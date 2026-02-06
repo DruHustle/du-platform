@@ -133,8 +133,8 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 flex-shrink-0">
+          {/* Desktop Navigation - UPDATED: Added flex-1 and justify-end */}
+          <nav className="hidden lg:flex flex-1 justify-end items-center space-x-1 px-4">
             {navigation.map((item) => (
               item.children ? (
                 <div
@@ -153,7 +153,7 @@ export default function Layout({ children }: LayoutProps) {
                     </Button>
                   </Link>
                   
-                  <div className="absolute left-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
+                  <div className="absolute right-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
                     <Link href={item.href}>
                       <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm">
                         Explore {item.name}
@@ -174,7 +174,6 @@ export default function Layout({ children }: LayoutProps) {
                 <Link key={item.href} href={item.href}>
                   <Button
                     variant={isActive(item.href) ? "default" : "ghost"}
-                    /* Standardized font-medium without overriding size classes to match dropdown buttons */
                     className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} font-medium transition-all px-3`}
                   >
                     {item.name}
@@ -185,7 +184,7 @@ export default function Layout({ children }: LayoutProps) {
           </nav>
 
           {/* Utility Icons */}
-          <div className="flex items-center gap-1 md:gap-2 lg:gap-3 ml-auto">
+          <div className="flex items-center gap-1 md:gap-2 lg:gap-3">
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden sm:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">

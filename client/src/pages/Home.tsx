@@ -146,10 +146,10 @@ export default function Home() {
                   </CardHeader>
                   <CardContent className="pt-0">
                     <Link href={module.href}>
-                      <Button className="w-full group/btn" size="lg">
-                        Learn More
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                      </Button>
+                    <Button className="w-full group/btn opacity-90 hover:opacity-100 transition-opacity" size="lg">
+                      Learn More
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </Button>
                     </Link>
                   </CardContent>
                 </Card>
@@ -160,11 +160,11 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding-sm bg-primary text-primary-foreground">
+      <section className="section-padding-sm opacity-90 bg-primary text-primary-foreground">
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">Ready to Connect with Zimbabwe?</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">Ready to Connect?</h2>
               <p className="opacity-90">Join thousands of diaspora members building bridges for economic transformation.</p>
             </div>
             <div className="flex gap-4">
