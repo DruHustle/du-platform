@@ -126,9 +126,12 @@ export default function Home() {
           </div>
 
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
-              <div className="w-1.5 h-3 bg-white/70 rounded-full" />
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator">
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-xs text-white/60 font-medium tracking-widest uppercase">Scroll to explore</span>
+              <div className="w-5 h-8 border-2 border-white/40 rounded-full flex justify-center pt-1.5 hover:border-white/60 transition-colors">
+                <div className="w-1 h-2 bg-white/60 rounded-full scroll-indicator-dot" />
+              </div>
             </div>
           </div>
         </div>

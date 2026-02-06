@@ -432,6 +432,7 @@
   /* Slide up animation */
   .slide-up {
     animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
   }
   
   @keyframes slideUp {
@@ -442,6 +443,41 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+  
+  /* Scroll indicator animation */
+  .scroll-indicator {
+    animation: scrollBounce 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes scrollBounce {
+    0%, 20%, 50%, 80%, 100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 0.7;
+      transform: translateY(8px);
+    }
+    60% {
+      opacity: 0.7;
+      transform: translateY(8px);
+    }
+  }
+  
+  .scroll-indicator-dot {
+    animation: scrollDot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes scrollDot {
+    0%, 20% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    40%, 100% {
+      opacity: 0;
+      transform: translateY(12px);
     }
   }
   
