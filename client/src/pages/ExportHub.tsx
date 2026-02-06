@@ -1,12 +1,17 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Users, Building2, Truck, Shield, ExternalLink } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { FileText, Users, Building2, Truck, Shield, ExternalLink, AlertTriangle, CheckCircle } from "lucide-react";
+import { Link } from "wouter";
 
 export default function ExportHub() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
   const germanRequirements = [
     {
       category: "Food Products",
@@ -63,6 +68,64 @@ export default function ExportHub() {
     }
   ];
 
+  // 2026 Regulatory Updates
+  const regulatoryUpdates = [
+    {
+      title: "EU Sanctions Easing",
+      date: "February 2025",
+      description: "EU eased certain sanctions on Zimbabwe, improving trade relations and market access opportunities.",
+      status: "positive"
+    },
+    {
+      title: "Arms Embargo Expiration",
+      date: "February 2026",
+      description: "The EU arms embargo is set to expire, signaling further normalization of EU-Zimbabwe relations.",
+      status: "positive"
+    },
+    {
+      title: "EU-ESA EPA Benefits",
+      description: "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement for qualifying products.",
+      status: "positive"
+    }
+  ];
+
+  // Product-specific market intelligence
+  const marketIntelligence = [
+    {
+      product: "Blueberries",
+      status: "approved",
+      requirements: [
+        "Class I quality standards required",
+        "LIDL-specific MRLs (33% of legal limit)",
+        "Mandatory cold chain logistics",
+        "GLOBALG.A.P. certification essential"
+      ],
+      buyers: ["LIDL", "EDEKA", "REWE"]
+    },
+    {
+      product: "Honey",
+      status: "pending",
+      requirements: [
+        "NOT YET EU APPROVED for direct export",
+        "TRACES registration mandate (since Nov 2024)",
+        "Residue Monitoring Plan (RMP) required",
+        "EU-accredited testing systems needed"
+      ],
+      buyers: ["Pending approval process"]
+    },
+    {
+      product: "Natural Oils (Marula)",
+      status: "approved",
+      requirements: [
+        "German-language labeling mandatory",
+        "Purity testing certification",
+        "Organic certification preferred",
+        "REACH compliance for cosmetic use"
+      ],
+      buyers: ["Cosmetic manufacturers", "Specialty retailers"]
+    }
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -70,7 +133,7 @@ export default function ExportHub() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/kreNqAHriNxTszcg.jpg')`,
+            backgroundImage: `url('/images/export_hub_bg.jpg')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
@@ -87,8 +150,91 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Market Requirements */}
+      {/* 2026 Regulatory Updates */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">2026 Regulatory Updates</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Latest developments affecting Zimbabwe-EU trade relations
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {regulatoryUpdates.map((update, index) => (
+              <Card key={index} className="border-t-4 border-t-green-600">
+                <CardHeader>
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    {update.date && <Badge variant="outline">{update.date}</Badge>}
+                  </div>
+                  <CardTitle className="text-lg">{update.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">{update.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Market Intelligence */}
       <section className="py-16">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Product Market Intelligence</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Specific requirements and status for key Zimbabwean export products
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {marketIntelligence.map((item, index) => (
+              <Card key={index} className={`border-t-4 ${item.status === 'approved' ? 'border-t-green-600' : 'border-t-yellow-500'}`}>
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    <CardTitle className="text-xl">{item.product}</CardTitle>
+                    <Badge className={item.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                      {item.status === 'approved' ? 'EU Approved' : 'Pending Approval'}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <p className="text-sm font-semibold text-muted-foreground mb-2">Requirements:</p>
+                    <ul className="space-y-2">
+                      {item.requirements.map((req, idx) => (
+                        <li key={idx} className="flex items-start text-sm">
+                          {req.includes("NOT YET") ? (
+                            <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500 flex-shrink-0 mt-0.5" />
+                          ) : (
+                            <FileText className="h-4 w-4 mr-2 text-primary flex-shrink-0 mt-0.5" />
+                          )}
+                          <span className={req.includes("NOT YET") ? "text-yellow-700 font-medium" : ""}>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-muted-foreground mb-2">Target Buyers:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {item.buyers.map((buyer, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">
+                          {buyer}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Market Requirements */}
+      <section className="py-16 bg-muted/30">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">German Market Requirements</h2>
@@ -124,7 +270,7 @@ export default function ExportHub() {
       </section>
 
       {/* Certifications */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Certifications</h2>
@@ -134,10 +280,11 @@ export default function ExportHub() {
           </div>
 
           <Tabs defaultValue="organic" className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="organic">Organic</TabsTrigger>
               <TabsTrigger value="safety">Safety & Quality</TabsTrigger>
               <TabsTrigger value="trade">Fair Trade</TabsTrigger>
+              <TabsTrigger value="globalg">GLOBALG.A.P.</TabsTrigger>
             </TabsList>
             
             <TabsContent value="organic" className="mt-6">
@@ -214,12 +361,40 @@ export default function ExportHub() {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            <TabsContent value="globalg" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>GLOBALG.A.P. & GRASP</CardTitle>
+                  <CardDescription>Good Agricultural Practices certification for fresh produce</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold mb-2">GLOBALG.A.P. Requirements:</h4>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                      <li>Food safety and traceability</li>
+                      <li>Environmental management</li>
+                      <li>Worker health and safety</li>
+                      <li>Integrated pest management</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">GRASP Add-on:</h4>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                      <li>Social practices assessment</li>
+                      <li>Worker welfare standards</li>
+                      <li>Required by major EU retailers</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
         </div>
       </section>
 
       {/* Potential Partners */}
-      <section className="py-16">
+      <section className="py-16 bg-muted/30">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Potential Partners</h2>
@@ -261,14 +436,33 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Contact Form */}
+      {/* Contact CTA with Modal */}
       <section className="py-16">
         <div className="container">
-          <ContactForm
-            title="Need Export Support?"
-            description="Our team can help you navigate German market requirements, connect with partners, and access export resources."
-            module="export"
-          />
+          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+            <CardHeader>
+              <CardTitle className="text-2xl">Need Export Support?</CardTitle>
+              <CardDescription className="text-base">
+                Our team can help you navigate German market requirements, connect with partners, and access export resources.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="text-lg px-8">
+                    Connect with an Expert
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <ContactForm
+                    title="Export Support Request"
+                    description="Fill out the form below and our export specialists will contact you."
+                    module="export"
+                  />
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -277,17 +471,16 @@ export default function ExportHub() {
         <div className="container">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Explore Sucess Stories?
+              Explore Success Stories
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
               View some of the successful projects that have been funded through our platform and the impact they've made in Zimbabwe
             </p>
-            <a href="/succsess-stories" >
-              <button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-lg font-semibold">
+            <Link href="/success-stories">
+              <Button size="lg" variant="secondary" className="text-lg px-8">
                 Explore Success Stories
-              </button>
-            </a>
-
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

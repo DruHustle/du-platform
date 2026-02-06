@@ -1,37 +1,42 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, TrendingUp, Award, Globe, ExternalLink, Users } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Trade() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
   const exportSectors = [
     {
       name: "Horticulture",
       description: "Fresh produce, flowers, and organic vegetables for international markets",
-      image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80",
+      image: "/images/horticulture.jpg",
       opportunities: ["EU organic markets", "Middle East exports", "Regional SADC trade"],
       icon: Package
     },
     {
       name: "Leather Products",
       description: "Premium leather goods, footwear, and accessories with authentic African craftsmanship",
-      image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&q=80",
+      image: "/images/leather_products.jpg",
       opportunities: ["European fashion markets", "Luxury goods sector", "Government procurement"],
       icon: Award
     },
     {
       name: "Arts & Crafts",
       description: "Stone sculptures, beadwork, woven baskets, and traditional artisan products",
-      image: "https://images.unsplash.com/photo-1582582621959-48d27397dc69?w=800&q=80",
+      image: "/images/arts_crafts.jpg",
       opportunities: ["Tourism markets", "Cultural exports", "Fair trade channels"],
       icon: Globe
     },
     {
       name: "Minerals & Mining",
       description: "Value-added mineral products, precious stones, and processed materials",
-      image: "https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=800&q=80",
+      image: "/images/minerals_mining.jpg",
       opportunities: ["Industrial exports", "Jewelry sector", "Technology minerals"],
       icon: TrendingUp
     }
@@ -81,6 +86,56 @@ export default function Trade() {
     }
   ];
 
+  // Export flow steps based on the diagram
+  const exportFlowSteps = [
+    {
+      phase: "Product Approval",
+      description: "For products not yet EU approved (e.g., Honey)",
+      steps: [
+        "Submit Residue Monitoring Plan (RMP)",
+        "Establish EU-Accredited Testing Systems",
+        "Register in EU TRACES System",
+        "Await Addition to EU Approved List"
+      ],
+      icon: AlertCircle,
+      color: "border-yellow-500"
+    },
+    {
+      phase: "Registration & Compliance",
+      description: "Required for all exporters",
+      steps: [
+        "Register for REX System via ZIMRA",
+        "Consult ZimTrade for Market Intelligence",
+        "Obtain Required Certifications"
+      ],
+      icon: FileCheck,
+      color: "border-blue-500"
+    },
+    {
+      phase: "Certification & Quality",
+      description: "Meet EU quality standards",
+      steps: [
+        "GLOBALG.A.P. & GRASP Certification",
+        "EU Organic Certification (if applicable)",
+        "Quality Control: Class I, MRL Limits"
+      ],
+      icon: CheckCircle2,
+      color: "border-green-500"
+    },
+    {
+      phase: "Logistics & Documentation",
+      description: "Final export preparation",
+      steps: [
+        "Prepare Export Documents",
+        "Health & Phytosanitary Certificates",
+        "Commercial Invoice with REX Statement",
+        "Arrange Cold Chain Logistics"
+      ],
+      icon: Truck,
+      color: "border-purple-500"
+    }
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -88,7 +143,7 @@ export default function Trade() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/xrZBHerHOgqkwoKu.jpeg')`,
+            backgroundImage: `url('/images/great_zimbabwe.jpeg')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
@@ -102,6 +157,70 @@ export default function Trade() {
           <p className="text-xl md:text-2xl mb-6 max-w-3xl opacity-95">
             Connecting Zimbabwean exporters with global markets through diaspora networks
           </p>
+        </div>
+      </section>
+
+      {/* Export Flow Diagram Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Zimbabwe to Germany Export Roadmap</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Step-by-step guide for exporting Zimbabwean products to the German market
+            </p>
+          </div>
+
+          {/* Visual Flow Diagram */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-primary text-primary-foreground text-center">
+                <CardTitle className="text-xl">Export Process Flow</CardTitle>
+                <CardDescription className="text-primary-foreground/80">
+                  From farmer to German market (e.g., EDEKA)
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="flex justify-center">
+                  <img 
+                    src="/images/export_flow.png" 
+                    alt="Zimbabwe to Germany Export Flow Diagram"
+                    className="max-w-full h-auto rounded-lg shadow-md"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Detailed Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {exportFlowSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <Card key={index} className={`border-t-4 ${step.color}`}>
+                  <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <Badge variant="outline">Phase {index + 1}</Badge>
+                    </div>
+                    <CardTitle className="text-lg">{step.phase}</CardTitle>
+                    <CardDescription>{step.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {step.steps.map((s, idx) => (
+                        <li key={idx} className="flex items-start text-sm">
+                          <span className="mr-2 text-primary">•</span>
+                          <span>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -261,71 +380,33 @@ export default function Trade() {
         </div>
       </section>
 
-      {/* Trade Resources */}
+      {/* Contact CTA with Modal */}
       <section className="py-16 bg-muted/30">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Essential Trade Resources</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Quick access to key information for exporters and importers
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Trade Regulations",
-                description: "Import/export requirements, customs procedures, and compliance guidelines",
-                icon: "📋"
-              },
-              {
-                title: "Trade Agreements",
-                description: "SADC, COMESA, AfCFTA, and bilateral trade agreements",
-                icon: "🤝"
-              },
-              {
-                title: "Market Intelligence",
-                description: "Price trends, demand forecasts, and competitive analysis",
-                icon: "📊"
-              },
-              {
-                title: "Certification Support",
-                description: "Quality standards, organic certification, and compliance testing",
-                icon: "✓"
-              },
-              {
-                title: "Logistics Partners",
-                description: "Freight forwarders, customs brokers, and shipping solutions",
-                icon: "🚚"
-              },
-              {
-                title: "Export Finance",
-                description: "Trade finance, export credit insurance, and payment solutions",
-                icon: "💳"
-              }
-            ].map((resource, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="text-4xl mb-2">{resource.icon}</div>
-                  <CardTitle className="text-lg">{resource.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{resource.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
-      <section className="py-16">
-        <div className="container">
-          <ContactForm
-            title="Trade Support & Partnerships"
-            description="Connect with our trade team for export development support, market access guidance, and partnership opportunities."
-            module="trade"
-          />
+          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+            <CardHeader>
+              <CardTitle className="text-2xl">Ready to Export?</CardTitle>
+              <CardDescription className="text-base">
+                Our trade specialists can help you navigate export requirements, connect with buyers, and access ZimTrade programs.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="text-lg px-8">
+                    Connect with an Expert
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <ContactForm
+                    title="Trade Inquiry"
+                    description="Fill out the form below and our trade specialists will contact you."
+                    module="trade"
+                  />
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -334,10 +415,10 @@ export default function Trade() {
         <div className="container">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Access Comprehensive Trade Services
+              Explore More Trade Resources
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              For detailed trade information, export development programs, and direct support services, visit ZimTrade
+              For comprehensive trade information, export guides, and market intelligence, visit ZimTrade
             </p>
             <a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="secondary" className="text-lg px-8">

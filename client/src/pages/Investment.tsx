@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import InvestmentCalculator from "@/components/InvestmentCalculator";
@@ -5,14 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle, Building, Leaf, Cpu, Factory, Award } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Investment() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [riskFilter, setRiskFilter] = useState("all");
+
   const projects = [
     {
       title: "Zimbabwe Leather Manufacturing Project",
       description: "Expand leather goods production for export to European markets with government procurement support",
       category: "Manufacturing",
+      sector: "manufacturing",
       targetAmount: "$250,000",
       raised: "$187,500",
       progress: 75,
@@ -21,6 +30,8 @@ export default function Investment() {
       expectedReturn: "12-15% annually",
       timeline: "3-5 years",
       status: "Active",
+      risk: "moderate",
+      verified: true,
       highlights: [
         "Government civil servant procurement contract",
         "Export-ready quality standards",
@@ -32,6 +43,7 @@ export default function Investment() {
       title: "Organic Horticulture Export Hub",
       description: "Establish EU-certified organic farming collective for high-value vegetable exports",
       category: "Agriculture",
+      sector: "agriculture",
       targetAmount: "$150,000",
       raised: "$98,000",
       progress: 65,
@@ -40,6 +52,8 @@ export default function Investment() {
       expectedReturn: "10-12% annually",
       timeline: "2-4 years",
       status: "Active",
+      risk: "conservative",
+      verified: true,
       highlights: [
         "EU organic certification in progress",
         "Direct buyer relationships in Germany",
@@ -51,6 +65,7 @@ export default function Investment() {
       title: "Victoria Falls Tourism Lodge",
       description: "Boutique eco-lodge development near Victoria Falls for diaspora and international tourists",
       category: "Tourism",
+      sector: "tourism",
       targetAmount: "$500,000",
       raised: "$125,000",
       progress: 25,
@@ -59,11 +74,57 @@ export default function Investment() {
       expectedReturn: "15-18% annually",
       timeline: "5-7 years",
       status: "Active",
+      risk: "aggressive",
+      verified: false,
       highlights: [
         "Prime location near UNESCO site",
         "Sustainable tourism model",
         "Diaspora homecoming packages",
         "Year-round revenue potential"
+      ]
+    },
+    {
+      title: "Solar Energy Infrastructure Fund",
+      description: "Invest in renewable energy projects powering rural communities and businesses",
+      category: "Infrastructure",
+      sector: "infrastructure",
+      targetAmount: "$400,000",
+      raised: "$280,000",
+      progress: 70,
+      investors: 412,
+      minInvestment: "$250",
+      expectedReturn: "8-10% annually",
+      timeline: "4-6 years",
+      status: "Active",
+      risk: "conservative",
+      verified: true,
+      highlights: [
+        "Government energy partnership",
+        "Carbon credit potential",
+        "Rural electrification impact",
+        "Long-term power purchase agreements"
+      ]
+    },
+    {
+      title: "AgriTech Innovation Hub",
+      description: "Technology-driven agricultural solutions including precision farming and supply chain digitization",
+      category: "Tech",
+      sector: "tech",
+      targetAmount: "$300,000",
+      raised: "$195,000",
+      progress: 65,
+      investors: 289,
+      minInvestment: "$500",
+      expectedReturn: "18-22% annually",
+      timeline: "3-5 years",
+      status: "Active",
+      risk: "aggressive",
+      verified: false,
+      highlights: [
+        "Mobile-first farmer platform",
+        "AI-powered crop analytics",
+        "Market linkage system",
+        "Diaspora tech mentorship"
       ]
     }
   ];
@@ -87,9 +148,37 @@ export default function Investment() {
     {
       icon: DollarSign,
       title: "Flexible Investment",
-      description: "Start with as little as $300-$1,000 and build your portfolio over time"
+      description: "Start with as little as $250-$1,000 and build your portfolio over time"
     }
   ];
+
+  // HDC Associations
+  const hdcAssociations = [
+    "Avocado Growers Association",
+    "Berry Growers Association",
+    "Citrus Growers Association",
+    "Coffee Growers Association",
+    "Deciduous Fruit Growers Association",
+    "Nut Growers Association",
+    "Export Produce Association",
+    "Export Flower Growers Association",
+    "Tea Growers Association"
+  ];
+
+  const filteredProjects = projects.filter(project => {
+    const sectorMatch = activeFilter === "all" || project.sector === activeFilter;
+    const riskMatch = riskFilter === "all" || project.risk === riskFilter;
+    return sectorMatch && riskMatch;
+  });
+
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case "conservative": return "bg-green-100 text-green-800 border-green-300";
+      case "moderate": return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      case "aggressive": return "bg-red-100 text-red-800 border-red-300";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <Layout>
@@ -98,7 +187,7 @@ export default function Investment() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/tnmQvoljziNwaaOa.jpg')`,
+            backgroundImage: `url('/images/investment_bg.jpg')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
@@ -146,28 +235,109 @@ export default function Investment() {
         </div>
       </section>
 
-      {/* Active Projects */}
+      {/* Verified Directories */}
       <section className="py-16">
         <div className="container">
-          <div className="text-center mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* NTIR */}
+            <Card className="border-t-4 border-t-primary">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <Building className="h-8 w-8 text-primary" />
+                  <CardTitle className="text-xl">National Trade & Investment Register</CardTitle>
+                </div>
+                <CardDescription>
+                  Access the official registry of all verified trade and investment entities in Zimbabwe
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  Search NTIR Database
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* HDC */}
+            <Card className="border-t-4 border-t-green-600">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <Leaf className="h-8 w-8 text-green-600" />
+                  <CardTitle className="text-xl">Horticultural Development Council</CardTitle>
+                </div>
+                <CardDescription>
+                  HDC of Zimbabwe oversees quality and standards for horticultural exports
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {hdcAssociations.slice(0, 5).map((assoc, idx) => (
+                    <Badge key={idx} variant="secondary" className="text-xs">
+                      {assoc}
+                    </Badge>
+                  ))}
+                  <Badge variant="outline" className="text-xs">+4 more</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Active Projects with Filters */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Carefully vetted projects with government support and transparent performance tracking
             </p>
           </div>
 
+          {/* Filters */}
+          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+            <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-full md:w-auto">
+              <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-1">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="agriculture">Agriculture</TabsTrigger>
+                <TabsTrigger value="tech">Tech</TabsTrigger>
+                <TabsTrigger value="infrastructure">Infrastructure</TabsTrigger>
+                <TabsTrigger value="manufacturing">Manufacturing</TabsTrigger>
+                <TabsTrigger value="tourism">Tourism</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            
+            <select 
+              value={riskFilter} 
+              onChange={(e) => setRiskFilter(e.target.value)}
+              className="px-4 py-2 border rounded-md bg-white"
+            >
+              <option value="all">All Risk Levels</option>
+              <option value="conservative">Conservative</option>
+              <option value="moderate">Moderate</option>
+              <option value="aggressive">Aggressive</option>
+            </select>
+          </div>
+
           <div className="space-y-8">
-            {projects.map((project, index) => (
+            {filteredProjects.map((project, index) => (
               <Card key={index} className="overflow-hidden border-t-4 border-t-primary hover:shadow-xl transition-shadow">
                 <div className="grid md:grid-cols-3 gap-6 p-6">
                   {/* Project Details */}
                   <div className="md:col-span-2 space-y-4">
                     <div>
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <Badge variant="secondary">{project.category}</Badge>
                         <Badge className="bg-green-100 text-green-800 border-green-300">
                           {project.status}
                         </Badge>
+                        <Badge className={getRiskColor(project.risk)}>
+                          {project.risk.charAt(0).toUpperCase() + project.risk.slice(1)} Risk
+                        </Badge>
+                        {project.verified && (
+                          <Badge className="bg-blue-100 text-blue-800 border-blue-300">
+                            <Award className="h-3 w-3 mr-1" /> Verified
+                          </Badge>
+                        )}
                       </div>
                       <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
                       <p className="text-muted-foreground">{project.description}</p>
@@ -237,7 +407,7 @@ export default function Investment() {
       </section>
 
       {/* How It Works */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How Crowdfunding Works</h2>
@@ -269,11 +439,11 @@ export default function Investment() {
                 description: "Get quarterly dividends and capital appreciation as projects grow and succeed"
               }
             ].map((item, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="mx-auto w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold mb-3">
-                    {item.step}
-                  </div>
+              <Card key={index} className="text-center relative">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                  {item.step}
+                </div>
+                <CardHeader className="pt-8">
                   <CardTitle className="text-lg">{item.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -285,83 +455,56 @@ export default function Investment() {
         </div>
       </section>
 
-      {/* NTIR - Trust Infrastructure */}
+      {/* Investment Calculator */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <InvestmentCalculator />
+        </div>
+      </section>
+
+      {/* Contact CTA with Modal */}
       <section className="py-16">
         <div className="container">
-          <Card className="border-t-4 border-t-secondary">
+          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
             <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <Shield className="h-8 w-8 text-primary" />
-                <CardTitle className="text-2xl">National Trusted Investment Registry (NTIR)</CardTitle>
-              </div>
+              <CardTitle className="text-2xl">Ready to Invest?</CardTitle>
               <CardDescription className="text-base">
-                Government-backed trust infrastructure ensuring transparency and accountability
+                Our investment team can help you identify the right opportunities and guide you through the process.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                All investment opportunities on the ZIGD platform are registered with the National Trusted Investment Registry (NTIR), 
-                a government initiative that provides:
-              </p>
-              <ul className="grid md:grid-cols-2 gap-3">
-                {[
-                  "Pre-investment due diligence and verification",
-                  "Real-time performance tracking and reporting",
-                  "Investor protection mechanisms",
-                  "Dispute resolution frameworks",
-                  "Compliance monitoring and audits",
-                  "Trust score ratings for projects and operators"
-                ].map((item, idx) => (
-                  <li key={idx} className="flex items-start">
-                    <CheckCircle className="h-5 w-5 mr-2 text-primary flex-shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+            <CardContent>
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="text-lg px-8">
+                    Connect with an Expert
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <ContactForm
+                    title="Investment Inquiry"
+                    description="Fill out the form below and our investment specialists will contact you."
+                    module="investment"
+                  />
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* Investment Calculator */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Calculate Your Returns</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Use our interactive calculator to project potential returns on your investment portfolio
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <InvestmentCalculator />
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
-      <section className="py-16">
-        <div className="container">
-          <ContactForm
-            title="Investment Inquiries"
-            description="Interested in investing? Our team can provide detailed project information, due diligence reports, and NTIR registration support."
-            module="investment"
-          />
-        </div>
-      </section>
-
-      {/* External Link to ZIDA */}
+      {/* External Links */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Looking for Large-Scale Investments?
+              Explore More Investment Resources
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              For institutional investors and large-scale FDI opportunities, explore comprehensive investment services through ZIDA
+              For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency
             </p>
             <a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="secondary" className="text-lg px-8">
-                Visit ZIDA Invest <ExternalLink className="ml-2 h-5 w-5" />
+                Visit ZIDA <ExternalLink className="ml-2 h-5 w-5" />
               </Button>
             </a>
           </div>

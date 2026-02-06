@@ -1,34 +1,38 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award } from "lucide-react";
 
 export default function Tourism() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
   const attractions = [
     {
       name: "Victoria Falls",
       description: "One of the Seven Natural Wonders of the World, the world's largest sheet of falling water",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/VCkjwnzexqBLwEsw.jpg",
+      image: "/images/victoria_falls.jpg",
       highlights: ["UNESCO World Heritage Site", "Adventure Activities", "Wildlife Viewing"]
     },
     {
       name: "Great Zimbabwe",
       description: "Ancient stone ruins showcasing medieval African civilization and architectural excellence",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/xrZBHerHOgqkwoKu.jpeg",
+      image: "/images/great_zimbabwe.jpeg",
       highlights: ["UNESCO World Heritage Site", "Historical Significance", "Cultural Heritage"]
     },
     {
       name: "Kariba Dam",
       description: "One of the world's largest man-made lakes, perfect for houseboating and fishing",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/hLsRUKwLwmLFKdTm.webp",
+      image: "/images/kariba_dam.webp",
       highlights: ["Water Sports", "Fishing", "Scenic Beauty"]
     },
     {
       name: "Balancing Rocks",
       description: "Iconic natural rock formations that symbolize Zimbabwe's unique geological heritage",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/aLiYtCaLKOPCTMkZ.jpg",
+      image: "/images/balancing_rocks.jpg",
       highlights: ["Natural Wonder", "Photography", "National Symbol"]
     }
   ];
@@ -67,7 +71,7 @@ export default function Tourism() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/VCkjwnzexqBLwEsw.jpg')`,
+            backgroundImage: `url('/images/victoria_falls.jpg')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
@@ -227,14 +231,33 @@ export default function Tourism() {
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section className="py-16">
+      {/* Contact CTA with Modal */}
+      <section className="py-16 bg-muted/30">
         <div className="container">
-          <ContactForm
-            title="Plan Your Zimbabwe Adventure"
-            description="Need help planning your trip? Our tourism team can assist with bookings, itineraries, and special diaspora packages."
-            module="tourism"
-          />
+          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+            <CardHeader>
+              <CardTitle className="text-2xl">Plan Your Zimbabwe Adventure</CardTitle>
+              <CardDescription className="text-base">
+                Need help planning your trip? Our tourism team can assist with bookings, itineraries, and special diaspora packages.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="text-lg px-8">
+                    Connect with an Expert
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <ContactForm
+                    title="Tourism Inquiry"
+                    description="Fill out the form below and our tourism specialists will contact you."
+                    module="tourism"
+                  />
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

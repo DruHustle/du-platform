@@ -1,19 +1,20 @@
-import { useState } from "react"; // Added useState
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Quote, TrendingUp, Users, DollarSign, Award } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Added Dialog imports
 
 export default function SuccessStories() {
-  const [isFormOpen, setIsFormOpen] = useState(false); // Added state
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const stories = [
     {
       title: "Leather Goods Export Success",
       category: "Export",
-      image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&q=80",
+      image: "/images/leather_products.jpg",
       impact: {
         revenue: "$2.5M",
         jobs: "150+",
@@ -27,7 +28,7 @@ export default function SuccessStories() {
     {
       title: "Organic Horticulture Breakthrough",
       category: "Export",
-      image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80",
+      image: "/images/horticulture.jpg",
       impact: {
         revenue: "$850K",
         jobs: "85",
@@ -41,7 +42,7 @@ export default function SuccessStories() {
     {
       title: "Tourism Lodge Investment",
       category: "Investment",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/VCkjwnzexqBLwEsw.jpg",
+      image: "/images/victoria_falls.jpg",
       impact: {
         revenue: "$1.2M annually",
         jobs: "45",
@@ -55,7 +56,7 @@ export default function SuccessStories() {
     {
       title: "Stone Sculpture Export Network",
       category: "Trade",
-      image: "https://images.unsplash.com/photo-1582582621959-48d27397dc69?w=800&q=80",
+      image: "/images/arts_crafts.jpg",
       impact: {
         revenue: "$450K",
         jobs: "60 artisans",
@@ -69,7 +70,7 @@ export default function SuccessStories() {
     {
       title: "Tech Startup Diaspora Funding",
       category: "Investment",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+      image: "/images/tech_startup.jpg",
       impact: {
         revenue: "$3.5M valuation",
         jobs: "35",
@@ -83,7 +84,7 @@ export default function SuccessStories() {
     {
       title: "Honey Export Cooperative",
       category: "Export",
-      image: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=800&q=80",
+      image: "/images/honey_export.jpg",
       impact: {
         revenue: "$320K",
         jobs: "120 beekeepers",
@@ -97,7 +98,7 @@ export default function SuccessStories() {
     {
       title: "Heritage Tourism Package Success",
       category: "Tourism",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/xrZBHerHOgqkwoKu.jpeg",
+      image: "/images/great_zimbabwe.jpeg",
       impact: {
         revenue: "$680K",
         tourists: "1,200+ diaspora",
@@ -111,7 +112,7 @@ export default function SuccessStories() {
     {
       title: "Macadamia Nut Processing Plant",
       category: "Investment",
-      image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=800&q=80",
+      image: "/images/macadamia_nuts.jpg",
       impact: {
         revenue: "$1.8M",
         jobs: "95",
@@ -158,7 +159,7 @@ export default function SuccessStories() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/tnmQvoljziNwaaOa.jpg')`,
+            backgroundImage: `url('/images/investment_bg.jpg')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
@@ -242,44 +243,63 @@ export default function SuccessStories() {
                       
                       {/* Impact Metrics */}
                       <div className="flex flex-wrap gap-4 mb-4">
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-5 w-5 text-primary" />
-                          <span className="font-semibold">{story.impact.revenue}</span>
-                          <span className="text-sm text-muted-foreground">revenue</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Users className="h-5 w-5 text-primary" />
-                          <span className="font-semibold">{story.impact.jobs}</span>
-                          <span className="text-sm text-muted-foreground">jobs</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <TrendingUp className="h-5 w-5 text-primary" />
-                          <span className="font-semibold">{story.impact.markets || story.impact.investors || story.impact.tourists}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {story.impact.markets ? "markets" : story.impact.investors ? "investors" : "tourists"}
-                          </span>
-                        </div>
+                        {Object.entries(story.impact).map(([key, value], idx) => (
+                          <div key={idx} className="text-center">
+                            <p className="text-lg font-bold text-primary">{value}</p>
+                            <p className="text-xs text-muted-foreground capitalize">{key}</p>
+                          </div>
+                        ))}
                       </div>
 
                       <p className="text-muted-foreground mb-4">{story.story}</p>
                     </div>
 
                     {/* Testimonial */}
-                    <Card className="bg-muted/50 border-l-4 border-l-primary">
-                      <CardContent className="p-4">
-                        <Quote className="h-6 w-6 text-primary mb-2" />
-                        <p className="italic mb-3">{story.testimonial}</p>
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <Quote className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                         <div>
-                          <p className="font-semibold">{story.author}</p>
-                          <p className="text-sm text-muted-foreground">{story.role}</p>
+                          <p className="italic text-sm mb-2">"{story.testimonial}"</p>
+                          <p className="text-sm font-semibold">{story.author}</p>
+                          <p className="text-xs text-muted-foreground">{story.role}</p>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Contact CTA with Modal */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+            <CardHeader>
+              <CardTitle className="text-2xl">Share Your Success Story</CardTitle>
+              <CardDescription className="text-base">
+                Have a success story to share? We'd love to feature your journey and inspire others.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="text-lg px-8">
+                    Submit Your Story
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <ContactForm
+                    title="Share Your Success Story"
+                    description="Tell us about your diaspora-driven success and how we can feature it."
+                    module="success-story"
+                  />
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -290,19 +310,19 @@ export default function SuccessStories() {
             Be Part of the Next Success Story
           </h2>
           <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-            Whether you're an entrepreneur, investor, or diaspora member, ZIGD Gateway connects you with opportunities to make an impact
+            Whether you're an investor, exporter, or diaspora professional, there's a role for you in Zimbabwe's economic transformation
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-              <DialogTrigger asChild>
-                <button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-lg font-semibold">
-                  Get in Touch
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px] p-0 border-none">
-                <ContactForm module="trade" />
-              </DialogContent>
-            </Dialog>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/investment">
+              <Button size="lg" variant="secondary" className="text-lg px-8">
+                Explore Investments
+              </Button>
+            </a>
+            <a href="/export-hub">
+              <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 hover:bg-white/20 text-white border-white">
+                Start Exporting
+              </Button>
+            </a>
           </div>
         </div>
       </section>

@@ -12,7 +12,7 @@ const modules = [
       icon: BookOpen,
       href: "/export-hub",
       color: "border-t-4 border-t-green-600 bg-green-600/5 hover:bg-green-600/10",
-      bgImage: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/kreNqAHriNxTszcg.jpg"
+      bgImage: "/images/export_hub_bg.jpg"
     },
     {
       title: "Tourism Information",
@@ -20,7 +20,7 @@ const modules = [
       icon: Plane,
       href: "/tourism",
       color: "border-t-4 border-t-yellow-500 bg-yellow-500/5 hover:bg-yellow-500/10",
-      bgImage: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/VCkjwnzexqBLwEsw.jpg"
+      bgImage: "/images/victoria_falls.jpg"
     },
     {
       title: "Investment Opportunities",
@@ -28,7 +28,7 @@ const modules = [
       icon: TrendingUp,
       href: "/investment",
       color: "border-t-4 border-t-red-600 bg-red-600/5 hover:bg-red-600/10",
-      bgImage: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/tnmQvoljziNwaaOa.jpg"
+      bgImage: "/images/investment_bg.jpg"
     },
     {
       title: "Trade Information",
@@ -36,25 +36,25 @@ const modules = [
       icon: Package,
       href: "/trade",
       color: "border-t-4 border-t-slate-800 bg-slate-800/5 hover:bg-slate-800/10",
-      bgImage: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/xrZBHerHOgqkwoKu.jpeg"
+      bgImage: "/images/great_zimbabwe.jpeg"
     }
   ];
 
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative min-h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/VCkjwnzexqBLwEsw.jpg')`,
+            backgroundImage: `url('/images/victoria_falls.jpg')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70" />
         </div>
         
 
-        <div className="relative z-10 container text-center text-white">
+        <div className="relative z-10 container text-center text-white flex flex-col items-center justify-center">
           <div className="flex justify-center mb-6">
             <img
               src="/images/made_in_zimbabwe.png"
