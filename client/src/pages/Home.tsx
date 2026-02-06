@@ -11,7 +11,7 @@ export default function Home() {
       description: "Access German market requirements, regulations, certifications, and connect with potential partners for exporting Zimbabwean products.",
       icon: BookOpen,
       href: "/export-hub",
-      color: "border-t-4 border-t-green-600",
+      color: "border-t-4 border-t-green-600 bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/export_hub_bg.jpg",
       stats: "50+ Export Guides"
     },
@@ -20,7 +20,7 @@ export default function Home() {
       description: "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
       icon: Plane,
       href: "/tourism",
-      color: "border-t-4 border-t-yellow-500",
+         color: "border-t-4 border-t-yellow-500 bg-yellow-500/5 hover:bg-yellow-500/10",
       bgImage: "/images/victoria_falls.jpg",
       stats: "Forbes #1 2025"
     },
@@ -29,7 +29,7 @@ export default function Home() {
       description: "Explore diaspora-friendly micro-investment and crowdfunding opportunities in verified Zimbabwean projects.",
       icon: TrendingUp,
       href: "/investment",
-      color: "border-t-4 border-t-red-600",
+      color: "border-t-4 border-t-red-600 bg-red-600/5 hover:bg-red-600/10",
       bgImage: "/images/investment_bg.jpg",
       stats: "$50M+ Opportunities"
     },
@@ -38,7 +38,7 @@ export default function Home() {
       description: "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
       icon: Package,
       href: "/trade",
-      color: "border-t-4 border-t-slate-700",
+      color: "border-t-4 border-t-slate-800 bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/great_zimbabwe.jpeg",
       stats: "8 Export Sectors"
     }
@@ -77,7 +77,7 @@ export default function Home() {
             </div>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 tracking-tight px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
+          <h1 className= "!text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] font-bold mb-4 tracking-tighter leading-none px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
             Diaspora Unlocked
           </h1>
           
@@ -85,8 +85,8 @@ export default function Home() {
             Trade, Tourism and Investment Acceleration for Vision 2030
           </p>
           
-          <p className="text-sm sm:text-base md:text-lg mb-8 max-w-2xl mx-auto opacity-95 px-4 slide-up" style={{ animationDelay: '0.3s' }}>
-            A unified digital platform connecting Zimbabwe's global diaspora with opportunities at home
+          <p className="text-xs sm:text-sm md:text-base mb-8 max-w-2xl mx-auto opacity-95 px-4 slide-up"style={{ animationDelay: '0.3s' }}>
+            A digital platform connecting Zimbabwe's global diaspora with opportunities at home
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 slide-up" style={{ animationDelay: '0.5s' }}>
