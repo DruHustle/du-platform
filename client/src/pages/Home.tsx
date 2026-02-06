@@ -45,6 +45,7 @@ export default function Home() {
   ];
 
   return (
+    
     <Layout>
     {/* Hero Section */}
       <section className="relative min-h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
@@ -54,7 +55,6 @@ export default function Home() {
             backgroundImage: `url('/images/victoria_falls.jpg')`,
           }}
         >
-          {/* Green-shaded background fill */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70" />
         </div>
         
@@ -67,14 +67,12 @@ export default function Home() {
         <div className="relative z-10 container text-center text-white flex flex-col items-center justify-center py-12">
   
           <div className="flex justify-center mb-6 slide-up">
-            <div className="relative min-w-max"> {/* Added min-w-max to prevent squeezing */}
+            <div className="relative min-w-max"> 
               <img
                 src="/images/made_in_zimbabwe.png"
                 alt="Made in Zimbabwe"
-                /* Increased from h-16/h-24 to h-24/h-36 */
                 className="h-24 md:h-36 w-auto object-contain drop-shadow-2xl relative z-10" 
               />
-              {/* This is your glow effect - adjusted size to match the new flag size */}
               <div className="absolute -inset-6 bg-white/10 rounded-full blur-2xl -z-10" />
             </div>
           </div>
