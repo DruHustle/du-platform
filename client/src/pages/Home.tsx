@@ -156,7 +156,7 @@ export default function Home() {
       <section className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-14 px-4">
-            <span className="badge-primary mb-4 inline-block">Gateway Services</span>
+            <span className="badge-primary mb-4 inline-block">Platform Services</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
               The Zimbabwe Global and Diaspora Gateway
             </h2>
