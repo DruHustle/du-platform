@@ -11,7 +11,7 @@ import { Mail, Phone, User, MessageSquare } from "lucide-react";
 interface ContactFormProps {
   title?: string;
   description?: string;
-  module: "export" | "tourism" | "investment" | "trade";
+  module: "export" | "tourism" | "investment" | "trade" | "success-story";
 }
 
 export default function ContactForm({ title, description, module }: ContactFormProps) {
@@ -51,6 +51,13 @@ export default function ContactForm({ title, description, module }: ContactFormP
       "Market Access",
       "Trade Regulations",
       "Partnership Opportunities",
+      "General Inquiry"
+    ],
+    "success-story": [
+      "Share Your Story",
+      "Project Showcase",
+      "Success Metrics",
+      "Partnership Inquiry",
       "General Inquiry"
     ]
   };
