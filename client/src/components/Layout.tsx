@@ -34,8 +34,8 @@ export default function Layout({ children }: LayoutProps) {
           <Link href="/">
             <div className="flex items-center space-x-2 md:space-x-3 cursor-pointer flex-shrink-0">
               <img
-                src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663323515850/qHZuHhlGMOFUCsIR.png"
-                alt="Made in Zimbabwe"
+              src="/images/made_in_zimbabwe.png"
+              alt="Made in Zimbabwe"
                 className="h-8 w-8 md:h-10 md:w-10 object-contain flex-shrink-0"
               />
               <div className="min-w-0">
