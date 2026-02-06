@@ -1,9 +1,14 @@
+import { useState } from "react"; // Added useState
 import Layout from "@/components/Layout";
+import ContactForm from "@/components/ContactForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Quote, TrendingUp, Users, DollarSign, Award } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Added Dialog imports
 
 export default function SuccessStories() {
+  const [isFormOpen, setIsFormOpen] = useState(false); // Added state
+
   const stories = [
     {
       title: "Leather Goods Export Success",
@@ -288,16 +293,16 @@ export default function SuccessStories() {
             Whether you're an entrepreneur, investor, or diaspora member, ZIGD Gateway connects you with opportunities to make an impact
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="/export-hub">
-              <button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-lg font-semibold">
-                Explore Export Opportunities
-              </button>
-            </a>
-            <a href="/investment">
-              <button className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-semibold border border-white/30">
-                View Investment Projects
-              </button>
-            </a>
+            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+              <DialogTrigger asChild>
+                <button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-lg font-semibold">
+                  Get in Touch
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px] p-0 border-none">
+                <ContactForm module="trade" />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </section>

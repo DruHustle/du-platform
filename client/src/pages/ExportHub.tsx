@@ -272,21 +272,22 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* External Link to ZimTrade */}
+      {/* Navigate to Success Stories */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Need More Trade Information?
+              Explore Sucess Stories?
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              For comprehensive trade services, export development programs, and additional market intelligence
+              View some of the successful projects that have been funded through our platform and the impact they've made in Zimbabwe
             </p>
-            <a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Visit ZimTrade <ExternalLink className="ml-2 h-5 w-5" />
-              </Button>
+            <a href="/succsess-stories" >
+              <button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-lg font-semibold">
+                Explore Success Stories
+              </button>
             </a>
+
           </div>
         </div>
       </section>
