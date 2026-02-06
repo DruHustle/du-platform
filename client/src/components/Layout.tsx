@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle, ExternalLink, Mail, Phone, MapPin } from "lucide-react";
+import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface LayoutProps {
@@ -23,7 +23,6 @@ export default function Layout({ children }: LayoutProps) {
   });
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  // Handle scroll effect for header
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -101,14 +100,12 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
     setSearchOpen(false);
     setSearchQuery("");
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-
       {/* Header */}
       <header className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
         scrolled 
@@ -134,12 +131,10 @@ export default function Layout({ children }: LayoutProps) {
                 </p>
               </div>
             </div>
-
-
           </Link>
 
-          {/* Desktop Navigation with Hover Dropdowns */}
-          <nav className="hidden lg:flex items-center space-x-0.5 flex-shrink-0">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1 flex-shrink-0">
             {navigation.map((item) => (
               item.children ? (
                 <div
@@ -151,17 +146,16 @@ export default function Layout({ children }: LayoutProps) {
                   <Link href={item.href}>
                     <Button
                       variant={isActive(item.href) ? "default" : "ghost"}
-                      className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} flex items-center gap-1 font-medium transition-all`}
+                      className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} flex items-center gap-1 font-medium transition-all px-3`}
                     >
                       {item.name}
                       <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === item.href ? 'rotate-180' : ''}`} />
                     </Button>
                   </Link>
                   
-                  {/* Hover Dropdown */}
                   <div className="absolute left-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
                     <Link href={item.href}>
-                      <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors">
+                      <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm">
                         Explore {item.name}
                       </div>
                     </Link>
@@ -180,7 +174,8 @@ export default function Layout({ children }: LayoutProps) {
                 <Link key={item.href} href={item.href}>
                   <Button
                     variant={isActive(item.href) ? "default" : "ghost"}
-                    className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} font-medium transition-all text-sm md:text-base`}
+                    /* Standardized font-medium without overriding size classes to match dropdown buttons */
+                    className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} font-medium transition-all px-3`}
                   >
                     {item.name}
                   </Button>
@@ -191,7 +186,6 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Utility Icons */}
           <div className="flex items-center gap-1 md:gap-2 lg:gap-3 ml-auto">
-            {/* Search */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden sm:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
@@ -218,7 +212,6 @@ export default function Layout({ children }: LayoutProps) {
               </DialogContent>
             </Dialog>
 
-            {/* Region Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden md:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
@@ -230,7 +223,7 @@ export default function Layout({ children }: LayoutProps) {
                 <DropdownMenuSeparator />
                 {Object.entries(regions).map(([continent, countries]) => (
                   <div key={continent}>
-                    <DropdownMenuLabel className="text-xs text-muted-foreground font-normal uppercase tracking-wider">{continent}</DropdownMenuLabel>
+                    <DropdownMenuLabel className="text-xs text-muted-foreground font-normal uppercase tracking-wider px-2 py-1">{continent}</DropdownMenuLabel>
                     {countries.map((country) => (
                       <DropdownMenuItem 
                         key={country}
@@ -245,7 +238,6 @@ export default function Layout({ children }: LayoutProps) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Login Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden md:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
@@ -263,7 +255,6 @@ export default function Layout({ children }: LayoutProps) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Mobile Menu */}
             <Button
               variant="ghost"
               size="icon"
@@ -284,7 +275,7 @@ export default function Layout({ children }: LayoutProps) {
                   <Link href={item.href}>
                     <Button
                       variant={isActive(item.href) ? "default" : "ghost"}
-                      className="w-full justify-start text-sm md:text-base"
+                      className="w-full justify-start text-sm"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -295,7 +286,7 @@ export default function Layout({ children }: LayoutProps) {
                       {item.children.map((child, idx) => (
                         <Link href={item.href} key={idx}>
                           <div 
-                            className="text-xs md:text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer py-1"
+                            className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer py-1.5"
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             {child.name}
@@ -311,7 +302,6 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 w-full">
         {children}
       </main>
@@ -329,17 +319,15 @@ export default function Layout({ children }: LayoutProps) {
           <button className="relative bg-green-500 hover:bg-green-600 text-white p-3 md:p-4 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center">
             <MessageCircle className="h-5 w-5 md:h-6 md:w-6" />
           </button>
-          <div className="absolute bottom-full right-0 mb-2 bg-gray-900 text-white text-xs md:text-sm px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute bottom-full right-0 mb-2 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Chat with us
           </div>
         </div>
       </a>
 
-      {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 md:py-12 mt-12">
         <div className="container">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8">
-            {/* About */}
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">About ZIGD</h3>
               <p className="text-xs md:text-sm opacity-90 leading-relaxed">
@@ -347,7 +335,6 @@ export default function Layout({ children }: LayoutProps) {
               </p>
             </div>
 
-            {/* Quick Links */}
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Quick Links</h3>
               <ul className="space-y-2 text-xs md:text-sm">
@@ -358,7 +345,6 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
 
-            {/* Partners */}
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Partners</h3>
               <ul className="space-y-2 text-xs md:text-sm">
@@ -369,7 +355,6 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
 
-            {/* Contact */}
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Contact</h3>
               <ul className="space-y-2 text-xs md:text-sm">
@@ -380,7 +365,6 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
-          {/* Bottom Bar */}
           <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">
             <p className="opacity-80">© 2026 ZIGD Platform. All rights reserved.</p>
             <div className="flex gap-4 md:gap-6">

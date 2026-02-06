@@ -67,27 +67,24 @@ export default function Home() {
         <div className="relative z-10 container text-center text-white flex flex-col items-center justify-center py-12">
   
           <div className="flex justify-center mb-6 slide-up">
-            <div className="relative">
+            <div className="relative min-w-max"> {/* Added min-w-max to prevent squeezing */}
               <img
                 src="/images/made_in_zimbabwe.png"
                 alt="Made in Zimbabwe"
-                className="h-16 md:h-24 w-auto drop-shadow-2xl"
+                /* Increased from h-16/h-24 to h-24/h-36 */
+                className="h-24 md:h-36 w-auto object-contain drop-shadow-2xl relative z-10" 
               />
-              <div className="absolute -inset-4 bg-white/10 rounded-full blur-xl -z-10" />
+              {/* This is your glow effect - adjusted size to match the new flag size */}
+              <div className="absolute -inset-6 bg-white/10 rounded-full blur-2xl -z-10" />
             </div>
           </div>
           
-          <h1 className= "!text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] font-bold mb-4 tracking-tighter leading-none px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
-            Diaspora Unlocked
-          </h1>
-          
-          <p className="text-lg sm:text-xl md:text-2xl mb-3 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
-            Trade, Tourism and Investment Acceleration for Vision 2030
-          </p>
-          
-          <p className="text-xs sm:text-sm md:text-base mb-8 max-w-2xl mx-auto opacity-95 px-4 slide-up"style={{ animationDelay: '0.3s' }}>
-            A digital platform connecting Zimbabwe's global diaspora with opportunities at home
-          </p>
+            <h1 className="!text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] font-bold mb-12 tracking-tighter leading-none px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
+              Diaspora Unlocked
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl mb-3 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
+              Trade, Tourism and Investment Acceleration for Vision 2030
+            </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 slide-up" style={{ animationDelay: '0.5s' }}>
             <Link href="/export-hub">
@@ -115,8 +112,8 @@ export default function Home() {
              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">
               The Zimbabwe Global and Diaspora Gateway
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-              Transforming engagement through market access, trust infrastructure, and digital coordination
+              <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
+                 A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.
             </p>
           </div>
 
