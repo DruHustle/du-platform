@@ -108,28 +108,6 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Top Bar */}
-      <div className="bg-primary text-primary-foreground py-2 text-xs sm:text-sm hidden md:block">
-        <div className="container flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
-            <a href="mailto:info@zigd.co.zw" className="flex items-center gap-2 hover:text-secondary transition-colors text-xs sm:text-sm">
-              <Mail className="h-3.5 w-3.5 flex-shrink-0" />
-              <span className="truncate">info@zigd.co.zw</span>
-            </a>
-            <a href="tel:+263771234567" className="flex items-center gap-2 hover:text-secondary transition-colors text-xs sm:text-sm">
-              <Phone className="h-3.5 w-3.5 flex-shrink-0" />
-              <span className="truncate">+263 77 123 4567</span>
-            </a>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
-            <span className="flex items-center gap-2 text-xs sm:text-sm">
-              <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-              <span className="truncate">Harare, Zimbabwe</span>
-            </span>
-            <span className="text-secondary font-medium text-xs sm:text-sm">Vision 2030</span>
-          </div>
-        </div>
-      </div>
 
       {/* Header */}
       <header className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
@@ -138,23 +116,26 @@ export default function Layout({ children }: LayoutProps) {
           : 'bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60'
       }`}>
         <div className="container flex h-14 md:h-16 lg:h-18 items-center justify-between gap-2 md:gap-4">
+          
           {/* Logo */}
-          <Link href="/">
-            <div className="flex items-center space-x-1.5 md:space-x-3 cursor-pointer flex-shrink-0 group min-w-0">
+          <Link href='/'>
+            <div className='flex items-center space-x-2 md:space-x-3 cursor-pointer flex-shrink-0 group min-w-0'>
               <img
-                src="/images/made_in_zimbabwe.png"
-                alt="Made in Zimbabwe"
-                className="h-8 w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 object-contain flex-shrink-0 transition-transform group-hover:scale-105"
+                src='/images/made_in_zimbabwe.png'
+                alt='Made in Zimbabwe'
+                className='h-9 w-9 md:h-11 md:w-11 object-contain flex-shrink-0 transition-transform group-hover:scale-105'
               />
-              <div className="min-w-0 hidden sm:block">
-                <h1 className="text-base md:text-lg lg:text-xl font-bold text-primary whitespace-nowrap tracking-tight truncate">
+              <div className='min-w-0'>
+                <h1 className='text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
                   ZIGD Platform
                 </h1>
-                <p className="text-xs text-muted-foreground whitespace-nowrap hidden md:block truncate">
+                <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
                   Zimbabwe Global & Diaspora
                 </p>
               </div>
             </div>
+
+
           </Link>
 
           {/* Desktop Navigation with Hover Dropdowns */}
@@ -181,7 +162,7 @@ export default function Layout({ children }: LayoutProps) {
                   <div className="absolute left-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
                     <Link href={item.href}>
                       <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors">
-                        View All {item.name}
+                        Explore {item.name}
                       </div>
                     </Link>
                     <div className="border-t my-2" />

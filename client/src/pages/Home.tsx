@@ -11,7 +11,7 @@ export default function Home() {
       description: "Access German market requirements, regulations, certifications, and connect with potential partners for exporting Zimbabwean products.",
       icon: BookOpen,
       href: "/export-hub",
-      color: "border-l-4 border-l-green-600",
+      color: "border-t-4 border-t-green-600",
       bgImage: "/images/export_hub_bg.jpg",
       stats: "50+ Export Guides"
     },
@@ -20,7 +20,7 @@ export default function Home() {
       description: "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
       icon: Plane,
       href: "/tourism",
-      color: "border-l-4 border-l-yellow-500",
+      color: "border-t-4 border-t-yellow-500",
       bgImage: "/images/victoria_falls.jpg",
       stats: "Forbes #1 2025"
     },
@@ -29,7 +29,7 @@ export default function Home() {
       description: "Explore diaspora-friendly micro-investment and crowdfunding opportunities in verified Zimbabwean projects.",
       icon: TrendingUp,
       href: "/investment",
-      color: "border-l-4 border-l-red-600",
+      color: "border-t-4 border-t-red-600",
       bgImage: "/images/investment_bg.jpg",
       stats: "$50M+ Opportunities"
     },
@@ -38,129 +38,81 @@ export default function Home() {
       description: "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
       icon: Package,
       href: "/trade",
-      color: "border-l-4 border-l-slate-700",
+      color: "border-t-4 border-t-slate-700",
       bgImage: "/images/great_zimbabwe.jpeg",
       stats: "8 Export Sectors"
     }
   ];
 
-  const stats = [
-    { value: "$6.8B", label: "Total Exports 2025", icon: BarChart3 },
-    { value: "3.5M", label: "Global Diaspora", icon: Globe },
-    { value: "$1.8B", label: "Annual Remittances", icon: TrendingUp },
-    { value: "6.6%", label: "GDP Growth Rate", icon: Award }
-  ];
-
-  const features = [
-    "Access verified investment opportunities",
-    "Connect with German market buyers",
-    "Explore tourism packages",
-    "Track economic indicators"
-  ];
-
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    {/* Hero Section */}
+      <section className="relative min-h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url('/images/victoria_falls.jpg')`,
           }}
         >
-          <div className="absolute inset-0 hero-gradient" />
+          {/* Green-shaded background fill */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70" />
         </div>
         
-        {/* Animated background elements */}
+        {/* Animated background elements retained for depth */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
-        <div className="relative z-10 container text-center text-white flex flex-col items-center justify-center py-16">
-          <div className="flex justify-center mb-8 slide-up">
+        <div className="relative z-10 container text-center text-white flex flex-col items-center justify-center py-12">
+  
+          <div className="flex justify-center mb-6 slide-up">
             <div className="relative">
               <img
                 src="/images/made_in_zimbabwe.png"
                 alt="Made in Zimbabwe"
-                className="h-20 md:h-28 w-auto drop-shadow-2xl"
+                className="h-16 md:h-24 w-auto drop-shadow-2xl"
               />
               <div className="absolute -inset-4 bg-white/10 rounded-full blur-xl -z-10" />
             </div>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 tracking-tight px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
             Diaspora Unlocked
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
+          <p className="text-lg sm:text-xl md:text-2xl mb-3 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
             Trade, Tourism and Investment Acceleration for Vision 2030
           </p>
           
-          <p className="text-base sm:text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-95 px-4 slide-up" style={{ animationDelay: '0.3s' }}>
+          <p className="text-sm sm:text-base md:text-lg mb-8 max-w-2xl mx-auto opacity-95 px-4 slide-up" style={{ animationDelay: '0.3s' }}>
             A unified digital platform connecting Zimbabwe's global diaspora with opportunities at home
           </p>
 
-          {/* Feature list */}
-          <div className="flex flex-wrap justify-center gap-4 mb-10 px-4 slide-up" style={{ animationDelay: '0.4s' }}>
-            {features.map((feature, idx) => (
-              <div key={idx} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm">
-                <CheckCircle className="h-4 w-4 text-secondary" />
-                <span>{feature}</span>
-              </div>
-            ))}
-          </div>
-
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 slide-up" style={{ animationDelay: '0.5s' }}>
             <Link href="/export-hub">
-              <Button size="lg" className="text-lg px-8 py-6 bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl hover:shadow-2xl transition-all group">
+              <Button size="lg" className="text-lg px-8 py-6 bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl transition-all group">
                 Explore Export Hub
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/investment">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm shadow-xl">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
                 View Investments
               </Button>
             </Link>
           </div>
-
-          {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator">
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-xs text-white/60 font-medium tracking-widest uppercase">Scroll to explore</span>
-              <div className="w-5 h-8 border-2 border-white/40 rounded-full flex justify-center pt-1.5 hover:border-white/60 transition-colors">
-                <div className="w-1 h-2 bg-white/60 rounded-full scroll-indicator-dot" />
-              </div>
-            </div>
-          </div>
         </div>
+
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 bg-primary">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <div key={idx} className="text-center text-white fade-in" style={{ animationDelay: `${idx * 0.1}s` }}>
-                  <Icon className="h-8 w-8 mx-auto mb-3 text-secondary" />
-                  <div className="text-3xl md:text-4xl font-bold mb-1">{stat.value}</div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* Four Modules */}
       <section className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-14 px-4">
             <span className="badge-primary mb-4 inline-block">Platform Services</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
+             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">
               The Zimbabwe Global and Diaspora Gateway
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
