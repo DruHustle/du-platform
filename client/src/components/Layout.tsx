@@ -123,9 +123,9 @@ export default function Layout({ children }: LayoutProps) {
                 className='h-9 w-9 md:h-11 md:w-11 object-contain flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <div className='min-w-0'>
-                <h1 className='!text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
+                <span className='text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
                   ZIGD Platform
-                </h1>
+                </span>
                 <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
                   Zimbabwe Global & Diaspora
                 </p>

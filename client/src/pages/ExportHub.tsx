@@ -173,10 +173,12 @@ export default function ExportHub() {
                   />
                 </DialogContent>
               </Dialog>
-              <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
-                <Globe className="mr-2 h-5 w-5" />
-                View Market Guide
-              </Button>
+              <a href="#market-requirements" className="inline-block">
+                <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
+                  <Globe className="mr-2 h-5 w-5" />
+                  View Market Guide
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -288,7 +290,7 @@ export default function ExportHub() {
       </section>
 
       {/* Market Requirements */}
-      <section className="section-padding bg-muted/30">
+      <section id="market-requirements" className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-12">
             <Badge className="badge-primary mb-4">Requirements</Badge>
@@ -339,11 +341,11 @@ export default function ExportHub() {
           </div>
 
           <Tabs defaultValue="organic" className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-muted/50">
-              <TabsTrigger value="organic" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Organic</TabsTrigger>
-              <TabsTrigger value="safety" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Safety & Quality</TabsTrigger>
-              <TabsTrigger value="trade" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Fair Trade</TabsTrigger>
-              <TabsTrigger value="globalg" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">GLOBALG.A.P.</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1 bg-muted/50">
+              <TabsTrigger value="organic" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Organic</TabsTrigger>
+              <TabsTrigger value="safety" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Safety & Quality</TabsTrigger>
+              <TabsTrigger value="trade" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Fair Trade</TabsTrigger>
+              <TabsTrigger value="globalg" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">GLOBALG.A.P.</TabsTrigger>
             </TabsList>
             
             <TabsContent value="organic" className="mt-8">
