@@ -1,9 +1,25 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Globe, Store, Utensils, Heart, Zap, Truck, Users, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ZimbabweShopInfo() {
+  const [currentJerseyIndex, setCurrentJerseyIndex] = useState(0);
+  
+  const sportsJerseys = [
+    { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
+    { image: "/images/shop_sports.jpg", title: "Chevrons Cricket" },
+    { image: "/images/shop_warriors.jpg", title: "Warriors Football" }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentJerseyIndex((prev) => (prev + 1) % sportsJerseys.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -147,57 +163,84 @@ export default function ZimbabweShopInfo() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            {
-              title: "Sables Rugby",
-              image: "/images/shop_sables.jpg",
-              color: "zim-green",
-              desc: "Official Zimbabwe National Rugby Team merchandise.",
-              items: ["Home Replica", "Training Kit", "Supporter Tee"]
-            },
-            {
-              title: "Chevrons Cricket",
-              image: "/images/shop_sports.jpg",
-              color: "zim-gold",
-              desc: "Official gear for the national cricket team.",
-              items: ["ODI Jersey", "T20 Kit", "Collectibles"]
-            },
-            {
-              title: "Arts & Crafts",
-              image: "/images/shop_crafts.jpg",
-              color: "zim-red",
-              desc: "Supporting rural artisans and women cooperatives.",
-              items: ["Stone Sculptures", "Binga Baskets", "Beaded Jewellery"]
-            },
-            {
-              title: "Food & Nostalgia",
-              image: "/images/shop_food.webp",
-              color: "zim-gold",
-              desc: "The flavors of home, fully EU-compliant.",
-              items: ["Mazoe & Cerevita", "Maputi Snacks", "Export-grade Dovi"]
-            }
-          ].map((cat, i) => (
-            <div key={i} className="group hover-lift">
-              <div className="relative h-64 rounded-t-2xl overflow-hidden bg-muted">
-                <img 
-                  src={cat.image} 
-                  alt={cat.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Rotating National Sports Jerseys */}
+          <div className="group hover-lift">
+            <div className="relative h-64 rounded-t-2xl overflow-hidden bg-muted">
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentJerseyIndex}
+                  src={sportsJerseys[currentJerseyIndex].image} 
+                  alt={sportsJerseys[currentJerseyIndex].title} 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
                 />
-                <div className={`absolute inset-0 bg-${cat.color}/10 group-hover:bg-transparent transition-colors duration-500`} />
+              </AnimatePresence>
+              <div className="absolute bottom-2 right-2 flex gap-1">
+                {sportsJerseys.map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={`h-1.5 w-1.5 rounded-full transition-colors ${i === currentJerseyIndex ? 'bg-zim-gold' : 'bg-white/50'}`} 
+                  />
+                ))}
               </div>
-              <div className="p-6 bg-card border border-t-0 rounded-b-2xl shadow-sm">
-                <h4 className="text-xl font-bold mb-2">{cat.title}</h4>
-                <p className="text-sm text-muted-foreground mb-4">{cat.desc}</p>
-                <div className="flex flex-wrap gap-2">
-                  {cat.items.map((item, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-[10px] font-semibold">{item}</Badge>
-                  ))}
-                </div>
+              <div className="absolute inset-0 bg-zim-green/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            <div className="p-6 bg-card border border-t-0 rounded-b-2xl shadow-sm h-full">
+              <h4 className="text-xl font-bold mb-2">National Sports</h4>
+              <p className="text-sm text-muted-foreground mb-4">Official gear for the Sables, Chevrons, and Warriors.</p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="text-[10px] font-semibold">Rugby Jerseys</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Cricket Kits</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Soccer Gear</Badge>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Arts & Crafts */}
+          <div className="group hover-lift">
+            <div className="relative h-64 rounded-t-2xl overflow-hidden bg-muted">
+              <img 
+                src="/images/shop_crafts.jpg" 
+                alt="Arts & Crafts" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-zim-red/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            <div className="p-6 bg-card border border-t-0 rounded-b-2xl shadow-sm h-full">
+              <h4 className="text-xl font-bold mb-2">Arts & Crafts</h4>
+              <p className="text-sm text-muted-foreground mb-4">Supporting rural artisans and women cooperatives.</p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="text-[10px] font-semibold">Stone Sculptures</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Binga Baskets</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Beaded Jewellery</Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* Food & Nostalgia */}
+          <div className="group hover-lift">
+            <div className="relative h-64 rounded-t-2xl overflow-hidden bg-muted">
+              <img 
+                src="/images/shop_food.webp" 
+                alt="Food & Nostalgia" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-zim-gold/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            <div className="p-6 bg-card border border-t-0 rounded-b-2xl shadow-sm h-full">
+              <h4 className="text-xl font-bold mb-2">Food & Nostalgia</h4>
+              <p className="text-sm text-muted-foreground mb-4">The flavors of home, fully EU-compliant.</p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="text-[10px] font-semibold">Mazoe & Cerevita</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Maputi Snacks</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Export-grade Dovi</Badge>
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
 
