@@ -147,32 +147,39 @@ export default function ZimbabweShopInfo() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
-              title: "National Sports",
-              image: "/images/shop_sports.jpg",
+              title: "Sables Rugby",
+              image: "/images/shop_sables.jpg",
               color: "zim-green",
-              desc: "Official gear for Sables, Chevrons, and Warriors.",
-              items: ["Official Jerseys", "Training Wear", "Fan Accessories"]
+              desc: "Official Zimbabwe National Rugby Team merchandise.",
+              items: ["Home Replica", "Training Kit", "Supporter Tee"]
+            },
+            {
+              title: "Chevrons Cricket",
+              image: "/images/shop_sports.jpg",
+              color: "zim-gold",
+              desc: "Official gear for the national cricket team.",
+              items: ["ODI Jersey", "T20 Kit", "Collectibles"]
             },
             {
               title: "Arts & Crafts",
               image: "/images/shop_crafts.jpg",
               color: "zim-red",
               desc: "Supporting rural artisans and women cooperatives.",
-              items: ["Stone Sculptures", "Handwoven Baskets", "Beaded Jewellery"]
+              items: ["Stone Sculptures", "Binga Baskets", "Beaded Jewellery"]
             },
             {
               title: "Food & Nostalgia",
               image: "/images/shop_food.webp",
               color: "zim-gold",
               desc: "The flavors of home, fully EU-compliant.",
-              items: ["Mazoe & Cerevita", "Maputi Variants", "Export-grade Dovi"]
+              items: ["Mazoe & Cerevita", "Maputi Snacks", "Export-grade Dovi"]
             }
           ].map((cat, i) => (
             <div key={i} className="group hover-lift">
-              <div className="relative h-56 rounded-t-2xl overflow-hidden bg-muted">
+              <div className="relative h-64 rounded-t-2xl overflow-hidden bg-muted">
                 <img 
                   src={cat.image} 
                   alt={cat.title} 
