@@ -38,7 +38,7 @@ export default function ZimbabweShopInfo() {
           alt="Zimbabwe Shop" 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-zim-black/90 via-zim-black/40 to-transparent flex flex-col justify-end p-8 md:p-16">
+        <div className="absolute inset-0 bg-gradient-to-t from-zim-black/80 via-transparent to-zim-black/20 flex flex-col justify-end p-8 md:p-16">
           <div className="max-w-3xl space-y-4">
             <Badge className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-sm font-bold px-4 py-1 mb-2 uppercase tracking-wider">
               New Initiative
