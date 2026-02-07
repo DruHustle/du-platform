@@ -151,30 +151,34 @@ export default function ZimbabweShopInfo() {
           {[
             {
               title: "National Sports",
-              icon: ShoppingBag,
+              image: "/images/shop_sports.jpg",
               color: "zim-green",
               desc: "Official gear for Sables, Chevrons, and Warriors.",
               items: ["Official Jerseys", "Training Wear", "Fan Accessories"]
             },
             {
               title: "Arts & Crafts",
-              icon: Heart,
+              image: "/images/shop_crafts.jpg",
               color: "zim-red",
               desc: "Supporting rural artisans and women cooperatives.",
               items: ["Stone Sculptures", "Handwoven Baskets", "Beaded Jewellery"]
             },
             {
               title: "Food & Nostalgia",
-              icon: Utensils,
+              image: "/images/shop_food.webp",
               color: "zim-gold",
               desc: "The flavors of home, fully EU-compliant.",
               items: ["Mazoe & Cerevita", "Maputi Variants", "Export-grade Dovi"]
             }
           ].map((cat, i) => (
             <div key={i} className="group hover-lift">
-              <div className="relative h-48 rounded-t-2xl overflow-hidden bg-muted flex items-center justify-center">
-                <div className={`absolute inset-0 bg-${cat.color}/10 group-hover:bg-${cat.color}/20 transition-colors`} />
-                <cat.icon className={`h-16 w-16 text-${cat.color} group-hover:scale-110 transition-transform duration-500`} />
+              <div className="relative h-56 rounded-t-2xl overflow-hidden bg-muted">
+                <img 
+                  src={cat.image} 
+                  alt={cat.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className={`absolute inset-0 bg-${cat.color}/10 group-hover:bg-transparent transition-colors duration-500`} />
               </div>
               <div className="p-6 bg-card border border-t-0 rounded-b-2xl shadow-sm">
                 <h4 className="text-xl font-bold mb-2">{cat.title}</h4>
