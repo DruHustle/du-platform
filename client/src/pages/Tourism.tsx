@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award } from "lucide-react";
+import ZimbabweShopInfo from "@/components/ZimbabweShopInfo";
 
 export default function Tourism() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -90,6 +91,13 @@ export default function Tourism() {
           <p className="text-xl md:text-2xl mb-6 max-w-3xl mx-auto opacity-95">
             Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences
           </p>
+        </div>
+      </section>
+
+      {/* Zimbabwe Shop Section */}
+      <section className="py-16 bg-background">
+        <div className="container">
+          <ZimbabweShopInfo />
         </div>
       </section>
 
