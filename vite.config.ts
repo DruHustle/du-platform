@@ -6,7 +6,7 @@ import { defineConfig, loadEnv } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 
 export default defineConfig(({ mode }) => {
-  // Load env vars from the root directory
+  // Load env vars. The third argument "" ensures all variables are loaded, not just those starting with VITE_
   const env = loadEnv(mode, path.resolve(import.meta.dirname), "");
 
   return {
@@ -17,7 +17,9 @@ export default defineConfig(({ mode }) => {
       createHtmlPlugin({
         inject: {
           data: {
+            // Mapping variables for EJS replacement in index.html
             VITE_SITE_URL: env.VITE_SITE_URL,
+            VITE_SITE_NAME: env.VITE_SITE_NAME || "ZIGD Platform",
             VITE_ANALYTICS_ENDPOINT: env.VITE_ANALYTICS_ENDPOINT,
             VITE_ANALYTICS_WEBSITE_ID: env.VITE_ANALYTICS_WEBSITE_ID,
           },
