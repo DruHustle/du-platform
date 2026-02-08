@@ -88,6 +88,8 @@ export default function ContactForm({ title, description, module }: ContactFormP
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const currentOptions = subjectOptions[module] || ["General Inquiry"];
+
   return (
     <Card className="border-t-4 border-t-primary">
       <CardHeader>
@@ -164,7 +166,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
                   <SelectValue placeholder="Select a subject" />
                 </SelectTrigger>
                 <SelectContent>
-                  {subjectOptions[module].map((option) => (
+                  {currentOptions.map((option) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
