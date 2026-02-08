@@ -157,15 +157,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section-padding-sm opacity-90 bg-primary text-primary-foreground">
+      {/* External Links */}
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">Ready to Connect?</h2>
-              <p className="opacity-90">Join thousands of diaspora members building bridges for economic transformation.</p>
-            </div>
-            <div className="flex gap-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Ready to Connect?
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              Join thousands of diaspora members building bridges for economic transformation.
+            </p>
+            <div className="flex justify-center gap-4">
               <Link href="/data-visualization">
                 <Button size="lg" variant="secondary" className="shadow-lg">
                   View Economic Data
@@ -180,6 +182,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
 
       {/* Trust Indicators */}
       <section className="py-12 bg-background border-t">

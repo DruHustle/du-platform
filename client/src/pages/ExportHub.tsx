@@ -577,18 +577,16 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Navigate to Success Stories */}
-      <section className="section-padding-sm bg-primary text-primary-foreground">
+       {/* Navigate to Success Stories */}
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                Explore Success Stories
-              </h2>
-              <p className="text-lg opacity-95">
-                View successful projects funded through our platform and their impact in Zimbabwe
-              </p>
-            </div>
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+             Explore Success Stories
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              View successful projects funded through our platform and their impact in Zimbabwe
+            </p>
             <Link href="/success-stories">
               <Button size="lg" variant="secondary" className="shadow-lg group">
                 Explore Success Stories
@@ -598,6 +596,7 @@ export default function ExportHub() {
           </div>
         </div>
       </section>
+
     </Layout>
   );
 }

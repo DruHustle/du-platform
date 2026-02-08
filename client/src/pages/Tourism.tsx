@@ -178,68 +178,65 @@ export default function Tourism() {
       </section>
 
 
-      {/* Planning Your Visit */}
-      <section className="section-padding bg-zim-black text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+{/* Planning Your Visit */}
+      <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
+       
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
+        
         <div className="container relative z-10">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-zim-gold text-zim-black border-none uppercase tracking-widest px-4">Travel Guide</Badge>
+          <Badge variant="outline" className="border-yellow-400 text-yellow-400 uppercase tracking-widest px-4">Travel Guide</Badge>
+
             <h2 className="text-4xl md:text-5xl font-bold">Essential Planning Information</h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">
+            <p className="text-lg opacity-90 max-w-2xl mx-auto">
              Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.
             </p>
 
             <div className="pt-4">
-              <Button className="rounded-full px-8 h-12 bg-zim-green hover:bg-zim-green/90">
+              <Button size="lg" variant="secondary" className="rounded-full px-8 h-12">
                 Download Travel Kit
               </Button>
             </div>
-
           </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        {planningInfo.map((info, index) => {
-          const Icon = info.icon;
-          return (
-            <motion.div
-              key={index}
-              whileHover={{ y: -10 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-[2rem] flex flex-col justify-between"
-            >
-              <div className="space-y-6">
-                <div className="flex justify-between items-start">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-
-                      {/* Keeping your dynamic icon logic */}
-                      <Icon className="h-6 w-6 text-zim-gold" />
-                      <h3 className="text-2xl font-bold text-zim-gold">
-                        {info.title}
-                      </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            {planningInfo.map((info, index) => {
+              const Icon = info.icon;
+              return (
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -10 }}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 p-8 rounded-[2rem] flex flex-col justify-between"
+                >
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          {/* Icons now use the secondary color (likely the gold/yellow) to pop against green */}
+                          <Icon className="h-6 w-6 text-secondary" />
+                          <h3 className="text-2xl font-bold text-white">
+                            {info.title}
+                          </h3>
+                        </div>
+                        <p className="opacity-80 text-sm leading-relaxed">
+                          {info.description}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-white/60 text-sm leading-relaxed">
-                      {info.description}
-                    </p>
+
+                    <ul className="space-y-4">
+                      {info.details.map((detail, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-white text-sm">
+                          <CheckCircle2 className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
+                          <span>{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
-                </div>
-
-                <ul className="space-y-4">
-                  {/* Mapping 'details' from original data to the new 'features' style */}
-                  {info.details.map((detail, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-white/80 text-sm">
-                      <CheckCircle2 className="h-5 w-5 text-zim-gold shrink-0 mt-0.5" />
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-            </motion.div>
-          );
-        })}
-      </div>
-
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 

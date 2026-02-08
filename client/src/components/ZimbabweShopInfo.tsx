@@ -43,7 +43,8 @@ export default function ZimbabweShopInfo() {
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
-      className="max-w-7xl mx-auto px-4 space-y-24 py-12"
+      // Reduced vertical spacing between major sections from 24 to 16
+      className="max-w-7xl mx-auto px-4 space-y-16 py-12"
     >
       {/* Hero Section */}
       <motion.div variants={itemVariants} className="relative rounded-3xl overflow-hidden min-h-[500px] shadow-2xl group">
@@ -158,13 +159,16 @@ export default function ZimbabweShopInfo() {
         </div>
       </motion.div>
 
-      {/* Vision Statement */}
-      <motion.div variants={itemVariants} className="relative py-16 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl">
+      {/* Vision Statement - Optimized spacing here */}
+      <motion.div 
+        variants={itemVariants} 
+        className="relative py-12 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl"
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
         
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <Heart className="h-12 w-12 text-zim-gold mx-auto mb-2" />
+          <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
           <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
             "To build the leading global commercial gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
           </h3>
@@ -173,46 +177,6 @@ export default function ZimbabweShopInfo() {
             <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">Our Vision</p>
             <div className="h-px w-12 bg-zim-gold/50" />
           </div>
-        </div>
-      </motion.div>
-
-      {/* Ecosystem Impact */}
-      <motion.div variants={itemVariants} className="space-y-10">
-        <h3 className="text-3xl font-bold text-center lg:text-left">The Ecosystem Impact</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {[
-            { 
-              title: "Tourism Funnel Effect", 
-              icon: Globe, 
-              desc: "Commerce drives awareness: Purchase → Discover → Book → Visit.",
-              color: "text-zim-green",
-              bg: "bg-zim-green/10"
-            },
-            { 
-              title: "Identity Economy", 
-              icon: Users, 
-              desc: "Connecting the diaspora through belonging, memory, and pride.",
-              color: "text-zim-gold",
-              bg: "bg-zim-gold/10"
-            },
-            { 
-              title: "Market Validation", 
-              icon: Zap, 
-              desc: "Low-risk EU market testing for Zimbabwean SMEs and artisans.",
-              color: "text-zim-red",
-              bg: "bg-zim-red/10"
-            }
-          ].map((feature, i) => (
-            <div key={i} className="p-8 bg-card border rounded-2xl flex flex-col gap-6 hover:border-primary/30 transition-all hover:shadow-md">
-              <div className={`h-14 w-14 rounded-2xl ${feature.bg} flex items-center justify-center shrink-0`}>
-                <feature.icon className={`h-7 w-7 ${feature.color}`} />
-              </div>
-              <div>
-                <h4 className="font-bold text-xl mb-3">{feature.title}</h4>
-                <p className="text-sm text-muted-foreground leading-relaxed italic">"{feature.desc}"</p>
-              </div>
-            </div>
-          ))}
         </div>
       </motion.div>
     </motion.div>
