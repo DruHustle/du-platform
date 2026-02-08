@@ -35,6 +35,56 @@ export default function Tourism() {
       subtitle: "EU Diaspora & Tourism Commerce Gateway",
       description: "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
       buttons: []
+    },
+    {
+      image: "/images/hwange_elephants.jpg",
+      badge: "Wildlife Paradise",
+      badgeIcon: true,
+      title: "Hwange National Park",
+      titleHighlight: "",
+      subtitle: "Home to over 40,000 elephants and one of Africa's largest elephant populations",
+      description: "Experience incredible game viewing with lions, leopards, wild dogs, and over 400 bird species across 14,650 square kilometers of pristine wilderness.",
+      buttons: []
+    },
+    {
+      image: "/images/matobo_hills.jpg",
+      badge: "UNESCO Heritage",
+      badgeIcon: true,
+      title: "Matobo Hills",
+      titleHighlight: "",
+      subtitle: "Ancient granite formations and sacred rock art dating back 13,000 years",
+      description: "Explore balancing rocks, ancient San rock paintings, and the final resting place of Cecil Rhodes. Home to the highest concentration of black eagles in the world.",
+      buttons: []
+    },
+    {
+      image: "/images/eastern_highlands.jpg",
+      badge: "Mountain Paradise",
+      badgeIcon: true,
+      title: "Eastern Highlands",
+      titleHighlight: "",
+      subtitle: "Zimbabwe's scenic mountain range with waterfalls, forests, and cool climate",
+      description: "Discover Nyanga, Chimanimani, and Vumba mountains offering hiking, trout fishing, and breathtaking views. Perfect for nature lovers and adventure seekers.",
+      buttons: []
+    },
+    {
+      image: "/images/mana_pools.jpg",
+      badge: "UNESCO Heritage",
+      badgeIcon: true,
+      title: "Mana Pools National Park",
+      titleHighlight: "",
+      subtitle: "Pristine wilderness along the Zambezi River with walking safaris",
+      description: "One of Africa's premier safari destinations offering canoe safaris, walking safaris, and exceptional wildlife encounters including elephants, lions, and wild dogs.",
+      buttons: []
+    },
+    {
+      image: "/images/kariba_sunset.jpg",
+      badge: "Aquatic Adventure",
+      badgeIcon: true,
+      title: "Lake Kariba Sunset",
+      titleHighlight: "",
+      subtitle: "World-famous sunsets over Africa's largest man-made lake",
+      description: "Experience legendary tiger fishing, houseboat holidays, and spectacular wildlife along the shoreline. Witness elephants swimming between islands at sunset.",
+      buttons: []
     }
   ];
 
