@@ -9,8 +9,13 @@ export default function ZimbabweShopInfo() {
   
   const sportsJerseys = [
     { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
+    { image: "/images/sports_rugby_jersey1.jpg", title: "Sables Rugby Home Kit" },
+    { image: "/images/sports_rugby_jersey2.jpg", title: "Sables Rugby Fan Jersey" },
     { image: "/images/shop_sports.jpg", title: "Chevrons Cricket" },
-    { image: "/images/shop_warriors.jpg", title: "Warriors Football" }
+    { image: "/images/sports_cricket_kit1.jpg", title: "Chevrons T20 Kit" },
+    { image: "/images/sports_cricket_kit2.jpg", title: "Chevrons World Cup Jersey" },
+    { image: "/images/shop_warriors.jpg", title: "Warriors Football" },
+    { image: "/images/sports_football_jersey1.jpg", title: "Warriors National Team Kit" }
   ];
 
   useEffect(() => {
