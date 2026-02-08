@@ -11,12 +11,15 @@ export default function Home() {
   const heroBackgrounds = [
     "/images/victoria_falls.jpg",
     "/images/hwange_elephants.jpg",
-    "/balancing_rocks.jpg",
+    "/images/balancing_rocks.jpg",
+    "/images/great_zimbabwe.jpeg",
     "/images/eastern_highlands.jpg",
+    "/images/zimbabwe_lion.png",
     "/images/mana_pools.jpg",
     "/images/kariba_sunset.jpg",
     "/images/partnership_handshake.png",
     "/images/african_trade.jpg",
+    "/images/harare_airport.png",
     "/images/eu_symbol.png"
 
   ];
@@ -93,7 +96,7 @@ export default function Home() {
                 backgroundImage: `url('${heroBackgrounds[currentBgIndex]}')`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/40" />
           </motion.div>
         </AnimatePresence>
         
@@ -116,7 +119,7 @@ export default function Home() {
             </div>
           </div>
           
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-8 tracking-tighter leading-tight px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
+            <h1 className="!text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] font-bold mb-4 tracking-tighter leading-none px-4 hero-text-shadow slide-up"style={{ animationDelay: '0.1s' }}>
               Diaspora Unlocked
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl mb-3 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
@@ -137,7 +140,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Four Modules */}

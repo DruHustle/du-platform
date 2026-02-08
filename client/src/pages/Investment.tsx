@@ -375,30 +375,30 @@ export default function Investment() {
       {/* Active Projects with Filters */}
       <section className="py-16 bg-muted/30">
         <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
+          <div className="text-center mb-8 px-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Carefully vetted projects with government support and transparent performance tracking
             </p>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center px-4">
             <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-full md:w-auto">
-              <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-1">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="agriculture">Agriculture</TabsTrigger>
-                <TabsTrigger value="tech">Tech</TabsTrigger>
-                <TabsTrigger value="infrastructure">Infrastructure</TabsTrigger>
-                <TabsTrigger value="manufacturing">Manufacturing</TabsTrigger>
-                <TabsTrigger value="tourism">Tourism</TabsTrigger>
+              <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1 h-auto">
+                <TabsTrigger value="all" className="text-xs sm:text-sm px-2 py-2">All</TabsTrigger>
+                <TabsTrigger value="agriculture" className="text-xs sm:text-sm px-2 py-2">Agriculture</TabsTrigger>
+                <TabsTrigger value="tech" className="text-xs sm:text-sm px-2 py-2">Tech</TabsTrigger>
+                <TabsTrigger value="infrastructure" className="text-xs sm:text-sm px-2 py-2">Infrastructure</TabsTrigger>
+                <TabsTrigger value="manufacturing" className="text-xs sm:text-sm px-2 py-2">Manufacturing</TabsTrigger>
+                <TabsTrigger value="tourism" className="text-xs sm:text-sm px-2 py-2">Tourism</TabsTrigger>
               </TabsList>
             </Tabs>
             
             <select 
               value={riskFilter} 
               onChange={(e) => setRiskFilter(e.target.value)}
-              className="px-4 py-2 border rounded-md bg-white"
+              className="px-4 py-2 border rounded-md bg-white w-full md:w-auto"
             >
               <option value="all">All Risk Levels</option>
               <option value="conservative">Conservative</option>
@@ -410,7 +410,7 @@ export default function Investment() {
           <div className="space-y-8">
             {filteredProjects.map((project, index) => (
               <Card key={index} className="overflow-hidden border-t-4 border-t-primary hover:shadow-xl transition-shadow">
-                <div className="grid md:grid-cols-3 gap-6 p-6">
+                <div className="grid md:grid-cols-3 gap-6 p-4 md:p-6">
                   {/* Project Details */}
                   <div className="md:col-span-2 space-y-4">
                     <div>
@@ -428,7 +428,7 @@ export default function Investment() {
                           </Badge>
                         )}
                       </div>
-                      <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+                      <h3 className="text-xl md:text-2xl font-bold mb-2">{project.title}</h3>
                       <p className="text-muted-foreground">{project.description}</p>
                     </div>
 
