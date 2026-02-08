@@ -14,7 +14,7 @@ export default function SuccessStories() {
 
   const heroSlides = [
     {
-      image: "/images/success_entrepreneurs.jpeg",
+      image: "/images/partnership_handshake.png",
       badge: "Impact Stories",
       title: "Diaspora-Driven Success",
       subtitle: "Real stories of Zimbabwean businesses transformed through diaspora connections and support",
