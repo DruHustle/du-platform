@@ -109,6 +109,12 @@ export default function ExportHub() {
       icon: Shield,
       examples: ["German Customs (Zoll)", "Certification Bodies", "Quality Assurance Agencies", "Trade Compliance Consultants"],
       description: "Support for regulatory compliance and certifications"
+    },
+    {
+      type: "Financial Services",
+      icon: Building2,
+      examples: ["Deutsche Bank", "Commerzbank", "KfW Development Bank", "Export Credit Agencies", "Trade Finance Providers"],
+      description: "Banking and financial support for international trade transactions"
     }
   ];
 
@@ -279,7 +285,7 @@ export default function ExportHub() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {regulatoryUpdates.map((update, index) => (
-              <Card key={index} className="card-professional border-l-4 border-l-green-600">
+              <Card key={index} className="card-professional ">
                 <CardHeader>
                   <div className="flex items-center gap-2 mb-2">
                     <div className="p-2 bg-green-100 rounded-full">
@@ -366,7 +372,7 @@ export default function ExportHub() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {germanRequirements.map((item, index) => (
-              <Card key={index} className="card-professional border-l-4 border-l-secondary">
+              <Card key={index} className="card-professional ">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span className="flex items-center gap-3">

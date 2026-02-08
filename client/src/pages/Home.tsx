@@ -34,7 +34,7 @@ export default function Home() {
       description: "Access German market requirements, regulations, certifications, and connect with potential partners for exporting Zimbabwean products.",
       icon: BookOpen,
       href: "/export-hub",
-      color: "border-t-4 border-t-green-600 bg-green-600/5 hover:bg-green-600/10",
+      color: " bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/eu_symbol.png",
       stats: "50+ Export Guides"
     },
@@ -43,7 +43,7 @@ export default function Home() {
       description: "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
       icon: Plane,
       href: "/tourism",
-         color: "border-t-4 border-t-yellow-500 bg-yellow-500/5 hover:bg-yellow-500/10",
+         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
       bgImage: "/images/hwange_elephants.jpg",
       stats: "Forbes #1 2025"
     },
@@ -52,7 +52,7 @@ export default function Home() {
       description: "Explore diaspora-friendly micro-investment and crowdfunding opportunities in verified Zimbabwean projects.",
       icon: TrendingUp,
       href: "/investment",
-      color: "border-t-4 border-t-red-600 bg-red-600/5 hover:bg-red-600/10",
+      color: " bg-red-600/5 hover:bg-red-600/10",
       bgImage: "/images/infrastructure_investment.webp",
       stats: "$50M+ Opportunities"
     },
@@ -61,7 +61,7 @@ export default function Home() {
       description: "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
       icon: Package,
       href: "/trade",
-      color: "border-t-4 border-t-slate-800 bg-slate-800/5 hover:bg-slate-800/10",
+      color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/african_trade.jpg",
       stats: "8 Export Sectors"
     }
@@ -144,9 +144,7 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
         <div className="container">
           <div className="text-center mb-16 px-4">
-            <div className="inline-block mb-4">
-              <span className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">Platform Services</span>
-            </div>
+            <span className="badge-primary mb-4 inline-block">Platform Services</span>
              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
               The Zimbabwe Global and Diaspora Gateway
             </h2>
@@ -180,7 +178,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="absolute top-6 right-6">
-                        <span className="bg-zim-gold text-zim-black text-sm font-bold px-4 py-2 rounded-full shadow-xl">
+                        <span className="bg-zim-gold backdrop-blur-md border border-white/20 text-zim-black text-sm font-bold px-4 py-2 rounded-full shadow-xl">
                           {module.stats}
                         </span>
                       </div>
