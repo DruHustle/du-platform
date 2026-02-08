@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       strictPort: false,
       host: true,
+
       fs: {
         strict: true,
         deny: ["**/.*"],
