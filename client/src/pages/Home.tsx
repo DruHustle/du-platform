@@ -3,8 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+
+  // Hero background images from other page carousels
+  const heroBackgrounds = [
+    "/images/victoria_falls.jpg",
+    "/images/partnership_handshake.png",
+    "/images/diaspora_investment.jpg",
+    "/images/african_trade.jpg",
+    "/images/hwange_elephants.jpg",
+    "/images/eu_symbol.png"
+  ];
+
+  useEffect(() => {
+    const bgTimer = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
+    }, 5000);
+    return () => clearInterval(bgTimer);
+  }, []);
+
   const modules = [
     {
       title: "Export Knowledge Hub",
@@ -12,7 +33,7 @@ export default function Home() {
       icon: BookOpen,
       href: "/export-hub",
       color: "border-t-4 border-t-green-600 bg-green-600/5 hover:bg-green-600/10",
-      bgImage: "/images/export_hub_bg.jpg",
+      bgImage: "/images/eu_symbol.png",
       stats: "50+ Export Guides"
     },
     {
@@ -21,7 +42,7 @@ export default function Home() {
       icon: Plane,
       href: "/tourism",
          color: "border-t-4 border-t-yellow-500 bg-yellow-500/5 hover:bg-yellow-500/10",
-      bgImage: "/images/victoria_falls.jpg",
+      bgImage: "/images/hwange_elephants.jpg",
       stats: "Forbes #1 2025"
     },
     {
@@ -30,7 +51,7 @@ export default function Home() {
       icon: TrendingUp,
       href: "/investment",
       color: "border-t-4 border-t-red-600 bg-red-600/5 hover:bg-red-600/10",
-      bgImage: "/images/investment_bg.jpg",
+      bgImage: "/images/infrastructure_investment.webp",
       stats: "$50M+ Opportunities"
     },
     {
@@ -39,7 +60,7 @@ export default function Home() {
       icon: Package,
       href: "/trade",
       color: "border-t-4 border-t-slate-800 bg-slate-800/5 hover:bg-slate-800/10",
-      bgImage: "/images/great_zimbabwe.jpeg",
+      bgImage: "/images/african_trade.jpg",
       stats: "8 Export Sectors"
     }
   ];
@@ -55,16 +76,30 @@ export default function Home() {
   return (
     
     <Layout>
-    {/* Hero Section */}
+    {/* Hero Section with Rotating Background */}
       <section className="relative min-h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/images/victoria_falls.jpg')`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70" />
-        </div>
+        {/* Rotating Background Images */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentBgIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0"
+          >
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.1 }}
+              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('${heroBackgrounds[currentBgIndex]}')`,
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70" />
+          </motion.div>
+        </AnimatePresence>
         
         {/* Animated background elements retained for depth */}
         <div className="absolute inset-0 overflow-hidden">
@@ -128,54 +163,64 @@ export default function Home() {
       </section>
 
       {/* Four Modules */}
-      <section className="section-padding bg-muted/30">
+      <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
         <div className="container">
-          <div className="text-center mb-14 px-4">
-            <span className="badge-primary mb-4 inline-block">Platform Services</span>
-             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">
+          <div className="text-center mb-16 px-4">
+            <div className="inline-block mb-4">
+              <span className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">Platform Services</span>
+            </div>
+             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
               The Zimbabwe Global and Diaspora Gateway
             </h2>
-              <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                  A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {modules.map((module, index) => {
               const Icon = module.icon;
               return (
-                <Card key={index} className={`overflow-hidden card-professional ${module.color} group`}>
-                  <div className="relative h-52 overflow-hidden">
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                      style={{ backgroundImage: `url('${module.bgImage}')` }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                    </div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl mb-2 inline-block">
-                        <Icon className="h-8 w-8" />
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <Card className={`overflow-hidden border-2 ${module.color} group hover:shadow-2xl transition-all duration-500 h-full`}>
+                    <div className="relative h-64 overflow-hidden">
+                      <div 
+                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style={{ backgroundImage: `url('${module.bgImage}')` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                      </div>
+                      <div className="absolute bottom-6 left-6 text-white">
+                        <div className="bg-zim-gold/20 backdrop-blur-md p-4 rounded-2xl mb-3 inline-block border-2 border-zim-gold/40 shadow-xl">
+                          <Icon className="h-10 w-10 text-zim-gold" />
+                        </div>
+                      </div>
+                      <div className="absolute top-6 right-6">
+                        <span className="bg-zim-gold text-zim-black text-sm font-bold px-4 py-2 rounded-full shadow-xl">
+                          {module.stats}
+                        </span>
                       </div>
                     </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-secondary text-secondary-foreground text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
-                        {module.stats}
-                      </span>
-                    </div>
-                  </div>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-2xl group-hover:text-primary transition-colors">{module.title}</CardTitle>
-                    <CardDescription className="text-base leading-relaxed">{module.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <Link href={module.href}>
-                    <Button className="w-full group/btn opacity-90 hover:opacity-100 transition-opacity" size="lg">
-                      Learn More
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
+                    <CardHeader className="pb-3 pt-6">
+                      <CardTitle className="text-2xl md:text-3xl font-bold group-hover:text-zim-gold transition-colors mb-3">{module.title}</CardTitle>
+                      <CardDescription className="text-base md:text-lg leading-relaxed">{module.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-2 pb-6">
+                      <Link href={module.href}>
+                        <Button className="w-full group/btn bg-zim-gold text-zim-black hover:bg-zim-gold/90 font-bold text-lg py-6" size="lg">
+                          Explore Now
+                          <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
