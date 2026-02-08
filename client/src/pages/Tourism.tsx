@@ -199,7 +199,7 @@ export default function Tourism() {
 
 
       {/* Zimbabwe Shop Section */}
-      <section className="section-padding bg-background relative overflow-hidden">
+     <section className="pt-16 md:pt-24 pb-0 bg-background relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-zim-green/5 rounded-full blur-3xl -mr-20 -mt-20" />
         <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-zim-gold/5 rounded-full blur-3xl -ml-20 -mb-20" />
         <div className="container relative z-10">
@@ -208,7 +208,7 @@ export default function Tourism() {
       </section>
 
       {/* Key Attractions */}
-      <section className="section-padding-sm bg-muted/30">
+      <section className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30">.
         <div className="container">
           <div className="text-center mb-16 space-y-4">
             <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Destinations</Badge>
