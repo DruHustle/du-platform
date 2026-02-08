@@ -227,7 +227,7 @@ export default function ZimbabweShopInfo() {
         className="relative py-12 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+        <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
         
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />

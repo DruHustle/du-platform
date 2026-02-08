@@ -302,7 +302,7 @@ export default function Tourism() {
      {/* Planning Your Visit */}
       <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
        
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
+        <div className="absolute inset-0 bg-[url('/images/cubes.png')] opacity-5" />
         
         <div className="container relative z-10">
           <div className="text-center mb-16 space-y-4">
