@@ -15,7 +15,6 @@ export default function Home() {
     "/images/eastern_highlands.jpg",
     "/images/mana_pools.jpg",
     "/images/kariba_sunset.jpg",
-    "/images/zimbabwe_shop_hero.jpg",
     "/images/partnership_handshake.png",
     "/images/african_trade.jpg",
     "/images/eu_symbol.png"
@@ -176,8 +175,8 @@ export default function Home() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                       </div>
                       <div className="absolute bottom-6 left-6 text-white">
-                        <div className="bg-zim-gold/20 backdrop-blur-md p-4 rounded-2xl mb-3 inline-block border-2 border-zim-gold/40 shadow-xl">
-                          <Icon className="h-10 w-10 text-zim-gold" />
+                        <div className="bg-white/10 backdrop-blur-lg p-4 rounded-2xl mb-3 inline-block border border-white/20 shadow-2xl">
+                          <Icon className="h-10 w-10 text-white" />
                         </div>
                       </div>
                       <div className="absolute top-6 right-6">
