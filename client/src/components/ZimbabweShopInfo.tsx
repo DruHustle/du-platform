@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Globe, Store, Utensils, Heart, Zap, Users } from "lucide-react";
+import { ShoppingBag, Globe, Store, Utensils, Heart, Zap, Truck, Users, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ZimbabweShopInfo() {
@@ -72,53 +72,86 @@ export default function ZimbabweShopInfo() {
         </div>
       </motion.div>
 
-      {/* The Hybrid Model Section */}
-      <motion.div variants={itemVariants} className="space-y-8">
-        <div className="max-w-3xl space-y-4">
-          <h3 className="text-3xl md:text-4xl font-bold gradient-text">The Hybrid Model</h3>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Zimbabwe Shop is a hybrid Diaspora Commerce + Tourism Promotion + Export Enablement Platform designed to connect Zimbabwean culture, products, and experiences with the European market.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="card-professional overflow-hidden group">
-            <div className="h-2 bg-zim-green w-full" />
-            <CardHeader>
-              <div className="p-3 bg-zim-green/10 rounded-xl w-fit mb-4 group-hover:bg-zim-green group-hover:text-white transition-colors duration-300">
-                <Globe className="h-6 w-6" />
-              </div>
-              <CardTitle className="text-xl">EU Online Store</CardTitle>
-              <CardDescription>Digital-first commerce</CardDescription>
-            </CardHeader>
-            <CardContent className="text-muted-foreground">
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-zim-green" /> EU-wide shipping & logistics</li>
-                <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-zim-green" /> Multi-currency checkout</li>
-                <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-zim-green" /> Fast delivery (2–5 days)</li>
-              </ul>
-            </CardContent>
-          </Card>
+      {/* Mission & Model */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <motion.div variants={itemVariants} className="lg:col-span-7 space-y-8">
+          <div className="space-y-4">
+            <h3 className="text-3xl md:text-4xl font-bold gradient-text">The Hybrid Model</h3>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Zimbabwe Shop is a hybrid Diaspora Commerce + Tourism Promotion + Export Enablement Platform designed to connect Zimbabwean culture, products, and experiences with the European market.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="card-professional overflow-hidden group">
+              <div className="h-2 bg-zim-green w-full" />
+              <CardHeader>
+                <div className="p-3 bg-zim-green/10 rounded-xl w-fit mb-4 group-hover:bg-zim-green group-hover:text-white transition-colors duration-300">
+                  <Globe className="h-6 w-6" />
+                </div>
+                <CardTitle className="text-xl">EU Online Store</CardTitle>
+                <CardDescription>Digital-first commerce</CardDescription>
+              </CardHeader>
+              <CardContent className="text-muted-foreground">
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-zim-green" /> EU-wide shipping & logistics</li>
+                  <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-zim-green" /> Multi-currency checkout</li>
+                  <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-zim-green" /> Fast delivery (2–5 days)</li>
+                </ul>
+              </CardContent>
+            </Card>
 
-          <Card className="card-professional overflow-hidden group">
-            <div className="h-2 bg-zim-gold w-full" />
-            <CardHeader>
-              <div className="p-3 bg-zim-gold/10 rounded-xl w-fit mb-4 group-hover:bg-zim-gold group-hover:text-zim-black transition-colors duration-300">
-                <Store className="h-6 w-6" />
-              </div>
-              <CardTitle className="text-xl">Flagship Store</CardTitle>
-              <CardDescription>Physical brand experience</CardDescription>
-            </CardHeader>
-            <CardContent className="text-muted-foreground">
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-zim-gold" /> Cultural showroom & hub</li>
-                <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-zim-gold" /> Merchandise flagship</li>
-                <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-zim-gold" /> Community engagement centre</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-      </motion.div>
+            <Card className="card-professional overflow-hidden group">
+              <div className="h-2 bg-zim-gold w-full" />
+              <CardHeader>
+                <div className="p-3 bg-zim-gold/10 rounded-xl w-fit mb-4 group-hover:bg-zim-gold group-hover:text-zim-black transition-colors duration-300">
+                  <Store className="h-6 w-6" />
+                </div>
+                <CardTitle className="text-xl">Flagship Store</CardTitle>
+                <CardDescription>Physical brand experience</CardDescription>
+              </CardHeader>
+              <CardContent className="text-muted-foreground">
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-zim-gold" /> Cultural showroom & hub</li>
+                  <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-zim-gold" /> Merchandise flagship</li>
+                  <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-zim-gold" /> Community engagement centre</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="lg:col-span-5 bg-zim-black text-white rounded-3xl p-8 md:p-10 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10">
+            <Zap className="h-32 w-32" />
+          </div>
+          <div className="relative z-10 space-y-8">
+            <h3 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
+              <Zap className="h-8 w-8 text-zim-gold" />
+              Strategic Mission
+            </h3>
+            <div className="space-y-6">
+              {[
+                { title: "Monetize Identity", desc: "Commercializing Zimbabwean national culture" },
+                { title: "Export Pathways", desc: "Global access for SMEs and artisans" },
+                { title: "Diaspora Connection", desc: "Strengthening bonds with home" },
+                { title: "Fund Tourism", desc: "Revenue-driven promotion model" },
+                { title: "EU Compliance", desc: "Trusted distribution channel" }
+              ].map((item, i) => (
+                <div key={i} className="flex gap-4 group">
+                  <div className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center shrink-0 group-hover:border-zim-gold group-hover:text-zim-gold transition-colors">
+                    <span className="text-sm font-bold">{i + 1}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-zim-gold">{item.title}</h4>
+                    <p className="text-sm text-white/70">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Product Categories */}
       <motion.div variants={itemVariants} className="space-y-12">
@@ -211,46 +244,88 @@ export default function ZimbabweShopInfo() {
         </div>
       </motion.div>
 
-      {/* Ecosystem Impact Section */}
-      <motion.div variants={itemVariants} className="space-y-8">
-        <h3 className="text-3xl font-bold">The Ecosystem Impact</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { 
-              title: "Tourism Funnel Effect", 
-              icon: Globe, 
-              desc: "Commerce drives awareness: Purchase → Discover → Book → Visit.",
-              color: "zim-green"
-            },
-            { 
-              title: "Identity Economy", 
-              icon: Users, 
-              desc: "Connecting the diaspora through belonging, memory, and pride.",
-              color: "zim-gold"
-            },
-            { 
-              title: "Market Validation", 
-              icon: Zap, 
-              desc: "Low-risk EU market testing for Zimbabwean SMEs and artisans.",
-              color: "zim-red"
-            }
-          ].map((feature, i) => (
-            <div key={i} className="p-6 bg-card border rounded-2xl flex flex-col gap-4 hover:border-primary/30 transition-colors shadow-sm">
-              <div className={`h-12 w-12 rounded-xl bg-${feature.color}/10 flex items-center justify-center shrink-0`}>
-                <feature.icon className={`h-6 w-6 text-${feature.color}`} />
+      {/* Why it Matters & Logistics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <motion.div variants={itemVariants} className="space-y-8">
+          <h3 className="text-3xl font-bold">The Ecosystem Impact</h3>
+          <div className="space-y-4">
+            {[
+              { 
+                title: "Tourism Funnel Effect", 
+                icon: Globe, 
+                desc: "Commerce drives awareness: Purchase → Discover → Book → Visit.",
+                color: "zim-green"
+              },
+              { 
+                title: "Identity Economy", 
+                icon: Users, 
+                desc: "Connecting the diaspora through belonging, memory, and pride.",
+                color: "zim-gold"
+              },
+              { 
+                title: "Market Validation", 
+                icon: Zap, 
+                desc: "Low-risk EU market testing for Zimbabwean SMEs and artisans.",
+                color: "zim-red"
+              }
+            ].map((feature, i) => (
+              <div key={i} className="p-6 bg-card border rounded-2xl flex gap-5 hover:border-primary/30 transition-colors shadow-sm">
+                <div className={`h-12 w-12 rounded-xl bg-${feature.color}/10 flex items-center justify-center shrink-0`}>
+                  <feature.icon className={`h-6 w-6 text-${feature.color}`} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-1">{feature.title}</h4>
+                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-lg mb-1">{feature.title}</h4>
-                <p className="text-sm text-muted-foreground">{feature.desc}</p>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="bg-zim-green text-white rounded-3xl p-10 flex flex-col justify-between shadow-xl relative overflow-hidden">
+          <div className="absolute -bottom-10 -right-10 opacity-10">
+            <Truck className="h-48 w-48" />
+          </div>
+          <div className="relative z-10 space-y-8">
+            <h3 className="text-3xl font-bold">EU Logistics Strategy</h3>
+            <div className="space-y-8">
+              <div className="flex gap-6">
+                <div className="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+                  <Truck className="h-6 w-6 text-zim-gold" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-zim-gold">Phase 1: Import & Hubs</h4>
+                  <p className="text-white/80 leading-relaxed">
+                    Utilizing Germany and Netherlands fulfilment hubs for rapid 3PL distribution across the entire European Union.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-6">
+                <div className="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+                  <Zap className="h-6 w-6 text-zim-gold" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-zim-gold">Phase 2: Light Assembly</h4>
+                  <p className="text-white/80 leading-relaxed">
+                    Local EU packaging for curated gift sets and monthly diaspora subscription boxes to ensure premium quality.
+                  </p>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      </motion.div>
+          </div>
+          <div className="mt-12 pt-8 border-t border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-2 w-2 rounded-full bg-zim-gold animate-pulse" />
+              <span className="text-xs font-bold uppercase tracking-widest text-zim-gold">Strategy Active</span>
+            </div>
+            <Badge variant="outline" className="text-white border-white/30">EU-Compliant</Badge>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Innovation Features */}
       <motion.div variants={itemVariants} className="bg-muted/50 rounded-[2.5rem] p-8 md:p-16 border border-border/50">
-        <div className="flex flex-col lg:flex-row gap-12 items-center">
+        <div className="flex flex-col lg:flex-row gap-16 items-center">
           <div className="flex-1 space-y-8">
             <div className="space-y-4">
               <Badge className="bg-zim-red text-white uppercase">Innovation</Badge>
@@ -275,6 +350,26 @@ export default function ZimbabweShopInfo() {
                 <h4 className="text-xl font-bold">Product Passport</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">QR-based storytelling connecting customers directly to the artisan and region of origin.</p>
               </div>
+            </div>
+          </div>
+          
+          <div className="w-full lg:w-1/3 bg-card p-8 rounded-3xl shadow-xl border border-primary/10 space-y-6">
+            <h4 className="text-lg font-bold flex items-center gap-2">
+              <Users className="h-5 w-5 text-zim-green" />
+              Strategic Network
+            </h4>
+            <div className="space-y-4">
+              {["Ministry of Tourism", "ZimTrade", "Sports Associations", "EU Compliance Partners"].map((partner, i) => (
+                <div key={partner} className="flex items-center gap-3">
+                  <div className="h-1.5 w-1.5 rounded-full bg-zim-green" />
+                  <span className="text-sm font-medium">{partner}</span>
+                </div>
+              ))}
+            </div>
+            <div className="pt-6 border-t">
+              <p className="text-xs text-muted-foreground italic">
+                A collaborative ecosystem for national growth.
+              </p>
             </div>
           </div>
         </div>
