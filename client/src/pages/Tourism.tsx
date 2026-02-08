@@ -197,6 +197,7 @@ export default function Tourism() {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
+
       {/* Zimbabwe Shop Section */}
       <section className="section-padding bg-background relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-zim-green/5 rounded-full blur-3xl -mr-20 -mt-20" />

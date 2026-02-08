@@ -83,6 +83,29 @@ export default function ZimbabweShopInfo() {
       // Reduced vertical spacing between major sections from 24 to 16
       className="max-w-7xl mx-auto px-4 space-y-16 py-12"
     >
+
+      {/* Vision Statement - Optimized spacing here */}
+      <motion.div 
+        variants={itemVariants} 
+        className="relative py-12 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+        
+        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+          <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
+          <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
+            "To build the leading global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
+          </h3>
+          <div className="flex items-center justify-center gap-6">
+            <div className="h-px w-12 bg-zim-gold/50" />
+            <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">Our Vision</p>
+            <div className="h-px w-12 bg-zim-gold/50" />
+          </div>
+        </div>
+      </motion.div>
+
+
       {/* Product Categories */}
       <motion.div variants={itemVariants} className="space-y-12">
         <div className="text-center space-y-4">
@@ -195,26 +218,8 @@ export default function ZimbabweShopInfo() {
         </div>
       </motion.div>
 
-      {/* Vision Statement - Optimized spacing here */}
-      <motion.div 
-        variants={itemVariants} 
-        className="relative py-12 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
-        
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
-          <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
-            "To build the leading global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
-          </h3>
-          <div className="flex items-center justify-center gap-6">
-            <div className="h-px w-12 bg-zim-gold/50" />
-            <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">Our Vision</p>
-            <div className="h-px w-12 bg-zim-gold/50" />
-          </div>
-        </div>
-      </motion.div>
+
+
     </motion.div>
   );
 }
