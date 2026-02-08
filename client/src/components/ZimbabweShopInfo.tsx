@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function ZimbabweShopInfo() {
   const [currentJerseyIndex, setCurrentJerseyIndex] = useState(0);
   const [currentCraftsIndex, setCurrentCraftsIndex] = useState(0);
+  const [currentFoodIndex, setCurrentFoodIndex] = useState(0);
   
   const sportsJerseys = [
     { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
@@ -29,6 +30,17 @@ export default function ZimbabweShopInfo() {
     { image: "/images/crafts_beaded_jewelry1.jpg", title: "Beaded Jewelry" }
   ];
 
+  const foodProducts = [
+    { image: "/images/shop_food.webp", title: "Food & Nostalgia" },
+    { image: "/images/food_mazoe1.webp", title: "Mazoe Orange Crush" },
+    { image: "/images/food_mazoe2.jpg", title: "Mazoe Variety Pack" },
+    { image: "/images/food_cerevita1.jpg", title: "Cerevita Instant Cereal" },
+    { image: "/images/food_cerevita2.png", title: "Cerevita Corn & Wheat" },
+    { image: "/images/food_maputi1.jpg", title: "Maputi Snacks" },
+    { image: "/images/food_dovi1.webp", title: "Traditional Dovi" },
+    { image: "/images/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
+  ];
+
   useEffect(() => {
     const jerseyTimer = setInterval(() => {
       setCurrentJerseyIndex((prev) => (prev + 1) % sportsJerseys.length);
@@ -36,9 +48,13 @@ export default function ZimbabweShopInfo() {
     const craftsTimer = setInterval(() => {
       setCurrentCraftsIndex((prev) => (prev + 1) % artsCrafts.length);
     }, 3500);
+    const foodTimer = setInterval(() => {
+      setCurrentFoodIndex((prev) => (prev + 1) % foodProducts.length);
+    }, 4000);
     return () => {
       clearInterval(jerseyTimer);
       clearInterval(craftsTimer);
+      clearInterval(foodTimer);
     };
   }, []);
 
@@ -170,14 +186,26 @@ export default function ZimbabweShopInfo() {
             </div>
           </div>
 
-          {/* Food & Nostalgia */}
+          {/* Zimbabwe Delicacies */}
           <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="relative h-64 overflow-hidden bg-muted">
-              <img 
-                src="/images/shop_food.webp" 
-                alt="Food & Nostalgia" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentFoodIndex}
+                  src={foodProducts[currentFoodIndex].image} 
+                  alt={foodProducts[currentFoodIndex].title} 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute bottom-4 right-4 flex gap-1.5 z-10">
+                {foodProducts.map((_, i) => (
+                  <div key={i} className={`h-2 w-2 rounded-full transition-colors ${i === currentFoodIndex ? 'bg-zim-gold' : 'bg-white/50'}`} />
+                ))}
+              </div>
               <div className="absolute inset-0 bg-zim-gold/10 group-hover:bg-transparent transition-colors duration-500" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
