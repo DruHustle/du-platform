@@ -7,18 +7,16 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
-
-  // Hero background images from other page carousels
+  const [currentBgIndex, setCurrentBgIndex  // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = [
     "/images/victoria_falls.jpg",
-    "/images/partnership_handshake.png",
-    "/images/african_trade.jpg",
     "/images/hwange_elephants.jpg",
-    "/images/eu_symbol.png"
+    "/images/matobo_hills.jpg",
+    "/images/eastern_highlands.jpg",
+    "/images/mana_pools.jpg",
+    "/images/kariba_sunset.jpg",
+    "/images/zimbabwe_shop_hero.jpg"
   ];
-
-  useEffect(() => {
     const bgTimer = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
     }, 5000);
@@ -72,13 +70,13 @@ export default function Home() {
     {/* Hero Section with Rotating Background */}
       <section className="relative min-h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
         {/* Rotating Background Images */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentBgIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
+            transition={{ duration: 2, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <motion.div
