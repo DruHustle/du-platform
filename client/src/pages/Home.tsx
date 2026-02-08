@@ -77,7 +77,7 @@ export default function Home() {
             </div>
           </div>
           
-            <h1 className="!text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] font-bold mb-12 tracking-tighter leading-none px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-8 tracking-tighter leading-tight px-4 hero-text-shadow slide-up" style={{ animationDelay: '0.1s' }}>
               Diaspora Unlocked
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl mb-3 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
