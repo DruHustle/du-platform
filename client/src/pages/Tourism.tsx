@@ -208,7 +208,7 @@ export default function Tourism() {
       </section>
 
       {/* Key Attractions */}
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding-sm bg-muted/30">
         <div className="container">
           <div className="text-center mb-16 space-y-4">
             <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Destinations</Badge>
