@@ -172,7 +172,16 @@ export default function Tourism() {
                     <p className="text-muted-foreground leading-relaxed mb-6">
                       {attraction.description}
                     </p>
-                    <Button variant="link" className="p-0 h-auto text-zim-green font-bold group-hover:gap-3 transition-all">
+                    <Button 
+                      variant="link" 
+                      className="p-0 h-auto text-zim-green font-bold group-hover:gap-3 transition-all"
+                      onClick={() => {
+                        const exploreSection = document.getElementById('explore-destinations');
+                        if (exploreSection) {
+                          exploreSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                    >
                       Explore destination <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </CardContent>
@@ -182,7 +191,7 @@ export default function Tourism() {
           </div>
 
           {/* Explore More Destinations */}
-          <div className="mt-20">
+          <div id="explore-destinations" className="mt-20">
             <div className="text-center mb-12 space-y-4">
               <Badge variant="outline" className="border-zim-gold text-zim-gold uppercase tracking-widest px-4">Explore More</Badge>
               <h3 className="text-3xl md:text-4xl font-bold">Other Incredible Destinations</h3>
