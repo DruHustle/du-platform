@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award } from "lucide-react";
+import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award } from "lucide-react";
 
 export default function Home() {
   const modules = [
@@ -43,6 +43,14 @@ export default function Home() {
       stats: "8 Export Sectors"
     }
   ];
+
+    const stats = [
+      { value: "€2.8B", label: "EU-Zimbabwe Trade", icon: TrendingUp },
+      { value: "50+", label: "Export Guides", icon: FileText },
+      { value: "100+", label: "Partner Network", icon: Users },
+      { value: "0%", label: "EPA Tariffs", icon: Award }
+    ];
+
 
   return (
     
@@ -101,6 +109,23 @@ export default function Home() {
 
       </section>
 
+      {/* Stats Bar */}
+      <section className="py-8 bg-primary">
+        <div className="container">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, idx) => {
+              const Icon = stat.icon;
+              return (
+                <div key={idx} className="text-center text-white">
+                  <Icon className="h-6 w-6 mx-auto mb-2 text-secondary" />
+                  <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
+                  <div className="text-sm opacity-80">{stat.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* Four Modules */}
       <section className="section-padding bg-muted/30">

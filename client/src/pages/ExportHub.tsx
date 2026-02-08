@@ -168,12 +168,6 @@ export default function ExportHub() {
     }
   ];
 
-  const stats = [
-    { value: "€2.8B", label: "EU-Zimbabwe Trade", icon: TrendingUp },
-    { value: "50+", label: "Export Guides", icon: FileText },
-    { value: "100+", label: "Partner Network", icon: Users },
-    { value: "0%", label: "EPA Tariffs", icon: Award }
-  ];
 
   return (
     <Layout>
@@ -271,23 +265,6 @@ export default function ExportHub() {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Stats Bar */}
-      <section className="py-8 bg-primary">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <div key={idx} className="text-center text-white">
-                  <Icon className="h-6 w-6 mx-auto mb-2 text-secondary" />
-                  <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* 2026 Regulatory Updates */}
       <section className="section-padding bg-muted/30">
