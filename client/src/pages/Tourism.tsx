@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -7,35 +7,72 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award, ArrowRight, CheckCircle2 } from "lucide-react";
 import ZimbabweShopInfo from "@/components/ZimbabweShopInfo";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Tourism() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "/images/victoria_falls.jpg",
+      badge: "Forbes #1 Destination 2025",
+      badgeIcon: true,
+      title: "Zimbabwe: ",
+      titleHighlight: "A World of Wonders",
+      subtitle: "Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences in the heart of Southern Africa.",
+      buttons: [
+        { text: "Plan Your Journey", variant: "primary" },
+        { text: "Watch Experience", variant: "outline" }
+      ]
+    },
+    {
+      image: "/images/zimbabwe_shop_hero.jpg",
+      badge: "New Initiative",
+      badgeIcon: false,
+      title: "🇿🇼 Zimbabwe Shop",
+      titleHighlight: "",
+      subtitle: "EU Diaspora & Tourism Commerce Gateway",
+      description: "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
+      buttons: []
+    }
+  ];
+
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 8000);
+    return () => clearInterval(heroTimer);
+  }, []);
 
   const attractions = [
     {
       name: "Victoria Falls",
       description: "One of the Seven Natural Wonders of the World, the world's largest sheet of falling water",
       image: "/images/victoria_falls.jpg",
-      highlights: ["UNESCO World Heritage", "Adventure Hub", "Wildlife Viewing"]
+      highlights: ["UNESCO World Heritage", "Adventure Hub", "Wildlife Viewing"],
+      summary: "Known locally as Mosi-oa-Tunya (The Smoke That Thunders), Victoria Falls is twice the height of Niagara Falls. Experience white-water rafting, bungee jumping, helicopter flights, and the famous Devil's Pool. The falls are at their most spectacular from February to May during peak flow."
     },
     {
       name: "Great Zimbabwe",
       description: "Ancient stone ruins showcasing medieval African civilization and architectural excellence",
       image: "/images/great_zimbabwe.jpeg",
-      highlights: ["UNESCO World Heritage", "Historical Site", "Cultural Heritage"]
+      highlights: ["UNESCO World Heritage", "Historical Site", "Cultural Heritage"],
+      summary: "Built between the 11th and 15th centuries, Great Zimbabwe was the capital of the Kingdom of Zimbabwe. The massive stone structures were built without mortar, showcasing sophisticated engineering. The site gives the country its name and remains a powerful symbol of African achievement."
     },
     {
       name: "Kariba Dam",
       description: "One of the world's largest man-made lakes, perfect for houseboating and fishing",
       image: "/images/kariba_dam.webp",
-      highlights: ["Water Sports", "Tiger Fishing", "Scenic Sunset"]
+      highlights: ["Water Sports", "Tiger Fishing", "Scenic Sunset"],
+      summary: "Lake Kariba stretches over 5,500 square kilometers along the Zambezi River. Famous for world-class tiger fishing, houseboat holidays, and stunning sunsets. The lake is home to abundant wildlife including hippos, crocodiles, and elephants along its shores. Matusadona National Park offers excellent game viewing."
     },
     {
       name: "Balancing Rocks",
       description: "Iconic natural rock formations that symbolize Zimbabwe's unique geological heritage",
       image: "/images/balancing_rocks.jpg",
-      highlights: ["National Symbol", "Photography", "Natural Wonder"]
+      highlights: ["National Symbol", "Photography", "Natural Wonder"],
+      summary: "These gravity-defying granite formations appear on Zimbabwe's currency and are found throughout the country, particularly in Matobo National Park. Formed over millions of years through erosion, the rocks create surreal landscapes perfect for photography, rock climbing, and nature walks."
     }
   ];
 
@@ -68,47 +105,93 @@ export default function Tourism() {
 
   return (
     <Layout>
-      {/* Hero Section */}
+      {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <motion.div 
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/images/victoria_falls.jpg')`,
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
-        
-        <div className="relative z-10 container text-white text-center">
-          <motion.div 
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col items-center"
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentHeroIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
           >
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <Award className="h-10 w-10 text-zim-gold" />
-              <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                Forbes #1 Destination 2025
-              </Badge>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
-              Zimbabwe: <span className="text-zim-gold italic">A World of Wonders</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-white/90 leading-relaxed font-medium">
-              Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences in the heart of Southern Africa.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold">
-                Plan Your Journey
-              </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold">
-                Watch Experience
-              </Button>
-            </div>
+            <motion.div 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
           </motion.div>
+        </AnimatePresence>
+        
+        <div className="relative z-10 container text-white">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`content-${currentHeroIndex}`}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
+            >
+              <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
+                {heroSlides[currentHeroIndex].badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
+                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                  {heroSlides[currentHeroIndex].badge}
+                </Badge>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+                {heroSlides[currentHeroIndex].title}
+                {heroSlides[currentHeroIndex].titleHighlight && (
+                  <span className="text-zim-gold italic">{heroSlides[currentHeroIndex].titleHighlight}</span>
+                )}
+              </h1>
+              <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
+                {heroSlides[currentHeroIndex].subtitle}
+              </p>
+              {heroSlides[currentHeroIndex].description && (
+                <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+                  {heroSlides[currentHeroIndex].description}
+                </p>
+              )}
+              {heroSlides[currentHeroIndex].buttons.length > 0 && (
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {heroSlides[currentHeroIndex].buttons.map((button, idx) => (
+                    <Button 
+                      key={idx}
+                      size="lg" 
+                      variant={button.variant === "outline" ? "outline" : "default"}
+                      className={button.variant === "outline" 
+                        ? "text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold"
+                        : "bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold"
+                      }
+                    >
+                      {button.text}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {heroSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentHeroIndex(idx)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
@@ -168,13 +251,15 @@ export default function Tourism() {
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-8">
-                    <p className="text-muted-foreground leading-relaxed mb-6">
-                      {attraction.description}
+                  <CardContent className="p-6">
+                    <p className="text-muted-foreground mb-4">
+                      {attraction.summary}
                     </p>
-                    <Button variant="link" className="p-0 h-auto text-zim-green font-bold group-hover:gap-3 transition-all">
-                      Explore destination <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      {attraction.highlights.map((highlight, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">{highlight}</Badge>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -182,7 +267,7 @@ export default function Tourism() {
           </div>
 
           {/* Explore More Destinations */}
-          <div className="mt-20">
+          <div id="explore-destinations" className="mt-20">
             <div className="text-center mb-12 space-y-4">
               <Badge variant="outline" className="border-zim-gold text-zim-gold uppercase tracking-widest px-4">Explore More</Badge>
               <h3 className="text-3xl md:text-4xl font-bold">Other Incredible Destinations</h3>
