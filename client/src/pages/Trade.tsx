@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Trade() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [isFlowDiagramOpen, setIsFlowDiagramOpen] = useState(false);
 
   const heroSlides = [
     {
@@ -262,6 +263,33 @@ export default function Trade() {
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Professional step-by-step guidance for exporting Zimbabwean products to the German and EU markets
             </p>
+          </div>
+
+          {/* View Flow Diagram Button */}
+          <div className="text-center mb-8">
+            <Dialog open={isFlowDiagramOpen} onOpenChange={setIsFlowDiagramOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="lg" className="border-2 border-zim-gold text-zim-gold hover:bg-zim-gold hover:text-zim-black font-bold">
+                  <Package className="mr-2 h-5 w-5" />
+                  View Complete Flow Diagram
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold mb-2">Export Process Flow</h3>
+                    <p className="text-muted-foreground">From farmer to German market (e.g., EDEKA)</p>
+                  </div>
+                  <div className="flex justify-center">
+                    <img 
+                      src="/images/export_flow.png" 
+                      alt="Zimbabwe to Germany Export Flow Diagram"
+                      className="max-w-full h-auto rounded-lg shadow-md"
+                    />
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Modern Flow Visualization */}
