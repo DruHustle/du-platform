@@ -84,31 +84,6 @@ export default function ZimbabweShopInfo() {
       // Reduced vertical spacing between major sections from 24 to 16
       className="max-w-7xl mx-auto px-4 space-y-16 py-12"
     >
-      {/* Hero Section */}
-      <motion.div variants={itemVariants} className="relative rounded-3xl overflow-hidden min-h-[500px] shadow-2xl group">
-        <img 
-          src="/images/zimbabwe_shop_hero.jpg" 
-          alt="Zimbabwe Shop" 
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="relative z-10 min-h-[500px] bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8 md:p-16">
-          <div className="max-w-3xl space-y-4">
-            <Badge className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-sm font-bold px-4 py-1 mb-2 uppercase tracking-wider w-fit">
-              New Initiative
-            </Badge>
-            <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-              🇿🇼 Zimbabwe Shop
-            </h2>
-            <p className="text-xl md:text-2xl text-zim-gold font-semibold">
-              EU Diaspora & Tourism Commerce Gateway
-            </p>
-            <p className="text-lg text-white/90 max-w-2xl leading-relaxed">
-              Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.
-            </p>
-          </div>
-        </div>
-      </motion.div>
-
       {/* Product Categories */}
       <motion.div variants={itemVariants} className="space-y-12">
         <div className="text-center space-y-4">

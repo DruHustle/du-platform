@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,43 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award, ArrowRight, CheckCircle2 } from "lucide-react";
 import ZimbabweShopInfo from "@/components/ZimbabweShopInfo";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Tourism() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "/images/victoria_falls.jpg",
+      badge: "Forbes #1 Destination 2025",
+      badgeIcon: true,
+      title: "Zimbabwe: ",
+      titleHighlight: "A World of Wonders",
+      subtitle: "Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences in the heart of Southern Africa.",
+      buttons: [
+        { text: "Plan Your Journey", variant: "primary" },
+        { text: "Watch Experience", variant: "outline" }
+      ]
+    },
+    {
+      image: "/images/zimbabwe_shop_hero.jpg",
+      badge: "New Initiative",
+      badgeIcon: false,
+      title: "🇿🇼 Zimbabwe Shop",
+      titleHighlight: "",
+      subtitle: "EU Diaspora & Tourism Commerce Gateway",
+      description: "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
+      buttons: []
+    }
+  ];
+
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 8000);
+    return () => clearInterval(heroTimer);
+  }, []);
 
   const attractions = [
     {
@@ -72,47 +105,93 @@ export default function Tourism() {
 
   return (
     <Layout>
-      {/* Hero Section */}
+      {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <motion.div 
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/images/victoria_falls.jpg')`,
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
-        
-        <div className="relative z-10 container text-white text-center">
-          <motion.div 
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col items-center"
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentHeroIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
           >
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <Award className="h-10 w-10 text-zim-gold" />
-              <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                Forbes #1 Destination 2025
-              </Badge>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
-              Zimbabwe: <span className="text-zim-gold italic">A World of Wonders</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-white/90 leading-relaxed font-medium">
-              Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences in the heart of Southern Africa.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold">
-                Plan Your Journey
-              </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold">
-                Watch Experience
-              </Button>
-            </div>
+            <motion.div 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
           </motion.div>
+        </AnimatePresence>
+        
+        <div className="relative z-10 container text-white">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`content-${currentHeroIndex}`}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
+            >
+              <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
+                {heroSlides[currentHeroIndex].badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
+                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                  {heroSlides[currentHeroIndex].badge}
+                </Badge>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+                {heroSlides[currentHeroIndex].title}
+                {heroSlides[currentHeroIndex].titleHighlight && (
+                  <span className="text-zim-gold italic">{heroSlides[currentHeroIndex].titleHighlight}</span>
+                )}
+              </h1>
+              <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
+                {heroSlides[currentHeroIndex].subtitle}
+              </p>
+              {heroSlides[currentHeroIndex].description && (
+                <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+                  {heroSlides[currentHeroIndex].description}
+                </p>
+              )}
+              {heroSlides[currentHeroIndex].buttons.length > 0 && (
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {heroSlides[currentHeroIndex].buttons.map((button, idx) => (
+                    <Button 
+                      key={idx}
+                      size="lg" 
+                      variant={button.variant === "outline" ? "outline" : "default"}
+                      className={button.variant === "outline" 
+                        ? "text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold"
+                        : "bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold"
+                      }
+                    >
+                      {button.text}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {heroSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentHeroIndex(idx)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
