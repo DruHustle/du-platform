@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function ZimbabweShopInfo() {
   const [currentJerseyIndex, setCurrentJerseyIndex] = useState(0);
+  const [currentCraftsIndex, setCurrentCraftsIndex] = useState(0);
   
   const sportsJerseys = [
     { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
@@ -18,11 +19,27 @@ export default function ZimbabweShopInfo() {
     { image: "/images/sports_football_jersey1.jpg", title: "Warriors National Team Kit" }
   ];
 
+  const artsCrafts = [
+    { image: "/images/shop_crafts.jpg", title: "Arts & Crafts" },
+    { image: "/images/crafts_stone_sculptures1.png", title: "Shona Stone Sculptures" },
+    { image: "/images/crafts_stone_sculptures2.jpg", title: "Traditional Stone Art" },
+    { image: "/images/crafts_stone_sculptures3.jpg", title: "Stone Sculpture Collection" },
+    { image: "/images/crafts_binga_baskets1.jpg", title: "Binga Baskets" },
+    { image: "/images/crafts_binga_baskets2.jpg", title: "Traditional Baskets" },
+    { image: "/images/crafts_beaded_jewelry1.jpg", title: "Beaded Jewelry" }
+  ];
+
   useEffect(() => {
-    const timer = setInterval(() => {
+    const jerseyTimer = setInterval(() => {
       setCurrentJerseyIndex((prev) => (prev + 1) % sportsJerseys.length);
     }, 3000);
-    return () => clearInterval(timer);
+    const craftsTimer = setInterval(() => {
+      setCurrentCraftsIndex((prev) => (prev + 1) % artsCrafts.length);
+    }, 3500);
+    return () => {
+      clearInterval(jerseyTimer);
+      clearInterval(craftsTimer);
+    };
   }, []);
 
   const containerVariants = {
@@ -123,11 +140,23 @@ export default function ZimbabweShopInfo() {
           {/* Arts & Crafts */}
           <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="relative h-64 overflow-hidden bg-muted">
-              <img 
-                src="/images/shop_crafts.jpg" 
-                alt="Arts & Crafts" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentCraftsIndex}
+                  src={artsCrafts[currentCraftsIndex].image} 
+                  alt={artsCrafts[currentCraftsIndex].title} 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute bottom-4 right-4 flex gap-1.5 z-10">
+                {artsCrafts.map((_, i) => (
+                  <div key={i} className={`h-2 w-2 rounded-full transition-colors ${i === currentCraftsIndex ? 'bg-zim-gold' : 'bg-white/50'}`} />
+                ))}
+              </div>
               <div className="absolute inset-0 bg-zim-red/10 group-hover:bg-transparent transition-colors duration-500" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
