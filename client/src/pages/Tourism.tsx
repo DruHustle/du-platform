@@ -180,6 +180,103 @@ export default function Tourism() {
               </motion.div>
             ))}
           </div>
+
+          {/* Explore More Destinations */}
+          <div className="mt-20">
+            <div className="text-center mb-12 space-y-4">
+              <Badge variant="outline" className="border-zim-gold text-zim-gold uppercase tracking-widest px-4">Explore More</Badge>
+              <h3 className="text-3xl md:text-4xl font-bold">Other Incredible Destinations</h3>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Hwange National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Zimbabwe's largest national park, home to over 100 mammal species and 400 bird species. Famous for its large elephant herds and year-round game viewing.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Wildlife Safari</Badge>
+                    <Badge variant="secondary" className="text-xs">Big Five</Badge>
+                    <Badge variant="secondary" className="text-xs">Game Drives</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Matobo National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Ancient granite formations and sacred sites with rock art dating back thousands of years. Home to black and white rhinos, and the burial site of Cecil Rhodes.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Rock Art</Badge>
+                    <Badge variant="secondary" className="text-xs">Rhino Tracking</Badge>
+                    <Badge variant="secondary" className="text-xs">History</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Eastern Highlands</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Misty mountains, lush forests, and cascading waterfalls. Perfect for hiking, birdwatching, and experiencing Zimbabwe's cooler climate and scenic beauty.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Hiking Trails</Badge>
+                    <Badge variant="secondary" className="text-xs">Waterfalls</Badge>
+                    <Badge variant="secondary" className="text-xs">Birdwatching</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Mana Pools National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    UNESCO World Heritage Site on the Zambezi River. Renowned for walking safaris, canoeing adventures, and exceptional wildlife encounters in pristine wilderness.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Walking Safari</Badge>
+                    <Badge variant="secondary" className="text-xs">Canoeing</Badge>
+                    <Badge variant="secondary" className="text-xs">UNESCO Site</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Nyanga National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Zimbabwe's oldest national park featuring Mutarazi Falls (Africa's second highest), mountain scenery, trout fishing, and the famous Nyanga Skywalk.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Mountain Views</Badge>
+                    <Badge variant="secondary" className="text-xs">Trout Fishing</Badge>
+                    <Badge variant="secondary" className="text-xs">Skywalk</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Gonarezhou National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    "Place of Elephants" - a remote wilderness area with dramatic Chilojo Cliffs, diverse ecosystems, and part of the Great Limpopo Transfrontier Park.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Remote Safari</Badge>
+                    <Badge variant="secondary" className="text-xs">Elephants</Badge>
+                    <Badge variant="secondary" className="text-xs">Chilojo Cliffs</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
 
