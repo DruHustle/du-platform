@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -8,9 +8,49 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { FileText, Users, Building2, Truck, Shield, AlertTriangle, CheckCircle, ArrowRight, Globe, Award, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ExportHub() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "/images/eu_symbol.png",
+      badge: "EU Market Access",
+      title: "Access German Markets",
+      subtitle: "Comprehensive guidance on regulations, certifications, and partnerships for exporting Zimbabwean products to Germany",
+      highlight: "€83.4B Trade Volume"
+    },
+    {
+      image: "/images/germany_flag.png",
+      badge: "Germany Trade Hub",
+      title: "Your Gateway to Europe",
+      subtitle: "Germany is Europe's largest economy and a key entry point for African exporters seeking EU market access",
+      highlight: "#1 EU Economy"
+    },
+    {
+      image: "/images/eu_flags.png",
+      badge: "EU Partnership",
+      title: "EU-ESA Trade Benefits",
+      subtitle: "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement",
+      highlight: "Tariff-Free Access"
+    },
+    {
+      image: "/images/export_port1.jpg",
+      badge: "Export Excellence",
+      title: "Connect to Global Markets",
+      subtitle: "Professional logistics support, regulatory compliance guidance, and market intelligence for successful EU exports",
+      highlight: "End-to-End Support"
+    }
+  ];
+
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 7000);
+    return () => clearInterval(heroTimer);
+  }, []);
 
   const germanRequirements = [
     {
@@ -128,77 +168,103 @@ export default function ExportHub() {
     }
   ];
 
-  const stats = [
-    { value: "€2.8B", label: "EU-Zimbabwe Trade", icon: TrendingUp },
-    { value: "50+", label: "Export Guides", icon: FileText },
-    { value: "100+", label: "Partner Network", icon: Users },
-    { value: "0%", label: "EPA Tariffs", icon: Award }
-  ];
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/images/export_hub_bg.jpg')`,
-          }}
-        >
-          <div className="absolute inset-0 hero-gradient" />
+      {/* Hero Carousel Section */}
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentHeroIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
+          >
+            <motion.div 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
+          </motion.div>
+        </AnimatePresence>
+        
+        <div className="relative z-10 container text-white">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`content-${currentHeroIndex}`}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-4xl"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <Globe className="h-8 w-8 text-zim-gold" />
+                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                  {heroSlides[currentHeroIndex].badge}
+                </Badge>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+                {heroSlides[currentHeroIndex].title}
+              </h1>
+              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
+                {heroSlides[currentHeroIndex].subtitle}
+              </p>
+              <div className="flex items-center gap-3 mb-8">
+                <TrendingUp className="h-6 w-6 text-zim-green" />
+                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex].highlight}</span>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold group">
+                      Connect with an Expert
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <ContactForm
+                      title="Export Support Request"
+                      description="Fill out the form below and our export specialists will contact you."
+                      module="export"
+                    />
+                  </DialogContent>
+                </Dialog>
+                <a href="#market-requirements" className="inline-block">
+                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold">
+                    <Globe className="mr-2 h-5 w-5" />
+                    View Market Guide
+                  </Button>
+                </a>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
         
-        <div className="relative z-10 container text-white py-16">
-          <div className="max-w-4xl">
-            <Badge className="mb-4 bg-secondary text-secondary-foreground shadow-lg">Export Knowledge Hub</Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 hero-text-shadow">
-              Access German Markets
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl opacity-95 leading-relaxed">
-              Comprehensive guidance on regulations, certifications, and partnerships for exporting Zimbabwean products to Germany
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl group">
-                    Connect with an Expert
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title="Export Support Request"
-                    description="Fill out the form below and our export specialists will contact you."
-                    module="export"
-                  />
-                </DialogContent>
-              </Dialog>
-              <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
-                <Globe className="mr-2 h-5 w-5" />
-                View Market Guide
-              </Button>
-            </div>
-          </div>
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {heroSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentHeroIndex(idx)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
+        
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Stats Bar */}
-      <section className="py-8 bg-primary">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <div key={idx} className="text-center text-white">
-                  <Icon className="h-6 w-6 mx-auto mb-2 text-secondary" />
-                  <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* 2026 Regulatory Updates */}
       <section className="section-padding bg-muted/30">
@@ -288,7 +354,7 @@ export default function ExportHub() {
       </section>
 
       {/* Market Requirements */}
-      <section className="section-padding bg-muted/30">
+      <section id="market-requirements" className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-12">
             <Badge className="badge-primary mb-4">Requirements</Badge>
@@ -339,11 +405,11 @@ export default function ExportHub() {
           </div>
 
           <Tabs defaultValue="organic" className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-muted/50">
-              <TabsTrigger value="organic" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Organic</TabsTrigger>
-              <TabsTrigger value="safety" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Safety & Quality</TabsTrigger>
-              <TabsTrigger value="trade" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Fair Trade</TabsTrigger>
-              <TabsTrigger value="globalg" className="py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">GLOBALG.A.P.</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1 bg-muted/50">
+              <TabsTrigger value="organic" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Organic</TabsTrigger>
+              <TabsTrigger value="safety" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Safety & Quality</TabsTrigger>
+              <TabsTrigger value="trade" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Fair Trade</TabsTrigger>
+              <TabsTrigger value="globalg" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">GLOBALG.A.P.</TabsTrigger>
             </TabsList>
             
             <TabsContent value="organic" className="mt-8">
@@ -575,18 +641,16 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Navigate to Success Stories */}
-      <section className="section-padding-sm bg-primary text-primary-foreground">
+       {/* Navigate to Success Stories */}
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                Explore Success Stories
-              </h2>
-              <p className="text-lg opacity-95">
-                View successful projects funded through our platform and their impact in Zimbabwe
-              </p>
-            </div>
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+             Explore Success Stories
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              View successful projects funded through our platform and their impact in Zimbabwe
+            </p>
             <Link href="/success-stories">
               <Button size="lg" variant="secondary" className="shadow-lg group">
                 Explore Success Stories
@@ -596,6 +660,7 @@ export default function ExportHub() {
           </div>
         </div>
       </section>
+
     </Layout>
   );
 }

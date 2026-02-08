@@ -1,0 +1,225 @@
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingBag, Globe, Store, Utensils, Heart, Zap, Truck, Users, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function ZimbabweShopInfo() {
+  const [currentJerseyIndex, setCurrentJerseyIndex] = useState(0);
+  const [currentCraftsIndex, setCurrentCraftsIndex] = useState(0);
+  const [currentFoodIndex, setCurrentFoodIndex] = useState(0);
+  
+  const sportsJerseys = [
+    { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
+    { image: "/images/sports_rugby_jersey1.jpg", title: "Sables Rugby Home Kit" },
+    { image: "/images/shop_sports.jpg", title: "Chevrons Cricket" },
+    { image: "/images/sports_cricket_kit1.jpg", title: "Chevrons T20 Kit" },
+    { image: "/images/sports_cricket_kit2.jpg", title: "Chevrons World Cup Jersey" },
+    { image: "/images/shop_warriors.jpg", title: "Warriors Football" },
+    { image: "/images/sports_football_jersey1.jpg", title: "Warriors National Team Kit" }
+  ];
+
+  const artsCrafts = [
+    { image: "/images/shop_crafts.jpg", title: "Arts & Crafts" },
+    { image: "/images/crafts_stone_sculptures1.png", title: "Shona Stone Sculptures" },
+    { image: "/images/crafts_stone_sculptures2.jpg", title: "Traditional Stone Art" },
+    { image: "/images/crafts_stone_sculptures3.jpg", title: "Stone Sculpture Collection" },
+    { image: "/images/crafts_binga_baskets1.jpg", title: "Binga Baskets" },
+    { image: "/images/crafts_binga_baskets2.jpg", title: "Traditional Baskets" },
+    { image: "/images/crafts_beaded_jewelry1.jpg", title: "Beaded Jewelry" }
+  ];
+
+  const foodProducts = [
+    { image: "/images/shop_food.webp", title: "Food & Nostalgia" },
+    { image: "/images/food_mazoe1.webp", title: "Mazoe Orange Crush" },
+    { image: "/images/food_mazoe2.jpg", title: "Mazoe Variety Pack" },
+    { image: "/images/food_cerevita1.jpg", title: "Cerevita Instant Cereal" },
+    { image: "/images/food_cerevita2.png", title: "Cerevita Corn & Wheat" },
+    { image: "/images/food_maputi1.jpg", title: "Maputi Snacks" },
+    { image: "/images/food_dovi1.webp", title: "Traditional Dovi" },
+    { image: "/images/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
+  ];
+
+  useEffect(() => {
+    const jerseyTimer = setInterval(() => {
+      setCurrentJerseyIndex((prev) => (prev + 1) % sportsJerseys.length);
+    }, 3000);
+    const craftsTimer = setInterval(() => {
+      setCurrentCraftsIndex((prev) => (prev + 1) % artsCrafts.length);
+    }, 3500);
+    const foodTimer = setInterval(() => {
+      setCurrentFoodIndex((prev) => (prev + 1) % foodProducts.length);
+    }, 4000);
+    return () => {
+      clearInterval(jerseyTimer);
+      clearInterval(craftsTimer);
+      clearInterval(foodTimer);
+    };
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
+  };
+
+  return (
+    <motion.div 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+      transition={{ staggerChildren: 0.1, delayChildren: 0.1 }}
+      // Reduced vertical spacing between major sections from 24 to 16
+      className="max-w-7xl mx-auto px-4 space-y-16 py-12"
+    >
+
+      {/* Vision Statement - Optimized spacing here */}
+      <motion.div 
+        variants={itemVariants} 
+        className="relative py-12 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+        
+        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+          <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
+          <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
+            "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
+          </h3>
+          <div className="flex items-center justify-center gap-6">
+            <div className="h-px w-12 bg-zim-gold/50" />
+            <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">Our Vision</p>
+            <div className="h-px w-12 bg-zim-gold/50" />
+          </div>
+        </div>
+      </motion.div>
+
+
+      {/* Product Categories */}
+      <motion.div variants={itemVariants} className="space-y-12">
+        <div className="text-center space-y-4">
+          <Badge variant="outline" className="border-zim-green text-zim-green uppercase tracking-widest px-4">Collections</Badge>
+          <h3 className="text-4xl md:text-5xl font-bold">Curated Zimbabwean Excellence</h3>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Rotating National Sports Jerseys */}
+          <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="relative h-64 overflow-hidden bg-muted">
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentJerseyIndex}
+                  src={sportsJerseys[currentJerseyIndex].image} 
+                  alt={sportsJerseys[currentJerseyIndex].title} 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute bottom-4 right-4 flex gap-1.5 z-10">
+                {sportsJerseys.map((_, i) => (
+                  <div key={i} className={`h-2 w-2 rounded-full transition-colors ${i === currentJerseyIndex ? 'bg-zim-gold' : 'bg-white/50'}`} />
+                ))}
+              </div>
+              <div className="absolute inset-0 bg-zim-green/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            <div className="p-6 flex flex-col flex-grow">
+              <h4 className="text-xl font-bold mb-2">National Sports</h4>
+              <p className="text-sm text-muted-foreground mb-6 flex-grow">Official gear for the Sables, Chevrons, and Warriors.</p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="text-[10px] font-semibold">Rugby Jerseys</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Cricket Kits</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Soccer Gear</Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* Arts & Crafts */}
+          <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="relative h-64 overflow-hidden bg-muted">
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentCraftsIndex}
+                  src={artsCrafts[currentCraftsIndex].image} 
+                  alt={artsCrafts[currentCraftsIndex].title} 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute bottom-4 right-4 flex gap-1.5 z-10">
+                {artsCrafts.map((_, i) => (
+                  <div key={i} className={`h-2 w-2 rounded-full transition-colors ${i === currentCraftsIndex ? 'bg-zim-gold' : 'bg-white/50'}`} />
+                ))}
+              </div>
+              <div className="absolute inset-0 bg-zim-red/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            <div className="p-6 flex flex-col flex-grow">
+              <h4 className="text-xl font-bold mb-2">Arts & Crafts</h4>
+              <p className="text-sm text-muted-foreground mb-6 flex-grow">Supporting rural artisans and women cooperatives.</p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="text-[10px] font-semibold">Stone Sculptures</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Binga Baskets</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Beaded Jewellery</Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* Zimbabwe Delicacies */}
+          <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="relative h-64 overflow-hidden bg-muted">
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentFoodIndex}
+                  src={foodProducts[currentFoodIndex].image} 
+                  alt={foodProducts[currentFoodIndex].title} 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute bottom-4 right-4 flex gap-1.5 z-10">
+                {foodProducts.map((_, i) => (
+                  <div key={i} className={`h-2 w-2 rounded-full transition-colors ${i === currentFoodIndex ? 'bg-zim-gold' : 'bg-white/50'}`} />
+                ))}
+              </div>
+              <div className="absolute inset-0 bg-zim-gold/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            <div className="p-6 flex flex-col flex-grow">
+              <h4 className="text-xl font-bold mb-2">Food & Nostalgia</h4>
+              <p className="text-sm text-muted-foreground mb-6 flex-grow">The flavors of home, fully EU-compliant.</p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="text-[10px] font-semibold">Mazoe & Cerevita</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Maputi Snacks</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">Export-grade Dovi</Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+
+
+    </motion.div>
+  );
+}

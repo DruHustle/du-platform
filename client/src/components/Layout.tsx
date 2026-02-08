@@ -123,9 +123,9 @@ export default function Layout({ children }: LayoutProps) {
                 className='h-9 w-9 md:h-11 md:w-11 object-contain flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <div className='min-w-0'>
-                <h1 className='!text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
+                <span className='text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
                   ZIGD Platform
-                </h1>
+                </span>
                 <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
                   Zimbabwe Global & Diaspora
                 </p>
@@ -133,8 +133,8 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </Link>
 
-          {/* Desktop Navigation - UPDATED: Added flex-1 and justify-end */}
-          <nav className="hidden lg:flex flex-1 justify-end items-center space-x-1 px-4">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1 px-2">
             {navigation.map((item) => (
               item.children ? (
                 <div
@@ -146,7 +146,7 @@ export default function Layout({ children }: LayoutProps) {
                   <Link href={item.href}>
                     <Button
                       variant={isActive(item.href) ? "default" : "ghost"}
-                      className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} flex items-center gap-1 font-medium transition-all px-3`}
+                      className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} flex items-center gap-1 font-medium transition-all px-2 text-xs`}
                     >
                       {item.name}
                       <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === item.href ? 'rotate-180' : ''}`} />
@@ -174,7 +174,7 @@ export default function Layout({ children }: LayoutProps) {
                 <Link key={item.href} href={item.href}>
                   <Button
                     variant={isActive(item.href) ? "default" : "ghost"}
-                    className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} font-medium transition-all px-3`}
+                    className={`${isActive(item.href) ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-primary/5"} font-medium transition-all px-2 text-xs`}
                   >
                     {item.name}
                   </Button>
@@ -184,7 +184,7 @@ export default function Layout({ children }: LayoutProps) {
           </nav>
 
           {/* Utility Icons */}
-          <div className="flex items-center gap-1 md:gap-2 lg:gap-3">
+          <div className="flex items-center gap-1 md:gap-2 ml-auto">
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden sm:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
