@@ -143,7 +143,7 @@ export default function Tourism() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="card-professional group overflow-hidden border-none">
+                <Card className="card-professional group overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="relative h-80 overflow-hidden">
                     <img 
                       src={attraction.image} 
@@ -198,11 +198,11 @@ export default function Tourism() {
               {planningInfo.map((info, index) => {
                 const Icon = info.icon;
                 return (
-                  <Card key={index} className="border border-border/50 hover:border-primary/20 hover:shadow-md transition-all rounded-2xl">
+                  <Card key={index} className="border border-border/50 hover:border-primary/20 hover:shadow-md transition-all rounded-2xl bg-card">
                     <CardHeader className="pb-4">
                       <div className="flex items-center space-x-4 mb-2">
-                        <div className="p-3 bg-primary/5 rounded-xl">
-                          <Icon className="h-6 w-6 text-primary" />
+                        <div className="p-3 bg-zim-green/5 rounded-xl">
+                          <Icon className="h-6 w-6 text-zim-green" />
                         </div>
                         <CardTitle className="text-xl">{info.title}</CardTitle>
                       </div>
@@ -242,105 +242,93 @@ export default function Tourism() {
             {[
               {
                 title: "Heritage Tour",
-                duration: "7 Days",
-                highlights: ["Great Zimbabwe", "Matobo Hills", "Cultural Villages", "Traditional Ceremonies"],
-                price: "From $1,200",
-                accent: "zim-green"
-              },
-              {
-                title: "Adventure Package",
                 duration: "10 Days",
-                highlights: ["Victoria Falls", "Hwange Safari", "Kariba Houseboat", "White Water Rafting"],
-                price: "From $2,500",
-                accent: "zim-gold"
+                price: "From $1,499",
+                features: ["Cultural sites", "Family reunions", "Local guides"]
               },
               {
-                title: "Family Reunion",
+                title: "Safari Explorer",
+                duration: "7 Days",
+                price: "From $2,199",
+                features: ["Hwange Safari", "Mana Pools", "Luxury Lodges"]
+              },
+              {
+                title: "Business & Leisure",
                 duration: "14 Days",
-                highlights: ["Flexible Itinerary", "Family Gatherings", "City Tours", "Rural Visits"],
-                price: "Custom Pricing",
-                accent: "zim-red"
+                price: "From $1,899",
+                features: ["Investment tours", "City stays", "Resort relaxation"]
               }
             ].map((pkg, index) => (
-              <Card key={index} className="bg-white/5 border-white/10 hover:bg-white/10 transition-all rounded-3xl overflow-hidden group">
-                <div className={`h-2 bg-${pkg.accent}`} />
-                <CardHeader>
-                  <CardTitle className="text-2xl text-white">{pkg.title}</CardTitle>
-                  <CardDescription className="flex items-center gap-2 text-white/60">
-                    <Calendar className="h-4 w-4" />
-                    {pkg.duration}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <ul className="space-y-3">
-                    {pkg.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start text-sm text-white/80">
-                        <CheckCircle2 className={`mr-3 h-4 w-4 text-${pkg.accent} shrink-0 mt-0.5`} />
-                        <span>{highlight}</span>
+              <motion.div 
+                key={index}
+                whileHover={{ y: -10 }}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-[2rem] flex flex-col justify-between"
+              >
+                <div className="space-y-6">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-2xl font-bold text-zim-gold">{pkg.title}</h3>
+                    <Badge variant="outline" className="text-white border-white/30">{pkg.duration}</Badge>
+                  </div>
+                  <ul className="space-y-4">
+                    {pkg.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center gap-3 text-white/80">
+                        <CheckCircle2 className="h-5 w-5 text-zim-gold" />
+                        {feature}
                       </li>
                     ))}
                   </ul>
-                  <div className="pt-6 border-t border-white/10 flex items-center justify-between">
-                    <p className={`text-xl font-bold text-${pkg.accent}`}>{pkg.price}</p>
-                    <Button variant="outline" className="border-white/20 text-white hover:bg-white/20 rounded-full">
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="mt-10 pt-8 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-xl font-bold">{pkg.price}</span>
+                  <Button variant="ghost" className="text-zim-gold hover:text-zim-gold hover:bg-white/10">
+                    View Details
+                  </Button>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact CTA with Modal */}
+      {/* Contact Section */}
       <section className="section-padding bg-background">
         <div className="container">
-          <motion.div 
-            whileHover={{ scale: 1.01 }}
-            className="relative rounded-[3rem] overflow-hidden shadow-2xl"
-          >
-            <div className="absolute inset-0 bg-zim-green opacity-95" />
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] opacity-20" />
-            <div className="relative z-10 p-12 md:p-20 text-center space-y-8">
-              <h2 className="text-4xl md:text-5xl font-bold text-white">Ready to Explore Zimbabwe?</h2>
-              <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-                Our specialized tourism team is ready to assist you with bespoke bookings, tailored itineraries, and exclusive diaspora homecoming packages.
-              </p>
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="bg-white text-zim-green hover:bg-white/90 text-xl px-12 h-16 rounded-full font-bold shadow-xl">
-                    Connect with an Expert
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-0 border-none">
-                  <ContactForm
-                    title="Tourism Inquiry"
-                    description="Fill out the form below and our tourism specialists will contact you."
-                    module="tourism"
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+          <div className="max-w-5xl mx-auto bg-muted/30 rounded-[3rem] p-8 md:p-16 border border-border/50">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-4xl font-bold">Ready to Start Your Adventure?</h2>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    Our travel experts are ready to help you plan the perfect Zimbabwean experience tailored to your interests and needs.
+                  </p>
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-zim-green/10 flex items-center justify-center text-zim-green">
+                      <Shield className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold">Expert Support</h4>
+                      <p className="text-sm text-muted-foreground">Dedicated travel specialists at your service.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-zim-gold/10 flex items-center justify-center text-zim-gold">
+                      <Award className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold">Verified Partners</h4>
+                      <p className="text-sm text-muted-foreground">We only work with the best local operators.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-      {/* External Link to Zimbabwe Tourism */}
-      <section className="py-24 bg-zim-black text-white">
-        <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12 p-12 rounded-[2.5rem] bg-gradient-to-r from-zim-green/20 to-zim-gold/10 border border-white/10">
-            <div className="space-y-4 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold">Official Tourism Resources</h2>
-              <p className="text-lg text-white/60 max-w-xl">
-                Access the official Zimbabwe Tourism Authority website for comprehensive destination guides and national tourism updates.
-              </p>
+              <div className="bg-card p-8 rounded-3xl shadow-xl border border-primary/10">
+                <ContactForm />
+              </div>
             </div>
-            <a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" className="bg-white text-zim-black hover:bg-white/90 text-lg px-10 h-14 rounded-full font-bold group">
-                Visit Official Portal <ExternalLink className="ml-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
-              </Button>
-            </a>
           </div>
         </div>
       </section>
