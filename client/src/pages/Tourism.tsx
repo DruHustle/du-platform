@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award, CheckCircle2 } from "lucide-react";
+import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award, CheckCircle2, Trophy } from "lucide-react";
 
 export default function Tourism() {
   const [isFormOpen, setIsFormOpen] = useState(false);
