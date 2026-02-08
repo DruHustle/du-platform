@@ -7,16 +7,22 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
-  const [currentBgIndex, setCurrentBgIndex  // Hero background images - Zimbabwe tourist destinations
+  const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = [
     "/images/victoria_falls.jpg",
     "/images/hwange_elephants.jpg",
-    "/images/matobo_hills.jpg",
+    "/balancing_rocks.jpg",
     "/images/eastern_highlands.jpg",
     "/images/mana_pools.jpg",
     "/images/kariba_sunset.jpg",
-    "/images/zimbabwe_shop_hero.jpg"
+    "/images/zimbabwe_shop_hero.jpg",
+    "/images/partnership_handshake.png",
+    "/images/african_trade.jpg",
+    "/images/eu_symbol.png"
+
   ];
+
+  useEffect(() => {
     const bgTimer = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
     }, 5000);
