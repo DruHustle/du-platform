@@ -17,25 +17,29 @@ export default function Tourism() {
       name: "Victoria Falls",
       description: "One of the Seven Natural Wonders of the World, the world's largest sheet of falling water",
       image: "/images/victoria_falls.jpg",
-      highlights: ["UNESCO World Heritage", "Adventure Hub", "Wildlife Viewing"]
+      highlights: ["UNESCO World Heritage", "Adventure Hub", "Wildlife Viewing"],
+      summary: "Known locally as Mosi-oa-Tunya (The Smoke That Thunders), Victoria Falls is twice the height of Niagara Falls. Experience white-water rafting, bungee jumping, helicopter flights, and the famous Devil's Pool. The falls are at their most spectacular from February to May during peak flow."
     },
     {
       name: "Great Zimbabwe",
       description: "Ancient stone ruins showcasing medieval African civilization and architectural excellence",
       image: "/images/great_zimbabwe.jpeg",
-      highlights: ["UNESCO World Heritage", "Historical Site", "Cultural Heritage"]
+      highlights: ["UNESCO World Heritage", "Historical Site", "Cultural Heritage"],
+      summary: "Built between the 11th and 15th centuries, Great Zimbabwe was the capital of the Kingdom of Zimbabwe. The massive stone structures were built without mortar, showcasing sophisticated engineering. The site gives the country its name and remains a powerful symbol of African achievement."
     },
     {
       name: "Kariba Dam",
       description: "One of the world's largest man-made lakes, perfect for houseboating and fishing",
       image: "/images/kariba_dam.webp",
-      highlights: ["Water Sports", "Tiger Fishing", "Scenic Sunset"]
+      highlights: ["Water Sports", "Tiger Fishing", "Scenic Sunset"],
+      summary: "Lake Kariba stretches over 5,500 square kilometers along the Zambezi River. Famous for world-class tiger fishing, houseboat holidays, and stunning sunsets. The lake is home to abundant wildlife including hippos, crocodiles, and elephants along its shores. Matusadona National Park offers excellent game viewing."
     },
     {
       name: "Balancing Rocks",
       description: "Iconic natural rock formations that symbolize Zimbabwe's unique geological heritage",
       image: "/images/balancing_rocks.jpg",
-      highlights: ["National Symbol", "Photography", "Natural Wonder"]
+      highlights: ["National Symbol", "Photography", "Natural Wonder"],
+      summary: "These gravity-defying granite formations appear on Zimbabwe's currency and are found throughout the country, particularly in Matobo National Park. Formed over millions of years through erosion, the rocks create surreal landscapes perfect for photography, rock climbing, and nature walks."
     }
   ];
 
@@ -168,22 +172,15 @@ export default function Tourism() {
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-8">
-                    <p className="text-muted-foreground leading-relaxed mb-6">
-                      {attraction.description}
+                  <CardContent className="p-6">
+                    <p className="text-muted-foreground mb-4">
+                      {attraction.summary}
                     </p>
-                    <Button 
-                      variant="link" 
-                      className="p-0 h-auto text-zim-green font-bold group-hover:gap-3 transition-all"
-                      onClick={() => {
-                        const exploreSection = document.getElementById('explore-destinations');
-                        if (exploreSection) {
-                          exploreSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                      }}
-                    >
-                      Explore destination <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      {attraction.highlights.map((highlight, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">{highlight}</Badge>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
