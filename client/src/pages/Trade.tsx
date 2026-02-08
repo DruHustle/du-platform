@@ -249,66 +249,98 @@ export default function Trade() {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Export Flow Diagram Section */}
-      <section className="py-16 bg-muted/30">
+      {/* Export Process Flow Section */}
+      <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Zimbabwe to Germany Export Roadmap</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Step-by-step guide for exporting Zimbabwean products to the German market
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+              Export Roadmap
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Zimbabwe to Germany Export Process</h2>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Professional step-by-step guidance for exporting Zimbabwean products to the German and EU markets
             </p>
           </div>
 
-          {/* Visual Flow Diagram */}
-          <div className="max-w-5xl mx-auto mb-12">
-            <Card className="overflow-hidden">
-              <CardHeader className="bg-primary text-primary-foreground text-center">
-                <CardTitle className="text-xl">Export Process Flow</CardTitle>
-                <CardDescription className="text-primary-foreground/80">
-                  From farmer to German market (e.g., EDEKA)
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="flex justify-center">
-                  <img 
-                    src="/images/export_flow.png" 
-                    alt="Zimbabwe to Germany Export Flow Diagram"
-                    className="max-w-full h-auto rounded-lg shadow-md"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+          {/* Modern Flow Visualization */}
+          <div className="max-w-6xl mx-auto mb-16">
+            <div className="relative">
+              {/* Connection Lines */}
+              <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-yellow-500 via-blue-500 via-green-500 to-purple-500 transform -translate-y-1/2 z-0" />
+              
+              {/* Flow Steps */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+                {exportFlowSteps.map((step, index) => {
+                  const Icon = step.icon;
+                  const colorClasses = {
+                    'border-yellow-500': 'from-yellow-500/20 to-yellow-500/5 border-yellow-500 text-yellow-600',
+                    'border-blue-500': 'from-blue-500/20 to-blue-500/5 border-blue-500 text-blue-600',
+                    'border-green-500': 'from-green-500/20 to-green-500/5 border-green-500 text-green-600',
+                    'border-purple-500': 'from-purple-500/20 to-purple-500/5 border-purple-500 text-purple-600'
+                  };
+                  const gradientClass = colorClasses[step.color];
+                  
+                  return (
+                    <div key={index} className="relative group">
+                      {/* Step Number Badge */}
+                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${gradientClass.split(' ')[0]} ${gradientClass.split(' ')[1]} border-4 border-background flex items-center justify-center shadow-lg`}>
+                          <span className="text-lg font-bold">{index + 1}</span>
+                        </div>
+                      </div>
+
+                      {/* Step Card */}
+                      <Card className={`mt-8 border-2 ${step.color} hover:shadow-2xl transition-all duration-300 group-hover:scale-105 bg-gradient-to-br ${gradientClass.split(' ')[0]} ${gradientClass.split(' ')[1]}`}>
+                        <CardHeader className="pb-4">
+                          <div className="flex justify-center mb-4">
+                            <div className={`p-4 rounded-2xl bg-background shadow-md border-2 ${step.color}`}>
+                              <Icon className={`h-8 w-8 ${gradientClass.split(' ')[2]}`} />
+                            </div>
+                          </div>
+                          <CardTitle className="text-xl font-bold text-center mb-2">{step.phase}</CardTitle>
+                          <CardDescription className="text-center text-sm font-medium">{step.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="bg-background/80 rounded-lg p-4 backdrop-blur-sm">
+                            <ul className="space-y-3">
+                              {step.steps.map((s, idx) => (
+                                <li key={idx} className="flex items-start text-sm">
+                                  <CheckCircle2 className={`h-4 w-4 mr-2 mt-0.5 flex-shrink-0 ${gradientClass.split(' ')[2]}`} />
+                                  <span className="leading-tight">{s}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Arrow Connector (Mobile) */}
+                      {index < exportFlowSteps.length - 1 && (
+                        <div className="lg:hidden flex justify-center my-4">
+                          <div className={`w-1 h-8 bg-gradient-to-b ${step.color.replace('border-', 'from-')} to-transparent`} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          {/* Detailed Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {exportFlowSteps.map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <Card key={index} className={`border-t-4 ${step.color}`}>
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <Badge variant="outline">Phase {index + 1}</Badge>
-                    </div>
-                    <CardTitle className="text-lg">{step.phase}</CardTitle>
-                    <CardDescription>{step.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {step.steps.map((s, idx) => (
-                        <li key={idx} className="flex items-start text-sm">
-                          <span className="mr-2 text-primary">•</span>
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              );
-            })}
+          {/* Call to Action */}
+          <div className="text-center mt-12">
+            <Card className="max-w-3xl mx-auto border-2 border-zim-gold/30 bg-gradient-to-br from-zim-gold/5 to-transparent">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-bold mb-4">Need Export Assistance?</h3>
+                <p className="text-muted-foreground mb-6">
+                  Our diaspora network and trade experts are ready to guide you through every step of the export process
+                </p>
+                <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 font-bold">
+                  <Package className="mr-2 h-5 w-5" />
+                  Get Export Support
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
