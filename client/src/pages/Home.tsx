@@ -188,7 +188,7 @@ export default function Home() {
                     </CardHeader>
                     <CardContent className="pt-2 pb-6">
                       <Link href={module.href}>
-                        <Button className="w-full group/btn bg-zim-gold text-zim-black hover:bg-zim-gold/90 font-bold text-lg py-6" size="lg">
+                        <Button className="w-full group/btn font-bold text-lg py-6" size="lg">
                           Explore Now
                           <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                         </Button>
