@@ -302,13 +302,13 @@ export default function Trade() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
                 {exportFlowSteps.map((step, index) => {
                   const Icon = step.icon;
-                  const colorClasses = {
+                  const colorClasses: Record<string, string> = {
                     'border-yellow-500': 'from-yellow-500/20 to-yellow-500/5 border-yellow-500 text-yellow-600',
                     'border-blue-500': 'from-blue-500/20 to-blue-500/5 border-blue-500 text-blue-600',
                     'border-green-500': 'from-green-500/20 to-green-500/5 border-green-500 text-green-600',
                     'border-purple-500': 'from-purple-500/20 to-purple-500/5 border-purple-500 text-purple-600'
                   };
-                  const gradientClass = colorClasses[step.color];
+                  const gradientClass = colorClasses[step.color] || colorClasses['border-yellow-500'];
                   
                   return (
                     <div key={index} className="relative group">
