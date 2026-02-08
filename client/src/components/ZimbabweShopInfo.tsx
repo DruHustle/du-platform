@@ -69,8 +69,7 @@ export default function ZimbabweShopInfo() {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
-      opacity: 1,
-      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+      opacity: 1
     }
   };
 
@@ -80,6 +79,7 @@ export default function ZimbabweShopInfo() {
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
+      transition={{ staggerChildren: 0.1, delayChildren: 0.1 }}
       // Reduced vertical spacing between major sections from 24 to 16
       className="max-w-7xl mx-auto px-4 space-y-16 py-12"
     >
