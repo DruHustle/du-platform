@@ -273,6 +273,26 @@ export default function Tourism() {
           </div>
         </section>
 
+
+      {/* External Links */}
+      <section className="py-16 bg-primary text-primary-foreground">
+        <div className="container">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Explore More Tourism Information
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              For detailed destination guides, booking information, and comprehensive tourism resources, visit the official Zimbabwe Tourism Authority website.
+            </p>
+            <a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" variant="secondary" className="text-lg px-8">
+                Visit Zimbabwe Tourism Authority <ExternalLink className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
+          </div>
+        </div>
+      </section>
+
     </Layout>
   );
 }
