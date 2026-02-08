@@ -109,6 +109,12 @@ export default function ExportHub() {
       icon: Shield,
       examples: ["German Customs (Zoll)", "Certification Bodies", "Quality Assurance Agencies", "Trade Compliance Consultants"],
       description: "Support for regulatory compliance and certifications"
+    },
+    {
+      type: "Financial Services",
+      icon: Building2,
+      examples: ["Deutsche Bank", "Commerzbank", "KfW Development Bank", "Export Credit Agencies", "Trade Finance Providers"],
+      description: "Banking and financial support for international trade transactions"
     }
   ];
 
