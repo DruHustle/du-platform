@@ -95,7 +95,7 @@ export default function ZimbabweShopInfo() {
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
           <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
-            "To build the leading global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
+            "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
           </h3>
           <div className="flex items-center justify-center gap-6">
             <div className="h-px w-12 bg-zim-gold/50" />
