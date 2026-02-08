@@ -183,7 +183,7 @@ export default function Home() {
                       </div>
                     </div>
                     <CardHeader className="pb-3 pt-6">
-                      <CardTitle className="text-2xl md:text-3xl font-bold group-hover:text-zim-gold transition-colors mb-3">{module.title}</CardTitle>
+                      <CardTitle className="text-2xl md:text-3xl font-bold group-hover:text-primary transition-colors mb-3">{module.title}</CardTitle>
                       <CardDescription className="text-base md:text-lg leading-relaxed">{module.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="pt-2 pb-6">
