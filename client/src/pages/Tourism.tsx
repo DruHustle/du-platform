@@ -123,8 +123,7 @@ export default function Tourism() {
         </div>
       </section>
 
-
-{/* Key Attractions */}
+      {/* Key Attractions */}
       <section className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-16 space-y-4">
