@@ -85,6 +85,56 @@ export default function Tourism() {
       subtitle: "World-famous sunsets over Africa's largest man-made lake",
       description: "Experience legendary tiger fishing, houseboat holidays, and spectacular wildlife along the shoreline. Witness elephants swimming between islands at sunset.",
       buttons: []
+    },
+    {
+      image: "/images/zimbabwe_lion.png",
+      badge: "Big Five Safari",
+      badgeIcon: true,
+      title: "Majestic Lions",
+      titleHighlight: "",
+      subtitle: "Encounter the king of the African savanna in its natural habitat",
+      description: "Zimbabwe's national parks are home to thriving lion populations. Experience close encounters with these magnificent predators on guided safaris across pristine wilderness.",
+      buttons: []
+    },
+    {
+      image: "/images/harare_statue_1.png",
+      badge: "Urban Heritage",
+      badgeIcon: true,
+      title: "Harare City Center",
+      titleHighlight: "",
+      subtitle: "Modern capital city with rich historical landmarks",
+      description: "Explore Zimbabwe's vibrant capital featuring iconic monuments, bustling markets, world-class restaurants, and a thriving arts scene in the heart of Southern Africa.",
+      buttons: []
+    },
+    {
+      image: "/images/harare_statue_2.png",
+      badge: "National Pride",
+      badgeIcon: true,
+      title: "Heroes & Heritage",
+      titleHighlight: "",
+      subtitle: "Monuments celebrating Zimbabwe's journey to independence",
+      description: "Visit historic statues and memorials honoring Zimbabwe's heroes and liberation struggle. Discover the stories that shaped the nation's identity and pride.",
+      buttons: []
+    },
+    {
+      image: "/images/harare_airport.png",
+      badge: "Gateway to Africa",
+      badgeIcon: true,
+      title: "Robert Gabriel Mugabe International Airport",
+      titleHighlight: "",
+      subtitle: "Your arrival point to Zimbabwe's wonders",
+      description: "Modern international airport with distinctive architectural design. The starting point for your Zimbabwe adventure, connecting you to world-class destinations.",
+      buttons: []
+    },
+    {
+      image: "/images/i_love_zimbabwe.jpg",
+      badge: "National Spirit",
+      badgeIcon: true,
+      title: "I ❤️ Zimbabwe",
+      titleHighlight: "",
+      subtitle: "Experience the warmth and pride of Zimbabwean hospitality",
+      description: "From stunning landscapes to vibrant culture, discover why millions around the world love Zimbabwe. Join the journey and fall in love with our beautiful nation.",
+      buttons: []
     }
   ];
 

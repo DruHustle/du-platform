@@ -15,7 +15,12 @@ export default function Home() {
     "/images/eastern_highlands.jpg",
     "/images/mana_pools.jpg",
     "/images/kariba_sunset.jpg",
-    "/images/zimbabwe_shop_hero.jpg"
+    "/images/zimbabwe_shop_hero.jpg",
+    "/images/zimbabwe_lion.png",
+    "/images/harare_statue_1.png",
+    "/images/harare_statue_2.png",
+    "/images/harare_airport.png",
+    "/images/i_love_zimbabwe.jpg"
   ];
     const bgTimer = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
