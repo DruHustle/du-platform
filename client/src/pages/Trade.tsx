@@ -146,7 +146,8 @@ export default function Trade() {
       steps: [
         "Register for REX System via ZIMRA",
         "Consult ZimTrade for Market Intelligence",
-        "Obtain Required Certifications"
+        "Obtain Required Certifications",
+        "Complete Export Registration with Relevant Authorities"
       ],
       icon: FileCheck,
       color: "border-blue-500"
@@ -157,7 +158,8 @@ export default function Trade() {
       steps: [
         "GLOBALG.A.P. & GRASP Certification",
         "EU Organic Certification (if applicable)",
-        "Quality Control: Class I, MRL Limits"
+        "Quality Control: Class I, MRL Limits",
+        "Third-Party Audits & Compliance Verification"
       ],
       icon: CheckCircle2,
       color: "border-green-500"
