@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,9 +6,49 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Quote, TrendingUp, Users, DollarSign, Award } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SuccessStories() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "/images/success_entrepreneurs.jpeg",
+      badge: "Impact Stories",
+      title: "Diaspora-Driven Success",
+      subtitle: "Real stories of Zimbabwean businesses transformed through diaspora connections and support",
+      highlight: "$8.5M+ Generated"
+    },
+    {
+      image: "/images/leather_products.jpg",
+      badge: "Export Success",
+      title: "Leather Goods to Europe",
+      subtitle: "$2.5M revenue, 150+ jobs created, exporting to 3 European countries",
+      highlight: "18 Months to Success"
+    },
+    {
+      image: "/images/victoria_falls.jpg",
+      badge: "Investment Success",
+      title: "Victoria Falls Eco-Lodge",
+      subtitle: "280 diaspora investors pooled $500K to build a thriving tourism business",
+      highlight: "$1.2M Annual Revenue"
+    },
+    {
+      image: "/images/tech_startup.jpg",
+      badge: "Tech Innovation",
+      title: "Fintech Startup Growth",
+      subtitle: "$750K diaspora funding, 500K+ users, combining Silicon Valley standards with African market realities",
+      highlight: "$3.5M Valuation"
+    }
+  ];
+
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 7000);
+    return () => clearInterval(heroTimer);
+  }, []);
 
   const stories = [
     {
@@ -154,26 +194,75 @@ export default function SuccessStories() {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative h-[400px] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/images/investment_bg.jpg')`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-        </div>
+      {/* Hero Carousel Section */}
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentHeroIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
+          >
+            <motion.div 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
+          </motion.div>
+        </AnimatePresence>
         
         <div className="relative z-10 container text-white">
-          <Badge className="mb-4 bg-secondary text-secondary-foreground">Success Stories</Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Diaspora Impact in Action
-          </h1>
-          <p className="text-xl md:text-2xl mb-6 max-w-3xl opacity-95">
-            Real stories of how diaspora engagement is transforming Zimbabwe's economy
-          </p>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`content-${currentHeroIndex}`}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-4xl"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <Award className="h-8 w-8 text-zim-gold" />
+                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                  {heroSlides[currentHeroIndex].badge}
+                </Badge>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+                {heroSlides[currentHeroIndex].title}
+              </h1>
+              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
+                {heroSlides[currentHeroIndex].subtitle}
+              </p>
+              <div className="flex items-center gap-3 mb-8">
+                <TrendingUp className="h-6 w-6 text-zim-green" />
+                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex].highlight}</span>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
+        
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {heroSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentHeroIndex(idx)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+        
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Impact Metrics */}
