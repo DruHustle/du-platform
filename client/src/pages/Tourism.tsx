@@ -177,161 +177,102 @@ export default function Tourism() {
         </div>
       </section>
 
+
       {/* Planning Your Visit */}
-      <section className="section-padding bg-background">
-        <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 items-center">
-            <div className="lg:col-span-1 space-y-6">
-              <Badge className="bg-zim-green/10 text-zim-green border-none uppercase tracking-widest px-4">Travel Guide</Badge>
-              <h2 className="text-4xl font-bold leading-tight">Essential Planning Information</h2>
-              <p className="text-lg text-muted-foreground">
-                Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.
-              </p>
-              <div className="pt-4">
-                <Button className="rounded-full px-8 h-12 bg-zim-green hover:bg-zim-green/90">
-                  Download Travel Kit
-                </Button>
-              </div>
-            </div>
-
-            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {planningInfo.map((info, index) => {
-                const Icon = info.icon;
-                return (
-                  <Card key={index} className="border border-border/50 hover:border-primary/20 hover:shadow-md transition-all rounded-2xl bg-card">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center space-x-4 mb-2">
-                        <div className="p-3 bg-zim-green/5 rounded-xl">
-                          <Icon className="h-6 w-6 text-zim-green" />
-                        </div>
-                        <CardTitle className="text-xl">{info.title}</CardTitle>
-                      </div>
-                      <CardDescription className="text-sm">{info.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {info.details.map((detail, idx) => (
-                          <li key={idx} className="flex items-start text-sm group">
-                            <CheckCircle2 className="mr-3 h-4 w-4 text-zim-green shrink-0 mt-0.5" />
-                            <span className="text-muted-foreground group-hover:text-foreground transition-colors">{detail}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Diaspora Tourism Packages */}
       <section className="section-padding bg-zim-black text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
         <div className="container relative z-10">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-zim-gold text-zim-black border-none uppercase tracking-widest px-4">Diaspora Specials</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold">Homecoming Packages</h2>
+            <Badge className="bg-zim-gold text-zim-black border-none uppercase tracking-widest px-4">Travel Guide</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold">Essential Planning Information</h2>
             <p className="text-lg text-white/60 max-w-2xl mx-auto">
-              Curated experiences designed specifically for Zimbabweans abroad reconnecting with their roots.
+             Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Heritage Tour",
-                duration: "10 Days",
-                price: "From $1,499",
-                features: ["Cultural sites", "Family reunions", "Local guides"]
-              },
-              {
-                title: "Safari Explorer",
-                duration: "7 Days",
-                price: "From $2,199",
-                features: ["Hwange Safari", "Mana Pools", "Luxury Lodges"]
-              },
-              {
-                title: "Business & Leisure",
-                duration: "14 Days",
-                price: "From $1,899",
-                features: ["Investment tours", "City stays", "Resort relaxation"]
-              }
-            ].map((pkg, index) => (
-              <motion.div 
-                key={index}
-                whileHover={{ y: -10 }}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-[2rem] flex flex-col justify-between"
-              >
-                <div className="space-y-6">
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-2xl font-bold text-zim-gold">{pkg.title}</h3>
-                    <Badge variant="outline" className="text-white border-white/30">{pkg.duration}</Badge>
-                  </div>
-                  <ul className="space-y-4">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-3 text-white/80">
-                        <CheckCircle2 className="h-5 w-5 text-zim-gold" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="mt-10 pt-8 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-xl font-bold">{pkg.price}</span>
-                  <Button variant="ghost" className="text-zim-gold hover:text-zim-gold hover:bg-white/10">
-                    View Details
-                  </Button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="section-padding bg-background">
-        <div className="container">
-          <div className="max-w-5xl mx-auto bg-muted/30 rounded-[3rem] p-8 md:p-16 border border-border/50">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <h2 className="text-4xl font-bold">Ready to Start Your Adventure?</h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Our travel experts are ready to help you plan the perfect Zimbabwean experience tailored to your interests and needs.
-                  </p>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-full bg-zim-green/10 flex items-center justify-center text-zim-green">
-                      <Shield className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold">Expert Support</h4>
-                      <p className="text-sm text-muted-foreground">Dedicated travel specialists at your service.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-full bg-zim-gold/10 flex items-center justify-center text-zim-gold">
-                      <Award className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold">Verified Partners</h4>
-                      <p className="text-sm text-muted-foreground">We only work with the best local operators.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-card p-8 rounded-3xl shadow-xl border border-primary/10">
-                <ContactForm />
-              </div>
+            <div className="pt-4">
+              <Button className="rounded-full px-8 h-12 bg-zim-green hover:bg-zim-green/90">
+                Download Travel Kit
+              </Button>
             </div>
+
           </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        {planningInfo.map((info, index) => {
+          const Icon = info.icon;
+          return (
+            <motion.div
+              key={index}
+              whileHover={{ y: -10 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-[2rem] flex flex-col justify-between"
+            >
+              <div className="space-y-6">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+
+                      {/* Keeping your dynamic icon logic */}
+                      <Icon className="h-6 w-6 text-zim-gold" />
+                      <h3 className="text-2xl font-bold text-zim-gold">
+                        {info.title}
+                      </h3>
+                    </div>
+                    <p className="text-white/60 text-sm leading-relaxed">
+                      {info.description}
+                    </p>
+                  </div>
+
+                </div>
+
+                <ul className="space-y-4">
+                  {/* Mapping 'details' from original data to the new 'features' style */}
+                  {info.details.map((detail, idx) => (
+                    <li key={idx} className="flex items-start gap-3 text-white/80 text-sm">
+                      <CheckCircle2 className="h-5 w-5 text-zim-gold shrink-0 mt-0.5" />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </motion.div>
+          );
+        })}
+      </div>
+
         </div>
       </section>
+
+        {/* Contact Section */}
+        <section className="py-16">
+          <div className="container">
+            <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+              <CardHeader>
+                <CardTitle className="text-2xl">Ready to Start Your Adventure?</CardTitle>
+                <CardDescription className="text-base">
+                  Our travel experts are ready to help you plan the perfect Zimbabwean experience tailored to your interests and needs.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="text-lg px-8">
+                      Connect with an Expert
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <ContactForm
+                      title="Travel Inquiry"
+                      description="Fill out the form below and our travel specialists will contact you."
+                      module= "tourism"
+                    />
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
     </Layout>
   );
 }
