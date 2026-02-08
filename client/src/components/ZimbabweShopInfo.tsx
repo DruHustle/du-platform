@@ -12,7 +12,6 @@ export default function ZimbabweShopInfo() {
   const sportsJerseys = [
     { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
     { image: "/images/sports_rugby_jersey1.jpg", title: "Sables Rugby Home Kit" },
-    { image: "/images/sports_rugby_jersey2.jpg", title: "Sables Rugby Fan Jersey" },
     { image: "/images/shop_sports.jpg", title: "Chevrons Cricket" },
     { image: "/images/sports_cricket_kit1.jpg", title: "Chevrons T20 Kit" },
     { image: "/images/sports_cricket_kit2.jpg", title: "Chevrons World Cup Jersey" },
@@ -232,7 +231,7 @@ export default function ZimbabweShopInfo() {
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
           <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
-            "To build the leading global commercial gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
+            "To build the leading global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
           </h3>
           <div className="flex items-center justify-center gap-6">
             <div className="h-px w-12 bg-zim-gold/50" />
