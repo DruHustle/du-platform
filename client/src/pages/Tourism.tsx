@@ -193,6 +193,9 @@ export default function Tourism() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_hwange.png" alt="Hwange National Park" className="w-full h-full object-cover" />
+                </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-bold mb-3 text-zim-green">Hwange National Park</h4>
                   <p className="text-muted-foreground mb-4">
@@ -207,6 +210,9 @@ export default function Tourism() {
               </Card>
 
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_matobo.jpg" alt="Matobo National Park" className="w-full h-full object-cover" />
+                </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-bold mb-3 text-zim-green">Matobo National Park</h4>
                   <p className="text-muted-foreground mb-4">
@@ -221,6 +227,9 @@ export default function Tourism() {
               </Card>
 
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_eastern_highlands.jpg" alt="Eastern Highlands" className="w-full h-full object-cover" />
+                </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-bold mb-3 text-zim-green">Eastern Highlands</h4>
                   <p className="text-muted-foreground mb-4">
@@ -235,6 +244,9 @@ export default function Tourism() {
               </Card>
 
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_mana_pools.jpg" alt="Mana Pools National Park" className="w-full h-full object-cover" />
+                </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-bold mb-3 text-zim-green">Mana Pools National Park</h4>
                   <p className="text-muted-foreground mb-4">
@@ -249,6 +261,9 @@ export default function Tourism() {
               </Card>
 
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_nyanga.jpg" alt="Nyanga National Park" className="w-full h-full object-cover" />
+                </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-bold mb-3 text-zim-green">Nyanga National Park</h4>
                   <p className="text-muted-foreground mb-4">
@@ -263,6 +278,9 @@ export default function Tourism() {
               </Card>
 
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_gonarezhou.jpg" alt="Gonarezhou National Park" className="w-full h-full object-cover" />
+                </div>
                 <CardContent className="p-6">
                   <h4 className="text-xl font-bold mb-3 text-zim-green">Gonarezhou National Park</h4>
                   <p className="text-muted-foreground mb-4">
