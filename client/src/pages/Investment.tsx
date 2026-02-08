@@ -385,13 +385,13 @@ export default function Investment() {
           {/* Filters */}
           <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center px-4">
             <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-full md:w-auto">
-              <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="agriculture">Agriculture</TabsTrigger>
-                <TabsTrigger value="tech">Tech</TabsTrigger>
-                <TabsTrigger value="infrastructure">Infrastructure</TabsTrigger>
-                <TabsTrigger value="manufacturing">Manufacturing</TabsTrigger>
-                <TabsTrigger value="tourism">Tourism</TabsTrigger>
+              <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1 h-auto">
+                <TabsTrigger value="all" className="text-xs sm:text-sm px-2 py-2">All</TabsTrigger>
+                <TabsTrigger value="agriculture" className="text-xs sm:text-sm px-2 py-2">Agriculture</TabsTrigger>
+                <TabsTrigger value="tech" className="text-xs sm:text-sm px-2 py-2">Tech</TabsTrigger>
+                <TabsTrigger value="infrastructure" className="text-xs sm:text-sm px-2 py-2">Infrastructure</TabsTrigger>
+                <TabsTrigger value="manufacturing" className="text-xs sm:text-sm px-2 py-2">Manufacturing</TabsTrigger>
+                <TabsTrigger value="tourism" className="text-xs sm:text-sm px-2 py-2">Tourism</TabsTrigger>
               </TabsList>
             </Tabs>
             
