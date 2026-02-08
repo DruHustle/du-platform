@@ -13,7 +13,6 @@ export default function Home() {
   const heroBackgrounds = [
     "/images/victoria_falls.jpg",
     "/images/partnership_handshake.png",
-    "/images/diaspora_investment.jpg",
     "/images/african_trade.jpg",
     "/images/hwange_elephants.jpg",
     "/images/eu_symbol.png"
@@ -65,12 +64,6 @@ export default function Home() {
     }
   ];
 
-    const stats = [
-      { value: "€2.8B", label: "EU-Zimbabwe Trade", icon: TrendingUp },
-      { value: "50+", label: "Export Guides", icon: FileText },
-      { value: "100+", label: "Partner Network", icon: Users },
-      { value: "0%", label: "EPA Tariffs", icon: Award }
-    ];
 
 
   return (
@@ -144,24 +137,6 @@ export default function Home() {
 
       </section>
 
-      {/* Stats Bar */}
-      <section className="py-8 bg-primary">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <div key={idx} className="text-center text-white">
-                  <Icon className="h-6 w-6 mx-auto mb-2 text-secondary" />
-                  <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Four Modules */}
       <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
         <div className="container">
@@ -227,6 +202,31 @@ export default function Home() {
         </div>
       </section>
 
+
+      {/* Trust Indicators */}
+      <section className="py-12 bg-background border-t">
+        <div className="container">
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              <span className="text-sm font-medium">Diaspora Verified</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="h-5 w-5" />
+              <span className="text-sm font-medium">ZIDA Partner</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="h-5 w-5" />
+              <span className="text-sm font-medium">ZimTrade Certified</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5" />
+              <span className="text-sm font-medium">Vision 2030 Aligned</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* External Links */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
@@ -254,29 +254,6 @@ export default function Home() {
       </section>
 
 
-      {/* Trust Indicators */}
-      <section className="py-12 bg-background border-t">
-        <div className="container">
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              <span className="text-sm font-medium">Diaspora Verified</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Award className="h-5 w-5" />
-              <span className="text-sm font-medium">ZIDA Partner</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5" />
-              <span className="text-sm font-medium">ZimTrade Certified</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5" />
-              <span className="text-sm font-medium">Vision 2030 Aligned</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 }
