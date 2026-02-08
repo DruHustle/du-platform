@@ -34,7 +34,7 @@ export default function Home() {
       description: "Access German market requirements, regulations, certifications, and connect with potential partners for exporting Zimbabwean products.",
       icon: BookOpen,
       href: "/export-hub",
-      color: "border-t-4 border-t-green-600 bg-green-600/5 hover:bg-green-600/10",
+      color: " bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/eu_symbol.png",
       stats: "50+ Export Guides"
     },
@@ -43,7 +43,7 @@ export default function Home() {
       description: "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
       icon: Plane,
       href: "/tourism",
-         color: "border-t-4 border-t-yellow-500 bg-yellow-500/5 hover:bg-yellow-500/10",
+         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
       bgImage: "/images/hwange_elephants.jpg",
       stats: "Forbes #1 2025"
     },
@@ -52,7 +52,7 @@ export default function Home() {
       description: "Explore diaspora-friendly micro-investment and crowdfunding opportunities in verified Zimbabwean projects.",
       icon: TrendingUp,
       href: "/investment",
-      color: "border-t-4 border-t-red-600 bg-red-600/5 hover:bg-red-600/10",
+      color: " bg-red-600/5 hover:bg-red-600/10",
       bgImage: "/images/infrastructure_investment.webp",
       stats: "$50M+ Opportunities"
     },
@@ -61,7 +61,7 @@ export default function Home() {
       description: "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
       icon: Package,
       href: "/trade",
-      color: "border-t-4 border-t-slate-800 bg-slate-800/5 hover:bg-slate-800/10",
+      color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/african_trade.jpg",
       stats: "8 Export Sectors"
     }
@@ -173,23 +173,23 @@ export default function Home() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                       </div>
                       <div className="absolute bottom-6 left-6 text-white">
-                        <div className="bg-zim-gold/20 backdrop-blur-md p-4 rounded-2xl mb-3 inline-block border-2 border-zim-gold/40 shadow-xl">
-                          <Icon className="h-10 w-10 text-zim-gold" />
+                        <div className="bg-white/10 backdrop-blur-lg p-4 rounded-2xl mb-3 inline-block border border-white/20 shadow-2xl">
+                          <Icon className="h-10 w-10 text-white" />
                         </div>
                       </div>
                       <div className="absolute top-6 right-6">
-                        <span className="bg-zim-gold text-zim-black text-sm font-bold px-4 py-2 rounded-full shadow-xl">
+                        <span className="bg-zim-gold backdrop-blur-md border border-white/20 text-zim-black text-sm font-bold px-4 py-2 rounded-full shadow-xl">
                           {module.stats}
                         </span>
                       </div>
                     </div>
                     <CardHeader className="pb-3 pt-6">
-                      <CardTitle className="text-2xl md:text-3xl font-bold group-hover:text-zim-gold transition-colors mb-3">{module.title}</CardTitle>
+                      <CardTitle className="text-2xl md:text-3xl font-bold group-hover:text-primary transition-colors mb-3">{module.title}</CardTitle>
                       <CardDescription className="text-base md:text-lg leading-relaxed">{module.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="pt-2 pb-6">
                       <Link href={module.href}>
-                        <Button className="w-full group/btn bg-zim-gold text-zim-black hover:bg-zim-gold/90 font-bold text-lg py-6" size="lg">
+                        <Button className="w-full group/btn font-bold text-lg py-6" size="lg">
                           Explore Now
                           <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                         </Button>
