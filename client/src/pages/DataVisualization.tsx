@@ -41,7 +41,7 @@ export default function DataVisualization() {
 
   const heroSlides = [
     {
-      image: "/images/investment_bg.jpg",
+      image: "/images/infrastructure_investment.webp",
       badge: "Economic Growth 2025",
       badgeIcon: true,
       title: "Data-Driven ",
@@ -56,7 +56,7 @@ export default function DataVisualization() {
     {
       image: "/images/manufacturing_factory.jpg",
       badge: "Industrial Excellence",
-      badgeIcon: false,
+      badgeIcon: true,
       title: "Manufacturing ",
       titleHighlight: "Growth",
       subtitle: "Industrial sector contributing 15.3% to the national GDP.",
@@ -74,23 +74,43 @@ export default function DataVisualization() {
       buttons: []
     },
     {
-      image: "/images/horticulture.jpg",
-      badge: "Agricultural Record",
+      image: "/images/african_trade.jpg",
+      badge: "Export Excellence",
       badgeIcon: true,
-      title: "Agricultural ",
-      titleHighlight: "Revival",
-      subtitle: "Record-breaking wheat production and growing horticulture exports.",
-      description: "Modernizing agriculture to ensure food security and increase high-value exports to international markets.",
+      title: "International ",
+      titleHighlight: "Trade",
+      subtitle: "Growing export base reaching markets across Africa and beyond.",
+      description: "Zimbabwe's strategic position in regional trade networks drives economic growth and creates opportunities for diaspora investment.",
+      buttons: []
+    },
+    {
+      image: "/images/diaspora_investment.jpg",
+      badge: "Diaspora Capital",
+      badgeIcon: true,
+      title: "Remittance ",
+      titleHighlight: "Impact",
+      subtitle: "$1.8B in annual remittances fueling economic development.",
+      description: "The global diaspora's financial contributions transform lives through education, housing, healthcare, and business investment.",
+      buttons: []
+    },
+    {
+      image: "/images/export_hub_bg.jpg",
+      badge: "Export Hub",
+      badgeIcon: true,
+      title: "Export ",
+      titleHighlight: "Gateway",
+      subtitle: "Zimbabwe's position as a regional export hub.",
+      description: "Strategic infrastructure and favorable trade policies position Zimbabwe as a key distribution center for Southern Africa.",
       buttons: []
     }
   ];
 
   useEffect(() => {
     const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+      setCurrentHeroIndex((prev) => (prev + 1) % 6);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, [heroSlides.length]);
+  }, []);
 
   // Animate counter on mount
   useEffect(() => {
@@ -287,7 +307,7 @@ export default function DataVisualization() {
           
           {/* Carousel Indicators */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-            {heroSlides.map((_, idx) => (
+            {[0, 1, 2, 3, 4, 5].map((idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentHeroIndex(idx)}
