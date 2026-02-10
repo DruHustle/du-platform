@@ -45,7 +45,7 @@ export default function Tourism() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, [heroSlides.length]);
+  }, []);
 
   const attractions = [
     {
@@ -127,7 +127,7 @@ export default function Tourism() {
                 backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
+            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
           </motion.div>
         </AnimatePresence>
         
@@ -139,45 +139,45 @@ export default function Tourism() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -30, opacity: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-4xl"
+              className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
             >
-              <div className="flex items-center gap-3 mb-6">
-                <Award className="h-8 w-8 text-zim-gold" />
+              <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
+                {heroSlides[currentHeroIndex].badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
                 <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
                   {heroSlides[currentHeroIndex].badge}
                 </Badge>
               </div>
               <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
                 {heroSlides[currentHeroIndex].title}
-                <span className="text-zim-gold">{heroSlides[currentHeroIndex].titleHighlight}</span>
+                {heroSlides[currentHeroIndex].titleHighlight && (
+                  <span className="text-zim-gold italic">{heroSlides[currentHeroIndex].titleHighlight}</span>
+                )}
               </h1>
-              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
+              <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
                 {heroSlides[currentHeroIndex].subtitle}
               </p>
               {heroSlides[currentHeroIndex].description && (
-                <p className="text-lg mb-8 text-white/80 max-w-2xl">
+                <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
                   {heroSlides[currentHeroIndex].description}
                 </p>
               )}
-              <div className="flex flex-wrap gap-4">
-                {heroSlides[currentHeroIndex].buttons.length > 0 ? (
-                  heroSlides[currentHeroIndex].buttons.map((btn, idx) => (
+              {heroSlides[currentHeroIndex].buttons.length > 0 && (
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {heroSlides[currentHeroIndex].buttons.map((button, idx) => (
                     <Button 
                       key={idx}
                       size="lg" 
-                      variant={btn.variant as any}
-                      className={btn.variant === "primary" ? "bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold" : "text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold"}
+                      variant={button.variant === "outline" ? "outline" : "default"}
+                      className={button.variant === "outline" 
+                        ? "text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold"
+                        : "bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold"
+                      }
                     >
-                      {btn.text}
+                      {button.text}
                     </Button>
-                  ))
-                ) : (
-                  <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold group">
-                    Learn More
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -195,153 +195,309 @@ export default function Tourism() {
             />
           ))}
         </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Attractions Grid */}
-      <section className="py-20 bg-gradient-to-b from-muted/30 to-background" id="attractions">
+
+      {/* Zimbabwe Shop Section */}
+     <section className="pt-0 pb-0 bg-background relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-zim-green/5 rounded-full blur-3xl -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-zim-gold/5 rounded-full blur-3xl -ml-20 -mb-20" />
+        <div className="container relative z-10">
+          <ZimbabweShopInfo />
+        </div>
+      </section>
+
+      {/* Key Attractions */}
+      <section className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30">.
         <div className="container">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              Explore Zimbabwe
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t('tourism.attractions_title')}</h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              {t('tourism.attractions_subtitle')}
+          <div className="text-center mb-16 space-y-4">
+            <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Destinations</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold">Must-Visit Attractions</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              From ancient ruins to natural wonders, Zimbabwe offers experiences that will stay with you forever.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 perspective-1000">
             {attractions.map((attraction, index) => (
-              <motion.div
+              <motion.div 
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ delay: index * 0.1 }}
+                className="group"
               >
-                <Card className="overflow-hidden border-2 hover:border-zim-gold/50 group transition-all duration-500 hover:shadow-2xl h-full">
-                  <div className="relative h-80 overflow-hidden">
+                <Card className="card-professional overflow-hidden border-none shadow-xl transition-all duration-500 ease-out 
+                  hover:shadow-2xl 
+                  group-hover:-translate-y-4 
+                  group-hover:rotate-x-2 
+                  group-hover:rotate-y-[-2deg] 
+                  bg-white">
+                  <div className="relative h-80 overflow-hidden rounded-t-xl">
                     <img 
                       src={attraction.image} 
-                      alt={attraction.name} 
+                      alt={attraction.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-6 left-6 text-white">
-                      <h3 className="text-3xl font-bold mb-2">{attraction.name}</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {attraction.highlights.map((h, i) => (
-                          <Badge key={i} variant="secondary" className="bg-white/20 backdrop-blur-md text-white border-none">
-                            {h}
-                          </Badge>
+                    <div className="absolute inset-0 bg-gradient-to-t from-zim-black/90 via-zim-black/20 to-transparent opacity-80" />
+                    <div className="absolute bottom-6 left-6 right-6 transition-transform duration-500 group-hover:translate-z-10">
+                       <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-md">{attraction.name}</h3>
+                       <div className="flex flex-wrap gap-2">
+                        {attraction.highlights.map((highlight, idx) => (
+                          <span key={idx} className="text-[10px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-md text-white px-2 py-1 rounded shadow-sm">
+                            {highlight}
+                          </span>
                         ))}
                       </div>
                     </div>
                   </div>
-                  <CardHeader>
-                    <CardTitle className="text-xl font-bold text-primary">{attraction.description}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <p className="text-muted-foreground leading-relaxed">
+                  <CardContent className="p-6">
+                    <p className="text-muted-foreground mb-4">
                       {attraction.summary}
                     </p>
-                    <Button variant="outline" className="w-full group/btn font-bold">
-                      View Destination Guide
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      {attraction.highlights.map((highlight, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">{highlight}</Badge>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
+
+          {/* Explore More Destinations */}
+          <div id="explore-destinations" className="mt-20">
+            <div className="text-center mb-12 space-y-4">
+              <Badge variant="outline" className="border-zim-gold text-zim-gold uppercase tracking-widest px-4">Explore More</Badge>
+              <h3 className="text-3xl md:text-4xl font-bold">Other Incredible Destinations</h3>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_hwange.png" alt="Hwange National Park" className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Hwange National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Zimbabwe's largest national park, home to over 100 mammal species and 400 bird species. Famous for its large elephant herds and year-round game viewing.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Wildlife Safari</Badge>
+                    <Badge variant="secondary" className="text-xs">Big Five</Badge>
+                    <Badge variant="secondary" className="text-xs">Game Drives</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_matobo.jpg" alt="Matobo National Park" className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Matobo National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Ancient granite formations and sacred sites with rock art dating back thousands of years. Home to black and white rhinos, and the burial site of Cecil Rhodes.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Rock Art</Badge>
+                    <Badge variant="secondary" className="text-xs">Rhino Tracking</Badge>
+                    <Badge variant="secondary" className="text-xs">History</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_eastern_highlands.jpg" alt="Eastern Highlands" className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Eastern Highlands</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Misty mountains, lush forests, and cascading waterfalls. Perfect for hiking, birdwatching, and experiencing Zimbabwe's cooler climate and scenic beauty.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Hiking Trails</Badge>
+                    <Badge variant="secondary" className="text-xs">Waterfalls</Badge>
+                    <Badge variant="secondary" className="text-xs">Birdwatching</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_mana_pools.jpg" alt="Mana Pools National Park" className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Mana Pools National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    UNESCO World Heritage Site on the Zambezi River. Renowned for walking safaris, canoeing adventures, and exceptional wildlife encounters in pristine wilderness.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Walking Safari</Badge>
+                    <Badge variant="secondary" className="text-xs">Canoeing</Badge>
+                    <Badge variant="secondary" className="text-xs">UNESCO Site</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_nyanga.jpg" alt="Nyanga National Park" className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Nyanga National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    Zimbabwe's oldest national park featuring Mutarazi Falls (Africa's second highest), mountain scenery, trout fishing, and the famous Nyanga Skywalk.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Mountain Views</Badge>
+                    <Badge variant="secondary" className="text-xs">Trout Fishing</Badge>
+                    <Badge variant="secondary" className="text-xs">Skywalk</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img src="/images/dest_gonarezhou.jpg" alt="Gonarezhou National Park" className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-6">
+                  <h4 className="text-xl font-bold mb-3 text-zim-green">Gonarezhou National Park</h4>
+                  <p className="text-muted-foreground mb-4">
+                    "Place of Elephants" - a remote wilderness area with dramatic Chilojo Cliffs, diverse ecosystems, and part of the Great Limpopo Transfrontier Park.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-xs">Remote Safari</Badge>
+                    <Badge variant="secondary" className="text-xs">Elephants</Badge>
+                    <Badge variant="secondary" className="text-xs">Chilojo Cliffs</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Zimbabwe Shop Info Section */}
-      <section className="py-24 bg-zim-black text-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zim-green via-zim-gold to-zim-red" />
+
+     {/* Planning Your Visit */}
+      <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
+       
+        <div className="absolute inset-0 bg-[url('/images/cubes.png')] opacity-5" />
+        
         <div className="container relative z-10">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              Coming Soon
-            </Badge>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">🇿🇼 The Zimbabwe Shop</h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
-              Bringing the best of Zimbabwe to the European diaspora. Authenticity, quality, and heritage delivered to your doorstep.
-            </p>
-          </div>
-          <ZimbabweShopInfo />
-        </div>
-      </section>
+          <div className="text-center mb-16 space-y-4">
+          <Badge variant="outline" className="border-yellow-400 text-yellow-400 uppercase tracking-widest px-4">Travel Guide</Badge>
 
-      {/* Travel Planning Section */}
-      <section className="py-20 bg-background" id="plan">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t('tourism.plan_visit_title')}</h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-              {t('tourism.plan_visit_desc')}
+            <h2 className="text-4xl md:text-5xl font-bold">Essential Planning Information</h2>
+            <p className="text-lg opacity-90 max-w-2xl mx-auto">
+             Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.
             </p>
+
+            <div className="pt-4">
+              <Button size="lg" variant="secondary" className="rounded-full px-8 h-12">
+                Download Travel Kit
+              </Button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {planningInfo.map((info, index) => {
               const Icon = info.icon;
               return (
-                <Card key={index} className="border-2 hover:border-zim-gold transition-colors duration-300">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                      <Icon className="h-6 w-6 text-primary" />
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -10 }}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 p-8 rounded-[2rem] flex flex-col justify-between"
+                >
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          {/* Icons now use the secondary color (likely the gold/yellow) to pop against green */}
+                          <Icon className="h-6 w-6 text-secondary" />
+                          <h3 className="text-2xl font-bold text-white">
+                            {info.title}
+                          </h3>
+                        </div>
+                        <p className="opacity-80 text-sm leading-relaxed">
+                          {info.description}
+                        </p>
+                      </div>
                     </div>
-                    <CardTitle className="text-xl font-bold">{info.title}</CardTitle>
-                    <CardDescription className="text-base">{info.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
+
+                    <ul className="space-y-4">
                       {info.details.map((detail, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <CheckCircle2 className="h-4 w-4 text-zim-green" />
-                          {detail}
+                        <li key={idx} className="flex items-start gap-3 text-white text-sm">
+                          <CheckCircle2 className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
+                          <span>{detail}</span>
                         </li>
                       ))}
                     </ul>
-                  </CardContent>
-                </Card>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
-
-          <div className="mt-16 text-center">
-            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="bg-primary text-white hover:bg-primary/90 px-12 h-16 rounded-full font-bold text-lg shadow-xl">
-                  Connect with a Travel Specialist
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                <ContactForm 
-                  title={t('tourism.contact_title')}
-                  description={t('tourism.contact_desc')}
-                  module="tourism"
-                />
-              </DialogContent>
-            </Dialog>
-          </div>
         </div>
       </section>
 
-      {/* Partners Section */}
-      <section className="py-16 border-t bg-muted/20">
+        {/* Contact Section */}
+        <section className="py-16">
+          <div className="container">
+            <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+              <CardHeader>
+                <CardTitle className="text-2xl">Ready to Start Your Adventure?</CardTitle>
+                <CardDescription className="text-base">
+                  Our travel experts are ready to help you plan the perfect Zimbabwean experience tailored to your interests and needs.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="text-lg px-8">
+                      Connect with an Expert
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <ContactForm
+                      title="Travel Inquiry"
+                      description="Fill out the form below and our travel specialists will contact you."
+                      module= "tourism"
+                    />
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+
+      {/* External Links */}
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
-          <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <img src="/images/zimtrade_logo.png" alt="ZimTrade" className="h-12 object-contain" />
-            <img src="/images/zida_logo.png" alt="ZIDA" className="h-12 object-contain" />
-            <img src="/images/zimbabwe_tourism_authority.png" alt="ZTA" className="h-16 object-contain" />
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Explore More Tourism Information
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              For detailed destination guides, booking information, and comprehensive tourism resources, visit the official Zimbabwe Tourism Authority website.
+            </p>
+            <a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" variant="secondary" className="text-lg px-8">
+                Visit Zimbabwe Tourism Authority <ExternalLink className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
           </div>
         </div>
       </section>
+
     </Layout>
   );
 }
