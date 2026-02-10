@@ -129,16 +129,21 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 slide-up" style={{ animationDelay: '0.5s' }}>
             <Link href="/export-hub">
-              <Button size="lg" className="text-lg px-8 py-6 bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl transition-all group">
-                Explore Export Hub
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
+                Export Hub
+              </Button>
+            </Link>
+            <Link href="/tourism">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
+                Tourism
               </Button>
             </Link>
             <Link href="/investment">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
-                View Investments
+                Investments 
               </Button>
             </Link>
+
           </div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
@@ -150,7 +155,7 @@ export default function Home() {
           <div className="text-center mb-16 px-4">
             <span className="badge-primary mb-4 inline-block">Platform Services</span>
              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-              The Zimbabwe Global and Diaspora Gateway
+              The Zimbabwe Global Diaspora Gateway
             </h2>
               <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                  A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.
