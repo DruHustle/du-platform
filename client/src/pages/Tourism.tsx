@@ -141,7 +141,7 @@ export default function Tourism() {
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 8000);
+    }, 5000);
     return () => clearInterval(heroTimer);
   }, []);
 

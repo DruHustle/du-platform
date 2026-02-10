@@ -48,7 +48,7 @@ export default function Trade() {
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(heroTimer);
   }, []);
 

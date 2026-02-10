@@ -73,6 +73,11 @@ export default function Layout({ children }: LayoutProps) {
         { name: "ZimTrade Programs", description: "Export development initiatives" }
       ]
     },
+        { 
+      name: "Economic Data", 
+      href: "/data-visualization",
+      children: null
+    },
     { 
       name: "Success Stories", 
       href: "/success-stories",
@@ -134,7 +139,7 @@ export default function Layout({ children }: LayoutProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 px-2">
+          <nav className="hidden lg:flex flex-1 items-center justify-end space-x-1 px-4">
             {navigation.map((item) => (
               item.children ? (
                 <div
@@ -280,20 +285,7 @@ export default function Layout({ children }: LayoutProps) {
                       {item.name}
                     </Button>
                   </Link>
-                  {item.children && (
-                    <div className="ml-4 mt-1 space-y-1 border-l-2 border-primary/20 pl-3">
-                      {item.children.map((child, idx) => (
-                        <Link href={item.href} key={idx}>
-                          <div 
-                            className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer py-1.5"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {child.name}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  {/* Children mapping removed from here */}
                 </div>
               ))}
             </div>
@@ -307,7 +299,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* WhatsApp FAB */}
       <a
-        href="https://wa.me/263771234567"
+        href="https://wa.me/+4915147416152"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-40 group"
