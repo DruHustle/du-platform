@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle } from "lucide-react";
+import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface LayoutProps {
@@ -73,11 +73,8 @@ export default function Layout({ children }: LayoutProps) {
         { name: "ZimTrade Programs", description: "Export development initiatives" }
       ]
     },
-    { 
-      name: "Success Stories", 
-      href: "/success-stories",
-      children: null
-    },
+    { name: "Economic Data", href: "/data-visualization", children: null },
+    { name: "Success Stories", href: "/success-stories", children: null },
   ];
 
   const regions = {
@@ -123,9 +120,9 @@ export default function Layout({ children }: LayoutProps) {
                 className='h-9 w-9 md:h-11 md:w-11 object-contain flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <div className='min-w-0'>
-                <span className='text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
+                <h1 className='!text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
                   ZIGD Platform
-                </span>
+                </h1>
                 <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
                   Zimbabwe Global & Diaspora
                 </p>
@@ -134,7 +131,7 @@ export default function Layout({ children }: LayoutProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 px-2">
+          <nav className="hidden lg:flex flex-1 items-center justify-end space-x-1 px-4">
             {navigation.map((item) => (
               item.children ? (
                 <div
@@ -307,7 +304,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* WhatsApp FAB */}
       <a
-        href="https://wa.me/263771234567"
+        href="https://wa.me/+4915147416152"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-40 group"
@@ -337,31 +334,59 @@ export default function Layout({ children }: LayoutProps) {
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Quick Links</h3>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><Link href="/export-hub"><span className="hover:text-secondary transition-colors cursor-pointer">Export Hub</span></Link></li>
-                <li><Link href="/tourism"><span className="hover:text-secondary transition-colors cursor-pointer">Tourism</span></Link></li>
-                <li><Link href="/investment"><span className="hover:text-secondary transition-colors cursor-pointer">Investment</span></Link></li>
-                <li><Link href="/trade"><span className="hover:text-secondary transition-colors cursor-pointer">Trade</span></Link></li>
+                {[
+                  { name: "Export Hub", href: "/export-hub" },
+                  { name: "Tourism", href: "/tourism" },
+                  { name: "Investment", href: "/investment" },
+                  { name: "Trade", href: "/trade" },
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>
+                      <span 
+                        className="hover:text-secondary transition-colors cursor-pointer"
+                        onClick={() => {
+                          // This ensures any "scrollToBottom" flags from previous 
+                          // interactions are cleared before the new page loads
+                          window.history.replaceState({ scrollToBottom: false, stayPut: false }, "");
+                          window.scrollTo(0, 0); 
+                        }}
+                      >
+                        {link.name}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Partners</h3>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="#" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
-                <li><a href="#" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
-                <li><a href="#" className="hover:text-secondary transition-colors">ZimTrade</a></li>
-                <li><a href="#" className="hover:text-secondary transition-colors">ZIMRA</a></li>
+                <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
+                <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
+                <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZimTrade</a></li>
+                <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIMRA</a></li>
               </ul>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">Contact</h3>
-              <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="mailto:info@zigd.co.zw" className="hover:text-secondary transition-colors">info@zigd.co.zw</a></li>
-                <li><a href="tel:+263771234567" className="hover:text-secondary transition-colors">+263 77 123 4567</a></li>
-                <li className="opacity-90">Harare, Zimbabwe</li>
-              </ul>
-            </div>
+          <div className="space-y-3">
+            <h3 className="font-bold">Contact</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-secondary" />
+                <a href="mailto:diaspora.unlocked@gmail.com" className="hover:text-secondary transition-colors">diaspora.unlocked@gmail.com</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-secondary" />
+                <a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a>
+              </li>
+              <li className="flex items-center gap-2 opacity-90">
+                <MapPin className="h-4 w-4 text-secondary" />
+                <span>Berlin, Germany</span>
+              </li>
+            </ul>
+          </div>
+
           </div>
 
           <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">

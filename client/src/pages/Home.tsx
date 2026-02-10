@@ -39,7 +39,7 @@ export default function Home() {
       href: "/export-hub",
       color: " bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/eu_symbol.png",
-      stats: "50+ Export Guides"
+      stats: "Verified Partners"
     },
     {
       title: "Tourism Information",
@@ -85,7 +85,8 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 2, ease: "easeInOut" }}
-            className="absolute inset-0"
+            className="absolute inset-0 cursor-pointer"
+            onClick={() => window.scrollTo({top: 800, behavior: "smooth"})}
           >
             <motion.div
               initial={{ scale: 1 }}
@@ -191,12 +192,21 @@ export default function Home() {
                       <CardDescription className="text-base md:text-lg leading-relaxed">{module.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="pt-2 pb-6">
+
                       <Link href={module.href}>
-                        <Button className="w-full group/btn font-bold text-lg py-6" size="lg">
+                        <Button 
+                          className="w-full group/btn font-bold text-lg py-6" 
+                          size="lg"
+                          onClick={() => {window.scrollTo({top: 0,left: 0,
+                              behavior: 'smooth' // Use 'instant' if you want it to jump immediately
+                            });
+                          }}
+                        >
                           Explore Now
                           <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                         </Button>
                       </Link>
+
                     </CardContent>
                   </Card>
                 </motion.div>

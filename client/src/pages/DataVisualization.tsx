@@ -1,9 +1,11 @@
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, DollarSign, Users, Globe, Factory, Leaf, Mountain, Plane } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface EconomicData {
   remittances: number;
@@ -16,7 +18,7 @@ interface EconomicData {
 }
 
 export default function DataVisualization() {
-  const [data, setData] = useState<EconomicData>({
+  const [data] = useState<EconomicData>({
     remittances: ECONOMIC_DATA.diaspora.remittances * 1000, // Convert to Million USD
     gdp: ECONOMIC_DATA.gdp.value * 1000, // Convert to Million USD
     diasporaPopulation: ECONOMIC_DATA.diaspora.population * 1000000,
@@ -34,6 +36,81 @@ export default function DataVisualization() {
     miningRevenue: 0,
     tourismRevenue: 0
   });
+
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "/images/infrastructure_investment.webp",
+      badge: "Economic Growth 2025",
+      badgeIcon: true,
+      title: "Data-Driven ",
+      titleHighlight: "Insights",
+      subtitle: "Comprehensive analysis of Zimbabwe's economic landscape and growth potential.",
+      description: "Explore real-time metrics, sector performances, and the transformative impact of diaspora contributions on the national economy.",
+      buttons: [
+        { text: "View Indicators", variant: "primary", link: "#indicators" },
+        { text: "Sector Analysis", variant: "outline", link: "#sectors" }
+      ]
+    },
+    {
+      image: "/images/manufacturing_factory.jpg",
+      badge: "Industrial Excellence",
+      badgeIcon: true,
+      title: "Manufacturing ",
+      titleHighlight: "Growth",
+      subtitle: "Industrial sector contributing 15.3% to the national GDP.",
+      description: "Witness the revitalization of Zimbabwe's manufacturing base through innovation, investment, and expanded export capabilities.",
+      buttons: []
+    },
+    {
+      image: "/images/minerals_mining.png",
+      badge: "Mineral Wealth",
+      badgeIcon: true,
+      title: "Mining ",
+      titleHighlight: "Sector",
+      subtitle: "Contributing $5.56B to the economy through gold, lithium, and platinum.",
+      description: "Zimbabwe's vast mineral resources continue to be a cornerstone of economic stability and a magnet for global investment.",
+      buttons: []
+    },
+    {
+      image: "/images/african_trade.jpg",
+      badge: "Export Excellence",
+      badgeIcon: true,
+      title: "International ",
+      titleHighlight: "Trade",
+      subtitle: "Growing export base reaching markets across Africa and beyond.",
+      description: "Zimbabwe's strategic position in regional trade networks drives economic growth and creates opportunities for diaspora investment.",
+      buttons: []
+    },
+    {
+      image: "/images/remittances_impact.png",
+      badge: "Diaspora Capital",
+      badgeIcon: true,
+      title: "Remittance ",
+      titleHighlight: "Impact",
+      subtitle: "$1.8B in annual remittances fueling economic development.",
+      description: "The global diaspora's financial contributions transform lives through education, housing, healthcare, and business investment.",
+      buttons: []
+    },
+    {
+      image: "/images/export_hub_bg.jpg",
+      badge: "Export Hub",
+      badgeIcon: true,
+      title: "Export ",
+      titleHighlight: "Gateway",
+      subtitle: "Zimbabwe's position as a regional export hub.",
+      description: "Strategic infrastructure and favorable trade policies position Zimbabwe as a key distribution center for Southern Africa.",
+      buttons: []
+    }
+  ];
+
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % 6);
+    }, 5000);
+    return () => clearInterval(heroTimer);
+  }, []);
 
   // Animate counter on mount
   useEffect(() => {
@@ -152,26 +229,100 @@ export default function DataVisualization() {
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-        {/* Hero Section */}
-        <section className="py-16 bg-primary text-white">
-          <div className="container">
-            <div className="max-w-4xl mx-auto text-center">
-              <Badge className="mb-4 bg-secondary text-secondary-foreground">Economic Dashboard</Badge>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Zimbabwe Economic Dashboard 2025
-              </h1>
-              <p className="text-lg md:text-xl opacity-90">
-                Real-time insights into Zimbabwe's economy, diaspora contributions, and national growth metrics
-              </p>
-              <p className="text-sm mt-4 opacity-75">
-                Data sources: RBZ, World Bank, IMF, ZIMSTAT • Last updated: February 2025
-              </p>
-            </div>
+        {/* Hero Carousel Section */}
+        <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={currentHeroIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <motion.div 
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
+            </motion.div>
+          </AnimatePresence>
+          
+          <div className="relative z-10 container text-white">
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={`content-${currentHeroIndex}`}
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -30, opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
+              >
+                <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
+                  {heroSlides[currentHeroIndex].badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
+                  <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                    {heroSlides[currentHeroIndex].badge}
+                  </Badge>
+                </div>
+                <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+                  {heroSlides[currentHeroIndex].title}
+                  {heroSlides[currentHeroIndex].titleHighlight && (
+                    <span className="text-zim-gold italic">{heroSlides[currentHeroIndex].titleHighlight}</span>
+                  )}
+                </h1>
+                <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
+                  {heroSlides[currentHeroIndex].subtitle}
+                </p>
+                {heroSlides[currentHeroIndex].description && (
+                  <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+                    {heroSlides[currentHeroIndex].description}
+                  </p>
+                )}
+                {heroSlides[currentHeroIndex].buttons.length > 0 && (
+                  <div className="flex flex-wrap gap-4 justify-center">
+                    {heroSlides[currentHeroIndex].buttons.map((button, idx) => (
+                      <Button 
+                        key={idx}
+                        size="lg" 
+                        variant={button.variant === "outline" ? "outline" : "default"}
+                        className={button.variant === "outline" 
+                          ? "text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold"
+                          : "bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold"
+                        }
+                        asChild
+                      >
+                        <a href={button.link}>{button.text}</a>
+                      </Button>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
+          
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+            {[0, 1, 2, 3, 4, 5].map((idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentHeroIndex(idx)}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
         </section>
 
         {/* Key Metrics */}
-        <section className="py-16">
+        <section id="indicators" className="py-16">
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Economic Indicators</h2>
@@ -247,7 +398,7 @@ export default function DataVisualization() {
         </section>
 
         {/* Mining Sector Breakdown */}
-        <section className="py-16">
+        <section id="sectors" className="py-16">
           <div className="container">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
@@ -264,93 +415,13 @@ export default function DataVisualization() {
                       <CardTitle className="text-lg">{mineral.name}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-bold text-primary mb-2">{mineral.value}%</div>
-                      <p className="text-sm text-muted-foreground">${mineral.revenue}B revenue</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Regional Diaspora Breakdown */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  Global Diaspora Distribution
-                </h2>
-                <p className="text-lg text-muted-foreground">
-                  Where Zimbabweans are making their mark worldwide
-                </p>
-              </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Regional Breakdown</CardTitle>
-                  <CardDescription>Estimated diaspora population by region (3.5 million total)</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {regionalBreakdown.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">{item.flag}</span>
-                          <div>
-                            <p className="font-semibold">{item.region}</p>
-                            <p className="text-sm text-muted-foreground">{item.population}</p>
-                          </div>
+                      <div className="space-y-1">
+                        <p className="text-2xl font-bold text-primary">{mineral.value}%</p>
+                        <p className="text-xs text-muted-foreground">Contribution</p>
+                        <div className="mt-2 pt-2 border-t">
+                          <p className="text-sm font-semibold">${mineral.revenue}B</p>
+                          <p className="text-[10px] text-muted-foreground">Revenue</p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xl font-bold text-primary">{item.percentage}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Remittance Impact */}
-        <section className="py-16">
-          <div className="container">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  Remittance Impact Analysis
-                </h2>
-                <p className="text-lg text-muted-foreground">
-                  How $1.8B in diaspora remittances are transforming Zimbabwe's economy
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {remittanceImpact.map((item, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <span>{item.icon}</span>
-                          {item.sector}
-                        </CardTitle>
-                        <span className="text-2xl font-bold text-primary">{item.percentage}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-                          <div 
-                            className="h-full bg-primary rounded-full transition-all duration-1000"
-                            style={{ width: item.percentage }}
-                          />
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Annual allocation: <span className="font-semibold text-foreground">{item.amount}</span>
-                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -360,72 +431,103 @@ export default function DataVisualization() {
           </div>
         </section>
 
-        {/* Key Insights */}
+        {/* Diaspora Remittances Impact */}
         <section className="py-16 bg-primary text-white">
           <div className="container">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-                Key Economic Insights 2025
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <Badge className="mb-4 bg-secondary text-secondary-foreground">Social Impact</Badge>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Diaspora Remittance Allocation</h2>
+                <p className="text-lg opacity-90 mb-8">
+                  Remittances are more than just financial transfers; they are vital lifelines that drive development across key social and economic sectors in Zimbabwe.
+                </p>
+                <div className="space-y-6">
+                  {remittanceImpact.map((item, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex justify-between text-sm font-medium">
+                        <span className="flex items-center gap-2">
+                          <span>{item.icon}</span> {item.sector}
+                        </span>
+                        <span>{item.percentage} ({item.amount})</span>
+                      </div>
+                      <div className="w-full bg-white/20 rounded-full h-2">
+                        <div 
+                          className="bg-secondary h-full rounded-full" 
+                          style={{ width: item.percentage }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <Card className="bg-white/10 border-white/20 text-white">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5" />
-                      Strong GDP Growth
-                    </CardTitle>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-4xl font-bold text-secondary">$1.8B</CardTitle>
+                    <CardDescription className="text-white/70">Annual Remittances</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm opacity-90">
-                      Zimbabwe's GDP is projected to grow by 6.6% in 2025, with Q2 year-over-year growth reaching 11.04%, 
-                      driven by mining, agriculture, and services sectors.
-                    </p>
-                  </CardContent>
                 </Card>
                 <Card className="bg-white/10 border-white/20 text-white">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <Factory className="h-5 w-5" />
-                      Mining Boom
-                    </CardTitle>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-4xl font-bold text-secondary">3.5M</CardTitle>
+                    <CardDescription className="text-white/70">Global Diaspora</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm opacity-90">
-                      The mining sector generated $5.56B in 2024, with lithium emerging as a key growth driver 
-                      alongside traditional gold and platinum exports.
-                    </p>
-                  </CardContent>
                 </Card>
-                <Card className="bg-white/10 border-white/20 text-white">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <Leaf className="h-5 w-5" />
-                      Agricultural Records
-                    </CardTitle>
+                <Card className="bg-white/10 border-white/20 text-white col-span-2">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-4xl font-bold text-secondary">$500M</CardTitle>
+                    <CardDescription className="text-white/70">Annual Investment Potential</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm opacity-90">
-                      Record wheat production of 640,000 tons achieved, with tobacco exports reaching $850M 
-                      and horticulture exports growing to $120M.
-                    </p>
-                  </CardContent>
                 </Card>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Data Sources */}
-        <section className="py-12 bg-muted/30">
+        {/* Global Diaspora Distribution */}
+        <section className="py-16">
           <div className="container">
-            <div className="max-w-4xl mx-auto text-center">
-              <h3 className="text-lg font-semibold mb-4">Data Sources & Methodology</h3>
-              <p className="text-sm text-muted-foreground">
-                Data compiled from Reserve Bank of Zimbabwe (RBZ), World Bank, International Monetary Fund (IMF), 
-                Zimbabwe National Statistics Agency (ZIMSTAT), and Ministry of Finance. Figures are based on 
-                2024 actuals and 2025 projections. Diaspora population estimates from IOM and community surveys.
-              </p>
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Global Diaspora Distribution</h2>
+                <p className="text-lg text-muted-foreground">
+                  Where the Zimbabwean diaspora resides across the globe
+                </p>
+              </div>
+
+              <div className="overflow-hidden rounded-xl border shadow-sm">
+                <table className="w-full text-left">
+                  <thead className="bg-muted">
+                    <tr>
+                      <th className="p-4 font-semibold">Region/Country</th>
+                      <th className="p-4 font-semibold">Estimated Population</th>
+                      <th className="p-4 font-semibold text-right">Percentage</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {regionalBreakdown.map((item, index) => (
+                      <tr key={index} className="hover:bg-muted/50 transition-colors">
+                        <td className="p-4 flex items-center gap-3">
+                          <span className="text-xl">{item.flag}</span>
+                          <span className="font-medium">{item.region}</span>
+                        </td>
+                        <td className="p-4 text-muted-foreground">{item.population}</td>
+                        <td className="p-4 text-right font-bold text-primary">{item.percentage}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
+        </section>
+
+        {/* Data Sources Disclaimer */}
+        <section className="py-12 bg-muted/30">
+          <div className="container text-center">
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto italic">
+              * The data presented in this dashboard are projections and estimates based on 2024-2025 economic reports from the Reserve Bank of Zimbabwe (RBZ), ZIMSTAT, World Bank, and IMF. Real-time metrics are updated periodically as new official data becomes available.
+            </p>
           </div>
         </section>
       </div>

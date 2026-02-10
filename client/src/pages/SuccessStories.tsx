@@ -46,7 +46,7 @@ export default function SuccessStories() {
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(heroTimer);
   }, []);
 
@@ -196,13 +196,13 @@ export default function SuccessStories() {
     <Layout>
       {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentHeroIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <motion.div 
@@ -219,7 +219,7 @@ export default function SuccessStories() {
         </AnimatePresence>
         
         <div className="relative z-10 container text-white">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false}>
             <motion.div
               key={`content-${currentHeroIndex}`}
               initial={{ y: 30, opacity: 0 }}
@@ -401,18 +401,6 @@ export default function SuccessStories() {
           <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
             Whether you're an investor, exporter, or diaspora professional, there's a role for you in Zimbabwe's economic transformation
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/investment">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Explore Investments
-              </Button>
-            </a>
-            <a href="/export-hub">
-              <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 hover:bg-white/20 text-white border-white">
-                Start Exporting
-              </Button>
-            </a>
-          </div>
         </div>
       </section>
     </Layout>

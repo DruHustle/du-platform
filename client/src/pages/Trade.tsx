@@ -48,7 +48,7 @@ export default function Trade() {
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(heroTimer);
   }, []);
 
@@ -77,7 +77,7 @@ export default function Trade() {
     {
       name: "Minerals & Mining",
       description: "Value-added mineral products, precious stones, and processed materials",
-      image: "/images/minerals_mining.jpg",
+      image: "/images/minerals_mining.png",
       opportunities: ["Industrial exports", "Jewelry sector", "Technology minerals"],
       icon: TrendingUp
     }
@@ -183,13 +183,13 @@ export default function Trade() {
     <Layout>
       {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentHeroIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <motion.div 
@@ -206,7 +206,7 @@ export default function Trade() {
         </AnimatePresence>
         
         <div className="relative z-10 container text-white">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false}>
             <motion.div
               key={`content-${currentHeroIndex}`}
               initial={{ y: 30, opacity: 0 }}

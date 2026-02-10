@@ -20,11 +20,11 @@ export default function Investment() {
 
   const heroSlides = [
     {
-      image: "/images/diaspora_investment.jpg",
-      badge: "Diaspora Investment",
-      title: "Invest in Zimbabwe's Future",
-      subtitle: "Transparent, verified investment opportunities connecting diaspora capital with high-impact projects",
-      highlight: "12-18% Returns"
+      image: "/images/rbz_building.png",
+      badge: "Reserve Bank of Zimbabwe",
+      title: "Zimbabwe Gold (ZiG) Stability",
+      subtitle: "Backed by gold and foreign currency reserves, ZiG represents a new era of monetary stability and controlled inflation for investors.",
+      highlight: "Gold-Backed Currency"
     },
     {
       image: "/images/infrastructure_investment.webp",
@@ -34,6 +34,13 @@ export default function Investment() {
       highlight: "$2.5M+ Invested"
     },
     {
+      image: "/images/vfex_logo.png",
+      badge: "Victoria Falls Stock Exchange",
+      title: "VFEX: Your USD Gateway",
+      subtitle: "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
+      highlight: "USD Denominated"
+    },
+{
       image: "/images/manufacturing_factory.jpg",
       badge: "Manufacturing Sector",
       title: "Industrial Renaissance",
@@ -41,18 +48,18 @@ export default function Investment() {
       highlight: "500+ Jobs Created"
     },
     {
-      image: "/images/horticulture.jpg",
-      badge: "Agriculture Innovation",
-      title: "Organic Export Farming",
-      subtitle: "EU-certified organic farming projects supplying European markets with premium produce",
-      highlight: "15% Annual Returns"
+      image: "/images/diaspora_investment.jpg",
+      badge: "Diaspora Investment",
+      title: "Invest in Zimbabwe's Future",
+      subtitle: "Transparent, verified investment opportunities connecting diaspora capital with high-impact projects",
+      highlight: "12-18% Returns"
     }
   ];
 
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(heroTimer);
   }, []);
 
@@ -224,13 +231,13 @@ export default function Investment() {
     <Layout>
       {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentHeroIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <motion.div 
@@ -247,7 +254,7 @@ export default function Investment() {
         </AnimatePresence>
         
         <div className="relative z-10 container text-white">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false}>
             <motion.div
               key={`content-${currentHeroIndex}`}
               initial={{ y: 30, opacity: 0 }}

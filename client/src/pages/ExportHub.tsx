@@ -48,7 +48,7 @@ export default function ExportHub() {
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(heroTimer);
   }, []);
 
@@ -179,13 +179,13 @@ export default function ExportHub() {
     <Layout>
       {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentHeroIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <motion.div 
@@ -202,7 +202,7 @@ export default function ExportHub() {
         </AnimatePresence>
         
         <div className="relative z-10 container text-white">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false}>
             <motion.div
               key={`content-${currentHeroIndex}`}
               initial={{ y: 30, opacity: 0 }}
@@ -655,11 +655,11 @@ export default function ExportHub() {
              Explore Success Stories
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              View successful projects funded through our platform and their impact in Zimbabwe
+              Discover how the Zimbabwe diaspora, through our platform, have successfully supported Zimbabwean businesses in export ventures.
             </p>
             <Link href="/success-stories">
               <Button size="lg" variant="secondary" className="shadow-lg group">
-                Explore Success Stories
+                Success Stories
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
