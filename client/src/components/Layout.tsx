@@ -121,10 +121,10 @@ export default function Layout({ children }: LayoutProps) {
               />
               <div className='min-w-0'>
                 <h1 className='!text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
-                  ZIGD Platform
+                  Diaspora Unlocked
                 </h1>
                 <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
-                  Zimbabwe Global & Diaspora
+                  Zimbabwe Global Diaspora Platform
                 </p>
               </div>
             </div>
@@ -325,7 +325,7 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8">
             <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">About ZIGD</h3>
+              <h3 className="font-bold text-base md:text-lg">About Diaspora Unlocked</h3>
               <p className="text-xs md:text-sm opacity-90 leading-relaxed">
                 Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.
               </p>
@@ -374,7 +374,7 @@ export default function Layout({ children }: LayoutProps) {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-secondary" />
-                <a href="mailto:diaspora.unlocked@gmail.com" className="hover:text-secondary transition-colors">diaspora.unlocked@gmail.com</a>
+                <a href="mailto:info@diasporaunlocked.com" className="hover:text-secondary transition-colors">info@diasporaunlocked.com</a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-secondary" />
