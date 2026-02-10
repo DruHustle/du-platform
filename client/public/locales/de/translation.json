@@ -1,0 +1,57 @@
+{
+  "brand": "Diaspora Unlocked",
+  "tagline": "Simbabwe Global Diaspora Plattform",
+  "select_lang": "Sprache wählen",
+  "nav": {
+    "home": "Startseite",
+    "export": "Export-Zentrum",
+    "tourism": "Tourismus",
+    "investment": "Investitionen",
+    "trade": "Handel",
+    "data": "Wirtschaftsdaten",
+    "success": "Erfolgsgeschichten"
+  },
+  "home": {
+    "hero_title": "Diaspora Unlocked",
+    "hero_subtitle": "Beschleunigung von Handel, Tourismus und Investitionen für Vision 2030",
+    "export_hub": "Export-Zentrum",
+    "tourism": "Tourismus",
+    "investments": "Investitionen",
+    "platform_services": "Plattform-Dienste",
+    "gateway_title": "Das Simbabwe Global Diaspora Gateway",
+    "gateway_desc": "Eine digitale Plattform, die Simbabwe durch Handel, Tourismus und Investitionen mit der Welt verbindet.",
+    "explore_now": "Jetzt erkunden",
+    "ready_to_connect": "Bereit zur Vernetzung?",
+    "join_diaspora": "Schließen Sie sich Tausenden von Diaspora-Mitgliedern an, die Brücken für den wirtschaftlichen Wandel bauen.",
+    "view_data": "Wirtschaftsdaten ansehen",
+    "success_stories": "Erfolgsgeschichten",
+    "modules": {
+      "export": {
+        "title": "Export-Wissenszentrum",
+        "desc": "Greifen Sie auf deutsche Marktanforderungen, Vorschriften und Zertifizierungen zu und vernetzen Sie sich mit potenziellen Partnern für den Export simbabwischer Produkte.",
+        "stats": "Verifizierte Partner"
+      },
+      "tourism": {
+        "title": "Tourismus-Informationen",
+        "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen, planen Sie Ihren Besuch und erkunden Sie das Forbes-Reiseziel Nr. 1 für 2025.",
+        "stats": "Forbes #1 2025"
+      },
+      "investment": {
+        "title": "Investitionsmöglichkeiten",
+        "desc": "Erkunden Sie diaspora-freundliche Mikroinvestitions- und Crowdfunding-Möglichkeiten in verifizierten simbabwischen Projekten.",
+        "stats": "$50M+ Möglichkeiten"
+      },
+      "trade": {
+        "title": "Handelsinformationen",
+        "desc": "Greifen Sie auf umfassende Handelsressourcen und Exportentwicklungsprogramme zu und vernetzen Sie sich mit Simbabwes florierenden Exportsektoren.",
+        "stats": "8 Exportsektoren"
+      }
+    },
+    "trust": {
+      "diaspora": "Diaspora Verifiziert",
+      "zida": "ZIDA Partner",
+      "zimtrade": "ZimTrade Zertifiziert",
+      "vision2030": "Vision 2030 Ausgerichtet"
+    }
+  }
+}

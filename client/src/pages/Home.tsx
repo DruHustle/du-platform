@@ -5,8 +5,10 @@ import { Link } from "wouter";
 import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = [
     "/images/victoria_falls.jpg",
@@ -33,40 +35,40 @@ export default function Home() {
 
   const modules = [
     {
-      title: "Export Knowledge Hub",
-      description: "Access German market requirements, regulations, certifications, and connect with potential partners for exporting Zimbabwean products.",
+      title: t('home.modules.export.title'),
+      description: t('home.modules.export.desc'),
       icon: BookOpen,
       href: "/export-hub",
       color: " bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/eu_symbol.png",
-      stats: "Verified Partners"
+      stats: t('home.modules.export.stats')
     },
     {
-      title: "Tourism Information",
-      description: "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
+      title: t('home.modules.tourism.title'),
+      description: t('home.modules.tourism.desc'),
       icon: Plane,
       href: "/tourism",
          color: " bg-yellow-500/5 hover:bg-yellow-500/10",
       bgImage: "/images/hwange_elephants.jpg",
-      stats: "Forbes #1 2025"
+      stats: t('home.modules.tourism.stats')
     },
     {
-      title: "Investment Opportunities",
-      description: "Explore diaspora-friendly micro-investment and crowdfunding opportunities in verified Zimbabwean projects.",
+      title: t('home.modules.investment.title'),
+      description: t('home.modules.investment.desc'),
       icon: TrendingUp,
       href: "/investment",
       color: " bg-red-600/5 hover:bg-red-600/10",
       bgImage: "/images/infrastructure_investment.webp",
-      stats: "$50M+ Opportunities"
+      stats: t('home.modules.investment.stats')
     },
     {
-      title: "Trade Information",
-      description: "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
+      title: t('home.modules.trade.title'),
+      description: t('home.modules.trade.desc'),
       icon: Package,
       href: "/trade",
       color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/african_trade.jpg",
-      stats: "8 Export Sectors"
+      stats: t('home.modules.trade.stats')
     }
   ];
 
@@ -121,26 +123,26 @@ export default function Home() {
           </div>
           
             <h1 className="!text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] font-bold mb-4 tracking-tighter leading-none px-4 hero-text-shadow slide-up"style={{ animationDelay: '0.1s' }}>
-              Diaspora Unlocked
+              {t('home.hero_title')}
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl mb-3 max-w-4xl mx-auto font-semibold px-4 text-secondary slide-up" style={{ animationDelay: '0.2s' }}>
-              Trade, Tourism and Investment Acceleration for Vision 2030
+              {t('home.hero_subtitle')}
             </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 slide-up" style={{ animationDelay: '0.5s' }}>
             <Link href="/export-hub">
             <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
-                Export Hub
+                {t('home.export_hub')}
               </Button>
             </Link>
             <Link href="/tourism">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
-                Tourism
+                {t('home.tourism')}
               </Button>
             </Link>
             <Link href="/investment">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
-                Investments 
+                {t('home.investments')} 
               </Button>
             </Link>
 
@@ -153,12 +155,12 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
         <div className="container">
           <div className="text-center mb-16 px-4">
-            <span className="badge-primary mb-4 inline-block">Platform Services</span>
+            <span className="badge-primary mb-4 inline-block">{t('home.platform_services')}</span>
              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-              The Zimbabwe Global Diaspora Gateway
+              {t('home.gateway_title')}
             </h2>
               <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                 A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.
+                 {t('home.gateway_desc')}
             </p>
           </div>
 
@@ -207,7 +209,7 @@ export default function Home() {
                             });
                           }}
                         >
-                          Explore Now
+                          {t('home.explore_now')}
                           <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                         </Button>
                       </Link>
@@ -228,19 +230,19 @@ export default function Home() {
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              <span className="text-sm font-medium">Diaspora Verified</span>
+              <span className="text-sm font-medium">{t('home.trust.diaspora')}</span>
             </div>
             <div className="flex items-center gap-2">
               <Award className="h-5 w-5" />
-              <span className="text-sm font-medium">ZIDA Partner</span>
+              <span className="text-sm font-medium">{t('home.trust.zida')}</span>
             </div>
             <div className="flex items-center gap-2">
               <Globe className="h-5 w-5" />
-              <span className="text-sm font-medium">ZimTrade Certified</span>
+              <span className="text-sm font-medium">{t('home.trust.zimtrade')}</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" />
-              <span className="text-sm font-medium">Vision 2030 Aligned</span>
+              <span className="text-sm font-medium">{t('home.trust.vision2030')}</span>
             </div>
           </div>
         </div>
@@ -251,20 +253,20 @@ export default function Home() {
         <div className="container">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to Connect?
+              {t('home.ready_to_connect')}
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              Join thousands of diaspora members building bridges for economic transformation.
+              {t('home.join_diaspora')}
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/data-visualization">
                 <Button size="lg" variant="secondary" className="shadow-lg">
-                  View Economic Data
+                  {t('home.view_data')}
                 </Button>
               </Link>
               <Link href="/success-stories">
                 <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
-                  Success Stories
+                  {t('home.success_stories')}
                 </Button>
               </Link>
             </div>

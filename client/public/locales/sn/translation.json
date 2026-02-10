@@ -1,0 +1,57 @@
+{
+  "brand": "Diaspora Unlocked",
+  "tagline": "Dandira reZimbabwean riri kunze kwenyika",
+  "select_lang": "Sarudza Mutauro",
+  "nav": {
+    "home": "Kumba",
+    "export": "Zvekutengesera",
+    "tourism": "Kushanya",
+    "investment": "Kudyara Mari",
+    "trade": "Zvekutengeserana",
+    "data": "Zveupfumi",
+    "success": "Nhau dzeKubudirira"
+  },
+  "home": {
+    "hero_title": "Diaspora Unlocked",
+    "hero_subtitle": "Kukurumidza kweKutengeserana, Kushanya uye Kudyara Mari kweVision 2030",
+    "export_hub": "Zvekutengesera",
+    "tourism": "Kushanya",
+    "investments": "Kudyara Mari",
+    "platform_services": "Mabasa eDandira",
+    "gateway_title": "Suo reZimbabwe Global Diaspora",
+    "gateway_desc": "Dandira rinosanganisa Zimbabwe nenyika dzose kuburikidza nekutengeserana, kushanya, uye kudyara mari.",
+    "explore_now": "Ongorora Iye zvino",
+    "ready_to_connect": "Wagadzirira Kubatana?",
+    "join_diaspora": "Joinha zviuru zvevanhu vari kunze kwenyika vari kuvaka mabhiriji ekushandura upfumi.",
+    "view_data": "Ona Zveupfumi",
+    "success_stories": "Nhau dzeKubudirira",
+    "modules": {
+      "export": {
+        "title": "Zivo yeZvekutengesera",
+        "desc": "Wana zvinodiwa nemusika weGermany, mitemo, zvitupa, uye batana nevamwe vanogona kutenga zvigadzirwa zveZimbabwe.",
+        "stats": "Vadyidzani Vakatariswa"
+      },
+      "tourism": {
+        "title": "Zivo yeKushanya",
+        "desc": "Tsvaga nzvimbo dzeZimbabwe dzinoyevedza, ronga kushanya kwako, uye ongorora nzvimbo yakasarudzwa neForbes seye #1 muna 2025.",
+        "stats": "Forbes #1 2025"
+      },
+      "investment": {
+        "title": "Mikana yeKudyara Mari",
+        "desc": "Ongorora mikana yekudyara mari diki uye crowdfunding mumapurojekiti eZimbabwe akatariswa.",
+        "stats": "$50M+ Mikana"
+      },
+      "trade": {
+        "title": "Zivo yeKutengeserana",
+        "desc": "Wana zviwanikwa zvekutengeserana, zvirongwa zvekusimudzira kutengesera kunze, uye batana nezvikamu zveZimbabwe zviri kubudirira.",
+        "stats": "8 Zvikamu zveKutengesera"
+      }
+    },
+    "trust": {
+      "diaspora": "VekuDiaspora Vakatariswa",
+      "zida": "Mudyidzani weZIDA",
+      "zimtrade": "ZimTrade Certified",
+      "vision2030": "Inoenderana neVision 2030"
+    }
+  }
+}

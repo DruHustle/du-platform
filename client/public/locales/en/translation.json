@@ -1,0 +1,57 @@
+{
+  "brand": "Diaspora Unlocked",
+  "tagline": "Zimbabwe Global Diaspora Platform",
+  "select_lang": "Select Language",
+  "nav": {
+    "home": "Home",
+    "export": "Export Hub",
+    "tourism": "Tourism",
+    "investment": "Investment",
+    "trade": "Trade",
+    "data": "Economic Data",
+    "success": "Success Stories"
+  },
+  "home": {
+    "hero_title": "Diaspora Unlocked",
+    "hero_subtitle": "Trade, Tourism and Investment Acceleration for Vision 2030",
+    "export_hub": "Export Hub",
+    "tourism": "Tourism",
+    "investments": "Investments",
+    "platform_services": "Platform Services",
+    "gateway_title": "The Zimbabwe Global Diaspora Gateway",
+    "gateway_desc": "A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.",
+    "explore_now": "Explore Now",
+    "ready_to_connect": "Ready to Connect?",
+    "join_diaspora": "Join thousands of diaspora members building bridges for economic transformation.",
+    "view_data": "View Economic Data",
+    "success_stories": "Success Stories",
+    "modules": {
+      "export": {
+        "title": "Export Knowledge Hub",
+        "desc": "Access German market requirements, regulations, certifications, and connect with potential partners for exporting Zimbabwean products.",
+        "stats": "Verified Partners"
+      },
+      "tourism": {
+        "title": "Tourism Information",
+        "desc": "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
+        "stats": "Forbes #1 2025"
+      },
+      "investment": {
+        "title": "Investment Opportunities",
+        "desc": "Explore diaspora-friendly micro-investment and crowdfunding opportunities in verified Zimbabwean projects.",
+        "stats": "$50M+ Opportunities"
+      },
+      "trade": {
+        "title": "Trade Information",
+        "desc": "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
+        "stats": "8 Export Sectors"
+      }
+    },
+    "trust": {
+      "diaspora": "Diaspora Verified",
+      "zida": "ZIDA Partner",
+      "zimtrade": "ZimTrade Certified",
+      "vision2030": "Vision 2030 Aligned"
+    }
+  }
+}

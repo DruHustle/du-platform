@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"; 
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -12,8 +13,6 @@ import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
 import SuccessStories from "./pages/SuccessStories";
 
-
-
 function Router() {
   return (
     <Switch>
@@ -25,7 +24,6 @@ function Router() {
       <Route path={"/data-visualization"} component={DataVisualization} />
       <Route path={"/success-stories"} component={SuccessStories} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
@@ -38,6 +36,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <Analytics /> {/* Vercel Analytics*/}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

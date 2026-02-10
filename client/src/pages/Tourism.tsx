@@ -107,7 +107,7 @@ export default function Tourism() {
       buttons: []
     },
     {
-      image: "/images/harare_statue_2.png",
+      image: "/images/bulawayo.png",
       badge: "National Pride",
       badgeIcon: true,
       title: "Heroes & Heritage",
@@ -127,7 +127,7 @@ export default function Tourism() {
       buttons: []
     },
     {
-      image: "/images/i_love_zimbabwe.jpg",
+      image: "/images/i_love_zimbabwe.png",
       badge: "National Spirit",
       badgeIcon: true,
       title: "I ❤️ Zimbabwe",

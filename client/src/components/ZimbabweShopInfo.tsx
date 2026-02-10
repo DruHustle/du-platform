@@ -35,7 +35,7 @@ export default function ZimbabweShopInfo() {
     { image: "/images/food_mazoe2.jpg", title: "Mazoe Variety Pack" },
     { image: "/images/food_cerevita1.jpg", title: "Cerevita Instant Cereal" },
     { image: "/images/food_cerevita2.png", title: "Cerevita Corn & Wheat" },
-    { image: "/images/food_maputi1.jpg", title: "Maputi Snacks" },
+    { image: "/images/food_maputi.png", title: "Maputi Snacks" },
     { image: "/images/food_dovi1.webp", title: "Traditional Dovi" },
     { image: "/images/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
   ];
