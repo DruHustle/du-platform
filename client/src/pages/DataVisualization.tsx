@@ -54,15 +54,25 @@ export default function DataVisualization() {
         { text: t('nav.data'), variant: "primary", link: "#indicators" },
         { text: t('export.market_intelligence'), variant: "outline", link: "#sectors" }
       ]
+    },
+    {
+      image: "/images/remittances_impact.png",
+      badge: t('data.hero.badge2'),
+      badgeIcon: true,
+      title: t('data.hero.title2'),
+      titleHighlight: t('data.hero.highlight2'),
+      subtitle: t('data.hero.subtitle2'),
+      description: t('data.hero.desc2'),
+      buttons: []
     }
   ], [t]);
 
   useEffect(() => {
     const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % 6);
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   // Animate counter on mount
   useEffect(() => {
@@ -259,7 +269,7 @@ export default function DataVisualization() {
           
           {/* Carousel Indicators */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-            {[0, 1, 2, 3, 4, 5].map((idx) => (
+            {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentHeroIndex(idx)}

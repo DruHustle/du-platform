@@ -37,6 +37,33 @@ export default function Tourism() {
       subtitle: t('tourism.hero.subtitle2'),
       description: t('tourism.hero.desc2'),
       buttons: []
+    },
+    {
+      image: "/images/hwange_elephants.jpg",
+      badge: t('tourism.hero.badge3'),
+      badgeIcon: true,
+      title: t('tourism.hero.title3'),
+      titleHighlight: "",
+      subtitle: t('tourism.hero.subtitle3'),
+      buttons: []
+    },
+    {
+      image: "/images/great_zimbabwe.jpeg",
+      badge: t('tourism.hero.badge4'),
+      badgeIcon: true,
+      title: t('tourism.hero.title4'),
+      titleHighlight: "",
+      subtitle: t('tourism.hero.subtitle4'),
+      buttons: []
+    },
+    {
+      image: "/images/victoria_falls.jpg",
+      badge: t('tourism.hero.badge5'),
+      badgeIcon: true,
+      title: t('tourism.hero.title5'),
+      titleHighlight: "",
+      subtitle: t('tourism.hero.subtitle5'),
+      buttons: []
     }
   ], [t]);
 
@@ -45,7 +72,7 @@ export default function Tourism() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   const attractions = [
     {

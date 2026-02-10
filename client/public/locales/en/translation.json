@@ -1,7 +1,7 @@
 {
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
-  "about": "Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.",
+  "about": "About",
   "select_lang": "Select Language",
   "account": "Account",
   "login": "Login",
@@ -18,7 +18,6 @@
   "quick_links": "Quick Links",
   "partners": "Partners",
   "contact": "Contact",
-  "about": "About",
   "nav": {
     "home": "Home",
     "export": "Export Hub",
@@ -100,7 +99,7 @@
       "badge1": "EU Market Access",
       "title1": "Access German Markets",
       "desc1": "Comprehensive guidance on regulations, certifications, and partnerships for exporting Zimbabwean products to Germany",
-      "highlight1": "\u20ac83.4B Trade Volume",
+      "highlight1": "€83.4B Trade Volume",
       "badge2": "Germany Trade Hub",
       "title2": "Your Gateway to Europe",
       "desc2": "Germany is Europe's largest economy and a key entry point for African exporters seeking EU market access",
@@ -112,7 +111,15 @@
       "badge4": "Export Excellence",
       "title4": "Connect to Global Markets",
       "desc4": "Professional logistics support, regulatory compliance guidance, and market intelligence for successful EU exports",
-      "highlight4": "End-to-End Support"
+      "highlight4": "End-to-End Support",
+      "badge5": "Organic Standards",
+      "title5": "Organic Export Certification",
+      "desc5": "Navigate EU Bio-Siegel requirements",
+      "highlight5": "Premium Pricing",
+      "badge6": "Logistics Excellence",
+      "title6": "Cold Chain & Supply Chain",
+      "desc6": "Ensuring product quality from farm to retail",
+      "highlight6": "Verified Logistics"
     },
     "connect_expert": "Connect with an Expert",
     "view_guide": "View Market Guide",
@@ -140,7 +147,19 @@
       "badge2": "New Initiative",
       "title2": "Zimbabwe Shop",
       "subtitle2": "EU Diaspora & Tourism Commerce Gateway",
-      "desc2": "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market."
+      "desc2": "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
+      "badge3": "Safari Excellence",
+      "title3": "Hwange National Park",
+      "subtitle3": "Witness the majestic Big Five",
+      "highlight3": "50,000+ Elephants",
+      "badge4": "Historical Heritage",
+      "title4": "Great Zimbabwe Ruins",
+      "subtitle4": "Explore the medieval stone city",
+      "highlight4": "Ancient Majesty",
+      "badge5": "Adventure Capital",
+      "title5": "Mosi-oa-Tunya",
+      "subtitle5": "The Smoke That Thunders",
+      "highlight5": "Natural Wonder"
     },
     "attractions_title": "Iconic Attractions",
     "attractions_subtitle": "Experience the natural beauty and historical wonders of Zimbabwe",
@@ -162,7 +181,15 @@
       "badge3": "Victoria Falls Stock Exchange",
       "title3": "VFEX: Your USD Gateway",
       "subtitle3": "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
-      "highlight3": "USD Denominated"
+      "highlight3": "USD Denominated",
+      "badge4": "Agriculture 4.0",
+      "title4": "Smart Farming Investments",
+      "subtitle4": "High-yield macadamia and avocado projects using precision agriculture technology.",
+      "highlight4": "18-22% IRR",
+      "badge5": "Mining Transformation",
+      "title5": "Critical Minerals Hub",
+      "subtitle5": "Invest in Zimbabwe's lithium and platinum value-addition projects for the global energy transition.",
+      "highlight5": "Global Demand"
     },
     "active_projects": "Active Investment Projects",
     "active_projects_desc": "Verified opportunities for diaspora investment across key sectors",
@@ -186,7 +213,15 @@
       "badge1": "Trade Excellence",
       "title1": "Zimbabwe Export Hub",
       "subtitle1": "Connecting Zimbabwean producers with global markets through diaspora networks and trade expertise",
-      "highlight1": "$50M+ Exports"
+      "highlight1": "$50M+ Exports",
+      "badge2": "Sector Growth",
+      "title2": "Horticulture Expansion",
+      "subtitle2": "Zimbabwe's horticultural exports are reaching new heights in European and Middle Eastern markets.",
+      "highlight2": "30% Annual Growth",
+      "badge3": "Industrialization",
+      "title3": "Value-Added Manufacturing",
+      "subtitle3": "Supporting the transition from raw exports to high-quality processed Zimbabwean products.",
+      "highlight3": "Vision 2030"
     },
     "export_roadmap": "Export Roadmap",
     "roadmap_title": "Zimbabwe to Germany Export Process",
@@ -204,7 +239,12 @@
       "title1": "Data-Driven ",
       "highlight1": "Insights",
       "subtitle1": "Comprehensive analysis of Zimbabwe's economic landscape and growth potential.",
-      "desc1": "Explore real-time metrics, sector performances, and the transformative impact of diaspora contributions on the national economy."
+      "desc1": "Explore real-time metrics, sector performances, and the transformative impact of diaspora contributions on the national economy.",
+      "badge2": "Remittance Trends",
+      "title2": "Diaspora Remittances",
+      "highlight2": "$2.1B Annually",
+      "subtitle2": "Remittances continue to be a cornerstone of Zimbabwe's foreign currency inflows and social stability.",
+      "desc2": "Analyzing the flow and impact of diaspora capital on local community development and investment."
     },
     "indicators": "Economic Indicators",
     "indicators_desc": "Key metrics driving Zimbabwe's economic transformation",
@@ -219,7 +259,11 @@
       "badge1": "Impact Stories",
       "title1": "Diaspora-Driven Success",
       "subtitle1": "Real stories of Zimbabwean businesses transformed through diaspora connections and support",
-      "highlight1": "$8.5M+ Generated"
+      "highlight1": "$8.5M+ Generated",
+      "badge2": "Entrepreneurial Spirit",
+      "title2": "Startup Success",
+      "subtitle2": "How diaspora-led tech startups are solving local challenges in fintech, agritech, and health.",
+      "highlight2": "50+ Tech Ventures"
     },
     "stories_title": "Success Stories",
     "stories_desc": "Explore how diaspora engagement is creating real impact in Zimbabwe",
@@ -278,7 +322,7 @@
     "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
   },
   "shop": {
-    "vision": "To build a global gateway connecting Zimbabwe\u2019s culture, products, tourism, and investment opportunities.",
+    "vision": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
     "our_vision": "Our Vision",
     "collections": "Collections",
     "title": "Curated Zimbabwean Excellence",

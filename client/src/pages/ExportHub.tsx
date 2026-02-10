@@ -44,6 +44,20 @@ export default function ExportHub() {
       title: t('export.hero.title4'),
       subtitle: t('export.hero.desc4'),
       highlight: t('export.hero.highlight4')
+    },
+    {
+      image: "/images/horticulture.jpg",
+      badge: t('export.hero.badge5'),
+      title: t('export.hero.title5'),
+      subtitle: t('export.hero.desc5'),
+      highlight: t('export.hero.highlight5')
+    },
+    {
+      image: "/images/manufacturing_factory.jpg",
+      badge: t('export.hero.badge6'),
+      title: t('export.hero.title6'),
+      subtitle: t('export.hero.desc6'),
+      highlight: t('export.hero.highlight6')
     }
   ], [t]);
 

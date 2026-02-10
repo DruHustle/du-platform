@@ -21,6 +21,13 @@ export default function SuccessStories() {
       title: t('success.hero.title1'),
       subtitle: t('success.hero.subtitle1'),
       highlight: t('success.hero.highlight1')
+    },
+    {
+      image: "/images/tech_startup.jpg",
+      badge: t('success.hero.badge2'),
+      title: t('success.hero.title2'),
+      subtitle: t('success.hero.subtitle2'),
+      highlight: t('success.hero.highlight2')
     }
   ], [t]);
 
@@ -29,7 +36,7 @@ export default function SuccessStories() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   const stories = [
     {

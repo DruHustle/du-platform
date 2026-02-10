@@ -1,7 +1,7 @@
 {
   "brand": "Diaspora Unlocked",
   "tagline": "Dandira reZimbabwean riri kunze kwenyika",
-  "about": "Kubatanidza vana veZimbabwe vari kunze kwenyika nemikana yekutengeserana, kushanya, uye kudyara mari.",
+  "about": "Nezvedu",
   "select_lang": "Sarudza Mutauro",
   "account": "Akaundi",
   "login": "Pinda",
@@ -18,7 +18,6 @@
   "quick_links": "Zvechimbi-chimbi",
   "partners": "Vadyidzani",
   "contact": "Taura Nesu",
-  "about": "Nezvedu",
   "nav": {
     "home": "Kumba",
     "export": "Zvekutengesera",
@@ -100,7 +99,7 @@
       "badge1": "EU Market Access",
       "title1": "Access German Markets",
       "desc1": "Comprehensive guidance on regulations, certifications, and partnerships for exporting Zimbabwean products to Germany",
-      "highlight1": "\u20ac83.4B Trade Volume",
+      "highlight1": "€83.4B Trade Volume",
       "badge2": "Germany Trade Hub",
       "title2": "Your Gateway to Europe",
       "desc2": "Germany is Europe's largest economy and a key entry point for African exporters seeking EU market access",
@@ -112,7 +111,15 @@
       "badge4": "Export Excellence",
       "title4": "Connect to Global Markets",
       "desc4": "Professional logistics support, regulatory compliance guidance, and market intelligence for successful EU exports",
-      "highlight4": "End-to-End Support"
+      "highlight4": "End-to-End Support",
+      "badge5": "Bio-Standards",
+      "title5": "Bio-Export-Zertifizierung",
+      "desc5": "EU-Bio-Siegel Anforderungen navigieren",
+      "highlight5": "Premium-Preise",
+      "badge6": "Logistik-Exzellenz",
+      "title6": "Kühlkette & Lieferkette",
+      "desc6": "Sicherung der Produktqualität vom Bauernhof bis zum Einzelhandel",
+      "highlight6": "Verifizierte Logistik"
     },
     "connect_expert": "Connect with an Expert",
     "view_guide": "View Market Guide",
@@ -140,7 +147,19 @@
       "badge2": "New Initiative",
       "title2": "Zimbabwe Shop",
       "subtitle2": "EU Diaspora & Tourism Commerce Gateway",
-      "desc2": "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market."
+      "desc2": "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
+      "badge3": "Safari-Exzellenz",
+      "title3": "Hwange-Nationalpark",
+      "subtitle3": "Erleben Sie die majestätischen Big Five",
+      "highlight3": "50.000+ Elefanten",
+      "badge4": "Historisches Erbe",
+      "title4": "Ruinen von Groß-Simbabwe",
+      "subtitle4": "Erkunden Sie die mittelalterliche Steinstadt",
+      "highlight4": "Antike Majestät",
+      "badge5": "Abenteuer-Hauptstadt",
+      "title5": "Mosi-oa-Tunya",
+      "subtitle5": "Der donnernde Rauch",
+      "highlight5": "Naturwunder"
     },
     "attractions_title": "Iconic Attractions",
     "attractions_subtitle": "Experience the natural beauty and historical wonders of Zimbabwe",
@@ -278,7 +297,7 @@
     "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
   },
   "shop": {
-    "vision": "To build a global gateway connecting Zimbabwe\u2019s culture, products, tourism, and investment opportunities.",
+    "vision": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
     "our_vision": "Our Vision",
     "collections": "Collections",
     "title": "Curated Zimbabwean Excellence",
