@@ -64,6 +64,36 @@ export default function DataVisualization() {
       subtitle: t('data.hero.subtitle2'),
       description: t('data.hero.desc2'),
       buttons: []
+    },
+    {
+      image: "/images/diaspora_investment.jpg",
+      badge: t('data.hero.badge3'),
+      badgeIcon: true,
+      title: t('data.hero.title3'),
+      titleHighlight: t('data.hero.highlight3'),
+      subtitle: t('data.hero.subtitle3'),
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/export_hub_bg.jpg",
+      badge: t('data.hero.badge4'),
+      badgeIcon: true,
+      title: t('data.hero.title4'),
+      titleHighlight: t('data.hero.highlight4'),
+      subtitle: t('data.hero.subtitle4'),
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/rbz_building.png",
+      badge: t('data.hero.badge5'),
+      badgeIcon: true,
+      title: t('data.hero.title5'),
+      titleHighlight: t('data.hero.highlight5'),
+      subtitle: t('data.hero.subtitle5'),
+      description: "",
+      buttons: []
     }
   ], [t]);
 

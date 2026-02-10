@@ -28,6 +28,27 @@ export default function SuccessStories() {
       title: t('success.hero.title2'),
       subtitle: t('success.hero.subtitle2'),
       highlight: t('success.hero.highlight2')
+    },
+    {
+      image: "/images/crafts_binga_baskets1.jpg",
+      badge: t('success.hero.badge3'),
+      title: t('success.hero.title3'),
+      subtitle: t('success.hero.subtitle3'),
+      highlight: t('success.hero.highlight3')
+    },
+    {
+      image: "/images/eastern_highlands.jpg",
+      badge: t('success.hero.badge4'),
+      title: t('success.hero.title4'),
+      subtitle: t('success.hero.subtitle4'),
+      highlight: t('success.hero.highlight4')
+    },
+    {
+      image: "/images/minerals_mining.png",
+      badge: t('success.hero.badge5'),
+      title: t('success.hero.title5'),
+      subtitle: t('success.hero.subtitle5'),
+      highlight: t('success.hero.highlight5')
     }
   ], [t]);
 

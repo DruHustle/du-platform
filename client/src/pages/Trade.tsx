@@ -37,6 +37,20 @@ export default function Trade() {
       title: t('trade.hero.title3'),
       subtitle: t('trade.hero.subtitle3'),
       highlight: t('trade.hero.highlight3')
+    },
+    {
+      image: "/images/export_port1.jpg",
+      badge: t('trade.hero.badge4'),
+      title: t('trade.hero.title4'),
+      subtitle: t('trade.hero.subtitle4'),
+      highlight: t('trade.hero.highlight4')
+    },
+    {
+      image: "/images/eu_flags.png",
+      badge: t('trade.hero.badge5'),
+      title: t('trade.hero.title5'),
+      subtitle: t('trade.hero.subtitle5'),
+      highlight: t('trade.hero.highlight5')
     }
   ], [t]);
 
