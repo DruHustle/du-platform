@@ -1,6 +1,13 @@
 {
   "brand": "Diaspora Unlocked",
   "tagline": "Simbabwe Global Diaspora Plattform",
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+  "about": "Verbindung der globalen Diaspora Simbabwes mit Möglichkeiten in Handel, Tourismus und Investitionen.",
+  "select_lang": "Sprache wählen",
+=======
+>>>>>>> Stashed changes
   "select_lang": "Sprache w\u00e4hlen",
   "account": "Konto",
   "login": "Anmelden",
@@ -18,6 +25,10 @@
   "partners": "Partner",
   "contact": "Kontakt",
   "about": "\u00dcber uns",
+<<<<<<< Updated upstream
+=======
+>>>>>>> 8c8713d69593efdcba8ddcea7e4959dd62ee399d
+>>>>>>> Stashed changes
   "nav": {
     "home": "Startseite",
     "export": "Export-Zentrum",
