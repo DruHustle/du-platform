@@ -133,9 +133,148 @@
     "partner_network_title": "German Partner Network",
     "partner_network_desc": "Connecting Zimbabwean exporters with established German institutions and businesses",
     "regulatory_updates": "Regulatory & Trade Updates",
-    "market_intelligence": "Market Intelligence",
+    "market_intelligence": {
+      "blueberries": "Blueberries",
+      "honey": "Honey",
+      "natural_oils": "Natural Oils (Marula)",
+      "status_approved": "approved",
+      "status_pending": "pending",
+      "blueberries_req1": "Class I quality standards required",
+      "blueberries_req2": "LIDL-specific MRLs (33% of legal limit)",
+      "blueberries_req3": "Mandatory cold chain logistics",
+      "blueberries_req4": "GLOBALG.A.P. certification essential",
+      "blueberries_buyers": [
+        "LIDL",
+        "EDEKA",
+        "REWE"
+      ],
+      "honey_req1": "NOT YET EU APPROVED for direct export",
+      "honey_req2": "TRACES registration mandate (since Nov 2024)",
+      "honey_req3": "Residue Monitoring Plan (RMP) required",
+      "honey_req4": "EU-accredited testing systems needed",
+      "honey_buyers": [
+        "Pending approval process"
+      ],
+      "oils_req1": "German-language labeling mandatory",
+      "oils_req2": "Purity testing certification",
+      "oils_req3": "Organic certification preferred",
+      "oils_req4": "REACH compliance for cosmetic use",
+      "oils_buyers": [
+        "Cosmetic manufacturers",
+        "Specialty retailers"
+      ]
+    },
     "support_request": "Export Support Request",
-    "support_request_desc": "Fill out the form below and our export specialists will contact you."
+    "support_request_desc": "Fill out the form below and our export specialists will contact you.",
+    "categories": {
+      "food_products": "Food Products",
+      "textiles_leather": "Textiles & Leather",
+      "arts_crafts": "Arts & Crafts",
+      "agricultural_products": "Agricultural Products"
+    },
+    "requirements": {
+      "food": {
+        "cert1": "EU Organic Certification (Bio-Siegel)",
+        "cert2": "HACCP Compliance",
+        "cert3": "Maximum Residue Levels (MRLs)",
+        "cert4": "Traceability Documentation",
+        "price": "€15-45/kg (organic produce)"
+      },
+      "textiles": {
+        "cert1": "REACH Compliance",
+        "cert2": "CE Marking",
+        "cert3": "Oeko-Tex Standard 100",
+        "cert4": "Country of Origin Documentation",
+        "price": "€25-120/item (leather goods)"
+      },
+      "arts": {
+        "cert1": "Product Safety Standards",
+        "cert2": "Import Declaration",
+        "cert3": "Cultural Heritage Documentation",
+        "cert4": "Fair Trade Certification (optional)",
+        "price": "€30-500/piece (stone sculptures)"
+      },
+      "agricultural": {
+        "cert1": "Phytosanitary Certificate",
+        "cert2": "EU Plant Health Regulations",
+        "cert3": "Pesticide Residue Testing",
+        "cert4": "Quality Standards",
+        "price": "€2-8/kg (fresh produce)"
+      }
+    },
+    "partners": {
+      "retailers": "Retailers",
+      "retailers_desc": "Major German retail chains interested in authentic African products",
+      "retailers_examples": [
+        "REWE Group",
+        "EDEKA",
+        "Metro AG",
+        "Kaufland",
+        "Aldi Süd"
+      ],
+      "educational": "Educational Institutions",
+      "educational_desc": "Institutions supporting trade education and partnerships",
+      "educational_examples": [
+        "German-African Business Association",
+        "IHK (Chambers of Commerce)",
+        "Trade Schools",
+        "Universities"
+      ],
+      "business": "Business Partners",
+      "business_desc": "Professional services for market entry and expansion",
+      "business_examples": [
+        "Import/Export Agencies",
+        "Trade Consultants",
+        "Market Entry Specialists",
+        "Distribution Partners"
+      ],
+      "logistics": "Logistics Partners",
+      "logistics_desc": "Reliable shipping and customs clearance services",
+      "logistics_examples": [
+        "DHL Global Forwarding",
+        "Kuehne + Nagel",
+        "DB Schenker",
+        "Freight Forwarders"
+      ],
+      "regulatory": "Regulatory Partners",
+      "regulatory_desc": "Support for regulatory compliance and certifications",
+      "regulatory_examples": [
+        "German Customs (Zoll)",
+        "Certification Bodies",
+        "Quality Assurance Agencies",
+        "Trade Compliance Consultants"
+      ],
+      "financial": "Financial Services",
+      "financial_desc": "Banking and financial support for international trade transactions",
+      "financial_examples": [
+        "Deutsche Bank",
+        "Commerzbank",
+        "KfW Development Bank",
+        "Export Credit Agencies",
+        "Trade Finance Providers"
+      ]
+    },
+    "updates": {
+      "title1": "EU Sanctions Easing",
+      "date1": "February 2025",
+      "desc1": "EU eased certain sanctions on Zimbabwe, improving trade relations and market access opportunities.",
+      "title2": "Arms Embargo Expiration",
+      "date2": "February 2026",
+      "desc2": "The EU arms embargo is set to expire, signaling further normalization of EU-Zimbabwe relations.",
+      "title3": "EU-ESA EPA Benefits",
+      "desc3": "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement for qualifying products."
+    },
+    "latest_updates": "Latest Updates",
+    "regulatory_updates_title": "2026 Regulatory Updates",
+    "regulatory_updates_desc": "Latest developments affecting Zimbabwe-EU trade relations",
+    "product_intelligence": "Product Intelligence",
+    "product_market_intelligence": "Product Market Intelligence",
+    "product_intelligence_desc": "Specific requirements and status for key Zimbabwean export products",
+    "eu_approved": "EU Approved",
+    "pending_approval": "Pending Approval",
+    "requirements_label": "Requirements:",
+    "buyers_label": "Buyers:",
+    "go_to_slide": "Go to slide"
   },
   "tourism": {
     "hero": {
@@ -366,5 +505,12 @@
     "crafts_desc": "Supporting rural artisans and women cooperatives.",
     "food_title": "Food & Nostalgia",
     "food_desc": "The flavors of home, fully EU-compliant."
+  },
+  "notfound": {
+    "title": "404",
+    "subtitle": "Page Not Found",
+    "message": "Sorry, the page you are looking for doesn't exist.",
+    "message2": "It may have been moved or deleted.",
+    "go_home": "Go Home"
   }
 }

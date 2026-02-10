@@ -247,7 +247,7 @@ export default function ExportHub() {
                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                   <DialogTrigger asChild>
                     <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold group">
-                      Connect with an Expert
+                        {t('export.connect_expert')}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
@@ -262,7 +262,7 @@ export default function ExportHub() {
                 <a href="#market-requirements" className="inline-block">
                   <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold">
                     <Globe className="mr-2 h-5 w-5" />
-                    View Market Guide
+                    {t('export.view_guide')}
                   </Button>
                 </a>
               </div>
@@ -279,7 +279,7 @@ export default function ExportHub() {
               className={`w-3 h-3 rounded-full transition-all ${
                 idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
               }`}
-              aria-label={`Go to slide ${idx + 1}`}
+              aria-label={`${t('export.go_to_slide')} ${idx + 1}`}
             />
           ))}
         </div>
@@ -292,10 +292,10 @@ export default function ExportHub() {
       <section className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">Latest Updates</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">2026 Regulatory Updates</h2>
+            <Badge className="badge-primary mb-4">{t('export.latest_updates')}</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('export.regulatory_updates_title')}</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Latest developments affecting Zimbabwe-EU trade relations
+              {t('export.regulatory_updates_desc')}
             </p>
           </div>
 
@@ -324,10 +324,10 @@ export default function ExportHub() {
       <section className="section-padding">
         <div className="container">
           <div className="text-center mb-12">
-            <Badge className="badge-secondary mb-4">Product Intelligence</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Product Market Intelligence</h2>
+            <Badge className="badge-secondary mb-4">{t('export.product_intelligence')}</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('export.product_market_intelligence')}</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Specific requirements and status for key Zimbabwean export products
+              {t('export.product_intelligence_desc')}
             </p>
           </div>
 
@@ -338,13 +338,13 @@ export default function ExportHub() {
                   <div className="flex items-center justify-between mb-2">
                     <CardTitle className="text-xl">{item.product}</CardTitle>
                     <Badge className={`${item.status === 'approved' ? 'badge-success' : 'badge-warning'}`}>
-                      {item.status === 'approved' ? 'EU Approved' : 'Pending Approval'}
+                      {item.status === 'approved' ? t('export.eu_approved') : t('export.pending_approval')}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-5">
                   <div>
-                    <p className="text-sm font-semibold text-foreground mb-3">Requirements:</p>
+                    <p className="text-sm font-semibold text-foreground mb-3">{t('export.requirements_label')}</p>
                     <ul className="space-y-2">
                       {item.requirements.map((req, idx) => (
                         <li key={idx} className="flex items-start text-sm">
@@ -359,7 +359,7 @@ export default function ExportHub() {
                     </ul>
                   </div>
                   <div className="pt-3 border-t">
-                    <p className="text-sm font-semibold text-foreground mb-2">Target Buyers:</p>
+                    <p className="text-sm font-semibold text-foreground mb-3">{t('export.buyers_label')}</p>
                     <div className="flex flex-wrap gap-2">
                       {item.buyers.map((buyer, idx) => (
                         <Badge key={idx} variant="secondary" className="text-xs font-medium">
@@ -646,7 +646,7 @@ export default function ExportHub() {
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
                   <Button size="lg" className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all group">
-                    Connect with an Expert
+                      {t('export.connect_expert')}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </DialogTrigger>
