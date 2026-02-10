@@ -4,41 +4,38 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const { t, i18n } = useTranslation();
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [selectedRegion, setSelectedRegion] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('zigd-region') || 'Zimbabwe';
-    }
-    return 'Zimbabwe';
-  });
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const languages = [
+    { name: "English", code: "en" },
+    { name: "chiShona", code: "sn" },
+    { name: "isiNdebele", code: "nd" },
+    { name: "Deutsch", code: "de" }
+  ];
+
   const navigation = [
+    { name: t('nav.home'), href: "/", children: null },
     { 
-      name: "Home", 
-      href: "/",
-      children: null
-    },
-    { 
-      name: "Export Hub", 
+      name: t('nav.export'), 
       href: "/export-hub",
       children: [
         { name: "Market Requirements", description: "German market regulations and certifications" },
@@ -47,7 +44,7 @@ export default function Layout({ children }: LayoutProps) {
       ]
     },
     { 
-      name: "Tourism", 
+      name: t('nav.tourism'), 
       href: "/tourism",
       children: [
         { name: "Attractions", description: "Must-visit destinations in Zimbabwe" },
@@ -56,7 +53,7 @@ export default function Layout({ children }: LayoutProps) {
       ]
     },
     { 
-      name: "Investment", 
+      name: t('nav.investment'), 
       href: "/investment",
       children: [
         { name: "Active Projects", description: "Browse investment opportunities" },
@@ -65,7 +62,7 @@ export default function Layout({ children }: LayoutProps) {
       ]
     },
     { 
-      name: "Trade", 
+      name: t('nav.trade'), 
       href: "/trade",
       children: [
         { name: "Export Sectors", description: "Key industries and opportunities" },
@@ -73,22 +70,9 @@ export default function Layout({ children }: LayoutProps) {
         { name: "ZimTrade Programs", description: "Export development initiatives" }
       ]
     },
-    { name: "Economic Data", href: "/data-visualization", children: null },
-    { name: "Success Stories", href: "/success-stories", children: null },
+    { name: t('nav.data'), href: "/data-visualization", children: null },
+    { name: t('nav.success'), href: "/success-stories", children: null },
   ];
-
-  const regions = {
-    "Africa": ["Zimbabwe", "South Africa"],
-    "Europe": ["Germany", "United Kingdom"],
-    "Americas": ["United States", "Canada"],
-    "Asia-Pacific": ["Australia", "Singapore"]
-  };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('zigd-region', selectedRegion);
-    }
-  }, [selectedRegion]);
 
   const isActive = (href: string) => {
     if (href === "/") return location === "/";
@@ -116,15 +100,15 @@ export default function Layout({ children }: LayoutProps) {
             <div className='flex items-center space-x-2 md:space-x-3 cursor-pointer flex-shrink-0 group min-w-0'>
               <img
                 src='/images/made_in_zimbabwe.png'
-                alt='Made in Zimbabwe'
+                alt='Logo'
                 className='h-9 w-9 md:h-11 md:w-11 object-contain flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <div className='min-w-0'>
                 <h1 className='!text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
-                  Diaspora Unlocked
+                  {t('brand')}
                 </h1>
                 <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
-                  Zimbabwe Global Diaspora Platform
+                  {t('tagline')}
                 </p>
               </div>
             </div>
@@ -182,6 +166,7 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Utility Icons */}
           <div className="flex items-center gap-1 md:gap-2 ml-auto">
+            {/* Search Dialog */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden sm:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
@@ -208,39 +193,36 @@ export default function Layout({ children }: LayoutProps) {
               </DialogContent>
             </Dialog>
 
+            {/* Language Switcher (Globe) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden md:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
                   <Globe className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 md:w-56 shadow-xl">
-                <DropdownMenuLabel className="text-primary font-semibold text-sm">Select Region</DropdownMenuLabel>
+              <DropdownMenuContent className="w-48 md:w-56 shadow-xl" align="end">
+                <DropdownMenuLabel className="text-primary font-semibold text-sm">{t('select_lang')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {Object.entries(regions).map(([continent, countries]) => (
-                  <div key={continent}>
-                    <DropdownMenuLabel className="text-xs text-muted-foreground font-normal uppercase tracking-wider px-2 py-1">{continent}</DropdownMenuLabel>
-                    {countries.map((country) => (
-                      <DropdownMenuItem 
-                        key={country}
-                        onClick={() => setSelectedRegion(country)}
-                        className={`cursor-pointer transition-colors text-sm ${selectedRegion === country ? 'bg-primary/10 text-primary' : ''}`}
-                      >
-                        {country}
-                      </DropdownMenuItem>
-                    ))}
-                  </div>
+                {languages.map((lang) => (
+                  <DropdownMenuItem 
+                    key={lang.code}
+                    onClick={() => i18n.changeLanguage(lang.code)}
+                    className={`cursor-pointer transition-colors text-sm ${i18n.language === lang.code ? 'bg-primary/10 text-primary' : ''}`}
+                  >
+                    {lang.name}
+                  </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Account Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="hidden md:flex hover:bg-primary/5 transition-colors h-9 w-9 md:h-10 md:w-10">
                   <User className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 md:w-56 shadow-xl">
+              <DropdownMenuContent className="w-48 md:w-56 shadow-xl" align="end">
                 <DropdownMenuLabel className="text-primary font-semibold text-sm">Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer text-sm">Login</DropdownMenuItem>
@@ -308,49 +290,33 @@ export default function Layout({ children }: LayoutProps) {
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-40 group"
-        title="Contact us on WhatsApp"
       >
         <div className="relative">
           <div className="absolute inset-0 bg-green-500 rounded-full blur-lg group-hover:blur-xl transition-all opacity-75 group-hover:opacity-100" />
           <button className="relative bg-green-500 hover:bg-green-600 text-white p-3 md:p-4 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center">
             <MessageCircle className="h-5 w-5 md:h-6 md:w-6" />
           </button>
-          <div className="absolute bottom-full right-0 mb-2 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            Chat with us
-          </div>
         </div>
       </a>
 
+      {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 md:py-12 mt-12">
         <div className="container">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8">
             <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">About Diaspora Unlocked</h3>
+              <h3 className="font-bold text-base md:text-lg">About {t('brand')}</h3>
               <p className="text-xs md:text-sm opacity-90 leading-relaxed">
-                Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.
+                {t('tagline')}
               </p>
             </div>
 
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Quick Links</h3>
               <ul className="space-y-2 text-xs md:text-sm">
-                {[
-                  { name: "Export Hub", href: "/export-hub" },
-                  { name: "Tourism", href: "/tourism" },
-                  { name: "Investment", href: "/investment" },
-                  { name: "Trade", href: "/trade" },
-                ].map((link) => (
+                {navigation.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href}>
-                      <span 
-                        className="hover:text-secondary transition-colors cursor-pointer"
-                        onClick={() => {
-                          // This ensures any "scrollToBottom" flags from previous 
-                          // interactions are cleared before the new page loads
-                          window.history.replaceState({ scrollToBottom: false, stayPut: false }, "");
-                          window.scrollTo(0, 0); 
-                        }}
-                      >
+                      <span className="hover:text-secondary transition-colors cursor-pointer">
                         {link.name}
                       </span>
                     </Link>
@@ -369,32 +335,30 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
 
-          <div className="space-y-3">
-            <h3 className="font-bold">Contact</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-secondary" />
-                <a href="mailto:info@diasporaunlocked.com" className="hover:text-secondary transition-colors">info@diasporaunlocked.com</a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-secondary" />
-                <a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a>
-              </li>
-              <li className="flex items-center gap-2 opacity-90">
-                <MapPin className="h-4 w-4 text-secondary" />
-                <span>Berlin, Germany</span>
-              </li>
-            </ul>
-          </div>
-
+            <div className="space-y-3">
+              <h3 className="font-bold">Contact</h3>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-secondary" />
+                  <a href="mailto:info@diasporaunlocked.com" className="hover:text-secondary transition-colors">info@diasporaunlocked.com</a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-secondary" />
+                  <a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a>
+                </li>
+                <li className="flex items-center gap-2 opacity-90">
+                  <MapPin className="h-4 w-4 text-secondary" />
+                  <span>Berlin, Germany</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">
-            <p className="opacity-80">© 2026 ZIGD Platform. All rights reserved.</p>
+            <p className="opacity-80">© 2026 {t('brand')}. All rights reserved.</p>
             <div className="flex gap-4 md:gap-6">
               <a href="#" className="hover:text-secondary transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-secondary transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-secondary transition-colors">Cookie Settings</a>
             </div>
           </div>
         </div>
