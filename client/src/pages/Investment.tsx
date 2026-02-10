@@ -20,32 +20,32 @@ export default function Investment() {
 
   const heroSlides = [
     {
+      image: "/images/rbz_building.png",
+      badge: "Reserve Bank of Zimbabwe",
+      title: "Zimbabwe Gold (ZiG) Stability",
+      subtitle: "Backed by gold and foreign currency reserves, ZiG represents a new era of monetary stability and controlled inflation for investors.",
+      highlight: "Gold-Backed Currency"
+    },
+    {
+      image: "/images/vfex_logo.png",
+      badge: "Victoria Falls Stock Exchange",
+      title: "VFEX: Your USD Gateway",
+      subtitle: "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
+      highlight: "USD Denominated"
+    },
+    {
+      image: "/images/zse_logo.png",
+      badge: "Zimbabwe Stock Exchange",
+      title: "ZSE: Building Wealth",
+      subtitle: "Join one of Africa's oldest exchanges. Access diverse sectors from agriculture to mining and participate in Zimbabwe's industrial growth.",
+      highlight: "120+ Years of History"
+    },
+    {
       image: "/images/diaspora_investment.jpg",
       badge: "Diaspora Investment",
       title: "Invest in Zimbabwe's Future",
       subtitle: "Transparent, verified investment opportunities connecting diaspora capital with high-impact projects",
       highlight: "12-18% Returns"
-    },
-    {
-      image: "/images/infrastructure_investment.webp",
-      badge: "Infrastructure Growth",
-      title: "Build Zimbabwe Together",
-      subtitle: "Infrastructure projects creating jobs, generating returns, and developing communities",
-      highlight: "$2.5M+ Invested"
-    },
-    {
-      image: "/images/manufacturing_factory.jpg",
-      badge: "Manufacturing Sector",
-      title: "Industrial Renaissance",
-      subtitle: "Support local manufacturing with export potential and government procurement contracts",
-      highlight: "500+ Jobs Created"
-    },
-    {
-      image: "/images/horticulture.jpg",
-      badge: "Agriculture Innovation",
-      title: "Organic Export Farming",
-      subtitle: "EU-certified organic farming projects supplying European markets with premium produce",
-      highlight: "15% Annual Returns"
     }
   ];
 
