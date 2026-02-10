@@ -343,47 +343,36 @@ export default function SuccessStories() {
         </div>
       </section>
 
+
       {/* Contact CTA with Modal */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
-          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
-            <CardHeader>
-              <CardTitle className="text-2xl">Share Your Success Story</CardTitle>
-              <CardDescription className="text-base">
-                Have a success story to share? We'd love to feature your journey and inspire others.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8">
-                    Submit Your Story
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title="Share Your Success Story"
-                    description="Tell us about your diaspora-driven success and how we can feature it."
-                    module="success-story"
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Share Your Success Story
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              Have a success story to share? We'd love to feature your journey and inspire others within the global Zimbabwean community.
+            </p>
+            
+            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="secondary" className="text-lg px-8">
+                  Submit Your Story
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto text-foreground">
+                <ContactForm
+                  title="Share Your Success Story"
+                  description="Tell us about your diaspora-driven success and how we can feature it."
+                  module="success-story"
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Be Part of the Next Success Story
-          </h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-            Whether you're an investor, exporter, or diaspora professional, there's a role for you in Zimbabwe's economic transformation
-          </p>
-        </div>
-      </section>
     </Layout>
   );
 }
