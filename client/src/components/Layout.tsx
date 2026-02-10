@@ -38,36 +38,36 @@ export default function Layout({ children }: LayoutProps) {
       name: t('nav.export'), 
       href: "/export-hub",
       children: [
-        { name: "Market Requirements", description: "German market regulations and certifications" },
-        { name: "Product Intelligence", description: "Product-specific export guidance" },
-        { name: "Partner Network", description: "Connect with retailers and logistics" }
+        { name: t('nav.market_requirements'), description: t('nav.market_requirements_desc') },
+        { name: t('nav.product_intelligence'), description: t('nav.product_intelligence_desc') },
+        { name: t('nav.partner_network'), description: t('nav.partner_network_desc') }
       ]
     },
     { 
       name: t('nav.tourism'), 
       href: "/tourism",
       children: [
-        { name: "Attractions", description: "Must-visit destinations in Zimbabwe" },
-        { name: "Plan Your Visit", description: "Visa, health, and travel information" },
-        { name: "Diaspora Packages", description: "Special homecoming tours" }
+        { name: t('nav.attractions'), description: t('nav.attractions_desc') },
+        { name: t('nav.plan_visit'), description: t('nav.plan_visit_desc') },
+        { name: t('nav.diaspora_packages'), description: t('nav.diaspora_packages_desc') }
       ]
     },
     { 
       name: t('nav.investment'), 
       href: "/investment",
       children: [
-        { name: "Active Projects", description: "Browse investment opportunities" },
-        { name: "Investment Calculator", description: "Simulate your returns" },
-        { name: "Verified Directories", description: "NTIR and HDC registries" }
+        { name: t('nav.active_projects'), description: t('nav.active_projects_desc') },
+        { name: t('nav.investment_calculator'), description: t('nav.investment_calculator_desc') },
+        { name: t('nav.verified_directories'), description: t('nav.verified_directories_desc') }
       ]
     },
     { 
       name: t('nav.trade'), 
       href: "/trade",
       children: [
-        { name: "Export Sectors", description: "Key industries and opportunities" },
-        { name: "Export Roadmap", description: "Step-by-step export process" },
-        { name: "ZimTrade Programs", description: "Export development initiatives" }
+        { name: t('nav.export_sectors'), description: t('nav.export_sectors_desc') },
+        { name: t('nav.export_roadmap'), description: t('nav.export_roadmap_desc') },
+        { name: t('nav.zimtrade_programs'), description: t('nav.zimtrade_programs_desc') }
       ]
     },
     { name: t('nav.data'), href: "/data-visualization", children: null },
@@ -137,7 +137,7 @@ export default function Layout({ children }: LayoutProps) {
                   <div className="absolute right-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
                     <Link href={item.href}>
                       <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm">
-                        Explore {item.name}
+                        {t('explore')} {item.name}
                       </div>
                     </Link>
                     <div className="border-t my-2" />
@@ -175,19 +175,19 @@ export default function Layout({ children }: LayoutProps) {
               </DialogTrigger>
               <DialogContent className="sm:max-w-xl w-[95vw]">
                 <DialogHeader>
-                  <DialogTitle className="text-lg md:text-xl">Search ZIGD Platform</DialogTitle>
+                  <DialogTitle className="text-lg md:text-xl">{t('search_title')}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSearch} className="mt-4">
                   <div className="flex gap-2 md:gap-3">
                     <input
                       type="text"
-                      placeholder="Search for exports, investments, tourism..."
+                      placeholder={t('search_placeholder')}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="flex-1 px-3 md:px-4 py-2 md:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm md:text-base"
                       autoFocus
                     />
-                    <Button type="submit" className="px-4 md:px-6 text-sm md:text-base">Search</Button>
+                    <Button type="submit" className="px-4 md:px-6 text-sm md:text-base">{t('search_button')}</Button>
                   </div>
                 </form>
               </DialogContent>
@@ -223,13 +223,13 @@ export default function Layout({ children }: LayoutProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48 md:w-56 shadow-xl" align="end">
-                <DropdownMenuLabel className="text-primary font-semibold text-sm">Account</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-primary font-semibold text-sm">{t('account')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-sm">Login</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer text-sm">Register</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-sm">{t('login')}</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-sm">{t('register')}</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-sm">My Investments</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer text-sm">Settings</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-sm">{t('my_investments')}</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-sm">{t('settings')}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -246,7 +246,7 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t bg-white/95 backdrop-blur">
+          <div className="lg:hidden border-t bg-white/95 backdrop-blur-md">
             <div className="container py-3 space-y-2">
               {navigation.map((item) => (
                 <div key={item.href}>
@@ -304,14 +304,14 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8">
             <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">About {t('brand')}</h3>
+              <h3 className="font-bold text-base md:text-lg">{t('about')} {t('brand')}</h3>
               <p className="text-xs md:text-sm opacity-90 leading-relaxed">
                 {t('tagline')}
               </p>
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">Quick Links</h3>
+              <h3 className="font-bold text-base md:text-lg">{t('quick_links')}</h3>
               <ul className="space-y-2 text-xs md:text-sm">
                 {navigation.map((link) => (
                   <li key={link.href}>
@@ -326,7 +326,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">Partners</h3>
+              <h3 className="font-bold text-base md:text-lg">{t('partners')}</h3>
               <ul className="space-y-2 text-xs md:text-sm">
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
@@ -336,7 +336,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-bold">Contact</h3>
+              <h3 className="font-bold">{t('contact')}</h3>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-secondary" />
@@ -355,10 +355,10 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">
-            <p className="opacity-80">© 2026 {t('brand')}. All rights reserved.</p>
+            <p className="opacity-80">© 2026 {t('brand')}. {t('all_rights_reserved')}</p>
             <div className="flex gap-4 md:gap-6">
-              <a href="#" className="hover:text-secondary transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-secondary transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-secondary transition-colors">{t('privacy_policy')}</a>
+              <a href="#" className="hover:text-secondary transition-colors">{t('terms_of_service')}</a>
             </div>
           </div>
         </div>
