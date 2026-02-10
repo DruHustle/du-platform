@@ -361,19 +361,8 @@ export default function Layout({ children }: LayoutProps) {
           <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">
             <p className="opacity-80">© 2026 {t('brand')}. {t('all_rights_reserved')}</p>
             <div className="flex gap-4 md:gap-6">
-<<<<<<< Updated upstream
               <a href="#" className="hover:text-secondary transition-colors">{t('privacy_policy')}</a>
               <a href="#" className="hover:text-secondary transition-colors">{t('terms_of_service')}</a>
-=======
-<<<<<<< HEAD
-              <a href="#" className="hover:text-secondary transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-secondary transition-colors">Terms of Service</a>
-               <a href="#" className="hover:text-secondary transition-colors">Cookie Settings</a>
-=======
-              <a href="#" className="hover:text-secondary transition-colors">{t('privacy_policy')}</a>
-              <a href="#" className="hover:text-secondary transition-colors">{t('terms_of_service')}</a>
->>>>>>> 8c8713d69593efdcba8ddcea7e4959dd62ee399d
->>>>>>> Stashed changes
             </div>
           </div>
         </div>
