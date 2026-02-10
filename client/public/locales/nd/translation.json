@@ -1,0 +1,57 @@
+{
+  "brand": "Diaspora Unlocked",
+  "tagline": "Inkundla yamaZimbabwean akwamanye amazwe",
+  "select_lang": "Khetha ulimi",
+  "nav": {
+    "home": "Ekhaya",
+    "export": "Zokuhweba",
+    "tourism": "Ezokuvakasha",
+    "investment": "Ukuchitha Imali",
+    "trade": "Ukuhweba",
+    "data": "Idatha yezomnotho",
+    "success": "Izindaba Zempumelelo"
+  },
+  "home": {
+    "hero_title": "Diaspora Unlocked",
+    "hero_subtitle": "Ukusheshiswa koKuhweba, Ezokuvakasha loKutshala Imali kweVision 2030",
+    "export_hub": "Zokuhweba",
+    "tourism": "Ezokuvakasha",
+    "investments": "Ukutshala Imali",
+    "platform_services": "Imisebenzi yeNkundla",
+    "gateway_title": "Isango leZimbabwe Global Diaspora",
+    "gateway_desc": "Inkundla exhuma iZimbabwe lomhlaba wonke ngokuhweba, ezokuvakasha, lokutshala imali.",
+    "explore_now": "Hlola Manje",
+    "ready_to_connect": "Ukulungele Ukuxhumana?",
+    "join_diaspora": "Joyina izinkulungwane zabantu abasemaphandleni abakha amabhuloho oshintsho lwezomnotho.",
+    "view_data": "Buka Idatha Yezomnotho",
+    "success_stories": "Izindaba Zempumelelo",
+    "modules": {
+      "export": {
+        "title": "Ulwazi Lwezokuhweba",
+        "desc": "Thola izidingo zemakethe yaseGermany, imithetho, izitifiketi, futhi uxhumane labalingani abangaba khona bokuthengisa imikhiqizo yaseZimbabwe.",
+        "stats": "Abalingani Abaqinisekisiwe"
+      },
+      "tourism": {
+        "title": "Ulwazi Lwezokuvakasha",
+        "desc": "Thola izindawo zaseZimbabwe ezikhangayo emhlabeni wonke, hlela ukuvakasha kwakho, futhi uhlole indawo yeForbes #1 ongayivakashela ngo-2025.",
+        "stats": "Forbes #1 2025"
+      },
+      "investment": {
+        "title": "Amathuba Okutshala Imali",
+        "desc": "Hlola amathuba okutshala imali encane lokubhadala imali kumaphrojekthi aqinisekisiwe aseZimbabwe.",
+        "stats": "$50M+ Amathuba"
+      },
+      "trade": {
+        "title": "Ulwazi Lokuhweba",
+        "desc": "Thola izinsiza zokuhweba ezibanzi, izinhlelo zokuthuthukisa ukuhweba, futhi uxhumane lemikhakha yokuhweba yaseZimbabwe echumayo.",
+        "stats": "8 Imikhakha Yokuhweba"
+      }
+    },
+    "trust": {
+      "diaspora": "AbaseDiaspora Baqinisekisiwe",
+      "zida": "Umlingani weZIDA",
+      "zimtrade": "ZimTrade Certified",
+      "vision2030": "Iyahambisana leVision 2030"
+    }
+  }
+}
