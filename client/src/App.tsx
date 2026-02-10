@@ -11,6 +11,7 @@ import Investment from "./pages/Investment";
 import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
 import SuccessStories from "./pages/SuccessStories";
+import { Analytics } from "@vercel/analytics/react";
 
 
 
@@ -38,6 +39,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <Analytics />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
