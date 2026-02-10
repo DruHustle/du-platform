@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
