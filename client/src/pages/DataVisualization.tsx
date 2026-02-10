@@ -52,7 +52,7 @@ export default function DataVisualization() {
       description: t('data.hero.desc1'),
       buttons: [
         { text: t('nav.data'), variant: "primary", link: "#indicators" },
-        { text: t('export.market_intelligence'), variant: "outline", link: "#sectors" }
+        { text: t('export.market_intelligence_btn'), variant: "outline", link: "#sectors" }
       ]
     },
     {
