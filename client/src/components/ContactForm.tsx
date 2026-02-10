@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Mail, Phone, User, MessageSquare } from "lucide-react";
 
 interface ContactFormProps {
@@ -15,6 +16,7 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ title, description, module }: ContactFormProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -69,8 +71,8 @@ export default function ContactForm({ title, description, module }: ContactFormP
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    toast.success("Message sent successfully!", {
-      description: "We'll get back to you within 24-48 hours.",
+    toast.success(t('contact_form.success_msg'), {
+      description: t('contact_form.success_desc'),
     });
 
     // Reset form
@@ -94,10 +96,10 @@ export default function ContactForm({ title, description, module }: ContactFormP
     <Card className="border-t-4 border-t-primary">
       <CardHeader>
         <CardTitle className="text-2xl">
-          {title || "Get in Touch"}
+          {title || t('contact_form.get_started')}
         </CardTitle>
         <CardDescription>
-          {description || "Have questions? We're here to help. Fill out the form below and our team will respond within 24-48 hours."}
+          {description || t('contact_form.desc')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -107,7 +109,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
             <div className="space-y-2">
               <Label htmlFor="name" className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Full Name *
+                {t('contact_form.full_name')} *
               </Label>
               <Input
                 id="name"
@@ -122,7 +124,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                Email Address *
+                {t('contact_form.email')} *
               </Label>
               <Input
                 id="email"
@@ -140,7 +142,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
             <div className="space-y-2">
               <Label htmlFor="phone" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                Phone Number
+                {t('contact_form.phone')}
               </Label>
               <Input
                 id="phone"
@@ -155,7 +157,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
             <div className="space-y-2">
               <Label htmlFor="subject" className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
-                Subject *
+                {t('contact_form.subject')} *
               </Label>
               <Select
                 value={formData.subject}
@@ -163,7 +165,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
                 required
               >
                 <SelectTrigger id="subject">
-                  <SelectValue placeholder="Select a subject" />
+                  <SelectValue placeholder={t('contact_form.select_subject')} />
                 </SelectTrigger>
                 <SelectContent>
                   {currentOptions.map((option) => (
@@ -179,7 +181,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
           {/* Message */}
           <div className="space-y-2">
             <Label htmlFor="message">
-              Message *
+              {t('contact_form.message')} *
             </Label>
             <Textarea
               id="message"
@@ -197,7 +199,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
             className="w-full md:w-auto"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? t('contact_form.sending') : t('contact_form.send')}
           </Button>
         </form>
       </CardContent>

@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Globe, Store, Utensils, Heart, Zap, Truck, Users, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function ZimbabweShopInfo() {
+  const { t } = useTranslation();
   const [currentJerseyIndex, setCurrentJerseyIndex] = useState(0);
   const [currentCraftsIndex, setCurrentCraftsIndex] = useState(0);
   const [currentFoodIndex, setCurrentFoodIndex] = useState(0);
@@ -20,7 +22,7 @@ export default function ZimbabweShopInfo() {
   ];
 
   const artsCrafts = [
-    { image: "/images/shop_crafts.jpg", title: "Arts & Crafts" },
+    { image: "/images/shop_crafts.jpg", title: "{t('shop.crafts_title')}" },
     { image: "/images/crafts_stone_sculptures1.png", title: "Shona Stone Sculptures" },
     { image: "/images/crafts_stone_sculptures2.jpg", title: "Traditional Stone Art" },
     { image: "/images/crafts_stone_sculptures3.jpg", title: "Stone Sculpture Collection" },
@@ -30,7 +32,7 @@ export default function ZimbabweShopInfo() {
   ];
 
   const foodProducts = [
-    { image: "/images/shop_food.webp", title: "Food & Nostalgia" },
+    { image: "/images/shop_food.webp", title: "{t('shop.food_title')}" },
     { image: "/images/food_mazoe1.webp", title: "Mazoe Orange Crush" },
     { image: "/images/food_mazoe2.jpg", title: "Mazoe Variety Pack" },
     { image: "/images/food_cerevita1.jpg", title: "Cerevita Instant Cereal" },
@@ -95,11 +97,11 @@ export default function ZimbabweShopInfo() {
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
           <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
-            "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
+            {t('shop.vision')}
           </h3>
           <div className="flex items-center justify-center gap-6">
             <div className="h-px w-12 bg-zim-gold/50" />
-            <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">Our Vision</p>
+            <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">{t('shop.our_vision')}</p>
             <div className="h-px w-12 bg-zim-gold/50" />
           </div>
         </div>
@@ -109,15 +111,15 @@ export default function ZimbabweShopInfo() {
       {/* Product Categories */}
       <motion.div variants={itemVariants} className="space-y-12">
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="border-zim-green text-zim-green uppercase tracking-widest px-4">Collections</Badge>
-          <h3 className="text-4xl md:text-5xl font-bold">Curated Zimbabwean Excellence</h3>
+          <Badge variant="outline" className="border-zim-green text-zim-green uppercase tracking-widest px-4">{t('shop.collections')}</Badge>
+          <h3 className="text-4xl md:text-5xl font-bold">{t('shop.title')}</h3>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.
+            {t('shop.desc')}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Rotating National Sports Jerseys */}
+          {/* Rotating {t('shop.sports_title')} Jerseys */}
           <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="relative h-64 overflow-hidden bg-muted">
               <AnimatePresence mode="wait">
@@ -140,8 +142,8 @@ export default function ZimbabweShopInfo() {
               <div className="absolute inset-0 bg-zim-green/10 group-hover:bg-transparent transition-colors duration-500" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
-              <h4 className="text-xl font-bold mb-2">National Sports</h4>
-              <p className="text-sm text-muted-foreground mb-6 flex-grow">Official gear for the Sables, Chevrons, and Warriors.</p>
+              <h4 className="text-xl font-bold mb-2">{t('shop.sports_title')}</h4>
+              <p className="text-sm text-muted-foreground mb-6 flex-grow">{t('shop.sports_desc')}</p>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary" className="text-[10px] font-semibold">Rugby Jerseys</Badge>
                 <Badge variant="secondary" className="text-[10px] font-semibold">Cricket Kits</Badge>
@@ -150,7 +152,7 @@ export default function ZimbabweShopInfo() {
             </div>
           </div>
 
-          {/* Arts & Crafts */}
+          {/* {t('shop.crafts_title')} */}
           <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="relative h-64 overflow-hidden bg-muted">
               <AnimatePresence mode="wait">
@@ -173,8 +175,8 @@ export default function ZimbabweShopInfo() {
               <div className="absolute inset-0 bg-zim-red/10 group-hover:bg-transparent transition-colors duration-500" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
-              <h4 className="text-xl font-bold mb-2">Arts & Crafts</h4>
-              <p className="text-sm text-muted-foreground mb-6 flex-grow">Supporting rural artisans and women cooperatives.</p>
+              <h4 className="text-xl font-bold mb-2">{t('shop.crafts_title')}</h4>
+              <p className="text-sm text-muted-foreground mb-6 flex-grow">{t('shop.crafts_desc')}</p>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary" className="text-[10px] font-semibold">Stone Sculptures</Badge>
                 <Badge variant="secondary" className="text-[10px] font-semibold">Binga Baskets</Badge>
@@ -206,8 +208,8 @@ export default function ZimbabweShopInfo() {
               <div className="absolute inset-0 bg-zim-gold/10 group-hover:bg-transparent transition-colors duration-500" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
-              <h4 className="text-xl font-bold mb-2">Food & Nostalgia</h4>
-              <p className="text-sm text-muted-foreground mb-6 flex-grow">The flavors of home, fully EU-compliant.</p>
+              <h4 className="text-xl font-bold mb-2">{t('shop.food_title')}</h4>
+              <p className="text-sm text-muted-foreground mb-6 flex-grow">{t('shop.food_desc')}</p>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary" className="text-[10px] font-semibold">Mazoe & Cerevita</Badge>
                 <Badge variant="secondary" className="text-[10px] font-semibold">Maputi Snacks</Badge>
