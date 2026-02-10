@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ export default function Trade() {
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isFlowDiagramOpen, setIsFlowDiagramOpen] = useState(false);
 
-  const heroSlides = [
+  const heroSlides = useMemo(() => [
     {
       image: "/images/african_trade.jpg",
       badge: t('trade.hero.badge1'),
@@ -24,7 +24,7 @@ export default function Trade() {
       subtitle: t('trade.hero.subtitle1'),
       highlight: t('trade.hero.highlight1')
     }
-  ];
+  ], [t]);
 
   useEffect(() => {
     const heroTimer = setInterval(() => {
@@ -179,7 +179,7 @@ export default function Trade() {
               transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+                backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')`,
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
@@ -199,18 +199,18 @@ export default function Trade() {
               <div className="flex items-center gap-3 mb-6">
                 <Globe className="h-8 w-8 text-zim-gold" />
                 <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                  {heroSlides[currentHeroIndex].badge}
+                  {heroSlides[currentHeroIndex]?.badge}
                 </Badge>
               </div>
               <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
-                {heroSlides[currentHeroIndex].title}
+                {heroSlides[currentHeroIndex]?.title}
               </h1>
               <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
-                {heroSlides[currentHeroIndex].subtitle}
+                {heroSlides[currentHeroIndex]?.subtitle}
               </p>
               <div className="flex items-center gap-3 mb-8">
                 <TrendingUp className="h-6 w-6 text-zim-green" />
-                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex].highlight}</span>
+                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
               </div>
             </motion.div>
           </AnimatePresence>
