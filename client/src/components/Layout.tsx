@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle } from "lucide-react";
+import { Menu, X, Search, Globe, User, ChevronDown, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface LayoutProps {
@@ -374,10 +374,19 @@ export default function Layout({ children }: LayoutProps) {
 
           <div className="space-y-3">
             <h3 className="font-bold">Contact</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="mailto:diaspora.unlocked@gmail.com" className="hover:text-secondary transition-colors">diaspora.unlocked@gmail.com</a></li>
-              <li><a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a></li>
-              <li className="opacity-90">Berlin, Germany</li>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-secondary" />
+                <a href="mailto:diaspora.unlocked@gmail.com" className="hover:text-secondary transition-colors">diaspora.unlocked@gmail.com</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-secondary" />
+                <a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a>
+              </li>
+              <li className="flex items-center gap-2 opacity-90">
+                <MapPin className="h-4 w-4 text-secondary" />
+                <span>Berlin, Germany</span>
+              </li>
             </ul>
           </div>
 

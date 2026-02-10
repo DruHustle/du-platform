@@ -85,7 +85,8 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 2, ease: "easeInOut" }}
-            className="absolute inset-0"
+            className="absolute inset-0 cursor-pointer"
+            onClick={() => window.scrollTo({top: 800, behavior: "smooth"})}
           >
             <motion.div
               initial={{ scale: 1 }}
