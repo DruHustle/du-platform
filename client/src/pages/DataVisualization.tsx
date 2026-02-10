@@ -41,7 +41,7 @@ export default function DataVisualization() {
 
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
-  const heroSlides = [
+  const heroSlides = useMemo(() => [
     {
       image: "/images/infrastructure_investment.webp",
       badge: t('data.hero.badge1'),
@@ -55,7 +55,7 @@ export default function DataVisualization() {
         { text: t('export.market_intelligence'), variant: "outline", link: "#sectors" }
       ]
     }
-  ];
+  ], [t]);
 
   useEffect(() => {
     const heroTimer = setInterval(() => {
@@ -198,7 +198,7 @@ export default function DataVisualization() {
                 transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('${heroSlides[currentHeroIndex].image}')`,
+                  backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')`,
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
@@ -216,28 +216,28 @@ export default function DataVisualization() {
                 className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
               >
                 <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
-                  {heroSlides[currentHeroIndex].badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
+                  {heroSlides[currentHeroIndex]?.badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
                   <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                    {heroSlides[currentHeroIndex].badge}
+                    {heroSlides[currentHeroIndex]?.badge}
                   </Badge>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
-                  {heroSlides[currentHeroIndex].title}
-                  {heroSlides[currentHeroIndex].titleHighlight && (
-                    <span className="text-zim-gold italic">{heroSlides[currentHeroIndex].titleHighlight}</span>
+                  {heroSlides[currentHeroIndex]?.title}
+                  {heroSlides[currentHeroIndex]?.titleHighlight && (
+                    <span className="text-zim-gold italic">{heroSlides[currentHeroIndex]?.titleHighlight}</span>
                   )}
                 </h1>
                 <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
-                  {heroSlides[currentHeroIndex].subtitle}
+                  {heroSlides[currentHeroIndex]?.subtitle}
                 </p>
-                {heroSlides[currentHeroIndex].description && (
+                {heroSlides[currentHeroIndex]?.description && (
                   <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
-                    {heroSlides[currentHeroIndex].description}
+                    {heroSlides[currentHeroIndex]?.description}
                   </p>
                 )}
-                {heroSlides[currentHeroIndex].buttons.length > 0 && (
+                {heroSlides[currentHeroIndex]?.buttons.length > 0 && (
                   <div className="flex flex-wrap gap-4 justify-center">
-                    {heroSlides[currentHeroIndex].buttons.map((button, idx) => (
+                    {heroSlides[currentHeroIndex]?.buttons.map((button, idx) => (
                       <Button 
                         key={idx}
                         size="lg" 
