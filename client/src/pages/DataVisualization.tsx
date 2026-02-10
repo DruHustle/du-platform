@@ -246,16 +246,16 @@ export default function DataVisualization() {
           </AnimatePresence>
           
           <div className="relative z-10 container text-white">
-            <AnimatePresence initial={false}>
+                <AnimatePresence initial={false}>
               <motion.div
                 key={`content-${currentHeroIndex}`}
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -30, opacity: 0 }}
                 transition={{ duration: 0.8 }}
-                className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
+                className="text-left max-w-4xl"
               >
-                <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
+                <div className="flex items-center gap-3 mb-6">
                   {heroSlides[currentHeroIndex]?.badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
                   <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
                     {heroSlides[currentHeroIndex]?.badge}
@@ -267,7 +267,7 @@ export default function DataVisualization() {
                     <span className="text-zim-gold italic">{heroSlides[currentHeroIndex]?.titleHighlight}</span>
                   )}
                 </h1>
-                <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
+                <p className="text-xl md:text-2xl mb-4 text-white/90 leading-relaxed font-medium">
                   {heroSlides[currentHeroIndex]?.subtitle}
                 </p>
                 {heroSlides[currentHeroIndex]?.description && (
@@ -276,7 +276,7 @@ export default function DataVisualization() {
                   </p>
                 )}
                 {heroSlides[currentHeroIndex]?.buttons.length > 0 && (
-                  <div className="flex flex-wrap gap-4 justify-center">
+                  <div className="flex flex-wrap gap-4 justify-start">
                     {heroSlides[currentHeroIndex]?.buttons.map((button, idx) => (
                       <Button 
                         key={idx}
