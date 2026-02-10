@@ -426,12 +426,6 @@ export default function Tourism() {
             <p className="text-lg opacity-90 max-w-2xl mx-auto">
              Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.
             </p>
-
-            <div className="pt-4">
-              <Button size="lg" variant="secondary" className="rounded-full px-8 h-12">
-                Download Travel Kit
-              </Button>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">

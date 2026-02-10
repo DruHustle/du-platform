@@ -306,7 +306,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">{t('about')} {t('brand')}</h3>
               <p className="text-xs md:text-sm opacity-90 leading-relaxed">
-                {t('about')}
+                {t('about_us')}
               </p>
             </div>
 
