@@ -21,6 +21,34 @@ export default function SuccessStories() {
       title: t('success.hero.title1'),
       subtitle: t('success.hero.subtitle1'),
       highlight: t('success.hero.highlight1')
+    },
+    {
+      image: "/images/tech_startup.jpg",
+      badge: t('success.hero.badge2'),
+      title: t('success.hero.title2'),
+      subtitle: t('success.hero.subtitle2'),
+      highlight: t('success.hero.highlight2')
+    },
+    {
+      image: "/images/crafts_binga_baskets1.jpg",
+      badge: t('success.hero.badge3'),
+      title: t('success.hero.title3'),
+      subtitle: t('success.hero.subtitle3'),
+      highlight: t('success.hero.highlight3')
+    },
+    {
+      image: "/images/eastern_highlands.jpg",
+      badge: t('success.hero.badge4'),
+      title: t('success.hero.title4'),
+      subtitle: t('success.hero.subtitle4'),
+      highlight: t('success.hero.highlight4')
+    },
+    {
+      image: "/images/minerals_mining.png",
+      badge: t('success.hero.badge5'),
+      title: t('success.hero.title5'),
+      subtitle: t('success.hero.subtitle5'),
+      highlight: t('success.hero.highlight5')
     }
   ], [t]);
 
@@ -29,7 +57,7 @@ export default function SuccessStories() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   const stories = [
     {
@@ -343,47 +371,36 @@ export default function SuccessStories() {
         </div>
       </section>
 
+
       {/* Contact CTA with Modal */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container">
-          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
-            <CardHeader>
-              <CardTitle className="text-2xl">Share Your Success Story</CardTitle>
-              <CardDescription className="text-base">
-                Have a success story to share? We'd love to feature your journey and inspire others.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8">
-                    Submit Your Story
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title="Share Your Success Story"
-                    description="Tell us about your diaspora-driven success and how we can feature it."
-                    module="success-story"
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Share Your Success Story
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
+              Have a success story to share? We'd love to feature your journey and inspire others within the global Zimbabwean community.
+            </p>
+            
+            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="secondary" className="text-lg px-8">
+                  Submit Your Story
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto text-foreground">
+                <ContactForm
+                  title="Share Your Success Story"
+                  description="Tell us about your diaspora-driven success and how we can feature it."
+                  module="success-story"
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Be Part of the Next Success Story
-          </h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-            Whether you're an investor, exporter, or diaspora professional, there's a role for you in Zimbabwe's economic transformation
-          </p>
-        </div>
-      </section>
     </Layout>
   );
 }

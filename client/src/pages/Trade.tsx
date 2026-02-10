@@ -23,6 +23,34 @@ export default function Trade() {
       title: t('trade.hero.title1'),
       subtitle: t('trade.hero.subtitle1'),
       highlight: t('trade.hero.highlight1')
+    },
+    {
+      image: "/images/horticulture.jpg",
+      badge: t('trade.hero.badge2'),
+      title: t('trade.hero.title2'),
+      subtitle: t('trade.hero.subtitle2'),
+      highlight: t('trade.hero.highlight2')
+    },
+    {
+      image: "/images/manufacturing_factory.jpg",
+      badge: t('trade.hero.badge3'),
+      title: t('trade.hero.title3'),
+      subtitle: t('trade.hero.subtitle3'),
+      highlight: t('trade.hero.highlight3')
+    },
+    {
+      image: "/images/export_port1.jpg",
+      badge: t('trade.hero.badge4'),
+      title: t('trade.hero.title4'),
+      subtitle: t('trade.hero.subtitle4'),
+      highlight: t('trade.hero.highlight4')
+    },
+    {
+      image: "/images/eu_flags.png",
+      badge: t('trade.hero.badge5'),
+      title: t('trade.hero.title5'),
+      subtitle: t('trade.hero.subtitle5'),
+      highlight: t('trade.hero.highlight5')
     }
   ], [t]);
 
@@ -31,7 +59,7 @@ export default function Trade() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   const exportSectors = [
     {

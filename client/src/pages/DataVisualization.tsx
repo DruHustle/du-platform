@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -54,15 +54,55 @@ export default function DataVisualization() {
         { text: t('nav.data'), variant: "primary", link: "#indicators" },
         { text: t('export.market_intelligence'), variant: "outline", link: "#sectors" }
       ]
+    },
+    {
+      image: "/images/remittances_impact.png",
+      badge: t('data.hero.badge2'),
+      badgeIcon: true,
+      title: t('data.hero.title2'),
+      titleHighlight: t('data.hero.highlight2'),
+      subtitle: t('data.hero.subtitle2'),
+      description: t('data.hero.desc2'),
+      buttons: []
+    },
+    {
+      image: "/images/diaspora_investment.jpg",
+      badge: t('data.hero.badge3'),
+      badgeIcon: true,
+      title: t('data.hero.title3'),
+      titleHighlight: t('data.hero.highlight3'),
+      subtitle: t('data.hero.subtitle3'),
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/export_hub_bg.jpg",
+      badge: t('data.hero.badge4'),
+      badgeIcon: true,
+      title: t('data.hero.title4'),
+      titleHighlight: t('data.hero.highlight4'),
+      subtitle: t('data.hero.subtitle4'),
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/rbz_building.png",
+      badge: t('data.hero.badge5'),
+      badgeIcon: true,
+      title: t('data.hero.title5'),
+      titleHighlight: t('data.hero.highlight5'),
+      subtitle: t('data.hero.subtitle5'),
+      description: "",
+      buttons: []
     }
   ], [t]);
 
   useEffect(() => {
     const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % 6);
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   // Animate counter on mount
   useEffect(() => {
@@ -259,7 +299,7 @@ export default function DataVisualization() {
           
           {/* Carousel Indicators */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-            {[0, 1, 2, 3, 4, 5].map((idx) => (
+            {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentHeroIndex(idx)}

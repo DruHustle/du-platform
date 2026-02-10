@@ -41,6 +41,20 @@ export default function Investment() {
       title: t('investment.hero.title3'),
       subtitle: t('investment.hero.subtitle3'),
       highlight: t('investment.hero.highlight3')
+    },
+    {
+      image: "/images/horticulture.jpg",
+      badge: t('investment.hero.badge4'),
+      title: t('investment.hero.title4'),
+      subtitle: t('investment.hero.subtitle4'),
+      highlight: t('investment.hero.highlight4')
+    },
+    {
+      image: "/images/minerals_mining.png",
+      badge: t('investment.hero.badge5'),
+      title: t('investment.hero.title5'),
+      subtitle: t('investment.hero.subtitle5'),
+      highlight: t('investment.hero.highlight5')
     }
   ], [t]);
 
@@ -49,7 +63,7 @@ export default function Investment() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   const projects = [
     {

@@ -37,6 +37,33 @@ export default function Tourism() {
       subtitle: t('tourism.hero.subtitle2'),
       description: t('tourism.hero.desc2'),
       buttons: []
+    },
+    {
+      image: "/images/hwange_elephants.jpg",
+      badge: t('tourism.hero.badge3'),
+      badgeIcon: true,
+      title: t('tourism.hero.title3'),
+      titleHighlight: "",
+      subtitle: t('tourism.hero.subtitle3'),
+      buttons: []
+    },
+    {
+      image: "/images/great_zimbabwe.jpeg",
+      badge: t('tourism.hero.badge4'),
+      badgeIcon: true,
+      title: t('tourism.hero.title4'),
+      titleHighlight: "",
+      subtitle: t('tourism.hero.subtitle4'),
+      buttons: []
+    },
+    {
+      image: "/images/victoria_falls.jpg",
+      badge: t('tourism.hero.badge5'),
+      badgeIcon: true,
+      title: t('tourism.hero.title5'),
+      titleHighlight: "",
+      subtitle: t('tourism.hero.subtitle5'),
+      buttons: []
     }
   ], [t]);
 
@@ -45,7 +72,7 @@ export default function Tourism() {
       setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(heroTimer);
-  }, []);
+  }, [heroSlides.length]);
 
   const attractions = [
     {
@@ -399,12 +426,6 @@ export default function Tourism() {
             <p className="text-lg opacity-90 max-w-2xl mx-auto">
              Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.
             </p>
-
-            <div className="pt-4">
-              <Button size="lg" variant="secondary" className="rounded-full px-8 h-12">
-                Download Travel Kit
-              </Button>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">

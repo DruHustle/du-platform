@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const { t } = useTranslation();
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
-  const heroBackgrounds = [
+  const heroBackgrounds = useMemo(() => [
     "/images/victoria_falls.jpg",
     "/images/hwange_elephants.jpg",
     "/images/balancing_rocks.jpg",
@@ -22,16 +22,20 @@ export default function Home() {
     "/images/partnership_handshake.png",
     "/images/african_trade.jpg",
     "/images/harare_airport.png",
-    "/images/eu_symbol.png"
-
-  ];
+    "/images/eu_symbol.png",
+    "/images/dest_mana_pools.jpg",
+    "/images/dest_gonarezhou.jpg",
+    "/images/dest_matobo.jpg",
+    "/images/minerals_mining.png",
+    "/images/manufacturing_factory.jpg"
+  ], []);
 
   useEffect(() => {
     const bgTimer = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
     }, 5000);
     return () => clearInterval(bgTimer);
-  }, []);
+  }, [heroBackgrounds.length]);
 
   const modules = [
     {

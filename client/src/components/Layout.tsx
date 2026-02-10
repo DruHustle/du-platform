@@ -306,22 +306,26 @@ export default function Layout({ children }: LayoutProps) {
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">{t('about')} {t('brand')}</h3>
               <p className="text-xs md:text-sm opacity-90 leading-relaxed">
-                {t('tagline')}
+                {t('about_us')}
               </p>
             </div>
 
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">{t('quick_links')}</h3>
               <ul className="space-y-2 text-xs md:text-sm">
-                {navigation.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>
-                      <span className="hover:text-secondary transition-colors cursor-pointer">
-                        {link.name}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+                {navigation
+                  .filter((link) => 
+                    !["/", "/success-stories", "/data-visualization"].includes(link.href)
+                  )
+                  .map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href}>
+                        <span className="hover:text-secondary transition-colors cursor-pointer">
+                          {link.name}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </div>
 
