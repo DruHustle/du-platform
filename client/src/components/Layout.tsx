@@ -73,11 +73,6 @@ export default function Layout({ children }: LayoutProps) {
         { name: "ZimTrade Programs", description: "Export development initiatives" }
       ]
     },
-        { 
-      name: "Economic Data", 
-      href: "/data-visualization",
-      children: null
-    },
     { 
       name: "Success Stories", 
       href: "/success-stories",
@@ -128,9 +123,9 @@ export default function Layout({ children }: LayoutProps) {
                 className='h-9 w-9 md:h-11 md:w-11 object-contain flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <div className='min-w-0'>
-                <span className='text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
+                <h1 className='!text-lg md:text-xl font-bold text-primary whitespace-nowrap tracking-tight'>
                   ZIGD Platform
-                </span>
+                </h1>
                 <p className='text-xs text-muted-foreground whitespace-nowrap hidden sm:block'>
                   Zimbabwe Global & Diaspora
                 </p>
@@ -285,7 +280,20 @@ export default function Layout({ children }: LayoutProps) {
                       {item.name}
                     </Button>
                   </Link>
-                  {/* Children mapping removed from here */}
+                  {item.children && (
+                    <div className="ml-4 mt-1 space-y-1 border-l-2 border-primary/20 pl-3">
+                      {item.children.map((child, idx) => (
+                        <Link href={item.href} key={idx}>
+                          <div 
+                            className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer py-1.5"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {child.name}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -329,31 +337,50 @@ export default function Layout({ children }: LayoutProps) {
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Quick Links</h3>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><Link href="/export-hub"><span className="hover:text-secondary transition-colors cursor-pointer">Export Hub</span></Link></li>
-                <li><Link href="/tourism"><span className="hover:text-secondary transition-colors cursor-pointer">Tourism</span></Link></li>
-                <li><Link href="/investment"><span className="hover:text-secondary transition-colors cursor-pointer">Investment</span></Link></li>
-                <li><Link href="/trade"><span className="hover:text-secondary transition-colors cursor-pointer">Trade</span></Link></li>
+                {[
+                  { name: "Export Hub", href: "/export-hub" },
+                  { name: "Tourism", href: "/tourism" },
+                  { name: "Investment", href: "/investment" },
+                  { name: "Trade", href: "/trade" },
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>
+                      <span 
+                        className="hover:text-secondary transition-colors cursor-pointer"
+                        onClick={() => {
+                          // This ensures any "scrollToBottom" flags from previous 
+                          // interactions are cleared before the new page loads
+                          window.history.replaceState({ scrollToBottom: false, stayPut: false }, "");
+                          window.scrollTo(0, 0); 
+                        }}
+                      >
+                        {link.name}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="space-y-3">
               <h3 className="font-bold text-base md:text-lg">Partners</h3>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="#" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
-                <li><a href="#" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
-                <li><a href="#" className="hover:text-secondary transition-colors">ZimTrade</a></li>
-                <li><a href="#" className="hover:text-secondary transition-colors">ZIMRA</a></li>
+                <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
+                <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
+                <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZimTrade</a></li>
+                <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIMRA</a></li>
               </ul>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">Contact</h3>
-              <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="mailto:info@zigd.co.zw" className="hover:text-secondary transition-colors">info@zigd.co.zw</a></li>
-                <li><a href="tel:+263771234567" className="hover:text-secondary transition-colors">+263 77 123 4567</a></li>
-                <li className="opacity-90">Harare, Zimbabwe</li>
-              </ul>
-            </div>
+          <div className="space-y-3">
+            <h3 className="font-bold">Contact</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="mailto:diaspora.unlocked@gmail.com" className="hover:text-secondary transition-colors">diaspora.unlocked@gmail.com</a></li>
+              <li><a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a></li>
+              <li className="opacity-90">Berlin, Germany</li>
+            </ul>
+          </div>
+
           </div>
 
           <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">

@@ -27,18 +27,25 @@ export default function Investment() {
       highlight: "Gold-Backed Currency"
     },
     {
+      image: "/images/infrastructure_investment.webp",
+      badge: "Infrastructure Growth",
+      title: "Build Zimbabwe Together",
+      subtitle: "Infrastructure projects creating jobs, generating returns, and developing communities",
+      highlight: "$2.5M+ Invested"
+    },
+    {
       image: "/images/vfex_logo.png",
       badge: "Victoria Falls Stock Exchange",
       title: "VFEX: Your USD Gateway",
       subtitle: "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
       highlight: "USD Denominated"
     },
-    {
-      image: "/images/zse_logo.png",
-      badge: "Zimbabwe Stock Exchange",
-      title: "ZSE: Building Wealth",
-      subtitle: "Join one of Africa's oldest exchanges. Access diverse sectors from agriculture to mining and participate in Zimbabwe's industrial growth.",
-      highlight: "120+ Years of History"
+{
+      image: "/images/manufacturing_factory.jpg",
+      badge: "Manufacturing Sector",
+      title: "Industrial Renaissance",
+      subtitle: "Support local manufacturing with export potential and government procurement contracts",
+      highlight: "500+ Jobs Created"
     },
     {
       image: "/images/diaspora_investment.jpg",

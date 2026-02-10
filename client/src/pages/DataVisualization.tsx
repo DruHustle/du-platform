@@ -64,7 +64,7 @@ export default function DataVisualization() {
       buttons: []
     },
     {
-      image: "/images/minerals_mining.jpg",
+      image: "/images/minerals_mining.png",
       badge: "Mineral Wealth",
       badgeIcon: true,
       title: "Mining ",
@@ -84,7 +84,7 @@ export default function DataVisualization() {
       buttons: []
     },
     {
-      image: "/images/diaspora_investment.jpg",
+      image: "/images/remittances_impact.png",
       badge: "Diaspora Capital",
       badgeIcon: true,
       title: "Remittance ",

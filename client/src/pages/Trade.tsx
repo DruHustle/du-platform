@@ -77,7 +77,7 @@ export default function Trade() {
     {
       name: "Minerals & Mining",
       description: "Value-added mineral products, precious stones, and processed materials",
-      image: "/images/minerals_mining.jpg",
+      image: "/images/minerals_mining.png",
       opportunities: ["Industrial exports", "Jewelry sector", "Technology minerals"],
       icon: TrendingUp
     }

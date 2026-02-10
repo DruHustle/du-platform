@@ -655,11 +655,11 @@ export default function ExportHub() {
              Explore Success Stories
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              View successful projects funded through our platform and their impact in Zimbabwe
+              Discover how the Zimbabwe diaspora, through our platform, have successfully supported Zimbabwean businesses in export ventures.
             </p>
             <Link href="/success-stories">
               <Button size="lg" variant="secondary" className="shadow-lg group">
-                Explore Success Stories
+                Success Stories
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>

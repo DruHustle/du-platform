@@ -401,18 +401,6 @@ export default function SuccessStories() {
           <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
             Whether you're an investor, exporter, or diaspora professional, there's a role for you in Zimbabwe's economic transformation
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/investment">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Explore Investments
-              </Button>
-            </a>
-            <a href="/export-hub">
-              <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 hover:bg-white/20 text-white border-white">
-                Start Exporting
-              </Button>
-            </a>
-          </div>
         </div>
       </section>
     </Layout>
