@@ -73,11 +73,8 @@ export default function Layout({ children }: LayoutProps) {
         { name: "ZimTrade Programs", description: "Export development initiatives" }
       ]
     },
-    { 
-      name: "Success Stories", 
-      href: "/success-stories",
-      children: null
-    },
+    { name: "Economic Data", href: "/data-visualization", children: null },
+    { name: "Success Stories", href: "/success-stories", children: null },
   ];
 
   const regions = {
