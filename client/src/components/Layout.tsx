@@ -244,37 +244,45 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Updated with Language Switcher */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t bg-white/95 backdrop-blur-md">
-            <div className="container py-3 space-y-2">
-              {navigation.map((item) => (
-                <div key={item.href}>
-                  <Link href={item.href}>
+            <div className="container py-4 space-y-4">
+              <nav className="flex flex-col space-y-2">
+                {navigation.map((item) => (
+                  <Link key={item.href} href={item.href}>
                     <Button
                       variant={isActive(item.href) ? "default" : "ghost"}
-                      className="w-full justify-start text-sm"
+                      className="w-full justify-start text-sm font-medium"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
                     </Button>
                   </Link>
-                  {item.children && (
-                    <div className="ml-4 mt-1 space-y-1 border-l-2 border-primary/20 pl-3">
-                      {item.children.map((child, idx) => (
-                        <Link href={item.href} key={idx}>
-                          <div 
-                            className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer py-1.5"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {child.name}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                ))}
+              </nav>
+
+              <div className="border-t pt-4">
+                <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3 px-4">
+                  {t('select_lang')}
+                </p>
+                <div className="grid grid-cols-2 gap-2 px-2">
+                  {languages.map((lang) => (
+                    <Button
+                      key={lang.code}
+                      variant={i18n.language === lang.code ? "default" : "outline"}
+                      size="sm"
+                      className="text-xs justify-center"
+                      onClick={() => {
+                        i18n.changeLanguage(lang.code);
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      {lang.name}
+                    </Button>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         )}
