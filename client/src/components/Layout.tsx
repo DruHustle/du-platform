@@ -254,7 +254,11 @@ export default function Layout({ children }: LayoutProps) {
                     <Button
                       variant={isActive(item.href) ? "default" : "ghost"}
                       className="w-full justify-start text-sm font-medium"
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        // Robust reset: instantaneous jump to top before content renders
+                        window.scrollTo(0, 0); 
+                      }}
                     >
                       {item.name}
                     </Button>
@@ -262,6 +266,7 @@ export default function Layout({ children }: LayoutProps) {
                 ))}
               </nav>
 
+              {/* Language Switcher Section */}
               <div className="border-t pt-4">
                 <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3 px-4">
                   {t('select_lang')}
@@ -276,6 +281,8 @@ export default function Layout({ children }: LayoutProps) {
                       onClick={() => {
                         i18n.changeLanguage(lang.code);
                         setMobileMenuOpen(false);
+                        // Also scroll up here in case translation changes page height
+                        window.scrollTo({ top: 0, behavior: 'instant' });
                       }}
                     >
                       {lang.name}
@@ -286,6 +293,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
         )}
+
       </header>
 
       <main className="flex-1 w-full">
