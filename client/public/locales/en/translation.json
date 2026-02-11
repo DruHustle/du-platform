@@ -27,6 +27,7 @@
     "trade": "Trade",
     "data": "Economic Data",
     "success": "Success Stories",
+    "technology": "Technology",
     "market_requirements": "Market Requirements",
     "market_requirements_desc": "German market regulations and certifications",
     "product_intelligence": "Product Intelligence",
@@ -66,6 +67,7 @@
     "join_diaspora": "Join thousands of diaspora members building bridges for economic transformation.",
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
+    "technology": "Technology",
     "modules": {
       "export": {
         "title": "Export Knowledge Hub",
@@ -86,6 +88,16 @@
         "title": "Trade Information",
         "desc": "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
         "stats": "8 Export Sectors"
+      },
+      "technology": {
+        "title": "Technology & AI",
+        "desc": "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context for investors and diaspora.",
+        "stats": "Onesa AI"
+      },
+      "success": {
+        "title": "Success Stories",
+        "desc": "Explore real-world examples of businesses and projects thriving through diaspora engagement.",
+        "stats": "Impact Stories"
       }
     },
     "trust": {
@@ -94,6 +106,55 @@
       "zimtrade": "ZimTrade Certified",
       "vision2030": "Vision 2030 Aligned"
     }
+  },
+  "tech": {
+    "hero": {
+      "badge1": "Future of Innovation",
+      "title1": "Onesa AI: Illuminating Zimbabwe",
+      "subtitle1": "The first AI model built specifically for the Zimbabwean context.",
+      "highlight1": "Built for Zimbabwe",
+      "badge2": "Contextual Intelligence",
+      "title2": "Deep Contextual Understanding",
+      "subtitle2": "Unlike general AI, Onesa understands the nuances of life and business in Zimbabwe.",
+      "highlight2": "Localized Knowledge",
+      "badge3": "Investor Tools",
+      "title3": "Smart Investment Brainstorming",
+      "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
+      "highlight3": "Data-Driven Success"
+    },
+    "explore_onesa": "Explore Onesa AI",
+    "onesa_badge": "Meet Onesa AI",
+    "onesa_title": "Illuminating the Way Forward",
+    "onesa_meaning": "Onesa means 'illuminate' in Shona",
+    "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
+    "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
+    "onesa_usp1": "Contextual Understanding",
+    "onesa_usp2": "Accurate Language Translation",
+    "ai_status": "Beta Version",
+    "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
+    "features_title": "Onesa AI Capabilities",
+    "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
+    "features": {
+      "context": {
+        "title": "Contextual Mastery",
+        "desc": "Onesa understands how things work on the ground, from informal market dynamics to formal regulatory frameworks."
+      },
+      "translation": {
+        "title": "Language Accuracy",
+        "desc": "Accurately translates Shona, Ndebele, and other local languages, preserving cultural nuances and technical meanings."
+      },
+      "risk": {
+        "title": "Risk Assessment",
+        "desc": "Investors can use Onesa to assess specific risks based on real-time local data and historical patterns."
+      },
+      "brainstorm": {
+        "title": "Idea Generation",
+        "desc": "Brainstorm business ideas tailored to succeed in the unique Zimbabwean economic landscape."
+      }
+    },
+    "cta_title": "Ready to Illuminate Your Journey?",
+    "cta_desc": "Join our beta program and be the first to experience Onesa AI's localized intelligence.",
+    "cta_button": "Join Beta Waitlist"
   },
   "export": {
     "hero": {
@@ -246,7 +307,6 @@
         "Trade Compliance Consultants"
       ],
       "financial": "Financial Services",
-      "financial_desc": "Banking and financial support for international trade transactions",
       "financial_examples": [
         "Deutsche Bank",
         "Commerzbank",
@@ -347,7 +407,9 @@
     "calculator_title": "Investment Calculator",
     "calculator_desc": "Simulate your potential returns",
     "verified_directories": "Verified Directories",
-    "directories_desc": "Access official registries and associations"
+    "directories_desc": "Access official registries and associations",
+    "onesa_title": "Onesa AI Companion",
+    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context."
   },
   "trade": {
     "hero": {

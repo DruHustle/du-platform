@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award } from "lucide-react";
+import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award, Brain } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -27,7 +27,9 @@ export default function Home() {
     "/images/dest_gonarezhou.jpg",
     "/images/dest_matobo.jpg",
     "/images/minerals_mining.png",
-    "/images/manufacturing_factory.jpg"
+    "/images/manufacturing_factory.jpg",
+    "/images/tech/ai_innovation.jpg",
+    "/images/tech/ai_context.jpg"
   ], []);
 
   useEffect(() => {
@@ -73,6 +75,24 @@ export default function Home() {
       color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/african_trade.jpg",
       stats: t('home.modules.trade.stats')
+    },
+    {
+      title: t('home.modules.technology.title'),
+      description: t('home.modules.technology.desc'),
+      icon: Brain,
+      href: "/technology",
+      color: " bg-purple-600/5 hover:bg-purple-600/10",
+      bgImage: "/images/tech/ai_innovation.jpg",
+      stats: t('home.modules.technology.stats')
+    },
+    {
+      title: t('home.modules.success.title'),
+      description: t('home.modules.success.desc'),
+      icon: Award,
+      href: "/success-stories",
+      color: " bg-zim-gold/5 hover:bg-zim-gold/10",
+      bgImage: "/images/partnership_handshake.png",
+      stats: t('home.modules.success.stats')
     }
   ];
 

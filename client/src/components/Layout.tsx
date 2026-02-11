@@ -72,6 +72,7 @@ export default function Layout({ children }: LayoutProps) {
     },
     { name: t('nav.data'), href: "/data-visualization", children: null },
     { name: t('nav.success'), href: "/success-stories", children: null },
+    { name: t('nav.technology'), href: "/technology", children: null },
   ];
 
   const isActive = (href: string) => {
