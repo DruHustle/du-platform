@@ -73,8 +73,8 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.technology'), 
       href: "/technology", 
       children: [
-        { name: t('nav.technology_capabilities'), description: t('nav.technology_capabilities_desc') },
-        { name: t('nav.technology_industries'), description: t('nav.technology_industries_desc') },
+        { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
+        { name: t('nav.technology_industries'), href: "/technology#technology-sectors", description: t('nav.technology_industries_desc') },
       ]
     },
     { name: t('nav.data'), href: "/data-visualization", children: null },
