@@ -154,6 +154,11 @@ export default function Home() {
             </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 slide-up" style={{ animationDelay: '0.5s' }}>
+            <Link href="/technology">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
+                {t('home.technology')} 
+              </Button>
+            </Link>
             <Link href="/export-hub">
             <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
                 {t('home.export_hub')}
@@ -162,11 +167,6 @@ export default function Home() {
             <Link href="/tourism">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
                 {t('home.tourism')}
-              </Button>
-            </Link>
-            <Link href="/technology">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
-                {t('home.technology')} 
               </Button>
             </Link>
             <Link href="/investment">
