@@ -627,6 +627,35 @@
     },
     "cta_title": "Ready to Illuminate Your Journey?",
     "cta_desc": "Join our beta program and be the first to experience Onesa AI's localized intelligence.",
-    "cta_button": "Join Beta Waitlist"
+    "cta_button": "Join Beta Waitlist",
+    "sectors_badge": "Sector Transformation",
+    "sectors_title": "Powering Key Industries",
+    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
+    "sectors": {
+      "mining": {
+        "title": "Mining & Resources",
+        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
+        "d1": "Real-time mineral pricing and market trends",
+        "d2": "Environmental and safety compliance monitoring"
+      },
+      "farming": {
+        "title": "Precision Farming",
+        "desc": "Transforming agriculture through data-driven crop management and weather pattern prediction.",
+        "d1": "Soil health analysis and crop yield optimization",
+        "d2": "Localized weather alerts and pest control advice"
+      },
+      "logistics": {
+        "title": "Smart Logistics",
+        "desc": "Optimizing supply chains and cross-border trade routes through the Zimbabwean corridor.",
+        "d1": "Route optimization for regional distribution",
+        "d2": "Real-time tracking and border clearance assistance"
+      },
+      "education": {
+        "title": "Future Education",
+        "desc": "Bridging the digital divide through AI-powered personalized learning and vocational training.",
+        "d1": "Adaptive learning platforms for local schools",
+        "d2": "Technical skill development for the digital economy"
+      }
+    }
   }
 }
