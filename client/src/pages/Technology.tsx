@@ -6,29 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, Sparkles, Globe, Shield, Zap, MessageSquare, TrendingUp, Lightbulb, Award, CheckCircle, Plane, Tractor, Pickaxe, Truck, GraduationCap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "wouter";
 
 export default function Technology() {
   const { t } = useTranslation();
-  const [location] = useLocation();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
-
-  // Manual scroll handler for internal hash navigation
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const scrollTimer = setTimeout(() => {
-        const element = document.querySelector(hash);
-        if (element) {
-          element.scrollIntoView({ 
-            behavior: "smooth", 
-            block: "start" 
-          });
-        }
-      }, 100); 
-      return () => clearTimeout(scrollTimer);
-    }
-  }, [location]);
 
   const heroSlides = useMemo(() => [
     {
@@ -168,9 +149,11 @@ export default function Technology() {
                 <Zap className="h-6 w-6 text-zim-green" />
                 <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
               </div>
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-xl px-12 h-16 rounded-full font-bold shadow-2xl transform hover:scale-105 transition-all">
-                {t('tech.explore_onesa')}
-              </Button>
+              <a href="#technology-capabilities">
+                <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-xl px-12 h-16 rounded-full font-bold shadow-2xl transform hover:scale-105 transition-all">
+                  {t('tech.explore_onesa')}
+                </Button>
+              </a>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -191,7 +174,7 @@ export default function Technology() {
       </section>
 
       {/* Onesa AI Introduction */}
-      <section className="py-24 bg-background">
+      <section id="technology-capabilities" className="py-24 bg-background scroll-mt-24">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <motion.div
@@ -263,53 +246,50 @@ export default function Technology() {
               </motion.div>
             </div>
           </div>
-      </section>
+        </section>
 
         {/* Features Grid */}
-      <div id="technology-capabilities" className="scroll-mt-24" /> 
-      <section className="py-24 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('tech.features_title')}</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('tech.features_subtitle')}
-            </p>
+        <section className="py-24 bg-muted/30">
+          <div className="container">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('tech.features_title')}</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {t('tech.features_subtitle')}
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card className="h-full border-none shadow-lg hover:shadow-xl transition-all duration-300">
+                      <CardHeader>
+                        <div className="h-14 w-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <Icon className="h-7 w-7 text-primary" />
+                        </div>
+                        <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {feature.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="h-full border-none shadow-lg hover:shadow-xl transition-all duration-300">
-                    <CardHeader>
-                      <div className="h-14 w-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <Icon className="h-7 w-7 text-primary" />
-                      </div>
-                      <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+        </section>
 
       {/* Sector Transformation Section */}
-      <div id="technology-industries" className="scroll-mt-24" />
-
-      <section className="py-24 bg-background">
+      <section id="technology-industries" className="py-24 bg-background scroll-mt-24">
           <div className="container">
             <div className="text-center mb-16">
               <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border-zim-gold/20 px-4 py-1">
@@ -358,7 +338,7 @@ export default function Technology() {
               })}
             </div>
           </div>
-      </section>
+        </section>
 
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
