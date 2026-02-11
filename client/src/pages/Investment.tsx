@@ -339,7 +339,7 @@ export default function Investment() {
       </section>
 
       {/* Verified Directories */}
-      <section id="verified-directories" className="py-16">
+      <section id="verified-directories" className="py-16 scroll-mt-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* NTIR */}
@@ -387,7 +387,7 @@ export default function Investment() {
       </section>
 
       {/* Active Projects with Filters */}
-      <section id="active-projects" className="section-padding bg-muted/30">
+      <section id="active-projects" className="section-padding bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-8 px-4">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
@@ -510,7 +510,7 @@ export default function Investment() {
       </section>
 
       {/* How It Works */}
-      <section id="investment-calculator" className="py-16">
+      <section id="investment-calculator" className="py-16 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How Crowdfunding Works</h2>
