@@ -41,6 +41,16 @@ export default function Home() {
 
   const modules = [
     {
+      title: t('home.modules.technology.title'),
+      description: t('home.modules.technology.desc'),
+      icon: Brain,
+      href: "/technology",
+      color: " bg-purple-600/5 hover:bg-purple-600/10",
+      bgImage: "/images/tech/ai_innovation.jpg",
+      stats: t('home.modules.technology.stats')
+    },
+    {
+      
       title: t('home.modules.export.title'),
       description: t('home.modules.export.desc'),
       icon: BookOpen,
@@ -48,15 +58,6 @@ export default function Home() {
       color: " bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/eu_symbol.png",
       stats: t('home.modules.export.stats')
-    },
-    {
-      title: t('home.modules.tourism.title'),
-      description: t('home.modules.tourism.desc'),
-      icon: Plane,
-      href: "/tourism",
-         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
-      bgImage: "/images/hwange_elephants.jpg",
-      stats: t('home.modules.tourism.stats')
     },
     {
       title: t('home.modules.investment.title'),
@@ -77,13 +78,13 @@ export default function Home() {
       stats: t('home.modules.trade.stats')
     },
     {
-      title: t('home.modules.technology.title'),
-      description: t('home.modules.technology.desc'),
-      icon: Brain,
-      href: "/technology",
-      color: " bg-purple-600/5 hover:bg-purple-600/10",
-      bgImage: "/images/tech/ai_innovation.jpg",
-      stats: t('home.modules.technology.stats')
+      title: t('home.modules.tourism.title'),
+      description: t('home.modules.tourism.desc'),
+      icon: Plane,
+      href: "/tourism",
+         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
+      bgImage: "/images/hwange_elephants.jpg",
+      stats: t('home.modules.tourism.stats')
     },
     {
       title: t('home.modules.success.title'),
