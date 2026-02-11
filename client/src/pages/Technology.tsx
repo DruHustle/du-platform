@@ -149,9 +149,11 @@ export default function Technology() {
                 <Zap className="h-6 w-6 text-zim-green" />
                 <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
               </div>
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-xl px-12 h-16 rounded-full font-bold shadow-2xl transform hover:scale-105 transition-all">
-                {t('tech.explore_onesa')}
-              </Button>
+              <a href="#technology-capabilities">
+                <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-xl px-12 h-16 rounded-full font-bold shadow-2xl transform hover:scale-105 transition-all">
+                  {t('tech.explore_onesa')}
+                </Button>
+              </a>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -172,8 +174,7 @@ export default function Technology() {
       </section>
 
       {/* Onesa AI Introduction */}
-      <div id="technology-capabilities" className="scroll-mt-24" />
-      <section className="py-24 bg-background">
+      <section id="technology-capabilities" className="py-24 bg-background scroll-mt-24">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <motion.div
@@ -288,8 +289,7 @@ export default function Technology() {
         </section>
 
       {/* Sector Transformation Section */}
-      <div id="technology-sectors" className="scroll-mt-24" />
-      <section className="py-24 bg-background">
+      <section id="technology-industries" className="py-24 bg-background scroll-mt-24">
           <div className="container">
             <div className="text-center mb-16">
               <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border-zim-gold/20 px-4 py-1">
