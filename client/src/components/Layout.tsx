@@ -38,36 +38,36 @@ export default function Layout({ children }: LayoutProps) {
       name: t('nav.export'), 
       href: "/export-hub",
       children: [
-        { name: t('nav.market_requirements'), description: t('nav.market_requirements_desc') },
-        { name: t('nav.product_intelligence'), description: t('nav.product_intelligence_desc') },
-        { name: t('nav.partner_network'), description: t('nav.partner_network_desc') }
+        { name: t('nav.market_requirements'), href: "/export-hub#market-requirements", description: t('nav.market_requirements_desc') },
+        { name: t('nav.product_intelligence'), href: "/export-hub#product-intelligence", description: t('nav.product_intelligence_desc') },
+        { name: t('nav.partner_network'), href: "/export-hub#partner-network", description: t('nav.partner_network_desc') }
       ]
     },
     { 
       name: t('nav.tourism'), 
       href: "/tourism",
       children: [
-        { name: t('nav.attractions'), description: t('nav.attractions_desc') },
-        { name: t('nav.plan_visit'), description: t('nav.plan_visit_desc') },
-        { name: t('nav.diaspora_packages'), description: t('nav.diaspora_packages_desc') }
+        { name: t('nav.attractions'), href: "/tourism#attractions", description: t('nav.attractions_desc') },
+        { name: t('nav.plan_visit'), href: "/tourism#plan-visit", description: t('nav.plan_visit_desc') },
+        { name: t('nav.diaspora_packages'), href: "/tourism#diaspora-packages", description: t('nav.diaspora_packages_desc') }
       ]
     },
     { 
       name: t('nav.investment'), 
       href: "/investment",
       children: [
-        { name: t('nav.active_projects'), description: t('nav.active_projects_desc') },
-        { name: t('nav.investment_calculator'), description: t('nav.investment_calculator_desc') },
-        { name: t('nav.verified_directories'), description: t('nav.verified_directories_desc') }
+        { name: t('nav.active_projects'), href: "/investment#active-projects", description: t('nav.active_projects_desc') },
+        { name: t('nav.investment_calculator'), href: "/investment#investment-calculator", description: t('nav.investment_calculator_desc') },
+        { name: t('nav.verified_directories'), href: "/investment#verified-directories", description: t('nav.verified_directories_desc') }
       ]
     },
     { 
       name: t('nav.trade'), 
       href: "/trade",
       children: [
-        { name: t('nav.export_sectors'), description: t('nav.export_sectors_desc') },
-        { name: t('nav.export_roadmap'), description: t('nav.export_roadmap_desc') },
-        { name: t('nav.zimtrade_programs'), description: t('nav.zimtrade_programs_desc') }
+        { name: t('nav.export_sectors'), href: "/trade#export-sectors", description: t('nav.export_sectors_desc') },
+        { name: t('nav.export_roadmap'), href: "/trade#export-roadmap", description: t('nav.export_roadmap_desc') },
+        { name: t('nav.zimtrade_programs'), href: "/trade#zimtrade-programs", description: t('nav.zimtrade_programs_desc') }
       ]
     },
     { name: t('nav.technology'), 
@@ -150,7 +150,7 @@ export default function Layout({ children }: LayoutProps) {
                     </Link>
                     <div className="border-t my-2" />
                     {item.children.map((child, idx) => (
-                      <Link href={item.href} key={idx}>
+                      <Link href={child.href} key={idx}>
                         <div className="cursor-pointer flex flex-col items-start py-3 px-3 hover:bg-muted/50 rounded-lg transition-colors">
                           <span className="font-medium text-foreground text-sm">{child.name}</span>
                           <span className="text-xs text-muted-foreground mt-0.5">{child.description}</span>
@@ -262,18 +262,37 @@ export default function Layout({ children }: LayoutProps) {
               <div className="p-4 space-y-4 overflow-y-auto">
                 <nav className="flex flex-col space-y-1">
                   {navigation.map((item) => (
-                    <Link key={item.href} href={item.href}>
-                      <Button
-                        variant={isActive(item.href) ? "default" : "ghost"}
-                        className="w-full justify-start text-sm font-medium h-11"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          window.scrollTo(0, 0); 
-                        }}
-                      >
-                        {item.name}
-                      </Button>
-                    </Link>
+                    <div key={item.href} className="flex flex-col">
+                      <Link href={item.href}>
+                        <Button
+                          variant={isActive(item.href) ? "default" : "ghost"}
+                          className="w-full justify-start text-sm font-medium h-11"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            window.scrollTo(0, 0); 
+                          }}
+                        >
+                          {item.name}
+                        </Button>
+                      </Link>
+                      {item.children && (
+                        <div className="ml-4 flex flex-col border-l border-muted pl-2 mb-2">
+                          {item.children.map((child, idx) => (
+                            <Link key={idx} href={child.href}>
+                              <Button
+                                variant="ghost"
+                                className="w-full justify-start text-xs font-normal h-9 text-muted-foreground hover:text-primary"
+                                onClick={() => {
+                                  setMobileMenuOpen(false);
+                                }}
+                              >
+                                {child.name}
+                              </Button>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </nav>
 
