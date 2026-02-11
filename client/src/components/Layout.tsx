@@ -209,6 +209,7 @@ export default function Layout({ children }: LayoutProps) {
                     onClick={() => i18n.changeLanguage(lang.code)}
                     className={`cursor-pointer transition-colors text-sm ${i18n.language === lang.code ? 'bg-primary/10 text-primary' : ''}`}
                   >
+                    <span className="mr-2">{lang.flag}</span>
                     {lang.name}
                   </DropdownMenuItem>
                 ))}
