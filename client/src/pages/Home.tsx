@@ -164,6 +164,11 @@ export default function Home() {
                 {t('home.tourism')}
               </Button>
             </Link>
+            <Link href="/technology">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
+                {t('home.technology')} 
+              </Button>
+            </Link>
             <Link href="/investment">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm shadow-xl">
                 {t('home.investments')} 

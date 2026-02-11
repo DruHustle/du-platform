@@ -59,9 +59,10 @@
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "Trade, Tourism and Investment Acceleration for Vision 2030",
+    "hero_subtitle": "ICT, Trade, Tourism and Investment Acceleration for Vision 2030",
     "export_hub": "Export Hub",
     "tourism": "Tourism",
+    "technology": "Technology",
     "investments": "Investments",
     "platform_services": "Platform Services",
     "gateway_title": "The Zimbabwe Global Diaspora Gateway",
@@ -71,7 +72,7 @@
     "join_diaspora": "Join thousands of diaspora members building bridges for economic transformation.",
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
-    "technology": "Technology",
+  
     "modules": {
       "export": {
         "title": "Export Knowledge Hub",

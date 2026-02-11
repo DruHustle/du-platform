@@ -59,10 +59,11 @@
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "Beschleunigung von Handel, Tourismus und Investitionen für Vision 2030",
+    "hero_subtitle": "IKT,Beschleunigung von Handel, Tourismus und Investitionen für Vision 2030",
     "export_hub": "Export-Zentrum",
     "tourism": "Tourismus",
     "investments": "Investitionen",
+    "technology": "Technologie",  
     "platform_services": "Plattform-Dienste",
     "gateway_title": "Das Simbabwe Global Diaspora Gateway",
     "gateway_desc": "Eine digitale Plattform, die Simbabwe durch Handel, Tourismus und Investitionen mit der Welt verbindet.",
@@ -109,7 +110,11 @@
       "zimtrade": "ZimTrade Zertifiziert",
       "vision2030": "Vision 2030 Ausgerichtet"
     },
-    "technology": "Technology"
+    "testimonial": {
+      "quote": "Diese Plattform hat es mir ermöglicht, in Simbabwes Wachstum zu investieren und gleichzeitig eine Verbindung zu meiner Heimat aufrechtzuerhalten.",
+      "name": "Jane Doe",
+      "role": "Diaspora Investor"
+    }
   },
   "export": {
     "hero": {

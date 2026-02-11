@@ -60,7 +60,7 @@
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "Kukurumidza kweKutengeserana, Kushanya uye Kudyara Mari kweVision 2030",
+    "hero_subtitle": "ICT, Kukurumidza kweKutengeserana, Kushanya uye Kudyara Mari kweVision 2030",
     "export_hub": "Zvekutengesera",
     "tourism": "Kushanya",
     "investments": "Kudyara Mari",
@@ -110,7 +110,12 @@
       "zimtrade": "ZimTrade Certified",
       "vision2030": "Inoenderana neVision 2030"
     },
-    "technology": "Technology"
+    "testimonial": {
+      "quote": "This platform has enabled me to invest in Zimbabwe's growth while maintaining a connection to my homeland.",
+      "name": "Jane Doe",
+      "role": "Diaspora Investor"
+    }
+
   },
   "export": {
     "hero": {
