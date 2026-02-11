@@ -327,7 +327,7 @@ export default function Tourism() {
       </section>
 
       {/* Key Attractions */}
-      <section id="attractions" className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30">
+      <section id="attractions" className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-16 space-y-4">
             <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Destinations</Badge>
@@ -505,7 +505,7 @@ export default function Tourism() {
 
 
      {/* Planning Your Visit */}
-      <section id="plan-visit" className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
+      <section id="plan-visit" className="section-padding bg-primary text-primary-foreground relative overflow-hidden scroll-mt-24">
        
         <div className="absolute inset-0 bg-[url('/images/cubes.png')] opacity-5" />
         
