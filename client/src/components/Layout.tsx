@@ -26,10 +26,10 @@ export default function Layout({ children }: LayoutProps) {
   }, []);
 
   const languages = [
-    { name: "English", code: "en" },
-    { name: "chiShona", code: "sn" },
-    { name: "isiNdebele", code: "nd" },
-    { name: "Deutsch", code: "de" }
+    { name: "English", flag: "🇬🇧", code: "en" },
+    { name: "chiShona", flag: "🇿🇼", code: "sn" },
+    { name: "isiNdebele", flag: "🇿🇼", code: "nd" },
+    { name: "Deutsch", flag: "🇩🇪", code: "de" }
   ];
 
   const navigation = [
@@ -244,50 +244,54 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
 
-        {/* Mobile Menu Updated with Language Switcher */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t bg-white/95 backdrop-blur-md">
-            <div className="container py-4 space-y-4">
-              <nav className="flex flex-col space-y-2">
-                {navigation.map((item) => (
-                  <Link key={item.href} href={item.href}>
-                    <Button
-                      variant={isActive(item.href) ? "default" : "ghost"}
-                      className="w-full justify-start text-sm font-medium"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        // Robust reset: instantaneous jump to top before content renders
-                        window.scrollTo(0, 0); 
-                      }}
-                    >
-                      {item.name}
-                    </Button>
-                  </Link>
-                ))}
-              </nav>
 
-              {/* Language Switcher Section */}
-              <div className="border-t pt-4">
-                <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3 px-4">
-                  {t('select_lang')}
-                </p>
-                <div className="grid grid-cols-2 gap-2 px-2">
-                  {languages.map((lang) => (
-                    <Button
-                      key={lang.code}
-                      variant={i18n.language === lang.code ? "default" : "outline"}
-                      size="sm"
-                      className="text-xs justify-center"
-                      onClick={() => {
-                        i18n.changeLanguage(lang.code);
-                        setMobileMenuOpen(false);
-                        // Also scroll up here in case translation changes page height
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    >
-                      {lang.name}
-                    </Button>
+        {/* Mobile Menu*/}
+        {mobileMenuOpen && (
+
+          <div className="lg:hidden absolute top-14 right-0 w-72 z-50">
+            <div className="bg-white/98 backdrop-blur-md border border-r-0 rounded-l-2xl rounded-r-none shadow-2xl overflow-hidden max-h-[80vh] flex flex-col">
+              <div className="p-4 space-y-4 overflow-y-auto">
+                <nav className="flex flex-col space-y-1">
+                  {navigation.map((item) => (
+                    <Link key={item.href} href={item.href}>
+                      <Button
+                        variant={isActive(item.href) ? "default" : "ghost"}
+                        className="w-full justify-start text-sm font-medium h-11"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          window.scrollTo(0, 0); 
+                        }}
+                      >
+                        {item.name}
+                      </Button>
+                    </Link>
                   ))}
+                </nav>
+
+                <div className="border-t pt-4 pb-2">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3 px-3">
+                    {t('select_lang')}
+                  </p>
+                  <div className="flex flex-col gap-1 px-1">
+                    {languages.map((lang) => (
+                      <Button
+                        key={lang.code}
+                        variant={i18n.language === lang.code ? "secondary" : "ghost"}
+                        size="sm"
+                        className={`text-xs justify-start px-3 h-10 w-full ${
+                          i18n.language === lang.code ? "font-bold text-primary" : ""
+                        }`}
+                        onClick={() => {
+                          i18n.changeLanguage(lang.code);
+                          setMobileMenuOpen(false);
+                          window.scrollTo({ top: 0, behavior: 'instant' });
+                        }}
+                      >
+                        <span className="mr-2">{lang.flag}</span>
+                        {lang.name}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
