@@ -38,40 +38,48 @@ export default function Layout({ children }: LayoutProps) {
       name: t('nav.export'), 
       href: "/export-hub",
       children: [
-        { name: t('nav.market_requirements'), description: t('nav.market_requirements_desc') },
-        { name: t('nav.product_intelligence'), description: t('nav.product_intelligence_desc') },
-        { name: t('nav.partner_network'), description: t('nav.partner_network_desc') }
+        { name: t('nav.market_requirements'), href: "/export-hub#market-requirements", description: t('nav.market_requirements_desc') },
+        { name: t('nav.product_intelligence'), href: "/export-hub#product-intelligence", description: t('nav.product_intelligence_desc') },
+        { name: t('nav.partner_network'), href: "/export-hub#partner-network", description: t('nav.partner_network_desc') }
       ]
     },
     { 
       name: t('nav.tourism'), 
       href: "/tourism",
       children: [
-        { name: t('nav.attractions'), description: t('nav.attractions_desc') },
-        { name: t('nav.plan_visit'), description: t('nav.plan_visit_desc') },
-        { name: t('nav.diaspora_packages'), description: t('nav.diaspora_packages_desc') }
+        { name: t('nav.attractions'), href: "/tourism#attractions", description: t('nav.attractions_desc') },
+        { name: t('nav.plan_visit'), href: "/tourism#plan-visit", description: t('nav.plan_visit_desc') },
+        { name: t('nav.diaspora_packages'), href: "/tourism#diaspora-packages", description: t('nav.diaspora_packages_desc') }
       ]
     },
     { 
       name: t('nav.investment'), 
       href: "/investment",
       children: [
-        { name: t('nav.active_projects'), description: t('nav.active_projects_desc') },
-        { name: t('nav.investment_calculator'), description: t('nav.investment_calculator_desc') },
-        { name: t('nav.verified_directories'), description: t('nav.verified_directories_desc') }
+        { name: t('nav.active_projects'), href: "/investment#active-projects", description: t('nav.active_projects_desc') },
+        { name: t('nav.investment_calculator'), href: "/investment#investment-calculator", description: t('nav.investment_calculator_desc') },
+        { name: t('nav.verified_directories'), href: "/investment#verified-directories", description: t('nav.verified_directories_desc') }
       ]
     },
     { 
       name: t('nav.trade'), 
       href: "/trade",
       children: [
-        { name: t('nav.export_sectors'), description: t('nav.export_sectors_desc') },
-        { name: t('nav.export_roadmap'), description: t('nav.export_roadmap_desc') },
-        { name: t('nav.zimtrade_programs'), description: t('nav.zimtrade_programs_desc') }
+        { name: t('nav.export_sectors'), href: "/trade#export-sectors", description: t('nav.export_sectors_desc') },
+        { name: t('nav.export_roadmap'), href: "/trade#export-roadmap", description: t('nav.export_roadmap_desc') },
+        { name: t('nav.zimtrade_programs'), href: "/trade#zimtrade-programs", description: t('nav.zimtrade_programs_desc') }
+      ]
+    },
+    { name: t('nav.technology'), 
+      href: "/technology", 
+      children: [
+        { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
+        { name: t('nav.technology_industries'), href: "/technology#technology-industries", description: t('nav.technology_industries_desc') },
       ]
     },
     { name: t('nav.data'), href: "/data-visualization", children: null },
     { name: t('nav.success'), href: "/success-stories", children: null },
+   
   ];
 
   const isActive = (href: string) => {
@@ -136,19 +144,49 @@ export default function Layout({ children }: LayoutProps) {
                   
                   <div className="absolute right-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
                     <Link href={item.href}>
-                      <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm">
+                      <div 
+                        className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm"
+                        onClick={() => {
+                          if (location === item.href) {
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                        }}
+                      >
                         {t('explore')} {item.name}
                       </div>
                     </Link>
                     <div className="border-t my-2" />
-                    {item.children.map((child, idx) => (
-                      <Link href={item.href} key={idx}>
-                        <div className="cursor-pointer flex flex-col items-start py-3 px-3 hover:bg-muted/50 rounded-lg transition-colors">
-                          <span className="font-medium text-foreground text-sm">{child.name}</span>
-                          <span className="text-xs text-muted-foreground mt-0.5">{child.description}</span>
-                        </div>
-                      </Link>
-                    ))}
+                    {item.children.map((child, idx) => {
+                      const isHashLink = child.href.includes('#');
+                      const [path, hash] = child.href.split('#');
+                      const isSamePage = location === path;
+
+                      if (isHashLink && isSamePage) {
+                        return (
+                          <a 
+                            href={child.href} 
+                            key={idx}
+                            onClick={(e) => {
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            <div className="cursor-pointer flex flex-col items-start py-3 px-3 hover:bg-muted/50 rounded-lg transition-colors">
+                              <span className="font-medium text-foreground text-sm">{child.name}</span>
+                              <span className="text-xs text-muted-foreground mt-0.5">{child.description}</span>
+                            </div>
+                          </a>
+                        );
+                      }
+
+                      return (
+                        <Link href={child.href} key={idx}>
+                          <div className="cursor-pointer flex flex-col items-start py-3 px-3 hover:bg-muted/50 rounded-lg transition-colors">
+                            <span className="font-medium text-foreground text-sm">{child.name}</span>
+                            <span className="text-xs text-muted-foreground mt-0.5">{child.description}</span>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               ) : (
@@ -254,18 +292,22 @@ export default function Layout({ children }: LayoutProps) {
               <div className="p-4 space-y-4 overflow-y-auto">
                 <nav className="flex flex-col space-y-1">
                   {navigation.map((item) => (
-                    <Link key={item.href} href={item.href}>
-                      <Button
-                        variant={isActive(item.href) ? "default" : "ghost"}
-                        className="w-full justify-start text-sm font-medium h-11"
+                    <div key={item.href} className="flex flex-col">
+                      <Link href={item.href}>
+                        <Button
+                          variant={isActive(item.href) ? "default" : "ghost"}
+                          className="w-full justify-start text-sm font-medium h-11"
                         onClick={() => {
                           setMobileMenuOpen(false);
-                          window.scrollTo(0, 0); 
+                          if (location === item.href) {
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
                         }}
-                      >
-                        {item.name}
-                      </Button>
-                    </Link>
+                        >
+                          {item.name}
+                        </Button>
+                      </Link>
+                    </div>
                   ))}
                 </nav>
 
@@ -356,6 +398,7 @@ export default function Layout({ children }: LayoutProps) {
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
                 <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZimTrade</a></li>
+                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Ministry Of ICTPS</a></li>
                 <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIMRA</a></li>
               </ul>
             </div>

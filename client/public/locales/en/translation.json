@@ -49,14 +49,20 @@
     "export_sectors_desc": "Key industries and opportunities",
     "export_roadmap": "Export Roadmap",
     "export_roadmap_desc": "Step-by-step export process",
+    "technology": "Technology",
+    "technology_capabilities": "Technology Capabilities",
+    "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
+    "technology_industries": "Technology Industries",
+    "technology_industries_desc": "Key technology sectors in Zimbabwe",
     "zimtrade_programs": "ZimTrade Programs",
     "zimtrade_programs_desc": "Export development initiatives"
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "Trade, Tourism and Investment Acceleration for Vision 2030",
+    "hero_subtitle": "ICT, Trade, Tourism and Investment Acceleration for Vision 2030",
     "export_hub": "Export Hub",
     "tourism": "Tourism",
+    "technology": "Technology",
     "investments": "Investments",
     "platform_services": "Platform Services",
     "gateway_title": "The Zimbabwe Global Diaspora Gateway",
@@ -66,6 +72,7 @@
     "join_diaspora": "Join thousands of diaspora members building bridges for economic transformation.",
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
+  
     "modules": {
       "export": {
         "title": "Export Knowledge Hub",
@@ -86,6 +93,16 @@
         "title": "Trade Information",
         "desc": "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
         "stats": "8 Export Sectors"
+      },
+      "technology": {
+        "title": "Technology & AI",
+        "desc": "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context for investors and diaspora.",
+        "stats": "Onesa AI"
+      },
+      "success": {
+        "title": "Success Stories",
+        "desc": "Explore real-world examples of businesses and projects thriving through diaspora engagement.",
+        "stats": "Impact Stories"
       }
     },
     "trust": {
@@ -93,6 +110,88 @@
       "zida": "ZIDA Partner",
       "zimtrade": "ZimTrade Certified",
       "vision2030": "Vision 2030 Aligned"
+    }
+  },
+  "tech": {
+    "hero": {
+      "badge1": "Future of Innovation",
+      "title1": "Onesa AI: Illuminating Zimbabwe",
+      "subtitle1": "The first AI model built specifically for the Zimbabwean context.",
+      "highlight1": "Built for Zimbabwe",
+      "badge2": "Contextual Intelligence",
+      "title2": "Deep Contextual Understanding",
+      "subtitle2": "Unlike general AI, Onesa understands the nuances of life and business in Zimbabwe.",
+      "highlight2": "Localized Knowledge",
+      "badge3": "Investor Tools",
+      "title3": "Smart Investment Brainstorming",
+      "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
+      "highlight3": "Data-Driven Success"
+    },
+    "explore_onesa": "Explore Onesa AI",
+    "onesa_badge": "Meet Onesa AI",
+    "onesa_title": "Illuminating the Way Forward",
+    "onesa_meaning": "Onesa means 'illuminate' in Shona",
+    "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
+    "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
+    "onesa_usp1": "Contextual Understanding",
+    "onesa_usp2": "Accurate Language Translation",
+    "ai_status": "Beta Version",
+    "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
+    "features_title": "Onesa AI Capabilities",
+    "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
+    "features": {
+      "context": {
+        "title": "Contextual Mastery",
+        "desc": "Onesa understands how things work on the ground, from informal market dynamics to formal regulatory frameworks."
+      },
+      "translation": {
+        "title": "Language Accuracy",
+        "desc": "Accurately translates Shona, Ndebele, and other local languages, preserving cultural nuances and technical meanings."
+      },
+      "risk": {
+        "title": "Risk Assessment",
+        "desc": "Investors can use Onesa to assess specific risks based on real-time local data and historical patterns."
+      },
+      "brainstorm": {
+        "title": "Idea Generation",
+        "desc": "Brainstorm business ideas tailored to succeed in the unique Zimbabwean landscape."
+      },
+      "tourism": {
+        "title": "Tourist Companion",
+        "desc": "Navigate Zimbabwe with a pocket-sized local guide that knows the best spots and cultural ins-and-outs."
+      }
+    },
+    "cta_title": "Ready to Illuminate Your Journey?",
+    "cta_desc": "Join our beta program and be the first to experience Onesa AI's localized intelligence.",
+    "cta_button": "Join Beta Waitlist",
+    "sectors_badge": "Sector Transformation",
+    "sectors_title": "Powering Key Industries",
+    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
+    "sectors": {
+      "mining": {
+        "title": "Mining & Resources",
+        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
+        "d1": "Real-time mineral pricing and market trends",
+        "d2": "Environmental and safety compliance monitoring"
+      },
+      "farming": {
+        "title": "Precision Farming",
+        "desc": "Transforming agriculture through data-driven crop management and weather pattern prediction.",
+        "d1": "Soil health analysis and crop yield optimization",
+        "d2": "Localized weather alerts and pest control advice"
+      },
+      "logistics": {
+        "title": "Smart Logistics",
+        "desc": "Optimizing supply chains and cross-border trade routes through the Zimbabwean corridor.",
+        "d1": "Route optimization for regional distribution",
+        "d2": "Real-time tracking and border clearance assistance"
+      },
+      "education": {
+        "title": "Future Education",
+        "desc": "Bridging the digital divide through AI-powered personalized learning and vocational training.",
+        "d1": "Adaptive learning platforms for local schools",
+        "d2": "Technical skill development for the digital economy"
+      }
     }
   },
   "export": {
@@ -246,7 +345,6 @@
         "Trade Compliance Consultants"
       ],
       "financial": "Financial Services",
-      "financial_desc": "Banking and financial support for international trade transactions",
       "financial_examples": [
         "Deutsche Bank",
         "Commerzbank",
@@ -307,7 +405,55 @@
     "plan_visit_title": "Plan Your Visit",
     "plan_visit_desc": "Essential information for a seamless travel experience",
     "contact_title": "Tourism Inquiry",
-    "contact_desc": "Need help planning your trip? Contact our tourism specialists."
+    "contact_desc": "Need help planning your trip? Contact our tourism specialists.",
+    "planning": {
+      "visa": {
+        "title": "Visa Requirements",
+        "desc": "Most visitors can obtain visa on arrival. E-visa system available for advance applications.",
+        "d1": "Tourist visa: $30-75",
+        "d2": "Valid passport required",
+        "d3": "6 months validity recommended"
+      },
+      "health": {
+        "title": "Health & Safety",
+        "desc": "Zimbabwe is generally safe for tourists. Standard travel precautions recommended.",
+        "d1": "Yellow fever (if applicable)",
+        "d2": "Malaria prophylaxis",
+        "d3": "Travel insurance advised"
+      },
+      "payment": {
+        "title": "Payment Systems",
+        "desc": "Multi-currency economy with USD widely accepted. Mobile money popular.",
+        "d1": "USD, ZAR, EUR accepted",
+        "d2": "EcoCash mobile money",
+        "d3": "Cards in major hotels"
+      },
+      "time": {
+        "title": "Best Time to Visit",
+        "desc": "Year-round destination with dry season (May-October) being most popular.",
+        "d1": "May-Oct: Dry season",
+        "d2": "Nov-Apr: Green season",
+        "d3": "Falls best: Feb-May"
+      }
+    },
+    "onesa": {
+      "badge": "AI Tourist Companion",
+      "title": "Your Local Guide in Your Pocket",
+      "subtitle": "Onesa AI helps you navigate the ins and outs of Zimbabwe, from cultural etiquette to hidden gems.",
+      "guide": {
+        "title": "Local Insight",
+        "desc": "Get recommendations for the best local food, hidden attractions, and cultural experiences only locals know."
+      },
+      "navigate": {
+        "title": "Seamless Navigation",
+        "desc": "Navigate transport, local markets, and services with real-time advice on pricing and etiquette."
+      },
+      "plan": {
+        "title": "Smart Planning",
+        "desc": "Plan your itinerary based on current local events, weather, and seasonal wildlife patterns."
+      },
+      "cta": "Chat with Onesa AI"
+    }
   },
   "investment": {
     "hero": {
@@ -347,7 +493,9 @@
     "calculator_title": "Investment Calculator",
     "calculator_desc": "Simulate your potential returns",
     "verified_directories": "Verified Directories",
-    "directories_desc": "Access official registries and associations"
+    "directories_desc": "Access official registries and associations",
+    "onesa_title": "Onesa AI Companion",
+    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context."
   },
   "trade": {
     "hero": {

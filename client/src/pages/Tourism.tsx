@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award, ArrowRight, CheckCircle2 } from "lucide-react";
+import { MapPin, Calendar, Shield, CreditCard, ExternalLink, Award, ArrowRight, CheckCircle2, Brain, Sparkles } from "lucide-react";
 import ZimbabweShopInfo from "@/components/ZimbabweShopInfo";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -108,27 +108,45 @@ export default function Tourism() {
   const planningInfo = [
     {
       icon: MapPin,
-      title: "Visa Requirements",
-      description: "Most visitors can obtain visa on arrival. E-visa system available for advance applications.",
-      details: ["Tourist visa: $30-75", "Valid passport required", "6 months validity recommended"]
+      title: t('tourism.planning.visa.title'),
+      description: t('tourism.planning.visa.desc'),
+      details: [t('tourism.planning.visa.d1'), t('tourism.planning.visa.d2'), t('tourism.planning.visa.d3')]
     },
     {
       icon: Shield,
-      title: "Health & Safety",
-      description: "Zimbabwe is generally safe for tourists. Standard travel precautions recommended.",
-      details: ["Yellow fever (if applicable)", "Malaria prophylaxis", "Travel insurance advised"]
+      title: t('tourism.planning.health.title'),
+      description: t('tourism.planning.health.desc'),
+      details: [t('tourism.planning.health.d1'), t('tourism.planning.health.d2'), t('tourism.planning.health.d3')]
     },
     {
       icon: CreditCard,
-      title: "Payment Systems",
-      description: "Multi-currency economy with USD widely accepted. Mobile money popular.",
-      details: ["USD, ZAR, EUR accepted", "EcoCash mobile money", "Cards in major hotels"]
+      title: t('tourism.planning.payment.title'),
+      description: t('tourism.planning.payment.desc'),
+      details: [t('tourism.planning.payment.d1'), t('tourism.planning.payment.d2'), t('tourism.planning.payment.d3')]
     },
     {
       icon: Calendar,
-      title: "Best Time to Visit",
-      description: "Year-round destination with dry season (May-October) being most popular.",
-      details: ["May-Oct: Dry season", "Nov-Apr: Green season", "Falls best: Feb-May"]
+      title: t('tourism.planning.time.title'),
+      description: t('tourism.planning.time.desc'),
+      details: [t('tourism.planning.time.d1'), t('tourism.planning.time.d2'), t('tourism.planning.time.d3')]
+    }
+  ];
+
+  const onesaTouristFeatures = [
+    {
+      icon: Brain,
+      title: t('tourism.onesa.guide.title'),
+      description: t('tourism.onesa.guide.desc')
+    },
+    {
+      icon: MapPin,
+      title: t('tourism.onesa.navigate.title'),
+      description: t('tourism.onesa.navigate.desc')
+    },
+    {
+      icon: Calendar,
+      title: t('tourism.onesa.plan.title'),
+      description: t('tourism.onesa.plan.desc')
     }
   ];
 
@@ -226,6 +244,79 @@ export default function Tourism() {
       </section>
 
 
+      {/* Onesa AI Tourist Companion Section */}
+      <section className="py-24 bg-zim-black text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-12 opacity-5">
+          <Brain className="h-96 w-96" />
+        </div>
+        <div className="container relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-zim-gold rounded-lg">
+                  <Sparkles className="h-6 w-6 text-zim-black" />
+                </div>
+                <Badge variant="outline" className="border-zim-gold text-zim-gold px-4 py-1">
+                  {t('tourism.onesa.badge')}
+                </Badge>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                {t('tourism.onesa.title')}
+              </h2>
+              <p className="text-xl text-white/80 mb-8 leading-relaxed">
+                {t('tourism.onesa.subtitle')}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+                {onesaTouristFeatures.map((feature, idx) => {
+                  const Icon = feature.icon;
+                  return (
+                    <div key={idx} className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                      <Icon className="h-8 w-8 text-zim-gold mb-4" />
+                      <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                      <p className="text-sm text-white/70 leading-relaxed">{feature.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold">
+                {t('tourism.onesa.cta')}
+              </Button>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative hidden lg:block"
+            >
+              <div className="aspect-square relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <img 
+                  src="/images/tech/zim_think.jpg" 
+                  alt="Onesa AI Guide" 
+                  className="w-full h-full object-cover opacity-60"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-zim-black via-transparent to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8 bg-zim-black/80 backdrop-blur-md p-6 rounded-2xl border border-white/10">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="h-3 w-3 rounded-full bg-zim-green animate-pulse" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-zim-gold">Onesa AI Assistant</span>
+                  </div>
+                  <p className="text-white font-medium italic">
+                    "Onesa, what's the best local spot for traditional Sadza in Harare tonight?"
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Zimbabwe Shop Section */}
      <section className="pt-0 pb-0 bg-background relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-zim-green/5 rounded-full blur-3xl -mr-20 -mt-20" />
@@ -236,7 +327,7 @@ export default function Tourism() {
       </section>
 
       {/* Key Attractions */}
-      <section className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30">.
+      <section id="attractions" className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-16 space-y-4">
             <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Destinations</Badge>
@@ -414,7 +505,7 @@ export default function Tourism() {
 
 
      {/* Planning Your Visit */}
-      <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
+      <section id="plan-visit" className="section-padding bg-primary text-primary-foreground relative overflow-hidden scroll-mt-24">
        
         <div className="absolute inset-0 bg-[url('/images/cubes.png')] opacity-5" />
         

@@ -72,13 +72,14 @@ export default function ZimbabweShopInfo() {
 
   return (
     <motion.div 
+      id="diaspora-packages"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
       transition={{ staggerChildren: 0.1, delayChildren: 0.1 }}
       // Reduced vertical spacing between major sections from 24 to 16
-      className="max-w-7xl mx-auto px-4 space-y-16 py-12"
+      className="max-w-7xl mx-auto px-4 space-y-16 py-12 scroll-mt-24"
     >
 
       {/* Vision Statement - Optimized spacing here */}

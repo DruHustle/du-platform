@@ -12,20 +12,26 @@ import Investment from "./pages/Investment";
 import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
 import SuccessStories from "./pages/SuccessStories";
+import Technology from "./pages/Technology";
+import ScrollToHash from "./components/ScrollToHash";
 
 function Router() {
   return (
+    <>
+    <ScrollToHash />
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/export-hub"} component={ExportHub} />
       <Route path={"/tourism"} component={Tourism} />
       <Route path={"/investment"} component={Investment} />
       <Route path={"/trade"} component={Trade} />
+      <Route path={"/technology"} component={Technology} />
       <Route path={"/data-visualization"} component={DataVisualization} />
       <Route path={"/success-stories"} component={SuccessStories} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+    </>
   );
 }
 

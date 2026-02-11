@@ -321,7 +321,7 @@ export default function ExportHub() {
       </section>
 
       {/* Market Intelligence */}
-      <section className="section-padding">
+      <section id="product-intelligence" className="section-padding scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <Badge className="badge-secondary mb-4">{t('export.product_intelligence')}</Badge>
@@ -376,7 +376,7 @@ export default function ExportHub() {
       </section>
 
       {/* Market Requirements */}
-      <section id="market-requirements" className="section-padding bg-muted/30">
+      <section id="market-requirements" className="section-padding bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <Badge className="badge-primary mb-4">Requirements</Badge>
@@ -588,7 +588,7 @@ export default function ExportHub() {
       </section>
 
       {/* Potential Partners */}
-      <section className="section-padding bg-muted/30">
+      <section id="partner-network" className="section-padding bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <Badge className="badge-primary mb-4">Network</Badge>

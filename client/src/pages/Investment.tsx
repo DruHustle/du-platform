@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle, Building, Leaf, Cpu, Factory, Award } from "lucide-react";
+import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle, Building, Leaf, Cpu, Factory, Award, Brain } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -198,6 +198,11 @@ export default function Investment() {
       icon: DollarSign,
       title: "Flexible Investment",
       description: "Start with as little as $250-$1,000 and build your portfolio over time"
+    },
+    {
+      icon: Brain,
+      title: t('investment.onesa_title'),
+      description: t('investment.onesa_desc')
     }
   ];
 
@@ -334,7 +339,7 @@ export default function Investment() {
       </section>
 
       {/* Verified Directories */}
-      <section className="py-16">
+      <section id="verified-directories" className="py-16 scroll-mt-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* NTIR */}
@@ -382,7 +387,7 @@ export default function Investment() {
       </section>
 
       {/* Active Projects with Filters */}
-      <section className="py-16 bg-muted/30">
+      <section id="active-projects" className="section-padding bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-8 px-4">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
@@ -505,7 +510,7 @@ export default function Investment() {
       </section>
 
       {/* How It Works */}
-      <section className="py-16">
+      <section id="investment-calculator" className="py-16 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How Crowdfunding Works</h2>

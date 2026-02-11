@@ -262,7 +262,7 @@ export default function Trade() {
       </section>
 
       {/* Export Process Flow Section */}
-      <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
+      <section id="export-roadmap" className="py-20 bg-gradient-to-b from-muted/30 to-background scroll-mt-24">
         <div className="container">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
@@ -385,7 +385,7 @@ export default function Trade() {
       </section>
 
       {/* Export Sectors */}
-      <section className="py-16">
+      <section id="export-sectors" className="section-padding scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Export Sectors</h2>
@@ -434,7 +434,7 @@ export default function Trade() {
       </section>
 
       {/* ZimTrade Programs */}
-      <section className="py-16 bg-muted/30">
+      <section id="zimtrade-programs" className="section-padding bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Export Development Programs</h2>
