@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Sparkles, Globe, Shield, Zap, MessageSquare, TrendingUp, Lightbulb, Award, CheckCircle } from "lucide-react";
+import { Brain, Sparkles, Globe, Shield, Zap, MessageSquare, TrendingUp, Lightbulb, Award, CheckCircle, Plane } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -62,6 +62,11 @@ export default function Technology() {
       icon: Lightbulb,
       title: t('tech.features.brainstorm.title'),
       description: t('tech.features.brainstorm.desc')
+    },
+    {
+      icon: Plane,
+      title: t('tech.features.tourism.title'),
+      description: t('tech.features.tourism.desc')
     }
   ];
 

@@ -50,7 +50,8 @@
     "export_roadmap": "Export-Fahrplan",
     "export_roadmap_desc": "Schritt-für-Schritt-Exportprozess",
     "zimtrade_programs": "ZimTrade-Programme",
-    "zimtrade_programs_desc": "Exportentwicklungsinitiativen"
+    "zimtrade_programs_desc": "Exportentwicklungsinitiativen",
+    "technology": "Technology"
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
@@ -86,6 +87,16 @@
         "title": "Handelsinformationen",
         "desc": "Greifen Sie auf umfassende Handelsressourcen und Exportentwicklungsprogramme zu und vernetzen Sie sich mit Simbabwes florierenden Exportsektoren.",
         "stats": "8 Exportsektoren"
+      },
+      "technology": {
+        "title": "Technology & AI",
+        "desc": "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context for investors and diaspora.",
+        "stats": "Onesa AI"
+      },
+      "success": {
+        "title": "Success Stories",
+        "desc": "Explore real-world examples of businesses and projects thriving through diaspora engagement.",
+        "stats": "Impact Stories"
       }
     },
     "trust": {
@@ -93,7 +104,8 @@
       "zida": "ZIDA Partner",
       "zimtrade": "ZimTrade Zertifiziert",
       "vision2030": "Vision 2030 Ausgerichtet"
-    }
+    },
+    "technology": "Technology"
   },
   "export": {
     "hero": {
@@ -134,7 +146,37 @@
     "partner_network_title": "German Partner Network",
     "partner_network_desc": "Connecting Zimbabwean exporters with established German institutions and businesses",
     "regulatory_updates": "Regulatory & Trade Updates",
-    "market_intelligence": "Market Intelligence",
+    "market_intelligence": {
+      "blueberries": "Blueberries",
+      "honey": "Honey",
+      "natural_oils": "Natural Oils (Marula)",
+      "status_approved": "approved",
+      "status_pending": "pending",
+      "blueberries_req1": "Class I quality standards required",
+      "blueberries_req2": "LIDL-specific MRLs (33% of legal limit)",
+      "blueberries_req3": "Mandatory cold chain logistics",
+      "blueberries_req4": "GLOBALG.A.P. certification essential",
+      "blueberries_buyers": [
+        "LIDL",
+        "EDEKA",
+        "REWE"
+      ],
+      "honey_req1": "NOT YET EU APPROVED for direct export",
+      "honey_req2": "TRACES registration mandate (since Nov 2024)",
+      "honey_req3": "Residue Monitoring Plan (RMP) required",
+      "honey_req4": "EU-accredited testing systems needed",
+      "honey_buyers": [
+        "Pending approval process"
+      ],
+      "oils_req1": "German-language labeling mandatory",
+      "oils_req2": "Purity testing certification",
+      "oils_req3": "Organic certification preferred",
+      "oils_req4": "REACH compliance for cosmetic use",
+      "oils_buyers": [
+        "Cosmetic manufacturers",
+        "Specialty retailers"
+      ]
+    },
     "support_request": "Export Support Request",
     "support_request_desc": "Fill out the form below and our export specialists will contact you.",
     "categories": {
@@ -277,7 +319,55 @@
     "plan_visit_title": "Plan Your Visit",
     "plan_visit_desc": "Essential information for a seamless travel experience",
     "contact_title": "Tourism Inquiry",
-    "contact_desc": "Need help planning your trip? Contact our tourism specialists."
+    "contact_desc": "Need help planning your trip? Contact our tourism specialists.",
+    "planning": {
+      "visa": {
+        "title": "Visa Requirements",
+        "desc": "Most visitors can obtain visa on arrival. E-visa system available for advance applications.",
+        "d1": "Tourist visa: $30-75",
+        "d2": "Valid passport required",
+        "d3": "6 months validity recommended"
+      },
+      "health": {
+        "title": "Health & Safety",
+        "desc": "Zimbabwe is generally safe for tourists. Standard travel precautions recommended.",
+        "d1": "Yellow fever (if applicable)",
+        "d2": "Malaria prophylaxis",
+        "d3": "Travel insurance advised"
+      },
+      "payment": {
+        "title": "Payment Systems",
+        "desc": "Multi-currency economy with USD widely accepted. Mobile money popular.",
+        "d1": "USD, ZAR, EUR accepted",
+        "d2": "EcoCash mobile money",
+        "d3": "Cards in major hotels"
+      },
+      "time": {
+        "title": "Best Time to Visit",
+        "desc": "Year-round destination with dry season (May-October) being most popular.",
+        "d1": "May-Oct: Dry season",
+        "d2": "Nov-Apr: Green season",
+        "d3": "Falls best: Feb-May"
+      }
+    },
+    "onesa": {
+      "badge": "AI Tourist Companion",
+      "title": "Your Local Guide in Your Pocket",
+      "subtitle": "Onesa AI helps you navigate the ins and outs of Zimbabwe, from cultural etiquette to hidden gems.",
+      "guide": {
+        "title": "Local Insight",
+        "desc": "Get recommendations for the best local food, hidden attractions, and cultural experiences only locals know."
+      },
+      "navigate": {
+        "title": "Seamless Navigation",
+        "desc": "Navigate transport, local markets, and services with real-time advice on pricing and etiquette."
+      },
+      "plan": {
+        "title": "Smart Planning",
+        "desc": "Plan your itinerary based on current local events, weather, and seasonal wildlife patterns."
+      },
+      "cta": "Chat with Onesa AI"
+    }
   },
   "investment": {
     "hero": {
@@ -292,7 +382,15 @@
       "badge3": "Victoria Falls Stock Exchange",
       "title3": "VFEX: Your USD Gateway",
       "subtitle3": "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
-      "highlight3": "USD Denominated"
+      "highlight3": "USD Denominated",
+      "badge4": "Agriculture 4.0",
+      "title4": "Smart Farming Investments",
+      "subtitle4": "High-yield macadamia and avocado projects using precision agriculture technology.",
+      "highlight4": "18-22% IRR",
+      "badge5": "Mining Transformation",
+      "title5": "Critical Minerals Hub",
+      "subtitle5": "Invest in Zimbabwe's lithium and platinum value-addition projects for the global energy transition.",
+      "highlight5": "Global Demand"
     },
     "active_projects": "Active Investment Projects",
     "active_projects_desc": "Verified opportunities for diaspora investment across key sectors",
@@ -309,7 +407,9 @@
     "calculator_title": "Investment Calculator",
     "calculator_desc": "Simulate your potential returns",
     "verified_directories": "Verified Directories",
-    "directories_desc": "Access official registries and associations"
+    "directories_desc": "Access official registries and associations",
+    "onesa_title": "Onesa AI Companion",
+    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context."
   },
   "trade": {
     "hero": {
@@ -324,7 +424,15 @@
       "badge5": "Handelspolitik",
       "title5": "Interim-WPA-Vorteile",
       "subtitle5": "Nutzung von Handelsabkommen für Wettbewerbsvorteile auf EU-Märkten.",
-      "highlight5": "Zollfrei"
+      "highlight5": "Zollfrei",
+      "badge2": "Sector Growth",
+      "title2": "Horticulture Expansion",
+      "subtitle2": "Zimbabwe's horticultural exports are reaching new heights in European and Middle Eastern markets.",
+      "highlight2": "30% Annual Growth",
+      "badge3": "Industrialization",
+      "title3": "Value-Added Manufacturing",
+      "subtitle3": "Supporting the transition from raw exports to high-quality processed Zimbabwean products.",
+      "highlight3": "Vision 2030"
     },
     "export_roadmap": "Export Roadmap",
     "roadmap_title": "Zimbabwe to Germany Export Process",
@@ -467,5 +575,58 @@
     "message": "Sorry, the page you are looking for doesn't exist.",
     "message2": "It may have been moved or deleted.",
     "go_home": "Go Home"
+  },
+  "tech": {
+    "hero": {
+      "badge1": "Future of Innovation",
+      "title1": "Onesa AI: Illuminating Zimbabwe",
+      "subtitle1": "The first AI model built specifically for the Zimbabwean context.",
+      "highlight1": "Built for Zimbabwe",
+      "badge2": "Contextual Intelligence",
+      "title2": "Deep Contextual Understanding",
+      "subtitle2": "Unlike general AI, Onesa understands the nuances of life and business in Zimbabwe.",
+      "highlight2": "Localized Knowledge",
+      "badge3": "Investor Tools",
+      "title3": "Smart Investment Brainstorming",
+      "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
+      "highlight3": "Data-Driven Success"
+    },
+    "explore_onesa": "Explore Onesa AI",
+    "onesa_badge": "Meet Onesa AI",
+    "onesa_title": "Illuminating the Way Forward",
+    "onesa_meaning": "Onesa means 'illuminate' in Shona",
+    "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
+    "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
+    "onesa_usp1": "Contextual Understanding",
+    "onesa_usp2": "Accurate Language Translation",
+    "ai_status": "Beta Version",
+    "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
+    "features_title": "Onesa AI Capabilities",
+    "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
+    "features": {
+      "context": {
+        "title": "Contextual Mastery",
+        "desc": "Onesa understands how things work on the ground, from informal market dynamics to formal regulatory frameworks."
+      },
+      "translation": {
+        "title": "Language Accuracy",
+        "desc": "Accurately translates Shona, Ndebele, and other local languages, preserving cultural nuances and technical meanings."
+      },
+      "risk": {
+        "title": "Risk Assessment",
+        "desc": "Investors can use Onesa to assess specific risks based on real-time local data and historical patterns."
+      },
+      "brainstorm": {
+        "title": "Idea Generation",
+        "desc": "Brainstorm business ideas tailored to succeed in the unique Zimbabwean landscape."
+      },
+      "tourism": {
+        "title": "Tourist Companion",
+        "desc": "Navigate Zimbabwe with a pocket-sized local guide that knows the best spots and cultural ins-and-outs."
+      }
+    },
+    "cta_title": "Ready to Illuminate Your Journey?",
+    "cta_desc": "Join our beta program and be the first to experience Onesa AI's localized intelligence.",
+    "cta_button": "Join Beta Waitlist"
   }
 }

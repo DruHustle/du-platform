@@ -149,7 +149,11 @@
       },
       "brainstorm": {
         "title": "Idea Generation",
-        "desc": "Brainstorm business ideas tailored to succeed in the unique Zimbabwean economic landscape."
+        "desc": "Brainstorm business ideas tailored to succeed in the unique Zimbabwean landscape."
+      },
+      "tourism": {
+        "title": "Tourist Companion",
+        "desc": "Navigate Zimbabwe with a pocket-sized local guide that knows the best spots and cultural ins-and-outs."
       }
     },
     "cta_title": "Ready to Illuminate Your Journey?",
@@ -367,7 +371,55 @@
     "plan_visit_title": "Plan Your Visit",
     "plan_visit_desc": "Essential information for a seamless travel experience",
     "contact_title": "Tourism Inquiry",
-    "contact_desc": "Need help planning your trip? Contact our tourism specialists."
+    "contact_desc": "Need help planning your trip? Contact our tourism specialists.",
+    "planning": {
+      "visa": {
+        "title": "Visa Requirements",
+        "desc": "Most visitors can obtain visa on arrival. E-visa system available for advance applications.",
+        "d1": "Tourist visa: $30-75",
+        "d2": "Valid passport required",
+        "d3": "6 months validity recommended"
+      },
+      "health": {
+        "title": "Health & Safety",
+        "desc": "Zimbabwe is generally safe for tourists. Standard travel precautions recommended.",
+        "d1": "Yellow fever (if applicable)",
+        "d2": "Malaria prophylaxis",
+        "d3": "Travel insurance advised"
+      },
+      "payment": {
+        "title": "Payment Systems",
+        "desc": "Multi-currency economy with USD widely accepted. Mobile money popular.",
+        "d1": "USD, ZAR, EUR accepted",
+        "d2": "EcoCash mobile money",
+        "d3": "Cards in major hotels"
+      },
+      "time": {
+        "title": "Best Time to Visit",
+        "desc": "Year-round destination with dry season (May-October) being most popular.",
+        "d1": "May-Oct: Dry season",
+        "d2": "Nov-Apr: Green season",
+        "d3": "Falls best: Feb-May"
+      }
+    },
+    "onesa": {
+      "badge": "AI Tourist Companion",
+      "title": "Your Local Guide in Your Pocket",
+      "subtitle": "Onesa AI helps you navigate the ins and outs of Zimbabwe, from cultural etiquette to hidden gems.",
+      "guide": {
+        "title": "Local Insight",
+        "desc": "Get recommendations for the best local food, hidden attractions, and cultural experiences only locals know."
+      },
+      "navigate": {
+        "title": "Seamless Navigation",
+        "desc": "Navigate transport, local markets, and services with real-time advice on pricing and etiquette."
+      },
+      "plan": {
+        "title": "Smart Planning",
+        "desc": "Plan your itinerary based on current local events, weather, and seasonal wildlife patterns."
+      },
+      "cta": "Chat with Onesa AI"
+    }
   },
   "investment": {
     "hero": {
