@@ -25,6 +25,19 @@ export default function Layout({ children }: LayoutProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Ensure hash navigation works when clicking links to the same page
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    }
+  }, [location]);
+
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
     { name: "chiShona", flag: "🇿🇼", code: "sn" },
@@ -74,7 +87,7 @@ export default function Layout({ children }: LayoutProps) {
       href: "/technology", 
       children: [
         { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
-        { name: t('nav.technology_industries'), href: "/technology#technology-sectors", description: t('nav.technology_industries_desc') },
+        { name: t('nav.technology_industries'), href: "/technology#technology-industries", description: t('nav.technology_industries_desc') },
       ]
     },
     { name: t('nav.data'), href: "/data-visualization", children: null },
@@ -269,24 +282,22 @@ export default function Layout({ children }: LayoutProps) {
                           className="w-full justify-start text-sm font-medium h-11"
                         onClick={() => {
                           setMobileMenuOpen(false);
+                          if (item.href === "/") window.scrollTo(0, 0);
                         }}
                         >
                           {item.name}
                         </Button>
                       </Link>
                       {item.children && (
-                        <div className="ml-4 flex flex-col border-l border-muted pl-2 mb-2">
-                          {item.children.map((child, idx) => (
-                            <Link key={idx} href={child.href}>
-                              <Button
-                                variant="ghost"
-                                className="w-full justify-start text-xs font-normal h-9 text-muted-foreground hover:text-primary"
-                                onClick={() => {
-                                  setMobileMenuOpen(false);
-                                }}
+                        <div className="pl-4 flex flex-col space-y-1 mt-1 border-l ml-4">
+                          {item.children.map((child) => (
+                            <Link key={child.href} href={child.href}>
+                              <button 
+                                className="text-left py-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+                                onClick={() => setMobileMenuOpen(false)}
                               >
                                 {child.name}
-                              </Button>
+                              </button>
                             </Link>
                           ))}
                         </div>

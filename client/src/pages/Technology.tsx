@@ -6,10 +6,29 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, Sparkles, Globe, Shield, Zap, MessageSquare, TrendingUp, Lightbulb, Award, CheckCircle, Plane, Tractor, Pickaxe, Truck, GraduationCap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "wouter";
 
 export default function Technology() {
   const { t } = useTranslation();
+  const [location] = useLocation();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  // Manual scroll handler for internal hash navigation
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const scrollTimer = setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: "smooth", 
+            block: "start" 
+          });
+        }
+      }, 100); 
+      return () => clearTimeout(scrollTimer);
+    }
+  }, [location]);
 
   const heroSlides = useMemo(() => [
     {
@@ -288,7 +307,7 @@ export default function Technology() {
         </section>
 
       {/* Sector Transformation Section */}
-      <div id="technology-sectors" className="scroll-mt-24" />
+      <div id="technology-industries" className="scroll-mt-24" />
       <section className="py-24 bg-background">
           <div className="container">
             <div className="text-center mb-16">

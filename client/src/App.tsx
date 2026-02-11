@@ -25,9 +25,9 @@ function Router() {
       <Route path={"/tourism"} component={Tourism} />
       <Route path={"/investment"} component={Investment} />
       <Route path={"/trade"} component={Trade} />
+      <Route path={"/technology"} component={Technology} />
       <Route path={"/data-visualization"} component={DataVisualization} />
       <Route path={"/success-stories"} component={SuccessStories} />
-      <Route path={"/technology"} component={Technology} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
