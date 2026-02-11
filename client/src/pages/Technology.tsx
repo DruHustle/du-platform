@@ -174,7 +174,7 @@ export default function Technology() {
       </section>
 
       {/* Onesa AI Introduction */}
-      <section id="technology-capabilities" className="py-24 bg-background scroll-mt-24">
+      <section id="onesa-ai" className="py-24 bg-background scroll-mt-24">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <motion.div
@@ -249,7 +249,7 @@ export default function Technology() {
         </section>
 
         {/* Features Grid */}
-        <section className="py-24 bg-muted/30">
+        <section id="technology-capabilities" className="py-24 bg-muted/30" >
           <div className="container">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('tech.features_title')}</h2>
@@ -292,7 +292,7 @@ export default function Technology() {
       <section id="technology-industries" className="py-24 bg-background scroll-mt-24">
           <div className="container">
             <div className="text-center mb-16">
-              <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border-zim-gold/20 px-4 py-1">
+             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1 text-sm font-semibold">
                 {t('tech.sectors_badge')}
               </Badge>
               <h2 className="text-3xl md:text-5xl font-bold mb-4">{t('tech.sectors_title')}</h2>

@@ -144,7 +144,14 @@ export default function Layout({ children }: LayoutProps) {
                   
                   <div className="absolute right-0 mt-0 w-72 bg-white border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
                     <Link href={item.href}>
-                      <div className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm">
+                      <div 
+                        className="cursor-pointer font-semibold text-primary hover:bg-primary/5 rounded-lg p-3 mb-2 transition-colors text-sm"
+                        onClick={() => {
+                          if (location === item.href) {
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                        }}
+                      >
                         {t('explore')} {item.name}
                       </div>
                     </Link>
@@ -160,7 +167,6 @@ export default function Layout({ children }: LayoutProps) {
                             href={child.href} 
                             key={idx}
                             onClick={(e) => {
-                              // Let the browser handle the hash change which triggers hashchange event
                               setOpenDropdown(null);
                             }}
                           >
@@ -293,49 +299,14 @@ export default function Layout({ children }: LayoutProps) {
                           className="w-full justify-start text-sm font-medium h-11"
                         onClick={() => {
                           setMobileMenuOpen(false);
+                          if (location === item.href) {
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
                         }}
                         >
                           {item.name}
                         </Button>
                       </Link>
-                      {item.children && (
-                        <div className="ml-4 flex flex-col border-l border-muted pl-2 mb-2">
-                           {item.children.map((child, idx) => {
-                        const isHashLink = child.href.includes('#');
-                        const [path, hash] = child.href.split('#');
-                        const isSamePage = location === path;
-
-                        if (isHashLink && isSamePage) {
-                          return (
-                            <a 
-                              href={child.href} 
-                              key={idx}
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              <Button
-                                variant="ghost"
-                                className="w-full justify-start text-xs font-normal h-9 pl-8 text-muted-foreground"
-                              >
-                                {child.name}
-                              </Button>
-                            </a>
-                          );
-                        }
-
-                        return (
-                          <Link href={child.href} key={idx}>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start text-xs font-normal h-9 pl-8 text-muted-foreground"
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              {child.name}
-                            </Button>
-                          </Link>
-                        );
-                      })}
-                        </div>
-                      )}
                     </div>
                   ))}
                 </nav>
@@ -427,6 +398,7 @@ export default function Layout({ children }: LayoutProps) {
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
                 <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZimTrade</a></li>
+                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Ministry Of ICTPS</a></li>
                 <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIMRA</a></li>
               </ul>
             </div>
