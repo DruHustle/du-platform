@@ -13,9 +13,12 @@ import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
 import SuccessStories from "./pages/SuccessStories";
 import Technology from "./pages/Technology";
+import ScrollToHash from "./components/ScrollToHash";
 
 function Router() {
   return (
+    <>
+    <ScrollToHash />
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/export-hub"} component={ExportHub} />
@@ -28,6 +31,7 @@ function Router() {
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+    </>
   );
 }
 

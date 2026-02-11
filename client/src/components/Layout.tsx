@@ -267,10 +267,9 @@ export default function Layout({ children }: LayoutProps) {
                         <Button
                           variant={isActive(item.href) ? "default" : "ghost"}
                           className="w-full justify-start text-sm font-medium h-11"
-                          onClick={() => {
-                            setMobileMenuOpen(false);
-                            window.scrollTo(0, 0); 
-                          }}
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                        }}
                         >
                           {item.name}
                         </Button>

@@ -172,7 +172,8 @@ export default function Technology() {
       </section>
 
       {/* Onesa AI Introduction */}
-      <section id="technology-capabilities" className="py-24 bg-background">
+      <div id="technology-capabilities" className="scroll-mt-24" />
+      <section className="py-24 bg-background">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <motion.div
@@ -287,7 +288,8 @@ export default function Technology() {
         </section>
 
       {/* Sector Transformation Section */}
-      <section id="technology-sectors" className="py-24 bg-background">
+      <div id="technology-sectors" className="scroll-mt-24" />
+      <section className="py-24 bg-background">
           <div className="container">
             <div className="text-center mb-16">
               <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border-zim-gold/20 px-4 py-1">
