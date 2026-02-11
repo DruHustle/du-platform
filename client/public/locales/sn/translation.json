@@ -49,9 +49,14 @@
     "export_sectors_desc": "Maindasitiri nemikana iripo",
     "export_roadmap": "Nzira yeKutengesera",
     "export_roadmap_desc": "Nhanho dzekutengesera kunze",
+    "technology": "Technology",
+    "technology_capabilities": "Masimba eTekinoroji",
+    "technology_capabilities_desc": "Nzvimbo yeTekinoroji nezvekugadzira muZimbabwe",
+    "technology_industries": "Maindasitiri eTekinoroji",
+    "technology_industries_desc": "Zvikamu zvakakosha zvetekinoroji muZimbabwe",
     "zimtrade_programs": "Zvirongwa zveZimTrade",
-    "zimtrade_programs_desc": "Zvirongwa zvekusimudzira kutengesera kunze",
-    "technology": "Technology"
+    "zimtrade_programs_desc": "Zvirongwa zvekusimudzira kutengesera kunze"
+    
   },
   "home": {
     "hero_title": "Diaspora Unlocked",

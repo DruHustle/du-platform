@@ -49,9 +49,14 @@
     "export_sectors_desc": "Izimboni ezibalulekile lamathuba",
     "export_roadmap": "Umgwaqo Wokuhweba",
     "export_roadmap_desc": "Izinyathelo zokuhweba kancane kancane",
+    "technology": "Technology",
+    "technology_capabilities": "Amandla E-Technology",
+    "technology_capabilities_desc": "Indawo yezobuchwepheshe nezokusungula eZimbabwe",
+    "technology_industries": "Imboni Yobuchwepheshe",
+    "technology_industries_desc": "Imikhakha ebalulekile yezobuchwepheshe eZimbabwe",
     "zimtrade_programs": "Izinhlelo zeZimTrade",
-    "zimtrade_programs_desc": "Izinhlelo zokuthuthukisa ukuhweba",
-    "technology": "Technology"
+    "zimtrade_programs_desc": "Izinhlelo zokuthuthukisa ukuhweba"
+    
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
