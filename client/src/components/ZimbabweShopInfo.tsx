@@ -12,13 +12,10 @@ export default function ZimbabweShopInfo() {
   const [currentFoodIndex, setCurrentFoodIndex] = useState(0);
   
   const sportsJerseys = [
-    { image: "/images/shop_sables.jpg", title: "Sables Rugby" },
-    { image: "/images/sports_rugby_jersey1.jpg", title: "Sables Rugby Home Kit" },
-    { image: "/images/shop_sports.jpg", title: "Chevrons Cricket" },
-    { image: "/images/sports_cricket_kit1.jpg", title: "Chevrons T20 Kit" },
-    { image: "/images/sports_cricket_kit2.jpg", title: "Chevrons World Cup Jersey" },
-    { image: "/images/shop_warriors.jpg", title: "Warriors Football" },
-    { image: "/images/sports_football_jersey1.jpg", title: "Warriors National Team Kit" }
+    
+    { image: "/images/sports_rugby_jersey.jpg", title: "Sables Rugby Home Kit" },
+    { image: "/images/sports_cricket_jersey.png", title: "Chevrons World Cup Jersey" },
+    { image: "/images/sports_football_jersey.png", title: "Warriors Football Kit" },
   ];
 
   const artsCrafts = [
@@ -33,10 +30,8 @@ export default function ZimbabweShopInfo() {
 
   const foodProducts = [
     { image: "/images/shop_food.webp", title: "{t('shop.food_title')}" },
-    { image: "/images/food_mazoe1.webp", title: "Mazoe Orange Crush" },
-    { image: "/images/food_mazoe2.jpg", title: "Mazoe Variety Pack" },
+    { image: "/images/food_mazoe.jpg", title: "Mazoe Variety Pack" },
     { image: "/images/food_cerevita1.jpg", title: "Cerevita Instant Cereal" },
-    { image: "/images/food_cerevita2.png", title: "Cerevita Corn & Wheat" },
     { image: "/images/food_maputi.png", title: "Maputi Snacks" },
     { image: "/images/food_dovi1.webp", title: "Traditional Dovi" },
     { image: "/images/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
