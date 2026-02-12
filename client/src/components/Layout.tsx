@@ -398,7 +398,7 @@ export default function Layout({ children }: LayoutProps) {
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
                 <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZimTrade</a></li>
-                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Ministry Of ICTPS</a></li>
+                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Ministry Of ICT Zimbabwe</a></li>
                 <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIMRA</a></li>
               </ul>
             </div>
