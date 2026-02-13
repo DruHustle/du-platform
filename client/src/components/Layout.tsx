@@ -90,10 +90,7 @@ export default function Layout({ children }: LayoutProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to a search results page or perform in-page search
-      // For now, let's navigate to the most relevant page or show an alert
-      console.log("Searching for:", searchQuery);
-      window.location.href = `/#search?q=${encodeURIComponent(searchQuery)}`;
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
     }
     setSearchOpen(false);
     setSearchQuery("");
