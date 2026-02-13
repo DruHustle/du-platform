@@ -43,7 +43,7 @@ export default function DataVisualization() {
 
   const heroSlides = useMemo(() => [
     {
-      image: "/images/infrastructure_investment.webp",
+      image: "/images/infrastructure_investment.png",
       badge: t('data.hero.badge1'),
       badgeIcon: true,
       title: t('data.hero.title1'),

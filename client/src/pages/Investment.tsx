@@ -21,13 +21,7 @@ export default function Investment() {
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
   const heroSlides = useMemo(() => [
-    {
-      image: "/images/masuwe_sez.jpg",
-      badge: t('investment.hero.badge2'),
-      title: t('investment.hero.title2'),
-      subtitle: t('investment.hero.subtitle2'),
-      highlight: t('investment.hero.highlight2')
-    },
+
     {
       image: "/images/rbz_building.png",
       badge: t('investment.hero.badge1'),
@@ -36,7 +30,7 @@ export default function Investment() {
       highlight: t('investment.hero.highlight1')
     },
     {
-      image: "/images/infrastructure_investment.webp",
+      image: "/images/masuwe_sez.png",
       badge: t('investment.hero.badge2'),
       title: t('investment.hero.title2'),
       subtitle: t('investment.hero.subtitle2'),
@@ -208,11 +202,7 @@ export default function Investment() {
   ];
 
   const benefits = [
-    {
-      icon: Shield,
-      title: "Government Support",
-      description: "Selected projects receive government backing through procurement contracts and policy support"
-    },
+
     {
       icon: Users,
       title: "Diaspora Network",
@@ -339,14 +329,15 @@ export default function Investment() {
       {/* Masuwe SEZ Section */}
       <section id="masuwe-sez" className="py-24 bg-background scroll-mt-24">
         <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border-zim-gold/20 px-4 py-1 text-sm font-semibold">
+              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1 text-sm font-semibold">
                 {t('investment.hero.badge2')}
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary leading-tight">
@@ -369,19 +360,31 @@ export default function Investment() {
                   <span className="text-lg">Tax Holidays & Duty-Free Capital Importation</span>
                 </div>
               </div>
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90">
+              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 w-fit">
                 Download SEZ Prospectus
               </Button>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="rounded-3xl overflow-hidden shadow-2xl border border-border"
+              /* Aligns top of image with the H2 title */
+              className="relative self-start mt-14 lg:mt-[68px]" 
             >
-              <img src="/images/investment_masuwe.jpg" alt="Masuwe SEZ Vision" className="w-full h-full object-cover" />
+              <div className="absolute -inset-4 bg-zim-gold/20 rounded-full blur-3xl opacity-50 animate-pulse" />
+              
+              <div className="relative w-full aspect-[16/10] lg:aspect-[16/9] max-h-[320px] rounded-3xl overflow-hidden shadow-2xl border border-border">
+                <img 
+                  src="/images/masuwe_mosiatunya_stadium.png" 
+                  alt="Masuwe SEZ Vision" 
+                  /* object-cover ensures the wide image doesn't distort */
+                  className="w-full h-full object-cover" 
+                />
+              </div>
             </motion.div>
+
           </div>
         </div>
       </section>
@@ -433,7 +436,7 @@ export default function Investment() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="https://tradezimbabwe.com/exporters-directory/" target="_blank" rel="noopener noreferrer">
+                <a href="https://tradezimbabwe.com/useful-contacts/" target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" className="w-full">
                     Search NTIR Database <ExternalLink className="ml-2 h-4 w-4" />
                   </Button>
