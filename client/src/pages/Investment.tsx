@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle, Building, Leaf, Cpu, Factory, Award, Brain } from "lucide-react";
+import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle, Building, Leaf, Cpu, Factory, Award, Brain, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,6 @@ export default function Investment() {
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
   const heroSlides = useMemo(() => [
-
     {
       image: "/images/rbz_building.png",
       badge: t('investment.hero.badge1'),
@@ -68,9 +67,9 @@ export default function Investment() {
 
   const projects = [
     {
-      title: "Masuwe Special Economic Zone - Tourism & Finance",
-      description: "A premier 1200-hectare Special Economic Zone 10km from Victoria Falls, focusing on high-end tourism and international financial services.",
-      category: "Tourism & Finance",
+      title: t('investment.projects.masuwe.title'),
+      description: t('investment.projects.masuwe.description'),
+      category: t('investment.projects.masuwe.category'),
       sector: "tourism",
       targetAmount: "$1.2B",
       raised: "$0",
@@ -79,20 +78,20 @@ export default function Investment() {
       minInvestment: "$100,000",
       expectedReturn: "15-25% annually",
       timeline: "10-15 years",
-      status: "Active",
+      status: t('investment.projects.active'),
       risk: "moderate",
       verified: true,
       highlights: [
-        "International Cricket Stadium for 2027 World Cup",
-        "5-Star Hotels & International Finance Centre",
-        "Tax holiday for first 5 years of operation",
-        "Duty-free importation of capital equipment"
+        t('investment.projects.masuwe.highlights.0'),
+        t('investment.projects.masuwe.highlights.1'),
+        t('investment.projects.masuwe.highlights.2'),
+        t('investment.projects.masuwe.highlights.3')
       ]
     },
     {
-      title: "Zimbabwe Leather Manufacturing Project",
-      description: "Expand leather goods production for export to European markets with government procurement support",
-      category: "Manufacturing",
+      title: t('investment.projects.leather.title'),
+      description: t('investment.projects.leather.description'),
+      category: t('investment.projects.leather.category'),
       sector: "manufacturing",
       targetAmount: "$250,000",
       raised: "$187,500",
@@ -101,20 +100,20 @@ export default function Investment() {
       minInvestment: "$500",
       expectedReturn: "12-15% annually",
       timeline: "3-5 years",
-      status: "Active",
+      status: t('investment.projects.active'),
       risk: "moderate",
       verified: true,
       highlights: [
-        "Government civil servant procurement contract",
-        "Export-ready quality standards",
-        "Skilled artisan workforce",
-        "Sustainable sourcing practices"
+        t('investment.projects.leather.highlights.0'),
+        t('investment.projects.leather.highlights.1'),
+        t('investment.projects.leather.highlights.2'),
+        t('investment.projects.leather.highlights.3')
       ]
     },
     {
-      title: "Organic Horticulture Export Hub",
-      description: "Establish EU-certified organic farming collective for high-value vegetable exports",
-      category: "Agriculture",
+      title: t('investment.projects.horticulture.title'),
+      description: t('investment.projects.horticulture.description'),
+      category: t('investment.projects.horticulture.category'),
       sector: "agriculture",
       targetAmount: "$150,000",
       raised: "$98,000",
@@ -123,20 +122,20 @@ export default function Investment() {
       minInvestment: "$300",
       expectedReturn: "10-12% annually",
       timeline: "2-4 years",
-      status: "Active",
+      status: t('investment.projects.active'),
       risk: "conservative",
       verified: true,
       highlights: [
-        "EU organic certification in progress",
-        "Direct buyer relationships in Germany",
-        "Climate-smart irrigation systems",
-        "Fair trade principles"
+        t('investment.projects.horticulture.highlights.0'),
+        t('investment.projects.horticulture.highlights.1'),
+        t('investment.projects.horticulture.highlights.2'),
+        t('investment.projects.horticulture.highlights.3')
       ]
     },
     {
-      title: "Victoria Falls Tourism Lodge",
-      description: "Boutique eco-lodge development near Victoria Falls for diaspora and international tourists",
-      category: "Tourism",
+      title: t('investment.projects.lodge.title'),
+      description: t('investment.projects.lodge.description'),
+      category: t('investment.projects.lodge.category'),
       sector: "tourism",
       targetAmount: "$500,000",
       raised: "$125,000",
@@ -145,20 +144,20 @@ export default function Investment() {
       minInvestment: "$1,000",
       expectedReturn: "15-18% annually",
       timeline: "5-7 years",
-      status: "Active",
+      status: t('investment.projects.active'),
       risk: "aggressive",
       verified: false,
       highlights: [
-        "Prime location near UNESCO site",
-        "Sustainable tourism model",
-        "Diaspora homecoming packages",
-        "Year-round revenue potential"
+        t('investment.projects.lodge.highlights.0'),
+        t('investment.projects.lodge.highlights.1'),
+        t('investment.projects.lodge.highlights.2'),
+        t('investment.projects.lodge.highlights.3')
       ]
     },
     {
-      title: "Solar Energy Infrastructure Fund",
-      description: "Invest in renewable energy projects powering rural communities and businesses",
-      category: "Infrastructure",
+      title: t('investment.projects.solar.title'),
+      description: t('investment.projects.solar.description'),
+      category: t('investment.projects.solar.category'),
       sector: "infrastructure",
       targetAmount: "$400,000",
       raised: "$280,000",
@@ -167,20 +166,20 @@ export default function Investment() {
       minInvestment: "$250",
       expectedReturn: "8-10% annually",
       timeline: "4-6 years",
-      status: "Active",
+      status: t('investment.projects.active'),
       risk: "conservative",
       verified: true,
       highlights: [
-        "Government energy partnership",
-        "Carbon credit potential",
-        "Rural electrification impact",
-        "Long-term power purchase agreements"
+        t('investment.projects.solar.highlights.0'),
+        t('investment.projects.solar.highlights.1'),
+        t('investment.projects.solar.highlights.2'),
+        t('investment.projects.solar.highlights.3')
       ]
     },
     {
-      title: "AgriTech Innovation Hub",
-      description: "Technology-driven agricultural solutions including precision farming and supply chain digitization",
-      category: "Tech",
+      title: t('investment.projects.agritech.title'),
+      description: t('investment.projects.agritech.description'),
+      category: t('investment.projects.agritech.category'),
       sector: "tech",
       targetAmount: "$300,000",
       raised: "$195,000",
@@ -189,54 +188,42 @@ export default function Investment() {
       minInvestment: "$500",
       expectedReturn: "18-22% annually",
       timeline: "3-5 years",
-      status: "Active",
+      status: t('investment.projects.active'),
       risk: "aggressive",
       verified: false,
       highlights: [
-        "Mobile-first farmer platform",
-        "AI-powered crop analytics",
-        "Market linkage system",
-        "Diaspora tech mentorship"
+        t('investment.projects.agritech.highlights.0'),
+        t('investment.projects.agritech.highlights.1'),
+        t('investment.projects.agritech.highlights.2'),
+        t('investment.projects.agritech.highlights.3')
       ]
     }
   ];
 
   const benefits = [
-
     {
       icon: Users,
-      title: "Diaspora Network",
-      description: "Leverage global connections for market access, expertise, and investment capital"
+      title: t('investment.benefits.diaspora_network.title'),
+      description: t('investment.benefits.diaspora_network.desc')
     },
     {
       icon: TrendingUp,
-      title: "Performance Tracking",
-      description: "Real-time dashboards showing project progress, financial performance, and impact metrics"
+      title: t('investment.benefits.performance_tracking.title'),
+      description: t('investment.benefits.performance_tracking.desc')
     },
     {
       icon: DollarSign,
-      title: "Flexible Investment",
-      description: "Start with as little as $250-$1,000 and build your portfolio over time"
+      title: t('investment.benefits.flexible_investment.title'),
+      description: t('investment.benefits.flexible_investment.desc')
     },
     {
       icon: Brain,
-      title: t('investment.onesa_title'),
-      description: t('investment.onesa_desc')
+      title: t('investment.benefits.onesa_ai.title'),
+      description: t('investment.benefits.onesa_ai.desc')
     }
   ];
 
-  // HDC Associations
-  const hdcAssociations = [
-    "Avocado Growers Association",
-    "Berry Growers Association",
-    "Citrus Growers Association",
-    "Coffee Growers Association",
-    "Deciduous Fruit Growers Association",
-    "Nut Growers Association",
-    "Export Produce Association",
-    "Export Flower Growers Association",
-    "Tea Growers Association"
-  ];
+  const hdcAssociations = t('investment.hdc_associations', { returnObjects: true }) as string[];
 
   const filteredProjects = projects.filter(project => {
     const sectorMatch = activeFilter === "all" || project.sector === activeFilter;
@@ -255,7 +242,6 @@ export default function Investment() {
 
   return (
     <Layout>
-      {/* Hero Carousel Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <AnimatePresence initial={false}>
           <motion.div
@@ -302,341 +288,143 @@ export default function Investment() {
                 {heroSlides[currentHeroIndex]?.subtitle}
               </p>
               <div className="flex items-center gap-3 mb-8">
-                <TrendingUp className="h-6 w-6 text-zim-green" />
+                <Award className="h-7 w-7 text-zim-green" />
                 <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/#investment-projects">
+                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-zim-black text-lg px-10 h-14 rounded-full font-bold group w-full sm:w-auto">
+                    {t('investment.explore_opportunities')}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black text-lg px-10 h-14 rounded-full font-bold group w-full sm:w-auto">
+                      {t('contact')}
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
+                    <ContactForm 
+                      title={t('investment.contact_form_title')}
+                      module="investment"
+                    />
+                  </DialogContent>
+                </Dialog>
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
-        
-        {/* Carousel Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentHeroIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-        
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Masuwe SEZ Section */}
-      <section id="masuwe-sez" className="py-24 bg-background scroll-mt-24">
-        <div className="container">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1 text-sm font-semibold">
-                {t('investment.hero.badge2')}
-              </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary leading-tight">
-                {t('investment.masuwe_title')}
-              </h2>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                {t('investment.masuwe_desc')}
-              </p>
-              <div className="space-y-4 mb-10">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-zim-green" />
-                  <span className="text-lg">International Cricket Stadium & Medical Resorts</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-zim-green" />
-                  <span className="text-lg">International Finance Service Centre (IFSC)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-zim-green" />
-                  <span className="text-lg">Tax Holidays & Duty-Free Capital Importation</span>
-                </div>
-              </div>
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 w-fit">
-                Download SEZ Prospectus
-              </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              /* Aligns top of image with the H2 title */
-              className="relative self-start mt-14 lg:mt-[68px]" 
-            >
-              <div className="absolute -inset-4 bg-zim-gold/20 rounded-full blur-3xl opacity-50 animate-pulse" />
-              
-              <div className="relative w-full aspect-[16/10] lg:aspect-[16/9] max-h-[320px] rounded-3xl overflow-hidden shadow-2xl border border-border">
-                <img 
-                  src="/images/masuwe_mosiatunya_stadium.png" 
-                  alt="Masuwe SEZ Vision" 
-                  /* object-cover ensures the wide image doesn't distort */
-                  className="w-full h-full object-cover" 
-                />
-              </div>
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Why Invest Section */}
-      <section className="py-16 bg-muted/30">
+      <section id="investment-projects" className="py-24 bg-background">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Invest Through ZIGD?</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              We've designed an investment platform specifically for small to medium-scale diaspora investors
-            </p>
+            <h2 className="text-4xl font-bold mb-4">{t('investment.investment_sectors_title')}</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">{t('investment.investment_sectors_subtitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((benefit, index) => {
-              const Icon = benefit.icon;
-              return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="mx-auto p-3 bg-primary/10 rounded-lg w-fit mb-3">
-                      <Icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{benefit.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+          <div className="flex flex-col md:flex-row gap-8 mb-12">
+            <div className="w-full md:w-1/4">
+              <h3 className="font-semibold mb-4">{t('investment.project_filters.sector')}</h3>
+              <div className="flex flex-wrap md:flex-col gap-2">
+                <Button variant={activeFilter === 'all' ? 'secondary' : 'ghost'} onClick={() => setActiveFilter('all')} className="justify-start">{t('investment.project_filters.all')}</Button>
+                <Button variant={activeFilter === 'tourism' ? 'secondary' : 'ghost'} onClick={() => setActiveFilter('tourism')} className="justify-start">{t('investment.project_filters.tourism')}</Button>
+                <Button variant={activeFilter === 'agriculture' ? 'secondary' : 'ghost'} onClick={() => setActiveFilter('agriculture')} className="justify-start">{t('investment.project_filters.agriculture')}</Button>
+                <Button variant={activeFilter === 'manufacturing' ? 'secondary' : 'ghost'} onClick={() => setActiveFilter('manufacturing')} className="justify-start">{t('investment.project_filters.manufacturing')}</Button>
+                <Button variant={activeFilter === 'tech' ? 'secondary' : 'ghost'} onClick={() => setActiveFilter('tech')} className="justify-start">{t('investment.project_filters.tech')}</Button>
+                <Button variant={activeFilter === 'infrastructure' ? 'secondary' : 'ghost'} onClick={() => setActiveFilter('infrastructure')} className="justify-start">{t('investment.project_filters.infrastructure')}</Button>
+              </div>
+              <h3 className="font-semibold mb-4 mt-8">{t('investment.project_filters.risk_level')}</h3>
+              <div className="flex flex-wrap md:flex-col gap-2">
+                <Button variant={riskFilter === 'all' ? 'secondary' : 'ghost'} onClick={() => setRiskFilter('all')} className="justify-start">{t('investment.project_filters.all')}</Button>
+                <Button variant={riskFilter === 'conservative' ? 'secondary' : 'ghost'} onClick={() => setRiskFilter('conservative')} className="justify-start">{t('investment.project_filters.conservative')}</Button>
+                <Button variant={riskFilter === 'moderate' ? 'secondary' : 'ghost'} onClick={() => setRiskFilter('moderate')} className="justify-start">{t('investment.project_filters.moderate')}</Button>
+                <Button variant={riskFilter === 'aggressive' ? 'secondary' : 'ghost'} onClick={() => setRiskFilter('aggressive')} className="justify-start">{t('investment.project_filters.aggressive')}</Button>
+              </div>
+            </div>
 
-      {/* Verified Directories */}
-      <section id="verified-directories" className="py-16 scroll-mt-24">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* NTIR */}
-            <Card className="border-t-4 border-t-primary">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Building className="h-8 w-8 text-primary" />
-                  <CardTitle className="text-xl">National Trade & Investment Register</CardTitle>
-                </div>
-                <CardDescription>
-                  Access the official registry of all verified trade and investment entities in Zimbabwe
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <a href="https://tradezimbabwe.com/useful-contacts/" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full">
-                    Search NTIR Database <ExternalLink className="ml-2 h-4 w-4" />
-                  </Button>
-                </a>
-              </CardContent>
-            </Card>
-
-            {/* HDC */}
-            <Card className="border-t-4 border-t-green-600">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Leaf className="h-8 w-8 text-green-600" />
-                  <CardTitle className="text-xl">Horticultural Development Council</CardTitle>
-                </div>
-                <CardDescription>
-                  HDC of Zimbabwe oversees quality and standards for horticultural exports
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {hdcAssociations.slice(0, 5).map((assoc, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">
-                      {assoc}
-                    </Badge>
-                  ))}
-                  <Badge variant="outline" className="text-xs">+4 more</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Active Projects with Filters */}
-      <section id="active-projects" className="section-padding bg-muted/30 scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-8 px-4">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Carefully vetted projects with government support and transparent performance tracking
-            </p>
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center px-4">
-            <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-full md:w-auto">
-              <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1 h-auto">
-                <TabsTrigger value="all" className="text-xs sm:text-sm px-2 py-2">All</TabsTrigger>
-                <TabsTrigger value="agriculture" className="text-xs sm:text-sm px-2 py-2">Agriculture</TabsTrigger>
-                <TabsTrigger value="tech" className="text-xs sm:text-sm px-2 py-2">Tech</TabsTrigger>
-                <TabsTrigger value="infrastructure" className="text-xs sm:text-sm px-2 py-2">Infrastructure</TabsTrigger>
-                <TabsTrigger value="manufacturing" className="text-xs sm:text-sm px-2 py-2">Manufacturing</TabsTrigger>
-                <TabsTrigger value="tourism" className="text-xs sm:text-sm px-2 py-2">Tourism</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
-            <select 
-              value={riskFilter} 
-              onChange={(e) => setRiskFilter(e.target.value)}
-              className="px-4 py-2 border rounded-md bg-white w-full md:w-auto"
-            >
-              <option value="all">All Risk Levels</option>
-              <option value="conservative">Conservative</option>
-              <option value="moderate">Moderate</option>
-              <option value="aggressive">Aggressive</option>
-            </select>
-          </div>
-
-          <div className="space-y-8">
-            {filteredProjects.map((project, index) => (
-              <Card key={index} className="overflow-hidden border-t-4 border-t-primary hover:shadow-xl transition-shadow">
-                <div className="grid md:grid-cols-3 gap-6 p-4 md:p-6">
-                  {/* Project Details */}
-                  <div className="md:col-span-2 space-y-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <Badge variant="secondary">{project.category}</Badge>
-                        <Badge className="bg-green-100 text-green-800 border-green-300">
-                          {project.status}
-                        </Badge>
-                        <Badge className={getRiskColor(project.risk)}>
-                          {project.risk.charAt(0).toUpperCase() + project.risk.slice(1)} Risk
-                        </Badge>
+            <div className="w-full md:w-3/4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {filteredProjects.map((project, index) => (
+                  <Card key={index} className="flex flex-col justify-between bg-muted/20 border-border/30 hover:border-primary/50 transition-all shadow-sm hover:shadow-lg">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-xl font-bold pr-4">{project.title}</CardTitle>
                         {project.verified && (
-                          <Badge className="bg-blue-100 text-blue-800 border-blue-300">
-                            <Award className="h-3 w-3 mr-1" /> Verified
-                          </Badge>
+                          <Badge className="bg-green-100 text-green-800 border-green-300 flex-shrink-0">{t('investment.project_card.verified')}</Badge>
                         )}
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold mb-2">{project.title}</h3>
-                      <p className="text-muted-foreground">{project.description}</p>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold mb-2 flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-primary" />
-                        Key Highlights
-                      </h4>
-                      <ul className="grid md:grid-cols-2 gap-2">
-                        {project.highlights.map((highlight, idx) => (
-                          <li key={idx} className="flex items-start text-sm">
-                            <span className="mr-2 text-primary">•</span>
-                            <span>{highlight}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Investment Stats */}
-                  <div className="space-y-4">
-                    <div className="p-4 bg-muted/50 rounded-lg space-y-3">
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Funding Progress</p>
-                        <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-2xl font-bold text-primary">{project.raised}</span>
-                          <span className="text-sm text-muted-foreground">of {project.targetAmount}</span>
-                        </div>
+                      <CardDescription>{project.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <div className="mb-4">
                         <Progress value={project.progress} className="h-2" />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {project.title.includes("Masuwe") ? "Data yet to be verified" : `${project.progress}% funded`}
-                        </p>
+                        <div className="flex justify-between text-sm text-muted-foreground mt-2">
+                          <span>{t('investment.project_card.raised', { amount: project.raised })}</span>
+                          <span>{t('investment.project_card.target_amount', { amount: project.targetAmount })}</span>
+                        </div>
                       </div>
-
-                      <div className="grid grid-cols-2 gap-3 pt-3 border-t">
+                      <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                         <div>
-                          <p className="text-xs text-muted-foreground">Investors</p>
-                          <p className="text-lg font-semibold">{project.investors}</p>
+                          <p className="text-muted-foreground">{t('investment.project_card.investors', { count: project.investors })}</p>
+                          <p className="font-semibold">{t('investment.project_card.min_investment', { amount: project.minInvestment })}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Min. Investment</p>
-                          <p className="text-lg font-semibold">{project.minInvestment}</p>
+                          <p className="text-muted-foreground">{t('investment.project_card.expected_return')}</p>
+                          <p className="font-semibold">{project.expectedReturn}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">{t('investment.project_card.timeline')}</p>
+                          <p className="font-semibold">{project.timeline}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">{t('investment.project_card.risk')}</p>
+                          <Badge className={`${getRiskColor(project.risk)} text-xs`}>{project.risk}</Badge>
                         </div>
                       </div>
-
-                      <div className="pt-3 border-t space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Expected Return</span>
-                          <span className="font-semibold text-green-600">{project.expectedReturn}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Timeline</span>
-                          <span className="font-semibold">{project.timeline}</span>
-                        </div>
+                      <div>
+                        <h4 className="font-semibold text-sm mb-2">{t('investment.project_card.highlights')}</h4>
+                        <ul className="space-y-1 text-sm text-muted-foreground">
+                          {project.highlights.map((highlight, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <CheckCircle className="h-4 w-4 text-zim-green flex-shrink-0 mt-0.5" />
+                              <span>{highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
+                    </CardContent>
+                    <div className="p-6 pt-0">
+                      <Button className="w-full bg-primary hover:bg-primary/90">{t('investment.project_card.view_details')}</Button>
                     </div>
-
-                    <Button className="w-full" size="lg">
-                      View Details & Invest
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                  </Card>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="investment-calculator" className="py-16 scroll-mt-24">
+      <section className="py-24 bg-muted/40">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How Crowdfunding Works</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Simple, transparent process from investment to returns
-            </p>
+            <h2 className="text-4xl font-bold mb-4">{t('investment.benefits_title')}</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">{t('investment.benefits_subtitle')}</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              {
-                step: "1",
-                title: "Browse Projects",
-                description: "Review vetted investment opportunities with detailed business plans and government backing"
-              },
-              {
-                step: "2",
-                title: "Invest Your Share",
-                description: "Choose your investment amount and complete secure payment through multiple channels"
-              },
-              {
-                step: "3",
-                title: "Track Performance",
-                description: "Monitor project progress, financial metrics, and impact through your investor dashboard"
-              },
-              {
-                step: "4",
-                title: "Receive Returns",
-                description: "Get quarterly dividends and capital appreciation as projects grow and succeed"
-              }
-            ].map((item, index) => (
-              <Card key={index} className="text-center relative">
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                  {item.step}
-                </div>
-                <CardHeader className="pt-8">
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {benefits.map((benefit, index) => (
+              <Card key={index} className="text-center border-border/30 shadow-sm hover:shadow-lg transition-all">
+                <CardHeader>
+                  <div className="mx-auto h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                    <benefit.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <CardTitle>{benefit.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <p className="text-muted-foreground">{benefit.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -644,59 +432,48 @@ export default function Investment() {
         </div>
       </section>
 
-      {/* Investment Calculator */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-24 bg-background">
         <div className="container">
-          <InvestmentCalculator />
+          <Tabs defaultValue="calculator" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:w-1/2 mx-auto h-12">
+              <TabsTrigger value="calculator" className="h-10">{t('nav.investment_calculator')}</TabsTrigger>
+              <TabsTrigger value="hdc" className="h-10">{t('investment.hdc_title')}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="calculator" className="mt-8">
+              <InvestmentCalculator />
+            </TabsContent>
+            <TabsContent value="hdc" className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t('investment.hdc_title')}</CardTitle>
+                  <CardDescription>{t('investment.hdc_subtitle')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {hdcAssociations.map((item, index) => (
+                      <li key={index} className="flex items-center gap-3 bg-muted/40 p-3 rounded-lg">
+                        <Award className="h-5 w-5 text-zim-gold" />
+                        <span className="font-medium">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
-      {/* Contact CTA with Modal */}
-      <section className="py-16">
-        <div className="container">
-          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
-            <CardHeader>
-              <CardTitle className="text-2xl">Ready to Invest?</CardTitle>
-              <CardDescription className="text-base">
-                Our investment team can help you identify the right opportunities and guide you through the process.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8">
-                    Connect with an Expert
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title="Investment Inquiry"
-                    description="Fill out the form below and our investment specialists will contact you."
-                    module="investment"
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* External Links */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Explore More Investment Resources
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency
-            </p>
-            <a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Visit ZIDA <ExternalLink className="ml-2 h-5 w-5" />
-              </Button>
-            </a>
-          </div>
+      <section className="py-24 bg-primary text-primary-foreground">
+        <div className="container text-center">
+          <h2 className="text-4xl font-bold mb-4">{t('investment.cta_title')}</h2>
+          <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">{t('investment.cta_subtitle')}</p>
+          <Link href="/#investment-projects">
+            <Button size="lg" variant="secondary" className="font-bold text-lg px-10 h-14 shadow-xl group">
+              {t('investment.cta_button')}
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </section>
     </Layout>

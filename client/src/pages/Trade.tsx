@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -19,38 +19,38 @@ export default function Trade() {
   const heroSlides = useMemo(() => [
     {
       image: "/images/african_trade.jpg",
-      badge: t('trade.hero.badge1'),
-      title: t('trade.hero.title1'),
-      subtitle: t('trade.hero.subtitle1'),
-      highlight: t('trade.hero.highlight1')
+      badge: t("trade.hero.badge1"),
+      title: t("trade.hero.title1"),
+      subtitle: t("trade.hero.subtitle1"),
+      highlight: t("trade.hero.highlight1")
     },
     {
       image: "/images/horticulture.jpg",
-      badge: t('trade.hero.badge2'),
-      title: t('trade.hero.title2'),
-      subtitle: t('trade.hero.subtitle2'),
-      highlight: t('trade.hero.highlight2')
+      badge: t("trade.hero.badge2"),
+      title: t("trade.hero.title2"),
+      subtitle: t("trade.hero.subtitle2"),
+      highlight: t("trade.hero.highlight2")
     },
     {
       image: "/images/manufacturing_factory.jpg",
-      badge: t('trade.hero.badge3'),
-      title: t('trade.hero.title3'),
-      subtitle: t('trade.hero.subtitle3'),
-      highlight: t('trade.hero.highlight3')
+      badge: t("trade.hero.badge3"),
+      title: t("trade.hero.title3"),
+      subtitle: t("trade.hero.subtitle3"),
+      highlight: t("trade.hero.highlight3")
     },
     {
       image: "/images/export_port1.jpg",
-      badge: t('trade.hero.badge4'),
-      title: t('trade.hero.title4'),
-      subtitle: t('trade.hero.subtitle4'),
-      highlight: t('trade.hero.highlight4')
+      badge: t("trade.hero.badge4"),
+      title: t("trade.hero.title4"),
+      subtitle: t("trade.hero.subtitle4"),
+      highlight: t("trade.hero.highlight4")
     },
     {
       image: "/images/eu_flags.png",
-      badge: t('trade.hero.badge5'),
-      title: t('trade.hero.title5'),
-      subtitle: t('trade.hero.subtitle5'),
-      highlight: t('trade.hero.highlight5')
+      badge: t("trade.hero.badge5"),
+      title: t("trade.hero.title5"),
+      subtitle: t("trade.hero.subtitle5"),
+      highlight: t("trade.hero.highlight5")
     }
   ], [t]);
 
@@ -63,126 +63,105 @@ export default function Trade() {
 
   const exportSectors = [
     {
-      name: "Horticulture",
-      description: "Fresh produce, flowers, and organic vegetables for international markets",
+      name: t("trade.sectors.horticulture.name"),
+      description: t("trade.sectors.horticulture.description"),
       image: "/images/horticulture.jpg",
-      opportunities: ["EU organic markets", "Middle East exports", "Regional SADC trade"],
+      opportunities: t("trade.sectors.horticulture.opportunities", { returnObjects: true }) as string[],
       icon: Package
     },
     {
-      name: "Leather Products",
-      description: "Premium leather goods, footwear, and accessories with authentic African craftsmanship",
+      name: t("trade.sectors.leather_products.name"),
+      description: t("trade.sectors.leather_products.description"),
       image: "/images/leather_products.jpg",
-      opportunities: ["European fashion markets", "Luxury goods sector", "Government procurement"],
+      opportunities: t("trade.sectors.leather_products.opportunities", { returnObjects: true }) as string[],
       icon: Award
     },
     {
-      name: "Arts & Crafts",
-      description: "Stone sculptures, beadwork, woven baskets, and traditional artisan products",
+      name: t("trade.sectors.arts_crafts.name"),
+      description: t("trade.sectors.arts_crafts.description"),
       image: "/images/arts_crafts.jpg",
-      opportunities: ["Tourism markets", "Cultural exports", "Fair trade channels"],
+      opportunities: t("trade.sectors.arts_crafts.opportunities", { returnObjects: true }) as string[],
       icon: Globe
     },
     {
-      name: "Minerals & Mining",
-      description: "Value-added mineral products, precious stones, and processed materials",
+      name: t("trade.sectors.minerals_mining.name"),
+      description: t("trade.sectors.minerals_mining.description"),
       image: "/images/minerals_mining.png",
-      opportunities: ["Industrial exports", "Jewelry sector", "Technology minerals"],
+      opportunities: t("trade.sectors.minerals_mining.opportunities", { returnObjects: true }) as string[],
       icon: TrendingUp
     }
   ];
 
   const programs = [
     {
-      title: "Eagles Nest",
-      description: "Youth export incubator program developing the next generation of Zimbabwean exporters",
-      target: "Young entrepreneurs (18-35)",
-      benefits: ["Export training", "Mentorship", "Market access", "Funding support"]
+      title: t("trade.programs.eagles_nest.title"),
+      description: t("trade.programs.eagles_nest.description"),
+      target: t("trade.programs.eagles_nest.target"),
+      benefits: t("trade.programs.eagles_nest.benefits", { returnObjects: true }) as string[]
     },
     {
-      title: "Next She Exporter",
-      description: "Empowering female-owned businesses with export knowledge, skills, and market connections",
-      target: "Women-owned businesses",
-      benefits: ["Capacity building", "Networking", "Trade missions", "Certification support"]
+      title: t("trade.programs.next_she_exporter.title"),
+      description: t("trade.programs.next_she_exporter.description"),
+      target: t("trade.programs.next_she_exporter.target"),
+      benefits: t("trade.programs.next_she_exporter.benefits", { returnObjects: true }) as string[]
     },
     {
-      title: "Shop At Zim",
-      description: "B2B e-commerce platform connecting Zimbabwean suppliers with international buyers",
-      target: "Export-ready businesses",
-      benefits: ["Online marketplace", "Buyer connections", "Payment solutions", "Logistics support"]
+      title: t("trade.programs.shop_at_zim.title"),
+      description: t("trade.programs.shop_at_zim.description"),
+      target: t("trade.programs.shop_at_zim.target"),
+      benefits: t("trade.programs.shop_at_zim.benefits", { returnObjects: true }) as string[]
     }
   ];
 
   const diasporaRole = [
     {
-      title: "Market Intelligence",
-      description: "Share insights about consumer preferences, trends, and opportunities in your host country",
+      title: t("trade.diaspora_roles.market_intelligence.title"),
+      description: t("trade.diaspora_roles.market_intelligence.description"),
       icon: Globe
     },
     {
-      title: "Buyer Connections",
-      description: "Introduce Zimbabwean exporters to retailers, distributors, and importers in your network",
+      title: t("trade.diaspora_roles.buyer_connections.title"),
+      description: t("trade.diaspora_roles.buyer_connections.description"),
       icon: Users
     },
     {
-      title: "Quality Feedback",
-      description: "Provide feedback on product quality, packaging, and market readiness",
+      title: t("trade.diaspora_roles.quality_feedback.title"),
+      description: t("trade.diaspora_roles.quality_feedback.description"),
       icon: Award
     },
     {
-      title: "Brand Ambassadors",
-      description: "Promote Zimbabwean products and brands in international markets",
+      title: t("trade.diaspora_roles.brand_ambassadors.title"),
+      description: t("trade.diaspora_roles.brand_ambassadors.description"),
       icon: TrendingUp
     }
   ];
 
-  // Export flow steps based on the diagram
   const exportFlowSteps = [
     {
-      phase: "Product Approval",
-      description: "For products not yet EU approved (e.g., Honey)",
-      steps: [
-        "Submit Residue Monitoring Plan (RMP)",
-        "Establish EU-Accredited Testing Systems",
-        "Register in EU TRACES System",
-        "Await Addition to EU Approved List"
-      ],
+      phase: t("trade.export_flow.product_approval.phase"),
+      description: t("trade.export_flow.product_approval.description"),
+      steps: t("trade.export_flow.product_approval.steps", { returnObjects: true }) as string[],
       icon: AlertCircle,
       color: "border-yellow-500"
     },
     {
-      phase: "Registration & Compliance",
-      description: "Required for all exporters",
-      steps: [
-        "Register for REX System via ZIMRA",
-        "Consult ZimTrade for Market Intelligence",
-        "Obtain Required Certifications",
-        "Complete Export Registration with Relevant Authorities"
-      ],
+      phase: t("trade.export_flow.registration_compliance.phase"),
+      description: t("trade.export_flow.registration_compliance.description"),
+      steps: t("trade.export_flow.registration_compliance.steps", { returnObjects: true }) as string[],
       icon: FileCheck,
       color: "border-blue-500"
     },
     {
-      phase: "Certification & Quality",
-      description: "Meet EU quality standards",
-      steps: [
-        "GLOBALG.A.P. & GRASP Certification",
-        "EU Organic Certification (if applicable)",
-        "Quality Control: Class I, MRL Limits",
-        "Third-Party Audits & Compliance Verification"
-      ],
+      phase: t("trade.export_flow.certification_quality.phase"),
+      description: t("trade.export_flow.certification_quality.description"),
+      steps: t("trade.export_flow.certification_quality.steps", { returnObjects: true }) as string[],
       icon: CheckCircle2,
       color: "border-green-500"
     },
     {
-      phase: "Logistics & Documentation",
-      description: "Final export preparation",
-      steps: [
-        "Prepare Export Documents",
-        "Health & Phytosanitary Certificates",
-        "Commercial Invoice with REX Statement",
-        "Arrange Cold Chain Logistics"
-      ],
+      phase: t("trade.export_flow.logistics_documentation.phase"),
+      description: t("trade.export_flow.logistics_documentation.description"),
+      steps: t("trade.export_flow.logistics_documentation.steps", { returnObjects: true }) as string[],
       icon: Truck,
       color: "border-purple-500"
     }
@@ -266,165 +245,73 @@ export default function Trade() {
         <div className="container">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              Export Roadmap
+              {t("trade.export_roadmap_badge")}
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Zimbabwe to Germany Export Process</h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Professional step-by-step guidance for exporting Zimbabwean products to the German and EU markets
-            </p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.export_roadmap_title")}</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.export_roadmap_subtitle")}</p>
           </div>
 
-          {/* View Flow Diagram Button */}
-          <div className="text-center mb-8">
-            <Dialog open={isFlowDiagramOpen} onOpenChange={setIsFlowDiagramOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="lg" className="border-2 border-zim-gold text-zim-gold hover:bg-zim-gold hover:text-zim-black font-bold">
-                  <Package className="mr-2 h-5 w-5" />
-                  View Complete Flow Diagram
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <h3 className="text-2xl font-bold mb-2">Export Process Flow</h3>
-                    <p className="text-muted-foreground">From farmer to German market (e.g., EDEKA)</p>
-                  </div>
-                  <div className="flex justify-center">
-                    <img 
-                      src="/images/export_flow.png" 
-                      alt="Zimbabwe to Germany Export Flow Diagram"
-                      className="max-w-full h-auto rounded-lg shadow-md"
-                    />
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Modern Flow Visualization */}
-          <div className="max-w-6xl mx-auto mb-16">
-            <div className="relative">
-              {/* Connection Lines */}
-              <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-yellow-500 via-blue-500 via-green-500 to-purple-500 transform -translate-y-1/2 z-0" />
-              
-              {/* Flow Steps */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-                {exportFlowSteps.map((step, index) => {
-                  const Icon = step.icon;
-                  const colorClasses: Record<string, string> = {
-                    'border-yellow-500': 'from-yellow-500/20 to-yellow-500/5 border-yellow-500 text-yellow-600',
-                    'border-blue-500': 'from-blue-500/20 to-blue-500/5 border-blue-500 text-blue-600',
-                    'border-green-500': 'from-green-500/20 to-green-500/5 border-green-500 text-green-600',
-                    'border-purple-500': 'from-purple-500/20 to-purple-500/5 border-purple-500 text-purple-600'
-                  };
-                  const gradientClass = colorClasses[step.color] || colorClasses['border-yellow-500'];
-                  
-                  return (
-                    <div key={index} className="relative group">
-                      {/* Step Number Badge */}
-                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${gradientClass.split(' ')[0]} ${gradientClass.split(' ')[1]} border-4 border-background flex items-center justify-center shadow-lg`}>
-                          <span className="text-lg font-bold">{index + 1}</span>
-                        </div>
-                      </div>
-
-                      {/* Step Card */}
-                      <Card className={`mt-8 border-2 ${step.color} hover:shadow-2xl transition-all duration-300 group-hover:scale-105 bg-gradient-to-br ${gradientClass.split(' ')[0]} ${gradientClass.split(' ')[1]}`}>
-                        <CardHeader className="pb-4">
-                          <div className="flex justify-center mb-4">
-                            <div className={`p-4 rounded-2xl bg-background shadow-md border-2 ${step.color}`}>
-                              <Icon className={`h-8 w-8 ${gradientClass.split(' ')[2]}`} />
-                            </div>
-                          </div>
-                          <CardTitle className="text-xl font-bold text-center mb-2">{step.phase}</CardTitle>
-                          <CardDescription className="text-center text-sm font-medium">{step.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="bg-background/80 rounded-lg p-4 backdrop-blur-sm">
-                            <ul className="space-y-3">
-                              {step.steps.map((s, idx) => (
-                                <li key={idx} className="flex items-start text-sm">
-                                  <CheckCircle2 className={`h-4 w-4 mr-2 mt-0.5 flex-shrink-0 ${gradientClass.split(' ')[2]}`} />
-                                  <span className="leading-tight">{s}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Arrow Connector (Mobile) */}
-                      {index < exportFlowSteps.length - 1 && (
-                        <div className="lg:hidden flex justify-center my-4">
-                          <div className={`w-1 h-8 bg-gradient-to-b ${step.color.replace('border-', 'from-')} to-transparent`} />
-                        </div>
-                      )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {exportFlowSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <Card key={index} className={`relative p-6 border-t-4 ${step.color} shadow-lg hover:shadow-xl transition-shadow duration-300`}>
+                  <div className="flex items-center mb-4">
+                    <div className="flex-shrink-0 h-12 w-12 rounded-full bg-muted flex items-center justify-center mr-4">
+                      <Icon className="h-6 w-6 text-primary" />
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="text-center mt-12">
-            <Card className="max-w-3xl mx-auto border-2 border-zim-gold/30 bg-gradient-to-br from-zim-gold/5 to-transparent">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold mb-4">Need Export Assistance?</h3>
-                <p className="text-muted-foreground mb-6">
-                  Our diaspora network and trade experts are ready to guide you through every step of the export process
-                </p>
-                <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 font-bold">
-                  <Package className="mr-2 h-5 w-5" />
-                  Get Export Support
-                </Button>
-              </CardContent>
-            </Card>
+                    <CardTitle className="text-xl font-bold">{step.phase}</CardTitle>
+                  </div>
+                  <CardDescription className="mb-4">{step.description}</CardDescription>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    {step.steps.map((detail, dIdx) => (
+                      <li key={dIdx} className="flex items-start">
+                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 flex-shrink-0 mt-1" />
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Export Sectors */}
-      <section id="export-sectors" className="section-padding scroll-mt-24">
+      {/* Export Sectors Section */}
+      <section id="export-sectors" className="py-20 bg-background scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Export Sectors</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Zimbabwe's diverse export portfolio offers opportunities across multiple sectors
-            </p>
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+              {t("trade.export_sectors_badge")}
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.export_sectors_title")}</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.export_sectors_subtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {exportSectors.map((sector, index) => {
               const Icon = sector.icon;
               return (
-                <Card key={index} className="overflow-hidden hover:shadow-xl transition-all border-t-4 border-t-accent">
-                  <div className="relative h-48 overflow-hidden">
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url('${sector.image}')` }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    </div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <Icon className="h-10 w-10 mb-2" />
-                    </div>
-                  </div>
+                <Card key={index} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <img src={sector.image} alt={sector.name} className="w-full h-48 object-cover" />
                   <CardHeader>
-                    <CardTitle className="text-2xl">{sector.name}</CardTitle>
-                    <CardDescription className="text-base">{sector.description}</CardDescription>
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-xl font-bold">{sector.name}</CardTitle>
+                      <Icon className="h-6 w-6 text-zim-gold" />
+                    </div>
+                    <CardDescription>{sector.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-muted-foreground">Export Opportunities:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {sector.opportunities.map((opp, idx) => (
-                          <Badge key={idx} variant="secondary">
-                            {opp}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
+                    <h4 className="font-semibold mb-2">Opportunities:</h4>
+                    <ul className="space-y-1 text-sm text-muted-foreground">
+                      {sector.opportunities.map((opp, oppIdx) => (
+                        <li key={oppIdx} className="flex items-center">
+                          <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                          <span>{opp}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </CardContent>
                 </Card>
               );
@@ -433,39 +320,38 @@ export default function Trade() {
         </div>
       </section>
 
-      {/* ZimTrade Programs */}
-      <section id="zimtrade-programs" className="section-padding bg-muted/30 scroll-mt-24">
+      {/* ZimTrade Programs Section */}
+      <section id="zimtrade-programs" className="py-20 bg-muted/30 scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Export Development Programs</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              ZimTrade offers specialized programs to build export capacity and connect businesses with markets
-            </p>
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+              {t("trade.zimtrade_programs_badge")}
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.zimtrade_programs_title")}</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.zimtrade_programs_subtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {programs.map((program, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow border-t-4 border-t-primary">
+              <Card key={index} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardHeader>
-                  <CardTitle className="text-xl">{program.title}</CardTitle>
+                  <CardTitle className="text-2xl font-bold mb-2">{program.title}</CardTitle>
                   <CardDescription>{program.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <p className="text-sm font-semibold text-muted-foreground mb-2">Target Audience:</p>
-                    <Badge variant="outline">{program.target}</Badge>
+                <CardContent>
+                  <div className="mb-4">
+                    <h4 className="font-semibold">Target Audience:</h4>
+                    <p className="text-muted-foreground">{program.target}</p>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-muted-foreground mb-2">Key Benefits:</p>
-                    <ul className="space-y-1">
-                      {program.benefits.map((benefit, idx) => (
-                        <li key={idx} className="flex items-start text-sm">
-                          <span className="mr-2 text-primary">•</span>
-                          <span>{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <h4 className="font-semibold mb-2">Benefits:</h4>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    {program.benefits.map((benefit, bIdx) => (
+                      <li key={bIdx} className="flex items-center">
+                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                        <span>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
@@ -473,119 +359,57 @@ export default function Trade() {
         </div>
       </section>
 
-      {/* Diaspora Trade Networks */}
-      <section className="py-16">
+      {/* Diaspora Role Section */}
+      <section id="diaspora-role" className="py-20 bg-background scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Diaspora Trade Networks</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              How diaspora members can support Zimbabwean exporters and create trade opportunities
-            </p>
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+              {t("trade.diaspora_role_badge")}
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.diaspora_role_title")}</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.diaspora_role_subtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {diasporaRole.map((role, index) => {
               const Icon = role.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                <Card key={index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
                   <CardHeader>
-                    <div className="mx-auto p-3 bg-primary/10 rounded-lg w-fit mb-3">
-                      <Icon className="h-8 w-8 text-primary" />
+                    <div className="mx-auto h-16 w-16 bg-zim-gold/20 rounded-full flex items-center justify-center mb-4">
+                      <Icon className="h-8 w-8 text-zim-gold" />
                     </div>
-                    <CardTitle className="text-lg">{role.title}</CardTitle>
+                    <CardTitle>{role.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">{role.description}</p>
+                    <p className="text-muted-foreground">{role.description}</p>
                   </CardContent>
                 </Card>
               );
             })}
           </div>
-
-          <div className="mt-12 text-center">
-            <Card className="max-w-3xl mx-auto border-t-4 border-t-secondary">
-              <CardHeader>
-                <CardTitle className="text-2xl">Success Story: Leather Export Network</CardTitle>
-                <CardDescription>How diaspora connections opened European markets</CardDescription>
-              </CardHeader>
-              <CardContent className="text-left space-y-4">
-                <p>
-                  A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers 
-                  with European retailers, resulting in a $2.5M export contract. The diaspora network provided:
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start">
-                    <span className="mr-2 text-primary">✓</span>
-                    <span>Market intelligence on German consumer preferences</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 text-primary">✓</span>
-                    <span>Direct introductions to retail buyers</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 text-primary">✓</span>
-                    <span>Quality assurance and certification guidance</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 text-primary">✓</span>
-                    <span>Ongoing market feedback and product development support</span>
-                  </li>
-                </ul>
-                <p className="text-sm text-muted-foreground italic">
-                  This partnership now supports 150+ artisans in Zimbabwe and has expanded to three European countries.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </section>
 
-      {/* Contact CTA with Modal */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
-            <CardHeader>
-              <CardTitle className="text-2xl">Ready to Export?</CardTitle>
-              <CardDescription className="text-base">
-                Our trade specialists can help you navigate export requirements, connect with buyers, and access ZimTrade programs.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8">
-                    Connect with an Expert
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title="Trade Inquiry"
-                    description="Fill out the form below and our trade specialists will contact you."
-                    module="trade"
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* External Link to ZimTrade */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Explore More Trade Resources
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              For comprehensive trade information, export guides, and market intelligence, visit ZimTrade
-            </p>
-            <a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Visit ZimTrade <ExternalLink className="ml-2 h-5 w-5" />
+      {/* CTA Section */}
+      <section className="py-20 bg-primary text-primary-foreground">
+        <div className="container text-center">
+          <h2 className="text-4xl font-bold mb-4">{t("trade.cta_title")}</h2>
+          <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">{t("trade.cta_subtitle")}</p>
+          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg" variant="secondary" className="font-bold text-lg px-10 h-14 shadow-xl group">
+                {t("trade.cta_button")}
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </a>
-          </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
+              <ContactForm 
+                title={t("trade.contact_form_title")}
+                module="trade"
+              />
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
     </Layout>

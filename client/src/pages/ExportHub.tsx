@@ -70,123 +70,123 @@ export default function ExportHub() {
 
   const germanRequirements = [
     {
-      category: "Food Products",
-      requirements: ["EU Organic Certification (Bio-Siegel)", "HACCP Compliance", "Maximum Residue Levels (MRLs)", "Traceability Documentation"],
-      price: "€15-45/kg (organic produce)",
+      category: t('export.german_requirements.food_products.category'),
+      requirements: [t('export.german_requirements.food_products.req1'), t('export.german_requirements.food_products.req2'), t('export.german_requirements.food_products.req3'), t('export.german_requirements.food_products.req4')],
+      price: t('export.german_requirements.food_products.price'),
       icon: "🍎"
     },
     {
-      category: "Textiles & Leather",
-      requirements: ["REACH Compliance", "CE Marking", "Oeko-Tex Standard 100", "Country of Origin Documentation"],
-      price: "€25-120/item (leather goods)",
+      category: t('export.german_requirements.textiles_leather.category'),
+      requirements: [t('export.german_requirements.textiles_leather.req1'), t('export.german_requirements.textiles_leather.req2'), t('export.german_requirements.textiles_leather.req3'), t('export.german_requirements.textiles_leather.req4')],
+      price: t('export.german_requirements.textiles_leather.price'),
       icon: "👜"
     },
     {
-      category: "Arts & Crafts",
-      requirements: ["Product Safety Standards", "Import Declaration", "Cultural Heritage Documentation", "Fair Trade Certification (optional)"],
-      price: "€30-500/piece (stone sculptures)",
+      category: t('export.german_requirements.arts_crafts.category'),
+      requirements: [t('export.german_requirements.arts_crafts.req1'), t('export.german_requirements.arts_crafts.req2'), t('export.german_requirements.arts_crafts.req3'), t('export.german_requirements.arts_crafts.req4')],
+      price: t('export.german_requirements.arts_crafts.price'),
       icon: "🎨"
     },
     {
-      category: "Agricultural Products",
-      requirements: ["Phytosanitary Certificate", "EU Plant Health Regulations", "Pesticide Residue Testing", "Quality Standards"],
-      price: "€2-8/kg (fresh produce)",
+      category: t('export.german_requirements.agricultural_products.category'),
+      requirements: [t('export.german_requirements.agricultural_products.req1'), t('export.german_requirements.agricultural_products.req2'), t('export.german_requirements.agricultural_products.req3'), t('export.german_requirements.agricultural_products.req4')],
+      price: t('export.german_requirements.agricultural_products.price'),
       icon: "🌾"
     }
   ];
 
   const partners = [
     {
-      type: "Retailers",
+      type: t("export.partners.retailers.type"),
       icon: Building2,
       examples: ["REWE Group", "EDEKA", "Metro AG", "Kaufland", "Aldi Süd"],
-      description: "Major German retail chains interested in authentic African products"
+      description: t("export.partners.retailers.description")
     },
     {
-      type: "Educational Institutions",
+      type: t("export.partners.educational_institutions.type"),
       icon: Users,
       examples: ["German-African Business Association", "IHK (Chambers of Commerce)", "Trade Schools", "Universities"],
-      description: "Institutions supporting trade education and partnerships"
+      description: t("export.partners.educational_institutions.description")
     },
     {
-      type: "Business Partners",
+      type: t("export.partners.business_partners.type"),
       icon: Building2,
       examples: ["Import/Export Agencies", "Trade Consultants", "Market Entry Specialists", "Distribution Partners"],
-      description: "Professional services for market entry and expansion"
+      description: t("export.partners.business_partners.description")
     },
     {
-      type: "Logistics Partners",
+      type: t("export.partners.logistics_partners.type"),
       icon: Truck,
       examples: ["DHL Global Forwarding", "Kuehne + Nagel", "DB Schenker", "Freight Forwarders"],
-      description: "Reliable shipping and customs clearance services"
+      description: t("export.partners.logistics_partners.description")
     },
     {
-      type: "Regulatory Partners",
+      type: t("export.partners.regulatory_partners.type"),
       icon: Shield,
       examples: ["German Customs (Zoll)", "Certification Bodies", "Quality Assurance Agencies", "Trade Compliance Consultants"],
-      description: "Support for regulatory compliance and certifications"
+      description: t("export.partners.regulatory_partners.description")
     },
     {
-      type: "Financial Services",
+      type: t("export.partners.financial_services.type"),
       icon: Building2,
       examples: ["Deutsche Bank", "Commerzbank", "KfW Development Bank", "Export Credit Agencies", "Trade Finance Providers"],
-      description: "Banking and financial support for international trade transactions"
+      description: t("export.partners.financial_services.description")
     }
   ];
 
   const regulatoryUpdates = [
     {
-      title: "EU Sanctions Easing",
-      date: "February 2025",
-      description: "EU eased certain sanctions on Zimbabwe, improving trade relations and market access opportunities.",
+      title: t("export.regulatory_updates.eu_sanctions_easing.title"),
+      date: t("export.regulatory_updates.eu_sanctions_easing.date"),
+      description: t("export.regulatory_updates.eu_sanctions_easing.description"),
       status: "positive"
     },
     {
-      title: "Arms Embargo Expiration",
-      date: "February 2026",
-      description: "The EU arms embargo is set to expire, signaling further normalization of EU-Zimbabwe relations.",
+      title: t("export.regulatory_updates.arms_embargo_expiration.title"),
+      date: t("export.regulatory_updates.arms_embargo_expiration.date"),
+      description: t("export.regulatory_updates.arms_embargo_expiration.description"),
       status: "positive"
     },
     {
-      title: "EU-ESA EPA Benefits",
-      description: "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement for qualifying products.",
+      title: t("export.regulatory_updates.eu_esa_epa_benefits.title"),
+      description: t("export.regulatory_updates.eu_esa_epa_benefits.description"),
       status: "positive"
     }
   ];
 
   const marketIntelligence = [
     {
-      product: "Blueberries",
-      status: "approved",
+      product: t("export.market_intelligence.blueberries.product"),
+      status: t("export.market_intelligence.blueberries.status"),
       requirements: [
-        "Class I quality standards required",
-        "LIDL-specific MRLs (33% of legal limit)",
-        "Mandatory cold chain logistics",
-        "GLOBALG.A.P. certification essential"
+        t("export.market_intelligence.blueberries.req1"),
+        t("export.market_intelligence.blueberries.req2"),
+        t("export.market_intelligence.blueberries.req3"),
+        t("export.market_intelligence.blueberries.req4")
       ],
       buyers: ["LIDL", "EDEKA", "REWE"]
     },
     {
-      product: "Honey",
-      status: "pending",
+      product: t("export.market_intelligence.honey.product"),
+      status: t("export.market_intelligence.honey.status"),
       requirements: [
-        "NOT YET EU APPROVED for direct export",
-        "TRACES registration mandate (since Nov 2024)",
-        "Residue Monitoring Plan (RMP) required",
-        "EU-accredited testing systems needed"
+        t("export.market_intelligence.honey.req1"),
+        t("export.market_intelligence.honey.req2"),
+        t("export.market_intelligence.honey.req3"),
+        t("export.market_intelligence.honey.req4")
       ],
-      buyers: ["Pending approval process"]
+      buyers: [t("export.market_intelligence.honey.buyers")]
     },
     {
-      product: "Natural Oils (Marula)",
-      status: "approved",
+      product: t("export.market_intelligence.natural_oils.product"),
+      status: t("export.market_intelligence.natural_oils.status"),
       requirements: [
-        "German-language labeling mandatory",
-        "Purity testing certification",
-        "Organic certification preferred",
-        "REACH compliance for cosmetic use"
+        t("export.market_intelligence.natural_oils.req1"),
+        t("export.market_intelligence.natural_oils.req2"),
+        t("export.market_intelligence.natural_oils.req3"),
+        t("export.market_intelligence.natural_oils.req4")
       ],
-      buyers: ["Cosmetic manufacturers", "Specialty retailers"]
+      buyers: [t("export.market_intelligence.natural_oils.buyers1"), t("export.market_intelligence.natural_oils.buyers2")]
     }
   ];
 
@@ -243,135 +243,30 @@ export default function ExportHub() {
                 <TrendingUp className="h-6 w-6 text-zim-green" />
                 <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
               </div>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a href="#market-requirements" className="inline-block">
+                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-zim-black text-lg px-10 h-14 rounded-full font-bold group">
+                    {t("export.explore_market_requirements")}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </a>
                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold group">
-                        {t('export.connect_expert')}
+                    <Button size="lg" className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black text-lg px-10 h-14 rounded-full font-bold group">
+                      {t("export.contact_us")}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <ContactForm
-                      title={t('export.support_request')}
-                      description={t('export.support_request_desc')}
-                      module="export"
-                    />
+                  <DialogContent className="max-w-4xl p-0">
+              <ContactForm 
+                title={t("export.contact_form_title")}
+                module="export"
+              />
                   </DialogContent>
                 </Dialog>
-                <a href="#market-requirements" className="inline-block">
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold">
-                    <Globe className="mr-2 h-5 w-5" />
-                    {t('export.view_guide')}
-                  </Button>
-                </a>
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
-        
-        {/* Carousel Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentHeroIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`${t('export.go_to_slide')} ${idx + 1}`}
-            />
-          ))}
-        </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-      </section>
-
-
-      {/* 2026 Regulatory Updates */}
-      <section className="section-padding bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">{t('export.latest_updates')}</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('export.regulatory_updates_title')}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              {t('export.regulatory_updates_desc')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {regulatoryUpdates.map((update, index) => (
-              <Card key={index} className="card-professional ">
-                <CardHeader>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-2 bg-green-100 rounded-full">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                    </div>
-                    {update.date && <Badge variant="outline" className="font-medium">{update.date}</Badge>}
-                  </div>
-                  <CardTitle className="text-lg">{update.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{update.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Market Intelligence */}
-      <section id="product-intelligence" className="section-padding scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-12">
-            <Badge className="badge-secondary mb-4">{t('export.product_intelligence')}</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('export.product_market_intelligence')}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              {t('export.product_intelligence_desc')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {marketIntelligence.map((item, index) => (
-              <Card key={index} className={`card-professional overflow-hidden ${item.status === 'approved' ? 'border-t-4 border-t-green-600' : 'border-t-4 border-t-amber-500'}`}>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <CardTitle className="text-xl">{item.product}</CardTitle>
-                    <Badge className={`${item.status === 'approved' ? 'badge-success' : 'badge-warning'}`}>
-                      {item.status === 'approved' ? t('export.eu_approved') : t('export.pending_approval')}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-5">
-                  <div>
-                    <p className="text-sm font-semibold text-foreground mb-3">{t('export.requirements_label')}</p>
-                    <ul className="space-y-2">
-                      {item.requirements.map((req, idx) => (
-                        <li key={idx} className="flex items-start text-sm">
-                          {req.includes("NOT YET") ? (
-                            <AlertTriangle className="h-4 w-4 mr-2 text-amber-500 flex-shrink-0 mt-0.5" />
-                          ) : (
-                            <CheckCircle className="h-4 w-4 mr-2 text-green-600 flex-shrink-0 mt-0.5" />
-                          )}
-                          <span className={req.includes("NOT YET") ? "text-amber-700 font-medium" : "text-muted-foreground"}>{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="pt-3 border-t">
-                    <p className="text-sm font-semibold text-foreground mb-3">{t('export.buyers_label')}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {item.buyers.map((buyer, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs font-medium">
-                          {buyer}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -379,32 +274,31 @@ export default function ExportHub() {
       <section id="market-requirements" className="section-padding bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">Requirements</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">German Market Requirements</h2>
+            <Badge className="badge-primary mb-4">{t("export.market_requirements_badge")}</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.market_requirements_title")}</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Different products have different requirements. Find the specific regulations and pricing for your product category.
+              {t("export.market_requirements_subtitle")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {germanRequirements.map((item, index) => (
-              <Card key={index} className="card-professional ">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span className="flex items-center gap-3">
-                      <span className="text-2xl">{item.icon}</span>
-                      {item.category}
-                    </span>
-                    <Badge variant="outline" className="font-semibold text-primary">{item.price}</Badge>
-                  </CardTitle>
-                  <CardDescription className="text-base">Required certifications and documentation</CardDescription>
+              <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden">
+                <CardHeader className="bg-gradient-to-br from-zim-green/10 to-zim-gold/10 p-6">
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl">{item.icon}</span>
+                    <div>
+                      <CardTitle className="text-2xl font-bold text-zim-black">{item.category}</CardTitle>
+                      <CardDescription className="text-lg font-semibold text-zim-green">{item.price}</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {item.requirements.map((req, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <FileText className="h-5 w-5 mr-3 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-muted-foreground">{req}</span>
+                <CardContent className="p-6">
+                  <ul className="space-y-3 text-gray-700">
+                    {item.requirements.map((req, i) => (
+                      <li key={i} className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-zim-green mr-3 mt-1 flex-shrink-0" />
+                        <span>{req}</span>
                       </li>
                     ))}
                   </ul>
@@ -415,274 +309,167 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Certifications */}
-      <section className="section-padding">
+      {/* Market Intelligence Section */}
+      <section className="section-padding bg-white">
         <div className="container">
           <div className="text-center mb-12">
-            <Badge className="badge-secondary mb-4">Certifications</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Certifications</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Essential certifications for accessing EU and German markets
+            <Badge className="badge-primary mb-4">{t("export.product_intelligence_badge")}</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.product_intelligence_title")}</h2>
+            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
+              {t("export.product_intelligence_subtitle")}
             </p>
           </div>
 
-          <Tabs defaultValue="organic" className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1 bg-muted/50">
-              <TabsTrigger value="organic" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Organic</TabsTrigger>
-              <TabsTrigger value="safety" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Safety & Quality</TabsTrigger>
-              <TabsTrigger value="trade" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Fair Trade</TabsTrigger>
-              <TabsTrigger value="globalg" className="py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">GLOBALG.A.P.</TabsTrigger>
+          <Tabs defaultValue={marketIntelligence[0].product} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-muted/50 rounded-full h-14 p-2 mb-8">
+              {marketIntelligence.map((item) => (
+                <TabsTrigger key={item.product} value={item.product} className="h-full rounded-full text-lg font-bold data-[state=active]:bg-zim-gold data-[state=active]:text-zim-black data-[state=active]:shadow-md">
+                  {item.product}
+                </TabsTrigger>
+              ))}
             </TabsList>
-            
-            <TabsContent value="organic" className="mt-8">
-              <Card className="card-professional">
-                <CardHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-3 bg-green-100 rounded-xl">
-                      <Award className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">EU Organic Certification (Bio-Siegel)</CardTitle>
-                      <CardDescription>Required for organic food products in the EU market</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <h4 className="font-semibold mb-3 text-foreground">Requirements:</h4>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {["No synthetic pesticides or fertilizers", "No GMOs (Genetically Modified Organisms)", "Annual inspection by authorized certification body", "Detailed documentation of production methods"].map((item, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                          <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="p-4 bg-muted/50 rounded-lg">
-                    <h4 className="font-semibold mb-2 text-foreground">Certification Bodies in Zimbabwe:</h4>
-                    <p className="text-muted-foreground">Contact Standards Association of Zimbabwe (SAZ) for approved certification partners</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="safety" className="mt-8">
-              <Card className="card-professional">
-                <CardHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-3 bg-blue-100 rounded-xl">
-                      <Shield className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">REACH & CE Marking</CardTitle>
-                      <CardDescription>Safety and quality standards for consumer products</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-semibold mb-3 text-foreground">REACH Compliance:</h4>
-                      <ul className="space-y-2">
-                        {["Registration of chemical substances", "Safety data sheets", "Restriction of hazardous substances"].map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                            <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                            {item}
+            {marketIntelligence.map((item) => (
+              <TabsContent key={item.product} value={item.product}>
+                <Card className="bg-gradient-to-br from-zim-black to-zinc-900 text-white rounded-xl shadow-2xl overflow-hidden">
+                  <div className="grid md:grid-cols-2 items-center">
+                    <div className="p-8 md:p-12">
+                      <div className="flex items-center gap-4 mb-4">
+                        <h3 className="text-4xl font-bold text-white">{item.product}</h3>
+                        <Badge 
+                          className={`px-4 py-1 text-sm font-bold rounded-full ${item.status === t("export.market_intelligence.blueberries.status") ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300'}`}>
+                          {item.status === t("export.market_intelligence.blueberries.status") ? <CheckCircle className="h-4 w-4 mr-2" /> : <AlertTriangle className="h-4 w-4 mr-2" />}
+                          {item.status}
+                        </Badge>
+                      </div>
+                      <p className="text-lg text-muted-foreground mb-6">{t("export.market_intelligence_requirements")}</p>
+                      <ul className="space-y-3 text-gray-300 mb-8">
+                        {item.requirements.map((req, i) => (
+                          <li key={i} className="flex items-start">
+                            <FileText className="h-5 w-5 text-zim-gold mr-3 mt-1 flex-shrink-0" />
+                            <span>{req}</span>
                           </li>
                         ))}
                       </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-3 text-foreground">CE Marking:</h4>
-                      <ul className="space-y-2">
-                        {["Conformity assessment", "Technical documentation", "Declaration of conformity"].map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                            <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                            {item}
-                          </li>
+                      <p className="text-lg text-muted-foreground mb-4">{t("export.market_intelligence_buyers")}</p>
+                      <div className="flex flex-wrap gap-3">
+                        {item.buyers.map((buyer, i) => (
+                          <Badge key={i} variant="secondary" className="px-4 py-2 text-base bg-zinc-700 text-white">{buyer}</Badge>
                         ))}
-                      </ul>
+                      </div>
+                    </div>
+                    <div className="hidden md:block h-full w-full bg-cover bg-center" style={{backgroundImage: `url('/images/${item.product.toLowerCase().replace(/ /g, '_')}.jpg')`}}>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="trade" className="mt-8">
-              <Card className="card-professional">
-                <CardHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-3 bg-amber-100 rounded-xl">
-                      <Users className="h-6 w-6 text-amber-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">Fair Trade Certification</CardTitle>
-                      <CardDescription>Ethical sourcing and fair prices for producers</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <h4 className="font-semibold mb-3 text-foreground">Benefits:</h4>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {["Premium prices for certified products", "Access to ethical consumer markets", "Long-term trading partnerships", "Community development funds"].map((item, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                          <CheckCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="p-4 bg-muted/50 rounded-lg">
-                    <h4 className="font-semibold mb-2 text-foreground">Certification Process:</h4>
-                    <p className="text-muted-foreground">Contact Fairtrade Africa or local representatives for certification guidance</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="globalg" className="mt-8">
-              <Card className="card-professional">
-                <CardHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-3 bg-green-100 rounded-xl">
-                      <Globe className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">GLOBALG.A.P. & GRASP</CardTitle>
-                      <CardDescription>Good Agricultural Practices certification for fresh produce</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-semibold mb-3 text-foreground">GLOBALG.A.P. Requirements:</h4>
-                      <ul className="space-y-2">
-                        {["Food safety and traceability", "Environmental management", "Worker health and safety", "Integrated pest management"].map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-3 text-foreground">GRASP Add-on:</h4>
-                      <ul className="space-y-2">
-                        {["Social practices assessment", "Worker welfare standards", "Required by major EU retailers"].map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                </Card>
+              </TabsContent>
+            ))}
           </Tabs>
         </div>
       </section>
 
-      {/* Potential Partners */}
-      <section id="partner-network" className="section-padding bg-muted/30 scroll-mt-24">
+      {/* Partner Network Section */}
+      <section className="section-padding bg-muted/30">
         <div className="container">
           <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">Network</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Potential Partners</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Connect with retailers, educational institutions, business partners, logistics providers, and regulatory experts
+            <Badge className="badge-primary mb-4">{t("export.partner_network_badge")}</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.partner_network_title")}</h2>
+            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
+              {t("export.partner_network_subtitle")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partners.map((partner, index) => {
-              const Icon = partner.icon;
-              return (
-                <Card key={index} className="card-professional group">
-                  <CardHeader>
-                    <div className="flex items-center space-x-3 mb-2">
-                      <div className="feature-icon group-hover:bg-primary/20 transition-colors">
-                        <Icon className="h-6 w-6 text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {partners.map((partner, index) => (
+              <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg text-center p-8 flex flex-col items-center">
+                <div className="bg-zim-gold/10 p-4 rounded-full mb-6">
+                  <partner.icon className="h-12 w-12 text-zim-gold" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-zim-black mb-3">{partner.type}</CardTitle>
+                <CardDescription className="text-gray-600 flex-grow mb-4">{partner.description}</CardDescription>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="link" className="text-zim-green font-bold text-lg mt-auto">{t("export.view_examples")}<ArrowRight className="ml-2 h-5 w-5" /></Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <CardHeader>
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="bg-zim-gold/10 p-3 rounded-full">
+                          <partner.icon className="h-8 w-8 text-zim-gold" />
+                        </div>
+                        <CardTitle className="text-3xl font-bold text-zim-black">{partner.type}</CardTitle>
                       </div>
-                      <CardTitle className="text-xl group-hover:text-primary transition-colors">{partner.type}</CardTitle>
-                    </div>
-                    <CardDescription className="text-base">{partner.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-foreground">Examples:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {partner.examples.slice(0, 3).map((example, idx) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
-                            {example}
-                          </Badge>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-lg text-muted-foreground mb-6">{t("export.partner_examples")}</p>
+                      <ul className="space-y-2">
+                        {partner.examples.map((example, i) => (
+                          <li key={i} className="text-lg text-gray-800 font-medium bg-gray-100 px-4 py-2 rounded-md">{example}</li>
                         ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                      </ul>
+                    </CardContent>
+                  </DialogContent>
+                </Dialog>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="section-padding">
+      {/* Regulatory Updates Section */}
+      <section className="section-padding bg-white">
         <div className="container">
-          <Card className="max-w-4xl mx-auto text-center card-professional border-t-4 border-t-primary overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5" />
-            <CardHeader className="relative">
-              <CardTitle className="text-2xl md:text-3xl">Need Export Support?</CardTitle>
-              <CardDescription className="text-lg">
-                Our team can help you navigate German market requirements, connect with partners, and access export resources.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="relative">
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all group">
-                      {t('export.connect_expert')}
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title={t('export.support_request')}
-                    description={t('export.support_request_desc')}
-                    module="export"
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
+          <div className="text-center mb-12">
+            <Badge className="badge-primary mb-4">{t("export.regulatory_updates_badge")}</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.regulatory_updates_title")}</h2>
+            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
+              {t("export.regulatory_updates_subtitle")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {regulatoryUpdates.map((update, index) => (
+              <Card key={index} className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-2xl font-bold text-zim-black">{update.title}</CardTitle>
+                    {update.status === 'positive' ? 
+                      <CheckCircle className="h-8 w-8 text-green-500" /> : 
+                      <AlertTriangle className="h-8 w-8 text-yellow-500" />
+                    }
+                  </div>
+                  {update.date && <CardDescription className="text-md font-medium text-gray-500 pt-2">{update.date}</CardDescription>}
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-gray-700 text-lg">{update.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
-       {/* Navigate to Success Stories */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-             Explore Success Stories
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              Discover how the Zimbabwe diaspora, through our platform, have successfully supported Zimbabwean businesses in export ventures.
-            </p>
-            <Link href="/success-stories">
-              <Button size="lg" variant="secondary" className="shadow-lg group">
-                Success Stories
+      {/* CTA Section */}
+      <section className="section-padding bg-zim-black text-white">
+        <div className="container text-center">
+          <Award className="h-16 w-16 text-zim-gold mx-auto mb-6" />
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("export.cta_title")}</h2>
+          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-8">{t("export.cta_subtitle")}</p>
+          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg" className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black text-lg px-10 h-14 rounded-full font-bold group">
+                {t("export.cta_button")}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </Link>
-          </div>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl p-0">
+              <ContactForm 
+                title={t("export.contact_form_title")}
+                module="export"
+              />
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
-
     </Layout>
   );
 }

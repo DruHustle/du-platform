@@ -2,11 +2,13 @@ import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award } from "lucide-react";
+import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award, ArrowRight } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import ContactForm from "@/components/ContactForm";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface EconomicData {
   remittances: number;
@@ -40,6 +42,7 @@ export default function DataVisualization() {
   });
 
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const heroSlides = useMemo(() => [
     {
@@ -142,78 +145,78 @@ export default function DataVisualization() {
 
   const metrics = [
     {
-      title: "GDP (2025 Projection)",
+      title: t("data.overview.gdp_growth.title"),
       value: `$${(animatedValues.gdp / 1000).toFixed(1)}B`,
-      description: "Zimbabwe's Gross Domestic Product",
+      description: t("data.overview.gdp_growth.description"),
       icon: TrendingUp,
       color: "text-primary",
       bgColor: "bg-primary/10",
-      change: `+${ECONOMIC_DATA.gdp.growth}% growth rate`
+      change: t("data.overview.gdp_growth.change", { growth: ECONOMIC_DATA.gdp.growth }),
     },
     {
-      title: "Diaspora Remittances",
+      title: t("data.overview.remittances.title"),
       value: `$${(animatedValues.remittances / 1000).toFixed(1)}B`,
-      description: "Annual remittances from Zimbabwean diaspora",
+      description: t("data.overview.remittances.description"),
       icon: DollarSign,
       color: "text-green-600",
       bgColor: "bg-green-600/10",
-      change: "Largest forex source"
+      change: t("data.overview.remittances.change"),
     },
     {
-      title: "Total Exports",
+      title: t("data.overview.exports.title"),
       value: `$${(animatedValues.exportValue / 1000).toFixed(1)}B`,
-      description: "Total export value (2025)",
+      description: t("data.overview.exports.description"),
       icon: Globe,
       color: "text-blue-600",
       bgColor: "bg-blue-600/10",
-      change: "Growing export base"
+      change: t("data.overview.exports.change"),
     },
     {
-      title: "Mining Revenue",
+      title: t("data.overview.mining_revenue.title"),
       value: `$${(animatedValues.miningRevenue / 1000).toFixed(1)}B`,
-      description: "Total mining sector revenue",
+      description: t("data.overview.mining_revenue.description"),
       icon: Mountain,
       color: "text-amber-600",
       bgColor: "bg-amber-600/10",
-      change: "Gold, Lithium, Platinum"
+      change: t("data.overview.mining_revenue.change"),
     },
     {
-      title: "Global Diaspora",
+      title: t("data.overview.global_diaspora.title"),
       value: `${(animatedValues.diasporaPopulation / 1000000).toFixed(1)}M`,
-      description: "Zimbabweans living abroad worldwide",
+      description: t("data.overview.global_diaspora.description"),
       icon: Users,
       color: "text-red-600",
       bgColor: "bg-red-600/10",
-      change: "Across 100+ countries"
+      change: t("data.overview.global_diaspora.change"),
     },
     {
-      title: "Tourism Revenue",
+      title: t("data.overview.tourism_revenue.title"),
       value: `$${(animatedValues.tourismRevenue / 1000).toFixed(1)}B`,
-      description: "Annual tourism sector revenue",
+      description: t("data.overview.tourism_revenue.description"),
       icon: Plane,
       color: "text-purple-600",
       bgColor: "bg-purple-600/10",
-      change: "Forbes #1 Destination 2025"
+      change: t("data.overview.tourism_revenue.change")
     }
   ];
 
   const regionalBreakdown = [
-    { region: "South Africa", population: "1.5 - 2.0 Million", percentage: "43%", flag: "🇿🇦" },
-    { region: "United Kingdom", population: "500K - 1.0 Million", percentage: "22%", flag: "🇬🇧" },
-    { region: "Botswana", population: "500K+", percentage: "14%", flag: "🇧🇼" },
-    { region: "United States", population: "300K - 500K", percentage: "9%", flag: "🇺🇸" },
-    { region: "Australia", population: "50K - 100K", percentage: "3%", flag: "🇦🇺" },
-    { region: "Canada", population: "50K - 100K", percentage: "2%", flag: "🇨🇦" },
-    { region: "Germany", population: "30K - 50K", percentage: "1%", flag: "🇩🇪" },
-    { region: "Other Countries", population: "200K+", percentage: "6%", flag: "🌍" }
+    { region: t("data.regional_breakdown.south_africa.region"), population: t("data.regional_breakdown.south_africa.population"), percentage: "43%", flag: "🇿🇦" },
+    { region: t("data.regional_breakdown.united_kingdom.region"), population: t("data.regional_breakdown.united_kingdom.population"), percentage: "22%", flag: "🇬🇧" },
+    { region: t("data.regional_breakdown.botswana.region"), population: t("data.regional_breakdown.botswana.population"), percentage: "14%", flag: "🇧🇼" },
+    { region: t("data.regional_breakdown.united_states.region"), population: t("data.regional_breakdown.united_states.population"), percentage: "9%", flag: "🇺🇸" },
+    { region: t("data.regional_breakdown.australia.region"), population: t("data.regional_breakdown.australia.population"), percentage: "3%", flag: "🇦🇺" },
+    { region: t("data.regional_breakdown.canada.region"), population: t("data.regional_breakdown.canada.population"), percentage: "2%", flag: "🇨🇦" },
+    { region: t("data.regional_breakdown.germany.region"), population: t("data.regional_breakdown.germany.population"), percentage: "1%", flag: "🇩🇪" },
+    { region: t("data.regional_breakdown.other_countries.region"), population: t("data.regional_breakdown.other_countries.population"), percentage: "6%", flag: "🌍" }
   ];
 
   const remittanceImpact = [
-    { sector: "Education", percentage: "28%", amount: "$504M", icon: "📚" },
-    { sector: "Housing & Construction", percentage: "24%", amount: "$432M", icon: "🏠" },
-    { sector: "Healthcare", percentage: "18%", amount: "$324M", icon: "🏥" },
-    { sector: "Business Investment", percentage: "17%", amount: "$306M", icon: "💼" },
-    { sector: "Food & Basic Needs", percentage: "13%", amount: "$234M", icon: "🛒" }
+    { sector: t("data.remittance_impact.education.sector"), percentage: "28%", amount: "$504M", icon: "📚" },
+    { sector: t("data.remittance_impact.housing_construction.sector"), percentage: "24%", amount: "$432M", icon: "🏠" },
+    { sector: t("data.remittance_impact.healthcare.sector"), percentage: "18%", amount: "$324M", icon: "🏥" },
+    { sector: t("data.remittance_impact.business_investment.sector"), percentage: "17%", amount: "$306M", icon: "💼" },
+    { sector: t("data.remittance_impact.food_basic_needs.sector"), percentage: "13%", amount: "$234M", icon: "🛒" }
   ];
 
   const gdpGrowthData = SECTOR_DATA.gdpGrowth;
@@ -271,28 +274,17 @@ export default function DataVisualization() {
                   {heroSlides[currentHeroIndex]?.subtitle}
                 </p>
                 {heroSlides[currentHeroIndex]?.description && (
-                  <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+                  <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
                     {heroSlides[currentHeroIndex]?.description}
                   </p>
                 )}
-                {heroSlides[currentHeroIndex]?.buttons.length > 0 && (
-                  <div className="flex flex-wrap gap-4 justify-center">
-                    {heroSlides[currentHeroIndex]?.buttons.map((button, idx) => (
-                      <Button 
-                        key={idx}
-                        size="lg" 
-                        variant={button.variant === "outline" ? "outline" : "default"}
-                        className={button.variant === "outline" 
-                          ? "text-white border-white hover:bg-white/10 text-lg px-10 h-14 rounded-full font-bold"
-                          : "bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold"
-                        }
-                        asChild
-                      >
-                        <a href={button.link}>{button.text}</a>
-                      </Button>
-                    ))}
-                  </div>
-                )}
+                <div className="flex gap-4 justify-center">
+                  {heroSlides[currentHeroIndex]?.buttons.map((button, btnIdx) => (
+                    <Button key={btnIdx} size="lg" variant={button.variant === "primary" ? "default" : (button.variant as any)}>
+                      {button.text}
+                    </Button>
+                  ))}
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -310,37 +302,36 @@ export default function DataVisualization() {
               />
             ))}
           </div>
+          
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
         </section>
 
-        {/* Key Metrics */}
-        <section id="indicators" className="py-16">
+        {/* Economic Overview Section */}
+        <section id="indicators" className="py-20 scroll-mt-24">
           <div className="container">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Economic Indicators</h2>
-              <p className="text-lg text-muted-foreground">
-                Zimbabwe's economic performance at a glance
-              </p>
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                {t("data.economic_overview_badge")}
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("data.data_overview_title")}</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("data.data_overview_subtitle")}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {metrics.map((metric, index) => {
                 const Icon = metric.icon;
                 return (
-                  <Card key={index} className={`${metric.bgColor} border-l-4 ${metric.color.replace('text-', 'border-l-')} hover:shadow-lg transition-shadow`}>
+                  <Card key={index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                          {metric.title}
-                        </CardTitle>
-                        <Icon className={`h-5 w-5 ${metric.color}`} />
+                      <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 ${metric.bgColor}`}>
+                        <Icon className={`h-8 w-8 ${metric.color}`} />
                       </div>
+                      <CardTitle className="text-3xl font-bold">{metric.value}</CardTitle>
+                      <CardDescription className="text-lg">{metric.title}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-3xl font-bold">{metric.value}</p>
-                        <p className="text-xs text-muted-foreground">{metric.description}</p>
-                        <p className={`text-sm font-medium ${metric.color}`}>{metric.change}</p>
-                      </div>
+                      <p className="text-sm text-muted-foreground mb-2">{metric.description}</p>
+                      <Badge variant="secondary" className="text-xs">{metric.change}</Badge>
                     </CardContent>
                   </Card>
                 );
@@ -349,177 +340,105 @@ export default function DataVisualization() {
           </div>
         </section>
 
-        {/* GDP Growth Chart */}
-        <section className="py-16 bg-muted/30">
+        {/* Sectoral Data & Trends Section */}
+        <section id="sectors" className="py-20 bg-muted/30 scroll-mt-24">
           <div className="container">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">GDP Growth Trajectory</h2>
-                <p className="text-lg text-muted-foreground">
-                  Zimbabwe's economic growth from 2021 to 2025 projection
-                </p>
-              </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Annual GDP Growth Rate (%)</CardTitle>
-                  <CardDescription>Source: World Bank, IMF, ZIMSTAT</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {gdpGrowthData.map((item, index) => (
-                      <div key={index} className="flex items-center gap-4">
-                        <div className="w-16 text-sm font-semibold">{item.year}</div>
-                        <div className="flex-1">
-                          <div className="w-full bg-muted rounded-full h-8 overflow-hidden">
-                            <div 
-                              className="h-full bg-primary rounded-full flex items-center justify-end pr-3 transition-all duration-1000"
-                              style={{ width: `${(item.growth / 10) * 100}%` }}
-                            >
-                              <span className="text-sm font-bold text-white">{item.growth}%</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                {t("data.sectoral_data_badge")}
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("data.sectoral_data_title")}</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("data.sectoral_data_subtitle")}</p>
             </div>
-          </div>
-        </section>
 
-        {/* Mining Sector Breakdown */}
-        <section id="sectors" className="py-16">
-          <div className="container">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Mining Sector Breakdown</h2>
-                <p className="text-lg text-muted-foreground">
-                  Zimbabwe's mineral wealth contributing $5.56B to the economy
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                {SECTOR_DATA.mining.map((mineral, index) => (
-                  <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">{mineral.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-1">
-                        <p className="text-2xl font-bold text-primary">{mineral.value}%</p>
-                        <p className="text-xs text-muted-foreground">Contribution</p>
-                        <div className="mt-2 pt-2 border-t">
-                          <p className="text-sm font-semibold">${mineral.revenue}B</p>
-                          <p className="text-[10px] text-muted-foreground">Revenue</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Diaspora Remittances Impact */}
-        <section className="py-16 bg-primary text-white">
-          <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <Badge className="mb-4 bg-secondary text-secondary-foreground">Social Impact</Badge>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">Diaspora Remittance Allocation</h2>
-                <p className="text-lg opacity-90 mb-8">
-                  Remittances are more than just financial transfers; they are vital lifelines that drive development across key social and economic sectors in Zimbabwe.
-                </p>
-                <div className="space-y-6">
-                  {remittanceImpact.map((item, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm font-medium">
-                        <span className="flex items-center gap-2">
-                          <span>{item.icon}</span> {item.sector}
-                        </span>
-                        <span>{item.percentage} ({item.amount})</span>
-                      </div>
-                      <div className="w-full bg-white/20 rounded-full h-2">
+                <h3 className="text-3xl font-bold mb-6">GDP Growth by Sector ({data.year})</h3>
+                <div className="space-y-4">
+                  {gdpGrowthData.map((sector, index) => (
+                    <div key={index} className="flex items-center gap-4">
+                      <div className="w-24 text-right text-sm font-medium text-muted-foreground">{(sector as any).sector || (sector as any).name || "Sector"}</div>
+                      <div className="flex-1 bg-gray-200 rounded-full h-4">
                         <div 
-                          className="bg-secondary h-full rounded-full" 
-                          style={{ width: item.percentage }}
-                        />
+                          className="bg-zim-green h-4 rounded-full transition-all duration-1000 ease-out"
+                          style={{ width: `${sector.growth}%` }}
+                        ></div>
                       </div>
+                      <div className="w-12 text-left text-sm font-bold text-zim-green">{sector.growth}%</div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="bg-white/10 border-white/20 text-white">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-4xl font-bold text-secondary">$1.8B</CardTitle>
-                    <CardDescription className="text-white/70">Annual Remittances</CardDescription>
-                  </CardHeader>
-                </Card>
-                <Card className="bg-white/10 border-white/20 text-white">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-4xl font-bold text-secondary">3.5M</CardTitle>
-                    <CardDescription className="text-white/70">Global Diaspora</CardDescription>
-                  </CardHeader>
-                </Card>
-                <Card className="bg-white/10 border-white/20 text-white col-span-2">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-4xl font-bold text-secondary">$500M</CardTitle>
-                    <CardDescription className="text-white/70">Annual Investment Potential</CardDescription>
-                  </CardHeader>
-                </Card>
+              <div>
+                <img 
+                  src="/images/gdp_growth_chart.png" 
+                  alt="GDP Growth by Sector Chart" 
+                  className="rounded-lg shadow-xl border border-gray-200"
+                />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Global Diaspora Distribution */}
-        <section className="py-16">
+        {/* Diaspora Economic Impact Section */}
+        <section id="diaspora-impact" className="py-20 scroll-mt-24">
           <div className="container">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Global Diaspora Distribution</h2>
-                <p className="text-lg text-muted-foreground">
-                  Where the Zimbabwean diaspora resides across the globe
-                </p>
-              </div>
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                {t("data.diaspora_impact_badge")}
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("data.diaspora_impact_title")}</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("data.diaspora_impact_subtitle")}</p>
+            </div>
 
-              <div className="overflow-hidden rounded-xl border shadow-sm">
-                <table className="w-full text-left">
-                  <thead className="bg-muted">
-                    <tr>
-                      <th className="p-4 font-semibold">Region/Country</th>
-                      <th className="p-4 font-semibold">Estimated Population</th>
-                      <th className="p-4 font-semibold text-right">Percentage</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {regionalBreakdown.map((item, index) => (
-                      <tr key={index} className="hover:bg-muted/50 transition-colors">
-                        <td className="p-4 flex items-center gap-3">
-                          <span className="text-xl">{item.flag}</span>
-                          <span className="font-medium">{item.region}</span>
-                        </td>
-                        <td className="p-4 text-muted-foreground">{item.population}</td>
-                        <td className="p-4 text-right font-bold text-primary">{item.percentage}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div>
+                <h3 className="text-3xl font-bold mb-6">{t("data.regional_breakdown_title")}</h3>
+                <p className="text-muted-foreground mb-8">{t("data.regional_breakdown_subtitle")}</p>
+                <div className="space-y-3">
+                  {regionalBreakdown.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm">
+                      <span className="text-lg font-medium flex items-center gap-2">{item.flag} {item.region}</span>
+                      <span className="text-muted-foreground">{item.population} ({item.percentage})</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold mb-6">{t("data.remittance_impact_title")}</h3>
+                <p className="text-muted-foreground mb-8">{t("data.remittance_impact_subtitle")}</p>
+                <div className="space-y-3">
+                  {remittanceImpact.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm">
+                      <span className="text-lg font-medium flex items-center gap-2">{item.icon} {item.sector}</span>
+                      <span className="text-muted-foreground">{item.percentage} ({item.amount})</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Data Sources Disclaimer */}
-        <section className="py-12 bg-muted/30">
+        {/* CTA Section */}
+        <section className="py-20 bg-primary text-primary-foreground">
           <div className="container text-center">
-            <p className="text-sm text-muted-foreground max-w-2xl mx-auto italic">
-              * The data presented in this dashboard are projections and estimates based on 2024-2025 economic reports from the Reserve Bank of Zimbabwe (RBZ), ZIMSTAT, World Bank, and IMF. Real-time metrics are updated periodically as new official data becomes available.
-            </p>
+            <h2 className="text-4xl font-bold mb-4">{t("data.cta_title")}</h2>
+            <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">{t("data.cta_subtitle")}</p>
+            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="secondary" className="font-bold text-lg px-10 h-14 shadow-xl group">
+                  {t("data.cta_button")}
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
+              <ContactForm 
+                title={t("data.cta_button")}
+                module="investment"
+              />
+              </DialogContent>
+            </Dialog>
           </div>
         </section>
       </div>

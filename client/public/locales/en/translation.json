@@ -2,7 +2,7 @@
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
   "about": "About",
-  "about_us": "Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.",
+  "about_us": "Connecting Zimbabwe\"s global diaspora with opportunities in trade, tourism, and investment.",
   "select_lang": "Select Language",
   "account": "Account",
   "login": "Login",
@@ -40,7 +40,6 @@
     "diaspora_packages": "Diaspora Packages",
     "diaspora_packages_desc": "Special homecoming tours",
     "active_projects": "Active Projects",
-    "active_projects_desc": "Browse investment opportunities",
     "investment_calculator": "Investment Calculator",
     "investment_calculator_desc": "Simulate your returns",
     "verified_directories": "Verified Directories",
@@ -51,13 +50,14 @@
     "export_roadmap_desc": "Step-by-step export process",
     "technology": "Technology",
     "technology_capabilities": "Technology Capabilities",
-    "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
+    "technology_capabilities_desc": "Zimbabwe\"s technology and innovation landscape",
     "technology_industries": "Technology Industries",
     "technology_industries_desc": "Key technology sectors in Zimbabwe",
     "zimtrade_programs": "ZimTrade Programs",
     "zimtrade_programs_desc": "Export development initiatives"
   },
   "home": {
+    "made_in_zimbabwe_alt": "Made in Zimbabwe",
     "hero_title": "Diaspora Unlocked",
     "hero_subtitle": "ICT, Trade, Tourism and Investment Acceleration for Vision 2030",
     "export_hub": "Export Hub",
@@ -80,7 +80,7 @@
       },
       "tourism": {
         "title": "Tourism Information",
-        "desc": "Discover Zimbabwe's world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
+        "desc": "Discover Zimbabwe\"s world-class attractions, plan your visit, and explore the Forbes #1 destination to visit in 2025.",
         "stats": "Forbes #1 2025"
       },
       "investment": {
@@ -90,7 +90,7 @@
       },
       "trade": {
         "title": "Trade Information",
-        "desc": "Access comprehensive trade resources, export development programs, and connect with Zimbabwe's thriving export sectors.",
+        "desc": "Access comprehensive trade resources, export development programs, and connect with Zimbabwe\"s thriving export sectors.",
         "stats": "8 Export Sectors"
       },
       "technology": {
@@ -129,17 +129,17 @@
     "explore_onesa": "Explore Onesa AI",
     "onesa_badge": "Meet Onesa AI",
     "onesa_title": "Illuminating the Way Forward",
-    "onesa_meaning": "Onesa means 'illuminate' in Shona",
+    "onesa_meaning": "Onesa means \"illuminate\" in Shona",
     "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
     "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
     "onesa_local_edge_title": "Beyond Western-Centric Models",
-    "onesa_local_edge_desc": "Standard models like GPT-4 or Claude are often Western-centric, excelling in formal economies but failing to navigate the 'kukiya-kiya' (hustle) economy of Mbare Musika or the deep nuances of Shona slang mixed with rural Ndebele. Onesa understands these cultural textures.",
+    "onesa_local_edge_desc": "Standard models like GPT-4 or Claude are often Western-centric, excelling in formal economies but failing to navigate the \"kukiya-kiya\" (hustle) economy of Mbare Musika or the deep nuances of Shona slang mixed with rural Ndebele. Onesa understands these cultural textures.",
     "diaspora_unlocked_title": "Diaspora Unlocked Technology",
     "diaspora_unlocked_desc": "We use cutting-edge technology to enable seamless tourism, trade, and investment. Our platform bridges the gap between the diaspora and local opportunities through digital transparency and AI-powered insights.",
     "onesa_usp1": "Contextual Understanding",
     "onesa_usp2": "Accurate Language Translation",
     "ai_status": "Beta Version",
-    "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
+    "ai_demo_response": "Zimbabwe\"s agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
     "features_title": "Onesa AI Capabilities",
     "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
     "features": {
@@ -165,22 +165,21 @@
       }
     },
     "cta_title": "Ready to Illuminate Your Journey?",
-    "cta_desc": "Join our beta program and be the first to experience Onesa AI's localized intelligence.",
+    "cta_desc": "Join our beta program and be the first to experience Onesa AI\"s localized intelligence.",
     "cta_button": "Join Beta Waitlist",
     "sectors_badge": "Sector Transformation",
     "sectors_title": "Powering Key Industries",
-    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
+    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe\"s most critical economic sectors.",
     "sectors": {
       "mining": {
         "title": "Mining & Resources",
-        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
+        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe\"s vast mineral sector.",
         "d1": "Real-time mineral pricing and market trends",
         "d2": "Environmental and safety compliance monitoring"
       },
       "farming": {
         "title": "Precision Farming",
         "desc": "Transforming agriculture through data-driven crop management and weather pattern prediction.",
-        "d1": "Soil health analysis and crop yield optimization",
         "d2": "Localized weather alerts and pest control advice"
       },
       "logistics": {
@@ -197,200 +196,675 @@
       }
     }
   },
-  "investment": {
-    "hero": {
-      "badge1": "Strategic Growth",
-      "title1": "Invest in Zimbabwe's Future",
-      "subtitle1": "Secure, verified, and high-impact investment opportunities for the global diaspora.",
-      "highlight1": "Vision 2030 Ready",
-      "badge2": "Special Economic Zones",
-      "title2": "Masuwe SEZ Opportunities",
-      "subtitle2": "Explore premier tourism and financial services investments in Victoria Falls.",
-      "highlight2": "1200 Hectares of Potential",
-      "badge3": "Financial Markets",
-      "title3": "VFEX & Capital Markets",
-      "subtitle3": "Direct access to Zimbabwe's dollar-denominated stock exchange and fixed income.",
-      "highlight3": "USD Denominated",
-      "badge4": "Agro-Exports",
-      "title4": "Horticulture & Agriculture",
-      "subtitle4": "Scale high-value agricultural exports to global markets with guaranteed off-take.",
-      "highlight4": "Global Export Quality",
-      "badge5": "Mineral Wealth",
-      "title5": "Strategic Mining Projects",
-      "subtitle5": "Invest in the exploration and processing of critical minerals and precious metals.",
-      "highlight5": "Vast Resource Base"
-    },
-    "onesa_title": "Onesa AI Companion",
-    "onesa_desc": "Make data-driven investment choices using Onesa AI as your companion. Assess risks, understand local dynamics, and navigate regulatory frameworks with ease.",
-    "masuwe_title": "Masuwe Special Economic Zone",
-    "masuwe_desc": "The Masuwe SEZ is a premier 1200-hectare development 10km from Victoria Falls. It offers world-class opportunities in international tourism, medical resorts, and financial services with significant tax incentives and government support.",
-    "active_projects": "Active Projects",
-    "calculator_title": "Investment Calculator",
-    "contact_title": "Ready to Invest?"
-  },
   "export": {
     "hero": {
-      "badge1": "Trade Excellence",
-      "title1": "Zimbabwe Export Hub",
-      "subtitle1": "Connecting Zimbabwean producers with global markets through diaspora networks and trade expertise",
-      "highlight1": "$50M+ Exports",
-      "badge2": "Sector Growth",
-      "title2": "Horticulture Expansion",
-      "subtitle2": "Zimbabwe's horticultural exports are reaching new heights in European and Middle Eastern markets.",
-      "highlight2": "30% Annual Growth",
-      "badge3": "Industrialization",
-      "title3": "Value-Added Manufacturing",
-      "subtitle3": "Supporting the transition from raw exports to high-quality processed Zimbabwean products.",
-      "highlight3": "Vision 2030",
-      "badge4": "Logistics & Supply",
-      "title4": "Efficient Export Logistics",
-      "subtitle4": "Streamlining the journey of Zimbabwean products to global destinations.",
-      "highlight4": "Global Reach",
-      "badge5": "Trade Policy",
-      "title5": "Interim EPA Benefits",
-      "subtitle5": "Leveraging trade agreements for competitive advantage in EU markets.",
-      "highlight5": "Duty-Free"
+      "badge1": "EU Market Access",
+      "title1": "Unlock European Markets",
+      "desc1": "Navigate EU regulations and certifications with ease to export your Zimbabwean products.",
+      "highlight1": "Simplified Compliance",
+      "badge2": "German Focus",
+      "title2": "Target Germany",
+      "desc2": "Specific insights and partners for the German market, a key entry point to Europe.",
+      "highlight2": "Direct Market Entry",
+      "badge3": "Trade Agreements",
+      "title3": "Leverage EPA & ESA",
+      "desc3": "Benefit from Economic Partnership Agreements for duty-free and quota-free access.",
+      "highlight3": "Preferential Access",
+      "badge4": "Global Reach",
+      "title4": "Expand Your Horizons",
+      "desc4": "Connect with a global network of buyers and distributors.",
+      "highlight4": "Worldwide Opportunities",
+      "badge5": "Horticulture Focus",
+      "title5": "Green Gold Exports",
+      "desc5": "Specialized support for fresh produce, flowers, and organic products.",
+      "highlight5": "High-Value Crops",
+      "badge6": "Manufacturing Boost",
+      "title6": "Industrial Exports",
+      "desc6": "Guidance for manufactured goods, textiles, and processed foods.",
+      "highlight6": "Value-Added Products"
     },
-    "export_roadmap": "Export Roadmap",
-    "roadmap_title": "Zimbabwe to Germany Export Process",
-    "roadmap_desc": "Professional step-by-step guidance for exporting Zimbabwean products to the German and EU markets",
-    "export_sectors": "Key Export Sectors",
-    "sectors_desc": "Zimbabwe's diverse export portfolio offers opportunities across multiple sectors",
-    "development_programs": "Export Development Programs",
-    "programs_desc": "Specialized initiatives to build export capacity and market access",
-    "diaspora_role": "The Role of Diaspora in Trade",
-    "diaspora_role_desc": "How diaspora members can support Zimbabwean exporters and create trade opportunities"
+    "explore_market_requirements": "Explore Market Requirements",
+    "contact_us": "Contact Us",
+    "contact_form_title": "Export Hub Inquiry",
+    "contact_form_subtitle": "Fill out the form below to get in touch with our export specialists.",
+    "market_requirements_badge": "Requirements",
+    "market_requirements_title": "German Market Requirements",
+    "market_requirements_subtitle": "Understand the specific regulations, certifications, and standards for exporting to Germany.",
+    "german_requirements": {
+      "food_products": {
+        "category": "Food Products",
+        "requirements": [
+          "EU Food Safety Regulations (e.g., HACCP)",
+          "Pesticide Residue Limits (MRLs)",
+          "Labeling Requirements (ingredients, allergens, origin)",
+          "Veterinary and Phytosanitary Certificates"
+        ],
+        "price": "High Compliance Cost"
+      },
+      "textiles_leather": {
+        "category": "Textiles & Leather",
+        "requirements": [
+          "REACH Regulation (chemicals)",
+          "Flammability Standards",
+          "Labeling (material composition, care instructions)",
+          "Ethical Sourcing & Sustainability Certifications"
+        ],
+        "price": "Moderate Compliance Cost"
+      },
+      "arts_crafts": {
+        "category": "Arts & Crafts",
+        "requirements": [
+          "CE Marking (if applicable, e.g., toys)",
+          "Material Safety Data Sheets (MSDS)",
+          "Customs Declarations and Tariffs",
+          "Intellectual Property Rights"
+        ],
+        "price": "Low Compliance Cost"
+      },
+      "agricultural_products": {
+        "category": "Agricultural Products",
+        "requirements": [
+          "GlobalG.A.P. Certification",
+          "Organic Certifications (EU Organic Logo)",
+          "Traceability Systems",
+          "Quality and Grading Standards"
+        ],
+        "price": "High Compliance Cost"
+      }
+    },
+    "product_intelligence_badge": "Intelligence",
+    "product_intelligence_title": "Product-Specific Market Intelligence",
+    "product_intelligence_subtitle": "Stay ahead with real-time data on product demand, pricing, and buyer preferences.",
+    "market_intelligence_requirements": "Key Requirements:",
+    "market_intelligence_buyers": "Potential Buyers:",
+    "market_intelligence": {
+      "blueberries": {
+        "product": "Blueberries",
+        "status": "High Demand",
+        "requirements": [
+          "GlobalG.A.P. certification is essential.",
+          "Strict adherence to EU MRLs for pesticides.",
+          "Packaging must meet EU standards for fresh produce.",
+          "Consistent supply chain and cold storage are critical."
+        ],
+        "buyers": ["LIDL", "EDEKA", "REWE"]
+      },
+      "honey": {
+        "product": "Honey",
+        "status": "Growing Niche",
+        "requirements": [
+          "EU Honey Directive compliance (purity, origin).",
+          "Residue monitoring for antibiotics and heavy metals.",
+          "Organic certification offers a significant premium.",
+          "Traceability from hive to shelf is highly valued."
+        ],
+        "buyers": "Specialty food stores, organic markets"
+      },
+      "natural_oils": {
+        "product": "Natural Oils (Marula)",
+        "status": "Emerging Market",
+        "requirements": [
+          "COSMOS or NaTrue certification for cosmetics.",
+          "Documentation of sustainable sourcing practices.",
+          "Quality control for purity and fatty acid profile.",
+          "Clear labeling of botanical name and origin."
+        ],
+        "buyers1": "Cosmetic manufacturers",
+        "buyers2": "Wellness brands"
+      }
+    },
+    "partner_network_badge": "Network",
+    "partner_network_title": "Verified Partner Network",
+    "partner_network_subtitle": "Connect with trusted German retailers, distributors, and logistics providers.",
+    "view_examples": "View Examples",
+    "partner_examples": "Examples of Partners:",
+    "partners": {
+      "retailers": {
+        "type": "Retailers & Supermarkets",
+        "description": "Direct access to major German retail chains and independent stores."
+      },
+      "educational_institutions": {
+        "type": "Educational Institutions",
+        "description": "Partnerships for skill development, research, and cultural exchange."
+      },
+      "business_partners": {
+        "type": "Business Development Partners",
+        "description": "Specialists in market entry, business matching, and investment facilitation."
+      },
+      "logistics_partners": {
+        "type": "Logistics & Freight Forwarders",
+        "description": "Reliable and efficient transport solutions for seamless export operations."
+      },
+      "regulatory_partners": {
+        "type": "Regulatory & Certification Bodies",
+        "description": "Guidance and support for navigating complex German and EU regulations."
+      },
+      "financial_services": {
+        "type": "Financial Services & Trade Finance",
+        "description": "Access to trade finance, export credit, and banking solutions."
+      }
+    },
+    "regulatory_updates_badge": "Updates",
+    "regulatory_updates_title": "Regulatory Updates",
+    "regulatory_updates_subtitle": "Stay informed about the latest changes in international trade regulations and policies affecting Zimbabwean exports.",
+    "regulatory_updates": {
+      "eu_sanctions_easing": {
+        "title": "EU Sanctions Easing on Zimbabwe",
+        "date": "March 2024",
+        "description": "The European Union has eased sanctions on several Zimbabwean entities, opening new avenues for trade and investment. This move signals a positive shift in diplomatic relations and economic cooperation."
+      },
+      "arms_embargo_expiration": {
+        "title": "Arms Embargo Expiration",
+        "date": "February 2024",
+        "description": "The EU\"s arms embargo on Zimbabwe has officially expired, further normalizing trade relations. While direct impact on general exports is limited, it improves the overall investment climate."
+      },
+      "eu_esa_epa_benefits": {
+        "title": "Benefits of EU-ESA EPA",
+        "description": "Zimbabwe benefits from duty-free, quota-free access to the EU market under the interim Economic Partnership Agreement (EPA) with the East and Southern Africa (ESA) region. This provides a significant competitive advantage for Zimbabwean products."
+      }
+    },
+    "cta_title": "Ready to Export to Germany?",
+    "cta_subtitle": "Our team of experts is ready to guide you through every step of the process. Contact us today to get started.",
+    "cta_button": "Get Started Now"
+  },
+  "investment": {
+    "hero": {
+      "badge1": "RBZ Initiatives",
+      "title1": "Diaspora Investment",
+      "subtitle1": "Supporting national development through diaspora engagement.",
+      "highlight1": "National Growth",
+      "badge2": "Masuwe SEZ",
+      "title2": "Invest in Masuwe SEZ",
+      "subtitle2": "A prime investment destination near Victoria Falls, offering lucrative opportunities in tourism, hospitality, and infrastructure.",
+      "highlight2": "Strategic Location",
+      "badge3": "VFEX Listings",
+      "title3": "Victoria Falls Stock Exchange",
+      "subtitle3": "Invest in leading Zimbabwean and African companies listed on the offshore VFEX.",
+      "highlight3": "Global Access",
+      "badge4": "Horticulture",
+      "title4": "Green Gold Opportunities",
+      "subtitle4": "High-value horticulture exports driving agricultural growth.",
+      "highlight4": "Sustainable Returns",
+      "badge5": "Mining",
+      "title5": "Mineral Wealth",
+      "subtitle5": "Explore vast resources in gold, platinum, and lithium.",
+      "highlight5": "Strategic Minerals"
+    },
+    "explore_opportunities": "Explore Opportunities",
+    "investment_sectors_badge": "Sectors",
+    "investment_sectors_title": "Key Investment Sectors",
+    "investment_sectors_subtitle": "Zimbabwe offers a diverse range of investment opportunities across high-growth sectors.",
+    "sectors": {
+      "tourism": {
+        "title": "Tourism & Hospitality",
+        "desc": "Invest in world-class resorts, eco-tourism, and adventure travel experiences."
+      },
+      "agriculture": {
+        "title": "Agriculture & Agro-processing",
+        "desc": "Opportunities in commercial farming, value-added processing, and food security initiatives."
+      },
+      "mining": {
+        "title": "Mining & Mineral Beneficiation",
+        "desc": "Explore vast mineral resources, from gold and diamonds to lithium and platinum."
+      },
+      "manufacturing": {
+        "title": "Manufacturing & Industry",
+        "desc": "Invest in textile, pharmaceutical, and general manufacturing for regional markets."
+      },
+      "energy": {
+        "title": "Renewable Energy",
+        "desc": "Harness solar, hydro, and wind power for sustainable energy solutions."
+      },
+      "infrastructure": {
+        "title": "Infrastructure Development",
+        "desc": "Opportunities in road, rail, housing, and urban development projects."
+      }
+    },
+    "why_invest_badge": "Why Zimbabwe",
+    "why_invest_title": "Why Invest in Zimbabwe?",
+    "why_invest_subtitle": "A compelling destination for investors seeking growth and impact.",
+    "why_invest": {
+      "resources": {
+        "title": "Abundant Natural Resources",
+        "desc": "Rich in minerals, fertile land, and diverse wildlife."
+      },
+      "workforce": {
+        "title": "Skilled Workforce",
+        "desc": "High literacy rate and adaptable labor pool."
+      },
+      "location": {
+        "title": "Strategic Location",
+        "desc": "Gateway to Southern Africa with well-developed transport networks."
+      },
+      "reforms": {
+        "title": "Favorable Investment Reforms",
+        "desc": "Government commitment to improving ease of doing business."
+      },
+      "diaspora": {
+        "title": "Engaged Diaspora",
+        "desc": "A supportive diaspora community eager to contribute to national development."
+      }
+    },
+    "project_filters": {
+      "all": "All",
+      "tourism": "Tourism",
+      "agriculture": "Agriculture",
+      "manufacturing": "Manufacturing",
+      "tech": "Tech",
+      "infrastructure": "Infrastructure",
+      "conservative": "Conservative",
+      "moderate": "Moderate",
+      "aggressive": "Aggressive",
+      "sector": "Sector",
+      "risk_level": "Risk Level"
+    },
+    "project_card": {
+      "target_amount": "Target: {{amount}}",
+      "raised": "Raised: {{amount}}",
+      "investors": "{{count}} Investors",
+      "min_investment": "Min. Investment: {{amount}}",
+      "expected_return": "Expected Return: {{return}}",
+      "timeline": "Timeline: {{timeline}}",
+      "status": "Status: {{status}}",
+      "risk": "Risk: {{risk}}",
+      "view_details": "View Details",
+      "verified": "Verified",
+      "highlights": "Highlights:"
+    },
+    "cta_title": "Ready to Make an Impact?",
+    "cta_subtitle": "Explore our curated investment opportunities and become a part of Zimbabwe\"s growth story.",
+    "cta_button": "View Opportunities",
+    "contact_form_title": "Investment Inquiry",
+    "contact_form_subtitle": "Fill out the form below to get in touch with our investment specialists.",
+    "benefits_title": "Why Invest Through ZIGD?",
+    "benefits_subtitle": "Unlock unparalleled advantages by partnering with Diaspora Unlocked for your investments in Zimbabwe.",
+    "benefits": {
+      "diaspora_network": {
+        "title": "Diaspora Network",
+        "desc": "Leverage global connections for market access, expertise, and investment capital"
+      },
+      "performance_tracking": {
+        "title": "Performance Tracking",
+        "desc": "Real-time dashboards showing project progress, financial performance, and impact metrics"
+      },
+      "flexible_investment": {
+        "title": "Flexible Investment",
+        "desc": "Start with as little as $250-$1,000 and build your portfolio over time"
+      },
+      "onesa_ai": {
+        "title": "Onesa AI Insights",
+        "desc": "Utilize Onesa AI for localized market intelligence and risk assessment, ensuring informed decisions."
+      }
+    },
+    "hdc_title": "Horticulture Development Council (HDC) Associations",
+    "hdc_subtitle": "Connect with key associations driving growth in Zimbabwe\"s horticulture sector.",
+    "hdc_associations": [
+      "Avocado Growers Association",
+      "Berry Growers Association",
+      "Citrus Growers Association",
+      "Coffee Growers Association",
+      "Deciduous Fruit Growers Association",
+      "Nut Growers Association",
+      "Export Produce Association",
+      "Export Flower Growers Association",
+      "Tea Growers Association"
+    ]
+  },
+  "trade": {
+    "hero": {
+      "badge1": "Global Trade",
+      "title1": "Zimbabwe\"s Trade Hub",
+      "subtitle1": "Connecting local businesses to global markets and fostering economic growth.",
+      "highlight1": "Export Growth",
+      "badge2": "Strategic Partnerships",
+      "title2": "International Collaborations",
+      "subtitle2": "Building strong trade relationships with partners worldwide.",
+      "highlight2": "Global Network",
+      "badge3": "Sustainable Trade",
+      "title3": "Ethical & Green Exports",
+      "subtitle3": "Promoting environmentally friendly and socially responsible trade practices.",
+      "highlight3": "Responsible Business",
+      "badge4": "Export Growth",
+      "title4": "Boosting National Exports",
+      "subtitle4": "Driving economic prosperity through diversified export strategies.",
+      "highlight4": "Economic Prosperity",
+      "badge5": "EU Market Access",
+      "title5": "Accessing European Markets",
+      "subtitle5": "Facilitating entry for Zimbabwean products into the lucrative EU market.",
+      "highlight5": "Duty-Free Access"
+    },
+    "export_roadmap_badge": "Export Roadmap",
+    "export_roadmap_title": "Zimbabwe to Germany Export Process",
+    "export_roadmap_subtitle": "A step-by-step guide to navigating the export journey from Zimbabwe to Germany.",
+    "export_flow": {
+      "product_approval": {
+        "phase": "Product Approval",
+        "description": "For products not yet EU approved (e.g., Honey)",
+        "steps": [
+          "Submit Residue Monitoring Plan (RMP)",
+          "Establish EU-Accredited Testing Systems",
+          "Register in EU TRACES System",
+          "Await Addition to EU Approved List"
+        ]
+      },
+      "registration_compliance": {
+        "phase": "Registration & Compliance",
+        "description": "Required for all exporters",
+        "steps": [
+          "Register for REX System via ZIMRA",
+          "Consult ZimTrade for Market Intelligence",
+          "Obtain Required Certifications",
+          "Complete Export Registration with Relevant Authorities"
+        ]
+      },
+      "certification_quality": {
+        "phase": "Certification & Quality",
+        "description": "Meet EU quality standards",
+        "steps": [
+          "GLOBALG.A.P. & GRASP Certification",
+          "EU Organic Certification (if applicable)",
+          "Quality Control: Class I, MRL Limits",
+          "Third-Party Audits & Compliance Verification"
+        ]
+      },
+      "logistics_documentation": {
+        "phase": "Logistics & Documentation",
+        "description": "Final export preparation",
+        "steps": [
+          "Prepare Export Documents",
+          "Health & Phytosanitary Certificates",
+          "Commercial Invoice with REX Statement",
+          "Arrange Cold Chain Logistics"
+        ]
+      }
+    },
+    "export_sectors_badge": "Sectors",
+    "export_sectors_title": "Key Export Sectors",
+    "export_sectors_subtitle": "Discover the primary sectors driving Zimbabwe\"s export economy.",
+    "sectors": {
+      "horticulture": {
+        "name": "Horticulture",
+        "description": "Fresh produce, flowers, and organic vegetables for international markets",
+        "opportunities": [
+          "EU organic markets",
+          "Middle East exports",
+          "Regional SADC trade"
+        ]
+      },
+      "leather_products": {
+        "name": "Leather Products",
+        "description": "Premium leather goods, footwear, and accessories with authentic African craftsmanship",
+        "opportunities": [
+          "European fashion markets",
+          "Luxury goods sector",
+          "Government procurement"
+        ]
+      },
+      "arts_crafts": {
+        "name": "Arts & Crafts",
+        "description": "Stone sculptures, beadwork, woven baskets, and traditional artisan products",
+        "opportunities": [
+          "Tourism markets",
+          "Cultural exports",
+          "Fair trade channels"
+        ]
+      },
+      "minerals_mining": {
+        "name": "Minerals & Mining",
+        "description": "Value-added mineral products, precious stones, and processed materials",
+        "opportunities": [
+          "Industrial exports",
+          "Jewelry sector",
+          "Technology minerals"
+        ]
+      }
+    },
+    "zimtrade_programs_badge": "Programs",
+    "zimtrade_programs_title": "ZimTrade Export Development Programs",
+    "zimtrade_programs_subtitle": "Initiatives designed to empower Zimbabwean businesses for international trade.",
+    "programs": {
+      "eagles_nest": {
+        "title": "Eagles Nest",
+        "description": "Youth export incubator program developing the next generation of Zimbabwean exporters",
+        "target": "Young entrepreneurs (18-35)",
+        "benefits": [
+          "Export training",
+          "Mentorship",
+          "Market access",
+          "Funding support"
+        ]
+      },
+      "next_she_exporter": {
+        "title": "Next She Exporter",
+        "description": "Empowering female-owned businesses with export knowledge, skills, and market connections",
+        "target": "Women-owned businesses",
+        "benefits": [
+          "Capacity building",
+          "Networking",
+          "Trade missions",
+          "Certification support"
+        ]
+      },
+      "shop_at_zim": {
+        "title": "Shop At Zim",
+        "description": "B2B e-commerce platform connecting Zimbabwean suppliers with international buyers",
+        "target": "Export-ready businesses",
+        "benefits": [
+          "Online marketplace",
+          "Buyer connections",
+          "Payment solutions",
+          "Logistics support"
+        ]
+      }
+    },
+    "diaspora_role_badge": "Diaspora Role",
+    "diaspora_role_title": "Your Role in Export Growth",
+    "diaspora_role_subtitle": "The Zimbabwean diaspora plays a crucial role in promoting and facilitating exports.",
+    "diaspora_roles": {
+      "market_intelligence": {
+        "title": "Market Intelligence",
+        "description": "Share insights about consumer preferences, trends, and opportunities in your host country"
+      },
+      "buyer_connections": {
+        "title": "Buyer Connections",
+        "description": "Introduce Zimbabwean exporters to retailers, distributors, and importers in your network"
+      },
+      "quality_feedback": {
+        "title": "Quality Feedback",
+        "description": "Provide feedback on product quality, packaging, and market readiness"
+      },
+      "brand_ambassadors": {
+        "title": "Brand Ambassadors",
+        "description": "Promote Zimbabwean products and brands in international markets"
+      }
+    },
+    "cta_title": "Ready to Start Your Export Journey?",
+    "cta_subtitle": "Connect with ZimTrade and our partners to unlock your export potential.",
+    "cta_button": "Contact ZimTrade"
   },
   "data": {
     "hero": {
-      "badge1": "Economic Growth 2025",
-      "title1": "Data-Driven ",
-      "highlight1": "Insights",
-      "subtitle1": "Comprehensive analysis of Zimbabwe's economic landscape.",
-      "desc1": "Explore real-time metrics and sector performances.",
-      "badge2": "Remittance Trends",
-      "title2": "Diaspora Remittances",
-      "highlight2": "$2.1B Annually",
-      "subtitle2": "Cornerstone of foreign currency inflows.",
-      "desc2": "Analyzing the flow and impact of diaspora capital.",
+      "badge1": "Economic Insights",
+      "title1": "Driving Growth Through ",
+      "highlight1": "Data",
+      "subtitle1": "Unlocking Zimbabwe\"s economic potential with comprehensive data visualization and analysis.",
+      "desc1": "Explore key economic indicators, sectoral performance, and the significant impact of the diaspora on national development.",
+      "badge2": "Diaspora Power",
+      "title2": "Remittances: A Pillar of ",
+      "highlight2": "Growth",
+      "subtitle2": "Diaspora remittances are a vital source of foreign currency and a key driver of economic stability and development.",
+      "desc2": "Discover how these funds are impacting various sectors, from education to housing, and fueling local economies.",
       "badge3": "Investment Trends",
-      "title3": "Capital Inflow Analysis",
-      "subtitle3": "Tracking the growth of diaspora-led investments.",
-      "highlight3": "Sector Growth",
-      "badge4": "Market Intelligence",
-      "title4": "Consumer Data Insights",
-      "subtitle4": "Understanding market demands to optimize strategies.",
-      "highlight4": "Data-Driven",
-      "badge5": "Economic Outlook",
-      "title5": "Vision 2030 Progress",
-      "subtitle5": "Monitoring national development goals.",
-      "highlight5": "Growth Path"
+      "title3": "Strategic Investment ",
+      "highlight3": "Opportunities",
+      "subtitle3": "Identify high-potential sectors and projects attracting significant investment, both local and from the diaspora.",
+      "badge4": "Export Performance",
+      "title4": "Boosting National ",
+      "highlight4": "Exports",
+      "subtitle4": "Track the growth of Zimbabwe\"s export sectors and understand market access dynamics.",
+      "badge5": "Policy Impact",
+      "title5": "Informed Policy ",
+      "highlight5": "Making",
+      "subtitle5": "Data-driven insights supporting effective economic planning and policy formulation."
     },
-    "indicators": "Economic Indicators",
-    "indicators_desc": "Key metrics driving Zimbabwe's economic transformation",
-    "diaspora_impact": "Global Diaspora Impact",
-    "diaspora_impact_desc": "The financial and social contribution of Zimbabweans abroad",
-    "regional_breakdown": "Regional Diaspora Breakdown",
-    "remittance_allocation": "Remittance Allocation by Sector",
-    "gdp_growth": "GDP Growth Trend"
+    "economic_overview_badge": "Economic Overview",
+    "data_overview_title": "Economic Overview",
+    "data_overview_subtitle": "Key macroeconomic indicators and performance highlights.",
+    "overview": {
+      "gdp_growth": {
+        "title": "GDP (2025 Projection)",
+        "description": "Zimbabwe\"s Gross Domestic Product",
+        "change": "+{{growth}}% growth rate"
+      },
+      "remittances": {
+        "title": "Diaspora Remittances",
+        "description": "Annual remittances from Zimbabwean diaspora",
+        "change": "Largest forex source"
+      },
+      "exports": {
+        "title": "Total Exports",
+        "description": "Total export value (2025)",
+        "change": "Growing export base"
+      },
+      "mining_revenue": {
+        "title": "Mining Revenue",
+        "description": "Total mining sector revenue",
+        "change": "Gold, Lithium, Platinum"
+      },
+      "global_diaspora": {
+        "title": "Global Diaspora",
+        "description": "Zimbabweans living abroad worldwide",
+        "change": "Across 100+ countries"
+      },
+      "tourism_revenue": {
+        "title": "Tourism Revenue",
+        "description": "Annual tourism sector revenue",
+        "change": "Forbes #1 Destination 2025"
+      }
+    },
+    "sectoral_data_badge": "Sectors",
+    "sectoral_data_title": "Sectoral Data & Trends",
+    "sectoral_data_subtitle": "Detailed insights into the performance of Zimbabwe\"s key economic sectors.",
+    "diaspora_impact_badge": "Diaspora Impact",
+    "diaspora_impact_title": "Diaspora Economic Impact",
+    "diaspora_impact_subtitle": "Understanding the significant contribution of the Zimbabwean diaspora to the national economy.",
+    "regional_breakdown_title": "Diaspora Regional Breakdown",
+    "regional_breakdown_subtitle": "Distribution of Zimbabwean diaspora across key regions.",
+    "regional_breakdown": {
+      "south_africa": {
+        "region": "South Africa",
+        "population": "1.5 - 2.0 Million"
+      },
+      "united_kingdom": {
+        "region": "United Kingdom",
+        "population": "500K - 1.0 Million"
+      },
+      "botswana": {
+        "region": "Botswana",
+        "population": "500K+"
+      },
+      "united_states": {
+        "region": "United States",
+        "population": "300K - 500K"
+      },
+      "australia": {
+        "region": "Australia",
+        "population": "50K - 100K"
+      },
+      "canada": {
+        "region": "Canada",
+        "population": "50K - 100K"
+      },
+      "germany": {
+        "region": "Germany",
+        "population": "30K - 50K"
+      },
+      "other_countries": {
+        "region": "Other Countries",
+        "population": "200K+"
+      }
+    },
+    "remittance_impact_title": "Remittance Impact by Sector",
+    "remittance_impact_subtitle": "How diaspora remittances are distributed across various sectors in Zimbabwe.",
+    "remittance_impact": {
+      "education": {
+        "sector": "Education"
+      },
+      "housing_construction": {
+        "sector": "Housing & Construction"
+      },
+      "healthcare": {
+        "sector": "Healthcare"
+      },
+      "business_investment": {
+        "sector": "Business Investment"
+      },
+      "food_basic_needs": {
+        "sector": "Food & Basic Needs"
+      }
+    },
+    "cta_title": "Need More In-depth Data?",
+    "cta_subtitle": "Access our comprehensive reports and custom data analytics services for your specific needs.",
+    "cta_button": "Request Custom Report"
   },
   "success": {
     "hero": {
       "badge1": "Impact Stories",
-      "title1": "Diaspora-Driven Success",
-      "subtitle1": "Real stories of Zimbabwean businesses transformed.",
-      "highlight1": "$8.5M+ Generated",
-      "badge2": "Entrepreneurial Spirit",
-      "title2": "Startup Success",
-      "subtitle2": "How diaspora-led tech startups are solving challenges.",
-      "highlight2": "50+ Tech Ventures",
-      "badge3": "Agri-Success",
-      "title3": "Binga Basket Exports",
-      "subtitle3": "Empowering rural women through direct market access.",
-      "highlight3": "Community Impact",
-      "badge4": "Tourism Growth",
-      "title4": "Eco-Lodge Investment",
-      "subtitle4": "Diaspora-funded sustainable tourism projects.",
-      "highlight4": "Sustainable",
-      "badge5": "Mining Innovation",
-      "title5": "Lithium Value Addition",
-      "subtitle5": "Transforming raw minerals into high-value exports.",
-      "highlight5": "Value Addition"
+      "title1": "Diaspora Driving ",
+      "highlight1": "Change",
+      "subtitle1": "Real-world examples of how the Zimbabwean diaspora is making a tangible difference.",
+      "badge2": "Innovation",
+      "title2": "Tech & Entrepreneurship ",
+      "highlight2": "Success",
+      "subtitle2": "Showcasing groundbreaking ventures fueled by diaspora expertise and investment.",
+      "badge3": "Cultural Exchange",
+      "title3": "Preserving Heritage Through ",
+      "highlight3": "Trade",
+      "subtitle3": "Highlighting initiatives that bring Zimbabwean culture to the global stage.",
+      "badge4": "Sustainable Development",
+      "title4": "Green Initiatives & ",
+      "highlight4": "Community Growth",
+      "subtitle4": "Stories of environmental stewardship and upliftment in rural communities.",
+      "badge5": "Resource Mobilization",
+      "title5": "Unlocking Potential Through ",
+      "highlight5": "Investment",
+      "subtitle5": "How diaspora capital is transforming key sectors and creating opportunities."
     },
-    "stories_title": "Success Stories",
-    "stories_desc": "Explore how diaspora engagement is creating real impact in Zimbabwe",
-    "impact_metrics": "Overall Platform Impact",
-    "metrics_desc": "Aggregated success metrics across our partner network"
-  },
-  "common": {
-    "explore_now": "Explore Now",
-    "learn_more": "Learn More",
-    "get_started": "Get Started",
-    "invest_now": "Invest Now",
-    "contact_us": "Contact Us",
-    "view_all": "View All",
-    "back_to_top": "Back to Top",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "success": "Success!",
-    "verified": "Verified",
-    "target": "Target",
-    "raised": "Raised",
-    "investors": "Investors",
-    "min_investment": "Min. Investment",
-    "expected_return": "Expected Return",
-    "timeline": "Timeline",
-    "status": "Status",
-    "risk_level": "Risk Level",
-    "highlights": "Highlights",
-    "share": "Share",
-    "save": "Save"
-  },
-  "contact_form": {
-    "full_name": "Full Name",
-    "email": "Email Address",
-    "phone": "Phone Number",
-    "subject": "Subject",
-    "message": "Message",
-    "send": "Send Message",
-    "sending": "Sending...",
-    "success_msg": "Message sent successfully!",
-    "success_desc": "We'll get back to you within 24-48 hours.",
-    "select_subject": "Select a subject",
-    "required_field": "Required *"
-  },
-  "calculator": {
-    "title": "Investment Calculator",
-    "desc": "Calculate potential returns on your diaspora investment portfolio",
-    "amount": "Investment Amount",
-    "timeline": "Investment Timeline",
-    "return_rate": "Expected Annual Return",
-    "total_investment": "Total Investment",
-    "total_returns": "Total Returns",
-    "final_value": "Final Value",
-    "projected_growth": "Projected Growth",
-    "year": "Year",
-    "annual_return": "Annual return",
-    "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
-  },
-  "shop": {
-    "vision": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
-    "our_vision": "Our Vision",
-    "collections": "Collections",
-    "title": "Curated Zimbabwean Excellence",
-    "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
-    "sports_title": "National Sports",
-    "sports_desc": "Official gear for the Sables, Chevrons, and Warriors.",
-    "crafts_title": "Arts & Crafts",
-    "crafts_desc": "Supporting rural artisans and women cooperatives.",
-    "food_title": "Food & Nostalgia",
-    "food_desc": "The flavors of home, fully EU-compliant."
-  },
-  "notfound": {
-    "title": "404",
-    "subtitle": "Page Not Found",
-    "message": "Sorry, the page you are looking for doesn't exist.",
-    "message2": "It may have been moved or deleted.",
-    "go_home": "Go Home"
+    "stories_badge": "Stories",
+    "stories_title": "Inspiring Success Stories",
+    "stories_subtitle": "Explore the impactful contributions of the Zimbabwean diaspora across various sectors.",
+    "story_card": {
+      "impact": "Impact:",
+      "revenue": "Revenue:",
+      "jobs": "Jobs:",
+      "markets": "Markets:",
+      "investors": "Investors:",
+      "testimonial_by": "— {{author}}, {{role}}",
+      "view_story": "View Story"
+    },
+    "impact_metrics_badge": "Metrics",
+    "impact_metrics_title": "Collective Impact",
+    "impact_metrics_subtitle": "The aggregated impact of diaspora engagement across all featured success stories.",
+    "impact_metrics": {
+      "economic_impact": {
+        "label": "Total Economic Impact",
+        "description": "Revenue generated across all success stories"
+      },
+      "jobs_created": {
+        "label": "Jobs Created",
+        "description": "Direct employment opportunities"
+      },
+      "diaspora_investors": {
+        "label": "Diaspora Investors",
+        "description": "Active participants in projects"
+      },
+      "markets_accessed": {
+        "label": "Markets Accessed",
+        "description": "International markets reached"
+      }
+    },
+    "cta_title": "Have a Success Story to Share?",
+    "cta_subtitle": "We are always looking for inspiring stories of diaspora impact. Share yours with us!",
+    "cta_button": "Share Your Story"
   }
 }

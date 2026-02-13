@@ -140,7 +140,7 @@ export default function Home() {
             <div className="relative min-w-max"> 
               <img
                 src="/images/made_in_zimbabwe.png"
-                alt="Made in Zimbabwe"
+                alt={t("home.made_in_zimbabwe_alt")}
                 className="h-24 md:h-36 w-auto object-contain drop-shadow-2xl relative z-10" 
               />
               <div className="absolute -inset-6 bg-white/10 rounded-full blur-2xl -z-10" />
