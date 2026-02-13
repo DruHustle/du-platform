@@ -244,78 +244,7 @@ export default function Tourism() {
       </section>
 
 
-      {/* Onesa AI Tourist Companion Section */}
-      <section className="py-24 bg-zim-black text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-12 opacity-5">
-          <Brain className="h-96 w-96" />
-        </div>
-        <div className="container relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-zim-gold rounded-lg">
-                  <Sparkles className="h-6 w-6 text-zim-black" />
-                </div>
-                <Badge variant="outline" className="border-zim-gold text-zim-gold px-4 py-1">
-                  {t('tourism.onesa.badge')}
-                </Badge>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                {t('tourism.onesa.title')}
-              </h2>
-              <p className="text-xl text-white/80 mb-8 leading-relaxed">
-                {t('tourism.onesa.subtitle')}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-                {onesaTouristFeatures.map((feature, idx) => {
-                  const Icon = feature.icon;
-                  return (
-                    <div key={idx} className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                      <Icon className="h-8 w-8 text-zim-gold mb-4" />
-                      <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                      <p className="text-sm text-white/70 leading-relaxed">{feature.description}</p>
-                    </div>
-                  );
-                })}
-              </div>
-              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90 text-lg px-10 h-14 rounded-full font-bold">
-                {t('tourism.onesa.cta')}
-              </Button>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative hidden lg:block"
-            >
-              <div className="aspect-square relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-                <img 
-                  src="/images/tech/zim_think.jpg" 
-                  alt="Onesa AI Guide" 
-                  className="w-full h-full object-cover opacity-60"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zim-black via-transparent to-transparent" />
-                <div className="absolute bottom-8 left-8 right-8 bg-zim-black/80 backdrop-blur-md p-6 rounded-2xl border border-white/10">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="h-3 w-3 rounded-full bg-zim-green animate-pulse" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-zim-gold">Onesa AI Assistant</span>
-                  </div>
-                  <p className="text-white font-medium italic">
-                    "Onesa, what's the best local spot for traditional Sadza in Harare tonight?"
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Zimbabwe Shop Section */}
      <section className="pt-0 pb-0 bg-background relative overflow-hidden">
@@ -326,10 +255,130 @@ export default function Tourism() {
         </div>
       </section>
 
+      {/* Onesa AI Tourist Companion Section */}
+      <section className="my-10 container max-w-5xl px-4">
+
+          <div className="text-center mb-8 space-y-4">
+            <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Travel Guide</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold">{t('tourism.onesa.title')}</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {t('tourism.onesa.subtitle')}
+            </p>
+          </div>
+
+        <div className="bg-zim-black text-white relative overflow-hidden rounded-[2.5rem] border border-white/10 py-12 px-6 md:px-12 shadow-2xl">
+          
+          {/* Large, Visible Watermark Brain */}
+          <div className="absolute top-1/2 -translate-y-1/2 right-[10%] opacity-[0.15] pointer-events-none transform -rotate-6 group-hover:rotate-0 transition-all duration-[3000ms] z-0">
+            <Brain 
+              className="h-[500px] w-[500px] text-zim-gold" 
+              strokeWidth={0.5} 
+            />
+          </div>
+
+          {/* Secondary Glow for Brain Visibility */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-zim-gold/5 blur-[80px] pointer-events-none" />
+
+          <div className="relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              
+              {/* Left Content (6/12) */}
+              <motion.div
+                className="lg:col-span-6"
+                initial={{ opacity: 0, x: -15 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                {/* Scaled up Badge & Icon Container */}
+                <div className="flex items-center gap-3.5 mb-5">
+                  <div className="p-2 bg-zim-gold/10 rounded-xl border border-zim-gold/20 shadow-sm">
+                    <Sparkles className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <Badge variant="outline" className="border-zim-gold/40 text-zim-gold px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                    {t('tourism.onesa.badge')}
+                  </Badge>
+                </div>
+                
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-3 tracking-tight">
+                  {t('tourism.onesa.title')}
+                </h3>
+                
+                <p className="text-sm text-white/60 mb-8 leading-relaxed max-w-md">
+                  {t('tourism.onesa.subtitle')}
+                </p>
+
+                {/* Compact Feature List */}
+                <div className="space-y-3 mb-8">
+                  {onesaTouristFeatures.map((feature, idx) => {
+                    const Icon = feature.icon;
+                    return (
+                      <div key={idx} className="flex items-center gap-4 bg-white/[0.03] backdrop-blur-sm p-3 rounded-xl border border-white/5 hover:bg-white/[0.08] transition-all group/item">
+                        <div className="p-2 bg-zim-black rounded-lg border border-white/10 group-hover/item:border-zim-gold/50 transition-colors">
+                          <Icon className="h-4 w-4 text-zim-gold" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-white">{feature.title}</h4>
+                          <p className="text-[11px] text-white/40 leading-none">{feature.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-6 h-9 rounded-full font-bold text-xs shadow-lg shadow-zim-gold/10">
+                  {t('tourism.onesa.cta')}
+                </Button>
+              </motion.div>
+              
+              {/* Right Content - Wide Phone Mockup (6/12) */}
+              <motion.div
+                className="lg:col-span-6 flex justify-center lg:justify-end"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="relative w-full max-w-[300px] aspect-[9/16] rounded-[3rem] p-3 border-[6px] border-white/10 bg-zinc-900 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] group">
+                  <div className="relative h-full w-full rounded-[2.2rem] overflow-hidden bg-zim-black">
+                    <img 
+                      src="/images/tech/zim_think.jpg" 
+                      alt="Onesa AI Guide" 
+                      className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-[2000ms]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-zim-black via-zim-black/10 to-transparent" />
+                    
+                    <div className="absolute inset-x-4 bottom-8 space-y-4">
+                      <div className="bg-zim-gold p-3 rounded-2xl rounded-br-none shadow-lg w-[85%] ml-auto transform -rotate-1">
+                        <p className="text-zim-black text-[11px] font-bold leading-tight">
+                          "Onesa, what's the best local spot for Sadza?"
+                        </p>
+                      </div>
+
+                      <div className="bg-white/10 backdrop-blur-xl p-4 rounded-2xl rounded-bl-none border border-white/20 shadow-2xl transform rotate-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="h-1.5 w-1.5 rounded-full bg-zim-green animate-pulse" />
+                          <span className="text-[9px] font-black text-zim-gold uppercase tracking-widest">Onesa AI</span>
+                        </div>
+                        <p className="text-white text-[11px] leading-snug font-medium">
+                          "I recommend **Gava's** in Belgravia. The open-fire cooking gives it the most authentic taste in Harare!"
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-5 bg-black rounded-full border border-white/10 shadow-inner" />
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Key Attractions */}
       <section id="attractions" className="pt-0 pb-20 md:pb-32 px-4 bg-muted/30 scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-16 space-y-4">
+          <div className="text-center mb-8 space-y-4">
             <Badge variant="outline" className="border-zim-red text-zim-red uppercase tracking-widest px-4">Destinations</Badge>
             <h2 className="text-4xl md:text-5xl font-bold">Must-Visit Attractions</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -386,11 +435,13 @@ export default function Tourism() {
             ))}
           </div>
 
+
+
           {/* Explore More Destinations */}
-          <div id="explore-destinations" className="mt-20">
-            <div className="text-center mb-12 space-y-4">
+          <div id="explore-destinations" className="pt-12 pb-20 md:pb-32 px-4 bg-muted/30 scroll-mt-24">
+            <div className="text-center mb-8 space-y-4">
               <Badge variant="outline" className="border-zim-gold text-zim-gold uppercase tracking-widest px-4">Explore More</Badge>
-              <h3 className="text-3xl md:text-4xl font-bold">Other Incredible Destinations</h3>
+              <h2 className="text-4xl md:text-5xl font-bold">Other Incredible Destinations</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.
               </p>

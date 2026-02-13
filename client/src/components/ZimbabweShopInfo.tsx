@@ -108,7 +108,7 @@ export default function ZimbabweShopInfo() {
       <motion.div variants={itemVariants} className="space-y-12">
         <div className="text-center space-y-4">
           <Badge variant="outline" className="border-zim-green text-zim-green uppercase tracking-widest px-4">{t('shop.collections')}</Badge>
-          <h3 className="text-4xl md:text-5xl font-bold">{t('shop.title')}</h3>
+          <h2 className="text-4xl md:text-5xl font-bold">{t('shop.title')}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {t('shop.desc')}
           </p>
