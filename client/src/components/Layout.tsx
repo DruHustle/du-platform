@@ -34,6 +34,13 @@ export default function Layout({ children }: LayoutProps) {
 
   const navigation = [
     { name: t('nav.home'), href: "/", children: null },
+    { name: t('nav.technology'), 
+      href: "/technology", 
+      children: [
+        { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
+        { name: t('nav.technology_industries'), href: "/technology#technology-industries", description: t('nav.technology_industries_desc') },
+      ]
+    },
     { 
       name: t('nav.export'), 
       href: "/export-hub",
@@ -68,13 +75,6 @@ export default function Layout({ children }: LayoutProps) {
         { name: t('nav.export_sectors'), href: "/trade#export-sectors", description: t('nav.export_sectors_desc') },
         { name: t('nav.export_roadmap'), href: "/trade#export-roadmap", description: t('nav.export_roadmap_desc') },
         { name: t('nav.zimtrade_programs'), href: "/trade#zimtrade-programs", description: t('nav.zimtrade_programs_desc') }
-      ]
-    },
-    { name: t('nav.technology'), 
-      href: "/technology", 
-      children: [
-        { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
-        { name: t('nav.technology_industries'), href: "/technology#technology-industries", description: t('nav.technology_industries_desc') },
       ]
     },
     { name: t('nav.data'), href: "/data-visualization", children: null },

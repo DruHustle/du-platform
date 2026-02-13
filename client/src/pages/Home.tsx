@@ -60,12 +60,21 @@ export default function Home() {
       stats: t('home.modules.export.stats')
     },
     {
+      title: t('home.modules.tourism.title'),
+      description: t('home.modules.tourism.desc'),
+      icon: Plane,
+      href: "/tourism",
+         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
+      bgImage: "/images/hwange_elephants.jpg",
+      stats: t('home.modules.tourism.stats')
+    },
+    {
       title: t('home.modules.investment.title'),
       description: t('home.modules.investment.desc'),
       icon: TrendingUp,
       href: "/investment",
       color: " bg-red-600/5 hover:bg-red-600/10",
-      bgImage: "/images/infrastructure_investment.webp",
+      bgImage: "/images/minerals_mining.png",
       stats: t('home.modules.investment.stats')
     },
     {
@@ -76,15 +85,6 @@ export default function Home() {
       color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/african_trade.jpg",
       stats: t('home.modules.trade.stats')
-    },
-    {
-      title: t('home.modules.tourism.title'),
-      description: t('home.modules.tourism.desc'),
-      icon: Plane,
-      href: "/tourism",
-         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
-      bgImage: "/images/hwange_elephants.jpg",
-      stats: t('home.modules.tourism.stats')
     },
     {
       title: t('home.modules.success.title'),
