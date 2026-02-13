@@ -72,7 +72,6 @@
     "join_diaspora": "Join thousands of diaspora members building bridges for economic transformation.",
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
-  
     "modules": {
       "export": {
         "title": "Export Knowledge Hub",
@@ -133,6 +132,10 @@
     "onesa_meaning": "Onesa means 'illuminate' in Shona",
     "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
     "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
+    "onesa_local_edge_title": "Beyond Western-Centric Models",
+    "onesa_local_edge_desc": "Standard models like GPT-4 or Claude are often Western-centric, excelling in formal economies but failing to navigate the 'kukiya-kiya' (hustle) economy of Mbare Musika or the deep nuances of Shona slang mixed with rural Ndebele. Onesa understands these cultural textures.",
+    "diaspora_unlocked_title": "Diaspora Unlocked Technology",
+    "diaspora_unlocked_desc": "We use cutting-edge technology to enable seamless tourism, trade, and investment. Our platform bridges the gap between the diaspora and local opportunities through digital transparency and AI-powered insights.",
     "onesa_usp1": "Contextual Understanding",
     "onesa_usp2": "Accurate Language Translation",
     "ai_status": "Beta Version",
@@ -194,310 +197,38 @@
       }
     }
   },
-  "export": {
-    "hero": {
-      "badge1": "EU Market Access",
-      "title1": "Access German Markets",
-      "desc1": "Comprehensive guidance on regulations, certifications, and partnerships for exporting Zimbabwean products to Germany",
-      "highlight1": "€83.4B Trade Volume",
-      "badge2": "Germany Trade Hub",
-      "title2": "Your Gateway to Europe",
-      "desc2": "Germany is Europe's largest economy and a key entry point for African exporters seeking EU market access",
-      "highlight2": "#1 EU Economy",
-      "badge3": "EU Partnership",
-      "title3": "EU-ESA Trade Benefits",
-      "desc3": "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement",
-      "highlight3": "Tariff-Free Access",
-      "badge4": "Export Excellence",
-      "title4": "Connect to Global Markets",
-      "desc4": "Professional logistics support, regulatory compliance guidance, and market intelligence for successful EU exports",
-      "highlight4": "End-to-End Support",
-      "badge5": "Organic Standards",
-      "title5": "Organic Export Certification",
-      "desc5": "Navigate EU Bio-Siegel requirements",
-      "highlight5": "Premium Pricing",
-      "badge6": "Logistics Excellence",
-      "title6": "Cold Chain & Supply Chain",
-      "desc6": "Ensuring product quality from farm to retail",
-      "highlight6": "Verified Logistics"
-    },
-    "connect_expert": "Connect with an Expert",
-    "view_guide": "View Market Guide",
-    "market_intelligence_btn": "Market Intelligence",
-    "market_req_title": "German Market Requirements",
-    "market_req_desc": "Essential certifications and standards for major product categories",
-    "food_products": "Food Products",
-    "textiles_leather": "Textiles & Leather",
-    "arts_crafts": "Arts & Crafts",
-    "agri_products": "Agricultural Products",
-    "partner_network_title": "German Partner Network",
-    "partner_network_desc": "Connecting Zimbabwean exporters with established German institutions and businesses",
-    "regulatory_updates": "Regulatory & Trade Updates",
-    "market_intelligence": {
-      "blueberries": "Blueberries",
-      "honey": "Honey",
-      "natural_oils": "Natural Oils (Marula)",
-      "status_approved": "approved",
-      "status_pending": "pending",
-      "blueberries_req1": "Class I quality standards required",
-      "blueberries_req2": "LIDL-specific MRLs (33% of legal limit)",
-      "blueberries_req3": "Mandatory cold chain logistics",
-      "blueberries_req4": "GLOBALG.A.P. certification essential",
-      "blueberries_buyers": [
-        "LIDL",
-        "EDEKA",
-        "REWE"
-      ],
-      "honey_req1": "NOT YET EU APPROVED for direct export",
-      "honey_req2": "TRACES registration mandate (since Nov 2024)",
-      "honey_req3": "Residue Monitoring Plan (RMP) required",
-      "honey_req4": "EU-accredited testing systems needed",
-      "honey_buyers": [
-        "Pending approval process"
-      ],
-      "oils_req1": "German-language labeling mandatory",
-      "oils_req2": "Purity testing certification",
-      "oils_req3": "Organic certification preferred",
-      "oils_req4": "REACH compliance for cosmetic use",
-      "oils_buyers": [
-        "Cosmetic manufacturers",
-        "Specialty retailers"
-      ]
-    },
-    "support_request": "Export Support Request",
-    "support_request_desc": "Fill out the form below and our export specialists will contact you.",
-    "categories": {
-      "food_products": "Food Products",
-      "textiles_leather": "Textiles & Leather",
-      "arts_crafts": "Arts & Crafts",
-      "agricultural_products": "Agricultural Products"
-    },
-    "requirements": {
-      "food": {
-        "cert1": "EU Organic Certification (Bio-Siegel)",
-        "cert2": "HACCP Compliance",
-        "cert3": "Maximum Residue Levels (MRLs)",
-        "cert4": "Traceability Documentation",
-        "price": "€15-45/kg (organic produce)"
-      },
-      "textiles": {
-        "cert1": "REACH Compliance",
-        "cert2": "CE Marking",
-        "cert3": "Oeko-Tex Standard 100",
-        "cert4": "Country of Origin Documentation",
-        "price": "€25-120/item (leather goods)"
-      },
-      "arts": {
-        "cert1": "Product Safety Standards",
-        "cert2": "Import Declaration",
-        "cert3": "Cultural Heritage Documentation",
-        "cert4": "Fair Trade Certification (optional)",
-        "price": "€30-500/piece (stone sculptures)"
-      },
-      "agricultural": {
-        "cert1": "Phytosanitary Certificate",
-        "cert2": "EU Plant Health Regulations",
-        "cert3": "Pesticide Residue Testing",
-        "cert4": "Quality Standards",
-        "price": "€2-8/kg (fresh produce)"
-      }
-    },
-    "partners": {
-      "retailers": "Retailers",
-      "retailers_desc": "Major German retail chains interested in authentic African products",
-      "retailers_examples": [
-        "REWE Group",
-        "EDEKA",
-        "Metro AG",
-        "Kaufland",
-        "Aldi Süd"
-      ],
-      "educational": "Educational Institutions",
-      "educational_desc": "Institutions supporting trade education and partnerships",
-      "educational_examples": [
-        "German-African Business Association",
-        "IHK (Chambers of Commerce)",
-        "Trade Schools",
-        "Universities"
-      ],
-      "business": "Business Partners",
-      "business_desc": "Professional services for market entry and expansion",
-      "business_examples": [
-        "Import/Export Agencies",
-        "Trade Consultants",
-        "Market Entry Specialists",
-        "Distribution Partners"
-      ],
-      "logistics": "Logistics Partners",
-      "logistics_desc": "Reliable shipping and customs clearance services",
-      "logistics_examples": [
-        "DHL Global Forwarding",
-        "Kuehne + Nagel",
-        "DB Schenker",
-        "Freight Forwarders"
-      ],
-      "regulatory": "Regulatory Partners",
-      "regulatory_desc": "Support for regulatory compliance and certifications",
-      "regulatory_examples": [
-        "German Customs (Zoll)",
-        "Certification Bodies",
-        "Quality Assurance Agencies",
-        "Trade Compliance Consultants"
-      ],
-      "financial": "Financial Services",
-      "financial_examples": [
-        "Deutsche Bank",
-        "Commerzbank",
-        "KfW Development Bank",
-        "Export Credit Agencies",
-        "Trade Finance Providers"
-      ]
-    },
-    "updates": {
-      "title1": "EU Sanctions Easing",
-      "date1": "February 2025",
-      "desc1": "EU eased certain sanctions on Zimbabwe, improving trade relations and market access opportunities.",
-      "title2": "Arms Embargo Expiration",
-      "date2": "February 2026",
-      "desc2": "The EU arms embargo is set to expire, signaling further normalization of EU-Zimbabwe relations.",
-      "title3": "EU-ESA EPA Benefits",
-      "desc3": "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement for qualifying products."
-    },
-    "latest_updates": "Latest Updates",
-    "regulatory_updates_title": "2026 Regulatory Updates",
-    "regulatory_updates_desc": "Latest developments affecting Zimbabwe-EU trade relations",
-    "product_intelligence": "Product Intelligence",
-    "product_market_intelligence": "Product Market Intelligence",
-    "product_intelligence_desc": "Specific requirements and status for key Zimbabwean export products",
-    "eu_approved": "EU Approved",
-    "pending_approval": "Pending Approval",
-    "requirements_label": "Requirements:",
-    "buyers_label": "Buyers:",
-    "go_to_slide": "Go to slide"
-  },
-  "tourism": {
-    "hero": {
-      "badge1": "Forbes #1 Destination 2025",
-      "title1": "Zimbabwe: ",
-      "highlight1": "A World of Wonders",
-      "subtitle1": "Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences in the heart of Southern Africa.",
-      "plan_journey": "Plan Your Journey",
-      "watch_exp": "Watch Experience",
-      "badge2": "New Initiative",
-      "title2": "Zimbabwe Shop",
-      "subtitle2": "EU Diaspora & Tourism Commerce Gateway",
-      "desc2": "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
-      "badge3": "Safari Excellence",
-      "title3": "Hwange National Park",
-      "subtitle3": "Witness the majestic Big Five",
-      "highlight3": "50,000+ Elephants",
-      "badge4": "Historical Heritage",
-      "title4": "Great Zimbabwe Ruins",
-      "subtitle4": "Explore the medieval stone city",
-      "highlight4": "Ancient Majesty",
-      "badge5": "Adventure Capital",
-      "title5": "Mosi-oa-Tunya",
-      "subtitle5": "The Smoke That Thunders",
-      "highlight5": "Natural Wonder"
-    },
-    "attractions_title": "Iconic Attractions",
-    "attractions_subtitle": "Experience the natural beauty and historical wonders of Zimbabwe",
-    "plan_visit_title": "Plan Your Visit",
-    "plan_visit_desc": "Essential information for a seamless travel experience",
-    "contact_title": "Tourism Inquiry",
-    "contact_desc": "Need help planning your trip? Contact our tourism specialists.",
-    "planning": {
-      "visa": {
-        "title": "Visa Requirements",
-        "desc": "Most visitors can obtain visa on arrival. E-visa system available for advance applications.",
-        "d1": "Tourist visa: $30-75",
-        "d2": "Valid passport required",
-        "d3": "6 months validity recommended"
-      },
-      "health": {
-        "title": "Health & Safety",
-        "desc": "Zimbabwe is generally safe for tourists. Standard travel precautions recommended.",
-        "d1": "Yellow fever (if applicable)",
-        "d2": "Malaria prophylaxis",
-        "d3": "Travel insurance advised"
-      },
-      "payment": {
-        "title": "Payment Systems",
-        "desc": "Multi-currency economy with USD widely accepted. Mobile money popular.",
-        "d1": "USD, ZAR, EUR accepted",
-        "d2": "EcoCash mobile money",
-        "d3": "Cards in major hotels"
-      },
-      "time": {
-        "title": "Best Time to Visit",
-        "desc": "Year-round destination with dry season (May-October) being most popular.",
-        "d1": "May-Oct: Dry season",
-        "d2": "Nov-Apr: Green season",
-        "d3": "Falls best: Feb-May"
-      }
-    },
-    "onesa": {
-      "badge": "AI Tourist Companion",
-      "title": "Your Local Guide in Your Pocket",
-      "subtitle": "Onesa AI helps you navigate the ins and outs of Zimbabwe, from cultural etiquette to hidden gems.",
-      "guide": {
-        "title": "Local Insight",
-        "desc": "Get recommendations for the best local food, hidden attractions, and cultural experiences only locals know."
-      },
-      "navigate": {
-        "title": "Seamless Navigation",
-        "desc": "Navigate transport, local markets, and services with real-time advice on pricing and etiquette."
-      },
-      "plan": {
-        "title": "Smart Planning",
-        "desc": "Plan your itinerary based on current local events, weather, and seasonal wildlife patterns."
-      },
-      "cta": "Chat with Onesa AI"
-    }
-  },
   "investment": {
     "hero": {
-      "badge1": "Reserve Bank of Zimbabwe",
-      "title1": "Zimbabwe Gold (ZiG) Stability",
-      "subtitle1": "Backed by gold and foreign currency reserves, ZiG represents a new era of monetary stability and controlled inflation for investors.",
-      "highlight1": "Gold-Backed Currency",
-      "badge2": "Infrastructure Growth",
-      "title2": "Build Zimbabwe Together",
-      "subtitle2": "Infrastructure projects creating jobs, generating returns, and developing communities",
-      "highlight2": "$2.5M+ Invested",
-      "badge3": "Victoria Falls Stock Exchange",
-      "title3": "VFEX: Your USD Gateway",
-      "subtitle3": "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
+      "badge1": "Strategic Growth",
+      "title1": "Invest in Zimbabwe's Future",
+      "subtitle1": "Secure, verified, and high-impact investment opportunities for the global diaspora.",
+      "highlight1": "Vision 2030 Ready",
+      "badge2": "Special Economic Zones",
+      "title2": "Masuwe SEZ Opportunities",
+      "subtitle2": "Explore premier tourism and financial services investments in Victoria Falls.",
+      "highlight2": "1200 Hectares of Potential",
+      "badge3": "Financial Markets",
+      "title3": "VFEX & Capital Markets",
+      "subtitle3": "Direct access to Zimbabwe's dollar-denominated stock exchange and fixed income.",
       "highlight3": "USD Denominated",
-      "badge4": "Agriculture 4.0",
-      "title4": "Smart Farming Investments",
-      "subtitle4": "High-yield macadamia and avocado projects using precision agriculture technology.",
-      "highlight4": "18-22% IRR",
-      "badge5": "Mining Transformation",
-      "title5": "Critical Minerals Hub",
-      "subtitle5": "Invest in Zimbabwe's lithium and platinum value-addition projects for the global energy transition.",
-      "highlight5": "Global Demand"
+      "badge4": "Agro-Exports",
+      "title4": "Horticulture & Agriculture",
+      "subtitle4": "Scale high-value agricultural exports to global markets with guaranteed off-take.",
+      "highlight4": "Global Export Quality",
+      "badge5": "Mineral Wealth",
+      "title5": "Strategic Mining Projects",
+      "subtitle5": "Invest in the exploration and processing of critical minerals and precious metals.",
+      "highlight5": "Vast Resource Base"
     },
-    "active_projects": "Active Investment Projects",
-    "active_projects_desc": "Verified opportunities for diaspora investment across key sectors",
-    "all_sectors": "All Sectors",
-    "agriculture": "Agriculture",
-    "manufacturing": "Manufacturing",
-    "tourism": "Tourism",
-    "infrastructure": "Infrastructure",
-    "tech": "Tech",
-    "all_risk": "All Risk Levels",
-    "conservative": "Conservative",
-    "moderate": "Moderate",
-    "aggressive": "Aggressive",
-    "calculator_title": "Investment Calculator",
-    "calculator_desc": "Simulate your potential returns",
-    "verified_directories": "Verified Directories",
-    "directories_desc": "Access official registries and associations",
     "onesa_title": "Onesa AI Companion",
-    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context."
+    "onesa_desc": "Make data-driven investment choices using Onesa AI as your companion. Assess risks, understand local dynamics, and navigate regulatory frameworks with ease.",
+    "masuwe_title": "Masuwe Special Economic Zone",
+    "masuwe_desc": "The Masuwe SEZ is a premier 1200-hectare development 10km from Victoria Falls. It offers world-class opportunities in international tourism, medical resorts, and financial services with significant tax incentives and government support.",
+    "active_projects": "Active Projects",
+    "calculator_title": "Investment Calculator",
+    "contact_title": "Ready to Invest?"
   },
-  "trade": {
+  "export": {
     "hero": {
       "badge1": "Trade Excellence",
       "title1": "Zimbabwe Export Hub",

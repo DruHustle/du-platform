@@ -141,7 +141,12 @@
       "badge6": "Logistik-Exzellenz",
       "title6": "Kühlkette & Lieferkette",
       "desc6": "Sicherung der Produktqualität vom Bauernhof bis zum Einzelhandel",
-      "highlight6": "Verifizierte Logistik"
+      "highlight6": "Verifizierte Logistik",
+      "subtitle1": "Connecting Zimbabwean producers with global markets through diaspora networks and trade expertise",
+      "subtitle2": "Zimbabwe's horticultural exports are reaching new heights in European and Middle Eastern markets.",
+      "subtitle3": "Supporting the transition from raw exports to high-quality processed Zimbabwean products.",
+      "subtitle4": "Streamlining the journey of Zimbabwean products to global destinations.",
+      "subtitle5": "Leveraging trade agreements for competitive advantage in EU markets."
     },
     "connect_expert": "Connect with an Expert",
     "view_guide": "View Market Guide",
@@ -296,7 +301,16 @@
     "pending_approval": "Pending Approval",
     "requirements_label": "Requirements:",
     "buyers_label": "Buyers:",
-    "go_to_slide": "Go to slide"
+    "go_to_slide": "Go to slide",
+    "export_roadmap": "Export Roadmap",
+    "roadmap_title": "Zimbabwe to Germany Export Process",
+    "roadmap_desc": "Professional step-by-step guidance for exporting Zimbabwean products to the German and EU markets",
+    "export_sectors": "Key Export Sectors",
+    "sectors_desc": "Zimbabwe's diverse export portfolio offers opportunities across multiple sectors",
+    "development_programs": "Export Development Programs",
+    "programs_desc": "Specialized initiatives to build export capacity and market access",
+    "diaspora_role": "The Role of Diaspora in Trade",
+    "diaspora_role_desc": "How diaspora members can support Zimbabwean exporters and create trade opportunities"
   },
   "tourism": {
     "hero": {
@@ -418,7 +432,10 @@
     "verified_directories": "Verified Directories",
     "directories_desc": "Access official registries and associations",
     "onesa_title": "Onesa AI Companion",
-    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context."
+    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context.",
+    "masuwe_title": "Masuwe Special Economic Zone",
+    "masuwe_desc": "The Masuwe SEZ is a premier 1200-hectare development 10km from Victoria Falls. It offers world-class opportunities in international tourism, medical resorts, and financial services with significant tax incentives and government support.",
+    "contact_title": "Ready to Invest?"
   },
   "trade": {
     "hero": {
@@ -665,6 +682,10 @@
         "d1": "Adaptive learning platforms for local schools",
         "d2": "Technical skill development for the digital economy"
       }
-    }
+    },
+    "onesa_local_edge_title": "Beyond Western-Centric Models",
+    "onesa_local_edge_desc": "Standard models like GPT-4 or Claude are often Western-centric, excelling in formal economies but failing to navigate the 'kukiya-kiya' (hustle) economy of Mbare Musika or the deep nuances of Shona slang mixed with rural Ndebele. Onesa understands these cultural textures.",
+    "diaspora_unlocked_title": "Diaspora Unlocked Technology",
+    "diaspora_unlocked_desc": "We use cutting-edge technology to enable seamless tourism, trade, and investment. Our platform bridges the gap between the diaspora and local opportunities through digital transparency and AI-powered insights."
   }
 }
