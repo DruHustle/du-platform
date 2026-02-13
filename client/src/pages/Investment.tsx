@@ -79,8 +79,8 @@ export default function Investment() {
       category: "Tourism & Finance",
       sector: "tourism",
       targetAmount: "$1.2B",
-      raised: "$450M",
-      progress: 37,
+      raised: "$0",
+      progress: 0,
       investors: 12,
       minInvestment: "$100,000",
       expectedReturn: "15-25% annually",
@@ -433,9 +433,11 @@ export default function Investment() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="outline" className="w-full">
-                  Search NTIR Database
-                </Button>
+                <a href="https://tradezimbabwe.com/exporters-directory/" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="w-full">
+                    Search NTIR Database <ExternalLink className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
               </CardContent>
             </Card>
 
@@ -551,7 +553,9 @@ export default function Investment() {
                           <span className="text-sm text-muted-foreground">of {project.targetAmount}</span>
                         </div>
                         <Progress value={project.progress} className="h-2" />
-                        <p className="text-xs text-muted-foreground mt-1">{project.progress}% funded</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {project.title.includes("Masuwe") ? "Data yet to be verified" : `${project.progress}% funded`}
+                        </p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-3 pt-3 border-t">

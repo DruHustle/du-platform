@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Search, ArrowRight, FileText, Globe, TrendingUp, Plane, Brain, Award } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
