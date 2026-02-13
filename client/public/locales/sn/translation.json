@@ -56,7 +56,6 @@
     "technology_industries_desc": "Zvikamu zvakakosha zvetekinoroji muZimbabwe",
     "zimtrade_programs": "Zvirongwa zveZimTrade",
     "zimtrade_programs_desc": "Zvirongwa zvekusimudzira kutengesera kunze"
-    
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
@@ -114,8 +113,8 @@
       "quote": "This platform has enabled me to invest in Zimbabwe's growth while maintaining a connection to my homeland.",
       "name": "Jane Doe",
       "role": "Diaspora Investor"
-    }
-
+    },
+    "technology": "Technology"
   },
   "export": {
     "hero": {

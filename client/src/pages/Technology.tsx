@@ -194,7 +194,10 @@ export default function Technology() {
                 </p>
                 <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
                   <p>{t('tech.onesa_desc1')}</p>
-                  <p>{t('tech.onesa_desc2')}</p>
+                  <p className="font-medium text-primary">{t('tech.onesa_local_edge_title')}</p>
+                  <p>{t('tech.onesa_local_edge_desc')}</p>
+                  <p className="font-medium text-primary">{t('tech.diaspora_unlocked_title')}</p>
+                  <p>{t('tech.diaspora_unlocked_desc')}</p>
                 </div>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <div className="flex items-center gap-2 bg-muted p-3 rounded-lg border border-border">

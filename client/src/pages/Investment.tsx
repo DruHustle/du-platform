@@ -22,6 +22,13 @@ export default function Investment() {
 
   const heroSlides = useMemo(() => [
     {
+      image: "/images/masuwe_sez.jpg",
+      badge: t('investment.hero.badge2'),
+      title: t('investment.hero.title2'),
+      subtitle: t('investment.hero.subtitle2'),
+      highlight: t('investment.hero.highlight2')
+    },
+    {
       image: "/images/rbz_building.png",
       badge: t('investment.hero.badge1'),
       title: t('investment.hero.title1'),
@@ -66,6 +73,28 @@ export default function Investment() {
   }, [heroSlides.length]);
 
   const projects = [
+    {
+      title: "Masuwe Special Economic Zone - Tourism & Finance",
+      description: "A premier 1200-hectare Special Economic Zone 10km from Victoria Falls, focusing on high-end tourism and international financial services.",
+      category: "Tourism & Finance",
+      sector: "tourism",
+      targetAmount: "$1.2B",
+      raised: "$450M",
+      progress: 37,
+      investors: 12,
+      minInvestment: "$100,000",
+      expectedReturn: "15-25% annually",
+      timeline: "10-15 years",
+      status: "Active",
+      risk: "moderate",
+      verified: true,
+      highlights: [
+        "International Cricket Stadium for 2027 World Cup",
+        "5-Star Hotels & International Finance Centre",
+        "Tax holiday for first 5 years of operation",
+        "Duty-free importation of capital equipment"
+      ]
+    },
     {
       title: "Zimbabwe Leather Manufacturing Project",
       description: "Expand leather goods production for export to European markets with government procurement support",
@@ -305,6 +334,56 @@ export default function Investment() {
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      </section>
+
+      {/* Masuwe SEZ Section */}
+      <section id="masuwe-sez" className="py-24 bg-background scroll-mt-24">
+        <div className="container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border-zim-gold/20 px-4 py-1 text-sm font-semibold">
+                {t('investment.hero.badge2')}
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary leading-tight">
+                {t('investment.masuwe_title')}
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                {t('investment.masuwe_desc')}
+              </p>
+              <div className="space-y-4 mb-10">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-zim-green" />
+                  <span className="text-lg">International Cricket Stadium & Medical Resorts</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-zim-green" />
+                  <span className="text-lg">International Finance Service Centre (IFSC)</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-zim-green" />
+                  <span className="text-lg">Tax Holidays & Duty-Free Capital Importation</span>
+                </div>
+              </div>
+              <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-zim-gold/90">
+                Download SEZ Prospectus
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="rounded-3xl overflow-hidden shadow-2xl border border-border"
+            >
+              <img src="/images/investment_masuwe.jpg" alt="Masuwe SEZ Vision" className="w-full h-full object-cover" />
+            </motion.div>
+          </div>
+        </div>
       </section>
 
       {/* Why Invest Section */}
