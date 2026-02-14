@@ -1,8 +1,8 @@
 {
   "brand": "Diaspora Unlocked",
-  "tagline": "Simbabwe Global Diaspora Plattform",
-  "about": "Über",
-  "about_us": "Verbindung der globalen simbabwischen Diaspora mit Möglichkeiten in Handel, Tourismus und Investitionen.",
+  "tagline": "Globale Plattform für die Simbabwische Diaspora",
+  "about": "Über uns",
+  "about_us": "Verbindung der weltweiten simbabwischen Diaspora mit Möglichkeiten in Handel, Tourismus und Investitionen.",
   "select_lang": "Sprache wählen",
   "account": "Konto",
   "login": "Anmelden",
@@ -10,18 +10,18 @@
   "my_investments": "Meine Investitionen",
   "settings": "Einstellungen",
   "search_placeholder": "Suche nach Exporten, Investitionen, Tourismus...",
-  "search_title": "ZIGD Plattform durchsuchen",
+  "search_title": "ZIGD-Plattform durchsuchen",
   "search_button": "Suchen",
-  "explore": "Erkunden",
+  "explore": "Entdecken",
   "all_rights_reserved": "Alle Rechte vorbehalten.",
   "privacy_policy": "Datenschutzrichtlinie",
   "terms_of_service": "Nutzungsbedingungen",
-  "quick_links": "Schnellzugriff",
+  "quick_links": "Quick-Links",
   "partners": "Partner",
   "contact": "Kontakt",
   "nav": {
     "home": "Startseite",
-    "export": "Export-Zentrum",
+    "export": "Export-Hub",
     "tourism": "Tourismus",
     "investment": "Investitionen",
     "trade": "Handel",
@@ -29,517 +29,1130 @@
     "success": "Erfolgsgeschichten",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
-    "product_intelligence": "Produktintelligenz",
+    "product_intelligence": "Produkt-Informationen",
     "product_intelligence_desc": "Produktspezifische Exportberatung",
-    "partner_network": "Partnernetzwerk",
-    "partner_network_desc": "Verbindung zu Einzelhändlern und Logistik",
-    "attractions": "Attraktionen",
-    "attractions_desc": "Sehenswürdigkeiten in Simbabwe",
+    "partner_network": "Partner-Netzwerk",
+    "partner_network_desc": "Verbindung zu Einzelhandel und Logistik",
+    "attractions": "Sehenswürdigkeiten",
+    "attractions_desc": "Top-Ziele in Simbabwe",
     "plan_visit": "Besuch planen",
-    "plan_visit_desc": "Visum, Gesundheit und Reiseinformationen",
+    "plan_visit_desc": "Visa, Gesundheit und Reiseinformationen",
     "diaspora_packages": "Diaspora-Pakete",
     "diaspora_packages_desc": "Spezielle Heimkehr-Touren",
     "active_projects": "Aktive Projekte",
     "active_projects_desc": "Investitionsmöglichkeiten durchsuchen",
     "investment_calculator": "Investitionsrechner",
-    "investment_calculator_desc": "Rendite simulieren",
+    "investment_calculator_desc": "Renditen simulieren",
     "verified_directories": "Verifizierte Verzeichnisse",
     "verified_directories_desc": "NTIR- und HDC-Register",
     "export_sectors": "Exportsektoren",
-    "export_sectors_desc": "Schlüsselindustrien und Möglichkeiten",
-    "export_roadmap": "Export-Fahrplan",
+    "export_sectors_desc": "Schlüsselindustrien und Chancen",
+    "export_roadmap": "Export-Roadmap",
     "export_roadmap_desc": "Schritt-für-Schritt-Exportprozess",
-    "technology_capabilities": "Technologie-Fähigkeiten",
+    "technology": "Technologie",
+    "technology_capabilities": "Technologische Kapazitäten",
     "technology_capabilities_desc": "Simbabwes Technologie- und Innovationslandschaft",
     "technology_industries": "Technologiebranchen",
-    "technology_industries_desc": "Schlüsseltechnologiesektoren in Simbabwe",
+    "technology_industries_desc": "Wichtige Technologiesektoren in Simbabwe",
     "zimtrade_programs": "ZimTrade-Programme",
-    "zimtrade_programs_desc": "Exportentwicklungsinitiativen",
-    "technology": "Technologie"
+    "zimtrade_programs_desc": "Initiativen zur Exportentwicklung"
   },
   "home": {
+    "made_in_zimbabwe_alt": "Hergestellt in Simbabwe",
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "IKT, Beschleunigung von Handel, Tourismus und Investitionen für die Vision 2030",
-    "export_hub": "Export-Zentrum",
+    "hero_subtitle": "Beschleunigung von IKT, Handel, Tourismus und Investitionen für die Vision 2030",
+    "export_hub": "Export-Hub",
     "tourism": "Tourismus",
-    "investments": "Investitionen",
     "technology": "Technologie",
-    "platform_services": "Plattform-Dienste",
-    "gateway_title": "Das Simbabwe Global Diaspora Gateway",
-    "gateway_desc": "Eine digitale Plattform, die Simbabwe durch Handel, Tourismus und Investitionen mit der Welt verbindet.",
-    "explore_now": "Jetzt erkunden",
-    "ready_to_connect": "Bereit zur Vernetzung?",
-    "join_diaspora": "Schließen Sie sich Tausenden von Diaspora-Mitgliedern an, die Brücken für den wirtschaftlichen Wandel bauen.",
+    "investments": "Investitionen",
+    "objective_title": "Plattform-Dienste",
+    "objective_desc": "Eine digitale Plattform, die Simbabwe durch Handel, Tourismus und Investitionen mit dem Rest der Welt verbindet.",
+    "explore_now": "Jetzt entdecken",
+    "inquiry_btn": "Kontaktieren Sie uns",
+    "inquiry_title": "Allgemeine Anfrage",
+    "ready_to_connect_title": "Bereit zur Vernetzung?",
+    "ready_to_connect_subtitle": "Schließen Sie sich tausenden Diaspora-Mitgliedern an, die Brücken für die wirtschaftliche Entwicklung schlagen.",
     "view_data": "Wirtschaftsdaten ansehen",
     "success_stories": "Erfolgsgeschichten",
     "modules": {
       "export": {
-        "title": "Export-Wissenszentrum",
-        "desc": "Greifen Sie auf EU-Marktanforderungen, Vorschriften und Zertifizierungen zu und vernetzen Sie sich mit potenziellen Partnern für den Export simbabwischer Produkte.",
+        "title": "Export-Hub",
+        "desc": "Greifen Sie auf EU-Marktanforderungen zu und vernetzen Sie sich mit verifizierten Partnern für den Export.",
         "stats": "Verifizierte Partner"
       },
       "tourism": {
-        "title": "Tourismus-Informationen",
-        "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen, planen Sie Ihren Besuch und erkunden Sie das Forbes-Reiseziel Nr. 1 für 2025.",
+        "title": "Tourismus",
+        "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen und planen Sie Ihren Besuch.",
         "stats": "Forbes #1 2025"
       },
       "investment": {
-        "title": "Investitionsmöglichkeiten",
-        "desc": "Erkunden Sie diaspora-freundliche Mikroinvestitions- und Crowdfunding-Möglichkeiten in verifizierten simbabwischen Projekten.",
-        "stats": "$50M+ Möglichkeiten"
+        "title": "Investitionen",
+        "desc": "Entdecken Sie diaspora-freundliche Mikro-Investitionen und Crowdfunding-Möglichkeiten.",
+        "stats": "Über 50 Mio. $ Chancen"
       },
       "trade": {
-        "title": "Handelsinformationen",
-        "desc": "Greifen Sie auf umfassende Handelsressourcen und Exportentwicklungsprogramme zu und vernetzen Sie sich mit Simbabwes florierenden Exportsektoren.",
+        "title": "Handel",
+        "desc": "Nutzen Sie umfassende Handelsressourcen und verbinden Sie sich mit simbabwischen Exportsektoren.",
         "stats": "8 Exportsektoren"
       },
       "technology": {
         "title": "Technologie & KI",
-        "desc": "Lernen Sie Onesa AI kennen, unser spezialisiertes Modell, das entwickelt wurde, um den simbabwischen Kontext für Investoren und die Diaspora zu beleuchten.",
-        "stats": "Onesa KI"
+        "desc": "Lernen Sie Onesa AI kennen, unser spezialisiertes Modell für den simbabwischen Kontext.",
+        "stats": "Onesa AI"
       },
       "success": {
-        "title": "Erfolgsgeschichten",
-        "desc": "Entdecken Sie Praxisbeispiele von Unternehmen und Projekten, die durch Diaspora-Engagement florieren.",
+        "title": "Wirkung",
+        "desc": "Erkunden Sie Praxisbeispiele von Projekten, die durch Diaspora-Engagement florieren.",
         "stats": "Impact-Geschichten"
       }
+    }
+  },
+  "tech": {
+    "hero": {
+      "badge1": "Zukunft der Innovation",
+      "title1": "Onesa AI: Simbabwe beleuchten",
+      "subtitle1": "Das erste KI-Modell, das speziell für den simbabwischen Kontext entwickelt wurde.",
+      "highlight1": "Für Simbabwe gebaut",
+      "badge2": "Kontextuelle Intelligenz",
+      "title2": "Tiefes kontextuelles Verständnis",
+      "subtitle2": "Im Gegensatz zu allgemeiner KI versteht Onesa die Nuancen von Leben und Wirtschaft in Simbabwe.",
+      "highlight2": "Lokalisiertes Wissen",
+      "badge3": "Investor-Tools",
+      "title3": "Smartes Investment-Brainstorming",
+      "subtitle3": "Bewerten Sie Risiken und generieren Sie Geschäftsideen, die im lokalen Markt tatsächlich Erfolg haben.",
+      "highlight3": "Datengestützter Erfolg"
     },
-    "trust": {
-      "diaspora": "Diaspora Verifiziert",
-      "zida": "ZIDA Partner",
-      "zimtrade": "ZimTrade Zertifiziert",
-      "vision2030": "Vision 2030 Ausgerichtet"
-    },
-    "testimonial": {
-      "quote": "Diese Plattform hat es mir ermöglicht, in Simbabwes Wachstum zu investieren und gleichzeitig eine Verbindung zu meiner Heimat aufrechtzuerhalten.",
-      "name": "Jane Doe",
-      "role": "Diaspora-Investor"
+    "explore_onesa": "Onesa AI entdecken",
+    "onesa_badge": "Darf ich vorstellen: Onesa AI",
+    "onesa_title": "Ihren Weg beleuchten",
+    "onesa_meaning": "Onesa bedeutet „beleuchten“ auf Shona",
+    "onesa_desc1": "Onesa AI ist unser firmeneigenes Modell, das entwickelt wurde, um den Weg zum Leben, Investieren und Erfolg in Simbabwe aufzuzeigen. Während allgemeinen KI-Modellen oft lokale Nuancen fehlen, wurde Onesa von Grund auf darauf trainiert, den simbabwischen Kontext besser als jedes andere Modell zu verstehen.",
+    "onesa_desc2": "Von der Navigation durch lokale Vorschriften bis hin zum Brainstorming von Geschäftsideen für spezifische simbabwische Herausforderungen – Onesa bietet die lokalisierte Intelligenz, die Sie für Ihren Erfolg benötigen.",
+    "onesa_local_edge_title": "Jenseits westlich-zentrierter Modelle",
+    "onesa_local_edge_desc": "Standardmodelle sind oft westlich geprägt; sie glänzen in formalen Wirtschaftssystemen, scheitern aber an der „Kukiya-kiya“-Wirtschaft (Hustle) von Mbare Musika oder den tiefen Nuancen von Shona-Slang gemischt mit ländlichem Ndebele.",
+    "diaspora_unlocked_title": "Diaspora Unlocked Technologie",
+    "diaspora_unlocked_desc": "Wir nutzen modernste Technologie, um nahtlosen Tourismus, Handel und Investitionen zu ermöglichen. Unsere Plattform schließt die Lücke zwischen der Diaspora und lokalen Möglichkeiten durch digitale Transparenz und KI-gestützte Erkenntnisse.",
+    "onesa_usp1": "Kontextuelles Verständnis",
+    "onesa_usp2": "Präzise Sprachübersetzung",
+    "ai_status": "Beta-Version",
+    "ai_demo_question": "Was sind derzeit einige Investitionsmöglichkeiten mit hohem ROI im simbabwischen Agrarsektor?",
+    "ai_demo_response": "Simbabwes Agrarsektor verzeichnet derzeit ein starkes Wachstum bei Gartenbau-Exporten. Aktuellen Trends zufolge bietet die Investition in Kühlkettenlogistik für den Blaubeerexport aus dem östlichen Hochland einen hohen ROI bei moderatem Risiko...",
+    "features_title": "Onesa AI Fähigkeiten",
+    "features_subtitle": "Spezialisierte Tools, um die Lücke zwischen der Diaspora und lokalen Chancen zu schließen.",
+    "cta_title": "Bereit, Ihre Reise zu beleuchten?",
+    "cta_desc": "Werden Sie Teil unseres Beta-Programms und erleben Sie als Erster die lokalisierte Intelligenz von Onesa AI.",
+    "cta_button": "Auf die Beta-Warteliste setzen",
+    "sectors_badge": "Sektortransformation",
+    "sectors_title": "Schlüsselindustrien stärken",
+    "sectors_subtitle": "Onesa AI bietet spezialisierte Intelligenz zur Optimierung der kritischsten Wirtschaftssektoren Simbabwes.",
+    "sectors": {
+      "mining": {
+        "title": "Bergbau & Ressourcen",
+        "desc": "Nutzung von KI für die Analyse geologischer Daten und die Einhaltung gesetzlicher Vorschriften im riesigen Mineraliensektor Simbabwes.",
+        "d1": "Echtzeit-Mineralienpreise und Markttrends",
+        "d2": "Überwachung der Umwelt- und Sicherheitskonformität"
+      },
+      "farming": {
+        "title": "Präzisionslandwirtschaft",
+        "desc": "Transformation der Landwirtschaft durch datengestütztes Pflanzenmanagement und Vorhersage von Wettermustern.",
+        "d1": "Bodenanalysen und Optimierung der Ernteerträge",
+        "d2": "Lokalisierte Wetterwarnungen und Beratung zur Schädlingsbekämpfung"
+      },
+      "logistics": {
+        "title": "Intelligente Logistik",
+        "desc": "Optimierung von Lieferketten und grenzüberschreitenden Handelsrouten durch den simbabwischen Korridor.",
+        "d1": "Routenoptimierung für die regionale Verteilung",
+        "d2": "Echtzeit-Tracking und Unterstützung bei der Zollabwicklung"
+      },
+      "education": {
+        "title": "Bildung der Zukunft",
+        "desc": "Überbrückung der digitalen Kluft durch KI-gestütztes personalisiertes Lernen und Berufsbildung.",
+        "d1": "Adaptive Lernplattformen für lokale Schulen",
+        "d2": "Entwicklung technischer Fähigkeiten für die digitale Wirtschaft"
+      }
     }
   },
   "export": {
     "hero": {
       "badge1": "EU-Marktzugang",
-      "title1": "Zugang zum deutschen Markt",
-      "desc1": "Umfassende Beratung zu Vorschriften, Zertifizierungen und Partnerschaften für den Export simbabwischer Produkte nach Deutschland",
-      "highlight1": "€83,4 Mrd. Handelsvolumen",
-      "badge2": "Handelszentrum Deutschland",
-      "title2": "Ihr Tor nach Europa",
-      "desc2": "Deutschland ist die größte Volkswirtschaft Europas und ein wichtiger Einstiegspunkt für afrikanische Exporteure in den EU-Markt",
-      "highlight2": "#1 EU-Wirtschaft",
-      "badge3": "EU-Partnerschaft",
-      "title3": "EU-ESA Handelsvorteile",
-      "desc3": "Simbabwe profitiert vom zollfreien Zugang zu EU-Märkten im Rahmen des Interims-Wirtschaftspartnerschaftsabkommens EU-ESA",
-      "highlight3": "Zollfreier Zugang",
-      "badge4": "Export-Exzellenz",
-      "title4": "Verbindung zu globalen Märkten",
-      "desc4": "Professionelle Logistikunterstützung, Beratung zur Einhaltung gesetzlicher Vorschriften und Marktintelligenz für erfolgreiche EU-Exporte",
-      "highlight4": "End-to-End Unterstützung",
-      "badge5": "Bio-Standards",
-      "title5": "Bio-Export-Zertifizierung",
-      "desc5": "EU-Bio-Siegel Anforderungen navigieren",
-      "highlight5": "Premium-Preise",
-      "badge6": "Logistik-Exzellenz",
-      "title6": "Kühlkette & Lieferkette",
-      "desc6": "Sicherung der Produktqualität vom Bauernhof bis zum Einzelhandel",
-      "highlight6": "Verifizierte Logistik",
-      "subtitle1": "Verbindung simbabwischer Produzenten mit globalen Märkten durch Diaspora-Netzwerke und Handelsexperten",
-      "subtitle2": "Simbabwes Gartenbauexporte erreichen auf europäischen und nahöstlichen Märkten neue Höchststände.",
-      "subtitle3": "Unterstützung des Übergangs von Rohexporten zu hochwertig verarbeiteten simbabwischen Produkten.",
-      "subtitle4": "Optimierung des Weges simbabwischer Produkte zu globalen Zielen.",
-      "subtitle5": "Nutzung von Handelsabkommen für Wettbewerbsvorteile auf EU-Märkten."
+      "title1": "Europäische Märkte erschließen",
+      "desc1": "Navigieren Sie mühelos durch EU-Vorschriften und Zertifizierungen, um Ihre simbabwischen Produkte zu exportieren.",
+      "highlight1": "Vereinfachte Compliance",
+      "badge2": "Fokus Deutschland",
+      "title2": "Zielmarkt Deutschland",
+      "desc2": "Spezifische Einblicke und Partner für den deutschen Markt, ein wichtiges Tor nach Europa.",
+      "highlight2": "Direkter Markteinstieg",
+      "badge3": "Handelsabkommen",
+      "title3": "EPA & ESA nutzen",
+      "desc3": "Profitieren Sie von Wirtschaftspartnerschaftsabkommen für zoll- und quotenfreien Zugang.",
+      "highlight3": "Präferenzzugang",
+      "badge4": "Globale Reichweite",
+      "title4": "Erweitern Sie Ihren Horizont",
+      "desc4": "Vernetzen Sie sich mit einem weltweiten Netzwerk von Käufern und Distributoren.",
+      "highlight4": "Weltweite Chancen",
+      "badge5": "Fokus Gartenbau",
+      "title5": "Exporte von „Grünem Gold“",
+      "desc5": "Spezialisierte Unterstützung für Frischwaren, Blumen und Bio-Produkte.",
+      "highlight5": "Hochwertige Nutzpflanzen",
+      "badge6": "Produktionsschub",
+      "title6": "Industrielle Exporte",
+      "desc6": "Beratung für Industriegüter, Textilien und verarbeitete Lebensmittel.",
+      "highlight6": "Wertschöpfungsprodukte"
     },
-    "connect_expert": "Experten kontaktieren",
-    "view_guide": "Marktleitfaden ansehen",
-    "market_intelligence_btn": "Marktintelligenz",
-    "market_req_title": "Deutsche Marktanforderungen",
-    "market_req_desc": "Wesentliche Zertifizierungen und Standards für wichtige Produktkategorien",
-    "food_products": "Lebensmittel",
-    "textiles_leather": "Textilien & Leder",
-    "arts_crafts": "Kunst & Handwerk",
-    "agri_products": "Landwirtschaftliche Produkte",
-    "partner_network_title": "Deutsches Partnernetzwerk",
-    "partner_network_desc": "Verbindung simbabwischer Exporteure mit etablierten deutschen Institutionen und Unternehmen",
-    "regulatory_updates": "Regulierungs- & Handels-Updates",
-    "market_intelligence": {
-      "blueberries": "Blaubeeren",
-      "honey": "Honig",
-      "natural_oils": "Natürliche Öle (Marula)",
-      "status_approved": "zugelassen",
-      "status_pending": "ausstehend",
-      "blueberries_req1": "Qualitätsstandards der Klasse I erforderlich",
-      "blueberries_req2": "LIDL-spezifische Rückstandshöchstmengen (33% des gesetzlichen Limits)",
-      "blueberries_req3": "Obligatorische Kühlkettenlogistik",
-      "blueberries_req4": "GLOBALG.A.P.-Zertifizierung unerlässlich",
-      "blueberries_buyers": [
-        "LIDL",
-        "EDEKA",
-        "REWE"
-      ],
-      "honey_req1": "NOCH NICHT EU-ZUGELASSEN für den Direktexport",
-      "honey_req2": "TRACES-Registrierungspflicht (seit Nov 2024)",
-      "honey_req3": "Rückstandsüberwachungsplan (RMP) erforderlich",
-      "honey_req4": "EU-akkreditierte Prüfsysteme benötigt",
-      "honey_buyers": [
-        "Zulassungsverfahren ausstehend"
-      ],
-      "oils_req1": "Kennzeichnung in deutscher Sprache obligatorisch",
-      "oils_req2": "Zertifizierung der Reinheitsprüfung",
-      "oils_req3": "Bio-Zertifizierung bevorzugt",
-      "oils_req4": "REACH-Konformität für kosmetische Zwecke",
-      "oils_buyers": [
-        "Kosmetikhersteller",
-        "Spezialitätenhändler"
-      ]
-    },
-    "support_request": "Export-Supportanfrage",
-    "support_request_desc": "Füllen Sie das folgende Formular aus und unsere Exportspezialisten werden Sie kontaktieren.",
-    "categories": {
-      "food_products": "Lebensmittel",
-      "textiles_leather": "Textilien & Leder",
-      "arts_crafts": "Kunst & Handwerk",
-      "agricultural_products": "Landwirtschaftliche Produkte"
-    },
-    "requirements": {
-      "food": {
-        "cert1": "EU-Bio-Zertifizierung (Bio-Siegel)",
-        "cert2": "HACCP-Konformität",
-        "cert3": "Rückstandshöchstmengen (MRLs)",
-        "cert4": "Dokumentation der Rückverfolgbarkeit",
-        "price": "€15-45/kg (Bio-Erzeugnisse)"
+    "objective_title": "Exporte fördern, Sie stärken",
+    "objective_subtitle": "Verbindung von Produkten, Partnern und Marktinformationen, um Exporteuren den Erfolg in der EU zu ermöglichen.",
+    "explore_market_requirements": "Marktanforderungen erkunden",
+    "contact_us": "Kontaktieren Sie uns",
+    "contact_form_title": "Export-Hub Anfrage",
+    "contact_form_subtitle": "Füllen Sie das Formular aus, um mit unseren Exportspezialisten in Kontakt zu treten.",
+    "market_requirements_title": "EU-Marktanforderungen",
+    "market_requirements_subtitle": "Verstehen Sie die spezifischen Vorschriften, Zertifizierungen und Standards für den Export nach Deutschland.",
+    "german_requirements": {
+      "food_products": {
+        "category": "Lebensmittel",
+        "requirements": [
+          "EU-Lebensmittelsicherheitsvorschriften (z. B. HACCP)",
+          "Rückstandshöchstmengen für Pestizide (MRLs)",
+          "Kennzeichnungspflichten (Zutaten, Allergene, Herkunft)",
+          "Veterinär- und Pflanzengesundheitszeugnisse"
+        ],
+        "price": "Hohe Compliance-Kosten"
       },
-      "textiles": {
-        "cert1": "REACH-Konformität",
-        "cert2": "CE-Kennzeichnung",
-        "cert3": "Oeko-Tex Standard 100",
-        "cert4": "Ursprungszeugnis",
-        "price": "€25-120/Stück (Lederwaren)"
+      "textiles_leather": {
+        "category": "Textilien & Leder",
+        "requirements": [
+          "REACH-Verordnung (Chemikalien)",
+          "Entflammbarkeitsnormen",
+          "Kennzeichnung (Materialzusammensetzung, Pflegehinweise)",
+          "Ethische Beschaffung & Nachhaltigkeitszertifikate"
+        ],
+        "price": "Moderate Compliance-Kosten"
       },
-      "arts": {
-        "cert1": "Produktsicherheitsstandards",
-        "cert2": "Einfuhrerklärung",
-        "cert3": "Dokumentation des Kulturerbes",
-        "cert4": "Fair-Trade-Zertifizierung (optional)",
-        "price": "€30-500/Stück (Steinskulpturen)"
+      "arts_crafts": {
+        "category": "Kunst & Handwerk",
+        "requirements": [
+          "CE-Kennzeichnung (falls zutreffend, z. B. Spielzeug)",
+          "Sicherheitsdatenblätter (MSDS)",
+          "Zollerklärungen und Tarife",
+          "Rechte an geistigem Eigentum"
+        ],
+        "price": "Niedrige Compliance-Kosten"
       },
-      "agricultural": {
-        "cert1": "Pflanzengesundheitszeugnis",
-        "cert2": "EU-Pflanzenschutzverordnungen",
-        "cert3": "Pestizidrückstandsprüfung",
-        "cert4": "Qualitätsstandards",
-        "price": "€2-8/kg (Frischware)"
+      "agricultural_products": {
+        "category": "Landwirtschaftliche Produkte",
+        "requirements": [
+          "GlobalG.A.P. Zertifizierung",
+          "Bio-Zertifizierungen (EU-Bio-Siegel)",
+          "Rückverfolgbarkeitssysteme",
+          "Qualitäts- und Sortierstandards"
+        ],
+        "price": "Hohe Compliance-Kosten"
       }
     },
+    "product_intelligence_badge": "Informationen",
+    "product_intelligence_title": "Produktspezifische Marktanalysen",
+    "product_intelligence_subtitle": "Bleiben Sie vorn mit Echtzeitdaten zu Produktnachfrage, Preisen und Käuferpräferenzen.",
+    "market_intelligence_requirements": "Wichtige Anforderungen:",
+    "market_intelligence_buyers": "Potenzielle Käufer:",
+    "market_intelligence": {
+      "blueberries": {
+        "product": "Blaubeeren",
+        "status": "Hohe Nachfrage",
+        "requirements": [
+          "GlobalG.A.P. Zertifizierung ist unerlässlich.",
+          "Strikte Einhaltung der EU-MRLs für Pestizide.",
+          "Verpackung muss EU-Standards für Frischwaren entsprechen.",
+          "Konsistente Lieferkette und Kühllagerung sind kritisch."
+        ],
+        "buyers": [
+          "LIDL",
+          "EDEKA",
+          "REWE"
+        ]
+      },
+      "honey": {
+        "product": "Honig",
+        "status": "Wachsende Nische",
+        "requirements": [
+          "Einhaltung der EU-Honigrichtlinie (Reinheit, Herkunft).",
+          "Rückstandsüberwachung auf Antibiotika und Schwermetalle.",
+          "Bio-Zertifizierung bietet signifikante Aufschläge.",
+          "Rückverfolgbarkeit vom Bienenstock bis ins Regal ist sehr wichtig."
+        ],
+        "buyers": "Feinkostläden, Biomärkte"
+      },
+      "natural_oils": {
+        "product": "Natürliche Öle (Marula)",
+        "status": "Aufstrebender Markt",
+        "requirements": [
+          "COSMOS- oder NaTrue-Zertifizierung für Kosmetika.",
+          "Dokumentation nachhaltiger Beschaffungspraktiken.",
+          "Qualitätskontrolle für Reinheit und Fettsäureprofil.",
+          "Klare Kennzeichnung des botanischen Namens und der Herkunft."
+        ],
+        "buyers1": "Kosmetikhersteller",
+        "buyers2": "Wellness-Marken"
+      }
+    },
+    "partner_network_badge": "Netzwerk",
+    "partner_network_title": "Verifiziertes Partner-Netzwerk",
+    "partner_network_subtitle": "Verbinden Sie sich mit vertrauenswürdigen deutschen Einzelhändlern, Distributoren und Logistikdienstleistern.",
+    "view_examples": "Beispiele ansehen",
+    "partner_examples": "Beispiele für Partner:",
     "partners": {
-      "retailers": "Einzelhändler",
-      "retailers_desc": "Große deutsche Einzelhandelsketten mit Interesse an authentischen afrikanischen Produkten",
-      "retailers_examples": [
-        "REWE Group",
-        "EDEKA",
-        "Metro AG",
-        "Kaufland",
-        "Aldi Süd"
-      ],
-      "educational": "Bildungseinrichtungen",
-      "educational_desc": "Institutionen, die Handelsschulungen und Partnerschaften unterstützen",
-      "educational_examples": [
-        "Afrika-Verein der deutschen Wirtschaft",
-        "IHK (Industrie- und Handelskammern)",
-        "Handelsschulen",
-        "Universitäten"
-      ],
-      "business": "Geschäftspartner",
-      "business_desc": "Professionelle Dienstleistungen für Markteintritt und Expansion",
-      "business_examples": [
-        "Import/Export-Agenturen",
-        "Unternehmensberater",
-        "Markteintrittsspezialisten",
-        "Vertriebspartner"
-      ],
-      "logistics": "Logistikpartner",
-      "logistics_desc": "Zuverlässige Versand- und Zollabwicklungsdienste",
-      "logistics_examples": [
-        "DHL Global Forwarding",
-        "Kuehne + Nagel",
-        "DB Schenker",
-        "Speditionen"
-      ],
-      "regulatory": "Regulierungspartner",
-      "regulatory_desc": "Unterstützung bei der Einhaltung von Vorschriften und Zertifizierungen",
-      "regulatory_examples": [
-        "Deutscher Zoll (Zoll)",
-        "Zertifizierungsstellen",
-        "Qualitätssicherungsagenturen",
-        "Trade-Compliance-Berater"
-      ],
-      "financial": "Finanzdienstleistungen",
-      "financial_desc": "Bank- und Finanzunterstützung für internationale Handelstransaktionen",
-      "financial_examples": [
-        "Deutsche Bank",
-        "Commerzbank",
-        "KfW Entwicklungsbank",
-        "Exportkreditagenturen",
-        "Handelsfinanzierer"
-      ]
+      "retailers": {
+        "type": "Einzelhändler & Supermärkte",
+        "description": "Direkter Zugang zu großen deutschen Einzelhandelsketten und unabhängigen Geschäften."
+      },
+      "educational_institutions": {
+        "type": "Bildungseinrichtungen",
+        "description": "Partnerschaften für Kompetenzentwicklung, Forschung und kulturellen Austausch."
+      },
+      "business_partners": {
+        "type": "Geschäftsentwicklungspartner",
+        "description": "Spezialisten für Markteintritt, Business Matching und Investitionserleichterung."
+      },
+      "logistics_partners": {
+        "type": "Logistik & Speditionen",
+        "description": "Zuverlässige und effiziente Transportlösungen für reibungslose Exportgeschäfte."
+      },
+      "regulatory_partners": {
+        "type": "Regulierungs- & Zertifizierungsstellen",
+        "description": "Beratung und Unterstützung bei der Navigation durch komplexe deutsche und EU-Vorschriften."
+      },
+      "financial_services": {
+        "type": "Finanzdienstleistungen & Handelsfinanzierung",
+        "description": "Zugang zu Handelsfinanzierungen, Exportkrediten und Banklösungen."
+      }
     },
-    "updates": {
-      "title1": "Lockerung der EU-Sanktionen",
-      "date1": "Februar 2025",
-      "desc1": "Die EU hat bestimmte Sanktionen gegen Simbabwe gelockert, was die Handelsbeziehungen und Marktzugangschancen verbessert.",
-      "title2": "Ablauf des Waffenembargos",
-      "date2": "Februar 2026",
-      "desc2": "Das EU-Waffenembargo läuft aus, was eine weitere Normalisierung der Beziehungen zwischen der EU und Simbabwe signalisiert.",
-      "title3": "EU-ESA WPA Vorteile",
-      "desc3": "Simbabwe profitiert vom zollfreien Zugang zu EU-Märkten im Rahmen des Interims-Wirtschaftspartnerschaftsabkommens EU-ESA für qualifizierte Produkte."
+    "regulatory_updates_badge": "Updates",
+    "regulatory_updates_title": "Aktualisierungen der Vorschriften",
+    "regulatory_updates_subtitle": "Bleiben Sie informiert über die neuesten Änderungen in den internationalen Handelsvorschriften für simbabwische Exporte.",
+    "regulatory_updates": {
+      "eu_sanctions_easing": {
+        "title": "EU-Sanktionslockerungen für Simbabwe",
+        "date": "März 2024",
+        "description": "Die Europäische Union hat Sanktionen gegen mehrere simbabwische Unternehmen gelockert, was neue Wege für Handel und Investitionen eröffnet."
+      },
+      "arms_embargo_expiration": {
+        "title": "Ablauf des Waffenembargos",
+        "date": "Februar 2024",
+        "description": "Das Waffenembargo der EU gegen Simbabwe ist offiziell ausgelaufen, was die Handelsbeziehungen weiter normalisiert."
+      },
+      "eu_esa_epa_benefits": {
+        "title": "Vorteile des EU-ESA EPA",
+        "description": "Simbabwe profitiert von zoll- und quotenfreiem Zugang zum EU-Markt im Rahmen des Interims-Wirtschaftspartnerschaftsabkommens (EPA)."
+      }
     },
-    "latest_updates": "Aktuelle Updates",
-    "regulatory_updates_title": "Regulierungs-Updates 2026",
-    "regulatory_updates_desc": "Neueste Entwicklungen im Handelsverhältnis Simbabwe-EU",
-    "product_intelligence": "Produktintelligenz",
-    "product_market_intelligence": "Produkt-Marktintelligenz",
-    "product_intelligence_desc": "Spezifische Anforderungen und Status für wichtige simbabwische Exportprodukte",
-    "eu_approved": "EU-zugelassen",
-    "pending_approval": "Zulassung ausstehend",
-    "requirements_label": "Anforderungen:",
-    "buyers_label": "Abnehmer:",
-    "go_to_slide": "Zu Slide gehen",
-    "export_roadmap": "Export-Fahrplan",
-    "roadmap_title": "Exportprozess Simbabwe nach Deutschland",
-    "roadmap_desc": "Professionelle Schritt-für-Schritt-Anleitung für den Export simbabwischer Produkte in den deutschen und EU-Markt",
-    "export_sectors": "Wichtige Exportsektoren",
-    "sectors_desc": "Das vielfältige Exportportfolio Simbabwes bietet Möglichkeiten in verschiedenen Sektoren",
-    "development_programs": "Exportentwicklungsprogramme",
-    "programs_desc": "Spezialisierte Initiativen zum Aufbau von Exportkapazitäten und Marktzugang",
-    "diaspora_role": "Die Rolle der Diaspora im Handel",
-    "diaspora_role_desc": "Wie Diaspora-Mitglieder simbabwische Exporteure unterstützen und Handelsmöglichkeiten schaffen können"
+    "cta_title": "Bereit für den Export in die EU?",
+    "cta_subtitle": "Unser Expertenteam begleitet Sie durch jeden Schritt des Prozesses. Kontaktieren Sie uns noch heute.",
+    "cta_button": "Jetzt starten"
   },
   "tourism": {
     "hero": {
-      "badge1": "Forbes #1 Reiseziel 2025",
-      "title1": "Simbabwe: ",
-      "highlight1": "Eine Welt voller Wunder",
-      "subtitle1": "Entdecken Sie atemberaubende Landschaften, reiches kulturelles Erbe und unvergessliche Erlebnisse im Herzen des südlichen Afrikas.",
-      "plan_journey": "Reise planen",
-      "watch_exp": "Erlebnis ansehen",
-      "badge2": "Neue Initiative",
-      "title2": "Zimbabwe Shop",
-      "subtitle2": "EU-Diaspora & Tourismus Handelsportal",
-      "desc2": "Verbindung von Kultur, Handel und Identität über eine Plattform, die das Herz Simbabwes auf den europäischen Markt bringt.",
-      "badge3": "Safari-Exzellenz",
-      "title3": "Hwange-Nationalpark",
-      "subtitle3": "Erleben Sie die majestätischen Big Five",
-      "highlight3": "50.000+ Elefanten",
-      "badge4": "Historisches Erbe",
-      "title4": "Ruinen von Groß-Simbabwe",
-      "subtitle4": "Erkunden Sie die mittelalterliche Steinstadt",
-      "highlight4": "Antike Majestät",
-      "badge5": "Abenteuer-Hauptstadt",
+      "badge1": "Besuchen Sie Simbabwe",
+      "title1": "Entdecken Sie die Majestät",
+      "subtitle1": "Von den Victoriafällen bis Groß-Simbabwe – erleben Sie das Herz Afrikas.",
+      "highlight1": "Weltklasse-Schönheit",
+      "badge2": "Kulturelles Erbe",
+      "title2": "Reiche Geschichte",
+      "subtitle2": "Erkunden Sie antike Zivilisationen und lebendige moderne Kultur.",
+      "highlight2": "Uralte Wurzeln",
+      "badge3": "Abenteuer",
+      "title3": "Wildtiere & Safari",
+      "subtitle3": "Unvergessliche Begegnungen in unberührten Nationalparks.",
+      "highlight3": "Unberührte Natur",
+      "badge4": "Historische Stätte",
+      "title4": "Groß-Simbabwe",
+      "subtitle4": "Antike Ruinen, die die mittelalterliche afrikanische Zivilisation zeigen.",
+      "badge5": "Abenteuer-Hub",
       "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Der donnernde Rauch",
-      "highlight5": "Naturwunder"
+      "subtitle5": "Erleben Sie den „Donnernden Rauch“ an den Victoriafällen.",
+      "plan_journey": "Reise planen",
+      "watch_exp": "Erlebnis ansehen"
     },
-    "attractions_title": "Ikonische Attraktionen",
-    "attractions_subtitle": "Erleben Sie die natürliche Schönheit und die historischen Wunder Simbabwes",
-    "plan_visit_title": "Besuch planen",
-    "plan_visit_desc": "Wesentliche Informationen für ein reibungsloses Reiseerlebnis",
-    "contact_title": "Tourismus-Anfrage",
-    "contact_desc": "Benötigen Sie Hilfe bei der Planung Ihrer Reise? Kontaktieren Sie unsere Tourismus-Spezialisten.",
-    "planning": {
-      "visa": {
-        "title": "Visabestimmungen",
-        "desc": "Die meisten Besucher erhalten ein Visum bei der Einkunft. E-Visum-System für Vorabanmeldungen verfügbar.",
-        "d1": "Touristenvisum: $30-75",
-        "d2": "Gültiger Reisepass erforderlich",
-        "d3": "6 Monate Restgültigkeit empfohlen"
+    "attractions_title": "Top-Reiseziele",
+    "attractions_subtitle": "Ikonische Wahrzeichen, die das simbabwische Erlebnis definieren.",
+    "attractions": {
+      "vicfalls": {
+        "name": "Victoriafälle",
+        "desc": "Eines der sieben Weltwunder der Natur, der größte fallende Wasservorhang der Welt.",
+        "h1": "UNESCO-Welterbe",
+        "h2": "Abenteuer-Zentrum",
+        "h3": "Wildtierbeobachtung",
+        "summary": "Lokal bekannt als Mosi-oa-Tunya (Der donnernde Rauch), sind die Victoriafälle doppelt so hoch wie die Niagarafälle. Erleben Sie Wildwasser-Rafting, Bungee-Jumping, Helikopterflüge und den berühmten Devil's Pool. Von Februar bis Mai sind die Fälle am spektakulärsten."
       },
-      "health": {
-        "title": "Gesundheit & Sicherheit",
-        "desc": "Simbabwe ist für Touristen im Allgemeinen sicher. Standard-Reisevorsorge empfohlen.",
-        "d1": "Gelbfieber (falls zutreffend)",
-        "d2": "Malariaprophylaxe",
-        "d3": "Reiseversicherung ratsam"
+      "greatzim": {
+        "name": "Groß-Simbabwe",
+        "desc": "Antike Steinruinen, die mittelalterliche afrikanische Zivilisation und architektonische Exzellenz bezeugen.",
+        "h1": "UNESCO-Welterbe",
+        "h2": "Historische Stätte",
+        "h3": "Kulturerbe",
+        "summary": "Erbaut zwischen dem 11. und 15. Jahrhundert, war Groß-Simbabwe die Hauptstadt des Königreichs Simbabwe. Die massiven Steinstrukturen wurden ohne Mörtel errichtet. Die Stätte gab dem Land seinen Namen."
       },
-      "payment": {
-        "title": "Zahlungssysteme",
-        "desc": "Mehrwährungswirtschaft, USD ist weitgehend akzeptiert. Mobiles Bezahlen ist beliebt.",
-        "d1": "USD, ZAR, EUR akzeptiert",
-        "d2": "EcoCash Mobile Money",
-        "d3": "Karten in großen Hotels"
+      "kariba": {
+        "name": "Kariba-Talsperre",
+        "desc": "Einer der weltweit größten künstlichen Seen, perfekt für Hausboot-Touren und Angeln.",
+        "h1": "Wassersport",
+        "h2": "Tigerfisch-Angeln",
+        "h3": "Malerische Sonnenuntergänge",
+        "summary": "Der Kariba-See erstreckt sich über 5.500 Quadratkilometer entlang des Sambesi. Berühmt für Hausbootferien und atemberaubende Sonnenuntergänge. Der See beherbergt zahlreiche Flusspferde, Krokodile und Elefanten."
       },
-      "time": {
-        "title": "Beste Reisezeit",
-        "desc": "Ganzjahresziel, wobei die Trockenzeit (Mai–Oktober) am beliebtesten ist.",
-        "d1": "Mai–Okt: Trockenzeit",
-        "d2": "Nov–Apr: Regenzeit (Grüne Saison)",
-        "d3": "Fälle am besten: Feb–Mai"
+      "rocks": {
+        "name": "Balancing Rocks",
+        "desc": "Ikonische Felsformationen, die Simbabwes einzigartiges geologisches Erbe symbolisieren.",
+        "h1": "Nationalsymbol",
+        "h2": "Fotografie",
+        "h3": "Naturwunder",
+        "summary": "Diese der Schwerkraft trotzenden Granitformationen sind auf Simbabwes Währung abgebildet. Sie entstanden über Millionen von Jahren durch Erosion und bieten surreale Landschaften."
+      }
+    },
+    "other_attractions_title": "Weitere unglaubliche Ziele",
+    "other_attractions_subtitle": "Jenseits der Klassiker bietet Simbabwe vielfältige Landschaften und Wildtiererlebnisse.",
+    "other_attractions": {
+      "hwange": {
+        "name": "Hwange-Nationalpark",
+        "desc": "Simbabwes größter Park, berühmt für seine riesigen Elefantenherden.",
+        "h1": "Big-Five-Safari",
+        "h2": "Massive Elefantenherden",
+        "h3": "Naturschutz",
+        "summary": "Mit über 14.000 Quadratkilometern ist Hwange ein erstklassiges Safari-Ziel. Er beheimatet über 100 Säugetierarten und ist weltberühmt für seine zehntausenden Elefanten."
+      },
+      "matobo": {
+        "name": "Matobo-Nationalpark",
+        "desc": "UNESCO-Welterbe, bekannt für seine Felsformationen und spirituelle Geschichte.",
+        "h1": "Balancing Rocks",
+        "h2": "Antike Felsmalerei",
+        "h3": "Nashorn-Schutzgebiet",
+        "summary": "Die Matobo-Berge bieten eine einzigartige Landschaft aus Granitkuppen. Es ist eine bedeutende archäologische Stätte mit San-Felskunst und dem Grab von Cecil Rhodes."
+      },
+      "eastern_highlands": {
+        "name": "Östliches Hochland",
+        "desc": "Eine kühle Gebirgsregion mit üppigen Wäldern, Wasserfällen und nebligen Gipfeln.",
+        "h1": "Bergwandern",
+        "h2": "Atemberaubende Wasserfälle",
+        "h3": "Kühles Klima",
+        "summary": "Diese Region umfasst die Nyanga-, Vumba- und Chimanimani-Berge. Sie bietet einen starken Kontrast zum Rest des Landes mit ihrer alpinen Szenerie."
+      },
+      "mana_pools": {
+        "name": "Mana-Pools-Nationalpark",
+        "desc": "Ein abgelegenes UNESCO-Gebiet, berühmt für seine Flussbecken und Wander-Safaris.",
+        "h1": "Wander-Safaris",
+        "h2": "Blick auf den Sambesi",
+        "h3": "Ungezähmte Wildnis",
+        "summary": "Mana Pools ist bekannt für seine unglaubliche Schönheit. Es bietet die einzigartige Gelegenheit für unbegleitete Wander-Safaris inmitten von Elefanten und Löwen."
+      },
+      "nyanga": {
+        "name": "Nyanga-Nationalpark",
+        "desc": "Das „kleine Schottland“ Afrikas, Heimat des höchsten Gipfels Simbabwes.",
+        "h1": "Mount Nyangani",
+        "h2": "Mutarazi-Fälle",
+        "h3": "Outdoor-Abenteuer",
+        "summary": "Ein Hochlandparadies mit den Mutarazi-Fällen (den zweithöchsten Afrikas). Besucher genießen Skywalks und Ziplines über die Pungwe-Schlucht."
+      },
+      "gonarezhou": {
+        "name": "Gonarezhou-Nationalpark",
+        "desc": "Der „Ort der Elefanten“, geprägt durch die roten Chilojo-Klippen.",
+        "h1": "Chilojo-Klippen",
+        "h2": "Unberührte Wildnis",
+        "h3": "Ort der Elefanten",
+        "summary": "Simbabwes zweitgrößter Park ist berühmt für seine raue Landschaft und die ikonischen roten Sandsteinklippen. Ein echtes Abenteuer abseits der Pfade."
       }
     },
     "onesa": {
-      "badge": "KI-Reisebegleiter",
+      "name": "Onesa AI",
+      "badge": "Onesa AI Begleiter",
+      "chat": "Mit Onesa chatten",
+      "img_alt": "Onesa AI Guide",
       "title": "Ihr lokaler Guide in der Tasche",
-      "subtitle": "Onesa KI hilft Ihnen, sich in Simbabwe zurechtzufinden – von kultureller Etikette bis hin zu versteckten Juwelen.",
+      "subtitle": "Simbabwe zu bereisen kann komplex sein. Onesa AI versteht die „Kukiya-kiya“-Wirtschaft und lokale Nuancen, um Ihre Reise nahtlos zu machen.",
+      "companion_title": "Vom Buchen von Flügen über Wetterinfos bis zum Entdecken lokaler Geheimtipps – Onesa AI hilft Ihnen.",
+      "companion_subtitle": "Onesa AI hilft Ihnen bei der Planung und Navigation vor Ort. Vom Verständnis lokaler Etikette bis zum Finden versteckter Juwelen.",
+      "assistant_label": "Onesa AI Assistent",
+      "prompt_question": "„Onesa, wo gibt es heute Abend in Harare das beste traditionelle Sadza?“",
+      "prompt_response": "Für ein authentisches Sadza-Erlebnis in Harare sollten Sie zum Mbare Musika Markt gehen. Die lokalen Anbieter dort servieren frisch zubereitetes Sadza mit verschiedenen Beilagen. Fragen Sie einfach nach „Sadza ne Nyama“ (Sadza mit Fleisch)!",
       "guide": {
         "title": "Lokale Einblicke",
-        "desc": "Erhalten Sie Empfehlungen für das beste lokale Essen, versteckte Attraktionen und kulturelle Erlebnisse, die nur Einheimische kennen."
+        "desc": "Verstehen Sie lokale Etikette, Trinkgeldkultur und soziale Normen."
       },
       "navigate": {
-        "title": "Nahtlose Navigation",
-        "desc": "Navigieren Sie durch Verkehrsmittel, lokale Märkte und Dienstleistungen mit Echtzeit-Tipps zu Preisen und Verhaltensregeln."
+        "title": "Smarte Navigation",
+        "desc": "Finden Sie die besten Routen und Orte, die nur Einheimische kennen."
       },
       "plan": {
-        "title": "Intelligente Planung",
-        "desc": "Planen Sie Ihre Reiseroute basierend auf aktuellen lokalen Ereignissen, Wetter und saisonalen Wildtiermustern."
+        "title": "Individuelle Reisepläne",
+        "desc": "KI-generierte Pläne basierend auf Ihren Interessen und Ihrem Reisestil."
+      }
+    },
+    "planning": {
+      "guide_badge": "Reiseführer",
+      "essential_info": "Wichtige Planungsinformationen",
+      "essential_desc": "Alles, was Sie wissen müssen, um ein unvergessliches Abenteuer in Simbabwe zu garantieren.",
+      "visa": {
+        "title": "Visa-Anforderungen",
+        "desc": "Wichtige Einreiseinformationen für internationale Reisende.",
+        "d1": "E-Visum-System verfügbar",
+        "d2": "Visa-on-Arrival für viele Nationalitäten",
+        "d3": "Gültiger Reisepass (6 Monate) erforderlich"
       },
-      "cta": "Chat mit Onesa KI"
-    }
+      "health": {
+        "title": "Gesundheit & Sicherheit",
+        "desc": "Bleiben Sie gesund und sicher auf Ihrem Abenteuer.",
+        "d1": "Gelbfieber-Zertifikat falls zutreffend",
+        "d2": "Malaria-Prophylaxe empfohlen",
+        "d3": "Umfassende Reiseversicherung ratsam"
+      },
+      "payment": {
+        "title": "Währung & Zahlung",
+        "desc": "Navigation in der lokalen Finanzlandschaft.",
+        "d1": "Mehrwährungssystem (USD weit verbreitet)",
+        "d2": "Visa und Mastercard in großen Hotels akzeptiert",
+        "d3": "Mobiles Bezahlen (EcoCash) verbreitet"
+      },
+      "time": {
+        "title": "Beste Reisezeit",
+        "desc": "Das richtige Timing für das beste Erlebnis.",
+        "d1": "Mai bis Oktober für Wildtierbeobachtung",
+        "d2": "Februar bis Mai für die Victoriafälle",
+        "d3": "Ganzjährig angenehmes gemäßigtes Klima"
+      }
+    },
+    "cta_title": "Bereit für Ihr Abenteuer?",
+    "cta_button": "Mit einem Experten sprechen",
+    "cta_subtitle": "Unser Reiseteam hilft Ihnen, die richtigen Möglichkeiten zu finden und führt Sie durch den Prozess.",
+    "contact_form_title": "Reiseanfrage",
+    "explore_title": "Weitere Reiseinformationen",
+    "explore_subtitle": "Für umfassende offizielle Richtlinien besuchen Sie die Website der Zimbabwe Tourism Authority.",
+    "explore_site": "Zimbabwe Tourism Authority besuchen"
   },
   "investment": {
+    "objective_title": "Sicher investieren, Wachstum fördern",
+    "objective_subtitle": "Verbindung von Diaspora-Investoren mit geprüften, hochpotenzialen Projekten, unterstützt durch staatliche Initiativen.",
     "hero": {
-      "badge1": "Reserve Bank of Zimbabwe",
-      "title1": "Simbabwe-Gold (ZiG) Stabilität",
-      "subtitle1": "Abgesichert durch Gold- und Fremdwährungsreserven steht der ZiG für eine neue Ära der Währungsstabilität und kontrollierten Inflation für Investoren.",
-      "highlight1": "Goldgedeckte Währung",
-      "badge2": "Infrastrukturwachstum",
-      "title2": "Gemeinsam Simbabwe aufbauen",
-      "subtitle2": "Infrastrukturprojekte, die Arbeitsplätze schaffen, Renditen generieren und Gemeinden entwickeln",
-      "highlight2": "$2,5M+ Investiert",
-      "badge3": "Victoria Falls Stock Exchange",
-      "title3": "VFEX: Ihr USD-Tor",
-      "subtitle3": "Investieren Sie in Simbabwes führende USD-denominierte Börse mit Steuervorteilen und nahtloser Kapitalrückführung für globale Investoren.",
-      "highlight3": "USD-Denominiert",
-      "badge4": "Landwirtschaft 4.0",
-      "title4": "Smart Farming Investitionen",
-      "subtitle4": "Hochertragreiche Macadamia- und Avocado-Projekte unter Einsatz von Präzisionslandwirtschaft.",
-      "highlight4": "18-22% IRR",
-      "badge5": "Bergbau-Transformation",
-      "title5": "Zentrum für kritische Mineralien",
-      "subtitle5": "Investieren Sie in Simbabwes Lithium- und Platin-Veredelungsprojekte für die globale Energiewende.",
-      "highlight5": "Globale Nachfrage"
+      "badge1": "RBZ-Initiativen",
+      "title1": "Diaspora-Investitionen",
+      "subtitle1": "Unterstützung der nationalen Entwicklung durch Diaspora-Engagement.",
+      "rbz_policy": "Richtlinien erkunden",
+      "rbz_currency": "Investieren in USD oder ZiG",
+      "highlight1": "Nationales Wachstum",
+      "badge2": "Masuwe SEZ",
+      "title2": "Investieren in Masuwe SEZ",
+      "subtitle2": "Strategische Tourismus-Chancen nahe der Victoriafälle.",
+      "highlight2": "Top-Lage",
+      "badge3": "VFEX",
+      "title3": "Börse",
+      "subtitle3": "In offshore-gelistete afrikanische Unternehmen investieren.",
+      "highlight3": "Globaler Zugang",
+      "badge4": "Gartenbau",
+      "title4": "Grünes Gold",
+      "subtitle4": "Hochwertige Fruchtexporte als Wachstumstreiber.",
+      "highlight4": "Hoher ROI",
+      "badge5": "Bergbau",
+      "title5": "Mineralreichtum",
+      "subtitle5": "Gold-, Platin- und Lithium-Chancen.",
+      "highlight5": "Strategische Assets"
     },
-    "active_projects": "Aktive Investitionsprojekte",
-    "active_projects_desc": "Verifizierte Möglichkeiten für Diaspora-Investitionen in Schlüsselsektoren",
-    "all_sectors": "Alle Sektoren",
-    "agriculture": "Landwirtschaft",
-    "manufacturing": "Fertigung",
-    "tourism": "Tourismus",
-    "infrastructure": "Infrastruktur",
-    "tech": "Tech",
-    "all_risk": "Alle Risikostufen",
-    "conservative": "Konservativ",
-    "moderate": "Moderat",
-    "aggressive": "Aggressiv",
-    "calculator_title": "Investitionsrechner",
-    "calculator_desc": "Simulieren Sie Ihre potenziellen Renditen",
-    "verified_directories": "Verifizierte Verzeichnisse",
-    "directories_desc": "Greifen Sie auf offizielle Register und Verbände zu",
-    "onesa_title": "Onesa KI Begleiter",
-    "onesa_desc": "Nutzen Sie Onesa KI für datengestützte Investitionsentscheidungen und Risikobewertungen mit tiefem lokalem Kontext.",
-    "masuwe_title": "Sonderwirtschaftszone Masuwe",
-    "masuwe_desc": "Die Masuwe SEZ ist eine erstklassige 1200 Hektar große Entwicklung 10 km von den Victoriafällen entfernt. Sie bietet erstklassige Möglichkeiten im internationalen Tourismus, für medizinische Resorts und Finanzdienstleistungen mit erheblichen steuerlichen Anreizen und staatlicher Unterstützung.",
-    "contact_title": "Bereit zu investieren?"
+    "projects": {
+      "masuwe": {
+        "title": "Masuwe SEZ",
+        "description": "Zentrum für Tourismus-Infrastruktur nahe der Victoriafälle.",
+        "highlights": [
+          "Steuervorteile",
+          "Tourismus-Hub",
+          "Infrastruktur bereit"
+        ]
+      },
+      "leather": {
+        "title": "Leder-Cluster",
+        "description": "Regionale Exportverarbeitung und Herstellung.",
+        "highlights": [
+          "Wertschöpfung",
+          "Fachkräfte",
+          "Exportbereit"
+        ]
+      },
+      "apparel": {
+        "title": "ZimBrand Lieferkette",
+        "description": "Vertriebszentrum für Markenartikel und Sporttrikots.",
+        "highlights": [
+          "Globale Lizenzen",
+          "Sportpartner",
+          "Skalierbares Modell"
+        ]
+      },
+      "horticulture": {
+        "title": "Blaubeer-Farm",
+        "description": "Hochwertige Exportproduktion für globale Märkte.",
+        "highlights": [
+          "Global Gap zertifiziert",
+          "Off-Season Vorteil",
+          "Wassereffizient"
+        ]
+      },
+      "fintech": {
+        "title": "ZimPay Core",
+        "description": "Nächste Generation IT-Infrastruktur für Diaspora-Überweisungen.",
+        "highlights": [
+          "SaaS-Modell",
+          "Sichere API",
+          "Regionale Skalierung"
+        ]
+      },
+      "solar": {
+        "title": "Mutare Solar Park",
+        "description": "5MW netzgekoppelte Energie für lokale Industrie.",
+        "highlights": [
+          "Einspeisevertrag",
+          "CO2-Zertifikate",
+          "Stabile Renditen"
+        ]
+      }
+    },
+    "project_filters": {
+      "all": "Alle",
+      "tourism": "Tourismus",
+      "agriculture": "Landwirtschaft",
+      "manufacturing": "Produktion",
+      "it": "IT & Fintech",
+      "energy": "Energie",
+      "sector": "Sektor",
+      "risk_level": "Risiko",
+      "min_investment": "Min. ",
+      "expected_return": "Erwartet",
+      "conservative": "Niedrig",
+      "moderate": "Mittel",
+      "aggressive": "Hoch"
+    },
+    "project_card": {
+      "target_amount": "Ziel: {{amount}}",
+      "raised": "Gesammelt: {{amount}}",
+      "view_details": "Details ansehen",
+      "verified": "Verifiziertes Asset",
+      "risk": "Risikostufe",
+      "timeline": "Zeitraum"
+    },
+    "benefits": {
+      "diaspora_network": {
+        "title": "Diaspora-Netzwerk",
+        "desc": "Nutzen Sie globale Verbindungen für den Marktzugang."
+      },
+      "performance_tracking": {
+        "title": "Live-Tracking",
+        "desc": "Echtzeit-Dashboards und Metriken der Projekte."
+      },
+      "flexible_investment": {
+        "title": "Flexible Portfolios",
+        "desc": "Beginnen Sie mit kleinen Beträgen und bauen Sie schrittweise auf."
+      },
+      "onesa_ai": {
+        "title": "Onesa AI Einblicke",
+        "desc": "Lokalisierte Risikobewertung und Intelligenz."
+      }
+    },
+    "hdc_title": "Horticultural Development Council (HDC)",
+    "hdc_subtitle": "Überwachung der Qualitätsstandards für Gartenbau-Exporte.",
+    "hdc_associations": [
+      "Avocado-Anbauerverband",
+      "Beeren-Anbauerverband",
+      "Zitrusfrucht-Anbauerverband",
+      "Kaffee-Anbauerverband",
+      "Nuss-Anbauerverband",
+      "Tee-Anbauerverband",
+      "Exportartikelverband",
+      "Blumen-Anbauerverband"
+    ],
+    "ntir_title": "Nationales Handels- & Investitionsregister (NTIR)",
+    "ntir_subtitle": "Offizielles Register verifizierter Handels- und Investitionseinheiten in Simbabwe.",
+    "ntir_button": "NTIR-Datenbank durchsuchen",
+    "crowdfunding_title": "Crowdfunding-Möglichkeiten",
+    "crowdfunding_subtitle": "Mikro-Investitionen in geprüfte Projekte und reale Wirkung sehen.",
+    "investment_sectors_title": "Aktive Investitionsmöglichkeiten",
+    "investment_sectors_subtitle": "Sorgfältig geprüfte Projekte mit staatlicher Unterstützung und Transparenz.",
+    "cta_title": "Bereit zum Investieren?",
+    "cta_subtitle": "Unser Investment-Team hilft Ihnen, die richtigen Gelegenheiten zu finden.",
+    "cta_button": "Mit einem Experten sprechen",
+    "contact_form_title": "Investitionsanfrage",
+    "explore_title": "Weitere Investitionsinfos",
+    "explore_subtitle": "Für offizielle Richtlinien besuchen Sie die Zimbabwe Investment and Development Agency.",
+    "explore_site": "ZIDA besuchen"
   },
   "trade": {
     "hero": {
-      "badge1": "Handels-Exzellenz",
-      "title1": "Simbabwe Export Hub",
-      "subtitle1": "Verbindung simbabwischer Produzenten mit globalen Märkten durch Diaspora-Netzwerke und Handelsexpertise",
-      "highlight1": "$50M+ Exporte",
-      "badge4": "Logistik & Versorgung",
-      "title4": "Effiziente Exportlogistik",
-      "subtitle4": "Optimierung des Weges simbabwischer Produkte zu globalen Zielen.",
-      "highlight4": "Globale Reichweite",
-      "badge5": "Handelspolitik",
-      "title5": "Interim-WPA-Vorteile",
-      "subtitle5": "Nutzung von Handelsabkommen für Wettbewerbsvorteile auf EU-Märkten.",
-      "highlight5": "Zollfrei",
-      "badge2": "Sektorwachstum",
-      "title2": "Expansion im Gartenbau",
-      "subtitle2": "Simbabwes Gartenbauexporte erreichen auf europäischen und nahöstlichen Märkten neue Höchststände.",
-      "highlight2": "30% Jährliches Wachstum",
-      "badge3": "Industrialisierung",
-      "title3": "Wertschöpfende Fertigung",
-      "subtitle3": "Unterstützung des Übergangs von Rohexporten zu hochwertig verarbeiteten simbabwischen Produkten.",
-      "highlight3": "Vision 2030"
+      "badge1": "Globaler Handel",
+      "title1": "Simbabwes Handels-Hub",
+      "subtitle1": "Verbindung lokaler Unternehmen mit globalen Märkten.",
+      "highlight1": "Exportwachstum",
+      "badge2": "Strategische Partner",
+      "title2": "Internationale Zusammenarbeit",
+      "subtitle2": "Aufbau starker Handelsbeziehungen mit Partnern weltweit.",
+      "highlight2": "Globales Netzwerk",
+      "badge3": "Nachhaltiger Handel",
+      "title3": "Ethische & Grüne Exporte",
+      "subtitle3": "Förderung umweltfreundlicher und sozial verantwortlicher Handelspraktiken.",
+      "highlight3": "Verantwortungsvolles Business",
+      "badge4": "Exportförderung",
+      "title4": "Nationale Exporte stärken",
+      "subtitle4": "Wirtschaftliche Prosperität durch diversifizierte Exportstrategien.",
+      "highlight4": "Wirtschaftlicher Wohlstand",
+      "badge5": "EU-Marktzugang",
+      "title5": "Zugang zum europäischen Markt",
+      "subtitle5": "Erleichterung des Markteintritts für simbabwische Produkte in die EU.",
+      "highlight5": "Zollfreier Zugang"
     },
-    "export_roadmap": "Export-Fahrplan",
-    "roadmap_title": "Exportprozess Simbabwe nach Deutschland",
-    "roadmap_desc": "Professionelle Schritt-für-Schritt-Anleitung für den Export simbabwischer Produkte in den deutschen und EU-Markt",
-    "export_sectors": "Wichtige Exportsektoren",
-    "sectors_desc": "Das vielfältige Exportportfolio Simbabwes bietet Möglichkeiten in verschiedenen Sektoren",
-    "development_programs": "Exportentwicklungsprogramme",
-    "programs_desc": "Spezialisierte Initiativen zum Aufbau von Exportkapazitäten und Marktzugang",
-    "diaspora_role": "Die Rolle der Diaspora im Handel",
-    "diaspora_role_desc": "Wie Diaspora-Mitglieder simbabwische Exporteure unterstützen und Handelsmöglichkeiten schaffen können"
+    "objective_title": "Wertschöpfungsketten",
+    "objective_subtitle": "Aufbau nachhaltiger und effizienter Wertschöpfungsketten für langfristiges Wachstum.",
+    "export_roadmap_badge": "Export-Roadmap",
+    "export_roadmap_title": "Exportprozess Simbabwe nach Deutschland",
+    "export_roadmap_subtitle": "Eine Schritt-für-Schritt-Anleitung für Ihre Exportreise.",
+    "export_flow": {
+      "product_approval": {
+        "phase": "Produktzulassung",
+        "description": "Für Produkte ohne EU-Zulassung (z. B. Honig)",
+        "steps": [
+          "Rückstandsüberwachungsplan (RMP) einreichen",
+          "EU-akkreditierte Testsysteme etablieren",
+          "Registrierung im EU TRACES-System",
+          "Warten auf Aufnahme in die EU-Liste"
+        ]
+      },
+      "registration_compliance": {
+        "phase": "Registrierung & Compliance",
+        "description": "Erforderlich für alle Exporteure",
+        "steps": [
+          "Registrierung für das REX-System über ZIMRA",
+          "ZimTrade für Marktanalysen konsultieren",
+          "Erforderliche Zertifikate einholen",
+          "Exportregistrierung bei Behörden abschließen"
+        ]
+      },
+      "certification_quality": {
+        "phase": "Zertifizierung & Qualität",
+        "description": "EU-Qualitätsstandards erfüllen",
+        "steps": [
+          "GLOBALG.A.P. & GRASP Zertifizierung",
+          "EU-Bio-Zertifizierung (falls zutreffend)",
+          "Qualitätskontrolle: Klasse I, MRL-Grenzwerte",
+          "Audits durch Drittanbieter"
+        ]
+      },
+      "logistics_documentation": {
+        "phase": "Logistik & Dokumentation",
+        "description": "Letzte Exportvorbereitungen",
+        "steps": [
+          "Exportdokumente vorbereiten",
+          "Gesundheits- & Pflanzengesundheitszeugnisse",
+          "Handelsrechnung mit REX-Erklärung",
+          "Kühlkettenlogistik organisieren"
+        ]
+      }
+    },
+    "export_sectors_badge": "Sektoren",
+    "export_sectors_title": "Wichtige Exportsektoren",
+    "export_sectors_subtitle": "Entdecken Sie die Branchen, die Simbabwes Exportwirtschaft antreiben.",
+    "sectors": {
+      "horticulture": {
+        "name": "Gartenbau",
+        "description": "Frischwaren, Blumen und Bio-Gemüse für internationale Märkte.",
+        "opportunities": [
+          "EU-Biomärkte",
+          "Exporte in den Nahen Osten",
+          "Regionaler SADC-Handel"
+        ]
+      },
+      "leather_products": {
+        "name": "Lederprodukte",
+        "description": "Hochwertige Lederwaren und Schuhe mit authentischer afrikanischer Handwerkskunst.",
+        "opportunities": [
+          "Europäische Modemärkte",
+          "Luxusgütersektor",
+          "Staatliche Beschaffung"
+        ]
+      },
+      "arts_crafts": {
+        "name": "Kunst & Handwerk",
+        "description": "Steinskulpturen, Flechtwaren und traditionelle Kunstprodukte.",
+        "opportunities": [
+          "Tourismusmärkte",
+          "Kulturexporte",
+          "Fair-Trade-Kanäle"
+        ]
+      },
+      "minerals_mining": {
+        "name": "Mineralien & Bergbau",
+        "description": "Veredelte Mineralprodukte, Edelsteine und verarbeitete Materialien.",
+        "opportunities": [
+          "Industrielle Exporte",
+          "Schmucksektor",
+          "Technologie-Mineralien"
+        ]
+      }
+    },
+    "zimtrade_programs_badge": "Programme",
+    "zimtrade_programs_title": "ZimTrade Export-Entwicklungsprogramme",
+    "zimtrade_programs_subtitle": "Initiativen zur Stärkung simbabwischer Unternehmen.",
+    "programs": {
+      "eagles_nest": {
+        "title": "Eagles Nest",
+        "description": "Inkubatorprogramm für junge Exporteure der nächsten Generation.",
+        "target": "Junge Unternehmer (18-35 Jahre)",
+        "benefits": [
+          "Export-Training",
+          "Mentoring",
+          "Marktzugang",
+          "Finanzierungshilfe"
+        ]
+      },
+      "next_she_exporter": {
+        "title": "Next She Exporter",
+        "description": "Stärkung von frauengeführten Unternehmen im Export.",
+        "target": "Unternehmen in Frauenhand",
+        "benefits": [
+          "Kapazitätsaufbau",
+          "Networking",
+          "Handelsmissionen",
+          "Zertifizierungsunterstützung"
+        ]
+      },
+      "shop_at_zim": {
+        "title": "Shop At Zim",
+        "description": "B2B-E-Commerce-Plattform für simbabwische Lieferanten.",
+        "target": "Exportbereite Unternehmen",
+        "benefits": [
+          "Online-Marktplatz",
+          "Käuferkontakte",
+          "Zahlungslösungen",
+          "Logistik-Support"
+        ]
+      }
+    },
+    "diaspora_role_badge": "Rolle der Diaspora",
+    "diaspora_role_title": "Ihre Rolle beim Exportwachstum",
+    "diaspora_role_subtitle": "Die Diaspora spielt eine entscheidende Rolle bei der Exportförderung.",
+    "diaspora_roles": {
+      "market_intelligence": {
+        "title": "Marktinformationen",
+        "description": "Teilen Sie Einblicke über Trends und Chancen in Ihrem Gastland."
+      },
+      "buyer_connections": {
+        "title": "Käuferkontakte",
+        "description": "Stellen Sie Exporteure bei Einzelhändlern und Importeuren in Ihrem Netzwerk vor."
+      },
+      "quality_feedback": {
+        "title": "Qualitäts-Feedback",
+        "description": "Geben Sie Rückmeldungen zu Qualität, Verpackung und Marktfähigkeit."
+      },
+      "brand_ambassadors": {
+        "title": "Markenbotschafter",
+        "description": "Fördern Sie simbabwische Produkte auf internationalen Märkten."
+      }
+    },
+    "cta_title": "Bereit für den Export?",
+    "cta_subtitle": "Unsere Spezialisten helfen Ihnen bei den Anforderungen und verbinden Sie mit Partnern.",
+    "cta_button": "Mit einem Experten sprechen",
+    "contact_form_title": "Handelsanfrage",
+    "explore_title": "Mehr Informationen",
+    "explore_subtitle": "Für umfassende Handelsrichtlinien besuchen Sie ZimTrade.",
+    "explore_site": "ZimTrade besuchen"
   },
   "data": {
     "hero": {
-      "badge1": "Wirtschaftswachstum 2025",
-      "title1": "Datengetriebene ",
-      "highlight1": "Einblicke",
-      "subtitle1": "Umfassende Analyse der Wirtschaftslandschaft Simbabwes.",
-      "desc1": "Erkunden Sie Echtzeit-Metriken und Sektorleistungen.",
-      "badge3": "Investitionstrends",
-      "title3": "Kapitalzufluss-Analyse",
-      "subtitle3": "Verfolgung des Wachstums von Diaspora-geführten Investitionen.",
-      "highlight3": "Sektorwachstum",
-      "badge4": "Marktintelligenz",
-      "title4": "Verbraucherdaten-Einblicke",
-      "subtitle4": "Marktanforderungen verstehen, um Strategien zu optimieren.",
-      "highlight4": "Datengetrieben",
-      "badge5": "Wirtschaftsausblick",
-      "title5": "Vision 2030 Fortschritt",
-      "subtitle5": "Überwachung nationaler Entwicklungsziele.",
-      "highlight5": "Wachstumspfad",
-      "badge2": "Überweisungstrends",
-      "title2": "Diaspora-Überweisungen",
-      "highlight2": "$2,1 Mrd. jährlich",
-      "subtitle2": "Grundstein der Devisenzuflüsse.",
-      "desc2": "Analyse des Flusses und der Auswirkungen von Diaspora-Kapital."
+      "badge1": "Wirtschaftliche Einblicke",
+      "title1": "Wachstum fördern durch ",
+      "highlight1": "Daten",
+      "subtitle1": "Erschließung des wirtschaftlichen Potenzials Simbabwes durch Datenvisualisierung.",
+      "desc1": "Erkunden Sie Wirtschaftsindikatoren, Sektorleistungen und den Einfluss der Diaspora.",
+      "economic_data": "Wirtschaftsdaten erkunden",
+      "sector": "Sektor-Leistungsdaten",
+      "badge2": "Diaspora-Power",
+      "title2": "Rücküberweisungen: Eine Säule des ",
+      "highlight2": "Wachstums",
+      "subtitle2": "Rücküberweisungen sind eine lebenswichtige Devisenquelle und Treiber der Stabilität.",
+      "desc2": "Erfahren Sie, wie diese Mittel Sektoren von Bildung bis Wohnungsbau beeinflussen.",
+      "badge3": "Investment-Trends",
+      "title3": "Strategische Investitions-",
+      "highlight3": "Möglichkeiten",
+      "subtitle3": "Identifizieren Sie Sektoren mit hohem Potenzial für lokale und Diaspora-Investoren.",
+      "badge4": "Exportleistung",
+      "title4": "Nationale ",
+      "highlight4": "Exporte steigern",
+      "subtitle4": "Verfolgen Sie das Wachstum der Exportsektoren und verstehen Sie die Marktdynamik.",
+      "badge5": "Einfluss auf die Politik",
+      "title5": "Informierte ",
+      "highlight5": "Entscheidungsfindung",
+      "subtitle5": "Datengestützte Erkenntnisse für effektive wirtschaftliche Planung."
     },
-    "indicators": "Wirtschaftsindikatoren",
-    "indicators_desc": "Schlüsselkennzahlen für die wirtschaftliche Transformation Simbabwes",
-    "diaspora_impact": "Globaler Diaspora-Impact",
-    "diaspora_impact_desc": "Der finanzielle und soziale Beitrag der Simbabwer im Ausland",
-    "regional_breakdown": "Regionale Diaspora-Aufschlüsselung",
-    "remittance_allocation": "Verteilung der Überweisungen nach Sektoren",
-    "gdp_growth": "BIP-Wachstumstrend"
+    "education": "Bildung",
+    "housing": "Wohnungsbau & Bauwesen",
+    "health_care": "Gesundheitswesen",
+    "business_investment": "Unternehmensinvestitionen",
+    "food": "Ernährung & Grundbedürfnisse",
+    "objective_title": "Datengestützte Einblicke",
+    "objective_subtitle": "Bereitstellung umfassender Informationen für strategische Entscheidungen.",
+    "overview_title": "Wirtschaftliche Kennzahlen",
+    "overview_subtitle": "Makroökonomische Indikatoren. Daten 2025 und Prognosen 2026.",
+    "overview": {
+      "gdp": {
+        "title": "BIP (Prognose 2026)",
+        "subtitle": " % Wachstum",
+        "description": "Simbabwes Bruttoinlandsprodukt"
+      },
+      "gdp_growth": {
+        "title": "Live-BIP-Wachstum",
+        "subtitle": " Echtzeit-Feed",
+        "description": "Echtzeit-Wachstumsrate basierend auf aktueller Aktivität"
+      },
+      "remittances": {
+        "title": "Rücküberweisungen",
+        "subtitle": "Devisen-Spitzenreiter",
+        "description": "Jährliche Überweisungen der Diaspora"
+      },
+      "exports": {
+        "title": "Gesamtexporte",
+        "subtitle": "Welthandel",
+        "description": "Gesamtwert der simbabwischen Exporte"
+      },
+      "mining_revenue": {
+        "title": "Bergbau-Einnahmen",
+        "subtitle": "Strategische Erze",
+        "description": "Gesamteinnahmen des Bergbausektors"
+      },
+      "manufacturing": {
+        "title": "Verarbeitendes Gewerbe",
+        "subtitle": "Industrieller Ausstoß",
+        "description": "BIP-Beitrag des Industriesektors"
+      },
+      "tourism_revenue": {
+        "title": "Tourismus-Einnahmen",
+        "subtitle": "Jahresumsatz",
+        "description": "Jährliche Einnahmen im Tourismussektor"
+      },
+      "agriculture": {
+        "title": "Agrar-Exporte",
+        "subtitle": "Exportwert",
+        "description": "Gesamtwert landwirtschaftlicher Exporte"
+      }
+    },
+    "gdp_growth_rate": "BIP-Wachstumsrate",
+    "gdp_growth_trajectory": "BIP-Wachstumsverlauf",
+    "gdp_growth_history": "Wirtschaftswachstum 2021 bis Prognose 2025",
+    "gdp_data_source": "Quelle: Weltbank, IWF, ZIMSTAT",
+    "sectoral_data_mining_title": "Analyse des Bergbausektors",
+    "sectoral_data_mining_subtitle": "Mineralreichtum trägt 5,56 Mrd. $ zur Wirtschaft bei.",
+    "sectoral_data_mining_contribution": "Beitrag",
+    "sectoral_data_mining_revenue": "Umsatz",
+    "sectoral_data_badge": "Sektorleistung",
+    "sectoral_data_title": "BIP-Wachstum nach Sektoren",
+    "sectoral_data_breakdown": "Beitrag der einzelnen Säulen zum nationalen Wachstum.",
+    "sectoral_data_projections": "Wachstumsprognosen",
+    "sectoral_data_gdp_by_sector": "BIP-Aufschlüsselung",
+    "diaspora_remittance_impact_badge": "Diaspora-Einfluss",
+    "diaspora_remittance_impact_title": "Wirtschaftliche Wirkung der Diaspora",
+    "diaspora_remittance_impact_subtitle": "Beitrag der weltweiten Diaspora zur nationalen Wirtschaft.",
+    "diaspora_remittance_value": "Jährliche Überweisungen",
+    "diaspora_number_value": "Globale Diaspora",
+    "diaspora_investment_potential": "Investitionspotenzial",
+    "diaspora_distribution": "Verteilung der Diaspora weltweit",
+    "diaspora_residence": "Wohnort der simbabwischen Diaspora weltweit",
+    "diaspora_residence_country": "Region/Land",
+    "diaspora_population": "Bevölkerung",
+    "diaspora_percentage": "Prozentsatz",
+    "data_disclaimer": "* Daten basieren auf Schätzungen von RBZ, ZIMSTAT, Weltbank und IWF. Echtzeit-Metriken aktualisieren sich periodisch.",
+    "regional_breakdown_title": "Regionale Aufschlüsselung",
+    "regional_breakdown_subtitle": "Verteilung der Diaspora in Schlüsselregionen.",
+    "regional_breakdown": {
+      "south_africa": {
+        "region": "Südafrika",
+        "population": "1,5 - 2,0 Millionen"
+      },
+      "united_kingdom": {
+        "region": "Großbritannien",
+        "population": "500k - 1,0 Millionen"
+      },
+      "botswana": {
+        "region": "Botswana",
+        "population": "500k+"
+      },
+      "united_states": {
+        "region": "USA",
+        "population": "300k - 500k"
+      },
+      "australia": {
+        "region": "Australien",
+        "population": "50k - 100k"
+      },
+      "canada": {
+        "region": "Kanada",
+        "population": "50k - 100k"
+      },
+      "germany": {
+        "region": "Deutschland",
+        "population": "30k - 50k"
+      },
+      "other_countries": {
+        "region": "Andere Länder",
+        "population": "200k+"
+      }
+    },
+    "remittance_impact_title": "Wirkung nach Sektoren",
+    "remittance_impact_subtitle": "Verteilung der Überweisungen in Simbabwe.",
+    "remittance_impact": {
+      "education": {
+        "sector": "Bildung"
+      },
+      "housing_construction": {
+        "sector": "Wohnungsbau & Bau"
+      },
+      "healthcare": {
+        "sector": "Gesundheitswesen"
+      },
+      "business_investment": {
+        "sector": "Unternehmensinvestition"
+      },
+      "food_basic_needs": {
+        "sector": "Grundbedürfnisse"
+      }
+    },
+    "cta_title": "Benötigen Sie tiefere Daten?",
+    "cta_subtitle": "Nutzen Sie unsere Berichte und Analysedienste.",
+    "cta_button": "Individuellen Bericht anfordern"
   },
   "success": {
     "hero": {
       "badge1": "Impact-Geschichten",
-      "title1": "Diaspora-getriebener Erfolg",
-      "subtitle1": "Echte Geschichten transformierter simbabwischer Unternehmen.",
-      "highlight1": "$8,5 Mio.+ generiert",
-      "badge3": "Agrar-Erfolg",
-      "title3": "Binga-Korb-Exporte",
-      "subtitle3": "Stärkung von Frauen auf dem Land durch direkten Marktzugang.",
-      "highlight3": "Gemeinschafts-Auswirkung",
-      "badge4": "Tourismuswachstum",
-      "title4": "Öko-Lodge-Investition",
-      "subtitle4": "Diaspora-finanzierte nachhaltige Tourismusprojekte.",
-      "highlight4": "Nachhaltig",
-      "badge5": "Bergbau-Innovation",
-      "title5": "Lithium-Wertschöpfung",
-      "subtitle5": "Umwandlung von Rohmineralien in hochwertige Exporte.",
-      "highlight5": "Wertschöpfung",
-      "badge2": "Unternehmergeist",
-      "title2": "Startup-Erfolg",
-      "subtitle2": "Wie Diaspora-geführte Tech-Startups Herausforderungen lösen.",
-      "highlight2": "50+ Tech-Unternehmen"
+      "title1": "Diaspora treibt ",
+      "highlight1": "Wandel",
+      "subtitle1": "Beispiele, wie die Diaspora einen spürbaren Unterschied macht.",
+      "badge2": "Innovation",
+      "title2": "Erfolg in Technik & ",
+      "highlight2": "Unternehmertum",
+      "subtitle2": "Bahnbrechende Unternehmen, unterstützt durch Diaspora-Expertise.",
+      "badge3": "Kulturaustausch",
+      "title3": "Erbe bewahren durch ",
+      "highlight3": "Handel",
+      "subtitle3": "Initiativen, die simbabwische Kultur weltweit bekannt machen.",
+      "badge4": "Nachhaltigkeit",
+      "title4": "Grüne Initiativen & ",
+      "highlight4": "Gemeinschaft",
+      "subtitle4": "Umweltschutz und Förderung ländlicher Gemeinden.",
+      "badge5": "Ressourcen",
+      "title5": "Potenziale nutzen durch ",
+      "highlight5": "Investitionen",
+      "subtitle5": "Wie Diaspora-Kapital Sektoren transformiert."
     },
-    "stories_title": "Erfolgsgeschichten",
-    "stories_desc": "Erfahren Sie, wie Diaspora-Engagement eine reale Wirkung in Simbabwe erzielt",
-    "impact_metrics": "Gesamtwirkung der Plattform",
-    "metrics_desc": "Aggregierte Erfolgskennzahlen in unserem Partnernetzwerk"
+    "objective_title": "Wirkung",
+    "objective_subtitle": "Präsentation des spürbaren Einflusses der Diaspora in Simbabwe.",
+    "stories": {
+      "leather_goods": {
+        "title": "Erfolg im Lederwaren-Export",
+        "category": "Export",
+        "story": "Fachkräfte in Deutschland vernetzten Lederhersteller mit europäischen Händlern. Das Netzwerk lieferte Analysen zu Konsumvorlieben und direkte Kontakte zu Einkäufern.",
+        "testimonial": "Die Plattform verband uns mit Diaspora-Mitgliedern, die unser Handwerk und den EU-Markt verstehen.",
+        "author": "Tendai Moyo",
+        "role": "Geschäftsführer, Zimbabwe Leather Collective"
+      },
+      "horticulture_breakthrough": {
+        "title": "Durchbruch im Bio-Gartenbau",
+        "category": "Export",
+        "story": "Eine Kooperative erhielt EU-Bio-Zertifizierung mit Hilfe von Diaspora-Agronomen. Heute exportieren sie hochwertiges Gemüse in EU-Supermärkte.",
+        "testimonial": "Wir hätten nie gedacht, dass unsere kleine Farm EU-Standards erfüllen kann.",
+        "author": "Grace Ncube",
+        "role": "Vorsitzende, Mazowe Organic Farmers Cooperative"
+      },
+      "tourism_lodge": {
+        "title": "Investition in Tourismus-Lodge",
+        "category": "Investition",
+        "story": "Über Crowdfunding sammelten 280 Investoren 500.000 $ für eine Eco-Lodge bei den Victoriafällen. Sie erwirtschaftet heute stabile Renditen.",
+        "testimonial": "Ich habe 2.000 $ investiert und bin nun Miteigentümer einer Lodge in meiner Heimat.",
+        "author": "Simba Chikwanha",
+        "role": "Diaspora-Investor, London"
+      },
+      "stone_sculpture": {
+        "title": "Exportnetzwerk für Steinskulpturen",
+        "category": "Handel",
+        "story": "Bildhauer erhielten Zugang zum US-Kunstmarkt durch Galeriebesitzer aus der Diaspora. Der Umsatz verdreifachte sich in zwei Jahren.",
+        "testimonial": "Unsere Skulpturen stehen nun in Galerien auf drei Kontinenten.",
+        "author": "Patrick Mavros",
+        "role": "Meisterbildhauer, Harare"
+      },
+      "tech_startup": {
+        "title": "Finanzierung für Tech-Startup",
+        "category": "Investition",
+        "story": "Ein Fintech aus Harare sammelte 750.000 $ ein. Die mobile Bezahllösung dient heute über 500.000 Nutzern.",
+        "testimonial": "Das Diaspora-Kapital brachte Mentoren mit, die Silicon-Valley-Standards verstehen.",
+        "author": "Tafadzwa Chidavaenzi",
+        "role": "CEO, PayMoyo Technologies"
+      },
+      "honey_export": {
+        "title": "Honig-Export-Kooperative",
+        "category": "Export",
+        "story": "Ländliche Imker exportieren nun Bio-Honig nach Europa. Diaspora-Wissenschaftler halfen bei der EU-Zertifizierung.",
+        "testimonial": "Vom Straßenverkauf zum EU-Supermarkt – die Diaspora machte es möglich.",
+        "author": "Rudo Makoni",
+        "role": "Sekretärin, Masvingo Honey Cooperative"
+      },
+      "heritage_tourism": {
+        "title": "Heimkehr-Tourismus-Pakete",
+        "category": "Tourismus",
+        "story": "Ein Reiseveranstalter entwickelte Pakete, die Familienbesuche mit Kultur verbinden und jährlich 1.200 Touristen anziehen.",
+        "testimonial": "Wir schufen Erlebnisse, die helfen, Wurzeln wiederzuentdecken.",
+        "author": "Chipo Mutasa",
+        "role": "Direktorin, Heritage Trails Zimbabwe"
+      },
+      "macadamia_nut": {
+        "title": "Macadamia-Verarbeitungsanlage",
+        "category": "Investition",
+        "story": "Crowdfunding ermöglichte den Bau von Simbabwes erster Macadamia-Fabrik, die Nüsse von über 200 Kleinbauern verarbeitet.",
+        "testimonial": "Wir haben 1,2 Mio. $ gesammelt. Jetzt schaffen wir Jobs und exportieren nach Asien.",
+        "author": "Ngoni Sibanda",
+        "role": "Betriebsleiter, Zim Macadamia Processors"
+      }
+    },
+    "impact_metrics": {
+      "economic_impact": {
+        "label": "Wirtschaftliche Gesamtwirkung",
+        "description": "Generierter Umsatz über alle Erfolgsgeschichten"
+      },
+      "jobs_created": {
+        "label": "Geschaffene Arbeitsplätze",
+        "description": "Direkte Beschäftigungsverhältnisse"
+      },
+      "diaspora_investors": {
+        "label": "Diaspora-Investoren",
+        "description": "Aktive Projektteilnehmer"
+      },
+      "markets_accessed": {
+        "label": "Erschlossene Märkte",
+        "description": "Erreichte internationale Märkte"
+      }
+    },
+    "stories_badge": "Geschichten",
+    "stories_title": "Inspirierende Erfolgsgeschichten",
+    "stories_subtitle": "Entdecken Sie die Beiträge der Diaspora in verschiedenen Sektoren.",
+    "story_card": {
+      "impact": "Wirkung:",
+      "revenue": "Umsatz:",
+      "jobs": "Jobs:",
+      "markets": "Märkte:",
+      "investors": "Investoren:",
+      "testimonial_by": "— {{author}}, {{role}}",
+      "view_story": "Geschichte lesen"
+    },
+    "impact_metrics_badge": "Kennzahlen",
+    "impact_metrics_title": "Gemeinsame Wirkung",
+    "impact_metrics_subtitle": "Die kumulierte Wirkung des Engagements über alle Projekte.",
+    "cta_title": "Haben Sie eine Erfolgsgeschichte?",
+    "cta_subtitle": "Wir suchen immer nach Inspiration. Teilen Sie Ihre Geschichte mit uns!",
+    "cta_button": "Geschichte teilen"
   },
   "common": {
-    "explore_now": "Jetzt erkunden",
+    "explore_now": "Jetzt entdecken",
     "learn_more": "Mehr erfahren",
     "get_started": "Jetzt starten",
     "invest_now": "Jetzt investieren",
     "contact_us": "Kontaktieren Sie uns",
     "view_all": "Alle ansehen",
-    "back_to_top": "Zurück nach oben",
-    "loading": "Wird geladen...",
+    "back_to_top": "Nach oben",
+    "loading": "Lädt...",
     "error": "Ein Fehler ist aufgetreten",
     "success": "Erfolg!",
     "verified": "Verifiziert",
@@ -548,7 +1161,7 @@
     "investors": "Investoren",
     "min_investment": "Mindestinvestition",
     "expected_return": "Erwartete Rendite",
-    "timeline": "Zeitplan",
+    "timeline": "Zeitraum",
     "status": "Status",
     "risk_level": "Risikostufe",
     "highlights": "Highlights",
@@ -556,44 +1169,49 @@
     "save": "Speichern"
   },
   "contact_form": {
+    "get_started": "Kontakt aufnehmen",
     "full_name": "Vollständiger Name",
     "email": "E-Mail-Adresse",
     "phone": "Telefonnummer",
     "subject": "Betreff",
     "message": "Nachricht",
+    "message_placeholder": "Schreiben Sie hier Ihre Nachricht...",
+    "select_subject": "Betreff wählen",
     "send": "Nachricht senden",
     "sending": "Wird gesendet...",
     "success_msg": "Nachricht erfolgreich gesendet!",
-    "success_desc": "Wir werden uns innerhalb von 24–48 Stunden bei Ihnen melden.",
-    "select_subject": "Wählen Sie einen Betreff",
+    "description": "Haben Sie Fragen? Füllen Sie das Formular aus und wir melden uns bei Ihnen.",
     "required_field": "Erforderlich *"
   },
   "calculator": {
     "title": "Investitionsrechner",
-    "desc": "Berechnen Sie potenzielle Renditen für Ihr Diaspora-Investmentportfolio",
+    "desc": "Berechnen Sie potenzielle Renditen für Ihr Diaspora-Portfolio.",
     "amount": "Investitionsbetrag",
-    "timeline": "Investitionszeitraum",
-    "return_rate": "Erwartete jährliche Rendite",
+    "timeline": "Anlagezeitraum",
+    "return_rate": "Erwartete Jahresrendite",
     "total_investment": "Gesamtinvestition",
-    "total_returns": "Gesamtrendite",
+    "total_returns": "Gesamtertrag",
     "final_value": "Endwert",
     "projected_growth": "Projiziertes Wachstum",
     "year": "Jahr",
     "annual_return": "Jährliche Rendite",
-    "disclaimer": "Hinweis: Dieser Rechner liefert Schätzungen auf Basis angenommener konstanter Renditen. Die tatsächliche Anlageperformance kann abweichen."
+    "disclaimer": "Hinweis: Dieser Rechner liefert Schätzungen. Die tatsächliche Performance kann abweichen."
   },
   "shop": {
-    "vision": "Ein globales Tor bauen, das Kultur, Produkte, Tourismus und Investitionsmöglichkeiten Simbabwes verbindet.",
+    "vision": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
     "our_vision": "Unsere Vision",
     "collections": "Kollektionen",
     "title": "Kuratierte simbabwische Exzellenz",
-    "desc": "Von offiziellen Merchandise-Artikeln bis hin zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte von Tradition und Qualität.",
-    "sports_title": "Nationalsport",
-    "sports_desc": "Offizielle Ausrüstung für die Sables, Chevrons und Warriors.",
+    "desc": "Von offiziellem Merchandise bis zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte.",
+    "sports_title": "Nationaler Sport",
+    "sports_desc": "Offizielle Ausrüstung für Sables, Chevrons und Warriors.",
+    "sports_mech_soccer": "Fußball-Trikot",
+    "sports_mech_rugby": "Rugby-Trikot",
+    "sports_mech_cricket": "Cricket-Trikot",
     "crafts_title": "Kunst & Handwerk",
-    "crafts_desc": "Unterstützung ländlicher Kunsthandwerker und Frauenkooperativen.",
-    "food_title": "Essen & Nostalgie",
-    "food_desc": "Die Aromen der Heimat, vollständig EU-konform."
+    "crafts_desc": "Unterstützung für ländliche Kunsthandwerker und Frauenkooperativen.",
+    "food_title": "Kulinarik & Heimweh",
+    "food_desc": "Der Geschmack der Heimat, voll EU-konform."
   },
   "notfound": {
     "title": "404",
@@ -601,91 +1219,5 @@
     "message": "Entschuldigung, die gesuchte Seite existiert nicht.",
     "message2": "Sie wurde möglicherweise verschoben oder gelöscht.",
     "go_home": "Zur Startseite"
-  },
-  "tech": {
-    "hero": {
-      "badge1": "Zukunft der Innovation",
-      "title1": "Onesa KI: Simbabwe beleuchten",
-      "subtitle1": "Das erste KI-Modell, das speziell für den simbabwischen Kontext entwickelt wurde.",
-      "highlight1": "Gebaut für Simbabwe",
-      "badge2": "Kontextuelle Intelligenz",
-      "title2": "Tiefes kontextuelles Verständnis",
-      "subtitle2": "Im Gegensatz zu allgemeiner KI versteht Onesa die Nuancen des Lebens und der Wirtschaft in Simbabwe.",
-      "highlight2": "Lokalisiertes Wissen",
-      "badge3": "Investoren-Tools",
-      "title3": "Smartes Investment-Brainstorming",
-      "subtitle3": "Risiken bewerten und Geschäftsideen generieren, die im lokalen Markt tatsächlich Erfolg haben.",
-      "highlight3": "Datengestützter Erfolg"
-    },
-    "explore_onesa": "Onesa KI erkunden",
-    "onesa_badge": "Lernen Sie Onesa KI kennen",
-    "onesa_title": "Den Weg nach vorne beleuchten",
-    "onesa_meaning": "Onesa bedeutet 'beleuchten' auf Schona",
-    "onesa_desc1": "Onesa KI ist unser firmeneigenes Modell, das entwickelt wurde, um den Weg zu beleuchten, wie man in Simbabwe leben, investieren und gedeihen kann. Während es allgemeinen KI-Modellen oft an lokalen Nuancen mangelt, wurde Onesa von Grund auf so konzipiert, dass es den simbabwischen Kontext besser versteht als jedes andere Modell.",
-    "onesa_desc2": "Von der Navigation durch lokale Vorschriften bis hin zum Brainstorming von Geschäftsideen, die spezifische simbabwische Herausforderungen lösen – Onesa bietet die lokalisierte Intelligenz, die Sie für Ihren Erfolg benötigen.",
-    "onesa_usp1": "Kontextuelles Verständnis",
-    "onesa_usp2": "Präzise Sprachübersetzung",
-    "ai_status": "Beta-Version",
-    "ai_demo_response": "Simbabwes Agrarsektor verzeichnet derzeit ein hohes Wachstum bei Gartenbauexporten. Basierend auf aktuellen Trends bietet die Investition in Kühlkettenlogistik für Blaubeerexporte aus dem östlichen Hochland einen hohen ROI bei moderatem Risiko...",
-    "features_title": "Onesa KI Fähigkeiten",
-    "features_subtitle": "Spezialisierte Tools, die die Lücke zwischen der Diaspora und lokalen Möglichkeiten schließen.",
-    "features": {
-      "context": {
-        "title": "Kontextuelle Meisterschaft",
-        "desc": "Onesa versteht, wie die Dinge vor Ort funktionieren – von informeller Marktdynamik bis hin zu formalen regulatorischen Rahmenbedingungen."
-      },
-      "translation": {
-        "title": "Sprachpräzision",
-        "desc": "Übersetzt Schona, Ndebele und andere Lokalsprachen präzise und bewahrt dabei kulturelle Nuancen und technische Bedeutungen."
-      },
-      "risk": {
-        "title": "Risikobewertung",
-        "desc": "Investoren können Onesa nutzen, um spezifische Risiken basierend auf lokalen Echtzeitdaten und historischen Mustern zu bewerten."
-      },
-      "brainstorm": {
-        "title": "Ideengenerierung",
-        "desc": "Brainstorming von Geschäftsideen, die darauf zugeschnitten sind, in der einzigartigen simbabwischen Landschaft erfolgreich zu sein."
-      },
-      "tourism": {
-        "title": "Touristischer Begleiter",
-        "desc": "Navigieren Sie durch Simbabwe mit einem lokalen Guide für die Hosentasche, der die besten Orte und kulturellen Gepflogenheiten kennt."
-      }
-    },
-    "cta_title": "Bereit, Ihre Reise zu beleuchten?",
-    "cta_desc": "Nehmen Sie an unserem Beta-Programm teil und erleben Sie als Erster die lokalisierte Intelligenz von Onesa KI.",
-    "cta_button": "Beta-Warteliste beitreten",
-    "sectors_badge": "Branchen-Transformation",
-    "sectors_title": "Antrieb für Schlüsselindustrien",
-    "sectors_subtitle": "Onesa KI bietet spezialisierte Intelligenz zur Optimierung der kritischsten Wirtschaftssektoren Simbabwes.",
-    "sectors": {
-      "mining": {
-        "title": "Bergbau & Ressourcen",
-        "desc": "Nutzung von KI für geologische Datenanalyse und Einhaltung gesetzlicher Vorschriften im riesigen Mineraliensektor Simbabwes.",
-        "d1": "Echtzeit-Mineralienpreise und Markttrends",
-        "d2": "Überwachung der Umwelt- und Sicherheitskonformität"
-      },
-      "farming": {
-        "title": "Präzisionslandwirtschaft",
-        "desc": "Transformation der Landwirtschaft durch datengestütztes Pflanzenmanagement und Vorhersage von Wettermustern.",
-        "d1": "Bodenbehandlungsanalyse und Ertragsoptimierung",
-        "d2": "Lokalisierte Wetterwarnungen und Beratung zur Schädlingsbekämpfung"
-      },
-      "logistics": {
-        "title": "Smarte Logistik",
-        "desc": "Optimierung von Lieferketten und grenzüberschreitenden Handelsrouten durch den simbabwischen Korridor.",
-        "d1": "Routenoptimierung für regionale Verteilung",
-        "d2": "Echtzeit-Tracking und Unterstützung bei der Grenzabfertigung"
-      },
-      "education": {
-        "title": "Zukunft der Bildung",
-        "desc": "Überbrückung der digitalen Kluft durch KI-gestütztes personalisiertes Lernen und Berufsbildung.",
-        "d1": "Adaptive Lernplattformen für lokale Schulen",
-        "d2": "Entwicklung technischer Fähigkeiten für die digitale Wirtschaft"
-      }
-    },
-    "onesa_local_edge_title": "Jenseits westlich-zentrierter Modelle",
-    "onesa_local_edge_desc": "Standardmodelle wie GPT-4 oder Claude sind oft westlich zentriert; sie brillieren in formalen Ökonomien, scheitern aber an der Navigation in der 'Kukiya-kiya' (Hustle-) Ökonomie von Mbare Musika oder den tiefen Nuancen von Schona-Slang gemischt mit ländlichem Ndebele. Onesa versteht diese kulturellen Texturen.",
-    "diaspora_unlocked_title": "Diaspora Unlocked Technologie",
-    "diaspora_unlocked_desc": "Wir nutzen modernste Technologie, um nahtlosen Tourismus, Handel und Investitionen zu ermöglichen. Unsere Plattform überbrückt die Lücke zwischen der Diaspora und lokalen Möglichkeiten durch digitale Transparenz und KI-gestützte Einblicke."
   }
 }

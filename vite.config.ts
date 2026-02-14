@@ -43,13 +43,20 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       strictPort: false,
       host: true,
+      proxy: {
+        // This is the magic bridge!
+        '/api': {
+          target: 'http://localhost:5000', // Change to the port your Express server uses
+          changeOrigin: true,
+        },
+      },
       hmr: {
         clientPort: 3000,
       },
       fs: {
         strict: true,
         deny: ["**/.*"],
-      },
+      }
     },
   };
 });

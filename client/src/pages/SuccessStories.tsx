@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Quote, TrendingUp, Users, DollarSign, Award, ArrowRight } from "lucide-react";
+import { Quote, TrendingUp, Users, DollarSign, Award, ArrowRight, Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -204,83 +204,122 @@ export default function SuccessStories() {
 
   return (
     <Layout>
-      {/* Hero Carousel Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={currentHeroIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
+{/* Hero Carousel Section - Optimized for Readability and Layout Symmetery */}
+<section className="relative h-[600px] flex items-center overflow-hidden bg-zim-black">
+  <AnimatePresence initial={false}>
+    <motion.div
+      key={currentHeroIndex}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.5, ease: "easeInOut" }}
+      className="absolute inset-0"
+    >
+      <motion.div 
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url("${heroSlides[currentHeroIndex]?.image}")`,
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
+    </motion.div>
+  </AnimatePresence>
+  
+  <div className="relative z-20 container mx-auto px-6 md:px-12">
+    <AnimatePresence initial={false} mode="wait">
+      <motion.div
+        key={`content-${currentHeroIndex}`}
+        initial={{ x: -100, opacity: 0 }} // Increased for smoother entry
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 100, opacity: 0 }} // Exit to the right as requested
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="max-w-4xl text-left"
+      >
+        <div className="flex items-center gap-3 mb-6 justify-start">
+          <Award className="h-8 w-8 text-zim-gold drop-shadow-md" />
+          <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest border-none shadow-lg">
+            {heroSlides[currentHeroIndex]?.badge}
+          </Badge>
+        </div>
+
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white drop-shadow-2xl">
+          {heroSlides[currentHeroIndex]?.title}
+          {heroSlides[currentHeroIndex]?.highlight && (
+            <span className="text-zim-gold italic ml-3 block md:inline">
+              {heroSlides[currentHeroIndex]?.highlight}
+            </span>
+          )}
+        </h1>
+
+        <p className="text-xl md:text-2xl mb-8 text-white/90 font-semibold leading-relaxed max-w-2xl drop-shadow-lg">
+          {heroSlides[currentHeroIndex]?.subtitle}
+        </p>
+
+      </motion.div>
+    </AnimatePresence>
+  </div>
+  
+  <div className="absolute bottom-12 left-6 md:left-12 flex gap-3 z-30">
+    {heroSlides.map((_, idx) => (
+      <button
+        key={idx}
+        onClick={() => setCurrentHeroIndex(idx)}
+        className={`h-1.5 transition-all duration-300 rounded-full ${
+          idx === currentHeroIndex ? 'bg-zim-gold w-12' : 'bg-white/40 w-4 hover:bg-white/70'
+        }`}
+        aria-label={`Go to slide ${idx + 1}`}
+      />
+    ))}
+  </div>
+  
+  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-20" />
+</section>
+
+
+      {/* Success Story Introduction */}
+      <section id="success-info" className="py-0 bg-background relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            
             <motion.div 
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url("${heroSlides[currentHeroIndex]?.image}")`,
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
-          </motion.div>
-        </AnimatePresence>
-        
-        <div className="relative z-10 container text-white">
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={`content-${currentHeroIndex}`}
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl"
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <Award className="h-8 w-8 text-zim-gold" />
-                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                  {heroSlides[currentHeroIndex]?.badge}
-                </Badge>
+              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+              
+              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
+              <Trophy className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+                
+                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                  {t('success.objective_subtitle')}
+                </h3>
+                
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                  
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                    {t('success.objective_title')}
+                  </p>
+                  
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                </div>
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
-                {heroSlides[currentHeroIndex]?.title}
-                {heroSlides[currentHeroIndex]?.highlight && (
-                  <span className="text-zim-gold italic">{heroSlides[currentHeroIndex]?.highlight}</span>
-                )}
-              </h1>
-              <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed font-medium">
-                {heroSlides[currentHeroIndex]?.subtitle}
-              </p>
             </motion.div>
-          </AnimatePresence>
+                    
+          </div>
         </div>
-        
-        {/* Carousel Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentHeroIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Success Stories Section */}
-      <section id="stories" className="py-20 scroll-mt-24">
+      <section id="stories" className="py-10 scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              {t("success.stories_badge")}
-            </Badge>
+          <div className="text-center mb-8">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("success.stories_title")}</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("success.stories_subtitle")}</p>
           </div>
@@ -308,9 +347,16 @@ export default function SuccessStories() {
                       {t("success.story_card.testimonial_by", { author: story.author, role: story.role })}
                     </p>
                   </div>
-                  <Button variant="outline" className="w-full">
-                    {t("success.story_card.view_story")}
-                  </Button>
+                  <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full">
+                          {t("common.contact_us")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl p-0">
+                        <ContactForm title= {t("common.get_started")} module="general" />
+                      </DialogContent>
+                    </Dialog>
                 </CardContent>
               </Card>
             ))}
@@ -318,13 +364,12 @@ export default function SuccessStories() {
         </div>
       </section>
 
+
+
       {/* Impact Metrics Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-10 bg-muted/30">
         <div className="container">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              {t("success.impact_metrics_badge")}
-            </Badge>
+          <div className="text-center mb-8">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("success.impact_metrics_title")}</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("success.impact_metrics_subtitle")}</p>
           </div>
@@ -349,27 +394,32 @@ export default function SuccessStories() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container text-center">
-          <h2 className="text-4xl font-bold mb-4">{t("success.cta_title")}</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">{t("success.cta_subtitle")}</p>
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" variant="secondary" className="font-bold text-lg px-10 h-14 shadow-xl group">
-                {t("success.cta_button")}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
-              <ContactForm 
-                title={t("success.cta_button")}
-                module="success-story"
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </section>
+            {/* CTA Section - Matched to Home Footer CTA */}
+            <section className="py-8 bg-primary text-primary-foreground">
+              <div className="container">
+                <div className="text-center">
+                  <Award className="h-10 w-10 text-zim-gold mx-auto mb-3" />
+                  <h2 className="text-xl md:text-2xl font-bold mb-2">
+                    {t("success.cta_title")}
+                  </h2>
+                  <p className="text-sm mb-5 max-w-2xl mx-auto opacity-95">
+                    {t("success.cta_subtitle")}
+                  </p>
+                  
+                  <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="default" variant="secondary" className="shadow-lg font-bold px-8">
+                        {t("success.cta_button")}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl p-0">
+                      <ContactForm title={t("success.contact_form_title")} module="success" />
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+            </section>
+
     </Layout>
   );
 }

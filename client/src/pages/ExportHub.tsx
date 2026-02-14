@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { FileText, Users, Building2, Truck, Shield, AlertTriangle, CheckCircle, ArrowRight, Globe, Award, TrendingUp } from "lucide-react";
+import { FileText, Users, Building2, Truck, Shield, AlertTriangle, CheckCircle, ArrowRight, Globe, Award, TrendingUp, Ship } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -68,28 +68,28 @@ export default function ExportHub() {
     return () => clearInterval(heroTimer);
   }, [heroSlides.length]);
 
-  const germanRequirements = [
+const germanRequirements = [
     {
       category: t('export.german_requirements.food_products.category'),
-      requirements: [t('export.german_requirements.food_products.req1'), t('export.german_requirements.food_products.req2'), t('export.german_requirements.food_products.req3'), t('export.german_requirements.food_products.req4')],
+      requirements: t('export.german_requirements.food_products.requirements', { returnObjects: true }) || [],
       price: t('export.german_requirements.food_products.price'),
       icon: "🍎"
     },
     {
       category: t('export.german_requirements.textiles_leather.category'),
-      requirements: [t('export.german_requirements.textiles_leather.req1'), t('export.german_requirements.textiles_leather.req2'), t('export.german_requirements.textiles_leather.req3'), t('export.german_requirements.textiles_leather.req4')],
+      requirements: t('export.german_requirements.textiles_leather.requirements', { returnObjects: true }) || [],
       price: t('export.german_requirements.textiles_leather.price'),
       icon: "👜"
     },
     {
       category: t('export.german_requirements.arts_crafts.category'),
-      requirements: [t('export.german_requirements.arts_crafts.req1'), t('export.german_requirements.arts_crafts.req2'), t('export.german_requirements.arts_crafts.req3'), t('export.german_requirements.arts_crafts.req4')],
+      requirements: t('export.german_requirements.arts_crafts.requirements', { returnObjects: true }) || [],
       price: t('export.german_requirements.arts_crafts.price'),
       icon: "🎨"
     },
     {
       category: t('export.german_requirements.agricultural_products.category'),
-      requirements: [t('export.german_requirements.agricultural_products.req1'), t('export.german_requirements.agricultural_products.req2'), t('export.german_requirements.agricultural_products.req3'), t('export.german_requirements.agricultural_products.req4')],
+      requirements: t('export.german_requirements.agricultural_products.requirements', { returnObjects: true }) || [],
       price: t('export.german_requirements.agricultural_products.price'),
       icon: "🌾"
     }
@@ -154,47 +154,35 @@ export default function ExportHub() {
     }
   ];
 
-  const marketIntelligence = [
+const marketIntelligence = [
     {
       product: t("export.market_intelligence.blueberries.product"),
       status: t("export.market_intelligence.blueberries.status"),
-      requirements: [
-        t("export.market_intelligence.blueberries.req1"),
-        t("export.market_intelligence.blueberries.req2"),
-        t("export.market_intelligence.blueberries.req3"),
-        t("export.market_intelligence.blueberries.req4")
-      ],
-      buyers: ["LIDL", "EDEKA", "REWE"]
+      requirements: t("export.market_intelligence.blueberries.requirements", { returnObjects: true }) || [],
+      buyers: t("export.market_intelligence.blueberries.buyers", { returnObjects: true }) || []
     },
     {
       product: t("export.market_intelligence.honey.product"),
       status: t("export.market_intelligence.honey.status"),
-      requirements: [
-        t("export.market_intelligence.honey.req1"),
-        t("export.market_intelligence.honey.req2"),
-        t("export.market_intelligence.honey.req3"),
-        t("export.market_intelligence.honey.req4")
-      ],
+      requirements: t("export.market_intelligence.honey.requirements", { returnObjects: true }) || [],
       buyers: [t("export.market_intelligence.honey.buyers")]
     },
     {
       product: t("export.market_intelligence.natural_oils.product"),
       status: t("export.market_intelligence.natural_oils.status"),
-      requirements: [
-        t("export.market_intelligence.natural_oils.req1"),
-        t("export.market_intelligence.natural_oils.req2"),
-        t("export.market_intelligence.natural_oils.req3"),
-        t("export.market_intelligence.natural_oils.req4")
-      ],
-      buyers: [t("export.market_intelligence.natural_oils.buyers1"), t("export.market_intelligence.natural_oils.buyers2")]
+      requirements: t("export.market_intelligence.natural_oils.requirements", { returnObjects: true }) || [],
+      buyers: [
+        t("export.market_intelligence.natural_oils.buyers1"), 
+        t("export.market_intelligence.natural_oils.buyers2")
+      ]
     }
   ];
 
 
   return (
     <Layout>
-      {/* Hero Carousel Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+    {/* Hero Carousel Section  */}
+      <section className="relative min-h-[500px] md:h-[600px] flex items-center overflow-hidden">
         <AnimatePresence initial={false}>
           <motion.div
             key={currentHeroIndex}
@@ -205,99 +193,160 @@ export default function ExportHub() {
             className="absolute inset-0"
           >
             <motion.div 
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.05 }}
               transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
               className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')`,
-              }}
+              style={{ backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
+            {/* Re-introduced a subtle gradient for text readability without a full overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-zim-black/60 to-transparent" />
           </motion.div>
         </AnimatePresence>
         
-        <div className="relative z-10 container text-white">
-          <AnimatePresence initial={false}>
+        <div className="relative z-10 container mx-auto px-6 md:px-12 py-12 text-white">
+          <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={`content-${currentHeroIndex}`}
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
+              initial={{ x: -20, opacity: 0 }} 
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 20, opacity: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-4xl"
+              className="max-w-4xl" 
             >
-              <div className="flex items-center gap-3 mb-6">
+              {/* Updated Icon Size and Badge Style */}
+              <div className="flex items-center gap-3 mb-6 slide-up justify-start">
                 <Globe className="h-8 w-8 text-zim-gold" />
                 <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
                   {heroSlides[currentHeroIndex]?.badge}
                 </Badge>
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+              
+              {/* Updated Heading Sizes to match template scale */}
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight slide-up">
                 {heroSlides[currentHeroIndex]?.title}
               </h1>
-              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
+              
+              {/* Updated Paragraph spacing and font weight */}
+              <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed font-medium max-w-3xl slide-up">
                 {heroSlides[currentHeroIndex]?.subtitle}
               </p>
-              <div className="flex items-center gap-3 mb-8">
-                <TrendingUp className="h-6 w-6 text-zim-green" />
-                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a href="#market-requirements" className="inline-block">
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-zim-black text-lg px-10 h-14 rounded-full font-bold group">
+
+              {/* Added the "Highlight" section for consistency if applicable */}
+              {heroSlides[currentHeroIndex]?.highlight && (
+                <div className="flex items-center gap-3 mb-8 slide-up">
+                  <Award className="h-7 w-7 text-zim-green" />
+                  <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
+                </div>
+              )}
+
+              {/* Updated Buttons to match template size and hover effects */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-start slide-up">
+                <a href="#market-requirements" className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-zim-black text-lg px-10 h-14 rounded-full font-bold group w-full">
                     {t("export.explore_market_requirements")}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </a>
                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black text-lg px-10 h-14 rounded-full font-bold group">
+                    <Button size="lg" className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black text-lg px-10 h-14 rounded-full font-bold group w-full sm:w-auto">
                       {t("export.contact_us")}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-4xl p-0">
-              <ContactForm 
-                title={t("export.contact_form_title")}
-                module="export"
-              />
+                  <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
+                    <ContactForm title={t("export.contact_form_title")} module="export" />
                   </DialogContent>
                 </Dialog>
               </div>
+
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {/* Carousel Indicators - Positioned left */}
+        <div className="absolute bottom-12 left-6 md:left-12 flex gap-3 z-20">
+          {heroSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentHeroIndex(idx)}
+              className={`h-1.5 transition-all duration-300 rounded-full ${
+                idx === currentHeroIndex ? 'bg-zim-gold w-12' : 'bg-white/40 w-4 hover:bg-white/70'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Market Requirements */}
-      <section id="market-requirements" className="section-padding bg-muted/30 scroll-mt-24">
+      {/* Export Introduction */}
+      <section id="export-info" className="py-0 bg-background relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+              
+              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
+               <Ship className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+                
+                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                  {t('export.objective_subtitle')}
+                </h3>
+                
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                  
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                    {t('export.objective_title')}
+                  </p>
+                  
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                </div>
+              </div>
+            </motion.div>
+                    
+          </div>
+        </div>
+      </section>
+
+      {/* Market Requirements - Reduced Header Sizing */}
+      <section id="market-requirements" className="py-12 bg-muted/30 scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">{t("export.market_requirements_badge")}</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.market_requirements_title")}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-xl md:text-2xl font-bold mb-2">{t("export.market_requirements_title")}</h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               {t("export.market_requirements_subtitle")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {germanRequirements.map((item, index) => (
-              <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden">
-                <CardHeader className="bg-gradient-to-br from-zim-green/10 to-zim-gold/10 p-6">
-                  <div className="flex items-center gap-4">
-                    <span className="text-4xl">{item.icon}</span>
+              <Card key={index} className="border-2 bg-white hover:bg-slate-50/50 transition-all duration-300">
+                <CardHeader className="pb-2 pt-5">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{item.icon}</span>
                     <div>
-                      <CardTitle className="text-2xl font-bold text-zim-black">{item.category}</CardTitle>
-                      <CardDescription className="text-lg font-semibold text-zim-green">{item.price}</CardDescription>
+                      <CardTitle className="text-lg font-bold">{item.category}</CardTitle>
+                      <CardDescription className="text-sm font-bold text-zim-green">{item.price}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <ul className="space-y-3 text-gray-700">
-                    {item.requirements.map((req, i) => (
+                <CardContent className="pb-5">
+                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                    {Array.isArray(item.requirements) && item.requirements.map((req, i) => (
                       <li key={i} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-zim-green mr-3 mt-1 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-zim-green mr-2 mt-0.5 flex-shrink-0" />
                         <span>{req}</span>
                       </li>
                     ))}
@@ -309,56 +358,51 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Market Intelligence Section */}
-      <section className="section-padding bg-white">
+      {/* Market Intelligence - Tightened Tabs and Description */}
+      <section className="py-12 bg-background">
         <div className="container">
-          <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">{t("export.product_intelligence_badge")}</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.product_intelligence_title")}</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-xl md:text-2xl font-bold mb-2">{t("export.product_intelligence_title")}</h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               {t("export.product_intelligence_subtitle")}
             </p>
           </div>
 
           <Tabs defaultValue={marketIntelligence[0].product} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-muted/50 rounded-full h-14 p-2 mb-8">
+            <TabsList className="flex justify-center bg-muted/50 rounded-full h-11 p-1 mb-6 max-w-md mx-auto">
               {marketIntelligence.map((item) => (
-                <TabsTrigger key={item.product} value={item.product} className="h-full rounded-full text-lg font-bold data-[state=active]:bg-zim-gold data-[state=active]:text-zim-black data-[state=active]:shadow-md">
+                <TabsTrigger key={item.product} value={item.product} className="rounded-full text-xs font-bold data-[state=active]:bg-zim-gold data-[state=active]:text-zim-black">
                   {item.product}
                 </TabsTrigger>
               ))}
             </TabsList>
             {marketIntelligence.map((item) => (
               <TabsContent key={item.product} value={item.product}>
-                <Card className="bg-gradient-to-br from-zim-black to-zinc-900 text-white rounded-xl shadow-2xl overflow-hidden">
+                <Card className="bg-slate-900 text-white rounded-2xl overflow-hidden border-none">
                   <div className="grid md:grid-cols-2 items-center">
-                    <div className="p-8 md:p-12">
-                      <div className="flex items-center gap-4 mb-4">
-                        <h3 className="text-4xl font-bold text-white">{item.product}</h3>
-                        <Badge 
-                          className={`px-4 py-1 text-sm font-bold rounded-full ${item.status === t("export.market_intelligence.blueberries.status") ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300'}`}>
-                          {item.status === t("export.market_intelligence.blueberries.status") ? <CheckCircle className="h-4 w-4 mr-2" /> : <AlertTriangle className="h-4 w-4 mr-2" />}
+                    <div className="p-6 md:p-10">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h3 className="text-2xl font-bold">{item.product}</h3>
+                        <Badge className="text-[10px] bg-green-500/20 text-green-300 border-none">
                           {item.status}
                         </Badge>
                       </div>
-                      <p className="text-lg text-muted-foreground mb-6">{t("export.market_intelligence_requirements")}</p>
-                      <ul className="space-y-3 text-gray-300 mb-8">
-                        {item.requirements.map((req, i) => (
+                      <p className="text-xs text-white/60 mb-4">{t("export.market_intelligence_requirements")}</p>
+                      <ul className="space-y-2 text-sm text-white/80 mb-6">
+                        {Array.isArray(item.requirements) && item.requirements.map((req, i) => (
                           <li key={i} className="flex items-start">
-                            <FileText className="h-5 w-5 text-zim-gold mr-3 mt-1 flex-shrink-0" />
+                            <FileText className="h-4 w-4 text-zim-gold mr-2 mt-0.5" />
                             <span>{req}</span>
                           </li>
                         ))}
                       </ul>
-                      <p className="text-lg text-muted-foreground mb-4">{t("export.market_intelligence_buyers")}</p>
-                      <div className="flex flex-wrap gap-3">
-                        {item.buyers.map((buyer, i) => (
-                          <Badge key={i} variant="secondary" className="px-4 py-2 text-base bg-zinc-700 text-white">{buyer}</Badge>
+                      <div className="flex flex-wrap gap-2">
+                        {Array.isArray(item.buyers) && item.buyers.map((buyer, i) => (
+                          <Badge key={i} variant="secondary" className="bg-white/10 text-white text-[10px]">{buyer}</Badge>
                         ))}
                       </div>
                     </div>
-                    <div className="hidden md:block h-full w-full bg-cover bg-center" style={{backgroundImage: `url('/images/${item.product.toLowerCase().replace(/ /g, '_')}.jpg')`}}>
-                    </div>
+                    <div className="hidden md:block h-64 bg-cover bg-center" style={{backgroundImage: `url('/images/${item.product.toLowerCase().replace(/ /g, '_')}.jpg')`}} />
                   </div>
                 </Card>
               </TabsContent>
@@ -367,80 +411,40 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* Partner Network Section */}
-      <section className="section-padding bg-muted/30">
+      {/* Partner Network - Matched to Modules grid */}
+      <section className="py-12 bg-muted/30">
         <div className="container">
-          <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">{t("export.partner_network_badge")}</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.partner_network_title")}</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
-              {t("export.partner_network_subtitle")}
-            </p>
+          <div className="text-center mb-10">
+            <h2 className="text-xl md:text-2xl font-bold mb-2">{t("export.partner_network_title")}</h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">{t("export.partner_network_subtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {partners.map((partner, index) => (
-              <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg text-center p-8 flex flex-col items-center">
-                <div className="bg-zim-gold/10 p-4 rounded-full mb-6">
-                  <partner.icon className="h-12 w-12 text-zim-gold" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-zim-black mb-3">{partner.type}</CardTitle>
-                <CardDescription className="text-gray-600 flex-grow mb-4">{partner.description}</CardDescription>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="link" className="text-zim-green font-bold text-lg mt-auto">{t("export.view_examples")}<ArrowRight className="ml-2 h-5 w-5" /></Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <CardHeader>
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="bg-zim-gold/10 p-3 rounded-full">
-                          <partner.icon className="h-8 w-8 text-zim-gold" />
-                        </div>
-                        <CardTitle className="text-3xl font-bold text-zim-black">{partner.type}</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-lg text-muted-foreground mb-6">{t("export.partner_examples")}</p>
-                      <ul className="space-y-2">
-                        {partner.examples.map((example, i) => (
-                          <li key={i} className="text-lg text-gray-800 font-medium bg-gray-100 px-4 py-2 rounded-md">{example}</li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </DialogContent>
-                </Dialog>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Regulatory Updates Section */}
-      <section className="section-padding bg-white">
-        <div className="container">
-          <div className="text-center mb-12">
-            <Badge className="badge-primary mb-4">{t("export.regulatory_updates_badge")}</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-zim-black mb-4">{t("export.regulatory_updates_title")}</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
-              {t("export.regulatory_updates_subtitle")}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {regulatoryUpdates.map((update, index) => (
-              <Card key={index} className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-2xl font-bold text-zim-black">{update.title}</CardTitle>
-                    {update.status === 'positive' ? 
-                      <CheckCircle className="h-8 w-8 text-green-500" /> : 
-                      <AlertTriangle className="h-8 w-8 text-yellow-500" />
-                    }
+              <Card key={index} className="border-2 bg-white group hover:shadow-xl transition-all duration-500 h-full flex flex-col">
+                <CardHeader className="text-center pt-8">
+                  <div className="bg-zim-gold/10 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-zim-gold transition-colors">
+                    <partner.icon className="h-8 w-8 text-zim-gold group-hover:text-zim-black" />
                   </div>
-                  {update.date && <CardDescription className="text-md font-medium text-gray-500 pt-2">{update.date}</CardDescription>}
+                  <CardTitle className="text-lg font-bold">{partner.type}</CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-gray-700 text-lg">{update.description}</p>
+                <CardContent className="text-center flex-grow">
+                  <CardDescription className="text-sm leading-snug mb-4">{partner.description}</CardDescription>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="link" className="text-primary font-bold text-sm h-auto p-0">{t("export.view_examples")}<ArrowRight className="ml-1 h-3 w-3" /></Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <div className="p-4">
+                        <h4 className="font-bold mb-4">{partner.type} {t("export.partner_examples")}</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {partner.examples.map((example, i) => (
+                            <Badge key={i} variant="outline" className="text-xs">{example}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             ))}
@@ -448,28 +452,33 @@ export default function ExportHub() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section-padding bg-zim-black text-white">
-        <div className="container text-center">
-          <Award className="h-16 w-16 text-zim-gold mx-auto mb-6" />
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("export.cta_title")}</h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-8">{t("export.cta_subtitle")}</p>
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black text-lg px-10 h-14 rounded-full font-bold group">
-                {t("export.cta_button")}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl p-0">
-              <ContactForm 
-                title={t("export.contact_form_title")}
-                module="export"
-              />
-            </DialogContent>
-          </Dialog>
+      {/* Regulatory Updates - Consistent Card Sizing */}
+      <section className="py-12 bg-background">
+        <div className="container">
+          <div className="text-center mb-10">
+            <h2 className="text-xl md:text-2xl font-bold mb-2">{t("export.regulatory_updates_title")}</h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">{t("export.regulatory_updates_subtitle")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {regulatoryUpdates.map((update, index) => (
+              <Card key={index} className="border-2 flex flex-col">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <CardTitle className="text-base font-bold leading-tight">{update.title}</CardTitle>
+                    <CheckCircle className="h-5 w-5 text-zim-green flex-shrink-0" />
+                  </div>
+                  {update.date && <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">{update.date}</CardDescription>}
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{update.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
+
     </Layout>
   );
 }

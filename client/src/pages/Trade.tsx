@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
+import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight, Handshake } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -169,8 +169,8 @@ export default function Trade() {
 
   return (
     <Layout>
-      {/* Hero Carousel Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+    {/* Hero Carousel Section */}
+    <section className="relative min-h-[500px] md:h-[600px] flex items-center overflow-hidden">
         <AnimatePresence initial={false}>
           <motion.div
             key={currentHeroIndex}
@@ -185,65 +185,112 @@ export default function Trade() {
               animate={{ scale: 1 }}
               transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
               className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')`,
-              }}
+              style={{ backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
+            {/* Subtle lateral gradient for text legibility while maintaining the "No Overlay" feel */}
+            <div className="absolute inset-0 bg-gradient-to-r from-zim-black/70 via-zim-black/30 to-transparent" />
           </motion.div>
         </AnimatePresence>
         
-        <div className="relative z-10 container text-white">
-          <AnimatePresence initial={false}>
+        <div className="relative z-10 container mx-auto px-6 md:px-12 py-12">
+          <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={`content-${currentHeroIndex}`}
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
+              initial={{ x: -30, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 20, opacity: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-4xl"
+              className="max-w-4xl text-left"
             >
-              <div className="flex items-center gap-3 mb-6">
+              {/* Updated Icon & Badge to match Template 1 */}
+              <div className="flex items-center gap-3 mb-6 slide-up justify-start">
                 <Globe className="h-8 w-8 text-zim-gold" />
                 <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
                   {heroSlides[currentHeroIndex]?.badge}
                 </Badge>
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
+              
+              {/* Heading Scale: Text-5xl to 7xl */}
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight text-white slide-up">
                 {heroSlides[currentHeroIndex]?.title}
               </h1>
-              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
+              
+              {/* Subtitle Scale: Text-xl to 2xl */}
+              <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed font-medium max-w-3xl slide-up">
                 {heroSlides[currentHeroIndex]?.subtitle}
               </p>
-              <div className="flex items-center gap-3 mb-8">
-                <TrendingUp className="h-6 w-6 text-zim-green" />
-                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
+
+              {/* Highlight Line with Consistent Iconography */}
+              <div className="flex items-center gap-3 mb-8 slide-up">
+                <TrendingUp className="h-7 w-7 text-zim-gold" />
+                <span className="text-2xl font-bold text-zim-gold drop-shadow-md">
+                  {heroSlides[currentHeroIndex]?.highlight}
+                </span>
               </div>
+              
+              {/* Optional: Add buttons here if needed to maintain absolute consistency across all sections */}
             </motion.div>
           </AnimatePresence>
         </div>
-        
-        {/* Carousel Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+
+        {/* Carousel Indicators - Left Aligned */}
+        <div className="absolute bottom-12 left-6 md:left-12 flex gap-3 z-20">
           {heroSlides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentHeroIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+              className={`h-1.5 transition-all duration-300 rounded-full ${
+                idx === currentHeroIndex ? 'bg-zim-gold w-12' : 'bg-white/40 w-4 hover:bg-white/70'
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
         </div>
-        
+
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
+     {/* Trade Introduction */}
+      <section id="trade-info" className="py-0 bg-background relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+              
+              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
+              <Handshake className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+                
+                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                  {t('trade.objective_subtitle')}
+                </h3>
+                
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                  
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                    {t('trade.objective_title')}
+                  </p>
+                  
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                </div>
+              </div>
+            </motion.div>
+                    
+          </div>
+        </div>
+      </section>
+
       {/* Export Process Flow Section */}
-      <section id="export-roadmap" className="py-20 bg-gradient-to-b from-muted/30 to-background scroll-mt-24">
+      <section id="export-roadmap" className="py-10 bg-gradient-to-b from-muted/30 to-background scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
               {t("trade.export_roadmap_badge")}
             </Badge>
@@ -279,9 +326,9 @@ export default function Trade() {
       </section>
 
       {/* Export Sectors Section */}
-      <section id="export-sectors" className="py-20 bg-background scroll-mt-24">
+      <section id="export-sectors" className="py-10 bg-background scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
               {t("trade.export_sectors_badge")}
             </Badge>
@@ -321,9 +368,9 @@ export default function Trade() {
       </section>
 
       {/* ZimTrade Programs Section */}
-      <section id="zimtrade-programs" className="py-20 bg-muted/30 scroll-mt-24">
+      <section id="zimtrade-programs" className="py-10 bg-muted/30 scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
               {t("trade.zimtrade_programs_badge")}
             </Badge>
@@ -360,9 +407,9 @@ export default function Trade() {
       </section>
 
       {/* Diaspora Role Section */}
-      <section id="diaspora-role" className="py-20 bg-background scroll-mt-24">
+      <section id="diaspora-role" className=" bg-background scroll-mt-24">
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
               {t("trade.diaspora_role_badge")}
             </Badge>
@@ -391,27 +438,48 @@ export default function Trade() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container text-center">
-          <h2 className="text-4xl font-bold mb-4">{t("trade.cta_title")}</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">{t("trade.cta_subtitle")}</p>
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" variant="secondary" className="font-bold text-lg px-10 h-14 shadow-xl group">
-                {t("trade.cta_button")}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
-              <ContactForm 
-                title={t("trade.contact_form_title")}
-                module="trade"
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </section>
+
+            {/* Contact CTA */}
+            <section className="py-12">
+              <div className="container">
+                <Card className="max-w-2xl mx-auto text-center border-2 border-primary/20 bg-muted/20">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl">{t("trade.cta_title")}</CardTitle>
+                    <CardDescription className="text-sm">
+                        {t("trade.cta_subtitle")}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="default" className="font-bold px-8 shadow-lg">
+                          {t("trade.cta_button")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl p-0">
+                        <ContactForm title={t("trade.contact_form_title")} module="trade" />
+                      </DialogContent>
+                    </Dialog>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
+      
+            {/* Footer Links CTA */}
+            <section className="py-8 bg-primary text-primary-foreground">
+              <div className="container text-center">
+                  <h2 className="text-xl md:text-2xl font-bold mb-2">{t("trade.explore_title")}</h2>
+                  <p className="text-sm mb-6 max-w-2xl mx-auto opacity-90">
+                    {t("trade.explore_subtitle")} 
+                  </p>
+                  <a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer">
+                    <Button size="default" variant="secondary" className="font-bold px-8 shadow-lg">
+                      {t("trade.explore_site")} <ExternalLink className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+              </div>
+            </section>
+
     </Layout>
   );
 }

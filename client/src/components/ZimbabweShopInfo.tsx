@@ -31,7 +31,7 @@ export default function ZimbabweShopInfo() {
   const foodProducts = [
     { image: "/images/shop_food.webp", title: "{t('shop.food_title')}" },
     { image: "/images/food_mazoe.jpg", title: "Mazoe Variety Pack" },
-    { image: "/images/food_cerevita1.jpg", title: "Cerevita Instant Cereal" },
+    { image: "/images/food_cerevita1.png", title: "Cerevita Instant Cereal" },
     { image: "/images/food_maputi.png", title: "Maputi Snacks" },
     { image: "/images/food_dovi1.webp", title: "Traditional Dovi" },
     { image: "/images/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
@@ -70,44 +70,57 @@ export default function ZimbabweShopInfo() {
     }
   };
 
-  return (
+return (
+  <>
+    {/* Vision Statement - Moved outside the main container */}
+    <section id="shop-vision" className="py-0 bg-background relative overflow-hidden">
+      <div className="container relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }}
+            className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+            
+            <div className="relative z-10 max-w-3xl mx-auto space-y-3">
+              <Heart className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+              
+              <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                {t('shop.vision')}
+              </h3>
+              
+              <div className="flex items-center justify-center gap-4">
+                <div className="h-px w-8 bg-zim-gold/50" />
+                <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                  {t('shop.our_vision')}
+                </p>
+                <div className="h-px w-8 bg-zim-gold/50" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+
+    {/* Main Content Container */}
     <motion.div 
-      id="diaspora-packages"
+      id="zimbabwe-shop-info"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
       transition={{ staggerChildren: 0.1, delayChildren: 0.1 }}
-      // Reduced vertical spacing between major sections from 24 to 16
-      className="max-w-7xl mx-auto px-4 space-y-16 py-12 scroll-mt-24"
+      className="max-w-6xl mx-auto px-4 space-y-12 py-10 scroll-mt-24"
     >
-
-      {/* Vision Statement - Optimized spacing here */}
-      <motion.div 
-        variants={itemVariants} 
-        className="relative py-12 px-8 md:px-16 rounded-[2.5rem] overflow-hidden text-center group shadow-xl"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
-        
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <Heart className="h-10 w-10 text-zim-gold mx-auto mb-2" />
-          <h3 className="text-2xl md:text-3xl font-bold text-white leading-relaxed px-4">
-            {t('shop.vision')}
-          </h3>
-          <div className="flex items-center justify-center gap-6">
-            <div className="h-px w-12 bg-zim-gold/50" />
-            <p className="text-zim-gold text-sm font-black uppercase tracking-[0.3em]">{t('shop.our_vision')}</p>
-            <div className="h-px w-12 bg-zim-gold/50" />
-          </div>
-        </div>
-      </motion.div>
-
-
       {/* Product Categories */}
       <motion.div variants={itemVariants} className="space-y-12">
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="border-zim-green text-zim-green uppercase tracking-widest px-4">{t('shop.collections')}</Badge>
+          <Badge variant="outline" className="border-zim-green text-zim-green uppercase tracking-widest px-4">
+            {t('shop.collections')}
+          </Badge>
           <h2 className="text-4xl md:text-5xl font-bold">{t('shop.title')}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {t('shop.desc')}
@@ -115,7 +128,7 @@ export default function ZimbabweShopInfo() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Rotating {t('shop.sports_title')} Jerseys */}
+          {/* Rotating Jerseys */}
           <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="relative h-64 overflow-hidden bg-muted">
               <AnimatePresence mode="wait">
@@ -141,14 +154,14 @@ export default function ZimbabweShopInfo() {
               <h4 className="text-xl font-bold mb-2">{t('shop.sports_title')}</h4>
               <p className="text-sm text-muted-foreground mb-6 flex-grow">{t('shop.sports_desc')}</p>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="text-[10px] font-semibold">Rugby Jerseys</Badge>
-                <Badge variant="secondary" className="text-[10px] font-semibold">Cricket Kits</Badge>
-                <Badge variant="secondary" className="text-[10px] font-semibold">Soccer Gear</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">{t('shop.sports_mech_rugby')}</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">{t('shop.sports_mech_cricket')}</Badge>
+                <Badge variant="secondary" className="text-[10px] font-semibold">{t('shop.sports_mech_soccer')}</Badge>
               </div>
             </div>
           </div>
 
-          {/* {t('shop.crafts_title')} */}
+          {/* Crafts */}
           <div className="flex flex-col group h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="relative h-64 overflow-hidden bg-muted">
               <AnimatePresence mode="wait">
@@ -215,9 +228,7 @@ export default function ZimbabweShopInfo() {
           </div>
         </div>
       </motion.div>
-
-
-
     </motion.div>
-  );
+  </>
+);
 }

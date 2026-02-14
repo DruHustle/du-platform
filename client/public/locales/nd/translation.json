@@ -1,686 +1,750 @@
 {
   "brand": "Diaspora Unlocked",
-  "tagline": "Inkundla yamaZimbabwean akwamanye amazwe",
-  "about": "Mayelana",
-  "about_us": "Ukuhlanganisa amaZimbabwean akwamanye amazwe namathuba okuhweba, ukuvakasha, nokutshala imali.",
-  "select_lang": "Khetha ulimi",
+  "tagline": "Ingosi yeZimbabwe Global Diaspora",
+  "about": "Mayelana lathi",
+  "about_us": "Sihlanganisa amaZimbabwe ahlala emhlabeni jikelele lamathuba kwezokuhweba, ezokuvakasha, lokutshalwa kwezimali.",
+  "select_lang": "Khetha Ulimi",
   "account": "I-akhawunti",
   "login": "Ngena",
   "register": "Bhalisa",
-  "my_investments": "Ukutshala Kwami",
+  "my_investments": "Izimali zami ezitshaliweyo",
   "settings": "Izilungiselelo",
-  "search_placeholder": "Tshinga zokuhweba, ukutshala imali, ezokuvakasha...",
-  "search_title": "Tshinga kuNkundla yeZIGD",
-  "search_button": "Tshinga",
-  "explore": "Hlola",
+  "search_placeholder": "Dinga okuthunyelwa phandle, ukutshala imali, ezokuvakasha...",
+  "search_title": "Dinga ku-ZIGD Platform",
+  "search_button": "Dinga",
+  "explore": "Funda okunye",
   "all_rights_reserved": "Wonke amalungelo agodliwe.",
-  "privacy_policy": "Inqubomgomo Yobumfihlo",
-  "terms_of_service": "Imigomo Yesevisi",
-  "quick_links": "Izixhumanisi Ezisheshayo",
-  "partners": "Abalingani",
-  "contact": "Xhumana Nathi",
+  "privacy_policy": "Inqubo yobumfihlo",
+  "terms_of_service": "Imithetho yokusebenzisa",
+  "quick_links": "Izixhumanisi ezisheshayo",
+  "partners": "Abahlanganyeli",
+  "contact": "Thintana lathi",
   "nav": {
     "home": "Ekhaya",
-    "export": "Zokuhweba",
+    "export": "Isizinda Sokuthumela Phandle",
     "tourism": "Ezokuvakasha",
-    "investment": "Ukuchitha Imali",
-    "trade": "Ukuhweba",
-    "data": "Idatha yezomnotho",
-    "success": "Izindaba Zempumelelo",
+    "investment": "Ukutshala Imali",
+    "trade": "Ezohwebo",
+    "data": "Idatha Yezoqhumi",
+    "success": "Indaba Zenkuthazo",
     "market_requirements": "Izidingo Zemakethe",
-    "market_requirements_desc": "Imithetho lezitifiketi zemakethe yaseGermany",
-    "product_intelligence": "Ulwazi Lomkhiqizo",
-    "product_intelligence_desc": "Isiqondiso sokuhweba esiqondene lomkhiqizo",
-    "partner_network": "Inethiwekhi Yabalingani",
-    "partner_network_desc": "Xhumana labathengisi lezokuthutha",
+    "market_requirements_desc": "Imithetho lezitifiketi zemakethe yeGermany",
+    "product_intelligence": "Ulwazi Ngemikhiqizo",
+    "product_intelligence_desc": "Inkomba yokuthumela imikhiqizo ethile phandle",
+    "partner_network": "Inethiwekhi Yabahlanganyeli",
+    "partner_network_desc": "Xhumana labathengisi labezokuthutha",
     "attractions": "Izindawo Ezikhangayo",
     "attractions_desc": "Izindawo okumele uzivakashele eZimbabwe",
-    "plan_visit": "Hlela Ukuvakasha Kwakho",
-    "plan_visit_desc": "I-visa, ezempilo, lolwazi lokuhamba",
-    "diaspora_packages": "Amaphakethe eDiaspora",
-    "diaspora_packages_desc": "Uhambo olukhethekile lokubuyela ekhaya",
+    "plan_visit": "Hlela Uhambo Lwakho",
+    "plan_visit_desc": "Ulwazi nge-Visa, ezempilo, lohambo",
+    "diaspora_packages": "Amaphakheji e-Diaspora",
+    "diaspora_packages_desc": "Inhambo ezikhethekileyo zokubuyela ekhaya",
     "active_projects": "Amaphrojekthi Akhona",
-    "active_projects_desc": "Hlola amathuba okutshala imali",
-    "investment_calculator": "Isibali Sokutshala",
+    "active_projects_desc": "Khangela amathuba okutshala imali",
+    "investment_calculator": "Isibali-mali Sokutshala",
     "investment_calculator_desc": "Linganisa inzuzo yakho",
-    "verified_directories": "Izinkomba Ezifakazelwe",
-    "verified_directories_desc": "Izincwadi ze-NTIR le-HDC",
-    "export_sectors": "Imikhakha Yokuhweba",
-    "export_sectors_desc": "Izimboni ezibalulekile lamathuba",
-    "export_roadmap": "Umgwaqo Wokuhweba",
-    "export_roadmap_desc": "Izinyathelo zokuhweba kancane kancane",
+    "verified_directories": "Izinkomba Eziqinisekisiweyo",
+    "verified_directories_desc": "Amarejista e-NTIR le-HDC",
+    "export_sectors": "Ingxenye Zokuthumela Phandle",
+    "export_sectors_desc": "Imboni eziqakathekileyo lamathuba akhona",
+    "export_roadmap": "Inkomba Yokuthumela Phandle",
+    "export_roadmap_desc": "Indlela yokuthumela phandle kancane kancane",
     "technology": "Ezobuchwepheshe",
-    "technology_capabilities": "Amandla E-Technology",
-    "technology_capabilities_desc": "Indawo yezobuchwepheshe nezokusungula eZimbabwe",
-    "technology_industries": "Imboni Yobuchwepheshe",
-    "technology_industries_desc": "Imikhakha ebalulekile yezobuchwepheshe eZimbabwe",
+    "technology_capabilities": "Amandla Ezobuchwepheshe",
+    "technology_capabilities_desc": "Isimo sezobuchwepheshe lokusungula eZimbabwe",
+    "technology_industries": "Izimboni Zezobuchwepheshe",
+    "technology_industries_desc": "Ingxenye zezobuchwepheshe eziqakathekileyo eZimbabwe",
     "zimtrade_programs": "Izinhlelo zeZimTrade",
-    "zimtrade_programs_desc": "Izinhlelo zokuthuthukisa ukuhweba"
+    "zimtrade_programs_desc": "Imisebenzi yokuthuthukisa ukuthunyelwa kwezinto phandle"
   },
   "home": {
+    "made_in_zimbabwe_alt": "Kwenziwe eZimbabwe",
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "ICT, Ukusheshiswa koKuhweba, Ezokuvakasha loKutshala Imali kweVision 2030",
-    "export_hub": "Zokuhweba",
+    "hero_subtitle": "Ukusheshisa i-ICT, Ezohwebo, Ezokuvakasha lokutshala imali kweze-Vision 2030",
+    "export_hub": "Isizinda Sokuthumela",
     "tourism": "Ezokuvakasha",
+    "technology": "Ezobuchwepheshe",
     "investments": "Ukutshala Imali",
-    "platform_services": "Imisebenzi yeNkundla",
-    "gateway_title": "Isango leZimbabwe Global Diaspora",
-    "gateway_desc": "Inkundla exhuma iZimbabwe lomhlaba wonke ngokuhweba, ezokuvakasha, lokutshala imali.",
-    "explore_now": "Hlola Manje",
-    "ready_to_connect": "Ukulungele Ukuxhumana?",
-    "join_diaspora": "Joyina izinkulungwane zabantu abasemaphandleni abakha amabhuloho oshintsho lwezomnotho.",
-    "view_data": "Buka Idatha Yezomnotho",
-    "success_stories": "Izindaba Zempumelelo",
+    "objective_title": "Imisebenzi ye-Platform",
+    "objective_desc": "Ingosi yedijithali ehlanganisa iZimbabwe lomhlaba jikelele ngezohwebo, ezokuvakasha, lokutshala imali.",
+    "explore_now": "Funda Manje",
+    "inquiry_btn": "Thintana Lathi",
+    "inquiry_title": "Umbuzo Jikelele",
+    "ready_to_connect_title": "Usukulungele Ukuxhumana?",
+    "ready_to_connect_subtitle": "Hlanganyela lezinkulungwane zama-diaspora akha amabhuloho okuthuthukisa umnotho.",
+    "view_data": "Buka Idatha Yezoqhumi",
+    "success_stories": "Indaba Zenkuthazo",
     "modules": {
       "export": {
-        "title": "Ulwazi Lwezokuhweba",
-        "desc": "Thola izidingo zemakethe yaseEU, imithetho, izitifiketi, futhi uxhumane labalingani abangaba khona bokuthengisa imikhiqizo yaseZimbabwe.",
-        "stats": "Abalingani Abaqinisekisiwe"
+        "title": "Isizinda Sokuthumela",
+        "desc": "Thola izidingo zemakethe ye-EU njalo uxhumane labahlanganyeli abaqinisekisiweyo.",
+        "stats": "Abahlanganyeli Abaqinisekisiweyo"
       },
       "tourism": {
-        "title": "Ulwazi Lwezokuvakasha",
-        "desc": "Thola izindawo zaseZimbabwe ezikhangayo emhlabeni wonke, hlela ukuvakasha kwakho, futhi uhlole indawo yeForbes #1 ongayivakashela ngo-2025.",
+        "title": "Ezokuvakasha",
+        "desc": "Thola izindawo zeZimbabwe ezibabazekayo njalo uhlele uhambo lwakho.",
         "stats": "Forbes #1 2025"
       },
       "investment": {
-        "title": "Amathuba Okutshala Imali",
-        "desc": "Hlola amathuba okutshala imali encane lokubhadala imali kumaphrojekthi aqinisekisiwe aseZimbabwe.",
+        "title": "Ukutshala Imali",
+        "desc": "Khangela amathuba okutshala imali amancane lokuphosa ngezandla (crowdfunding).",
         "stats": "$50M+ Amathuba"
       },
       "trade": {
-        "title": "Ulwazi Lokuhweba",
-        "desc": "Thola izinsiza zokuhweba ezibanzi, izinhlelo zokuthuthukisa ukuhweba, futhi uxhumane lemikhakha yokuhweba yaseZimbabwe echumayo.",
-        "stats": "8 Imikhakha Yokuhweba"
+        "title": "Ezohwebo",
+        "desc": "Thola ulwazi olugcweleyo ngezohwebo njalo uxhumane lezingxenye zeZimbabwe ezithumela phandle.",
+        "stats": "8 Izingxenye Zokuthumela"
       },
       "technology": {
         "title": "Ezobuchwepheshe le-AI",
-        "desc": "Hlangana lo-Onesa AI, imodeli yethu ekhethekile eyenzelwe ukukhanyisela abatshali mali labaseDiaspora ngesimo seZimbabwe.",
+        "desc": "Hlangana lo-Onesa AI, umshini wethu wokucabanga owakhelwe ukukhanyisela isimo seZimbabwe.",
         "stats": "Onesa AI"
       },
       "success": {
-        "title": "Izindaba Zempumelelo",
-        "desc": "Hlola izibonelo zomhlaba wangempela zamabhizinisi lamaphrojekthi achumayo ngokusebenzisana labasediaspora.",
-        "stats": "Izindaba Zomthelela"
+        "title": "Umphumela",
+        "desc": "Buka izibonelo zamaphrojekthi aphumelelayo ngokuzibandakanya kwama-diaspora.",
+        "stats": "Indaba Zomphumela"
       }
+    }
+  },
+  "tech": {
+    "hero": {
+      "badge1": "Ikusasa Lokusungula",
+      "title1": "Onesa AI: Ikhanyisela iZimbabwe",
+      "subtitle1": "Umshini wokuqala we-AI owakhelwe isimo seZimbabwe ngqo.",
+      "highlight1": "Yenzelwe iZimbabwe",
+      "badge2": "Ulwazi Lwesimo",
+      "title2": "Ukuwisisa Isimo Okujulileyo",
+      "subtitle2": "Ngokungafaniyo le-AI ejwayelekileyo, u-Onesa uyazwisisa ukuphila lebhizinisi eZimbabwe.",
+      "highlight2": "Ulwazi Lwasekhaya",
+      "badge3": "Amathuluzi Abatshali-mali",
+      "title3": "Ukucamanga Ngokutshala Imali",
+      "subtitle3": "Hlola ingozi njalo usungule amacebo ebhizinisi angaphumelela emakethe yasekhaya.",
+      "highlight3": "Impumelelo Esukela Kudatha"
     },
-    "trust": {
-      "diaspora": "AbaseDiaspora Baqinisekisiwe",
-      "zida": "Umlingani weZIDA",
-      "zimtrade": "Iqinisekiswe yiZimTrade",
-      "vision2030": "Iyahambisana leVision 2030"
-    },
-    "technology": "Ezobuchwepheshe"
+    "explore_onesa": "Dinga ulwazi ku-Onesa AI",
+    "onesa_badge": "Hlangana lo-Onesa AI",
+    "onesa_title": "Ikhanyisa Indlela Yakho",
+    "onesa_meaning": "U-Onesa utsho ukuthi \"khanyisa\" ngolimi lwesiShona",
+    "onesa_desc1": "U-Onesa AI ngumshini wethu owenzelwe ukukhanyisa indlela yokuhlala, ukutshala imali, lokuphumelela eZimbabwe. Lanxa eminye imishini ye-AI isilela kulwazi lwasikhaya, u-Onesa wakhiwe kusukela phansi ukuzwisisa isimo seZimbabwe ukwedlula noma yiwuphi omunye umshini.",
+    "onesa_desc2": "Kusukela ekulandeleni imithetho yelizwe kuye ekucabangeni amacebo amabhizinisi axazulula izinkinga zeZimbabwe, u-Onesa ukunika ulwazi oludingayo ukuze uphumelele.",
+    "onesa_local_edge_title": "Ukwedlula Imishini YaseNtshonalanga",
+    "onesa_local_edge_desc": "Imishini ejwayelekileyo ijwayele ukugxila eNtshonalanga, iphumelela emithonjeni yomnotho ehlelekileyo kodwa yehluleka ukuzwisisa ezomnotho ze-\"kukiya-kiya\" (hustle) eMbare Musika kumbe ukujula kolimi lwesiShona oluhlangene leNdebele yasemaphandleni.",
+    "diaspora_unlocked_title": "Ezobuchwepheshe be-Diaspora Unlocked",
+    "diaspora_unlocked_desc": "Sisebenzisa ubuchwepheshe obusezingeni eliphezulu ukwenza ezokuvakasha, ezohwebo, lokutshala imali kube lula. Ingosi yethu igcwalisa isikhala esiphakathi kwama-diaspora lamathuba asekhaya.",
+    "onesa_usp1": "Ukwizisisa Isimo",
+    "onesa_usp2": "Ukuhumusha Izilimi Okunembileyo",
+    "ai_status": "Uhlobo lwe-Beta",
+    "ai_demo_question": "Yimaphi amathuba okutshala imali angasuthisa enhlanyelweni eZimbabwe manje?",
+    "ai_demo_response": "Ingxenye ye-agriculture eZimbabwe ikhula kakhulu ekuthumeleni imikhiqizo ye-horticulture phandle. Ukutshala imali kwezokuthutha imikhiqizo eqandisiweyo (cold-chain) njengama-blueberries kusuka e-Eastern Highlands kulenzuzo enkulu...",
+    "features_title": "Amandla ka-Onesa AI",
+    "features_subtitle": "Amathuluzi akhethekileyo enzelwe ukuxhumanisa ama-diaspora lamathuba asekhaya.",
+    "cta_title": "Usukulungele Ukukhanyisa Uhambo Lwakho?",
+    "cta_desc": "Hlanganyela ohlelweni lwethu lwe-beta ube ngomunye wabokuqala ukusebenzisa ulwazi luka-Onesa AI.",
+    "cta_button": "Joyina Uhlu Lokulinda lwe-Beta",
+    "sectors_badge": "Ukuguqulwa Kwezingxenye",
+    "sectors_title": "Ukunika Izimboni Amandla",
+    "sectors_subtitle": "U-Onesa AI unikela ulwazi olukhethekileyo ukuthuthukisa izingxenye zomnotho zeZimbabwe eziqakathekileyo.",
+    "sectors": {
+      "mining": {
+        "title": "Ezokumbumbi Lezinqala",
+        "desc": "Ukusebenzisa i-AI ekuhlaziyeni idatha ye-geology lokulandela imithetho kwingxenye yezokumbumbi eZimbabwe.",
+        "d1": "Intengo yezimbiwa lesimo semakethe sikhathi sonke",
+        "d2": "Ukulandela imithetho yezemvelo lezokuvikeleka"
+      },
+      "farming": {
+        "title": "Ukulima Kwesimanje",
+        "desc": "Ukuguqula ezolimo ngokusebenzisa idatha ekulawuleni izilimo lokubikezela isimo sezulu.",
+        "d1": "Ukuhlola impilo yenhlabathi lokuthuthukisa isivuno",
+        "d2": "Izixwayiso zesimo sezulu sasendaweni lezeluleko zokunqanda izonakalisi"
+      },
+      "logistics": {
+        "title": "Ezokuthutha Ezihlakaniphileyo",
+        "desc": "Ukuthuthukisa ukuhamba kwempahla lemigwaqo yokuhweba enqamula imingcele yeZimbabwe.",
+        "d1": "Ukulungisa imizila yokuhambisa impahla esifundeni",
+        "d2": "Ukulandelela impahla isikhathi sonke losizo lokudlula emingceleni"
+      },
+      "education": {
+        "title": "Ikusasa Lezemfundo",
+        "desc": "Ukuvala isikhala sedijithali ngezifundo ze-AI ezenzelwe umuntu ngamunye loqeqesho lwezandla.",
+        "d1": "Ingosi zokufunda eziguqukayo zezikolo zasekhaya",
+        "d2": "Ukuthuthukisa amakhono ezobuchwepheshe kumnotho wedijithali"
+      }
+    }
   },
   "export": {
     "hero": {
       "badge1": "Ukungena Emakethe ye-EU",
-      "title1": "Ngena Emakethe yaseGermany",
-      "desc1": "Isiqondiso esiphelele ngemithetho, izitifiketi, lokusebenzisana ekuthumeleni imikhiqizo yaseZimbabwe eGermany",
-      "highlight1": "€83.4B Inani Lokuhweba",
-      "badge2": "Isikhungo Sokuhweba saseGermany",
-      "title2": "Isango Lakho eliya e-Europe",
-      "desc2": "IGermany ingomnotho omkhulu kunayo yonke e-Europe njalo iyindawo eyisihluthulelo kubathumeli base-Africa abafuna ukungena emakethe ye-EU",
-      "highlight2": "#1 Omnotho we-EU",
-      "badge3": "Ubudlelwano le-EU",
-      "title3": "Inzuzo Yokuhweba ye-EU-ESA",
-      "desc3": "IZimbabwe iyazuza ekungeniseni imikhiqizo ngaphandle kokubhadala umthelo (tariff-free) emakethe ye-EU ngaphansi kwesivumelwano se-EU-ESA Interim Economic Partnership",
-      "highlight3": "Ukungena Ngaphandle Komthelo",
-      "badge4": "Ukusebenza Kuhle Ekuhwebeni",
-      "title4": "Xhuma leMakethe yoMhlaba",
-      "desc4": "Ukusekelwa ngezokuthutha, isiqondiso sokuhambisana lemithetho, lolwazi lwemakethe ukuze uphumelele ekuhwebeni le-EU",
-      "highlight4": "Ukusekelwa Okuphelele",
-      "badge5": "Amazinga e-Bio",
-      "title5": "Isitifiketi Sokuhweba nge-Bio",
-      "desc5": "Ukuhambisana lezimfuneko ze-EU-Bio-Siegel",
-      "highlight5": "Intengo Ephakeme",
-      "badge6": "Ubungcweti Bezokuthutha",
-      "title6": "Iketanga Lokubanda Lokuthutha",
-      "desc6": "Ukuqinisekisa izinga lomkhiqizo kusukela epulazini kuze kufike esitolo",
-      "highlight6": "Ezokuthutha Ezifakazelwe",
-      "subtitle1": "Ukuxhumanisa abakhiqizi baseZimbabwe lezimakethe zomhlaba ngenethiwekhi yabaseDiaspora lobungcweti bokuhweba",
-      "subtitle2": "Ukuthunyelwa kwemikhiqizo yezolimo (horticulture) yaseZimbabwe kuya phezulu ezimakethe ze-Europe le-Middle East.",
-      "subtitle3": "Ukusekela ushintsho kusukela ekuthumeleni impahla eluhlaza kuye emikhiqizweni yaseZimbabwe ecutshunguliweyo yezinga eliphezulu.",
-      "subtitle4": "Ukwenza lula uhambo lwemikhiqizo yaseZimbabwe eya ezindaweni zomhlaba wonke.",
-      "subtitle5": "Ukusebenzisa izivumelwano zokuhweba ukuze sibe lithuba elingcono ezimakethe ze-EU."
+      "title1": "Vula Izimakethe ze-Europe",
+      "desc1": "Landela imithetho lezitifiketi ze-EU kalula ukuze uthumele imikhiqizo yakho yeZimbabwe.",
+      "highlight1": "Ukuhambisana Lemithetho Okulula",
+      "badge2": "Ukugxila eGermany",
+      "title2": "Target eGermany",
+      "desc2": "Ulwazi olukhethekileyo labahlanganyeli be-German market, okuyisango elikhulu lokuya e-Europe.",
+      "highlight2": "Ukungena Ngqo Emakethe",
+      "badge3": "Izivumelwano Zohwebo",
+      "title3": "Sebenzisa i-EPA le-ESA",
+      "desc3": "Zuza ezivumelwaneni ze-Economic Partnership Agreements ukuze ungene ngaphandle kokubhadala umthelo.",
+      "highlight3": "Amalungelo Okungena",
+      "badge4": "Emhlabeni Wonke",
+      "title4": "Gubula Imingcele Yakho",
+      "desc4": "Xhumana lenethiwekhi yabathengi labahambisi bempahla emhlabeni jikelele.",
+      "highlight4": "Amathuba Omhlaba",
+      "badge5": "Eze-Horticulture",
+      "title5": "Ukuthunyelwa Kwegolide Eliluhlaza",
+      "desc5": "Usekelo olukhethekileyo lwezitshalo ezitsha, amaluva, lemikhiqizo ye-organic.",
+      "highlight5": "Izilimo Zenani Eliphezulu",
+      "badge6": "Ukuvuselelwa Kwezokukhiqiza",
+      "title6": "Ukuthunyelwa Kwempahla Yezimboni",
+      "desc6": "Inkomba yempahla eyenziwe ezimbonini, izigqoko, lokudla okulungisiweyo.",
+      "highlight6": "Imikhiqizo Engezelelwe Inani"
     },
-    "connect_expert": "Xhumana loNgcweti",
-    "view_guide": "Buka Isiqondiso seMakethe",
-    "market_intelligence_btn": "Ulwazi lweMakethe",
-    "market_req_title": "Izidingo zeMakethe yaseGermany",
-    "market_req_desc": "Izitifiketi ezibalulekile lamazinga emikhakha emikhulu yemikhiqizo",
-    "food_products": "Imikhiqizo Yokudla",
-    "textiles_leather": "Izembatho leZikhumba",
-    "arts_crafts": "Ezobuciko leMisebenzi yezandla",
-    "agri_products": "Imikhiqizo yeZolimo",
-    "partner_network_title": "Inethiwekhi Yabalingani baseGermany",
-    "partner_network_desc": "Ukuxhumanisa abathumeli baseZimbabwe lezikhungo lamabhizinisi asungulwe eGermany",
-    "regulatory_updates": "Ulwazi Lwemithetho loKuhweba",
-    "market_intelligence": {
-      "blueberries": "Ama-Blueberry",
-      "honey": "Inyosi",
-      "natural_oils": "Amafutha eMvelo (Marula)",
-      "status_approved": "kuvunyelwe",
-      "status_pending": "kulindile",
-      "blueberries_req1": "Kudingeka amazinga e-Class I",
-      "blueberries_req2": "Ama-MRL aqondene le-LIDL (33% womkhawulo womthetho)",
-      "blueberries_req3": "Kuyisibopho ukuba lezinto zokuthutha ezibandayo",
-      "blueberries_req4": "Isitifiketi se-GLOBALG.A.P. sibalulekile",
-      "blueberries_buyers": [
-        "LIDL",
-        "EDEKA",
-        "REWE"
-      ],
-      "honey_req1": "AKUKAVUNYELWA yi-EU ukuthi kuthunyelwe ngqo",
-      "honey_req2": "Isibopho sokubhalisa ku-TRACES (kusukela ngo-Nov 2024)",
-      "honey_req3": "Kudingeka i-Residue Monitoring Plan (RMP)",
-      "honey_req4": "Kudingeka amasistimu okuhlola agunyazwe yi-EU",
-      "honey_buyers": [
-        "Kulindeleke ukuvunywa"
-      ],
-      "oils_req1": "Kumele kubhalwe ngolimi lwesi-German",
-      "oils_req2": "Isitifiketi sokuhlola ukuhlanzeka",
-      "oils_req3": "Isitifiketi se-Organic siyadingeka",
-      "oils_req4": "Ukuhambisana le-REACH ekusetshenzisweni kwezimonyo",
-      "oils_buyers": [
-        "Abakhiqizi bezimonyo",
-        "Abathengisi abakhethekile"
-      ]
-    },
-    "support_request": "Isicelo Sokusekelwa Kokuhweba",
-    "support_request_desc": "Gcwalisa ifomu elingezansi njalo abangcweti bethu bokuhweba bazakuthinta.",
-    "categories": {
-      "food_products": "Imikhiqizo Yokudla",
-      "textiles_leather": "Izembatho leZikhumba",
-      "arts_crafts": "Ezobuciko leMisebenzi yezandla",
-      "agricultural_products": "Imikhiqizo yeZolimo"
-    },
-    "requirements": {
-      "food": {
-        "cert1": "Isitifiketi se-EU Organic (Bio-Siegel)",
-        "cert2": "Ukuhambisana le-HACCP",
-        "cert3": "Amazinga Omkhawulo Wemithi (MRLs)",
-        "cert4": "Imibhalo Yokulandelela Umkhiqizo",
-        "price": "€15-45/kg (izithelo/imbida ze-organic)"
+    "objective_title": "Ukuthuthukisa Ukuthunyelwa Phandle, Ukukunika Amandla",
+    "objective_subtitle": "Ukuhlanganisa imikhiqizo, abahlanganyeli, lolwazi lwemakethe ukuze abathumeli baphumelele e-EU.",
+    "explore_market_requirements": "Khangela Izidingo Zemakethe",
+    "contact_us": "Thintana Lathi",
+    "contact_form_title": "Umbuzo Wesi-Export Hub",
+    "contact_form_subtitle": "Gcwalisa ifomu elingezansi ukuze ukhulume labochwepheshe bethu bokuthumela phandle.",
+    "market_requirements_title": "Izidingo Zemakethe ye-EU",
+    "market_requirements_subtitle": "Zwisisa imithetho ethile, izitifiketi, lamazinga okuthumela impahla eGermany.",
+    "german_requirements": {
+      "food_products": {
+        "category": "Imikhiqizo Yokudla",
+        "requirements": [
+          "Imithetho ye-EU Food Safety (isib. HACCP)",
+          "Imingcele yezibulala-zinambuzane (MRLs)",
+          "Izidingo zokubhalwa kumaphakethe (izithako, izinto ezingabangela ukugula, indawo esuka kuyo)",
+          "Izitifiketi zezempilo zezifuyo lezitshalo"
+        ],
+        "price": "Indleko Ephezulu Yokuhambisana Lemithetho"
       },
-      "textiles": {
-        "cert1": "Ukuhambisana le-REACH",
-        "cert2": "Uphawu lwe-CE",
-        "cert3": "Oeko-Tex Standard 100",
-        "cert4": "Imibhalo Yelitshe Lokuphuma (Origin)",
-        "price": "€25-120/ngalinye (impahla yesikhumba)"
+      "textiles_leather": {
+        "category": "Izigqoko le-Leather",
+        "requirements": [
+          "Umthetho we-REACH (izinto zemithi/chemicals)",
+          "Amazinga okuvikeleka emlilweni",
+          "Ukubhalwa (uhlobo lwento, imiyalelo yokugeza)",
+          "Izitifiketi zokuthola impahla ngendlela efaneleyo lokusimama"
+        ],
+        "price": "Indleko Emaphakathi"
       },
-      "arts": {
-        "cert1": "Amazinga Okuphepha Komkhiqizo",
-        "cert2": "Isimemezelo Sokungenisa",
-        "cert3": "Imibhalo Yezamagugu Amasiko",
-        "cert4": "Isitifiketi se-Fair Trade (uma sikhona)",
-        "price": "€30-500/ngalinye (izithombe zamatshe)"
+      "arts_crafts": {
+        "category": "Ubuciko Lezandla",
+        "requirements": [
+          "I-CE Marking (uma ifaneleka, isib. izinto zokudlala)",
+          "Amakhasi okuvikeleka kwezinto (MSDS)",
+          "Izimemezelo zasemngceleni lemithelo",
+          "Amalungelo obunini (Intellectual Property)"
+        ],
+        "price": "Indleko Ephansi"
       },
-      "agricultural": {
-        "cert1": "Isitifiketi se-Phytosanitary",
-        "cert2": "Imithetho ye-EU ye-Plant Health",
-        "cert3": "Ukuhlola Imithi Yezilanyana (Pesticide)",
-        "cert4": "Amazinga eKhwalithi",
-        "price": "€2-8/kg (izithelo ezintsha)"
+      "agricultural_products": {
+        "category": "Imikhiqizo Yezolimo",
+        "requirements": [
+          "Isitifiketi se-GlobalG.A.P.",
+          "Izitifiketi ze-Organic (EU Organic Logo)",
+          "Izindlela zokulandelela isuka kuphi impahla",
+          "Amazinga obunjalo lokuhleleka (Quality and Grading)"
+        ],
+        "price": "Indleko Ephezulu"
       }
     },
+    "product_intelligence_badge": "Ulwazi",
+    "product_intelligence_title": "Ulwazi Ngemikhiqizo Ethile",
+    "product_intelligence_subtitle": "Hlala uphambili ngedatha ekhombisa isidingo semikhiqizo, intengo, lokuthandwa ngabathengi.",
+    "market_intelligence_requirements": "Izidingo Eziqakathekileyo:",
+    "market_intelligence_buyers": "Abathengi Abangaba Khona:",
+    "market_intelligence": {
+      "blueberries": {
+        "product": "Ama-Blueberries",
+        "status": "Isidingo Esiphezulu",
+        "requirements": [
+          "Isitifiketi se-GlobalG.A.P. siqakathekile.",
+          "Ukulandela imingcele ye-EU MRLs yezibulala-zinambuzane.",
+          "Ukufakwa emaphaketheni kumele kuhambelane lamazinga we-EU.",
+          "Ukuqiniseka ukuthi impahla ihlala iqandisiwe kuze kuyofika."
+        ],
+        "buyers": [
+          "LIDL",
+          "EDEKA",
+          "REWE"
+        ]
+      },
+      "honey": {
+        "product": "Inyosi",
+        "status": "Imakethe Ekhulayo",
+        "requirements": [
+          "Ukuhambisana le-EU Honey Directive (ubunjalo, isuka kuphi).",
+          "Ukuhlola imithi yama-antibiotics lezi-heavy metals.",
+          "Isitifiketi se-organic sinika intengo engcono kakhulu.",
+          "Ukulandeleleka kusuka esidlekeni kuye eshalofini."
+        ],
+        "buyers": "Izitolo zokudla okukhethekileyo, izimakethe ze-organic"
+      },
+      "natural_oils": {
+        "product": "Amafutha Emvelo (Umganu)",
+        "status": "Imakethe Esafufusa",
+        "requirements": [
+          "Isitifiketi se-COSMOS kumbe i-NaTrue sezinto zokuzicwalisa.",
+          "Amakhasi akhombisa ukuthi kutholakala ngendlela engayibulali imvelo.",
+          "Ukuhlola ubunjalo bamafutha.",
+          "Ukubhala amabizo ezitshalo lendawo okusuka kuyo kucace."
+        ],
+        "buyers1": "Abakhiqizi bezinto zokuzicwalisa",
+        "buyers2": "Amabhrendi ezempilo"
+      }
+    },
+    "partner_network_badge": "Inethiwekhi",
+    "partner_network_title": "Inethiwekhi Yabahlanganyeli Eqinisekisiweyo",
+    "partner_network_subtitle": "Xhumana labathengisi beGermany abathembekileyo, abahambisi bempahla, labezokuthutha.",
+    "view_examples": "Buka Izibonelo",
+    "partner_examples": "Izibonelo Zabahlanganyeli:",
     "partners": {
-      "retailers": "Abathengisi",
-      "retailers_desc": "Izitolo ezinkulu zaseGermany ezifuna imikhiqizo yase-Africa eqotho",
-      "retailers_examples": [
-        "REWE Group",
-        "EDEKA",
-        "Metro AG",
-        "Kaufland",
-        "Aldi Süd"
-      ],
-      "educational": "Izikhungo Zemfundo",
-      "educational_desc": "Izikhungo ezisekela imfundo yezokuhweba lobudlelwano",
-      "educational_examples": [
-        "German-African Business Association",
-        "IHK (Chambers of Commerce)",
-        "Izikolo zezokuhweba",
-        "Amanyuvesi"
-      ],
-      "business": "Abalingani Bebhizinisi",
-      "business_desc": "Imisebenzi yobungcweti yokungena lokukhulisa imakethe",
-      "business_examples": [
-        "Ama-ejensi Okuhweba",
-        "Abacebisi Bezokuhweba",
-        "Abangcweti Bokungena Emakethe",
-        "Abalingani Bokusabalalisa"
-      ],
-      "logistics": "Abalingani Bezokuthutha",
-      "logistics_desc": "Imisebenzi ethembekile yokuthutha le-customs clearance",
-      "logistics_examples": [
-        "DHL Global Forwarding",
-        "Kuehne + Nagel",
-        "DB Schenker",
-        "Freight Forwarders"
-      ],
-      "regulatory": "Abalingani Bemithetho",
-      "regulatory_desc": "Ukusekelwa ekuhambisaneni lemithetho lezitifiketi",
-      "regulatory_examples": [
-        "German Customs (Zoll)",
-        "Imizimba Yezitifiketi",
-        "Ama-ejensi Okuqinisekisa Izinga",
-        "Abacebisi Bokuhambisana Lomthetho"
-      ],
-      "financial": "Imisebenzi yeZimali",
-      "financial_desc": "Ukusekelwa ngezamabhanga lokuhweba kwamazwe ngamazwe",
-      "financial_examples": [
-        "Deutsche Bank",
-        "Commerzbank",
-        "KfW Development Bank",
-        "Ama-ejensi e-Export Credit",
-        "Abahlinzeki beTrade Finance"
-      ]
+      "retailers": {
+        "type": "Abathengisi Lezitolo Ezinkulu",
+        "description": "Ukungena ngqo ezitolo ezinkulu zeGermany lezitolo ezizimeleyo."
+      },
+      "educational_institutions": {
+        "type": "Izikhungo Zemfundo",
+        "description": "Ukuhlanganyela ekuthuthukiseni amakhono, ucwaningo, lokushintshana ngamasiko."
+      },
+      "business_partners": {
+        "type": "Abahlanganyeli Kwezokuthuthukisa Amabhizinisi",
+        "description": "Ochwepheshe ekungeniseni amabhizinisi emakethe lokutshala imali."
+      },
+      "logistics_partners": {
+        "type": "Abezokuthutha Lempahla",
+        "description": "Izindlela zokuthutha ezithembekileyo zokuhambisa impahla phandle."
+      },
+      "regulatory_partners": {
+        "type": "Inhlangano Zemithetho Lezitifiketi",
+        "description": "Inkomba losizo ekulandeleni imithetho yeGermany le-EU enzima."
+      },
+      "financial_services": {
+        "type": "Imisebenzi Yezezimali Lohwebo",
+        "description": "Ukuthola usizo lwezezimali kwezohwebo lokubhenka."
+      }
     },
-    "updates": {
-      "title1": "Ukungeniswa lula kwe-EU Sanctions",
-      "date1": "Nhlolanja 2025",
-      "desc1": "I-EU yehlise ezinye izijeziso eZimbabwe, okuthuthukisa ubudlelwano bezohwebo lokuvuleka kwemakethe.",
-      "title2": "Ukuphela kwe-Arms Embargo",
-      "date2": "Nhlolanja 2026",
-      "desc2": "I-arms embargo ye-EU isizaphela, okutshengisa ukubuyela kwesimo phakathi kwe-EU leZimbabwe.",
-      "title3": "Inzuzo ye-EU-ESA EPA",
-      "desc3": "IZimbabwe iyazuza ekungeniseni imikhiqizo ngaphandle kokubhadala umthelo ngaphansi kwesivumelwano se-EPA."
+    "regulatory_updates_badge": "Okusha",
+    "regulatory_updates_title": "Okusha Ngemithetho",
+    "regulatory_updates_subtitle": "Hlala wazi ngezinguquko zakutshanje emithethweni yohwebo yomhlaba ethinta ezokuthumela zeZimbabwe.",
+    "regulatory_updates": {
+      "eu_sanctions_easing": {
+        "title": "Ukuxegiswa Kwezijeziso ze-EU eZimbabwe",
+        "date": "March 2024",
+        "description": "I-European Union isixegise izijeziso ezinhlanganweni ezimbalwa zeZimbabwe, okuvula amathuba amatsha ohwebo lokutshala imali."
+      },
+      "arms_embargo_expiration": {
+        "title": "Ukuphela Komthetho Wezikhali",
+        "date": "February 2024",
+        "description": "Umthetho we-EU onqabela ukudayiselana izikhali leZimbabwe usuphelile, okuthuthukisa isimo sezohwebo jikelele."
+      },
+      "eu_esa_epa_benefits": {
+        "title": "Inzuzo ye-EU-ESA EPA",
+        "description": "IZimbabwe iyazuza ekuthumeleni impahla ngaphandle komthelo kumbe imingcele ngaphansi kwesivumelwano se-Economic Partnership Agreement (EPA)."
+      }
     },
-    "latest_updates": "Okusandukwenzeka",
-    "regulatory_updates_title": "Ulwazi Lwemithetho lwango-2026",
-    "regulatory_updates_desc": "Izinto ezitsha ezithinta ubudlelwano bokuhweba phakathi kweZimbabwe le-EU",
-    "product_intelligence": "Ulwazi Lomkhiqizo",
-    "product_market_intelligence": "Ulwazi Lwemakethe Yomkhiqizo",
-    "product_intelligence_desc": "Izidingo eziqondile lesimo semikhiqizo eyinhloko yaseZimbabwe",
-    "eu_approved": "Kuvunyelwe yi-EU",
-    "pending_approval": "Kulindele Ukuvunywa",
-    "requirements_label": "Izidingo:",
-    "buyers_label": "Abathengi:",
-    "go_to_slide": "Iya ku-slide",
-    "export_roadmap": "Umgwaqo Wokuhweba",
-    "roadmap_title": "Inqubo Yokuthumela eGermany isuka eZimbabwe",
-    "roadmap_desc": "Isiqondiso sobungcweti sezinyathelo ngezinyathelo zokuthumela imikhiqizo yaseZimbabwe ezimakethe zeGermany le-EU",
-    "export_sectors": "Imikhakha Eqakathekileyo Yokuhweba",
-    "sectors_desc": "Imikhiqizo ehlukahlukene yaseZimbabwe iletha amathuba emikhakheni eminengi",
-    "development_programs": "Izinhlelo Zokuthuthukisa Ukuhweba",
-    "programs_desc": "Imizamo ekhethekile yokwakha amandla okuthumela lokungena emakethe",
-    "diaspora_role": "Iqhaza labaseDiaspora Ekuhwebeni",
-    "diaspora_role_desc": "Indlela amalunga ediaspora angasekela ngayo abathumeli baseZimbabwe lokudala amathuba okuhweba"
+    "cta_title": "Usukulungele Ukuthumela e-EU?",
+    "cta_subtitle": "Iqembu lethu labochwepheshe likulungele ukukukhokhela kukho konke okumele ukwenze. Thintana lathi namhla.",
+    "cta_button": "Qalisa Manje"
   },
   "tourism": {
     "hero": {
-      "badge1": "Forbes #1 Destination 2025",
-      "title1": "Zimbabwe: ",
-      "highlight1": "Umhlaba Wezimanga",
-      "subtitle1": "Thola izindawo ezinhle, amasiko acebile, lokuhlangenwe nakho okungeke kwakhohlakala enkabeni ye-Southern Africa.",
-      "plan_journey": "Hlela Uhambo Lwakho",
-      "watch_exp": "Bukela Lokhu",
-      "badge2": "Umzamo Omusha",
-      "title2": "Isitolo seZimbabwe",
-      "subtitle2": "Isango Lokuhweba labaseDiaspora be-EU lezeVakasha",
-      "desc2": "Ukuxhuma Amasiko, Uhwebo, loBunikazi ngenkundla eyenzelwe ukuletha inhliziyo yeZimbabwe emakethe ye-Europe.",
-      "badge3": "Safari-Exzellenz",
-      "title3": "Hwange National Park",
-      "subtitle3": "Zibonele i-Big Five ebabazekayo",
-      "highlight3": "50,000+ Izindlovu",
-      "badge4": "Amagugu Omlando",
-      "title4": "Amanxiwa eGreat Zimbabwe",
-      "subtitle4": "Hlola idolobha lamatshe lasendulo",
-      "highlight4": "Ubukhosi Basendulo",
-      "badge5": "Inhloko-dolobha ye-Adventure",
+      "badge1": "Vakashela iZimbabwe",
+      "title1": "Thola Ubuhle Obubabazekayo",
+      "subtitle1": "Kusukela eVictoria Falls kuye eGreat Zimbabwe, uzizwele inhliziyo ye-Africa.",
+      "highlight1": "Ubuhle Bomhlaba Wonke",
+      "badge2": "Amagugu Amasiko",
+      "title2": "Umlando Ocebileyo",
+      "subtitle2": "Khangela imivubukulo yasendulo lamasiko esikhathi samanje aphilayo.",
+      "highlight2": "Izimpande Zasendulo",
+      "badge3": "Okuthokozisayo",
+      "title3": "Izinyamazana le-Safari",
+      "subtitle3": "Ukuhlangana lezinyamazana okungasoze kwalityalwa emapaki esizwe.",
+      "highlight3": "Imvelo Echumayo",
+      "badge4": "Indawo Yomlando",
+      "title4": "Great Zimbabwe",
+      "subtitle4": "Izakhiwo zamatshe zasendulo ezikhombisa impucuko ye-Africa.",
+      "badge5": "Isizinda Sokuthokozisa",
       "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Intuthu Iduma",
-      "highlight5": "Isimangaliso seMvelo"
+      "subtitle5": "Zizwele intuthu iduma eVictoria Falls.",
+      "plan_journey": "Hlela Uhambo Lwakho",
+      "watch_exp": "Bukela Uhambo"
     },
-    "attractions_title": "Izindawo Ezikhangayo",
-    "attractions_subtitle": "Zibonele ubuhle bemvelo lezimanga zomlando waseZimbabwe",
-    "plan_visit_title": "Hlela Ukuvakasha Kwakho",
-    "plan_visit_desc": "Ulwazi olubalulekile lohambo oluhle",
-    "contact_title": "Ukubuza NgezeVakasha",
-    "contact_desc": "Udinga uncedo ngokuhlela uhambo lwakho? Xhumana labangcweti bethu bezokuvakasha.",
-    "planning": {
-      "visa": {
-        "title": "Izidingo ze-Visa",
-        "desc": "Abavakashi abanengi bangathola i-visa nxa befika. Uhlelo lwe-E-visa luyatholakala kulabo abafuna ukufaka izicelo kusengaphambili.",
-        "d1": "I-visa yezokuvakasha: $30-75",
-        "d2": "Kumele ube le-passport esebenzayo",
-        "d3": "Kunconywa ukuthi ibe lezinyanga ezi-6 isasebenza"
+    "attractions_title": "Izindawo Okumele Uzivakashele",
+    "attractions_subtitle": "Izindawo eziyisifanekiso esichaza iZimbabwe.",
+    "attractions": {
+      "vicfalls": {
+        "name": "Victoria Falls",
+        "desc": "Enye yezimangaliso eziyisikhombisa zemvelo emhlabeni, impophoma enkulu kakhulu.",
+        "h1": "UNESCO World Heritage",
+        "h2": "Isizinda Sokuthokozisa",
+        "h3": "Ukubuka Izinyamazana",
+        "summary": "Yaziwa kakhulu ngokuthi yiMosi-oa-Tunya (Intuthu Iduma), iVictoria Falls iphakeme ngokuphindwe kabili kuneNiagara Falls. Ungenza i-white-water rafting, bungee jumping, lemizila ye-helicopter."
       },
-      "health": {
-        "title": "Ezempilo loKuphepha",
-        "desc": "IZimbabwe iphephile kubavakashi. Izinyathelo ezijwayelekile zohambo ziyalulekwa.",
-        "d1": "I-Yellow fever (uma kudingeka)",
-        "d2": "Ukuvikelwa kuMalaleveva",
-        "d3": "Inshwalensi yohambo iyelulekwa"
+      "greatzim": {
+        "name": "Great Zimbabwe",
+        "desc": "Izakhiwo zamatshe zasendulo ezikhombisa ubuciko bokwakha base-Africa.",
+        "h1": "UNESCO World Heritage",
+        "h2": "Indawo Yomlando",
+        "h3": "Amagugu Amasiko",
+        "summary": "Yakhwa phakathi kwekhulu le-11 le-15, iGreat Zimbabwe yayiyinhloko-dolobha yoMbuso weZimbabwe. Amatshe la abekwa ngaphandle kokusebenzisa udaka (mortar)."
       },
-      "payment": {
-        "title": "Izinhlelo Zokubhadala",
-        "desc": "Omnotho osebenzisa imali ehlukahlukene njalo i-USD iyamukelwa kakhulu. Imali yomakhalekhukhwini ithandwa kakhulu.",
-        "d1": "I-USD, ZAR, EUR iyamukelwa",
-        "d2": "EcoCash (imali yomakhalekhukhwini)",
-        "d3": "Amakhadi (cards) emahhotela amakhulu"
+      "kariba": {
+        "name": "Kariba Dam",
+        "desc": "Elinye lamachibi amakhulu akhiwe ngabantu emhlabeni, lilungele ukuhamba ngezikepe lokudoba.",
+        "h1": "Imidlalo Yasemanzini",
+        "h2": "Ukudoba i-Tiger",
+        "h3": "Ukushona Kwelanga Okubabazekayo",
+        "summary": "Ichibi leKariba lingamakhilomitha angu-5,500 square. Laziwa kakhulu ngokudoba i-tiger fish, amaholide asezikepe (houseboats), lokubuka amavukuvuku lezindlovu ogwini."
       },
-      "time": {
-        "title": "Isikhathi Esihle Sokuvakasha",
-        "desc": "Indawo ongayivakashela loba nini, kodwa isikhathi sokulanga (May-October) yiso esithandwa kakhulu.",
-        "d1": "May-Oct: Isikhathi somoya/somile",
-        "d2": "Nov-Apr: Isikhathi sezulu",
-        "d3": "Izimpophoma zinhle: Feb-May"
+      "rocks": {
+        "name": "Balancing Rocks",
+        "desc": "Amatshe amise okungaqondakaliyo ayisibonakaliso samagugu emvelo eZimbabwe.",
+        "h1": "Isibonakaliso Selizwe",
+        "h2": "Ezokuthatha Imifanekiso",
+        "h3": "Isimangaliso Semvelo",
+        "summary": "Lawa amatshe e-granite amise okungathi azawa kodwa amile njalo. Atholakala kakhulu emalini yeZimbabwe laseMatobo National Park."
+      }
+    },
+    "other_attractions_title": "Ezinye Izindawo Ezimangalisayo",
+    "other_attractions_subtitle": "Ngaphandle kwezindawo ezaziwayo, iZimbabwe ilolunye ubuhle obuningi.",
+    "other_attractions": {
+      "hwange": {
+        "name": "Hwange National Park",
+        "desc": "Iphaki enkulu yeZimbabwe, yaziwa ngezinkulungwane zezindlovu lezinyamazana ezinengi.",
+        "h1": "Big Five Safari",
+        "h2": "Izindlovu Eziningi",
+        "h3": "Imisebenzi Yokulondoloza",
+        "summary": "I-Hwange ilezinhlobo zezinyamazana ezedlula ikhulu (100) lezinhlobo zezinyoni ezingamakhulu amane (400)."
+      },
+      "matobo": {
+        "name": "Matobo National Park",
+        "desc": "Indawo ye-UNESCO eyaziwa ngamatshe ayo (balancing rocks) lomlando wezomoya.",
+        "h1": "Balancing Rocks",
+        "h2": "Imidwebo Yasendulo",
+        "h3": "Isivikelo Sezibhejane",
+        "summary": "Amagquma aseMatobo alemidwebo yase-San yasendulo njalo kulapho okungatshwa khona u-Cecil John Rhodes e-'World's View'."
+      },
+      "eastern_highlands": {
+        "name": "Eastern Highlands",
+        "desc": "Indawo elamagquma lezihlahla eziluhlaza, izimpophoma, lenkungu.",
+        "h1": "Ukukhwela Izintaba",
+        "h2": "Izimpophoma Ezinhle",
+        "h3": "Umoya Oqandayo",
+        "summary": "Kuhlanganisa izintaba zeNyanga, Vumba, leChimanimani. Kulendawo ephakeme kakhulu eZimbabwe, iMount Nyangani."
+      },
+      "mana_pools": {
+        "name": "Mana Pools National Park",
+        "desc": "Indawo ye-UNESCO ekude eyaziwa kakhulu ngemifula lohambo lokuhamba ngezinyawo phakathi kwezinyamazana.",
+        "h1": "Walking Safaris",
+        "h2": "Ukubuka Umfula u-Zambezi",
+        "h3": "Imvelo Engakathintwa",
+        "summary": "Isendaweni ye-Zambezi Valley, i-Mana Pools yaziwa ngobuhle bayo lokubuka izindlovu lezilwane (wild dogs) eduze."
       }
     },
     "onesa": {
-      "badge": "AI Tourist Companion",
-      "title": "Umkhokheli Wendawo Ephaketheni Lakho",
-      "subtitle": "U-Onesa AI ukusiza ukuhamba eZimbabwe, kusukela emasikweni kuye ezindaweni ezinhle ezifihlakeleyo.",
+      "name": "Onesa AI",
+      "badge": "Umngane wakho u-Onesa AI",
+      "chat": "Khuluma lo-Onesa",
+      "img_alt": "Onesa AI Guide",
+      "title": "Umkhokheli wakho wasekhaya ephoketheni lakho",
+      "subtitle": "Ukuhamba eZimbabwe kungaba lukhuni. U-Onesa AI uyazwisisa umnotho we-'kukiya-kiya' lemikhuba yasendaweni ukuze uhambo lwakho luhambe kahle.",
+      "companion_title": "Kusukela ekubhadaleni indiza, isimo sezulu kumbe ukuthola izindawo eziphambili, u-Onesa AI ukusizile",
+      "companion_subtitle": "U-Onesa AI ukusiza ukuhlela uhambo lwakho lokuzwisisa imikhuba yasendaweni. U-Onesa ungumngane opheleleyo wohambo.",
+      "assistant_label": "Umsizi ka-Onesa AI",
+      "prompt_question": "\"Onesa, yikuphi lapho okutholakala khona isadza lesintu esimnandi eHarare lanhlanje?\"",
+      "prompt_response": "Ukuze uthole isadza lesintu langempela eHarare, yana eMbare Musika. Abathengisi bakhona baphakela isadza elitshisayo elilokushesha okuhlukahlukeneyo. Cela 'Sadza ne Nyama' ukuze usuthe!",
       "guide": {
-        "title": "Ulwazi Lwendawo",
-        "desc": "Thola iziphakamiso zokudla okuhle kwasekhaya, izindawo ezikhangayo, lamasiko aziwa ngabantu bendawo kuphela."
+        "title": "Ulwazi Lwasendaweni",
+        "desc": "Zwisisa imikhuba yasendaweni, ukunika i-tip, lezinye izinto."
       },
       "navigate": {
-        "title": "Ukuhamba Kalula",
-        "desc": "Thola uncedo kwezokuthutha, ezimakethe, leminye imisebenzi ngezindleko lenqubo efanele."
+        "title": "Ukuhamba Okuhlakaniphileyo",
+        "desc": "Thola imizila engcono kakhulu lezindawo ezaziwa ngabakhonapho kuphela."
       },
       "plan": {
-        "title": "Ukuhlela Ngobuhlakani",
-        "desc": "Hlela uhambo lwakho kuye ngezehlakalo zendawo, isimo sezulu, lezikhathi zezilwane zasendle."
+        "title": "Uhlelo Olungelwakho",
+        "desc": "Uhlelo lohambo olwenziwe yi-AI kuye ngokuthanda kwakho."
+      }
+    },
+    "planning": {
+      "guide_badge": "Umkhokheli Wohambo",
+      "essential_info": "Ulwazi Oluqakathekileyo Lokuhlela",
+      "essential_desc": "Konke odinga ukukwazi ukuze ube lohambo oluhle eZimbabwe.",
+      "visa": {
+        "title": "Izidingo ze-Visa",
+        "desc": "Ulwazi lokungena kubavakashi bamazwe ngamazwe.",
+        "d1": "Uhlelo lokubhalisela i-Visa kwi-internet lukhona",
+        "d2": "I-Visa iyatholakala ufika emngceleni kundawo eziningi",
+        "d3": "Kudingeka i-passport esebenzayo okungenani izinyanga ezingu-6"
       },
-      "cta": "Xoxa lo-Onesa AI"
-    }
+      "health": {
+        "title": "Ezempilo Lokuvikeleka",
+        "desc": "Hlala uphilile njalo uvikelekile ohambweni lwakho.",
+        "d1": "Isitifiketi se-Yellow fever uma sikhonjwa",
+        "d2": "Imithi yokuvikela i-malaria iyakhuthazwa",
+        "d3": "I-travel insurance egcweleyo iyadingeka"
+      },
+      "payment": {
+        "title": "Imali Lokubhadala",
+        "desc": "Ukusebenzisa imali eZimbabwe.",
+        "d1": "Uhlelo lwemali ehlukahlukeneyo (i-USD iyemukelwa yonke indawo)",
+        "d2": "I-Visa le-Mastercard ziyasebenza emahhotela amakhulu",
+        "d3": "Imali yomakhalekhukhwini (EcoCash) isetshenziswa kakhulu"
+      },
+      "time": {
+        "title": "Isikhathi Esihle Sokuvakasha",
+        "desc": "Hlela uhambo lwakho ngesikhathi esifaneleyo.",
+        "d1": "Meyi kuye ku-Okthoba ukubuka izinyamazana",
+        "d2": "Februwari kuye ku-Meyi ukuze ubone iVictoria Falls igcwele",
+        "d3": "Isimo sezulu sihle unyaka wonke"
+      }
+    },
+    "cta_title": "Usukulungele Ukuqala Uhambo Lwakho?",
+    "cta_button": "Xhumana lochwepheshe",
+    "cta_subtitle": "Iqembu lethu lezokuvakasha lingakusiza ukuthola amathuba alungele wena.",
+    "contact_form_title": "Umbuzo Wezokuvakasha",
+    "explore_title": "Dinga Olunye Ulwazi Lohambo",
+    "explore_subtitle": "Ukuze uthole ulwazi lohambo olupheleleyo, vakashela i-website ye-Zimbabwe Tourism Authority.",
+    "explore_site": "Vakashela i-ZTA"
   },
   "investment": {
+    "objective_title": "Ukutshala Imali Okuvikelekileyo, Ukukhulisa Umnotho",
+    "objective_subtitle": "Ukuxhumanisa abatshali-mali be-diaspora lamaphrojekthi ahloliweyo, asekelwa hulumende njalo alokulandelela okusobala.",
     "hero": {
-      "badge1": "Reserve Bank of Zimbabwe",
-      "title1": "Ukuzinza kwe-Zimbabwe Gold (ZiG)",
-      "subtitle1": "Isekelwa ngegolide lemali yakwamanye amazwe, i-ZiG imele isikhathi esitsha sokuqina kwemali kulabo abatshala imali.",
-      "highlight1": "Imali Esekelwa ngeGolide",
-      "badge2": "Ukukhula Kwengqalasizinda",
-      "title2": "Akha iZimbabwe Ndawonye",
-      "subtitle2": "Amaphrojekthi engqalasizinda adala imisebenzi, alethe inzuzo, njalo athuthukise imiphakathi",
-      "highlight2": "$2.5M+ Esekutshaliwe",
-      "badge3": "Victoria Falls Stock Exchange",
-      "title3": "VFEX: Isango Lakho le-USD",
-      "subtitle3": "Tshala imali ku-exchange yaseZimbabwe esebenzisa i-USD, enikeza izaphulelo zomthelo lokukhipha imali lula kubatshali mali.",
-      "highlight3": "Isetshenziswa nge-USD",
-      "badge4": "Ezolimo 4.0",
-      "title4": "Ukutshala Imali ku-Smart Farming",
-      "subtitle4": "Amaphrojekthi wama-macadamia lama-avocado asebenzisa ubuchwepheshe bezolimo obuphambili.",
-      "highlight4": "18-22% IRR",
-      "badge5": "Ushintsho kwezeMikhaya",
-      "title5": "Isikhungo Samaminerali Abalulekile",
-      "subtitle5": "Tshala amaphrojekthi we-lithium le-platinum okuzandisa inani labo ngenxa yoshintsho lwamandla emhlabeni.",
-      "highlight5": "Isidingo Somhlaba Wonke"
+      "badge1": "Imisebenzi ye-RBZ",
+      "title1": "Ukutshala Imali kwe-Diaspora",
+      "subtitle1": "Ukusekela intuthuko yelizwe ngokuzibandakanya kwama-diaspora.",
+      "rbz_policy": "Khangela imithetho",
+      "rbz_currency": "Tshala nge-USD kumbe nge-ZiG",
+      "highlight1": "Ukukhula Kwezwe",
+      "badge2": "Masuwe SEZ",
+      "title2": "Tshala e-Masuwe SEZ",
+      "subtitle2": "Amathuba amakhulu kwezokuvakasha eduze leVictoria Falls.",
+      "highlight2": "Indawo Ephambili",
+      "badge3": "VFEX",
+      "title3": "Stock Exchange",
+      "subtitle3": "Tshala ezinkampanini ze-Africa ezikwi-offshore list.",
+      "highlight3": "Ukufinyelela Umhlaba",
+      "badge4": "Horticulture",
+      "title4": "Igolide Eliluhlaza",
+      "subtitle4": "Ukuthunyelwa kwezithelo zenani eliphezulu.",
+      "highlight4": "Inzuzo Ephezulu",
+      "badge5": "Ezokumbumbi",
+      "title5": "Incebo Yezimbiwa",
+      "subtitle5": "Amathuba egolide, i-Platinum, le-Lithium.",
+      "highlight5": "Amagugu Omhlaba"
     },
-    "active_projects": "Amaphrojekthi Akhona Okutshala",
-    "active_projects_desc": "Amathuba afakazelwe okutshala imali kwabaseDiaspora emikhakheni eqakathekileyo",
-    "all_sectors": "Yonke Imikhakha",
-    "agriculture": "Ezolimo",
-    "manufacturing": "Ukwenza Impahla",
-    "tourism": "EzeVakasha",
-    "infrastructure": "Ingqalasizinda",
-    "tech": "Eze-Tech",
-    "all_risk": "Wonke Amazinga e-Risk",
-    "conservative": "Phansi (Conservative)",
-    "moderate": "Phakathi (Moderate)",
-    "aggressive": "Phezulu (Aggressive)",
-    "calculator_title": "Isibali Sokutshala",
-    "calculator_desc": "Bona ukuthi inzuzo yakho ingaba ngangani",
-    "verified_directories": "Izinkomba Ezifakazelwe",
-    "directories_desc": "Ngena kumarejista asemthethweni lezinhlangano",
-    "onesa_title": "Onesa AI Companion",
-    "onesa_desc": "Sebenzisa u-Onesa AI ukwenza izinqumo zokutshala imali ezisekelwe kudatha lokuhlola ama-risk ngolwazi lwendawo.",
-    "masuwe_title": "Masuwe Special Economic Zone",
-    "masuwe_desc": "I-Masuwe SEZ yindawo eyingqayizivele engama-hektha ayi-1200, eqhele ngamakhilomitha ayi-10 ukusuka eVictoria Falls. Inikeza amathuba emhlabeni wonke kwezokuvakasha, ezempilo, lezezimali.",
-    "contact_title": "Ukulungele Ukutshala Imali?"
+    "projects": {
+      "masuwe": {
+        "title": "Masuwe SEZ",
+        "description": "Isizinda sezindawo zokuvakasha eduze leVictoria Falls.",
+        "highlights": ["Imithelo Ephansi", "Isizinda Sokuvakasha", "Imigwaqo Lamanzi Kukhona"]
+      },
+      "leather": {
+        "title": "Leather Cluster",
+        "description": "Ukukhiqiza lezokuthuthukisa isikhumba esifundeni.",
+        "highlights": ["Ukwengeza Inani", "Abasebenzi Abanamakhono", "Sekulungele Ukuthunyelwa"]
+      }
+    },
+    "project_filters": {
+      "all": "Konke",
+      "tourism": "Ezokuvakasha",
+      "agriculture": "Ezolimo",
+      "manufacturing": "Ezokukhiqiza",
+      "it": "IT le-Fintech",
+      "energy": "Ezomandla",
+      "sector": "Ingxenye",
+      "risk_level": "Izinga Lengozi",
+      "min_investment": "Ubuncane. ",
+      "expected_return": "Inzuzo Ekhangelelweyo",
+      "conservative": "Phansi",
+      "moderate": "Phakathi",
+      "aggressive": "Phezulu"
+    },
+    "project_card": {
+      "target_amount": "Okudingwayo: {{amount}}",
+      "raised": "Okuhlatshiweyo: {{amount}}",
+      "view_details": "Buka kabanzi",
+      "verified": "Impahla Eqinisekisiweyo",
+      "risk": "Izinga Lengozi",
+      "timeline": "Isikhathi"
+    },
+    "benefits": {
+      "diaspora_network": {
+        "title": "Inethiwekhi ye-Diaspora",
+        "desc": "Sebenzisa ukuxhumana komhlaba ukungena emakethe."
+      },
+      "performance_tracking": {
+        "title": "Ukulandelela Bukhoma",
+        "desc": "Buka isimo sephrojekthi isikhathi sonke."
+      }
+    },
+    "hdc_title": "Horticultural Development Council",
+    "hdc_subtitle": "Ukubhekela ubunjalo lamazinga okuthunyelwa kwe-horticulture phandle.",
+    "ntir_title": "National Trade & Investment Register (NTIR)",
+    "ntir_subtitle": "Irejista esemthethweni yezinhlangano zohwebo lokutshala imali eziqinisekisiweyo eZimbabwe.",
+    "ntir_button": "Dinga ku-Database ye-NTIR.",
+    "crowdfunding_title": "Amathuba e-Crowdfunding",
+    "crowdfunding_subtitle": "Tshala imali encane kumaphrojekthi ahloliweyo ubone umphumela weqiniso.",
+    "investment_sectors_title": "Amathuba Okutshala Imali Akhona",
+    "investment_sectors_subtitle": "Amaphrojekthi ahlolwe kahle asekelwa hulumende.",
+    "cta_title": "Usukulungele Ukutshala Imali?",
+    "cta_subtitle": "Iqembu lethu lingakusiza ukuthola amathuba afaneleyo.",
+    "cta_button": "Xhumana lochwepheshe",
+    "explore_title": "Dinga Olunye Ulwazi Lokutshala Imali",
+    "explore_subtitle": "Ukuze uthole ulwazi olupheleleyo, vakashela i-Zimbabwe Investment and Development Agency.",
+    "explore_site": "Vakashela i-ZIDA"
   },
   "trade": {
     "hero": {
-      "badge1": "Ukusebenza Kuhle Ekuhwebeni",
-      "title1": "Isikhungo Sokuhweba saseZimbabwe",
-      "subtitle1": "Ukuxhumanisa abakhiqizi baseZimbabwe lezimakethe zomhlaba ngenethiwekhi yabaseDiaspora lobungcweti bokuhweba",
-      "highlight1": "$50M+ Okuthunyelwe",
-      "badge4": "Ezokuthutha loKuhlinzeka",
-      "title4": "Ezokuthutha Ezisebenzayo",
-      "subtitle4": "Ukwenza lula uhambo lwemikhiqizo yaseZimbabwe eya ezindaweni zomhlaba.",
-      "highlight4": "Ukufika Emhlabeni",
-      "badge5": "Inqubomgomo Yokuhweba",
-      "title5": "Inzuzo ye-Interim-EPA",
-      "subtitle5": "Ukusebenzisa izivumelwano zokuhweba ukuze kuzuze izimakethe ze-EU.",
-      "highlight5": "Ngaphandle Komthelo",
-      "badge2": "Ukukhula Komkhakha",
-      "title2": "Ukwanda kwe-Horticulture",
-      "subtitle2": "Imikhiqizo yezolimo yaseZimbabwe ifinyelela ezingeni eliphezulu e-Europe le-Middle East.",
-      "highlight2": "30% Ukukhula Ngomnyaka",
-      "badge3": "Ukwenza Amboni",
-      "title3": "Ukwandisa Inani (Value-Addition)",
-      "subtitle3": "Ukusekela ushintsho kusukela ekuthumeleni impahla eluhlaza kuye emikhiqizweni ecutshunguliweyo.",
-      "highlight3": "Vision 2030"
+      "badge1": "Uhwebo Lomhlaba",
+      "title1": "Isizinda Sohwebo seZimbabwe",
+      "subtitle1": "Ukuhlanganisa amabhizinisi asekhaya lezimakethe zomhlaba.",
+      "highlight1": "Ukukhula Kwezokuthumela"
     },
-    "export_roadmap": "Umgwaqo Wokuhweba",
-    "roadmap_title": "Inqubo Yokuthumela eGermany isuka eZimbabwe",
-    "roadmap_desc": "Isiqondiso sobungcweti sezinyathelo ngezinyathelo zokuthumela imikhiqizo yaseZimbabwe ezimakethe zeGermany le-EU",
-    "export_sectors": "Imikhakha Eqakathekileyo Yokuhweba",
-    "sectors_desc": "Imikhiqizo ehlukahlukene yaseZimbabwe iletha amathuba emikhakheni eminengi",
-    "development_programs": "Izinhlelo Zokuthuthukisa Ukuhweba",
-    "programs_desc": "Imizamo ekhethekile yokwakha amandla okuthumela lokungena emakethe",
-    "diaspora_role": "Iqhaza labaseDiaspora Ekuhwebeni",
-    "diaspora_role_desc": "Indlela amalunga ediaspora angasekela ngayo abathumeli baseZimbabwe lokudala amathuba okuhweba"
+    "objective_title": "Micu Yekukhiqiza (Value-chains).",
+    "objective_subtitle": "Ukwakha imicu yokukhiqiza esimayo esekela ukukhula komnotho kwesikhathi eside.",
+    "export_roadmap_badge": "Inkomba Yokuthumela",
+    "export_roadmap_title": "Indlela Yokuthumela Phandle kusuka eZimbabwe kuye eGermany",
+    "export_roadmap_subtitle": "Inkomba kancane kancane yokuhamba uhambo lokuthumela impahla.",
+    "export_flow": {
+      "product_approval": {
+        "phase": "Ukuvunyelwa Komkhiqizo",
+        "description": "Kumikhiqizo engakavunyelwa yi-EU (isib. Inyosi)",
+        "steps": [
+          "Thumela uhlelo lokuhlola imithi (RMP)",
+          "Misa inhlelo zokuhlola eziqinisekisiweyo yi-EU",
+          "Bhalisa ohlelweni lwe-EU TRACES",
+          "Lindela ukufakwa ohlwini lwaba-vunyelweyo yi-EU"
+        ]
+      }
+    },
+    "export_sectors_badge": "Izingxenye",
+    "export_sectors_title": "Izingxenye Ezithumela Phandle Eziqakathekileyo",
+    "export_sectors_subtitle": "Thola izingxenye eziqhuba umnotho we-export eZimbabwe.",
+    "sectors": {
+      "horticulture": {
+        "name": "Horticulture",
+        "description": "Izilimo ezitsha, amaluva, lemibhida ye-organic ezimakethe zomhlaba.",
+        "opportunities": [
+          "Izimakethe ze-organic ze-EU",
+          "Ukuthumela e-Middle East",
+          "Uhwebo lwesifunda lwe-SADC"
+        ]
+      }
+    },
+    "zimtrade_programs_badge": "Izinhlelo",
+    "zimtrade_programs_title": "Izinhlelo zeZimTrade Zokuthuthukisa Ukuthumela",
+    "programs": {
+      "eagles_nest": {
+        "title": "Eagles Nest",
+        "description": "Uhlelo lwabasafufusa lokuthuthukisa abathumeli bempahla phandle abasebatsha.",
+        "target": "Osabhizinisi abasebatsha (18-35)",
+        "benefits": [
+          "Ukuqeqeshwa ngezohwebo",
+          "Ukuthola umkhokheli (mentorship)",
+          "Ukungena emakethe",
+          "Usekelo lwemali"
+        ]
+      }
+    }
   },
   "data": {
-    "hero": {
-      "badge1": "Ukukhula Komnotho 2025",
-      "title1": "Inzuzo Elandela ",
-      "highlight1": "Idatha",
-      "subtitle1": "Ukuhlaziya okuphelele kwesimo somnotho waseZimbabwe.",
-      "desc1": "Hlola amamethrikhi esikhathi sangempela lemisebenzi yemikhakha.",
-      "badge3": "Izitayela Zokutshala",
-      "title3": "Ukuhlaziya Ukungena kweMali",
-      "subtitle3": "Ukulandelela ukukhula kokutshala imali okukhokhelwa ngabaseDiaspora.",
-      "highlight3": "Ukukhula Komkhakha",
-      "badge4": "Ulwazi Lwemakethe",
-      "title4": "Ulwazi Ngabathengi",
-      "subtitle4": "Ukuzwisisa izimfuneko zemakethe ukuze kuthuthukiswe amasu.",
-      "highlight4": "Ilandela Idatha",
-      "badge5": "Isimo Somnotho",
-      "title5": "Inqubekela-phambili ye-Vision 2030",
-      "subtitle5": "Ukubheka imigomo yentuthuko yelizwe.",
-      "highlight5": "Indlela Yokukhula",
-      "badge2": "Izitayela Zokuthunyelwa kweMali",
-      "title2": "Imali Ethunyelwa ngabaseDiaspora",
-      "highlight2": "$2.1 Billion ngomnyaka",
-      "subtitle2": "Insika yokungena kwemali yakwamanye amazwe.",
-      "desc2": "Ukuhlaziya ukugeleza lomthelela wemali yabaseDiaspora."
-    },
-    "indicators": "Izinkomba Zomnotho",
-    "indicators_desc": "Amamethrikhi ayinhloko aqhuba inguquko yezomnotho eZimbabwe",
-    "diaspora_impact": "Umthelela Wendao ye-Global Diaspora",
-    "diaspora_impact_desc": "Igalelo lezimali lelehlalo labaseZimbabwe abasemaphandleni",
-    "regional_breakdown": "Ukwahlukaniswa kwabaseDiaspora ngezifunda",
-    "remittance_allocation": "Ukusetshenziswa Kwemali Ethunyelwayo Ngemikhakha",
-    "gdp_growth": "Isitayela Sokukhula kwe-GDP"
-  },
-  "success": {
-    "hero": {
-      "badge1": "Izindaba Zomthelela",
-      "title1": "Impumelelo Eqhutshwa ngabaseDiaspora",
-      "subtitle1": "Izindaba zangempela zamabhizinisi aseZimbabwe aguqukayo.",
-      "highlight1": "$8.5M+ Eyadaliwe",
-      "badge3": "Impumelelo kwezoLimo",
-      "title3": "Ukuthunyelwa kwama-Binga Basket",
-      "subtitle3": "Ukunika abantu besifazane emakhaya amandla ngokungena emakethe ngqo.",
-      "highlight3": "Umthelela Emphakathini",
-      "badge4": "Ukukhula kwezeVakasha",
-      "title4": "Ukutshala kumaphrojekthi we-Eco-Lodge",
-      "subtitle4": "Amaphrojekthi wezokuvakasha azinzileyo axhaswa ngabaseDiaspora.",
-      "highlight4": "Okwenzakala Isikhathi Eside",
-      "badge5": "Inovayishini kwezeMikhaya",
-      "title5": "Inani le-Lithium",
-      "subtitle5": "Ukuguqula amaminerali aluhlaza abe yizinto ezithunyelwa ngaphandle zenani eliphezulu.",
-      "highlight5": "Ukwengeza Inani",
-      "badge2": "Umoya Wezamabhizinisi",
-      "title2": "Impumelelo ye-Startup",
-      "subtitle2": "Indlela ama-tech startups akhokhelwa ngabaseDiaspora axazulula ngayo izinkinga.",
-      "highlight2": "50+ Tech Companies"
-    },
-    "stories_title": "Izindaba Zempumelelo",
-    "stories_desc": "Hlola ukuthi ukuzibandakanya kwabaseDiaspora kudala kanjani umthelela wangempela eZimbabwe",
-    "impact_metrics": "Umthelela Ophelele weNkundla",
-    "metrics_desc": "Amamethrikhi empumelelo ahlanganisiwe kuyo yonke inethiwekhi yethu"
+    "education": "Imfundo",
+    "housing": "Ezezindlu Lokwakha",
+    "health_care": "Ezempilo",
+    "business_investment": "Ukutshala Kwebhizinisi",
+    "food": "Ukudla Lezidingo Eziqakathekileyo",
+    "overview_title": "Izinkomba Zomnotho Eziqakathekileyo",
+    "overview": {
+      "gdp": {
+        "title": "GDP (Isilinganiso sika-2026)",
+        "subtitle": "% Ukukhula",
+        "description": "Umkhiqizo Wonke weZimbabwe (GDP)"
+      },
+      "remittances": {
+        "title": "Imali Evela e-Diaspora",
+        "subtitle": "Umthombo we-Forex",
+        "description": "Imali ethunyelwa minyaka yonke ngama-diaspora"
+      }
+    }
   },
   "common": {
-    "explore_now": "Hlola Manje",
-    "learn_more": "Funda Okwengeziwe",
+    "explore_now": "Funda Manje",
+    "learn_more": "Funda Okunye",
     "get_started": "Qalisa Manje",
-    "invest_now": "Tshala Imali Manje",
-    "contact_us": "Xhumana Nathi",
-    "view_all": "Bona Konke",
+    "invest_now": "Tshala Manje",
+    "contact_us": "Thintana Lathi",
+    "view_all": "Buka Konke",
     "back_to_top": "Buyela Phezulu",
-    "loading": "Iyalayisha...",
+    "loading": "Isalungisa...",
     "error": "Kube lephutha",
     "success": "Kuphumelele!",
-    "verified": "Kufakazelwe",
-    "target": "Okuhlosiwe",
-    "raised": "Esebuthene",
-    "investors": "Abatshali Mali",
+    "verified": "Eqinisekisiweyo",
+    "target": "Okudingwayo",
+    "raised": "Okuhlatshiweyo",
+    "investors": "Abatshali-mali",
     "min_investment": "Ubuncane Bokutshala",
-    "expected_return": "Inzuzo Elindelekile",
+    "expected_return": "Inzuzo Ekhangelelweyo",
     "timeline": "Isikhathi",
     "status": "Isimo",
-    "risk_level": "Izinga le-Risk",
+    "risk_level": "Izinga Lengozi",
     "highlights": "Okugqamileyo",
-    "share": "Yabelana",
+    "share": "Phakela",
     "save": "Londoloza"
   },
   "contact_form": {
-    "full_name": "Ibizo Lonke",
-    "email": "I-Email",
+    "get_started": "Khuluma Lathi",
+    "full_name": "Ibizu Lonke",
+    "email": "I-Email Address",
     "phone": "Inombolo Yocingo",
     "subject": "Isihloko",
     "message": "Umlayezo",
-    "send": "Thumela Umlayezo",
-    "sending": "Iyathumela...",
-    "success_msg": "Umlayezo uthunyelwe kahle!",
-    "success_desc": "Sizakuphendula phakathi kwamahora angama-24-48.",
+    "message_placeholder": "Bhala umlayezo wakho lapha...",
     "select_subject": "Khetha isihloko",
-    "required_field": "Kumele ugcwalise *"
+    "send": "Thumela Umlayezo",
+    "sending": "Iyayathumela...",
+    "success_msg": "Umlayezo uthunyelwe ngempumelelo!",
+    "description": "Lemibuzo kumbe ufuna ukwazi okunye? Gcwalisa ifomu elingezansi siza-kuphendula.",
+    "required_field": "Kumele Kugcwaliswe *"
   },
   "calculator": {
-    "title": "Isibali Sokutshala",
-    "desc": "Bala inzuzo engaba khona ekutshaleni kwakho emaphandleni",
-    "amount": "Inani Lokutshala",
+    "title": "Isibali-mali Sokutshala",
+    "desc": "Bala inzuzo ongayithola ekutshaleni kwakho imali",
+    "amount": "Imali Otshala Yona",
     "timeline": "Isikhathi Sokutshala",
-    "return_rate": "Inzuzo Ngomnyaka Elindelekile",
-    "total_investment": "Isamba Sokutshala",
-    "total_returns": "Isamba Senzuzo",
+    "return_rate": "Inzuzo Yomnyaka Ekhangelelweyo",
+    "total_investment": "Imali Yonke Etshaliweyo",
+    "total_returns": "Inzuzo Yonke",
     "final_value": "Inani Lokugcina",
-    "projected_growth": "Ukukhula Okulindelekile",
+    "projected_growth": "Ukukhula Okukhangelelweyo",
     "year": "Umnyaka",
     "annual_return": "Inzuzo yomnyaka",
-    "disclaimer": "Qaphela: Lesi sibali sinikeza isilinganiso kuphela. Inzuzo yangempela ingase ihluke."
+    "disclaimer": "Qaphela: Lesi sibali-mali sinika isilinganiso kuphela. Inzuzo yeqiniso ingahluka."
   },
   "shop": {
-    "vision": "Ukwakha isango lomhlaba wonke elixhumanisa amasiko aseZimbabwe, imikhiqizo, ezeVakasha, lathuba okutshala imali.",
+    "vision": "Ukuvula isango lomhlaba elixhumanisa amasiko eZimbabwe, imikhiqizo, ezokuvakasha, lamathuba okutshala imali.",
     "our_vision": "Umbono Wethu",
     "collections": "Amaqoqo",
-    "title": "Ubungcweti baseZimbabwe obukhethiweyo",
-    "desc": "Kusukela kumpahla esemthethweni kuye emicebeni eyenziwe ngezandla, yonke into ilendaba yamagugu lekhwalithi.",
-    "sports_title": "Ezemidlalo Zesizwe",
-    "sports_desc": "Impahla esemthethweni ye-Sables, Chevrons, lama-Warriors.",
-    "crafts_title": "Ezobuciko leMisebenzi yezandla",
-    "crafts_desc": "Ukusekela abenzi bezandla emakhaya lamadlelandawonye abesifazane.",
-    "food_title": "Ukudla loKhumbula Ekhaya",
-    "food_desc": "Ukunambitheka kwasekhaya, okuhambisana lemithetho ye-EU ngokuphelele."
+    "title": "Ubuhle beZimbabwe Obukhethiweyo",
+    "desc": "Kusukela empahleni esemthethweni kuye emisebenzini yezandla, yonke impahla ilendaba yamagugu lobunjalo obuhle.",
+    "sports_title": "Imidlalo Yelizwe",
+    "sports_desc": "Impahla esemthethweni yama-Sables, Chevrons, lama-Warriors.",
+    "sports_mech_soccer": "Impahla yebhola lezinyawo.",
+    "sports_mech_rugby": "Impahla ye-Rugby.",
+    "sports_mech_cricket": "Impahla ye-Cricket.",
+    "crafts_title": "Ubuciko Lezandla",
+    "crafts_desc": "Ukusekela abenzi bezandla zasemaphandleni labomama abahlanganyele amandla.",
+    "food_title": "Ukudla Lesikhumbuzo",
+    "food_desc": "Ukunambitheka kwasekhaya, kuhambisana lemithetho ye-EU."
   },
   "notfound": {
     "title": "404",
     "subtitle": "Ikhasi Alitholakali",
     "message": "Uxolo, ikhasi olidingayo alikho.",
-    "message2": "Kungenzeka lisusiwe kumbe lathuthwa.",
+    "message2": "Kungenzeka ukuthi lisusiwe kumbe lathuthwa.",
     "go_home": "Buyela Ekhaya"
-  },
-  "tech": {
-    "hero": {
-      "badge1": "Ikusasa le-Innovation",
-      "title1": "Onesa AI: Ikhanyisela iZimbabwe",
-      "subtitle1": "Imodeli ye-AI yokuqala eyakhelwe isimo seZimbabwe.",
-      "highlight1": "Eyakhelwe iZimbabwe",
-      "badge2": "Ubulumko Be-Context",
-      "title2": "Ukuzwisisa Isimo Ngokujulile",
-      "subtitle2": "Ngokungafaniyo lezinye ii-AI, u-Onesa uyazizwisisa izinto ezenzakala eZimbabwe lebhizinisi lakhona.",
-      "highlight2": "Ulwazi Lwasekhaya",
-      "badge3": "Amathuluzi Abatshali Mali",
-      "title3": "Ukuhlela Ukutshala Ngobuhlakani",
-      "subtitle3": "Hlola ama-risk njalo udale imibono yamabhizinisi angaphumelela emakethe yasekhaya.",
-      "highlight3": "Impumelelo Esekelwa yiDatha"
-    },
-    "explore_onesa": "Hlola u-Onesa AI",
-    "onesa_badge": "Hlangana lo-Onesa AI",
-    "onesa_title": "Ukukhanyisa Indlela eya Phambili",
-    "onesa_meaning": "U-Onesa utsho ukuthi 'khanyisa' ngesiShona",
-    "onesa_desc1": "U-Onesa AI yimodeli yethu eyenzelwe ukukhanyisa indlela yokuthi ungapila, utshale imali, njalo uphumelele kanjani eZimbabwe. Lanxa amanye ama-AI esilela ulwazi lwasekhaya, u-Onesa wakhiwe kusukela phansi ukuzwisisa iZimbabwe.",
-    "onesa_desc2": "Kusukela ekuhambeni emithethweni yasekhaya kuye ekucabangeni amabhizinisi axazulula izinhlupho zeZimbabwe, u-Onesa ukupha ulwazi oludingayo.",
-    "onesa_usp1": "Ukuzwisisa Isimo",
-    "onesa_usp2": "Ukuhumusha Izilimi Ngokuqondile",
-    "ai_status": "Beta Version",
-    "ai_demo_response": "Umkhakha wezolimo eZimbabwe uyakhula kakhulu ekuthumeleni imikhiqizo ye-horticulture. Ngokubona izitayela zamanje, ukutshala imali kwezokuthutha ezibandayo (cold-chain) emikhiqizweni ye-blueberry kuletha inzuzo ephezulu...",
-    "features_title": "Amandla ka-Onesa AI",
-    "features_subtitle": "Amathuluzi akhethekile enzelwe ukuvala igebe phakathi kwabaseDiaspora lamathuba asekhaya.",
-    "features": {
-      "context": {
-        "title": "Ubungcweti be-Context",
-        "desc": "U-Onesa uyazwisisa ukuthi izinto zihamba kanjani, kusukela ezimakethe ezingekho emthethweni kuye emithethweni esemthethweni."
-      },
-      "translation": {
-        "title": "Ukuqonda Izilimi",
-        "desc": "Ihumusha isiShona, isiNdebele, lezinye izilimi zakhona ngokucophelela, igcina incazelo yamasiko lobungcweti."
-      },
-      "risk": {
-        "title": "Ukuhlola i-Risk",
-        "desc": "Abatshali mali bangasebenzisa u-Onesa ukuhlola ama-risk kuye ngedatha yasekhaya yesikhathi sangempela."
-      },
-      "brainstorm": {
-        "title": "Ukudala Imibono",
-        "desc": "Hlela imibono yamabhizinisi eyenzelwe ukuthi iphumelele esimweni seZimbabwe esiyingqayizivele."
-      },
-      "tourism": {
-        "title": "Umngane woMvakashi",
-        "desc": "Hamba eZimbabwe lomkhokheli osezandleni zakho owazi izindawo ezinhle lenqubo yamasiko."
-      }
-    },
-    "cta_title": "Ukulungele Ukukhanyiselwa Uhambo Lwakho?",
-    "cta_desc": "Joyina uhlelo lwethu lwe-beta njalo ube ngowokuqala ukuzwa ubulumko buka-Onesa AI.",
-    "cta_button": "Joyina i-Waitlist ye-Beta",
-    "sectors_badge": "Ushintsho Lwemikhakha",
-    "sectors_title": "Ukunika Izimboni Amandla",
-    "sectors_subtitle": "U-Onesa AI unikela ngolwazi olukhethekileyo lokuthuthukisa imikhakha yomnotho ebaluleke kakhulu eZimbabwe.",
-    "sectors": {
-      "mining": {
-        "title": "Ezemikhaya leMithombo",
-        "desc": "Ukusebenzisa i-AI ekuhlaziyeni idatha ye-geology lokuhambisana lemithetho emkhakheni wamaminerali waseZimbabwe.",
-        "d1": "Inani lamaminerali lesikhathi sangempela lezitayela zemakethe",
-        "d2": "Ukubhekwa kokuhambisana lezemvelo lokuphepha"
-      },
-      "farming": {
-        "title": "Ezolimo Zobuchwepheshe",
-        "desc": "Ukuguqula ezolimo ngedatha yokuphatha izilimo lokubikezela isimo sezulu.",
-        "d1": "Ukuhlaziya impilo yomhlabathi lokuthuthukisa isivuno",
-        "d2": "Iziphakamiso ngezimo zezulu lokuphatha izinambuzane"
-      },
-      "logistics": {
-        "title": "Smart Logistics",
-        "desc": "Ukuthuthukisa iketanga lokuhlinzeka lezindlela zokuhweba eziphakathi kwemingcele.",
-        "d1": "Ukuhlela izindlela zokusabalalisa impahla",
-        "d2": "Ukulandelela impahla lesizo ekukhipheni impahla emingceleni"
-      },
-      "education": {
-        "title": "Imfundo Yakusasa",
-        "desc": "Ukuvala igebe le-digital nge-AI efundisa umuntu kuye ngendlela yakhe.",
-        "d1": "Inkundla zokufunda eziguqukayo zezikolo zendawo",
-        "d2": "Ukuthuthukiswa kwamakhono ezobuchwepheshe emnothweni we-digital"
-      }
-    },
-    "onesa_local_edge_title": "Ngaphezu kwe-Western AI",
-    "onesa_local_edge_desc": "Ama-model anjenge-GPT-4 kumbe u-Claude ajwayele ukukhuluma ngezinto zasentshonalanga, kodwa ayahluleka ukuzwisisa umnotho we-'kukiya-kiya' waseMbare Musika kumbe ukuxubana kwesiShona lesiNdebele lasemaphandleni. U-Onesa uyazizwisisa lezi zinto.",
-    "diaspora_unlocked_title": "I-Technology ye-Diaspora Unlocked",
-    "diaspora_unlocked_desc": "Sisebenzisa ubuchwepheshe obusezingeni eliphezulu ukwenza ezeVakasha, ukuhweba, lokutshala imali kube lula. Inkundla yethu ivala igebe phakathi kwabaseDiaspora lasekhaya ngokusebenzisa i-AI."
   }
 }
