@@ -347,16 +347,6 @@ export default function SuccessStories() {
                       {t("success.story_card.testimonial_by", { author: story.author, role: story.role })}
                     </p>
                   </div>
-                  <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" className="w-full">
-                          {t("common.contact_us")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-4xl p-0">
-                        <ContactForm title= {t("common.get_started")} module="general" />
-                      </DialogContent>
-                    </Dialog>
                 </CardContent>
               </Card>
             ))}
