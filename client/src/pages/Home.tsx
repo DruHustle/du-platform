@@ -292,7 +292,7 @@ export default function Home() {
         </div>
       </section>
 
-     {/* CTA Section - Maintaining bg-primary */}  
+      {/* CTA Section - Maintaining bg-primary */}
       <section className="py-10 bg-primary text-primary-foreground">
         <div className="container">
           <div className="text-center">
@@ -303,23 +303,28 @@ export default function Home() {
               {t('home.ready_to_connect_subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 px-4"> 
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
-                  <Button size="default" variant="secondary">
+                  {/* Added w-full sm:w-auto to ensure consistent click area on mobile */}
+                  <Button size="default" variant="secondary" className="w-full sm:w-auto">
                     {t("home.inquiry_btn")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
                   <ContactForm 
                     title={t("home.inquiry_title")}
-                    module="general" // 
+                    module="general" 
                   />
                 </DialogContent>
               </Dialog>
 
-              <Link href="/success-stories">
-               <Button size="default" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30 font-bold">
+              <Link href="/success-stories" className="w-full sm:w-auto">
+                <Button 
+                  size="default" 
+                  variant="outline" 
+                  className="w-full bg-white/10 hover:bg-white/20 text-white border-white/30 font-bold"
+                >
                   {t('home.success_stories')}
                 </Button>
               </Link>
