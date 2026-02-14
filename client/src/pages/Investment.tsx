@@ -8,611 +8,376 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Users, Shield, DollarSign, ExternalLink, CheckCircle, Building, Leaf, Cpu, Factory, Award, Brain } from "lucide-react";
-import { Link } from "wouter";
+import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, PiggyBank, LucideBanknote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 export default function Investment() {
   const { t } = useTranslation();
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
   const [riskFilter, setRiskFilter] = useState("all");
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const heroSlides = useMemo(() => [
+const heroSlides = useMemo(() => [
     {
       image: "/images/rbz_building.png",
       badge: t('investment.hero.badge1'),
+      badgeIcon: true,
       title: t('investment.hero.title1'),
+      titleHighlight: t('investment.hero.highlight1'),
       subtitle: t('investment.hero.subtitle1'),
-      highlight: t('investment.hero.highlight1')
+      buttons: [
+        { text: t('investment.hero.rbz_policy'), variant: "primary" },
+        { text: t('investment.hero.rbz_currency'), variant: "outline" }
+      ]
     },
     {
-      image: "/images/infrastructure_investment.webp",
+      image: "/images/masuwe_sez.png",
       badge: t('investment.hero.badge2'),
+      badgeIcon: true,
       title: t('investment.hero.title2'),
+      titleHighlight: t('investment.hero.highlight2'),
       subtitle: t('investment.hero.subtitle2'),
-      highlight: t('investment.hero.highlight2')
+      buttons: []
     },
     {
       image: "/images/vfex_logo.png",
       badge: t('investment.hero.badge3'),
+      badgeIcon: true,
       title: t('investment.hero.title3'),
+      titleHighlight: t('investment.hero.highlight3'),
       subtitle: t('investment.hero.subtitle3'),
-      highlight: t('investment.hero.highlight3')
+      buttons: []
     },
     {
       image: "/images/horticulture.jpg",
       badge: t('investment.hero.badge4'),
+      badgeIcon: true,
       title: t('investment.hero.title4'),
+      titleHighlight: t('investment.hero.highlight4'),
       subtitle: t('investment.hero.subtitle4'),
-      highlight: t('investment.hero.highlight4')
+      buttons: []
     },
     {
       image: "/images/minerals_mining.png",
       badge: t('investment.hero.badge5'),
+      badgeIcon: true,
       title: t('investment.hero.title5'),
+      titleHighlight: t('investment.hero.highlight5'),
       subtitle: t('investment.hero.subtitle5'),
-      highlight: t('investment.hero.highlight5')
+      buttons: []
     }
   ], [t]);
 
   useEffect(() => {
-    const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(heroTimer);
+    const timer = setInterval(() => setCurrentHeroIndex(p => (p + 1) % heroSlides.length), 5000);
+    return () => clearInterval(timer);
   }, [heroSlides.length]);
 
   const projects = [
-    {
-      title: "Zimbabwe Leather Manufacturing Project",
-      description: "Expand leather goods production for export to European markets with government procurement support",
-      category: "Manufacturing",
-      sector: "manufacturing",
-      targetAmount: "$250,000",
-      raised: "$187,500",
-      progress: 75,
-      investors: 342,
-      minInvestment: "$500",
-      expectedReturn: "12-15% annually",
-      timeline: "3-5 years",
-      status: "Active",
-      risk: "moderate",
-      verified: true,
-      highlights: [
-        "Government civil servant procurement contract",
-        "Export-ready quality standards",
-        "Skilled artisan workforce",
-        "Sustainable sourcing practices"
-      ]
-    },
-    {
-      title: "Organic Horticulture Export Hub",
-      description: "Establish EU-certified organic farming collective for high-value vegetable exports",
-      category: "Agriculture",
-      sector: "agriculture",
-      targetAmount: "$150,000",
-      raised: "$98,000",
-      progress: 65,
-      investors: 218,
-      minInvestment: "$300",
-      expectedReturn: "10-12% annually",
-      timeline: "2-4 years",
-      status: "Active",
-      risk: "conservative",
-      verified: true,
-      highlights: [
-        "EU organic certification in progress",
-        "Direct buyer relationships in Germany",
-        "Climate-smart irrigation systems",
-        "Fair trade principles"
-      ]
-    },
-    {
-      title: "Victoria Falls Tourism Lodge",
-      description: "Boutique eco-lodge development near Victoria Falls for diaspora and international tourists",
-      category: "Tourism",
-      sector: "tourism",
-      targetAmount: "$500,000",
-      raised: "$125,000",
-      progress: 25,
-      investors: 156,
-      minInvestment: "$1,000",
-      expectedReturn: "15-18% annually",
-      timeline: "5-7 years",
-      status: "Active",
-      risk: "aggressive",
-      verified: false,
-      highlights: [
-        "Prime location near UNESCO site",
-        "Sustainable tourism model",
-        "Diaspora homecoming packages",
-        "Year-round revenue potential"
-      ]
-    },
-    {
-      title: "Solar Energy Infrastructure Fund",
-      description: "Invest in renewable energy projects powering rural communities and businesses",
-      category: "Infrastructure",
-      sector: "infrastructure",
-      targetAmount: "$400,000",
-      raised: "$280,000",
-      progress: 70,
-      investors: 412,
-      minInvestment: "$250",
-      expectedReturn: "8-10% annually",
-      timeline: "4-6 years",
-      status: "Active",
-      risk: "conservative",
-      verified: true,
-      highlights: [
-        "Government energy partnership",
-        "Carbon credit potential",
-        "Rural electrification impact",
-        "Long-term power purchase agreements"
-      ]
-    },
-    {
-      title: "AgriTech Innovation Hub",
-      description: "Technology-driven agricultural solutions including precision farming and supply chain digitization",
-      category: "Tech",
-      sector: "tech",
-      targetAmount: "$300,000",
-      raised: "$195,000",
-      progress: 65,
-      investors: 289,
-      minInvestment: "$500",
-      expectedReturn: "18-22% annually",
-      timeline: "3-5 years",
-      status: "Active",
-      risk: "aggressive",
-      verified: false,
-      highlights: [
-        "Mobile-first farmer platform",
-        "AI-powered crop analytics",
-        "Market linkage system",
-        "Diaspora tech mentorship"
-      ]
-    }
+    { id: "masuwe", sector: "tourism", target: "$1.2B", raised: "$0", prog: 0, inv: 12, min: "$100k", ret: "15-25%", time: "10-15y", risk: "moderate", ver: true },
+    { id: "leather", sector: "manufacturing", target: "$250k", raised: "$187k", prog: 75, inv: 342, min: "$500", ret: "12-15%", time: "3-5y", risk: "moderate", ver: true },
+    { id: "apparel", sector: "manufacturing", target: "$450k", raised: "$120k", prog: 26, inv: 89, min: "$1k", ret: "18-22%", time: "3-5y", risk: "aggressive", ver: true },
+    { id: "horticulture", sector: "agriculture", target: "$150k", raised: "$98k", prog: 65, inv: 218, min: "$300", ret: "10-12%", time: "2-4y", risk: "conservative", ver: true },
+    { id: "fintech", sector: "it", target: "$1.5M", raised: "$650k", prog: 43, inv: 112, min: "$2.5k", ret: "25-35%", time: "5-7y", risk: "aggressive", ver: true },
+    { id: "solar", sector: "energy", target: "$5M", raised: "$1.2M", prog: 24, inv: 412, min: "$1k", ret: "14-18%", time: "4-6y", risk: "conservative", ver: true }
   ];
 
-  const benefits = [
-    {
-      icon: Shield,
-      title: "Government Support",
-      description: "Selected projects receive government backing through procurement contracts and policy support"
-    },
-    {
-      icon: Users,
-      title: "Diaspora Network",
-      description: "Leverage global connections for market access, expertise, and investment capital"
-    },
-    {
-      icon: TrendingUp,
-      title: "Performance Tracking",
-      description: "Real-time dashboards showing project progress, financial performance, and impact metrics"
-    },
-    {
-      icon: DollarSign,
-      title: "Flexible Investment",
-      description: "Start with as little as $250-$1,000 and build your portfolio over time"
-    },
-    {
-      icon: Brain,
-      title: t('investment.onesa_title'),
-      description: t('investment.onesa_desc')
-    }
-  ];
-
-  // HDC Associations
-  const hdcAssociations = [
-    "Avocado Growers Association",
-    "Berry Growers Association",
-    "Citrus Growers Association",
-    "Coffee Growers Association",
-    "Deciduous Fruit Growers Association",
-    "Nut Growers Association",
-    "Export Produce Association",
-    "Export Flower Growers Association",
-    "Tea Growers Association"
-  ];
-
-  const filteredProjects = projects.filter(project => {
-    const sectorMatch = activeFilter === "all" || project.sector === activeFilter;
-    const riskMatch = riskFilter === "all" || project.risk === riskFilter;
-    return sectorMatch && riskMatch;
-  });
-
-  const getRiskColor = (risk: string) => {
-    switch (risk) {
-      case "conservative": return "bg-green-100 text-green-800 border-green-300";
-      case "moderate": return "bg-yellow-100 text-yellow-800 border-yellow-300";
-      case "aggressive": return "bg-red-100 text-red-800 border-red-300";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
+  const filtered = projects.filter(p => (activeFilter === "all" || p.sector === activeFilter) && (riskFilter === "all" || p.risk === riskFilter));
+  const hdcAssoc = t('investment.hdc_associations', { returnObjects: true }) as string[] || [];
 
   return (
     <Layout>
-      {/* Hero Carousel Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={currentHeroIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <motion.div 
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')`,
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-zim-black/70 via-zim-black/50 to-zim-black/85" />
-          </motion.div>
-        </AnimatePresence>
-        
-        <div className="relative z-10 container text-white">
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={`content-${currentHeroIndex}`}
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl"
+{/* Hero Carousel Section */}
+  <section className="relative min-h-[500px] md:h-[600px] flex items-center overflow-hidden">
+  <AnimatePresence initial={false}>
+    <motion.div 
+      key={currentHeroIndex} 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }} 
+      transition={{ duration: 1.5, ease: "easeInOut" }} 
+      className="absolute inset-0"
+    >
+      <motion.div 
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.1 }}
+        transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute inset-0 bg-cover bg-center" 
+        style={{ backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')` }} 
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
+    </motion.div>
+  </AnimatePresence>
+
+  <div className="container relative z-10 text-white">
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={`content-${currentHeroIndex}`}
+        initial={{ x: -30, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 30, opacity: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-4xl"
+      >
+        {/* Updated Badge Logic with Conditional Icon */}
+        <div className="flex items-center gap-3 mb-6">
+          {heroSlides[currentHeroIndex]?.badgeIcon && (
+            <Globe className="h-6 w-6 text-zim-gold" />
+          )}
+          <Badge className="bg-zim-gold text-zim-black px-6 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
+            {heroSlides[currentHeroIndex]?.badge}
+          </Badge>
+        </div>
+
+        {/* Updated Typography to include Highlight */}
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-[1.1] hero-text-shadow">
+          {heroSlides[currentHeroIndex]?.title}
+          {heroSlides[currentHeroIndex]?.titleHighlight && (
+            <span className="text-zim-gold block md:inline ml-0 md:ml-4">
+              {heroSlides[currentHeroIndex].titleHighlight}
+            </span>
+          )}
+        </h1>
+
+        <p className="text-xl md:text-2xl mb-10 max-w-2xl text-white/90 font-medium leading-relaxed">
+          {heroSlides[currentHeroIndex]?.subtitle}
+        </p>
+
+        {/* Dynamic Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-start">
+          {heroSlides[currentHeroIndex]?.buttons?.length > 0 ? (
+            heroSlides[currentHeroIndex].buttons.map((btn, bIdx) => (
+              <Button 
+                key={bIdx}
+                size="lg" 
+                variant={btn.variant === "primary" ? "default" : "outline"}
+                className={`rounded-full px-10 h-14 text-lg font-bold group ${
+                  btn.variant === "primary" 
+                    ? "bg-zim-gold hover:bg-zim-gold/90 text-zim-black border-none" 
+                    : "bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm"
+                }`} 
+              >
+                {btn.text}
+                {btn.variant === "primary" && (
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                )}
+              </Button>
+            ))
+          ) : (
+            /* Fallback if no buttons array exists for a specific slide */
+            <Button 
+              size="lg" 
+              className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black rounded-full px-10 h-14 text-lg font-bold group"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <DollarSign className="h-8 w-8 text-zim-gold" />
-                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                  {heroSlides[currentHeroIndex]?.badge}
-                </Badge>
-              </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
-                {heroSlides[currentHeroIndex]?.title}
-              </h1>
-              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed font-medium max-w-3xl">
-                {heroSlides[currentHeroIndex]?.subtitle}
-              </p>
-              <div className="flex items-center gap-3 mb-8">
-                <TrendingUp className="h-6 w-6 text-zim-green" />
-                <span className="text-2xl font-bold text-zim-gold">{heroSlides[currentHeroIndex]?.highlight}</span>
+              {t('investment.explore_title')}
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          )}
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  </div>
+  
+  <div className="absolute bottom-12 left-4 sm:left-12 flex gap-3 z-20">
+    {heroSlides.map((_, idx) => (
+      <button
+        key={idx}
+        onClick={() => setCurrentHeroIndex(idx)}
+        className={`h-1.5 transition-all duration-500 rounded-full ${
+          idx === currentHeroIndex ? 'bg-zim-gold w-16' : 'bg-white/30 w-4 hover:bg-white/60'
+        }`}
+        aria-label={`Go to slide ${idx + 1}`}
+      />
+    ))}
+  </div>
+  
+  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+</section>
+
+      {/* Investments Introduction */}
+      <section id="export-info" className="py-0 bg-background relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+              
+              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
+             <TrendingUp className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+                
+                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                  {t('investment.objective_subtitle')}
+                </h3>
+                
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                  
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                    {t('investment.objective_title')}
+                  </p>
+                  
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                </div>
               </div>
             </motion.div>
-          </AnimatePresence>
+                    
+          </div>
         </div>
-        
-        {/* Carousel Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentHeroIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
+      </section>
+
+
+      {/* Projects */}
+      <section id="active-projects" className="py-10 bg-muted/20">
+        <div className="container">
+          <div className="text-center mb-6">
+            <h2 className="text-4xl font-bold mb-4">{t('investment.investment_sectors_title')}</h2>
+            <div className="flex flex-wrap justify-center gap-2 mt-6">
+              {['all', 'tourism', 'agriculture', 'manufacturing', 'it', 'energy'].map(s => (
+                <Button key={s} variant={activeFilter === s ? "default" : "outline"} onClick={() => setActiveFilter(s)} className="rounded-full px-6 capitalize">{t(`investment.project_filters.${s}`)}</Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            {filtered.map(p => (
+              <Card key={p.id} className="overflow-hidden border-t-4 border-t-zim-gold hover:shadow-xl transition-all">
+                <div className="grid md:grid-cols-3 gap-6 p-6">
+                  <div className="md:col-span-2 space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="secondary" className="capitalize">{p.sector}</Badge>
+                      <Badge className={p.risk === "conservative" ? "bg-green-100 text-green-800" : p.risk === "moderate" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}>
+                        {t(`investment.project_filters.${p.risk}`)} {t('investment.project_card.risk')}
+                      </Badge>
+                      {p.ver && <Badge className="bg-blue-100 text-blue-800"><Award className="h-3 w-3 mr-1" /> {t('investment.project_card.verified')}</Badge>}
+                    </div>
+                    <CardTitle className="text-2xl">{t(`investment.projects.${p.id}.title`)}</CardTitle>
+                    <CardDescription>{t(`investment.projects.${p.id}.description`)}</CardDescription>
+                    <ul className="grid sm:grid-cols-2 gap-2">
+                      {(t(`investment.projects.${p.id}.highlights`, { returnObjects: true }) as string[] || []).map((h, i) => (
+                        <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground"><CheckCircle className="h-4 w-4 text-zim-green" /> {h}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-muted/50 p-4 rounded-xl space-y-4">
+                    <div>
+                      <div className="flex justify-between text-[10px] font-bold uppercase mb-2">
+                        <span>{t('investment.project_card.raised', { amount: p.raised })}</span>
+                        <span>{p.prog}%</span>
+                      </div>
+                      <Progress value={p.prog} className="h-2" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                      <div><p className="text-muted-foreground">{t('investment.project_filters.min_investment')}</p><p className="font-bold">{p.min}</p></div>
+                      <div><p className="text-muted-foreground">{t('investment.project_filters.expected_return')}</p><p className="font-bold text-zim-green">{p.ret}</p></div>
+                    </div>
+                    <Button className="w-full bg-zim-black text-white h-11">{t('investment.project_card.view_details')}</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works */}
+      <section className=" container text-center">
+        <h2 className="text-3xl font-bold mb-6">{t('investment.crowdfunding_title')}</h2>
+        <div className="grid md:grid-cols-4 gap-6">
+          {['Browse Projects', 'Invest Your Share', 'Track Performance', 'Receive Returns'].map((step, i) => (
+            <Card key={i} className="relative pt-8">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-bold">{i + 1}</div>
+              <CardHeader><CardTitle className="text-base">{step}</CardTitle></CardHeader>
+              <CardContent className="text-xs text-muted-foreground">{t('investment.crowdfunding_subtitle')}</CardContent>
+            </Card>
           ))}
         </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Why Invest Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Invest Through ZIGD?</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              We've designed an investment platform specifically for small to medium-scale diaspora investors
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((benefit, index) => {
-              const Icon = benefit.icon;
-              return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="mx-auto p-3 bg-primary/10 rounded-lg w-fit mb-3">
-                      <Icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{benefit.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Verified Directories */}
-      <section id="verified-directories" className="py-16 scroll-mt-24">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* NTIR */}
-            <Card className="border-t-4 border-t-primary">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Building className="h-8 w-8 text-primary" />
-                  <CardTitle className="text-xl">National Trade & Investment Register</CardTitle>
-                </div>
-                <CardDescription>
-                  Access the official registry of all verified trade and investment entities in Zimbabwe
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">
-                  Search NTIR Database
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* HDC */}
-            <Card className="border-t-4 border-t-green-600">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Leaf className="h-8 w-8 text-green-600" />
-                  <CardTitle className="text-xl">Horticultural Development Council</CardTitle>
-                </div>
-                <CardDescription>
-                  HDC of Zimbabwe oversees quality and standards for horticultural exports
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {hdcAssociations.slice(0, 5).map((assoc, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">
-                      {assoc}
-                    </Badge>
-                  ))}
-                  <Badge variant="outline" className="text-xs">+4 more</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Active Projects with Filters */}
-      <section id="active-projects" className="section-padding bg-muted/30 scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-8 px-4">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Active Investment Opportunities</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Carefully vetted projects with government support and transparent performance tracking
-            </p>
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center px-4">
-            <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-full md:w-auto">
-              <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1 h-auto">
-                <TabsTrigger value="all" className="text-xs sm:text-sm px-2 py-2">All</TabsTrigger>
-                <TabsTrigger value="agriculture" className="text-xs sm:text-sm px-2 py-2">Agriculture</TabsTrigger>
-                <TabsTrigger value="tech" className="text-xs sm:text-sm px-2 py-2">Tech</TabsTrigger>
-                <TabsTrigger value="infrastructure" className="text-xs sm:text-sm px-2 py-2">Infrastructure</TabsTrigger>
-                <TabsTrigger value="manufacturing" className="text-xs sm:text-sm px-2 py-2">Manufacturing</TabsTrigger>
-                <TabsTrigger value="tourism" className="text-xs sm:text-sm px-2 py-2">Tourism</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
-            <select 
-              value={riskFilter} 
-              onChange={(e) => setRiskFilter(e.target.value)}
-              className="px-4 py-2 border rounded-md bg-white w-full md:w-auto"
-            >
-              <option value="all">All Risk Levels</option>
-              <option value="conservative">Conservative</option>
-              <option value="moderate">Moderate</option>
-              <option value="aggressive">Aggressive</option>
-            </select>
-          </div>
-
-          <div className="space-y-8">
-            {filteredProjects.map((project, index) => (
-              <Card key={index} className="overflow-hidden border-t-4 border-t-primary hover:shadow-xl transition-shadow">
-                <div className="grid md:grid-cols-3 gap-6 p-4 md:p-6">
-                  {/* Project Details */}
-                  <div className="md:col-span-2 space-y-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <Badge variant="secondary">{project.category}</Badge>
-                        <Badge className="bg-green-100 text-green-800 border-green-300">
-                          {project.status}
-                        </Badge>
-                        <Badge className={getRiskColor(project.risk)}>
-                          {project.risk.charAt(0).toUpperCase() + project.risk.slice(1)} Risk
-                        </Badge>
-                        {project.verified && (
-                          <Badge className="bg-blue-100 text-blue-800 border-blue-300">
-                            <Award className="h-3 w-3 mr-1" /> Verified
-                          </Badge>
-                        )}
-                      </div>
-                      <h3 className="text-xl md:text-2xl font-bold mb-2">{project.title}</h3>
-                      <p className="text-muted-foreground">{project.description}</p>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold mb-2 flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-primary" />
-                        Key Highlights
-                      </h4>
-                      <ul className="grid md:grid-cols-2 gap-2">
-                        {project.highlights.map((highlight, idx) => (
-                          <li key={idx} className="flex items-start text-sm">
-                            <span className="mr-2 text-primary">•</span>
-                            <span>{highlight}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Investment Stats */}
-                  <div className="space-y-4">
-                    <div className="p-4 bg-muted/50 rounded-lg space-y-3">
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Funding Progress</p>
-                        <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-2xl font-bold text-primary">{project.raised}</span>
-                          <span className="text-sm text-muted-foreground">of {project.targetAmount}</span>
-                        </div>
-                        <Progress value={project.progress} className="h-2" />
-                        <p className="text-xs text-muted-foreground mt-1">{project.progress}% funded</p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 pt-3 border-t">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Investors</p>
-                          <p className="text-lg font-semibold">{project.investors}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Min. Investment</p>
-                          <p className="text-lg font-semibold">{project.minInvestment}</p>
-                        </div>
-                      </div>
-
-                      <div className="pt-3 border-t space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Expected Return</span>
-                          <span className="font-semibold text-green-600">{project.expectedReturn}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Timeline</span>
-                          <span className="font-semibold">{project.timeline}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Button className="w-full" size="lg">
-                      View Details & Invest
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="investment-calculator" className="py-16 scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How Crowdfunding Works</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Simple, transparent process from investment to returns
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              {
-                step: "1",
-                title: "Browse Projects",
-                description: "Review vetted investment opportunities with detailed business plans and government backing"
-              },
-              {
-                step: "2",
-                title: "Invest Your Share",
-                description: "Choose your investment amount and complete secure payment through multiple channels"
-              },
-              {
-                step: "3",
-                title: "Track Performance",
-                description: "Monitor project progress, financial metrics, and impact through your investor dashboard"
-              },
-              {
-                step: "4",
-                title: "Receive Returns",
-                description: "Get quarterly dividends and capital appreciation as projects grow and succeed"
-              }
-            ].map((item, index) => (
-              <Card key={index} className="text-center relative">
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                  {item.step}
-                </div>
-                <CardHeader className="pt-8">
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Investment Calculator */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <InvestmentCalculator />
-        </div>
-      </section>
-
-      {/* Contact CTA with Modal */}
-      <section className="py-16">
-        <div className="container">
-          <Card className="max-w-3xl mx-auto text-center border-t-4 border-t-primary">
+     {/* NTIR & HDC Directories */}
+      <section className="py-10 container">
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card className="border-t-4 border-t-zim-gold">
             <CardHeader>
-              <CardTitle className="text-2xl">Ready to Invest?</CardTitle>
-              <CardDescription className="text-base">
-                Our investment team can help you identify the right opportunities and guide you through the process.
-              </CardDescription>
+              <div className="flex items-center gap-3 mb-2">
+                <Building className="h-8 w-8 text-zim-gold" />
+                <CardTitle className="text-xl">{t('investment.ntir_title')}</CardTitle>
+              </div>
+              <CardDescription>{t('investment.ntir_subtitle')}</CardDescription>
+            </CardHeader>
+            <CardContent><Button variant="outline" className="w-full">{t('investment.ntir_button')}</Button></CardContent>
+          </Card>
+          <Card className="border-t-4 border-t-zim-green">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <Leaf className="h-8 w-8 text-zim-green" />
+                <CardTitle className="text-xl">{t('investment.hdc_title')}</CardTitle>
+              </div>
+              <CardDescription>{t('investment.hdc_subtitle')}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8">
-                    Connect with an Expert
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <ContactForm
-                    title="Investment Inquiry"
-                    description="Fill out the form below and our investment specialists will contact you."
-                    module="investment"
-                  />
-                </DialogContent>
-              </Dialog>
+              <div className="flex flex-wrap gap-2">
+                {hdcAssoc.slice(0, 5).map((a, i) => <Badge key={i} variant="secondary" className="text-[10px]">{a}</Badge>)}
+                <Badge variant="outline" className="text-[10px]">+{hdcAssoc.length - 5} more</Badge>
+              </div>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* External Links */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Explore More Investment Resources
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency
-            </p>
-            <a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Visit ZIDA <ExternalLink className="ml-2 h-5 w-5" />
-              </Button>
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* Calculator */}
+      <section className=" bg-muted/30"><div className="container"><InvestmentCalculator /></div></section>
+
+
+            {/* Contact CTA */}
+            <section className="py-12">
+              <div className="container">
+                <Card className="max-w-2xl mx-auto text-center border-2 border-primary/20 bg-muted/20">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl">{t("investment.cta_title")}</CardTitle>
+                    <CardDescription className="text-sm">
+                        {t("investment.cta_subtitle")}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="default" className="font-bold px-8 shadow-lg">
+                          {t("investment.cta_button")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl p-0">
+                        <ContactForm title={t("investment.contact_form_title")} module="investment" />
+                      </DialogContent>
+                    </Dialog>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
+      
+            {/* Footer Links CTA */}
+            <section className="py-8 bg-primary text-primary-foreground">
+              <div className="container text-center">
+                  <h2 className="text-xl md:text-2xl font-bold mb-2">{t("investment.explore_title")}</h2>
+                  <p className="text-sm mb-6 max-w-2xl mx-auto opacity-90">
+                    {t("investment.explore_subtitle")} 
+                  </p>
+                  <a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer">
+                    <Button size="default" variant="secondary" className="font-bold px-8 shadow-lg">
+                      {t("investment.explore_site")} <ExternalLink className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+              </div>
+            </section>
+
     </Layout>
   );
 }

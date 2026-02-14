@@ -34,6 +34,13 @@ export default function Layout({ children }: LayoutProps) {
 
   const navigation = [
     { name: t('nav.home'), href: "/", children: null },
+    { name: t('nav.technology'), 
+      href: "/technology", 
+      children: [
+        { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
+        { name: t('nav.technology_industries'), href: "/technology#technology-industries", description: t('nav.technology_industries_desc') },
+      ]
+    },
     { 
       name: t('nav.export'), 
       href: "/export-hub",
@@ -70,13 +77,6 @@ export default function Layout({ children }: LayoutProps) {
         { name: t('nav.zimtrade_programs'), href: "/trade#zimtrade-programs", description: t('nav.zimtrade_programs_desc') }
       ]
     },
-    { name: t('nav.technology'), 
-      href: "/technology", 
-      children: [
-        { name: t('nav.technology_capabilities'), href: "/technology#technology-capabilities", description: t('nav.technology_capabilities_desc') },
-        { name: t('nav.technology_industries'), href: "/technology#technology-industries", description: t('nav.technology_industries_desc') },
-      ]
-    },
     { name: t('nav.data'), href: "/data-visualization", children: null },
     { name: t('nav.success'), href: "/success-stories", children: null },
    
@@ -89,6 +89,9 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    }
     setSearchOpen(false);
     setSearchQuery("");
   };
@@ -170,10 +173,15 @@ export default function Layout({ children }: LayoutProps) {
                               setOpenDropdown(null);
                             }}
                           >
-                            <div className="cursor-pointer flex flex-col items-start py-3 px-3 hover:bg-muted/50 rounded-lg transition-colors">
-                              <span className="font-medium text-foreground text-sm">{child.name}</span>
-                              <span className="text-xs text-muted-foreground mt-0.5">{child.description}</span>
-                            </div>
+<div className="cursor-pointer flex flex-col items-start py-1 px-2 hover:bg-muted/50 rounded-lg transition-colors">
+  <span className="font-medium text-foreground text-sm leading-tight">
+    {child.name}
+  </span>
+  {/* Removed mt-0.5 and added leading-tight */}
+  <span className="text-xs text-muted-foreground leading-tight">
+    {child.description}
+  </span>
+</div>
                           </a>
                         );
                       }
@@ -363,19 +371,21 @@ export default function Layout({ children }: LayoutProps) {
       </a>
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-8 md:py-12 mt-12">
+      <footer className="bg-primary text-primary-foreground py-6 md:py-8 mt-8">
         <div className="container">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8">
-            <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">{t('about')} {t('brand')}</h3>
-              <p className="text-xs md:text-sm opacity-90 leading-relaxed">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div className="space-y-2">
+              {/* Titles: Reduced from text-base/lg to text-xs/sm */}
+              <h3 className="font-bold text-xs md:text-sm uppercase tracking-wider">{t('about')} {t('brand')}</h3>
+              {/* Body: Reduced from text-xs/sm to text-[10px]/xs */}
+              <p className="text-[10px] md:text-xs opacity-90 leading-relaxed">
                 {t('about_us')}
               </p>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">{t('quick_links')}</h3>
-              <ul className="space-y-2 text-xs md:text-sm">
+            <div className="space-y-2">
+              <h3 className="font-bold text-xs md:text-sm uppercase tracking-wider">{t('quick_links')}</h3>
+              <ul className="space-y-1.5 text-[10px] md:text-xs">
                 {navigation
                   .filter((link) => 
                     !["/", "/success-stories", "/data-visualization"].includes(link.href)
@@ -392,39 +402,39 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="font-bold text-base md:text-lg">{t('partners')}</h3>
-              <ul className="space-y-2 text-xs md:text-sm">
+            <div className="space-y-2">
+              <h3 className="font-bold text-xs md:text-sm uppercase tracking-wider">{t('partners')}</h3>
+              <ul className="space-y-1.5 text-[10px] md:text-xs">
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Zimbabwe Tourism</a></li>
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIDA Invest</a></li>
                 <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZimTrade</a></li>
-                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Ministry Of ICT Zimbabwe</a></li>
+                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Ministry Of ICT</a></li>
                 <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">ZIMRA</a></li>
               </ul>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="font-bold">{t('contact')}</h3>
-              <ul className="space-y-3 text-sm">
+            <div className="space-y-2">
+              <h3 className="font-bold text-xs md:text-sm uppercase tracking-wider">{t('contact')}</h3>
+              <ul className="space-y-2 text-[10px] md:text-xs">
                 <li className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-secondary" />
+                  <Mail className="h-3.5 w-3.5 text-secondary" />
                   <a href="mailto:info@diasporaunlocked.com" className="hover:text-secondary transition-colors">info@diasporaunlocked.com</a>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-secondary" />
+                  <Phone className="h-3.5 w-3.5 text-secondary" />
                   <a href="tel:+4915147416152" className="hover:text-secondary transition-colors">+49 151 474 16152</a>
                 </li>
                 <li className="flex items-center gap-2 opacity-90">
-                  <MapPin className="h-4 w-4 text-secondary" />
+                  <MapPin className="h-3.5 w-3.5 text-secondary" />
                   <span>Berlin, Germany</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-primary-foreground/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm">
-            <p className="opacity-80">© 2026 {t('brand')}. {t('all_rights_reserved')}</p>
-            <div className="flex gap-4 md:gap-6">
+          <div className="border-t border-primary-foreground/10 pt-4 flex flex-col md:flex-row justify-between items-center gap-3 text-[10px] md:text-xs">
+            <p className="opacity-70">© 2026 {t('brand')}. {t('all_rights_reserved')}</p>
+            <div className="flex gap-4">
               <a href="#" className="hover:text-secondary transition-colors">{t('privacy_policy')}</a>
               <a href="#" className="hover:text-secondary transition-colors">{t('terms_of_service')}</a>
             </div>

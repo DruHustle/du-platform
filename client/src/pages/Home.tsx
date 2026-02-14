@@ -2,13 +2,16 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award, Brain } from "lucide-react";
+import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award, Brain, Heart } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import ContactForm from "@/components/ContactForm";
 
 export default function Home() {
   const { t } = useTranslation();
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = useMemo(() => [
     "/images/victoria_falls.jpg",
@@ -60,12 +63,21 @@ export default function Home() {
       stats: t('home.modules.export.stats')
     },
     {
+      title: t('home.modules.tourism.title'),
+      description: t('home.modules.tourism.desc'),
+      icon: Plane,
+      href: "/tourism",
+         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
+      bgImage: "/images/hwange_elephants.jpg",
+      stats: t('home.modules.tourism.stats')
+    },
+    {
       title: t('home.modules.investment.title'),
       description: t('home.modules.investment.desc'),
       icon: TrendingUp,
       href: "/investment",
       color: " bg-red-600/5 hover:bg-red-600/10",
-      bgImage: "/images/infrastructure_investment.webp",
+      bgImage: "/images/minerals_mining.png",
       stats: t('home.modules.investment.stats')
     },
     {
@@ -76,15 +88,6 @@ export default function Home() {
       color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/african_trade.jpg",
       stats: t('home.modules.trade.stats')
-    },
-    {
-      title: t('home.modules.tourism.title'),
-      description: t('home.modules.tourism.desc'),
-      icon: Plane,
-      href: "/tourism",
-         color: " bg-yellow-500/5 hover:bg-yellow-500/10",
-      bgImage: "/images/hwange_elephants.jpg",
-      stats: t('home.modules.tourism.stats')
     },
     {
       title: t('home.modules.success.title'),
@@ -102,7 +105,7 @@ export default function Home() {
   return (
     
     <Layout>
-    {/* Hero Section with Rotating Background */}
+      {/* Hero Section with Rotating Background */}
       <section className="relative min-h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
         {/* Rotating Background Images */}
         <AnimatePresence initial={false}>
@@ -124,7 +127,7 @@ export default function Home() {
                 backgroundImage: `url('${heroBackgrounds[currentBgIndex]}')`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/40" />
+            {/* Overlay removed from here */}
           </motion.div>
         </AnimatePresence>
         
@@ -135,12 +138,12 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 container text-center text-white flex flex-col items-center justify-center py-12">
-  
+
           <div className="flex justify-center mb-6 slide-up">
             <div className="relative min-w-max"> 
               <img
                 src="/images/made_in_zimbabwe.png"
-                alt="Made in Zimbabwe"
+                alt={t("home.made_in_zimbabwe_alt")}
                 className="h-24 md:h-36 w-auto object-contain drop-shadow-2xl relative z-10" 
               />
               <div className="absolute -inset-6 bg-white/10 rounded-full blur-2xl -z-10" />
@@ -175,26 +178,57 @@ export default function Home() {
                 {t('home.investments')} 
               </Button>
             </Link>
-
           </div>
         </div>
+        
+        {/* Optional: Remove or keep this bottom fade-to-background gradient */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Four Modules */}
-      <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container">
-          <div className="text-center mb-16 px-4">
-            <span className="badge-primary mb-4 inline-block">{t('home.platform_services')}</span>
-             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-              {t('home.gateway_title')}
-            </h2>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                 {t('home.gateway_desc')}
-            </p>
+      {/* ZIGD Introduction */}
+      <section id="zigd-platform" className="py-0 bg-background relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+              
+              <div className="relative z-10 max-w-3xl mx-auto space-y-3"> {/* Reduced space-y from 4 to 3 */}
+                {/* Reduced Icon from h-10 to h-8 */}
+                <Globe className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+                
+                {/* Heading: Reduced from text-2xl/3xl to text-lg/xl (2 units) */}
+                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                  {t('home.objective_desc')}
+                </h3>
+                
+                <div className="flex items-center justify-center gap-4"> {/* Reduced gap from 6 to 4 */}
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                  
+                  {/* Label: Reduced from text-sm to text-[10px] (Approx 2 units) */}
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                    {t('home.objective_title')}
+                  </p>
+                  
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                </div>
+              </div>
+            </motion.div>
+                    
           </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {/* Modules */}
+      <section className="pt-8 pb-12 bg-gradient-to-b from-muted/30 to-background">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> {/* Reduced gap from 8 to 6 */}
             {modules.map((module, index) => {
               const Icon = module.icon;
               return (
@@ -205,45 +239,50 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  <Card className={`overflow-hidden border-2 ${module.color} group hover:shadow-2xl transition-all duration-500 h-full`}>
-                    <div className="relative h-64 overflow-hidden">
+                  <Card className={`overflow-hidden border-2 ${module.color} group hover:shadow-xl transition-all duration-500 h-full`}>
+                    <div className="relative h-56 overflow-hidden"> {/* Reduced height from 64 to 56 */}
                       <div 
                         className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                         style={{ backgroundImage: `url('${module.bgImage}')` }}
                       >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                       </div>
-                      <div className="absolute bottom-6 left-6 text-white">
-                        <div className="bg-white/10 backdrop-blur-lg p-4 rounded-2xl mb-3 inline-block border border-white/20 shadow-2xl">
-                          <Icon className="h-10 w-10 text-white" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl mb-2 inline-block border border-white/20 shadow-2xl">
+                          <Icon className="h-8 w-8 text-white" /> {/* Reduced icon from 10 to 8 */}
                         </div>
                       </div>
-                      <div className="absolute top-6 right-6">
-                        <span className="bg-zim-gold backdrop-blur-md border border-white/20 text-zim-black text-sm font-bold px-4 py-2 rounded-full shadow-xl">
-                          {module.stats}
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-zim-gold backdrop-blur-md border border-white/20 text-zim-black text-xs font-bold px-3 py-1.5 rounded-full shadow-xl">
+                          {module.stats} {/* Reduced text-sm to text-xs */}
                         </span>
                       </div>
                     </div>
-                    <CardHeader className="pb-3 pt-6">
-                      <CardTitle className="text-2xl md:text-3xl font-bold group-hover:text-primary transition-colors mb-3">{module.title}</CardTitle>
-                      <CardDescription className="text-base md:text-lg leading-relaxed">{module.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-2 pb-6">
 
+                    <CardHeader className="pb-2 pt-4"> {/* Reduced pb-3/pt-6 */}
+                      {/* Reduced Title from text-2xl/3xl to text-lg/xl */}
+                      <CardTitle className="text-lg md:text-xl font-bold group-hover:text-primary transition-colors mb-2">
+                        {module.title}
+                      </CardTitle>
+                      {/* Reduced Description from text-base/lg to text-sm/base */}
+                      <CardDescription className="text-sm md:text-base leading-snug">
+                        {module.description}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardContent className="pt-1 pb-4"> {/* Reduced pt-2/pb-6 */}
                       <Link href={module.href}>
                         <Button 
-                          className="w-full group/btn font-bold text-lg py-6" 
-                          size="lg"
-                          onClick={() => {window.scrollTo({top: 0,left: 0,
-                              behavior: 'smooth' // Use 'instant' if you want it to jump immediately
-                            });
+                          className="w-full group/btn font-bold text-base py-5" /* Reduced text-lg to text-base and py-6 to py-5 */
+                          size="sm"
+                          onClick={() => {
+                            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                           }}
                         >
                           {t('home.explore_now')}
-                          <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1.5 transition-transform" />
                         </Button>
                       </Link>
-
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -253,49 +292,34 @@ export default function Home() {
         </div>
       </section>
 
-
-      {/* Trust Indicators */}
-      <section className="py-12 bg-background border-t">
+     {/* CTA Section - Maintaining bg-primary */}  
+      <section className="py-10 bg-primary text-primary-foreground">
         <div className="container">
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              <span className="text-sm font-medium">{t('home.trust.diaspora')}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Award className="h-5 w-5" />
-              <span className="text-sm font-medium">{t('home.trust.zida')}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5" />
-              <span className="text-sm font-medium">{t('home.trust.zimtrade')}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5" />
-              <span className="text-sm font-medium">{t('home.trust.vision2030')}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* External Links */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t('home.ready_to_connect')}
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold mb-2">
+              {t('home.ready_to_connect_title')}
             </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto opacity-95">
-              {t('home.join_diaspora')}
+            <p className="text-sm md:text-base opacity-90 mb-6 max-w-xl mx-auto">
+              {t('home.ready_to_connect_subtitle')}
             </p>
-            <div className="flex justify-center gap-4">
-              <Link href="/data-visualization">
-                <Button size="lg" variant="secondary" className="shadow-lg">
-                  {t('home.view_data')}
-                </Button>
-              </Link>
+
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="default" variant="secondary">
+                    {t("home.inquiry_btn")}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-700 text-white">
+                  <ContactForm 
+                    title={t("home.inquiry_title")}
+                    module="general" // 
+                  />
+                </DialogContent>
+              </Dialog>
+
               <Link href="/success-stories">
-                <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30">
+               <Button size="default" variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30 font-bold">
                   {t('home.success_stories')}
                 </Button>
               </Link>

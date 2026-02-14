@@ -2,11 +2,12 @@ import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award } from "lucide-react";
+import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award, Activity, BarChart3, Factory } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend, Label } from "recharts";
 
 interface EconomicData {
   remittances: number;
@@ -15,18 +16,33 @@ interface EconomicData {
   exportValue: number;
   miningRevenue: number;
   tourismRevenue: number;
+  manufacturingRevenue: number;
+  agriculturalExports: number;
+  growthRate: number;
   year: number;
 }
 
 export default function DataVisualization() {
   const { t } = useTranslation();
-  const [data] = useState<EconomicData>({
-    remittances: ECONOMIC_DATA.diaspora.remittances * 1000, // Convert to Million USD
-    gdp: ECONOMIC_DATA.gdp.value * 1000, // Convert to Million USD
+  
+  // Initialize state with default data from shared constants
+  const [data, setData] = useState<EconomicData>({
+    remittances: ECONOMIC_DATA.diaspora.remittances * 1000,
+    gdp: ECONOMIC_DATA.gdp.value * 1000,
     diasporaPopulation: ECONOMIC_DATA.diaspora.population * 1000000,
     exportValue: ECONOMIC_DATA.trade.totalExports * 1000,
     miningRevenue: ECONOMIC_DATA.mining.totalRevenue * 1000,
     tourismRevenue: ECONOMIC_DATA.services.tourismRevenue * 1000,
+    manufacturingRevenue: ECONOMIC_DATA.manufacturing?.gdpContribution
+      ? ECONOMIC_DATA.manufacturing.gdpContribution * 1000
+      : 0,
+    agriculturalExports: ECONOMIC_DATA.agriculture
+      ? (
+          (ECONOMIC_DATA.agriculture.tobaccoExports || 0) +
+          (ECONOMIC_DATA.agriculture.horticultureExports || 0)
+        ) * 1000
+      : 0,
+    growthRate: ECONOMIC_DATA.gdp.growth,
     year: 2025
   });
 
@@ -36,14 +52,96 @@ export default function DataVisualization() {
     diasporaPopulation: 0,
     exportValue: 0,
     miningRevenue: 0,
-    tourismRevenue: 0
+    tourismRevenue: 0,
+    manufacturingRevenue: 0,
+    agriculturalExports: 0,
+    growthRate: 0
   });
 
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
-  const heroSlides = useMemo(() => [
+  // Fetch Live Data from Server API
+  useEffect(() => {
+    const fetchLiveStats = async () => {
+      try {
+        const response = await fetch('/api/economic-stats');
+        const liveData = await response.json();
+        
+        setData(prev => ({
+          ...prev,
+          remittances: liveData.remittances,
+          gdp: liveData.gdp,
+          diasporaPopulation: liveData.diasporaPopulation,
+          exportValue: liveData.exportValue,
+          miningRevenue: liveData.miningRevenue ?? prev.miningRevenue,
+          tourismRevenue: liveData.tourismRevenue ?? prev.tourismRevenue,
+          manufacturingRevenue: liveData.manufacturingRevenue ?? prev.manufacturingRevenue,
+          agriculturalExports: liveData.agriculturalExports ?? prev.agriculturalExports,
+          growthRate: liveData.growthRate,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch live economic data:", error);
+      }
+    };
+
+    fetchLiveStats();
+    const interval = setInterval(fetchLiveStats, 60000); // Poll every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Hero carousel timer
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(heroTimer);
+  }, []);
+
+  // Counter animation logic
+  useEffect(() => {
+    const duration = 2000;
+    const steps = 60;
+    const stepDuration = duration / steps;
+
+    let currentStep = 0;
+    const interval = setInterval(() => {
+      currentStep++;
+      const progress = currentStep / steps;
+
+      setAnimatedValues({
+        remittances: Math.floor(data.remittances * progress),
+        gdp: Math.floor(data.gdp * progress),
+        diasporaPopulation: Math.floor(data.diasporaPopulation * progress),
+        exportValue: Math.floor(data.exportValue * progress),
+        miningRevenue: Math.floor(data.miningRevenue * progress),
+        tourismRevenue: Math.floor(data.tourismRevenue * progress),
+        manufacturingRevenue: Math.floor(data.manufacturingRevenue * progress),
+        agriculturalExports: Math.floor(data.agriculturalExports * progress),
+        growthRate: Number((data.growthRate * progress).toFixed(1))
+      });
+
+      if (currentStep >= steps) {
+        clearInterval(interval);
+        setAnimatedValues({
+          remittances: data.remittances,
+          gdp: data.gdp,
+          diasporaPopulation: data.diasporaPopulation,
+          exportValue: data.exportValue,
+          miningRevenue: data.miningRevenue,
+          tourismRevenue: data.tourismRevenue,
+          manufacturingRevenue: data.manufacturingRevenue,
+          agriculturalExports: data.agriculturalExports,
+          growthRate: data.growthRate
+        });
+      }
+    }, stepDuration);
+
+    return () => clearInterval(interval);
+  }, [data]);
+
+const heroSlides = useMemo(() => [
     {
-      image: "/images/infrastructure_investment.webp",
+      image: "/images/infrastructure_investment.png",
       badge: t('data.hero.badge1'),
       badgeIcon: true,
       title: t('data.hero.title1'),
@@ -51,8 +149,8 @@ export default function DataVisualization() {
       subtitle: t('data.hero.subtitle1'),
       description: t('data.hero.desc1'),
       buttons: [
-        { text: t('nav.data'), variant: "primary", link: "#indicators" },
-        { text: t('export.market_intelligence_btn'), variant: "outline", link: "#sectors" }
+        { text: t('data.hero.economic_data'), variant: "primary", link: "#indicators" },
+        { text: t('data.hero.sector'), variant: "outline", link: "#sectors" }
       ]
     },
     {
@@ -97,108 +195,76 @@ export default function DataVisualization() {
     }
   ], [t]);
 
-  useEffect(() => {
-    const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(heroTimer);
-  }, [heroSlides.length]);
-
-  // Animate counter on mount
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const stepDuration = duration / steps;
-
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-
-      setAnimatedValues({
-        remittances: Math.floor(data.remittances * progress),
-        gdp: Math.floor(data.gdp * progress),
-        diasporaPopulation: Math.floor(data.diasporaPopulation * progress),
-        exportValue: Math.floor(data.exportValue * progress),
-        miningRevenue: Math.floor(data.miningRevenue * progress),
-        tourismRevenue: Math.floor(data.tourismRevenue * progress)
-      });
-
-      if (currentStep >= steps) {
-        clearInterval(interval);
-        setAnimatedValues({
-          remittances: data.remittances,
-          gdp: data.gdp,
-          diasporaPopulation: data.diasporaPopulation,
-          exportValue: data.exportValue,
-          miningRevenue: data.miningRevenue,
-          tourismRevenue: data.tourismRevenue
-        });
-      }
-    }, stepDuration);
-
-    return () => clearInterval(interval);
-  }, [data]);
-
   const metrics = [
     {
-      title: "GDP (2025 Projection)",
+      title: t('data.overview.gdp.title'),
       value: `$${(animatedValues.gdp / 1000).toFixed(1)}B`,
-      description: "Zimbabwe's Gross Domestic Product",
       icon: TrendingUp,
       color: "text-primary",
-      bgColor: "bg-primary/10",
-      change: `+${ECONOMIC_DATA.gdp.growth}% growth rate`
+      bgColor: "bg-primary/5",
+      change: `+${data.growthRate}% ${t('data.overview.gdp.subtitle')}`,
     },
     {
-      title: "Diaspora Remittances",
+      title: t('data.overview.gdp_growth.title'),
+      value: `${animatedValues.growthRate}%`,
+      icon: Activity,
+      color: "text-orange-600",
+      bgColor: "bg-orange-600/5",
+      change: "Real-time Feed",
+      isLive: true
+    },
+    {
+      title: t('data.overview.remittances.title'),
       value: `$${(animatedValues.remittances / 1000).toFixed(1)}B`,
-      description: "Annual remittances from Zimbabwean diaspora",
       icon: DollarSign,
       color: "text-green-600",
-      bgColor: "bg-green-600/10",
-      change: "Largest forex source"
+      bgColor: "bg-green-600/5",
+      change: t('data.overview.remittances.subtitle')
     },
     {
-      title: "Total Exports",
+      title: t('data.overview.total_exports.title'),
       value: `$${(animatedValues.exportValue / 1000).toFixed(1)}B`,
-      description: "Total export value (2025)",
       icon: Globe,
       color: "text-blue-600",
-      bgColor: "bg-blue-600/10",
-      change: "Growing export base"
+      bgColor: "bg-blue-600/5",
+      change: t('data.overview.total_exports.subtitle')
+    },
+        {
+      title: t('data.overview.manufacturing.title'),
+      value: `$${(animatedValues.manufacturingRevenue / 1000).toFixed(1)}B`,
+      icon: Factory,
+      color: "text-amber-600",
+      bgColor: "bg-amber-600/5",
+      change: t('data.overview.manufacturing.subtitle')
     },
     {
-      title: "Mining Revenue",
+      title: t('data.overview.mining.title'),
       value: `$${(animatedValues.miningRevenue / 1000).toFixed(1)}B`,
-      description: "Total mining sector revenue",
       icon: Mountain,
       color: "text-amber-600",
-      bgColor: "bg-amber-600/10",
-      change: "Gold, Lithium, Platinum"
+      bgColor: "bg-amber-600/5",
+      change: t('data.overview.mining.subtitle')
     },
     {
-      title: "Global Diaspora",
-      value: `${(animatedValues.diasporaPopulation / 1000000).toFixed(1)}M`,
-      description: "Zimbabweans living abroad worldwide",
+      title: t('data.overview.agriculture.title'),
+      value: `$${(animatedValues.agriculturalExports / 1000).toFixed(1)}B`,
       icon: Users,
       color: "text-red-600",
-      bgColor: "bg-red-600/10",
-      change: "Across 100+ countries"
+      bgColor: "bg-red-600/5",
+      change: t('data.overview.agriculture.subtitle')
     },
     {
-      title: "Tourism Revenue",
+      title: t('data.overview.tourism.title'),
       value: `$${(animatedValues.tourismRevenue / 1000).toFixed(1)}B`,
-      description: "Annual tourism sector revenue",
       icon: Plane,
       color: "text-purple-600",
-      bgColor: "bg-purple-600/10",
-      change: "Forbes #1 Destination 2025"
+      bgColor: "bg-purple-600/5",
+      change: t('data.overview.tourism.subtitle')
     }
   ];
 
   const regionalBreakdown = [
-    { region: "South Africa", population: "1.5 - 2.0 Million", percentage: "43%", flag: "🇿🇦" },
+    { region: "South Africa", population: "1.5 - 2.0 Million", percentage: "43%", flag: "🇿🇦" }, 
     { region: "United Kingdom", population: "500K - 1.0 Million", percentage: "22%", flag: "🇬🇧" },
     { region: "Botswana", population: "500K+", percentage: "14%", flag: "🇧🇼" },
     { region: "United States", population: "300K - 500K", percentage: "9%", flag: "🇺🇸" },
@@ -209,20 +275,66 @@ export default function DataVisualization() {
   ];
 
   const remittanceImpact = [
-    { sector: "Education", percentage: "28%", amount: "$504M", icon: "📚" },
-    { sector: "Housing & Construction", percentage: "24%", amount: "$432M", icon: "🏠" },
-    { sector: "Healthcare", percentage: "18%", amount: "$324M", icon: "🏥" },
-    { sector: "Business Investment", percentage: "17%", amount: "$306M", icon: "💼" },
-    { sector: "Food & Basic Needs", percentage: "13%", amount: "$234M", icon: "🛒" }
+    { sector: t('data.education'), percentage: "28%", amount: "$504M", icon: "📚" }, // "Education"
+    { sector: t('data.housing'), percentage: "24%", amount: "$432M", icon: "🏠" }, //Housing & Construction"
+    { sector: t('data.health_care'), percentage: "18%", amount: "$324M", icon: "🏥" }, //Healthcare
+    { sector: t('data.business_investment'), percentage: "17%", amount: "$306M", icon: "💼" }, //"Business Investment"
+    { sector: t('data.food'), percentage: "13%", amount: "$234M", icon: "🛒" } //"Food & Basic Needs"
   ];
 
-  const gdpGrowthData = SECTOR_DATA.gdpGrowth;
+  // Add this before the return statement to define gdpGrowthData
+  const gdpGrowthData = SECTOR_DATA.gdpGrowth || [];
+
+  // Pie chart data for sectoral GDP growth
+  const pieData = (SECTOR_DATA.gdpGrowth || []).map(sector => ({
+    name: sector.year, // Use 'year' if 'sector' does not exist
+    value: sector.growth
+  }));
+
+  // Pie chart colors
+  const COLORS = [
+    "#0088FE", "#00C49F", "#FFBB28", "#FF8042",
+    "#A020F0", "#FF6384", "#36A2EB", "#FFCE56"
+  ];
+
+  // Custom label renderer for PieChart
+  const renderCustomizedLabel = ({
+    cx, cy, midAngle, innerRadius, outerRadius, percent, index
+  }: {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    percent: number;
+    index: number;
+  }) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#333"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        fontSize={13}
+        fontWeight={600}
+      >
+        {`${pieData[index]?.name}: ${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
 
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-        {/* Hero Carousel Section */}
-        <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+         
+{/* Hero Carousel Section - Left Aligned with Left-to-Right Animation */}
+        <section className="relative h-[600px] flex items-center overflow-hidden">
           <AnimatePresence initial={false}>
             <motion.div
               key={currentHeroIndex}
@@ -237,46 +349,52 @@ export default function DataVisualization() {
                 animate={{ scale: 1 }}
                 transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
                 className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')`,
-                }}
+                style={{ backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')` }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-zim-black/60 via-zim-black/40 to-zim-black/80" />
+              <div className="absolute inset-0 bg-gradient-to-r from-zim-black/80 via-zim-black/40 to-transparent" />
             </motion.div>
           </AnimatePresence>
           
-          <div className="relative z-10 container text-white">
-            <AnimatePresence initial={false}>
+          <div className="relative z-10 container text-white px-6 md:px-12">
+            <AnimatePresence initial={false} mode="wait">
               <motion.div
                 key={`content-${currentHeroIndex}`}
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -30, opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                className={currentHeroIndex === 0 ? "text-center flex flex-col items-center" : "text-left max-w-3xl"}
+                // Starts from the left (-100)
+                initial={{ x: -100, opacity: 0 }} 
+                // Moves to natural position
+                animate={{ x: 0, opacity: 1 }}
+                // Exits to the right (100)
+                exit={{ x: 100, opacity: 0 }} 
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                // Forced Left Alignment for ALL slides
+                className="text-left max-w-3xl flex flex-col items-start" 
               >
-                <div className={currentHeroIndex === 0 ? "flex items-center justify-center gap-3 mb-8" : "mb-6"}>
+                <div className="flex items-center justify-start gap-3 mb-6">
                   {heroSlides[currentHeroIndex]?.badgeIcon && <Award className="h-10 w-10 text-zim-gold" />}
-                  <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+                  <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest border-none">
                     {heroSlides[currentHeroIndex]?.badge}
                   </Badge>
                 </div>
+
                 <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight">
                   {heroSlides[currentHeroIndex]?.title}
                   {heroSlides[currentHeroIndex]?.titleHighlight && (
-                    <span className="text-zim-gold italic">{heroSlides[currentHeroIndex]?.titleHighlight}</span>
+                    <span className="text-zim-gold italic ml-2">{heroSlides[currentHeroIndex]?.titleHighlight}</span>
                   )}
                 </h1>
-                <p className={`text-xl md:text-2xl mb-4 ${currentHeroIndex === 0 ? 'max-w-3xl mx-auto text-white/90' : 'text-zim-gold'} leading-relaxed font-medium`}>
+
+                <p className="text-xl md:text-2xl mb-4 text-zim-gold leading-relaxed font-medium">
                   {heroSlides[currentHeroIndex]?.subtitle}
                 </p>
+
                 {heroSlides[currentHeroIndex]?.description && (
                   <p className="text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
                     {heroSlides[currentHeroIndex]?.description}
                   </p>
                 )}
+
                 {heroSlides[currentHeroIndex]?.buttons.length > 0 && (
-                  <div className="flex flex-wrap gap-4 justify-center">
+                  <div className="flex flex-wrap gap-4 justify-start">
                     {heroSlides[currentHeroIndex]?.buttons.map((button, idx) => (
                       <Button 
                         key={idx}
@@ -297,51 +415,96 @@ export default function DataVisualization() {
             </AnimatePresence>
           </div>
           
-          {/* Carousel Indicators */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {/* Indicators positioned at the bottom left */}
+          <div className="absolute bottom-12 left-6 md:left-12 flex gap-3 z-20">
             {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentHeroIndex(idx)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  idx === currentHeroIndex ? 'bg-zim-gold w-8' : 'bg-white/50 hover:bg-white/75'
+                className={`h-1.5 transition-all duration-300 rounded-full ${
+                  idx === currentHeroIndex ? 'bg-zim-gold w-12' : 'bg-white/40 w-4 hover:bg-white/70'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
             ))}
           </div>
+          
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
         </section>
 
-        {/* Key Metrics */}
-        <section id="indicators" className="py-16">
+      {/* Datavisualization Introduction */}
+      <section id="data-info" className="py-0 bg-background relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
+              
+              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
+              <BarChart3 className="h-8 w-8 text-zim-gold mx-auto mb-1" />
+                
+                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
+                  {t('data.objective_subtitle')}
+                </h3>
+                
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                  
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                    {t('data.objective_title')}
+                  </p>
+                  
+                  <div className="h-px w-8 bg-zim-gold/50" />
+                </div>
+              </div>
+            </motion.div>
+                    
+          </div>
+        </div>
+      </section>
+
+      {/* Small Key Indicators Section */}
+        <section id="indicators" className="py-12">
           <div className="container">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Economic Indicators</h2>
-              <p className="text-lg text-muted-foreground">
-                Zimbabwe's economic performance at a glance
-              </p>
+            <div className="text-center mb-10">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('data.overview_title')}</h2> 
+              <p className="text-sm text-muted-foreground">{t('data.overview_subtitle')}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* grid-cols-2 for mobile, md:grid-cols-3 for tablets, lg:grid-cols-4 for desktop */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
               {metrics.map((metric, index) => {
                 const Icon = metric.icon;
                 return (
-                  <Card key={index} className={`${metric.bgColor} border-l-4 ${metric.color.replace('text-', 'border-l-')} hover:shadow-lg transition-shadow`}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                          {metric.title}
-                        </CardTitle>
-                        <Icon className={`h-5 w-5 ${metric.color}`} />
+                  <Card key={index} className={`${metric.bgColor} border-none shadow-sm hover:shadow-md transition-all p-3`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className={`p-1.5 rounded-md ${metric.bgColor} ${metric.color}`}>
+                        <Icon className="h-4 w-4" />
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-3xl font-bold">{metric.value}</p>
-                        <p className="text-xs text-muted-foreground">{metric.description}</p>
-                        <p className={`text-sm font-medium ${metric.color}`}>{metric.change}</p>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider truncate">
+                        {metric.title}
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <p className="text-lg font-bold tracking-tight">{metric.value}</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className={`text-[9px] font-semibold ${metric.color}`}>
+                          {metric.change}
+                        </span>
+                        {metric.isLive && (
+                          <span className="flex h-1.5 w-1.5">
+                            <span className="animate-ping absolute inline-flex h-1.5 w-1.5 rounded-full bg-orange-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-orange-500"></span>
+                          </span>
+                        )}
                       </div>
-                    </CardContent>
+                    </div>
                   </Card>
                 );
               })}
@@ -349,35 +512,37 @@ export default function DataVisualization() {
           </div>
         </section>
 
-        {/* GDP Growth Chart */}
-        <section className="py-16 bg-muted/30">
+        {/* GDP Growth Trajectory */}
+        <section className=" bg-muted/30">
           <div className="container">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">GDP Growth Trajectory</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('data.gdp_growth_trajectory')}</h2>
                 <p className="text-lg text-muted-foreground">
-                  Zimbabwe's economic growth from 2021 to 2025 projection
+                  {t('data.gdp_growth_history')}
                 </p>
               </div>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Annual GDP Growth Rate (%)</CardTitle>
-                  <CardDescription>Source: World Bank, IMF, ZIMSTAT</CardDescription>
+                  <CardTitle>{t('data.gdp_growth_rate')}</CardTitle>
+                  <CardDescription>{t('data.gdp_data_source')} </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {gdpGrowthData.map((item, index) => (
+                    {SECTOR_DATA.gdpGrowth.map((item, index) => (
                       <div key={index} className="flex items-center gap-4">
                         <div className="w-16 text-sm font-semibold">{item.year}</div>
                         <div className="flex-1">
                           <div className="w-full bg-muted rounded-full h-8 overflow-hidden">
-                            <div 
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${(item.growth / 10) * 100}%` }}
+                              transition={{ duration: 1, delay: index * 0.1 }}
                               className="h-full bg-primary rounded-full flex items-center justify-end pr-3 transition-all duration-1000"
-                              style={{ width: `${(item.growth / 10) * 100}%` }}
                             >
                               <span className="text-sm font-bold text-white">{item.growth}%</span>
-                            </div>
+                            </motion.div>
                           </div>
                         </div>
                       </div>
@@ -390,13 +555,13 @@ export default function DataVisualization() {
         </section>
 
         {/* Mining Sector Breakdown */}
-        <section id="sectors" className="py-16">
+        <section id="sectors" className="py-10">
           <div className="container">
             <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Mining Sector Breakdown</h2>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('data.sectoral_data_mining_title')}</h2>
                 <p className="text-lg text-muted-foreground">
-                  Zimbabwe's mineral wealth contributing $5.56B to the economy
+                  {t('data.sectoral_data_mining_subtitle')}
                 </p>
               </div>
 
@@ -409,10 +574,10 @@ export default function DataVisualization() {
                     <CardContent>
                       <div className="space-y-1">
                         <p className="text-2xl font-bold text-primary">{mineral.value}%</p>
-                        <p className="text-xs text-muted-foreground">Contribution</p>
+                        <p className="text-xs text-muted-foreground">{t('data.sectoral_data_mining_contribution')}</p>
                         <div className="mt-2 pt-2 border-t">
                           <p className="text-sm font-semibold">${mineral.revenue}B</p>
-                          <p className="text-[10px] text-muted-foreground">Revenue</p>
+                          <p className="text-[10px] text-muted-foreground">{t('data.sectoral_data_mining_revenue')}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -423,15 +588,90 @@ export default function DataVisualization() {
           </div>
         </section>
 
+{/* Sectoral Data & Trends Section */}
+        <section id="sectors" className="py-16 bg-muted/30 scroll-mt-24">
+          <div className="container">
+            <div className="text-center mb-10">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">{t('data.sectoral_data_title')}</h2> 
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                {t('data.sectoral_data_breakdown')} 
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column: Progress Bars */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold mb-6"> {t('data.sectoral_data_projections')} ({data.year})</h3> 
+                {SECTOR_DATA.gdpGrowth.map((sector, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex justify-between text-sm font-bold">
+                      <span className="text-muted-foreground">{sector.year}</span>
+                      <span className="text-zim-green">+{sector.growth}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${(sector.growth / 10) * 100}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="bg-zim-green h-3 rounded-full"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Right Column: Donut Chart with Visible Labels */}
+              <div className="h-[450px] w-full bg-white p-6 rounded-2xl shadow-xl border border-gray-100 relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                      // Labels outside the chart with connector lines
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                      {/* Central Label inside the donut hole */}
+                      <Label 
+                        value="GDP 2026" 
+                        position="center" 
+                        fill="#1a1a1a" 
+                        style={{ fontSize: '18px', fontWeight: 'bold' }} 
+                      />
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px rgba(0,0,0,0.1)' }} 
+                    />
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={36} 
+                      iconType="circle"
+                      formatter={(value) => <span className="text-xs font-bold text-gray-600 uppercase">{value}</span>}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Diaspora Remittances Impact */}
-        <section className="py-16 bg-primary text-white">
+        <section id="remittance-impact" className="py-12 bg-slate-900 text-white relative scroll-mt-24 rounded-2xl mx-4 md:mx-0">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <Badge className="mb-4 bg-secondary text-secondary-foreground">Social Impact</Badge>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">Diaspora Remittance Allocation</h2>
+                <Badge className="mb-4 bg-secondary text-secondary-foreground">{t('data.diaspora_remittance_impact_badge')}</Badge>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">{t('data.diaspora_remittance_impact_title')}</h2>
                 <p className="text-lg opacity-90 mb-8">
-                  Remittances are more than just financial transfers; they are vital lifelines that drive development across key social and economic sectors in Zimbabwe.
+                  {t('data.diaspora_remittance_impact_subtitle')}
                 </p>
                 <div className="space-y-6">
                   {remittanceImpact.map((item, index) => (
@@ -443,9 +683,10 @@ export default function DataVisualization() {
                         <span>{item.percentage} ({item.amount})</span>
                       </div>
                       <div className="w-full bg-white/20 rounded-full h-2">
-                        <div 
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: item.percentage }}
                           className="bg-secondary h-full rounded-full" 
-                          style={{ width: item.percentage }}
                         />
                       </div>
                     </div>
@@ -456,19 +697,19 @@ export default function DataVisualization() {
                 <Card className="bg-white/10 border-white/20 text-white">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-4xl font-bold text-secondary">$1.8B</CardTitle>
-                    <CardDescription className="text-white/70">Annual Remittances</CardDescription>
+                    <CardDescription className="text-white/70">{t('data.diaspora_remittance_value')} </CardDescription>
                   </CardHeader>
                 </Card>
                 <Card className="bg-white/10 border-white/20 text-white">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-4xl font-bold text-secondary">3.5M</CardTitle>
-                    <CardDescription className="text-white/70">Global Diaspora</CardDescription>
+                    <CardDescription className="text-white/70">{t('data.diaspora_number_value')}</CardDescription>
                   </CardHeader>
                 </Card>
                 <Card className="bg-white/10 border-white/20 text-white col-span-2">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-4xl font-bold text-secondary">$500M</CardTitle>
-                    <CardDescription className="text-white/70">Annual Investment Potential</CardDescription>
+                    <CardDescription className="text-white/70">{t('data.diaspora_investment_potential')}</CardDescription>
                   </CardHeader>
                 </Card>
               </div>
@@ -476,35 +717,32 @@ export default function DataVisualization() {
           </div>
         </section>
 
-        {/* Global Diaspora Distribution */}
-        <section className="py-16">
+      {/* Global Diaspora Distribution - Reduced Size by 20% */}
+        <section className="py-12">
           <div className="container">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Global Diaspora Distribution</h2>
-                <p className="text-lg text-muted-foreground">
-                  Where the Zimbabwean diaspora resides across the globe
-                </p>
+            <div className="max-w-3xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('data.diaspora_distribution')}</h2>
+                <p className="text-base text-muted-foreground">{t('data.diaspora_residence')}</p>
               </div>
-
-              <div className="overflow-hidden rounded-xl border shadow-sm">
-                <table className="w-full text-left">
+              <div className="overflow-hidden rounded-lg border shadow-sm">
+                <table className="w-full text-left text-sm">
                   <thead className="bg-muted">
                     <tr>
-                      <th className="p-4 font-semibold">Region/Country</th>
-                      <th className="p-4 font-semibold">Estimated Population</th>
-                      <th className="p-4 font-semibold text-right">Percentage</th>
+                      <th className="p-3 font-semibold">{t('data.diaspora_residence_country')}</th>
+                      <th className="p-3 font-semibold">{t('data.diaspora_population')}</th>
+                      <th className="p-3 font-semibold text-right">{t('data.diaspora_percentage')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {regionalBreakdown.map((item, index) => (
                       <tr key={index} className="hover:bg-muted/50 transition-colors">
-                        <td className="p-4 flex items-center gap-3">
-                          <span className="text-xl">{item.flag}</span>
+                        <td className="p-3 flex items-center gap-2">
+                          <span className="text-lg">{item.flag}</span>
                           <span className="font-medium">{item.region}</span>
                         </td>
-                        <td className="p-4 text-muted-foreground">{item.population}</td>
-                        <td className="p-4 text-right font-bold text-primary">{item.percentage}</td>
+                        <td className="p-3 text-muted-foreground text-xs">{item.population}</td>
+                        <td className="p-3 text-right font-bold text-primary">{item.percentage}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -514,12 +752,9 @@ export default function DataVisualization() {
           </div>
         </section>
 
-        {/* Data Sources Disclaimer */}
-        <section className="py-12 bg-muted/30">
-          <div className="container text-center">
-            <p className="text-sm text-muted-foreground max-w-2xl mx-auto italic">
-              * The data presented in this dashboard are projections and estimates based on 2024-2025 economic reports from the Reserve Bank of Zimbabwe (RBZ), ZIMSTAT, World Bank, and IMF. Real-time metrics are updated periodically as new official data becomes available.
-            </p>
+        <section className=" bg-muted/30">
+          <div className="container text-center text-sm text-muted-foreground italic max-w-2xl mx-auto">
+            {t('data.data_disclaimer')}
           </div>
         </section>
       </div>

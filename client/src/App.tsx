@@ -13,6 +13,7 @@ import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
 import SuccessStories from "./pages/SuccessStories";
 import Technology from "./pages/Technology";
+import SearchResults from "./pages/SearchResults";
 import ScrollToHash from "./components/ScrollToHash";
 
 function Router() {
@@ -28,6 +29,7 @@ function Router() {
       <Route path={"/technology"} component={Technology} />
       <Route path={"/data-visualization"} component={DataVisualization} />
       <Route path={"/success-stories"} component={SuccessStories} />
+      <Route path={"/search"} component={SearchResults} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -1,671 +1,1158 @@
 {
   "brand": "Diaspora Unlocked",
-  "tagline": "Dandira reZimbabwean riri kunze kwenyika",
-  "about": "Nezve",
-  "about_us": "Kubatanidza vana veZimbabwe vari kunze kwenyika nemikana yekutengeserana, kushanya, uye kudyara mari.",
+  "tagline": "Chikuva cheZimbabwe chevekunze kweNyika",
+  "about": "Nezvedu",
+  "about_us": "Kubatanidza zvizvarwa zveZimbabwe zviri kunze kwenyika nemikana yekutengeserana, kushanya, nekudyara mari.",
   "select_lang": "Sarudza Mutauro",
   "account": "Akaundi",
   "login": "Pinda",
   "register": "Nyoresa",
-  "my_investments": "Kudyara Kwangu",
+  "my_investments": "Mari dangu randakadyara",
   "settings": "Zvirongwa",
-  "search_placeholder": "Tsvaga zvekutengesera, kudyara mari, kushanya...",
-  "search_title": "Tsvaga paDandira reZIGD",
+  "search_placeholder": "Tsvaga zvinotengeswa kunze, kudyara mari, zvekushanya...",
+  "search_title": "Tsvaga paChikuva cheZIGD",
   "search_button": "Tsvaga",
   "explore": "Ongorora",
   "all_rights_reserved": "Kodzero dzose dzakachengetedzwa.",
-  "privacy_policy": "Mutemo weChakavanzika",
-  "terms_of_service": "Mitemo yeBasa",
-  "quick_links": "Zvechimbi-chimbi",
-  "partners": "Vadyidzani",
-  "contact": "Taura Nesu",
+  "privacy_policy": "Mitemo yekuchengetedza masasi",
+  "terms_of_service": "Mitemo nemisimboti",
+  "quick_links": "Zvekuvhura nekukasira",
+  "partners": "Vatishandi vedu",
+  "contact": "Taura nesu",
   "nav": {
     "home": "Kumba",
-    "export": "Zvekutengesera",
-    "tourism": "Kushanya",
+    "export": "Zvekutengesa Kunze",
+    "tourism": "Zvekushanya",
     "investment": "Kudyara Mari",
-    "trade": "Zvekutengeserana",
-    "data": "Zveupfumi",
-    "success": "Nhau dzeKubudirira",
+    "trade": "Kutengeserana",
+    "data": "Nhamba dzeupfumi",
+    "success": "Nhoroondo dzeKubudirira",
     "market_requirements": "Zvinodiwa neMusika",
     "market_requirements_desc": "Mitemo nezvitupa zvemusika weGermany",
-    "product_intelligence": "Zivo yeChigadzirwa",
-    "product_intelligence_desc": "Nhungamiro yekutengesera kunze",
-    "partner_network": "Dandira reVadyidzani",
-    "partner_network_desc": "Batana nevatengesi nezvekutakura",
-    "attractions": "Nzvimbo dzeKushanya",
+    "product_intelligence": "Ruzivo rweZvigadzirwa",
+    "product_intelligence_desc": "Nhungamiro yekutengesa zvigadzirwa kunze",
+    "partner_network": "Dandemutande revashandi",
+    "partner_network_desc": "Batana nevashambadzi nevekutakura zvinhu",
+    "attractions": "Zvinokwezva",
     "attractions_desc": "Nzvimbo dzinofanira kushanyirwa muZimbabwe",
     "plan_visit": "Ronga Kushanya Kwako",
-    "plan_visit_desc": "Viza, utano, uye ruzivo rwekufamba",
-    "diaspora_packages": "Zvirongwa zveveDiaspora",
-    "diaspora_packages_desc": "Kushanya kwakakosha kwekudzoka kumba",
-    "active_projects": "Mapurojekiti Aripo",
-    "active_projects_desc": "Ongorora mikana yekudyara mari",
-    "investment_calculator": "Karekurata yeKudyara",
-    "investment_calculator_desc": "Fungidzira mhindu yako",
-    "verified_directories": "Mazita Akatariswa",
-    "verified_directories_desc": "Mazita eNTIR neHDC",
-    "export_sectors": "Zvikamu zveKutengesera",
-    "export_sectors_desc": "Maindasitiri nemikana iripo",
-    "export_roadmap": "Nzira yeKutengesera",
-    "export_roadmap_desc": "Nhanho dzekutengesera kunze",
-    "technology": "Technology",
-    "technology_capabilities": "Masimba eTekinoroji",
-    "technology_capabilities_desc": "Nzvimbo yeTekinoroji nezvekugadzira muZimbabwe",
+    "plan_visit_desc": "Viza, zveutano, neruzivo rwekurwendo",
+    "diaspora_packages": "Zvirongwa zvevekunze",
+    "diaspora_packages_desc": "Nzendo dzekudzokera kumusha dzakakosha",
+    "active_projects": "Mapurojekiti aripo",
+    "active_projects_desc": "Ona mikana yekudyara mari",
+    "investment_calculator": "Muchina wekuverenga Mubereko",
+    "investment_calculator_desc": "Fungidzira mubereko wemari yako",
+    "verified_directories": "Mazita akasimbiswa",
+    "verified_directories_desc": "Magwaro eNTIR neHDC",
+    "export_sectors": "Zvikamu zvekutengesa kunze",
+    "export_sectors_desc": "Maindasitiri akakosha nemikana",
+    "export_roadmap": "Gwara rekutengesa kunze",
+    "export_roadmap_desc": "Matanho ekutengesa zvinhu kunze kwenyika",
+    "technology": "Tekinoroji",
+    "technology_capabilities": "Zvinogona kuitwa neTekinoroji",
+    "technology_capabilities_desc": "Mamiriro etekinoroji nekuvandudza muZimbabwe",
     "technology_industries": "Maindasitiri eTekinoroji",
-    "technology_industries_desc": "Zvikamu zvakakosha zvetekinoroji muZimbabwe",
+    "technology_industries_desc": "Zvikamu zvetekinoroji zvakakosha muZimbabwe",
     "zimtrade_programs": "Zvirongwa zveZimTrade",
     "zimtrade_programs_desc": "Zvirongwa zvekusimudzira kutengesera kunze"
-    
   },
   "home": {
+    "made_in_zimbabwe_alt": "Chakagadzirwa muZimbabwe",
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "ICT, Kukurumidza kweKutengeserana, Kushanya uye Kudyara Mari kweVision 2030",
-    "export_hub": "Zvekutengesera",
-    "tourism": "Kushanya",
+    "hero_subtitle": "Kukasira kweICT, Kutengeserana, Kushanya nekudyara Mari kuitira Chiratidzo che2030",
+    "export_hub": "Zvekutengesa Kunze",
+    "tourism": "Zvekushanya",
+    "technology": "Tekinoroji",
     "investments": "Kudyara Mari",
-    "platform_services": "Mabasa eDandira",
-    "gateway_title": "Suo reZimbabwe Global Diaspora",
-    "gateway_desc": "Dandira rinosanganisa Zimbabwe nenyika dzose kuburikidza nekutengeserana, kushanya, uye kudyara mari.",
+    "objective_title": "Basa reChikuva",
+    "objective_desc": "Chikuva chepa dandemutande chinobatanidza Zimbabwe nenyika yose kuburikidza nekutengeserana, kushanya, nekudyara mari.",
     "explore_now": "Ongorora Iye zvino",
-    "ready_to_connect": "Wagadzirira Kubatana?",
-    "join_diaspora": "Joinha zviuru zvevanhu vari kunze kwenyika vari kuvaka mabhiriji ekushandura upfumi.",
-    "view_data": "Ona Zveupfumi",
-    "success_stories": "Nhau dzeKubudirira",
+    "inquiry_btn": "Taura Nesu",
+    "inquiry_title": "Mubvunzo Uzere",
+    "ready_to_connect_title": "Wagadzirira Kubatana nesu?",
+    "ready_to_connect_subtitle": "Batana nezviuru zvevekunze vari kuvaka mabhiriji ekusimudzira upfumi.",
+    "view_data": "Ona Nhamba dzeUpfumi",
+    "success_stories": "Nhoroondo dzeKubudirira",
     "modules": {
       "export": {
-        "title": "Zivo yeZvekutengesera",
-        "desc": "Wana zvinodiwa nemusika weGermany, mitemo, zvitupa, uye batana nevamwe vanogona kutenga zvigadzirwa zveZimbabwe.",
-        "stats": "Vadyidzani Vakatariswa"
+        "title": "Zvekutengesa Kunze",
+        "desc": "Wana zvinodiwa nemusika weEU uye batana nevashandi vakasimbiswa.",
+        "stats": "Vashandi Vakakasimbiswa"
       },
       "tourism": {
-        "title": "Zivo yeKushanya",
-        "desc": "Tsvaga nzvimbo dzeZimbabwe dzinoyevedza, ronga kushanya kwako, uye ongorora nzvimbo yakasarudzwa neForbes seye #1 muna 2025.",
+        "title": "Zvekushanya",
+        "desc": "Tsvaga nzvimbo dzinoyevedza muZimbabwe uye ronga kushanya kwako.",
         "stats": "Forbes #1 2025"
       },
       "investment": {
-        "title": "Mikana yeKudyara Mari",
-        "desc": "Ongorora mikana yekudyara mari diki uye crowdfunding mumapurojekiti eZimbabwe akatariswa.",
-        "stats": "$50M+ Mikana"
+        "title": "Kudyara Mari",
+        "desc": "Ongorora mikana yekudyara mari diki nekubatana kwevekunze.",
+        "stats": "Mikana ye$50M+"
       },
       "trade": {
-        "title": "Zivo yeKutengeserana",
-        "desc": "Wana zviwanikwa zvekutengeserana, zvirongwa zvekusimudzira kutengesera kunze, uye batana nezvikamu zveZimbabwe zviri kubudirira.",
-        "stats": "8 Zvikamu zveKutengesera"
+        "title": "Kutengeserana",
+        "desc": "Wana ruzivo rwakakwana rwekutengeserana nezvikamu zvekutengesa kunze muZimbabwe.",
+        "stats": "Zvikamu 8 zvekutengesa"
       },
       "technology": {
-        "title": "Technology & AI",
-        "desc": "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context for investors and diaspora.",
+        "title": "Tekinoroji neAI",
+        "desc": "Sangana naOnesa AI, muchina wedu wakagadzirirwa kujekesa mamiriro eZimbabwe.",
         "stats": "Onesa AI"
       },
       "success": {
-        "title": "Success Stories",
-        "desc": "Explore real-world examples of businesses and projects thriving through diaspora engagement.",
-        "stats": "Impact Stories"
+        "title": "Simba reBasa",
+        "desc": "Ongorora mienzaniso yemapurojekiti ari kubudirira kuburikidza nekubatana kwevekunze.",
+        "stats": "Nhoroondo dzeBasa"
       }
-    },
-    "trust": {
-      "diaspora": "VekuDiaspora Vakatariswa",
-      "zida": "Mudyidzani weZIDA",
-      "zimtrade": "ZimTrade Certified",
-      "vision2030": "Inoenderana neVision 2030"
-    },
-    "testimonial": {
-      "quote": "This platform has enabled me to invest in Zimbabwe's growth while maintaining a connection to my homeland.",
-      "name": "Jane Doe",
-      "role": "Diaspora Investor"
     }
-
-  },
-  "export": {
-    "hero": {
-      "badge1": "EU Market Access",
-      "title1": "Access German Markets",
-      "desc1": "Comprehensive guidance on regulations, certifications, and partnerships for exporting Zimbabwean products to Germany",
-      "highlight1": "€83.4B Trade Volume",
-      "badge2": "Germany Trade Hub",
-      "title2": "Your Gateway to Europe",
-      "desc2": "Germany is Europe's largest economy and a key entry point for African exporters seeking EU market access",
-      "highlight2": "#1 EU Economy",
-      "badge3": "EU Partnership",
-      "title3": "EU-ESA Trade Benefits",
-      "desc3": "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement",
-      "highlight3": "Tariff-Free Access",
-      "badge4": "Export Excellence",
-      "title4": "Connect to Global Markets",
-      "desc4": "Professional logistics support, regulatory compliance guidance, and market intelligence for successful EU exports",
-      "highlight4": "End-to-End Support",
-      "badge5": "Bio-Standards",
-      "title5": "Bio-Export-Zertifizierung",
-      "desc5": "EU-Bio-Siegel Anforderungen navigieren",
-      "highlight5": "Premium-Preise",
-      "badge6": "Logistik-Exzellenz",
-      "title6": "Kühlkette & Lieferkette",
-      "desc6": "Sicherung der Produktqualität vom Bauernhof bis zum Einzelhandel",
-      "highlight6": "Verifizierte Logistik"
-    },
-    "connect_expert": "Connect with an Expert",
-    "view_guide": "View Market Guide",
-    "market_intelligence_btn": "Market Intelligence",
-    "market_req_title": "German Market Requirements",
-    "market_req_desc": "Essential certifications and standards for major product categories",
-    "food_products": "Food Products",
-    "textiles_leather": "Textiles & Leather",
-    "arts_crafts": "Arts & Crafts",
-    "agri_products": "Agricultural Products",
-    "partner_network_title": "German Partner Network",
-    "partner_network_desc": "Connecting Zimbabwean exporters with established German institutions and businesses",
-    "regulatory_updates": "Regulatory & Trade Updates",
-    "market_intelligence": {
-      "blueberries": "Blueberries",
-      "honey": "Honey",
-      "natural_oils": "Natural Oils (Marula)",
-      "status_approved": "approved",
-      "status_pending": "pending",
-      "blueberries_req1": "Class I quality standards required",
-      "blueberries_req2": "LIDL-specific MRLs (33% of legal limit)",
-      "blueberries_req3": "Mandatory cold chain logistics",
-      "blueberries_req4": "GLOBALG.A.P. certification essential",
-      "blueberries_buyers": [
-        "LIDL",
-        "EDEKA",
-        "REWE"
-      ],
-      "honey_req1": "NOT YET EU APPROVED for direct export",
-      "honey_req2": "TRACES registration mandate (since Nov 2024)",
-      "honey_req3": "Residue Monitoring Plan (RMP) required",
-      "honey_req4": "EU-accredited testing systems needed",
-      "honey_buyers": [
-        "Pending approval process"
-      ],
-      "oils_req1": "German-language labeling mandatory",
-      "oils_req2": "Purity testing certification",
-      "oils_req3": "Organic certification preferred",
-      "oils_req4": "REACH compliance for cosmetic use",
-      "oils_buyers": [
-        "Cosmetic manufacturers",
-        "Specialty retailers"
-      ]
-    },
-    "support_request": "Export Support Request",
-    "support_request_desc": "Fill out the form below and our export specialists will contact you.",
-    "categories": {
-      "food_products": "Food Products",
-      "textiles_leather": "Textiles & Leather",
-      "arts_crafts": "Arts & Crafts",
-      "agricultural_products": "Agricultural Products"
-    },
-    "requirements": {
-      "food": {
-        "cert1": "EU Organic Certification (Bio-Siegel)",
-        "cert2": "HACCP Compliance",
-        "cert3": "Maximum Residue Levels (MRLs)",
-        "cert4": "Traceability Documentation",
-        "price": "€15-45/kg (organic produce)"
-      },
-      "textiles": {
-        "cert1": "REACH Compliance",
-        "cert2": "CE Marking",
-        "cert3": "Oeko-Tex Standard 100",
-        "cert4": "Country of Origin Documentation",
-        "price": "€25-120/item (leather goods)"
-      },
-      "arts": {
-        "cert1": "Product Safety Standards",
-        "cert2": "Import Declaration",
-        "cert3": "Cultural Heritage Documentation",
-        "cert4": "Fair Trade Certification (optional)",
-        "price": "€30-500/piece (stone sculptures)"
-      },
-      "agricultural": {
-        "cert1": "Phytosanitary Certificate",
-        "cert2": "EU Plant Health Regulations",
-        "cert3": "Pesticide Residue Testing",
-        "cert4": "Quality Standards",
-        "price": "€2-8/kg (fresh produce)"
-      }
-    },
-    "partners": {
-      "retailers": "Retailers",
-      "retailers_desc": "Major German retail chains interested in authentic African products",
-      "retailers_examples": [
-        "REWE Group",
-        "EDEKA",
-        "Metro AG",
-        "Kaufland",
-        "Aldi Süd"
-      ],
-      "educational": "Educational Institutions",
-      "educational_desc": "Institutions supporting trade education and partnerships",
-      "educational_examples": [
-        "German-African Business Association",
-        "IHK (Chambers of Commerce)",
-        "Trade Schools",
-        "Universities"
-      ],
-      "business": "Business Partners",
-      "business_desc": "Professional services for market entry and expansion",
-      "business_examples": [
-        "Import/Export Agencies",
-        "Trade Consultants",
-        "Market Entry Specialists",
-        "Distribution Partners"
-      ],
-      "logistics": "Logistics Partners",
-      "logistics_desc": "Reliable shipping and customs clearance services",
-      "logistics_examples": [
-        "DHL Global Forwarding",
-        "Kuehne + Nagel",
-        "DB Schenker",
-        "Freight Forwarders"
-      ],
-      "regulatory": "Regulatory Partners",
-      "regulatory_desc": "Support for regulatory compliance and certifications",
-      "regulatory_examples": [
-        "German Customs (Zoll)",
-        "Certification Bodies",
-        "Quality Assurance Agencies",
-        "Trade Compliance Consultants"
-      ],
-      "financial": "Financial Services",
-      "financial_desc": "Banking and financial support for international trade transactions",
-      "financial_examples": [
-        "Deutsche Bank",
-        "Commerzbank",
-        "KfW Development Bank",
-        "Export Credit Agencies",
-        "Trade Finance Providers"
-      ]
-    },
-    "updates": {
-      "title1": "EU Sanctions Easing",
-      "date1": "February 2025",
-      "desc1": "EU eased certain sanctions on Zimbabwe, improving trade relations and market access opportunities.",
-      "title2": "Arms Embargo Expiration",
-      "date2": "February 2026",
-      "desc2": "The EU arms embargo is set to expire, signaling further normalization of EU-Zimbabwe relations.",
-      "title3": "EU-ESA EPA Benefits",
-      "desc3": "Zimbabwe benefits from tariff-free access to EU markets under the EU-ESA Interim Economic Partnership Agreement for qualifying products."
-    },
-    "latest_updates": "Latest Updates",
-    "regulatory_updates_title": "2026 Regulatory Updates",
-    "regulatory_updates_desc": "Latest developments affecting Zimbabwe-EU trade relations",
-    "product_intelligence": "Product Intelligence",
-    "product_market_intelligence": "Product Market Intelligence",
-    "product_intelligence_desc": "Specific requirements and status for key Zimbabwean export products",
-    "eu_approved": "EU Approved",
-    "pending_approval": "Pending Approval",
-    "requirements_label": "Requirements:",
-    "buyers_label": "Buyers:",
-    "go_to_slide": "Go to slide"
-  },
-  "tourism": {
-    "hero": {
-      "badge1": "Forbes #1 Destination 2025",
-      "title1": "Zimbabwe: ",
-      "highlight1": "A World of Wonders",
-      "subtitle1": "Discover breathtaking landscapes, rich cultural heritage, and unforgettable experiences in the heart of Southern Africa.",
-      "plan_journey": "Plan Your Journey",
-      "watch_exp": "Watch Experience",
-      "badge2": "New Initiative",
-      "title2": "Zimbabwe Shop",
-      "subtitle2": "EU Diaspora & Tourism Commerce Gateway",
-      "desc2": "Connecting Culture, Commerce, and Identity through a platform designed to bring the heart of Zimbabwe to the European market.",
-      "badge3": "Safari-Exzellenz",
-      "title3": "Hwange-Nationalpark",
-      "subtitle3": "Erleben Sie die majestätischen Big Five",
-      "highlight3": "50.000+ Elefanten",
-      "badge4": "Historisches Erbe",
-      "title4": "Ruinen von Groß-Simbabwe",
-      "subtitle4": "Erkunden Sie die mittelalterliche Steinstadt",
-      "highlight4": "Antike Majestät",
-      "badge5": "Abenteuer-Hauptstadt",
-      "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Der donnernde Rauch",
-      "highlight5": "Naturwunder"
-    },
-    "attractions_title": "Iconic Attractions",
-    "attractions_subtitle": "Experience the natural beauty and historical wonders of Zimbabwe",
-    "plan_visit_title": "Plan Your Visit",
-    "plan_visit_desc": "Essential information for a seamless travel experience",
-    "contact_title": "Tourism Inquiry",
-    "contact_desc": "Need help planning your trip? Contact our tourism specialists.",
-    "planning": {
-      "visa": {
-        "title": "Visa Requirements",
-        "desc": "Most visitors can obtain visa on arrival. E-visa system available for advance applications.",
-        "d1": "Tourist visa: $30-75",
-        "d2": "Valid passport required",
-        "d3": "6 months validity recommended"
-      },
-      "health": {
-        "title": "Health & Safety",
-        "desc": "Zimbabwe is generally safe for tourists. Standard travel precautions recommended.",
-        "d1": "Yellow fever (if applicable)",
-        "d2": "Malaria prophylaxis",
-        "d3": "Travel insurance advised"
-      },
-      "payment": {
-        "title": "Payment Systems",
-        "desc": "Multi-currency economy with USD widely accepted. Mobile money popular.",
-        "d1": "USD, ZAR, EUR accepted",
-        "d2": "EcoCash mobile money",
-        "d3": "Cards in major hotels"
-      },
-      "time": {
-        "title": "Best Time to Visit",
-        "desc": "Year-round destination with dry season (May-October) being most popular.",
-        "d1": "May-Oct: Dry season",
-        "d2": "Nov-Apr: Green season",
-        "d3": "Falls best: Feb-May"
-      }
-    },
-    "onesa": {
-      "badge": "AI Tourist Companion",
-      "title": "Your Local Guide in Your Pocket",
-      "subtitle": "Onesa AI helps you navigate the ins and outs of Zimbabwe, from cultural etiquette to hidden gems.",
-      "guide": {
-        "title": "Local Insight",
-        "desc": "Get recommendations for the best local food, hidden attractions, and cultural experiences only locals know."
-      },
-      "navigate": {
-        "title": "Seamless Navigation",
-        "desc": "Navigate transport, local markets, and services with real-time advice on pricing and etiquette."
-      },
-      "plan": {
-        "title": "Smart Planning",
-        "desc": "Plan your itinerary based on current local events, weather, and seasonal wildlife patterns."
-      },
-      "cta": "Chat with Onesa AI"
-    }
-  },
-  "investment": {
-    "hero": {
-      "badge1": "Reserve Bank of Zimbabwe",
-      "title1": "Zimbabwe Gold (ZiG) Stability",
-      "subtitle1": "Backed by gold and foreign currency reserves, ZiG represents a new era of monetary stability and controlled inflation for investors.",
-      "highlight1": "Gold-Backed Currency",
-      "badge2": "Infrastructure Growth",
-      "title2": "Build Zimbabwe Together",
-      "subtitle2": "Infrastructure projects creating jobs, generating returns, and developing communities",
-      "highlight2": "$2.5M+ Invested",
-      "badge3": "Victoria Falls Stock Exchange",
-      "title3": "VFEX: Your USD Gateway",
-      "subtitle3": "Invest in Zimbabwe's premier USD-denominated exchange, offering tax incentives and seamless capital repatriation for global investors.",
-      "highlight3": "USD Denominated",
-      "badge4": "Agriculture 4.0",
-      "title4": "Smart Farming Investments",
-      "subtitle4": "High-yield macadamia and avocado projects using precision agriculture technology.",
-      "highlight4": "18-22% IRR",
-      "badge5": "Mining Transformation",
-      "title5": "Critical Minerals Hub",
-      "subtitle5": "Invest in Zimbabwe's lithium and platinum value-addition projects for the global energy transition.",
-      "highlight5": "Global Demand"
-    },
-    "active_projects": "Active Investment Projects",
-    "active_projects_desc": "Verified opportunities for diaspora investment across key sectors",
-    "all_sectors": "All Sectors",
-    "agriculture": "Agriculture",
-    "manufacturing": "Manufacturing",
-    "tourism": "Tourism",
-    "infrastructure": "Infrastructure",
-    "tech": "Tech",
-    "all_risk": "All Risk Levels",
-    "conservative": "Conservative",
-    "moderate": "Moderate",
-    "aggressive": "Aggressive",
-    "calculator_title": "Investment Calculator",
-    "calculator_desc": "Simulate your potential returns",
-    "verified_directories": "Verified Directories",
-    "directories_desc": "Access official registries and associations",
-    "onesa_title": "Onesa AI Companion",
-    "onesa_desc": "Use Onesa AI to make data-driven investment choices and assess risks with deep local context."
-  },
-  "trade": {
-    "hero": {
-      "badge1": "Trade Excellence",
-      "title1": "Zimbabwe Export Hub",
-      "subtitle1": "Connecting Zimbabwean producers with global markets through diaspora networks and trade expertise",
-      "highlight1": "$50M+ Exports",
-      "badge4": "Logistik & Versorgung",
-      "title4": "Effiziente Exportlogistik",
-      "subtitle4": "Optimierung des Weges simbabwischer Produkte zu globalen Zielen.",
-      "highlight4": "Globale Reichweite",
-      "badge5": "Handelspolitik",
-      "title5": "Interim-WPA-Vorteile",
-      "subtitle5": "Nutzung von Handelsabkommen für Wettbewerbsvorteile auf EU-Märkten.",
-      "highlight5": "Zollfrei",
-      "badge2": "Sector Growth",
-      "title2": "Horticulture Expansion",
-      "subtitle2": "Zimbabwe's horticultural exports are reaching new heights in European and Middle Eastern markets.",
-      "highlight2": "30% Annual Growth",
-      "badge3": "Industrialization",
-      "title3": "Value-Added Manufacturing",
-      "subtitle3": "Supporting the transition from raw exports to high-quality processed Zimbabwean products.",
-      "highlight3": "Vision 2030"
-    },
-    "export_roadmap": "Export Roadmap",
-    "roadmap_title": "Zimbabwe to Germany Export Process",
-    "roadmap_desc": "Professional step-by-step guidance for exporting Zimbabwean products to the German and EU markets",
-    "export_sectors": "Key Export Sectors",
-    "sectors_desc": "Zimbabwe's diverse export portfolio offers opportunities across multiple sectors",
-    "development_programs": "Export Development Programs",
-    "programs_desc": "Specialized initiatives to build export capacity and market access",
-    "diaspora_role": "The Role of Diaspora in Trade",
-    "diaspora_role_desc": "How diaspora members can support Zimbabwean exporters and create trade opportunities"
-  },
-  "data": {
-    "hero": {
-      "badge1": "Wirtschaftswachstum 2025",
-      "title1": "Datengetriebene ",
-      "highlight1": "Einblicke",
-      "subtitle1": "Umfassende Analyse der Wirtschaftslandschaft Simbabwes.",
-      "desc1": "Erkunden Sie Echtzeit-Metriken und Sektorleistungen.",
-      "badge3": "Investitionstrends",
-      "title3": "Kapitalzufluss-Analyse",
-      "subtitle3": "Verfolgung des Wachstums von Diaspora-geführten Investitionen.",
-      "highlight3": "Sektorwachstum",
-      "badge4": "Marktintelligenz",
-      "title4": "Verbraucherdaten-Einblicke",
-      "subtitle4": "Marktanforderungen verstehen, um Strategien zu optimieren.",
-      "highlight4": "Datengetrieben",
-      "badge5": "Wirtschaftsausblick",
-      "title5": "Vision 2030 Fortschritt",
-      "subtitle5": "Überwachung nationaler Entwicklungsziele.",
-      "highlight5": "Wachstumspfad",
-      "badge2": "Überweisungstrends",
-      "title2": "Diaspora-Überweisungen",
-      "highlight2": "$2,1 Mrd. jährlich",
-      "subtitle2": "Grundstein der Devisenzuflüsse.",
-      "desc2": "Analyse des Flusses und der Auswirkungen von Diaspora-Kapital."
-    },
-    "indicators": "Economic Indicators",
-    "indicators_desc": "Key metrics driving Zimbabwe's economic transformation",
-    "diaspora_impact": "Global Diaspora Impact",
-    "diaspora_impact_desc": "The financial and social contribution of Zimbabweans abroad",
-    "regional_breakdown": "Regional Diaspora Breakdown",
-    "remittance_allocation": "Remittance Allocation by Sector",
-    "gdp_growth": "GDP Growth Trend"
-  },
-  "success": {
-    "hero": {
-      "badge1": "Impact-Geschichten",
-      "title1": "Diaspora-getriebener Erfolg",
-      "subtitle1": "Echte Geschichten transformierter simbabwischer Unternehmen.",
-      "highlight1": "$8,5 Mio.+ generiert",
-      "badge3": "Agrar-Erfolg",
-      "title3": "Binga-Korb-Exporte",
-      "subtitle3": "Stärkung von Frauen auf dem Land durch direkten Marktzugang.",
-      "highlight3": "Gemeinschafts-Auswirkung",
-      "badge4": "Tourismuswachstum",
-      "title4": "Öko-Lodge-Investition",
-      "subtitle4": "Diaspora-finanzierte nachhaltige Tourismusprojekte.",
-      "highlight4": "Nachhaltig",
-      "badge5": "Bergbau-Innovation",
-      "title5": "Lithium-Wertschöpfung",
-      "subtitle5": "Umwandlung von Rohmineralien in hochwertige Exporte.",
-      "highlight5": "Wertschöpfung",
-      "badge2": "Unternehmergeist",
-      "title2": "Startup-Erfolg",
-      "subtitle2": "Wie Diaspora-geführte Tech-Startups Herausforderungen lösen.",
-      "highlight2": "50+ Tech-Unternehmen"
-    },
-    "stories_title": "Success Stories",
-    "stories_desc": "Explore how diaspora engagement is creating real impact in Zimbabwe",
-    "impact_metrics": "Overall Platform Impact",
-    "metrics_desc": "Aggregated success metrics across our partner network"
-  },
-  "common": {
-    "explore_now": "Explore Now",
-    "learn_more": "Learn More",
-    "get_started": "Get Started",
-    "invest_now": "Invest Now",
-    "contact_us": "Contact Us",
-    "view_all": "View All",
-    "back_to_top": "Back to Top",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "success": "Success!",
-    "verified": "Verified",
-    "target": "Target",
-    "raised": "Raised",
-    "investors": "Investors",
-    "min_investment": "Min. Investment",
-    "expected_return": "Expected Return",
-    "timeline": "Timeline",
-    "status": "Status",
-    "risk_level": "Risk Level",
-    "highlights": "Highlights",
-    "share": "Share",
-    "save": "Save"
-  },
-  "contact_form": {
-    "full_name": "Full Name",
-    "email": "Email Address",
-    "phone": "Phone Number",
-    "subject": "Subject",
-    "message": "Message",
-    "send": "Send Message",
-    "sending": "Sending...",
-    "success_msg": "Message sent successfully!",
-    "success_desc": "We'll get back to you within 24-48 hours.",
-    "select_subject": "Select a subject",
-    "required_field": "Required *"
-  },
-  "calculator": {
-    "title": "Investment Calculator",
-    "desc": "Calculate potential returns on your diaspora investment portfolio",
-    "amount": "Investment Amount",
-    "timeline": "Investment Timeline",
-    "return_rate": "Expected Annual Return",
-    "total_investment": "Total Investment",
-    "total_returns": "Total Returns",
-    "final_value": "Final Value",
-    "projected_growth": "Projected Growth",
-    "year": "Year",
-    "annual_return": "Annual return",
-    "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
-  },
-  "shop": {
-    "vision": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
-    "our_vision": "Our Vision",
-    "collections": "Collections",
-    "title": "Curated Zimbabwean Excellence",
-    "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
-    "sports_title": "National Sports",
-    "sports_desc": "Official gear for the Sables, Chevrons, and Warriors.",
-    "crafts_title": "Arts & Crafts",
-    "crafts_desc": "Supporting rural artisans and women cooperatives.",
-    "food_title": "Food & Nostalgia",
-    "food_desc": "The flavors of home, fully EU-compliant."
-  },
-  "notfound": {
-    "title": "404",
-    "subtitle": "Page Not Found",
-    "message": "Sorry, the page you are looking for doesn't exist.",
-    "message2": "It may have been moved or deleted.",
-    "go_home": "Go Home"
   },
   "tech": {
     "hero": {
-      "badge1": "Future of Innovation",
-      "title1": "Onesa AI: Illuminating Zimbabwe",
-      "subtitle1": "The first AI model built specifically for the Zimbabwean context.",
-      "highlight1": "Built for Zimbabwe",
-      "badge2": "Contextual Intelligence",
-      "title2": "Deep Contextual Understanding",
-      "subtitle2": "Unlike general AI, Onesa understands the nuances of life and business in Zimbabwe.",
-      "highlight2": "Localized Knowledge",
-      "badge3": "Investor Tools",
-      "title3": "Smart Investment Brainstorming",
-      "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
-      "highlight3": "Data-Driven Success"
+      "badge1": "Ramangwana rekuVandudza",
+      "title1": "Onesa AI: Kujekesa Zimbabwe",
+      "subtitle1": "Muchina weAI wekutanga wakagadzirirwa mamiriro eZimbabwe chaiwo.",
+      "highlight1": "Yakavakirwa Zimbabwe",
+      "badge2": "Ruzivo rweMamiriro",
+      "title2": "Kunzwisisa Mamiriro Akadzama",
+      "subtitle2": "Kusiyana neAI dzimwe, Onesa anonzwisisa upenyu nebhizimusi muZimbabwe.",
+      "highlight2": "Ruzivo rweMunharaunda",
+      "badge3": "Zvishandiso zveVadyari Mari",
+      "title3": "Kufunga neUngwaru kwekudyara Mari",
+      "subtitle3": "Ongorora njodzi uye gadzira mazano ebhizimusi anobudirira mumusika wepamba.",
+      "highlight3": "Kubudirira neNhamba"
     },
-    "explore_onesa": "Explore Onesa AI",
-    "onesa_badge": "Meet Onesa AI",
-    "onesa_title": "Illuminating the Way Forward",
-    "onesa_meaning": "Onesa means 'illuminate' in Shona",
-    "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
-    "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
-    "onesa_usp1": "Contextual Understanding",
-    "onesa_usp2": "Accurate Language Translation",
+    "explore_onesa": "Ongorora Onesa AI",
+    "onesa_badge": "Sangana naOnesa AI",
+    "onesa_title": "Kujekesa Gwara rako",
+    "onesa_meaning": "Onesa zvinoreva kuti \"illuminate\" muChishona",
+    "onesa_desc1": "Onesa AI muenzaniso wedu wakagadzirirwa kujekesa nzira yekugara, kudyara mari, nekubudirira muZimbabwe. Kunyangwe michina yeAI yakajairika isina ruzivo rwemuno, Onesa akavakwa kubva pasi kuti anzwisise Zimbabwe kudarika mumwe muenzaniso upi zvawo.",
+    "onesa_desc2": "Kubva pakuziva mitemo yemuno kusvika pakufunga mazano ebhizimusi anopedza matambudziko eZimbabwe, Onesa anopa ruzivo rwemuno rwaunoda kuti ubudirire.",
+    "onesa_local_edge_title": "Kupfuura Michina yeMadokero",
+    "onesa_local_edge_desc": "Michina yakajairika ndeyekuMadokero, inogona mabasa mumaindasitiri makuru asi inokundikana kuziva hupfumi hwe \"kukiya-kiya\" hweMbare Musika kana kudzama kweChishona chakasanganiswa nechiNdebele chekumusha.",
+    "diaspora_unlocked_title": "Tekinoroji yeDiaspora Unlocked",
+    "diaspora_unlocked_desc": "Tinoshandisa tekinoroji yemhando yepamusoro kufambisa kushanya, kutengeserana, nekudyara mari pasina zvipingamupinyi. Chikuva chedu chinovhara gaka riri pakati pevekunze nemikana yemuno kuburikidza nekubuda pachena kwedigital neruzivo rweAI.",
+    "onesa_usp1": "Kunzwisisa Mamiriro",
+    "onesa_usp2": "Kududzirwa Kwemitauro Kwakanyatsomira",
     "ai_status": "Beta Version",
-    "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
-    "features_title": "Onesa AI Capabilities",
-    "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
-    "features": {
-      "context": {
-        "title": "Contextual Mastery",
-        "desc": "Onesa understands how things work on the ground, from informal market dynamics to formal regulatory frameworks."
-      },
-      "translation": {
-        "title": "Language Accuracy",
-        "desc": "Accurately translates Shona, Ndebele, and other local languages, preserving cultural nuances and technical meanings."
-      },
-      "risk": {
-        "title": "Risk Assessment",
-        "desc": "Investors can use Onesa to assess specific risks based on real-time local data and historical patterns."
-      },
-      "brainstorm": {
-        "title": "Idea Generation",
-        "desc": "Brainstorm business ideas tailored to succeed in the unique Zimbabwean landscape."
-      },
-      "tourism": {
-        "title": "Tourist Companion",
-        "desc": "Navigate Zimbabwe with a pocket-sized local guide that knows the best spots and cultural ins-and-outs."
-      }
-    },
-    "cta_title": "Ready to Illuminate Your Journey?",
-    "cta_desc": "Join our beta program and be the first to experience Onesa AI's localized intelligence.",
-    "cta_button": "Join Beta Waitlist",
-    "sectors_badge": "Sector Transformation",
-    "sectors_title": "Powering Key Industries",
-    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
+    "ai_demo_question": "Ndeapi mikana yekudyara mari ine mubereko mukuru muchikamu chezvekurima muZimbabwe iye zvino?",
+    "ai_demo_response": "Chikamu chezvekurima muZimbabwe chiri kuona kukura kukuru mukutengeswa kwezvibereko zvehorticulture kunze. Tichitarisa zviri kuitika iye zvino, kudyara mari mukutakura nekuchengetedza michero ye-blueberry kubva kuEastern Highlands kunopa mubereko mukuru nenjodzi iri pakati nepakati...",
+    "features_title": "Zvinogona kuitwa naOnesa AI",
+    "features_subtitle": "Zvishandiso zvakasarudzika zvakagadzirirwa kuvhara gaka riri pakati pevekunze nemikana yemuno.",
+    "cta_title": "Wagadzirira Kujekesa Rwendo rwako?",
+    "cta_desc": "Batana nechirongwa chedu che-beta uve wekutanga kuona ruzivo rwaOnesa AI.",
+    "cta_button": "Pinda muWaitlist",
+    "sectors_badge": "Kuchinja kweChikamu",
+    "sectors_title": "Kusimudzira Maindasitiri Makuru",
+    "sectors_subtitle": "Onesa AI anopa ruzivo rwakadzama kusimudzira zvikamu zveupfumi hweZimbabwe zvakakosha.",
     "sectors": {
       "mining": {
-        "title": "Mining & Resources",
-        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
-        "d1": "Real-time mineral pricing and market trends",
-        "d2": "Environmental and safety compliance monitoring"
+        "title": "Migodhi nezviwanikwa",
+        "desc": "Kushandisa AI kuongorora nhamba dzezvemigodhi nekutevera mitemo muchikamu chezviwanikwa muZimbabwe.",
+        "d1": "Mitengo yezvicherwa nenguva chaiyo nemafambiro emusika",
+        "d2": "Kutarisa kuchengetedzwa kwezvakatipoteredza nemutemo"
       },
       "farming": {
-        "title": "Precision Farming",
-        "desc": "Transforming agriculture through data-driven crop management and weather pattern prediction.",
-        "d1": "Soil health analysis and crop yield optimization",
-        "d2": "Localized weather alerts and pest control advice"
+        "title": "Kurima Kwemazuvano",
+        "desc": "Kuchinja zvekurima kuburikidza nekuronga zvirimwa nenhamba nekufanotaura mamiriro ekunze.",
+        "d1": "Kuongorora utano hwevhu nekukura kwezvirimwa",
+        "d2": "Yambiro dzemamiriro ekunze nemazano ekurwisa zvipembenene"
       },
       "logistics": {
-        "title": "Smart Logistics",
-        "desc": "Optimizing supply chains and cross-border trade routes through the Zimbabwean corridor.",
-        "d1": "Route optimization for regional distribution",
-        "d2": "Real-time tracking and border clearance assistance"
+        "title": "Kutakura Zvinhu neUngwaru",
+        "desc": "Kuronga mafambisirwo ezvinhu nekutengeserana kumiganhu kuburikidza nemugwagwa weZimbabwe.",
+        "d1": "Kuronga nzira dzakanakisisa dzekugovera zvinhu mudunhu",
+        "d2": "Kutevera nhumbi nenguva chaiyo nerubatsiro rwekumiganhu"
       },
       "education": {
-        "title": "Future Education",
-        "desc": "Bridging the digital divide through AI-powered personalized learning and vocational training.",
-        "d1": "Adaptive learning platforms for local schools",
-        "d2": "Technical skill development for the digital economy"
+        "title": "Dzidzo yeRamangwana",
+        "desc": "Kuvhara gaka redigital kuburikidza nekufunda kunofambiswa neAI nekudzidziswa kwebasa.",
+        "d1": "Zvikwata zvekufunda zvinoshanduka kuitira zvikoro zvemuno",
+        "d2": "Kuvandudza hunyanzvi hwetekinoroji kuitira upfumi hwedigital"
       }
+    }
+  },
+  "export": {
+    "hero": {
+      "badge1": "Kupinda muMusika weEU",
+      "title1": "Vhura Misika yeEurope",
+      "desc1": "Famba nemitemo nezvitupa zveEU zviri nyore kuti utengese zvigadzirwa zvako zveZimbabwe.",
+      "highlight1": "Kutevera Mitemo Kwakareruka",
+      "badge2": "Tarisiro kuGermany",
+      "title2": "Tarisa kuGermany",
+      "desc2": "Ruzivo nevashandi vakasarudzika vemusika weGermany, mukova mukuru wekupinda muEurope.",
+      "highlight2": "Kupinda muMusika Direct",
+      "badge3": "Zvibvumirano zvekutengeserana",
+      "title3": "Shandisa EPA & ESA",
+      "desc3": "Baidzirwa neZvibvumirano zvekushanda pamwe chete muupfumi kuitira kupinda pasina mutero.",
+      "highlight3": "Kupinda Kwakakosha",
+      "badge4": "Kusvika Pasi Pose",
+      "title4": "Wanza Tarisiro yako",
+      "desc4": "Batana netandemutande repasi rose revatengi nevagoveri.",
+      "highlight4": "Mikana yePasi Pose",
+      "badge5": "Tarisiro yeHorticulture",
+      "title5": "Kutengeswa kweGoridhe Rinyoro",
+      "desc5": "Rubatsiro rwakasarudzika rwezvibereko zvinyoro, maruva, nezvigadzirwa zveorganic.",
+      "highlight5": "Zvirimwa zvine Mutengo",
+      "badge6": "Kusimudzira Kugadzira",
+      "title6": "Kutengesa zvakagadzirwa mufekitari",
+      "desc6": "Nhungamiro yezvinhu zvakagadzirwa mufekitari, machira, nezvikafu zvakagadziriswa.",
+      "highlight6": "Zvigadzirwa zvakawedzerwa Mutengo"
+    },
+    "objective_title": "Kusimudzira Kutengesa kunze, Kukupa Simba",
+    "objective_subtitle": "Kubatanidza zvigadzirwa, vashandi, neruzivo rwemusika kupa simba vatengesi kuti vabudirire muEU.",
+    "explore_market_requirements": "Ongorora Zvinodiwa neMusika",
+    "contact_us": "Taura Nesu",
+    "contact_form_title": "Mubvunzo wezveKutengesa Kunze",
+    "contact_form_subtitle": "Zadza fomu riri pasi apa kuti utaure nenyanzvi dzedu dzekutengesa kunze.",
+    "market_requirements_title": "Zvinodiwa neMusika weEU",
+    "market_requirements_subtitle": "Nzwisisa mitemo, zvitupa, nemitemo yekutengesa zvinhu kuGermany.",
+    "german_requirements": {
+      "food_products": {
+        "category": "Zvekudya",
+        "requirements": [
+          "Mitemo yeEU yeKuchengetedza Zvekudya (senge HACCP)",
+          "Miganhu yezvakasara zveMishonga (MRLs)",
+          "Zvinodiwa panyaya dzeLabeling (zvinosanganiswa, zvinokonzera allergies, kwachakabva)",
+          "Zvitupa zvezveutano hwezvipfuyo nezvirimwa"
+        ],
+        "price": "Mutengo weMitemo Wakakwirira"
+      },
+      "textiles_leather": {
+        "category": "Machira neMatehwe",
+        "requirements": [
+          "REACH Regulation (makemikari)",
+          "Mitemo yekutsva kwezvinhu",
+          "Labeling (zvinhu zvakashandiswa, nhungamiro dzekuchengetedza)",
+          "Zvitupa zvezveutano nekushanda kwakanaka"
+        ],
+        "price": "Mutengo weMitemo uri Pakati"
+      },
+      "arts_crafts": {
+        "category": "Mabasa emaoko",
+        "requirements": [
+          "CE Marking (kana zvichidiwa, senge matoyi)",
+          "Magwaro ekuchengetedzeka kwezvinhu (MSDS)",
+          "Magwaro emutero wepaguva nenyaya dzemitero",
+          "Kodzero dzezvinhu zvawakagadzira (IPR)"
+        ],
+        "price": "Mutengo weMitemo Wakaderera"
+      },
+      "agricultural_products": {
+        "category": "Zvigadzirwa zvekurima",
+        "requirements": [
+          "Chitupa cheGlobalG.A.P.",
+          "Zvitupa zveOrganic (EU Organic Logo)",
+          "Maitiro ekutevera kwakabva zvinhu",
+          "Mitemo yemhando nekurongwa kwezvinhu"
+        ],
+        "price": "Mutengo weMitemo Wakakwirira"
+      }
+    },
+    "product_intelligence_badge": "Ruzivo",
+    "product_intelligence_title": "Ruzivo rweMusika rwakasarudzika",
+    "product_intelligence_subtitle": "Ramba uri mberi nenhamba dzeungwaru dzekudiwa kwezvinhu, mitengo, nezvinodiwa nevatengi.",
+    "market_intelligence_requirements": "Zvinodiwa zvakakosha:",
+    "market_intelligence_buyers": "Vatengi vangangovepo:",
+    "market_intelligence": {
+      "blueberries": {
+        "product": "Blueberries",
+        "status": "Inodiwa Kwazvo",
+        "requirements": [
+          "Chitupa cheGlobalG.A.P. chakakosha.",
+          "Kutevedzera mitemo yeEU MRLs yemishonga yezvirimwa.",
+          "Kurongwa kunofanira kutevera mitemo yeEU yezvibereko zvinyoro.",
+          "Mafambisirwo ezvinhu nekuchengetedza mufiriji zvakakosha."
+        ],
+        "buyers": [
+          "LIDL",
+          "EDEKA",
+          "REWE"
+        ]
+      },
+      "honey": {
+        "product": "Huchi",
+        "status": "Musika uri Kukura",
+        "requirements": [
+          "Kutevedzera mitemo yeEU Honey Directive (kunaka, kwachakabva).",
+          "Kutarisa zvasara zvema-antibiotics nemasimbi anorema.",
+          "Chitupa cheOrganic chinopa mutengo wakakwirira.",
+          "Kuziva kwakabva huchi kubva kumukoko kusvika pasherufu kunokosheswa."
+        ],
+        "buyers": "Zvitoro zvezvokudya zvakasarudzika, misika yeorganic"
+      },
+      "natural_oils": {
+        "product": "Mafuta echisikigo (Marula)",
+        "status": "Musika uri Kusimuka",
+        "requirements": [
+          "Chitupa cheCOSMOS kana NaTrue kuitira zvekuzvizora.",
+          "Magwaro anoratidza kutorwa kwezvinhu nenzira kwayo.",
+          "Kutarisa mhando kuti asave neimwe tsvina.",
+          "Kunyora zita remuti nekwawakabva zvakajeka."
+        ],
+        "buyers1": "Vagadziri vezvekuzvizora",
+        "buyers2": "Vatengesi vezvekuchengetedza utano"
+      }
+    },
+    "partner_network_badge": "Tandemutande",
+    "partner_network_title": "Tandemutande revashandi vakasimbiswa",
+    "partner_network_subtitle": "Batana nevashambadzi vekuGermany, vagoveri, nevekutakura zvinhu vakavimbika.",
+    "view_examples": "Ona Mienzaniso",
+    "partner_examples": "Mienzaniso yevashandi:",
+    "partners": {
+      "retailers": {
+        "type": "Vatengesi nemaSupermarket",
+        "description": "Kupinda direct muzvitoro zvikuru zvekuGermany nezvitoro zvinozvimirira."
+      },
+      "educational_institutions": {
+        "type": "Zvikoro nemasangano edzidzo",
+        "description": "Kushanda pamwe chete mukuvandudza hunyanzvi, tsvakiridzo, nekuchinjana tsika."
+      },
+      "business_partners": {
+        "type": "Vashandi vekuvandudza Bhizimusi",
+        "description": "Nyanzvi dzekupinda mumusika, kubatanidza mabhizimusi, nekufambisa kudyara mari."
+      },
+      "logistics_partners": {
+        "type": "Ve-Logistics neVatungamiriri veNhumbi",
+        "description": "Nzira dzekutakura zvinhu dzakavimbika kuitira kutengesa kunze pasina kunonoka."
+      },
+      "regulatory_partners": {
+        "type": "Masangano eMitemo nezvitupa",
+        "description": "Nhungamiro nerubatsiro pakufamba nemitemo yakaoma yeGermany neEU."
+      },
+      "financial_services": {
+        "type": "Zvemari nekufambisa Kutengeserana",
+        "description": "Kuwana mari dzekutengeserana, zvikwereti zvekutengesa kunze, nemabhengi."
+      }
+    },
+    "regulatory_updates_badge": "Zvinofamba",
+    "regulatory_updates_title": "Zvinofamba neMitemo",
+    "regulatory_updates_subtitle": "Ramba uine ruzivo nezvekuchinja kwemitemo yekutengeserana pasi rose inokanganisa Zimbabwe.",
+    "regulatory_updates": {
+      "eu_sanctions_easing": {
+        "title": "EU kurerutsa zvirango kuZimbabwe",
+        "date": "Kurume 2024",
+        "description": "Mubatanidzwa weEurope wakarerutsa zvirango kumasangano akati wandei emuZimbabwe, zvichivhura mikana mitsva yekutengeserana nekudyara mari."
+      },
+      "arms_embargo_expiration": {
+        "title": "Kupera kweArms Embargo",
+        "date": "Kukadzi 2024",
+        "description": "Kurambidzwa kwezvombo kweEU kuZimbabwe kwakapera zviri pamutemo, zvichiwedzera kugadzirisa kudyidzana pakutengeserana."
+      },
+      "eu_esa_epa_benefits": {
+        "title": "Zvakanakira EU-ESA EPA",
+        "description": "Zimbabwe inobatsirwa nekupinda mumusika weEU pasina mutero nepasi pechirongwa che-Economic Partnership Agreement (EPA) nedunhu reEast neSouthern Africa (ESA)."
+      }
+    },
+    "cta_title": "Wagadzirira Kutengesa kuEU?",
+    "cta_subtitle": "Chikwata chedu chenyanzvi chakagadzirira kukutungamirira padanho rega rega. Taura nesu nhasi kuti utange.",
+    "cta_button": "Tanga Iye zvino"
+  },
+  "tourism": {
+    "hero": {
+      "badge1": "Shanyira Zimbabwe",
+      "title1": "Tsvaga Runako",
+      "subtitle1": "Kubva kuVictoria Falls kusvika kuGreat Zimbabwe, zvionere mwoyo weAfrica.",
+      "highlight1": "Runako rwepasi rose",
+      "badge2": "Nhaka yeTsika",
+      "title2": "Nhoroondo yakadzama",
+      "subtitle2": "Ongorora budiriro dzekare netsika dzemazuvano dzinoyevedza.",
+      "highlight2": "Midzi yekare",
+      "badge3": "Kunakidzwa",
+      "title3": "Mhuka dzesango neSafari",
+      "subtitle3": "Kusangana nemhuka kusingakanganwiki mumapaki emunyika akachengetedzwa.",
+      "highlight3": "Chisikigo chisina kugunzwa",
+      "badge4": "Nzvimbo yeNhoroondo",
+      "title4": "Great Zimbabwe",
+      "subtitle4": "Matongo emabwe ekare anoratidza budiriro yeAfrica yemakore akapfuura.",
+      "badge5": "Nzvimbo yekunakidzwa",
+      "title5": "Mosi-oa-Tunya",
+      "subtitle5": "Zvionere utsi hunotinhira muVictoria Falls.",
+      "plan_journey": "Ronga Rwendo rwako",
+      "watch_exp": "Ona Zviri kuitika"
+    },
+    "attractions_title": "Nzvimbo dzinofanira Kushanyirwa",
+    "attractions_subtitle": "Nzvimbo dzinozivikanwa dzinotsanangura runako rweZimbabwe.",
+    "attractions": {
+      "vicfalls": {
+        "name": "Victoria Falls",
+        "desc": "Imwe yeSeven Natural Wonders of the World, mapopoma makuru pasi rose.",
+        "h1": "UNESCO World Heritage",
+        "h2": "Nzvimbo yekunakidzwa",
+        "h3": "Kuona Mhuka",
+        "summary": "Inozivikanwa nemuno seMosi-oa-Tunya (Utsi Hunotinhira). Victoria Falls kureba kwayo kupfuura Niagara Falls kaviri. Unogona kuita white-water rafting, bungee jumping, nekushanyira Devil's Pool."
+      },
+      "greatzim": {
+        "name": "Great Zimbabwe",
+        "desc": "Matongo emabwe ekare anoratidza hunyanzvi hwekuvaka hweAfrica.",
+        "h1": "UNESCO World Heritage",
+        "h2": "Nzvimbo yeNhoroondo",
+        "h3": "Nhaka yeTsika",
+        "summary": "Yakovakwa pakati pemakore e-11 ne-15, Great Zimbabwe ndiyo yaive guta guru reHumambo hweZimbabwe. Mabwe aya akaturikidzana pasina dhaka."
+      },
+      "kariba": {
+        "name": "Dhamu reKariba",
+        "desc": "Rimwe remadziva makuru akagadzirwa nevanhu pasi rose, rakakodzera kuredza hove nekufamba nemabhoti.",
+        "h1": "Mitambo yemumvura",
+        "h2": "Kuredza Tiger Fish",
+        "h3": "Kuvira kwezuva kunoyevedza",
+        "summary": "Lake Kariba rine makiromita anodarika 5,500. Rakakurumbira nekuredza tiger fish nekuzorora mumahouseboats."
+      },
+      "rocks": {
+        "name": "Balancing Rocks",
+        "desc": "Mabwe akaturikidzana nenzira yechisikigo anomirira nhaka yeZimbabwe.",
+        "h1": "Chiratidzo cheNyika",
+        "h2": "Kutora Mifananidzo",
+        "h3": "Chishamiso cheChisikigo",
+        "summary": "Mabwe aya anowanikwa pamari yeZimbabwe uye anowanikwa munyika yose, zvikuru kuMatobo National Park."
+      }
+    },
+    "other_attractions_title": "Dzimwe Nzvimbo dzinoshamisa",
+    "other_attractions_subtitle": "Pamusoro penzvimbo dzinozivikanwa idzi, Zimbabwe ine dzimwe nzvimbo dzakawanda dzine mhuka dzesango.",
+    "other_attractions": {
+      "hwange": {
+        "name": "Hwange National Park",
+        "desc": "Paki huru muZimbabwe, inozivikanwa nemazana enzou nemhuka dzakawanda.",
+        "h1": "Safari yeBig Five",
+        "h2": "Mhomho dzeNzou",
+        "h3": "Kuchengetedza mhuka",
+        "summary": "Hwange ine makiromita anodarika 14,000. Ine mhuka dzinoyamwisa dzinodarika marudzi zana neshiri dzinodarika mazana mana."
+      },
+      "matobo": {
+        "name": "Matobo National Park",
+        "desc": "Nzvimbo yeUNESCO inozivikanwa nemabwe akaturikidzana nhoroondo yemweya.",
+        "h1": "Balancing Rocks",
+        "h2": "Mifananidzo yemumapako",
+        "h3": "Kuchengetedza Chipembere",
+        "summary": "Matobo Hills ine nzvimbo dzekare dzine mifananidzo yakadhirowewa nevaSan."
+      },
+      "eastern_highlands": {
+        "name": "Eastern Highlands",
+        "desc": "Dunhu rine makomo, rine mhepo inotonhorera, masango, nemapopoma.",
+        "h1": "Kukwira Makomo",
+        "h2": "Mapopoma anoyevedza",
+        "h3": "Kunze kwakanaka",
+        "summary": "Inosanganisira makomo eNyanga, Vumba, neChimanimani. Nzvimbo iyi yakasiyana nedzimwe muZimbabwe nekuda kwekunononhora kwayo."
+      },
+      "mana_pools": {
+        "name": "Mana Pools National Park",
+        "desc": "Nzvimbo yeUNESCO inozivikanwa nemadziva emurwizi nenzendo dzekutsoka.",
+        "h1": "Safari dzekutsoka",
+        "h2": "Maonero eRwizi Zambezi",
+        "h3": "Sango remusikirwo",
+        "summary": "Inowanikwa muZambezi Valley, Mana Pools inozivikanwa nerunako rwayo nemadziva mana makuru akagadzirwa nerwizi."
+      },
+      "nyanga": {
+        "name": "Nyanga National Park",
+        "desc": "Inonzi 'Little Scotland' yeAfrica, kumba kwegomo rakanyanya kureba nemapopoma akadzika.",
+        "h1": "Gomo reNyangani",
+        "h2": "Mapopoma eMutarazi",
+        "h3": "Kunakidzwa panze",
+        "summary": "Nyanga iparadhiso ine Gomo reNyangani neMutarazi Falls (mapopoma echipiri kureba muAfrica)."
+      },
+      "gonarezhou": {
+        "name": "Gonarezhou National Park",
+        "desc": "Inonzi 'Nzvimbo dzeNzou,' inozivikanwa nemawere matsvuku eChilojo.",
+        "h1": "Chilojo Cliffs",
+        "h2": "Sango risina kugunzwa",
+        "h3": "Nzvimbo dzeNzou",
+        "summary": "Gonarezhou ipaki yechipiri pakukura muZimbabwe, ine runako rwemawere e-sandstone."
+      }
+    },
+    "onesa": {
+      "name": "Onesa AI",
+      "badge": "Mubatsiri Onesa AI",
+      "chat": "Taura naOnesa",
+      "img_alt": "Onesa AI Nhungamiro",
+      "title": "Nhungamiro yako yemuno muhomwe mako",
+      "subtitle": "Kufamba muZimbabwe kunogona kuoma. Onesa AI anonzwisisa upfumi hwe 'kukiya-kiya' nemagariro emuno kuti rwendo rwako rurambe rwakanaka.",
+      "companion_title": "Kubva pakubhadhara ndege, ruzivo rwemamiriro ekunze kana kutsvaga nzvimbo dzinoyevedza dzekumusha, Onesa AI anokubatsira.",
+      "companion_subtitle": "Onesa AI anokubatsira kuronga rwendo rwako nekuziva zvese zvaunoda kana wasvika muno.",
+      "assistant_label": "Onesa AI Mubatsiri",
+      "prompt_question": "\"Onesa, ndekupi kwakanaka kwandingawane sadza rekumusha muHarare manheru ano?\"",
+      "prompt_response": "Kuti uwane sadza chairo muHarare, enda kuMbare Musika. Vatengesi vemo vanopa sadza rinopisa rine usavi hwakasiyana hunonaka. Ingotsvaga 'Sadza neNyama' kuti ugute zvakanaka!",
+      "guide": {
+        "title": "Ruzivo rwemuno",
+        "desc": "Nzwisisa tsika dzemuno, kupa matipisi, nemaitiro evanhu munharaunda."
+      },
+      "navigate": {
+        "title": "Kufamba neUngwaru",
+        "desc": "Tsvaga nzira dzakanakisisa nenzvimbo dzakavanda dzinozivikanwa nevekumusha chete."
+      },
+      "plan": {
+        "title": "Zvirongwa zvakagadzirwa",
+        "desc": "Zvirongwa zvekurwendo zvakagadzirwa neAI zvichitevera zvaunoda."
+      }
+    },
+    "planning": {
+      "guide_badge": "Nhungamiro yeRwendo",
+      "essential_info": "Ruzivo Rwakakosha rweKuronga",
+      "essential_desc": "Zvese zvaunoda kuziva kuti uve nerwendo rusina zvipingamupinyi muZimbabwe.",
+      "visa": {
+        "title": "Zvinodiwa neViza",
+        "desc": "Ruzivo rwekupinda munyika kune vanobva kunze.",
+        "d1": "Chirongwa che-e-Visa chiripo",
+        "d2": "Viza inowanikwa pamuganhu kune dzimwe nyika",
+        "d3": "Pasipoti inoshanda (mwedzi mitanhatu) inodiwa"
+      },
+      "health": {
+        "title": "Utano nekuchengetedzeka",
+        "desc": "Ramba uine utano uye wakachengetedzeka parwendo rwako.",
+        "d1": "Chitupa che-Yellow fever kana zvichidiwa",
+        "d2": "Mishonga yeMalararia inokurudzirwa",
+        "d3": "Inishuwarenzi yerwendo inokurudzirwa"
+      },
+      "payment": {
+        "title": "Mari neKubhadhara",
+        "desc": "Kushandiswa kwemari muZimbabwe.",
+        "d1": "Maitiro emari dzakawanda (USD inoshandiswa kwese)",
+        "d2": "Visa neMastercard zvinogamuchirwa mumahotera makuru",
+        "d3": "Mari yepafoni (EcoCash) inoshandiswa kwazvo"
+      },
+      "time": {
+        "title": "Nguva Yakanaka yekushanya",
+        "desc": "Kusarudza nguva yakanaka kuitira rwendo rwako.",
+        "d1": "Chivabvu kusvika Gumiguru kuitira kuona mhuka",
+        "d2": "Kukadzi kusvika Chivabvu kuitira Victoria Falls",
+        "d3": "Mamiriro ekunze akanaka gore rose"
+      }
+    },
+    "cta_title": "Wagadzirira Kutanga Rwendo rwako?",
+    "cta_button": "Taura neNyanzvi",
+    "cta_subtitle": "Chikwata chedu chinokubatsira kuziva mikana kwayo nekutungamirira parwendo rwako.",
+    "contact_form_title": "Mubvunzo wezveRwendo",
+    "explore_title": "Ongorora Rumwe Ruzivo rweRwendo",
+    "explore_subtitle": "Kuti uwane ruzivo rwakakwana nemitemo yehurumende, shanyira dandemutande reZimbabwe Tourism Authority.",
+    "explore_site": "Shanyira ZTA"
+  },
+  "investment": {
+    "objective_title": "Kudyara Mari Kwakachengetedzeka, Kusimudzira Kukura",
+    "objective_subtitle": "Kubatanidza vadyari mari vekunze nemapurojekiti akasimbiswa, achitsigirwa nehurumende.",
+    "hero": {
+      "badge1": "Zvirongwa zveRBZ",
+      "title1": "Kudyara Mari kwevekunze",
+      "subtitle1": "Kutsigira budiriro yenyika kuburikidza nekubatana kwevekunze.",
+      "rbz_policy": "Ongorora mitemo",
+      "rbz_currency": "Dyara muUSD kana ZiG",
+      "highlight1": "Kukura kweNyika",
+      "badge2": "Masuwe SEZ",
+      "title2": "Dyara muMasuwe SEZ",
+      "subtitle2": "Mikana yezvekushanya pedyo neVictoria Falls.",
+      "highlight2": "Nzvimbo yakanaka",
+      "badge3": "VFEX",
+      "title3": "Musika wemasheya",
+      "subtitle3": "Dyara mumakambani eAfrica akanyoreswa kunze kwenyika.",
+      "highlight3": "Kupinda Pasi rose",
+      "badge4": "Horticulture",
+      "title4": "Goridhe Rinyoro",
+      "subtitle4": "Kutengesa michero kunze kuri kusimudzira upfumi.",
+      "highlight4": "Mubereko Mukuru",
+      "badge5": "Migodhi",
+      "title5": "Upfumi hwezvicherwa",
+      "subtitle5": "Mikana yeGoridhe, Platinum, neLithium.",
+      "highlight5": "Zviwanikwa zvakakosha"
+    },
+    "projects": {
+      "masuwe": {
+        "title": "Masuwe SEZ",
+        "description": "Nzvimbo yezvivakwa zvekushanya pedyo neVictoria Falls.",
+        "highlights": ["Zvakanakira Mitero", "Nzvimbo yekushanya", "Zvivakwa zvakagadzirwa"]
+      },
+      "leather": {
+        "title": "Leather Cluster",
+        "description": "Kugadziriswa nekugadzirwa kwematehwe ekutengesa kunze.",
+        "highlights": ["Kuwedzera Mutengo", "Vashandi vane unyanzvi", "Kutengesa kunze"]
+      },
+      "apparel": {
+        "title": "ZimBrand Supply Chain",
+        "description": "Nzvimbo yekugovera zvipfeko nemajezi emitambo ane zita.",
+        "highlights": ["Rezinesi yepasi rose", "Vashandi vemitambo", "Bhizimusi rinokura"]
+      },
+      "horticulture": {
+        "title": "Purazi reBlueberry",
+        "description": "Kugadzira zvibereko zvinokosha kuitira misika yepasi rose.",
+        "highlights": ["Chitupa cheGlobal Gap", "Kutengesa kunze", "Kushandisa mvura zvakanaka"]
+      },
+      "fintech": {
+        "title": "ZimPay Core",
+        "description": "Tekinoroji yekufambisa mari dzevekunze.",
+        "highlights": ["SaaS Model", "API Yakachengetedzeka", "Kushanda mudunhu"]
+      },
+      "solar": {
+        "title": "Mutare Solar Park",
+        "description": "Magetsi e-5MW akabatana negrid kuitira maindasitiri emuno.",
+        "highlights": ["Utility PPA", "Carbon Credits", "Mubereko wakatsiga"]
+      }
+    },
+    "project_filters": {
+      "all": "Zvese",
+      "tourism": "Zvekushanya",
+      "agriculture": "Zvekurima",
+      "manufacturing": "Kugadzira",
+      "it": "IT neFintech",
+      "energy": "Magetsi",
+      "sector": "Chikamu",
+      "risk_level": "Njodzi",
+      "min_investment": "Mari shoma ",
+      "expected_return": "Mubereko",
+      "conservative": "Pasi",
+      "moderate": "Pakati",
+      "aggressive": "Pamusoro"
+    },
+    "project_card": {
+      "target_amount": "Chinangwa: {{amount}}",
+      "raised": "Yawanikwa: {{amount}}",
+      "view_details": "Ona zvizere",
+      "verified": "Chivakwa chakakasimbiswa",
+      "risk": "Njodzi",
+      "timeline": "Nguva"
+    },
+    "benefits": {
+      "diaspora_network": {
+        "title": "Dandemutande rekunze",
+        "desc": "Shandisa kubatana kwepasi rose kuti upinde mumusika."
+      },
+      "performance_tracking": {
+        "title": "Kutevera Mafambiro",
+        "desc": "Ona kufambira mberi kwepurojekiti nenhamba nenguva chaiyo."
+      },
+      "flexible_investment": {
+        "title": "Kudyara mari nenzira yakasununguka",
+        "desc": "Tanga nemari yaunokwanisa uchienda mberi."
+      },
+      "onesa_ai": {
+        "title": "Ruzivo rwaOnesa AI",
+        "desc": "Kuongorora njodzi neruzivo rwemuno."
+      }
+    },
+    "hdc_title": "Horticultural Development Council",
+    "hdc_subtitle": "Kutarisa mhando nemitemo yezvinotengeswa kunze zvehorticulture.",
+    "hdc_associations": [
+      "Sangano revanori Maavhokadho",
+      "Sangano revanori maBerry",
+      "Sangano revanori maCitrus",
+      "Sangano revanori Kofi",
+      "Sangano revanori maNzungu",
+      "Sangano revanori Tii",
+      "Sangano revatengesi vezvibereko",
+      "Sangano revanori Maruva"
+    ],
+    "ntir_title": "National Trade & Investment Register (NTIR)",
+    "ntir_subtitle": "Gwaro repamutemo remakambani ekutengeserana nekudyara mari muZimbabwe.",
+    "ntir_button": "Tsvaga muDatabase yeNTIR.",
+    "crowdfunding_title": "Mikana yeCrowdfunding",
+    "crowdfunding_subtitle": "Kudyara mari diki mumapurojekiti akasimbiswa kuti uone simba remari yako.",
+    "investment_sectors_title": "Mikana yekudyara Mari iripo",
+    "investment_sectors_subtitle": "Mapurojekiti akasimbiswa anotsigirwa nehurumende.",
+    "cta_title": "Wagadzirira Kudyara Mari?",
+    "cta_subtitle": "Chikwata chedu chinogona kukubatsira kuziva mikana kwayo.",
+    "cta_button": "Taura neNyanzvi",
+    "contact_form_title": "Mubvunzo weKudyara Mari",
+    "explore_title": "Ongorora Rumwe Ruzivo rweKudyara Mari",
+    "explore_subtitle": "Kuti uwane ruzivo rwakakwana, shanyira Zimbabwe Investment and Development Agency.",
+    "explore_site": "Shanyira ZIDA"
+  },
+  "trade": {
+    "hero": {
+      "badge1": "Kutengeserana pasi rose",
+      "title1": "Mukova weKutengeserana weZimbabwe",
+      "subtitle1": "Kubatanidza mabhizimusi emuno nemisika yepasi rose.",
+      "highlight1": "Kukura kweKutengesa Kunze",
+      "badge2": "Kushanda pamwe chete",
+      "title2": "Kubatana kwepasi rose",
+      "subtitle2": "Kuvaka hukama hwakasimba hwekutengeserana nevashandi pasi rose.",
+      "highlight2": "Tandemutande repasi rose",
+      "badge3": "Kutengeserana kwakatsiga",
+      "title3": "Kutengesa nenzira kwayo",
+      "subtitle3": "Kusimudzira kutengeserana kunochengetedza zvakatipoteredza.",
+      "highlight3": "Bhizimusi rine Mutoro",
+      "badge4": "Kukura kweKutengesa",
+      "title4": "Kusimudzira Kutengesa kweNyika",
+      "subtitle4": "Kufambisa upfumi kuburikidza nekutengesa zvinhu zvakasiyana.",
+      "highlight4": "Kubudirira kweUpfumi",
+      "badge5": "Kupinda muMusika weEU",
+      "title5": "Kupinda muMisika yeEurope",
+      "subtitle5": "Kufambisa kupinda kwezvigadzirwa zveZimbabwe mumusika weEU unopa mubereko.",
+      "highlight5": "Kupinda pasina Mutero"
+    },
+    "objective_title": "Cheni dzeukoshi.",
+    "objective_subtitle": "Kuvaka cheni dzeukoshi dzakatsiga dzinotsigira kukura kweupfumi nenguva refu.",
+    "export_roadmap_badge": "Gwara reKutengesa Kunze",
+    "export_roadmap_title": "Maitiro ekutengesa kubva Zimbabwe kuenda kuGermany",
+    "export_roadmap_subtitle": "Nhungamiro yenhanho nenhanho yekufamba nerwendo rwekutengesa kunze.",
+    "export_flow": {
+      "product_approval": {
+        "phase": "Kubvumidzwa kweChigadzirwa",
+        "description": "Zvigadzirwa zvisati zvabvumidzwa neEU (senge Huchi)",
+        "steps": [
+          "Tumira Chirongwa chekutarisa Zvasara (RMP)",
+          "Gadzira maitiro ekuongorora akabvumidzwa neEU",
+          "Nyoresa muEU TRACES System",
+          "Mirira kuwedzerwa pane zvakabvumidzwa neEU"
+        ]
+      },
+      "registration_compliance": {
+        "phase": "Kunyoresa nekutevera Mitemo",
+        "description": "Zvinodiwa kune vese vatengesi",
+        "steps": [
+          "Nyoresa muREX System kuburikidza neZIMRA",
+          "Bvunza ZimTrade ruzivo rwemusika",
+          "Wana zvitupa zvinodiwa",
+          "Pedzisa kunyoresa kutengesa kunze nemasangano akakodzera"
+        ]
+      },
+      "certification_quality": {
+        "phase": "Zvitupa nemhando",
+        "description": "Svitsa mhando inodiwa neEU",
+        "steps": [
+          "Chitupa cheGLOBALG.A.P. & GRASP",
+          "Chitupa cheEU Organic (kana zvichidiwa)",
+          "Kutarisa mhando: Class I, MRL Limits",
+          "Kuongororwa kwekutevera mitemo"
+        ]
+      },
+      "logistics_documentation": {
+        "phase": "Mafambisirwo nemagwaro",
+        "description": "Kugadzirira kutengesa kwekupedzisira",
+        "steps": [
+          "Gadzirira magwaro ekutengesa kunze",
+          "Zvitupa zveutano nezvirimwa",
+          "Invoice ine REX Statement",
+          "Ronga mafambisirwo ane firiji"
+        ]
+      }
+    },
+    "export_sectors_badge": "Zvikamu",
+    "export_sectors_title": "Zvikamu zvikuru zvekutengesa kunze",
+    "export_sectors_subtitle": "Tsvaga zvikamu zvikuru zviri kufambisa upfumi hweZimbabwe hwekutengesa kunze.",
+    "sectors": {
+      "horticulture": {
+        "name": "Horticulture",
+        "description": "Zvibereko zvinyoro, maruva, nemuriwo weorganic wepasi rose.",
+        "opportunities": [
+          "Misika yeorganic yeEU",
+          "Kutengesera kuMiddle East",
+          "Kutengeserana mudunhu reSADC"
+        ]
+      },
+      "leather_products": {
+        "name": "Zvigadzirwa zveMatehwe",
+        "description": "Matehwe emhando yepamusoro, shangu, nezvimwe zvakagadzirwa nehunyanzvi hweAfrica.",
+        "opportunities": [
+          "Misika yemafashoni eEurope",
+          "Zvigadzirwa zvemutengo mukuru",
+          "Kutengesa kuhurumende"
+        ]
+      },
+      "arts_crafts": {
+        "name": "Mabasa emaoko",
+        "description": "Zvivezwa zvematombo, zvuma, tswanda, nemamwe mabasa emaoko.",
+        "opportunities": [
+          "Misika yekushanya",
+          "Kutengesa tsika nemagariro",
+          "Kutengeserana nenzira kwayo (Fair trade)"
+        ]
+      },
+      "minerals_mining": {
+        "name": "Zvicherwa neMigodhi",
+        "description": "Zvigadzirwa zvemunyu zvakawedzerwa mutengo, matombo anokosha, nezvicherwa zvakagadziriswa.",
+        "opportunities": [
+          "Kutengesa mumaindasitiri",
+          "Chikamu chezvishongo (Jewelry)",
+          "Zvicherwa zvetekinoroji"
+        ]
+      }
+    },
+    "zimtrade_programs_badge": "Zvirongwa",
+    "zimtrade_programs_title": "Zvirongwa zvekusimudzira kutengesa zveZimTrade",
+    "zimtrade_programs_subtitle": "Zvirongwa zvakagadzirirwa kupa mabhizimusi emuZimbabwe simba.",
+    "programs": {
+      "eagles_nest": {
+        "title": "Eagles Nest",
+        "description": "Chirongwa chevechidiki kuti vave vatengesi vezvinhu kunze munguva inotevera.",
+        "target": "Vanamuzvinabhizimusi vechidiki (18-35)",
+        "benefits": [
+          "Kudzidziswa kutengesa kunze",
+          "Kupihwa mazano",
+          "Kupinda mumusika",
+          "Rubatsiro rwemari"
+        ]
+      },
+      "next_she_exporter": {
+        "title": "Next She Exporter",
+        "description": "Kupa mabhizimusi emadzimai simba neruzivo rwekutengesa kunze.",
+        "target": "Mabhizimusi emadzimai",
+        "benefits": [
+          "Kuvaka unyanzvi",
+          "Kubatana nevamwe",
+          "Nzendo dzekutengeserana",
+          "Rubatsiro rwezvitupa"
+        ]
+      },
+      "shop_at_zim": {
+        "title": "Shop At Zim",
+        "description": "Chikuva che-e-commerce chinobatanidza vatengesi vemuZimbabwe nevatengi vepasi rose.",
+        "target": "Mabhizimusi akagadzirira kutengesa kunze",
+        "benefits": [
+          "Musika wepa dandemutande",
+          "Kubatana nevatengi",
+          "Maitiro ekubhadhara",
+          "Rubatsiro rwe-logistics"
+        ]
+      }
+    },
+    "diaspora_role_badge": "Basa revekunze",
+    "diaspora_role_title": "Basa rako mukukura kweKutengesa Kunze",
+    "diaspora_role_subtitle": "Zvizvarwa zveZimbabwe zviri kunze kwenyika zvine basa guru mukusimudzira kutengesa kunze.",
+    "diaspora_roles": {
+      "market_intelligence": {
+        "title": "Ruzivo rweMusika",
+        "description": "Ipai ruzivo nezvezvinodiwa nevatengi, zviri kuitika, nemikana munyika mamuri."
+      },
+      "buyer_connections": {
+        "title": "Kubatanidza nevatengi",
+        "description": "Suma vatengesi vemuZimbabwe kuvashambadzi nevagoveri vari mudandemutande renyu."
+      },
+      "quality_feedback": {
+        "title": "Mhinduro pamhando",
+        "description": "Ipai mhinduro pamusoro pemhando yezvigadzirwa nemarongero azvo."
+      },
+      "brand_ambassadors": {
+        "title": "Vamiriri veMazita (Brands)",
+        "description": "Simudzira zvigadzirwa nemazita emuZimbabwe mumisika yepasi rose."
+      }
+    },
+    "cta_title": "Wagadzirira Kutengesa Kunze?",
+    "cta_subtitle": "Nyanzvi dzedu dzekutengeserana dzinogona kukubatsira nekukubatanidza neruzivo nevashandi kwavo.",
+    "cta_button": "Taura neNyanzvi",
+    "contact_form_title": "Mubvunzo weKutengeserana",
+    "explore_title": "Ongorora Rumwe Ruzivo rweKutengeserana",
+    "explore_subtitle": "Kuti uwane ruzivo rwakakwana, shanyira ZimTrade.",
+    "explore_site": "Shanyira ZimTrade"
+  },
+  "data": {
+    "hero": {
+      "badge1": "Ruzivo rweUpfumi",
+      "title1": "Kufambisa Kukura kuburikidza ne ",
+      "highlight1": "Nhamba",
+      "subtitle1": "Kuvhura mikana yeupfumi hweZimbabwe neruzivo rwakakwana rwenhamba.",
+      "desc1": "Ongorora zviga zveupfumi, mashandiro ezvikamu, nesimba revekunze pakusimudzira nyika.",
+      "economic_data": "Ongorora Nhamba dzeUpfumi",
+      "sector": "Nhamba dzeMashandiro eZvikamu",
+      "badge2": "Simba revekunze",
+      "title2": "Mari dzevekunze: Musimboti we ",
+      "highlight2": "Kukura",
+      "subtitle2": "Mari dzinotumirwa nevekumusha dzakakosha kuitira kupa mari yekunze nekusimudzira upfumi.",
+      "desc2": "Tsvaga kuti mari idzi dziri kubatsira sei muzvikamu zvakasiyana, kubva kudzidzo kusvika kudzimba.",
+      "badge3": "Zvirongwa zvekudyara",
+      "title3": "Mikana yeKudyara Mari ",
+      "highlight3": "Yakarongwa",
+      "subtitle3": "Ziva zvikamu nemapurojekiti ane mukana mukuru ari kukwezva vadyari mari.",
+      "badge4": "Mashandiro eKutengesa",
+      "title4": "Kusimudzira Kutengesa kwe ",
+      "highlight4": "Nyika",
+      "subtitle4": "Tevera kukura kwekutengesa kweZimbabwe kunze nenzira dzekupinda mumusika.",
+      "badge5": "Simba reMitemo",
+      "title5": "Kugadzwa kweMitemo ine ",
+      "highlight5": "Ruzivo",
+      "subtitle5": "Ruzivo rwenhamba runotsigira kurongwa kweupfumi nembairo yemitemo."
+    },
+    "education": "Dzidzo",
+    "housing": "Dzimba nekuvaka",
+    "health_care": "Zveutano",
+    "business_investment": "Kudyara muBhizimusi",
+    "food": "Zvekudya nezvinodiwa",
+    "objective_title": "Ruzivo runobva kuNhamba",
+    "objective_subtitle": "Kupa ruzivo rwakakwana runobatsira pakuita sarudzo dzine hungwaru.",
+    "overview_title": "Zviga zvekuziva Upfumi",
+    "overview_subtitle": "Zviga zvikuru nezvimwe zvinoratidza mashandiro. Nhamba dze2025 nezvinofungidzirwa mu2026.",
+    "overview": {
+      "gdp": {
+        "title": "GDP (2026 Projection)",
+        "subtitle": " % Kukura",
+        "description": "Zvigadzirwa zvemuZimbabwe zvese (GDP)"
+      },
+      "gdp_growth": {
+        "title": "GDP Kukura Live",
+        "subtitle": " Nhamba dzeIye zvino",
+        "description": "Kukura kwe-GDP tichitarisa mabasa ari kuitwa iye zvino"
+      },
+      "remittances": {
+        "title": "Mari dzevekunze",
+        "subtitle": "Mutungamiri weForex",
+        "description": "Mari dzinotumirwa pagore nevese vari kunze kwenyika"
+      },
+      "exports": {
+        "title": "Kutengesa Kunze kwese",
+        "subtitle": "Kutengeserana Pasi rose",
+        "description": "Mutengo wese wezvinhu zvinotengeswa kunze neZimbabwe"
+      },
+      "mining_revenue": {
+        "title": "Mari yeMigodhi",
+        "subtitle": "Zvicherwa zvakakosha",
+        "description": "Mari yese inobva muchikamu chevemigodhi"
+      },
+      "manufacturing": {
+        "title": "Kugadzira",
+        "subtitle": "Zvinobuda mufekitari",
+        "description": "Zvakapiwa neindasitiri yekugadzira mu-GDP"
+      },
+      "tourism_revenue": {
+        "title": "Mari yeKushanya",
+        "subtitle": "Mari yePagore",
+        "description": "Mari inowanikwa muchikamu chezvekushanya pagore"
+      },
+      "agriculture": {
+        "title": "Kutengesa zveKurima",
+        "subtitle": "Mutengo weKutengesa",
+        "description": "Mutengo wese wezvibereko zvinotengeswa kunze"
+      }
+    },
+    "gdp_growth_rate": "Mwero wekukura kwe-GDP",
+    "gdp_growth_trajectory": "Gwara rekukura kwe-GDP",
+    "gdp_growth_history": "Kukura kweupfumi hweZimbabwe kubva 2021 kusvika 2025",
+    "gdp_data_source": "Kwabva: World Bank, IMF, ZIMSTAT",
+    "sectoral_data_mining_title": "ZveMigodhi",
+    "sectoral_data_mining_subtitle": "Upfumi hwezvicherwa muZimbabwe huri kupa madhora mabhiriyoni $5.56 kupfumi.",
+    "sectoral_data_mining_contribution": "Mugove",
+    "sectoral_data_mining_revenue": "Mari",
+    "sectoral_data_badge": "Mashandiro eZvikamu",
+    "sectoral_data_title": "GDP Kukura neChikamu",
+    "sectoral_data_breakdown": "Kurongwa kwemashandiro eimwe neimwe mbiru yeupfumi pakukura kwenyika.",
+    "sectoral_data_projections": "Kufungidzira Kukura",
+    "sectoral_data_gdp_by_sector": " GDP neChikamu",
+    "diaspora_remittance_impact_badge": "Simba revekunze",
+    "diaspora_remittance_impact_title": "Simba reMari dzevekunze",
+    "diaspora_remittance_impact_subtitle": "Kunzwisisa rubatsiro rwakanyanya rwevekunze kuupfumi hwenyika.",
+    "diaspora_remittance_value": "Mari dzePagore",
+    "diaspora_number_value": "Vekunze Pasi rose",
+    "diaspora_investment_potential": "Mikana yekudyara mari",
+    "diaspora_distribution": "Kupararira kwevekunze pasi rose",
+    "diaspora_residence": "Kunogara veZimbabwe pasi rose",
+    "diaspora_residence_country": "Dunhu/Nyika",
+    "diaspora_population": "Vanhu",
+    "diaspora_percentage": "Chidimbu (%)",
+    "data_disclaimer": "* Nhamba idzi dzinofungidzirwa kubva ku-RBZ, ZIMSTAT, World Bank, neIMF. Nhamba dze-live dzinovandudzwa nenguva.",
+    "regional_breakdown_title": "Kugoverwa kwevekunze mumatunhu",
+    "regional_breakdown_subtitle": "Kugoverwa kwezvizvarwa zveZimbabwe mumatunhu akakosha.",
+    "regional_breakdown": {
+      "south_africa": {
+        "region": "South Africa",
+        "population": "1.5 - 2.0 Miriyoni"
+      },
+      "united_kingdom": {
+        "region": "United Kingdom",
+        "population": "500K - 1.0 Miriyoni"
+      },
+      "botswana": {
+        "region": "Botswana",
+        "population": "500K+"
+      },
+      "united_states": {
+        "region": "United States",
+        "population": "300K - 500K"
+      },
+      "australia": {
+        "region": "Australia",
+        "population": "50K - 100K"
+      },
+      "canada": {
+        "region": "Canada",
+        "population": "50K - 100K"
+      },
+      "germany": {
+        "region": "Germany",
+        "population": "30K - 50K"
+      },
+      "other_countries": {
+        "region": "Dzimwe Nyika",
+        "population": "200K+"
+      }
+    },
+    "remittance_impact_title": "Simba reMari neChikamu",
+    "remittance_impact_subtitle": "Mabatsiriro ari kuita mari dzevekunze muzvikamu zvakasiyana muZimbabwe.",
+    "remittance_impact": {
+      "education": {
+        "sector": "Dzidzo"
+      },
+      "housing_construction": {
+        "sector": "Dzimba nekuvaka"
+      },
+      "healthcare": {
+        "sector": "Zveutano"
+      },
+      "business_investment": {
+        "sector": "Kudyara muBhizimusi"
+      },
+      "food_basic_needs": {
+        "sector": "Zvekudya nezvinodiwa"
+      }
+    },
+    "cta_title": "Unoda ruzivo rwakadzama?",
+    "cta_button": "Kumbira Report rakakosha"
+  },
+  "success": {
+    "hero": {
+      "badge1": "Nhoroondo dzeBasa",
+      "title1": "Vekunze vachifambisa ",
+      "highlight1": "Sanduko",
+      "subtitle1": "Mienzaniso chaiyo yekuti vekunze vari kuita mutsauko unooneka sei.",
+      "badge2": "Vandudzo",
+      "title2": "Kubudirira kweTekinoroji neBhizimusi ",
+      "highlight2": "Kubudirira",
+      "subtitle2": "Kuratidza mabhizimusi matsva ari kufambiswa nehunyanzvi hwevekunze.",
+      "badge3": "Kuchinjana Tsika",
+      "title3": "Chengetedzo yeNhaka kuburikidza ne ",
+      "highlight3": "Kutengeserana",
+      "subtitle3": "Zvirongwa zvinounza tsika dzeZimbabwe padanho repasi rose.",
+      "badge4": "Budiriro Yakatsiga",
+      "title4": "Zvirongwa zvakasvibira ne ",
+      "highlight4": "Kukura kweNharaunda",
+      "subtitle4": "Nhoroondo dzekuchengetedza zvakatipoteredza mumatunhu ekumashure.",
+      "badge5": "Kushandiswa kweZviwanikwa",
+      "title5": "Kuvhura Mikana kuburikidza ne ",
+      "highlight5": "Kudyara Mari",
+      "subtitle5": "Kuti mari yevekunze iri kuchinja sei zvikamu zvakakosha."
+    },
+    "objective_title": "Simba",
+    "objective_subtitle": "Kuratidza mutsauko unooneka wekubatana kwevekunze muzvikamu zvakasiyana munyika.",
+    "stories": {
+      "leather_goods": {
+        "title": "Kubudirira kweKutengesa Matehwe",
+        "category": "Kutengesa Kunze",
+        "story": "Chikwata chenyanzvi dzevekunze kuGermany chakabatanidza vagadziri vematehwe vemuZimbabwe nevatengesi vekuEurope. Vakabatsira nekuziva zvinodiwa nevatengi kuGermany nekusuma vatengi vatsva.",
+        "testimonial": "Chikuva cheZIGD chakatibatanidza nevekukunze vainzwisisa hunyanzvi hwedu nezvinodiwa kuEurope.",
+        "author": "Tendai Moyo",
+        "role": "Managing Director, Zimbabwe Leather Collective"
+      },
+      "horticulture_breakthrough": {
+        "title": "Budiriro yeOrganic Horticulture",
+        "category": "Kutengesa Kunze",
+        "story": "Sangano revamirimi vadiki rakawana chitupa cheEU organic nekubatsirwa nenyanzvi dzekurima dziri kunze kwenyika. Iye zvino vave kutengesera muriwo kumasupermarket ekuEurope.",
+        "testimonial": "Taisambofunga kuti purazi redu diki ringasvika pamatanho eEurope. Nyanzvi dzevekunze dzakatibatsira padanho rega rega.",
+        "author": "Grace Ncube",
+        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
+      },
+      "tourism_lodge": {
+        "title": "Kudyara mari mune zveKushanya",
+        "category": "Kudyara Mari",
+        "story": "Kuburikidza ne-crowdfunding yeZIGD, vadyari mari 280 vekunze vakakwanisa kuunganidza $500K yekuvaka eco-lodge pedyo neVictoria Falls.",
+        "testimonial": "Ndakadyara $2,000 ndiri kuUK iye zvino ndava umwe wevene velodge yakanaka kumusha kwangu.",
+        "author": "Simba Chikwanha",
+        "role": "Vadyari mari vekunze, London"
+      }
+    },
+    "impact_metrics": {
+      "economic_impact": {
+        "label": "Simba rose reUpfumi",
+        "description": "Mari yakawanikwa munhoroondo dzose"
+      },
+      "jobs_created": {
+        "label": "Mabasa akagadzirwa",
+        "description": "Mikana yemabasa kune vemuZimbabwe"
+      },
+      "diaspora_investors": {
+        "label": "Vadyari mari vekunze",
+        "description": "Vadyari mari vari kuita mabasa mumapurojekiti"
+      },
+      "markets_accessed": {
+        "label": "Misika yakasvikwa",
+        "description": "Misika yepasi rose yakasvikwa"
+      }
+    },
+    "stories_badge": "Nhoroondo",
+    "stories_title": "Nhoroondo dzeKubudirira",
+    "stories_subtitle": "Ongorora zvakaitwa nevese vari kunze kwenyika muzvikamu zvakasiyana.",
+    "story_card": {
+      "impact": "Simba:",
+      "revenue": "Mari:",
+      "jobs": "Mabasa:",
+      "markets": "Misika:",
+      "investors": "Vadyari mari:",
+      "testimonial_by": "— {{author}}, {{role}}",
+      "view_story": "Ona Nhoroondo"
+    },
+    "impact_metrics_badge": "Nhamba",
+    "impact_metrics_title": "Simba reKubatana",
+    "impact_metrics_subtitle": "Mhedzisiro yekubatana kwevekunze munhoroondo dzose dzabuda.",
+    "cta_title": "Une Nhoroondo yaunoda Kutaura here?",
+    "cta_subtitle": "Tiri kutsvaga nhoroondo dzinokurudzira dzevekunze. Taura yako nesu!",
+    "cta_button": "Ipa Nhoroondo yako"
+  },
+  "common": {
+    "explore_now": "Ongorora Iye zvino",
+    "learn_more": "Dzidza Zvimwe",
+    "get_started": "Tanga Iye zvino",
+    "invest_now": "Dyara Mari nhasi",
+    "contact_us": "Taura Nesu",
+    "view_all": "Ona Zvese",
+    "back_to_top": "Dzokera Kumusoro",
+    "loading": "Zvichitakura...",
+    "error": "Pane chakanganisika",
+    "success": "Zvebudirira!",
+    "verified": "Zvakakasimbiswa",
+    "target": "Chinangwa",
+    "raised": "Yawanikwa",
+    "investors": "Vadyari mari",
+    "min_investment": "Mari Shoma",
+    "expected_return": "Mubereko unofungidzirwa",
+    "timeline": "Nguva",
+    "status": "Mamiriro",
+    "risk_level": "Njodzi",
+    "highlights": "Zvakakosha",
+    "share": "Govera",
+    "save": "Chengetedza"
+  },
+  "contact_form": {
+    "get_started": "Bata nesu",
+    "full_name": "Zita rakazara",
+    "email": "E-mail",
+    "phone": "Nhamba dzeRunhare",
+    "subject": "Dingindira",
+    "message": "Mashoko",
+    "message_placeholder": "Nyora mashoko ako pano...",
+    "select_subject": "Sarudza dingindira",
+    "send": "Tumira Shoko",
+    "sending": "Zvichitumirwa...",
+    "success_msg": "Shoko ratumirwa zvakanaka!",
+    "description": "Une mibvunzo here? Zadza fomu riri pasi apa tichakubata munguva pfupi.",
+    "required_field": "Zvinodiwa *"
+  },
+  "calculator": {
+    "title": "Muchina wekuverenga Mubereko",
+    "desc": "Verenga mubereko waunogona kuwana pakudyara mari yako.",
+    "amount": "Mari yaunodyara",
+    "timeline": "Nguva yekudyara",
+    "return_rate": "Mubereko wePagore unofungidzirwa",
+    "total_investment": "Mari yese yakadyarwa",
+    "total_returns": "Mubereko wese",
+    "final_value": "Mari yaunopedzisira unayo",
+    "projected_growth": "Kukura kunofungidzirwa",
+    "year": "Gore",
+    "annual_return": "Mubereko wepagore",
+    "disclaimer": "Ziva: Muchina uyu unopa fungidziro chete. Mashandiro echokwadi anogona kusiyana."
+  },
+  "shop": {
+    "vision": "Kuvaka mukova wepasi rose unobatanidza tsika dzeZimbabwe, zvigadzirwa, kushanya, nekudyara mari.",
+    "our_vision": "Chiratidzo chedu",
+    "collections": "Zvigadzirwa",
+    "title": "Hunyanzvi hweZimbabwe hwakasimbiswa",
+    "desc": "Kubva pazvipfeko zviri pamutemo kusvika pamabasa emaoko, chimwe nechimwe chine nhoroondo yenhabvu nemhando.",
+    "sports_title": "Mitambo yeNyika",
+    "sports_desc": "Zvipfeko zviri pamutemo zvema-Sables, Chevrons, nema-Warriors.",
+    "sports_mech_soccer": "Kit yenhabvu.",
+    "sports_mech_rugby": "Kit yerugby.",
+    "sports_mech_cricket": "Kit yecricket.",
+    "crafts_title": "Mabasa emaoko",
+    "crafts_desc": "Kutsigira vashandi vadiki mumatunhu nemasangano emadzimai.",
+    "food_title": "Zvekudya neZvekumusha",
+    "food_desc": "Kunaka kwemusha, kutevedzera mitemo yeEU.",
+    "notfound": {
+      "title": "404",
+      "subtitle": "Peji harina kuwanikwa",
+      "message": "Ndine urombo, peji rauri kutsvaga haripo.",
+      "message2": "Rinogona kunge rakachinjwa nzvimbo kana kudzimwa.",
+      "go_home": "Enda Kumba"
     }
   }
 }

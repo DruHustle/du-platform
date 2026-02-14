@@ -12,7 +12,7 @@ import { Mail, Phone, User, MessageSquare } from "lucide-react";
 interface ContactFormProps {
   title?: string;
   description?: string;
-  module: "export" | "tourism" | "investment" | "trade" | "success-story";
+  module: "general" | "technology" | "export" | "tourism" | "investment" | "trade" | "data" | "success";
 }
 
 export default function ContactForm({ title, description, module }: ContactFormProps) {
@@ -27,6 +27,27 @@ export default function ContactForm({ title, description, module }: ContactFormP
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subjectOptions = {
+
+      general: [ 
+        "General Inquiry",
+        "Platform Feedback",
+        "Request",
+        "Partnership Inquiry"
+      ],
+    technology: [
+      "AI Integration Inquiry",
+      "Technology Partnership",
+      "Data Solutions",
+      "Digital Transformation",
+      "General Inquiry"
+    ],  
+    data: [
+      "Data Analytics Inquiry",
+      "Data Privacy",
+      "Data Governance",
+      "Data Integration",
+      "General Inquiry"
+    ],
     export: [
       "German Market Requirements",
       "Certification Support",
@@ -55,13 +76,14 @@ export default function ContactForm({ title, description, module }: ContactFormP
       "Partnership Opportunities",
       "General Inquiry"
     ],
-    "success-story": [
+
+    success: [
       "Share Your Story",
       "Project Showcase",
       "Success Metrics",
       "Partnership Inquiry",
       "General Inquiry"
-    ]
+    ],
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +112,10 @@ export default function ContactForm({ title, description, module }: ContactFormP
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const currentOptions = subjectOptions[module] || ["General Inquiry"];
+  const currentOptions =
+    module in subjectOptions
+      ? subjectOptions[module as keyof typeof subjectOptions]
+      : ["General Inquiry"];
 
   return (
     <Card className="border-t-4 border-t-primary">
@@ -99,7 +124,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
           {title || t('contact_form.get_started')}
         </CardTitle>
         <CardDescription>
-          {description || t('contact_form.desc')}
+          {description || t('contact_form.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -185,7 +210,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
             </Label>
             <Textarea
               id="message"
-              placeholder="Tell us more about your inquiry..."
+              placeholder={t('contact_form.message_placeholder')}
               rows={6}
               value={formData.message}
               onChange={(e) => handleChange("message", e.target.value)}
