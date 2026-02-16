@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "welcome_back": "Wamukelekile futhi",
+    "email": "Ikheli ye-Imeyili",
+    "password": "Iphasivadi",
+    "login": "Ngena",
+    "create_account": "Vula i-akhawunti",
+    "no_account": "Haula i-akhawunti?",
+    "register_now": "Bhalisa khonamanje"
+  }
+}

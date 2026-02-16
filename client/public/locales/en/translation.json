@@ -2,7 +2,7 @@
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
   "about": "About",
-  "about_us": "Connecting Zimbabwe\"s global diaspora with opportunities in trade, tourism, and investment.",
+  "about_us": "Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.",
   "select_lang": "Select Language",
   "account": "Account",
   "login": "Login",
@@ -19,6 +19,27 @@
   "quick_links": "Quick Links",
   "partners": "Partners",
   "contact": "Contact",
+
+
+  "auth": {
+    "create_account": "Join ZIGD Platform",
+    "register_subtitle": "Start your journey toward impactful diaspora collaboration.",
+    "full_name": "Full Name",
+    "email": "Email Address",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "terms_agreement": "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance.",
+    "have_account": "Already have an account?",
+    "login_here": "Login Here",
+    "welcome_back": "Welcome Back",
+    "login_subtitle": "Access your digital gateway to Zimbabwe.",
+    "forgot_password": "Forgot Password?",
+    "login": "Login",
+    "no_account": "Don't have an account?",
+    "register_now": "Register Now",
+    "close": "Close"
+  },
+
   "nav": {
     "home": "Home",
     "export": "Export Hub",
@@ -75,6 +96,7 @@
     "inquiry_title": "General Inquiry",
     "ready_to_connect_title": "Ready to Connect?",
     "ready_to_connect_subtitle": "Join thousands of diaspora members building bridges for economic development.",
+    
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
     "modules": {
@@ -125,6 +147,10 @@
       "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
       "highlight3": "Data-Driven Success"
     },
+
+    "objective_title":" Tech Enabled",
+    "objective_subtitle": "Leveraging AI and digital solutions to seamlessly connect Zimbabwe and the diaspora, driving collaboration, sustainable development, and long-term economic growth.",
+
     "explore_onesa": "Explore Onesa AI",
     "onesa_badge": "Meet Onesa AI",
     "onesa_title": "Illuminating your Way",
@@ -530,6 +556,8 @@
       }
     },
 
+    "objective_title":"Our Vision",
+    "objective_subtitle": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
     "cta_title": "Ready to Start Your Adventure?",
     "cta_button": "Connect with an Expert",
     "cta_subtitle": "Our travel team can help you identify the right opportunities and guide you through the process.",
@@ -653,13 +681,21 @@
       "Export Produce Association",
       "Flower Growers Association"
     ],
+
+    "database_title": "Trade & Investment Databases and Registries",
+    "database_subtitle": "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities.",
+
     "ntir_title": "National Trade & Investment Register (NTIR)",
     "ntir_subtitle": "Official registry of verified trade and investment entities in Zimbabwe.",
     "ntir_button": "Search NTIR Database.",
     "crowdfunding_title": "Crowdfunding Opportunities",
     "crowdfunding_subtitle": " Micro-investment in vetted projects with smaller amounts and see real impact.",
-    "investment_sectors_title": "Active Investment Opportunities",
-    "investment_sectors_subtitle": "Carefully vetted projects with government support and transparent tracking.",
+    "sectors_title": "Active Investment Opportunities",
+    "sectors_subtitle": "Carefully vetted projects with government support and transparent tracking.",
+
+    "calculator_title": "Smart Investment Calculator",
+    "calculator_subtitle": "Forecast returns using real market and project data",
+
     "cta_title": "Ready to Invest?",
     "cta_subtitle": "Our investment team can help you identify the right opportunities and guide you through the process.",
     "cta_button": "Connect with an Expert",
@@ -963,7 +999,7 @@
     "diaspora_residence_country": "Region/Country", 
     "diaspora_population": "Population",
     "diaspora_percentage": "Percentage",
-    "data_disclaimer": "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API.", 
+    "disclaimer": "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API.", 
 
 
     "regional_breakdown_title": "Diaspora Regional Breakdown",
@@ -1021,6 +1057,23 @@
         "sector": "Food & Basic Needs"
       }
     },
+
+
+    "investment_calculator_proInvestmentModeler": "Pro Investment Modeler",
+    "investment_calculator_stressTest": "Stress Test",
+    "investment_calculator_principal": "Principal",
+    "investment_calculator_taxRate": "Tax Rate ",
+    "investment_calculator_insurance/Year": "Insurance/Year",    
+    "investment_calculator_returns": "Returns",
+    "investment_calculator_netProfit": "Net Profit",
+    "investment_calculator_final": "Final",
+     "investment_calculator_fees": "Fees",
+     "investment_calculator_year": "Year",
+    "investment_calculator_shockIncluded": "Shock Included",
+    "investment_calculator_note": "Note",
+    "investment_calculator_disclaimer": "This calculator provides estimates based on assumed constant returns. Actual investment performance may vary. Past performance does not guarantee future results. Please consult with financial advisors and review project details before investing.",    
+
+
     "cta_title": "Need More In-depth Data?",
     "cta_subtitle": "Access our comprehensive reports and custom data analytics services for your specific needs.",
     "cta_button": "Request Custom Report"
@@ -1158,6 +1211,8 @@
     "cta_button": "Share Your Story"
   },
   "common": {
+
+    "coming_soon": "We are building intelligent solutions designed to transform how you connect, work, and grow using advanced AI technology.",
     "explore_now": "Explore Now",
     "learn_more": "Learn More",
     "get_started": "Get Started",
@@ -1212,8 +1267,7 @@
     "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
   },
   "shop": {
-    "vision": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
-    "our_vision": "Our Vision",
+
     "collections": "Collections",
     "title": "Curated Zimbabwean Excellence",
     "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",

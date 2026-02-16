@@ -9,6 +9,7 @@ import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truc
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import SubPageHero from "@/components/SubPageHero";
 
 export default function Trade() {
   const { t } = useTranslation();
@@ -20,6 +21,7 @@ export default function Trade() {
     {
       image: "/images/african_trade.jpg",
       badge: t("trade.hero.badge1"),
+      badgeIcon: Users,
       title: t("trade.hero.title1"),
       subtitle: t("trade.hero.subtitle1"),
       highlight: t("trade.hero.highlight1")
@@ -27,6 +29,7 @@ export default function Trade() {
     {
       image: "/images/horticulture.jpg",
       badge: t("trade.hero.badge2"),
+      badgeIcon: Package,
       title: t("trade.hero.title2"),
       subtitle: t("trade.hero.subtitle2"),
       highlight: t("trade.hero.highlight2")
@@ -34,6 +37,7 @@ export default function Trade() {
     {
       image: "/images/manufacturing_factory.jpg",
       badge: t("trade.hero.badge3"),
+      badgeIcon: TrendingUp,
       title: t("trade.hero.title3"),
       subtitle: t("trade.hero.subtitle3"),
       highlight: t("trade.hero.highlight3")
@@ -41,6 +45,7 @@ export default function Trade() {
     {
       image: "/images/export_port1.jpg",
       badge: t("trade.hero.badge4"),
+      badgeIcon: FileCheck,
       title: t("trade.hero.title4"),
       subtitle: t("trade.hero.subtitle4"),
       highlight: t("trade.hero.highlight4")
@@ -48,6 +53,7 @@ export default function Trade() {
     {
       image: "/images/eu_flags.png",
       badge: t("trade.hero.badge5"),
+      badgeIcon: Globe,
       title: t("trade.hero.title5"),
       subtitle: t("trade.hero.subtitle5"),
       highlight: t("trade.hero.highlight5")
@@ -60,6 +66,12 @@ export default function Trade() {
     }, 5000);
     return () => clearInterval(heroTimer);
   }, [heroSlides.length]);
+
+  const introData = {
+  icon: Handshake, // 
+  title: t('trade.objective_title'),
+  description:  t('trade.objective_subtitle')
+ };
 
   const exportSectors = [
     {
@@ -169,316 +181,171 @@ export default function Trade() {
 
   return (
     <Layout>
-    {/* Hero Carousel Section */}
-    <section className="relative min-h-[500px] md:h-[600px] flex items-center overflow-hidden">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={currentHeroIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <motion.div 
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')` }}
-            />
-            {/* Subtle lateral gradient for text legibility while maintaining the "No Overlay" feel */}
-            <div className="absolute inset-0 bg-gradient-to-r from-zim-black/70 via-zim-black/30 to-transparent" />
-          </motion.div>
-        </AnimatePresence>
+
+      {/* Hero Section */}
+      <section id="hero" >
+        <SubPageHero 
+          heroSlides={heroSlides} 
+          intro={introData} 
+          />
+      </section>
+
+     {/* Export Process Flow Section - Glassy UI Upgrade */}
+      <section id="export-roadmap" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        {/* Ambient background glow */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         
-        <div className="relative z-10 container mx-auto px-6 md:px-12 py-12">
-          <AnimatePresence initial={false} mode="wait">
-            <motion.div
-              key={`content-${currentHeroIndex}`}
-              initial={{ x: -30, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 20, opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl text-left"
-            >
-              {/* Updated Icon & Badge to match Template 1 */}
-              <div className="flex items-center gap-3 mb-6 slide-up justify-start">
-                <Globe className="h-8 w-8 text-zim-gold" />
-                <Badge className="bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-                  {heroSlides[currentHeroIndex]?.badge}
-                </Badge>
-              </div>
-              
-              {/* Heading Scale: Text-5xl to 7xl */}
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 hero-text-shadow leading-tight text-white slide-up">
-                {heroSlides[currentHeroIndex]?.title}
-              </h1>
-              
-              {/* Subtitle Scale: Text-xl to 2xl */}
-              <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed font-medium max-w-3xl slide-up">
-                {heroSlides[currentHeroIndex]?.subtitle}
-              </p>
-
-              {/* Highlight Line with Consistent Iconography */}
-              <div className="flex items-center gap-3 mb-8 slide-up">
-                <TrendingUp className="h-7 w-7 text-zim-gold" />
-                <span className="text-2xl font-bold text-zim-gold drop-shadow-md">
-                  {heroSlides[currentHeroIndex]?.highlight}
-                </span>
-              </div>
-              
-              {/* Optional: Add buttons here if needed to maintain absolute consistency across all sections */}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Carousel Indicators - Left Aligned */}
-        <div className="absolute bottom-12 left-6 md:left-12 flex gap-3 z-20">
-          {heroSlides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentHeroIndex(idx)}
-              className={`h-1.5 transition-all duration-300 rounded-full ${
-                idx === currentHeroIndex ? 'bg-zim-gold w-12' : 'bg-white/40 w-4 hover:bg-white/70'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-      </section>
-
-     {/* Trade Introduction */}
-      <section id="trade-info" className="py-0 bg-background relative overflow-hidden">
-        <div className="container relative z-10">
-          <div className="max-w-4xl mx-auto">
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              whileInView={{ opacity: 1, y: 0 }} 
-              viewport={{ once: true }}
-              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
-              
-              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
-              <Handshake className="h-8 w-8 text-zim-gold mx-auto mb-1" />
-                
-                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
-                  {t('trade.objective_subtitle')}
-                </h3>
-                
-                <div className="flex items-center justify-center gap-4">
-                  <div className="h-px w-8 bg-zim-gold/50" />
-                  
-                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                    {t('trade.objective_title')}
-                  </p>
-                  
-                  <div className="h-px w-8 bg-zim-gold/50" />
-                </div>
-              </div>
-            </motion.div>
-                    
-          </div>
-        </div>
-      </section>
-
-      {/* Export Process Flow Section */}
-      <section id="export-roadmap" className="py-10 bg-gradient-to-b from-muted/30 to-background scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-10">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              {t("trade.export_roadmap_badge")}
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.export_roadmap_title")}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.export_roadmap_subtitle")}</p>
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.export_roadmap_title")}</h2>
+            <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t("trade.export_roadmap_subtitle")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {exportFlowSteps.map((step, index) => {
               const Icon = step.icon;
               return (
-                <Card key={index} className={`relative p-6 border-t-4 ${step.color} shadow-lg hover:shadow-xl transition-shadow duration-300`}>
-                  <div className="flex items-center mb-4">
-                    <div className="flex-shrink-0 h-12 w-12 rounded-full bg-muted flex items-center justify-center mr-4">
-                      <Icon className="h-6 w-6 text-primary" />
+                <motion.div 
+                  key={index} 
+                  initial={{ opacity: 0, y: 20 }} 
+                  whileInView={{ opacity: 1, y: 0 }} 
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="relative group"
+                >
+                  <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-white/[0.06]">
+                    {/* The Crispy Edge Finish */}
+                    <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+                    
+                    {/* Phase Number & Icon */}
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-zim-gold/10 transition-colors">
+                        <Icon className="h-5 w-5 text-zim-gold" />
+                      </div>
+                      <span className="text-[10px] font-black text-white/30 uppercase tracking-widest italic">Phase 0{index + 1}</span>
                     </div>
-                    <CardTitle className="text-xl font-bold">{step.phase}</CardTitle>
+
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-zim-gold transition-colors">{step.phase}</h3>
+                    <p className="text-xs text-white/50 mb-6 leading-relaxed font-light">{step.description}</p>
+                    
+                    <ul className="space-y-3">
+                      {step.steps.map((detail, dIdx) => (
+                        <li key={dIdx} className="flex items-start gap-3">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-zim-gold opacity-60 mt-0.5 shrink-0" />
+                          <span className="text-[11px] text-white/70 font-medium leading-snug">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <CardDescription className="mb-4">{step.description}</CardDescription>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    {step.steps.map((detail, dIdx) => (
-                      <li key={dIdx} className="flex items-start">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 flex-shrink-0 mt-1" />
-                        <span>{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Export Sectors Section */}
-      <section id="export-sectors" className="py-10 bg-background scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-10">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              {t("trade.export_sectors_badge")}
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.export_sectors_title")}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.export_sectors_subtitle")}</p>
+      {/* Export Sectors Section - Cinematic Glass Grid */}
+      <section id="export-sectors" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.export_sectors_title")}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {exportSectors.map((sector, index) => {
               const Icon = sector.icon;
               return (
-                <Card key={index} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <img src={sector.image} alt={sector.name} className="w-full h-48 object-cover" />
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <CardTitle className="text-xl font-bold">{sector.name}</CardTitle>
-                      <Icon className="h-6 w-6 text-zim-gold" />
+                <motion.div key={index} whileHover={{ y: -5 }} className="group relative rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-2xl transition-all duration-500">
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={sector.image} alt={sector.name} className="w-full h-full object-cover saturate-[0.8] group-hover:saturate-100 group-hover:scale-110 transition-all duration-1000" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                    <div className="absolute bottom-4 left-6">
+                       <h3 className="text-xl font-bold text-white tracking-tight">{sector.name}</h3>
                     </div>
-                    <CardDescription>{sector.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <h4 className="font-semibold mb-2">Opportunities:</h4>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
-                      {sector.opportunities.map((opp, oppIdx) => (
-                        <li key={oppIdx} className="flex items-center">
-                          <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                          <span>{opp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                  </div>
+                  
+                  <div className="p-8 space-y-6">
+                    <p className="text-xs text-white/50 leading-relaxed font-light line-clamp-2">{sector.description}</p>
+                    
+                    <div className="space-y-3">
+                      <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.opportunities_label') || "Opportunities"}</h4>
+                      <ul className="space-y-2">
+                        {sector.opportunities.map((opp, oppIdx) => (
+                          <li key={oppIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
+                            <div className="h-1 w-1 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,1)]" />
+                            <span>{opp}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* ZimTrade Programs Section */}
-      <section id="zimtrade-programs" className="py-10 bg-muted/30 scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-10">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              {t("trade.zimtrade_programs_badge")}
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.zimtrade_programs_title")}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.zimtrade_programs_subtitle")}</p>
+      {/* ZimTrade Programs Section - High-Density Dashboard */}
+      <section id="zimtrade-programs" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="text-center mb-16 space-y-4">
+             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.zimtrade_programs_title")}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {programs.map((program, index) => (
-              <Card key={index} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold mb-2">{program.title}</CardTitle>
-                  <CardDescription>{program.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <h4 className="font-semibold">Target Audience:</h4>
-                    <p className="text-muted-foreground">{program.target}</p>
+              <div key={index} className="relative p-10 rounded-[3rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] group">
+                <span className="absolute inset-0 rounded-[3rem] border border-white/5 pointer-events-none" />
+                
+                <h3 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-zim-gold transition-colors">{program.title}</h3>
+                <p className="text-sm text-white/40 mb-8 font-light leading-relaxed">{program.description}</p>
+                
+                <div className="space-y-8">
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                    <h4 className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Target Audience</h4>
+                    <p className="text-[13px] text-white/80 font-medium">{program.target}</p>
                   </div>
-                  <h4 className="font-semibold mb-2">Benefits:</h4>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
+                  
+                  <ul className="space-y-3">
                     {program.benefits.map((benefit, bIdx) => (
-                      <li key={bIdx} className="flex items-center">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                        <span>{benefit}</span>
+                      <li key={bIdx} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-zim-gold opacity-60 shrink-0" />
+                        <span className="text-[11px] text-white/70 font-black uppercase tracking-widest leading-tight">{benefit}</span>
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Diaspora Role Section */}
-      <section id="diaspora-role" className=" bg-background scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-10">
-            <Badge className="mb-4 bg-zim-gold text-zim-black text-sm font-bold px-6 py-2 rounded-full uppercase tracking-widest">
-              {t("trade.diaspora_role_badge")}
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("trade.diaspora_role_title")}</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{t("trade.diaspora_role_subtitle")}</p>
+      {/* Diaspora Role Section - Floating Glass Icons */}
+      <section id="diaspora-role" className="pb-24 pt-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.diaspora_role_title")}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {diasporaRole.map((role, index) => {
               const Icon = role.icon;
               return (
-                <Card key={index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader>
-                    <div className="mx-auto h-16 w-16 bg-zim-gold/20 rounded-full flex items-center justify-center mb-4">
-                      <Icon className="h-8 w-8 text-zim-gold" />
-                    </div>
-                    <CardTitle>{role.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{role.description}</p>
-                  </CardContent>
-                </Card>
+                <div key={index} className="text-center p-8 rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl transition-all duration-500 hover:bg-white/[0.08] group">
+                  <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl border border-zim-gold/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-zim-gold/20 transition-all">
+                    <Icon className="h-10 w-10 text-zim-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" />
+                  </div>
+                  <h3 className="text-white font-bold text-lg mb-3">{role.title}</h3>
+                  <p className="text-xs text-white/40 leading-relaxed font-light">{role.description}</p>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-
-            {/* Contact CTA */}
-            <section className="py-12">
-              <div className="container">
-                <Card className="max-w-2xl mx-auto text-center border-2 border-primary/20 bg-muted/20">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xl">{t("trade.cta_title")}</CardTitle>
-                    <CardDescription className="text-sm">
-                        {t("trade.cta_subtitle")}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="default" className="font-bold px-8 shadow-lg">
-                          {t("trade.cta_button")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-4xl p-0">
-                        <ContactForm title={t("trade.contact_form_title")} module="trade" />
-                      </DialogContent>
-                    </Dialog>
-                  </CardContent>
-                </Card>
-              </div>
-            </section>
-      
-            {/* Footer Links CTA */}
-            <section className="py-8 bg-primary text-primary-foreground">
-              <div className="container text-center">
-                  <h2 className="text-xl md:text-2xl font-bold mb-2">{t("trade.explore_title")}</h2>
-                  <p className="text-sm mb-6 max-w-2xl mx-auto opacity-90">
-                    {t("trade.explore_subtitle")} 
-                  </p>
-                  <a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer">
-                    <Button size="default" variant="secondary" className="font-bold px-8 shadow-lg">
-                      {t("trade.explore_site")} <ExternalLink className="ml-2 h-4 w-4" />
-                    </Button>
-                  </a>
-              </div>
-            </section>
 
     </Layout>
   );

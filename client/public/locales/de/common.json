@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "welcome_back": "Willkommen zurück",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "create_account": "Konto erstellen",
+    "no_account": "Haben Sie noch kein Konto?",
+    "register_now": "Jetzt registrieren"
+  }
+}

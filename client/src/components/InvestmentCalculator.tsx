@@ -1,175 +1,165 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, DollarSign, Calendar, Percent } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { TrendingUp, ShieldCheck, AlertTriangle, Receipt, BarChart3, Info } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { t } from "i18next";
 
-export default function InvestmentCalculator() {
-  const [investmentAmount, setInvestmentAmount] = useState([5000]);
-  const [timeline, setTimeline] = useState([3]);
-  const [returnRate, setReturnRate] = useState([12]);
+export default function SophisticatedCalculator() {
+  const [amount, setAmount] = useState([10000]);
+  const [timeline, setTimeline] = useState([5]);
+  const [rate, setRate] = useState([12]);
+  const [taxRate, setTaxRate] = useState([15]);
+  const [insurance, setInsurance] = useState([200]);
+  const [isRiskActive, setIsRiskActive] = useState(false);
 
-  // Calculate returns
-  const principal = investmentAmount[0];
-  const years = timeline[0];
-  const rate = returnRate[0] / 100;
-
-  // Compound interest calculation
-  const futureValue = principal * Math.pow(1 + rate, years);
-  const totalReturns = futureValue - principal;
-  const annualReturn = totalReturns / years;
-
-  // Format currency
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
+  const calculateData = () => {
+    let currentPrincipal = amount[0];
+    const yearlyData = [];
+    const totalInsurance = insurance[0] * timeline[0];
+    
+    for (let i = 1; i <= timeline[0]; i++) {
+      let annualGain = currentPrincipal * (rate[0] / 100);
+      if (isRiskActive && i === 2) {
+        annualGain -= (currentPrincipal * 0.15);
+      }
+      const taxAmount = annualGain > 0 ? annualGain * (taxRate[0] / 100) : 0;
+      const netGain = annualGain - taxAmount - insurance[0];
+      currentPrincipal += netGain;
+      yearlyData.push({ year: i, value: currentPrincipal, netGain });
+    }
+    const totalProfit = currentPrincipal - amount[0];
+    return { yearlyData, finalValue: currentPrincipal, totalProfit, totalInsurance };
   };
 
-  // Generate yearly breakdown
-  const yearlyBreakdown = Array.from({ length: years }, (_, i) => {
-    const year = i + 1;
-    const value = principal * Math.pow(1 + rate, year);
-    const yearReturn = value - (i === 0 ? principal : principal * Math.pow(1 + rate, i));
-    return {
-      year,
-      value,
-      return: yearReturn,
-    };
-  });
+  const { yearlyData, finalValue, totalProfit, totalInsurance } = calculateData();
+
+  const formatCurrency = (val: number) => 
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
 
   return (
-    <Card className="border-t-4 border-t-primary">
-      <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <TrendingUp className="h-6 w-6 text-primary" />
-          Investment Calculator
-        </CardTitle>
-        <CardDescription>
-          Calculate potential returns on your diaspora investment portfolio
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-8">
-        {/* Input Controls */}
-        <div className="space-y-6">
-          {/* Investment Amount */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                Investment Amount
-              </Label>
-              <Badge variant="secondary" className="text-lg font-bold">
-                {formatCurrency(investmentAmount[0])}
-              </Badge>
+    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
+      {/* The Crispy Edge Finish */}
+      <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
+      
+      {/* Top Gradient Accent */}
+      <div className="h-1 w-full bg-gradient-to-r from-zim-gold via-white/20 to-zim-gold opacity-50" />
+      
+      <CardContent className="p-8 space-y-8 relative z-10">
+        {/* Header */}
+        <div className="flex justify-between items-center border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-zim-gold/10 rounded-lg">
+              <BarChart3 className="h-5 w-5 text-zim-gold shadow-[0_0_10px_rgba(212,175,55,0.4)]" />
             </div>
-            <Slider
-              value={investmentAmount}
-              onValueChange={setInvestmentAmount}
-              min={500}
-              max={50000}
-              step={500}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>$500</span>
-              <span>$50,000</span>
-            </div>
+            <h3 className="font-black text-white text-sm uppercase tracking-[0.2em]">
+              {t("data.investment_calculator_proInvestmentModeler")}
+            </h3>
           </div>
-
-          {/* Timeline */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Investment Timeline
-              </Label>
-              <Badge variant="secondary" className="text-lg font-bold">
-                {timeline[0]} {timeline[0] === 1 ? 'Year' : 'Years'}
-              </Badge>
-            </div>
-            <Slider
-              value={timeline}
-              onValueChange={setTimeline}
-              min={1}
-              max={10}
-              step={1}
-              className="w-full"
+          <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+            <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">
+              {t("data.investment_calculator_stressTest")}
+            </span>
+            <Switch 
+              checked={isRiskActive} 
+              onCheckedChange={setIsRiskActive}
+              className="data-[state=checked]:bg-zim-gold"
             />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>1 year</span>
-              <span>10 years</span>
-            </div>
-          </div>
-
-          {/* Expected Return Rate */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-2">
-                <Percent className="h-4 w-4" />
-                Expected Annual Return
-              </Label>
-              <Badge variant="secondary" className="text-lg font-bold">
-                {returnRate[0]}%
-              </Badge>
-            </div>
-            <Slider
-              value={returnRate}
-              onValueChange={setReturnRate}
-              min={5}
-              max={20}
-              step={0.5}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>5%</span>
-              <span>20%</span>
-            </div>
           </div>
         </div>
 
-        {/* Results Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-muted/50 rounded-lg">
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-1">Total Investment</p>
-            <p className="text-2xl font-bold text-primary">{formatCurrency(principal)}</p>
+        {/* Inputs Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest">{t("data.investment_calculator_principal")}</Label>
+              <p className="text-xs font-black text-white">{formatCurrency(amount[0])}</p>
+            </div>
+            <Slider value={amount} onValueChange={setAmount} min={1000} max={100000} step={1000} className="py-4" />
           </div>
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-1">Total Returns</p>
-            <p className="text-2xl font-bold text-green-600">{formatCurrency(totalReturns)}</p>
+
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest">{t("data.investment_calculator_returns")}</Label>
+              <p className="text-xs font-black text-zim-gold">{rate[0]}%</p>
+            </div>
+            <Slider value={rate} onValueChange={setRate} min={1} max={25} step={1} />
           </div>
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-1">Final Value</p>
-            <p className="text-2xl font-bold text-primary">{formatCurrency(futureValue)}</p>
+
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest">{t("data.investment_calculator_taxRate")}</Label>
+              <p className="text-xs font-black text-white">{taxRate[0]}%</p>
+            </div>
+            <Slider value={taxRate} onValueChange={setTaxRate} min={0} max={40} step={1} />
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest">{t("data.investment_calculator_insurance/Year")}</Label>
+              <p className="text-xs font-black text-white">{formatCurrency(insurance[0])}</p>
+            </div>
+            <Slider value={insurance} onValueChange={setInsurance} min={0} max={2000} step={50} />
           </div>
         </div>
 
-        {/* Yearly Breakdown */}
-        <div>
-          <h4 className="text-sm md:text-base font-semibold mb-4">Projected Growth</h4>
-          <div className="space-y-3">
-            {yearlyBreakdown.map((item) => (
-              <div key={item.year} className="flex items-center justify-between p-2 md:p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-2 md:gap-3">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm md:text-base font-bold text-primary">Y{item.year}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm md:text-base font-semibold">Year {item.year}</p>
-                    <p className="text-xs md:text-sm text-muted-foreground">
-                      Annual return: {formatCurrency(item.return)}
-                    </p>
-                  </div>
+        {/* Sophisticated Result Summary */}
+        <div className="bg-white/5 rounded-[2rem] p-6 border border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-inner">
+          <div className="text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start gap-2 text-zim-gold mb-1">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t("data.investment_calculator_netProfit")}</span>
+            </div>
+            <p className="text-3xl font-black tabular-nums text-white tracking-tighter">{formatCurrency(totalProfit)}</p>
+          </div>
+          <div className="h-12 w-px bg-white/10 hidden sm:block" />
+          <div className="text-center sm:text-right">
+            <div className="flex items-center justify-center sm:justify-end gap-2 text-white/30 mb-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t("data.investment_calculator_final")} (Post-Tax)</span>
+            </div>
+            <p className="text-3xl font-black tabular-nums text-zim-gold tracking-tighter drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+              {formatCurrency(finalValue)}
+            </p>
+          </div>
+        </div>
+
+        {/* Risk/Expense Breakdown Strip */}
+        <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 flex items-center gap-3 p-4 rounded-2xl bg-white/5 border border-white/5">
+                <div className="p-2 bg-white/5 rounded-lg">
+                  <Receipt className="h-4 w-4 text-white/60" />
                 </div>
-                <div className="text-right">
-                  <p className="text-sm md:text-lg font-bold">{formatCurrency(item.value)}</p>
-                  <p className="text-xs text-green-600">
-                    +{((item.value / principal - 1) * 100).toFixed(1)}%
-                  </p>
+                <span className="text-[11px] font-bold text-white/70 uppercase tracking-widest">
+                  {t("data.investment_calculator_fees")} : <span className="text-white">{formatCurrency(totalInsurance)}</span>
+                </span>
+            </div>
+            {isRiskActive && (
+                 <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex-1 flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/20"
+                 >
+                 <AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />
+                 <span className="text-[11px] font-bold text-red-500 uppercase tracking-widest">{t("data.investment_calculator_shockIncluded")}</span>
+             </motion.div>
+            )}
+        </div>
+
+        {/* Scrollable Timeline */}
+        <div className="space-y-4">
+          <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] block">Growth Projection</span>
+          <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+            {yearlyData.map((d) => (
+              <div key={d.year} className="flex-shrink-0 w-32 p-4 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-md group hover:bg-white/5 transition-colors">
+                <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">{t("data.investment_calculator_year")} { d.year}</p>
+                <p className="text-sm font-black text-white tabular-nums group-hover:text-zim-gold transition-colors">{formatCurrency(d.value)}</p>
+                <div className="h-1 w-full mt-3 rounded-full bg-white/10 overflow-hidden">
+                   <div 
+                    className={`h-full transition-all duration-1000 ${d.netGain > 0 ? 'bg-zim-gold' : 'bg-red-500'}`} 
+                    style={{ width: '100%' }}
+                   />
                 </div>
               </div>
             ))}
@@ -177,14 +167,14 @@ export default function InvestmentCalculator() {
         </div>
 
         {/* Disclaimer */}
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm text-amber-900">
-            <strong>Note:</strong> This calculator provides estimates based on assumed constant returns. 
-            Actual investment performance may vary. Past performance does not guarantee future results. 
-            Please consult with financial advisors and review project details before investing.
+        <div className="p-6 bg-zim-gold/5 border border-zim-gold/10 rounded-[1.5rem] flex gap-4 items-start">
+          <Info className="h-5 w-5 text-zim-gold shrink-0 mt-0.5" />
+          <p className="text-[11px] text-white/60 leading-relaxed">
+            <strong className="text-zim-gold uppercase tracking-widest mr-2">{t("data.investment_calculator_note")}:</strong> 
+            {t("data.investment_calculator_disclaimer")}
           </p>
         </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }
