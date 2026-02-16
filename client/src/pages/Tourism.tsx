@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Heart, FileText } from "lucide-react";
+import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Heart, FileText, Dog } from "lucide-react";
 import ZimbabweShopInfo from "@/components/ZimbabweShopInfo";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -51,6 +51,16 @@ export default function Tourism() {
       subtitle: t('tourism.hero.subtitle4'),
       buttons: []
     }
+    ,
+    {
+      image: "/images/cheetah.png",
+      badge: t('tourism.hero.badge3'),
+      badgeIcon: Dog,
+      title: t('tourism.hero.title3'),
+      subtitle: t('tourism.hero.subtitle3'),
+      buttons: []
+    }
+  
   ], [t]);
 
   useEffect(() => {
