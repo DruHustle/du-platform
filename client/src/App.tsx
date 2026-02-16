@@ -17,7 +17,7 @@ import Technology from "./pages/Technology";
 import SearchResults from "./pages/SearchResults";
 import ComingSoon from "./components/ComingSoon";
 import ScrollToHash from "./components/ScrollToHash";
-import LogIn from "./pages/LogIn";
+import LogIn from "./pages/Login";
 import Register from "./pages/Register";
 
 function Router() {
