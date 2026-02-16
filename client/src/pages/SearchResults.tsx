@@ -45,7 +45,9 @@ export default function SearchResults() {
 
   return (
     <Layout>
+      <div className="h-[85px] bg-slate-900/95 w-full" />
       <section className="py-24 bg-muted/30 min-h-[60vh]">
+     
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

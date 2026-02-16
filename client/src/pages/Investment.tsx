@@ -3,14 +3,13 @@ import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import InvestmentCalculator from "@/components/InvestmentCalculator";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, PiggyBank, LucideBanknote } from "lucide-react";
+import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, Shield, Gem, Repeat, FileText, Target, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import SubPageHero from "@/components/SubPageHero";
 
 export default function Investment() {
   const { t } = useTranslation();
@@ -19,11 +18,11 @@ export default function Investment() {
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-const heroSlides = useMemo(() => [
+  const heroSlides = useMemo(() => [
     {
       image: "/images/rbz_building.png",
       badge: t('investment.hero.badge1'),
-      badgeIcon: true,
+      badgeIcon: Shield, 
       title: t('investment.hero.title1'),
       titleHighlight: t('investment.hero.highlight1'),
       subtitle: t('investment.hero.subtitle1'),
@@ -35,7 +34,7 @@ const heroSlides = useMemo(() => [
     {
       image: "/images/masuwe_sez.png",
       badge: t('investment.hero.badge2'),
-      badgeIcon: true,
+      badgeIcon: Globe,
       title: t('investment.hero.title2'),
       titleHighlight: t('investment.hero.highlight2'),
       subtitle: t('investment.hero.subtitle2'),
@@ -44,7 +43,7 @@ const heroSlides = useMemo(() => [
     {
       image: "/images/vfex_logo.png",
       badge: t('investment.hero.badge3'),
-      badgeIcon: true,
+      badgeIcon: Repeat,
       title: t('investment.hero.title3'),
       titleHighlight: t('investment.hero.highlight3'),
       subtitle: t('investment.hero.subtitle3'),
@@ -53,7 +52,7 @@ const heroSlides = useMemo(() => [
     {
       image: "/images/horticulture.jpg",
       badge: t('investment.hero.badge4'),
-      badgeIcon: true,
+      badgeIcon: Leaf,
       title: t('investment.hero.title4'),
       titleHighlight: t('investment.hero.highlight4'),
       subtitle: t('investment.hero.subtitle4'),
@@ -62,7 +61,7 @@ const heroSlides = useMemo(() => [
     {
       image: "/images/minerals_mining.png",
       badge: t('investment.hero.badge5'),
-      badgeIcon: true,
+      badgeIcon: Gem,
       title: t('investment.hero.title5'),
       titleHighlight: t('investment.hero.highlight5'),
       subtitle: t('investment.hero.subtitle5'),
@@ -74,6 +73,12 @@ const heroSlides = useMemo(() => [
     const timer = setInterval(() => setCurrentHeroIndex(p => (p + 1) % heroSlides.length), 5000);
     return () => clearInterval(timer);
   }, [heroSlides.length]);
+
+  const introData = {
+    icon: TrendingUp,
+    title: t('investment.objective_title'),
+    description: t('investment.objective_subtitle')
+  };
 
   const projects = [
     { id: "masuwe", sector: "tourism", target: "$1.2B", raised: "$0", prog: 0, inv: 12, min: "$100k", ret: "15-25%", time: "10-15y", risk: "moderate", ver: true },
@@ -89,294 +94,205 @@ const heroSlides = useMemo(() => [
 
   return (
     <Layout>
-{/* Hero Carousel Section */}
-  <section className="relative min-h-[500px] md:h-[600px] flex items-center overflow-hidden">
-  <AnimatePresence initial={false}>
-    <motion.div 
-      key={currentHeroIndex} 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
-      exit={{ opacity: 0 }} 
-      transition={{ duration: 1.5, ease: "easeInOut" }} 
-      className="absolute inset-0"
-    >
-      <motion.div 
-        initial={{ scale: 1 }}
-        animate={{ scale: 1.1 }}
-        transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-        className="absolute inset-0 bg-cover bg-center" 
-        style={{ backgroundImage: `url('${heroSlides[currentHeroIndex]?.image}')` }} 
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
-    </motion.div>
-  </AnimatePresence>
-
-  <div className="container relative z-10 text-white">
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`content-${currentHeroIndex}`}
-        initial={{ x: -30, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 30, opacity: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="max-w-4xl"
-      >
-        {/* Updated Badge Logic with Conditional Icon */}
-        <div className="flex items-center gap-3 mb-6">
-          {heroSlides[currentHeroIndex]?.badgeIcon && (
-            <Globe className="h-6 w-6 text-zim-gold" />
-          )}
-          <Badge className="bg-zim-gold text-zim-black px-6 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
-            {heroSlides[currentHeroIndex]?.badge}
-          </Badge>
-        </div>
-
-        {/* Updated Typography to include Highlight */}
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-[1.1] hero-text-shadow">
-          {heroSlides[currentHeroIndex]?.title}
-          {heroSlides[currentHeroIndex]?.titleHighlight && (
-            <span className="text-zim-gold block md:inline ml-0 md:ml-4">
-              {heroSlides[currentHeroIndex].titleHighlight}
-            </span>
-          )}
-        </h1>
-
-        <p className="text-xl md:text-2xl mb-10 max-w-2xl text-white/90 font-medium leading-relaxed">
-          {heroSlides[currentHeroIndex]?.subtitle}
-        </p>
-
-        {/* Dynamic Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-start">
-          {heroSlides[currentHeroIndex]?.buttons?.length > 0 ? (
-            heroSlides[currentHeroIndex].buttons.map((btn, bIdx) => (
-              <Button 
-                key={bIdx}
-                size="lg" 
-                variant={btn.variant === "primary" ? "default" : "outline"}
-                className={`rounded-full px-10 h-14 text-lg font-bold group ${
-                  btn.variant === "primary" 
-                    ? "bg-zim-gold hover:bg-zim-gold/90 text-zim-black border-none" 
-                    : "bg-white/10 hover:bg-white/20 text-white border-white/40 backdrop-blur-sm"
-                }`} 
-              >
-                {btn.text}
-                {btn.variant === "primary" && (
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                )}
-              </Button>
-            ))
-          ) : (
-            /* Fallback if no buttons array exists for a specific slide */
-            <Button 
-              size="lg" 
-              className="bg-zim-gold hover:bg-zim-gold/90 text-zim-black rounded-full px-10 h-14 text-lg font-bold group"
-            >
-              {t('investment.explore_title')}
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          )}
-        </div>
-      </motion.div>
-    </AnimatePresence>
-  </div>
-  
-  <div className="absolute bottom-12 left-4 sm:left-12 flex gap-3 z-20">
-    {heroSlides.map((_, idx) => (
-      <button
-        key={idx}
-        onClick={() => setCurrentHeroIndex(idx)}
-        className={`h-1.5 transition-all duration-500 rounded-full ${
-          idx === currentHeroIndex ? 'bg-zim-gold w-16' : 'bg-white/30 w-4 hover:bg-white/60'
-        }`}
-        aria-label={`Go to slide ${idx + 1}`}
-      />
-    ))}
-  </div>
-  
-  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-</section>
-
-      {/* Investments Introduction */}
-      <section id="export-info" className="py-0 bg-background relative overflow-hidden">
-        <div className="container relative z-10">
-          <div className="max-w-4xl mx-auto">
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              whileInView={{ opacity: 1, y: 0 }} 
-              viewport={{ once: true }}
-              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden text-center group shadow-lg"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-zim-green via-zim-black to-zim-red opacity-90 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-10" />
-              
-              <div className="relative z-10 max-w-3xl mx-auto space-y-3">
-             <TrendingUp className="h-8 w-8 text-zim-gold mx-auto mb-1" />
-                
-                <h3 className="text-lg md:text-xl font-bold text-white leading-snug px-4">
-                  {t('investment.objective_subtitle')}
-                </h3>
-                
-                <div className="flex items-center justify-center gap-4">
-                  <div className="h-px w-8 bg-zim-gold/50" />
-                  
-                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                    {t('investment.objective_title')}
-                  </p>
-                  
-                  <div className="h-px w-8 bg-zim-gold/50" />
-                </div>
-              </div>
-            </motion.div>
-                    
-          </div>
-        </div>
+      {/* Hero Section */}
+      <section id="hero">
+        <SubPageHero heroSlides={heroSlides} intro={introData} />
       </section>
 
+      {/* Active Projects - Cinematic Glass Grid */}
+      <section id="active-projects" className="py-10 bg-slate-950 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
 
-      {/* Projects */}
-      <section id="active-projects" className="py-10 bg-muted/20">
-        <div className="container">
-          <div className="text-center mb-6">
-            <h2 className="text-4xl font-bold mb-4">{t('investment.investment_sectors_title')}</h2>
-            <div className="flex flex-wrap justify-center gap-2 mt-6">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.sectors_title')}</h2>
+             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle')}</p>
+            <div className="flex flex-wrap justify-center gap-2 mt-8">
               {['all', 'tourism', 'agriculture', 'manufacturing', 'it', 'energy'].map(s => (
-                <Button key={s} variant={activeFilter === s ? "default" : "outline"} onClick={() => setActiveFilter(s)} className="rounded-full px-6 capitalize">{t(`investment.project_filters.${s}`)}</Button>
+                <button 
+                  key={s} 
+                  onClick={() => setActiveFilter(s)} 
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                    activeFilter === s 
+                    ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]" 
+                    : "bg-white/5 text-white/60 border-white/10 hover:border-white/30"
+                  }`}
+                >
+                  {t(`investment.project_filters.${s}`)}
+                </button>
               ))}
             </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
             {filtered.map(p => (
-              <Card key={p.id} className="overflow-hidden border-t-4 border-t-zim-gold hover:shadow-xl transition-all">
-                <div className="grid md:grid-cols-3 gap-6 p-6">
-                  <div className="md:col-span-2 space-y-4">
+              <motion.div 
+                key={p.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="group relative rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-white/[0.07]"
+              >
+                {/* Crispy Edge Finish */}
+                <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
+                
+                <div className="grid md:grid-cols-12 gap-6 p-8 relative z-10">
+                  <div className="md:col-span-8 space-y-5">
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="secondary" className="capitalize">{p.sector}</Badge>
-                      <Badge className={p.risk === "conservative" ? "bg-green-100 text-green-800" : p.risk === "moderate" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}>
+                      <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[9px] uppercase font-black px-3 py-1 rounded-full">{p.sector}</Badge>
+                      <Badge className={`text-[9px] uppercase font-black px-3 py-1 rounded-full ${p.risk === "conservative" ? "bg-green-500/10 text-green-400" : p.risk === "moderate" ? "bg-yellow-500/10 text-yellow-400" : "bg-red-500/10 text-red-400"}`}>
                         {t(`investment.project_filters.${p.risk}`)} {t('investment.project_card.risk')}
                       </Badge>
-                      {p.ver && <Badge className="bg-blue-100 text-blue-800"><Award className="h-3 w-3 mr-1" /> {t('investment.project_card.verified')}</Badge>}
+                      {p.ver && <Badge className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] uppercase font-black px-3 py-1 rounded-full flex items-center gap-1.5"><Award className="h-3 w-3" /> {t('investment.project_card.verified')}</Badge>}
                     </div>
-                    <CardTitle className="text-2xl">{t(`investment.projects.${p.id}.title`)}</CardTitle>
-                    <CardDescription>{t(`investment.projects.${p.id}.description`)}</CardDescription>
-                    <ul className="grid sm:grid-cols-2 gap-2">
+                    
+                    <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-zim-gold transition-colors">{t(`investment.projects.${p.id}.title`)}</h3>
+                    <p className="text-sm text-white/50 font-light leading-relaxed line-clamp-2">{t(`investment.projects.${p.id}.description`)}</p>
+                    
+                    <ul className="grid sm:grid-cols-2 gap-3">
                       {(t(`investment.projects.${p.id}.highlights`, { returnObjects: true }) as string[] || []).map((h, i) => (
-                        <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground"><CheckCircle className="h-4 w-4 text-zim-green" /> {h}</li>
+                        <li key={i} className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
+                          <CheckCircle className="h-4 w-4 text-zim-gold opacity-60" /> 
+                          {h}
+                        </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="bg-muted/50 p-4 rounded-xl space-y-4">
-                    <div>
-                      <div className="flex justify-between text-[10px] font-bold uppercase mb-2">
-                        <span>{t('investment.project_card.raised', { amount: p.raised })}</span>
-                        <span>{p.prog}%</span>
+
+                  <div className="md:col-span-4 bg-white/5 rounded-3xl p-6 flex flex-col justify-between border border-white/5">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-white/40">
+                          <span>{t('investment.project_card.raised', { amount: p.raised })}</span>
+                          <span className="text-zim-gold">{p.prog}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${p.prog}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="h-full bg-zim-gold shadow-[0_0_10px_rgba(212,175,55,0.5)]" 
+                          />
+                        </div>
                       </div>
-                      <Progress value={p.prog} className="h-2" />
+                      
+                      <div className="grid grid-cols-1 gap-3">
+                        <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                          <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">{t('investment.project_filters.min_investment')}</p>
+                          <p className="text-sm font-black text-white">{p.min}</p>
+                        </div>
+                        <div className="p-3 bg-zim-gold/5 rounded-xl border border-zim-gold/10">
+                          <p className="text-[9px] font-black text-zim-gold/40 uppercase tracking-widest">{t('investment.project_filters.expected_return')}</p>
+                          <p className="text-sm font-black text-zim-gold">{p.ret}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <div><p className="text-muted-foreground">{t('investment.project_filters.min_investment')}</p><p className="font-bold">{p.min}</p></div>
-                      <div><p className="text-muted-foreground">{t('investment.project_filters.expected_return')}</p><p className="font-bold text-zim-green">{p.ret}</p></div>
-                    </div>
-                    <Button className="w-full bg-zim-black text-white h-11">{t('investment.project_card.view_details')}</Button>
+                    
+                    <Button className="w-full mt-4 bg-white text-slate-950 hover:bg-zim-gold hover:text-zim-black transition-all rounded-xl h-12 font-black text-[10px] uppercase tracking-widest shadow-xl">
+                      {t('investment.project_card.view_details')}
+                    </Button>
                   </div>
                 </div>
-              </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section className=" container text-center">
-        <h2 className="text-3xl font-bold mb-6">{t('investment.crowdfunding_title')}</h2>
-        <div className="grid md:grid-cols-4 gap-6">
-          {['Browse Projects', 'Invest Your Share', 'Track Performance', 'Receive Returns'].map((step, i) => (
-            <Card key={i} className="relative pt-8">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-bold">{i + 1}</div>
-              <CardHeader><CardTitle className="text-base">{step}</CardTitle></CardHeader>
-              <CardContent className="text-xs text-muted-foreground">{t('investment.crowdfunding_subtitle')}</CardContent>
-            </Card>
-          ))}
+      {/* How it Works - Glass Dashboard */}
+      <section className="py-10 bg-slate-950">
+        <div className="container px-6 mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.crowdfunding_title')}</h2>
+           < p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle')}</p>
+          </div>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              { title: 'Browse Projects', icon: Target },
+              { title: 'Invest Your Share', icon: DollarSign },
+              { title: 'Track Performance', icon: BarChart3 },
+              { title: 'Receive Returns', icon: Repeat }
+            ].map((step, i) => (
+              <div key={i} className="relative pt-10 group">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                  {i + 1}
+                </div>
+                <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 text-center transition-all duration-500 hover:bg-white/[0.06] hover:-translate-y-2">
+                  <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
+                    <step.icon className="h-6 w-6 text-zim-gold" />
+                  </div>
+                  <h3 className="text-white font-bold text-lg mb-3 tracking-tight">{step.title}</h3>
+                  <p className="text-white/40 text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle')}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-     {/* NTIR & HDC Directories */}
-      <section className="py-10 container">
-        <div className="grid md:grid-cols-2 gap-8">
-          <Card className="border-t-4 border-t-zim-gold">
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <Building className="h-8 w-8 text-zim-gold" />
-                <CardTitle className="text-xl">{t('investment.ntir_title')}</CardTitle>
+      {/* Directories - Dual Glass Panels */}
+      <section className="py-10 bg-slate-950">
+        <div className="container px-6 mx-auto">
+
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.database_title')}</h2>
+             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle')}</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="relative p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-5 mb-6">
+                <div className="p-4 bg-zim-gold/10 rounded-2xl border border-zim-gold/20">
+                  <Building className="h-8 w-8 text-zim-gold shadow-[0_0_15px_rgba(212,175,55,0.3)]" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-white tracking-tight">{t('investment.ntir_title')}</h3>
+                  <p className="text-xs text-zim-gold/60 font-black uppercase tracking-[0.2em]">National Directory</p>
+                </div>
               </div>
-              <CardDescription>{t('investment.ntir_subtitle')}</CardDescription>
-            </CardHeader>
-            <CardContent><Button variant="outline" className="w-full">{t('investment.ntir_button')}</Button></CardContent>
-          </Card>
-          <Card className="border-t-4 border-t-zim-green">
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <Leaf className="h-8 w-8 text-zim-green" />
-                <CardTitle className="text-xl">{t('investment.hdc_title')}</CardTitle>
+              <p className="text-white/50 text-sm font-light leading-relaxed mb-8">{t('investment.ntir_subtitle')}</p>
+              <Button variant="outline" className="w-full h-14 rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white hover:text-zim-black font-black text-[11px] uppercase tracking-widest transition-all">
+                {t('investment.ntir_button')}
+              </Button>
+            </div>
+
+            <div className="relative p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-5 mb-6">
+                <div className="p-4 bg-zim-green/10 rounded-2xl border border-zim-green/20">
+                  <Leaf className="h-8 w-8 text-zim-green shadow-[0_0_15px_rgba(34,197,94,0.3)]" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-white tracking-tight">{t('investment.hdc_title')}</h3>
+                  <p className="text-xs text-zim-green/60 font-black uppercase tracking-[0.2em]">Horticulture Council</p>
+                </div>
               </div>
-              <CardDescription>{t('investment.hdc_subtitle')}</CardDescription>
-            </CardHeader>
-            <CardContent>
+              <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.hdc_subtitle')}</p>
               <div className="flex flex-wrap gap-2">
-                {hdcAssoc.slice(0, 5).map((a, i) => <Badge key={i} variant="secondary" className="text-[10px]">{a}</Badge>)}
-                <Badge variant="outline" className="text-[10px]">+{hdcAssoc.length - 5} more</Badge>
+                {hdcAssoc.slice(0, 5).map((a, i) => (
+                  <Badge key={i} className="bg-white/5 text-white/60 border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">
+                    {a}
+                  </Badge>
+                ))}
+                <Badge className="bg-white/5 text-white/40 border border-white/10 text-[9px] font-bold px-3 py-1 rounded-full">+{hdcAssoc.length - 5} more</Badge>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Calculator */}
-      <section className=" bg-muted/30"><div className="container"><InvestmentCalculator /></div></section>
+      {/* Calculator Section */}
+      <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto relative z-10">
+            <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.calculator_title')}</h2>
+             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle')}</p>
+          </div>
+          <InvestmentCalculator />
+        </div>
+      </section>
 
-
-            {/* Contact CTA */}
-            <section className="py-12">
-              <div className="container">
-                <Card className="max-w-2xl mx-auto text-center border-2 border-primary/20 bg-muted/20">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xl">{t("investment.cta_title")}</CardTitle>
-                    <CardDescription className="text-sm">
-                        {t("investment.cta_subtitle")}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="default" className="font-bold px-8 shadow-lg">
-                          {t("investment.cta_button")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-4xl p-0">
-                        <ContactForm title={t("investment.contact_form_title")} module="investment" />
-                      </DialogContent>
-                    </Dialog>
-                  </CardContent>
-                </Card>
-              </div>
-            </section>
-      
-            {/* Footer Links CTA */}
-            <section className="py-8 bg-primary text-primary-foreground">
-              <div className="container text-center">
-                  <h2 className="text-xl md:text-2xl font-bold mb-2">{t("investment.explore_title")}</h2>
-                  <p className="text-sm mb-6 max-w-2xl mx-auto opacity-90">
-                    {t("investment.explore_subtitle")} 
-                  </p>
-                  <a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer">
-                    <Button size="default" variant="secondary" className="font-bold px-8 shadow-lg">
-                      {t("investment.explore_site")} <ExternalLink className="ml-2 h-4 w-4" />
-                    </Button>
-                  </a>
-              </div>
-            </section>
 
     </Layout>
   );

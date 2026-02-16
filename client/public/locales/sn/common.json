@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "welcome_back": "Mauya zvakare",
+    "email": "Kero ye-Imeyiri",
+    "password": "Phasuwedi",
+    "login": "Pinda",
+    "create_account": "Vhurai akaundi",
+    "no_account": "Hauna akaundi here?",
+    "register_now": "Nyoresa iye zvino"
+  }
+}

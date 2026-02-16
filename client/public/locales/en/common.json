@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "welcome_back": "Welcome Back",
+    "email": "Email Address",
+    "password": "Password",
+    "login": "Login",
+    "create_account": "Create Account",
+    "no_account": "Don't have an account?",
+    "register_now": "Register Now"
+  }
+}

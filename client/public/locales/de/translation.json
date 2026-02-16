@@ -19,6 +19,26 @@
   "quick_links": "Quick-Links",
   "partners": "Partner",
   "contact": "Kontakt",
+
+  "auth": {
+    "create_account": "Treten Sie der ZIGD-Plattform bei",
+    "register_subtitle": "Beginnen Sie Ihre Reise zu einer wirkungsvollen Zusammenarbeit in der Diaspora.",
+    "full_name": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "confirm_password": "Passwort bestätigen",
+    "terms_agreement": "Ich stimme den Nutzungsbedingungen und der Datenschutzerklärung gemäß der DSGVO-Daten-Governance zu.",
+    "have_account": "Haben Sie bereits ein Konto?",
+    "login_here": "Hier anmelden",
+    "welcome_back": "Willkommen zurück",
+    "login_subtitle": "Ihr digitaler Zugang zu Simbabwe.",
+    "forgot_password": "Passwort vergessen?",
+    "login": "Anmelden",
+    "no_account": "Haben Sie noch kein Konto?",
+    "register_now": "Jetzt registrieren",
+    "close": "Schließen"
+  },
+
   "nav": {
     "home": "Startseite",
     "export": "Export-Hub",
@@ -122,6 +142,9 @@
       "subtitle3": "Bewerten Sie Risiken und generieren Sie Geschäftsideen, die im lokalen Markt tatsächlich Erfolg haben.",
       "highlight3": "Datengestützter Erfolg"
     },
+
+    "objective_title": "Technologiegestützt",
+    "objective_subtitle": "Nutzung von KI und digitalen Lösungen zur nahtlosen Verbindung von Simbabwe und der Diaspora, um Zusammenarbeit, nachhaltige Entwicklung und langfristiges Wirtschaftswachstum voranzutreiben.",
     "explore_onesa": "Onesa AI entdecken",
     "onesa_badge": "Darf ich vorstellen: Onesa AI",
     "onesa_title": "Ihren Weg beleuchten",
@@ -517,6 +540,9 @@
         "d3": "Ganzjährig angenehmes gemäßigtes Klima"
       }
     },
+  
+    "objective_title":"Unsere Vision",
+    "objective_subtitle": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
     "cta_title": "Bereit für Ihr Abenteuer?",
     "cta_button": "Mit einem Experten sprechen",
     "cta_subtitle": "Unser Reiseteam hilft Ihnen, die richtigen Möglichkeiten zu finden und führt Sie durch den Prozess.",
@@ -661,13 +687,24 @@
       "Exportartikelverband",
       "Blumen-Anbauerverband"
     ],
+
+    
+    "database_title": "Handels- und Investitionsdatenbanken und -register",
+    "database_subtitle": "Datenbanken und Register verifizierter Handels- und Investitionseinheiten in Simbabwe. Die Verifizierung erfolgt durch Drittanbieter.",
+
+    
     "ntir_title": "Nationales Handels- & Investitionsregister (NTIR)",
     "ntir_subtitle": "Offizielles Register verifizierter Handels- und Investitionseinheiten in Simbabwe.",
     "ntir_button": "NTIR-Datenbank durchsuchen",
     "crowdfunding_title": "Crowdfunding-Möglichkeiten",
     "crowdfunding_subtitle": "Mikro-Investitionen in geprüfte Projekte und reale Wirkung sehen.",
-    "investment_sectors_title": "Aktive Investitionsmöglichkeiten",
-    "investment_sectors_subtitle": "Sorgfältig geprüfte Projekte mit staatlicher Unterstützung und Transparenz.",
+    "sectors_title": "Aktive Investitionsmöglichkeiten",
+    "sectors_subtitle": "Sorgfältig geprüfte Projekte mit staatlicher Unterstützung und Transparenz.",
+
+
+   "calculator_title": "Intelligenter Investitionsrechner",
+   "calculator_subtitle": "Prognostizieren Sie Renditen basierend auf echten Markt- und Projektdaten",
+
     "cta_title": "Bereit zum Investieren?",
     "cta_subtitle": "Unser Investment-Team hilft Ihnen, die richtigen Gelegenheiten zu finden.",
     "cta_button": "Mit einem Experten sprechen",
@@ -956,7 +993,7 @@
     "diaspora_residence_country": "Region/Land",
     "diaspora_population": "Bevölkerung",
     "diaspora_percentage": "Prozentsatz",
-    "data_disclaimer": "* Daten basieren auf Schätzungen von RBZ, ZIMSTAT, Weltbank und IWF. Echtzeit-Metriken aktualisieren sich periodisch.",
+    "disclaimer": "* Daten basieren auf Schätzungen von RBZ, ZIMSTAT, Weltbank und IWF. Echtzeit-Metriken aktualisieren sich periodisch.",
     "regional_breakdown_title": "Regionale Aufschlüsselung",
     "regional_breakdown_subtitle": "Verteilung der Diaspora in Schlüsselregionen.",
     "regional_breakdown": {
@@ -1012,6 +1049,21 @@
         "sector": "Grundbedürfnisse"
       }
     },
+
+    "investment_calculator_proInvestmentModeler": "Pro Investment-Modellierer",
+    "investment_calculator_stressTest": "Stresstest",
+    "investment_calculator_principal": "Grundkapital",
+    "investment_calculator_taxRate": "Steuersatz",
+    "investment_calculator_insurance/Year": "Versicherung/Jahr",
+    "investment_calculator_returns": "Rendite",
+    "investment_calculator_netProfit": "Nettogewinn",
+    "investment_calculator_final": "Endbetrag",
+    "investment_calculator_fees": "Gebühren",
+    "investment_calculator_year": "Jahr",
+    "investment_calculator_shockIncluded": "Inklusive Marktschock",
+    "investment_calculator_note": "Hinweis",
+    "investment_calculator_disclaimer": "Dieser Rechner liefert Schätzungen basierend auf angenommenen konstanten Renditen. Die tatsächliche Anlageentwicklung kann variieren. Wertentwicklungen in der Vergangenheit garantieren keine zukünftigen Ergebnisse. Bitte konsultieren Sie Finanzberater und prüfen Sie die Projektdetails vor einer Investition.",
+    
     "cta_title": "Benötigen Sie tiefere Daten?",
     "cta_subtitle": "Nutzen Sie unsere Berichte und Analysedienste.",
     "cta_button": "Individuellen Bericht anfordern"
@@ -1145,6 +1197,7 @@
     "cta_button": "Geschichte teilen"
   },
   "common": {
+    "coming_soon": "Wir entwickeln intelligente Lösungen, die mithilfe fortschrittlicher KI-Technologie die Art und Weise verändern, wie Sie sich vernetzen, arbeiten und wachsen.",
     "explore_now": "Jetzt entdecken",
     "learn_more": "Mehr erfahren",
     "get_started": "Jetzt starten",
@@ -1198,8 +1251,7 @@
     "disclaimer": "Hinweis: Dieser Rechner liefert Schätzungen. Die tatsächliche Performance kann abweichen."
   },
   "shop": {
-    "vision": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
-    "our_vision": "Unsere Vision",
+
     "collections": "Kollektionen",
     "title": "Kuratierte simbabwische Exzellenz",
     "desc": "Von offiziellem Merchandise bis zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte.",
