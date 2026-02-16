@@ -72,7 +72,7 @@
     "export_roadmap_desc": "Step-by-step export process",
     "technology": "Technology",
     "technology_capabilities": "Technology Capabilities",
-    "technology_capabilities_desc": "Zimbabwe\"s technology and innovation landscape",
+    "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
     "technology_industries": "Technology Industries",
     "technology_industries_desc": "Key technology sectors in Zimbabwe",
     "zimtrade_programs": "ZimTrade Programs",
@@ -175,11 +175,11 @@
 
     "sectors_badge": "Sector Transformation",
     "sectors_title": "Powering Key Industries",
-    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe\"s most critical economic sectors.",
+    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
     "sectors": {
       "mining": {
         "title": "Mining & Resources",
-        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe\"s vast mineral sector.",
+        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
         "d1": "Real-time mineral pricing and market trends",
         "d2": "Environmental and safety compliance monitoring"
       },
@@ -708,7 +708,7 @@
   "trade": {
     "hero": {
       "badge1": "Global Trade",
-      "title1": "Zimbabwe\"s Trade Hub",
+      "title1": "Zimbabwe's Trade Hub",
       "subtitle1": "Connecting local businesses to global markets and fostering economic growth.",
       "highlight1": "Export Growth",
       "badge2": "Strategic Partnerships",
@@ -780,7 +780,7 @@
     },
     "export_sectors_badge": "Sectors",
     "export_sectors_title": "Key Export Sectors",
-    "export_sectors_subtitle": "Discover the primary sectors driving Zimbabwe\"s export economy.",
+    "export_sectors_subtitle": "Discover the primary sectors driving Zimbabwe's export economy.",
     "sectors": {
       "horticulture": {
         "name": "Horticulture",
@@ -907,7 +907,7 @@
       "badge4": "Export Performance",
       "title4": "Boosting National ",
       "highlight4": "Exports",
-      "subtitle4": "Track the growth of Zimbabwe\"s export sectors and understand market access dynamics.",
+      "subtitle4": "Track the growth of Zimbabwe's export sectors and understand market access dynamics.",
       "badge5": "Policy Impact",
       "title5": "Informed Policy ",
       "highlight5": "Making",
