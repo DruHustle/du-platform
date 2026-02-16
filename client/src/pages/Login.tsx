@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Mail, Lock, LogIn as LoginIcon, X } from "lucide-react"; // Renamed icon to avoid conflict
 import { Link, useLocation } from "wouter";
 
-export default function LogIn() {
+export default function Login() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
   const [formData, setFormData] = useState({ email: "", password: "" });
