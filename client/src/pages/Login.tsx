@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { Mail, Lock, LogIn, X } from "lucide-react";
+import { Mail, Lock, LogIn as LoginIcon, X } from "lucide-react"; // Renamed icon to avoid conflict
 import { Link, useLocation } from "wouter";
 
-export default function Login() {
+export default function LogIn() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -75,7 +75,7 @@ export default function Login() {
               </div>
 
               <Button className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20">
-                <LogIn className="mr-2 h-4 w-4" /> {t('auth.login')}
+                <LoginIcon className="mr-2 h-4 w-4" /> {t('auth.login')}
               </Button>
             </form>
 

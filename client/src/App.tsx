@@ -17,7 +17,7 @@ import Technology from "./pages/Technology";
 import SearchResults from "./pages/SearchResults";
 import ComingSoon from "./components/ComingSoon";
 import ScrollToHash from "./components/ScrollToHash";
-import Login from "./pages/LogIn";
+import LogIn from "./pages/LogIn";
 import Register from "./pages/Register";
 
 function Router() {
@@ -35,7 +35,7 @@ function Router() {
       <Route path="/technology" component={Technology} />
       <Route path="/data-visualization" component={DataVisualization} />
       <Route path="/success-stories" component={SuccessStories} />
-      <Route path="/login" component={Login} />
+      <Route path="/login" component={LogIn} />
       <Route path="/register" component={Register} /> {/* Fixed typo: registar -> register */}
       <Route path="/search" component={SearchResults} />
       <Route path="/404" component={NotFound} />
