@@ -158,7 +158,9 @@ function getOnesaConfig() {
   const openaiBase = (process.env.ONESA_AI_BASE_URL ?? "http://127.0.0.1:1234/v1").replace(/\/+$/, "");
   const timeoutRaw = Number(process.env.ONESA_REQUEST_TIMEOUT_MS ?? "180000");
   const timeoutMs = Number.isFinite(timeoutRaw) && timeoutRaw > 0 ? timeoutRaw : 180000;
-  return { provider, model, ollamaBase, openaiBase, timeoutMs };
+  const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "220");
+  const maxTokens = Number.isFinite(maxTokensRaw) && maxTokensRaw > 0 ? Math.floor(maxTokensRaw) : 220;
+  return { provider, model, ollamaBase, openaiBase, timeoutMs, maxTokens };
 }
 
 function resolveOllamaModelName(requestedModel: string, availableModels: string[]): string | null {
@@ -187,7 +189,7 @@ function isOllamaModelNotFoundError(error: any): boolean {
 }
 
 async function generateOnesaReply(messages: ChatMessage[]) {
-  const { provider, model, ollamaBase, openaiBase, timeoutMs } = getOnesaConfig();
+  const { provider, model, ollamaBase, openaiBase, timeoutMs, maxTokens } = getOnesaConfig();
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
   const normalizedMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
@@ -202,6 +204,7 @@ async function generateOnesaReply(messages: ChatMessage[]) {
         model,
         messages: normalizedMessages,
         temperature: 0.3,
+        max_tokens: maxTokens,
       },
       {
         timeout: timeoutMs,
@@ -239,6 +242,7 @@ async function generateOnesaReply(messages: ChatMessage[]) {
         stream: false,
         options: {
           temperature: 0.3,
+          num_predict: maxTokens,
         },
       },
       {
@@ -260,6 +264,7 @@ async function generateOnesaReply(messages: ChatMessage[]) {
         stream: false,
         options: {
           temperature: 0.3,
+          num_predict: maxTokens,
         },
       },
       {
