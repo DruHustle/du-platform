@@ -72,10 +72,10 @@ ensure_ollama() {
 cleanup() {
   local code=$?
   trap - INT TERM EXIT
-  if [[ -n "${SERVER_PID:-}" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then
+  if [[ "${SERVER_STARTED:-0}" -eq 1 ]] && [[ -n "${SERVER_PID:-}" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then
     kill "$SERVER_PID" 2>/dev/null || true
   fi
-  if [[ -n "${FRONTEND_PID:-}" ]] && kill -0 "$FRONTEND_PID" 2>/dev/null; then
+  if [[ "${FRONTEND_STARTED:-0}" -eq 1 ]] && [[ -n "${FRONTEND_PID:-}" ]] && kill -0 "$FRONTEND_PID" 2>/dev/null; then
     kill "$FRONTEND_PID" 2>/dev/null || true
   fi
   if [[ -n "${OLLAMA_PID:-}" ]] && kill -0 "$OLLAMA_PID" 2>/dev/null; then
@@ -90,32 +90,39 @@ trap cleanup INT TERM EXIT
 ensure_ollama
 
 BACKEND_PORT="$(get_backend_port)"
+SERVER_STARTED=0
+FRONTEND_STARTED=0
+USE_EXISTING_BACKEND=0
+
 if lsof -tiTCP:"${BACKEND_PORT}" -sTCP:LISTEN >/dev/null 2>&1; then
-  echo "[dev:all] Port ${BACKEND_PORT} is busy. Releasing it..."
-  lsof -tiTCP:"${BACKEND_PORT}" -sTCP:LISTEN | xargs kill -9 2>/dev/null || true
-  sleep 1
+  echo "[dev:all] Port ${BACKEND_PORT} is busy. Reusing existing backend process."
+  USE_EXISTING_BACKEND=1
 fi
 
-echo "[dev:all] Starting backend..."
-"${SERVER_CMD[@]}" &
-SERVER_PID=$!
+if [[ "${USE_EXISTING_BACKEND}" -eq 0 ]]; then
+  echo "[dev:all] Starting backend..."
+  "${SERVER_CMD[@]}" &
+  SERVER_PID=$!
+  SERVER_STARTED=1
+fi
 
 sleep 1
 
 echo "[dev:all] Starting frontend..."
 "${FRONTEND_CMD[@]}" &
 FRONTEND_PID=$!
+FRONTEND_STARTED=1
 
 echo "[dev:all] Running. Press Ctrl+C to stop both."
 
 # Portable wait loop for macOS Bash 3.x (no `wait -n` support)
 while true; do
-  if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+  if [[ "${SERVER_STARTED}" -eq 1 ]] && ! kill -0 "$SERVER_PID" 2>/dev/null; then
     wait "$SERVER_PID"
     exit $?
   fi
 
-  if ! kill -0 "$FRONTEND_PID" 2>/dev/null; then
+  if [[ "${FRONTEND_STARTED}" -eq 1 ]] && ! kill -0 "$FRONTEND_PID" 2>/dev/null; then
     wait "$FRONTEND_PID"
     exit $?
   fi

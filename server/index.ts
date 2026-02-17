@@ -154,13 +154,14 @@ type ChatMessage = {
 function getOnesaConfig() {
   const provider = (process.env.ONESA_PROVIDER ?? "ollama").toLowerCase();
   const model = process.env.ONESA_MODEL ?? "llama3.1:8b";
+  const fallbackModel = process.env.ONESA_FALLBACK_MODEL ?? "llama3.1:8b";
   const ollamaBase = (process.env.ONESA_OLLAMA_URL ?? "http://127.0.0.1:11434").replace(/\/+$/, "");
   const openaiBase = (process.env.ONESA_AI_BASE_URL ?? "http://127.0.0.1:1234/v1").replace(/\/+$/, "");
   const timeoutRaw = Number(process.env.ONESA_REQUEST_TIMEOUT_MS ?? "180000");
   const timeoutMs = Number.isFinite(timeoutRaw) && timeoutRaw > 0 ? timeoutRaw : 180000;
   const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "220");
   const maxTokens = Number.isFinite(maxTokensRaw) && maxTokensRaw > 0 ? Math.floor(maxTokensRaw) : 220;
-  return { provider, model, ollamaBase, openaiBase, timeoutMs, maxTokens };
+  return { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens };
 }
 
 function resolveOllamaModelName(requestedModel: string, availableModels: string[]): string | null {
@@ -188,9 +189,39 @@ function isOllamaModelNotFoundError(error: any): boolean {
   return message.includes("model") && message.includes("not found");
 }
 
+function isLowQualityOnesaReply(reply: string): boolean {
+  const text = reply.trim().toLowerCase();
+  if (!text) return true;
+
+  if (text.includes("translate from en to en")) return true;
+  const notedCount = (text.match(/\bnoted\b/g) ?? []).length;
+  if (notedCount >= 3) return true;
+
+  const normalized = text.replace(/\s+/g, " ").trim();
+  const segments = normalized.split(/[.!?]\s+/).map((s) => s.trim()).filter(Boolean);
+  if (segments.length >= 4) {
+    const segmentCounts = new Map<string, number>();
+    for (const segment of segments) {
+      segmentCounts.set(segment, (segmentCounts.get(segment) ?? 0) + 1);
+    }
+    if (Array.from(segmentCounts.values()).some((count) => count >= 3)) {
+      return true;
+    }
+  }
+
+  const words = normalized.replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+  if (words.length >= 20) {
+    const uniqueRatio = new Set(words).size / words.length;
+    if (uniqueRatio < 0.35) return true;
+  }
+
+  return false;
+}
+
 async function generateOnesaReply(messages: ChatMessage[]) {
-  const { provider, model, ollamaBase, openaiBase, timeoutMs, maxTokens } = getOnesaConfig();
+  const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = getOnesaConfig();
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
+  const safeFallbackReply = "I am having trouble generating a reliable response right now. Please try again.";
   const normalizedMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
     ...messages.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim()),
@@ -215,10 +246,11 @@ async function generateOnesaReply(messages: ChatMessage[]) {
       }
     );
     const reply = String(response.data?.choices?.[0]?.message?.content ?? "").trim();
-    if (reply) {
+    if (reply && !isLowQualityOnesaReply(reply)) {
       lastOnesaSuccessAt = Date.now();
+      return reply;
     }
-    return reply;
+    return safeFallbackReply;
   }
 
   const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
@@ -300,12 +332,20 @@ async function generateOnesaReply(messages: ChatMessage[]) {
   const candidates = Array.from(
     new Set([model, resolveOllamaModelName(model, availableModels)].filter((m): m is string => Boolean(m)))
   );
+  const fallbackCandidates = Array.from(
+    new Set([fallbackModel, resolveOllamaModelName(fallbackModel, availableModels)].filter((m): m is string => Boolean(m)))
+  ).filter((candidate) => !candidates.includes(candidate));
 
   let lastError: any = null;
+  let lowQualityReply: string | null = null;
   for (const candidate of candidates) {
     try {
       const reply = await tryModel(candidate);
       if (reply) {
+        if (isLowQualityOnesaReply(reply)) {
+          lowQualityReply = reply;
+          continue;
+        }
         lastOnesaSuccessAt = Date.now();
         return reply;
       }
@@ -314,8 +354,29 @@ async function generateOnesaReply(messages: ChatMessage[]) {
     }
   }
 
+  for (const candidate of fallbackCandidates) {
+    try {
+      const reply = await tryModel(candidate);
+      if (reply) {
+        if (isLowQualityOnesaReply(reply)) {
+          lowQualityReply = reply;
+          continue;
+        }
+        lastOnesaSuccessAt = Date.now();
+        return reply;
+      }
+    } catch (error: any) {
+      lastError = error;
+    }
+  }
+
+  if (lowQualityReply) {
+    return safeFallbackReply;
+  }
   if (lastError) throw lastError;
-  throw new Error(`Onesa model returned an empty response for: ${candidates.join(", ") || model}`);
+  throw new Error(
+    `Onesa model returned an empty response for: ${[...candidates, ...fallbackCandidates].join(", ") || model}`
+  );
 }
 
 async function getOnesaHealth() {

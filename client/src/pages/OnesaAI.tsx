@@ -199,7 +199,7 @@ export default function OnesaAI() {
               {messages.map((message, index) => (
                 <div key={`${message.role}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[90%] md:max-w-[75%] rounded-2xl px-3 py-2.5 text-sm leading-relaxed ${
+                    className={`max-w-[90%] md:max-w-[75%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
                       message.role === "user"
                         ? "bg-slate-800 border border-slate-700 text-slate-100"
                         : "bg-slate-900 border border-white/10 text-slate-100"
