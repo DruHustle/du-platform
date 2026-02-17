@@ -60,22 +60,19 @@ export default function SuccessStories() {
   const normalizePeopleImage = (image: string | undefined, index: number) => {
     if (!image) return DIVERSE_PEOPLE_IMAGES[index % DIVERSE_PEOPLE_IMAGES.length];
 
-    const source = image.toLowerCase();
-    const decodedSource = source.replace(/%20/g, " ");
+    const normalizedSource = image.toLowerCase().replace(/%20/g, " ").replace(/[^a-z0-9]/g, "");
     const peopleSignals = [
-      "team meeting",
+      "teammeeting",
       "handshake",
-      "woman smiling",
-      "man at a laptop",
-      "scientist at computer",
-      "lachende frau",
+      "womansmiling",
+      "manatalaptop",
+      "scientistatcomputer",
+      "lachendefrau",
       "people",
       "office",
       "portrait",
     ];
-    const looksLikePeoplePhoto = peopleSignals.some(
-      (signal) => source.includes(signal) || decodedSource.includes(signal)
-    );
+    const looksLikePeoplePhoto = peopleSignals.some((signal) => normalizedSource.includes(signal));
 
     return looksLikePeoplePhoto ? DIVERSE_PEOPLE_IMAGES[index % DIVERSE_PEOPLE_IMAGES.length] : image;
   };
