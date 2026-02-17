@@ -80,14 +80,91 @@ export default function Investment() {
     description: t('investment.objective_subtitle')
   };
 
-  const projects = [
-    { id: "masuwe", sector: "tourism", target: "$1.2B", raised: "$0", prog: 0, inv: 12, min: "$100k", ret: "15-25%", time: "10-15y", risk: "moderate", ver: true },
-    { id: "leather", sector: "manufacturing", target: "$250k", raised: "$187k", prog: 75, inv: 342, min: "$500", ret: "12-15%", time: "3-5y", risk: "moderate", ver: true },
-    { id: "apparel", sector: "manufacturing", target: "$450k", raised: "$120k", prog: 26, inv: 89, min: "$1k", ret: "18-22%", time: "3-5y", risk: "aggressive", ver: true },
-    { id: "horticulture", sector: "agriculture", target: "$150k", raised: "$98k", prog: 65, inv: 218, min: "$300", ret: "10-12%", time: "2-4y", risk: "conservative", ver: true },
-    { id: "fintech", sector: "it", target: "$1.5M", raised: "$650k", prog: 43, inv: 112, min: "$2.5k", ret: "25-35%", time: "5-7y", risk: "aggressive", ver: true },
-    { id: "solar", sector: "energy", target: "$5M", raised: "$1.2M", prog: 24, inv: 412, min: "$1k", ret: "14-18%", time: "4-6y", risk: "conservative", ver: true }
-  ];
+const projects = [
+  { 
+    id: "masuwe", 
+    sector: "tourism", 
+    target: "$25M", 
+    raised: "$0", 
+    prog: 10, 
+    inv: 0, 
+    min: "$10k", 
+    ret: "14-20%", 
+    time: "10-15y", 
+    risk: "moderate", 
+    ver: true 
+  },
+
+  { 
+    id: "leather", 
+    sector: "manufacturing", 
+    target: "$180k", 
+    raised: "$0", 
+    prog: 35, 
+    inv: 0, 
+    min: "$500", 
+    ret: "12-16%", 
+    time: "3-5y", 
+    risk: "moderate", 
+    ver: true 
+  },
+
+  { 
+    id: "apparel", 
+    sector: "manufacturing", 
+    target: "$300k", 
+    raised: "$0", 
+    prog: 20, 
+    inv: 0, 
+    min: "$1k", 
+    ret: "16-22%", 
+    time: "3-5y", 
+    risk: "aggressive", 
+    ver: true 
+  },
+
+  { 
+    id: "horticulture", 
+    sector: "agriculture", 
+    target: "$120k", 
+    raised: "$0", 
+    prog: 40, 
+    inv: 0, 
+    min: "$300", 
+    ret: "10-14%", 
+    time: "2-4y", 
+    risk: "conservative", 
+    ver: true 
+  },
+
+  { 
+    id: "fintech", 
+    sector: "it", 
+    target: "$850k", 
+    raised: "$0", 
+    prog: 15, 
+    inv: 0, 
+    min: "$2,500", 
+    ret: "22-30%", 
+    time: "5-7y", 
+    risk: "aggressive", 
+    ver: true 
+  },
+
+  { 
+    id: "solar", 
+    sector: "energy", 
+    target: "$2.5M", 
+    raised: "$0", 
+    prog: 12, 
+    inv: 0, 
+    min: "$1,000", 
+    ret: "14-18%", 
+    time: "4-6y", 
+    risk: "conservative", 
+    ver: true 
+  }
+];
 
   const filtered = projects.filter(p => (activeFilter === "all" || p.sector === activeFilter) && (riskFilter === "all" || p.risk === riskFilter));
   const hdcAssoc = t('investment.hdc_associations', { returnObjects: true }) as string[] || [];

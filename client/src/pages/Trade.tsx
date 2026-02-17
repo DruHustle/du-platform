@@ -268,7 +268,7 @@ export default function Trade() {
                     <p className="text-xs text-white/50 leading-relaxed font-light line-clamp-2">{sector.description}</p>
                     
                     <div className="space-y-3">
-                      <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.opportunities_label') || "Opportunities"}</h4>
+                      <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.export_sectors_badge') || "Sectors"}</h4>
                       <ul className="space-y-2">
                         {sector.opportunities.map((opp, oppIdx) => (
                           <li key={oppIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
