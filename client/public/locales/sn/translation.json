@@ -1705,14 +1705,15 @@
     "subtitle": "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
     "send": "Send",
     "thinking": "Thinking...",
-    "starter_prompt": "Ndiri kuda mikana yekudyara yakatarisana nediaspora muZimbabwe pamwe nezvinodiwa nemitemo uye fungidziro yemari inodzoka.",
+    "starter_prompt": "Start chat....",
     "welcome": "Ndiri nyanzvi yeZimbabwe. Ndibvumire kukubatsira munzira dzese dzekudyara, kutengeserana, kushanya, uye mabasa ako ezuva nezuva.",
     "status_prefix": "Mamiro eOnesa",
     "status_offline": "Haisi online",
-    "status_backend_unreachable": "Mamiro eOnesa: Backend haisvikiki. Tanga `pnpm dev:server`, `ollama serve`, uye iva nechokwadi chekuti ONESA_MODEL iripo.",
-    "error_unable_contact": "Hatina kukwanisa kubata Onesa AI pari zvino. Ita shuwa kuti backend iri kushanda (`pnpm dev:server`) uye Ollama iri kushanda (`ollama serve`).",
+    "status_backend_unreachable": "Onesa haisi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
+    "error_unable_contact": "Onesa haisi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
     "online_indicator_aria": "Onesa iri online",
     "online_text": "Online",
-    "error_timeout": "Chikumbiro cheOnesa chapera nguva. Edza zvakare."
+    "error_timeout": "Chikumbiro cheOnesa chapera nguva mushure memaminitsi matatu. Edza zvakare.",
+    "offline_text": "Offline"
   }
 }

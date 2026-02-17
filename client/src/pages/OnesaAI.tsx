@@ -1,4 +1,4 @@
-import { KeyboardEvent, useCallback, useEffect, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,18 +15,14 @@ type ChatMessage = {
 export default function OnesaAI() {
   const { t } = useTranslation();
   const starterPrompt = t("onesa.starter_prompt", {
-    defaultValue:
-      "I want diaspora-focused investment opportunities in Zimbabwe with regulatory requirements and estimated return ranges.",
+    defaultValue: "Start chat....",
   });
   const onlineAria = t("onesa.online_indicator_aria", { defaultValue: "Onesa online" });
-  const statusPrefix = t("onesa.status_prefix", { defaultValue: "Onesa status" });
   const genericContactError = t("onesa.error_unable_contact", {
-    defaultValue:
-      "Unable to contact Onesa AI right now. Ensure backend is running (`pnpm dev:server`) and Ollama is active (`ollama serve`).",
+    defaultValue: "Onesa is currently unavailable. Please try again shortly.",
   });
   const backendUnreachableStatus = t("onesa.status_backend_unreachable", {
-    defaultValue:
-      "Onesa status: Backend unreachable. Start `pnpm dev:server`, `ollama serve`, and ensure ONESA_MODEL exists.",
+    defaultValue: "Onesa is currently unavailable. Please try again shortly.",
   });
 
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -43,29 +39,22 @@ export default function OnesaAI() {
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [isOnline, setIsOnline] = useState(false);
+  const loadingRef = useRef(false);
+  const hasChatStarted = messages.some((message) => message.role === "user");
 
-  const checkHealth = useCallback(async () => {
+  const checkHealth = useCallback(async (): Promise<boolean> => {
     try {
-      const { data } = await api.get("/onesa/health", { timeout: 8000 });
-      const online = Boolean(data?.ok);
+      const { data } = await api.get("/onesa/ready", { timeout: 12000 });
+      const online = Boolean(data?.ready);
       setIsOnline(online);
-      setStatus(
-        online
-          ? ""
-          : `${statusPrefix}: ${String(
-              data?.message ?? t("onesa.status_offline", { defaultValue: "Offline" })
-            )}`
-      );
-    } catch (err: any) {
+      setStatus(online ? "" : backendUnreachableStatus);
+      return online;
+    } catch {
       setIsOnline(false);
-      const responseMessage = err?.response?.data?.message;
-      if (responseMessage) {
-        setStatus(`${statusPrefix}: ${String(responseMessage)}`);
-        return;
-      }
       setStatus(backendUnreachableStatus);
+      return false;
     }
-  }, [backendUnreachableStatus, statusPrefix, t]);
+  }, [backendUnreachableStatus]);
 
   useEffect(() => {
     let mounted = true;
@@ -75,8 +64,9 @@ export default function OnesaAI() {
     };
     void runHealthCheck();
     const intervalId = window.setInterval(() => {
+      if (loadingRef.current) return;
       void runHealthCheck();
-    }, 15000);
+    }, 30000);
     return () => {
       mounted = false;
       window.clearInterval(intervalId);
@@ -86,11 +76,17 @@ export default function OnesaAI() {
   const sendMessage = async () => {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
+    const ready = isOnline || (await checkHealth());
+    if (!ready) {
+      setError(genericContactError);
+      return;
+    }
 
     const nextMessages: ChatMessage[] = [...messages, { role: "user", content: trimmed }];
     setMessages(nextMessages);
     setInput("");
     setError("");
+    loadingRef.current = true;
     setLoading(true);
 
     try {
@@ -99,7 +95,7 @@ export default function OnesaAI() {
         {
           messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
         },
-        { timeout: 45000 }
+        { timeout: 180000 }
       );
       const reply = String(data?.reply ?? "").trim();
       if (!reply) throw new Error("Empty model response.");
@@ -108,12 +104,13 @@ export default function OnesaAI() {
       const responseMessage = err?.response?.data?.message;
       const timeoutMessage =
         err?.code === "ECONNABORTED"
-          ? t("onesa.error_timeout", { defaultValue: "Onesa request timed out. Please try again." })
+          ? t("onesa.error_timeout", { defaultValue: "Onesa request timed out after 3 minutes. Please try again." })
           : null;
       const message = responseMessage ?? timeoutMessage ?? genericContactError;
       setError(message);
       void checkHealth();
     } finally {
+      loadingRef.current = false;
       setLoading(false);
     }
   };
@@ -142,17 +139,31 @@ export default function OnesaAI() {
               <h1 className="text-4xl md:text-6xl font-black tracking-tighter">
                 {t("onesa.title", { defaultValue: "Chat with Onesa AI" })}
               </h1>
-              {isOnline ? (
+              <span
+                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 ${
+                  isOnline
+                    ? "border border-emerald-300/40 bg-emerald-500/15 shadow-[0_0_16px_rgba(74,222,128,0.45)]"
+                    : "border border-red-300/40 bg-red-500/15 shadow-[0_0_16px_rgba(248,113,113,0.45)]"
+                }`}
+                aria-label={onlineAria}
+              >
                 <span
-                  className="inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-500/15 px-3 py-1 shadow-[0_0_16px_rgba(74,222,128,0.45)]"
-                  aria-label={onlineAria}
+                  className={`h-2.5 w-2.5 rounded-full ${
+                    isOnline
+                      ? "bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]"
+                      : "bg-red-400 shadow-[0_0_10px_rgba(248,113,113,0.9)]"
+                  }`}
+                />
+                <span
+                  className={`text-[10px] font-black uppercase tracking-widest animate-pulse ${
+                    isOnline ? "text-emerald-300" : "text-red-300"
+                  }`}
                 >
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-300 animate-pulse">
-                    {t("onesa.online_text", { defaultValue: "Online" })}
-                  </span>
+                  {isOnline
+                    ? t("onesa.online_text", { defaultValue: "Online" })
+                    : t("onesa.offline_text", { defaultValue: "Offline" })}
                 </span>
-              ) : null}
+              </span>
             </div>
             <p className="text-white/60 max-w-3xl">
               {t("onesa.subtitle", {
@@ -170,8 +181,8 @@ export default function OnesaAI() {
                   <div
                     className={`max-w-[90%] md:max-w-[75%] rounded-2xl p-4 text-sm leading-relaxed ${
                       message.role === "user"
-                        ? "bg-zim-gold text-zim-black font-medium"
-                        : "bg-white/[0.06] border border-white/10 text-white/90"
+                        ? "bg-slate-800 border border-slate-700 text-slate-100"
+                        : "bg-slate-900 border border-white/10 text-slate-100"
                     }`}
                   >
                     {message.role === "assistant" ? (
@@ -190,7 +201,7 @@ export default function OnesaAI() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleInputKeyDown}
-                placeholder={starterPrompt}
+                placeholder={hasChatStarted ? "" : starterPrompt}
                 className="min-h-[110px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/30"
               />
               {error ? <p className="text-red-400 text-sm">{error}</p> : null}

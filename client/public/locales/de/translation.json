@@ -1705,14 +1705,15 @@
     "subtitle": "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
     "send": "Send",
     "thinking": "Thinking...",
-    "starter_prompt": "Ich suche diaspora-orientierte Investitionsmöglichkeiten in Simbabwe mit regulatorischen Anforderungen und geschätzten Renditespannen.",
+    "starter_prompt": "Start chat....",
     "welcome": "Ich bin ein Experte für Simbabwe. Ich helfe Ihnen bei Investitionen, Handel, Tourismus und Ihren alltäglichen Aufgaben.",
     "status_prefix": "Onesa-Status",
     "status_offline": "Offline",
-    "status_backend_unreachable": "Onesa-Status: Backend nicht erreichbar. Starten Sie `pnpm dev:server`, `ollama serve` und stellen Sie sicher, dass ONESA_MODEL vorhanden ist.",
-    "error_unable_contact": "Onesa AI ist derzeit nicht erreichbar. Stellen Sie sicher, dass das Backend läuft (`pnpm dev:server`) und Ollama aktiv ist (`ollama serve`).",
+    "status_backend_unreachable": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
+    "error_unable_contact": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
     "online_indicator_aria": "Onesa online",
     "online_text": "Online",
-    "error_timeout": "Die Onesa-Anfrage ist abgelaufen. Bitte versuchen Sie es erneut."
+    "error_timeout": "Die Onesa-Anfrage ist nach 3 Minuten abgelaufen. Bitte versuchen Sie es erneut.",
+    "offline_text": "Offline"
   }
 }

@@ -32,6 +32,21 @@ const __dirname = path.dirname(__filename);
 const SESSION_COOKIE = "zigd_session";
 const DEFAULT_ONESA_SYSTEM_PROMPT =
   "You are Onesa AI, a Zimbabwe-focused diaspora decision-support assistant. Provide practical, concise guidance for tourism, trade, and investment, and clearly mark uncertainty.";
+const ONESA_READINESS_CACHE_MS = 30000;
+const ONESA_READINESS_GRACE_MS = 120000;
+
+type OnesaReadiness = {
+  ok: boolean;
+  ready: boolean;
+  provider: string;
+  model: string;
+  endpoint: string;
+  resolvedModel?: string | null;
+  message?: string;
+};
+
+let onesaReadinessCache: { checkedAt: number; value: OnesaReadiness } | null = null;
+let lastOnesaSuccessAt = 0;
 
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -196,7 +211,11 @@ async function generateOnesaReply(messages: ChatMessage[]) {
         },
       }
     );
-    return String(response.data?.choices?.[0]?.message?.content ?? "").trim();
+    const reply = String(response.data?.choices?.[0]?.message?.content ?? "").trim();
+    if (reply) {
+      lastOnesaSuccessAt = Date.now();
+    }
+    return reply;
   }
 
   const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
@@ -281,7 +300,10 @@ async function generateOnesaReply(messages: ChatMessage[]) {
   for (const candidate of candidates) {
     try {
       const reply = await tryModel(candidate);
-      if (reply) return reply;
+      if (reply) {
+        lastOnesaSuccessAt = Date.now();
+        return reply;
+      }
     } catch (error: any) {
       lastError = error;
     }
@@ -333,6 +355,127 @@ async function getOnesaHealth() {
       endpoint: ollamaBase,
       message: `Ollama unreachable: ${String(error?.message ?? "unknown error")}`,
     };
+  }
+}
+
+async function getOnesaReadiness() {
+  const { provider, model, ollamaBase, openaiBase, timeoutMs } = getOnesaConfig();
+  const endpoint = provider === "openai_compatible" ? openaiBase : ollamaBase;
+  const now = Date.now();
+  const probeTimeout = Math.min(timeoutMs, 10000);
+
+  if (onesaReadinessCache && now - onesaReadinessCache.checkedAt < ONESA_READINESS_CACHE_MS) {
+    return onesaReadinessCache.value;
+  }
+
+  const remember = (value: OnesaReadiness) => {
+    onesaReadinessCache = { checkedAt: Date.now(), value };
+    return value;
+  };
+
+  const health = await getOnesaHealth();
+  if (!health.ok) {
+    return remember({
+      ok: false,
+      ready: false,
+      provider,
+      model,
+      endpoint,
+      message: String(health.message ?? "Onesa is unavailable."),
+    });
+  }
+
+  const recentSuccess = now - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
+  if (recentSuccess) {
+    return remember({
+      ok: true,
+      ready: true,
+      provider,
+      model,
+      endpoint,
+      resolvedModel: provider === "ollama" ? String((health as any)?.resolvedModel ?? model) : undefined,
+    });
+  }
+
+  try {
+    if (provider === "openai_compatible") {
+      const apiKey = process.env.ONESA_AI_API_KEY ?? "not-required";
+      const response = await axios.post(
+        `${openaiBase}/chat/completions`,
+        {
+          model,
+          messages: [{ role: "user", content: "ready" }],
+          temperature: 0,
+          max_tokens: 4,
+        },
+        {
+          timeout: probeTimeout,
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const reply = String(response.data?.choices?.[0]?.message?.content ?? "").trim();
+      const ready = reply.length > 0;
+      if (ready) {
+        lastOnesaSuccessAt = Date.now();
+      }
+      return remember({
+        ok: ready,
+        ready,
+        provider,
+        model,
+        endpoint,
+        message: ready ? undefined : "Onesa is unavailable.",
+      });
+    }
+
+    const resolvedModel = String((health as any)?.resolvedModel ?? model);
+    const response = await axios.post(
+      `${ollamaBase}/api/generate`,
+      {
+        model: resolvedModel,
+        prompt: "ready",
+        stream: false,
+        options: {
+          temperature: 0,
+          num_predict: 4,
+        },
+      },
+      {
+        timeout: probeTimeout,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const reply = String(response.data?.response ?? "").trim();
+    const ready = reply.length > 0;
+    if (ready) {
+      lastOnesaSuccessAt = Date.now();
+    }
+    return remember({
+      ok: ready,
+      ready,
+      provider,
+      model,
+      endpoint,
+      resolvedModel,
+      message: ready ? undefined : "Onesa is unavailable.",
+    });
+  } catch {
+    const stillWarm = Date.now() - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
+    return remember({
+      ok: stillWarm,
+      ready: stillWarm,
+      provider,
+      model,
+      endpoint,
+      resolvedModel: provider === "ollama" ? String((health as any)?.resolvedModel ?? model) : undefined,
+      message: stillWarm ? undefined : "Onesa is unavailable.",
+    });
   }
 }
 
@@ -722,6 +865,8 @@ async function startServer() {
       if (!reply) {
         return res.status(502).json({ message: "Onesa model returned an empty response." });
       }
+      lastOnesaSuccessAt = Date.now();
+      onesaReadinessCache = null;
       return res.json({ reply });
     } catch (error: any) {
       const isDev = (process.env.NODE_ENV ?? "development") !== "production";
@@ -737,6 +882,12 @@ async function startServer() {
     const health = await getOnesaHealth();
     const status = health.ok ? 200 : 503;
     return res.status(status).json(health);
+  });
+
+  app.get("/api/onesa/ready", async (_req, res) => {
+    const readiness = await getOnesaReadiness();
+    const status = readiness.ready ? 200 : 503;
+    return res.status(status).json(readiness);
   });
 
   const staticPath =

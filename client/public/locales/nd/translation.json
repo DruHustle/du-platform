@@ -1705,14 +1705,15 @@
     "subtitle": "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
     "send": "Send",
     "thinking": "Thinking...",
-    "starter_prompt": "Ngifuna amathuba okutshala imali agxile kuma-diaspora eZimbabwe, okuhlanganisa izimfuneko zemithetho kanye lamazinga okubuya kwemali alinganisiwe.",
+    "starter_prompt": "Start chat....",
     "welcome": "Nginguchwepheshe weZimbabwe. Ake ngikusize kuzo zonke izinto ezimayelana lokutshala imali, ezohwebo, ezokuvakasha, kanye lemisebenzi yakho yansuku zonke.",
     "status_prefix": "Isimo se-Onesa",
     "status_offline": "Ayikho online",
-    "status_backend_unreachable": "Isimo se-Onesa: I-backend ayifinyeleleki. Qalisa `pnpm dev:server`, `ollama serve`, njalo uqinisekise ukuthi i-ONESA_MODEL ikhona.",
-    "error_unable_contact": "Asikwazanga ukuxhumana le-Onesa AI okwamanje. Qinisekisa ukuthi i-backend iyasebenza (`pnpm dev:server`) lokuthi i-Ollama iyasebenza (`ollama serve`).",
+    "status_backend_unreachable": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
+    "error_unable_contact": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
     "online_indicator_aria": "Onesa iku-online",
     "online_text": "Online",
-    "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi. Zama njalo."
+    "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi ngemva kwemizuzu emithathu. Zama njalo.",
+    "offline_text": "Offline"
   }
 }
