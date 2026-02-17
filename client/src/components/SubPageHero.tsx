@@ -149,7 +149,7 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
 
               {/* 4. BUTTONS */}
               <div className="flex flex-wrap gap-4">
-                {current.buttons?.map((btn, idx) => (
+                {current.buttons?.filter((btn) => Boolean(btn.link)).map((btn, idx) => (
                   <Button 
                     key={idx}
                     variant="outline"
@@ -162,7 +162,7 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
                     `}
                     asChild
                   >
-                    <a href={btn.link || "#"}>
+                    <a href={btn.link}>
                       <span className="relative z-10 flex items-center">
                         {btn.text}
                         {btn.showArrow && <ArrowRight className="ml-2 h-4 w-4" />}

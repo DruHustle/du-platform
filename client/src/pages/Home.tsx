@@ -15,28 +15,28 @@ export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = useMemo(() => [
-    "/images/victoria_falls.jpg",
-    "/images/hwange_elephants.jpg",
-    "/images/balancing_rocks.jpg",
-    "/images/great_zimbabwe.jpeg",
-    "/images/eastern_highlands.jpg",
-    "/images/zimbabwe_lion.png",
-    "/images/zimbabwe_baobab.png",
-    "/images/harare_cbd.png",
-    "/images/mana_pools.jpg",
-    "/images/kariba_sunset.jpg",
-    "/images/partnership_handshake.png",
-    "/images/african_trade.jpg",
-    "/images/harare_airport.png",
-    "/images/eu_symbol.png",
-    "/images/zimbabwe_shop_hero.jpg",
-    "/images/dest_mana_pools.jpg",
-    "/images/dest_gonarezhou.jpg",
-    "/images/dest_matobo.jpg",
-    "/images/minerals_mining.png",
-    "/images/manufacturing_factory.jpg",
-    "/images/tech/ai_innovation.jpg",
-    "/images/tech/ai_context.jpg"
+    "/images/pages/tourism/victoria_falls.jpg",
+    "/images/pages/wikimedia/african-elephant.jpg",
+    "/images/pages/tourism/balancing_rocks.jpg",
+    "/images/pages/tourism/great_zimbabwe.jpeg",
+    "/images/pages/tourism/eastern_highlands.jpg",
+    "/images/pages/home/zimbabwe_lion.png",
+    "/images/pages/home/zimbabwe_baobab.png",
+    "/images/pages/home/harare_cbd.png",
+    "/images/pages/tourism/mana_pools.jpg",
+    "/images/pages/tourism/kariba_sunset.jpg",
+    "/images/pages/home/partnership_handshake.png",
+    "/images/pages/trade/export_port1.jpg",
+    "/images/pages/home/harare_cbd.png",
+    "/images/pages/export/eu_symbol.png",
+    "/images/pages/shop/zimbabwe_shop_hero.jpg",
+    "/images/pages/tourism/dest_mana_pools.jpg",
+    "/images/pages/tourism/dest_gonarezhou.jpg",
+    "/images/pages/tourism/dest_matobo.jpg",
+    "/images/pages/shared/minerals_mining.png",
+    "/images/pages/trade/manufacturing_factory.jpg",
+    "/images/pages/technology/ai_innovation.jpg",
+    "/images/pages/home/partnership_handshake.png"
   ], []);
 
   const navButtons = [
@@ -62,52 +62,53 @@ export default function Home() {
 
   const modules = [
     {
-      title: t('home.modules.technology.title'),
-      description: t('home.modules.technology.desc'),
+      title: t('home.modules.technology.title') || "Technology & AI",
+      description: t('home.modules.technology.desc') || "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context.",
       href: "/technology",
       color: " bg-purple-600/5 hover:bg-purple-600/10",
-      bgImage: "/images/tech/ai_innovation.jpg",
-      stats: t('home.modules.technology.stats')
+      bgImage: "/images/pages/technology/ai_innovation.jpg",
+      stats: t('home.modules.technology.stats') || "Onesa AI"
     },
     {
       
-      title: t('home.modules.export.title'),
+      title: t('home.modules.export.title') || "Export Hub",
+      description: t('home.modules.export.desc') || "Access verified export partners, compliance guidance, and market-entry support for EU and global trade.",
       href: "/export-hub",
       color: " bg-green-600/5 hover:bg-green-600/10",
-      bgImage: "/images/eu_symbol.png",
-      stats: t('home.modules.export.stats')
+      bgImage: "/images/pages/export/eu_symbol.png",
+      stats: t('home.modules.export.stats') || "Verified Partners"
     },
     {
-      title: t('home.modules.tourism.title'),
-      description: t('home.modules.tourism.desc'),
+      title: t('home.modules.tourism.title') || "Tourism",
+      description: t('home.modules.tourism.desc') || "Discover Zimbabwe's world-class attractions and  plan your visit.",
       href: "/tourism",
       color: " bg-yellow-500/5 hover:bg-yellow-500/10",
-      bgImage: "/images/hwange_elephants.jpg",
-      stats: t('home.modules.tourism.stats')
+      bgImage: "/images/pages/tourism/victoria_falls.jpg",
+      stats: t('home.modules.tourism.stats') || "Diaspora Travel Ready"
     },
     {
-      title: t('home.modules.investment.title'),
-      description: t('home.modules.investment.desc'),
+      title: t('home.modules.investment.title') || "Investment",
+      description: t('home.modules.investment.desc') || "Explore diaspora-friendly micro-investment and crowdfunding opportunities.",
       href: "/investment",
       color: " bg-red-600/5 hover:bg-red-600/10",
-      bgImage: "/images/minerals_mining.png",
-      stats: t('home.modules.investment.stats')
+      bgImage: "/images/pages/shared/minerals_mining.png",
+      stats: t('home.modules.investment.stats') || "$50M+ Opportunities"
     },
     {
-      title: t('home.modules.trade.title'),
-      description: t('home.modules.trade.desc'),
+      title: t('home.modules.trade.title') || "Trade",
+      description: t('home.modules.trade.desc') || "Access comprehensive trade resources and connect with Zimbabwe's export sectors.",
       href: "/trade",
       color: " bg-slate-800/5 hover:bg-slate-800/10",
-      bgImage: "/images/african_trade.jpg",
-      stats: t('home.modules.trade.stats')
+      bgImage: "/images/pages/trade/export_port1.jpg",
+      stats: t('home.modules.trade.stats') || "8 Export Sectors"
     },
     {
-      title: t('home.modules.success.title'),
-      description: t('home.modules.success.desc'),
+      title: t('home.modules.success.title') || "Impact",
+      description: t('home.modules.success.desc') || "Explore real-world examples of projects thriving through diaspora engagement.",
       href: "/success-stories",
       color: " bg-zim-gold/5 hover:bg-zim-gold/10",
-      bgImage: "/images/partnership_handshake.png",
-      stats: t('home.modules.success.stats')
+      bgImage: "/images/pages/home/partnership_handshake.png",
+      stats: t('home.modules.success.stats') || "Impact Stories"
     }
   ];
 
@@ -204,7 +205,7 @@ export default function Home() {
                           bg-white/5 text-white text-[10px] font-black uppercase tracking-[0.2em] 
                           hover:bg-white hover:text-black transition-all duration-500
                         ">
-                          {t('home.explore_now')}
+                          {t('home.explore_now') || "Explore Now"}
                         </button>
                       </Link>
                     </div>
@@ -218,9 +219,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
-
 
     </Layout>
   );

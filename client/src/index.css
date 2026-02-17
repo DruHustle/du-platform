@@ -186,6 +186,19 @@
   ::selection {
     background: oklch(0.35 0.08 150 / 20%);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
@@ -262,6 +275,69 @@
   
   .hover-glow:hover {
     box-shadow: 0 0 30px rgba(34, 139, 34, 0.25);
+  }
+
+  /* Unified hover system: text tiles, media tiles, and chart tiles */
+  .global-hover-card {
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .global-hover-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px -16px rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(212, 175, 55, 0.28);
+  }
+
+  /* Shared card candidates across pages (stable, no :has selectors) */
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-white/5"],
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"] {
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"]:hover,
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"]:hover,
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-white/5"]:hover,
+  main :is(div, article)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -16px rgba(212, 175, 55, 0.26);
+    border-color: rgba(212, 175, 55, 0.25);
+  }
+
+  /* Media consistency inside tiles */
+  main :is(div, article)[class*="rounded-"][class*="border"] img[class*="object-cover"] {
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  main :is(div, article)[class*="rounded-"][class*="border"]:hover img[class*="object-cover"] {
+    transform: scale(1.02);
+  }
+
+  .recharts-wrapper,
+  .recharts-responsive-container {
+    transition: filter 0.28s ease, transform 0.28s ease;
+  }
+
+  .recharts-wrapper:hover,
+  .recharts-responsive-container:hover {
+    filter: saturate(1.04) brightness(1.03);
+    transform: translateY(-1px);
+  }
+
+  .recharts-tooltip-wrapper {
+    z-index: 90 !important;
+    pointer-events: none !important;
   }
   
   /* Button enhancements */

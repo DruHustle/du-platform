@@ -7,13 +7,33 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Mail, Lock, LogIn as LoginIcon, X } from "lucide-react"; // Renamed icon to avoid conflict
 import { Link, useLocation } from "wouter";
+import { api } from "@/lib/api";
 
 export default function Login() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
+  const params = new URLSearchParams(window.location.search);
+  const nextParam = params.get("next");
+  const nextPath = nextParam && nextParam.startsWith("/") ? nextParam : "/";
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await api.post("/auth/login", formData);
+      setLocation(nextPath);
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? "Login failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Layout>
@@ -31,7 +51,7 @@ export default function Login() {
             
             {/* --- CANCEL BUTTON --- */}
             <button 
-              onClick={() => setLocation("/")}
+              onClick={() => setLocation(nextPath)}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
               aria-label="Cancel login"
             >
@@ -43,10 +63,10 @@ export default function Login() {
               <p className="text-sm text-white/40 font-light">{t('auth.login_subtitle') || "Access your digital gateway to Zimbabwe."}</p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5" /> {t('auth.email')}
+                  <Mail className="h-3.5 w-3.5" /> {t('auth.email') || "Email Address"}
                 </Label>
                 <Input 
                   type="email" 
@@ -59,12 +79,10 @@ export default function Login() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
-                    <Lock className="h-3.5 w-3.5" /> {t('auth.password')}
+                    <Lock className="h-3.5 w-3.5" /> {t('auth.password') || "Password"}
                   </Label>
-                    <Link href="/forgot-password">
-                    <a className="text-[10px] uppercase font-black text-zim-gold/60 hover:text-zim-gold transition-colors tracking-widest cursor-pointer">
-                        {t('auth.forgot_password')}
-                    </a>
+                    <Link href="/forgot-password" className="text-[10px] uppercase font-black text-zim-gold/60 hover:text-zim-gold transition-colors tracking-widest cursor-pointer">
+                      {t('auth.forgot_password') || "Forgot Password?"}
                     </Link>
                 </div>
                 <Input 
@@ -74,8 +92,10 @@ export default function Login() {
                 />
               </div>
 
-              <Button className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20">
-                <LoginIcon className="mr-2 h-4 w-4" /> {t('auth.login')}
+              {error ? <p className="text-red-400 text-sm">{error}</p> : null}
+
+              <Button type="submit" disabled={loading} className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20">
+                <LoginIcon className="mr-2 h-4 w-4" /> {t('auth.login') || "Login"}
               </Button>
             </form>
 

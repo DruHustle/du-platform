@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+EN_FILE="client/public/locales/en/translation.json"
+
+# Run only if English translation file is staged for commit.
+if ! git diff --cached --name-only | grep -qx "$EN_FILE"; then
+  exit 0
+fi
+
+echo "[pre-commit] English translations changed. Syncing locale files..."
+pnpm translations:sync
+
+# Re-stage synced locale files.
+git add client/public/locales/*/translation.json
+
+echo "[pre-commit] Translation sync complete."

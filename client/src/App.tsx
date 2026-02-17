@@ -19,6 +19,17 @@ import ComingSoon from "./components/ComingSoon";
 import ScrollToHash from "./components/ScrollToHash";
 import LogIn from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import NtirDatabase from "./pages/NtirDatabase";
+import ProjectDetails from "./pages/ProjectDetails";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import ResetPassword from "./pages/ResetPassword";
+import Regulations from "./pages/Regulations";
+import OnesaAI from "./pages/OnesaAI";
+import AdminDashboard from "./pages/AdminDashboard";
+import CookieConsent from "./components/CookieConsent";
+import CookieSettings from "./pages/CookieSettings";
 
 function Router() {
   const { t } = useTranslation();
@@ -37,9 +48,18 @@ function Router() {
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/login" component={LogIn} />
       <Route path="/register" component={Register} /> {/* Fixed typo: registar -> register */}
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/regulations" component={Regulations} />
+      <Route path="/onesa-ai" component={OnesaAI} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/cookie-settings" component={CookieSettings} />
+      <Route path="/ntir" component={NtirDatabase} />
+      <Route path="/investment/projects/:id" component={ProjectDetails} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/search" component={SearchResults} />
       <Route path="/404" component={NotFound} />
-      <Route component={NotFound} />
 
       {/* COMING SOON ROUTE  */}
       <Route path="/coming-soon">
@@ -49,6 +69,7 @@ function Router() {
           </div>
         </ComingSoon>
       </Route>
+      <Route component={NotFound} />
 
     </Switch>
     </>
@@ -61,6 +82,7 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
+          <CookieConsent />
           <Router />
           <Analytics />
         </TooltipProvider>

@@ -2,10 +2,11 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
+import { api, type AuthUser } from "@/lib/api";
 
 
 interface LayoutProps {
@@ -19,17 +20,79 @@ export default function Layout({ children }: LayoutProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [phoneActionOpen, setPhoneActionOpen] = useState(false);
+  const [showWhatsIcon, setShowWhatsIcon] = useState(false);
+  const scrolledRef = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    let rafId = 0;
+    const updateScrolledState = () => {
+      rafId = 0;
+      const nextScrolled = window.scrollY > 10;
+      if (nextScrolled !== scrolledRef.current) {
+        scrolledRef.current = nextScrolled;
+        setScrolled(nextScrolled);
+      }
+    };
+
+    const handleScroll = () => {
+      if (rafId === 0) {
+        rafId = window.requestAnimationFrame(updateScrolledState);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setShowWhatsIcon((prev) => !prev);
+    }, 1800);
+    return () => clearInterval(timer);
   }, []);
 
   // Sync mobile menu close with route changes
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchMe = async () => {
+      try {
+        const { data } = await api.get("/auth/me");
+        if (mounted) setUser(data?.user ?? null);
+      } catch {
+        if (mounted) setUser(null);
+      } finally {
+        if (mounted) setAuthLoading(false);
+      }
+    };
+    fetchMe();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch {
+      // Intentionally ignore: UI should still clear local session state
+    } finally {
+      setUser(null);
+      window.location.href = "/";
+    }
+  };
 
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
@@ -50,6 +113,7 @@ export default function Layout({ children }: LayoutProps) {
   ];
 
   const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
+  const showOnesaBubble = !location.startsWith("/onesa-ai");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +146,7 @@ export default function Layout({ children }: LayoutProps) {
                     : 'opacity-0 -translate-x-4 pointer-events-none'
                 }`}>
                 <img
-                  src='/images/made_in_zimbabwe.png'
+                  src='/images/pages/shared/made_in_zimbabwe.png'
                   alt='Logo'
                   className="h-9 w-9 object-contain"
                 />
@@ -186,28 +250,48 @@ export default function Layout({ children }: LayoutProps) {
                 className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-2xl p-2 shadow-2xl min-w-[12rem] z-[100]"
               >
                 <DropdownMenuLabel className="text-white/40 font-black text-[10px] uppercase tracking-widest px-3 py-2">
-                  {t('account')}
+                  {user ? user.fullName : t('account')}
                 </DropdownMenuLabel>
                 
                 <DropdownMenuSeparator className="bg-white/10" />
 
-                {/* Login Link */}
-                <Link href="/login">
-                  <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
-                    <div className="flex items-center gap-2 w-full">
-                      {t('login')}
-                    </div>
+                {authLoading ? (
+                  <DropdownMenuItem className="rounded-xl py-2.5 px-3 text-sm text-white/60 cursor-default">
+                    Loading...
                   </DropdownMenuItem>
-                </Link>
+                ) : user ? (
+                  <>
+                    <Link href="/admin">
+                      <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
+                        <div className="flex items-center gap-2 w-full">Admin</div>
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
+                      <div className="flex items-center gap-2 w-full">
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </div>
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login">
+                      <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
+                        <div className="flex items-center gap-2 w-full">
+                          {t('login')}
+                        </div>
+                      </DropdownMenuItem>
+                    </Link>
 
-                {/* Register Link - Cinematic Gold Highlight */}
-                <Link href="/register">
-                  <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-zim-gold hover:text-zim-black py-2.5 px-3 text-sm font-bold transition-all duration-300 outline-none">
-                    <div className="flex items-center gap-2 w-full">
-                      {t('register')}
-                    </div>
-                  </DropdownMenuItem>
-                </Link>
+                    <Link href="/register">
+                      <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-zim-gold hover:text-zim-black py-2.5 px-3 text-sm font-bold transition-all duration-300 outline-none">
+                        <div className="flex items-center gap-2 w-full">
+                          {t('register')}
+                        </div>
+                      </DropdownMenuItem>
+                    </Link>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -326,6 +410,36 @@ export default function Layout({ children }: LayoutProps) {
         {children}
       </main>
 
+      {showOnesaBubble && (
+        /* Onesa Floating Bubble */
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"
+        >
+          <Link href="/onesa-ai">
+            <button
+              aria-label="Chat with Onesa"
+              className="group relative flex items-center gap-3 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 py-2 shadow-2xl hover:bg-slate-900 transition-colors will-change-transform"
+            >
+              <span className="relative h-12 w-12 rounded-full overflow-hidden border border-zim-gold/40">
+                <img
+                  src="/images/pages/technology/zim_think.jpg"
+                  alt="Onesa AI assistant"
+                  className="h-full w-full object-cover"
+                />
+                <span className="absolute inset-0 bg-gradient-to-t from-slate-950/30 to-transparent" />
+              </span>
+              <span className="text-left">
+                <span className="block text-zim-gold text-[10px] font-black uppercase tracking-widest">Onesa</span>
+                <span className="block text-white text-xs font-semibold">{t("tech.chat_with_onesa") || "Chat with Onesa"}</span>
+              </span>
+            </button>
+          </Link>
+        </motion.div>
+      )}
+
      {/* Footer */}
       <footer className="relative bg-slate-950 pt-20 pb-12 overflow-hidden">
         {/* Accents & Textures */}
@@ -376,9 +490,9 @@ export default function Layout({ children }: LayoutProps) {
               </h3>
               <ul className="text-slate-400 space-y-2 text-xs">
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Zimbabwe Tourism</a></li>
+                <li><a href="https://zimparks.org.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZimParks</a></li>
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZIDA Invest</a></li>
                 <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZimTrade</a></li>
-                <li><a href="https://www.ictministry.gov.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Ministry Of ICT</a></li>
                 <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZIMRA</a></li>
               </ul>
             </div>
@@ -393,9 +507,73 @@ export default function Layout({ children }: LayoutProps) {
                   <Mail className="h-4 w-4 text-yellow-400" />
                   <a href="mailto:info@diasporaunlocked.com" className="hover:text-white transition-colors">info@diasporaunlocked.com</a>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 text-yellow-400" />
-                  <a href="tel:+4915147416152" className="hover:text-white transition-colors">+49 151 474 16152</a>
+                <li className="relative">
+                  <button
+                    onClick={() => setPhoneActionOpen((prev) => !prev)}
+                    className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors"
+                  >
+                    <span className="relative h-4 w-4">
+                      <AnimatePresence mode="wait" initial={false}>
+                        {showWhatsIcon ? (
+                          <motion.span
+                            key="wa"
+                            initial={{ opacity: 0, scale: 0.7, rotate: -20 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            exit={{ opacity: 0, scale: 0.7, rotate: 20 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute inset-0 text-green-400"
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                          </motion.span>
+                        ) : (
+                          <motion.span
+                            key="call"
+                            initial={{ opacity: 0, scale: 0.7, rotate: 20 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            exit={{ opacity: 0, scale: 0.7, rotate: -20 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute inset-0 text-yellow-400"
+                          >
+                            <Phone className="h-4 w-4" />
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </span>
+                    <span>+49 151 474 16152</span>
+                  </button>
+                  <AnimatePresence>
+                    {phoneActionOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.18 }}
+                        className="absolute left-0 mt-2 w-56 rounded-xl border border-white/15 bg-slate-900/95 backdrop-blur-xl p-3 shadow-2xl z-[120]"
+                      >
+                        <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-2">
+                          Contact Options
+                        </p>
+                        <div className="flex flex-col gap-2">
+                          <a
+                            href="tel:+4915147416152"
+                            className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs text-white hover:bg-white hover:text-slate-900 transition-colors"
+                          >
+                            <Phone className="h-3.5 w-3.5" />
+                            Call
+                          </a>
+                          <a
+                            href="https://wa.me/+4915147416152"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 rounded-lg border border-green-400/30 bg-green-500/15 px-3 py-2 text-xs text-green-300 hover:bg-green-500 hover:text-white transition-colors"
+                          >
+                            <MessageCircle className="h-3.5 w-3.5" />
+                            WhatsApp
+                          </a>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </li>
                 <li className="flex items-center gap-3 opacity-90">
                   <MapPin className="h-4 w-4 text-yellow-400" />
@@ -411,24 +589,17 @@ export default function Layout({ children }: LayoutProps) {
               © 2026 {t('brand')}. {t('all_rights_reserved')}
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold">
+              <Link href="/privacy-policy" className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold">
                 {t('privacy_policy')}
-              </a>
-              <a href="#" className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold">
+              </Link>
+              <Link href="/terms-of-service" className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold">
                 {t('terms_of_service')}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       </footer>
 
-      {/* FAB */}
-      <a href="https://wa.me/+4915147416152" target="_blank" className="fixed bottom-10 right-10 z-[100] group">
-        <div className="relative">
-          <div className="absolute inset-0 bg-green-500 rounded-full blur-2xl group-hover:blur-3xl transition-all opacity-20" />
-          <button className="relative bg-green-500 hover:bg-green-400 text-white p-5 rounded-full shadow-2xl transition-all group-hover:scale-110 active:scale-95 border border-white/20"><MessageCircle className="h-7 w-7" /></button>
-        </div>
-      </a>
     </div>
   );
 }

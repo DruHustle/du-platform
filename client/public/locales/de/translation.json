@@ -19,7 +19,6 @@
   "quick_links": "Quick-Links",
   "partners": "Partner",
   "contact": "Kontakt",
-
   "auth": {
     "create_account": "Treten Sie der ZIGD-Plattform bei",
     "register_subtitle": "Beginnen Sie Ihre Reise zu einer wirkungsvollen Zusammenarbeit in der Diaspora.",
@@ -38,7 +37,6 @@
     "register_now": "Jetzt registrieren",
     "close": "Schließen"
   },
-
   "nav": {
     "home": "Startseite",
     "export": "Export-Hub",
@@ -142,7 +140,6 @@
       "subtitle3": "Bewerten Sie Risiken und generieren Sie Geschäftsideen, die im lokalen Markt tatsächlich Erfolg haben.",
       "highlight3": "Datengestützter Erfolg"
     },
-
     "objective_title": "Technologiegestützt",
     "objective_subtitle": "Nutzung von KI und digitalen Lösungen zur nahtlosen Verbindung von Simbabwe und der Diaspora, um Zusammenarbeit, nachhaltige Entwicklung und langfristiges Wirtschaftswachstum voranzutreiben.",
     "explore_onesa": "Onesa AI entdecken",
@@ -193,6 +190,87 @@
         "d1": "Adaptive Lernplattformen für lokale Schulen",
         "d2": "Entwicklung technischer Fähigkeiten für die digitale Wirtschaft"
       }
+    },
+    "more_compliance_information": "Mehr Compliance-Informationen",
+    "chat_with_onesa": "Chat with Onesa",
+    "momentum": {
+      "title": "Zimbabwe Technology Momentum (2026)",
+      "subtitle": "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption.",
+      "connectivity": {
+        "title": "Connectivity Expansion",
+        "detail": "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout."
+      },
+      "ai_strategy": {
+        "title": "National AI Strategy (2026-2030)",
+        "detail": "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery."
+      },
+      "digital_payments": {
+        "title": "Digital Payments at Scale",
+        "detail": "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations."
+      }
+    },
+    "opportunities": {
+      "title": "Top Opportunities for Investment and Innovation",
+      "ai": {
+        "title": "Artificial Intelligence",
+        "driver": "Deployment momentum in mining, healthcare, and governance under the national AI strategy."
+      },
+      "sme": {
+        "title": "SME Digitalization",
+        "driver": "High demand for affordable inventory tools, payroll automation, and customer support chat systems."
+      },
+      "cybersecurity": {
+        "title": "Cybersecurity",
+        "driver": "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills."
+      },
+      "ecommerce": {
+        "title": "E-commerce and Logistics",
+        "driver": "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure."
+      }
+    },
+    "challenges": {
+      "title": "Critical Challenges to Address",
+      "infrastructure": "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
+      "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
+      "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
+    },
+    "fintech": {
+      "title": "Fintech Regulatory Requirements (RBZ)",
+      "subtitle": "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations.",
+      "sandbox_title": "Regulatory Sandbox",
+      "sandbox_detail": "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded.",
+      "phases": {
+        "pre_application": "Pre-application",
+        "application": "Application and evaluation",
+        "testing": "Testing in a controlled live environment",
+        "exit": "Exit and deployment decision"
+      },
+      "licensing_title": "Licensing and Operating Requirements",
+      "l1": "Register legal entity first (typically Private Limited) before regulated fintech operations.",
+      "l2": "Plan for PSP licensing costs and ongoing compliance obligations.",
+      "l3": "Some financial products require minimum capital thresholds and fit-and-proper controls.",
+      "l4": "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."
+    },
+    "hubs": {
+      "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
+      "location": "Zimbabwe",
+      "visit_site": "Visit site",
+      "cities": {
+        "harare": "Harare",
+        "bulawayo": "Bulawayo",
+        "gweru": "Gweru",
+        "mutare": "Mutare"
+      },
+      "impact_hub": "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
+      "eight2five": "CBD innovation center supporting startup acceleration and venture-building programs.",
+      "stanbic": "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
+      "hit": "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
+      "zchpc": "High-performance computing and AI use cases for agriculture, health, and research.",
+      "b2c": "Urban coworking and accelerator-style support for practical local problem-solving startups.",
+      "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
+      "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
+      "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
+      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
     }
   },
   "export": {
@@ -369,7 +447,19 @@
     },
     "cta_title": "Bereit für den Export in die EU?",
     "cta_subtitle": "Unser Expertenteam begleitet Sie durch jeden Schritt des Prozesses. Kontaktieren Sie uns noch heute.",
-    "cta_button": "Jetzt starten"
+    "cta_button": "Jetzt starten",
+    "regulatory_updates_open_full_compliance_guide": "Vollständigen Compliance-Leitfaden öffnen",
+    "compliance_checklist": {
+      "title": "Export-Compliance-Checkliste",
+      "subtitle": "Eine praktische regulatorische Grundlage für diaspora-geführte Exportaktivitäten in EU-Märkte.",
+      "view_full_regulations": "Vollständige Vorschriften ansehen",
+      "points": [
+        "HS-Code-Klassifizierung und produktbezogene Kontrollen im Zielland.",
+        "Ursprungszeugnis und Qualitätsdokumentation.",
+        "Konforme Kennzeichnung und Verpackung je Zielmarkt.",
+        "Rückverfolgbarkeitsnachweise und zollfertige Unterlagen."
+      ]
+    }
   },
   "tourism": {
     "hero": {
@@ -540,8 +630,7 @@
         "d3": "Ganzjährig angenehmes gemäßigtes Klima"
       }
     },
-  
-    "objective_title":"Unsere Vision",
+    "objective_title": "Unsere Vision",
     "objective_subtitle": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
     "cta_title": "Bereit für Ihr Abenteuer?",
     "cta_button": "Mit einem Experten sprechen",
@@ -549,11 +638,73 @@
     "contact_form_title": "Reiseanfrage",
     "explore_title": "Weitere Reiseinformationen",
     "explore_subtitle": "Für umfassende offizielle Richtlinien besuchen Sie die Website der Zimbabwe Tourism Authority.",
-    "explore_site": "Zimbabwe Tourism Authority besuchen"
+    "explore_site": "Zimbabwe Tourism Authority besuchen",
+    "snapshot": {
+      "title": "Zimbabwe Tourism Snapshot (2026)",
+      "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
+      "performance": {
+        "title": "Sector Recovery and Contribution",
+        "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
+      },
+      "attractions": {
+        "title": "UNESCO and Wildlife Anchors",
+        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
+      },
+      "infrastructure": {
+        "title": "Access and Infrastructure Upgrades",
+        "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
+      }
+    },
+    "opportunities": {
+      "title": "Tourism Investment and Growth Opportunities",
+      "ecotourism": {
+        "title": "Ecotourism and Sustainability",
+        "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
+      },
+      "cbt": {
+        "title": "Community-Based Tourism",
+        "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
+      },
+      "hospitality": {
+        "title": "Hospitality and Infrastructure",
+        "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
+      },
+      "gastronomy": {
+        "title": "Gastronomy Tourism",
+        "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
+      },
+      "adventure": {
+        "title": "Adventure Tourism",
+        "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
+      },
+      "regional": {
+        "title": "Regional Hub Packaging",
+        "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
+      }
+    },
+    "authorities": {
+      "title": "Official Tourism Authorities",
+      "subtitle": "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards.",
+      "zta": "Visit Zimbabwe Tourism Authority",
+      "zimparks": "Visit ZimParks"
+    }
   },
   "investment": {
     "objective_title": "Sicher investieren, Wachstum fördern",
     "objective_subtitle": "Verbindung von Diaspora-Investoren mit geprüften, hochpotenzialen Projekten, unterstützt durch staatliche Initiativen.",
+    "economic_snapshot": {
+      "title": "Wirtschaftlicher Investoren-Überblick",
+      "subtitle": "Prüfen Sie Wachstumsdynamik sowie Währungs-, Steuer- und Compliance-Rahmenbedingungen vor der Kapitalallokation.",
+      "gdp_growth": "BIP-Wachstum",
+      "latest_macro_signal": "Aktuelles Makro-Signal",
+      "diaspora_remittances": "Diaspora-Überweisungen",
+      "annual_inflows": "Jährliche Zuflüsse",
+      "total_exports": "Gesamtexporte",
+      "external_demand": "Indikator der Auslandsnachfrage",
+      "gdp_size": "BIP-Größe",
+      "economic_scale": "Wirtschaftliche Größenordnung",
+      "top_growth_sectors": "Sektoren mit höchstem Wachstum"
+    },
     "hero": {
       "badge1": "RBZ-Initiativen",
       "title1": "Diaspora-Investitionen",
@@ -687,12 +838,8 @@
       "Exportartikelverband",
       "Blumen-Anbauerverband"
     ],
-
-    
     "database_title": "Handels- und Investitionsdatenbanken und -register",
     "database_subtitle": "Datenbanken und Register verifizierter Handels- und Investitionseinheiten in Simbabwe. Die Verifizierung erfolgt durch Drittanbieter.",
-
-    
     "ntir_title": "Nationales Handels- & Investitionsregister (NTIR)",
     "ntir_subtitle": "Offizielles Register verifizierter Handels- und Investitionseinheiten in Simbabwe.",
     "ntir_button": "NTIR-Datenbank durchsuchen",
@@ -700,18 +847,69 @@
     "crowdfunding_subtitle": "Mikro-Investitionen in geprüfte Projekte und reale Wirkung sehen.",
     "sectors_title": "Aktive Investitionsmöglichkeiten",
     "sectors_subtitle": "Sorgfältig geprüfte Projekte mit staatlicher Unterstützung und Transparenz.",
-
-
-   "calculator_title": "Intelligenter Investitionsrechner",
-   "calculator_subtitle": "Prognostizieren Sie Renditen basierend auf echten Markt- und Projektdaten",
-
+    "calculator_title": "Intelligenter Investitionsrechner",
+    "calculator_subtitle": "Prognostizieren Sie Renditen basierend auf echten Markt- und Projektdaten",
     "cta_title": "Bereit zum Investieren?",
     "cta_subtitle": "Unser Investment-Team hilft Ihnen, die richtigen Gelegenheiten zu finden.",
     "cta_button": "Mit einem Experten sprechen",
     "contact_form_title": "Investitionsanfrage",
     "explore_title": "Weitere Investitionsinfos",
     "explore_subtitle": "Für offizielle Richtlinien besuchen Sie die Zimbabwe Investment and Development Agency.",
-    "explore_site": "ZIDA besuchen"
+    "explore_site": "ZIDA besuchen",
+    "regulatory_snapshot": {
+      "title": "Überblick zu Investitionsvorschriften",
+      "subtitle": "Vor einer Kapitalzusage sollten Projekte auf regulatorische, Governance- und Abwicklungsanforderungen für Diaspora-Investoren ausgerichtet werden.",
+      "open_full_guide": "Vollständigen Leitfaden öffnen",
+      "checklist": [
+        "Rechtsform des Unternehmens und sektorale Genehmigungen bestätigen.",
+        "Eigentümerstruktur und Schutzrechte der Anteilseigner prüfen.",
+        "Währungsabwicklung und Bedingungen zur Gewinnrepatriierung festlegen.",
+        "Prüfbare Berichtstakte vor Auszahlung verbindlich vereinbaren."
+      ]
+    },
+    "collective_model": {
+      "title": "How Diaspora Collective Investing Works",
+      "subtitle": "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
+      "s1": "Create an investor profile and complete verification checks.",
+      "s2": "Join vetted opportunities with clear minimum-ticket participation.",
+      "s3": "Pool capital with other diaspora investors through structured terms.",
+      "s4": "Track project updates, milestones, and performance on one dashboard."
+    },
+    "eu_focus": {
+      "title": "European Partnership Capital in Zimbabwe",
+      "subtitle": "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, social inclusion, and climate resilience.",
+      "energy": {
+        "title": "Green Energy",
+        "detail": "GET.invest Zimbabwe (launched in May 2025 with EU and Germany funding) supports clean-energy project finance, with strong focus on solar and diversifying hydro-dependent generation."
+      },
+      "agri": {
+        "title": "Agriculture and Value Chains",
+        "detail": "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs."
+      },
+      "sme": {
+        "title": "Private Sector and SME Finance",
+        "detail": "EIB-backed lines through local banks expanded affordable finance for SMEs; reported EIB lending in recent years includes EUR 60 million, including EUR 20 million to Stanbic in March 2025."
+      },
+      "social": {
+        "title": "Health, Gender, and Social Programs",
+        "detail": "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth."
+      },
+      "biodiversity": {
+        "title": "Biodiversity and Resilience",
+        "detail": "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development."
+      },
+      "gateway": {
+        "title": "Global Gateway Partnership Envelope",
+        "detail": "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO."
+      },
+      "eib_takeaways_title": "EIB Practical Takeaways for Diaspora Investors",
+      "eib_t1": "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
+      "eib_t2": "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
+      "eib_t3": "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
+      "source_getinvest": "Source: GET.invest Zimbabwe",
+      "source_eu": "Source: EU International Partnerships",
+      "source_eib": "Source: EIB Zimbabwe Essay"
+    }
   },
   "trade": {
     "hero": {
@@ -967,6 +1165,21 @@
         "title": "Agrar-Exporte",
         "subtitle": "Exportwert",
         "description": "Gesamtwert landwirtschaftlicher Exporte"
+      },
+      "total_exports": {
+        "title": "Gesamtexporte",
+        "subtitle": "Welthandel",
+        "description": "Gesamtwert der simbabwischen Exporte"
+      },
+      "mining": {
+        "title": "Bergbau-Einnahmen",
+        "subtitle": "Strategische Erze",
+        "description": "Gesamteinnahmen des Bergbausektors"
+      },
+      "tourism": {
+        "title": "Tourismus-Einnahmen",
+        "subtitle": "Jahresumsatz",
+        "description": "Jährliche Einnahmen im Tourismussektor"
       }
     },
     "gdp_growth_rate": "BIP-Wachstumsrate",
@@ -1049,7 +1262,6 @@
         "sector": "Grundbedürfnisse"
       }
     },
-
     "investment_calculator_proInvestmentModeler": "Pro Investment-Modellierer",
     "investment_calculator_stressTest": "Stresstest",
     "investment_calculator_principal": "Grundkapital",
@@ -1063,7 +1275,6 @@
     "investment_calculator_shockIncluded": "Inklusive Marktschock",
     "investment_calculator_note": "Hinweis",
     "investment_calculator_disclaimer": "Dieser Rechner liefert Schätzungen basierend auf angenommenen konstanten Renditen. Die tatsächliche Anlageentwicklung kann variieren. Wertentwicklungen in der Vergangenheit garantieren keine zukünftigen Ergebnisse. Bitte konsultieren Sie Finanzberater und prüfen Sie die Projektdetails vor einer Investition.",
-    
     "cta_title": "Benötigen Sie tiefere Daten?",
     "cta_subtitle": "Nutzen Sie unsere Berichte und Analysedienste.",
     "cta_button": "Individuellen Bericht anfordern"
@@ -1194,7 +1405,155 @@
     "impact_metrics_subtitle": "Die kumulierte Wirkung des Engagements über alle Projekte.",
     "cta_title": "Haben Sie eine Erfolgsgeschichte?",
     "cta_subtitle": "Wir suchen immer nach Inspiration. Teilen Sie Ihre Geschichte mit uns!",
-    "cta_button": "Geschichte teilen"
+    "cta_button": "Geschichte teilen",
+    "stories_list": [
+      {
+        "display": true,
+        "title": "Erfolg im Lederwaren-Export",
+        "category": "Export",
+        "image": "/images/pages/shared/leather_products.jpg",
+        "impact": {
+          "revenue": "$2.5M",
+          "jobs": "150+",
+          "markets": "3 countries"
+        },
+        "story": "Fachkräfte in Deutschland vernetzten Lederhersteller mit europäischen Händlern. Das Netzwerk lieferte Analysen zu Konsumvorlieben und direkte Kontakte zu Einkäufern.",
+        "testimonial": "Die Plattform verband uns mit Diaspora-Mitgliedern, die unser Handwerk und den EU-Markt verstehen.",
+        "author": "Tendai Moyo",
+        "role": "Geschäftsführer, Zimbabwe Leather Collective"
+      },
+      {
+        "display": true,
+        "title": "Durchbruch im Bio-Gartenbau",
+        "category": "Export",
+        "image": "/images/pages/shared/horticulture.jpg",
+        "impact": {
+          "revenue": "$850K",
+          "jobs": "85",
+          "markets": "Germany, Netherlands"
+        },
+        "story": "Eine Kooperative erhielt EU-Bio-Zertifizierung mit Hilfe von Diaspora-Agronomen. Heute exportieren sie hochwertiges Gemüse in EU-Supermärkte.",
+        "testimonial": "Wir hätten nie gedacht, dass unsere kleine Farm EU-Standards erfüllen kann.",
+        "author": "Grace Ncube",
+        "role": "Vorsitzende, Mazowe Organic Farmers Cooperative"
+      },
+      {
+        "display": true,
+        "title": "Investition in Tourismus-Lodge",
+        "category": "Investition",
+        "image": "/images/pages/tourism/victoria_falls.jpg",
+        "impact": {
+          "revenue": "$1.2M annually",
+          "jobs": "45",
+          "investors": "280 diaspora"
+        },
+        "story": "Über Crowdfunding sammelten 280 Investoren 500.000 $ für eine Eco-Lodge bei den Victoriafällen. Sie erwirtschaftet heute stabile Renditen.",
+        "testimonial": "Ich habe 2.000 $ investiert und bin nun Miteigentümer einer Lodge in meiner Heimat.",
+        "author": "Simba Chikwanha",
+        "role": "Diaspora-Investor, London"
+      },
+      {
+        "display": true,
+        "title": "Exportnetzwerk für Steinskulpturen",
+        "category": "Handel",
+        "image": "/images/pages/wikimedia/faces-4.jpg",
+        "impact": {
+          "revenue": "$450K",
+          "jobs": "60 artisans",
+          "markets": "USA, CAN, UK"
+        },
+        "story": "Bildhauer erhielten Zugang zum US-Kunstmarkt durch Galeriebesitzer aus der Diaspora. Der Umsatz verdreifachte sich in zwei Jahren.",
+        "testimonial": "Unsere Skulpturen stehen nun in Galerien auf drei Kontinenten.",
+        "author": "Patrick Mavros",
+        "role": "Meisterbildhauer, Harare"
+      },
+      {
+        "display": true,
+        "title": "Finanzierung für Tech-Startup",
+        "category": "Investition",
+        "image": "/images/pages/home/partnership_handshake.png",
+        "impact": {
+          "revenue": "$3.5M valuation",
+          "jobs": "35",
+          "investors": "120 diaspora"
+        },
+        "story": "Ein Fintech aus Harare sammelte 750.000 $ ein. Die mobile Bezahllösung dient heute über 500.000 Nutzern.",
+        "testimonial": "Das Diaspora-Kapital brachte Mentoren mit, die Silicon-Valley-Standards verstehen.",
+        "author": "Tafadzwa Chidavaenzi",
+        "role": "CEO, PayMoyo Technologies"
+      },
+      {
+        "display": true,
+        "title": "Honig-Export-Kooperative",
+        "category": "Export",
+        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
+        "impact": {
+          "revenue": "$320K",
+          "jobs": "120 beekeepers",
+          "markets": "EU markets"
+        },
+        "story": "Ländliche Imker exportieren nun Bio-Honig nach Europa. Diaspora-Wissenschaftler halfen bei der EU-Zertifizierung.",
+        "testimonial": "Vom Straßenverkauf zum EU-Supermarkt – die Diaspora machte es möglich.",
+        "author": "Rudo Makoni",
+        "role": "Sekretärin, Masvingo Honey Cooperative"
+      },
+      {
+        "display": true,
+        "title": "Heimkehr-Tourismus-Pakete",
+        "category": "Tourismus",
+        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
+        "impact": {
+          "revenue": "$680K",
+          "tourists": "1,200+ diaspora",
+          "jobs": "28"
+        },
+        "story": "Ein Reiseveranstalter entwickelte Pakete, die Familienbesuche mit Kultur verbinden und jährlich 1.200 Touristen anziehen.",
+        "testimonial": "Wir schufen Erlebnisse, die helfen, Wurzeln wiederzuentdecken.",
+        "author": "Chipo Mutasa",
+        "role": "Direktorin, Heritage Trails Zimbabwe"
+      },
+      {
+        "display": true,
+        "title": "Macadamia-Verarbeitungsanlage",
+        "category": "Investition",
+        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
+        "impact": {
+          "revenue": "$1.8M",
+          "jobs": "95",
+          "investors": "340 diaspora"
+        },
+        "story": "Crowdfunding ermöglichte den Bau von Simbabwes erster Macadamia-Fabrik, die Nüsse von über 200 Kleinbauern verarbeitet.",
+        "testimonial": "Wir haben 1,2 Mio. $ gesammelt. Jetzt schaffen wir Jobs und exportieren nach Asien.",
+        "author": "Ngoni Sibanda",
+        "role": "Betriebsleiter, Zim Macadamia Processors"
+      }
+    ],
+    "impact_metrics_list": [
+      {
+        "display": true,
+        "value": "$11.3M+",
+        "label": "Wirtschaftliche Gesamtwirkung",
+        "description": "Generierter Umsatz über alle Erfolgsgeschichten"
+      },
+      {
+        "display": true,
+        "value": "700+",
+        "label": "Geschaffene Arbeitsplätze",
+        "description": "Direkte Beschäftigungsverhältnisse"
+      },
+      {
+        "display": true,
+        "value": "1,000+",
+        "label": "Diaspora-Investoren",
+        "description": "Aktive Projektteilnehmer"
+      },
+      {
+        "display": true,
+        "value": "15+",
+        "label": "Erschlossene Märkte",
+        "description": "Erreichte internationale Märkte"
+      }
+    ]
   },
   "common": {
     "coming_soon": "Wir entwickeln intelligente Lösungen, die mithilfe fortschrittlicher KI-Technologie die Art und Weise verändern, wie Sie sich vernetzen, arbeiten und wachsen.",
@@ -1219,7 +1578,10 @@
     "risk_level": "Risikostufe",
     "highlights": "Highlights",
     "share": "Teilen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "notify_success": "Priority Access Locked",
+    "get_notified": "Request Access",
+    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}"
   },
   "contact_form": {
     "get_started": "Kontakt aufnehmen",
@@ -1251,7 +1613,6 @@
     "disclaimer": "Hinweis: Dieser Rechner liefert Schätzungen. Die tatsächliche Performance kann abweichen."
   },
   "shop": {
-
     "collections": "Kollektionen",
     "title": "Kuratierte simbabwische Exzellenz",
     "desc": "Von offiziellem Merchandise bis zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte.",
@@ -1271,5 +1632,86 @@
     "message": "Entschuldigung, die gesuchte Seite existiert nicht.",
     "message2": "Sie wurde möglicherweise verschoben oder gelöscht.",
     "go_home": "Zur Startseite"
+  },
+  "regulations": {
+    "badge": "Compliance-Zentrum",
+    "title": "Leitfaden zu Vorschriften und Compliance",
+    "subtitle": "Praxisnahe regulatorische Hinweise für Diaspora-Investoren, Exporteure und Rückkehrende. Nutzen Sie dies als Umsetzungscheckliste und stimmen Sie finale Entscheidungen mit qualifizierten Rechts-, Steuer- und Branchenberatern ab.",
+    "sections": {
+      "investment_compliance": {
+        "title": "Investitions-Compliance",
+        "points": [
+          "Rechtsstruktur, Eigentum und Governance des Projekts vor Finanzierung bestätigen.",
+          "Lizenzen und Genehmigungen über ZIDA und zuständige Regulierungsstellen verifizieren.",
+          "Schriftliche Gesellschafter- und Governance-Vereinbarungen für Co-Investments nutzen.",
+          "Mittelherkunft dokumentieren und KYC/AML-Prüfungen bei Gegenparteien durchführen."
+        ]
+      },
+      "currency_settlement": {
+        "title": "Währung, Repatriierung und Abwicklung",
+        "points": [
+          "Abwicklungswährung (USD/ZiG/andere) und Auszahlungsplan vertraglich festlegen.",
+          "Dividendenauszahlung und Exit-Mechanik für Diaspora-Teilnehmer klar definieren.",
+          "Bankkonforme Kanäle mit vollständiger Transaktionsnachverfolgbarkeit nutzen.",
+          "FX- und Transfer-Risiken in Term Sheets ausdrücklich regeln."
+        ]
+      },
+      "export_controls": {
+        "title": "Exportkontrollen im Handel",
+        "points": [
+          "HS-Klassifizierung, Zielmarktauflagen und Genehmigungen validieren.",
+          "Zertifikatspaket pflegen: Ursprung, phytosanitäre und Qualitätsdokumente.",
+          "Kennzeichnung, Verpackung und Rückverfolgbarkeit an Zielmarktvorgaben ausrichten.",
+          "Für kontrollierte Warengruppen zugelassene Spediteure und Zollbroker einsetzen."
+        ]
+      },
+      "export_certification_and_labeling": {
+        "title": "Zertifizierung und Kennzeichnung",
+        "points": [
+          "Produkte vor Buyer-Onboarding den erforderlichen Standards zuordnen.",
+          "Betriebe und Aufzeichnungen vor externen Zertifizierungsläufen vorprüfen.",
+          "Chargenbezogene Rückverfolgbarkeit für Lebensmittel-, Wellness- und Handwerks-Exporte sichern.",
+          "Regelmäßige Compliance-Prüfungen durchführen, um Grenzstopps und Strafen zu vermeiden."
+        ]
+      },
+      "tourism_entry_and_safety": {
+        "title": "Einreise und Sicherheit im Tourismus",
+        "points": [
+          "Visumkategorie, erlaubte Aufenthaltsdauer und Dokumentengültigkeit vor Reise prüfen.",
+          "Reiseversicherung passend zu Aktivitäten und medizinischen Anforderungen abschließen.",
+          "Zahlungskanäle und Transaktionslimits vorab bestätigen.",
+          "Lokale Vorgaben für Parks, Straßenverkehr und Unterkünfte befolgen."
+        ]
+      },
+      "due_diligence_checklist": {
+        "title": "Diaspora-Due-Diligence-Checkliste",
+        "points": [
+          "Unternehmensprüfung, UBO-Checks sowie Litigation- und Sanktionsscreening.",
+          "Vertragsprüfung zu kommerziellen, steuerlichen und Streitbeilegungsklauseln.",
+          "Operative Nachweise: Standortprüfung, testierte Finanzberichte und Lieferantenvalidierung.",
+          "Laufende Kontrollen: Reporting-Rhythmus, KPI-Tracking und Eskalationsmatrix."
+        ]
+      }
+    },
+    "cta": {
+      "investment_opportunities": "Investitionsmöglichkeiten",
+      "export_hub": "Export-Hub",
+      "search_ntir": "NTIR durchsuchen"
+    }
+  },
+  "onesa": {
+    "badge": "Onesa AI",
+    "title": "Chat with Onesa AI",
+    "subtitle": "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "starter_prompt": "Ich suche diaspora-orientierte Investitionsmöglichkeiten in Simbabwe mit regulatorischen Anforderungen und geschätzten Renditespannen.",
+    "welcome": "Ich bin ein Experte für Simbabwe. Ich helfe Ihnen bei Investitionen, Handel, Tourismus und Ihren alltäglichen Aufgaben.",
+    "status_prefix": "Onesa-Status",
+    "status_offline": "Offline",
+    "status_backend_unreachable": "Onesa-Status: Backend nicht erreichbar. Starten Sie `pnpm dev:server`, `ollama serve` und stellen Sie sicher, dass ONESA_MODEL vorhanden ist.",
+    "error_unable_contact": "Onesa AI ist derzeit nicht erreichbar. Stellen Sie sicher, dass das Backend läuft (`pnpm dev:server`) und Ollama aktiv ist (`ollama serve`).",
+    "online_indicator_aria": "Onesa online",
+    "online_text": "Online"
   }
 }

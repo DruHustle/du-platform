@@ -19,52 +19,68 @@ export default function ExportHub() {
 
   const heroSlides = useMemo(() => [
     {
-      image: "/images/eu_symbol.png",
-      badge: t('export.hero.badge1'),
+      image: "/images/pages/export/eu_symbol.png",
+      badge: t('export.hero.badge1') || "EU Market Access",
       badgeIcon: Award,
-      title: t('export.hero.title1'),
-      subtitle: t('export.hero.desc1'),
-      highlight: t('export.hero.highlight1')
+      title: t('export.hero.title1') || "Unlock European Markets",
+      subtitle: t('export.hero.desc1') || "Navigate EU regulations and certifications with ease to export your Zimbabwean products.",
+      highlight: t('export.hero.highlight1') || "Simplified Compliance"
     },
     {
-      image: "/images/germany_flag.png",
-      badge: t('export.hero.badge2'),
-      badgeIcon: Globe,
-      title: t('export.hero.title2'),
-      subtitle: t('export.hero.desc2'),
-      highlight: t('export.hero.highlight2')
-    },
-    {
-      image: "/images/eu_flags.png",
-      badge: t('export.hero.badge3'),
+      image: "/images/pages/export/eu_flags.png",
+      badge: t('export.hero.badge3') || "Trade Agreements",
       badgeIcon: Euro,
-      title: t('export.hero.title3'),
-      subtitle: t('export.hero.desc3'),
-      highlight: t('export.hero.highlight3')
+      title: t('export.hero.title3') || "Leverage EPA & ESA",
+      subtitle: t('export.hero.desc3') || "Benefit from Economic Partnership Agreements for duty-free and quota-free access.",
+      highlight: t('export.hero.highlight3') || "Preferential Access"
     },
     {
-      image: "/images/export_port1.jpg",
-      badge: t('export.hero.badge4'),
-      badgeIcon: Container,
-      title: t('export.hero.title4'),
-      subtitle: t('export.hero.desc4'),
-      highlight: t('export.hero.highlight4')
+      image: "/images/pages/export/blueberry_export.png",
+      badge: "Market Intelligence",
+      badgeIcon: TrendingUp,
+      title: "High-Demand Product Windows",
+      subtitle: "Track demand and standards for high-value crops and specialty products in target EU markets.",
+      highlight: "Buyer-Aligned Supply"
     },
     {
-      image: "/images/horticulture.jpg",
-      badge: t('export.hero.badge5'),
+      image: "/images/pages/shared/horticulture.jpg",
+      badge: t('export.hero.badge5') || "Horticulture Focus",
       badgeIcon: Sprout,
-      title: t('export.hero.title5'),
-      subtitle: t('export.hero.desc5'),
-      highlight: t('export.hero.highlight5')
+      title: t('export.hero.title5') || "Green Gold Exports",
+      subtitle: t('export.hero.desc5') || "Specialized support for fresh produce, flowers, and organic products.",
+      highlight: t('export.hero.highlight5') || "High-Value Crops"
     },
     {
-      image: "/images/manufacturing_factory.jpg",
-      badge: t('export.hero.badge6'),
+      image: "/images/pages/wikimedia/small-honey-jar.jpg",
+      badge: "Compliance Advantage",
+      badgeIcon: CheckCircle,
+      title: "Certification-Ready Exports",
+      subtitle: "Use traceability, quality controls, and food-safety systems to secure repeat EU buyer contracts.",
+      highlight: "Trust and Quality"
+    },
+    {
+      image: "/images/pages/export/marula_export.png",
+      badge: "Niche Growth",
+      badgeIcon: Sprout,
+      title: "Natural Oils and Botanicals",
+      subtitle: "Develop premium natural products for cosmetics and wellness categories with strong EU demand.",
+      highlight: "Emerging Segments"
+    },
+    {
+      image: "/images/pages/trade/manufacturing_factory.jpg",
+      badge: t('export.hero.badge6') || "Manufacturing Boost",
       badgeIcon: Factory,
-      title: t('export.hero.title6'),
-      subtitle: t('export.hero.desc6'),
-      highlight: t('export.hero.highlight6')
+      title: t('export.hero.title6') || "Industrial Exports",
+      subtitle: t('export.hero.desc6') || "Guidance for manufactured goods, textiles, and processed foods.",
+      highlight: t('export.hero.highlight6') || "Value-Added Products"
+    },
+    {
+      image: "/images/pages/trade/export_port1.jpg",
+      badge: t('export.hero.badge4') || "Global Reach",
+      badgeIcon: Container,
+      title: t('export.hero.title4') || "Expand Your Horizons",
+      subtitle: t('export.hero.desc4') || "Connect with a global network of buyers and distributors.",
+      highlight: t('export.hero.highlight4') || "Worldwide Opportunities"
     }
   ], [t]);
 
@@ -76,74 +92,91 @@ export default function ExportHub() {
   }, [heroSlides.length]);
 
   const introData = {
-  icon: Ship, // 
-  title: t('export.objective_title'),
-  description: t('export.objective_subtitle')
- };
+    icon: Ship,
+    title: "Export to the EU with Confidence",
+    description:
+      "Zimbabwe exporters can access the EU under iEPA duty-free and quota-free terms. This page focuses on REX registration, origin documentation, SPS compliance, and current EU regulatory changes.",
+  };
 
 const germanRequirements = [
     {
-      category: t('export.german_requirements.food_products.category'),
-      requirements: t('export.german_requirements.food_products.requirements', { returnObjects: true }) || [],
-      price: t('export.german_requirements.food_products.price'),
-      icon: "🍎"
+      category: "REX and Preferential Tariffs",
+      requirements: [
+        "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
+        "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
+        "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX.",
+      ],
+      price: "Tariff Access",
+      icon: "🧾",
     },
     {
-      category: t('export.german_requirements.textiles_leather.category'),
-      requirements: t('export.german_requirements.textiles_leather.requirements', { returnObjects: true }) || [],
-      price: t('export.german_requirements.textiles_leather.price'),
-      icon: "👜"
+      category: "Statement on Origin Rules",
+      requirements: [
+        "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
+        "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
+        "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU.",
+      ],
+      price: "Origin Compliance",
+      icon: "✅",
     },
     {
-      category: t('export.german_requirements.arts_crafts.category'),
-      requirements: t('export.german_requirements.arts_crafts.requirements', { returnObjects: true }) || [],
-      price: t('export.german_requirements.arts_crafts.price'),
-      icon: "🎨"
+      category: "ZIMRA and Export Documentation",
+      requirements: [
+        "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
+        "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
+        "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading/air waybill.",
+      ],
+      price: "Pre-shipment",
+      icon: "📦",
     },
     {
-      category: t('export.german_requirements.agricultural_products.category'),
-      requirements: t('export.german_requirements.agricultural_products.requirements', { returnObjects: true }) || [],
-      price: t('export.german_requirements.agricultural_products.price'),
-      icon: "🌾"
-    }
+      category: "EU Product and Safety Standards",
+      requirements: [
+        "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
+        "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
+        "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
+      ],
+      price: "SPS Critical",
+      icon: "🌿",
+    },
   ];
 
   const partners = [
     {
-      type: t("export.partners.retailers.type"),
+      type: t("export.partners.retailers.type") || "Retailers & Supermarkets",
       icon: Building2,
       examples: ["REWE Group", "EDEKA", "Metro AG", "Kaufland", "Aldi Süd"],
-      description: t("export.partners.retailers.description")
+      description: t("export.partners.retailers.description") || "Direct access to major German retail chains and independent stores."
     },
     {
-      type: t("export.partners.educational_institutions.type"),
+      type: t("export.partners.educational_institutions.type") || "Educational Institutions",
       icon: Users,
       examples: ["German-African Business Association", "IHK (Chambers of Commerce)", "Trade Schools", "Universities"],
-      description: t("export.partners.educational_institutions.description")
+      description: t("export.partners.educational_institutions.description") || "Partnerships for skill development, research, and cultural exchange."
     },
     {
-      type: t("export.partners.business_partners.type"),
+      type: t("export.partners.business_partners.type") || "Business Development Partners",
       icon: Building2,
       examples: ["Import/Export Agencies", "Trade Consultants", "Market Entry Specialists", "Distribution Partners"],
-      description: t("export.partners.business_partners.description")
+      description: t("export.partners.business_partners.description") || "Specialists in market entry, business matching, and investment facilitation."
     },
     {
-      type: t("export.partners.logistics_partners.type"),
+      type: t("export.partners.logistics_partners.type") || "Logistics & Freight Forwarders",
       icon: Truck,
       examples: ["DHL Global Forwarding", "Kuehne + Nagel", "DB Schenker", "Freight Forwarders"],
-      description: t("export.partners.logistics_partners.description")
+      description: t("export.partners.logistics_partners.description") || "Reliable and efficient transport solutions for seamless export operations."
     },
     {
-      type: t("export.partners.regulatory_partners.type"),
+      type: t("export.partners.regulatory_partners.type") || "Regulatory & Certification Bodies",
       icon: Shield,
       examples: ["German Customs (Zoll)", "Certification Bodies", "Quality Assurance Agencies", "Trade Compliance Consultants"],
-      description: t("export.partners.regulatory_partners.description")
+      description: t("export.partners.regulatory_partners.description") || "Guidance and support for navigating complex German and EU regulations."
     },
     {
-      type: t("export.partners.financial_services.type"),
+      type: t("export.partners.financial_services.type") || "Financial Services & Trade Finance",
       icon: Building2,
       examples: ["Deutsche Bank", "Commerzbank", "KfW Development Bank", "Export Credit Agencies", "Trade Finance Providers"],
-      description: t("export.partners.financial_services.description")
+      description: t("export.partners.financial_services.description") || "Access to trade finance, export credit, and banking solutions."
     }
   ];
 
@@ -151,47 +184,80 @@ const germanRequirements = [
 
   const regulatoryUpdates = [
     {
-      title: t("export.regulatory_updates.eu_sanctions_easing.title"),
-      date: t("export.regulatory_updates.eu_sanctions_easing.date"),
-      description: t("export.regulatory_updates.eu_sanctions_easing.description"),
-      status: "positive"
+      title: "EU Deforestation Regulation (EUDR)",
+      date: "Full application delayed to December 2026",
+      description:
+        "If you export covered products, you must prove supply chains are deforestation-free and traceable before full enforcement.",
+      status: "watch",
     },
     {
-      title: t("export.regulatory_updates.arms_embargo_expiration.title"),
-      date: t("export.regulatory_updates.arms_embargo_expiration.date"),
-      description: t("export.regulatory_updates.arms_embargo_expiration.description"),
-      status: "positive"
+      title: "Carbon Border Adjustment Mechanism (CBAM)",
+      date: "Permanent phase expected January 2026",
+      description:
+        "CBAM is in transition for carbon-intensive goods (iron, steel, cement, fertilizers, aluminum). Financial obligations are expected in the permanent phase.",
+      status: "watch",
     },
     {
-      title: t("export.regulatory_updates.eu_esa_epa_benefits.title"),
-      description: t("export.regulatory_updates.eu_esa_epa_benefits.description"),
-      status: "positive"
-    }
+      title: "SPS Readiness for Agro and Food Exports",
+      date: "Ongoing compliance priority",
+      description:
+        "Food and plant exporters should treat SPS controls as a gate requirement. For sensitive products such as honey, maintain evidence of residue controls and competent authority oversight.",
+      status: "positive",
+    },
+  ];
+  const complianceChecklist = [
+    "Confirm your product HS code and check EU duties/technical measures in Access2Markets.",
+    "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
+    "Issue a valid Statement on Origin for each shipment.",
+    "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
+    "Complete SPS, labeling, and traceability controls required for your product class.",
+    "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
+  ];
+
+  const strategicResources = [
+    {
+      title: "EU Access2Markets Portal",
+      description: "Check duties, taxes, rules of origin, and technical requirements by exact HS code.",
+      link: "https://trade.ec.europa.eu/access-to-markets/en/home",
+      cta: "Open Access2Markets",
+    },
+    {
+      title: "EU REX Information",
+      description: "Reference rules and guidance for origin self-certification under the REX framework.",
+      link: "https://trade.ec.europa.eu/access-to-markets/en/content/registered-exporter-system-rex",
+      cta: "View REX Guidance",
+    },
+    {
+      title: "ZimTrade Export Support",
+      description: "Use ZimTrade support for market surveys, buyer readiness, and export development programs.",
+      link: "https://www.zimtrade.co.zw/",
+      cta: "Visit ZimTrade",
+    },
   ];
 
 const marketIntelligence = [
     {
-      product: t("export.market_intelligence.blueberries.product"),
-      status: t("export.market_intelligence.blueberries.status"),
-      image: "/images/blueberry_export.png",
+      product: t("export.market_intelligence.blueberries.product") || "Blueberries",
+      status: t("export.market_intelligence.blueberries.status") || "High Demand",
+      image: "/images/pages/export/blueberry_export.png",
       requirements: t("export.market_intelligence.blueberries.requirements", { returnObjects: true }) || [],
       buyers: t("export.market_intelligence.blueberries.buyers", { returnObjects: true }) || []
     },
     {
-      product: t("export.market_intelligence.honey.product"),
-      status: t("export.market_intelligence.honey.status"),
-      image:"/images/honey_export.jpg",
+      product: t("export.market_intelligence.honey.product") || "Honey",
+      status: t("export.market_intelligence.honey.status") || "Growing Niche",
+      image:"/images/pages/wikimedia/small-honey-jar.jpg",
       requirements: t("export.market_intelligence.honey.requirements", { returnObjects: true }) || [],
-      buyers: [t("export.market_intelligence.honey.buyers")]
+      buyers: [t("export.market_intelligence.honey.buyers") || "Specialty food stores, organic markets"]
     },
     {
-      product: t("export.market_intelligence.natural_oils.product"),
-      status: t("export.market_intelligence.natural_oils.status"),
-      image:"/images/marula_export.png",
+      product: t("export.market_intelligence.natural_oils.product") || "Natural Oils (Marula)",
+      status: t("export.market_intelligence.natural_oils.status") || "Emerging Market",
+      image:"/images/pages/export/marula_export.png",
       requirements: t("export.market_intelligence.natural_oils.requirements", { returnObjects: true }) || [],
       buyers: [
-        t("export.market_intelligence.natural_oils.buyers1"), 
-        t("export.market_intelligence.natural_oils.buyers2")
+        t("export.market_intelligence.natural_oils.buyers1") || "Cosmetic manufacturers", 
+        t("export.market_intelligence.natural_oils.buyers2") || "Wellness brands"
       ]
     }
   ];
@@ -217,10 +283,10 @@ const marketIntelligence = [
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-              {t("export.market_requirements_title")}
+              {"Key Registration and Documentation"}
             </h2>
             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
-              {t("export.market_requirements_subtitle")}
+              {"Core steps required to claim preferential access and clear EU import controls."}
             </p>
           </div>
 
@@ -354,9 +420,11 @@ const marketIntelligence = [
                           </div>
                         ))}
                       </div>
-                      <Button className="w-full mt-6 h-10 bg-white/5 hover:bg-zim-gold border border-white/10 hover:border-zim-gold text-white hover:text-zim-black text-[9px] font-black uppercase tracking-widest transition-all duration-500 rounded-xl">
-                        Contact verified buyers
-                      </Button>
+                      <Link href="/regulations#export-certification-and-labeling">
+                        <Button className="w-full mt-6 h-10 bg-white/5 hover:bg-zim-gold border border-white/10 hover:border-zim-gold text-white hover:text-zim-black text-[9px] font-black uppercase tracking-widest transition-all duration-500 rounded-xl">
+                          Contact verified buyers
+                        </Button>
+                      </Link>
                     </div>
 
                   </div>
@@ -367,6 +435,32 @@ const marketIntelligence = [
         </div>
       </section>
 
+      {/* Strategic Resources */}
+      <section className="py-10 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter">Strategic Support Resources</h2>
+            <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
+              Official tools and institutions you should use before shipment.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {strategicResources.map((resource) => (
+              <div key={resource.title} className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6">
+                <h3 className="text-lg font-bold text-white">{resource.title}</h3>
+                <p className="text-sm text-white/60 mt-3 leading-relaxed">{resource.description}</p>
+                <a href={resource.link} target="_blank" rel="noreferrer">
+                  <Button variant="outline" className="mt-6 w-full border-white/20 text-white hover:bg-white hover:text-zim-black text-[10px] font-black uppercase tracking-widest">
+                    {resource.cta}
+                  </Button>
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Partner Network - Glass Grid */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-full h-[500px] bg-[radial-gradient(circle_at_bottom_left,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
@@ -374,10 +468,10 @@ const marketIntelligence = [
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-              {t("export.partner_network_title")}
+              {t("export.partner_network_title") || "Verified Partner Network"}
             </h2>
             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
-              {t("export.partner_network_subtitle")}
+              {t("export.partner_network_subtitle") || "Connect with trusted German retailers, distributors, and logistics providers."}
             </p>
           </div>
 
@@ -408,14 +502,14 @@ const marketIntelligence = [
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="outline" className="mt-auto bg-white/5 hover:bg-zim-gold border-white/10 hover:border-zim-gold text-white hover:text-zim-black rounded-full px-8 text-[10px] font-black uppercase tracking-widest transition-all duration-300">
-                          {t("export.view_examples")}
+                          {t("export.view_examples") || "View Examples"}
                           <ArrowRight className="ml-2 h-3.5 w-3.5" />
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-slate-900/95 backdrop-blur-3xl border border-white/10 text-white rounded-[2rem] p-8 max-w-md shadow-2xl">
                         <h4 className="text-xl font-black tracking-tight mb-6 flex items-center gap-3">
                           <div className="h-2 w-2 rounded-full bg-zim-gold" />
-                          {partner.type} {t("export.partner_examples")}
+                          {partner.type} {t("export.partner_examples") || "Examples of Partners:"}
                         </h4>
                         <div className="flex flex-wrap gap-2.5">
                           {partner.examples.map((example, i) => (
@@ -434,16 +528,54 @@ const marketIntelligence = [
         </div>
       </section>
 
+      {/* Export Compliance Checklist */}
+      <section className="py-10 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+              <div>
+                <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter">
+                  {"Critical Regulations and Compliance Checklist"}
+                </h2>
+                <p className="text-white/60 mt-2 text-sm md:text-base">
+                  {"A practical baseline for SPS, origin documentation, and incoming EU climate/deforestation controls."}
+                </p>
+              </div>
+              <Link href="/regulations#export-controls">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("export.compliance_checklist.view_full_regulations") || "View Full Regulations"}
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {complianceChecklist.map((point) => (
+                <div key={point} className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-white/75 text-sm">
+                  {point}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Regulatory Updates - Horizontal Glass Ticker */}
       <section className="py-10 pb-24 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-              {t("export.regulatory_updates_title")}
+              {t("export.regulatory_updates_title") || "Regulatory Updates"}
             </h2>
             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
-              {t("export.regulatory_updates_subtitle")}
+              {t("export.regulatory_updates_subtitle") || "Stay informed about the latest changes in international trade regulations and policies affecting Zimbabwean exports."}
             </p>
+            <div className="mt-6">
+              <Link href="/regulations#export-controls">
+                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black text-[10px] font-black uppercase tracking-widest rounded-full px-6">
+                  {t("export.regulatory_updates_open_full_compliance_guide") || "Open Full Compliance Guide"}
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
