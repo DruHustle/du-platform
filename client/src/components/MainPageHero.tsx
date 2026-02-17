@@ -64,7 +64,7 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
             className="mb-8 md:mb-12"
           >
             <img 
-              src="/images/made_in_zimbabwe.png" 
+              src="/images/pages/shared/made_in_zimbabwe.png" 
               alt="Made in Zimbabwe" 
               className="h-16 md:h-20 object-contain drop-shadow-2xl" 
             />

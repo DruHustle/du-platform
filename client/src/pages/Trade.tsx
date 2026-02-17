@@ -19,44 +19,68 @@ export default function Trade() {
 
   const heroSlides = useMemo(() => [
     {
-      image: "/images/african_trade.jpg",
-      badge: t("trade.hero.badge1"),
+      image: "/images/pages/trade/export_port1.jpg",
+      badge: t("trade.hero.badge1") || "ZimTrade Export Support",
       badgeIcon: Users,
-      title: t("trade.hero.title1"),
-      subtitle: t("trade.hero.subtitle1"),
-      highlight: t("trade.hero.highlight1")
+      title: t("trade.hero.title1") || "Export from Zimbabwe with Confidence",
+      subtitle: t("trade.hero.subtitle1") || "Use ZimTrade market intelligence, buyer linkages, and compliance support to enter priority markets.",
+      highlight: t("trade.hero.highlight1") || "Market Readiness"
     },
     {
-      image: "/images/horticulture.jpg",
-      badge: t("trade.hero.badge2"),
+      image: "/images/pages/shared/horticulture.jpg",
+      badge: t("trade.hero.badge2") || "EU Market Access",
       badgeIcon: Package,
-      title: t("trade.hero.title2"),
-      subtitle: t("trade.hero.subtitle2"),
-      highlight: t("trade.hero.highlight2")
+      title: t("trade.hero.title2") || "iEPA Duty-Free Entry",
+      subtitle: t("trade.hero.subtitle2") || "Eligible Zimbabwean products can access the EU under preferential terms when origin rules are met.",
+      highlight: t("trade.hero.highlight2") || "Duty-Free & Quota-Free"
     },
     {
-      image: "/images/manufacturing_factory.jpg",
-      badge: t("trade.hero.badge3"),
+      image: "/images/pages/trade/manufacturing_factory.jpg",
+      badge: t("trade.hero.badge3") || "Compliance First",
       badgeIcon: TrendingUp,
-      title: t("trade.hero.title3"),
-      subtitle: t("trade.hero.subtitle3"),
-      highlight: t("trade.hero.highlight3")
+      title: t("trade.hero.title3") || "Meet EU Product Rules",
+      subtitle: t("trade.hero.subtitle3") || "Align with SPS, food safety, and traceability requirements before shipment.",
+      highlight: t("trade.hero.highlight3") || "Standards Compliance"
     },
     {
-      image: "/images/export_port1.jpg",
-      badge: t("trade.hero.badge4"),
+      image: "/images/pages/trade/export_port1.jpg",
+      badge: t("trade.hero.badge4") || "REX Origin System",
       badgeIcon: FileCheck,
-      title: t("trade.hero.title4"),
-      subtitle: t("trade.hero.subtitle4"),
-      highlight: t("trade.hero.highlight4")
+      title: t("trade.hero.title4") || "Self-Certify Origin Correctly",
+      subtitle: t("trade.hero.subtitle4") || "For consignments above EUR 6,000, use REX registration and statement on origin requirements.",
+      highlight: t("trade.hero.highlight4") || "Correct Documentation"
     },
     {
-      image: "/images/eu_flags.png",
-      badge: t("trade.hero.badge5"),
+      image: "/images/pages/export/eu_flags.png",
+      badge: t("trade.hero.badge5") || "Strategic Export Planning",
       badgeIcon: Globe,
-      title: t("trade.hero.title5"),
-      subtitle: t("trade.hero.subtitle5"),
-      highlight: t("trade.hero.highlight5")
+      title: t("trade.hero.title5") || "Use Access2Markets + ZimTrade",
+      subtitle: t("trade.hero.subtitle5") || "Validate duties, technical measures, and buyer requirements by HS code before closing deals.",
+      highlight: t("trade.hero.highlight5") || "Data-Driven Exports"
+    },
+    {
+      image: "/images/pages/export/eu_symbol.png",
+      badge: "Regulatory Readiness",
+      badgeIcon: FileCheck,
+      title: "Meet Documentation Standards",
+      subtitle: "Build complete shipment files with invoices, packing lists, transport documents, and origin statements.",
+      highlight: "Clean Documentation"
+    },
+    {
+      image: "/images/pages/shared/leather_products.jpg",
+      badge: "Value Addition",
+      badgeIcon: Award,
+      title: "Scale Higher-Value Products",
+      subtitle: "Move beyond raw exports by improving packaging, branding, and product finishing for premium buyers.",
+      highlight: "Better Margins"
+    },
+    {
+      image: "/images/pages/shared/minerals_mining.png",
+      badge: "Sector Expansion",
+      badgeIcon: Truck,
+      title: "Diversify Export Portfolio",
+      subtitle: "Balance commodity exports with processed goods and sector-specific compliance planning.",
+      highlight: "Risk Balanced Growth"
     }
   ], [t]);
 
@@ -69,36 +93,36 @@ export default function Trade() {
 
   const introData = {
   icon: Handshake, // 
-  title: t('trade.objective_title'),
-  description:  t('trade.objective_subtitle')
+  title: t('trade.objective_title') || "Zimbabwe Trade Execution",
+  description:  t('trade.objective_subtitle') || "Practical export guidance for 2026: market access, compliance, shipping, and diaspora-led buyer linkages."
  };
 
   const exportSectors = [
     {
-      name: t("trade.sectors.horticulture.name"),
-      description: t("trade.sectors.horticulture.description"),
-      image: "/images/horticulture.jpg",
+      name: t("trade.sectors.horticulture.name") || "Horticulture",
+      description: t("trade.sectors.horticulture.description") || "Fresh produce and processed foods with strong EU and regional demand when SPS standards are met",
+      image: "/images/pages/shared/horticulture.jpg",
       opportunities: t("trade.sectors.horticulture.opportunities", { returnObjects: true }) as string[],
       icon: Package
     },
     {
-      name: t("trade.sectors.leather_products.name"),
-      description: t("trade.sectors.leather_products.description"),
-      image: "/images/leather_products.jpg",
+      name: t("trade.sectors.leather_products.name") || "Leather Products",
+      description: t("trade.sectors.leather_products.description") || "Value-added manufacturing exports including footwear and lifestyle products for diaspora and EU channels",
+      image: "/images/pages/shared/leather_products.jpg",
       opportunities: t("trade.sectors.leather_products.opportunities", { returnObjects: true }) as string[],
       icon: Award
     },
     {
-      name: t("trade.sectors.arts_crafts.name"),
-      description: t("trade.sectors.arts_crafts.description"),
-      image: "/images/arts_crafts.jpg",
+      name: t("trade.sectors.arts_crafts.name") || "Arts & Crafts",
+      description: t("trade.sectors.arts_crafts.description") || "Authentic artisan exports that perform well in niche retail and diaspora-curated marketplaces",
+      image: "/images/pages/shop/crafts_stone_sculptures1.png",
       opportunities: t("trade.sectors.arts_crafts.opportunities", { returnObjects: true }) as string[],
       icon: Globe
     },
     {
-      name: t("trade.sectors.minerals_mining.name"),
-      description: t("trade.sectors.minerals_mining.description"),
-      image: "/images/minerals_mining.png",
+      name: t("trade.sectors.minerals_mining.name") || "Minerals & Mining",
+      description: t("trade.sectors.minerals_mining.description") || "Strategic minerals and value-added products with increasing demand in industrial and energy value chains",
+      image: "/images/pages/shared/minerals_mining.png",
       opportunities: t("trade.sectors.minerals_mining.opportunities", { returnObjects: true }) as string[],
       icon: TrendingUp
     }
@@ -106,74 +130,98 @@ export default function Trade() {
 
   const programs = [
     {
-      title: t("trade.programs.eagles_nest.title"),
-      description: t("trade.programs.eagles_nest.description"),
-      target: t("trade.programs.eagles_nest.target"),
+      title: t("trade.programs.eagles_nest.title") || "Eagles Nest",
+      description: t("trade.programs.eagles_nest.description") || "Youth export incubator program developing the next generation of Zimbabwean exporters",
+      target: t("trade.programs.eagles_nest.target") || "Young entrepreneurs (18-35)",
       benefits: t("trade.programs.eagles_nest.benefits", { returnObjects: true }) as string[]
     },
     {
-      title: t("trade.programs.next_she_exporter.title"),
-      description: t("trade.programs.next_she_exporter.description"),
-      target: t("trade.programs.next_she_exporter.target"),
+      title: t("trade.programs.next_she_exporter.title") || "Next She Exporter",
+      description: t("trade.programs.next_she_exporter.description") || "Empowering female-owned businesses with export knowledge, skills, and market connections",
+      target: t("trade.programs.next_she_exporter.target") || "Women-owned businesses",
       benefits: t("trade.programs.next_she_exporter.benefits", { returnObjects: true }) as string[]
     },
     {
-      title: t("trade.programs.shop_at_zim.title"),
-      description: t("trade.programs.shop_at_zim.description"),
-      target: t("trade.programs.shop_at_zim.target"),
+      title: t("trade.programs.shop_at_zim.title") || "Shop At Zim",
+      description: t("trade.programs.shop_at_zim.description") || "B2B e-commerce platform connecting Zimbabwean suppliers with international buyers",
+      target: t("trade.programs.shop_at_zim.target") || "Export-ready businesses",
       benefits: t("trade.programs.shop_at_zim.benefits", { returnObjects: true }) as string[]
     }
   ];
 
   const diasporaRole = [
     {
-      title: t("trade.diaspora_roles.market_intelligence.title"),
-      description: t("trade.diaspora_roles.market_intelligence.description"),
-      icon: Globe
+      title: t("trade.diaspora_roles.market_intelligence.title") || "Market Intelligence",
+      description: t("trade.diaspora_roles.market_intelligence.description") || "Share insights about consumer preferences, trends, and opportunities in your host country",
+      icon: Globe,
+      emoji: "🌍",
     },
     {
-      title: t("trade.diaspora_roles.buyer_connections.title"),
-      description: t("trade.diaspora_roles.buyer_connections.description"),
-      icon: Users
+      title: t("trade.diaspora_roles.buyer_connections.title") || "Buyer Connections",
+      description: t("trade.diaspora_roles.buyer_connections.description") || "Introduce Zimbabwean exporters to retailers, distributors, and importers in your network",
+      icon: Users,
+      emoji: "🤝",
     },
     {
-      title: t("trade.diaspora_roles.quality_feedback.title"),
-      description: t("trade.diaspora_roles.quality_feedback.description"),
-      icon: Award
+      title: t("trade.diaspora_roles.quality_feedback.title") || "Quality Feedback",
+      description: t("trade.diaspora_roles.quality_feedback.description") || "Provide feedback on product quality, packaging, and market readiness",
+      icon: Award,
+      emoji: "✅",
     },
     {
-      title: t("trade.diaspora_roles.brand_ambassadors.title"),
-      description: t("trade.diaspora_roles.brand_ambassadors.description"),
-      icon: TrendingUp
+      title: t("trade.diaspora_roles.brand_ambassadors.title") || "Brand Ambassadors",
+      description: t("trade.diaspora_roles.brand_ambassadors.description") || "Promote Zimbabwean products and brands in international markets",
+      icon: TrendingUp,
+      emoji: "📢",
     }
   ];
 
   const exportFlowSteps = [
     {
-      phase: t("trade.export_flow.product_approval.phase"),
-      description: t("trade.export_flow.product_approval.description"),
-      steps: t("trade.export_flow.product_approval.steps", { returnObjects: true }) as string[],
+      phase: t("trade.export_flow.product_approval.phase") || "Product Approval",
+      description: t("trade.export_flow.product_approval.description") || "Start with market access and product classification",
+      steps: (t("trade.export_flow.product_approval.steps", { returnObjects: true }) as string[]) || [
+        "Classify your product with the correct HS code.",
+        "Check the EU Access2Markets portal for duties, taxes, and measures.",
+        "Confirm eligibility for iEPA preferential access before pricing contracts.",
+        "For restricted product categories, obtain sector-specific approvals first.",
+      ],
       icon: AlertCircle,
       color: "border-yellow-500"
     },
     {
-      phase: t("trade.export_flow.registration_compliance.phase"),
-      description: t("trade.export_flow.registration_compliance.description"),
-      steps: t("trade.export_flow.registration_compliance.steps", { returnObjects: true }) as string[],
+      phase: t("trade.export_flow.registration_compliance.phase") || "Registration & Compliance",
+      description: t("trade.export_flow.registration_compliance.description") || "Core registrations for Zimbabwe exporters",
+      steps: (t("trade.export_flow.registration_compliance.steps", { returnObjects: true }) as string[]) || [
+        "Register the business and tax profile with ZIMRA.",
+        "Apply for Registered Exporter (REX) status for origin self-certification.",
+        "Consignments above EUR 6,000 require statement on origin by a registered exporter.",
+        "Consignments at or below EUR 6,000 can be self-certified without REX.",
+      ],
       icon: FileCheck,
       color: "border-blue-500"
     },
     {
-      phase: t("trade.export_flow.certification_quality.phase"),
-      description: t("trade.export_flow.certification_quality.description"),
-      steps: t("trade.export_flow.certification_quality.steps", { returnObjects: true }) as string[],
+      phase: t("trade.export_flow.certification_quality.phase") || "Certification & Quality",
+      description: t("trade.export_flow.certification_quality.description") || "Meet destination standards and risk rules",
+      steps: (t("trade.export_flow.certification_quality.steps", { returnObjects: true }) as string[]) || [
+        "Comply with SPS requirements for food and plant products.",
+        "Use GLOBALG.A.P. or HACCP where required by buyers and retailers.",
+        "Prepare traceability documentation for EUDR-affected supply chains.",
+        "Track CBAM developments for carbon-intensive products and contracts.",
+      ],
       icon: CheckCircle2,
       color: "border-green-500"
     },
     {
-      phase: t("trade.export_flow.logistics_documentation.phase"),
-      description: t("trade.export_flow.logistics_documentation.description"),
-      steps: t("trade.export_flow.logistics_documentation.steps", { returnObjects: true }) as string[],
+      phase: t("trade.export_flow.logistics_documentation.phase") || "Logistics & Documentation",
+      description: t("trade.export_flow.logistics_documentation.description") || "Dispatch, customs, and payment controls",
+      steps: (t("trade.export_flow.logistics_documentation.steps", { returnObjects: true }) as string[]) || [
+        "Prepare commercial invoice, packing list, and bill of lading/air waybill.",
+        "Include correct origin declarations and shipping marks.",
+        "Align payment terms with exchange-control and banking requirements.",
+        "Keep complete records for audits, claims, and repeat shipments.",
+      ],
       icon: Truck,
       color: "border-purple-500"
     }
@@ -197,8 +245,8 @@ export default function Trade() {
         
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.export_roadmap_title")}</h2>
-            <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t("trade.export_roadmap_subtitle")}</p>
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.export_roadmap_title") || "Zimbabwe Export Roadmap (2026)"}</h2>
+            <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t("trade.export_roadmap_subtitle") || "A practical path for exporters using ZimTrade support, ZIMRA/REX processes, and EU compliance requirements."}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -248,7 +296,10 @@ export default function Trade() {
       <section id="export-sectors" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.export_sectors_title")}</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.export_sectors_title") || "Key Export Sectors"}</h2>
+            <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">
+              {t("trade.export_sectors_subtitle") || "Discover the primary sectors driving Zimbabwe's export economy."}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -268,7 +319,7 @@ export default function Trade() {
                     <p className="text-xs text-white/50 leading-relaxed font-light line-clamp-2">{sector.description}</p>
                     
                     <div className="space-y-3">
-                      <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.opportunities_label') || "Opportunities"}</h4>
+                      <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.export_sectors_badge') || "Sectors"}</h4>
                       <ul className="space-y-2">
                         {sector.opportunities.map((opp, oppIdx) => (
                           <li key={oppIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
@@ -290,7 +341,7 @@ export default function Trade() {
       <section id="zimtrade-programs" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16 space-y-4">
-             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.zimtrade_programs_title")}</h2>
+             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.zimtrade_programs_title") || "ZimTrade Export Development Programs"}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -326,16 +377,15 @@ export default function Trade() {
       <section id="diaspora-role" className="pb-24 pt-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.diaspora_role_title")}</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("trade.diaspora_role_title") || "Your Role in Export Growth"}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {diasporaRole.map((role, index) => {
-              const Icon = role.icon;
               return (
                 <div key={index} className="text-center p-8 rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl transition-all duration-500 hover:bg-white/[0.08] group">
                   <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl border border-zim-gold/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-zim-gold/20 transition-all">
-                    <Icon className="h-10 w-10 text-zim-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" />
+                    <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
                   </div>
                   <h3 className="text-white font-bold text-lg mb-3">{role.title}</h3>
                   <p className="text-xs text-white/40 leading-relaxed font-light">{role.description}</p>

@@ -7,7 +7,7 @@ import { useEffect, useState, useMemo } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend, Label } from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import SubPageHero from "@/components/SubPageHero";
 
 interface EconomicData {
@@ -21,6 +21,12 @@ interface EconomicData {
   agriculturalExports: number;
   growthRate: number;
   year: number;
+}
+
+interface SectorGrowthData {
+  name: string;
+  growth: number;
+  share: number;
 }
 
 export default function DataVisualization() {
@@ -60,6 +66,14 @@ export default function DataVisualization() {
   });
 
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [activeSectorIndex, setActiveSectorIndex] = useState(0);
+  const [sectorGrowthData, setSectorGrowthData] = useState<SectorGrowthData[]>([
+    { name: "Services", growth: 6.4, share: 52.1 },
+    { name: "Manufacturing", growth: 4.2, share: 15.3 },
+    { name: "Mining", growth: 8.2, share: 12.0 },
+    { name: "Agriculture", growth: 4.5, share: 11.0 },
+    { name: "Tourism", growth: 6.1, share: 9.6 },
+  ]);
 
   // Fetch Live Data from Server API
   useEffect(() => {
@@ -80,6 +94,18 @@ export default function DataVisualization() {
           agriculturalExports: liveData.agriculturalExports ?? prev.agriculturalExports,
           growthRate: liveData.growthRate,
         }));
+
+        if (Array.isArray(liveData.sectorData) && liveData.sectorData.length > 0) {
+          setSectorGrowthData((prev) =>
+            prev.map((item) => {
+              const liveMatch = liveData.sectorData.find(
+                (entry: { name: string; growth: number }) =>
+                  entry.name.toLowerCase() === item.name.toLowerCase()
+              );
+              return liveMatch ? { ...item, growth: liveMatch.growth } : item;
+            })
+          );
+        }
       } catch (error) {
         console.error("Failed to fetch live economic data:", error);
       }
@@ -142,55 +168,85 @@ export default function DataVisualization() {
 
 const heroSlides = useMemo(() => [
     {
-      image: "/images/infrastructure_investment.png",
-      badge: t('data.hero.badge1'),
+      image: "/images/pages/data/infrastructure_investment.png",
+      badge: t('data.hero.badge1') || "Economic Insights",
       badgeIcon: Coins,
-      title: t('data.hero.title1'),
-      titleHighlight: t('data.hero.highlight1'),
-      subtitle: t('data.hero.subtitle1'),
-      description: t('data.hero.desc1'),
+      title: t('data.hero.title1') || "Driving Growth Through ",
+      titleHighlight: t('data.hero.highlight1') || "Data",
+      subtitle: t('data.hero.subtitle1') || "Unlocking Zimbabwe's economic potential with comprehensive data visualization and analysis.",
+      description: t('data.hero.desc1') || "Explore key economic indicators, sectoral performance, and the significant impact of the diaspora on national development.",
       buttons: [
-        { text: t('data.hero.economic_data'), variant: "primary", link: "#indicators" },
-        { text: t('data.hero.sector'), variant: "outline", link: "#sectors" }
+        { text: t('data.hero.economic_data') || "Explore Economic Data", variant: "primary", link: "#indicators" },
+        { text: t('data.hero.sector') || "Sector Performance Data", variant: "outline", link: "#sectors-gdp" }
       ]
     },
     {
-      image: "/images/remittances_impact.png",
-      badge: t('data.hero.badge2'),
+      image: "/images/pages/data/remittances_impact.png",
+      badge: t('data.hero.badge2') || "Diaspora Power",
       badgeIcon: Wallet,
-      title: t('data.hero.title2'),
-      titleHighlight: t('data.hero.highlight2'),
-      subtitle: t('data.hero.subtitle2'),
-      description: t('data.hero.desc2'),
+      title: t('data.hero.title2') || "Remittances: A Pillar of ",
+      titleHighlight: t('data.hero.highlight2') || "Growth",
+      subtitle: t('data.hero.subtitle2') || "Diaspora remittances are a vital source of foreign currency and a key driver of economic stability and development.",
+      description: t('data.hero.desc2') || "Discover how these funds are impacting various sectors, from education to housing, and fueling local economies.",
       buttons: []
     },
     {
-      image: "/images/diaspora_investment.jpg",
-      badge: t('data.hero.badge3'),
+      image: "/images/pages/investment/diaspora_investment.jpg",
+      badge: t('data.hero.badge3') || "Investment Trends",
       badgeIcon: TrendingUp,
-      title: t('data.hero.title3'),
-      titleHighlight: t('data.hero.highlight3'),
-      subtitle: t('data.hero.subtitle3'),
+      title: t('data.hero.title3') || "Strategic Investment ",
+      titleHighlight: t('data.hero.highlight3') || "Opportunities",
+      subtitle: t('data.hero.subtitle3') || "Identify high-potential sectors and projects attracting significant investment, both local and from the diaspora.",
       description: "",
       buttons: []
     },
     {
-      image: "/images/export_hub_bg.jpg",
-      badge: t('data.hero.badge4'),
+      image: "/images/pages/export/export_hub_bg.jpg",
+      badge: t('data.hero.badge4') || "Export Performance",
       badgeIcon: Handshake,
-      title: t('data.hero.title4'),
-      titleHighlight: t('data.hero.highlight4'),
-      subtitle: t('data.hero.subtitle4'),
+      title: t('data.hero.title4') || "Boosting National ",
+      titleHighlight: t('data.hero.highlight4') || "Exports",
+      subtitle: t('data.hero.subtitle4') || "Track the growth of Zimbabwe's export sectors and understand market access dynamics.",
       description: "",
       buttons: []
     },
     {
-      image: "/images/rbz_building.png",
-      badge: t('data.hero.badge5'),
+      image: "/images/pages/investment/rbz_building.png",
+      badge: t('data.hero.badge5') || "Policy Impact",
       badgeIcon: Currency,
-      title: t('data.hero.title5'),
-      titleHighlight: t('data.hero.highlight5'),
-      subtitle: t('data.hero.subtitle5'),
+      title: t('data.hero.title5') || "Informed Policy ",
+      titleHighlight: t('data.hero.highlight5') || "Making",
+      subtitle: t('data.hero.subtitle5') || "Data-driven insights supporting effective economic planning and policy formulation.",
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/pages/trade/manufacturing_factory.jpg",
+      badge: "Production Insights",
+      badgeIcon: Factory,
+      title: "Manufacturing Trends ",
+      titleHighlight: "in Focus",
+      subtitle: "Track industrial output performance and identify sectors with scaling potential.",
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/pages/shared/minerals_mining.png",
+      badge: "Resource Analytics",
+      badgeIcon: Mountain,
+      title: "Mining and Commodity ",
+      titleHighlight: "Signals",
+      subtitle: "Use sector data to assess commodity-driven revenue and downstream value-add opportunities.",
+      description: "",
+      buttons: []
+    },
+    {
+      image: "/images/pages/tourism/victoria_falls.jpg",
+      badge: "Services Performance",
+      badgeIcon: Plane,
+      title: "Tourism and Services ",
+      titleHighlight: "Momentum",
+      subtitle: "Understand services-sector recovery patterns and visitor-driven economic contribution.",
       description: "",
       buttons: []
     }
@@ -198,21 +254,21 @@ const heroSlides = useMemo(() => [
 
   const introData = {
   icon: BarChart3, // 
-  title:   t('data.objective_title'),
-  description:   t('data.objective_subtitle')
+  title:   t('data.objective_title') || "Data driven insights",
+  description:   t('data.objective_subtitle') || "Providing comprehensive, actionable insights to support informed decision-making and strategic planning."
 };
 
   const metrics = [
     {
-      title: t('data.overview.gdp.title'),
+      title: t('data.overview.gdp.title') || "GDP (2026 Projection)",
       value: `$${(animatedValues.gdp / 1000).toFixed(1)}B`,
       icon: TrendingUp,
       color: "text-primary",
       bgColor: "bg-primary/5",
-      change: `+${data.growthRate}% ${t('data.overview.gdp.subtitle')}`,
+      change: `+${data.growthRate}% ${t('data.overview.gdp.subtitle') || "% Growth"}`,
     },
     {
-      title: t('data.overview.gdp_growth.title'),
+      title: t('data.overview.gdp_growth.title') || "Live GDP Growth",
       value: `${animatedValues.growthRate}%`,
       icon: Activity,
       color: "text-orange-600",
@@ -221,52 +277,52 @@ const heroSlides = useMemo(() => [
       isLive: true
     },
     {
-      title: t('data.overview.remittances.title'),
+      title: t('data.overview.remittances.title') || "Diaspora Remittances",
       value: `$${(animatedValues.remittances / 1000).toFixed(1)}B`,
       icon: DollarSign,
       color: "text-green-600",
       bgColor: "bg-green-600/5",
-      change: t('data.overview.remittances.subtitle')
+      change: t('data.overview.remittances.subtitle') || "Forex leader"
     },
     {
-      title: t('data.overview.total_exports.title'),
+      title: t('data.overview.total_exports.title') || "Total Exports",
       value: `$${(animatedValues.exportValue / 1000).toFixed(1)}B`,
       icon: Globe,
       color: "text-blue-600",
       bgColor: "bg-blue-600/5",
-      change: t('data.overview.total_exports.subtitle')
+      change: t('data.overview.total_exports.subtitle') || "Export Performance"
     },
         {
-      title: t('data.overview.manufacturing.title'),
+      title: t('data.overview.manufacturing.title') || "Manufacturing",
       value: `$${(animatedValues.manufacturingRevenue / 1000).toFixed(1)}B`,
       icon: Factory,
       color: "text-amber-600",
       bgColor: "bg-amber-600/5",
-      change: t('data.overview.manufacturing.subtitle')
+      change: t('data.overview.manufacturing.subtitle') || "Industrial Output"
     },
     {
-      title: t('data.overview.mining.title'),
+      title: t('data.overview.mining.title') || "Mining",
       value: `$${(animatedValues.miningRevenue / 1000).toFixed(1)}B`,
       icon: Mountain,
       color: "text-amber-600",
       bgColor: "bg-amber-600/5",
-      change: t('data.overview.mining.subtitle')
+      change: t('data.overview.mining.subtitle') || "Output Growth"
     },
     {
-      title: t('data.overview.agriculture.title'),
+      title: t('data.overview.agriculture.title') || "Agricultural Exports",
       value: `$${(animatedValues.agriculturalExports / 1000).toFixed(1)}B`,
       icon: Users,
       color: "text-red-600",
       bgColor: "bg-red-600/5",
-      change: t('data.overview.agriculture.subtitle')
+      change: t('data.overview.agriculture.subtitle') || "Export Value"
     },
     {
-      title: t('data.overview.tourism.title'),
+      title: t('data.overview.tourism.title') || "Tourism",
       value: `$${(animatedValues.tourismRevenue / 1000).toFixed(1)}B`,
       icon: Plane,
       color: "text-purple-600",
       bgColor: "bg-purple-600/5",
-      change: t('data.overview.tourism.subtitle')
+      change: t('data.overview.tourism.subtitle') || "Recovery Growth"
     }
   ];
 
@@ -284,59 +340,24 @@ const heroSlides = useMemo(() => [
   ];
 
   const remittanceImpact = [
-    { sector: t('data.education'), percentage: "28%", amount: "$504M", icon: "📚" }, // "Education"
-    { sector: t('data.housing'), percentage: "24%", amount: "$432M", icon: "🏠" }, //Housing & Construction"
-    { sector: t('data.health_care'), percentage: "18%", amount: "$324M", icon: "🏥" }, //Healthcare
-    { sector: t('data.business_investment'), percentage: "17%", amount: "$306M", icon: "💼" }, //"Business Investment"
-    { sector: t('data.food'), percentage: "13%", amount: "$234M", icon: "🛒" } //"Food & Basic Needs"
+    { sector: t('data.education') || "Education", percentage: "28%", amount: "$504M", icon: "📚" }, // "Education"
+    { sector: t('data.housing') || "Housing & Construction", percentage: "24%", amount: "$432M", icon: "🏠" }, //Housing & Construction"
+    { sector: t('data.health_care') || "Healthcare", percentage: "18%", amount: "$324M", icon: "🏥" }, //Healthcare
+    { sector: t('data.business_investment') || "Business Investment", percentage: "17%", amount: "$306M", icon: "💼" }, //"Business Investment"
+    { sector: t('data.food') || "Food & Basic Needs", percentage: "13%", amount: "$234M", icon: "🛒" } //"Food & Basic Needs"
   ];
 
-  // Add this before the return statement to define gdpGrowthData
-  const gdpGrowthData = SECTOR_DATA.gdpGrowth || [];
-
-  // Pie chart data for sectoral GDP growth
-  const pieData = (SECTOR_DATA.gdpGrowth || []).map(sector => ({
-    name: sector.year, // Use 'year' if 'sector' does not exist
-    value: sector.growth
+  const pieData = sectorGrowthData.map((sector) => ({
+    name: sector.name,
+    value: sector.share,
+    growth: sector.growth,
   }));
 
   // Pie chart colors
   const COLORS = [
-    "#0088FE", "#00C49F", "#FFBB28", "#FF8042",
-    "#A020F0", "#FF6384", "#36A2EB", "#FFCE56"
+    "#60A5FA", "#34D399", "#FBBF24", "#F97316", "#A78BFA"
   ];
-
-  // Custom label renderer for PieChart
-  const renderCustomizedLabel = ({
-    cx, cy, midAngle, innerRadius, outerRadius, percent, index
-  }: {
-    cx: number;
-    cy: number;
-    midAngle: number;
-    innerRadius: number;
-    outerRadius: number;
-    percent: number;
-    index: number;
-  }) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="#333"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-        fontSize={13}
-        fontWeight={600}
-      >
-        {`${pieData[index]?.name}: ${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
+  const activeSector = pieData[activeSectorIndex] ?? pieData[0];
 
   return (
   <Layout>
@@ -356,8 +377,8 @@ const heroSlides = useMemo(() => [
         
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.overview_title')}</h2>
-            <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.overview_subtitle')}</p>
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.overview_title') || "Key Economic Indicators"}</h2>
+            <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -405,16 +426,16 @@ const heroSlides = useMemo(() => [
         <div className="container relative z-10 px-6 mx-auto">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.gdp_growth_trajectory')}</h2>
-              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.gdp_growth_history')}</p>
+              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
+              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
             </div>
 
             <div className="relative overflow-hidden rounded-[3rem] border border-white/10 bg-white/[0.02] backdrop-blur-3xl p-10 md:p-16 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
               <span className="absolute inset-0 rounded-[3rem] border border-white/5 pointer-events-none" />
               <div className="mb-8 flex justify-between items-end">
                 <div>
-                  <h3 className="text-xl font-bold text-white">{t('data.gdp_growth_rate')}</h3>
-                  <p className="text-xs text-white/30 uppercase tracking-widest mt-1">{t('data.gdp_data_source')}</p>
+                  <h3 className="text-xl font-bold text-white">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
+                  <p className="text-xs text-white/30 uppercase tracking-widest mt-1">{t('data.gdp_data_source') || "Source: World Bank, IMF, ZIMSTAT"}</p>
                 </div>
                 <TrendingUp className="text-zim-gold h-6 w-6 opacity-50" />
               </div>
@@ -444,12 +465,12 @@ const heroSlides = useMemo(() => [
       </section>
 
       {/* Mining Sector - Detailed Glass Tiles */}
-      <section id="sectors" className="py-10 bg-slate-950 relative">
+      <section id="sectors-mining" className="py-10 bg-slate-950 relative">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.sectoral_data_mining_title')}</h2>
-              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.sectoral_data_mining_subtitle')}</p>
+              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.sectoral_data_mining_title') || "Mining Sector Breakdown"}</h2>
+              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.sectoral_data_mining_subtitle') || "Zimbabwe's mineral wealth contributing $5.56B to the economy."}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -463,10 +484,10 @@ const heroSlides = useMemo(() => [
                   <div className="space-y-3">
                     <h3 className="text-[11px] font-black text-white/40 uppercase tracking-widest">{mineral.name}</h3>
                     <p className="text-3xl font-black text-zim-gold tracking-tighter group-hover:scale-110 transition-transform">{mineral.value}%</p>
-                    <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{t('data.sectoral_data_mining_contribution')}</p>
+                    <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{t('data.sectoral_data_mining_contribution') || "Contribution"}</p>
                     <div className="mt-4 pt-4 border-t border-white/10">
                       <p className="text-lg font-black text-white">${mineral.revenue}B</p>
-                      <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{t('data.sectoral_data_mining_revenue')}</p>
+                      <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{t('data.sectoral_data_mining_revenue') || "Revenue"}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -478,23 +499,31 @@ const heroSlides = useMemo(() => [
 
       {/* GDP Composition - Glass Donut Terminal */}
       
-      <section id="sectors" className="py-10 bg-slate-950 relative overflow-hidden">
+      <section id="sectors-gdp" className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.sectoral_data_title')}</h2> 
-            <p className="text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t('data.sectoral_data_breakdown')}</p>
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
+            <p className="text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             {/* Projections List */}
             <div className="space-y-8">
               <h3 className="text-[12px] font-black text-zim-gold uppercase tracking-[0.4em] mb-10 border-l-2 border-zim-gold/30 pl-4">
-                {t('data.sectoral_data_projections')} ({data.year})
+                {t('data.sectoral_data_projections') || "Growth Projections"} ({data.year})
               </h3> 
-              {SECTOR_DATA.gdpGrowth.map((sector, index) => (
-                <div key={index} className="space-y-3">
+              {sectorGrowthData.map((sector, index) => (
+                <button
+                  key={sector.name}
+                  onClick={() => setActiveSectorIndex(index)}
+                  className={`w-full text-left space-y-3 rounded-xl p-3 border transition-all ${
+                    activeSectorIndex === index
+                      ? "border-zim-gold/40 bg-zim-gold/10"
+                      : "border-transparent hover:border-white/20 hover:bg-white/[0.03]"
+                  }`}
+                >
                   <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
-                    <span className="text-white/40">{sector.year}</span>
+                    <span className="text-white/80">{sector.name}</span>
                     <span className="text-zim-gold">+{sector.growth}%</span>
                   </div>
                   <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
@@ -506,13 +535,16 @@ const heroSlides = useMemo(() => [
                       className="bg-zim-gold h-full rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]"
                     />
                   </div>
-                </div>
+                  <p className="text-[10px] text-white/50 uppercase tracking-widest">
+                    GDP Share: {sector.share.toFixed(1)}%
+                  </p>
+                </button>
               ))}
             </div>
 
             {/* Cinematic Donut Chart */}
             <div className="relative p-1 rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent">
-              <div className="h-[500px] w-full bg-slate-950/40 backdrop-blur-3xl p-10 rounded-[2.9rem] relative overflow-hidden">
+              <div className="h-[500px] w-full bg-slate-950/40 backdrop-blur-3xl p-10 rounded-[2.9rem] relative overflow-visible">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -523,27 +555,53 @@ const heroSlides = useMemo(() => [
                       outerRadius={120}
                       paddingAngle={8}
                       dataKey="value"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                      onMouseEnter={(_, index) => setActiveSectorIndex(index)}
                     >
                       {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="outline-none stroke-slate-900 stroke-2" />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                          className="outline-none stroke-slate-900"
+                          strokeWidth={activeSectorIndex === index ? 4 : 2}
+                          opacity={activeSectorIndex === index ? 1 : 0.65}
+                        />
                       ))}
                     </Pie>
                     <Tooltip 
-                      contentStyle={{ backgroundColor: 'rgba(2, 6, 23, 0.8)', backdropFilter: 'blur(12px)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }} 
+                      formatter={(value, _name, entry) => {
+                        const growth = (entry as { payload?: { growth?: number } })?.payload?.growth ?? 0;
+                        return [`${Number(value).toFixed(1)}% share`, `Growth: +${growth.toFixed(1)}%`];
+                      }}
+                      wrapperStyle={{
+                        zIndex: 60,
+                        outline: "none",
+                      }}
+                      contentStyle={{
+                        backgroundColor: "rgba(2, 6, 23, 0.92)",
+                        backdropFilter: "blur(12px)",
+                        borderRadius: "16px",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        color: "#fff",
+                        boxShadow: "0 12px 32px rgba(0, 0, 0, 0.45)",
+                      }}
+                      labelStyle={{ color: "#F8FAFC", fontWeight: 700 }}
+                      itemStyle={{ color: "#F8FAFC", fontWeight: 600 }}
                     />
                     <Legend 
                       verticalAlign="bottom" 
-                      height={36} 
+                      height={50} 
                       iconType="circle"
-                      formatter={(value) => <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{value}</span>}
+                      formatter={(value) => <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">{value}</span>}
                     />
                   </PieChart>
                 </ResponsiveContainer>
                 {/* Center Label */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">GDP</p>
-                  <p className="text-2xl font-black text-white">2026</p>
+                  <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">{activeSector?.name ?? "Sector"}</p>
+                  <p className="text-2xl font-black text-white">{activeSector?.value?.toFixed(1) ?? "0"}%</p>
+                  <p className="text-[11px] font-bold text-zim-gold">+{activeSector?.growth?.toFixed(1) ?? "0"}% growth</p>
                 </div>
               </div>
             </div>
@@ -559,13 +617,13 @@ const heroSlides = useMemo(() => [
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div className="space-y-8">
               <Badge className="bg-zim-gold/10 text-zim-gold border-zim-gold/20 text-[10px] font-black uppercase tracking-widest px-4 py-1.5">
-                {t('data.diaspora_remittance_impact_badge')}
+                {t('data.diaspora_remittance_impact_badge') || "Diaspora Impact"}
               </Badge>
               <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-tight">
-                {t('data.diaspora_remittance_impact_title')}
+                {t('data.diaspora_remittance_impact_title') || "Diaspora Economic Impact"}
               </h2>
               <p className="text-base text-white/50 font-light leading-relaxed">
-                {t('data.diaspora_remittance_impact_subtitle')}
+                {t('data.diaspora_remittance_impact_subtitle') || "Understanding the significant contribution of the Zimbabwean diaspora to the national economy."}
               </p>
               
               <div className="space-y-6 pt-6">
@@ -593,9 +651,9 @@ const heroSlides = useMemo(() => [
 
             <div className="grid grid-cols-2 gap-6">
               {[
-                { label: t('data.diaspora_remittance_value'), val: "$1.8B", highlight: true },
-                { label: t('data.diaspora_number_value'), val: "3.5M" },
-                { label: t('data.diaspora_investment_potential'), val: "$500M", span: true }
+                { label: t('data.diaspora_remittance_value') || "Annual Remittances", val: "$1.8B", highlight: true },
+                { label: t('data.diaspora_number_value') || "Global Diaspora", val: "3.5M" },
+                { label: t('data.diaspora_investment_potential') || "Investment Potential", val: "$500M", span: true }
               ].map((stat, i) => (
                 <div key={i} className={`p-8 rounded-[2.5rem] border border-white/10 bg-white/5 transition-all hover:bg-white/10 ${stat.span ? 'col-span-2' : ''}`}>
                   <p className="text-4xl font-black text-zim-gold tracking-tighter mb-2">{stat.val}</p>
@@ -619,7 +677,7 @@ const heroSlides = useMemo(() => [
                 whileInView={{ opacity: 1, y: 0 }}
                 className="text-3xl font-black text-white tracking-tighter"
               >
-                {t('data.diaspora_distribution')}
+                {t('data.diaspora_distribution') || "Global Diaspora Distribution"}
               </motion.h2>
               <motion.p 
                 initial={{ opacity: 0 }}
@@ -627,7 +685,7 @@ const heroSlides = useMemo(() => [
                 transition={{ delay: 0.2 }}
                 className="text-sm text-white/50 font-light"
               >
-                {t('data.diaspora_residence')}
+                {t('data.diaspora_residence') || "Zimbabwean diaspora residence worldwide"}
               </motion.p>
             </div>
             
@@ -643,9 +701,9 @@ const heroSlides = useMemo(() => [
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-white/5">
-                    <th className="p-6 text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_residence_country')}</th>
-                    <th className="p-6 text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_population')}</th>
-                    <th className="p-6 text-right text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_percentage')}</th>
+                    <th className="p-6 text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_residence_country') || "Region/Country"}</th>
+                    <th className="p-6 text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_population') || "Population"}</th>
+                    <th className="p-6 text-right text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_percentage') || "Percentage"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -686,7 +744,7 @@ const heroSlides = useMemo(() => [
             className="max-w-2xl mx-auto p-6 rounded-2xl bg-white/[0.02] border border-white/5 text-center"
           >
             <p className="text-[11px] text-white italic font-light leading-relaxed tracking-wide">
-              {t('data.disclaimer')}
+              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
             </p>
           </motion.div>
         </div>

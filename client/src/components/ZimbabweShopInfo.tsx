@@ -10,28 +10,28 @@ export default function ZimbabweShopInfo() {
   const [currentFoodIndex, setCurrentFoodIndex] = useState(0);
   
   const sportsJerseys = [
-    { image: "/images/sports_rugby_jersey.jpg", title: "Sables Rugby Home Kit" },
-    { image: "/images/sports_cricket_jersey.png", title: "Chevrons World Cup Jersey" },
-    { image: "/images/sports_football_jersey.png", title: "Warriors Football Kit" },
+    { image: "/images/pages/shop/sports_rugby_jersey.jpg", title: "Sables Rugby Home Kit" },
+    { image: "/images/pages/shop/sports_cricket_jersey.png", title: "Chevrons World Cup Jersey" },
+    { image: "/images/pages/shop/sports_football_jersey.png", title: "Warriors Football Kit" },
   ];
 
   const artsCrafts = [
-    { image: "/images/shop_crafts.jpg", title: t('shop.crafts_title') },
-    { image: "/images/crafts_stone_sculptures1.png", title: "Shona Stone Sculptures" },
-    { image: "/images/crafts_stone_sculptures2.jpg", title: "Traditional Stone Art" },
-    { image: "/images/crafts_stone_sculptures3.jpg", title: "Stone Sculpture Collection" },
-    { image: "/images/crafts_binga_baskets1.jpg", title: "Binga Baskets" },
-    { image: "/images/crafts_binga_baskets2.jpg", title: "Traditional Baskets" },
-    { image: "/images/crafts_beaded_jewelry1.jpg", title: "Beaded Jewelry" }
+    { image: "/images/pages/shop/crafts_binga_baskets1.jpg", title: t('shop.crafts_title') },
+    { image: "/images/pages/shop/crafts_stone_sculptures1.png", title: "Shona Stone Sculptures" },
+    { image: "/images/pages/shop/crafts_stone_sculptures2.jpg", title: "Traditional Stone Art" },
+    { image: "/images/pages/shop/crafts_stone_sculptures3.jpg", title: "Stone Sculpture Collection" },
+    { image: "/images/pages/shop/crafts_binga_baskets1.jpg", title: "Binga Baskets" },
+    { image: "/images/pages/shop/crafts_binga_baskets2.jpg", title: "Traditional Baskets" },
+    { image: "/images/pages/shop/crafts_beaded_jewelry1.jpg", title: "Beaded Jewelry" }
   ];
 
   const foodProducts = [
-    { image: "/images/shop_food.webp", title: t('shop.food_title') },
-    { image: "/images/food_mazoe.jpg", title: "Mazoe Variety Pack" },
-    { image: "/images/food_cerevita1.png", title: "Cerevita Instant Cereal" },
-    { image: "/images/food_maputi.png", title: "Maputi Snacks" },
-    { image: "/images/food_dovi1.webp", title: "Traditional Dovi" },
-    { image: "/images/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
+    { image: "/images/pages/shop/shop_food.webp", title: t('shop.food_title') },
+    { image: "/images/pages/shop/food_mazoe.jpg", title: "Mazoe Variety Pack" },
+    { image: "/images/pages/shop/food_cerevita1.png", title: "Cerevita Instant Cereal" },
+    { image: "/images/pages/shop/food_maputi.png", title: "Maputi Snacks" },
+    { image: "/images/pages/shop/food_dovi1.webp", title: "Traditional Dovi" },
+    { image: "/images/pages/shop/food_kapenta1.jpg", title: "Kapenta Dried Fish" }
   ];
 
   useEffect(() => {

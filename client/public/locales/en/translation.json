@@ -19,8 +19,6 @@
   "quick_links": "Quick Links",
   "partners": "Partners",
   "contact": "Contact",
-
-
   "auth": {
     "create_account": "Join ZIGD Platform",
     "register_subtitle": "Start your journey toward impactful diaspora collaboration.",
@@ -39,7 +37,6 @@
     "register_now": "Register Now",
     "close": "Close"
   },
-
   "nav": {
     "home": "Home",
     "export": "Export Hub",
@@ -72,7 +69,7 @@
     "export_roadmap_desc": "Step-by-step export process",
     "technology": "Technology",
     "technology_capabilities": "Technology Capabilities",
-    "technology_capabilities_desc": "Zimbabwe\"s technology and innovation landscape",
+    "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
     "technology_industries": "Technology Industries",
     "technology_industries_desc": "Key technology sectors in Zimbabwe",
     "zimtrade_programs": "ZimTrade Programs",
@@ -86,17 +83,13 @@
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
-    
     "objective_title": "Platform Services",
     "objective_desc": "A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.",
-    
     "explore_now": "Explore Now",
-
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
     "ready_to_connect_title": "Ready to Connect?",
     "ready_to_connect_subtitle": "Join thousands of diaspora members building bridges for economic development.",
-    
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
     "modules": {
@@ -147,10 +140,8 @@
       "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
       "highlight3": "Data-Driven Success"
     },
-
-    "objective_title":" Tech Enabled",
+    "objective_title": " Tech Enabled",
     "objective_subtitle": "Leveraging AI and digital solutions to seamlessly connect Zimbabwe and the diaspora, driving collaboration, sustainable development, and long-term economic growth.",
-
     "explore_onesa": "Explore Onesa AI",
     "onesa_badge": "Meet Onesa AI",
     "onesa_title": "Illuminating your Way",
@@ -168,18 +159,16 @@
     "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
     "features_title": "Onesa AI Capabilities",
     "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
-
     "cta_title": "Ready to Illuminate Your Journey?",
     "cta_desc": "Join our beta program and be the first to experience Onesa AI\"s localized intelligence.",
     "cta_button": "Join Beta Waitlist",
-
     "sectors_badge": "Sector Transformation",
     "sectors_title": "Powering Key Industries",
-    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe\"s most critical economic sectors.",
+    "sectors_subtitle": "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
     "sectors": {
       "mining": {
         "title": "Mining & Resources",
-        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe\"s vast mineral sector.",
+        "desc": "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
         "d1": "Real-time mineral pricing and market trends",
         "d2": "Environmental and safety compliance monitoring"
       },
@@ -201,7 +190,88 @@
         "d1": "Adaptive learning platforms for local schools",
         "d2": "Technical skill development for the digital economy"
       }
-    }
+    },
+    "momentum": {
+      "title": "Zimbabwe Technology Momentum (2026)",
+      "subtitle": "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption.",
+      "connectivity": {
+        "title": "Connectivity Expansion",
+        "detail": "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout."
+      },
+      "ai_strategy": {
+        "title": "National AI Strategy (2026-2030)",
+        "detail": "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery."
+      },
+      "digital_payments": {
+        "title": "Digital Payments at Scale",
+        "detail": "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations."
+      }
+    },
+    "opportunities": {
+      "title": "Top Opportunities for Investment and Innovation",
+      "ai": {
+        "title": "Artificial Intelligence",
+        "driver": "Deployment momentum in mining, healthcare, and governance under the national AI strategy."
+      },
+      "sme": {
+        "title": "SME Digitalization",
+        "driver": "High demand for affordable inventory tools, payroll automation, and customer support chat systems."
+      },
+      "cybersecurity": {
+        "title": "Cybersecurity",
+        "driver": "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills."
+      },
+      "ecommerce": {
+        "title": "E-commerce and Logistics",
+        "driver": "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure."
+      }
+    },
+    "challenges": {
+      "title": "Critical Challenges to Address",
+      "infrastructure": "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
+      "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
+      "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
+    },
+    "fintech": {
+      "title": "Fintech Regulatory Requirements (RBZ)",
+      "subtitle": "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations.",
+      "sandbox_title": "Regulatory Sandbox",
+      "sandbox_detail": "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded.",
+      "phases": {
+        "pre_application": "Pre-application",
+        "application": "Application and evaluation",
+        "testing": "Testing in a controlled live environment",
+        "exit": "Exit and deployment decision"
+      },
+      "licensing_title": "Licensing and Operating Requirements",
+      "l1": "Register legal entity first (typically Private Limited) before regulated fintech operations.",
+      "l2": "Plan for PSP licensing costs and ongoing compliance obligations.",
+      "l3": "Some financial products require minimum capital thresholds and fit-and-proper controls.",
+      "l4": "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."
+    },
+    "hubs": {
+      "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
+      "location": "Zimbabwe",
+      "visit_site": "Visit site",
+      "cities": {
+        "harare": "Harare",
+        "bulawayo": "Bulawayo",
+        "gweru": "Gweru",
+        "mutare": "Mutare"
+      },
+      "impact_hub": "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
+      "eight2five": "CBD innovation center supporting startup acceleration and venture-building programs.",
+      "stanbic": "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
+      "hit": "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
+      "zchpc": "High-performance computing and AI use cases for agriculture, health, and research.",
+      "b2c": "Urban coworking and accelerator-style support for practical local problem-solving startups.",
+      "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
+      "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
+      "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
+      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
+    },
+    "chat_with_onesa": "Chat with Onesa",
+    "more_compliance_information": "More Compliance Information"
   },
   "export": {
     "hero": {
@@ -230,56 +300,50 @@
       "desc6": "Guidance for manufactured goods, textiles, and processed foods.",
       "highlight6": "Value-Added Products"
     },
-    "objective_title": "Boosting Exports, Empowering You",
-    "objective_subtitle": "Connecting products, partners, and market intelligence to empower exporters for success in the EU.",
-    
+    "objective_title": "Export to the EU with Confidence",
+    "objective_subtitle": "Zimbabwe exporters can access the EU under iEPA duty-free and quota-free terms. Focus on REX registration, origin documentation, SPS compliance, and current EU regulatory changes.",
     "explore_market_requirements": "Explore Market Requirements",
     "contact_us": "Contact Us",
     "contact_form_title": "Export Hub Inquiry",
     "contact_form_subtitle": "Fill out the form below to get in touch with our export specialists.",
-
-    "market_requirements_title": "EU Market Requirements",
-    "market_requirements_subtitle": "Understand the specific regulations, certifications, and standards for exporting to Germany.",
+    "market_requirements_title": "Key Registration and Documentation",
+    "market_requirements_subtitle": "Core steps required to claim preferential access and clear EU import controls.",
     "german_requirements": {
       "food_products": {
-        "category": "Food Products",
+        "category": "REX and Preferential Tariffs",
         "requirements": [
-          "EU Food Safety Regulations (e.g., HACCP)",
-          "Pesticide Residue Limits (MRLs)",
-          "Labeling Requirements (ingredients, allergens, origin)",
-          "Veterinary and Phytosanitary Certificates"
+          "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
+          "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
+          "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX."
         ],
-        "price": "High Compliance Cost"
+        "price": "Tariff Access"
       },
       "textiles_leather": {
-        "category": "Textiles & Leather",
+        "category": "Statement on Origin Rules",
         "requirements": [
-          "REACH Regulation (chemicals)",
-          "Flammability Standards",
-          "Labeling (material composition, care instructions)",
-          "Ethical Sourcing & Sustainability Certifications"
+          "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
+          "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
+          "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU."
         ],
-        "price": "Moderate Compliance Cost"
+        "price": "Origin Compliance"
       },
       "arts_crafts": {
-        "category": "Arts & Crafts",
+        "category": "ZIMRA and Export Documentation",
         "requirements": [
-          "CE Marking (if applicable, e.g., toys)",
-          "Material Safety Data Sheets (MSDS)",
-          "Customs Declarations and Tariffs",
-          "Intellectual Property Rights"
+          "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
+          "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
+          "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading or air waybill."
         ],
-        "price": "Low Compliance Cost"
+        "price": "Pre-shipment"
       },
       "agricultural_products": {
-        "category": "Agricultural Products",
+        "category": "EU Product and Safety Standards",
         "requirements": [
-          "GlobalG.A.P. Certification",
-          "Organic Certifications (EU Organic Logo)",
-          "Traceability Systems",
-          "Quality and Grading Standards"
+          "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
+          "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
+          "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements."
         ],
-        "price": "High Compliance Cost"
+        "price": "SPS Critical"
       }
     },
     "product_intelligence_badge": "Intelligence",
@@ -360,28 +424,41 @@
     },
     "regulatory_updates_badge": "Updates",
     "regulatory_updates_title": "Regulatory Updates",
-    "regulatory_updates_subtitle": "Stay informed about the latest changes in international trade regulations and policies affecting Zimbabwean exports.",
+    "regulatory_updates_subtitle": "Track major EU policy shifts that affect origin compliance, sustainability checks, and carbon-linked reporting.",
+    "regulatory_updates_open_full_compliance_guide": "Open Full Compliance Guide",
+    "compliance_checklist": {
+      "title": "Critical Regulations and Compliance Checklist",
+      "subtitle": "A practical baseline for SPS, origin documentation, and incoming EU climate and deforestation controls.",
+      "view_full_regulations": "View Full Regulations",
+      "points": [
+        "Confirm your product HS code and check EU duties and technical measures in Access2Markets.",
+        "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
+        "Issue a valid Statement on Origin for each shipment.",
+        "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
+        "Complete SPS, labeling, and traceability controls required for your product class.",
+        "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
+      ]
+    },
     "regulatory_updates": {
       "eu_sanctions_easing": {
-        "title": "EU Sanctions Easing on Zimbabwe",
-        "date": "March 2024",
-        "description": "The European Union has eased sanctions on several Zimbabwean entities, opening new avenues for trade and investment. This move signals a positive shift in diplomatic relations and economic cooperation."
+        "title": "EU Deforestation Regulation (EUDR)",
+        "date": "Full application delayed to December 2026",
+        "description": "If you export covered products, you must prove supply chains are deforestation-free and traceable before full enforcement."
       },
       "arms_embargo_expiration": {
-        "title": "Arms Embargo Expiration",
-        "date": "February 2024",
-        "description": "The EU\"s arms embargo on Zimbabwe has officially expired, further normalizing trade relations. While direct impact on general exports is limited, it improves the overall investment climate."
+        "title": "Carbon Border Adjustment Mechanism (CBAM)",
+        "date": "Permanent phase expected January 2026",
+        "description": "CBAM is in transition for carbon-intensive goods (iron, steel, cement, fertilizers, aluminum). Financial obligations are expected in the permanent phase."
       },
       "eu_esa_epa_benefits": {
-        "title": "Benefits of EU-ESA EPA",
-        "description": "Zimbabwe benefits from duty-free, quota-free access to the EU market under the interim Economic Partnership Agreement (EPA) with the East and Southern Africa (ESA) region. This provides a significant competitive advantage for Zimbabwean products."
+        "title": "SPS Readiness for Agro and Food Exports",
+        "description": "Food and plant exporters should treat SPS controls as a gate requirement. For sensitive products such as honey, maintain evidence of residue controls and competent authority oversight."
       }
     },
     "cta_title": "Ready to Export to the EU?",
     "cta_subtitle": "Our team of experts is ready to guide you through every step of the process. Contact us today to get started.",
     "cta_button": "Get Started Now"
   },
-
   "tourism": {
     "hero": {
       "badge1": "Visit Zimbabwe",
@@ -405,7 +482,7 @@
       "plan_journey": "Plan Your Journey",
       "watch_exp": "Watch Experience"
     },
-    "attractions_title" : "Must-Visit Destinations",
+    "attractions_title": "Must-Visit Destinations",
     "attractions_subtitle": "Iconic landmarks that define the Zimbabwean experience.",
     "attractions": {
       "vicfalls": {
@@ -441,58 +518,58 @@
         "summary": "These gravity-defying granite formations appear on Zimbabwe's currency and are found throughout the country, particularly in Matobo National Park. Formed over millions of years through erosion, the rocks create surreal landscapes perfect for photography, rock climbing, and nature walks."
       }
     },
-  "other_attractions_title": "Other Incredible Destinations",
-  "other_attractions_subtitle": "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.",
-  "other_attractions": {
-    "hwange": {
-      "name": "Hwange National Park",
-      "desc": "Zimbabwe's largest park, famous for its massive elephant herds and diverse wildlife.",
-      "h1": "Big Five Safari",
-      "h2": "Massive Elephant Herds",
-      "h3": "Conservation Efforts",
-      "summary": "Covering over 14,000 square kilometers, Hwange is a premier safari destination. It hosts over 100 mammal species and 400 bird species. The park is world-renowned for its elephant population, numbering in the tens of thousands, and offers some of the best game viewing in Africa."
+    "other_attractions_title": "Other Incredible Destinations",
+    "other_attractions_subtitle": "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.",
+    "other_attractions": {
+      "hwange": {
+        "name": "Hwange National Park",
+        "desc": "Zimbabwe's largest park, famous for its massive elephant herds and diverse wildlife.",
+        "h1": "Big Five Safari",
+        "h2": "Massive Elephant Herds",
+        "h3": "Conservation Efforts",
+        "summary": "Covering over 14,000 square kilometers, Hwange is a premier safari destination. It hosts over 100 mammal species and 400 bird species. The park is world-renowned for its elephant population, numbering in the tens of thousands, and offers some of the best game viewing in Africa."
+      },
+      "matobo": {
+        "name": "Matobo National Park",
+        "desc": "A UNESCO World Heritage site known for its balancing rocks and spiritual history.",
+        "h1": "Balancing Rocks",
+        "h2": "Ancient Rock Art",
+        "h3": "Rhino Sanctuary",
+        "summary": "Matobo Hills features a unique landscape of granite whaleback dwalas and broken kopjes. It is a significant archaeological site with one of the highest concentrations of San rock art in Southern Africa and is the burial place of Cecil John Rhodes at 'World's View'."
+      },
+      "eastern_highlands": {
+        "name": "Eastern Highlands",
+        "desc": "A cool, mountainous region offering lush forests, waterfalls, and misty peaks.",
+        "h1": "Mountain Treks",
+        "h2": "Breathtaking Waterfalls",
+        "h3": "Cool Climate",
+        "summary": "Stretching along the border with Mozambique, this region includes the Nyanga, Vumba, and Chimanimani mountains. It offers a stark contrast to the rest of the country with its alpine scenery, trout fishing, and the highest point in Zimbabwe, Mount Nyangani."
+      },
+      "mana_pools": {
+        "name": "Mana Pools National Park",
+        "desc": "A remote UNESCO site famous for its river-fed pools and walking safaris.",
+        "h1": "Walking Safaris",
+        "h2": "Zambezi River Views",
+        "h3": "Untamed Wilderness",
+        "summary": "Located in the Zambezi Valley, Mana Pools is known for its incredible beauty and the four large pools formed by the river. It offers a unique opportunity for unguided walking safaris among elephants, lions, and African wild dogs in a raw, prehistoric landscape."
+      },
+      "nyanga": {
+        "name": "Nyanga National Park",
+        "desc": "The 'Little Scotland' of Africa, home to Zimbabwe's highest peak and deepest falls.",
+        "h1": "Mount Nyangani",
+        "h2": "Mutarazi Falls",
+        "h3": "Outdoor Adventure",
+        "summary": "Nyanga is a highland paradise featuring Mount Nyangani and Mutarazi Falls (Africa's second highest). Visitors enjoy fly-fishing, golfing, and the adrenaline-pumping skywalk and zipline over the deep Pungwe Gorge."
+      },
+      "gonarezhou": {
+        "name": "Gonarezhou National Park",
+        "desc": "The 'Place of Elephants,' characterized by the stunning red Chilojo Cliffs.",
+        "h1": "Chilojo Cliffs",
+        "h2": "Pristine Wilderness",
+        "h3": "The Place of Elephants",
+        "summary": "As Zimbabwe’s second-largest park and part of the Great Limpopo Transfrontier Park, Gonarezhou is famed for its rugged scenery and iconic red sandstone cliffs. It offers a truly wild experience for those looking to get off the beaten track."
+      }
     },
-    "matobo": {
-      "name": "Matobo National Park",
-      "desc": "A UNESCO World Heritage site known for its balancing rocks and spiritual history.",
-      "h1": "Balancing Rocks",
-      "h2": "Ancient Rock Art",
-      "h3": "Rhino Sanctuary",
-      "summary": "Matobo Hills features a unique landscape of granite whaleback dwalas and broken kopjes. It is a significant archaeological site with one of the highest concentrations of San rock art in Southern Africa and is the burial place of Cecil John Rhodes at 'World's View'."
-    },
-    "eastern_highlands": {
-      "name": "Eastern Highlands",
-      "desc": "A cool, mountainous region offering lush forests, waterfalls, and misty peaks.",
-      "h1": "Mountain Treks",
-      "h2": "Breathtaking Waterfalls",
-      "h3": "Cool Climate",
-      "summary": "Stretching along the border with Mozambique, this region includes the Nyanga, Vumba, and Chimanimani mountains. It offers a stark contrast to the rest of the country with its alpine scenery, trout fishing, and the highest point in Zimbabwe, Mount Nyangani."
-    },
-    "mana_pools": {
-      "name": "Mana Pools National Park",
-      "desc": "A remote UNESCO site famous for its river-fed pools and walking safaris.",
-      "h1": "Walking Safaris",
-      "h2": "Zambezi River Views",
-      "h3": "Untamed Wilderness",
-      "summary": "Located in the Zambezi Valley, Mana Pools is known for its incredible beauty and the four large pools formed by the river. It offers a unique opportunity for unguided walking safaris among elephants, lions, and African wild dogs in a raw, prehistoric landscape."
-    },
-    "nyanga": {
-      "name": "Nyanga National Park",
-      "desc": "The 'Little Scotland' of Africa, home to Zimbabwe's highest peak and deepest falls.",
-      "h1": "Mount Nyangani",
-      "h2": "Mutarazi Falls",
-      "h3": "Outdoor Adventure",
-      "summary": "Nyanga is a highland paradise featuring Mount Nyangani and Mutarazi Falls (Africa's second highest). Visitors enjoy fly-fishing, golfing, and the adrenaline-pumping skywalk and zipline over the deep Pungwe Gorge."
-    },
-    "gonarezhou": {
-      "name": "Gonarezhou National Park",
-      "desc": "The 'Place of Elephants,' characterized by the stunning red Chilojo Cliffs.",
-      "h1": "Chilojo Cliffs",
-      "h2": "Pristine Wilderness",
-      "h3": "The Place of Elephants",
-      "summary": "As Zimbabwe’s second-largest park and part of the Great Limpopo Transfrontier Park, Gonarezhou is famed for its rugged scenery and iconic red sandstone cliffs. It offers a truly wild experience for those looking to get off the beaten track."
-    }
-  },
     "onesa": {
       "name": "Onesa AI",
       "badge": "Onesa AI Companion",
@@ -500,14 +577,11 @@
       "img_alt": "Onesa AI Guide",
       "title": " Your Local Guide in Your Pocket",
       "subtitle": "Navigating Zimbabwe can be complex. Onesa AI understands the 'kukiya-kiya' economy and local nuances to ensure your trip is seamless.",
-
       "companion_title": "From booking flights,accurate weather information or discovering local gems, Onesa AI has you covered",
       "companion_subtitle": "Onesa AI helps you plan your trip and navigate the ins and outs once you're here. From understanding local etiquette to finding hidden gems, Onesa is your perfect travel companion.",
-
       "assistant_label": "Onesa AI Assistant",
       "prompt_question": "\"Onesa, what's the best local spot for traditional Sadza in Harare tonight?\"",
       "prompt_response": "For an authentic Sadza experience in Harare, head to Mbare Musika. The local vendors there serve up delicious, freshly made Sadza with a variety of tasty relishes. It's a favorite among locals and offers a true taste of Zimbabwean cuisine. Just ask for 'Sadza ne Nyama' (Sadza with meat) for a hearty meal!",
-      
       "guide": {
         "title": "Local Insights",
         "desc": "Understand local etiquette, tipping culture, and social norms."
@@ -520,8 +594,7 @@
         "title": "Custom Itineraries",
         "desc": "AI-generated plans based on your interests and travel style."
       }
-},
-
+    },
     "planning": {
       "guide_badge": "Travel Guide",
       "essential_info": "Essential Planning Information",
@@ -555,8 +628,56 @@
         "d3": "Pleasant year-round temperate climate"
       }
     },
-
-    "objective_title":"Our Vision",
+    "snapshot": {
+      "title": "Zimbabwe Tourism Snapshot (2026)",
+      "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
+      "performance": {
+        "title": "Sector Recovery and Contribution",
+        "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
+      },
+      "attractions": {
+        "title": "UNESCO and Wildlife Anchors",
+        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
+      },
+      "infrastructure": {
+        "title": "Access and Infrastructure Upgrades",
+        "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
+      }
+    },
+    "opportunities": {
+      "title": "Tourism Investment and Growth Opportunities",
+      "ecotourism": {
+        "title": "Ecotourism and Sustainability",
+        "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
+      },
+      "cbt": {
+        "title": "Community-Based Tourism",
+        "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
+      },
+      "hospitality": {
+        "title": "Hospitality and Infrastructure",
+        "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
+      },
+      "gastronomy": {
+        "title": "Gastronomy Tourism",
+        "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
+      },
+      "adventure": {
+        "title": "Adventure Tourism",
+        "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
+      },
+      "regional": {
+        "title": "Regional Hub Packaging",
+        "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
+      }
+    },
+    "authorities": {
+      "title": "Official Tourism Authorities",
+      "subtitle": "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards.",
+      "zta": "Visit Zimbabwe Tourism Authority",
+      "zimparks": "Visit ZimParks"
+    },
+    "objective_title": "Our Vision",
     "objective_subtitle": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
     "cta_title": "Ready to Start Your Adventure?",
     "cta_button": "Connect with an Expert",
@@ -566,12 +687,22 @@
     "explore_subtitle": " For comprehensive travel information and official guidelines, visit the Zimbabwe Tourism Authority website.",
     "explore_site": "Visit Zimbabwe Tourism Authority"
   },
-
-"investment": {
-
-    "objective_title": "Secure Investment, Driving Growth",
-    "objective_subtitle": "Connecting diaspora investors with carefully vetted, high-potential projects, supported by government initiatives and transparent tracking.",
-    
+  "investment": {
+    "objective_title": "Diaspora Collective Investment Model",
+    "objective_subtitle": "Diaspora Unlocked combines technology, skills, and network access so small investors can pool capital and participate in verified Zimbabwe opportunities.",
+    "economic_snapshot": {
+      "title": "Investor Economic Snapshot",
+      "subtitle": "Review growth momentum together with currency, tax, and compliance conditions before allocating capital.",
+      "gdp_growth": "GDP Growth",
+      "latest_macro_signal": "Latest macro signal",
+      "diaspora_remittances": "Diaspora Remittances",
+      "annual_inflows": "Annual inflows",
+      "total_exports": "Total Exports",
+      "external_demand": "External demand indicator",
+      "gdp_size": "GDP Size",
+      "economic_scale": "Economic scale",
+      "top_growth_sectors": "Top Growth Sectors"
+    },
     "hero": {
       "badge1": "RBZ Initiatives",
       "title1": "Diaspora Investment",
@@ -600,32 +731,56 @@
       "masuwe": {
         "title": "Masuwe SEZ",
         "description": "Tourism infrastructure hub near Victoria Falls.",
-        "highlights": ["Tax Incentives", "Tourism Hub", "Ready Infrastructure"]
+        "highlights": [
+          "Tax Incentives",
+          "Tourism Hub",
+          "Ready Infrastructure"
+        ]
       },
       "leather": {
         "title": "Leather Cluster",
         "description": "Regional export processing and manufacturing.",
-        "highlights": ["Value Addition", "Skilled Labor", "Export Ready"]
+        "highlights": [
+          "Value Addition",
+          "Skilled Labor",
+          "Export Ready"
+        ]
       },
       "apparel": {
         "title": "ZimBrand Supply Chain",
         "description": "Branded merchandise and sports jersey distribution hub.",
-        "highlights": ["Global Licensing", "Sports Partners", "Scalable Model"]
+        "highlights": [
+          "Global Licensing",
+          "Sports Partners",
+          "Scalable Model"
+        ]
       },
       "horticulture": {
         "title": "Blueberry Farm",
         "description": "High-value export production for global markets.",
-        "highlights": ["Global Gap Cert", "Off-season Edge", "Water Efficient"]
+        "highlights": [
+          "Global Gap Cert",
+          "Off-season Edge",
+          "Water Efficient"
+        ]
       },
       "fintech": {
         "title": "ZimPay Core",
         "description": "Next-gen IT infrastructure for diaspora remittances.",
-        "highlights": ["SaaS Model", "Secure API", "Regional Scale"]
+        "highlights": [
+          "SaaS Model",
+          "Secure API",
+          "Regional Scale"
+        ]
       },
       "solar": {
         "title": "Mutare Solar Park",
         "description": "5MW Grid-tied energy for local industry.",
-        "highlights": ["Utility PPA", "Carbon Credits", "Stable Returns"]
+        "highlights": [
+          "Utility PPA",
+          "Carbon Credits",
+          "Stable Returns"
+        ]
       }
     },
     "project_filters": {
@@ -681,10 +836,8 @@
       "Export Produce Association",
       "Flower Growers Association"
     ],
-
     "database_title": "Trade & Investment Databases and Registries",
     "database_subtitle": "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities.",
-
     "ntir_title": "National Trade & Investment Register (NTIR)",
     "ntir_subtitle": "Official registry of verified trade and investment entities in Zimbabwe.",
     "ntir_button": "Search NTIR Database.",
@@ -692,10 +845,66 @@
     "crowdfunding_subtitle": " Micro-investment in vetted projects with smaller amounts and see real impact.",
     "sectors_title": "Active Investment Opportunities",
     "sectors_subtitle": "Carefully vetted projects with government support and transparent tracking.",
-
+    "regulatory_snapshot": {
+      "title": "Investment Regulation Snapshot",
+      "subtitle": "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation.",
+      "open_full_guide": "Open Full Guide",
+      "checklist": [
+        "Check if your target activity is reserved under Statutory Instrument 215 of 2025 before committing capital.",
+        "If operating in a reserved sector, plan compliant local equity restructuring timelines and legal documentation.",
+        "Apply for a ZIDA investment license through the DIY portal to secure statutory investment protections.",
+        "Set up entity structure and appoint a local representative/proxy director for legal notices and operations.",
+        "Register qualifying cross-border investments, royalties, and recurring technical fee agreements with RBZ.",
+        "Model exchange-rate and settlement exposure across USD and ZiG under the multi-currency framework.",
+        "For listed exposure, account for ZSE foreign shareholding limits and assess VFEX USD-based alternatives.",
+        "In financial models, include applicable non-resident withholding taxes and export-incentive tax treatment."
+      ]
+    },
+    "collective_model": {
+      "title": "How Diaspora Collective Investing Works",
+      "subtitle": "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
+      "s1": "Create an investor profile and complete verification checks.",
+      "s2": "Join vetted opportunities with clear minimum-ticket participation.",
+      "s3": "Pool capital with other diaspora investors through structured terms.",
+      "s4": "Track project updates, milestones, and performance on one dashboard."
+    },
+    "eu_focus": {
+      "title": "European Partnership Capital in Zimbabwe",
+      "subtitle": "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, social inclusion, and climate resilience.",
+      "energy": {
+        "title": "Green Energy",
+        "detail": "GET.invest Zimbabwe (launched in May 2025 with EU and Germany funding) supports clean-energy project finance, with strong focus on solar and diversifying hydro-dependent generation."
+      },
+      "agri": {
+        "title": "Agriculture and Value Chains",
+        "detail": "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs."
+      },
+      "sme": {
+        "title": "Private Sector and SME Finance",
+        "detail": "EIB-backed lines through local banks expanded affordable finance for SMEs; reported EIB lending in recent years includes EUR 60 million, including EUR 20 million to Stanbic in March 2025."
+      },
+      "social": {
+        "title": "Health, Gender, and Social Programs",
+        "detail": "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth."
+      },
+      "biodiversity": {
+        "title": "Biodiversity and Resilience",
+        "detail": "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development."
+      },
+      "gateway": {
+        "title": "Global Gateway Partnership Envelope",
+        "detail": "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO."
+      },
+      "eib_takeaways_title": "EIB Practical Takeaways for Diaspora Investors",
+      "eib_t1": "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
+      "eib_t2": "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
+      "eib_t3": "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
+      "source_getinvest": "Source: GET.invest Zimbabwe",
+      "source_eu": "Source: EU International Partnerships",
+      "source_eib": "Source: EIB Zimbabwe Essay"
+    },
     "calculator_title": "Smart Investment Calculator",
     "calculator_subtitle": "Forecast returns using real market and project data",
-
     "cta_title": "Ready to Invest?",
     "cta_subtitle": "Our investment team can help you identify the right opportunities and guide you through the process.",
     "cta_button": "Connect with an Expert",
@@ -704,87 +913,83 @@
     "explore_subtitle": " For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency.",
     "explore_site": "Visit ZIDA"
   },
-
   "trade": {
     "hero": {
-      "badge1": "Global Trade",
-      "title1": "Zimbabwe\"s Trade Hub",
-      "subtitle1": "Connecting local businesses to global markets and fostering economic growth.",
-      "highlight1": "Export Growth",
-      "badge2": "Strategic Partnerships",
-      "title2": "International Collaborations",
-      "subtitle2": "Building strong trade relationships with partners worldwide.",
-      "highlight2": "Global Network",
-      "badge3": "Sustainable Trade",
-      "title3": "Ethical & Green Exports",
-      "subtitle3": "Promoting environmentally friendly and socially responsible trade practices.",
-      "highlight3": "Responsible Business",
-      "badge4": "Export Growth",
-      "title4": "Boosting National Exports",
-      "subtitle4": "Driving economic prosperity through diversified export strategies.",
-      "highlight4": "Economic Prosperity",
-      "badge5": "EU Market Access",
-      "title5": "Accessing European Markets",
-      "subtitle5": "Facilitating entry for Zimbabwean products into the lucrative EU market.",
-      "highlight5": "Duty-Free Access"
+      "badge1": "ZimTrade Export Support",
+      "title1": "Export from Zimbabwe with Confidence",
+      "subtitle1": "Use ZimTrade market intelligence, buyer linkages, and compliance support to enter priority markets.",
+      "highlight1": "Market Readiness",
+      "badge2": "EU Market Access",
+      "title2": "iEPA Duty-Free Entry",
+      "subtitle2": "Eligible Zimbabwean products can access the EU under preferential terms when origin rules are met.",
+      "highlight2": "Duty-Free & Quota-Free",
+      "badge3": "Compliance First",
+      "title3": "Meet EU Product Rules",
+      "subtitle3": "Align with SPS, food safety, and traceability requirements before shipment.",
+      "highlight3": "Standards Compliance",
+      "badge4": "REX Origin System",
+      "title4": "Self-Certify Origin Correctly",
+      "subtitle4": "For consignments above EUR 6,000, use REX registration and statement on origin requirements.",
+      "highlight4": "Correct Documentation",
+      "badge5": "Strategic Export Planning",
+      "title5": "Use Access2Markets + ZimTrade",
+      "subtitle5": "Validate duties, technical measures, and buyer requirements by HS code before closing deals.",
+      "highlight5": "Data-Driven Exports"
     },
-
-    "objective_title": "Value-chains.",
-    "objective_subtitle": "Building sustainable and efficient value chains that support long-term economic growth.",
-    
-
+    "objective_title": "Zimbabwe Trade Execution",
+    "objective_subtitle": "Practical export guidance for 2026: market access, compliance, shipping, and diaspora-led buyer linkages.",
     "export_roadmap_badge": "Export Roadmap",
-    "export_roadmap_title": "Zimbabwe to Germany Export Process",
-    "export_roadmap_subtitle": "A step-by-step guide to navigating the export journey from Zimbabwe to Germany.",
+    "export_roadmap_title": "Zimbabwe Export Roadmap (2026)",
+    "export_roadmap_subtitle": "A practical path for exporters using ZimTrade support, ZIMRA/REX processes, and EU compliance requirements.",
     "export_flow": {
       "product_approval": {
         "phase": "Product Approval",
-        "description": "For products not yet EU approved (e.g., Honey)",
+        "description": "Start with market access and product classification",
         "steps": [
-          "Submit Residue Monitoring Plan (RMP)",
-          "Establish EU-Accredited Testing Systems",
-          "Register in EU TRACES System",
-          "Await Addition to EU Approved List"
+          "Classify your product with the correct HS code.",
+          "Check the EU Access2Markets portal for duties, taxes, and measures.",
+          "Confirm eligibility for iEPA preferential access before pricing contracts.",
+          "For restricted product categories, obtain sector-specific approvals first."
         ]
       },
       "registration_compliance": {
         "phase": "Registration & Compliance",
-        "description": "Required for all exporters",
+        "description": "Core registrations for Zimbabwe exporters",
         "steps": [
-          "Register for REX System via ZIMRA",
-          "Consult ZimTrade for Market Intelligence",
-          "Obtain Required Certifications",
-          "Complete Export Registration with Relevant Authorities"
+          "Register the business and tax profile with ZIMRA.",
+          "Apply for Registered Exporter (REX) status for origin self-certification.",
+          "Consignments above EUR 6,000 require statement on origin by a registered exporter.",
+          "Consignments at or below EUR 6,000 can be self-certified without REX."
         ]
       },
       "certification_quality": {
         "phase": "Certification & Quality",
-        "description": "Meet EU quality standards",
+        "description": "Meet destination standards and risk rules",
         "steps": [
-          "GLOBALG.A.P. & GRASP Certification",
-          "EU Organic Certification (if applicable)",
-          "Quality Control: Class I, MRL Limits",
-          "Third-Party Audits & Compliance Verification"
+          "Comply with SPS requirements for food and plant products.",
+          "Use GLOBALG.A.P. or HACCP where required by buyers and retailers.",
+          "Prepare traceability documentation for EUDR-affected supply chains.",
+          "Track CBAM developments for carbon-intensive products and contracts."
         ]
       },
       "logistics_documentation": {
         "phase": "Logistics & Documentation",
-        "description": "Final export preparation",
+        "description": "Dispatch, customs, and payment controls",
         "steps": [
-          "Prepare Export Documents",
-          "Health & Phytosanitary Certificates",
-          "Commercial Invoice with REX Statement",
-          "Arrange Cold Chain Logistics"
+          "Prepare commercial invoice, packing list, and bill of lading/air waybill.",
+          "Include correct origin declarations and shipping marks.",
+          "Align payment terms with exchange-control and banking requirements.",
+          "Keep complete records for audits, claims, and repeat shipments."
         ]
       }
     },
     "export_sectors_badge": "Sectors",
     "export_sectors_title": "Key Export Sectors",
-    "export_sectors_subtitle": "Discover the primary sectors driving Zimbabwe\"s export economy.",
+    "export_sectors_subtitle": "Discover the primary sectors driving Zimbabwe's export economy.",
     "sectors": {
       "horticulture": {
         "name": "Horticulture",
-        "description": "Fresh produce, flowers, and organic vegetables for international markets",
+        "description": "Fresh produce and processed foods with strong EU and regional demand when SPS standards are met",
         "opportunities": [
           "EU organic markets",
           "Middle East exports",
@@ -793,7 +998,7 @@
       },
       "leather_products": {
         "name": "Leather Products",
-        "description": "Premium leather goods, footwear, and accessories with authentic African craftsmanship",
+        "description": "Value-added manufacturing exports including footwear and lifestyle products for diaspora and EU channels",
         "opportunities": [
           "European fashion markets",
           "Luxury goods sector",
@@ -802,7 +1007,7 @@
       },
       "arts_crafts": {
         "name": "Arts & Crafts",
-        "description": "Stone sculptures, beadwork, woven baskets, and traditional artisan products",
+        "description": "Authentic artisan exports that perform well in niche retail and diaspora-curated marketplaces",
         "opportunities": [
           "Tourism markets",
           "Cultural exports",
@@ -811,7 +1016,7 @@
       },
       "minerals_mining": {
         "name": "Minerals & Mining",
-        "description": "Value-added mineral products, precious stones, and processed materials",
+        "description": "Strategic minerals and value-added products with increasing demand in industrial and energy value chains",
         "opportunities": [
           "Industrial exports",
           "Jewelry sector",
@@ -907,35 +1112,31 @@
       "badge4": "Export Performance",
       "title4": "Boosting National ",
       "highlight4": "Exports",
-      "subtitle4": "Track the growth of Zimbabwe\"s export sectors and understand market access dynamics.",
+      "subtitle4": "Track the growth of Zimbabwe's export sectors and understand market access dynamics.",
       "badge5": "Policy Impact",
       "title5": "Informed Policy ",
       "highlight5": "Making",
       "subtitle5": "Data-driven insights supporting effective economic planning and policy formulation."
     },
-
-    "education": "Education", 
+    "education": "Education",
     "housing": "Housing & Construction",
-    "health_care": "Healthcare", 
+    "health_care": "Healthcare",
     "business_investment": "Business Investment",
     "food": "Food & Basic Needs",
-
     "objective_title": "Data driven insights",
     "objective_subtitle": "Providing comprehensive, actionable insights to support informed decision-making and strategic planning.",
-    
     "overview_title": "Key Economic Indicators",
     "overview_subtitle": "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections",
     "overview": {
-        "gdp": {
+      "gdp": {
         "title": "GDP (2026 Projection)",
         "subtitle": " % Growth",
         "description": "Zimbabwe's Gross Domestic Product"
       },
-        "gdp_growth": {
+      "gdp_growth": {
         "title": "Live GDP Growth",
         "subtitle": " Real-time Feed",
         "description": "Real-time GDP growth rate based on current economic activity"
-
       },
       "remittances": {
         "title": "Diaspora Remittances",
@@ -952,56 +1153,62 @@
         "subtitle": "Strategic Ores",
         "description": "Total mining sector revenue"
       },
-       "manufacturing": {
+      "manufacturing": {
         "title": "Manufacturing",
-        "subtitle": "Industrial Output",  
+        "subtitle": "Industrial Output",
         "description": "Total manufacturing sector GDP contribution"
       },
       "tourism_revenue": {
         "title": "Tourism Revenue",
         "subtitle": "Annual Revenue",
         "description": "Annual tourism sector revenue"
-     
       },
       "agriculture": {
         "title": "Agricultural Exports",
         "subtitle": "Export Value",
         "description": "Total value of agricultural exports"
+      },
+      "total_exports": {
+        "title": "Total Exports",
+        "subtitle": "Global Trade",
+        "description": "Total value of Zimbabwean exports"
+      },
+      "mining": {
+        "title": "Mining Revenue",
+        "subtitle": "Strategic Ores",
+        "description": "Total mining sector revenue"
+      },
+      "tourism": {
+        "title": "Tourism Revenue",
+        "subtitle": "Annual Revenue",
+        "description": "Annual tourism sector revenue"
       }
-      
     },
-
     "gdp_growth_rate": "GDP Growth Rate",
     "gdp_growth_trajectory": "GDP Growth Trajectory",
     "gdp_growth_history": "Zimbabwe's economic growth from 2021 to 2025 projection",
     "gdp_data_source": "Source: World Bank, IMF, ZIMSTAT",
-
     "sectoral_data_mining_title": "Mining Sector Breakdown",
     "sectoral_data_mining_subtitle": " Zimbabwe's mineral wealth contributing $5.56B to the economy.",
     "sectoral_data_mining_contribution": "Contribution",
     "sectoral_data_mining_revenue": "Revenue",
-
     "sectoral_data_badge": "Sector Performance",
     "sectoral_data_title": "GDP Growth by Sector",
     "sectoral_data_breakdown": "A breakdown of how each pillar of the economy is contributing to the national growth projection.",
     "sectoral_data_projections": "Growth Projections",
     "sectoral_data_gdp_by_sector": "GDP Breakdown",
-
     "diaspora_remittance_impact_badge": "Diaspora Impact",
     "diaspora_remittance_impact_title": "Diaspora Economic Impact",
     "diaspora_remittance_impact_subtitle": "Understanding the significant contribution of the Zimbabwean diaspora to the national economy.",
     "diaspora_remittance_value": "Annual Remittances",
     "diaspora_number_value": "Global Diaspora",
-    "diaspora_investment_potential": "Investment Potential",  
-
+    "diaspora_investment_potential": "Investment Potential",
     "diaspora_distribution": "Global Diaspora Distribution",
     "diaspora_residence": "Zimbabwean diaspora residence worldwide",
-    "diaspora_residence_country": "Region/Country", 
+    "diaspora_residence_country": "Region/Country",
     "diaspora_population": "Population",
     "diaspora_percentage": "Percentage",
-    "disclaimer": "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API.", 
-
-
+    "disclaimer": "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API.",
     "regional_breakdown_title": "Diaspora Regional Breakdown",
     "regional_breakdown_subtitle": "Distribution of Zimbabwean diaspora across key regions.",
     "regional_breakdown": {
@@ -1057,23 +1264,19 @@
         "sector": "Food & Basic Needs"
       }
     },
-
-
     "investment_calculator_proInvestmentModeler": "Pro Investment Modeler",
     "investment_calculator_stressTest": "Stress Test",
     "investment_calculator_principal": "Principal",
     "investment_calculator_taxRate": "Tax Rate ",
-    "investment_calculator_insurance/Year": "Insurance/Year",    
+    "investment_calculator_insurance/Year": "Insurance/Year",
     "investment_calculator_returns": "Returns",
     "investment_calculator_netProfit": "Net Profit",
     "investment_calculator_final": "Final",
-     "investment_calculator_fees": "Fees",
-     "investment_calculator_year": "Year",
+    "investment_calculator_fees": "Fees",
+    "investment_calculator_year": "Year",
     "investment_calculator_shockIncluded": "Shock Included",
     "investment_calculator_note": "Note",
-    "investment_calculator_disclaimer": "This calculator provides estimates based on assumed constant returns. Actual investment performance may vary. Past performance does not guarantee future results. Please consult with financial advisors and review project details before investing.",    
-
-
+    "investment_calculator_disclaimer": "This calculator provides estimates based on assumed constant returns. Actual investment performance may vary. Past performance does not guarantee future results. Please consult with financial advisors and review project details before investing.",
     "cta_title": "Need More In-depth Data?",
     "cta_subtitle": "Access our comprehensive reports and custom data analytics services for your specific needs.",
     "cta_button": "Request Custom Report"
@@ -1101,10 +1304,8 @@
       "highlight5": "Investment",
       "subtitle5": "How diaspora capital is transforming key sectors and creating opportunities."
     },
-
     "objective_title": "Impact",
     "objective_subtitle": "Showcasing the tangible impact of diaspora engagement across various sectors and communities in Zimbabwe.",
-
     "stories": {
       "leather_goods": {
         "title": "Leather Goods Export Success",
@@ -1189,7 +1390,6 @@
         "description": "International markets reached"
       }
     },
-
     "stories_badge": "Stories",
     "stories_title": "Inspiring Success Stories",
     "stories_subtitle": "Explore the impactful contributions of the Zimbabwean diaspora across various sectors.",
@@ -1205,13 +1405,225 @@
     "impact_metrics_badge": "Metrics",
     "impact_metrics_title": "Collective Impact",
     "impact_metrics_subtitle": "The aggregated impact of diaspora engagement across all featured success stories.",
-
     "cta_title": "Have a Success Story to Share?",
     "cta_subtitle": "We are always looking for inspiring stories of diaspora impact. Share yours with us!",
-    "cta_button": "Share Your Story"
+    "cta_button": "Share Your Story",
+    "stories_list": [
+      {
+        "display": true,
+        "title": "Leather Goods Export Success",
+        "category": "Export",
+        "image": "/images/pages/shared/leather_products.jpg",
+        "impact": {
+          "revenue": "$2.5M",
+          "jobs": "150+",
+          "markets": "3 countries"
+        },
+        "story": "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
+        "testimonial": "The ZIGD platform connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
+        "author": "Tendai Moyo",
+        "role": "Managing Director, Zimbabwe Leather Collective"
+      },
+      {
+        "display": true,
+        "title": "Organic Horticulture Breakthrough",
+        "category": "Export",
+        "image": "/images/pages/shared/horticulture.jpg",
+        "impact": {
+          "revenue": "$850K",
+          "jobs": "85",
+          "markets": "Germany, Netherlands"
+        },
+        "story": "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
+        "testimonial": "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
+        "author": "Grace Ncube",
+        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
+      },
+      {
+        "display": true,
+        "title": "Tourism Lodge Investment",
+        "category": "Investment",
+        "image": "/images/pages/tourism/victoria_falls.jpg",
+        "impact": {
+          "revenue": "$1.2M annually",
+          "jobs": "45",
+          "investors": "280 diaspora"
+        },
+        "story": "Through ZIGD's crowdfunding platform, 280 diaspora investors pooled $500K to develop an eco-lodge near Victoria Falls. The lodge now generates steady returns while providing employment and supporting local communities. Diaspora investors receive quarterly dividends and enjoy preferential booking rates.",
+        "testimonial": "I invested $2,000 from the UK and now I'm part-owner of a beautiful lodge in my homeland. The transparency through NTIR gave me confidence, and the returns have exceeded expectations.",
+        "author": "Simba Chikwanha",
+        "role": "Diaspora Investor, London"
+      },
+      {
+        "display": true,
+        "title": "Stone Sculpture Export Network",
+        "category": "Trade",
+        "image": "/images/pages/wikimedia/faces-4.jpg",
+        "impact": {
+          "revenue": "$450K",
+          "jobs": "60 artisans",
+          "markets": "USA, CAN, UK"
+        },
+        "story": "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
+        "testimonial": "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
+        "author": "Patrick Mavros",
+        "role": "Master Sculptor, Harare"
+      },
+      {
+        "display": true,
+        "title": "Tech Startup Diaspora Funding",
+        "category": "Investment",
+        "image": "/images/pages/home/partnership_handshake.png",
+        "impact": {
+          "revenue": "$3.5M valuation",
+          "jobs": "35",
+          "investors": "120 diaspora"
+        },
+        "story": "A Harare-based fintech startup raised $750K from diaspora investors through ZIGD's investment platform. The company developed a mobile payment solution for rural areas, now serving 500K+ users. Diaspora investors provided both capital and technical mentorship.",
+        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
+        "author": "Tafadzwa Chidavaenzi",
+        "role": "CEO, PayMoyo Technologies"
+      },
+      {
+        "display": true,
+        "title": "Honey Export Cooperative",
+        "category": "Export",
+        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
+        "impact": {
+          "revenue": "$320K",
+          "jobs": "120 beekeepers",
+          "markets": "EU markets"
+        },
+        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
+        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
+        "author": "Rudo Makoni",
+        "role": "Secretary, Masvingo Honey Cooperative"
+      },
+      {
+        "display": true,
+        "title": "Heritage Tourism Package Success",
+        "category": "Tourism",
+        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
+        "impact": {
+          "revenue": "$680K",
+          "tourists": "1,200+ diaspora",
+          "jobs": "28"
+        },
+        "story": "A tourism operator developed specialized diaspora homecoming packages through ZIGD's platform. The packages combine family visits with cultural tourism, attracting over 1,200 diaspora tourists annually. The business employs local guides, drivers, and hospitality staff.",
+        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. ZIGD's platform gave us visibility to our target market.",
+        "author": "Chipo Mutasa",
+        "role": "Director, Heritage Trails Zimbabwe"
+      },
+      {
+        "display": true,
+        "title": "Macadamia Nut Processing Plant",
+        "category": "Investment",
+        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
+        "impact": {
+          "revenue": "$1.8M",
+          "jobs": "95",
+          "investors": "340 diaspora"
+        },
+        "story": "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
+        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",
+        "author": "Ngoni Sibanda",
+        "role": "Operations Manager, Zim Macadamia Processors"
+      }
+    ],
+    "impact_metrics_list": [
+      {
+        "display": true,
+        "value": "$11.3M+",
+        "label": "Total Economic Impact",
+        "description": "Revenue generated across all success stories"
+      },
+      {
+        "display": true,
+        "value": "700+",
+        "label": "Jobs Created",
+        "description": "Direct employment opportunities"
+      },
+      {
+        "display": true,
+        "value": "1,000+",
+        "label": "Diaspora Investors",
+        "description": "Active participants in projects"
+      },
+      {
+        "display": true,
+        "value": "15+",
+        "label": "Markets Accessed",
+        "description": "International markets reached"
+      }
+    ]
+  },
+  "regulations": {
+    "badge": "Compliance Hub",
+    "title": "Regulations & Compliance Guide",
+    "subtitle": "Practical regulatory guidance for diaspora investors, exporters, and returnees. Use this as an execution checklist and align final decisions with qualified legal, tax, and sector advisors.",
+    "sections": {
+      "investment_compliance": {
+        "title": "Investment Compliance",
+        "points": [
+          "Confirm project legal structure, ownership, and board controls before funding.",
+          "Verify licensing and approvals through ZIDA and relevant sector regulators.",
+          "Use written shareholder and governance agreements for diaspora co-investment.",
+          "Document source of funds and perform KYC/AML checks on counterparties."
+        ]
+      },
+      "currency_settlement": {
+        "title": "Currency, Repatriation, and Settlement",
+        "points": [
+          "Agree settlement currency (USD/ZiG/other) and payout schedule in contracts.",
+          "Define dividend and exit mechanics clearly for diaspora participants.",
+          "Use bank-compliant channels with full transaction traceability.",
+          "Include FX and transfer-risk provisions in investment term sheets."
+        ]
+      },
+      "export_controls": {
+        "title": "Export Trade Controls",
+        "points": [
+          "Validate HS classification, destination-market restrictions, and permits.",
+          "Maintain certificate packs: origin, phytosanitary, and quality documents.",
+          "Align labeling, packaging, and traceability to destination-market rules.",
+          "Use approved freight and customs brokers for controlled product categories."
+        ]
+      },
+      "export_certification_and_labeling": {
+        "title": "Certification and Labeling",
+        "points": [
+          "Map each product to required standards before buyer onboarding.",
+          "Pre-audit facilities and records before external certification runs.",
+          "Maintain lot-level traceability for food, wellness, and craft exports.",
+          "Run periodic compliance checks to avoid border holds and penalties."
+        ]
+      },
+      "tourism_entry_and_safety": {
+        "title": "Tourism Entry and Safety",
+        "points": [
+          "Check visa category, permitted stay, and document validity before travel.",
+          "Carry travel insurance aligned to planned activities and medical needs.",
+          "Confirm payment channels and transaction limits in advance.",
+          "Follow local park, road, and accommodation compliance requirements."
+        ]
+      },
+      "due_diligence_checklist": {
+        "title": "Diaspora Due-Diligence Checklist",
+        "points": [
+          "Entity verification, UBO checks, and litigation or sanctions screening.",
+          "Contract review across commercial, tax, and dispute-resolution clauses.",
+          "Operational proof: site inspections, audited financials, and supplier validation.",
+          "Ongoing controls: reporting cadence, KPI tracking, and escalation matrix."
+        ]
+      }
+    },
+    "cta": {
+      "investment_opportunities": "Investment Opportunities",
+      "export_hub": "Export Hub",
+      "search_ntir": "Search NTIR"
+    }
   },
   "common": {
-
     "coming_soon": "We are building intelligent solutions designed to transform how you connect, work, and grow using advanced AI technology.",
     "explore_now": "Explore Now",
     "learn_more": "Learn More",
@@ -1234,10 +1646,12 @@
     "risk_level": "Risk Level",
     "highlights": "Highlights",
     "share": "Share",
-    "save": "Save"
+    "save": "Save",
+    "notify_success": "Priority Access Locked",
+    "get_notified": "Request Access",
+    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}"
   },
   "contact_form": {
-   
     "get_started": "Get in Touch",
     "full_name": "Full Name",
     "email": "Email Address",
@@ -1267,7 +1681,6 @@
     "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
   },
   "shop": {
-
     "collections": "Collections",
     "title": "Curated Zimbabwean Excellence",
     "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
@@ -1287,5 +1700,22 @@
     "message": "Sorry, the page you are looking for doesn't exist.",
     "message2": "It may have been moved or deleted.",
     "go_home": "Go Home"
+  },
+  "onesa": {
+    "badge": "Onesa AI",
+    "title": "Chat with Onesa AI",
+    "subtitle": "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "starter_prompt": "Start chat....",
+    "welcome": "I am an expert on Zimbabwe. Let me help you navigate everything from investment, trade, and tourism to your day-to-day tasks.",
+    "status_prefix": "Onesa status",
+    "status_offline": "Offline",
+    "status_backend_unreachable": "Onesa is currently unavailable. Please try again shortly.",
+    "error_unable_contact": "Onesa is currently unavailable. Please try again shortly.",
+    "online_indicator_aria": "Onesa online",
+    "online_text": "Online",
+    "error_timeout": "Onesa request timed out after 3 minutes. Please try again.",
+    "offline_text": "Offline"
   }
 }

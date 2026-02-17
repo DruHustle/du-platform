@@ -23,16 +23,16 @@ export default function NotFound() {
             </div>
           </div>
 
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">{t('notfound.title')}</h1>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">{t('notfound.title') || "404"}</h1>
 
           <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            {t('notfound.subtitle')}
+            {t('notfound.subtitle') || "Page Not Found"}
           </h2>
 
           <p className="text-slate-600 mb-8 leading-relaxed">
-            {t('notfound.message')}
+            {t('notfound.message') || "Sorry, the page you are looking for doesn't exist."}
             <br />
-            {t('notfound.message2')}
+            {t('notfound.message2') || "It may have been moved or deleted."}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -41,7 +41,7 @@ export default function NotFound() {
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
             >
               <Home className="w-4 h-4 mr-2" />
-              {t('notfound.go_home')}
+              {t('notfound.go_home') || "Go Home"}
             </Button>
           </div>
         </CardContent>

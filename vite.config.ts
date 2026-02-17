@@ -46,7 +46,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         // This is the magic bridge!
         '/api': {
-          target: 'http://localhost:5000', // Change to the port your Express server uses
+          target: env.BACKEND_URL || 'http://localhost:5001',
           changeOrigin: true,
         },
       },

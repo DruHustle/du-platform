@@ -4,12 +4,18 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "./scripts/dev-all.sh",
+    "dev:web": "vite --host",
+    "dev:server": "node --env-file=.env --import tsx server/index.ts",
+    "dev:all": "./scripts/dev-all.sh",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "translations:sync": "python3 sync_translations.py --mode sync",
+    "translations:sync:todo": "python3 sync_translations.py --mode sync --mark-missing",
+    "translations:check": "python3 sync_translations.py --mode check"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -84,6 +90,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "add": "^2.0.6",
     "autoprefixer": "^10.4.20",
+    "baseline-browser-mapping": "^2.9.19",
     "esbuild": "^0.25.0",
     "pnpm": "^10.15.1",
     "postcss": "^8.4.47",
