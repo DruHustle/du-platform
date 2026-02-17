@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
-import { Brain, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 type ChatMessage = {
@@ -199,17 +199,16 @@ export default function OnesaAI() {
               {messages.map((message, index) => (
                 <div key={`${message.role}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[90%] md:max-w-[75%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                    className={`max-w-[90%] md:max-w-[75%] px-3 py-2 text-sm leading-relaxed ${
                       message.role === "user"
-                        ? "bg-slate-800 border border-slate-700 text-slate-100"
-                        : "bg-slate-900 border border-white/10 text-slate-100"
+                        ? "rounded-[1.35rem] rounded-br-[0.45rem]"
+                        : "rounded-[1.35rem] rounded-bl-[0.45rem]"
+                    } ${
+                      message.role === "user"
+                        ? "bg-slate-900/90 border border-zim-gold/30 text-white"
+                        : "bg-zim-gold/10 border border-zim-gold/45 text-white shadow-[0_0_24px_rgba(212,175,55,0.24)]"
                     }`}
                   >
-                    {message.role === "assistant" ? (
-                      <div className="flex items-center gap-2 mb-2 text-zim-gold text-[10px] uppercase tracking-widest font-black">
-                        <Brain className="h-3 w-3" /> {t("onesa.badge", { defaultValue: "Onesa AI" })}
-                      </div>
-                    ) : null}
                     {message.content}
                   </div>
                 </div>
