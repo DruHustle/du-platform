@@ -1712,6 +1712,7 @@
     "status_backend_unreachable": "Isimo se-Onesa: I-backend ayifinyeleleki. Qalisa `pnpm dev:server`, `ollama serve`, njalo uqinisekise ukuthi i-ONESA_MODEL ikhona.",
     "error_unable_contact": "Asikwazanga ukuxhumana le-Onesa AI okwamanje. Qinisekisa ukuthi i-backend iyasebenza (`pnpm dev:server`) lokuthi i-Ollama iyasebenza (`ollama serve`).",
     "online_indicator_aria": "Onesa iku-online",
-    "online_text": "Online"
+    "online_text": "Online",
+    "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi. Zama njalo."
   }
 }

@@ -1712,6 +1712,7 @@
     "status_backend_unreachable": "Mamiro eOnesa: Backend haisvikiki. Tanga `pnpm dev:server`, `ollama serve`, uye iva nechokwadi chekuti ONESA_MODEL iripo.",
     "error_unable_contact": "Hatina kukwanisa kubata Onesa AI pari zvino. Ita shuwa kuti backend iri kushanda (`pnpm dev:server`) uye Ollama iri kushanda (`ollama serve`).",
     "online_indicator_aria": "Onesa iri online",
-    "online_text": "Online"
+    "online_text": "Online",
+    "error_timeout": "Chikumbiro cheOnesa chapera nguva. Edza zvakare."
   }
 }

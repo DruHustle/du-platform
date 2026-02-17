@@ -1714,6 +1714,7 @@
     "status_backend_unreachable": "Onesa status: Backend unreachable. Start `pnpm dev:server`, `ollama serve`, and ensure ONESA_MODEL exists.",
     "error_unable_contact": "Unable to contact Onesa AI right now. Ensure backend is running (`pnpm dev:server`) and Ollama is active (`ollama serve`).",
     "online_indicator_aria": "Onesa online",
-    "online_text": "Online"
+    "online_text": "Online",
+    "error_timeout": "Onesa request timed out. Please try again."
   }
 }

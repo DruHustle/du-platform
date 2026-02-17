@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,37 +44,44 @@ export default function OnesaAI() {
   const [status, setStatus] = useState("");
   const [isOnline, setIsOnline] = useState(false);
 
+  const checkHealth = useCallback(async () => {
+    try {
+      const { data } = await api.get("/onesa/health", { timeout: 8000 });
+      const online = Boolean(data?.ok);
+      setIsOnline(online);
+      setStatus(
+        online
+          ? ""
+          : `${statusPrefix}: ${String(
+              data?.message ?? t("onesa.status_offline", { defaultValue: "Offline" })
+            )}`
+      );
+    } catch (err: any) {
+      setIsOnline(false);
+      const responseMessage = err?.response?.data?.message;
+      if (responseMessage) {
+        setStatus(`${statusPrefix}: ${String(responseMessage)}`);
+        return;
+      }
+      setStatus(backendUnreachableStatus);
+    }
+  }, [backendUnreachableStatus, statusPrefix, t]);
+
   useEffect(() => {
     let mounted = true;
-    async function checkHealth() {
-      try {
-        const { data } = await api.get("/onesa/health");
-        if (!mounted) return;
-        const online = Boolean(data?.ok);
-        setIsOnline(online);
-        setStatus(
-          online
-            ? ""
-            : `${statusPrefix}: ${String(
-                data?.message ?? t("onesa.status_offline", { defaultValue: "Offline" })
-              )}`
-        );
-      } catch (err: any) {
-        if (!mounted) return;
-        setIsOnline(false);
-        const responseMessage = err?.response?.data?.message;
-        if (responseMessage) {
-          setStatus(`${statusPrefix}: ${String(responseMessage)}`);
-          return;
-        }
-        setStatus(backendUnreachableStatus);
-      }
-    }
-    void checkHealth();
+    const runHealthCheck = async () => {
+      if (!mounted) return;
+      await checkHealth();
+    };
+    void runHealthCheck();
+    const intervalId = window.setInterval(() => {
+      void runHealthCheck();
+    }, 15000);
     return () => {
       mounted = false;
+      window.clearInterval(intervalId);
     };
-  }, [backendUnreachableStatus, statusPrefix, t]);
+  }, [checkHealth]);
 
   const sendMessage = async () => {
     const trimmed = input.trim();
@@ -87,16 +94,25 @@ export default function OnesaAI() {
     setLoading(true);
 
     try {
-      const { data } = await api.post("/onesa/chat", {
-        messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
-      });
+      const { data } = await api.post(
+        "/onesa/chat",
+        {
+          messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
+        },
+        { timeout: 45000 }
+      );
       const reply = String(data?.reply ?? "").trim();
       if (!reply) throw new Error("Empty model response.");
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch (err: any) {
       const responseMessage = err?.response?.data?.message;
-      const message = responseMessage ?? genericContactError;
+      const timeoutMessage =
+        err?.code === "ECONNABORTED"
+          ? t("onesa.error_timeout", { defaultValue: "Onesa request timed out. Please try again." })
+          : null;
+      const message = responseMessage ?? timeoutMessage ?? genericContactError;
       setError(message);
+      void checkHealth();
     } finally {
       setLoading(false);
     }
