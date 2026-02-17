@@ -415,6 +415,53 @@ export default function Technology() {
       </div>
     </section>
 
+    {/* Why Onesa AI Matters */}
+    <section id="technology-onesa-vision" className="pb-10 bg-slate-950 relative overflow-hidden">
+      <div className="container relative z-10 px-6 mx-auto">
+        <div className="max-w-5xl mx-auto rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+              <Sparkles className="h-5 w-5 text-zim-gold" />
+            </div>
+            <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
+              Africa-Centric AI
+            </Badge>
+          </div>
+
+          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">
+            Why Onesa AI Matters
+          </h2>
+          <p className="text-white text-base md:text-lg leading-relaxed font-medium mb-4">
+            Africa deserves AI that understands Africa.
+          </p>
+          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+            Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data,
+            priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need
+            Africa-centric models that understand our languages, cultures, business environments, and development priorities.
+          </p>
+          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+            At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began
+            developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African
+            economic transformation goals.
+          </p>
+          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+            We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and
+            world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future
+            depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.
+          </p>
+          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+            AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and
+            their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic
+            independence. Africa must be in that future, not as observers, but as creators and leaders.
+          </p>
+          <p className="text-white text-sm md:text-base leading-relaxed font-medium">
+            Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems
+            that serve future generations across the continent and the diaspora.
+          </p>
+        </div>
+      </div>
+    </section>
+
     {/* Sector Transformation - Cinematic Glass Grid */}
     <section id="technology-industries" className="pt-10 pb-20 bg-slate-950 relative overflow-hidden">
       {/* Background glow for depth */}

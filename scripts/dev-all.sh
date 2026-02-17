@@ -4,6 +4,7 @@ set -euo pipefail
 SERVER_CMD=(pnpm dev:server)
 FRONTEND_CMD=(pnpm dev:web)
 OLLAMA_CMD=(ollama serve)
+ONESA_PROVIDER_RUNTIME=""
 
 get_backend_port() {
   if [[ -f ".env" ]]; then
@@ -33,10 +34,40 @@ is_ollama_running() {
   curl -fsS "http://127.0.0.1:11434/api/tags" >/dev/null 2>&1
 }
 
+choose_onesa_provider_mode() {
+  # Prompt only in interactive terminals. Non-interactive runs keep env behavior.
+  if [[ -t 0 && -t 1 ]]; then
+    echo "[dev:all] AI mode:"
+    echo "[dev:all]   y = Local model (Ollama)"
+    echo "[dev:all]   n = Cloud endpoint"
+    local use_local
+    read -r -p "[dev:all] Use local model? (y/N): " use_local
+    case "$(printf '%s' "${use_local:-}" | tr '[:upper:]' '[:lower:]')" in
+      y|yes)
+        ONESA_PROVIDER_RUNTIME="ollama"
+        ;;
+      *)
+        ONESA_PROVIDER_RUNTIME="openai_compatible"
+        ;;
+    esac
+  else
+    ONESA_PROVIDER_RUNTIME="$(get_onesa_provider)"
+  fi
+}
+
 ensure_ollama() {
   local provider
-  provider="$(get_onesa_provider)"
+  provider="${ONESA_PROVIDER_RUNTIME:-$(get_onesa_provider)}"
   if [[ "${provider}" == "openai_compatible" ]]; then
+    echo "[dev:all] Cloud mode selected. Skipping Ollama startup."
+    local api_key
+    api_key="${ONESA_AI_API_KEY:-}"
+    if [[ -z "${api_key}" ]] && [[ -f ".env" ]]; then
+      api_key="$(grep -E '^ONESA_AI_API_KEY=' .env | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
+    fi
+    if [[ -z "${api_key}" || "${api_key}" == "YOUR_GEMINI_API_KEY" ]]; then
+      echo "[dev:all] WARNING: ONESA_AI_API_KEY is missing/placeholder. Chat will be unavailable until configured."
+    fi
     return 0
   fi
 
@@ -87,6 +118,7 @@ cleanup() {
 
 trap cleanup INT TERM EXIT
 
+choose_onesa_provider_mode
 ensure_ollama
 
 BACKEND_PORT="$(get_backend_port)"
@@ -101,7 +133,11 @@ fi
 
 if [[ "${USE_EXISTING_BACKEND}" -eq 0 ]]; then
   echo "[dev:all] Starting backend..."
-  "${SERVER_CMD[@]}" &
+  if [[ -n "${ONESA_PROVIDER_RUNTIME}" ]]; then
+    ONESA_PROVIDER="${ONESA_PROVIDER_RUNTIME}" "${SERVER_CMD[@]}" &
+  else
+    "${SERVER_CMD[@]}" &
+  fi
   SERVER_PID=$!
   SERVER_STARTED=1
 fi
