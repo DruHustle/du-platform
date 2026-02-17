@@ -26,6 +26,8 @@ const DIVERSE_PEOPLE_IMAGES = [
   PROFILE_IMAGE_D,
 ];
 
+const IMPACT_METRIC_ICONS = [DollarSign, Users, TrendingUp, Award] as const;
+
 type ApiStory = {
   id: number;
   title: string;
@@ -39,6 +41,7 @@ type ApiStory = {
   jobs: string;
   markets: string;
   is_published: 0 | 1;
+  display?: boolean | string | number;
 };
 
 export default function SuccessStories() {
@@ -46,22 +49,33 @@ export default function SuccessStories() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [apiStories, setApiStories] = useState<ApiStory[]>([]);
 
+  const isVisible = (display: unknown) => {
+    if (display === false) return false;
+    if (display === 0) return false;
+    if (display === "false") return false;
+    if (display === "0") return false;
+    return true;
+  };
+
   const normalizePeopleImage = (image: string | undefined, index: number) => {
     if (!image) return DIVERSE_PEOPLE_IMAGES[index % DIVERSE_PEOPLE_IMAGES.length];
 
     const source = image.toLowerCase();
+    const decodedSource = source.replace(/%20/g, " ");
     const peopleSignals = [
-      "team%20meeting",
+      "team meeting",
       "handshake",
-      "woman%20smiling",
-      "man%20at%20a%20laptop",
-      "scientist%20at%20computer",
-      "lachende%20frau",
+      "woman smiling",
+      "man at a laptop",
+      "scientist at computer",
+      "lachende frau",
       "people",
       "office",
       "portrait",
     ];
-    const looksLikePeoplePhoto = peopleSignals.some((signal) => source.includes(signal));
+    const looksLikePeoplePhoto = peopleSignals.some(
+      (signal) => source.includes(signal) || decodedSource.includes(signal)
+    );
 
     return looksLikePeoplePhoto ? DIVERSE_PEOPLE_IMAGES[index % DIVERSE_PEOPLE_IMAGES.length] : image;
   };
@@ -258,7 +272,9 @@ export default function SuccessStories() {
   // Derived filtered lists
   const activeStories =
     apiStories.length > 0
-      ? apiStories.map((story, index) => ({
+      ? apiStories
+          .filter((story) => story.is_published !== 0 && isVisible(story.display))
+          .map((story, index) => ({
           title: story.title,
           category: story.category,
           image: normalizePeopleImage(story.image, index),
@@ -267,14 +283,14 @@ export default function SuccessStories() {
           author: story.author,
           role: story.role,
           impact: { revenue: story.revenue, jobs: story.jobs, markets: story.markets },
-        }))
+          }))
       : storiesData
-          .filter((s: any) => s?.display !== false)
+          .filter((s: any) => isVisible(s?.display))
           .map((story: any, index: number) => ({
             ...story,
             image: normalizePeopleImage(story?.image, index),
           }));
-  const activeMetrics = impactData.filter((m: any) => m?.display !== false);
+  const activeMetrics = impactData.filter((m: any) => isVisible(m?.display));
 
   const introData = { icon: Trophy, title: t('success.objective_title') || "Impact", description: t('success.objective_subtitle') || "Showcasing the tangible impact of diaspora engagement across various sectors and communities in Zimbabwe." };
 
@@ -346,7 +362,7 @@ export default function SuccessStories() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {activeMetrics.map((metric, index) => {
-                const Icon = metric.icon;
+                const Icon = metric.icon ?? IMPACT_METRIC_ICONS[index % IMPACT_METRIC_ICONS.length];
                 return (
                   <motion.div 
                     key={index} 

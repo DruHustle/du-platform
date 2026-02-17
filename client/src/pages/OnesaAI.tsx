@@ -43,16 +43,36 @@ export default function OnesaAI() {
   const hasChatStarted = messages.some((message) => message.role === "user");
 
   const checkHealth = useCallback(async (): Promise<boolean> => {
+    const checkLegacyHealth = async (): Promise<boolean> => {
+      try {
+        const { data } = await api.get("/onesa/health", { timeout: 10000 });
+        const online = Boolean(data?.ok ?? data?.modelAvailable);
+        setIsOnline(online);
+        setStatus(online ? "" : backendUnreachableStatus);
+        return online;
+      } catch {
+        setIsOnline(false);
+        setStatus(backendUnreachableStatus);
+        return false;
+      }
+    };
+
     try {
       const { data } = await api.get("/onesa/ready", { timeout: 12000 });
+      const isReadyPayload = typeof data === "object" && data !== null && "ready" in data;
+      if (!isReadyPayload) {
+        return await checkLegacyHealth();
+      }
       const online = Boolean(data?.ready);
       setIsOnline(online);
       setStatus(online ? "" : backendUnreachableStatus);
       return online;
-    } catch {
-      setIsOnline(false);
-      setStatus(backendUnreachableStatus);
-      return false;
+    } catch (err: any) {
+      // Backward compatibility: older backends may not expose /api/onesa/ready.
+      if (Number(err?.response?.status) === 404) {
+        return await checkLegacyHealth();
+      }
+      return await checkLegacyHealth();
     }
   }, [backendUnreachableStatus]);
 
