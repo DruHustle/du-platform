@@ -30,8 +30,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const SESSION_COOKIE = "zigd_session";
-const DEFAULT_ONESA_SYSTEM_PROMPT =
-  "You are Onesa AI, a Zimbabwe-focused diaspora decision-support assistant. Provide practical, concise guidance for tourism, trade, and investment, and clearly mark uncertainty.";
+const DEFAULT_ONESA_SYSTEM_PROMPT = [
+  "You are Onesa AI, a Zimbabwe-focused diaspora decision-support assistant.",
+  "Be warm, clear, and conversational.",
+  "If the user sends a simple greeting (for example: hello, hi, hey, mhoro, hesi, ndeipi), respond briefly in 1-2 short sentences and ask one simple follow-up question.",
+  "Do not auto-translate or explain language unless the user explicitly asks for translation.",
+  "Do not dump long bullet lists unless the user asks for detailed guidance.",
+  "For normal requests, provide practical and concise guidance for tourism, trade, and investment, and clearly mark uncertainty.",
+].join(" ");
 const ONESA_READINESS_CACHE_MS = 30000;
 const ONESA_READINESS_GRACE_MS = 120000;
 
@@ -151,6 +157,69 @@ type ChatMessage = {
   content: string;
 };
 
+function getLatestUserMessage(messages: ChatMessage[]): string {
+  for (let i = messages.length - 1; i >= 0; i -= 1) {
+    const msg = messages[i];
+    if (msg?.role === "user" && typeof msg.content === "string") {
+      const text = msg.content.trim();
+      if (text) return text;
+    }
+  }
+  return "";
+}
+
+function isGreetingOnlyMessage(content: string): boolean {
+  const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, "");
+  if (!normalized) return false;
+  const tokens = normalized.split(/\s+/).filter(Boolean);
+  if (tokens.length > 4) return false;
+  const phrase = tokens.join(" ");
+  const greetings = new Set([
+    "hi",
+    "hello",
+    "hey",
+    "yo",
+    "howdy",
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "mhoro",
+    "hesi",
+    "ndeipi",
+    "makadii",
+    "maswera sei",
+    "salibonani",
+    "sawubona",
+  ]);
+  return greetings.has(phrase);
+}
+
+function isThanksOnlyMessage(content: string): boolean {
+  const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, "");
+  if (!normalized) return false;
+  const phrase = normalized.split(/\s+/).filter(Boolean).join(" ");
+  const thanksPhrases = new Set([
+    "thanks",
+    "thank you",
+    "thankyou",
+    "much appreciated",
+    "ndatenda",
+    "ngiyabonga",
+  ]);
+  return thanksPhrases.has(phrase);
+}
+
+function getSmallTalkReply(content: string): string | null {
+  const normalized = content.trim().toLowerCase();
+  if (isGreetingOnlyMessage(normalized)) {
+    return "Hi! I am Onesa. How can I help you today?";
+  }
+  if (isThanksOnlyMessage(normalized)) {
+    return "You are welcome. If you want, I can help with tourism, investment, trade, or relocation questions.";
+  }
+  return null;
+}
+
 function getOnesaConfig() {
   const provider = (process.env.ONESA_PROVIDER ?? "ollama").toLowerCase();
   const model = process.env.ONESA_MODEL ?? "llama3.1:8b";
@@ -222,6 +291,12 @@ async function generateOnesaReply(messages: ChatMessage[]) {
   const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = getOnesaConfig();
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
   const safeFallbackReply = "I am having trouble generating a reliable response right now. Please try again.";
+  const latestUserMessage = getLatestUserMessage(messages);
+  const smallTalkReply = latestUserMessage ? getSmallTalkReply(latestUserMessage) : null;
+  if (smallTalkReply) {
+    lastOnesaSuccessAt = Date.now();
+    return smallTalkReply;
+  }
   const normalizedMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
     ...messages.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim()),

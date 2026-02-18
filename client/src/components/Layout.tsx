@@ -24,7 +24,19 @@ export default function Layout({ children }: LayoutProps) {
   const [authLoading, setAuthLoading] = useState(true);
   const [phoneActionOpen, setPhoneActionOpen] = useState(false);
   const [showWhatsIcon, setShowWhatsIcon] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
   const scrolledRef = useRef(false);
+  const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const suppressBubbleClickRef = useRef(false);
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+    dragging: boolean;
+  } | null>(null);
 
   useEffect(() => {
     let rafId = 0;
@@ -114,6 +126,66 @@ export default function Layout({ children }: LayoutProps) {
 
   const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
   const showOnesaBubble = !location.startsWith("/onesa-ai");
+  const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
+
+  const clampMobileBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
+    const minX = 8;
+    const minY = 8;
+    const maxX = Math.max(minX, window.innerWidth - bubbleWidth - 8);
+    const maxY = Math.max(minY, window.innerHeight - bubbleHeight - 8);
+    return { x: Math.min(Math.max(x, minX), maxX), y: Math.min(Math.max(y, minY), maxY) };
+  };
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (!showOnesaBubble || !isMobileViewport) return;
+
+    const initPosition = () => {
+      const bubbleRect = bubbleRef.current?.getBoundingClientRect();
+      const bubbleWidth = bubbleRect?.width ?? 180;
+      const bubbleHeight = bubbleRect?.height ?? 64;
+
+      let nextX = window.innerWidth - bubbleWidth - 16;
+      let nextY = window.innerHeight - bubbleHeight - 96;
+
+      try {
+        const saved = window.localStorage.getItem(MOBILE_BUBBLE_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved) as { x?: unknown; y?: unknown };
+          if (typeof parsed?.x === "number" && typeof parsed?.y === "number") {
+            nextX = parsed.x;
+            nextY = parsed.y;
+          }
+        }
+      } catch {
+        // Ignore malformed localStorage values.
+      }
+
+      setMobileBubblePosition(clampMobileBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight));
+    };
+
+    const rafId = window.requestAnimationFrame(initPosition);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [showOnesaBubble, isMobileViewport]);
+
+  useEffect(() => {
+    if (!showOnesaBubble || !isMobileViewport || !mobileBubblePosition) return;
+    const bubbleRect = bubbleRef.current?.getBoundingClientRect();
+    const bubbleWidth = bubbleRect?.width ?? 180;
+    const bubbleHeight = bubbleRect?.height ?? 64;
+    const clamped = clampMobileBubblePosition(mobileBubblePosition.x, mobileBubblePosition.y, bubbleWidth, bubbleHeight);
+    if (clamped.x !== mobileBubblePosition.x || clamped.y !== mobileBubblePosition.y) {
+      setMobileBubblePosition(clamped);
+    }
+  }, [showOnesaBubble, isMobileViewport, mobileBubblePosition]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,6 +194,70 @@ export default function Layout({ children }: LayoutProps) {
     }
     setSearchOpen(false);
     setSearchQuery("");
+  };
+
+  const handleBubblePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!isMobileViewport || !mobileBubblePosition) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: mobileBubblePosition.x,
+      originY: mobileBubblePosition.y,
+      dragging: false,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleBubblePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const dragState = dragStateRef.current;
+    if (!isMobileViewport || !dragState || dragState.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - dragState.startX;
+    const deltaY = event.clientY - dragState.startY;
+    if (!dragState.dragging && Math.hypot(deltaX, deltaY) > 4) {
+      dragState.dragging = true;
+    }
+    if (!dragState.dragging) return;
+
+    event.preventDefault();
+    const bubbleRect = bubbleRef.current?.getBoundingClientRect();
+    const bubbleWidth = bubbleRect?.width ?? 180;
+    const bubbleHeight = bubbleRect?.height ?? 64;
+    const next = clampMobileBubblePosition(dragState.originX + deltaX, dragState.originY + deltaY, bubbleWidth, bubbleHeight);
+    setMobileBubblePosition(next);
+  };
+
+  const handleBubblePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    const dragState = dragStateRef.current;
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    if (dragState.dragging) {
+      suppressBubbleClickRef.current = true;
+      window.setTimeout(() => {
+        suppressBubbleClickRef.current = false;
+      }, 250);
+      if (mobileBubblePosition) {
+        try {
+          window.localStorage.setItem(MOBILE_BUBBLE_STORAGE_KEY, JSON.stringify(mobileBubblePosition));
+        } catch {
+          // Ignore storage write failures.
+        }
+      }
+    }
+    dragStateRef.current = null;
+  };
+
+  const handleBubbleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!suppressBubbleClickRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    suppressBubbleClickRef.current = false;
   };
 
   return (
@@ -413,12 +549,26 @@ export default function Layout({ children }: LayoutProps) {
       {showOnesaBubble && (
         /* Onesa Floating Bubble */
         <motion.div
+          ref={bubbleRef}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"
+          className={isMobileViewport ? "fixed z-[95]" : "fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"}
+          style={
+            isMobileViewport && mobileBubblePosition
+              ? {
+                  left: `${mobileBubblePosition.x}px`,
+                  top: `${mobileBubblePosition.y}px`,
+                  touchAction: "none",
+                }
+              : undefined
+          }
+          onPointerDown={handleBubblePointerDown}
+          onPointerMove={handleBubblePointerMove}
+          onPointerUp={handleBubblePointerEnd}
+          onPointerCancel={handleBubblePointerEnd}
         >
-          <Link href="/onesa-ai">
+          <Link href="/onesa-ai" onClick={handleBubbleClick}>
             <button
               aria-label="Chat with Onesa"
               className="group relative flex items-center gap-3 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 py-2 shadow-2xl hover:bg-slate-900 transition-colors will-change-transform"

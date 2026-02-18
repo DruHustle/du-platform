@@ -168,6 +168,29 @@ export default function Technology() {
     }
   ];
 
+  const onesaVisionTiles = [
+    {
+      icon: Lightbulb,
+      title: "Onesa Means Illuminate",
+      detail: "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa.",
+    },
+    {
+      icon: Globe,
+      title: "Africa-Centric Intelligence",
+      detail: "Models grounded in African languages, markets, and realities create more relevant and useful outcomes.",
+    },
+    {
+      icon: Shield,
+      title: "AI Sovereignty",
+      detail: "Owning our data, models, and infrastructure protects long-term strategic independence and resilience.",
+    },
+    {
+      icon: TrendingUp,
+      title: "Future-Ready Growth",
+      detail: "Onesa supports innovation, investment confidence, and stronger digital participation for future generations.",
+    },
+  ];
+
   const digitalMomentum = [
     {
       icon: Signal,
@@ -378,11 +401,11 @@ export default function Technology() {
                 </div>
               </div>
 
-              {/* Right Column: Title and USPs */}
+              {/* Right Column: Onesa Positioning */}
               <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
-                <h4 className="text-2xl font-black text-white leading-tight tracking-tight">
-                  {t('tech.onesa_title') || "Illuminating your Way"}
-                </h4>
+                <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
+                  Onesa = Illuminate
+                </Badge>
                 <p className="text-sm text-white/60 leading-relaxed font-light">
                   {t('tech.onesa_desc1') || "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model."}
                 </p>
@@ -400,13 +423,6 @@ export default function Technology() {
                     </div>
                   </div>
                 </div>
-                <div className="pt-2">
-                  <Link href="/onesa-ai">
-                    <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                      {t('tech.chat_with_onesa') || "Chat with Onesa"}
-                    </Button>
-                  </Link>
-                </div>
               </div>
 
             </div>
@@ -418,7 +434,7 @@ export default function Technology() {
     {/* Why Onesa AI Matters */}
     <section id="technology-onesa-vision" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="max-w-5xl mx-auto rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
+        <div className="max-w-6xl mx-auto rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
           <div className="flex items-center gap-3 mb-5">
             <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
               <Sparkles className="h-5 w-5 text-zim-gold" />
@@ -428,36 +444,61 @@ export default function Technology() {
             </Badge>
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">
-            Why Onesa AI Matters
-          </h2>
-          <p className="text-white text-base md:text-lg leading-relaxed font-medium mb-4">
-            Africa deserves AI that understands Africa.
-          </p>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-            Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data,
-            priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need
-            Africa-centric models that understand our languages, cultures, business environments, and development priorities.
-          </p>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-            At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began
-            developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African
-            economic transformation goals.
-          </p>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-            We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and
-            world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future
-            depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.
-          </p>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-            AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and
-            their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic
-            independence. Africa must be in that future, not as observers, but as creators and leaders.
-          </p>
-          <p className="text-white text-sm md:text-base leading-relaxed font-medium">
-            Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems
-            that serve future generations across the continent and the diaspora.
-          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            <div className="lg:col-span-7">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
+                  Why Onesa AI Matters
+                </h2>
+                <Link href="/onesa-ai">
+                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                    {t('tech.chat_with_onesa') || "Chat with Onesa"}
+                  </Button>
+                </Link>
+              </div>
+              <p className="text-white text-base md:text-lg leading-relaxed font-medium mb-4">
+                Africa deserves AI that understands Africa.
+              </p>
+              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+                Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data,
+                priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need
+                Africa-centric models that understand our languages, cultures, business environments, and development priorities.
+              </p>
+              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+                At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began
+                developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African
+                economic transformation goals.
+              </p>
+              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+                We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and
+                world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future
+                depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.
+              </p>
+              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+                AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and
+                their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic
+                independence. Africa must be in that future, not as observers, but as creators and leaders.
+              </p>
+              <p className="text-white text-sm md:text-base leading-relaxed font-medium">
+                Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems
+                that serve future generations across the continent and the diaspora.
+              </p>
+            </div>
+
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {onesaVisionTiles.map((tile) => (
+                  <div key={tile.title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 h-full">
+                    <div className="flex items-center gap-2 mb-3">
+                      <tile.icon className="h-4 w-4 text-zim-gold" />
+                      <h3 className="text-white font-black text-sm tracking-tight">{tile.title}</h3>
+                    </div>
+                    <p className="text-white/70 text-xs leading-relaxed">{tile.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
