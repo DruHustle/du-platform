@@ -130,6 +130,11 @@ def main() -> int:
         help="Comma-separated key paths allowed to remain same as English when --require-translated is set.",
     )
     parser.add_argument(
+        "--allow-same-keys-file",
+        default="",
+        help="Path to a newline/comma-separated allowlist of key paths allowed to remain same as English.",
+    )
+    parser.add_argument(
         "--sample-size",
         type=int,
         default=12,
@@ -161,6 +166,19 @@ def main() -> int:
 
     failing = False
     allow_same_keys = {x.strip() for x in args.allow_same_keys.split(",") if x.strip()}
+    if args.allow_same_keys_file:
+        allow_path = Path(args.allow_same_keys_file)
+        if not allow_path.is_absolute():
+            allow_path = root / args.allow_same_keys_file
+        if not allow_path.exists():
+            print(f"fail: allow-same-keys file not found: {allow_path}")
+            return 1
+        raw = allow_path.read_text(encoding="utf-8")
+        for item in raw.replace(",", "\n").splitlines():
+            key = item.strip()
+            if not key or key.startswith("#"):
+                continue
+            allow_same_keys.add(key)
     for locale in locales:
         path = locales_dir / locale / "translation.json"
         if not path.exists():

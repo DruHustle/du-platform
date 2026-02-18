@@ -1,5 +1,5 @@
 {
-  "brand": "Diaspora Unlocked",
+  "brand": "Diaspora freigeschaltet",
   "tagline": "Globale Plattform für die Simbabwische Diaspora",
   "about": "Über uns",
   "about_us": "Verbindung der weltweiten simbabwischen Diaspora mit Möglichkeiten in Handel, Tourismus und Investitionen.",
@@ -77,7 +77,7 @@
   },
   "home": {
     "made_in_zimbabwe_alt": "Hergestellt in Simbabwe",
-    "hero_title": "Diaspora Unlocked",
+    "hero_title": "Diaspora freigeschaltet",
     "hero_subtitle": "Beschleunigung von IKT, Handel, Tourismus und Investitionen für die Vision 2030",
     "export_hub": "Export-Hub",
     "tourism": "Tourismus",
@@ -101,7 +101,7 @@
       "tourism": {
         "title": "Tourismus",
         "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen und planen Sie Ihren Besuch.",
-        "stats": "Forbes #1 2025"
+        "stats": "Forbes Nr. 1 2025"
       },
       "investment": {
         "title": "Investitionen",
@@ -116,7 +116,7 @@
       "technology": {
         "title": "Technologie & KI",
         "desc": "Lernen Sie Onesa AI kennen, unser spezialisiertes Modell für den simbabwischen Kontext.",
-        "stats": "Onesa AI"
+        "stats": "Onesa KI"
       },
       "success": {
         "title": "Wirkung",
@@ -192,111 +192,111 @@
       }
     },
     "more_compliance_information": "Mehr Compliance-Informationen",
-    "chat_with_onesa": "Chat with Onesa",
+    "chat_with_onesa": "Chatten Sie mit Onesa",
     "momentum": {
-      "title": "Zimbabwe Technology Momentum (2026)",
-      "subtitle": "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption.",
+      "title": "Technologiedynamik in Simbabwe (2026)",
+      "subtitle": "Simbabwe bewegt sich vom Technologieverbrauch zur lokalen Lösungsentwicklung, angeführt von Fintech, Agritech und der Einführung von KI.",
       "connectivity": {
-        "title": "Connectivity Expansion",
-        "detail": "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout."
+        "title": "Konnektivitätserweiterung",
+        "detail": "Mittlerweile liegt die Internetdurchdringung bei über 80 %, wobei sich der Markt durch neue Breitbandanbieter und die schnelle Einführung von 5G verschiebt."
       },
       "ai_strategy": {
-        "title": "National AI Strategy (2026-2030)",
-        "detail": "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery."
+        "title": "Nationale KI-Strategie (2026–2030)",
+        "detail": "Simbabwe verfügt nun über eine formelle KI-Strategie, die sich auf den praktischen Einsatz in vorrangigen Sektoren und die Erbringung öffentlicher Dienstleistungen konzentriert."
       },
       "digital_payments": {
-        "title": "Digital Payments at Scale",
-        "detail": "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations."
+        "title": "Digitale Zahlungen im großen Maßstab",
+        "detail": "Mobiles Geld bleibt die dominierende Plattform für Transaktionen, was zu einer starken Nachfrage nach Fintech-Tools und -Integrationen führt."
       }
     },
     "opportunities": {
-      "title": "Top Opportunities for Investment and Innovation",
+      "title": "Top-Möglichkeiten für Investitionen und Innovation",
       "ai": {
-        "title": "Artificial Intelligence",
-        "driver": "Deployment momentum in mining, healthcare, and governance under the national AI strategy."
+        "title": "Künstliche Intelligenz",
+        "driver": "Bereitstellungsdynamik in den Bereichen Bergbau, Gesundheitswesen und Governance im Rahmen der nationalen KI-Strategie."
       },
       "sme": {
-        "title": "SME Digitalization",
-        "driver": "High demand for affordable inventory tools, payroll automation, and customer support chat systems."
+        "title": "KMU-Digitalisierung",
+        "driver": "Hohe Nachfrage nach erschwinglichen Inventarisierungstools, Automatisierung der Gehaltsabrechnung und Chat-Systemen für den Kundensupport."
       },
       "cybersecurity": {
-        "title": "Cybersecurity",
-        "driver": "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills."
+        "title": "Cybersicherheit",
+        "driver": "Durch die schnelle digitale Einführung erhöhen sich die Angriffsflächen und die Nachfrage nach lokalen Sicherheitsdiensten und -kompetenzen."
       },
       "ecommerce": {
-        "title": "E-commerce and Logistics",
-        "driver": "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure."
+        "title": "E-Commerce und Logistik",
+        "driver": "Es besteht weiterhin eine große Lücke in der zuverlässigen inländischen Logistik und der Infrastruktur für die Zustellung auf der letzten Meile."
       }
     },
     "challenges": {
-      "title": "Critical Challenges to Address",
-      "infrastructure": "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
-      "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
-      "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
+      "title": "Kritische Herausforderungen, die es zu bewältigen gilt",
+      "infrastructure": "Infrastrukturlücken: Hohe Internetkosten und unregelmäßige Stromversorgung behindern immer noch die Durchführung von Startups.",
+      "human_capital": "Druck auf das Humankapital: Es gibt starke technische Talente, aber aufgrund der Abwanderung ist es schwierig, sie zu halten.",
+      "regulation": "Regulatorische Komplexität: Lizenzierung, Steuerkonformität und Genehmigungen können die Produkteinführung in regulierten Sektoren verzögern."
     },
     "fintech": {
-      "title": "Fintech Regulatory Requirements (RBZ)",
-      "subtitle": "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations.",
-      "sandbox_title": "Regulatory Sandbox",
-      "sandbox_detail": "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded.",
+      "title": "Fintech-Regulatorische Anforderungen (RBZ)",
+      "subtitle": "Fintech-Lösungen werden durch die RBZ-Aufsicht, Sandbox-Tests und Lizenzverpflichtungen für Zahlungs- und Finanzdienstleistungsbetriebe reguliert.",
+      "sandbox_title": "Regulatorische Sandbox",
+      "sandbox_detail": "Startups können Innovationen bis zu 24 Monate lang in einer überwachten Umgebung testen. Das Testen von Kryptowährungen und digitalen Währungen ist ausgeschlossen.",
       "phases": {
-        "pre_application": "Pre-application",
-        "application": "Application and evaluation",
-        "testing": "Testing in a controlled live environment",
-        "exit": "Exit and deployment decision"
+        "pre_application": "Voranmeldung",
+        "application": "Anwendung und Bewertung",
+        "testing": "Testen in einer kontrollierten Live-Umgebung",
+        "exit": "Ausstiegs- und Einsatzentscheidung"
       },
-      "licensing_title": "Licensing and Operating Requirements",
-      "l1": "Register legal entity first (typically Private Limited) before regulated fintech operations.",
-      "l2": "Plan for PSP licensing costs and ongoing compliance obligations.",
-      "l3": "Some financial products require minimum capital thresholds and fit-and-proper controls.",
-      "l4": "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."
+      "licensing_title": "Lizenz- und Betriebsanforderungen",
+      "l1": "Registrieren Sie zuerst eine juristische Person (in der Regel eine Private Limited), bevor Sie regulierte Fintech-Operationen durchführen.",
+      "l2": "Planen Sie PSP-Lizenzkosten und laufende Compliance-Verpflichtungen ein.",
+      "l3": "Für einige Finanzprodukte sind Mindestkapitalschwellen und angemessene Kontrollen erforderlich.",
+      "l4": "Mobile-Wallet- und bankverbundene Dienste erfordern in der Regel eine Partnerschaft mit einer lokal lizenzierten Bank."
     },
     "hubs": {
-      "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
-      "location": "Zimbabwe",
-      "visit_site": "Visit site",
+      "title": "Startup-Inkubatoren und Innovationszentren (Simbabwe)",
+      "location": "Simbabwe",
+      "visit_site": "Besuchen Sie die Website",
       "cities": {
         "harare": "Harare",
         "bulawayo": "Bulawayo",
         "gweru": "Gweru",
         "mutare": "Mutare"
       },
-      "impact_hub": "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
-      "eight2five": "CBD innovation center supporting startup acceleration and venture-building programs.",
-      "stanbic": "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
-      "hit": "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
-      "zchpc": "High-performance computing and AI use cases for agriculture, health, and research.",
-      "b2c": "Urban coworking and accelerator-style support for practical local problem-solving startups.",
-      "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
-      "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
-      "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
-      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
+      "impact_hub": "Soziale Innovation, Jugendunternehmertum, Mentoring und Inkubationsprogramme.",
+      "eight2five": "CBD-Innovationszentrum zur Unterstützung von Startup-Beschleunigungs- und Venture-Building-Programmen.",
+      "stanbic": "Unterstützung beim Kapazitätsaufbau, Zugang zum Arbeitsplatz und Möglichkeiten für Ökosystempartnerschaften.",
+      "hit": "Industrie 4.0-Kommerzialisierung mit Fokus auf IoT-, KI- und Big-Data-Lösungen.",
+      "zchpc": "Anwendungsfälle für Hochleistungsrechnen und KI für Landwirtschaft, Gesundheit und Forschung.",
+      "b2c": "Städtisches Coworking und Accelerator-artige Unterstützung für praktische lokale Problemlösungs-Startups.",
+      "techvillage": "In Bulawayo ansässige Startup-Community und Innovationszentrum mit Accelerator-Aktivitäten und Gründerunterstützungsprogrammen.",
+      "nust": "Von der Universität betriebenes Innovations- und Kommerzialisierungsökosystem, das jugendgeführte unternehmens- und branchenorientierte Lösungen unterstützt.",
+      "msu": "In den Midlands ansässige Inkubations- und Kommerzialisierungsplattform zur Unterstützung von Unternehmern, KMU und Spin-outs aus der angewandten Forschung.",
+      "digital_village": "Community-orientierter Innovationsraum in Mutare, der kollaborativen Arbeitsbereich, Schulungen und Unterstützung für digitale Unternehmen bietet."
     },
     "onesa_matter": {
-      "badge": "Africa-Centric AI",
-      "title": "Why Onesa AI Matters",
-      "headline": "Africa deserves AI that understands Africa.",
-      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
-      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
-      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
-      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
-      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "badge": "Afrikazentrierte KI",
+      "title": "Warum Onesa AI wichtig ist",
+      "headline": "Afrika verdient eine KI, die Afrika versteht.",
+      "p1": "Überall auf der Welt verändert KI mit unglaublicher Geschwindigkeit Volkswirtschaften, Industrien und Gesellschaften. Dennoch basieren die meisten Modelle auf Daten, Prioritäten und Kontexten, die häufig an der afrikanischen Realität vorbeigehen. Damit Afrika vollständig an der globalen digitalen Wirtschaft teilhaben kann, brauchen wir auf Afrika ausgerichtete Modelle, die unsere Sprachen, Kulturen, Geschäftsumgebungen und Entwicklungsprioritäten verstehen.",
+      "p2": "Wir bei Diaspora Unlocked glauben, dass Afrika nicht nur KI konsumieren sollte. Afrika muss beim Aufbau helfen. Genau aus dieser Überzeugung heraus haben wir mit der Entwicklung von Onesa AI begonnen: um intelligente Systeme zu schaffen, die für afrikanische Märkte, afrikanische Datenumgebungen und die Ziele der afrikanischen Wirtschaftstransformation wirklich relevant sind.",
+      "p3": "Wir wissen auch, dass dieser Weg nicht einfach ist. Das Training von KI-Modellen erfordert eine seriöse Infrastruktur, Rechenleistung, Datenaufbereitung und erstklassige Talente. Die Kosten sind hoch und die Hindernisse real. Wir haben uns trotzdem entschieden, voranzukommen, weil die langfristige Zukunft Afrikas von technologischer Eigenverantwortung, digitaler Unabhängigkeit und der Fähigkeit abhängt, unsere eigenen digitalen Ökosysteme zu gestalten.",
+      "p4": "Die KI-Souveränität wird zu einem der bestimmenden globalen Gespräche dieser Ära. Nationen, die ihre Daten, ihre Modelle und ihre digitale Infrastruktur kontrollieren, werden besser in der Lage sein, ihre Volkswirtschaften zu schützen, Innovationen zu beschleunigen und strategische Unabhängigkeit zu wahren. Afrika muss in dieser Zukunft nicht als Beobachter, sondern als Schöpfer und Führer agieren.",
+      "p5": "Onesa AI ist unser Engagement für diese Zukunft. Das ist größer als Technologie. Es geht um Chancen, Widerstandsfähigkeit und den Aufbau von Systemen, die künftigen Generationen auf dem gesamten Kontinent und in der Diaspora dienen.",
       "tiles": {
         "illuminate": {
-          "title": "Onesa Means Illuminate",
-          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+          "title": "Onesa bedeutet „erleuchten“.",
+          "detail": "Onesa wurde entwickelt, um praktische Klarheit darüber zu schaffen, wie Menschen und Unternehmen in Simbabwe und in ganz Afrika wachsen können."
         },
         "africa_centric": {
-          "title": "Africa-Centric Intelligence",
-          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+          "title": "Afrikazentrierter Geheimdienst",
+          "detail": "Modelle, die auf afrikanischen Sprachen, Märkten und Realitäten basieren, führen zu relevanteren und nützlicheren Ergebnissen."
         },
         "sovereignty": {
-          "title": "AI Sovereignty",
-          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+          "title": "KI-Souveränität",
+          "detail": "Der Besitz unserer Daten, Modelle und Infrastruktur schützt die langfristige strategische Unabhängigkeit und Widerstandsfähigkeit."
         },
         "growth": {
-          "title": "Future-Ready Growth",
-          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+          "title": "Zukunftsfähiges Wachstum",
+          "detail": "Onesa unterstützt Innovation, Investitionsvertrauen und eine stärkere digitale Teilhabe künftiger Generationen."
         }
       }
     }
@@ -454,7 +454,7 @@
         "description": "Zugang zu Handelsfinanzierungen, Exportkrediten und Banklösungen."
       }
     },
-    "regulatory_updates_badge": "Updates",
+    "regulatory_updates_badge": "Aktualisierungen",
     "regulatory_updates_title": "Aktualisierungen der Vorschriften",
     "regulatory_updates_subtitle": "Bleiben Sie informiert über die neuesten Änderungen in den internationalen Handelsvorschriften für simbabwische Exporte.",
     "regulatory_updates": {
@@ -540,7 +540,7 @@
         "summary": "Der Kariba-See erstreckt sich über 5.500 Quadratkilometer entlang des Sambesi. Berühmt für Hausbootferien und atemberaubende Sonnenuntergänge. Der See beherbergt zahlreiche Flusspferde, Krokodile und Elefanten."
       },
       "rocks": {
-        "name": "Balancing Rocks",
+        "name": "Balancierende Steine",
         "desc": "Ikonische Felsformationen, die Simbabwes einzigartiges geologisches Erbe symbolisieren.",
         "h1": "Nationalsymbol",
         "h2": "Fotografie",
@@ -562,7 +562,7 @@
       "matobo": {
         "name": "Matobo-Nationalpark",
         "desc": "UNESCO-Welterbe, bekannt für seine Felsformationen und spirituelle Geschichte.",
-        "h1": "Balancing Rocks",
+        "h1": "Balancierende Steine",
         "h2": "Antike Felsmalerei",
         "h3": "Nashorn-Schutzgebiet",
         "summary": "Die Matobo-Berge bieten eine einzigartige Landschaft aus Granitkuppen. Es ist eine bedeutende archäologische Stätte mit San-Felskunst und dem Grab von Cecil Rhodes."
@@ -586,7 +586,7 @@
       "nyanga": {
         "name": "Nyanga-Nationalpark",
         "desc": "Das „kleine Schottland“ Afrikas, Heimat des höchsten Gipfels Simbabwes.",
-        "h1": "Mount Nyangani",
+        "h1": "Berg Nyangani",
         "h2": "Mutarazi-Fälle",
         "h3": "Outdoor-Abenteuer",
         "summary": "Ein Hochlandparadies mit den Mutarazi-Fällen (den zweithöchsten Afrikas). Besucher genießen Skywalks und Ziplines über die Pungwe-Schlucht."
@@ -601,10 +601,10 @@
       }
     },
     "onesa": {
-      "name": "Onesa AI",
+      "name": "Onesa KI",
       "badge": "Onesa AI Begleiter",
       "chat": "Mit Onesa chatten",
-      "img_alt": "Onesa AI Guide",
+      "img_alt": "Onesa KI-Leitfaden",
       "title": "Ihr lokaler Guide in der Tasche",
       "subtitle": "Simbabwe zu bereisen kann komplex sein. Onesa AI versteht die „Kukiya-kiya“-Wirtschaft und lokale Nuancen, um Ihre Reise nahtlos zu machen.",
       "companion_title": "Vom Buchen von Flügen über Wetterinfos bis zum Entdecken lokaler Geheimtipps – Onesa AI hilft Ihnen.",
@@ -668,53 +668,53 @@
     "explore_subtitle": "Für umfassende offizielle Richtlinien besuchen Sie die Website der Zimbabwe Tourism Authority.",
     "explore_site": "Zimbabwe Tourism Authority besuchen",
     "snapshot": {
-      "title": "Zimbabwe Tourism Snapshot (2026)",
-      "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
+      "title": "Simbabwe Tourismus-Schnappschuss (2026)",
+      "subtitle": "Der Tourismus befindet sich auf einem starken Erholungspfad, unterstützt durch ikonische Vermögenswerte, wachsende Nachfrage und kontinuierliche Infrastrukturverbesserungen.",
       "performance": {
-        "title": "Sector Recovery and Contribution",
-        "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
+        "title": "Erholung und Beitrag des Sektors",
+        "detail": "Die Tourismuseinnahmen erholen sich weiterhin stark, wobei der Sektor einen Beitrag von mehreren Milliarden Dollar und einen wachsenden Anteil am nationalen BIP anstrebt."
       },
       "attractions": {
-        "title": "UNESCO and Wildlife Anchors",
-        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
+        "title": "UNESCO- und Wildlife-Anker",
+        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe und Flaggschiff-Nationalparks bleiben die Hauptnachfragetreiber für internationale Besucher."
       },
       "infrastructure": {
-        "title": "Access and Infrastructure Upgrades",
-        "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
+        "title": "Zugangs- und Infrastruktur-Upgrades",
+        "detail": "Durch die Sanierung von Straßen und Flughäfen wird der Zugang zu wichtigen Tourismuskorridoren und regionalen Zielrouten verbessert."
       }
     },
     "opportunities": {
-      "title": "Tourism Investment and Growth Opportunities",
+      "title": "Tourismusinvestitionen und Wachstumschancen",
       "ecotourism": {
-        "title": "Ecotourism and Sustainability",
-        "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
+        "title": "Ökotourismus und Nachhaltigkeit",
+        "detail": "Entwickeln Sie Öko-Lodges und schonende Naturschutzerlebnisse rund um Premiumparks und Schutzgebiete."
       },
       "cbt": {
-        "title": "Community-Based Tourism",
-        "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
+        "title": "Community-basierter Tourismus",
+        "detail": "Skalieren Sie Projekte, die lokale Gemeinschaften durch geführte Kulturtouren, Aufführungen und lokale Erlebnisse stärken."
       },
       "hospitality": {
-        "title": "Hospitality and Infrastructure",
-        "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
+        "title": "Gastgewerbe und Infrastruktur",
+        "detail": "Erweitern Sie hochwertige Unterkünfte und Besuchereinrichtungen in Harare, Bulawayo, Mutare und wichtigen Gateway-Routen."
       },
       "gastronomy": {
-        "title": "Gastronomy Tourism",
-        "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
+        "title": "Gastronomietourismus",
+        "detail": "Schaffen Sie Erlebnisse vom Bauernhof bis zum Tisch und lokale Küchenerlebnisse in Verbindung mit Kleinproduzenten und der Nachfrage nach kulinarischem Tourismus."
       },
       "adventure": {
-        "title": "Adventure Tourism",
-        "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
+        "title": "Abenteuertourismus",
+        "detail": "Bauen Sie hochwertige Aktivitäten wie Rafting, Bungee, Kanufahren und Wildnisexpeditionen rund um die Victoriafälle und den Sambesi-Korridor aus."
       },
       "regional": {
-        "title": "Regional Hub Packaging",
-        "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
+        "title": "Regionale Hub-Verpackung",
+        "detail": "Positionieren Sie Harare und Bulawayo als Gateway-Hubs für länderübergreifende Reiserouten, einschließlich KAZA und grenzüberschreitende Strecken."
       }
     },
     "authorities": {
-      "title": "Official Tourism Authorities",
-      "subtitle": "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards.",
-      "zta": "Visit Zimbabwe Tourism Authority",
-      "zimparks": "Visit ZimParks"
+      "title": "Offizielle Tourismusbehörden",
+      "subtitle": "Nutzen Sie die offiziellen Richtlinien der Zimbabwe Tourism Authority und der Zimbabwe Parks and Wildlife Management Authority für Genehmigungen, Parkinformationen und Reisezielstandards.",
+      "zta": "Besuchen Sie die Tourismusbehörde von Simbabwe",
+      "zimparks": "Besuchen Sie ZimParks"
     }
   },
   "investment": {
@@ -740,7 +740,7 @@
       "rbz_policy": "Richtlinien erkunden",
       "rbz_currency": "Investieren in USD oder ZiG",
       "highlight1": "Nationales Wachstum",
-      "badge2": "Masuwe SEZ",
+      "badge2": "Masuwe SWZ",
       "title2": "Investieren in Masuwe SEZ",
       "subtitle2": "Strategische Tourismus-Chancen nahe der Victoriafälle.",
       "highlight2": "Top-Lage",
@@ -759,7 +759,7 @@
     },
     "projects": {
       "masuwe": {
-        "title": "Masuwe SEZ",
+        "title": "Masuwe SWZ",
         "description": "Zentrum für Tourismus-Infrastruktur nahe der Victoriafälle.",
         "highlights": [
           "Steuervorteile",
@@ -804,7 +804,7 @@
         ]
       },
       "solar": {
-        "title": "Mutare Solar Park",
+        "title": "Mutare Solarpark",
         "description": "5MW netzgekoppelte Energie für lokale Industrie.",
         "highlights": [
           "Einspeisevertrag",
@@ -818,11 +818,11 @@
       "tourism": "Tourismus",
       "agriculture": "Landwirtschaft",
       "manufacturing": "Produktion",
-      "it": "IT & Fintech",
+      "it": "IT und FinTech",
       "energy": "Energie",
       "sector": "Sektor",
       "risk_level": "Risiko",
-      "min_investment": "Min. ",
+      "min_investment": "Min.",
       "expected_return": "Erwartet",
       "conservative": "Niedrig",
       "moderate": "Mittel",
@@ -846,7 +846,7 @@
         "desc": "Echtzeit-Dashboards und Metriken der Projekte."
       },
       "flexible_investment": {
-        "title": "Flexible Portfolios",
+        "title": "Flexible Anlageportfolios",
         "desc": "Beginnen Sie mit kleinen Beträgen und bauen Sie schrittweise auf."
       },
       "onesa_ai": {
@@ -896,47 +896,47 @@
       ]
     },
     "collective_model": {
-      "title": "How Diaspora Collective Investing Works",
-      "subtitle": "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
-      "s1": "Create an investor profile and complete verification checks.",
-      "s2": "Join vetted opportunities with clear minimum-ticket participation.",
-      "s3": "Pool capital with other diaspora investors through structured terms.",
-      "s4": "Track project updates, milestones, and performance on one dashboard."
+      "title": "Wie kollektives Investieren in der Diaspora funktioniert",
+      "subtitle": "Diaspora Unlocked ist für gebündelte Investitionen konzipiert, sodass kleine und mittlere Anleger Zugang zu Möglichkeiten erhalten, für die normalerweise größere Ticketgrößen erforderlich sind.",
+      "s1": "Erstellen Sie ein Anlegerprofil und führen Sie Verifizierungsprüfungen durch.",
+      "s2": "Nehmen Sie an geprüften Gelegenheiten mit klarer Mindestticket-Teilnahme teil.",
+      "s3": "Poolen Sie Kapital mit anderen Diaspora-Investoren über strukturierte Konditionen.",
+      "s4": "Verfolgen Sie Projektaktualisierungen, Meilensteine ​​und Leistung auf einem Dashboard."
     },
     "eu_focus": {
-      "title": "European Partnership Capital in Zimbabwe",
-      "subtitle": "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, social inclusion, and climate resilience.",
+      "title": "Europäische Partnerschaftshauptstadt in Simbabwe",
+      "subtitle": "Europäische Institutionen im Rahmen von Team Europe sind in Simbabwe in den Bereichen Energie, Landwirtschaft, KMU-Finanzierung, soziale Inklusion und Klimaresilienz aktiv.",
       "energy": {
-        "title": "Green Energy",
-        "detail": "GET.invest Zimbabwe (launched in May 2025 with EU and Germany funding) supports clean-energy project finance, with strong focus on solar and diversifying hydro-dependent generation."
+        "title": "Grüne Energie",
+        "detail": "GET.invest Zimbabwe (gestartet im Mai 2025 mit EU- und Deutschland-Mitteln) unterstützt die Finanzierung sauberer Energieprojekte mit starkem Schwerpunkt auf Solarenergie und der Diversifizierung der wasserkraftabhängigen Erzeugung."
       },
       "agri": {
-        "title": "Agriculture and Value Chains",
-        "detail": "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs."
+        "title": "Landwirtschaft und Wertschöpfungsketten",
+        "detail": "EU-Partnerschaftsprogramme legen Wert auf Gartenbau und traditionelles Getreide, eine klimafreundliche Landwirtschaft, die Anpassung an EU-Exportanforderungen und den Zugang zu Finanzmitteln für KMU in der Agrarindustrie."
       },
       "sme": {
-        "title": "Private Sector and SME Finance",
-        "detail": "EIB-backed lines through local banks expanded affordable finance for SMEs; reported EIB lending in recent years includes EUR 60 million, including EUR 20 million to Stanbic in March 2025."
+        "title": "Privatsektor und KMU-Finanzierung",
+        "detail": "Von der EIB unterstützte Darlehen lokaler Banken erweiterten erschwingliche Finanzierungsmöglichkeiten für KMU. Die gemeldeten EIB-Darlehen der letzten Jahre umfassen 60 Millionen Euro, davon 20 Millionen Euro an Stanbic im März 2025."
       },
       "social": {
-        "title": "Health, Gender, and Social Programs",
-        "detail": "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth."
+        "title": "Gesundheits-, Gender- und Sozialprogramme",
+        "detail": "Die Programme von Team Europe umfassen Maßnahmen zur Gleichstellung der Geschlechter und zur Stärkung der Rolle der Frau sowie praktische Unterstützung wie Finanzkompetenz und Zugangswege zu Finanzmitteln für Frauen und Jugendliche."
       },
       "biodiversity": {
-        "title": "Biodiversity and Resilience",
-        "detail": "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development."
+        "title": "Biodiversität und Resilienz",
+        "detail": "Partnerschaften unterstützen auch die biologische Vielfalt und die mit dem Naturschutz verbundene Widerstandsfähigkeit, einschließlich grenzüberschreitender Naturschutzgebiete, die für eine nachhaltige lokale Wirtschaftsentwicklung relevant sind."
       },
       "gateway": {
-        "title": "Global Gateway Partnership Envelope",
-        "detail": "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO."
+        "title": "Umschlag der Global Gateway-Partnerschaft",
+        "detail": "Die Zusammenarbeit zwischen der EU und Simbabwe im Rahmen von Global Gateway umfasst eine Zuschusszuweisung in Höhe von 165 Mio. EUR für den Zeitraum 2021–2027. Zu den Partnern von Team Europe gehören die EIB und PROPARCO."
       },
-      "eib_takeaways_title": "EIB Practical Takeaways for Diaspora Investors",
-      "eib_t1": "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
-      "eib_t2": "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
-      "eib_t3": "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
-      "source_getinvest": "Source: GET.invest Zimbabwe",
-      "source_eu": "Source: EU International Partnerships",
-      "source_eib": "Source: EIB Zimbabwe Essay"
+      "eib_takeaways_title": "Praktische Erkenntnisse der EIB für Investoren aus der Diaspora",
+      "eib_t1": "Von Frauen geführte Kleinunternehmen sind häufig mit Erschwinglichkeits- und Sicherheitenbeschränkungen konfrontiert, die den Zugang zu formellen Krediten einschränken.",
+      "eib_t2": "Mischfinanzierungen und Kreditlinien lokaler Banken können die Kreditbarrieren für mit der Landwirtschaft verbundene KMU senken.",
+      "eib_t3": "Finanzkompetenz und Unternehmensunterstützungsdienste verbessern die Investitionsbereitschaft und Kreditwürdigkeit kleiner Unternehmen.",
+      "source_getinvest": "Quelle: GET.invest Simbabwe",
+      "source_eu": "Quelle: Internationale Partnerschaften der EU",
+      "source_eib": "Quelle: Essay der EIB zu Simbabwe"
     }
   },
   "trade": {
@@ -1055,7 +1055,7 @@
     "zimtrade_programs_subtitle": "Initiativen zur Stärkung simbabwischer Unternehmen.",
     "programs": {
       "eagles_nest": {
-        "title": "Eagles Nest",
+        "title": "Adlernest",
         "description": "Inkubatorprogramm für junge Exporteure der nächsten Generation.",
         "target": "Junge Unternehmer (18-35 Jahre)",
         "benefits": [
@@ -1066,7 +1066,7 @@
         ]
       },
       "next_she_exporter": {
-        "title": "Next She Exporter",
+        "title": "Als nächstes ist sie Exporteur",
         "description": "Stärkung von frauengeführten Unternehmen im Export.",
         "target": "Unternehmen in Frauenhand",
         "benefits": [
@@ -1077,7 +1077,7 @@
         ]
       },
       "shop_at_zim": {
-        "title": "Shop At Zim",
+        "title": "Kaufen Sie bei Zim ein",
         "description": "B2B-E-Commerce-Plattform für simbabwische Lieferanten.",
         "target": "Exportbereite Unternehmen",
         "benefits": [
@@ -1313,7 +1313,7 @@
       "title1": "Diaspora treibt ",
       "highlight1": "Wandel",
       "subtitle1": "Beispiele, wie die Diaspora einen spürbaren Unterschied macht.",
-      "badge2": "Innovation",
+      "badge2": "Innovationen",
       "title2": "Erfolg in Technik & ",
       "highlight2": "Unternehmertum",
       "subtitle2": "Bahnbrechende Unternehmen, unterstützt durch Diaspora-Expertise.",
@@ -1335,7 +1335,7 @@
     "stories": {
       "leather_goods": {
         "title": "Erfolg im Lederwaren-Export",
-        "category": "Export",
+        "category": "Ausfuhr",
         "story": "Fachkräfte in Deutschland vernetzten Lederhersteller mit europäischen Händlern. Das Netzwerk lieferte Analysen zu Konsumvorlieben und direkte Kontakte zu Einkäufern.",
         "testimonial": "Die Plattform verband uns mit Diaspora-Mitgliedern, die unser Handwerk und den EU-Markt verstehen.",
         "author": "Tendai Moyo",
@@ -1343,7 +1343,7 @@
       },
       "horticulture_breakthrough": {
         "title": "Durchbruch im Bio-Gartenbau",
-        "category": "Export",
+        "category": "Ausfuhr",
         "story": "Eine Kooperative erhielt EU-Bio-Zertifizierung mit Hilfe von Diaspora-Agronomen. Heute exportieren sie hochwertiges Gemüse in EU-Supermärkte.",
         "testimonial": "Wir hätten nie gedacht, dass unsere kleine Farm EU-Standards erfüllen kann.",
         "author": "Grace Ncube",
@@ -1375,7 +1375,7 @@
       },
       "honey_export": {
         "title": "Honig-Export-Kooperative",
-        "category": "Export",
+        "category": "Ausfuhr",
         "story": "Ländliche Imker exportieren nun Bio-Honig nach Europa. Diaspora-Wissenschaftler halfen bei der EU-Zertifizierung.",
         "testimonial": "Vom Straßenverkauf zum EU-Supermarkt – die Diaspora machte es möglich.",
         "author": "Rudo Makoni",
@@ -1422,10 +1422,10 @@
     "story_card": {
       "impact": "Wirkung:",
       "revenue": "Umsatz:",
-      "jobs": "Jobs:",
+      "jobs": "Arbeitsplätze:",
       "markets": "Märkte:",
       "investors": "Investoren:",
-      "testimonial_by": "— {{author}}, {{role}}",
+      "testimonial_by": "— {{author}} ({{role}})",
       "view_story": "Geschichte lesen"
     },
     "impact_metrics_badge": "Kennzahlen",
@@ -1602,14 +1602,14 @@
     "min_investment": "Mindestinvestition",
     "expected_return": "Erwartete Rendite",
     "timeline": "Zeitraum",
-    "status": "Status",
+    "status": "Stand",
     "risk_level": "Risikostufe",
-    "highlights": "Highlights",
+    "highlights": "Höhepunkte",
     "share": "Teilen",
     "save": "Speichern",
-    "notify_success": "Priority Access Locked",
-    "get_notified": "Request Access",
-    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}"
+    "notify_success": "Vorrangiger Zugriff gesperrt",
+    "get_notified": "Zugriff anfordern",
+    "form_subtitle": "Geben Sie Ihre Daten ein, um sich in die Warteliste für {{featureName}} einzutragen."
   },
   "contact_form": {
     "get_started": "Kontakt aufnehmen",
@@ -1655,7 +1655,7 @@
     "food_desc": "Der Geschmack der Heimat, voll EU-konform."
   },
   "notfound": {
-    "title": "404",
+    "title": "404 - Seite nicht gefunden",
     "subtitle": "Seite nicht gefunden",
     "message": "Entschuldigung, die gesuchte Seite existiert nicht.",
     "message2": "Sie wurde möglicherweise verschoben oder gelöscht.",
@@ -1728,19 +1728,19 @@
     }
   },
   "onesa": {
-    "badge": "Onesa AI",
+    "badge": "Onesa KI",
     "title": "Mit Onesa AI chatten",
     "send": "Senden",
     "thinking": "Überlegt...",
     "starter_prompt": "Chat starten....",
     "welcome": "Ich bin ein Experte für Simbabwe. Ich helfe Ihnen bei Investitionen, Handel, Tourismus und Ihren alltäglichen Aufgaben.",
     "status_prefix": "Onesa-Status",
-    "status_offline": "Offline",
+    "status_offline": "Nicht verbunden",
     "status_backend_unreachable": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
     "error_unable_contact": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
-    "online_indicator_aria": "Onesa online",
-    "online_text": "Online",
+    "online_indicator_aria": "Onesa ist online",
+    "online_text": "Verbunden",
     "error_timeout": "Die Onesa-Anfrage ist nach 3 Minuten abgelaufen. Bitte versuchen Sie es erneut.",
-    "offline_text": "Offline"
+    "offline_text": "Nicht verbunden"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "brand": "Diaspora Unlocked",
+  "brand": "I-Diaspora Ivuliwe",
   "tagline": "Ipulatifomu yeZimbabwe Global Diaspora",
   "about": "Mayelana",
   "about_us": "Ukuxhumanisa amaZimbabwean akwamanye amazwe lathuba kwezohwebo, ezokuvakasha, lokutshala izimali.",
@@ -77,7 +77,7 @@
   },
   "home": {
     "made_in_zimbabwe_alt": "Kwenziwe eZimbabwe",
-    "hero_title": "Diaspora Unlocked",
+    "hero_title": "I-Diaspora Ivuliwe",
     "hero_subtitle": "Ezobuchwepheshe (ICT), Ezohwebo, Ezokuvakasha lokusheshisa ukutshala imali kwe-Vision 2030",
     "export_hub": "Indawo yokuthumela phandle",
     "tourism": "Ezokuvakasha",
@@ -101,7 +101,7 @@
       "tourism": {
         "title": "Ezokuvakasha",
         "desc": "Thola izindawo zokuvakasha zaseZimbabwe ezisezingeni lomhlaba njalo uhlele ukuvakasha kwakho.",
-        "stats": "Forbes #1 2025"
+        "stats": "Forbes #1 ngo-2025"
       },
       "investment": {
         "title": "Ukutshala Imali",
@@ -116,7 +116,7 @@
       "technology": {
         "title": "Ezobuchwepheshe le-AI",
         "desc": "Hlangana le-Onesa AI, uhlobo lwethu olukhethekileyo olwakhelwe ukukhanyisa isimo seZimbabwe.",
-        "stats": "Onesa AI"
+        "stats": "Onesa AI imodeli"
       },
       "success": {
         "title": "Umphumela",
@@ -154,7 +154,7 @@
     "diaspora_unlocked_desc": "Sisebenzisa ubuchwepheshe besimanje ukunika lula ezokuvakasha, ezohwebo, lokutshala imali. Ipulatifomu yethu ivala igebe phakathi kwama-diaspora lamathuba asekhaya ngokusebenzisa obala kwedijithali.",
     "onesa_usp1": "Ukwisisa isimo sendawo",
     "onesa_usp2": "Ukuhumusha ulimi okuchanekileyo",
-    "ai_status": "Beta Version",
+    "ai_status": "Inguqulo ye-Beta",
     "ai_demo_question": "Yimaphi amathuba okutshala imali e-agriculture athola inzuzo enengi eZimbabwe njengamanje?",
     "ai_demo_response": "Ingxenye ye-agriculture eZimbabwe njengamanje ibona ukukhula okukhulu ekuthunyelweni kwemikhiqizo ye-horticulture. Ngokusekelwe kulokho okwenzakalayo njengamanje, ukutshala imali ekuhlelweni kwezinto zokuthutha ezibandayo (cold-chain logistics) kumatshungwa (blueberries) asuka e-Eastern Highlands kunika inzuzo enkulu...",
     "features_title": "Amandla e-Onesa AI",
@@ -192,111 +192,111 @@
       }
     },
     "more_compliance_information": "Ulwazi olwengeziwe lokuhambisana",
-    "chat_with_onesa": "Chat with Onesa",
+    "chat_with_onesa": "Xoxa no-Onesa",
     "momentum": {
-      "title": "Zimbabwe Technology Momentum (2026)",
-      "subtitle": "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption.",
+      "title": "I-Zimbabwe Technology Momentum (2026)",
+      "subtitle": "IZimbabwe isuka ekusetshenzisweni kwethekhnoloji iye ekusunguleni izisombululo zakuleli, okuholwa yi-fintech, i-agritech, kanye ne-AI adoption.",
       "connectivity": {
-        "title": "Connectivity Expansion",
-        "detail": "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout."
+        "title": "Ukwandiswa Kokuxhumana",
+        "detail": "Ukungena kwe-inthanethi manje sekungaphezu kwama-80%, nokushintshwa kwemakethe kusuka kwabangenayo i-broadband entsha kanye nokukhishwa okusheshayo kwe-5G."
       },
       "ai_strategy": {
-        "title": "National AI Strategy (2026-2030)",
-        "detail": "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery."
+        "title": "Isu Likazwelonke le-AI (2026-2030)",
+        "detail": "IZimbabwe manje isinesu elisemthethweni le-AI eligxile ekuhanjisweni okusebenzayo emikhakheni ebekwe eqhulwini kanye nokulethwa kwezidingo zomphakathi."
       },
       "digital_payments": {
-        "title": "Digital Payments at Scale",
-        "detail": "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations."
+        "title": "Izinkokhelo Zedijithali Ngesikali",
+        "detail": "Imali yeselula isalokhu ingumzila wesitimela ohamba phambili ekuthengiseni, okwenza kube nesidingo esinamandla samathuluzi we-fintech nokuhlanganiswa."
       }
     },
     "opportunities": {
-      "title": "Top Opportunities for Investment and Innovation",
+      "title": "Amathuba Aphezulu Otshalomali Nokusungula",
       "ai": {
-        "title": "Artificial Intelligence",
-        "driver": "Deployment momentum in mining, healthcare, and governance under the national AI strategy."
+        "title": "Ukuhlakanipha okungekhona okwangempela",
+        "driver": "Umfutho wokusatshalaliswa kwezimayini, ukunakekelwa kwezempilo, kanye nokubusa ngaphansi kwesu le-AI likazwelonke."
       },
       "sme": {
-        "title": "SME Digitalization",
-        "driver": "High demand for affordable inventory tools, payroll automation, and customer support chat systems."
+        "title": "I-SME Digitalization",
+        "driver": "Isidingo esikhulu samathuluzi e-inventory athengekayo, i-payroll automation, nezinhlelo zengxoxo zokusekelwa kwamakhasimende."
       },
       "cybersecurity": {
-        "title": "Cybersecurity",
-        "driver": "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills."
+        "title": "I-Cybersecurity",
+        "driver": "Ukwamukelwa kwedijithali okusheshayo kwandisa izindawo zokuhlasela kanye nesidingo sezinsizakalo zokuphepha zasendaweni namakhono."
       },
       "ecommerce": {
-        "title": "E-commerce and Logistics",
-        "driver": "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure."
+        "title": "E-commerce kanye Logistics",
+        "driver": "Igebe elikhulu lisasele ekuthuthweni kwasekhaya okuthembekile kanye nengqalasizinda yokulethwa kwebanga lokugcina."
       }
     },
     "challenges": {
-      "title": "Critical Challenges to Address",
-      "infrastructure": "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
-      "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
-      "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
+      "title": "Izinselele Ezibalulekile Okuzobhekana Nazo",
+      "infrastructure": "Izikhala zengqalasizinda: izindleko eziphezulu ze-inthanethi kanye nokuphakelwa kukagesi okungajwayelekile kusabambezela ukuqalisa.",
+      "human_capital": "Ingcindezi yemali yabantu: ithalente eliqinile likhona, kodwa ukugcinwa kunzima ngenxa yokufudukela ngaphandle.",
+      "regulation": "Ubunzima bokulawula: ukunikwa kwelayisensi, ukuthobela intela, nokugunyazwa kungabambezela ukwethulwa komkhiqizo emikhakheni elawulwayo."
     },
     "fintech": {
-      "title": "Fintech Regulatory Requirements (RBZ)",
-      "subtitle": "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations.",
-      "sandbox_title": "Regulatory Sandbox",
-      "sandbox_detail": "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded.",
+      "title": "Izidingo Zokulawula ze-Fintech (RBZ)",
+      "subtitle": "Izixazululo ze-Fintech zilawulwa ngokugadwa kwe-RBZ, ukuhlolwa kwe-sandbox, kanye nezibopho zamalayisense okukhokha nokusebenza kwesevisi yezezimali.",
+      "sandbox_title": "Ibhokisi lesihlabathi esilawulayo",
+      "sandbox_detail": "Iziqalisi zingahlola izinto ezintsha endaweni egadiwe kuze kube yizinyanga ezingama-24. Ukuhlolwa kwe-Cryptocurrency nohlobo lwemali yedijithali akufakiwe.",
       "phases": {
-        "pre_application": "Pre-application",
-        "application": "Application and evaluation",
-        "testing": "Testing in a controlled live environment",
-        "exit": "Exit and deployment decision"
+        "pre_application": "Isicelo sangaphambili",
+        "application": "Isicelo nokuhlola",
+        "testing": "Ukuhlola endaweni ebukhoma elawulwayo",
+        "exit": "Isinqumo sokuphuma nokuthunyelwa"
       },
-      "licensing_title": "Licensing and Operating Requirements",
-      "l1": "Register legal entity first (typically Private Limited) before regulated fintech operations.",
-      "l2": "Plan for PSP licensing costs and ongoing compliance obligations.",
-      "l3": "Some financial products require minimum capital thresholds and fit-and-proper controls.",
-      "l4": "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."
+      "licensing_title": "Izidingo Zokuthola Ilayisensi Nokusebenza",
+      "l1": "Bhalisa ibhizinisi elisemthethweni kuqala (ngokujwayelekile i-Private Limited) ngaphambi kokusebenza kokulawulwa kwe-fintech.",
+      "l2": "Hlela izindleko zelayisensi ye-PSP kanye nezibopho eziqhubekayo zokuthobela.",
+      "l3": "Eminye imikhiqizo yezezimali idinga ubuncane bemali obuncane kanye nokulawula okufanele nokufanele.",
+      "l4": "Izinsiza ezixhumene nebhange le-wallet kanye nebhange ngokuvamile zidinga ubambiswano nebhange lasendaweni elinelayisensi."
     },
     "hubs": {
-      "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
-      "location": "Zimbabwe",
-      "visit_site": "Visit site",
+      "title": "Ama-Incubator okuqalisa kanye nama-Innovation Hubs (Zimbabwe)",
+      "location": "eZimbabwe",
+      "visit_site": "Vakashela isayithi",
       "cities": {
         "harare": "Harare",
         "bulawayo": "Bulawayo",
-        "gweru": "Gweru",
+        "gweru": "eGweru",
         "mutare": "Mutare"
       },
-      "impact_hub": "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
-      "eight2five": "CBD innovation center supporting startup acceleration and venture-building programs.",
-      "stanbic": "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
-      "hit": "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
-      "zchpc": "High-performance computing and AI use cases for agriculture, health, and research.",
-      "b2c": "Urban coworking and accelerator-style support for practical local problem-solving startups.",
-      "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
-      "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
-      "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
-      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
+      "impact_hub": "Ukuthuthukiswa komphakathi, usomabhizinisi abasha, ukufundisa, kanye nezinhlelo zokufukamela.",
+      "eight2five": "Isikhungo sokusungula se-CBD esisekela ukusheshisa kokuqala kanye nezinhlelo zokwakha amabhizinisi.",
+      "stanbic": "Ukwesekwa kokwakha amandla, ukufinyelela endaweni yokusebenza, namathuba wobambiswano lwe-ecosystem.",
+      "hit": "Ukuthengiswa kwemboni engu-4.0 ngokugxila ku-IoT, AI, nezixazululo zedatha enkulu.",
+      "zchpc": "Ukusebenza okuphezulu kwekhompuyutha kanye nezimo zokusebenzisa i-AI kwezolimo, ezempilo, kanye nocwaningo.",
+      "b2c": "Ukusebenzisana kwasemadolobheni kanye nokusekelwa kwesitayela sokusheshisa kokuqalisa okusebenzayo kokuxazulula izinkinga kwasendaweni.",
+      "techvillage": "Umphakathi osungulwe koBulawayo kanye nesikhungo sokusungula esinemisebenzi yokusheshisa kanye nezinhlelo zokusekela abasunguli.",
+      "nust": "Amasu amasha aqhutshwa yinyuvesi kanye ne-ecosystem yokuhweba esekela amabhizinisi aholwa yintsha nezisombululo ezigxile embonini.",
+      "msu": "Inkundla yokufukamela esekwe e-Midlands kanye nenkundla yokuthengisa esekela osomabhizinisi, ama-SME, kanye nokusetshenziswa kocwaningo.",
+      "digital_village": "Indawo yokusungula egxile emphakathini eMutare ihlinzeka ngendawo yokusebenza ngokubambisana, ukuqeqeshwa, nokusekelwa kwebhizinisi ledijithali."
     },
     "onesa_matter": {
-      "badge": "Africa-Centric AI",
-      "title": "Why Onesa AI Matters",
-      "headline": "Africa deserves AI that understands Africa.",
-      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
-      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
-      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
-      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
-      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "badge": "I-Africa-Centric AI",
+      "title": "Kungani I-Onesa AI Ibalulekile",
+      "headline": "I-Afrika ifanelwe yi-AI eqonda i-Afrika.",
+      "p1": "Emhlabeni wonke, i-AI ilungisa kabusha ezomnotho, izimboni, nemiphakathi ngesivinini esimangalisayo. Nokho amamodeli amaningi akhelwe phezu kwedatha, izinto ezibalulekile, kanye nezimo ezivame ukugeja amaqiniso ase-Afrika. Ukuze i-Afrika ibambe iqhaza ngokugcwele emnothweni wedijithali womhlaba, sidinga amamodeli agxile e-Afrika aqonda izilimi zethu, amasiko, izindawo zamabhizinisi, nezinto ezibalulekile ekuthuthukisweni kwethu.",
+      "p2": "E-Diaspora Unlocked, sikholelwa ukuthi i-Afrika akufanele idle i-AI kuphela. I-Afrika kumele isize ukuyakha. Leyo nkolelo yikho kanye okwenza saqala ukuthuthukisa i-Onesa AI: ukwakha amasistimu ahlakaniphile afaneleka ngempela ezimakethe zase-Afrika, indawo yedatha yase-Afrika, kanye nezinjongo zoguquko lomnotho wase-Afrika.",
+      "p3": "Siyazi futhi ukuthi lolu hambo alulula. Amamodeli e-AI okuqeqesha adinga ingqalasizinda ebucayi, amandla ekhompiyutha, ukulungiswa kwedatha, kanye nethalente elisezingeni lomhlaba. Izindleko ziphakeme, futhi izithiyo zingokoqobo. Sikhethe ukuqhubekela phambili noma kunjalo ngoba ikusasa lesikhathi eside le-Afrika lincike kubunikazi bezobuchwepheshe, ukuzimela kwedijithali, kanye nekhono lokubumba ezethu izimiso zemvelo zedijithali.",
+      "p4": "Ubukhosi be-AI buba ngenye yezingxoxo ezichaza umhlaba wonke zalesi sikhathi. Izizwe ezilawula idatha yazo, amamodeli azo, nengqalasizinda yazo yedijithali zizobekwa kangcono ukuze zivikele umnotho wazo, zisheshise ukusungula izinto ezintsha, futhi zilondoloze ukuzimela kwamasu. I-Afrika kumele ibe kulelo kusasa, ingabi njengezingqapheli, kodwa njengabadali nabaholi.",
+      "p5": "I-Onesa AI ukuzibophezela kwethu kulelo kusasa. Lokhu kukhulu kunobuchwepheshe. Imayelana namathuba, ukuqina, kanye nezinhlelo zokwakha ezisebenzela izizukulwane ezizayo kulo lonke izwekazi kanye ne-diaspora.",
       "tiles": {
         "illuminate": {
-          "title": "Onesa Means Illuminate",
-          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+          "title": "I-Onesa isho ukuthi Khanyisa",
+          "detail": "I-Onesa yakhelwe ukuletha ukucaca okusebenzayo kokuthi abantu namabhizinisi bangakhula kanjani eZimbabwe nase-Afrika yonkana."
         },
         "africa_centric": {
-          "title": "Africa-Centric Intelligence",
-          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+          "title": "I-Africa-Centric Intelligence",
+          "detail": "Amamodeli asekelwe ezilimini zase-Afrika, izimakethe, namaqiniso adala imiphumela efaneleke kakhulu futhi elusizo."
         },
         "sovereignty": {
-          "title": "AI Sovereignty",
-          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+          "title": "Ubukhosi be-AI",
+          "detail": "Ubunikazi bedatha yethu, amamodeli, nengqalasizinda kuvikela ukuzimela nokuqina kwamasu esikhathi eside."
         },
         "growth": {
-          "title": "Future-Ready Growth",
-          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+          "title": "Ukukhula Okulungele Ikusasa",
+          "detail": "I-Onesa isekela ukusungula izinto ezintsha, ukuzethemba kokutshalwa kwezimali, nokubamba iqhaza okuqinile kwedijithali ezizukulwaneni ezizayo."
         }
       }
     }
@@ -504,7 +504,7 @@
       "subtitle3": "Ukuhlangana okungenakulibaleka eziqiwini zelizwe ezinhle kakhulu.",
       "highlight3": "Imvelo emsulwa",
       "badge4": "Indawo yomlando",
-      "title4": "Great Zimbabwe",
+      "title4": "IZimbabwe Enkulu",
       "subtitle4": "Izinsalela zamatshe zasendulo ezibonisa impucuko yase-Africa yasendulo.",
       "badge5": "Indawo yentshisekelo",
       "title5": "Mosi-oa-Tunya",
@@ -516,17 +516,17 @@
     "attractions_subtitle": "Izindawo eziveleleyo ezichaza isimo seZimbabwe.",
     "attractions": {
       "vicfalls": {
-        "name": "Victoria Falls",
+        "name": "I-Victoria Falls",
         "desc": "Enye yezimangaliso eziyisikhombisa zemvelo emhlabeni, impophoma enkulu kakhulu emhlabeni.",
-        "h1": "UNESCO World Heritage",
+        "h1": "I-UNESCO World Heritage",
         "h2": "Indawo yentshisekelo",
         "h3": "Ukubuka izinyamazana",
         "summary": "Eyaziwa kakhulu ngokuthi yi-Mosi-oa-Tunya (Intuthu Edumayo), iVictoria Falls iyiphinda kabili ukuphakama kwe-Niagara Falls. Thola ithuba lokugibela izikepe, ukugxuma ngetambo (bungee jumping), lokubuka impophoma ngendizamtshina."
       },
       "greatzim": {
-        "name": "Great Zimbabwe",
+        "name": "IZimbabwe Enkulu",
         "desc": "Izinsalela zamatshe zasendulo ezibonisa impucuko yase-Africa yasendulo lobuchwepheshe bokwakha.",
-        "h1": "UNESCO World Heritage",
+        "h1": "I-UNESCO World Heritage",
         "h2": "Indawo yomlando",
         "h3": "Amagugu amasiko",
         "summary": "Yakhwa phakathi kwekhulu le-11 le-15, iGreat Zimbabwe yayiyimfunda-nkulu yombuso weZimbabwe. Izakhiwo zamatshe ezinkulu zakhiwa ngaphandle kokusebenzisa usimende (mortar)."
@@ -568,7 +568,7 @@
         "summary": "IMatobo Hills inezindawo ezingavamileyo zamatshe e-granite. Yindawo eqakathekileyo ye-archaeological enemifanekiso yama-San eminingi kakhulu e-Southern Africa."
       },
       "eastern_highlands": {
-        "name": "Eastern Highlands",
+        "name": "I-Eastern Highlands",
         "desc": "Indawo eqandayo lezintaba eneziganga ezinhle, izimpophoma, leziqongo ezisibekelwe yinkungu.",
         "h1": "Ukuhamba ezintabeni",
         "h2": "Izimpophoma ezinhle",
@@ -576,7 +576,7 @@
         "summary": "Idonsa emngceleni weMozambique, le ndawo ihlanganisa izintaba zeNyanga, Vumba, leChimanimani."
       },
       "mana_pools": {
-        "name": "Mana Pools National Park",
+        "name": "I-Mana Pools National Park",
         "desc": "Indawo ye-UNESCO ekude eyaziwa ngamachibi ayo ondliwa ngumfula le-safari yokuhamba ngezinyawo.",
         "h1": "Safari ngezinyawo",
         "h2": "Ukubuka umfula uZambezi",
@@ -584,17 +584,17 @@
         "summary": "Itholakala e-Zambezi Valley, iMana Pools yaziwa ngobuhle bayo obumangalisayo lamachibi amane amakhulu akhiwa ngumfula."
       },
       "nyanga": {
-        "name": "Nyanga National Park",
+        "name": "I-Nyanga National Park",
         "desc": "I-'Little Scotland' yase-Africa, ikhaya lesiqongo esiphakeme kunazo zonke eZimbabwe nempophoma ejule kunazo zonke.",
-        "h1": "Mount Nyangani",
-        "h2": "Mutarazi Falls",
+        "h1": "Intaba iNyangani",
+        "h2": "I-Mutarazi Falls",
         "h3": "Intshisekelo yasendle",
         "summary": "INyanga lipharadesi le-highland eliqoqa iMount Nyangani leMutarazi Falls (impophoma yesibili ngokuphakama e-Africa)."
       },
       "gonarezhou": {
-        "name": "Gonarezhou National Park",
+        "name": "I-Gonarezhou National Park",
         "desc": "I-'Indawo yezindlovu,' ebonakala ngamawa abomvu e-Chilojo Cliffs.",
-        "h1": "Chilojo Cliffs",
+        "h1": "UChilojo Cliffs",
         "h2": "Ihlane elimsulwa",
         "h3": "Indawo yezindlovu",
         "summary": "Njengesiqiwu sesibili ngobukhulu eZimbabwe, iGonarezhou yaziwa ngezindawo zayo ezinamagagasi lamawa amatshe abomvu (sandstone cliffs)."
@@ -668,53 +668,53 @@
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi yezokuvakasha leziqondiso ezisemthethweni, vakashela i-website ye-Zimbabwe Tourism Authority.",
     "explore_site": "Vakashela i-ZTA",
     "snapshot": {
-      "title": "Zimbabwe Tourism Snapshot (2026)",
-      "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
+      "title": "Isithombe se-Zimbabwe Tourism (2026)",
+      "subtitle": "Ezokuvakasha zisendleleni eqinile yokusimama, esekelwa yizimpahla eziwuphawu, isidingo esikhulayo, nokuthuthukiswa okuqhubekayo kwengqalasizinda.",
       "performance": {
-        "title": "Sector Recovery and Contribution",
-        "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
+        "title": "Ukubuyiselwa Komkhakha kanye Nomnikelo",
+        "detail": "Amarisidi ezokuvakasha ayaqhubeka nokusimama kahle, njengoba umkhakha ugxile ekunikeleni ngezigidigidi zamarandi kanye nesabelo esikhulayo se-GDP kazwelonke."
       },
       "attractions": {
-        "title": "UNESCO and Wildlife Anchors",
-        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
+        "title": "I-UNESCO kanye ne-Wildlife Anchors",
+        "detail": "IVictoria Falls, iMana Pools, iGreat Zimbabwe, kanye namapaki kazwelonke aphambili kusalokhu kuyisidingo esikhulu sezivakashi zakwamanye amazwe."
       },
       "infrastructure": {
-        "title": "Access and Infrastructure Upgrades",
-        "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
+        "title": "Ukufinyelela kanye Nokuthuthukiswa Kwengqalasizinda",
+        "detail": "Ukulungiswa kabusha kwemigwaqo nesikhumulo sezindiza kuthuthukisa ukufinyelela emihubheni yezokuvakasha ebalulekile namasekethe ezindawo okuyiwa kuzo."
       }
     },
     "opportunities": {
-      "title": "Tourism Investment and Growth Opportunities",
+      "title": "Ukutshalwa kwezimali kwezokuvakasha kanye namathuba okukhula",
       "ecotourism": {
-        "title": "Ecotourism and Sustainability",
-        "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
+        "title": "I-Ecotourism kanye Nokusimama",
+        "detail": "Thuthukisa ama-eco-lodge kanye nokongiwa kwemvelo okunomthelela omncane ezizungeze amapaki aphambili nezindawo ezivikelekile."
       },
       "cbt": {
-        "title": "Community-Based Tourism",
-        "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
+        "title": "Ezokuvakasha Ezizinze Emphakathini",
+        "detail": "Linganisa amaphrojekthi anika amandla imiphakathi yasendaweni ngohambo lwamasiko oluqondisiwe, amakhonsathi, nolwazi oluphethwe endaweni."
       },
       "hospitality": {
-        "title": "Hospitality and Infrastructure",
-        "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
+        "title": "Izihambi kanye nengqalasizinda",
+        "detail": "Nweba izindawo zokuhlala ezisezingeni eliphezulu kanye nezinsiza zezivakashi eHarare, Bulawayo, Mutare, kanye nemizila eyisihluthulelo yesango."
       },
       "gastronomy": {
-        "title": "Gastronomy Tourism",
-        "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
+        "title": "I-Gastronomy Tourism",
+        "detail": "Yakha ipulazi ukuya etafuleni kanye nesipiliyoni sendawo yokudlela exhunywe kubakhiqizi abancane kanye nesidingo sezokuvakasha zokupheka."
       },
       "adventure": {
-        "title": "Adventure Tourism",
-        "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
+        "title": "I-Adventure Tourism",
+        "detail": "Khulisa imisebenzi enenani eliphezulu efana ne-rafting, bungee, canoeing, kanye nohambo lwasogwadule oluzungeze i-Victoria Falls kanye ne-Zambezi corridor."
       },
       "regional": {
-        "title": "Regional Hub Packaging",
-        "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
+        "title": "I-Regional Hub Packaging",
+        "detail": "Beka iHarare kanye noBulawayo njengendawo yokungena ezindleleni zamazwe amaningi ezihlanganisa iKAZA kanye namasekethe awela imingcele."
       }
     },
     "authorities": {
-      "title": "Official Tourism Authorities",
-      "subtitle": "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards.",
-      "zta": "Visit Zimbabwe Tourism Authority",
-      "zimparks": "Visit ZimParks"
+      "title": "Iziphathimandla Zokuvakasha Ezisemthethweni",
+      "subtitle": "Sebenzisa iziqondiso ezisemthethweni ezivela eZimbabwe Tourism Authority kanye neZimbabwe Parks and Wildlife Management Authority ukuze uthole izimvume, ulwazi lwepaki kanye nezindinganiso zendawo.",
+      "zta": "Vakashela iZimbabwe Tourism Authority",
+      "zimparks": "Vakashela iZimParks"
     }
   },
   "investment": {
@@ -744,11 +744,11 @@
       "title2": "Tshala e-Masuwe SEZ",
       "subtitle2": "Amathuba amakhulu kwezokuvakasha eduze laseVictoria Falls.",
       "highlight2": "Indawo ephambili",
-      "badge3": "VFEX",
+      "badge3": "I-VFEX",
       "title3": "Isitoko semali (Stock Exchange)",
       "subtitle3": "Tshala ezinkampanini zase-Africa ezibhaliswe ngaphandle (offshore).",
       "highlight3": "Ukungena emhlabeni jikelele",
-      "badge4": "Horticulture",
+      "badge4": "I-Horticulture",
       "title4": "I-Green Gold",
       "subtitle4": "Ukuthunyelwa kwemikhiqizo yezithelo yenani eliphezulu.",
       "highlight4": "Inzuzo ephezulu (ROI)",
@@ -777,7 +777,7 @@
         ]
       },
       "apparel": {
-        "title": "ZimBrand Supply Chain",
+        "title": "I-ZimBrand Supply Chain",
         "description": "Indawo yokusabalalisa impahla yemidlalo lempahla elophawu.",
         "highlights": [
           "Amalayisensi omhlaba",
@@ -795,7 +795,7 @@
         ]
       },
       "fintech": {
-        "title": "ZimPay Core",
+        "title": "IZimPay Core",
         "description": "Ingqalasizinda ye-IT yesimanje yokuthunyelwa kwemali kwama-diaspora.",
         "highlights": [
           "Uhlelo lwe-SaaS",
@@ -816,7 +816,7 @@
     "project_filters": {
       "all": "Konke",
       "tourism": "Ezokuvakasha",
-      "agriculture": "Agriculture",
+      "agriculture": "Ezolimo",
       "manufacturing": "Ezokukhiqiza",
       "it": "IT le-Fintech",
       "energy": "Amandla (Energy)",
@@ -868,7 +868,7 @@
     ],
     "database_title": "Ingobo leZisindo zezoHwebo lezokuPhonseka kweSimali",
     "database_subtitle": "Ingobo lezisindo zamankampani ezohwebo lokuphonseka kwesimali aqinisekiswayo eZimbabwe. Ukuqinisekiswa lokhu kwenziwa ngenhlanganiso ezizimeleyo.",
-    "ntir_title": "National Trade & Investment Register (NTIR)",
+    "ntir_title": "Irejista Kazwelonke Yokuhweba Notshalomali (NTIR)",
     "ntir_subtitle": "Irejista esemthethweni yezinkampani zezohwebo lokutshala imali eziqinisekisiweyo eZimbabwe.",
     "ntir_button": "Dingisisa ku-Database ye-NTIR.",
     "crowdfunding_title": "Amathuba e-Crowdfunding",
@@ -896,47 +896,47 @@
       ]
     },
     "collective_model": {
-      "title": "How Diaspora Collective Investing Works",
-      "subtitle": "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
-      "s1": "Create an investor profile and complete verification checks.",
-      "s2": "Join vetted opportunities with clear minimum-ticket participation.",
-      "s3": "Pool capital with other diaspora investors through structured terms.",
-      "s4": "Track project updates, milestones, and performance on one dashboard."
+      "title": "Isebenza kanjani iDiaspora Collective Investing",
+      "subtitle": "I-Diaspora Unlocked iklanyelwe ukutshala izimali ezihlanganisiwe ukuze abatshalizimali abancane nabaphakathi bakwazi ukufinyelela amathuba ngokuvamile adinga osayizi abakhulu bamathikithi.",
+      "s1": "Dala iphrofayela yomtshali-zimali futhi uqedele ukuhlola kokuqinisekisa.",
+      "s2": "Joyina amathuba ahloliwe ngokubamba iqhaza okucacile kwethikithi elincane.",
+      "s3": "Imali yokuhlanganisa nabanye abatshalizimali abavela emazweni angaphandle ngokusebenzisa imigomo ehlelekile.",
+      "s4": "Landelela izibuyekezo zephrojekthi, izenzakalo ezibalulekile, nokusebenza kudeshibhodi eyodwa."
     },
     "eu_focus": {
-      "title": "European Partnership Capital in Zimbabwe",
-      "subtitle": "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, social inclusion, and climate resilience.",
+      "title": "I-European Partnership Capital eZimbabwe",
+      "subtitle": "Izikhungo zase-Europe ngaphansi kwe-Team Europe zisebenza eZimbabwe kuwo wonke amandla, ezolimo, ezezimali ze-SME, ukuhlanganiswa komphakathi, kanye nokumelana nesimo sezulu.",
       "energy": {
-        "title": "Green Energy",
-        "detail": "GET.invest Zimbabwe (launched in May 2025 with EU and Germany funding) supports clean-energy project finance, with strong focus on solar and diversifying hydro-dependent generation."
+        "title": "Amandla Aluhlaza",
+        "detail": "I-GET.invest Zimbabwe (yethulwe ngoMeyi 2025 ngoxhaso lwe-EU kanye ne-Germany) isekela uxhaso lwezimali lwephrojekthi yamandla ahlanzekile, ngokugxila kakhulu ekukhiqizeni amandla elanga kanye nezinhlobonhlobo ezincike emanzini."
       },
       "agri": {
-        "title": "Agriculture and Value Chains",
-        "detail": "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs."
+        "title": "Ezolimo kanye namaketanga eValue",
+        "detail": "Izinhlelo zobambiswano ze-EU zibeka phambili ukulima kwezitshalo nezinhlamvu zendabuko, ezolimo ezihlakaniphile ngesimo sezulu, ukuzivumelanisa nezimfuneko zokuthekelisa ze-EU, kanye nokufinyelela ngezimali kwama-SME ebhizinisi lezolimo."
       },
       "sme": {
-        "title": "Private Sector and SME Finance",
-        "detail": "EIB-backed lines through local banks expanded affordable finance for SMEs; reported EIB lending in recent years includes EUR 60 million, including EUR 20 million to Stanbic in March 2025."
+        "title": "Umkhakha Ozimele kanye Nezezimali ze-SME",
+        "detail": "Imigqa esekelwa yi-EIB ngamabhange endawo andise imali ethengekayo yama-SME; Ukubolekwa kwe-EIB eminyakeni yamuva nje kuhlanganisa ama-EUR ayizigidi ezingu-60, okuhlanganisa nama-EUR ayizigidi ezingu-20 e-Stanbic ngoMashi 2025."
       },
       "social": {
-        "title": "Health, Gender, and Social Programs",
-        "detail": "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth."
+        "title": "Ezempilo, Ubulili, kanye Nezinhlelo Zomphakathi",
+        "detail": "Izinhlelo zethimba laseYurophu zihlanganisa ukulingana ngokobulili kanye nezenzo zokuhlomisa abesifazane, ngokusekelwa okungokoqobo okufana nokufunda ngezimali nezindlela zokufinyelela ezezimali kwabesifazane nentsha."
       },
       "biodiversity": {
-        "title": "Biodiversity and Resilience",
-        "detail": "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development."
+        "title": "Izinhlobonhlobo Zezinto Eziphilayo Nokuqina",
+        "detail": "Ubambiswano luphinde lusekele ukuhlukahluka kwemvelo kanye nokuqina okuxhumene nokongiwa kwemvelo, okuhlanganisa nezindawo zokongiwa kwemingcele ezihambisana nentuthuko yomnotho wendawo esimeme."
       },
       "gateway": {
-        "title": "Global Gateway Partnership Envelope",
-        "detail": "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO."
+        "title": "I-Global Gateway Partnership Envelope",
+        "detail": "Ukubambisana kwe-EU-Zimbabwe ngaphansi kweGlobal Gateway kufaka phakathi isabelo sesibonelelo se-EUR 165 million sika-2021-2027, nabalingani beTeam Europe kuhlanganise ne-EIB kanye ne-PROPARCO."
       },
-      "eib_takeaways_title": "EIB Practical Takeaways for Diaspora Investors",
-      "eib_t1": "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
-      "eib_t2": "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
-      "eib_t3": "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
-      "source_getinvest": "Source: GET.invest Zimbabwe",
-      "source_eu": "Source: EU International Partnerships",
-      "source_eib": "Source: EIB Zimbabwe Essay"
+      "eib_takeaways_title": "I-EIB Practical Takeaways yabatshalizimali beDiaspora",
+      "eib_t1": "Amabhizinisi amancane aholwa ngabesifazane ngokuvamile abhekana nokungakwazi ukukhokhela izindleko kanye nezingqinamba ezibambisanayo ezibeka umkhawulo ekufinyeleleni isikweletu esisemthethweni.",
+      "eib_t2": "Izimali ezihlanganisiwe kanye nemigqa yezikweletu yamabhange endawo angehlisa izithiyo zokuboleka kuma-SME axhumene nezolimo.",
+      "eib_t3": "Ukufunda ngezezimali kanye nezinsizakalo zokweseka amabhizinisi zithuthukisa ukulungela ukutshalwa kwezimali kanye nokusebenza kwemalimboleko kumabhizinisi amancane.",
+      "source_getinvest": "Umthombo: GET.invest Zimbabwe",
+      "source_eu": "Umthombo: I-EU International Partnerships",
+      "source_eib": "Umthombo: EIB Zimbabwe Essay"
     }
   },
   "trade": {
@@ -1014,7 +1014,7 @@
     "export_sectors_subtitle": "Thola izimboni eziqhuba umnotho wezokuthumela phandle eZimbabwe.",
     "sectors": {
       "horticulture": {
-        "name": "Horticulture",
+        "name": "I-Horticulture",
         "description": "Imikhiqizo emitsha, amaluva, lemibhida ye-organic yezimakethe zomhlaba.",
         "opportunities": [
           "Izimakethe ze-EU organic",
@@ -1055,7 +1055,7 @@
     "zimtrade_programs_subtitle": "Imizamo eyakhelwe ukupha amandla amabhizinisi aseZimbabwe kwezezohwebo zomhlaba.",
     "programs": {
       "eagles_nest": {
-        "title": "Eagles Nest",
+        "title": "I-Eagles Nest",
         "description": "Uhlelo lwabatsha lokuthuthukisa ukuthumela phandle.",
         "target": "Osontshanti abatsha (18-35)",
         "benefits": [
@@ -1066,7 +1066,7 @@
         ]
       },
       "next_she_exporter": {
-        "title": "Next She Exporter",
+        "title": "Okulandelayo Yena Umthumeli",
         "description": "Ukupha amandla amabhizinisi abomama ngolwazi lokuthumela phandle.",
         "target": "Amabhizinisi abomama",
         "benefits": [
@@ -1077,7 +1077,7 @@
         ]
       },
       "shop_at_zim": {
-        "title": "Shop At Zim",
+        "title": "Thenga EZim",
         "description": "Ipulatifomu ye-e-commerce exhuma abakhiqizi baseZimbabwe labathengi bomhlaba.",
         "target": "Amabhizinisi aselungele ukuthumela",
         "benefits": [
@@ -1239,11 +1239,11 @@
     "regional_breakdown_subtitle": "Ukusabalala kwama-diaspora aseZimbabwe ezingxenyeni zomhlaba eziqakathekileyo.",
     "regional_breakdown": {
       "south_africa": {
-        "region": "South Africa",
+        "region": "Iningizimu Afrika",
         "population": "1.5 - 2.0 Million"
       },
       "united_kingdom": {
-        "region": "United Kingdom",
+        "region": "i-United Kingdom",
         "population": "500K - 1.0 Million"
       },
       "botswana": {
@@ -1251,7 +1251,7 @@
         "population": "500K+"
       },
       "united_states": {
-        "region": "United States",
+        "region": "I-united states",
         "population": "300K - 500K"
       },
       "australia": {
@@ -1263,7 +1263,7 @@
         "population": "50K - 100K"
       },
       "germany": {
-        "region": "Germany",
+        "region": "EJalimane",
         "population": "30K - 50K"
       },
       "other_countries": {
@@ -1290,8 +1290,8 @@
         "sector": "Ukudla lezidingo eziyinhloko"
       }
     },
-    "investment_calculator_proInvestmentModeler": "Pro Investment Modeler",
-    "investment_calculator_stressTest": "Stress Test",
+    "investment_calculator_proInvestmentModeler": "I-Pro Investment Modeler",
+    "investment_calculator_stressTest": "Ukuhlolwa Kwengcindezi",
     "investment_calculator_principal": "Imali oyitshalayo",
     "investment_calculator_taxRate": "Izinga lentela",
     "investment_calculator_insurance/Year": "Inshwalensi/Unyaka",
@@ -1300,7 +1300,7 @@
     "investment_calculator_final": "Okokugcina",
     "investment_calculator_fees": "Izindleko (Fees)",
     "investment_calculator_year": "Unyaka",
-    "investment_calculator_shockIncluded": "Shock Included",
+    "investment_calculator_shockIncluded": "Ukushaqeka Kuhlanganisiwe",
     "investment_calculator_note": "Qaphela",
     "investment_calculator_disclaimer": "Lesi sibali sinika izilinganiso kuye ngenzuzo elindelekileyo. Ukusebenza kwangempela kungatshiyana.",
     "cta_title": "Udinga idatha ejule kakhulu?",
@@ -1335,67 +1335,67 @@
     "stories": {
       "leather_goods": {
         "title": "Impumelelo yokuthunyelwa kwempahla yesikhumba",
-        "category": "Export",
+        "category": "Thekelisa",
         "story": "Iqembu labachwepheshe baseZimbabwe abahlala e-Germany baxhumanise abakhiqizi besikhumba basekhaya labathengisi baseYurophu.",
         "testimonial": "Ipulatifomu ye-ZIGD isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
         "author": "Tendai Moyo",
-        "role": "Managing Director, Zimbabwe Leather Collective"
+        "role": "Umphathintambo weZimbabwe Leather Collective"
       },
       "horticulture_breakthrough": {
         "title": "Ukuphumelela kwe-Organic Horticulture",
-        "category": "Export",
+        "category": "Thekelisa",
         "story": "Inhlanganiso yabalimi abancane ithole isitifiketi se-EU organic ngokusekelwa ngama-agronomists angama-diaspora.",
         "testimonial": "Sasingakaze sicabange ukuthi ipula lethu elincane lingafinyelela amazinga aseYurophu.",
         "author": "Grace Ncube",
-        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
+        "role": "USihlalo, iMazowe Organic Farmers Cooperative"
       },
       "tourism_lodge": {
         "title": "Ukutshala imali ku-Tourism Lodge",
-        "category": "Investment",
+        "category": "Ukutshala imali",
         "story": "Ngepulatifomu ye-crowdfunding ye-ZIGD, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
         "testimonial": "Ngaletshala u-$2,000 ngivela e-UK njalo manje sengiyingxenye yabanikazi be-lodge enhle ekhaya.",
         "author": "Simba Chikwanha",
-        "role": "Diaspora Investor, London"
+        "role": "I-Diaspora Investor, eLondon"
       },
       "stone_sculpture": {
         "title": "Inethiwekhi yokuthumela izithombe zamatshe",
-        "category": "Trade",
+        "category": "Uhwebo",
         "story": "Ababazi baseZimbabwe bathole ithuba lokungena ezimakethe zobuciko zase-North America ngezithombe zamatshe.",
         "testimonial": "Izithombe zethu manje sezikhonjiswa ezigalari emazweni amaningi.",
-        "author": "Patrick Mavros",
-        "role": "Master Sculptor, Harare"
+        "author": "UPatrick Mavros",
+        "role": "UMqophi Omkhulu, eHarare"
       },
       "tech_startup": {
         "title": "Ukuxhaswa kwe-Tech Startup ngama-Diaspora",
-        "category": "Investment",
+        "category": "Ukutshala imali",
         "story": "Inkampani ye-fintech eseHarare ihlanganise u-$750K kubatshali mali abangama-diaspora.",
         "testimonial": "Uxhaso lwama-diaspora lweze lolunye ulwazi—sathola abacebisi abazwisisa amazinga we-Silicon Valley lesimo sase-Africa.",
         "author": "Tafadzwa Chidavaenzi",
-        "role": "CEO, PayMoyo Technologies"
+        "role": "Isikhulu esiphezulu sePayMoyo Technologies"
       },
       "honey_export": {
         "title": "Inhlanganiso yokuthumela inyosi",
-        "category": "Export",
+        "category": "Thekelisa",
         "story": "Abalimi benyosi ezindaweni zasemaphandleni babumbe inhlanganiso yokuthumela inyosi e-organic eYurophu.",
         "testimonial": "Kusukela ekuthengiseni inyosi eceleni komgwaqo kusiya ekuthumeleni eYurophu—inethiwekhi yama-diaspora yenze lokhu kwenzeka.",
         "author": "Rudo Makoni",
-        "role": "Secretary, Masvingo Honey Cooperative"
+        "role": "Unobhala weMasvingo Honey Cooperative"
       },
       "heritage_tourism": {
         "title": "Impumelelo ye-Heritage Tourism Package",
-        "category": "Tourism",
+        "category": "Ezokuvakasha",
         "story": "Umhlinzeki wezokuvakasha usungule amaphakheji akhethekileyo wama-diaspora abuyela ekhaya.",
         "testimonial": "Siveze amathuba anceda ama-diaspora ukuxhumana lezimpande zawo bebesekela imiphakathi yakhona.",
         "author": "Chipo Mutasa",
-        "role": "Director, Heritage Trails Zimbabwe"
+        "role": "Umqondisi, Heritage Trails Zimbabwe"
       },
       "macadamia_nut": {
         "title": "Indawo yokucubungula ama-Macadamia Nut",
-        "category": "Investment",
+        "category": "Ukutshala imali",
         "story": "I-Crowdfunding yama-diaspora yenze kwaba lula ukwakhiwa kwendawo yokuqala eZimbabwe yokucubungula amantongomane e-macadamia.",
         "testimonial": "Sahlanganisa u-$1.2M kubatshali mali abangama-diaspora abakholelwa ekwenzeni inani elengeziweyo (value-addition).",
         "author": "Ngoni Sibanda",
-        "role": "Operations Manager, Zim Macadamia Processors"
+        "role": "Umphathi Wokusebenza, iZim Macadamia Processors"
       }
     },
     "impact_metrics": {
@@ -1425,7 +1425,7 @@
       "jobs": "Imisebenzi:",
       "markets": "Izimakethe:",
       "investors": "Abatshali mali:",
-      "testimonial_by": "— {{author}}, {{role}}",
+      "testimonial_by": "— {{author}} ({{role}})",
       "view_story": "Buka indaba"
     },
     "impact_metrics_badge": "Isilinganiso (Metrics)",
@@ -1607,9 +1607,9 @@
     "highlights": "Okugqanyiswayo",
     "share": "Abelana",
     "save": "Londoloza",
-    "notify_success": "Priority Access Locked",
-    "get_notified": "Request Access",
-    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}"
+    "notify_success": "Ukufinyelela Okubalulekile Kukhiyiwe",
+    "get_notified": "Cela Ukufinyelela",
+    "form_subtitle": "Gcwalisa imininingwane yakho ukuze ujoyine uhlu lokulinda lwe-{{featureName}}"
   },
   "contact_form": {
     "get_started": "Thintana lathi",
@@ -1655,7 +1655,7 @@
     "food_desc": "Umnambitheko wasekhaya, ohambisana lemithetho ye-EU."
   },
   "notfound": {
-    "title": "404",
+    "title": "404 - Ikhasi alitholakali",
     "subtitle": "Ikhasi alitholakali",
     "message": "Uxolo, ikhasi olidingayo alikho.",
     "message2": "Kungenzeka ukuba lisusiwe kumbe lacitshwa.",
@@ -1728,7 +1728,7 @@
     }
   },
   "onesa": {
-    "badge": "Onesa AI",
+    "badge": "Onesa AI umsekeli",
     "title": "Xoxa le-Onesa AI",
     "send": "Thumela",
     "thinking": "Iyacabanga...",
@@ -1739,8 +1739,8 @@
     "status_backend_unreachable": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
     "error_unable_contact": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
     "online_indicator_aria": "Onesa iku-online",
-    "online_text": "Online",
+    "online_text": "Ku-inthanethi",
     "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi ngemva kwemizuzu emithathu. Zama njalo.",
-    "offline_text": "Offline"
+    "offline_text": "Okungaxhunyiwe ku-inthanethi"
   }
 }
