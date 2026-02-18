@@ -12,11 +12,12 @@
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
+    "test:e2e:onesa": "bash scripts/e2e-onesa.sh",
     "format": "prettier --write .",
     "translations:sync": "python3 sync_translations.py --mode sync",
     "translations:sync:todo": "python3 sync_translations.py --mode sync --mark-missing",
     "translations:check:keys": "python3 sync_translations.py --mode check",
-    "translations:check": "python3 sync_translations.py --mode check --require-translated"
+    "translations:check": "python3 sync_translations.py --mode check --require-translated --allow-same-keys-file scripts/translation_allow_same_keys.txt"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

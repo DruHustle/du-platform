@@ -21,6 +21,9 @@ export default function OnesaAI() {
   const genericContactError = t("onesa.error_unable_contact", {
     defaultValue: "Onesa is currently unavailable. Please try again shortly.",
   });
+  const rateLimitedError = t("onesa.error_rate_limited", {
+    defaultValue: "Onesa is busy right now. Please try again in a few seconds.",
+  });
   const backendUnreachableStatus = t("onesa.status_backend_unreachable", {
     defaultValue: "Onesa is currently unavailable. Please try again shortly.",
   });
@@ -60,7 +63,7 @@ export default function OnesaAI() {
       try {
         const response = await api.get("/onesa/health", { timeout: 10000 });
         const payload = parseObjectPayload(response.data);
-        const online = Boolean(payload?.ok ?? payload?.modelAvailable ?? response.status === 200);
+        const online = Boolean(payload?.ok ?? payload?.modelAvailable);
         setIsOnline(online);
         setStatus(online ? "" : backendUnreachableStatus);
         return online;
@@ -77,7 +80,7 @@ export default function OnesaAI() {
       if (!payload) {
         return await checkLegacyHealth();
       }
-      const online = Boolean(payload?.ready ?? response.status === 200);
+      const online = Boolean(payload?.ready === true);
       setIsOnline(online);
       setStatus(online ? "" : backendUnreachableStatus);
       return online;
@@ -86,7 +89,9 @@ export default function OnesaAI() {
       if (Number(err?.response?.status) === 404) {
         return await checkLegacyHealth();
       }
-      return await checkLegacyHealth();
+      setIsOnline(false);
+      setStatus(backendUnreachableStatus);
+      return false;
     }
   }, [backendUnreachableStatus]);
 
@@ -110,11 +115,8 @@ export default function OnesaAI() {
   const sendMessage = async () => {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
-    const ready = isOnline || (await checkHealth());
-    if (!ready) {
-      setError(genericContactError);
-      return;
-    }
+    // Do not hard-block sends on readiness probes; chat endpoint can still recover via fallback.
+    void checkHealth();
 
     const nextMessages: ChatMessage[] = [...messages, { role: "user", content: trimmed }];
     setMessages(nextMessages);
@@ -135,15 +137,32 @@ export default function OnesaAI() {
       const reply = String(data?.reply ?? "").trim();
       if (!reply) throw new Error("Empty model response.");
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
+      setIsOnline(true);
+      setStatus("");
     } catch (err: any) {
+      const status = Number(err?.response?.status ?? 0);
       const responseMessage = err?.response?.data?.message;
+      const retryAfterMs = Number(err?.response?.data?.retryAfterMs ?? 0);
+      const retryAfterSeconds = retryAfterMs > 0 ? Math.max(1, Math.ceil(retryAfterMs / 1000)) : null;
+      const isRateLimited =
+        status === 429 ||
+        /status code 429|rate limit|too many requests/i.test(String(err?.message ?? responseMessage ?? ""));
+      const rateLimitedMessage = isRateLimited
+        ? retryAfterSeconds
+          ? `${rateLimitedError} (${retryAfterSeconds}s)`
+          : rateLimitedError
+        : null;
       const timeoutMessage =
         err?.code === "ECONNABORTED"
           ? t("onesa.error_timeout", { defaultValue: "Onesa request timed out after 3 minutes. Please try again." })
           : null;
-      const message = responseMessage ?? timeoutMessage ?? genericContactError;
+      const safeResponseMessage =
+        typeof responseMessage === "string" && !/status code \d+/i.test(responseMessage) ? responseMessage : null;
+      const message = rateLimitedMessage ?? timeoutMessage ?? safeResponseMessage ?? genericContactError;
       setError(message);
-      void checkHealth();
+      if (!isRateLimited) {
+        void checkHealth();
+      }
     } finally {
       loadingRef.current = false;
       setLoading(false);

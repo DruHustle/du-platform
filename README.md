@@ -102,6 +102,53 @@ pnpm build
 
 The development server will start at `http://localhost:3000`
 
+## End-to-End Testing (Onesa Chat)
+
+This project includes an Onesa API smoke E2E test script:
+
+- `GET /api/onesa/health`
+- `GET /api/onesa/ready`
+- `POST /api/onesa/chat` (English + Shona greeting + practical prompt)
+
+### Run E2E smoke test
+
+```bash
+pnpm test:e2e:onesa
+```
+
+By default, the script auto-detects a local backend on:
+- `http://127.0.0.1:5001`
+- `http://127.0.0.1:5002`
+- `http://127.0.0.1:5003`
+- `http://127.0.0.1:5000`
+
+It prefers an instance where `/api/onesa/ready` is `true`.
+
+### Run against a specific backend
+
+```bash
+pnpm test:e2e:onesa -- http://127.0.0.1:5003
+```
+
+Or with env:
+
+```bash
+ONESA_E2E_BASE_URL=http://127.0.0.1:5003 pnpm test:e2e:onesa
+```
+
+### Expected result
+
+You should see:
+
+```text
+[PASS] /health
+[PASS] /ready
+[PASS] /chat English greeting
+[PASS] /chat Shona greeting
+[PASS] /chat practical guidance
+[E2E] Onesa smoke test passed.
+```
+
 ## Strategic Framework Alignment
 
 The ZIGD Gateway Platform addresses key gaps identified in the Diaspora Unlocked Strategic Framework:

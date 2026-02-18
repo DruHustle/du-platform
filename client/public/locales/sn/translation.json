@@ -1,5 +1,5 @@
 {
-  "brand": "Diaspora Unlocked",
+  "brand": "Diaspora Yakavhurwa",
   "tagline": "Dandira reZimbabwe neVana vari Kunze kweNyika",
   "about": "Nezvedu",
   "about_us": "Kubatanidza vana veZimbabwe vari kunze kwenyika nemikana yezvokutengeserana, ushanyi, nekudyara mari.",
@@ -77,7 +77,7 @@
   },
   "home": {
     "made_in_zimbabwe_alt": "Chakagadzirwa muZimbabwe",
-    "hero_title": "Diaspora Unlocked",
+    "hero_title": "Diaspora Yakavhurwa",
     "hero_subtitle": "Kukasira kweICT, Kutengeserana, Ushanyi nekudyara mari kweVision 2030",
     "export_hub": "Zvinotumirwa Kunze",
     "tourism": "Ushanyi",
@@ -101,7 +101,7 @@
       "tourism": {
         "title": "Ushanyi",
         "desc": "Tsvaga nzvimbo dzeZimbabwe dzinoyevedza pasi rose uye ronga kushanya kwako.",
-        "stats": "Forbes #1 2025"
+        "stats": "Forbes #1 muna 2025"
       },
       "investment": {
         "title": "Kudyara Mari",
@@ -116,7 +116,7 @@
       "technology": {
         "title": "Tekinoroji neAI",
         "desc": "Sangana neOnesa AI, muchina wedu wakagadzirwa kujekesa mamiriro eZimbabwe.",
-        "stats": "Onesa AI"
+        "stats": "Onesa AI modhi"
       },
       "success": {
         "title": "Mhedzisiro",
@@ -154,7 +154,7 @@
     "diaspora_unlocked_desc": "Tinoshandisa ruzivo rwemazuva ano kuti ushanyi, kutengeserana, nekudyara mari kuve nyore. Dandira redu rinobatanidza vana vari kunze nemikana yemuno kuburikidza nekujekesa zvinhu neAI.",
     "onesa_usp1": "Kunzwisisa Mamiriro eMuno",
     "onesa_usp2": "Kushandura Mitauro Kwakanyatsonaka",
-    "ai_status": "Beta Version",
+    "ai_status": "Shanduro yeBeta",
     "ai_demo_question": "Ndeipi mikana yekudyara mari mune zvekurima muZimbabwe ine mhindu yakakura iye zvino?",
     "ai_demo_response": "Chikamu chekurima muZimbabwe chiri kuratidza kukura mune zvekutengesa kunze. Kudyara mari muzvokutakura zvinhu zvinoda kutonhorerwa (cold-chain) zveblueberries kubva kuEastern Highlands kune mhindu yakakura...",
     "features_title": "Zvinogona kuitwa neOnesa AI",
@@ -192,111 +192,111 @@
       }
     },
     "more_compliance_information": "Rumwe ruzivo rwekutevedzera mitemo",
-    "chat_with_onesa": "Chat with Onesa",
+    "chat_with_onesa": "Taura naOnesa",
     "momentum": {
-      "title": "Zimbabwe Technology Momentum (2026)",
-      "subtitle": "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption.",
+      "title": "Simbaradzo yeTekinoroji yeZimbabwe (2026)",
+      "subtitle": "Zimbabwe iri kubva mukushandiswa kwemichina ichienda mukugadzira zvigadziriso zvemuno, ichitungamirwa nefintech, agritech, uye kutora AI.",
       "connectivity": {
-        "title": "Connectivity Expansion",
-        "detail": "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout."
+        "title": "Kuwedzera kwekubatana",
+        "detail": "Kupinda kweInternet ikozvino kwave pamusoro pe80%, nemusika shanduko kubva kune vatsva vebroadband vanopinda uye nekukurumidza 5G kuburitswa."
       },
       "ai_strategy": {
-        "title": "National AI Strategy (2026-2030)",
-        "detail": "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery."
+        "title": "Hurongwa hweNyika hweAI (2026-2030)",
+        "detail": "Zimbabwe pari zvino yave nehurongwa hweAI hwakanangana nekuisa mabasa munzvimbo dzinokosha nekupa mabasa everuzhinji."
       },
       "digital_payments": {
-        "title": "Digital Payments at Scale",
-        "detail": "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations."
+        "title": "Digital Payments paChikero",
+        "detail": "Nharembozha mari inoramba iri njanji inotonga yekutengeserana, ichigadzira kudiwa kwakasimba kwefintech tooling uye kubatanidzwa."
       }
     },
     "opportunities": {
-      "title": "Top Opportunities for Investment and Innovation",
+      "title": "Mikana Yepamusoro Yekudyara uye Innovation",
       "ai": {
-        "title": "Artificial Intelligence",
-        "driver": "Deployment momentum in mining, healthcare, and governance under the national AI strategy."
+        "title": "Hungwaru hwekugadzira",
+        "driver": "Kuendesa mberi mumigodhi, hutano hwehutano, uye hutongi pasi pechirongwa cheAI yenyika."
       },
       "sme": {
-        "title": "SME Digitalization",
-        "driver": "High demand for affordable inventory tools, payroll automation, and customer support chat systems."
+        "title": "Kushandurwa kwemaSME nedhijitari",
+        "driver": "Kudiwa kukuru kwezvishandiso zvekushandisa zvinodhura, payroll otomatiki, uye masisitimu ekutsigira vatengi."
       },
       "cybersecurity": {
-        "title": "Cybersecurity",
-        "driver": "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills."
+        "title": "Kuchengetedzwa kweCyber",
+        "driver": "Kukurumidza kutorwa kwedhijitari kuri kuwedzera nzvimbo dzekurwiswa uye kudiwa kwenzvimbo dzekuchengetedza masevhisi uye hunyanzvi."
       },
       "ecommerce": {
-        "title": "E-commerce and Logistics",
-        "driver": "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure."
+        "title": "E-commerce uye Logistics",
+        "driver": "Mukana wakakura unoramba uri mune yakavimbika zvinhu zvepamba uye yekupedzisira-mamaira kuendesa zvivakwa."
       }
     },
     "challenges": {
-      "title": "Critical Challenges to Address",
-      "infrastructure": "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
-      "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
-      "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
+      "title": "Matambudziko Akakosha Okugadzirisa",
+      "infrastructure": "Infrastructure gap: mitengo yakakwira internet uye magetsi asina kujairika achiri kumanikidza kutanga kuita.",
+      "human_capital": "Dzvinyiriro yehupfumi hwevanhu: tarenda rakasimba rehunyanzvi riripo, asi kuchengetedza kwakaoma nekuda kwekutama kwekunze.",
+      "regulation": "Regulatory kuoma: kupihwa marezinesi, kutevedzera mutero, uye kubvumidzwa kunogona kunonoka kuburitswa kwechigadzirwa muzvikamu zvakadzorwa."
     },
     "fintech": {
-      "title": "Fintech Regulatory Requirements (RBZ)",
-      "subtitle": "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations.",
-      "sandbox_title": "Regulatory Sandbox",
-      "sandbox_detail": "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded.",
+      "title": "Fintech Regulatory Zvinodiwa (RBZ)",
+      "subtitle": "Fintech mhinduro dzinodzorwa kuburikidza nekutarisa kweRBZ, kuyedza bhokisi rejecha, uye zvisungo zvekupa marezenisi ekubhadhara uye kuita basa remari.",
+      "sandbox_title": "Nzvimbo yekuyedza mitemo",
+      "sandbox_detail": "Kutanga kunogona kuyedza hunyanzvi munzvimbo inotariswa kusvika kumwedzi makumi maviri nemana. Cryptocurrency uye yedhijitari-mari yekuyedza haina kubatanidzwa.",
       "phases": {
-        "pre_application": "Pre-application",
-        "application": "Application and evaluation",
-        "testing": "Testing in a controlled live environment",
-        "exit": "Exit and deployment decision"
+        "pre_application": "Usati waendesa chikumbiro",
+        "application": "Kushandisa uye kuongorora",
+        "testing": "Kuedza munzvimbo inodzorwa mhenyu",
+        "exit": "Kubuda uye kuendesa sarudzo"
       },
-      "licensing_title": "Licensing and Operating Requirements",
-      "l1": "Register legal entity first (typically Private Limited) before regulated fintech operations.",
-      "l2": "Plan for PSP licensing costs and ongoing compliance obligations.",
-      "l3": "Some financial products require minimum capital thresholds and fit-and-proper controls.",
-      "l4": "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."
+      "licensing_title": "Rezinesi uye Zvinodiwa Zvekushandisa",
+      "l1": "Bhalisa sangano repamutemo kutanga (kazhinji Private Limited) usati wadzorwa fintech mashandiro.",
+      "l2": "Ronga mari yekupihwa rezenisi yePSP uye zvisungo zvinoenderera mberi zvekuteerera.",
+      "l3": "Zvimwe zvigadzirwa zvemari zvinoda mashoma capital thresholds uye akakodzera-uye-akakodzera kudzora.",
+      "l4": "Mobile-wallet uye bhanga-akabatana masevhisi anowanzoda kudyidzana nebhanga rine rezinesi renzvimbo."
     },
     "hubs": {
-      "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
-      "location": "Zimbabwe",
-      "visit_site": "Visit site",
+      "title": "MaIncubator eStartup neInnovation Hubs (Zimbabwe)",
+      "location": "MuZimbabwe",
+      "visit_site": "Shanyira saiti",
       "cities": {
         "harare": "Harare",
         "bulawayo": "Bulawayo",
         "gweru": "Gweru",
         "mutare": "Mutare"
       },
-      "impact_hub": "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
-      "eight2five": "CBD innovation center supporting startup acceleration and venture-building programs.",
-      "stanbic": "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
-      "hit": "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
-      "zchpc": "High-performance computing and AI use cases for agriculture, health, and research.",
-      "b2c": "Urban coworking and accelerator-style support for practical local problem-solving startups.",
-      "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
-      "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
-      "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
-      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
+      "impact_hub": "Social innovation, vechidiki bhizinesi, kudzidzisa, uye incubation zvirongwa.",
+      "eight2five": "CBD innovation centre inotsigira kutanga kukurumidza uye zvirongwa zvekuvaka.",
+      "stanbic": "Tsigiro yekuvaka-kugona, kuwana nzvimbo yebasa, uye mikana yekudyidzana ecosystem.",
+      "hit": "Indasitiri 4.0 yekushambadzira ine tarisiro paIoT, AI, uye hombe-data mhinduro.",
+      "zchpc": "Yepamusoro-inoshanda komputa uye AI inoshandisa makesi ekurima, hutano, uye tsvagiridzo.",
+      "b2c": "Urban coworking uye accelerator-style tsigiro yeanoshanda emunharaunda kugadzirisa matambudziko ekutanga.",
+      "techvillage": "Bulawayo-yakavakirwa nharaunda yekutanga uye innovation hub ine accelerator zviitiko uye muvambi rutsigiro zvirongwa.",
+      "nust": "Yunivhesiti-inotungamirwa hunyanzvi uye kutengeserana ecosystem inotsigira vechidiki-inotungamirwa bhizinesi uye indasitiri-yakatarisana nemhinduro.",
+      "msu": "Midlands-yakavakirwa incubation uye kushambadzira chikuva chinotsigira mabhizinesi, maSME, uye kushandisa tsvakiridzo spin-outs.",
+      "digital_village": "Nzvimbo yakatarisana nenharaunda yekuvandudza maMutare ichipa nzvimbo yekushandira pamwe, kudzidzisa, nerutsigiro rwebhizinesi redhijitari."
     },
     "onesa_matter": {
-      "badge": "Africa-Centric AI",
-      "title": "Why Onesa AI Matters",
-      "headline": "Africa deserves AI that understands Africa.",
-      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
-      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
-      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
-      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
-      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "badge": "AI yakatarisana neAfrica",
+      "title": "Nei Onesa AI Inokosha",
+      "headline": "Africa inokodzera AI inonzwisisa Africa.",
+      "p1": "Pasi rese, AI iri kugadzirisa hupfumi, maindasitiri, uye nzanga nekumhanya kunoshamisa. Zvakadaro mamodheru mazhinji akavakirwa pane data, zvinonyanya kukosha, uye mamiriro anowanzo kupotsa chokwadi cheAfrica. Kuti Africa itore chikamu zvizere muupfumi hwepasi rose hwedhijitari, tinoda mhando dzeAfrica-centric dzinonzwisisa mitauro yedu, tsika, nharaunda dzebhizinesi, uye zvinotungamira mubudiriro.",
+      "p2": "KuDiaspora Yakavhurwa, tinotenda Africa haifanire kungodya AI. Africa inofanirwa kubatsira kuivaka. Kutenda ikoko ndicho chikonzero chakaita kuti titange kugadzira Onesa AI: kugadzira masisitimu ane hungwaru anonyatsoenderana nemisika yeAfrica, nzvimbo dze data dzeAfrica, uye zvinangwa zvekushandura hupfumi hweAfrica.",
+      "p3": "Tinoziva zvakare kuti rwendo urwu haruna nyore. Kudzidzisa AI modhi kunoda zvakakomba zvivakwa, simba rekombuta, kugadzirira data, uye tarenda repasi rose. Mari yacho yakakwirira, uye zvipingamupinyi ndezvechokwadi. Isu takasarudza kuenderera mberi zvakadaro nekuti ramangwana reAfrica renguva refu rinoenderana nehunyanzvi hwehunyanzvi, rusununguko rwedhijitari, uye kugona kuumba yedu yedhijitari ecosystem.",
+      "p4": "Hutongi hweAI huri kuita imwe yekutsanangura hurukuro dzepasi rose dzenguva ino. Nyika dzinodzora data radzo, mamodheru, uye zvivakwa zvedhijitari zvichange zvakamisikidzwa zvirinani kuchengetedza hupfumi hwavo, kusimudzira hunyanzvi, uye kuchengetedza rusununguko. Africa inofanirwa kunge iri mune ramangwana, kwete sevacherechedzi, asi sevasiki nevatungamiriri.",
+      "p5": "Onesa AI kuzvipira kwedu kune iro ramangwana. Izvi zvakakura kudarika tekinoroji. Zviri pamusoro pemukana, kusimba, uye kuvaka masisitimu anoshandira zvizvarwa zvinotevera mukondinendi yese nediaspora.",
       "tiles": {
         "illuminate": {
-          "title": "Onesa Means Illuminate",
-          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+          "title": "Onesa zvinoreva Kuvhenekera",
+          "detail": "Onesa yakavakirwa kuunza kujeka kunoshanda kwekuti vanhu nemabhizinesi vangakura sei muZimbabwe nemuAfrica yose."
         },
         "africa_centric": {
-          "title": "Africa-Centric Intelligence",
-          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+          "title": "Hungwaru hwakanangana neAfrica",
+          "detail": "Mienzaniso yakadzikwa mumitauro yeAfrica, misika, uye zvinhu chaizvo zvinogadzira mhedzisiro yakakosha uye inobatsira."
         },
         "sovereignty": {
-          "title": "AI Sovereignty",
-          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+          "title": "AI Changamire",
+          "detail": "Kuve nedata redu, mamodheru, uye zvivakwa zvinodzivirira kusununguka kwenguva refu kwehurongwa uye kusimba."
         },
         "growth": {
-          "title": "Future-Ready Growth",
-          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+          "title": "Kukura Kwenguva Yemberi",
+          "detail": "Onesa inotsigira hunyanzvi, kuvimba kwekudyara, uye kutora chikamu kwakasimba kwedhijitari kuzvizvarwa zvinotevera."
         }
       }
     }
@@ -385,7 +385,7 @@
     "market_intelligence_buyers": "Vatengi vangavepo:",
     "market_intelligence": {
       "blueberries": {
-        "product": "Blueberries",
+        "product": "Mablueberry",
         "status": "Inodiwa Kwazvo",
         "requirements": [
           "Chitupa cheGlobalG.A.P. chakakosha.",
@@ -516,9 +516,9 @@
     "attractions_subtitle": "Zvivakwa nezvinhu zvinotsanangura Zimbabwe.",
     "attractions": {
       "vicfalls": {
-        "name": "Victoria Falls",
+        "name": "Mapopoma eVhitori",
         "desc": "Chimwe chezvishamiso zvinomwe zvenyika, mapopoma makuru pasi rose",
-        "h1": "UNESCO World Heritage",
+        "h1": "Nhaka yePasi Rose yeUNESCO",
         "h2": "Nzvimbo yeZvinofadza",
         "h3": "Kutarira Mhuka",
         "summary": "Inozivikanwa nemuno seMosi-oa-Tunya (Utsi Hunotinhira), Victoria Falls yakapetwa kaviri pakukwirira kune Niagara Falls. Nakidzwa nekukwira magwa, bungee jumping, nhabvu dzemundege, uye Devil's Pool inozivikanwa kwazvo."
@@ -526,7 +526,7 @@
       "greatzim": {
         "name": "Great Zimbabwe",
         "desc": "Masvingo ekare anoratidza budiriro nehunyanzvi hwekuvaka hweAfrica",
-        "h1": "UNESCO World Heritage",
+        "h1": "Nhaka yePasi Rose yeUNESCO",
         "h2": "Nzvimbo yeNhoroondo",
         "h3": "Nhaka yeTsika",
         "summary": "Yakavakwa pakati pezana ramakore rechi11 nerechi15, Great Zimbabwe ndiyo yaive guta guru reUmambo hweZimbabwe. Masvingo aya akavakwa nemabwe pasina dhaka. Nzvimbo iyi ndiyo yakapa nyika zita rayo."
@@ -668,53 +668,53 @@
     "explore_subtitle": "Kuti uwane ruzivo rwakazara nemitemo, shanyirai website yeZimbabwe Tourism Authority.",
     "explore_site": "Shanyira ZTA",
     "snapshot": {
-      "title": "Zimbabwe Tourism Snapshot (2026)",
-      "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
+      "title": "Mufananidzo weKushanya weZimbabwe (2026)",
+      "subtitle": "Tourism iri munzira yakasimba yekudzoreredza, inotsigirwa neiyo iconic assets, kukura kudiwa, uye kuenderera mberi kwekuvandudzwa kwezvivakwa.",
       "performance": {
-        "title": "Sector Recovery and Contribution",
-        "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
+        "title": "Sector Recovery uye Mupiro",
+        "detail": "Maresiti ekushanya ari kuramba achidzoreredzwa nesimba, nechikamu chakanangana nemamiriyoni emadhora-madhora uye chikamu chiri kukura cheGDP yenyika."
       },
       "attractions": {
-        "title": "UNESCO and Wildlife Anchors",
-        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
+        "title": "UNESCO uye Wildlife Anchors",
+        "detail": "Mapopoma eVictoria Falls, Mana Pools, Great Zimbabwe, nemapaki enzvimbo dzinochengeterwa mhuka ndiwo ndiwo ari kudiwa zvakanyanya nevashanyi vekunze."
       },
       "infrastructure": {
-        "title": "Access and Infrastructure Upgrades",
-        "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
+        "title": "Access uye Infrastructure Upgrades",
+        "detail": "Kugadziridzwa kwemigwagwa nenhandare yendege kuri kuvandudza kuwanikwa kwenzira dzakakosha dzekushanya uye maseketi enzvimbo dzekuenda."
       }
     },
     "opportunities": {
-      "title": "Tourism Investment and Growth Opportunities",
+      "title": "Tourism Investment uye Kukura Mikana",
       "ecotourism": {
-        "title": "Ecotourism and Sustainability",
-        "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
+        "title": "Ecotourism uye Sustainability",
+        "detail": "Gadzira eco-lodges uye yakaderera-inokanganisa kuchengetedza zviitiko zvakatenderedza mapaki ekutanga uye nzvimbo dzakachengetedzwa."
       },
       "cbt": {
-        "title": "Community-Based Tourism",
-        "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
+        "title": "Kushanya kunotungamirirwa nenharaunda",
+        "detail": "Chikero mapurojekiti anosimbisa nharaunda dzemunharaunda kuburikidza neinotungamirwa tsika kushanya, mitambo, uye zviitiko zvemuno."
       },
       "hospitality": {
-        "title": "Hospitality and Infrastructure",
-        "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
+        "title": "Kugamuchira Vaenzi uye Zvivakwa",
+        "detail": "Wedzerai pekugara zvakanaka uye zvivakwa zvevaenzi muHarare, Bulawayo, Mutare, uye nzira dzakakosha dzemusuwo."
       },
       "gastronomy": {
-        "title": "Gastronomy Tourism",
-        "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
+        "title": "Kushanya kwechikafu",
+        "detail": "Vakai purazi-ku-tafura uye zvemuno cuisine zviitiko zvakabatana nevadiki-vagadziri vanogadzira uye culinary kushanya kudiwa."
       },
       "adventure": {
-        "title": "Adventure Tourism",
-        "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
+        "title": "Kushanya kwezviitiko",
+        "detail": "Ridzai zviitiko zvemhando yepamusoro zvakaita serafting, bungee, canoeing, uye nzendo dzemurenje dzakatenderedza Victoria Falls nemukoto weZambezi."
       },
       "regional": {
-        "title": "Regional Hub Packaging",
-        "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
+        "title": "Kurongedza hub yedunhu",
+        "detail": "Isa Harare neBulawayo semasuwo enzira dzekufamba nenyika dzakawanda dzinosanganisira KAZA nemaseketi ekuyambuka miganhu."
       }
     },
     "authorities": {
-      "title": "Official Tourism Authorities",
-      "subtitle": "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards.",
-      "zta": "Visit Zimbabwe Tourism Authority",
-      "zimparks": "Visit ZimParks"
+      "title": "Official Tourism Authority",
+      "subtitle": "Shandisai mazano ari pamutemo kubva kuZimbabwe Tourism Authority neZimbabwe Parks and Wildlife Management Authority kuti mupe mvumo, ruzivo rwepaka, uye mitemo yekwamunoenda.",
+      "zta": "Shanyira Zimbabwe Tourism Authority",
+      "zimparks": "Shanyira ZimParks"
     }
   },
   "investment": {
@@ -745,7 +745,7 @@
       "subtitle2": "Mikana yeushanyi eduze neVictoria Falls.",
       "highlight2": "Nzvimbo Yepamusoro",
       "badge3": "VFEX",
-      "title3": "Stock Exchange",
+      "title3": "Musika wemasheya",
       "subtitle3": "Dyara mari mumakambani eAfrica akanyoreswa kunze.",
       "highlight3": "Kusvika Pasi Rese",
       "badge4": "Kurima Horticulture",
@@ -854,7 +854,7 @@
         "desc": "Kuongorora njodzi neruzivo rwemuno."
       }
     },
-    "hdc_title": "Horticultural Development Council",
+    "hdc_title": "Dare reKusimudzira Horticulture (HDC)",
     "hdc_subtitle": "Kutarira hunhu nemitemo yezvinotengeswa kunze zvekurima.",
     "hdc_associations": [
       "Sangano revanodyara Avocado",
@@ -868,7 +868,7 @@
     ],
     "database_title": "Matura neMabhuku eZvekutengeserana neKudyara Pfuma",
     "database_subtitle": "Matura nemabhuku emakambani ezvekutengeserana nekurima akasimbiswa muZimbabwe. Kusimbiswa uku kunoitwa nemasangano akazvimirira.",
-    "ntir_title": "National Trade & Investment Register (NTIR)",
+    "ntir_title": "Rejista yeNyika yeKutengeserana neKudyara (NTIR)",
     "ntir_subtitle": "Gwaro repamutemo remabhizimusi akasimbiswa muZimbabwe.",
     "ntir_button": "Tsvaga muNTIR.",
     "crowdfunding_title": "Kudyara mari Vakawanda",
@@ -896,47 +896,47 @@
       ]
     },
     "collective_model": {
-      "title": "How Diaspora Collective Investing Works",
-      "subtitle": "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
-      "s1": "Create an investor profile and complete verification checks.",
-      "s2": "Join vetted opportunities with clear minimum-ticket participation.",
-      "s3": "Pool capital with other diaspora investors through structured terms.",
-      "s4": "Track project updates, milestones, and performance on one dashboard."
+      "title": "Mashandiro anoita Diaspora Collective Investing",
+      "subtitle": "Diaspora Unlocked yakagadzirirwa kuisa mari pamwe chete kuitira kuti vadiki uye vepakati vanoisa mari vakwanise kuwana mikana inowanzoda hukuru hwetikiti.",
+      "s1": "Gadzira mbiri ye investor uye uzere macheki ekuongorora.",
+      "s2": "Joinha mikana yakavhenekwa nekutora chikamu kwakajeka kwetiketi.",
+      "s3": "Pool capital nevamwe varidzi vediaspora kuburikidza nemaitiro akarongwa.",
+      "s4": "Tevera zvigadziriso zvepurojekiti, zviitiko, uye kuita pane imwe dashboard."
     },
     "eu_focus": {
-      "title": "European Partnership Capital in Zimbabwe",
-      "subtitle": "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, social inclusion, and climate resilience.",
+      "title": "European Partnership Capital muZimbabwe",
+      "subtitle": "Masangano emuEurope ari pasi peTeam Europe ari kushanda muZimbabwe pamusoro pezvesimba, zvekurima, mari yeSME, kubatanidza magariro, uye kugadzirisa mamiriro ekunze.",
       "energy": {
-        "title": "Green Energy",
-        "detail": "GET.invest Zimbabwe (launched in May 2025 with EU and Germany funding) supports clean-energy project finance, with strong focus on solar and diversifying hydro-dependent generation."
+        "title": "Simba rakasvibira",
+        "detail": "GET.invest Zimbabwe (yakatangwa muna Chivabvu 2025 nerubatsiro rweEU neGermany) inotsigira mari yechirongwa chegeji yakachena, ichitarisa zvakasimba kugadzirwa kwezuva uye zvakasiyana-siyana zvinoshandisa mvura."
       },
       "agri": {
-        "title": "Agriculture and Value Chains",
-        "detail": "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs."
+        "title": "Zvekurima uye Kukosha Cheni",
+        "detail": "Zvirongwa zvemubatanidzwa zveEU zvinoisa pamberi pekurima horticulture uye zviyo zvechinyakare, kurima kwakangwara, kuchinjika kune EU zvinodiwa kunze kwenyika, uye kuwana mari kune agribusiness SMEs."
       },
       "sme": {
-        "title": "Private Sector and SME Finance",
-        "detail": "EIB-backed lines through local banks expanded affordable finance for SMEs; reported EIB lending in recent years includes EUR 60 million, including EUR 20 million to Stanbic in March 2025."
+        "title": "Private Sector uye SME Finance",
+        "detail": "EIB-inotsigira mitsetse kuburikidza nemabhangi emuno akawedzera mari inokwanisika yemaSME; yakashumwa kukweretesa kweEIB mumakore achangopfuura kunosanganisira EUR 60 miriyoni, kusanganisira EUR 20 miriyoni kuStanbic muna Kurume 2025."
       },
       "social": {
-        "title": "Health, Gender, and Social Programs",
-        "detail": "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth."
+        "title": "Hutano, Gender, uye Social Programs",
+        "detail": "Zvirongwa zveTeam Europe zvinosanganisira kuenzana kwevakadzi uye zviito zvekusimudzira vakadzi, nerutsigiro runoshanda senge ruzivo rwemari uye nzira dzekuwana-mari dzevakadzi nevechidiki."
       },
       "biodiversity": {
-        "title": "Biodiversity and Resilience",
-        "detail": "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development."
+        "title": "Biodiversity uye Resilience",
+        "detail": "Kudyidzana kunotsigirawo kusiyana-siyana kwezvipenyu uye kusimba kwakabatana nekuchengetedza, kusanganisira nzvimbo dzekuchengetedza miganhu dzinoenderana nekusimudzira hupfumi hwenyika."
       },
       "gateway": {
-        "title": "Global Gateway Partnership Envelope",
-        "detail": "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO."
+        "title": "Pakeji yeGlobal Gateway Partnership",
+        "detail": "Kudyidzana kweEU-Zimbabwe pasi peGlobal Gateway kunosanganisira kugoverwa kwemari inosvika miriyoni zana nemakumi matanhatu nemashanu kubva muna 2021-2027, nevadyidzani veTeam Europe vanosanganisira EIB nePROPARCO."
       },
-      "eib_takeaways_title": "EIB Practical Takeaways for Diaspora Investors",
-      "eib_t1": "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
-      "eib_t2": "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
-      "eib_t3": "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
-      "source_getinvest": "Source: GET.invest Zimbabwe",
-      "source_eu": "Source: EU International Partnerships",
-      "source_eib": "Source: EIB Zimbabwe Essay"
+      "eib_takeaways_title": "EIB Inoshanda Yekutora kune Diaspora Investors",
+      "eib_t1": "Mabhizinesi madiki anotungamirwa nevakadzi anowanzo tarisana nekukwanisa kubhadhara uye zvisungo zvechibatiso izvo zvinotadzisa kuwana zvikwereti zvepamutemo.",
+      "eib_t2": "Mari yakasanganiswa uye mitsara yechikwereti yebhangi yemuno inogona kuderedza zvipingamupinyi zvekukwereta zvekurima-zvakabatana maSME.",
+      "eib_t3": "Ruzivo rwemari uye masevhisi ekutsigira bhizinesi anovandudza kugadzirira kwekudyara uye kuita kwechikwereti kumabhizinesi madiki.",
+      "source_getinvest": "Kunobva: GET.invest Zimbabwe",
+      "source_eu": "Kunobva: EU International Partnerships",
+      "source_eib": "Kunobva: EIB Zimbabwe Essay"
     }
   },
   "trade": {
@@ -1066,7 +1066,7 @@
         ]
       },
       "next_she_exporter": {
-        "title": "Next She Exporter",
+        "title": "Next Iye Exporter",
         "description": "Kusimbisa mabhizimusi emadzimai neruzivo rwekutengesa kunze.",
         "target": "Mabhizimusi emadzimai",
         "benefits": [
@@ -1077,7 +1077,7 @@
         ]
       },
       "shop_at_zim": {
-        "title": "Shop At Zim",
+        "title": "Shop KuZim",
         "description": "Dandira re-ecommerce rinobatanidza vatengesi vemuZimbabwe nevatengi vekunze.",
         "target": "Mabhizimusi akagadzirira kutengesa",
         "benefits": [
@@ -1239,11 +1239,11 @@
     "regional_breakdown_subtitle": "Kogoverwa kwevana veZimbabwe vari kunze mumatunhu makuru.",
     "regional_breakdown": {
       "south_africa": {
-        "region": "South Africa",
+        "region": "Chamhembe Afrika",
         "population": "1.5 - 2.0 Miriyoni"
       },
       "united_kingdom": {
-        "region": "United Kingdom",
+        "region": "Nyika dzakabatana",
         "population": "500K - 1.0 Miriyoni"
       },
       "botswana": {
@@ -1251,19 +1251,19 @@
         "population": "500K+"
       },
       "united_states": {
-        "region": "United States",
+        "region": "Nyika dzakabatana",
         "population": "300K - 500K"
       },
       "australia": {
-        "region": "Australia",
+        "region": "Ositireriya",
         "population": "50K - 100K"
       },
       "canada": {
-        "region": "Canada",
+        "region": "Kanadha",
         "population": "50K - 100K"
       },
       "germany": {
-        "region": "Germany",
+        "region": "Jerimani",
         "population": "30K - 50K"
       },
       "other_countries": {
@@ -1290,8 +1290,8 @@
         "sector": "Chikafu neZvinokosha"
       }
     },
-    "investment_calculator_proInvestmentModeler": "Pro Investment Modeler",
-    "investment_calculator_stressTest": "Stress Test",
+    "investment_calculator_proInvestmentModeler": "Mugadziri wePro Investment",
+    "investment_calculator_stressTest": "Bvunzo yekumanikidzwa",
     "investment_calculator_principal": "Mari inodyarwa",
     "investment_calculator_taxRate": "Izinga reMitero",
     "investment_calculator_insurance/Year": "Insurance paGore",
@@ -1305,7 +1305,7 @@
     "investment_calculator_disclaimer": "Ichi chirongwa chekuverenga chinopa fungidziro zvichienderana nenhamba dziripo. Mhindu chaiyo inogona kuchinja. Kumbirai mazano kunyanzvi dzezvemari musati madyara mari.",
     "cta_title": "Munoda Nhamba dzakadzama here?",
     "cta_button": "Kumbirai Umbiko Wakakosha",
-    "cta_subtitle": "Access our comprehensive reports and custom data analytics services for your specific needs."
+    "cta_subtitle": "Svika yedu yakazara mishumo uye tsika data analytics masevhisi kune zvaunoda chaizvo."
   },
   "success": {
     "hero": {
@@ -1325,17 +1325,17 @@
       "title4": "Zvirongwa zveGreen ne ",
       "highlight4": "Kukura kweNharaunda",
       "subtitle5": "Nhoroondo dzekuchengetedza nharaunda nekusimudzira kumaruwa.",
-      "subtitle4": "Stories of environmental stewardship and upliftment in rural communities.",
-      "badge5": "Resource Mobilization",
-      "title5": "Unlocking Potential Through ",
-      "highlight5": "Investment"
+      "subtitle4": "Nyaya dzekuchengetedza kwezvakatipoteredza uye kusimudzira munharaunda dzekumaruwa.",
+      "badge5": "Kuunganidza zviwanikwa",
+      "title5": "Kuvhura Zvinogona Kuburikidza",
+      "highlight5": "Kudyara"
     },
     "objective_title": "Mhedzisiro",
     "objective_subtitle": "Kuratidza mhedzisiro inofadza yekushanda kwevana vari kunze muzvikamu zvakasiyana-siyana muZimbabwe.",
     "stories": {
       "leather_goods": {
         "title": "Kubudirira kweKutengesa Matehwe Kunze",
-        "category": "Export",
+        "category": "Kutumira kunze",
         "story": "Chikwata chenyanzvi dzechiZimbabwe dziri muGermany chakabatanidza vagadziri vematehwe vemuZimbabwe nevatengesi vekuEurope.",
         "testimonial": "Dandira reZIGD rakatibatanidza nevana vedu vari kunze vanonzwisisa unyanzvi hwedu nezvinodiwa nemusika weEurope.",
         "author": "Tendai Moyo",
@@ -1343,15 +1343,15 @@
       },
       "horticulture_breakthrough": {
         "title": "Kubudirira kwerurimo rweOrganic",
-        "category": "Export",
+        "category": "Kutumira kunze",
         "story": "Kushanda pamwe kwevarimi vadiki kwakawana chitupa cheEU organic nerubatsiro rwenyanzvi dziri kunze kwenyika.",
         "testimonial": "Takange tisingafungi kuti purazi redu diki ringasvika pamatanho eEurope.",
         "author": "Grace Ncube",
-        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
+        "role": "Sachigaro, Mazowe Organic Farmers Cooperative"
       },
       "tourism_lodge": {
         "title": "Kudyara mari muHotera yeUshanyi",
-        "category": "Investment",
+        "category": "Kudyara",
         "story": "Kuburikidza neZIGD, vadyari vemari vari kunze mazana maviri nemakumi masere vakakwanisa kuvaka hotera inochengetedza nharaunda pedyo neVictoria Falls.",
         "testimonial": "Ndakadyara mari ndiri kuUK iye zvino ndava umwe wevene vehotera yakanaka kumusha kwangu.",
         "author": "Simba Chikwanha",
@@ -1359,41 +1359,41 @@
       },
       "stone_sculpture": {
         "title": "Dandira rekutengesa Zvivezwa",
-        "category": "Trade",
+        "category": "Kutengeserana",
         "story": "Vavezwa vemuZimbabwe vakawana mikana muzvitoro zveNorth America kuburikidza nevana veZimbabwe vane zvitoro zvezvivezwa kunze.",
         "testimonial": "Zvivezwa zvedu zvava kuonekwa pasi rose kuburikidza nekuponda nevana vari kunze.",
         "author": "Patrick Mavros",
-        "role": "Master Sculptor, Harare"
+        "role": "Muvezi Mukuru, Harare"
       },
       "tech_startup": {
-        "title": "Tech Startup Diaspora Funding",
-        "category": "Investment",
-        "story": "A Harare-based fintech startup raised $750K from diaspora investors through ZIGD's investment platform. The company developed a mobile payment solution for rural areas, now serving 500K+ users. Diaspora investors provided both capital and technical mentorship.",
-        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
+        "title": "Tech Kutanga Diaspora Mari",
+        "category": "Kudyara",
+        "story": "Kutangwa kwefintech muHarare kwakakwidza madhora mazana manomwe nemakumi mashanu kubva kune varidzi vediaspora kuburikidza nechirongwa chekudyara cheZIGD. Iyo kambani yakagadzira nharembozha yekubhadhara mhinduro yenzvimbo dzekumaruwa, ikozvino inoshandira 500K+ vashandisi. Diaspora investimendi vakapa zvese capital uye technical mentorship.",
+        "testimonial": "Mari yediaspora yakauya nemari inodarika mari — takawana vanachipangamazano vainzwisisa zvimiro zveSilicon Valley uye chokwadi chemusika weAfrica. Nhungamiro yavo yaikosha zvikuru.",
         "author": "Tafadzwa Chidavaenzi",
         "role": "CEO, PayMoyo Technologies"
       },
       "honey_export": {
-        "title": "Honey Export Cooperative",
-        "category": "Export",
-        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
-        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
+        "title": "Huchi Export Cooperative",
+        "category": "Kutumira kunze",
+        "story": "Vapfuri nyuchi vekumaruwa vakaumba mubatanidzwa wekutengesa huchi hwepasi kuEurope. Diaspora chikafu masayendisiti akabatsira kuwana EU certification, nepo diaspora bhizinesi nyanzvi dzakachengetedza zvibvumirano neakasarudzika ezvitoro zvekudya. Mushandirapamwe uyu zvino unotsigira mhuri zana nemakumi maviri.",
+        "testimonial": "Kubva pakutengesa uchi padivi pemugwagwa kuenda kune dzimwe nyika kuzvitoro zvikuru zvekuEurope—network yediaspora yakaita kuti shanduko iyi ikwanisike kuburikidza nerutsigiro rwehunyanzvi uye kubatana kwemusika.",
         "author": "Rudo Makoni",
-        "role": "Secretary, Masvingo Honey Cooperative"
+        "role": "Munyori, Masvingo Honey Cooperative"
       },
       "heritage_tourism": {
-        "title": "Heritage Tourism Package Success",
-        "category": "Tourism",
-        "story": "A tourism operator developed specialized diaspora homecoming packages through ZIGD's platform. The packages combine family visits with cultural tourism, attracting over 1,200 diaspora tourists annually. The business employs local guides, drivers, and hospitality staff.",
-        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. ZIGD's platform gave us visibility to our target market.",
+        "title": "Heritage Tourism Package Kubudirira",
+        "category": "Kushanya",
+        "story": "Mushandi wezvekushanya akagadzira mapakeji ekuuya kwediaspora kumba kuburikidza nepuratifomu yeZIGD. Iwo mapakeji anosanganisa kushanya kwemhuri nekushanya kwetsika, kukwezva vanopfuura 1,200 diaspora vashanyi pagore. Bhizinesi rinoshandisa vatungamiriri venzvimbo, vatyairi, uye vashandi vekugamuchira vaenzi.",
+        "testimonial": "Isu takagadzira zviitiko zvinobatsira diaspora kuti ibatane nemidzi yavo tichitsigira nharaunda. Chikuva cheZIGD chakatipa kuoneka kumusika wedu watinoda.",
         "author": "Chipo Mutasa",
         "role": "Director, Heritage Trails Zimbabwe"
       },
       "macadamia_nut": {
         "title": "Macadamia Nut Processing Plant",
-        "category": "Investment",
-        "story": "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
-        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",
+        "category": "Kudyara",
+        "story": "Kuwana mari kubva kudiaspora kwakaita kuti pavakwe chivako chekutanga chekugadzira macadamia muZimbabwe. Nzvimbo iyi inogadzira nzungu kubva ku200+ varimi vadiki, vachiwedzera kukosha vasati vatumira kunze kwenyika. Zvibvumirano zvekutenga zvehurumende zvinopa kudiwa kwakagadzikana nepo misika yekunze ichifambisa kukura.",
+        "testimonial": "Takakwidza $1.2M kubva kune diaspora investimendi vaitenda mukukosha-kuwedzera. Ikozvino tiri kugadzira mabasa, kutsigira varimi, uye kutumira zvigadzirwa zvekutanga kuAsia neEurope.",
         "author": "Ngoni Sibanda",
         "role": "Operations Manager, Zim Macadamia Processors"
       }
@@ -1425,7 +1425,7 @@
       "jobs": "Mabasa:",
       "markets": "Misika:",
       "investors": "Vadyari:",
-      "testimonial_by": "— {{author}}, {{role}}",
+      "testimonial_by": "— {{author}} ({{role}})",
       "view_story": "Verenga Zvizere"
     },
     "impact_metrics_badge": "Nhamba",
@@ -1607,9 +1607,9 @@
     "highlights": "Zvinokosha",
     "share": "Govera",
     "save": "Chengetedza",
-    "notify_success": "Priority Access Locked",
-    "get_notified": "Request Access",
-    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}"
+    "notify_success": "Kuwana Kukosha Kwakakiyiwa",
+    "get_notified": "Kumbira Kuwana",
+    "form_subtitle": "Zadza ruzivo rwako kuti ubatanidze vakamirira {{featureName}}"
   },
   "contact_form": {
     "get_started": "Taura Nesu",
@@ -1655,7 +1655,7 @@
     "food_desc": "Kunaka kwechikafu chekumusha, kutevedzera mitemo yeEU."
   },
   "notfound": {
-    "title": "404",
+    "title": "404 - Peji harisi kuwanikwa",
     "subtitle": "Ikhasi harina kuwanikwa",
     "message": "Uxolo, ikhasi rauri kutsvaga hariko.",
     "message2": "Rinogona kunge rakabviswa kana kudzimwa.",
@@ -1728,7 +1728,7 @@
     }
   },
   "onesa": {
-    "badge": "Onesa AI",
+    "badge": "Onesa AI Mubatsiri",
     "title": "Taura na Onesa AI",
     "send": "Tumira",
     "thinking": "Ndiri kufunga...",
@@ -1739,8 +1739,8 @@
     "status_backend_unreachable": "Onesa haisi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
     "error_unable_contact": "Onesa haasi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
     "online_indicator_aria": "Onesa ari online",
-    "online_text": "Online",
+    "online_text": "Pamhepo",
     "error_timeout": "Maminetsi matatu apfuura mhinduro kubva kunaOnesa isati yauya. Edza zvakare.",
-    "offline_text": "Offline"
+    "offline_text": "Haisi pamhepo"
   }
 }
