@@ -3,6 +3,7 @@
 set -euo pipefail
 
 URL="${1:-${KEEPALIVE_URL:-}}"
+# Keep timeout configurable for slower cold-start environments.
 TIMEOUT_SECONDS="${KEEPALIVE_TIMEOUT_SECONDS:-25}"
 
 if [[ -z "${URL}" ]]; then
@@ -17,6 +18,7 @@ if ! http_code="$(curl -sS --max-time "${TIMEOUT_SECONDS}" -o /tmp/keepalive-bod
   exit 1
 fi
 
+# Treat 2xx/3xx as success so redirects don't fail keepalive checks.
 if [[ "${http_code}" -ge 200 && "${http_code}" -lt 400 ]]; then
   echo "[keepalive] Success (HTTP ${http_code})"
   exit 0

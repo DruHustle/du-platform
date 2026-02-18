@@ -39,6 +39,7 @@ export default function Layout({ children }: LayoutProps) {
   } | null>(null);
 
   useEffect(() => {
+    // Throttle scroll-driven header state updates via RAF to avoid excessive re-renders.
     let rafId = 0;
     const updateScrolledState = () => {
       rafId = 0;
@@ -66,6 +67,7 @@ export default function Layout({ children }: LayoutProps) {
   }, []);
 
   useEffect(() => {
+    // Footer contact icon alternates between call/WhatsApp affordances.
     const timer = setInterval(() => {
       setShowWhatsIcon((prev) => !prev);
     }, 1800);
@@ -81,6 +83,7 @@ export default function Layout({ children }: LayoutProps) {
     let mounted = true;
     const fetchMe = async () => {
       try {
+        // Best-effort session bootstrap; UI remains usable when auth lookup fails.
         const { data } = await api.get("/auth/me");
         if (mounted) setUser(data?.user ?? null);
       } catch {
@@ -129,6 +132,7 @@ export default function Layout({ children }: LayoutProps) {
   const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
 
   const clampMobileBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
+    // Keep floating bubble fully visible inside the viewport.
     const minX = 8;
     const minY = 8;
     const maxX = Math.max(minX, window.innerWidth - bubbleWidth - 8);
@@ -157,6 +161,7 @@ export default function Layout({ children }: LayoutProps) {
       let nextY = window.innerHeight - bubbleHeight - 96;
 
       try {
+        // Restore last dragged mobile position if available.
         const saved = window.localStorage.getItem(MOBILE_BUBBLE_STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved) as { x?: unknown; y?: unknown };
@@ -178,6 +183,7 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     if (!showOnesaBubble || !isMobileViewport || !mobileBubblePosition) return;
+    // Re-clamp after orientation/viewport shifts.
     const bubbleRect = bubbleRef.current?.getBoundingClientRect();
     const bubbleWidth = bubbleRect?.width ?? 180;
     const bubbleHeight = bubbleRect?.height ?? 64;
@@ -222,6 +228,7 @@ export default function Layout({ children }: LayoutProps) {
     }
     if (!dragState.dragging) return;
 
+    // Prevent page scrolling while dragging the bubble.
     event.preventDefault();
     const bubbleRect = bubbleRef.current?.getBoundingClientRect();
     const bubbleWidth = bubbleRect?.width ?? 180;
@@ -238,12 +245,14 @@ export default function Layout({ children }: LayoutProps) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
     if (dragState.dragging) {
+      // Suppress the click that follows a drag so users do not navigate accidentally.
       suppressBubbleClickRef.current = true;
       window.setTimeout(() => {
         suppressBubbleClickRef.current = false;
       }, 250);
       if (mobileBubblePosition) {
         try {
+          // Persist mobile bubble placement between sessions.
           window.localStorage.setItem(MOBILE_BUBBLE_STORAGE_KEY, JSON.stringify(mobileBubblePosition));
         } catch {
           // Ignore storage write failures.
@@ -350,9 +359,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Desktop Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                {/* FIX: Added !isMenuOpen check (assuming your state name) 
-                  and ensured hidden is the default for mobile 
-                */}
+                {/* Hidden on mobile while menu is open to avoid duplicate controls. */}
                 <Button 
                   variant="ghost" 
                   size="icon" 
@@ -459,7 +466,7 @@ export default function Layout({ children }: LayoutProps) {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop intercepts outside taps and closes the slideout menu. */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -468,7 +475,7 @@ export default function Layout({ children }: LayoutProps) {
               onClick={() => setMobileMenuOpen(false)} 
             />
 
-            {/* Slide-out Menu */}
+            {/* Menu stays visually below header actions using explicit z-index layering. */}
             <motion.div 
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
