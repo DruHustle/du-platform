@@ -1,0 +1,21 @@
+name: Render Keepalive
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    name: Ping Render Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Ping keepalive URL
+        env:
+          KEEPALIVE_URL: ${{ secrets.RENDER_KEEPALIVE_URL }}
+          KEEPALIVE_TIMEOUT_SECONDS: "30"
+        run: |
+          ./scripts/keepalive-ping.sh
