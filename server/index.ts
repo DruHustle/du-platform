@@ -1,4 +1,5 @@
 import axios from "axios";
+import cors from "cors";
 import crypto from "crypto";
 import express from "express";
 import { createServer } from "http";
@@ -53,6 +54,24 @@ type OnesaReadiness = {
 
 let onesaReadinessCache: { checkedAt: number; value: OnesaReadiness } | null = null;
 let lastOnesaSuccessAt = 0;
+
+function getAllowedCorsOrigins(): string[] {
+  const fromEnv = String(process.env.CORS_ORIGINS ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  const defaults = [
+    "https://diasporaunlocked.com",
+    "https://www.diasporaunlocked.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+  ];
+
+  return Array.from(new Set([...defaults, ...fromEnv]));
+}
 
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -703,7 +722,27 @@ async function getOnesaReadiness() {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  const allowedOrigins = getAllowedCorsOrigins();
 
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) {
+          // Non-browser clients (curl/health checks/server-to-server).
+          callback(null, true);
+          return;
+        }
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+        callback(null, false);
+      },
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
   app.use(express.json());
   try {
     await initializeDatabase();

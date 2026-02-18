@@ -43,10 +43,24 @@ export default function OnesaAI() {
   const hasChatStarted = messages.some((message) => message.role === "user");
 
   const checkHealth = useCallback(async (): Promise<boolean> => {
+    const parseObjectPayload = (payload: unknown): Record<string, any> | null => {
+      if (typeof payload === "object" && payload !== null) return payload as Record<string, any>;
+      if (typeof payload === "string") {
+        try {
+          const parsed = JSON.parse(payload);
+          return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, any>) : null;
+        } catch {
+          return null;
+        }
+      }
+      return null;
+    };
+
     const checkLegacyHealth = async (): Promise<boolean> => {
       try {
-        const { data } = await api.get("/onesa/health", { timeout: 10000 });
-        const online = Boolean(data?.ok ?? data?.modelAvailable);
+        const response = await api.get("/onesa/health", { timeout: 10000 });
+        const payload = parseObjectPayload(response.data);
+        const online = Boolean(payload?.ok ?? payload?.modelAvailable ?? response.status === 200);
         setIsOnline(online);
         setStatus(online ? "" : backendUnreachableStatus);
         return online;
@@ -58,12 +72,12 @@ export default function OnesaAI() {
     };
 
     try {
-      const { data } = await api.get("/onesa/ready", { timeout: 12000 });
-      const isReadyPayload = typeof data === "object" && data !== null && "ready" in data;
-      if (!isReadyPayload) {
+      const response = await api.get("/onesa/ready", { timeout: 12000 });
+      const payload = parseObjectPayload(response.data);
+      if (!payload) {
         return await checkLegacyHealth();
       }
-      const online = Boolean(data?.ready);
+      const online = Boolean(payload?.ready ?? response.status === 200);
       setIsOnline(online);
       setStatus(online ? "" : backendUnreachableStatus);
       return online;
