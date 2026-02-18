@@ -154,7 +154,7 @@ You should see:
 To reduce cold starts on Render free instances, this repo includes a scheduled GitHub Action:
 
 - Workflow: `.github/workflows/render-keepalive.yml`
-- Frequency: every 5 minutes
+- Frequency: every 4 hours
 - Ping script: `scripts/keepalive-ping.sh`
 
 ### Setup

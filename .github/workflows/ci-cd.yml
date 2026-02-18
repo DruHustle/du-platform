@@ -1,8 +1,10 @@
 name: CI/CD Pipeline
 
 on:
+  # Run full pipeline on main/develop pushes.
   push:
     branches: [main, develop]
+  # Validate incoming changes before merge to main.
   pull_request:
     branches: [main]
 
@@ -12,7 +14,7 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  # 1. Build and Test Job (Standard CI)
+  # 1) Baseline quality gate used by deployment jobs.
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -43,7 +45,7 @@ jobs:
       - name: Build project (CI Check)
         run: pnpm build
 
-  # 2. Deploy to Vercel (Production)
+  # 2) Production deploy is gated on CI and only runs for direct main pushes.
   deploy-vercel-production:
     name: Deploy to Vercel (Production)
     needs: build-and-test
@@ -72,7 +74,7 @@ jobs:
       - name: Deploy to Vercel Production
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-  # 3. Deploy to Vercel (Preview)
+  # 3) Preview deploys are created for pull requests.
   deploy-vercel-preview:
     name: Deploy to Vercel (Preview)
     needs: build-and-test
@@ -99,7 +101,7 @@ jobs:
       - name: Deploy to Vercel Preview
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  # 4. Code Quality Checks
+  # 4) Non-blocking formatting visibility; does not fail the pipeline.
   code-quality:
     name: Code Quality
     runs-on: ubuntu-latest

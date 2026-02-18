@@ -1662,6 +1662,7 @@ async function startServer() {
     try {
       const rawMessages = Array.isArray(req.body?.messages) ? req.body.messages : [];
       const requestedLanguage = typeof req.body?.language === "string" ? req.body.language : undefined;
+      // Keep request payload bounded to control prompt size and provider cost.
       const messages: ChatMessage[] = rawMessages
         .map((m: any) => ({
           role: m?.role,
@@ -1684,6 +1685,7 @@ async function startServer() {
     } catch (error: any) {
       const upstreamStatus = getUpstreamStatus(error);
       const retryAfterMs = getRetryAfterMs(error) ?? getGlobalBackoffRemainingMs();
+      // Surface throttling explicitly so clients can implement countdown/retry UX.
       if (upstreamStatus === 429 || isRateLimitedUpstreamError(error)) {
         return res.status(429).json({
           message: "Onesa is receiving too many requests right now. Please try again shortly.",
@@ -1715,6 +1717,7 @@ async function startServer() {
   });
 
   app.get("/api/onesa/ready", async (_req, res) => {
+    // Readiness may probe upstream providers; avoid using this for high-frequency keepalive.
     const readiness = await getOnesaReadiness();
     const status = readiness.ready ? 200 : 503;
     return res.status(status).json(readiness);

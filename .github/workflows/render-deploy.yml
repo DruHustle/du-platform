@@ -1,8 +1,10 @@
 name: Deploy to Render
 
 on:
+  # Auto-trigger Render deploy hook on pushes to main.
   push:
     branches: [main]
+  # Allow manual deploy hook trigger from the Actions tab.
   workflow_dispatch:
 
 jobs:
@@ -16,6 +18,7 @@ jobs:
       
       - name: Trigger Render Deployment
         run: |
+          # Requires repo secret: RENDER_DEPLOY_HOOK_URL
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
       
       - name: Deployment notification

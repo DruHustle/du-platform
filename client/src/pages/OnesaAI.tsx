@@ -51,6 +51,7 @@ export default function OnesaAI() {
       setRetryAfterSecondsRemaining(null);
       return;
     }
+    // Drive UI countdown for 429 retry hints.
     const timeoutId = window.setTimeout(() => {
       setRetryAfterSecondsRemaining((current) => {
         if (current === null) return null;
@@ -76,6 +77,7 @@ export default function OnesaAI() {
 
     const checkLegacyHealth = async (): Promise<boolean> => {
       try {
+        // Older backends only expose /health shape.
         const response = await api.get("/onesa/health", { timeout: 10000 });
         const payload = parseObjectPayload(response.data);
         const online = Boolean(payload?.ok ?? payload?.modelAvailable);
@@ -125,7 +127,7 @@ export default function OnesaAI() {
   const sendMessage = async () => {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
-    // Do not hard-block sends on readiness probes; chat endpoint can still recover via fallback.
+    // Probe status opportunistically without blocking the user action.
     void checkHealth();
 
     const nextMessages: ChatMessage[] = [...messages, { role: "user", content: trimmed }];
@@ -157,6 +159,7 @@ export default function OnesaAI() {
       const isRateLimited =
         status === 429 ||
         /status code 429|rate limit|too many requests/i.test(String(err?.message ?? responseMessage ?? ""));
+      // Capture server-provided backoff so users don't spam retries.
       setRetryAfterSecondsRemaining(isRateLimited ? retryAfterSeconds : null);
       const rateLimitedMessage = isRateLimited ? rateLimitedError : null;
       const timeoutMessage =
