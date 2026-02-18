@@ -17,7 +17,7 @@ jobs:
 
       - name: Ping keepalive URL
         env:
-          # Set this repo secret to your backend keepalive endpoint (recommended: /api/ping).
+          # Set this repo secret to your backend keepalive endpoint (recommended: /api/ping). https://zigd-platform.onrender.com/api/ping
           KEEPALIVE_URL: ${{ secrets.RENDER_KEEPALIVE_URL }}
           # Curl timeout in seconds for slow/cold starts.
           KEEPALIVE_TIMEOUT_SECONDS: "30"
