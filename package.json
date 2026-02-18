@@ -13,6 +13,7 @@
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "test:e2e:onesa": "bash scripts/e2e-onesa.sh",
+    "keepalive:ping": "bash scripts/keepalive-ping.sh",
     "format": "prettier --write .",
     "translations:sync": "python3 sync_translations.py --mode sync",
     "translations:sync:todo": "python3 sync_translations.py --mode sync --mark-missing",

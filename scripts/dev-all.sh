@@ -26,6 +26,13 @@ get_env_value() {
 }
 
 get_backend_port() {
+  local dev_port
+  dev_port="$(get_env_value "DEV_PORT")"
+  if [[ -n "${dev_port}" ]]; then
+    printf '%s\n' "$dev_port"
+    return
+  fi
+
   if [[ -f ".env" ]]; then
     local env_port
     env_port="$(grep -E '^PORT=' .env | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"

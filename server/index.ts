@@ -39,8 +39,9 @@ const DEFAULT_ONESA_SYSTEM_PROMPT = [
   "Do not dump long bullet lists unless the user asks for detailed guidance.",
   "For normal requests, provide practical and concise guidance for tourism, trade, and investment, and clearly mark uncertainty.",
 ].join(" ");
-const ONESA_READINESS_CACHE_MS = 30000;
+const ONESA_READINESS_CACHE_MS = 120000;
 const ONESA_READINESS_GRACE_MS = 120000;
+const SERVER_STARTED_AT = Date.now();
 
 type OnesaReadiness = {
   ok: boolean;
@@ -1115,7 +1116,7 @@ async function getOnesaReadiness() {
   }
 
   const recentSuccess = now - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
-  if (recentSuccess && provider !== "openai_compatible") {
+  if (recentSuccess) {
     return remember({
       ok: true,
       ready: true,
@@ -1149,76 +1150,59 @@ async function getOnesaReadiness() {
         continue;
       }
 
-      let shouldSkipEndpoint = false;
-      for (const targetModel of providerTarget.models) {
-        if (shouldSkipEndpoint || getEndpointBackoffRemainingMs(providerTarget.baseUrl) > 0) {
-          break;
+      try {
+        if (providerTarget.kind === "anthropic") {
+          await axios.get(`${providerTarget.baseUrl}/v1/models`, {
+            timeout: probeTimeout,
+            headers: {
+              "x-api-key": providerTarget.apiKey,
+              "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
+              "Content-Type": "application/json",
+            },
+          });
+        } else {
+          await axios.get(`${providerTarget.baseUrl}/models`, {
+            timeout: probeTimeout,
+            headers: {
+              Authorization: `Bearer ${providerTarget.apiKey}`,
+              "Content-Type": "application/json",
+            },
+          });
         }
-        try {
-          if (providerTarget.kind === "anthropic") {
-            await axios.post(
-              `${providerTarget.baseUrl}/v1/messages`,
-              {
-                model: targetModel,
-                messages: [{ role: "user", content: "ping" }],
-                temperature: 0,
-                max_tokens: 1,
-              },
-              {
-                timeout: probeTimeout,
-                headers: {
-                  "x-api-key": providerTarget.apiKey,
-                  "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-          } else {
-            await axios.post(
-              `${providerTarget.baseUrl}/chat/completions`,
-              {
-                model: targetModel,
-                messages: [{ role: "user", content: "ping" }],
-                temperature: 0,
-                max_tokens: 1,
-              },
-              {
-                timeout: probeTimeout,
-                headers: {
-                  Authorization: `Bearer ${providerTarget.apiKey}`,
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-          }
-          lastOnesaSuccessAt = Date.now();
+        return remember({
+          ok: true,
+          ready: true,
+          provider,
+          model: providerTarget.models[0] ?? model,
+          endpoint: providerTarget.baseUrl,
+        });
+      } catch (error: any) {
+        const status = getUpstreamStatus(error);
+        if (status === 404 || status === 405) {
+          // Some providers do not expose a models endpoint consistently.
           return remember({
             ok: true,
             ready: true,
             provider,
-            model: targetModel,
+            model: providerTarget.models[0] ?? model,
             endpoint: providerTarget.baseUrl,
           });
-        } catch (error: any) {
-          if (isRateLimitedUpstreamError(error)) {
-            observedRateLimit = true;
-            const retryAfterMs = getRetryAfterMs(error) ?? 10000;
-            const existing = onesaProviderBackoffUntilByEndpoint.get(providerTarget.baseUrl) ?? 0;
-            onesaProviderBackoffUntilByEndpoint.set(
-              providerTarget.baseUrl,
-              Math.max(existing, Date.now() + Math.min(30000, retryAfterMs))
-            );
-            shouldSkipEndpoint = true;
-            break;
-          }
-          const status = getUpstreamStatus(error);
-          if (status === 401 || status === 403) {
-            lastFailureMessage = "Authentication failed.";
-            shouldSkipEndpoint = true;
-            break;
-          }
-          lastFailureMessage = String(error?.message ?? "probe failed");
         }
+        if (isRateLimitedUpstreamError(error)) {
+          observedRateLimit = true;
+          const retryAfterMs = getRetryAfterMs(error) ?? 10000;
+          const existing = onesaProviderBackoffUntilByEndpoint.get(providerTarget.baseUrl) ?? 0;
+          onesaProviderBackoffUntilByEndpoint.set(
+            providerTarget.baseUrl,
+            Math.max(existing, Date.now() + Math.min(30000, retryAfterMs))
+          );
+          continue;
+        }
+        if (status === 401 || status === 403) {
+          lastFailureMessage = "Authentication failed.";
+          continue;
+        }
+        lastFailureMessage = String(error?.message ?? "probe failed");
       }
     }
 
@@ -1736,6 +1720,17 @@ async function startServer() {
     return res.status(status).json(readiness);
   });
 
+  // Lightweight keepalive endpoint that does not call upstream AI providers.
+  app.get("/api/ping", (_req, res) => {
+    return res.json({
+      ok: true,
+      service: "zigd-platform",
+      uptimeSeconds: Math.floor(process.uptime()),
+      startedAt: new Date(SERVER_STARTED_AT).toISOString(),
+      now: new Date().toISOString(),
+    });
+  });
+
   const staticPath =
     process.env.NODE_ENV === "production"
       ? path.resolve(__dirname, "public")
@@ -1747,8 +1742,23 @@ async function startServer() {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
-  const defaultPort = process.env.NODE_ENV === "production" ? 3000 : 5000;
-  const requestedPort = Number(process.env.PORT || defaultPort);
+  const parsePort = (value: unknown): number | null => {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return null;
+    const port = Math.floor(parsed);
+    if (port <= 0 || port > 65535) return null;
+    return port;
+  };
+
+  const envMode = String(process.env.NODE_ENV ?? "development").toLowerCase();
+  const isProduction = envMode === "production";
+  const isTest = envMode === "test";
+  const requestedPort =
+    (isProduction
+      ? parsePort(process.env.PORT) ?? parsePort(process.env.PROD_PORT) ?? 3000
+      : isTest
+        ? parsePort(process.env.TEST_PORT) ?? parsePort(process.env.PORT) ?? 5002
+        : parsePort(process.env.DEV_PORT) ?? parsePort(process.env.PORT) ?? 5001);
   const allowPortFallback =
     String(process.env.ALLOW_PORT_FALLBACK ?? "").toLowerCase() === "true" ||
     process.env.NODE_ENV === "production";

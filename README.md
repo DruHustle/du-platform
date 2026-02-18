@@ -149,6 +149,27 @@ You should see:
 [E2E] Onesa smoke test passed.
 ```
 
+## Render Keepalive (Free Tier)
+
+To reduce cold starts on Render free instances, this repo includes a scheduled GitHub Action:
+
+- Workflow: `.github/workflows/render-keepalive.yml`
+- Frequency: every 5 minutes
+- Ping script: `scripts/keepalive-ping.sh`
+
+### Setup
+
+1. In GitHub repo settings, add a secret:
+   - `RENDER_KEEPALIVE_URL` = your backend keepalive URL (recommended: `https://<your-backend>/api/ping`)
+2. Ensure GitHub Actions are enabled for the repository.
+3. Optionally run it manually via Actions tab (`Render Keepalive` -> `Run workflow`).
+
+### Local manual ping
+
+```bash
+KEEPALIVE_URL=https://<your-backend>/api/ping pnpm keepalive:ping
+```
+
 ## Strategic Framework Alignment
 
 The ZIGD Gateway Platform addresses key gaps identified in the Diaspora Unlocked Strategic Framework:
