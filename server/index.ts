@@ -157,6 +157,26 @@ type ChatMessage = {
   content: string;
 };
 
+type SupportedOnesaLanguage = "en" | "sn" | "nd" | "de";
+
+function normalizeOnesaLanguage(value: unknown): SupportedOnesaLanguage {
+  const raw = String(value ?? "").trim().toLowerCase();
+  if (!raw) return "en";
+  const base = raw.split("-")[0];
+  if (base === "sn" || base === "nd" || base === "de" || base === "en") return base;
+  if (raw === "shona") return "sn";
+  if (raw === "ndebele") return "nd";
+  if (raw === "german" || raw === "deutsch") return "de";
+  return "en";
+}
+
+function getOnesaLanguageLabel(language: SupportedOnesaLanguage): string {
+  if (language === "sn") return "Shona";
+  if (language === "nd") return "Ndebele";
+  if (language === "de") return "German";
+  return "English";
+}
+
 function getLatestUserMessage(messages: ChatMessage[]): string {
   for (let i = messages.length - 1; i >= 0; i -= 1) {
     const msg = messages[i];
@@ -168,13 +188,20 @@ function getLatestUserMessage(messages: ChatMessage[]): string {
   return "";
 }
 
-function isGreetingOnlyMessage(content: string): boolean {
+function normalizeSmallTalkPhrase(content: string): string {
   const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, "");
-  if (!normalized) return false;
+  if (!normalized) return "";
   const tokens = normalized.split(/\s+/).filter(Boolean);
-  if (tokens.length > 4) return false;
-  const phrase = tokens.join(" ");
-  const greetings = new Set([
+  if (tokens.length > 4) return "";
+  return tokens.join(" ");
+}
+
+function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null {
+  const phrase = normalizeSmallTalkPhrase(content);
+  if (!phrase) return null;
+
+  const greetingsByLanguage: Record<SupportedOnesaLanguage, Set<string>> = {
+    en: new Set([
     "hi",
     "hello",
     "hey",
@@ -183,38 +210,82 @@ function isGreetingOnlyMessage(content: string): boolean {
     "good morning",
     "good afternoon",
     "good evening",
-    "mhoro",
-    "hesi",
-    "ndeipi",
-    "makadii",
-    "maswera sei",
-    "salibonani",
-    "sawubona",
-  ]);
-  return greetings.has(phrase);
+    ]),
+    sn: new Set([
+      "mhoro",
+      "hesi",
+      "ndeipi",
+      "makadii",
+      "maswera sei",
+    ]),
+    nd: new Set([
+      "salibonani",
+      "sawubona",
+      "kunjani",
+    ]),
+    de: new Set([
+      "hallo",
+      "guten tag",
+      "guten morgen",
+      "guten abend",
+      "servus",
+    ]),
+  };
+
+  for (const language of Object.keys(greetingsByLanguage) as SupportedOnesaLanguage[]) {
+    if (greetingsByLanguage[language].has(phrase)) return language;
+  }
+  return null;
 }
 
-function isThanksOnlyMessage(content: string): boolean {
-  const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, "");
-  if (!normalized) return false;
-  const phrase = normalized.split(/\s+/).filter(Boolean).join(" ");
-  const thanksPhrases = new Set([
-    "thanks",
-    "thank you",
-    "thankyou",
-    "much appreciated",
-    "ndatenda",
-    "ngiyabonga",
-  ]);
-  return thanksPhrases.has(phrase);
+function detectThanksLanguage(content: string): SupportedOnesaLanguage | null {
+  const phrase = normalizeSmallTalkPhrase(content);
+  if (!phrase) return null;
+
+  const thanksByLanguage: Record<SupportedOnesaLanguage, Set<string>> = {
+    en: new Set([
+      "thanks",
+      "thank you",
+      "thankyou",
+      "much appreciated",
+    ]),
+    sn: new Set([
+      "ndatenda",
+      "mazvita",
+    ]),
+    nd: new Set([
+      "ngiyabonga",
+      "ngiyathokoza",
+    ]),
+    de: new Set([
+      "danke",
+      "danke schon",
+      "vielen dank",
+    ]),
+  };
+
+  for (const language of Object.keys(thanksByLanguage) as SupportedOnesaLanguage[]) {
+    if (thanksByLanguage[language].has(phrase)) return language;
+  }
+  return null;
 }
 
-function getSmallTalkReply(content: string): string | null {
+function getSmallTalkReply(content: string, defaultLanguage: SupportedOnesaLanguage): string | null {
   const normalized = content.trim().toLowerCase();
-  if (isGreetingOnlyMessage(normalized)) {
+  const greetingLanguage = detectGreetingLanguage(normalized);
+  if (greetingLanguage) {
+    const language = greetingLanguage ?? defaultLanguage;
+    if (language === "sn") return "Mhoro! Ndini Onesa. Ndingakubatsirei nhasi?";
+    if (language === "nd") return "Sawubona! Ngingu Onesa. Ngingakuncedisa ngani lamuhla?";
+    if (language === "de") return "Hallo! Ich bin Onesa. Wie kann ich dir heute helfen?";
     return "Hi! I am Onesa. How can I help you today?";
   }
-  if (isThanksOnlyMessage(normalized)) {
+  const thanksLanguage = detectThanksLanguage(normalized);
+  if (thanksLanguage) {
+    const language = thanksLanguage ?? defaultLanguage;
+    if (language === "sn") return "Ndinotenda. Kana uchida, ndinogona kubatsira nezvekushanya, kudyara mari, kutengeserana, kana kudzokera kumusha.";
+    if (language === "nd") return "Wamukelekile. Nxa ufuna, ngingakuncedisa ngezokuvakasha, ukutshala imali, ukuhweba, loba ukubuyela ekhaya.";
+    if (language === "de") return "Gern geschehen. Wenn du möchtest, helfe ich bei Tourismus, Investitionen, Handel oder Rückkehrplanung.";
     return "You are welcome. If you want, I can help with tourism, investment, trade, or relocation questions.";
   }
   return null;
@@ -287,18 +358,26 @@ function isLowQualityOnesaReply(reply: string): boolean {
   return false;
 }
 
-async function generateOnesaReply(messages: ChatMessage[]) {
+async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: string) {
   const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = getOnesaConfig();
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
+  const responseLanguage = normalizeOnesaLanguage(requestedLanguage);
+  const languageInstruction = [
+    `Default reply language for this chat is ${getOnesaLanguageLabel(responseLanguage)}.`,
+    "If the user's latest message is clearly in another language, respond in that language.",
+    "If the user switches language, switch with them.",
+    "Do not translate unless the user asks for translation.",
+  ].join(" ");
   const safeFallbackReply = "I am having trouble generating a reliable response right now. Please try again.";
   const latestUserMessage = getLatestUserMessage(messages);
-  const smallTalkReply = latestUserMessage ? getSmallTalkReply(latestUserMessage) : null;
+  const smallTalkReply = latestUserMessage ? getSmallTalkReply(latestUserMessage, responseLanguage) : null;
   if (smallTalkReply) {
     lastOnesaSuccessAt = Date.now();
     return smallTalkReply;
   }
   const normalizedMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
+    { role: "system", content: languageInstruction },
     ...messages.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim()),
   ];
 
@@ -457,10 +536,32 @@ async function generateOnesaReply(messages: ChatMessage[]) {
 async function getOnesaHealth() {
   const { provider, model, ollamaBase, openaiBase } = getOnesaConfig();
   if (provider === "openai_compatible") {
+    const apiKey = process.env.ONESA_AI_API_KEY ?? "";
+    if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY") {
+      return {
+        ok: false,
+        provider,
+        model,
+        endpoint: openaiBase,
+        message: "Cloud AI API key is missing.",
+      };
+    }
+
     try {
-      await axios.get(`${openaiBase}/models`, { timeout: 5000 });
+      await axios.get(`${openaiBase}/models`, {
+        timeout: 5000,
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+      });
       return { ok: true, provider, model, endpoint: openaiBase };
     } catch (error: any) {
+      const status = Number(error?.response?.status ?? 0);
+      if (status === 404 || status === 405) {
+        // Some OpenAI-compatible providers may not expose /models.
+        return { ok: true, provider, model, endpoint: openaiBase };
+      }
       return {
         ok: false,
         provider,
@@ -990,6 +1091,7 @@ async function startServer() {
   app.post("/api/onesa/chat", async (req, res) => {
     try {
       const rawMessages = Array.isArray(req.body?.messages) ? req.body.messages : [];
+      const requestedLanguage = typeof req.body?.language === "string" ? req.body.language : undefined;
       const messages: ChatMessage[] = rawMessages
         .map((m: any) => ({
           role: m?.role,
@@ -1002,7 +1104,7 @@ async function startServer() {
         return res.status(400).json({ message: "At least one user message is required." });
       }
 
-      const reply = await generateOnesaReply(messages);
+      const reply = await generateOnesaReply(messages, requestedLanguage);
       if (!reply) {
         return res.status(502).json({ message: "Onesa model returned an empty response." });
       }
