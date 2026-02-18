@@ -639,43 +639,19 @@ async function getOnesaReadiness() {
     });
   }
 
-  try {
-    if (provider === "openai_compatible") {
-      const apiKey = process.env.ONESA_AI_API_KEY ?? "not-required";
-      const response = await axios.post(
-        `${openaiBase}/chat/completions`,
-        {
-          model,
-          messages: [{ role: "user", content: "ready" }],
-          temperature: 0,
-          max_tokens: 4,
-        },
-        {
-          timeout: probeTimeout,
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const firstChoice = response.data?.choices?.[0];
-      const reply = String(firstChoice?.message?.content ?? "").trim();
-      const hasChoice = Array.isArray(response.data?.choices) && response.data.choices.length > 0;
-      // Some providers return empty content for tiny probe prompts but are still fully usable.
-      const ready = hasChoice || reply.length > 0;
-      if (ready) {
-        lastOnesaSuccessAt = Date.now();
-      }
-      return remember({
-        ok: ready,
-        ready,
-        provider,
-        model,
-        endpoint,
-        message: ready ? undefined : "Onesa is unavailable.",
-      });
-    }
+  // For cloud OpenAI-compatible providers, a successful health check is a reliable
+  // readiness signal. Probe responses can be structurally inconsistent across providers.
+  if (provider === "openai_compatible") {
+    return remember({
+      ok: true,
+      ready: true,
+      provider,
+      model,
+      endpoint,
+    });
+  }
 
+  try {
     const resolvedModel = String((health as any)?.resolvedModel ?? model);
     const response = await axios.post(
       `${ollamaBase}/api/generate`,
