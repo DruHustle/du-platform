@@ -1,4 +1,4 @@
-import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,10 +40,25 @@ export default function OnesaAI() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [retryAfterSecondsRemaining, setRetryAfterSecondsRemaining] = useState<number | null>(null);
   const [status, setStatus] = useState("");
   const [isOnline, setIsOnline] = useState(false);
-  const loadingRef = useRef(false);
   const hasChatStarted = messages.some((message) => message.role === "user");
+
+  useEffect(() => {
+    if (retryAfterSecondsRemaining === null) return;
+    if (retryAfterSecondsRemaining <= 0) {
+      setRetryAfterSecondsRemaining(null);
+      return;
+    }
+    const timeoutId = window.setTimeout(() => {
+      setRetryAfterSecondsRemaining((current) => {
+        if (current === null) return null;
+        return Math.max(0, current - 1);
+      });
+    }, 1000);
+    return () => window.clearTimeout(timeoutId);
+  }, [retryAfterSecondsRemaining]);
 
   const checkHealth = useCallback(async (): Promise<boolean> => {
     const parseObjectPayload = (payload: unknown): Record<string, any> | null => {
@@ -102,13 +117,8 @@ export default function OnesaAI() {
       await checkHealth();
     };
     void runHealthCheck();
-    const intervalId = window.setInterval(() => {
-      if (loadingRef.current) return;
-      void runHealthCheck();
-    }, 30000);
     return () => {
       mounted = false;
-      window.clearInterval(intervalId);
     };
   }, [checkHealth]);
 
@@ -122,7 +132,7 @@ export default function OnesaAI() {
     setMessages(nextMessages);
     setInput("");
     setError("");
-    loadingRef.current = true;
+    setRetryAfterSecondsRemaining(null);
     setLoading(true);
 
     try {
@@ -147,11 +157,8 @@ export default function OnesaAI() {
       const isRateLimited =
         status === 429 ||
         /status code 429|rate limit|too many requests/i.test(String(err?.message ?? responseMessage ?? ""));
-      const rateLimitedMessage = isRateLimited
-        ? retryAfterSeconds
-          ? `${rateLimitedError} (${retryAfterSeconds}s)`
-          : rateLimitedError
-        : null;
+      setRetryAfterSecondsRemaining(isRateLimited ? retryAfterSeconds : null);
+      const rateLimitedMessage = isRateLimited ? rateLimitedError : null;
       const timeoutMessage =
         err?.code === "ECONNABORTED"
           ? t("onesa.error_timeout", { defaultValue: "Onesa request timed out after 3 minutes. Please try again." })
@@ -164,7 +171,6 @@ export default function OnesaAI() {
         void checkHealth();
       }
     } finally {
-      loadingRef.current = false;
       setLoading(false);
     }
   };
@@ -251,7 +257,12 @@ export default function OnesaAI() {
                 placeholder={hasChatStarted ? "" : starterPrompt}
                 className="min-h-[110px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/30"
               />
-              {error ? <p className="text-red-400 text-sm">{error}</p> : null}
+              {error ? (
+                <p className="text-red-400 text-sm">
+                  {error}
+                  {error === rateLimitedError && retryAfterSecondsRemaining !== null ? ` (${retryAfterSecondsRemaining}s)` : ""}
+                </p>
+              ) : null}
               <div className="flex justify-end">
                 <Button
                   type="submit"
