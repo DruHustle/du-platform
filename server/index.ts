@@ -658,8 +658,11 @@ async function getOnesaReadiness() {
           },
         }
       );
-      const reply = String(response.data?.choices?.[0]?.message?.content ?? "").trim();
-      const ready = reply.length > 0;
+      const firstChoice = response.data?.choices?.[0];
+      const reply = String(firstChoice?.message?.content ?? "").trim();
+      const hasChoice = Array.isArray(response.data?.choices) && response.data.choices.length > 0;
+      // Some providers return empty content for tiny probe prompts but are still fully usable.
+      const ready = hasChoice || reply.length > 0;
       if (ready) {
         lastOnesaSuccessAt = Date.now();
       }
