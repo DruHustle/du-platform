@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "translations:sync": "python3 sync_translations.py --mode sync",
     "translations:sync:todo": "python3 sync_translations.py --mode sync --mark-missing",
-    "translations:check": "python3 sync_translations.py --mode check"
+    "translations:check:keys": "python3 sync_translations.py --mode check",
+    "translations:check": "python3 sync_translations.py --mode check --require-translated"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

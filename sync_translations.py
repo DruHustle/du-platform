@@ -70,11 +70,71 @@ def check_locale_file(en_data: Any, locale_path: Path) -> dict[str, int]:
     return {"missing": len(missing), "extra": len(extra)}
 
 
+def get_check_details(
+    en_data: Any,
+    locale_path: Path,
+    require_translated: bool,
+    allow_same_keys: set[str],
+) -> dict[str, Any]:
+    locale_data = load_json(locale_path)
+    en_flat = flatten_dict(en_data)
+    locale_flat = flatten_dict(locale_data)
+
+    en_keys = set(en_flat.keys())
+    locale_keys = set(locale_flat.keys())
+    missing_keys = sorted(en_keys - locale_keys)
+    extra_keys = sorted(locale_keys - en_keys)
+
+    todo_keys: list[str] = []
+    untranslated_keys: list[str] = []
+
+    for key in sorted(en_keys & locale_keys):
+        locale_value = locale_flat[key]
+        if isinstance(locale_value, str) and locale_value.startswith("[TODO "):
+            todo_keys.append(key)
+
+        if not require_translated:
+            continue
+        if key in allow_same_keys:
+            continue
+
+        source_value = en_flat[key]
+        if isinstance(source_value, str) and isinstance(locale_value, str) and source_value == locale_value:
+            untranslated_keys.append(key)
+
+    return {
+        "missing": len(missing_keys),
+        "extra": len(extra_keys),
+        "todo": len(todo_keys),
+        "untranslated": len(untranslated_keys),
+        "missing_keys": missing_keys,
+        "extra_keys": extra_keys,
+        "todo_keys": todo_keys,
+        "untranslated_keys": untranslated_keys,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Sync/check i18n locale files from English master copy.")
     parser.add_argument("--mode", choices=["sync", "check"], default="sync")
     parser.add_argument("--locales", default="sn,nd,de", help="Comma-separated locale codes excluding 'en'.")
     parser.add_argument("--mark-missing", action="store_true", help="Mark missing inserted strings with [TODO <locale>].")
+    parser.add_argument(
+        "--require-translated",
+        action="store_true",
+        help="In check mode, fail when a locale value is unchanged from English.",
+    )
+    parser.add_argument(
+        "--allow-same-keys",
+        default="",
+        help="Comma-separated key paths allowed to remain same as English when --require-translated is set.",
+    )
+    parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=12,
+        help="How many sample keys to print for missing/TODO/untranslated checks.",
+    )
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parent
@@ -100,15 +160,32 @@ def main() -> int:
         return 0
 
     failing = False
+    allow_same_keys = {x.strip() for x in args.allow_same_keys.split(",") if x.strip()}
     for locale in locales:
         path = locales_dir / locale / "translation.json"
         if not path.exists():
             print(f"fail {locale}: missing file {path}")
             failing = True
             continue
-        stats = check_locale_file(en_data, path)
-        print(f"check {locale}: missing={stats['missing']} extra={stats['extra']}")
+        stats = get_check_details(
+            en_data=en_data,
+            locale_path=path,
+            require_translated=args.require_translated,
+            allow_same_keys=allow_same_keys,
+        )
+        print(
+            f"check {locale}: missing={stats['missing']} extra={stats['extra']} "
+            f"todo={stats['todo']} untranslated={stats['untranslated']}"
+        )
+
         if stats["missing"] > 0:
+            print(f"  missing sample: {', '.join(stats['missing_keys'][:args.sample_size])}")
+            failing = True
+        if stats["todo"] > 0:
+            print(f"  todo sample: {', '.join(stats['todo_keys'][:args.sample_size])}")
+            failing = True
+        if args.require_translated and stats["untranslated"] > 0:
+            print(f"  untranslated sample: {', '.join(stats['untranslated_keys'][:args.sample_size])}")
             failing = True
     return 1 if failing else 0
 

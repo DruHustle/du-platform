@@ -551,9 +551,29 @@ export default function Layout({ children }: LayoutProps) {
         <motion.div
           ref={bubbleRef}
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className={isMobileViewport ? "fixed z-[95]" : "fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"}
+          animate={
+            isMobileViewport
+              ? {
+                  opacity: 1,
+                  y: 0,
+                  boxShadow: [
+                    "0 0 0 rgba(212,175,55,0)",
+                    "0 0 18px rgba(212,175,55,0.28)",
+                    "0 0 0 rgba(212,175,55,0)",
+                  ],
+                }
+              : { opacity: 1, y: 0 }
+          }
+          transition={
+            isMobileViewport
+              ? {
+                  opacity: { duration: 0.35 },
+                  y: { duration: 0.35 },
+                  boxShadow: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+                }
+              : { duration: 0.35 }
+          }
+          className={isMobileViewport ? "fixed z-[95] rounded-full" : "fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"}
           style={
             isMobileViewport && mobileBubblePosition
               ? {

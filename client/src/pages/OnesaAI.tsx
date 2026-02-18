@@ -13,7 +13,7 @@ type ChatMessage = {
 };
 
 export default function OnesaAI() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const starterPrompt = t("onesa.starter_prompt", {
     defaultValue: "Start chat....",
   });
@@ -114,6 +114,7 @@ export default function OnesaAI() {
         "/onesa/chat",
         {
           messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
+          language: i18n.resolvedLanguage ?? i18n.language ?? "en",
         },
         { timeout: 180000 }
       );
@@ -185,12 +186,6 @@ export default function OnesaAI() {
                 </span>
               </span>
             </div>
-            <p className="text-white/60 max-w-3xl">
-              {t("onesa.subtitle", {
-                defaultValue:
-                  "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
-              })}
-            </p>
             {status ? <p className="text-white/60 max-w-3xl text-sm">{status}</p> : null}
           </div>
 

@@ -271,6 +271,34 @@
       "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
       "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
       "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
+    },
+    "onesa_matter": {
+      "badge": "Africa-Centric AI",
+      "title": "Why Onesa AI Matters",
+      "headline": "Africa deserves AI that understands Africa.",
+      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
+      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
+      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
+      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
+      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "tiles": {
+        "illuminate": {
+          "title": "Onesa Means Illuminate",
+          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+        },
+        "africa_centric": {
+          "title": "Africa-Centric Intelligence",
+          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+        },
+        "sovereignty": {
+          "title": "AI Sovereignty",
+          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+        },
+        "growth": {
+          "title": "Future-Ready Growth",
+          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+        }
+      }
     }
   },
   "export": {
@@ -1701,19 +1729,18 @@
   },
   "onesa": {
     "badge": "Onesa AI",
-    "title": "Chat with Onesa AI",
-    "subtitle": "This assistant is wired to your open-source model endpoint. You can swap models or use a fine-tuned checkpoint later via environment variables.",
-    "send": "Send",
-    "thinking": "Thinking...",
-    "starter_prompt": "Start chat....",
+    "title": "Taura na Onesa AI",
+    "send": "Tumira",
+    "thinking": "Ndiri kufunga...",
+    "starter_prompt": "Tanga kutaura....",
     "welcome": "Ndiri nyanzvi yeZimbabwe. Ndibvumire kukubatsira munzira dzese dzekudyara, kutengeserana, kushanya, uye mabasa ako ezuva nezuva.",
-    "status_prefix": "Mamiro eOnesa",
+    "status_prefix": "Mamiro aOnesa",
     "status_offline": "Haisi online",
     "status_backend_unreachable": "Onesa haisi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
-    "error_unable_contact": "Onesa haisi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
-    "online_indicator_aria": "Onesa iri online",
+    "error_unable_contact": "Onesa haasi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
+    "online_indicator_aria": "Onesa ari online",
     "online_text": "Online",
-    "error_timeout": "Chikumbiro cheOnesa chapera nguva mushure memaminitsi matatu. Edza zvakare.",
+    "error_timeout": "Maminetsi matatu apfuura mhinduro kubva kunaOnesa isati yauya. Edza zvakare.",
     "offline_text": "Offline"
   }
 }
