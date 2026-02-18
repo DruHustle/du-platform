@@ -197,6 +197,19 @@ function getOnesaLanguageLabel(language: SupportedOnesaLanguage): string {
   return "English";
 }
 
+function getOnesaLanguageFallbackReply(language: SupportedOnesaLanguage): string {
+  if (language === "sn") {
+    return "Pane dambudziko diki pakugadzira mhinduro izvozvi. Ndapota edza zvakare munguva pfupi.";
+  }
+  if (language === "nd") {
+    return "Kukhona inkinga encane ekuphenduleni okwamanje. Sicela uzame njalo ngemva kwesikhatshana.";
+  }
+  if (language === "de") {
+    return "Ich habe gerade ein kleines Problem beim Antworten. Bitte versuchen Sie es in Kürze erneut.";
+  }
+  return "I am having trouble generating a reliable response right now. Please try again.";
+}
+
 function getUpstreamStatus(error: any): number {
   return Number(error?.response?.status ?? 0);
 }
@@ -311,6 +324,65 @@ function normalizeSmallTalkPhrase(content: string): string {
   return tokens.join(" ");
 }
 
+function detectLatestUserLanguage(content: string): SupportedOnesaLanguage | null {
+  const greetingLanguage = detectGreetingLanguage(content);
+  if (greetingLanguage) return greetingLanguage;
+
+  const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  const words = normalized.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return null;
+
+  const score = { en: 0, sn: 0, nd: 0, de: 0 } as Record<SupportedOnesaLanguage, number>;
+  const has = (set: Set<string>, word: string) => set.has(word);
+  const snWords = new Set(["mhoro", "ndeip", "ndeipi", "makadii", "maswera", "sei", "ndatenda", "mazvita", "nding", "kubatsira"]);
+  const ndWords = new Set(["sawubona", "salibonani", "kunjani", "ngiyabonga", "nxa", "lamuhla", "ngingakuncedisa"]);
+  const deWords = new Set(["hallo", "guten", "danke", "bitte", "ich", "und", "wie", "kann"]);
+  const enWords = new Set(["hello", "hi", "hey", "thanks", "thank", "you", "how", "can", "help", "today"]);
+
+  for (const word of words) {
+    if (has(snWords, word) || word.startsWith("ndi")) score.sn += 1;
+    if (has(ndWords, word) || word.startsWith("ngi")) score.nd += 1;
+    if (has(deWords, word)) score.de += 1;
+    if (has(enWords, word)) score.en += 1;
+  }
+
+  const ranked = (Object.keys(score) as SupportedOnesaLanguage[]).sort((a, b) => score[b] - score[a]);
+  const top = ranked[0];
+  if (score[top] <= 0) return null;
+  const second = ranked[1];
+  if (score[top] === score[second]) return null;
+  return top;
+}
+
+function isMixedLanguageReply(reply: string, expectedLanguage: SupportedOnesaLanguage): boolean {
+  const normalized = reply.toLowerCase();
+  if (expectedLanguage === "en") return false;
+
+  const englishMarkers = [
+    "how can i",
+    "i can",
+    "you can",
+    "please",
+    "today",
+    "investment",
+    "trade",
+    "tourism",
+  ];
+  const swahiliMarkers = ["kwa kutumia", "kama ", " au ", "mifumo yote", "naweza", "leo"];
+  const englishHits = englishMarkers.reduce((count, marker) => (normalized.includes(marker) ? count + 1 : count), 0);
+
+  if (expectedLanguage === "sn") {
+    const swahiliHits = swahiliMarkers.reduce((count, marker) => (normalized.includes(marker) ? count + 1 : count), 0);
+    return englishHits >= 2 || swahiliHits >= 1;
+  }
+
+  if (expectedLanguage === "nd" || expectedLanguage === "de") {
+    return englishHits >= 2;
+  }
+
+  return false;
+}
+
 function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null {
   const phrase = normalizeSmallTalkPhrase(content);
   if (!phrase) return null;
@@ -330,6 +402,8 @@ function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null 
       "mhoro",
       "hesi",
       "ndeipi",
+      "ndeip",
+      "ndepi",
       "makadii",
       "maswera sei",
     ]),
@@ -353,38 +427,6 @@ function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null 
   return null;
 }
 
-function detectThanksLanguage(content: string): SupportedOnesaLanguage | null {
-  const phrase = normalizeSmallTalkPhrase(content);
-  if (!phrase) return null;
-
-  const thanksByLanguage: Record<SupportedOnesaLanguage, Set<string>> = {
-    en: new Set([
-      "thanks",
-      "thank you",
-      "thankyou",
-      "much appreciated",
-    ]),
-    sn: new Set([
-      "ndatenda",
-      "mazvita",
-    ]),
-    nd: new Set([
-      "ngiyabonga",
-      "ngiyathokoza",
-    ]),
-    de: new Set([
-      "danke",
-      "danke schon",
-      "vielen dank",
-    ]),
-  };
-
-  for (const language of Object.keys(thanksByLanguage) as SupportedOnesaLanguage[]) {
-    if (thanksByLanguage[language].has(phrase)) return language;
-  }
-  return null;
-}
-
 function getSmallTalkReply(
   content: string,
   defaultLanguage: SupportedOnesaLanguage
@@ -393,18 +435,10 @@ function getSmallTalkReply(
   const greetingLanguage = detectGreetingLanguage(normalized);
   if (greetingLanguage) {
     const language = greetingLanguage ?? defaultLanguage;
-    if (language === "sn") return "Mhoro! Ndini Onesa. Ndingakubatsirei nhasi?";
+    if (language === "sn") return "Mhoro! Ndini Onesa. Ndingakubatsirai nei nhasi?";
     if (language === "nd") return "Sawubona! Ngingu Onesa. Ngingakuncedisa ngani lamuhla?";
     if (language === "de") return "Hallo! Ich bin Onesa. Wie kann ich dir heute helfen?";
     return "Hi! I am Onesa. How can I help you today?";
-  }
-  const thanksLanguage = detectThanksLanguage(normalized);
-  if (thanksLanguage) {
-    const language = thanksLanguage ?? defaultLanguage;
-    if (language === "sn") return "Ndinotenda. Kana uchida, ndinogona kubatsira nezvekushanya, kudyara mari, kutengeserana, kana kudzokera kumusha.";
-    if (language === "nd") return "Wamukelekile. Nxa ufuna, ngingakuncedisa ngezokuvakasha, ukutshala imali, ukuhweba, loba ukubuyela ekhaya.";
-    if (language === "de") return "Gern geschehen. Wenn du möchtest, helfe ich bei Tourismus, Investitionen, Handel oder Rückkehrplanung.";
-    return "You are welcome. If you want, I can help with tourism, investment, trade, or relocation questions.";
   }
   return null;
 }
@@ -667,15 +701,19 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   const config = getOnesaConfig();
   const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = config;
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
-  const responseLanguage = normalizeOnesaLanguage(requestedLanguage);
+  const preferredLanguage = normalizeOnesaLanguage(requestedLanguage);
+  const latestUserMessage = getLatestUserMessage(messages);
+  const detectedUserLanguage = latestUserMessage ? detectLatestUserLanguage(latestUserMessage) : null;
+  const responseLanguage = detectedUserLanguage ?? preferredLanguage;
   const languageInstruction = [
+    `Respond only in ${getOnesaLanguageLabel(responseLanguage)}.`,
+    "Do not mix languages in the same response unless the user explicitly asks.",
     "Always respond in the same language as the user's latest message.",
-    `If the latest message language is ambiguous, use ${getOnesaLanguageLabel(responseLanguage)}.`,
+    `If the latest message language is ambiguous, use ${getOnesaLanguageLabel(responseLanguage)} only.`,
     "If the user switches language, switch with them.",
     "Do not translate unless the user asks for translation.",
   ].join(" ");
-  const safeFallbackReply = "I am having trouble generating a reliable response right now. Please try again.";
-  const latestUserMessage = getLatestUserMessage(messages);
+  const safeFallbackReply = getOnesaLanguageFallbackReply(responseLanguage);
   const smallTalkReply = latestUserMessage
     ? getSmallTalkReply(latestUserMessage, responseLanguage)
     : null;
@@ -759,7 +797,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
             providerTarget.kind === "anthropic"
               ? extractAnthropicText(response.data)
               : String(response.data?.choices?.[0]?.message?.content ?? "").trim();
-          if (reply && !isLowQualityOnesaReply(reply)) {
+          if (reply && !isLowQualityOnesaReply(reply) && !isMixedLanguageReply(reply, responseLanguage)) {
             lastOnesaSuccessAt = Date.now();
             return reply;
           }
