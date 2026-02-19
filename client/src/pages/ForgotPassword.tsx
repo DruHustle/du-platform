@@ -32,7 +32,7 @@ export default function ForgotPassword() {
   return (
     <Layout>
       <section className="min-h-[80vh] bg-slate-950 px-6 py-28">
-        <div className="max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+        <div className="outer-glass-panel max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
           <h1 className="text-3xl font-black tracking-tighter">Reset Password</h1>
           <p className="text-white/75 text-sm mt-2">Enter your account email and we will send reset instructions.</p>
 

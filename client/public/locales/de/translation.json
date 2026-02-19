@@ -39,6 +39,7 @@
   },
   "nav": {
     "home": "Startseite",
+    "shop": "Shop",
     "export": "Export-Hub",
     "tourism": "Tourismus",
     "investment": "Investitionen",
@@ -1942,8 +1943,44 @@
   },
   "shop": {
     "collections": "Kollektionen",
-    "title": "Kuratierte simbabwische Exzellenz",
+    "title": "Ein Zuhause fern von Zuhause",
+    "collections_title": "Kuratierte simbabwische Exzellenz",
     "desc": "Von offiziellem Merchandise bis zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte.",
+    "collections_description": "Kuratierte simbabwische Exzellenz bringt authentische simbabwische Produkte direkt zu Ihnen nach Hause – von Vorratswaren und Getränken bis zu Kunsthandwerk und Sportbekleidung, mit Fokus auf Qualität und Diaspora-Komfort.",
+    "explore": "Entdecken",
+    "explore_shop": "Shop entdecken",
+    "trade_support": "Handelsunterstützung entdecken",
+    "export_readiness": "Export-Reifeleitfaden",
+    "hero": {
+      "badge1": "Authentische Produkte aus Simbabwe",
+      "title1": "Simbabwe Shop",
+      "subtitle1": "Kaufen Sie kuratierte Produkte aus Simbabwe mit diasporafreundlicher Lieferung und vertrauenswürdiger Beschaffung.",
+      "button1": "Kollektionen durchsuchen",
+      "badge2": "Handwerkskultur",
+      "title2": "Handgefertigte Exzellenz",
+      "subtitle2": "Von Shona-Steinbildhauerei bis zu handgeflochtenen Körben – entdecken Sie Produkte mit Kultur und Qualität.",
+      "badge3": "Geschmack von Zuhause",
+      "title3": "Essen und Nostalgie",
+      "subtitle3": "Genießen Sie Favoriten aus Simbabwe mit Qualitätskontrollen für lokale und exportorientierte Käufer."
+    },
+    "how_it_works": {
+      "title": "So funktioniert der Shop",
+      "subtitle": "Praktischer Handelsablauf für in Simbabwe hergestellte Waren – für Vertrauen, Komfort und Diaspora-Wirkung."
+    },
+    "process": {
+      "verified": {
+        "title": "Verifizierte Beschaffung",
+        "desc": "Waren werden von vertrauenswürdigen Produzenten, Kunsthandwerkern und konformen Lieferanten kuratiert."
+      },
+      "delivery": {
+        "title": "Diaspora-Lieferunterstützung",
+        "desc": "Wir priorisieren praktikable Lieferwege für lokale, regionale und internationale Käufer."
+      },
+      "payment": {
+        "title": "Flexible Zahlungswege",
+        "desc": "Unterstützung moderner Zahlungsabläufe und transparenter Preise zur Reduzierung von Checkout-Hürden."
+      }
+    },
     "sports_title": "Nationaler Sport",
     "sports_desc": "Offizielle Ausrüstung für Sables, Chevrons und Warriors.",
     "sports_mech_soccer": "Fußball-Trikot",

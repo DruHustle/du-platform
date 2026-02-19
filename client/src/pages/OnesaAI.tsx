@@ -211,7 +211,7 @@ export default function OnesaAI() {
               {t("onesa.badge", { defaultValue: "Onesa AI" })}
             </Badge>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter">
+              <h1 className="!text-xl !font-black !tracking-tight">
                 {t("onesa.title", { defaultValue: "Chat with Onesa AI" })}
               </h1>
               <span

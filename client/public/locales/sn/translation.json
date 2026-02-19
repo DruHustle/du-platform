@@ -39,6 +39,7 @@
   },
   "nav": {
     "home": "Pamba",
+    "shop": "Shop",
     "export": "Zvinotumirwa Kunze",
     "tourism": "Ushanyi",
     "investment": "Kudyara Mari",
@@ -1942,8 +1943,44 @@
   },
   "shop": {
     "collections": "Zvirongwa",
-    "title": "Zvigadzirwa zvemuZimbabwe Zvakanaka",
+    "title": "Kumba Kuri Kure",
+    "collections_title": "Zvigadzirwa zvemuZimbabwe Zvakanaka",
     "desc": "Kubva kuzvigadzirwa zvehurumende kusvika kumabasa emaoko, chimwe nechimwe chinotaura nhoroondo nenhaka yedu.",
+    "collections_description": "Curated Zimbabwean Excellence inounza zvigadzirwa zvechokwadi zveZimbabwe pamusuwo wako, kubva kune zvekudya nemichero kusvika kumabasa emaoko nezvipfeko zvemitambo, zvakasarudzwa nehunhu uye nyore kune diaspora.",
+    "explore": "Ongorora",
+    "explore_shop": "Ongorora Shop",
+    "trade_support": "Ongorora Rutsigiro rweTrade",
+    "export_readiness": "Gwaro reKugadzirira Export",
+    "hero": {
+      "badge1": "Zvigadzirwa zvechokwadi zveZimbabwe",
+      "title1": "Shop Zimbabwe",
+      "subtitle1": "Tenga zvigadzirwa zvakasarudzwa zveZimbabwe zvine delivery inokodzera diaspora uye sourcing inovimbika.",
+      "button1": "Tarisa Collections",
+      "badge2": "Nhaka yeMabasa emaoko",
+      "title2": "Hunaka Hwakagadzirwa nemaoko",
+      "subtitle2": "Kubva kuShona stone sculpture kusvika kuma basket akarukwa nemaoko, wana zvigadzirwa zvine tsika nehunhu.",
+      "badge3": "Kunaka kweKumba",
+      "title3": "Chikafu neNostalgia",
+      "subtitle3": "Nakidzwa nezvinodiwa zveZimbabwe zvine quality control kune vatengi vemuno neveexport."
+    },
+    "how_it_works": {
+      "title": "Mashandiro eShop",
+      "subtitle": "Mafambiro anoshanda e-commerce yezvinhu zvakagadzirwa muZimbabwe, zvakagadzirirwa kuvimba, nyore, uye mhedzisiro ye diaspora."
+    },
+    "process": {
+      "verified": {
+        "title": "Sourcing Yakasimbiswa",
+        "desc": "Zvigadzirwa zvinounganidzwa kubva kuvagadziri, vanyanzvi vemabasa emaoko, nevapi vezvinhu vanotevedzera mitemo."
+      },
+      "delivery": {
+        "title": "Rutsigiro rweDelivery kuDiaspora",
+        "desc": "Tinokoshesa nzira dzekuendesa zvinhu dzinoshanda kune vatengi vemuno, mudunhu, nepasirese."
+      },
+      "payment": {
+        "title": "Nzira dzeKubhadhara Dzinochinjika",
+        "desc": "Tsigiro yenzira dzemazuva ano dzekubhadhara nemitengo yakajeka kuderedza kusagadzikana pa checkout."
+      }
+    },
     "sports_title": "Mitambo yeNyika",
     "sports_desc": "Mbatya dzepamutemo dzeSables, Chevrons, nemaWarriors.",
     "sports_mech_soccer": "Mbatya dzeSoccer.",

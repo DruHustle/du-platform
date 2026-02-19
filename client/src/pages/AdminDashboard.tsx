@@ -37,7 +37,20 @@ type SuccessStoryRow = {
   created_at: string;
 };
 
-type TabKey = "notify" | "ntir" | "stories";
+type ShopProductRow = {
+  id: number;
+  slug: string;
+  name: string;
+  category: "sports" | "crafts" | "food";
+  description: string;
+  image_url: string;
+  price_cents: number;
+  currency: string;
+  stock_qty: number;
+  is_active: 0 | 1;
+};
+
+type TabKey = "notify" | "ntir" | "stories" | "shop";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<TabKey>("notify");
@@ -46,6 +59,7 @@ export default function AdminDashboard() {
   const [notifyRows, setNotifyRows] = useState<NotifyRow[]>([]);
   const [ntirRows, setNtirRows] = useState<NtirRow[]>([]);
   const [storyRows, setStoryRows] = useState<SuccessStoryRow[]>([]);
+  const [shopRows, setShopRows] = useState<ShopProductRow[]>([]);
   const [ntirForm, setNtirForm] = useState({ name: "", sector: "", location: "", verification_status: "Pending" });
   const [storyForm, setStoryForm] = useState({
     title: "",
@@ -60,28 +74,43 @@ export default function AdminDashboard() {
     markets: "",
     is_published: true,
   });
+  const [shopForm, setShopForm] = useState({
+    slug: "",
+    name: "",
+    category: "sports" as "sports" | "crafts" | "food",
+    description: "",
+    image_url: "",
+    price_cents: "0",
+    currency: "EUR",
+    stock_qty: "0",
+    is_active: true,
+  });
+  const [editingShopId, setEditingShopId] = useState<number | null>(null);
 
   const tabs = useMemo(
     () => [
       { key: "notify" as const, label: "Notify Me", count: notifyRows.length },
       { key: "ntir" as const, label: "NTIR", count: ntirRows.length },
       { key: "stories" as const, label: "Success Stories", count: storyRows.length },
+      { key: "shop" as const, label: "Shop Products", count: shopRows.length },
     ],
-    [notifyRows.length, ntirRows.length, storyRows.length]
+    [notifyRows.length, ntirRows.length, storyRows.length, shopRows.length]
   );
 
   const loadAdminData = async () => {
     setLoading(true);
     setError("");
     try {
-      const [notifyRes, ntirRes, storiesRes] = await Promise.all([
+      const [notifyRes, ntirRes, storiesRes, shopRes] = await Promise.all([
         api.get("/admin/notify-requests"),
         api.get("/admin/ntir"),
         api.get("/admin/success-stories"),
+        api.get("/admin/shop-products"),
       ]);
       setNotifyRows(notifyRes.data?.rows ?? []);
       setNtirRows(ntirRes.data?.rows ?? []);
       setStoryRows(storiesRes.data?.stories ?? []);
+      setShopRows(shopRes.data?.rows ?? []);
     } catch (err: any) {
       const status = Number(err?.response?.status ?? 0);
       if (status === 401) {
@@ -91,6 +120,70 @@ export default function AdminDashboard() {
       setError(String(err?.response?.data?.message ?? "Unable to load admin data."));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const resetShopForm = () => {
+    setShopForm({
+      slug: "",
+      name: "",
+      category: "sports",
+      description: "",
+      image_url: "",
+      price_cents: "0",
+      currency: "EUR",
+      stock_qty: "0",
+      is_active: true,
+    });
+    setEditingShopId(null);
+  };
+
+  const submitShopProduct = async (event: FormEvent) => {
+    event.preventDefault();
+    setError("");
+    const payload = {
+      ...shopForm,
+      price_cents: Math.floor(Number(shopForm.price_cents)),
+      stock_qty: Math.floor(Number(shopForm.stock_qty)),
+      is_active: shopForm.is_active ? 1 : 0,
+    };
+    try {
+      if (editingShopId) {
+        await api.put(`/admin/shop-products/${editingShopId}`, payload);
+      } else {
+        await api.post("/admin/shop-products", payload);
+      }
+      resetShopForm();
+      await loadAdminData();
+    } catch (err: any) {
+      setError(String(err?.response?.data?.message ?? "Unable to save shop product."));
+    }
+  };
+
+  const editShopProduct = (row: ShopProductRow) => {
+    setEditingShopId(row.id);
+    setShopForm({
+      slug: row.slug,
+      name: row.name,
+      category: row.category,
+      description: row.description,
+      image_url: row.image_url,
+      price_cents: String(row.price_cents),
+      currency: row.currency || "EUR",
+      stock_qty: String(row.stock_qty),
+      is_active: row.is_active === 1,
+    });
+    setActiveTab("shop");
+  };
+
+  const deleteShopProduct = async (id: number) => {
+    setError("");
+    try {
+      await api.delete(`/admin/shop-products/${id}`);
+      if (editingShopId === id) resetShopForm();
+      await loadAdminData();
+    } catch (err: any) {
+      setError(String(err?.response?.data?.message ?? "Unable to delete shop product."));
     }
   };
 
@@ -332,6 +425,66 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          ) : null}
+
+          {!loading && activeTab === "shop" ? (
+            <div className="space-y-6">
+              <form onSubmit={submitShopProduct} className="space-y-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="grid md:grid-cols-3 gap-3">
+                  <Input value={shopForm.slug} onChange={(e) => setShopForm((p) => ({ ...p, slug: e.target.value }))} placeholder="Slug" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input value={shopForm.name} onChange={(e) => setShopForm((p) => ({ ...p, name: e.target.value }))} placeholder="Product name" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input value={shopForm.image_url} onChange={(e) => setShopForm((p) => ({ ...p, image_url: e.target.value }))} placeholder="Image URL or path" className="bg-white/[0.05] border-white/20 text-white" />
+                </div>
+                <div className="grid md:grid-cols-4 gap-3">
+                  <Input value={shopForm.category} onChange={(e) => setShopForm((p) => ({ ...p, category: e.target.value as "sports" | "crafts" | "food" }))} placeholder="Category: sports/crafts/food" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input value={shopForm.price_cents} onChange={(e) => setShopForm((p) => ({ ...p, price_cents: e.target.value }))} placeholder="Price cents (e.g. 4999)" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input value={shopForm.stock_qty} onChange={(e) => setShopForm((p) => ({ ...p, stock_qty: e.target.value }))} placeholder="Stock qty" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input value={shopForm.currency} onChange={(e) => setShopForm((p) => ({ ...p, currency: e.target.value }))} placeholder="Currency" className="bg-white/[0.05] border-white/20 text-white" />
+                </div>
+                <Textarea value={shopForm.description} onChange={(e) => setShopForm((p) => ({ ...p, description: e.target.value }))} placeholder="Description" className="min-h-[90px] bg-white/[0.05] border-white/20 text-white" />
+                <div className="flex items-center gap-4">
+                  <label className="text-white/80 text-sm flex items-center gap-2">
+                    <input type="checkbox" checked={shopForm.is_active} onChange={(e) => setShopForm((p) => ({ ...p, is_active: e.target.checked }))} />
+                    Active
+                  </label>
+                  <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
+                    {editingShopId ? "Update Product" : "Add Product"}
+                  </Button>
+                  {editingShopId ? (
+                    <Button type="button" variant="outline" onClick={resetShopForm} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
+                      Cancel Edit
+                    </Button>
+                  ) : null}
+                </div>
+              </form>
+
+              <div className="grid gap-4">
+                {shopRows.map((row) => (
+                  <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="font-black">{row.name}</p>
+                        <p className="text-white/75 text-sm">
+                          {row.category} | {row.slug} | {row.currency} {(Number(row.price_cents) / 100).toFixed(2)} | Stock {row.stock_qty}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={row.is_active ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
+                          {row.is_active ? "Active" : "Inactive"}
+                        </Badge>
+                        <Button type="button" variant="outline" onClick={() => editShopProduct(row)} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
+                          Edit
+                        </Button>
+                        <Button type="button" variant="outline" onClick={() => deleteShopProduct(row.id)} className="border-rose-400/40 bg-rose-500/10 text-rose-200 hover:bg-rose-500 hover:text-white">
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {shopRows.length === 0 ? <p className="text-white/50">No shop products yet.</p> : null}
               </div>
             </div>
           ) : null}

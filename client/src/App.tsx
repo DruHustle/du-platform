@@ -14,6 +14,8 @@ import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
 import SuccessStories from "./pages/SuccessStories";
 import Technology from "./pages/Technology";
+import Shop from "./pages/Shop";
+import ShopProducts from "./pages/ShopProducts";
 import SearchResults from "./pages/SearchResults";
 import ComingSoon from "./components/ComingSoon";
 import ScrollToHash from "./components/ScrollToHash";
@@ -44,6 +46,8 @@ function Router() {
       <Route path="/investment" component={Investment} />
       <Route path="/trade" component={Trade} />
       <Route path="/technology" component={Technology} />
+      <Route path="/shop" component={Shop} />
+      <Route path="/shop/products" component={ShopProducts} />
       <Route path="/data-visualization" component={DataVisualization} />
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/login" component={LogIn} />

@@ -89,13 +89,13 @@ export default function ProjectDetails() {
           </Link>
 
           {!project ? (
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+            <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
               <h1 className="text-3xl font-black">Project not found</h1>
               <p className="text-white/75 mt-2">The selected project ID does not exist.</p>
             </div>
           ) : (
             <>
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 text-white">
+              <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 text-white">
                 <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase text-[10px] tracking-widest font-black">
                   Project Details
                 </Badge>
@@ -105,7 +105,7 @@ export default function ProjectDetails() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+                <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-zim-gold" /> Highlights
                   </h2>
@@ -118,7 +118,7 @@ export default function ProjectDetails() {
                   </ul>
                 </div>
 
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+                <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
                     <Building2 className="h-5 w-5 text-zim-gold" /> Key Metrics
                   </h2>
@@ -133,7 +133,7 @@ export default function ProjectDetails() {
                 </div>
               </div>
 
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white grid md:grid-cols-3 gap-4">
+              <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white grid md:grid-cols-3 gap-4">
                 <div className="rounded-xl border border-white/10 p-4">
                   <p className="text-white/40 !text-[11px] uppercase tracking-widest">Location</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">

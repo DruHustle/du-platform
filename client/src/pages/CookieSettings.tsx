@@ -14,7 +14,7 @@ export default function CookieSettings() {
     <Layout>
       <section className="py-16 bg-slate-950 min-h-[70vh]">
         <div className="container px-6 mx-auto max-w-3xl">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
               Cookie settings
             </h1>

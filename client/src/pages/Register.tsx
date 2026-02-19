@@ -47,7 +47,7 @@ export default function Register() {
           animate={{ opacity: 1, y: 0 }}
           className="relative w-full max-w-lg p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent"
         >
-          <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-12 space-y-8">
+          <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-12 space-y-8">
             
             {/* --- CANCEL BUTTON --- */}
             <button 

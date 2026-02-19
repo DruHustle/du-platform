@@ -379,7 +379,6 @@ export default function Technology() {
             className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
           >
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-zim-gold/10 blur-[80px] rounded-full group-hover:bg-zim-gold/20 transition-all duration-700" />
 
             {/* Top row: Onesa intro, status, and demo preview */}
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
@@ -439,9 +438,6 @@ export default function Technology() {
             {/* Bottom row: Why Onesa AI matters and value pillars */}
             <div id="technology-onesa-vision" className="relative z-10 mt-10 pt-8 border-t border-white/10">
               <div className="flex items-center justify-center gap-3 mb-5">
-                <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                  <Sparkles className="h-5 w-5 text-zim-gold" />
-                </div>
                 <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
                   {t("tech.onesa_matter.badge") || "Africa-Centric AI"}
                 </Badge>
@@ -511,7 +507,8 @@ export default function Technology() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="mb-10 text-center">
             <div className="flex items-center justify-center gap-3 mb-5">
               <BarChart3 className="h-6 w-6 text-zim-gold" />
@@ -577,7 +574,8 @@ export default function Technology() {
     {/* Digital Transformation Snapshot */}
     <section id="technology-momentum" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="mb-10 text-center">
             <div className="flex items-center justify-center gap-3 mb-5">
               <Signal className="h-6 w-6 text-zim-gold" />
@@ -635,7 +633,8 @@ export default function Technology() {
     {/* Diaspora Use Cases */}
     <section id="technology-diaspora-use-cases" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="mb-10 text-center">
             <div className="flex items-center justify-center gap-3 mb-5">
               <Globe className="h-6 w-6 text-zim-gold" />
@@ -666,7 +665,8 @@ export default function Technology() {
     {/* Opportunities and Challenges */}
     <section id="technology-opportunities" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8">
+        <div className="relative p-8 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="flex items-center justify-center gap-3 mb-5">
             <Lightbulb className="h-6 w-6 text-zim-gold" />
             <h3 className="text-xl font-black text-white tracking-tight">
@@ -705,7 +705,8 @@ export default function Technology() {
     {/* Fintech Regulatory Environment */}
     <section id="technology-fintech-regulation" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="mb-10 text-center">
             <div className="flex items-center gap-3">
               <Shield className="h-6 w-6 text-zim-gold" />
@@ -756,7 +757,8 @@ export default function Technology() {
     {showInnovationHubs && (
       <section id="technology-hubs" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="mb-10 text-center">
               <h2 className="text-xl font-black text-white tracking-tight">
                 {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
@@ -790,7 +792,8 @@ export default function Technology() {
     {/* Governance & Trust */}
     <section id="technology-governance" className="pb-24 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-12">
+        <div className="relative p-8 md:p-12 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="mb-10 text-center">
             <div className="flex items-center justify-center gap-3 mb-5">
               <Shield className="h-6 w-6 text-zim-gold" />

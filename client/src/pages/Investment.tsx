@@ -405,7 +405,7 @@ const projects = [
       {/* Collective Model */}
       <section id="collective-model" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-center justify-center gap-3 mb-5">
               <Users className="h-6 w-6 text-zim-gold" />
               <h3 className="text-xl font-black text-white tracking-tight">
@@ -430,7 +430,7 @@ const projects = [
       {/* European Investment Partnerships */}
       <section id="eu-partnerships" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Globe className="h-6 w-6 text-zim-gold" />
@@ -499,7 +499,7 @@ const projects = [
       {/* Active Projects - Cinematic Glass Grid */}
       <section id="active-projects" className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Target className="h-6 w-6 text-zim-gold" />
@@ -607,7 +607,7 @@ const projects = [
       {/* How it Works - Glass Dashboard */}
       <section className="py-10 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Repeat className="h-6 w-6 text-zim-gold" />
@@ -627,7 +627,7 @@ const projects = [
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
                     {i + 1}
                   </div>
-                  <div className="h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
+                  <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
                     <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
                       <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
                     </div>
@@ -644,7 +644,7 @@ const projects = [
       {/* Directories - Dual Glass Panels */}
       <section className="py-10 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
               <div className="mb-10 text-center">
             <div className="flex items-center justify-center gap-3 mb-5">
               <FileText className="h-6 w-6 text-zim-gold" />
@@ -653,11 +653,11 @@ const projects = [
              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-5 mb-6">
-                <div className="p-4 bg-zim-gold/10 rounded-2xl border border-zim-gold/20">
-                  <span className="text-4xl drop-shadow-[0_0_12px_rgba(212,175,55,0.35)]">🗂️</span>
+                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🗂️</span>
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
@@ -674,11 +674,11 @@ const projects = [
               </Link>
             </div>
 
-            <div className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-5 mb-6">
-                <div className="p-4 bg-zim-green/10 rounded-2xl border border-zim-green/20">
-                  <span className="text-4xl drop-shadow-[0_0_12px_rgba(34,197,94,0.35)]">🌱</span>
+                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🌱</span>
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
@@ -707,7 +707,7 @@ const projects = [
       {/* ZIDA Information Section */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Building className="h-6 w-6 text-zim-gold" />
@@ -751,7 +751,7 @@ const projects = [
       {/* Regulatory Snapshot */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
               <div className="space-y-3 max-w-3xl mx-auto">
                 <h3 className="text-xl font-black text-white tracking-tight">
@@ -783,7 +783,7 @@ const projects = [
       {/* Calculator Section */}
       <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto relative z-10">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Brain className="h-6 w-6 text-zim-gold" />

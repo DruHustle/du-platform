@@ -121,6 +121,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.technology'), href: "/technology" },
     { name: t('nav.export'), href: "/export-hub" },
     { name: t('nav.tourism'), href: "/tourism" },
+    { name: t('nav.shop'), href: "/shop" },
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
     { name: t('nav.data'), href: "/data-visualization" },

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { FileText, Users, Building2, Truck, Shield, AlertTriangle, CheckCircle, ArrowRight, Globe, Award, TrendingUp, Ship, Euro, Sprout, Factory, Container } from "lucide-react";
+import { FileText, Users, Building2, Shield, AlertTriangle, CheckCircle, ArrowRight, Globe, Award, TrendingUp, Ship, Euro, Sprout, Factory, Container } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -145,37 +145,37 @@ const germanRequirements = [
   const partners = [
     {
       type: t("export.partners.retailers.type") || "Retailers & Supermarkets",
-      icon: Building2,
+      icon: "🏬",
       examples: ["REWE Group", "EDEKA", "Metro AG", "Kaufland", "Aldi Süd"],
       description: t("export.partners.retailers.description") || "Direct access to major German retail chains and independent stores."
     },
     {
       type: t("export.partners.educational_institutions.type") || "Educational Institutions",
-      icon: Users,
+      icon: "🎓",
       examples: ["German-African Business Association", "IHK (Chambers of Commerce)", "Trade Schools", "Universities"],
       description: t("export.partners.educational_institutions.description") || "Partnerships for skill development, research, and cultural exchange."
     },
     {
       type: t("export.partners.business_partners.type") || "Business Development Partners",
-      icon: Building2,
+      icon: "🤝",
       examples: ["Import/Export Agencies", "Trade Consultants", "Market Entry Specialists", "Distribution Partners"],
       description: t("export.partners.business_partners.description") || "Specialists in market entry, business matching, and investment facilitation."
     },
     {
       type: t("export.partners.logistics_partners.type") || "Logistics & Freight Forwarders",
-      icon: Truck,
+      icon: "🚚",
       examples: ["DHL Global Forwarding", "Kuehne + Nagel", "DB Schenker", "Freight Forwarders"],
       description: t("export.partners.logistics_partners.description") || "Reliable and efficient transport solutions for seamless export operations."
     },
     {
       type: t("export.partners.regulatory_partners.type") || "Regulatory & Certification Bodies",
-      icon: Shield,
+      icon: "🛡️",
       examples: ["German Customs (Zoll)", "Certification Bodies", "Quality Assurance Agencies", "Trade Compliance Consultants"],
       description: t("export.partners.regulatory_partners.description") || "Guidance and support for navigating complex German and EU regulations."
     },
     {
       type: t("export.partners.financial_services.type") || "Financial Services & Trade Finance",
-      icon: Building2,
+      icon: "💶",
       examples: ["Deutsche Bank", "Commerzbank", "KfW Development Bank", "Export Credit Agencies", "Trade Finance Providers"],
       description: t("export.partners.financial_services.description") || "Access to trade finance, export credit, and banking solutions."
     }
@@ -285,7 +285,8 @@ const marketIntelligence = [
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="relative p-8 md:p-10 !rounded-[2rem] !overflow-hidden !border !border-white/10 !bg-white/[0.02] !shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] !border !border-white/10 pointer-events-none" />
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <FileText className="h-6 w-6 text-zim-gold" />
@@ -308,30 +309,29 @@ const marketIntelligence = [
                   transition={{ delay: index * 0.1 }}
                   className="relative group"
                 >
-                  <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-slate-950/60">
-                    {/* The Crispy Edge Finish */}
-                    <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-                    
-                    <div className="flex items-center gap-5 mb-6">
-                      <div className="p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:scale-110 transition-transform duration-500">
-                        <span className="text-4xl drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{item.icon}</span>
+                  <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02]">
+                    <div className="p-8">
+                      <div className="flex items-center gap-5 mb-6">
+                        <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                        <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{item.icon}</span>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-black text-white tracking-tight">{item.category}</h3>
+                          <p className="text-xs font-black text-zim-gold uppercase tracking-widest mt-1">
+                            {item.price}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-black text-white tracking-tight">{item.category}</h3>
-                        <p className="text-xs font-black text-zim-gold uppercase tracking-widest mt-1">
-                          {item.price}
-                        </p>
-                      </div>
+
+                      <ul className="space-y-3">
+                        {Array.isArray(item.requirements) && item.requirements.map((req, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)] flex-shrink-0" />
+                            <span className="text-sm text-white/70 font-light leading-relaxed">{req}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    
-                    <ul className="space-y-3">
-                      {Array.isArray(item.requirements) && item.requirements.map((req, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)] flex-shrink-0" />
-                          <span className="text-sm text-white/70 font-light leading-relaxed">{req}</span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </motion.div>
               ))}
@@ -364,10 +364,10 @@ const marketIntelligence = [
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.1)]"
+                  className="relative p-8 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
                 >
                   {/* The Crispy Edge Finish */}
-                  <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+                  <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
 
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
                     
@@ -447,7 +447,8 @@ const marketIntelligence = [
       {/* Strategic Resources */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Building2 className="h-6 w-6 text-zim-gold" />
@@ -480,7 +481,8 @@ const marketIntelligence = [
         <div className="absolute bottom-0 left-0 w-full h-[500px] bg-[radial-gradient(circle_at_bottom_left,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
         
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Users className="h-6 w-6 text-zim-gold" />
@@ -503,12 +505,10 @@ const marketIntelligence = [
                   transition={{ delay: index * 0.1 }}
                   className="group relative h-full flex flex-col"
                 >
-                  <div className="relative flex-grow flex flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
-                    {/* The Crispy Edge Finish */}
-                    <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-                    
-                    <div className="bg-white/5 p-6 rounded-[2rem] w-20 h-20 flex items-center justify-center mx-auto mb-8 border border-white/10 group-hover:bg-zim-gold/10 group-hover:border-zim-gold/30 transition-all duration-500 group-hover:scale-110">
-                      <partner.icon className="h-10 w-10 text-zim-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" />
+                  <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02]">
+                    <div className="p-8">
+                    <div className="p-4 bg-white/5 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-8 group-hover:bg-zim-gold/10 transition-colors">
+                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{partner.icon}</span>
                     </div>
                     
                     <div className="text-center flex-grow flex flex-col items-center">
@@ -539,6 +539,7 @@ const marketIntelligence = [
                         </DialogContent>
                       </Dialog>
                     </div>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -550,7 +551,8 @@ const marketIntelligence = [
       {/* Export Compliance Checklist */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="mb-8 text-center">
               <div>
                 <div className="flex items-center justify-center gap-3 mb-5">
@@ -586,7 +588,8 @@ const marketIntelligence = [
       {/* Regulatory Updates - Horizontal Glass Ticker */}
       <section className="py-10 pb-24 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <AlertTriangle className="h-6 w-6 text-zim-gold" />
@@ -616,7 +619,7 @@ const marketIntelligence = [
                   transition={{ delay: index * 0.1 }}
                   className="group relative flex flex-col"
                 >
-                  <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-slate-950/60">
+                  <div className="relative p-8 h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group hover:bg-slate-950/60">
                     {/* Internal "Crispy" Edge */}
                     <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
                     

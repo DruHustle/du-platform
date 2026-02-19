@@ -39,6 +39,7 @@
   },
   "nav": {
     "home": "Ekhaya",
+    "shop": "Shop",
     "export": "Indawo yokuthumela phandle",
     "tourism": "Ezokuvakasha",
     "investment": "Ukutshala Imali",
@@ -1942,8 +1943,44 @@
   },
   "shop": {
     "collections": "Amaqoqo (Collections)",
-    "title": "Ubungcweti baseZimbabwe obukhethiweyo",
+    "title": "Ikhaya Likhona Lanxa Ukude",
+    "collections_title": "Ubungcweti baseZimbabwe obukhethiweyo",
     "desc": "Kusukela kwimpahla esemthethweni kusiya emagugwini enziwe ngezandla, yonke impahla ilendaba yamasiko le-quality.",
+    "collections_description": "Ubungcweti baseZimbabwe obukhethiweyo buletha imikhiqizo yeZimbabwe eqotho emnyango wakho, kusukela kokudla leziselo kuye kwezobuciko lezimpahla zemidlalo, kukhethwe ngekhwalithi lokwanelisa i-diaspora.",
+    "explore": "Hlola",
+    "explore_shop": "Hlola iShop",
+    "trade_support": "Hlola Ukusekelwa KweTrade",
+    "export_readiness": "Isiqondiso Sokulungela i-Export",
+    "hero": {
+      "badge1": "Imikhiqizo yeZimbabwe eqotho",
+      "title1": "Thenga iZimbabwe",
+      "subtitle1": "Thenga imikhiqizo ekhethiweyo evela eZimbabwe nge-delivery ehambelana le-diaspora kanye le-sourcing ethembekileyo.",
+      "button1": "Buka Amaqoqo",
+      "badge2": "Ifa Lezobuciko",
+      "title2": "Ubungcweti Benziwe Ngezandla",
+      "subtitle2": "Kusukela ku-Shona stone sculpture kuye kumabasket alukiwe ngezandla, thola imikhiqizo egxile emasikweni lasekhwalithini.",
+      "badge3": "Ukunambitheka Kwekhaya",
+      "title3": "Ukudla le-Nostalgia",
+      "subtitle3": "Jabulela izinto ozaziyo zaseZimbabwe ezilawulwa ngekhwalithi kubathengi basekhaya labanxusa i-export."
+    },
+    "how_it_works": {
+      "title": "IShop Isebenza Njani",
+      "subtitle": "Indlela esebenzayo yokuthengisa imikhiqizo eyenziwe eZimbabwe, eyakhiwe ngokwethemba, ukulula, kanye lomthelela we-diaspora."
+    },
+    "process": {
+      "verified": {
+        "title": "Ukutholakala Okuqinisekisiweyo",
+        "desc": "Imikhiqizo iqoqwa kubakhiqizi abathembelekayo, izingcwethi zezandla, kanye labahlinzeki abahambisana lemigomo."
+      },
+      "delivery": {
+        "title": "Ukusekelwa Kwe-Delivery yeDiaspora",
+        "desc": "Sibeka phambili imigudu yokuletha esebenzayo kubathengi basekhaya, esigabeni, kanye labamazwe ngamazwe."
+      },
+      "payment": {
+        "title": "Izindlela Zokukhokha Eziguquguqukayo",
+        "desc": "Ukusekelwa kwezindlela zesimanje zokukhokha kanye lentengo ecacileyo ukunciphisa ukuhlupheka ngesikhathi se-checkout."
+      }
+    },
     "sports_title": "Imidlalo yesizwe",
     "sports_desc": "Impahla esemthethweni ye-Sables, Chevrons, le-Warriors.",
     "sports_mech_soccer": "I-Soccer Kit.",

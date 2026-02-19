@@ -39,6 +39,7 @@
   },
   "nav": {
     "home": "Home",
+    "shop": "Shop",
     "export": "Export Hub",
     "tourism": "Tourism",
     "investment": "Investment",
@@ -2011,8 +2012,44 @@
   },
   "shop": {
     "collections": "Collections",
-    "title": "Curated Zimbabwean Excellence",
+    "title": "Home Away From Home",
+    "collections_title": "Curated Zimbabwean Excellence",
     "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
+    "collections_description": "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience.",
+    "explore": "Explore",
+    "explore_shop": "Explore Shop",
+    "trade_support": "Explore Trade Support",
+    "export_readiness": "Export Readiness Guide",
+    "hero": {
+      "badge1": "Authentic Zimbabwe Goods",
+      "title1": "Shop Zimbabwe",
+      "subtitle1": "Buy curated products from Zimbabwe with diaspora-friendly delivery and trusted sourcing.",
+      "button1": "Browse Collections",
+      "badge2": "Craft Heritage",
+      "title2": "Handcrafted Excellence",
+      "subtitle2": "From Shona stone sculpture to handwoven baskets, discover products rooted in culture and quality.",
+      "badge3": "Taste of Home",
+      "title3": "Food and Nostalgia",
+      "subtitle3": "Enjoy Zimbabwe favorites sourced with quality controls for local and export-ready buyers."
+    },
+    "how_it_works": {
+      "title": "How The Shop Works",
+      "subtitle": "Practical commerce flow for Zimbabwe-made goods, designed for trust, convenience, and diaspora impact."
+    },
+    "process": {
+      "verified": {
+        "title": "Verified Sourcing",
+        "desc": "Goods are curated from trusted Zimbabwean producers, artisans, and compliant suppliers."
+      },
+      "delivery": {
+        "title": "Diaspora Delivery Support",
+        "desc": "We prioritize practical fulfillment routes for local, regional, and international buyers."
+      },
+      "payment": {
+        "title": "Flexible Payment Pathways",
+        "desc": "Support for modern payment flows and transparent pricing to reduce checkout friction."
+      }
+    },
     "sports_title": "National Sports",
     "sports_desc": "Official gear for the Sables, Chevrons, and Warriors.",
     "sports_mech_soccer": "Soccer Kit.",

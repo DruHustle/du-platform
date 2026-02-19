@@ -156,8 +156,7 @@ export default function Home() {
                       transition-all duration-500 group hover:scale-[1.02] hover:border-white/30
                     ">
                       {/* EXACT SHINE & TEXTURE */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
+                    <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
 
                       <div className="relative z-10 flex flex-col items-center text-center h-full">
                         

@@ -283,7 +283,7 @@ export default function Trade() {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Package className="h-6 w-6 text-zim-gold" />
@@ -304,10 +304,7 @@ export default function Trade() {
                     transition={{ delay: index * 0.1 }}
                     className="relative group"
                   >
-                    <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-slate-950/60">
-                      {/* The Crispy Edge Finish */}
-                      <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
-                      
+                    <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-500 hover:bg-slate-950/60">
                       {/* Phase Number & Icon */}
                       <div className="flex items-center gap-4 mb-6">
                         <div className="p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-zim-gold/10 transition-colors">
@@ -338,7 +335,7 @@ export default function Trade() {
 
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Globe className="h-6 w-6 text-zim-gold" />
@@ -381,7 +378,7 @@ export default function Trade() {
       {/* Export Sectors Section - Cinematic Glass Grid */}
       <section id="export-sectors" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Award className="h-6 w-6 text-zim-gold" />
@@ -431,7 +428,7 @@ export default function Trade() {
       {/* ZimTrade Programs Section - High-Density Dashboard */}
       <section id="zimtrade-programs" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Users className="h-6 w-6 text-zim-gold" />
@@ -441,10 +438,9 @@ export default function Trade() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {programs.map((program, index) => (
-                <div key={index} className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] group">
-                  <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+                <div key={index} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                   
-                  <h3 className="text-xl font-black text-white mb-4 tracking-tight group-hover:text-zim-gold transition-colors">{program.title}</h3>
+                  <h3 className="text-xl font-black text-white mb-4 tracking-tight">{program.title}</h3>
                   <p className="text-sm text-white/40 mb-8 font-light leading-relaxed">{program.description}</p>
                   
                   <div className="space-y-8">
@@ -472,7 +468,7 @@ export default function Trade() {
       {/* Diaspora Role Section - Floating Glass Icons */}
       <section id="diaspora-role" className="pb-24 pt-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Handshake className="h-6 w-6 text-zim-gold" />
@@ -483,8 +479,8 @@ export default function Trade() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {diasporaRole.map((role, index) => {
                 return (
-                  <div key={index} className="text-center p-8 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
-                    <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl border border-zim-gold/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-zim-gold/20 transition-all">
+                  <div key={index} className="text-center p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
+                    <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
                       <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
                     </div>
                     <h3 className="text-lg font-black text-white tracking-tight mb-3">{role.title}</h3>
