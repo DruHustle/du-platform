@@ -494,15 +494,9 @@ export default function ShopProducts() {
                           <div className="h-48 overflow-hidden relative bg-slate-900">
                             <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
                             <span
-                              className={`absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                                product.stock_qty > 0
-                                  ? "bg-emerald-400/15 text-emerald-300 border-emerald-300/30"
-                                  : "bg-rose-400/15 text-rose-300 border-rose-300/30"
-                              }`}
+                              className="absolute z-20 top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-rose-200/60 bg-rose-600/80 text-white shadow-[0_8px_20px_rgba(0,0,0,0.45)] backdrop-blur-sm"
                             >
-                              {product.stock_qty > 0
-                                ? t("shop.products.stock.in") || "In Stock"
-                                : t("shop.products.stock.out") || "Out of Stock"}
+                              {t("shop.products.stock.out") || "Out of Stock"}
                             </span>
                           </div>
                           <div className="p-6">
@@ -512,13 +506,11 @@ export default function ShopProducts() {
                               <p className="text-zim-gold font-black">{formatMoney(product.price_cents, product.currency)}</p>
                               <Button
                                 type="button"
-                                disabled={product.stock_qty <= 0}
+                                disabled
                                 onClick={() => addToCart(product)}
                                 className="rounded-full px-5 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-40 font-black text-[10px] uppercase tracking-[0.2em]"
                               >
-                                {product.stock_qty > 0
-                                  ? t("shop.products.actions.buy") || "Buy"
-                                  : t("shop.products.stock.out") || "Out of Stock"}
+                                {t("shop.products.stock.out") || "Out of Stock"}
                               </Button>
                             </div>
                           </div>

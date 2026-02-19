@@ -7,7 +7,7 @@ import NotFound from "@/pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import ExportHub from "./pages/ExportHub";
+import Exports from "./pages/Exports";
 import Tourism from "./pages/Tourism";
 import Investment from "./pages/Investment";
 import Trade from "./pages/Trade";
@@ -41,7 +41,7 @@ function Router() {
     <ScrollToHash />
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/export-hub" component={ExportHub} />
+      <Route path="/exports" component={Exports} />
       <Route path="/tourism" component={Tourism} />
       <Route path="/investment" component={Investment} />
       <Route path="/trade" component={Trade} />

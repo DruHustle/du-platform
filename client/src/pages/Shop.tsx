@@ -256,7 +256,7 @@ export default function Shop() {
                   variant="outline"
                   className="rounded-full px-7 py-2 h-auto bg-white/10 border-white/20 text-white hover:bg-white hover:text-black font-black text-[10px] uppercase tracking-[0.2em]"
                 >
-                  <Link href="/export-hub">{t("shop.export_readiness") || "Export Readiness Guide"}</Link>
+                  <Link href="/exports">{t("shop.export_readiness") || "Export Readiness Guide"}</Link>
                 </Button>
               </div>
             </div>

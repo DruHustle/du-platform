@@ -39,9 +39,10 @@ export default function Home() {
     "/images/pages/home/partnership_handshake.png"
   ], []);
 
-  const navButtons = [
+const navButtons = [
+  { href: '/shop', label: 'nav.shop' },
   { href: '/technology', label: 'home.technology' },
-  { href: '/export-hub', label: 'home.export_hub' },
+  { href: '/exports', label: 'home.export_hub' },
   { href: '/tourism', label: 'home.tourism' },
   { href: '/investment', label: 'home.investments' },
 ];
@@ -73,7 +74,7 @@ export default function Home() {
       
       title: t('home.modules.export.title') || "Export Hub",
       description: t('home.modules.export.desc') || "Access verified export partners, compliance guidance, and market-entry support for EU and global trade.",
-      href: "/export-hub",
+      href: "/exports",
       color: " bg-green-600/5 hover:bg-green-600/10",
       bgImage: "/images/pages/export/eu_symbol.png",
       stats: t('home.modules.export.stats') || "Verified Partners"
@@ -201,7 +202,7 @@ export default function Home() {
                         {/* 6. Explore Button (kept as direct CTA link) */}
                         <Link href={module.href} className="w-full">
                           <button className="
-                            w-full py-4 rounded-full border-t border-l border-white/20 border-b border-r border-white/5 
+                            w-full py-3 rounded-full border-t border-l border-white/20 border-b border-r border-white/5 
                             bg-white/5 text-white text-[10px] font-black uppercase tracking-[0.2em] 
                             hover:bg-white hover:text-black transition-all duration-500
                           ">

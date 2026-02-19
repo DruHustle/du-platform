@@ -67,7 +67,7 @@ zigd-platform/
 │   │   │   └── ...
 │   │   ├── pages/           # Fully translated page components
 │   │   │   ├── Home.tsx
-│   │   │   ├── ExportHub.tsx
+│   │   │   ├── Exports.tsx
 │   │   │   ├── Tourism.tsx
 │   │   │   ├── Investment.tsx
 │   │   │   ├── Trade.tsx

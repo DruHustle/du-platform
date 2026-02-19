@@ -40,7 +40,7 @@
   "nav": {
     "home": "Pamba",
     "shop": "Shop",
-    "export": "Zvinotumirwa Kunze",
+    "export": "Zvinotengeswa Kunze",
     "tourism": "Ushanyi",
     "investment": "Kudyara Mari",
     "trade": "Zvekutengeserana",
@@ -80,7 +80,7 @@
     "made_in_zimbabwe_alt": "Chakagadzirwa muZimbabwe",
     "hero_title": "Diaspora Yakavhurwa",
     "hero_subtitle": "Kukasira kweICT, Kutengeserana, Ushanyi nekudyara mari kweVision 2030",
-    "export_hub": "Zvinotumirwa Kunze",
+    "export_hub": "Zvinotengeswa Kunze",
     "tourism": "Ushanyi",
     "technology": "Tekinoroji",
     "investments": "Mari dzinodyarwa",
@@ -95,7 +95,7 @@
     "success_stories": "Nhoroondo dzeKubudirira",
     "modules": {
       "export": {
-        "title": "Zvekutengesa Kunze",
+        "title": "Zvinotengeswa Kunze",
         "desc": "Ziva zvinodiwa nemusika weEU uye batana nevatishandi vakasimbiswa.",
         "stats": "Vatishandi vakasimbiswa"
       },
@@ -350,7 +350,7 @@
     "objective_subtitle": "Kubatanidza zvigadzirwa, vatishandi, neruzivo rwemusika kupa vatengesi simba rekubudirira muEU.",
     "explore_market_requirements": "Ongorora Zvinodiwa neMusika",
     "contact_us": "Taura Nesu",
-    "contact_form_title": "Mubvunzo weZvekutengesa Kunze",
+    "contact_form_title": "Mubvunzo weZvinotengeswa Kunze",
     "contact_form_subtitle": "Zadzisai fomu riri pasi apa kuti mutaure nenyanzvi dzedu dzekutengesa kunze.",
     "market_requirements_title": "Zvinodiwa neMusika weEU",
     "market_requirements_subtitle": "Nzwisisa mitemo, zvitupa, nematanho ekutengesa zvinhu kuGermany.",
@@ -2176,7 +2176,7 @@
     "cta": {
       "back": "Dzokera",
       "investment_opportunities": "Mikana yekudyara mari",
-      "export_hub": "Nzvimbo yekutengesa kunze",
+      "export_hub": "Zvinotengeswa Kunze",
       "search_ntir": "Tsvaga NTIR"
     }
   },

@@ -40,7 +40,7 @@
   "nav": {
     "home": "Ekhaya",
     "shop": "Shop",
-    "export": "Indawo yokuthumela phandle",
+    "export": "OkuThunyelwa Ngaphandle",
     "tourism": "Ezokuvakasha",
     "investment": "Ukutshala Imali",
     "trade": "Ezohwebo",
@@ -80,7 +80,7 @@
     "made_in_zimbabwe_alt": "Kwenziwe eZimbabwe",
     "hero_title": "I-Diaspora Ivuliwe",
     "hero_subtitle": "Ezobuchwepheshe (ICT), Ezohwebo, Ezokuvakasha lokusheshisa ukutshala imali kwe-Vision 2030",
-    "export_hub": "Indawo yokuthumela phandle",
+    "export_hub": "OkuThunyelwa Ngaphandle",
     "tourism": "Ezokuvakasha",
     "technology": "Ezobuchwepheshe",
     "investments": "Ukutshala Imali",
@@ -95,7 +95,7 @@
     "success_stories": "Izindaba zempumelelo",
     "modules": {
       "export": {
-        "title": "Indawo yokuthumela phandle",
+        "title": "OkuThunyelwa Ngaphandle",
         "desc": "Finyelela izidingo zemakethe ye-EU njalo uxhumane labahlanganyeli abaqinisekisiweyo.",
         "stats": "Abahlanganyeli abaqinisekisiweyo"
       },
@@ -350,7 +350,7 @@
     "objective_subtitle": "Ukuxhuma imikhiqizo, abahlanganyeli, lolwazi lwemakethe ukuze abathumeli baphumelele e-EU.",
     "explore_market_requirements": "Hlola izidingo zemakethe",
     "contact_us": "Thintana lathi",
-    "contact_form_title": "Imibuzo yendawo yokuthumela phandle",
+    "contact_form_title": "Imibuzo yokuThunyelwa Ngaphandle",
     "contact_form_subtitle": "Gcwalisa ifomu elingezansi ukuze ukhulume labachwepheshe bethu.",
     "market_requirements_title": "Izidingo zemakethe ye-EU",
     "market_requirements_subtitle": "Zwisisa imithetho ethile, izitifiketi, lamazinga okuthumela e-Germany.",
@@ -2176,7 +2176,7 @@
     "cta": {
       "back": "Buyela emuva",
       "investment_opportunities": "Amathuba okutshala imali",
-      "export_hub": "Indawo yokuthumela phandle",
+      "export_hub": "OkuThunyelwa Ngaphandle",
       "search_ntir": "Dingisisa i-NTIR"
     }
   },
