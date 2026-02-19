@@ -72,7 +72,7 @@ const navButtons = [
     },
     {
       
-      title: t('home.modules.export.title') || "Export Hub",
+      title: t('home.modules.export.title') || "Exports",
       description: t('home.modules.export.desc') || "Access verified export partners, compliance guidance, and market-entry support for EU and global trade.",
       href: "/exports",
       color: " bg-green-600/5 hover:bg-green-600/10",
