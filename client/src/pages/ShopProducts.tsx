@@ -180,6 +180,14 @@ function normalizeWhatsAppPhone(raw: string) {
   return digits || "263780000000";
 }
 
+function normalizeProductCategory(raw: unknown): ProductCategory {
+  const value = String(raw ?? "").trim().toLowerCase();
+  if (value === "sports" || value === "crafts" || value === "food") return value;
+  // Treat beverage-like categories as food for UI filters.
+  if (value === "beverage" || value === "beverages" || value === "drinks" || value === "drink") return "food";
+  return "all";
+}
+
 export default function ShopProducts() {
   const { t } = useTranslation();
   const [location, setLocation] = useLocation();
@@ -255,7 +263,7 @@ export default function ShopProducts() {
 
   useEffect(() => {
     const filtered = allProducts.filter((product) => {
-      const normalized = String(product.category ?? "").toLowerCase();
+      const normalized = normalizeProductCategory(product.category);
       const categoryMatch = category === "all" ? true : normalized === category;
       return categoryMatch && matchesSegment(product, segment);
     });
