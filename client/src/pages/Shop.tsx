@@ -95,6 +95,11 @@ export default function Shop() {
     },
   ];
 
+  const getCategoryTitle = (key: ShopSegmentKey, fallback: string) =>
+    t(`shop.categories.${key}.title`) || fallback;
+  const getCategoryDescription = (key: ShopSegmentKey, fallback: string) =>
+    t(`shop.categories.${key}.description`) || fallback;
+
   return (
     <Layout>
       <section id="hero">
@@ -137,7 +142,7 @@ export default function Shop() {
                       <div className="relative h-36 overflow-hidden bg-slate-900">
                         <img
                           src={category.images[carouselIndex[category.key] ?? 0]}
-                          alt={category.title}
+                          alt={getCategoryTitle(category.key, category.title)}
                           className="w-full h-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10" />
@@ -148,7 +153,7 @@ export default function Shop() {
                               <button
                                 key={`${category.key}-${imageIdx}`}
                                 type="button"
-                                aria-label={`${category.title} image ${imageIdx + 1}`}
+                                aria-label={`${getCategoryTitle(category.key, category.title)} ${(t("shop.image") || "image")} ${imageIdx + 1}`}
                                 aria-current={isActive ? "true" : "false"}
                                 onClick={() =>
                                   setCarouselIndex((prev) => ({
@@ -169,9 +174,11 @@ export default function Shop() {
 
                       <div className="p-4 flex flex-col flex-grow relative z-10">
                         <h4 className="text-sm font-black text-white tracking-tight mb-2 group-hover:text-zim-gold transition-colors duration-300">
-                          {category.title}
+                          {getCategoryTitle(category.key, category.title)}
                         </h4>
-                        <p className="text-xs text-white/70 mb-4 flex-grow leading-relaxed font-light">{category.description}</p>
+                        <p className="text-xs text-white/70 mb-4 flex-grow leading-relaxed font-light">
+                          {getCategoryDescription(category.key, category.description)}
+                        </p>
                         <div>
                           <Button
                             asChild

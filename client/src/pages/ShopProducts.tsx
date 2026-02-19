@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -180,6 +181,7 @@ function normalizeWhatsAppPhone(raw: string) {
 }
 
 export default function ShopProducts() {
+  const { t } = useTranslation();
   const [location, setLocation] = useLocation();
   const { queryCategory, querySegment } = useMemo(() => {
     const params = new URLSearchParams(location.split("?")[1] ?? "");
@@ -197,7 +199,7 @@ export default function ShopProducts() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
-  const [shippingCountry, setShippingCountry] = useState("Zimbabwe");
+  const [shippingCountry, setShippingCountry] = useState(t("shop.products.default_country") || "Germany");
   const [shippingCity, setShippingCity] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("stripe");
@@ -280,29 +282,29 @@ export default function ShopProducts() {
   const whatsappOrderHref = useMemo(() => {
     if (cartRows.length === 0) return "";
     const lines = [
-      "Hello, I want to place an order from the Zimbabwe Shop.",
+      t("shop.products.whatsapp.intro") || "Hello, I want to place an order from the Zimbabwe Shop.",
       "",
-      "Order Items:",
+      t("shop.products.whatsapp.order_items") || "Order Items:",
       ...cartRows.map(
         (row) =>
           `- ${row.product.name} x${row.item.quantity} (${formatMoney(
             row.product.price_cents,
             row.product.currency
-          )} each)`
+          )} ${t("shop.products.whatsapp.each") || "each"})`
       ),
       "",
-      `Subtotal: ${formatMoney(subtotalCents)}`,
-      `Shipping: ${formatMoney(shippingCents)}`,
-      `Total: ${formatMoney(totalCents)}`,
+      `${t("shop.products.totals.subtotal") || "Subtotal"}: ${formatMoney(subtotalCents)}`,
+      `${t("shop.products.totals.shipping") || "Shipping"}: ${formatMoney(shippingCents)}`,
+      `${t("shop.products.totals.total") || "Total"}: ${formatMoney(totalCents)}`,
       "",
-      "Customer Details:",
-      `Name: ${customerName || "-"}`,
-      `Email: ${customerEmail || "-"}`,
-      `Country: ${shippingCountry || "-"}`,
-      `City: ${shippingCity || "-"}`,
-      `Address: ${shippingAddress || "-"}`,
+      t("shop.products.whatsapp.customer_details") || "Customer Details:",
+      `${t("shop.products.fields.name") || "Name"}: ${customerName || "-"}`,
+      `${t("shop.products.fields.email") || "Email"}: ${customerEmail || "-"}`,
+      `${t("shop.products.fields.country") || "Country"}: ${shippingCountry || "-"}`,
+      `${t("shop.products.fields.city") || "City"}: ${shippingCity || "-"}`,
+      `${t("shop.products.fields.address") || "Address"}: ${shippingAddress || "-"}`,
       "",
-      "Please confirm availability and payment instructions.",
+      t("shop.products.whatsapp.outro") || "Please confirm availability and payment instructions.",
     ];
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
   }, [
@@ -342,11 +344,11 @@ export default function ShopProducts() {
   const placeOrder = async () => {
     setCheckoutError("");
     if (cartRows.length === 0) {
-      setCheckoutError("Your cart is empty.");
+      setCheckoutError(t("shop.products.errors.empty_cart") || "Your cart is empty.");
       return;
     }
     if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
-      setCheckoutError("Please complete all checkout fields.");
+      setCheckoutError(t("shop.products.errors.complete_fields") || "Please complete all checkout fields.");
       return;
     }
     setPlacingOrder(true);
@@ -367,7 +369,9 @@ export default function ShopProducts() {
       setOrder(data?.order ?? null);
       setCart([]);
     } catch (error: any) {
-      setCheckoutError(String(error?.response?.data?.message ?? "Unable to place order."));
+      setCheckoutError(
+        String(error?.response?.data?.message ?? (t("shop.products.errors.unable_place_order") || "Unable to place order."))
+      );
     } finally {
       setPlacingOrder(false);
     }
@@ -387,7 +391,9 @@ export default function ShopProducts() {
         status: data?.order?.status ?? "paid",
       }));
     } catch (error: any) {
-      setCheckoutError(String(error?.response?.data?.message ?? "Unable to confirm payment."));
+      setCheckoutError(
+        String(error?.response?.data?.message ?? (t("shop.products.errors.unable_confirm_payment") || "Unable to confirm payment."))
+      );
     } finally {
       setConfirmingPayment(false);
     }
@@ -402,13 +408,14 @@ export default function ShopProducts() {
             <div className="relative z-10">
               <div className="mb-8 flex items-center justify-between gap-3">
                 <div>
-                  <h1 className="section-title-compact text-left">Shop Products</h1>
+                  <h1 className="section-title-compact text-left">{t("shop.products.title") || "Shop Products"}</h1>
                   <p className="text-sm text-white/75 mt-3 max-w-2xl">
-                    End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay.
+                    {t("shop.products.subtitle") ||
+                      "End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay."}
                   </p>
                 </div>
                 <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white hover:text-black rounded-full">
-                  <Link href="/shop">Back to Shop</Link>
+                  <Link href="/shop">{t("shop.products.back_to_shop") || "Back to Shop"}</Link>
                 </Button>
               </div>
 
@@ -416,10 +423,10 @@ export default function ShopProducts() {
                 <div className="lg:col-span-8 space-y-6">
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { key: "all" as ProductCategory, label: "All" },
-                      { key: "sports" as ProductCategory, label: "Sports" },
-                      { key: "crafts" as ProductCategory, label: "Arts & Crafts" },
-                      { key: "food" as ProductCategory, label: "Food & Nostalgia" },
+                      { key: "all" as ProductCategory, label: t("shop.products.filters.all") || "All" },
+                      { key: "sports" as ProductCategory, label: t("shop.products.filters.sports") || "Sports" },
+                      { key: "crafts" as ProductCategory, label: t("shop.products.filters.crafts") || "Arts & Crafts" },
+                      { key: "food" as ProductCategory, label: t("shop.products.filters.food") || "Food & Nostalgia" },
                     ].map((tab) => (
                       <Button
                         key={tab.key}
@@ -453,7 +460,7 @@ export default function ShopProducts() {
                           : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
                       }`}
                     >
-                      All Segments
+                      {t("shop.products.filters.all_segments") || "All Segments"}
                     </Button>
                     {SHOP_CATEGORY_CONFIG.filter((item) => category === "all" || item.baseCategory === category).map((item) => (
                       <Button
@@ -469,20 +476,22 @@ export default function ShopProducts() {
                             : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
                         }`}
                       >
-                        {item.title}
+                        {t(`shop.categories.${item.key}.title`) || item.title}
                       </Button>
                     ))}
                   </div>
 
                   {loading ? (
                     <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 flex items-center gap-3 text-white/80">
-                      <Loader2 className="h-4 w-4 animate-spin" /> Loading products...
+                      <Loader2 className="h-4 w-4 animate-spin" /> {t("shop.products.loading") || "Loading products..."}
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {products.length === 0 ? (
                         <div className="md:col-span-2 rounded-[2rem] border border-white/10 bg-white/[0.02] p-8">
-                          <p className="text-white/70 text-sm">No products available in this category yet.</p>
+                          <p className="text-white/70 text-sm">
+                            {t("shop.products.empty_state") || "No products available in this category yet."}
+                          </p>
                         </div>
                       ) : null}
                       {products.map((product) => (
@@ -496,7 +505,9 @@ export default function ShopProducts() {
                                   : "bg-rose-400/15 text-rose-300 border-rose-300/30"
                               }`}
                             >
-                              {product.stock_qty > 0 ? "In Stock" : "Out of Stock"}
+                              {product.stock_qty > 0
+                                ? t("shop.products.stock.in") || "In Stock"
+                                : t("shop.products.stock.out") || "Out of Stock"}
                             </span>
                           </div>
                           <div className="p-6">
@@ -510,7 +521,9 @@ export default function ShopProducts() {
                                 onClick={() => addToCart(product)}
                                 className="rounded-full px-5 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-40 font-black text-[10px] uppercase tracking-[0.2em]"
                               >
-                                {product.stock_qty > 0 ? "Buy" : "Out of Stock"}
+                                {product.stock_qty > 0
+                                  ? t("shop.products.actions.buy") || "Buy"
+                                  : t("shop.products.stock.out") || "Out of Stock"}
                               </Button>
                             </div>
                           </div>
@@ -524,11 +537,13 @@ export default function ShopProducts() {
                   <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-3.5 md:p-4">
                     <div className="flex items-center gap-1.5 mb-2">
                       <ShoppingCart className="h-3.5 w-3.5 text-zim-gold" />
-                      <h2 className="section-title-compact">Cart & Checkout</h2>
+                      <h2 className="section-title-compact">{t("shop.products.cart.title") || "Cart & Checkout"}</h2>
                     </div>
 
                     {cartRows.length === 0 ? (
-                      <p className="text-[11px] text-white/60">No items yet. Add products to begin checkout.</p>
+                      <p className="text-[11px] text-white/60">
+                        {t("shop.products.cart.empty") || "No items yet. Add products to begin checkout."}
+                      </p>
                     ) : (
                       <div className="space-y-1.5">
                         {cartRows.map((row) => (
@@ -551,26 +566,37 @@ export default function ShopProducts() {
                     )}
 
                     <div className="mt-2.5 border-t border-white/10 pt-2.5 text-[10px] text-white/75 space-y-1">
-                      <div className="flex justify-between"><span>Subtotal</span><span>{formatMoney(subtotalCents)}</span></div>
-                      <div className="flex justify-between"><span>Shipping</span><span>{formatMoney(shippingCents)}</span></div>
-                      <div className="flex justify-between text-white font-black text-[11px]"><span>Total</span><span>{formatMoney(totalCents)}</span></div>
+                      <div className="flex justify-between">
+                        <span>{t("shop.products.totals.subtotal") || "Subtotal"}</span>
+                        <span>{formatMoney(subtotalCents)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{t("shop.products.totals.shipping") || "Shipping"}</span>
+                        <span>{formatMoney(shippingCents)}</span>
+                      </div>
+                      <div className="flex justify-between text-white font-black text-[11px]">
+                        <span>{t("shop.products.totals.total") || "Total"}</span>
+                        <span>{formatMoney(totalCents)}</span>
+                      </div>
                     </div>
 
                     <div className="mt-3 border-t border-white/10 pt-2.5">
-                      <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">Guest Checkout</h3>
+                      <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
+                        {t("shop.products.guest_checkout.title") || "Guest Checkout"}
+                      </h3>
                       <div className="space-y-1.5">
-                      <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Full Name" className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="Email Address" className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} placeholder="Country" className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} placeholder="City" className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder="Shipping Address" className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={t("shop.products.fields.full_name") || "Full Name"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={t("shop.products.fields.email_address") || "Email Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      <input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} placeholder={t("shop.products.fields.country") || "Country"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      <input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} placeholder={t("shop.products.fields.city") || "City"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      <input value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
                       </div>
 
                       <div className="mt-2.5 space-y-1">
                       {[
-                        { value: "stripe", label: "Stripe (Credit Card)" },
-                        { value: "paypal", label: "PayPal" },
-                        { value: "amazon_pay", label: "Amazon Pay" },
+                        { value: "stripe", label: t("shop.products.payment_methods.stripe") || "Stripe (Credit Card)" },
+                        { value: "paypal", label: t("shop.products.payment_methods.paypal") || "PayPal" },
+                        { value: "amazon_pay", label: t("shop.products.payment_methods.amazon_pay") || "Amazon Pay" },
                       ].map((option) => (
                         <label key={option.value} className="flex items-center gap-1 text-[11px] text-white/80">
                           <input
@@ -593,7 +619,9 @@ export default function ShopProducts() {
                             disabled={placingOrder}
                             className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.14em]"
                           >
-                            {placingOrder ? "Creating Order..." : "Place Order"}
+                            {placingOrder
+                              ? t("shop.products.actions.creating_order") || "Creating Order..."
+                              : t("shop.products.actions.place_order") || "Place Order"}
                           </Button>
                           <Button
                             asChild
@@ -604,14 +632,18 @@ export default function ShopProducts() {
                           >
                             <a href={whatsappOrderHref || "#"} target="_blank" rel="noopener noreferrer">
                               <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                              Order on WhatsApp
+                              {t("shop.products.actions.order_whatsapp") || "Order on WhatsApp"}
                             </a>
                           </Button>
                         </>
                       ) : (
                         <div className="mt-3 rounded-xl border border-emerald-300/30 bg-emerald-500/10 p-3">
-                          <p className="text-xs text-white">Order reference: <span className="font-black">{order.orderRef ?? order.order_ref}</span></p>
-                          <p className="text-[11px] text-white/70 mt-1">Status: {String(order.status ?? "").toUpperCase()}</p>
+                          <p className="text-xs text-white">
+                            {t("shop.products.order.reference") || "Order reference"}: <span className="font-black">{order.orderRef ?? order.order_ref}</span>
+                          </p>
+                          <p className="text-[11px] text-white/70 mt-1">
+                            {t("shop.products.order.status") || "Status"}: {String(order.status ?? "").toUpperCase()}
+                          </p>
                           <Button
                             type="button"
                             onClick={confirmPayment}
@@ -619,21 +651,27 @@ export default function ShopProducts() {
                             className="mt-2.5 w-full rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-50 font-black text-[9px] uppercase tracking-[0.14em]"
                           >
                             {String(order.status) === "paid"
-                              ? "Payment Confirmed"
+                              ? t("shop.products.actions.payment_confirmed") || "Payment Confirmed"
                               : confirmingPayment
-                                ? "Processing..."
-                                : `Pay with ${paymentMethod === "amazon_pay" ? "Amazon Pay" : paymentMethod === "paypal" ? "PayPal" : "Stripe"}`}
+                                ? t("shop.products.actions.processing") || "Processing..."
+                                : `${t("shop.products.actions.pay_with") || "Pay with"} ${
+                                    paymentMethod === "amazon_pay"
+                                      ? t("shop.products.payment_methods.amazon_pay_short") || "Amazon Pay"
+                                      : paymentMethod === "paypal"
+                                        ? t("shop.products.payment_methods.paypal_short") || "PayPal"
+                                        : t("shop.products.payment_methods.stripe_short") || "Stripe"
+                                  }`}
                           </Button>
                         </div>
                       )}
 
                       <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-white/60">
                         <ShieldCheck className="h-3.5 w-3.5 text-zim-gold" />
-                        <span>Guest checkout enabled: no login required.</span>
+                        <span>{t("shop.products.notes.guest_checkout") || "Guest checkout enabled: no login required."}</span>
                       </div>
                       <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/60">
                         <CreditCard className="h-3.5 w-3.5 text-zim-gold" />
-                        <span>Supported methods: Stripe, PayPal, Amazon Pay.</span>
+                        <span>{t("shop.products.notes.supported_methods") || "Supported methods: Stripe, PayPal, Amazon Pay."}</span>
                       </div>
                     </div>
                   </div>
