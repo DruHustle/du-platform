@@ -464,7 +464,7 @@ export default function ShopProducts() {
                             : `/shop/products?category=${category}`;
                           setLocation(query);
                         }}
-                        className="w-full rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white outline-none focus:border-zim-gold"
+                        className="w-full rounded-full border border-zim-gold bg-zim-gold px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-black outline-none focus:border-zim-gold sm:border-white/20 sm:bg-white/10 sm:text-white"
                       >
                         <option value="" className="bg-slate-900 text-white">
                           {t("shop.products.filters.select_segment") || "Select Segment"}
