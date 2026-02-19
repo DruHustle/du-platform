@@ -262,6 +262,11 @@ export default function ShopProducts() {
     setProducts(filtered);
   }, [allProducts, category, segment]);
 
+  const availableSegments = useMemo(
+    () => SHOP_CATEGORY_CONFIG.filter((item) => category === "all" || item.baseCategory === category),
+    [category]
+  );
+
   const productsById = useMemo(() => new Map(allProducts.map((product) => [product.id, product])), [allProducts]);
 
   const cartRows = useMemo(() => {
@@ -421,7 +426,7 @@ export default function ShopProducts() {
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div className="lg:col-span-8 space-y-6">
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     {[
                       { key: "all" as ProductCategory, label: t("shop.products.filters.all") || "All" },
                       { key: "sports" as ProductCategory, label: t("shop.products.filters.sports") || "Sports" },
@@ -445,40 +450,30 @@ export default function ShopProducts() {
                         {tab.label}
                       </Button>
                     ))}
-                  </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        setSegment("");
-                        setLocation(`/shop/products?category=${category}`);
-                      }}
-                      className={`rounded-full px-3 py-1 h-auto text-[8px] font-black uppercase tracking-[0.12em] ${
-                        !segment
-                          ? "bg-zim-gold text-black hover:bg-zim-gold/90"
-                          : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
-                      }`}
-                    >
-                      {t("shop.products.filters.all_segments") || "All Segments"}
-                    </Button>
-                    {SHOP_CATEGORY_CONFIG.filter((item) => category === "all" || item.baseCategory === category).map((item) => (
-                      <Button
-                        key={item.key}
-                        type="button"
-                        onClick={() => {
-                          setSegment(item.key);
-                          setLocation(`/shop/products?category=${category}&segment=${item.key}`);
+                    <div className="relative min-w-[190px]">
+                      <select
+                        value={segment}
+                        onChange={(event) => {
+                          const nextSegment = event.target.value;
+                          setSegment(nextSegment);
+                          const query = nextSegment
+                            ? `/shop/products?category=${category}&segment=${nextSegment}`
+                            : `/shop/products?category=${category}`;
+                          setLocation(query);
                         }}
-                        className={`rounded-full px-3 py-1 h-auto text-[8px] font-black uppercase tracking-[0.12em] ${
-                          segment === item.key
-                            ? "bg-zim-gold text-black hover:bg-zim-gold/90"
-                            : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
-                        }`}
+                        className="w-full rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white outline-none focus:border-zim-gold"
                       >
-                        {t(`shop.categories.${item.key}.title`) || item.title}
-                      </Button>
-                    ))}
+                        <option value="" className="bg-slate-900 text-white">
+                          {t("shop.products.filters.select_segment") || "Select Segment"}
+                        </option>
+                        {availableSegments.map((item) => (
+                          <option key={item.key} value={item.key} className="bg-slate-900 text-white">
+                            {t(`shop.categories.${item.key}.title`) || item.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   {loading ? (

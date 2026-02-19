@@ -2035,7 +2035,8 @@
         "sports": "Sports",
         "crafts": "Arts & Crafts",
         "food": "Food & Nostalgia",
-        "all_segments": "All Segments"
+        "all_segments": "All Segments",
+        "select_segment": "Segment auswählen"
       },
       "loading": "Loading products...",
       "empty_state": "No products available in this category yet.",
