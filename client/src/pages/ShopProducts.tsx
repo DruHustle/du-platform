@@ -427,29 +427,31 @@ export default function ShopProducts() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div className="lg:col-span-8 space-y-6">
                   <div className="flex flex-wrap items-center gap-2">
-                    {[
-                      { key: "all" as ProductCategory, label: t("shop.products.filters.all") || "All" },
-                      { key: "sports" as ProductCategory, label: t("shop.products.filters.sports") || "Sports" },
-                      { key: "crafts" as ProductCategory, label: t("shop.products.filters.crafts") || "Arts & Crafts" },
-                      { key: "food" as ProductCategory, label: t("shop.products.filters.food") || "Food & Nostalgia" },
-                    ].map((tab) => (
-                      <Button
-                        key={tab.key}
-                        type="button"
-                        onClick={() => {
-                          setCategory(tab.key);
-                          setSegment("");
-                          setLocation(`/shop/products?category=${tab.key}`);
-                        }}
-                        className={`rounded-full px-5 py-2 h-auto text-[10px] font-black uppercase tracking-[0.2em] ${
-                          category === tab.key
-                            ? "bg-zim-gold text-black hover:bg-zim-gold/90"
-                            : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
-                        }`}
-                      >
-                        {tab.label}
-                      </Button>
-                    ))}
+                    <div className="hidden sm:flex flex-wrap gap-2">
+                      {[
+                        { key: "all" as ProductCategory, label: t("shop.products.filters.all") || "All" },
+                        { key: "sports" as ProductCategory, label: t("shop.products.filters.sports") || "Sports" },
+                        { key: "crafts" as ProductCategory, label: t("shop.products.filters.crafts") || "Arts & Crafts" },
+                        { key: "food" as ProductCategory, label: t("shop.products.filters.food") || "Food & Nostalgia" },
+                      ].map((tab) => (
+                        <Button
+                          key={tab.key}
+                          type="button"
+                          onClick={() => {
+                            setCategory(tab.key);
+                            setSegment("");
+                            setLocation(`/shop/products?category=${tab.key}`);
+                          }}
+                          className={`rounded-full px-5 py-2 h-auto text-[10px] font-black uppercase tracking-[0.2em] ${
+                            category === tab.key
+                              ? "bg-zim-gold text-black hover:bg-zim-gold/90"
+                              : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
+                          }`}
+                        >
+                          {tab.label}
+                        </Button>
+                      ))}
+                    </div>
 
                     <div className="relative min-w-[190px]">
                       <select
