@@ -1,4 +1,4 @@
-import { KeyboardEvent, useCallback, useEffect, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,7 +43,12 @@ export default function OnesaAI() {
   const [retryAfterSecondsRemaining, setRetryAfterSecondsRemaining] = useState<number | null>(null);
   const [status, setStatus] = useState("");
   const [isOnline, setIsOnline] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const hasChatStarted = messages.some((message) => message.role === "user");
+
+  const scrollMessagesToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior, block: "end" });
+  }, []);
 
   useEffect(() => {
     if (retryAfterSecondsRemaining === null) return;
@@ -123,6 +128,13 @@ export default function OnesaAI() {
       mounted = false;
     };
   }, [checkHealth]);
+
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      scrollMessagesToBottom(messages.length <= 1 ? "auto" : "smooth");
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [messages, loading, scrollMessagesToBottom]);
 
   const sendMessage = async () => {
     const trimmed = input.trim();
@@ -228,10 +240,10 @@ export default function OnesaAI() {
                 </span>
               </span>
             </div>
-            {status ? <p className="text-white/60 max-w-3xl text-sm">{status}</p> : null}
+            {status ? <p className="text-white/75 max-w-3xl text-sm">{status}</p> : null}
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-4 md:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-4 md:p-6">
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
               {messages.map((message, index) => (
                 <div key={`${message.role}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -250,6 +262,7 @@ export default function OnesaAI() {
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
 
             <form onSubmit={handleSubmit} className="mt-5 space-y-3">

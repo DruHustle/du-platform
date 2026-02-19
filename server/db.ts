@@ -32,10 +32,34 @@ const memoryNtirEntities: Array<{
   location: string;
   verification_status: "Verified" | "Pending";
 }> = [
-  { id: 1, name: "Masuwe Tourism Holdings", sector: "Tourism", location: "Victoria Falls", verification_status: "Verified" },
-  { id: 2, name: "Zim Leather Cluster", sector: "Manufacturing", location: "Bulawayo", verification_status: "Verified" },
-  { id: 3, name: "Eastern Highlands Berries", sector: "Agriculture", location: "Mutare", verification_status: "Pending" },
+  { id: 1, name: "Matseka Trade Pvt Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
+  { id: 2, name: "Berrymark Trading P/L", sector: "Fresh Produce Export", location: "Harare", verification_status: "Verified" },
+  { id: 3, name: "Fair Mark Enterprises P/L", sector: "Fresh Produce Export", location: "Harare", verification_status: "Pending" },
+  { id: 4, name: "Flitvick Exports Pvt Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
+  { id: 5, name: "Hortech (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Pending" },
+  { id: 6, name: "Matanuska (Pvt) Ltd", sector: "Fresh Produce Export", location: "Honde Valley", verification_status: "Verified" },
+  { id: 7, name: "Schmoozy Fresh (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Pending" },
+  { id: 8, name: "Jumbo Fresh (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
+  { id: 9, name: "Linkage Agencies (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
+  { id: 10, name: "Chammy International (Pvt) Ltd", sector: "Fresh Produce Export", location: "Mutare", verification_status: "Pending" },
 ];
+
+async function syncNtirSeedData(): Promise<void> {
+  if (!db) return;
+
+  for (const entity of memoryNtirEntities) {
+    await db.execute(
+      `
+      INSERT INTO ntir_entities (name, sector, location, verification_status)
+      SELECT ?, ?, ?, ?
+      WHERE NOT EXISTS (
+        SELECT 1 FROM ntir_entities WHERE LOWER(name) = LOWER(?) LIMIT 1
+      )
+      `,
+      [entity.name, entity.sector, entity.location, entity.verification_status, entity.name]
+    );
+  }
+}
 
 const memoryFeatureNotifications: Array<{
   id: number;
@@ -60,6 +84,75 @@ const memorySuccessStories: Array<{
   is_published: 0 | 1;
   created_at: string;
 }> = [];
+
+const memoryEconomicStats = {
+  remittances: 1500,
+  gdp: 28000,
+  diasporaPopulation: 3000000,
+  exportValue: 4500,
+  growthRate: 5.3,
+};
+
+const memoryEconomicSectorData: Array<{ name: string; growth: number }> = [
+  { name: "Mining", growth: 8.2 },
+  { name: "Agriculture", growth: 4.5 },
+  { name: "Tourism", growth: 6.1 },
+  { name: "Manufacturing", growth: 3.2 },
+];
+
+const memoryRemittanceImpact: Array<{ sector: string; percentage: number }> = [
+  { sector: "Education", percentage: 35 },
+  { sector: "Real Estate", percentage: 25 },
+  { sector: "Healthcare", percentage: 20 },
+  { sector: "Small Business", percentage: 20 },
+];
+
+async function syncEconomicStatsSeedData(): Promise<void> {
+  if (!db) return;
+
+  await db.execute(
+    `
+    INSERT INTO economic_stats (id, remittances, gdp, diaspora_population, export_value, growth_rate)
+    SELECT 1, ?, ?, ?, ?, ?
+    WHERE NOT EXISTS (
+      SELECT 1 FROM economic_stats WHERE id = 1
+    )
+    `,
+    [
+      memoryEconomicStats.remittances,
+      memoryEconomicStats.gdp,
+      memoryEconomicStats.diasporaPopulation,
+      memoryEconomicStats.exportValue,
+      memoryEconomicStats.growthRate,
+    ]
+  );
+
+  for (const row of memoryEconomicSectorData) {
+    await db.execute(
+      `
+      INSERT INTO economic_sector_data (name, growth)
+      SELECT ?, ?
+      WHERE NOT EXISTS (
+        SELECT 1 FROM economic_sector_data WHERE LOWER(name) = LOWER(?) LIMIT 1
+      )
+      `,
+      [row.name, row.growth, row.name]
+    );
+  }
+
+  for (const row of memoryRemittanceImpact) {
+    await db.execute(
+      `
+      INSERT INTO remittance_impact (sector, percentage)
+      SELECT ?, ?
+      WHERE NOT EXISTS (
+        SELECT 1 FROM remittance_impact WHERE LOWER(sector) = LOWER(?) LIMIT 1
+      )
+      `,
+      [row.sector, row.percentage, row.sector]
+    );
+  }
+}
 
 function isDbConnectionError(error: unknown): boolean {
   const code = (error as any)?.code;
@@ -249,15 +342,38 @@ export async function initializeDatabase(): Promise<void> {
     )
   `);
 
-  const [existing] = await db.query<mysql.RowDataPacket[]>("SELECT COUNT(*) as count FROM ntir_entities");
-  if (Number(existing[0]?.count ?? 0) === 0) {
-    for (const entity of memoryNtirEntities) {
-      await db.execute(
-        "INSERT INTO ntir_entities (name, sector, location, verification_status) VALUES (?, ?, ?, ?)",
-        [entity.name, entity.sector, entity.location, entity.verification_status]
-      );
-    }
-  }
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS economic_stats (
+      id INT PRIMARY KEY,
+      remittances DOUBLE NOT NULL,
+      gdp DOUBLE NOT NULL,
+      diaspora_population DOUBLE NOT NULL,
+      export_value DOUBLE NOT NULL,
+      growth_rate DOUBLE NOT NULL,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS economic_sector_data (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL UNIQUE,
+      growth DOUBLE NOT NULL,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS remittance_impact (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      sector VARCHAR(255) NOT NULL UNIQUE,
+      percentage DOUBLE NOT NULL,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+
+  await syncNtirSeedData();
+  await syncEconomicStatsSeedData();
 }
 
 export async function findUserByEmail(email: string) {
@@ -768,5 +884,63 @@ export async function createSuccessStory(payload: {
     };
     memorySuccessStories.unshift(record);
     return record;
+  }
+}
+
+export async function getEconomicStats() {
+  if (!db) {
+    return {
+      ...memoryEconomicStats,
+      sectorData: memoryEconomicSectorData,
+      remittanceImpact: memoryRemittanceImpact,
+    };
+  }
+
+  try {
+    const [[statsRow]] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT remittances, gdp, diaspora_population, export_value, growth_rate
+      FROM economic_stats
+      WHERE id = 1
+      LIMIT 1
+      `
+    );
+    const [sectorRows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT name, growth FROM economic_sector_data ORDER BY id ASC"
+    );
+    const [impactRows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT sector, percentage FROM remittance_impact ORDER BY id ASC"
+    );
+
+    if (!statsRow) {
+      return {
+        ...memoryEconomicStats,
+        sectorData: memoryEconomicSectorData,
+        remittanceImpact: memoryRemittanceImpact,
+      };
+    }
+
+    return {
+      remittances: Number(statsRow.remittances),
+      gdp: Number(statsRow.gdp),
+      diasporaPopulation: Number(statsRow.diaspora_population),
+      exportValue: Number(statsRow.export_value),
+      growthRate: Number(statsRow.growth_rate),
+      sectorData: sectorRows.map((row) => ({
+        name: String(row.name),
+        growth: Number(row.growth),
+      })),
+      remittanceImpact: impactRows.map((row) => ({
+        sector: String(row.sector),
+        percentage: Number(row.percentage),
+      })),
+    };
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return {
+      ...memoryEconomicStats,
+      sectorData: memoryEconomicSectorData,
+      remittanceImpact: memoryRemittanceImpact,
+    };
   }
 }

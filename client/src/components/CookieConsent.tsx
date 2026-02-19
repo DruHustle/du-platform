@@ -47,13 +47,13 @@ export default function CookieConsent() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-[100]">
-      <div className="mx-auto max-w-4xl rounded-2xl border border-white/20 bg-slate-950/95 backdrop-blur-xl p-5 shadow-2xl">
+      <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 shadow-2xl">
         <p className="text-white/90 text-sm leading-relaxed">
           Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link href="/cookie-settings">
-            <Button variant="outline" className="border-white/30 text-white hover:bg-white hover:text-zim-black">
+            <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
               Cookie settings
             </Button>
           </Link>
@@ -65,4 +65,3 @@ export default function CookieConsent() {
     </div>
   );
 }
-

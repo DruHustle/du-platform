@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
+import { ArrowLeft } from "lucide-react";
 
 function getTokenFromUrl() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -43,9 +44,9 @@ export default function ResetPassword() {
   return (
     <Layout>
       <section className="min-h-[80vh] bg-slate-950 px-6 py-28">
-        <div className="max-w-md mx-auto rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-white">
+        <div className="max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
           <h1 className="text-3xl font-black tracking-tighter">Set New Password</h1>
-          <p className="text-white/60 text-sm mt-2">Choose a strong password for your account.</p>
+          <p className="text-white/75 text-sm mt-2">Choose a strong password for your account.</p>
 
           {!token ? (
             <p className="text-red-400 mt-4 text-sm">Missing reset token. Please use the link sent to your email.</p>
@@ -81,9 +82,10 @@ export default function ResetPassword() {
             </form>
           )}
 
-          <div className="mt-6 text-sm text-white/60">
-            <Link href="/login" className="text-zim-gold hover:underline">
-              Back to login
+          <div className="mt-6 text-sm text-white/75">
+            <Link href="/login" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+              <ArrowLeft className="h-3.5 w-3.5 mr-2" />
+              Back to Login
             </Link>
           </div>
         </div>
@@ -91,4 +93,3 @@ export default function ResetPassword() {
     </Layout>
   );
 }
-

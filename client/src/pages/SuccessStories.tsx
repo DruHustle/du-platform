@@ -48,14 +48,24 @@ export default function SuccessStories() {
   const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [apiStories, setApiStories] = useState<ApiStory[]>([]);
+  const [storiesLoaded, setStoriesLoaded] = useState(false);
+  const [storiesLoadFailed, setStoriesLoadFailed] = useState(false);
 
   const isVisible = (display: unknown) => {
-    if (display === false) return false;
-    if (display === 0) return false;
-    if (display === "false") return false;
-    if (display === "0") return false;
-    return true;
+    if (display === true || display === 1) return true;
+    if (typeof display === "string") {
+      const normalized = display.trim().toLowerCase();
+      return ["true", "1", "yes", "on"].includes(normalized);
+    }
+    return false;
   };
+
+  const normalizeKey = (value: unknown) =>
+    String(value ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
 
   const normalizePeopleImage = (image: string | undefined, index: number) => {
     if (!image) return DIVERSE_PEOPLE_IMAGES[index % DIVERSE_PEOPLE_IMAGES.length];
@@ -248,30 +258,60 @@ export default function SuccessStories() {
   useEffect(() => {
     api
       .get("/success-stories")
-      .then(({ data }) => setApiStories(Array.isArray(data?.stories) ? data.stories : []))
-      .catch(() => setApiStories([]));
+      .then(({ data }) => {
+        setApiStories(Array.isArray(data?.stories) ? data.stories : []);
+        setStoriesLoadFailed(false);
+        setStoriesLoaded(true);
+      })
+      .catch(() => {
+        setApiStories([]);
+        setStoriesLoadFailed(true);
+        setStoriesLoaded(true);
+      });
   }, []);
 
   // --- 3. IMPACT METRICS DATA WITH BOOLEAN SHIELD ---
   const impactData = useMemo(() => {
-    const rawMetrics = t("success.impact_metrics_list", { returnObjects: true });
-    if (!Array.isArray(rawMetrics)) {
-      return [
-        { display: false, icon: DollarSign, value: "$11.3M+", label: t("success.impact_metrics.economic_impact.label") || "Total Economic Impact", description: t("success.impact_metrics.economic_impact.description") || "Revenue generated across all success stories" },
-        { display: false, icon: Users, value: "700+", label: t("success.impact_metrics.jobs_created.label") || "Jobs Created", description: t("success.impact_metrics.jobs_created.description") || "Direct employment opportunities" },
-        { display: false, icon: TrendingUp, value: "1,000+", label: t("success.impact_metrics.diaspora_investors.label") || "Diaspora Investors", description: t("success.impact_metrics.diaspora_investors.description") || "Active participants in projects" },
-        { display: false, icon: Award, value: "15+", label: t("success.impact_metrics.markets_accessed.label") || "Markets Accessed", description: t("success.impact_metrics.markets_accessed.description") || "International markets reached" }
-      ];
-    }
-    return rawMetrics;
+    return [
+      { display: false, icon: DollarSign, value: "$11.3M+", label: t("success.impact_metrics.economic_impact.label") || "Total Economic Impact", description: t("success.impact_metrics.economic_impact.description") || "Revenue generated across all success stories" },
+      { display: false, icon: Users, value: "700+", label: t("success.impact_metrics.jobs_created.label") || "Jobs Created", description: t("success.impact_metrics.jobs_created.description") || "Direct employment opportunities" },
+      { display: false, icon: TrendingUp, value: "1,000+", label: t("success.impact_metrics.diaspora_investors.label") || "Diaspora Investors", description: t("success.impact_metrics.diaspora_investors.description") || "Active participants in projects" },
+      { display: false, icon: Award, value: "15+", label: t("success.impact_metrics.markets_accessed.label") || "Markets Accessed", description: t("success.impact_metrics.markets_accessed.description") || "International markets reached" }
+    ];
   }, [t]);
 
+  // Build a hide-list from localized content so display=false is honored
+  // even when stories are loaded from the API.
+  const hiddenStoryTitles = new Set(
+    (Array.isArray(storiesData) ? storiesData : [])
+      .filter((s: any) => !isVisible(s?.display))
+      .map((s: any) => normalizeKey(s?.title))
+      .filter(Boolean)
+  );
+  const hiddenStorySignatures = new Set(
+    (Array.isArray(storiesData) ? storiesData : [])
+      .filter((s: any) => !isVisible(s?.display))
+      .map((s: any) => `${normalizeKey(s?.category)}|${normalizeKey(s?.author)}`)
+      .filter((key) => key !== "|")
+  );
+
   // Derived filtered lists
-  const activeStories =
-    apiStories.length > 0
-      ? apiStories
-          .filter((story) => story.is_published !== 0 && isVisible(story.display))
-          .map((story, index) => ({
+  const activeStories = (!storiesLoaded || storiesLoadFailed)
+    ? storiesData
+        .filter((s: any) => isVisible(s?.display))
+        .map((story: any, index: number) => ({
+          ...story,
+          image: normalizePeopleImage(story?.image, index),
+        }))
+    : apiStories
+        .filter(
+          (story) =>
+            story.is_published !== 0 &&
+            isVisible(story.display) &&
+            !hiddenStoryTitles.has(normalizeKey(story.title)) &&
+            !hiddenStorySignatures.has(`${normalizeKey(story.category)}|${normalizeKey(story.author)}`)
+        )
+        .map((story, index) => ({
           title: story.title,
           category: story.category,
           image: normalizePeopleImage(story.image, index),
@@ -280,13 +320,7 @@ export default function SuccessStories() {
           author: story.author,
           role: story.role,
           impact: { revenue: story.revenue, jobs: story.jobs, markets: story.markets },
-          }))
-      : storiesData
-          .filter((s: any) => isVisible(s?.display))
-          .map((story: any, index: number) => ({
-            ...story,
-            image: normalizePeopleImage(story?.image, index),
-          }));
+        }));
   const activeMetrics = impactData.filter((m: any) => isVisible(m?.display));
 
   const introData = { icon: Trophy, title: t('success.objective_title') || "Impact", description: t('success.objective_subtitle') || "Showcasing the tangible impact of diaspora engagement across various sectors and communities in Zimbabwe." };
@@ -300,9 +334,9 @@ export default function SuccessStories() {
         <section id="stories" className="py-24 bg-slate-950 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none">{t("success.stories_title") || "Inspiring Success Stories"}</h2>
-              <p className="text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t("success.stories_subtitle") || "Explore the impactful contributions of the Zimbabwean diaspora across various sectors."}</p>
+            <div className="mb-10 text-center">
+              <h2 className="text-xl font-black text-white tracking-tight">{t("success.stories_title") || "Inspiring Success Stories"}</h2>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("success.stories_subtitle") || "Explore the impactful contributions of the Zimbabwean diaspora across various sectors."}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -312,9 +346,9 @@ export default function SuccessStories() {
                   initial={{ opacity: 0, y: 30 }} 
                   whileInView={{ opacity: 1, y: 0 }} 
                   viewport={{ once: true }} 
-                  className="group relative flex flex-col h-full rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-2xl transition-all duration-500 hover:bg-white/[0.07] hover:-translate-y-2"
+                  className="group relative flex flex-col h-full rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-2xl transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2"
                 >
-                  <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
+                  <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none z-20" />
                   <div className="relative h-64 overflow-hidden">
                     <img src={story?.image} alt={story?.title} className="w-full h-full object-cover saturate-[0.8] group-hover:saturate-100 group-hover:scale-110 transition-all duration-1000" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
@@ -323,7 +357,7 @@ export default function SuccessStories() {
                     </Badge>
                   </div>
                   <div className="p-8 flex-grow space-y-6 relative">
-                    <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-zim-gold transition-colors leading-tight">{story?.title}</h3>
+                    <h3 className="text-xl font-black text-white tracking-tight group-hover:text-zim-gold transition-colors leading-tight">{story?.title}</h3>
                     <p className="text-[13px] text-white/50 leading-relaxed font-light line-clamp-3">{story?.story}</p>
                     <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
                       <div className="space-y-1">
@@ -353,9 +387,9 @@ export default function SuccessStories() {
         <section className="py-24 bg-slate-950 border-t border-white/5 relative overflow-hidden">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t("success.impact_metrics_title") || "Collective Impact"}</h2>
-              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t("success.impact_metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured success stories."}</p>
+            <div className="mb-10 text-center">
+              <h2 className="text-xl font-black text-white tracking-tight">{t("success.impact_metrics_title") || "Collective Impact"}</h2>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("success.impact_metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured success stories."}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {activeMetrics.map((metric, index) => {
@@ -364,13 +398,13 @@ export default function SuccessStories() {
                   <motion.div 
                     key={index} 
                     whileHover={{ y: -5 }} 
-                    className="relative p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl text-center group overflow-hidden shadow-2xl"
+                    className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center group overflow-hidden shadow-2xl"
                   >
-                    <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
+                    <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none z-20" />
                     <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl border border-zim-gold/20 flex items-center justify-center mb-8">
                       {Icon && <Icon className="h-10 w-10 text-zim-gold" />}
                     </div>
-                    <h3 className="text-5xl font-black text-white tracking-tighter mb-2 tabular-nums">{metric.value}</h3>
+                    <h3 className="text-2xl font-black text-white tracking-tighter mb-2 tabular-nums">{metric.value}</h3>
                     <p className="text-[11px] font-black text-zim-gold uppercase tracking-[0.2em]">{metric.label}</p>
                     <p className="text-[12px] text-white/40 font-light leading-relaxed pt-3">{metric.description}</p>
                   </motion.div>
@@ -384,16 +418,16 @@ export default function SuccessStories() {
       {/* CONTACT CTA */}
       <section id="contact-cta" className="py-24 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="relative max-w-5xl mx-auto p-12 md:p-24 rounded-[4rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl text-center overflow-hidden">
+          <div className="relative max-w-5xl mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-zim-gold/10 blur-[120px] pointer-events-none" />
             <div className="relative z-10 space-y-10">
               <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl flex items-center justify-center border border-zim-gold/20">
                 <Award className="h-10 w-10 text-zim-gold" />
               </div>
 
-              <div className="space-y-4">
-                <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none">{t("success.cta_title") || "Have a Success Story to Share?"}</h2>
-                <p className="text-white/50 text-xl font-light max-w-2xl mx-auto">{t("success.cta_subtitle") || "We are always looking for inspiring stories of diaspora impact. Share yours with us!"}</p>
+              <div className="space-y-4 text-left">
+                <h2 className="text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have a Success Story to Share?"}</h2>
+                <p className="text-sm text-white/75 font-light max-w-3xl mx-auto leading-relaxed">{t("success.cta_subtitle") || "We are always looking for inspiring stories of diaspora impact. Share yours with us!"}</p>
               </div>
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
@@ -401,7 +435,7 @@ export default function SuccessStories() {
                     {t("success.cta_button") || "Share Your Story"}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl p-0 bg-slate-950 border-white/10 overflow-hidden rounded-[2.5rem]">
+                <DialogContent className="max-w-4xl p-0 bg-slate-950 border-white/10 overflow-hidden rounded-[2rem]">
                   <ContactForm title={t("success.cta_title") || "Have a Success Story to Share?"} module="success" />
                 </DialogContent>
               </Dialog>

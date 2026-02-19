@@ -207,6 +207,10 @@
       "digital_payments": {
         "title": "Digital Payments paChikero",
         "detail": "Nharembozha mari inoramba iri njanji inotonga yekutengeserana, ichigadzira kudiwa kwakasimba kwefintech tooling uye kubatanidzwa."
+      },
+      "hubs": {
+        "title": "Innovation Hubs and Incubators",
+        "detail": "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."
       }
     },
     "opportunities": {
@@ -270,7 +274,8 @@
       "techvillage": "Bulawayo-yakavakirwa nharaunda yekutanga uye innovation hub ine accelerator zviitiko uye muvambi rutsigiro zvirongwa.",
       "nust": "Yunivhesiti-inotungamirwa hunyanzvi uye kutengeserana ecosystem inotsigira vechidiki-inotungamirwa bhizinesi uye indasitiri-yakatarisana nemhinduro.",
       "msu": "Midlands-yakavakirwa incubation uye kushambadzira chikuva chinotsigira mabhizinesi, maSME, uye kushandisa tsvakiridzo spin-outs.",
-      "digital_village": "Nzvimbo yakatarisana nenharaunda yekuvandudza maMutare ichipa nzvimbo yekushandira pamwe, kudzidzisa, nerutsigiro rwebhizinesi redhijitari."
+      "digital_village": "Nzvimbo yakatarisana nenharaunda yekuvandudza maMutare ichipa nzvimbo yekushandira pamwe, kudzidzisa, nerutsigiro rwebhizinesi redhijitari.",
+      "open_button": "Tech Hubs in Zimbabwe"
     },
     "onesa_matter": {
       "badge": "AI yakatarisana neAfrica",
@@ -326,7 +331,19 @@
       "badge6": "Kusimudzira Maindasitiri",
       "title6": "Kutengesa Zvigadzirwa zveMaindasitiri",
       "desc6": "Mazano ezvigadzirwa, mbatya, nezvekudya zvakagadzirwa mufekitari.",
-      "highlight6": "Zvigadzirwa zvakawedzerwa Mutengo"
+      "highlight6": "Zvigadzirwa zvakawedzerwa Mutengo",
+      "badge7": "Market Intelligence",
+      "title7": "High-Demand Product Windows",
+      "desc7": "Track demand and standards for high-value crops and specialty products in target EU markets.",
+      "highlight7": "Buyer-Aligned Supply",
+      "badge8": "Compliance Advantage",
+      "title8": "Certification-Ready Exports",
+      "desc8": "Use traceability, quality controls, and food-safety systems to secure repeat EU buyer contracts.",
+      "highlight8": "Trust and Quality",
+      "badge9": "Niche Growth",
+      "title9": "Natural Oils and Botanicals",
+      "desc9": "Develop premium natural products for cosmetics and wellness categories with strong EU demand.",
+      "highlight9": "Emerging Segments"
     },
     "objective_title": "Kukurisa Kutengesa Kunze, Kukurutsai",
     "objective_subtitle": "Kubatanidza zvigadzirwa, vatishandi, neruzivo rwemusika kupa vatengesi simba rekubudirira muEU.",
@@ -471,7 +488,8 @@
       "eu_esa_epa_benefits": {
         "title": "Zvakanaka zveEU-ESA EPA",
         "description": "Zimbabwe inobatsirwa nekutengesa kunze pasina mitero kumatunhu eEU pasi pechibvumirano cheEconomic Partnership Agreement (EPA)."
-      }
+      },
+      "sps_priority_date": "Ongoing compliance priority"
     },
     "cta_title": "Wagadzirira kutengesa kuEU here?",
     "cta_subtitle": "Chikwata chedu chenyanzvi chakagadzirira kukutungamirira munhanho dzose. Taura nesu nhasi kuti utange.",
@@ -486,7 +504,77 @@
         "Chitupa chemavambo uye magwaro ehunhu.",
         "Kunyora pamapakeji nekupakata zvinoenderana nemusika wekuenda.",
         "Magwaro ekutevera chigadzirwa uye mapepa akagadzirira customs."
-      ]
+      ],
+      "c1": "Confirm your product HS code and check EU duties/technical measures in Access2Markets.",
+      "c2": "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
+      "c3": "Issue a valid Statement on Origin for each shipment.",
+      "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
+      "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
+      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
+    },
+    "registration": {
+      "title": "Key Registration and Documentation",
+      "subtitle": "Core steps required to claim preferential access and clear EU import controls.",
+      "rex": {
+        "category": "REX and Preferential Tariffs",
+        "r1": "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
+        "r2": "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
+        "r3": "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX.",
+        "tag": "Tariff Access"
+      },
+      "origin": {
+        "category": "Statement on Origin Rules",
+        "r1": "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
+        "r2": "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
+        "r3": "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU.",
+        "tag": "Origin Compliance"
+      },
+      "zimra": {
+        "category": "ZIMRA and Export Documentation",
+        "r1": "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
+        "r2": "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
+        "r3": "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading/air waybill.",
+        "tag": "Pre-shipment"
+      },
+      "sps": {
+        "category": "EU Product and Safety Standards",
+        "r1": "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
+        "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
+        "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
+        "tag": "SPS Critical"
+      }
+    },
+    "strategic_resources": {
+      "trade_zimbabwe": {
+        "title": "Trade Zimbabwe Portal",
+        "description": "Official ZimTrade portal for exporter support services, market information, and trade publications.",
+        "cta": "Open Trade Zimbabwe"
+      },
+      "access2markets": {
+        "title": "EU Access2Markets Portal",
+        "description": "Check duties, taxes, rules of origin, and technical requirements by exact HS code.",
+        "cta": "Open Access2Markets"
+      },
+      "rex": {
+        "title": "EU REX Information",
+        "description": "Reference rules and guidance for origin self-certification under the REX framework.",
+        "cta": "View REX Guidance"
+      },
+      "zimtrade_support": {
+        "title": "ZimTrade Export Support",
+        "description": "Use ZimTrade support for market surveys, buyer readiness, and export development programs.",
+        "cta": "Visit ZimTrade"
+      },
+      "virtual_library": {
+        "title": "Trade Zimbabwe Virtual Library",
+        "description": "Access trade directories, country briefs, market studies, and exporter-focused guidance documents.",
+        "cta": "Open Virtual Library"
+      },
+      "zim_ebic": {
+        "title": "ZIM-EBIC",
+        "description": "Use Zimbabwe-EU Business Information Centre resources for EU market intelligence and trade facilitation.",
+        "cta": "Open ZIM-EBIC"
+      }
     }
   },
   "tourism": {
@@ -510,7 +598,16 @@
       "title5": "Mosi-oa-Tunya",
       "subtitle5": "Zvionere utsi hunotinhira paVictoria Falls.",
       "plan_journey": "Ronga Rwendo Rwako",
-      "watch_exp": "Ona Zviri Kuitika"
+      "watch_exp": "Ona Zviri Kuitika",
+      "badge6": "UNESCO Wilderness",
+      "title6": "Mana Pools Experience",
+      "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
+      "badge7": "National Parks",
+      "title7": "Hwange Wildlife Corridor",
+      "subtitle7": "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
+      "badge8": "Lake & Leisure",
+      "title8": "Kariba Adventure Tourism",
+      "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
     },
     "attractions_title": "Nzvimbo dzinofanirwa Kushanyirwa",
     "attractions_subtitle": "Zvivakwa nezvinhu zvinotsanangura Zimbabwe.",
@@ -521,7 +618,22 @@
         "h1": "Nhaka yePasi Rose yeUNESCO",
         "h2": "Nzvimbo yeZvinofadza",
         "h3": "Kutarira Mhuka",
-        "summary": "Inozivikanwa nemuno seMosi-oa-Tunya (Utsi Hunotinhira), Victoria Falls yakapetwa kaviri pakukwirira kune Niagara Falls. Nakidzwa nekukwira magwa, bungee jumping, nhabvu dzemundege, uye Devil's Pool inozivikanwa kwazvo."
+        "summary": "Inozivikanwa nemuno seMosi-oa-Tunya (Utsi Hunotinhira), Victoria Falls yakapetwa kaviri pakukwirira kune Niagara Falls. Nakidzwa nekukwira magwa, bungee jumping, nhabvu dzemundege, uye Devil's Pool inozivikanwa kwazvo.",
+        "quickFacts": [
+          "Located on the Zambezi River at the Zimbabwe-Zambia border.",
+          "Approximate width is 1.7 km with a drop of over 100 m at its deepest sections.",
+          "Protected within the Mosi-oa-Tunya / Victoria Falls World Heritage landscape."
+        ],
+        "experiences": [
+          "Scenic viewpoints, rainforest walks, and photography trails.",
+          "Adventure options such as rafting, bungee jumping, and helicopter flights.",
+          "Nearby safari and river experiences in surrounding protected areas."
+        ],
+        "bestTime": "High-water spectacle is usually strongest from late rainy season into early dry season; lower-water months are often preferred for some adventure activities.",
+        "sources": {
+          "vf": "ZTA: Victoria Falls",
+          "vfnp": "ZTA: Victoria Falls National Park"
+        }
       },
       "greatzim": {
         "name": "Great Zimbabwe",
@@ -529,7 +641,21 @@
         "h1": "Nhaka yePasi Rose yeUNESCO",
         "h2": "Nzvimbo yeNhoroondo",
         "h3": "Nhaka yeTsika",
-        "summary": "Yakavakwa pakati pezana ramakore rechi11 nerechi15, Great Zimbabwe ndiyo yaive guta guru reUmambo hweZimbabwe. Masvingo aya akavakwa nemabwe pasina dhaka. Nzvimbo iyi ndiyo yakapa nyika zita rayo."
+        "summary": "Yakavakwa pakati pezana ramakore rechi11 nerechi15, Great Zimbabwe ndiyo yaive guta guru reUmambo hweZimbabwe. Masvingo aya akavakwa nemabwe pasina dhaka. Nzvimbo iyi ndiyo yakapa nyika zita rayo.",
+        "quickFacts": [
+          "Constructed and expanded between the 11th and 15th centuries.",
+          "Famous for dry-stone masonry built without mortar.",
+          "Represents the political and cultural center of the historic Zimbabwe civilization."
+        ],
+        "experiences": [
+          "Explore the Hill Complex, Great Enclosure, and Valley Ruins.",
+          "Interpretive historical tours and local cultural storytelling.",
+          "Panoramic viewpoints over the wider Masvingo landscape."
+        ],
+        "bestTime": "Accessible year-round; dry season months are generally better for walking and site exploration.",
+        "sources": {
+          "gz": "ZTA: Great Zimbabwe Ruins"
+        }
       },
       "kariba": {
         "name": "Dhamu reKariba",
@@ -537,7 +663,21 @@
         "h1": "Mitambo yemumvura",
         "h2": "Kuredza Tiger Fish",
         "h3": "Kuvira kweZuva",
-        "summary": "Dziva reKariba rakakura kudarika 5,500 square kilometers parwizi rwaZambezi. Rakakurumbira nekuredza tiger fish, maholide emagwa (houseboats), nekuvira kwezuva kunoyevedza."
+        "summary": "Dziva reKariba rakakura kudarika 5,500 square kilometers parwizi rwaZambezi. Rakakurumbira nekuredza tiger fish, maholide emagwa (houseboats), nekuvira kwezuva kunoyevedza.",
+        "quickFacts": [
+          "Sits on the Zambezi corridor and supports both tourism and recreation.",
+          "Popular for boat-based travel, fishing tourism, and sunset cruises.",
+          "Connected to nearby wildlife areas including Matusadona-facing zones."
+        ],
+        "experiences": [
+          "Houseboat holidays and shoreline lodges.",
+          "Tiger fishing and birdwatching itineraries.",
+          "Game-viewing combinations with lake and park circuits."
+        ],
+        "bestTime": "Dry season is typically preferred for wildlife viewing; lake activities operate across most of the year.",
+        "sources": {
+          "kariba": "ZTA: Lake Kariba Recreational Park"
+        }
       },
       "rocks": {
         "name": "Mabwe Anoshamisa",
@@ -545,7 +685,22 @@
         "h1": "Mucherechedzo weNyika",
         "h2": "Kutora Mifananidzo",
         "h3": "Chishamiso cheMusikirwo",
-        "summary": "Mabwe aya anoonekwa pamari yeZimbabwe uye anowanikwa munyika yose, zvikuru muMatobo National Park. Akasikwa nemamiriro ekunze mukufamba kwemakore akawanda."
+        "summary": "Mabwe aya anoonekwa pamari yeZimbabwe uye anowanikwa munyika yose, zvikuru muMatobo National Park. Akasikwa nemamiriro ekunze mukufamba kwemakore akawanda.",
+        "quickFacts": [
+          "Prominent around Matobo and other granite landscapes.",
+          "Featured in national symbolism, including currency imagery.",
+          "Formed through weathering and erosion of ancient granite outcrops."
+        ],
+        "experiences": [
+          "Landscape photography and short nature walks.",
+          "Rock-art and heritage combinations in Matobo areas.",
+          "Scenic drives linking Harare and Matobo viewpoints."
+        ],
+        "bestTime": "Year-round attraction; clear dry-season weather often gives the best visibility for photos.",
+        "sources": {
+          "chiremba": "ZTA: Chiremba Balancing Rocks",
+          "matobo": "ZTA: Matobo Hills"
+        }
       }
     },
     "other_attractions_title": "Dzimwe Nzvimbo dzinoshamisa",
@@ -715,6 +870,44 @@
       "subtitle": "Shandisai mazano ari pamutemo kubva kuZimbabwe Tourism Authority neZimbabwe Parks and Wildlife Management Authority kuti mupe mvumo, ruzivo rwepaka, uye mitemo yekwamunoenda.",
       "zta": "Shanyira Zimbabwe Tourism Authority",
       "zimparks": "Shanyira ZimParks"
+    },
+    "attraction_card": {
+      "tap_for_details": "Tap for more details"
+    },
+    "attraction_dialog": {
+      "quick_facts": "Quick Facts",
+      "what_to_do": "What To Do",
+      "best_time": "Best Time Guidance",
+      "official_sources": "Official Sources"
+    },
+    "zta_resources": {
+      "title": "ZTA Official Visitor Resources",
+      "subtitle": "Use Zimbabwe Tourism Authority resources for trusted planning information, destination references, and operator checks.",
+      "open_resource": "Open Resource",
+      "destinations": {
+        "title": "Destinations",
+        "description": "Browse official destination highlights and tourism circuits across Zimbabwe."
+      },
+      "plan_trip": {
+        "title": "Plan Your Trip",
+        "description": "Use official trip-planning information for logistics, timing, and travel readiness."
+      },
+      "flying": {
+        "title": "Flying to Zimbabwe",
+        "description": "Review air-travel guidance and useful links for planning flight entry into Zimbabwe."
+      },
+      "operators": {
+        "title": "Operator Database",
+        "description": "Check registered tourism operators to support safer bookings and basic due diligence."
+      },
+      "brochures": {
+        "title": "Zimbabwe Brochures and Media",
+        "description": "Download official destination brochures, media assets, and tourism reference materials."
+      },
+      "apps": {
+        "title": "Useful Apps",
+        "description": "Find recommended travel-support applications listed by Zimbabwe Tourism Authority."
+      }
     }
   },
   "investment": {
@@ -755,7 +948,19 @@
       "badge5": "Migodhi",
       "title5": "Upfumi hweZvicherwa",
       "subtitle5": "Mikana muGoridhe, Platinum, neLithium.",
-      "highlight5": "Zviwanikwa zvakakosha"
+      "highlight5": "Zviwanikwa zvakakosha",
+      "badge6": "Manufacturing Upside",
+      "title6": "Value-Added Manufacturing",
+      "highlight6": "Export-Ready Capacity",
+      "subtitle6": "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
+      "badge7": "Tourism Capital",
+      "title7": "Hospitality Growth Corridors",
+      "highlight7": "Visitor Economy",
+      "subtitle7": "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
+      "badge8": "Diaspora Flows",
+      "title8": "Channel Remittances to Assets",
+      "highlight8": "Structured Investment",
+      "subtitle8": "Convert household remittance strength into pooled, trackable, and productive investment pathways."
     },
     "projects": {
       "masuwe": {
@@ -937,6 +1142,60 @@
       "source_getinvest": "Kunobva: GET.invest Zimbabwe",
       "source_eu": "Kunobva: EU International Partnerships",
       "source_eib": "Kunobva: EIB Zimbabwe Essay"
+    },
+    "ntir_label": "National Directory",
+    "hdc_label": "Horticulture Council",
+    "crowdfunding_steps": {
+      "browse": "Browse Projects",
+      "invest": "Invest Your Share",
+      "track": "Track Performance",
+      "returns": "Receive Returns"
+    },
+    "zida": {
+      "title": "ZIDA Investment Information",
+      "subtitle": "Official pathways and resources from the Zimbabwe Investment and Development Agency for licensing, sector discovery, and investment setup.",
+      "open_route": "Open Route",
+      "visit_resource": "Visit Resource",
+      "routes": {
+        "general_license": {
+          "title": "General Investment License",
+          "detail": "For private business setup in Zimbabwe, including options for full ownership based on applicable laws and sector rules."
+        },
+        "ppp": {
+          "title": "Public Private Partnership (PPP)",
+          "detail": "For projects structured with Government, local authorities, or state-owned enterprises."
+        },
+        "sez": {
+          "title": "Special Economic Zones (SEZ)",
+          "detail": "For developing, operating, or investing in designated SEZ activities under ZIDA administration."
+        }
+      },
+      "resources": {
+        "investor_services": {
+          "title": "ZIDA Investor Services",
+          "description": "Guidance for local and foreign investors, including support for setup, growth, and market-entry planning."
+        },
+        "diy_licensing": {
+          "title": "DIY Investor Licensing Portal",
+          "description": "Apply for investment licenses and related permit actions through ZIDA's online self-service process."
+        },
+        "portal_access": {
+          "title": "ZIDA DIY Portal Access",
+          "description": "Direct portal entry for investor licensing workflows and account-based submissions."
+        },
+        "invest_zim": {
+          "title": "Invest in Zimbabwe",
+          "description": "Central investment gateway with key sectors, PPP opportunities, and current project information."
+        },
+        "doing_business": {
+          "title": "Doing Business in Zimbabwe",
+          "description": "Practical guide covering investment routes, business establishment steps, and licensing pathways."
+        },
+        "investor_register": {
+          "title": "Licensed Investor Register",
+          "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
+        }
+      }
     }
   },
   "trade": {
@@ -960,7 +1219,19 @@
       "badge5": "Kupinda muMusika weEU",
       "title5": "Kupinda muMisika yeEurope",
       "subtitle5": "Kufambisa kupinda kwezvigadzirwa zveZimbabwe muEU.",
-      "highlight5": "Kupinda pasina Mitero"
+      "highlight5": "Kupinda pasina Mitero",
+      "badge6": "Regulatory Readiness",
+      "title6": "Meet Documentation Standards",
+      "subtitle6": "Build complete shipment files with invoices, packing lists, transport documents, and origin statements.",
+      "highlight6": "Clean Documentation",
+      "badge7": "Value Addition",
+      "title7": "Scale Higher-Value Products",
+      "subtitle7": "Move beyond raw exports by improving packaging, branding, and product finishing for premium buyers.",
+      "highlight7": "Better Margins",
+      "badge8": "Sector Expansion",
+      "title8": "Diversify Export Portfolio",
+      "subtitle8": "Balance commodity exports with processed goods and sector-specific compliance planning.",
+      "highlight8": "Risk Balanced Growth"
     },
     "objective_title": "Maketani eukoshi",
     "objective_subtitle": "Kuvaka mafambisirwo ezvinhu anotsigira kukura kweupfumi kwenguva refu.",
@@ -1115,7 +1386,40 @@
     "contact_form_title": "Mubvunzo weKutengeserana",
     "explore_title": "Ongorora Rumwe Ruzivo rwezvekutengeserana",
     "explore_subtitle": "Kuti uwane ruzivo rwakazara nemitemo, shanyirai ZimTrade.",
-    "explore_site": "Shanyira ZimTrade"
+    "explore_site": "Shanyira ZimTrade",
+    "market_resources": {
+      "open_resource": "Open Resource",
+      "trade_zimbabwe": {
+        "title": "Trade Zimbabwe Portal",
+        "description": "Official ZimTrade trade information portal with exporter support, market information, and publication access.",
+        "badge": "Official Portal"
+      },
+      "cbi": {
+        "title": "CBI Market Information",
+        "description": "Access practical EU market intelligence, buyer requirements, and product compliance guidance curated by ZimTrade.",
+        "badge": "Market Intelligence"
+      },
+      "zim_ebic": {
+        "title": "ZIM-EBIC",
+        "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
+        "badge": "EU Business Support"
+      },
+      "directory": {
+        "title": "Trade Directory 2023",
+        "description": "Find exporter profiles and business contacts from Trade Zimbabwe's 2023 directory used for marketplace discovery.",
+        "badge": "Business Directory"
+      },
+      "library": {
+        "title": "Virtual Library",
+        "description": "Browse trade directories, market briefs, newsletters, and exporter guides for market-entry planning.",
+        "badge": "Publications"
+      },
+      "contacts": {
+        "title": "Useful Contacts",
+        "description": "Access Trade Zimbabwe office and trade-support contact points for follow-up on market and export enquiries.",
+        "badge": "Contact Points"
+      }
+    }
   },
   "data": {
     "hero": {
@@ -1214,10 +1518,6 @@
     "gdp_growth_trajectory": "Kufamba kweKukura kweGDP",
     "gdp_growth_history": "Kukura kweupfumi hweZimbabwe kubva 2021 kusvika 2025",
     "gdp_data_source": "Kwakabva: World Bank, IMF, ZIMSTAT",
-    "sectoral_data_mining_title": "Kuongorora chikamu cheMigodhi",
-    "sectoral_data_mining_subtitle": "Upfumi hwezvicherwa huri kupa $5.56B muupfumi hweZimbabwe.",
-    "sectoral_data_mining_contribution": "Iqhaza",
-    "sectoral_data_mining_revenue": "Mari Inowanikwa",
     "sectoral_data_badge": "Kushanda kweZvikamu",
     "sectoral_data_title": "Kukura kweGDP neChikamu",
     "sectoral_data_breakdown": "Maonero ekuti chikamu chimwe nechimwe chiri kubatsira sei pakukura kwenyika.",
@@ -1722,6 +2022,7 @@
       }
     },
     "cta": {
+      "back": "Dzokera",
       "investment_opportunities": "Mikana yekudyara mari",
       "export_hub": "Nzvimbo yekutengesa kunze",
       "search_ntir": "Tsvaga NTIR"

@@ -45,9 +45,9 @@ export default function Register() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full max-w-lg p-1 rounded-[2.5rem] bg-gradient-to-br from-white/10 to-transparent"
+          className="relative w-full max-w-lg p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent"
         >
-          <div className="relative bg-slate-900/40 backdrop-blur-3xl p-10 md:p-12 rounded-[2.4rem] border border-white/5 space-y-8">
+          <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-12 space-y-8">
             
             {/* --- CANCEL BUTTON --- */}
             <button 
@@ -129,7 +129,7 @@ export default function Register() {
               </Button>
             </form>
 
-            <div className="text-center pt-4 border-t border-white/5">
+            <div className="text-center pt-4 border-t border-white/10">
               <p className="text-xs text-white/40">
                 {t('auth.have_account') || "Already have an account?"}{' '}
                 <Link href="/login" className="text-zim-gold font-bold hover:underline">

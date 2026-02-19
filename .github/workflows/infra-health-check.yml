@@ -1,0 +1,64 @@
+name: Infra Health Check
+
+on:
+  # Low-frequency backup ping. Primary keepalive is handled externally (cron-job.org).
+  schedule:
+    - cron: "0 */4 * * *"
+  # Allow manual runs from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    name: Health Check Render + DB
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Health check app endpoint
+        env:
+          # Prefer repository variable; fallback to secret if user stored it there.
+          KEEPALIVE_URL: ${{ vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          # Optional DB URL fallback (variable or secret) used to derive app origin.
+          RENDER_DB_KEEPALIVE_URL: ${{ vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          # Curl timeout in seconds for slow/cold starts.
+          KEEPALIVE_TIMEOUT_SECONDS: "30"
+        run: |
+          APP_URL="$(echo "${KEEPALIVE_URL:-}" | xargs)"
+          DB_URL="$(echo "${RENDER_DB_KEEPALIVE_URL:-}" | xargs)"
+
+          if [[ -z "$APP_URL" && -n "$DB_URL" ]]; then
+            APP_ORIGIN="$(echo "$DB_URL" | sed -E 's#(https?://[^/]+).*#\1#')"
+            APP_URL="${APP_ORIGIN}/api/ping"
+          fi
+
+          if [[ -z "$APP_URL" ]]; then
+            echo "[keepalive] Missing app URL."
+            echo "[keepalive] Set one of: vars.RENDER_KEEPALIVE_URL, secrets.RENDER_KEEPALIVE_URL, vars.RENDER_DB_KEEPALIVE_URL, secrets.RENDER_DB_KEEPALIVE_URL"
+            exit 1
+          fi
+
+          export KEEPALIVE_URL="$APP_URL"
+          ./scripts/keepalive-ping.sh
+
+      - name: Health check DB endpoint (same schedule)
+        env:
+          # Optional explicit repo variable: RENDER_DB_KEEPALIVE_URL. If omitted, derives from RENDER_KEEPALIVE_URL.
+          RENDER_DB_KEEPALIVE_URL: ${{ vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          RENDER_KEEPALIVE_URL: ${{ vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          KEEPALIVE_TIMEOUT_SECONDS: "30"
+        run: |
+          DB_URL="$(echo "${RENDER_DB_KEEPALIVE_URL:-}" | xargs)"
+          APP_URL="$(echo "${RENDER_KEEPALIVE_URL:-}" | xargs)"
+
+          if [[ -z "$DB_URL" ]]; then
+            if [[ -z "$APP_URL" ]]; then
+              echo "[keepalive] Missing both RENDER_DB_KEEPALIVE_URL and RENDER_KEEPALIVE_URL."
+              exit 1
+            fi
+            # Derive service origin from app keepalive URL and append DB health endpoint.
+            APP_ORIGIN="$(echo "$APP_URL" | sed -E 's#(https?://[^/]+).*#\1#')"
+            DB_URL="${APP_ORIGIN}/api/health/db"
+          fi
+
+          ./scripts/keepalive-ping.sh "$DB_URL"

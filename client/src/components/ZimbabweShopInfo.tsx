@@ -77,11 +77,11 @@ export default function ZimbabweShopInfo() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
 
       {/* Header Section */}
-      <motion.div variants={itemVariants} className="space-y-6 text-center">
-        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">
+      <motion.div variants={itemVariants} className="space-y-4 text-center">
+        <h2 className="section-title-compact">
           {t('shop.title')}
         </h2>
-        <p className="text-base md:text-lg text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
+        <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
           {t('shop.desc')}
         </p>
       </motion.div>
@@ -114,10 +114,10 @@ export default function ZimbabweShopInfo() {
           <motion.div
             key={catIdx}
             variants={itemVariants}
-            className="group relative flex flex-col h-full rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-white/[0.07] hover:-translate-y-2"
+            className="group relative flex flex-col h-full rounded-[2rem] overflow-hidden border border-white/10 bg-slate-950/45 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2"
           >
             {/* The Crispy Edge Finish */}
-            <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
+            <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none z-20" />
 
             {/* Image Section with Glass Overlay */}
             <div className="relative h-72 overflow-hidden bg-slate-900">
@@ -152,10 +152,10 @@ export default function ZimbabweShopInfo() {
 
             {/* Content Section */}
             <div className="p-8 flex flex-col flex-grow relative z-10">
-              <h4 className="text-xl font-bold text-white mb-3 group-hover:text-zim-gold transition-colors duration-300">
+              <h4 className="text-lg font-black text-white tracking-tight mb-3 group-hover:text-zim-gold transition-colors duration-300">
                 {category.title}
               </h4>
-              <p className="text-sm text-white/50 mb-8 flex-grow leading-relaxed font-light">
+              <p className="text-sm text-white/70 mb-8 flex-grow leading-relaxed font-light">
                 {category.desc}
               </p>
               
@@ -164,7 +164,7 @@ export default function ZimbabweShopInfo() {
                 {category.badges.map((badge, bIdx) => (
                   <span 
                     key={bIdx} 
-                    className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-white/70 group-hover:border-zim-gold/30 group-hover:text-white transition-all duration-300"
+                    className="px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/10 text-[9px] font-black uppercase tracking-widest text-white/70 group-hover:border-zim-gold/30 group-hover:text-white transition-all duration-300"
                   >
                     {badge}
                   </span>

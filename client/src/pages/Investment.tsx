@@ -6,19 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, Shield, Gem, Repeat, FileText, Target, BarChart3 } from "lucide-react";
+import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, Shield, Gem, Repeat, FileText, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
 import { Link } from "wouter";
-
-type EconomicStatsResponse = {
-  remittances: number;
-  gdp: number;
-  exportValue: number;
-  growthRate: number;
-  sectorData?: Array<{ name: string; growth: number }>;
-};
 
 export default function Investment() {
   const { t } = useTranslation();
@@ -26,19 +18,6 @@ export default function Investment() {
   const [riskFilter, setRiskFilter] = useState("all");
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [economicStats, setEconomicStats] = useState<EconomicStatsResponse>({
-    remittances: 1500,
-    gdp: 28000,
-    exportValue: 4500,
-    growthRate: 5.3,
-    sectorData: [
-      { name: "Mining", growth: 8.2 },
-      { name: "Tourism", growth: 6.1 },
-      { name: "Agriculture", growth: 4.5 },
-      { name: "Manufacturing", growth: 3.2 },
-    ],
-  });
-  const [economicLoading, setEconomicLoading] = useState(true);
 
   const heroSlides = useMemo(() => [
     {
@@ -91,29 +70,29 @@ export default function Investment() {
     },
     {
       image: "/images/pages/trade/manufacturing_factory.jpg",
-      badge: "Manufacturing Upside",
+      badge: t("investment.hero.badge6") || "Manufacturing Upside",
       badgeIcon: Building,
-      title: "Value-Added Manufacturing",
-      titleHighlight: "Export-Ready Capacity",
-      subtitle: "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
+      title: t("investment.hero.title6") || "Value-Added Manufacturing",
+      titleHighlight: t("investment.hero.highlight6") || "Export-Ready Capacity",
+      subtitle: t("investment.hero.subtitle6") || "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
       buttons: []
     },
     {
       image: "/images/pages/tourism/victoria_falls.jpg",
-      badge: "Tourism Capital",
+      badge: t("investment.hero.badge7") || "Tourism Capital",
       badgeIcon: Target,
-      title: "Hospitality Growth Corridors",
-      titleHighlight: "Visitor Economy",
-      subtitle: "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
+      title: t("investment.hero.title7") || "Hospitality Growth Corridors",
+      titleHighlight: t("investment.hero.highlight7") || "Visitor Economy",
+      subtitle: t("investment.hero.subtitle7") || "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
       buttons: []
     },
     {
       image: "/images/pages/data/remittances_impact.png",
-      badge: "Diaspora Flows",
+      badge: t("investment.hero.badge8") || "Diaspora Flows",
       badgeIcon: DollarSign,
-      title: "Channel Remittances to Assets",
-      titleHighlight: "Structured Investment",
-      subtitle: "Convert household remittance strength into pooled, trackable, and productive investment pathways.",
+      title: t("investment.hero.title8") || "Channel Remittances to Assets",
+      titleHighlight: t("investment.hero.highlight8") || "Structured Investment",
+      subtitle: t("investment.hero.subtitle8") || "Convert household remittance strength into pooled, trackable, and productive investment pathways.",
       buttons: []
     }
   ], [t]);
@@ -123,28 +102,6 @@ export default function Investment() {
     return () => clearInterval(timer);
   }, [heroSlides.length]);
 
-  useEffect(() => {
-    const fetchEconomicStats = async () => {
-      try {
-        const response = await fetch("/api/economic-stats");
-        if (!response.ok) throw new Error("Unable to fetch economic data.");
-        const liveData: EconomicStatsResponse = await response.json();
-        setEconomicStats((prev) => ({
-          remittances: liveData.remittances ?? prev.remittances,
-          gdp: liveData.gdp ?? prev.gdp,
-          exportValue: liveData.exportValue ?? prev.exportValue,
-          growthRate: liveData.growthRate ?? prev.growthRate,
-          sectorData: liveData.sectorData?.length ? liveData.sectorData : prev.sectorData,
-        }));
-      } catch {
-        // Keep defaults when API is unavailable.
-      } finally {
-        setEconomicLoading(false);
-      }
-    };
-
-    fetchEconomicStats();
-  }, []);
 
   const introData = {
     icon: TrendingUp,
@@ -312,37 +269,6 @@ const projects = [
         "For listed exposure, account for ZSE foreign shareholding limits and assess VFEX USD-based alternatives.",
         "In financial models, include applicable non-resident withholding taxes and export-incentive tax treatment.",
       ];
-  const formatUsdMillions = (value: number) =>
-    value >= 1000 ? `$${(value / 1000).toFixed(1)}B` : `$${value.toFixed(0)}M`;
-  const topSectors = [...(economicStats.sectorData ?? [])]
-    .sort((a, b) => b.growth - a.growth)
-    .slice(0, 3);
-  const snapshotCards = [
-    {
-      label: t("investment.economic_snapshot.gdp_growth") || "GDP Growth",
-      value: `${economicStats.growthRate.toFixed(1)}%`,
-      note: t("investment.economic_snapshot.latest_macro_signal") || "Latest macro signal",
-      icon: TrendingUp,
-    },
-    {
-      label: t("investment.economic_snapshot.diaspora_remittances") || "Diaspora Remittances",
-      value: formatUsdMillions(economicStats.remittances),
-      note: t("investment.economic_snapshot.annual_inflows") || "Annual inflows",
-      icon: DollarSign,
-    },
-    {
-      label: t("investment.economic_snapshot.total_exports") || "Total Exports",
-      value: formatUsdMillions(economicStats.exportValue),
-      note: t("investment.economic_snapshot.external_demand") || "External demand indicator",
-      icon: Globe,
-    },
-    {
-      label: t("investment.economic_snapshot.gdp_size") || "GDP Size",
-      value: formatUsdMillions(economicStats.gdp),
-      note: t("investment.economic_snapshot.economic_scale") || "Economic scale",
-      icon: BarChart3,
-    },
-  ];
   const collectiveModelSteps = [
     t("investment.collective_model.s1") || "Create an investor profile and complete verification checks.",
     t("investment.collective_model.s2") || "Join vetted opportunities with clear minimum-ticket participation.",
@@ -401,6 +327,73 @@ const projects = [
     t("investment.eu_focus.eib_t3") ||
       "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
   ];
+  const zidaInvestmentRoutes = [
+    {
+      title: t("investment.zida.routes.general_license.title") || "General Investment License",
+      detail:
+        t("investment.zida.routes.general_license.detail") ||
+        "For private business setup in Zimbabwe, including options for full ownership based on applicable laws and sector rules.",
+      link: "https://zidainvest.com/general-investment-license/",
+    },
+    {
+      title: t("investment.zida.routes.ppp.title") || "Public Private Partnership (PPP)",
+      detail:
+        t("investment.zida.routes.ppp.detail") ||
+        "For projects structured with Government, local authorities, or state-owned enterprises.",
+      link: "https://zidainvest.com/public-private-partnerships/",
+    },
+    {
+      title: t("investment.zida.routes.sez.title") || "Special Economic Zones (SEZ)",
+      detail:
+        t("investment.zida.routes.sez.detail") ||
+        "For developing, operating, or investing in designated SEZ activities under ZIDA administration.",
+      link: "https://zidainvest.com/doing-business-in-zimbabwe/",
+    },
+  ];
+  const zidaResources = [
+    {
+      title: t("investment.zida.resources.investor_services.title") || "ZIDA Investor Services",
+      description:
+        t("investment.zida.resources.investor_services.description") ||
+        "Guidance for local and foreign investors, including support for setup, growth, and market-entry planning.",
+      link: "https://zidainvest.com/investor-services/",
+    },
+    {
+      title: t("investment.zida.resources.diy_licensing.title") || "DIY Investor Licensing Portal",
+      description:
+        t("investment.zida.resources.diy_licensing.description") ||
+        "Apply for investment licenses and related permit actions through ZIDA's online self-service process.",
+      link: "https://zidainvest.com/zida-diy-investor-licensing-portal/",
+    },
+    {
+      title: t("investment.zida.resources.portal_access.title") || "ZIDA DIY Portal Access",
+      description:
+        t("investment.zida.resources.portal_access.description") ||
+        "Direct portal entry for investor licensing workflows and account-based submissions.",
+      link: "https://zidainvest.com/zida-diy-portal/",
+    },
+    {
+      title: t("investment.zida.resources.invest_zim.title") || "Invest in Zimbabwe",
+      description:
+        t("investment.zida.resources.invest_zim.description") ||
+        "Central investment gateway with key sectors, PPP opportunities, and current project information.",
+      link: "https://zidainvest.com/invest-in-zimbabwe/",
+    },
+    {
+      title: t("investment.zida.resources.doing_business.title") || "Doing Business in Zimbabwe",
+      description:
+        t("investment.zida.resources.doing_business.description") ||
+        "Practical guide covering investment routes, business establishment steps, and licensing pathways.",
+      link: "https://zidainvest.com/doing-business-in-zimbabwe/",
+    },
+    {
+      title: t("investment.zida.resources.investor_register.title") || "Licensed Investor Register",
+      description:
+        t("investment.zida.resources.investor_register.description") ||
+        "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility.",
+      link: "https://zidainvest.com/investor-register/",
+    },
+  ];
 
   return (
     <Layout>
@@ -409,57 +402,17 @@ const projects = [
         <SubPageHero heroSlides={heroSlides} intro={introData} />
       </section>
 
-      {/* Investor Economic Snapshot */}
-      <section id="economic-snapshot" className="py-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="text-center mb-10 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
-              {t("investment.economic_snapshot.title") || "Investor Economic Snapshot"}
-            </h2>
-            <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">
-              {t("investment.economic_snapshot.subtitle") ||
-                "Review growth momentum together with currency, tax, and compliance conditions before allocating capital."}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {snapshotCards.map((card) => (
-              <div key={card.label} className="rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-6">
-                <card.icon className="h-6 w-6 text-zim-gold mb-4" />
-                <p className="text-[11px] uppercase tracking-widest text-white/50 font-black">{card.label}</p>
-                <p className="text-3xl font-black text-white mt-2">{economicLoading ? "..." : card.value}</p>
-                <p className="text-xs text-white/50 mt-2">{card.note}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-6 md:p-8">
-            <h3 className="text-xl md:text-2xl font-black text-white tracking-tight mb-4">
-              {t("investment.economic_snapshot.top_growth_sectors") || "Top Growth Sectors"}
-            </h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {topSectors.map((sector) => (
-                <div key={sector.name} className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-                  <p className="text-white font-bold">{sector.name}</p>
-                  <p className="text-zim-gold font-black text-lg mt-1">+{sector.growth.toFixed(1)}%</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Collective Model */}
       <section id="collective-model" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="flex items-center justify-center gap-3 mb-5">
               <Users className="h-6 w-6 text-zim-gold" />
-              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter">
+              <h3 className="text-xl font-black text-white tracking-tight">
                 {t("investment.collective_model.title") || "How Diaspora Collective Investing Works"}
-              </h2>
+              </h3>
             </div>
-            <p className="text-white/65 text-sm md:text-base leading-relaxed mb-8 max-w-3xl">
+            <p className="text-white/75 text-sm leading-relaxed mb-8 max-w-3xl mx-auto">
               {t("investment.collective_model.subtitle") ||
                 "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes."}
             </p>
@@ -477,171 +430,176 @@ const projects = [
       {/* European Investment Partnerships */}
       <section id="eu-partnerships" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
-              {t("investment.eu_focus.title") || "European Partnership Capital in Zimbabwe"}
-            </h2>
-            <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-              {t("investment.eu_focus.subtitle") ||
-                "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure."}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2 justify-center mb-8">
-            {europePartners.map((partner) => (
-              <Badge key={partner} className="bg-white/5 text-white/70 border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1">
-                {partner}
-              </Badge>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {europeFocusAreas.map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6">
-                <h3 className="text-white font-black mb-3">{item.title}</h3>
-                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Globe className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">
+                  {t("investment.eu_focus.title") || "European Partnership Capital in Zimbabwe"}
+                </h3>
               </div>
-            ))}
-          </div>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                {t("investment.eu_focus.subtitle") ||
+                  "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure."}
+              </p>
+            </div>
 
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6">
-            <h3 className="text-white font-black mb-4">
-              {t("investment.eu_focus.eib_takeaways_title") || "EIB Practical Takeaways for Diaspora Investors"}
-            </h3>
-            <ul className="space-y-3">
-              {eibTakeaways.map((point) => (
-                <li key={point} className="flex items-start gap-3 text-white/75 text-sm">
-                  <CheckCircle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                  <span>{point}</span>
-                </li>
+            <div className="flex flex-wrap gap-2 justify-center mb-8">
+              {europePartners.map((partner) => (
+                <Badge key={partner} className="bg-white/5 text-white/70 border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1">
+                  {partner}
+                </Badge>
               ))}
-            </ul>
-          </div>
+            </div>
 
-          <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            <a href="https://www.get-invest.eu/about/country-windows/zimbabwe/" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
-                {t("investment.eu_focus.source_getinvest") || "Source: GET.invest Zimbabwe"}
-              </Button>
-            </a>
-            <a href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
-                {t("investment.eu_focus.source_eu") || "Source: EU International Partnerships"}
-              </Button>
-            </a>
-            <a href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
-                {t("investment.eu_focus.source_eib") || "Source: EIB Zimbabwe Essay"}
-              </Button>
-            </a>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {europeFocusAreas.map((item) => (
+                <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                  <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
+                  <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <h4 className="text-lg font-black text-white tracking-tight mb-4">
+                {t("investment.eu_focus.eib_takeaways_title") || "EIB Practical Takeaways for Diaspora Investors"}
+              </h4>
+              <ul className="space-y-3">
+                {eibTakeaways.map((point) => (
+                  <li key={point} className="flex items-start gap-3 text-white/75 text-sm">
+                    <CheckCircle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3 justify-center">
+              <a href="https://www.get-invest.eu/about/country-windows/zimbabwe/" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.eu_focus.source_getinvest") || "Source: GET.invest Zimbabwe"}
+                </Button>
+              </a>
+              <a href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.eu_focus.source_eu") || "Source: EU International Partnerships"}
+                </Button>
+              </a>
+              <a href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.eu_focus.source_eib") || "Source: EIB Zimbabwe Essay"}
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Active Projects - Cinematic Glass Grid */}
       <section id="active-projects" className="py-10 bg-slate-950 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
-
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.sectors_title') || "Active Investment Opportunities"}</h2>
-             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
-            <div className="flex flex-wrap justify-center gap-2 mt-8">
-              {['all', 'tourism', 'agriculture', 'manufacturing', 'it', 'energy'].map(s => (
-                <button 
-                  key={s} 
-                  onClick={() => setActiveFilter(s)} 
-                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
-                    activeFilter === s 
-                    ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]" 
-                    : "bg-white/5 text-white/60 border-white/10 hover:border-white/30"
-                  }`}
-                >
-                  {t(`investment.project_filters.${s}`) || projectFilterFallbacks[s] || s}
-                </button>
-              ))}
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Target className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.sectors_title') || "Active Investment Opportunities"}</h3>
+              </div>
+               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
+              <div className="flex flex-wrap justify-center gap-2 mt-8">
+                {['all', 'tourism', 'agriculture', 'manufacturing', 'it', 'energy'].map(s => (
+                  <button 
+                    key={s} 
+                    onClick={() => setActiveFilter(s)} 
+                    className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                      activeFilter === s 
+                      ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]" 
+                      : "bg-white/5 text-white/60 border-white/10 hover:border-white/30"
+                    }`}
+                  >
+                    {t(`investment.project_filters.${s}`) || projectFilterFallbacks[s] || s}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {filtered.map(p => (
-              <motion.div 
-                key={p.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="group relative rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 hover:bg-white/[0.07]"
-              >
-                {/* Crispy Edge Finish */}
-                <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
-                
-                <div className="grid md:grid-cols-12 gap-6 p-8 relative z-10">
-                  <div className="md:col-span-8 space-y-5">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[9px] uppercase font-black px-3 py-1 rounded-full">{p.sector}</Badge>
-                      <Badge className={`text-[9px] uppercase font-black px-3 py-1 rounded-full ${p.risk === "conservative" ? "bg-green-500/10 text-green-400" : p.risk === "moderate" ? "bg-yellow-500/10 text-yellow-400" : "bg-red-500/10 text-red-400"}`}>
-                        {(t(`investment.project_filters.${p.risk}`) || projectFilterFallbacks[p.risk] || p.risk)} {t('investment.project_card.risk') || "Risk Level"}
-                      </Badge>
-                      {p.ver && <Badge className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] uppercase font-black px-3 py-1 rounded-full flex items-center gap-1.5"><Award className="h-3 w-3" /> {t('investment.project_card.verified') || "Verified Asset"}</Badge>}
+            <div className="grid lg:grid-cols-2 gap-8">
+              {filtered.map(p => (
+                <motion.div 
+                  key={p.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="group rounded-[2rem] border border-white/10 bg-white/[0.02] transition-colors duration-300 hover:bg-white/[0.03]"
+                >
+                  <div className="grid md:grid-cols-12 gap-6 p-7">
+                    <div className="md:col-span-8 space-y-5">
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[9px] uppercase font-black px-3 py-1 rounded-full">{p.sector}</Badge>
+                        <Badge className={`text-[9px] uppercase font-black px-3 py-1 rounded-full ${p.risk === "conservative" ? "bg-green-500/10 text-green-400" : p.risk === "moderate" ? "bg-yellow-500/10 text-yellow-400" : "bg-red-500/10 text-red-400"}`}>
+                          {(t(`investment.project_filters.${p.risk}`) || projectFilterFallbacks[p.risk] || p.risk)} {t('investment.project_card.risk') || "Risk Level"}
+                        </Badge>
+                        {p.ver && <Badge className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] uppercase font-black px-3 py-1 rounded-full flex items-center gap-1.5"><Award className="h-3 w-3" /> {t('investment.project_card.verified') || "Verified Asset"}</Badge>}
+                      </div>
+                      
+                      <h3 className="text-lg font-black text-white tracking-tight">
+                        {t(`investment.projects.${p.id}.title`) || projectContentFallbacks[p.id]?.title || "Investment Opportunity"}
+                      </h3>
+                      <p className="text-sm text-white/50 font-light leading-relaxed line-clamp-2">
+                        {t(`investment.projects.${p.id}.description`) || projectContentFallbacks[p.id]?.description || "Verified opportunity for diaspora investors."}
+                      </p>
+                      
+                      <ul className="grid sm:grid-cols-2 gap-3">
+                        {((Array.isArray(t(`investment.projects.${p.id}.highlights`, { returnObjects: true }))
+                          ? (t(`investment.projects.${p.id}.highlights`, { returnObjects: true }) as string[])
+                          : projectContentFallbacks[p.id]?.highlights) || []).map((h, i) => (
+                          <li key={i} className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
+                            <CheckCircle className="h-4 w-4 text-zim-gold opacity-60" /> 
+                            {h}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    
-                    <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-zim-gold transition-colors">
-                      {t(`investment.projects.${p.id}.title`) || projectContentFallbacks[p.id]?.title || "Investment Opportunity"}
-                    </h3>
-                    <p className="text-sm text-white/50 font-light leading-relaxed line-clamp-2">
-                      {t(`investment.projects.${p.id}.description`) || projectContentFallbacks[p.id]?.description || "Verified opportunity for diaspora investors."}
-                    </p>
-                    
-                    <ul className="grid sm:grid-cols-2 gap-3">
-                      {((Array.isArray(t(`investment.projects.${p.id}.highlights`, { returnObjects: true }))
-                        ? (t(`investment.projects.${p.id}.highlights`, { returnObjects: true }) as string[])
-                        : projectContentFallbacks[p.id]?.highlights) || []).map((h, i) => (
-                        <li key={i} className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
-                          <CheckCircle className="h-4 w-4 text-zim-gold opacity-60" /> 
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
 
-                  <div className="md:col-span-4 bg-white/5 rounded-3xl p-6 flex flex-col justify-between border border-white/5">
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-white/40">
-                          <span>{t('investment.project_card.raised', { amount: p.raised }) || `Raised: ${p.raised}`}</span>
-                          <span className="text-zim-gold">{p.prog}%</span>
+                    <div className="md:col-span-4 p-2 flex flex-col justify-between border-l border-white/10 md:pl-5">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-white/40">
+                            <span>{t('investment.project_card.raised', { amount: p.raised }) || `Raised: ${p.raised}`}</span>
+                            <span className="text-zim-gold">{p.prog}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${p.prog}%` }}
+                              transition={{ duration: 1, ease: "easeOut" }}
+                              className="h-full bg-zim-gold" 
+                            />
+                          </div>
                         </div>
-                        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                          <motion.div 
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${p.prog}%` }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                            className="h-full bg-zim-gold shadow-[0_0_10px_rgba(212,175,55,0.5)]" 
-                          />
+                        
+                        <div className="grid grid-cols-1 gap-3">
+                          <div className="py-2 border-b border-white/10">
+                            <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">{t('investment.project_filters.min_investment') || "Min. "}</p>
+                            <p className="text-sm font-black text-white">{p.min}</p>
+                          </div>
+                          <div className="py-2">
+                            <p className="text-[9px] font-black text-zim-gold/40 uppercase tracking-widest">{t('investment.project_filters.expected_return') || "Expected"}</p>
+                            <p className="text-sm font-black text-zim-gold">{p.ret}</p>
+                          </div>
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-1 gap-3">
-                        <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-                          <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">{t('investment.project_filters.min_investment') || "Min. "}</p>
-                          <p className="text-sm font-black text-white">{p.min}</p>
-                        </div>
-                        <div className="p-3 bg-zim-gold/5 rounded-xl border border-zim-gold/10">
-                          <p className="text-[9px] font-black text-zim-gold/40 uppercase tracking-widest">{t('investment.project_filters.expected_return') || "Expected"}</p>
-                          <p className="text-sm font-black text-zim-gold">{p.ret}</p>
-                        </div>
-                      </div>
+                      <Link href={`/investment/projects/${p.id}`}>
+                        <Button className="w-full mt-4 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                          {t('investment.project_card.view_details') || "View Details"}
+                        </Button>
+                      </Link>
                     </div>
-                    
-                    <Link href={`/investment/projects/${p.id}`}>
-                      <Button className="w-full mt-4 bg-white text-slate-950 hover:bg-zim-gold hover:text-zim-black transition-all rounded-xl h-12 font-black text-[10px] uppercase tracking-widest shadow-xl">
-                        {t('investment.project_card.view_details') || "View Details"}
-                      </Button>
-                    </Link>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -649,31 +607,36 @@ const projects = [
       {/* How it Works - Glass Dashboard */}
       <section className="py-10 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h2>
-           <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
-          </div>
-          
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { title: 'Browse Projects', emoji: '🧭' },
-              { title: 'Invest Your Share', emoji: '💵' },
-              { title: 'Track Performance', emoji: '📈' },
-              { title: 'Receive Returns', emoji: '✅' }
-            ].map((step, i) => (
-              <div key={i} className="relative pt-10 group">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-                  {i + 1}
-                </div>
-                <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 text-center transition-all duration-500 hover:bg-white/[0.06] hover:-translate-y-2">
-                  <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
-                    <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
-                  </div>
-                  <h3 className="text-white font-bold text-lg mb-3 tracking-tight">{step.title}</h3>
-                  <p className="text-white/40 text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
-                </div>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Repeat className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
               </div>
-            ))}
+             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+            </div>
+            
+            <div className="grid md:grid-cols-4 gap-8">
+              {[
+                { title: t("investment.crowdfunding_steps.browse") || "Browse Projects", emoji: "🧭" },
+                { title: t("investment.crowdfunding_steps.invest") || "Invest Your Share", emoji: "💵" },
+                { title: t("investment.crowdfunding_steps.track") || "Track Performance", emoji: "📈" },
+                { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", emoji: "✅" }
+              ].map((step, i) => (
+                <div key={i} className="relative pt-10 group">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                    {i + 1}
+                  </div>
+                  <div className="h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
+                    <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
+                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
+                    </div>
+                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{step.title}</h3>
+                    <p className="text-white/40 text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -681,40 +644,47 @@ const projects = [
       {/* Directories - Dual Glass Panels */}
       <section className="py-10 bg-slate-950">
         <div className="container px-6 mx-auto">
-
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.database_title') || "Trade & Investment Databases and Registries"}</h2>
-             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+              <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <FileText className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">{t('investment.database_title') || "Trade & Investment Databases and Registries"}</h3>
+            </div>
+             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="relative p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl overflow-hidden group">
+            <div className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-5 mb-6">
                 <div className="p-4 bg-zim-gold/10 rounded-2xl border border-zim-gold/20">
                   <span className="text-4xl drop-shadow-[0_0_12px_rgba(212,175,55,0.35)]">🗂️</span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
-                  <p className="text-xs text-zim-gold/60 font-black uppercase tracking-[0.2em]">National Directory</p>
+                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
+                  <p className="text-xs text-zim-gold/60 font-black uppercase tracking-[0.2em]">
+                    {t("investment.ntir_label") || "National Directory"}
+                  </p>
                 </div>
               </div>
               <p className="text-white/50 text-sm font-light leading-relaxed mb-8">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
               <Link href="/ntir">
-                <Button variant="outline" className="w-full h-14 rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white hover:text-zim-black font-black text-[11px] uppercase tracking-widest transition-all">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
                   {t('investment.ntir_button') || "Search NTIR Database."}
                 </Button>
               </Link>
             </div>
 
-            <div className="relative p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl overflow-hidden group">
+            <div className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-5 mb-6">
                 <div className="p-4 bg-zim-green/10 rounded-2xl border border-zim-green/20">
                   <span className="text-4xl drop-shadow-[0_0_12px_rgba(34,197,94,0.35)]">🌱</span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
-                  <p className="text-xs text-zim-green/60 font-black uppercase tracking-[0.2em]">Horticulture Council</p>
+                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
+                  <p className="text-xs text-zim-green/60 font-black uppercase tracking-[0.2em]">
+                    {t("investment.hdc_label") || "Horticulture Council"}
+                  </p>
                 </div>
               </div>
               <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
@@ -730,19 +700,64 @@ const projects = [
               </div>
             </div>
           </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ZIDA Information Section */}
+      <section className="py-10 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Building className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">
+                  {t("investment.zida.title") || "ZIDA Investment Information"}
+                </h3>
+              </div>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
+                {t("investment.zida.subtitle") ||
+                  "Official pathways and resources from the Zimbabwe Investment and Development Agency for licensing, sector discovery, and investment setup."}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {zidaInvestmentRoutes.map((route) => (
+                <div key={route.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                  <h3 className="text-lg font-black text-white tracking-tight">{route.title}</h3>
+                  <p className="text-sm text-white/60 mt-3 leading-relaxed">{route.detail}</p>
+                  <a href={route.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-4 text-zim-gold font-black uppercase tracking-widest text-[10px] hover:text-white transition-colors">
+                    {t("investment.zida.open_route") || "Open Route"} <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {zidaResources.map((resource) => (
+                <div key={resource.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                  <p className="text-white font-black">{resource.title}</p>
+                  <p className="text-white/70 text-sm mt-2 leading-relaxed">{resource.description}</p>
+                  <a href={resource.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-zim-gold text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">
+                    {t("investment.zida.visit_resource") || "Visit Resource"} <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Regulatory Snapshot */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
-              <div className="space-y-3 max-w-3xl">
-                <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter">
+              <div className="space-y-3 max-w-3xl mx-auto">
+                <h3 className="text-xl font-black text-white tracking-tight">
                   {t("investment.regulatory_snapshot.title") || "Investment Regulation Snapshot"}
-                </h2>
-                <p className="text-white/60 text-sm md:text-base leading-relaxed">
+                </h3>
+                <p className="text-white/75 text-sm leading-relaxed">
                   {t("investment.regulatory_snapshot.subtitle") ||
                     "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation."}
                 </p>
@@ -768,11 +783,16 @@ const projects = [
       {/* Calculator Section */}
       <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto relative z-10">
-            <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">{t('investment.calculator_title') || "Smart Investment Calculator"}</h2>
-             <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Brain className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.calculator_title') || "Smart Investment Calculator"}</h3>
+              </div>
+               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
+            </div>
+            <InvestmentCalculator />
           </div>
-          <InvestmentCalculator />
         </div>
       </section>
 
