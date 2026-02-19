@@ -40,6 +40,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 6900,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 2,
@@ -51,6 +52,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 6400,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 3,
@@ -62,6 +64,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 5090,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 4,
@@ -73,6 +76,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 1490,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 5,
@@ -84,6 +88,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 390,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 6,
@@ -95,17 +100,19 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 290,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 7,
     slug: "mazoe-variety-pack",
     name: "Mazoe Variety Pack",
-    category: "food",
+    category: "beverage",
     description: "Classic Zimbabwe cordial selection.",
     image_url: "/images/pages/shop/beverage_mazoe_mixed_6.jpg",
     price_cents: 220,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 8,
@@ -117,20 +124,11 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 190,
     currency: "EUR",
     stock_qty: 0,
+
   },
+
   {
     id: 9,
-    slug: "kapenta-dried-fish",
-    name: "Kapenta Dried Fish",
-    category: "food",
-    description: "Traditional dried kapenta, export packed.",
-    image_url: "/images/pages/shop/food_kapenta_1.jpg",
-    price_cents: 330,
-    currency: "EUR",
-    stock_qty: 0,
-  },
-  {
-    id: 10,
     slug: "mazoe-raspberry-2l-case-6",
     name: "Mazoe Raspberry 2L Case (6 Units)",
     category: "beverage",
@@ -139,9 +137,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 449,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 11,
+    id: 10,
     slug: "mazoe-orange-2l-case-6",
     name: "Mazoe Orange 2L Case (6 Units)",
     category: "beverage",
@@ -150,9 +149,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 449,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 12,
+    id: 11,
     slug: "mazoe-orange-2l",
     name: "Mazoe Orange 2L",
     category: "beverage",
@@ -161,9 +161,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 749,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 13,
+    id: 12,
     slug: "pfuko-maheu-traditional-500ml-case-12",
     name: "Pfuko Maheu Traditional 500ml Case (12 Units)",
     category: "beverage",
@@ -172,9 +173,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 191,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 14,
+    id: 13,
     slug: "kariba-kapenta-matemba-100g",
     name: "Kariba Kapenta (Matemba) 100g",
     category: "food",
@@ -183,9 +185,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 349,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 15,
+    id: 14,
     slug: "royco-usavi-beef-75g",
     name: "Royco Usavi Beef 75g",
     category: "food",
@@ -194,9 +197,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 169,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 16,
+    id: 15,
     slug: "colcom-pork-pie-100g",
     name: "Colcom Pork Pie 100g",
     category: "food",
@@ -205,9 +209,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 199,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 17,
+    id: 16,
     slug: "cheeky-chilli-peri-peri-sauce-100ml",
     name: "Cheeky Chilli Peri Peri Sauce 100ml",
     category: "food",
@@ -216,31 +221,34 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 179,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 18,
+    id: 17,
     slug: "mazoe-blackberry-2l",
     name: "Mazoe Blackberry 2L",
-    category: "beverage",
+    category: "food",
     description: "Blackberry cordial favorite.",
     image_url: "/images/pages/shop/beverage_mazoe_blackberry_1.png",
     price_cents: 749,
     currency: "EUR",
     stock_qty: 18,
+
   },
   {
-    id: 19,
+    id: 18,
     slug: "mazoe-cream-soda-2l",
     name: "Mazoe Cream Soda 2L",
-    category: "beverage",
+    category: "food",
     description: "Cream soda cordial flavor.",
     image_url: "/images/pages/shop/beverage_mazoe_creamsoda_1.png",
     price_cents: 249,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 20,
+    id: 19,
     slug: "maputi-40g",
     name: "Maputi 40g",
     category: "food",
@@ -249,9 +257,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 99,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 21,
+    id: 20,
     slug: "lobels-lemon-creams-150g",
     name: "Lobels Lemon Creams 150g",
     category: "food",
@@ -260,9 +269,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 99,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 22,
+    id: 21,
     slug: "sun-jam-500g",
     name: "Sun Jam 500g",
     category: "food",
@@ -271,9 +281,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 179,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 23,
+    id: 22,
     slug: "madras-hot-curry-powder-100g",
     name: "Madras Hot Curry Powder 100g",
     category: "food",
@@ -282,9 +293,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 69,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 24,
+    id: 23,
     slug: "madras-mild-curry-powder-100g",
     name: "Madras Mild Curry Powder 100g",
     category: "food",
@@ -293,9 +305,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 69,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 25,
+    id: 24,
     slug: "cerevita-corn-cocoa-malt-500g",
     name: "Cerevita Corn, Cocoa & Malt 500g",
     category: "food",
@@ -304,9 +317,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 349,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
-    id: 26,
+    id: 25,
     slug: "cerevita-corn-wheat-500g",
     name: "Cerevita Corn & Wheat 500g",
     category: "food",
@@ -315,9 +329,10 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 349,
     currency: "EUR",
     stock_qty: 0,
+
   },
-  {
-    id: 27,
+    {
+    id: 26,
     slug: "mama-dovi_750ml",
     name: "Mama Dovi 750ml",
     category: "food",
@@ -326,6 +341,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 149,
     currency: "EUR",
     stock_qty: 0,
+
   },
 ];
 
