@@ -1755,8 +1755,8 @@ async function startServer() {
   app.get("/api/shop/products", async (req, res) => {
     try {
       const category = String(req.query.category ?? "").trim();
-      const products = await listShopProducts(category);
-      return res.json({ count: products.length, products });
+      const result = await listShopProducts(category);
+      return res.json({ count: result.products.length, products: result.products, source: result.source, cached: result.cached });
     } catch {
       return res.status(500).json({ message: "Unable to load shop products." });
     }

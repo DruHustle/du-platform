@@ -77,7 +77,7 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
       "/images/pages/shop/food_dried_mango_1.jpg",
     
     ],
-    keywords: ["maputi", "biscuit", "cream", "snack", "pie", "treat"],
+    keywords: ["maputi", "biscuit", "creams", "snack", "pie", "treat"],
   },
   {
     key: "oils_spreads",

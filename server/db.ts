@@ -109,6 +109,13 @@ const memoryRemittanceImpact: Array<{ sector: string; percentage: number }> = [
 
 export type ShopPaymentMethod = "stripe" | "paypal" | "amazon_pay";
 export type ShopOrderStatus = "awaiting_payment" | "paid" | "failed";
+export type ShopProductsSource = "db" | "memory";
+
+export type ShopProductsResult = {
+  products: mysql.RowDataPacket[] | ShopProduct[];
+  source: ShopProductsSource;
+  cached: boolean;
+};
 
 type ShopProduct = {
   id: number;
@@ -249,20 +256,9 @@ const memoryShopProducts: ShopProduct[] = [
     stock_qty: 0,
     is_active: 1,
   },
+
   {
     id: 9,
-    slug: "kapenta-dried-fish",
-    name: "Kapenta Dried Fish",
-    category: "food",
-    description: "Traditional dried kapenta, export packed.",
-    image_url: "/images/pages/shop/food_kapenta_1.jpg",
-    price_cents: 330,
-    currency: "EUR",
-    stock_qty: 0,
-    is_active: 1,
-  },
-  {
-    id: 10,
     slug: "mazoe-raspberry-2l-case-6",
     name: "Mazoe Raspberry 2L Case (6 Units)",
     category: "beverage",
@@ -274,7 +270,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 11,
+    id: 10,
     slug: "mazoe-orange-2l-case-6",
     name: "Mazoe Orange 2L Case (6 Units)",
     category: "beverage",
@@ -286,7 +282,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 12,
+    id: 11,
     slug: "mazoe-orange-2l",
     name: "Mazoe Orange 2L",
     category: "beverage",
@@ -298,7 +294,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 13,
+    id: 12,
     slug: "pfuko-maheu-traditional-500ml-case-12",
     name: "Pfuko Maheu Traditional 500ml Case (12 Units)",
     category: "beverage",
@@ -310,7 +306,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 14,
+    id: 13,
     slug: "kariba-kapenta-matemba-100g",
     name: "Kariba Kapenta (Matemba) 100g",
     category: "food",
@@ -322,7 +318,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 15,
+    id: 14,
     slug: "royco-usavi-beef-75g",
     name: "Royco Usavi Beef 75g",
     category: "food",
@@ -334,7 +330,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 16,
+    id: 15,
     slug: "colcom-pork-pie-100g",
     name: "Colcom Pork Pie 100g",
     category: "food",
@@ -346,7 +342,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 17,
+    id: 16,
     slug: "cheeky-chilli-peri-peri-sauce-100ml",
     name: "Cheeky Chilli Peri Peri Sauce 100ml",
     category: "food",
@@ -358,7 +354,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 18,
+    id: 17,
     slug: "mazoe-blackberry-2l",
     name: "Mazoe Blackberry 2L",
     category: "food",
@@ -370,7 +366,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 19,
+    id: 18,
     slug: "mazoe-cream-soda-2l",
     name: "Mazoe Cream Soda 2L",
     category: "food",
@@ -382,7 +378,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 20,
+    id: 19,
     slug: "maputi-40g",
     name: "Maputi 40g",
     category: "food",
@@ -394,7 +390,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 21,
+    id: 20,
     slug: "lobels-lemon-creams-150g",
     name: "Lobels Lemon Creams 150g",
     category: "food",
@@ -406,7 +402,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 22,
+    id: 21,
     slug: "sun-jam-500g",
     name: "Sun Jam 500g",
     category: "food",
@@ -418,7 +414,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 23,
+    id: 22,
     slug: "madras-hot-curry-powder-100g",
     name: "Madras Hot Curry Powder 100g",
     category: "food",
@@ -430,7 +426,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 24,
+    id: 23,
     slug: "madras-mild-curry-powder-100g",
     name: "Madras Mild Curry Powder 100g",
     category: "food",
@@ -442,7 +438,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 25,
+    id: 24,
     slug: "cerevita-corn-cocoa-malt-500g",
     name: "Cerevita Corn, Cocoa & Malt 500g",
     category: "food",
@@ -454,7 +450,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 26,
+    id: 25,
     slug: "cerevita-corn-wheat-500g",
     name: "Cerevita Corn & Wheat 500g",
     category: "food",
@@ -574,6 +570,36 @@ function isDbConnectionError(error: unknown): boolean {
     "ER_BAD_DB_ERROR",
     "ETIMEDOUT",
   ].includes(String(code));
+}
+
+function isTransientShopQueryError(error: unknown): boolean {
+  const code = String((error as any)?.code ?? "");
+  return [
+    "PROTOCOL_CONNECTION_LOST",
+    "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR",
+    "PROTOCOL_ENQUEUE_AFTER_QUIT",
+    "ER_LOCK_DEADLOCK",
+    "ER_LOCK_WAIT_TIMEOUT",
+    "ER_QUERY_TIMEOUT",
+    "ECONNRESET",
+    "ETIMEDOUT",
+  ].includes(code);
+}
+
+function normalizeShopCategory(raw: unknown): "sports" | "crafts" | "food" {
+  const value = String(raw ?? "").trim().toLowerCase();
+  if (value === "sports") return "sports";
+  if (value === "crafts") return "crafts";
+  if (value === "beverage" || value === "beverages" || value === "drink" || value === "drinks") return "food";
+  return "food";
+}
+
+const SHOP_PRODUCTS_CACHE_TTL_MS = 60_000;
+const SHOP_PRODUCTS_QUERY_TIMEOUT_MS = 5_000;
+const shopProductsCache = new Map<string, { expiresAt: number; source: ShopProductsSource; products: any[] }>();
+
+function getShopProductsCacheKey(categoryFilter: string) {
+  return categoryFilter || "__all__";
 }
 
 function getEnv(name: string): string | undefined {
@@ -1410,38 +1436,60 @@ export async function getEconomicStats() {
   }
 }
 
-export async function listShopProducts(category?: string) {
+export async function listShopProducts(category?: string): Promise<ShopProductsResult> {
   const normalizedCategory = String(category ?? "").trim().toLowerCase();
   const categoryFilter = normalizedCategory && ["sports", "crafts", "food"].includes(normalizedCategory)
     ? normalizedCategory
     : "";
+  const cacheKey = getShopProductsCacheKey(categoryFilter);
+  const cachedEntry = shopProductsCache.get(cacheKey);
+  if (cachedEntry && cachedEntry.expiresAt > Date.now()) {
+    return { products: cachedEntry.products, source: cachedEntry.source, cached: true };
+  }
+
+  const finalizeProducts = (rows: any[]) =>
+    rows.map((row) => ({
+      ...row,
+      category: normalizeShopCategory(row.category),
+    }));
 
   if (!db) {
     const rows = memoryShopProducts.filter((product) => {
       if (product.is_active !== 1) return false;
-      if (categoryFilter && String(product.category).toLowerCase() !== categoryFilter) return false;
+      if (categoryFilter && normalizeShopCategory(product.category) !== categoryFilter) return false;
       return true;
     });
-    if (categoryFilter && rows.length === 0) {
-      return memoryShopProducts.filter((product) => product.is_active === 1);
-    }
-    return rows;
+    const normalizedRows = finalizeProducts(rows);
+    shopProductsCache.set(cacheKey, {
+      expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
+      source: "memory",
+      products: normalizedRows,
+    });
+    return { products: normalizedRows, source: "memory", cached: false };
   }
 
-  try {
+  const runQuery = async () => {
     if (categoryFilter) {
-      const [rows] = await db.query<mysql.RowDataPacket[]>(
+      const queryPromise = db.query<mysql.RowDataPacket[]>(
         `
         SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
         FROM shop_products
-        WHERE is_active = 1 AND LOWER(category) = ?
+        WHERE is_active = 1
+          AND (
+            LOWER(category) = ?
+            OR (? = 'food' AND LOWER(category) IN ('beverage', 'beverages', 'drink', 'drinks'))
+          )
         ORDER BY id ASC
         `,
-        [categoryFilter]
+        [categoryFilter, categoryFilter]
       );
-      if (rows.length > 0) return rows;
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(Object.assign(new Error("Shop products query timed out"), { code: "ER_QUERY_TIMEOUT" })), SHOP_PRODUCTS_QUERY_TIMEOUT_MS)
+      );
+      const [rows] = (await Promise.race([queryPromise, timeoutPromise])) as [mysql.RowDataPacket[], any];
+      return rows;
     }
-    const [rows] = await db.query<mysql.RowDataPacket[]>(
+    const queryPromise = db.query<mysql.RowDataPacket[]>(
       `
       SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
       FROM shop_products
@@ -1449,18 +1497,45 @@ export async function listShopProducts(category?: string) {
       ORDER BY id ASC
       `
     );
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(Object.assign(new Error("Shop products query timed out"), { code: "ER_QUERY_TIMEOUT" })), SHOP_PRODUCTS_QUERY_TIMEOUT_MS)
+    );
+    const [rows] = (await Promise.race([queryPromise, timeoutPromise])) as [mysql.RowDataPacket[], any];
     return rows;
+  };
+
+  try {
+    let rows: mysql.RowDataPacket[] = [];
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        rows = await runQuery();
+        break;
+      } catch (error) {
+        const canRetry = attempt === 0 && isTransientShopQueryError(error);
+        if (!canRetry) throw error;
+      }
+    }
+    const normalizedRows = finalizeProducts(rows);
+    shopProductsCache.set(cacheKey, {
+      expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
+      source: "db",
+      products: normalizedRows,
+    });
+    return { products: normalizedRows, source: "db", cached: false };
   } catch (error) {
-    if (!isDbConnectionError(error)) throw error;
+    if (!isDbConnectionError(error) && !isTransientShopQueryError(error)) throw error;
     const rows = memoryShopProducts.filter((product) => {
       if (product.is_active !== 1) return false;
-      if (categoryFilter && String(product.category).toLowerCase() !== categoryFilter) return false;
+      if (categoryFilter && normalizeShopCategory(product.category) !== categoryFilter) return false;
       return true;
     });
-    if (categoryFilter && rows.length === 0) {
-      return memoryShopProducts.filter((product) => product.is_active === 1);
-    }
-    return rows;
+    const normalizedRows = finalizeProducts(rows);
+    shopProductsCache.set(cacheKey, {
+      expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
+      source: "memory",
+      products: normalizedRows,
+    });
+    return { products: normalizedRows, source: "memory", cached: false };
   }
 }
 
