@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Heart, FileText, Dog, TrendingUp } from "lucide-react";
-import ZimbabweShopInfo from "@/components/ZimbabweShopInfo";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
@@ -218,6 +217,129 @@ export default function Tourism() {
     },
   ];
 
+  const otherAttractions: Attraction[] = [
+    {
+      name: t("tourism.other_attractions.hwange.name") || "Hwange National Park",
+      image: "/images/pages/tourism/dest_hwange.png",
+      highlights: ["Big Five", "Elephant Herds", "Safari"],
+      summary:
+        t("tourism.other_attractions.hwange.desc") ||
+        "Zimbabwe's largest park, famous for its massive elephant herds and diverse wildlife.",
+      quickFacts: [
+        "Located in western Zimbabwe and linked to major safari circuits.",
+        "Known for one of Africa's largest elephant populations.",
+        "Strong dry-season game viewing around pumped waterholes.",
+      ],
+      experiences: [
+        "Game drives and guided safari experiences.",
+        "Birdwatching and photography-focused itineraries.",
+        "Lodge and camp stays across multiple park zones.",
+      ],
+      bestTime: "Peak wildlife concentration is usually in the dry months when water sources are limited.",
+      sourceLinks: [{ label: "ZTA: Hwange", url: "https://zimbabwetourism.net/" }],
+    },
+    {
+      name: t("tourism.other_attractions.matobo.name") || "Matobo National Park",
+      image: "/images/pages/tourism/dest_matobo.jpg",
+      highlights: ["UNESCO", "Rock Formations", "Heritage"],
+      summary:
+        t("tourism.other_attractions.matobo.desc") ||
+        "A UNESCO World Heritage site known for its balancing rocks and spiritual history.",
+      quickFacts: [
+        "Recognized for cultural landscapes and granite outcrops.",
+        "Home to major historical and spiritual heritage sites.",
+        "Important rhino and bird habitat in Zimbabwe.",
+      ],
+      experiences: [
+        "Rock-art and heritage tours.",
+        "Scenic drives through granite formations.",
+        "Wildlife tracking and cultural storytelling.",
+      ],
+      bestTime: "Accessible year-round; cooler dry months are ideal for walking and exploration.",
+      sourceLinks: [{ label: "ZTA: Matobo", url: "https://zimbabwetourism.net/portfolios/matobo-hills/" }],
+    },
+    {
+      name: t("tourism.other_attractions.eastern_highlands.name") || "Eastern Highlands",
+      image: "/images/pages/tourism/mutarazi_falls.jpg",
+      highlights: ["Mountains", "Waterfalls", "Cool Climate"],
+      summary:
+        t("tourism.other_attractions.eastern_highlands.desc") ||
+        "A cool, mountainous region offering lush forests, waterfalls, and misty peaks.",
+      quickFacts: [
+        "Stretches along Zimbabwe's eastern border.",
+        "Includes Nyanga, Vumba, and Chimanimani landscapes.",
+        "Known for hiking, scenic lodges, and highland weather.",
+      ],
+      experiences: [
+        "Hiking and nature trails.",
+        "Waterfall viewpoints and adventure activities.",
+        "Mountain lodge retreats and weekend escapes.",
+      ],
+      bestTime: "Dry months generally offer clearer views and better trail conditions.",
+      sourceLinks: [{ label: "ZTA: Eastern Highlands", url: "https://zimbabwetourism.net/" }],
+    },
+    {
+      name: t("tourism.other_attractions.mana_pools.name") || "Mana Pools",
+      image: "/images/pages/tourism/dest_mana_pools.jpg",
+      highlights: ["UNESCO", "Walking Safari", "Wilderness"],
+      summary:
+        t("tourism.other_attractions.mana_pools.desc") ||
+        "A remote UNESCO site famous for its river-fed pools and walking safaris.",
+      quickFacts: [
+        "Set along the lower Zambezi floodplain.",
+        "Recognized globally for wilderness value and biodiversity.",
+        "Strong seasonal game concentration in dry months.",
+      ],
+      experiences: [
+        "Guided walking safaris.",
+        "Canoeing and river-based wildlife viewing.",
+        "Premium low-impact safari camps.",
+      ],
+      bestTime: "Dry season is typically preferred for high-density wildlife viewing.",
+      sourceLinks: [{ label: "ZTA: Mana Pools", url: "https://zimbabwetourism.net/" }],
+    },
+    {
+      name: t("tourism.other_attractions.nyanga.name") || "Nyanga National Park",
+      image: "/images/pages/tourism/dest_nyanga.jpg",
+      highlights: ["Highlands", "Falls", "Scenic Drives"],
+      summary:
+        t("tourism.other_attractions.nyanga.desc") ||
+        "The 'Little Scotland' of Africa, home to Zimbabwe's highest peak and deepest falls.",
+      quickFacts: [
+        "Includes Mount Nyangani and major highland attractions.",
+        "Popular for cooler climate tourism and mountain scenery.",
+        "Important domestic and regional leisure destination.",
+      ],
+      experiences: [
+        "Hiking and mountain viewpoints.",
+        "Trout fishing and outdoor recreation.",
+        "Road trips across highland circuits.",
+      ],
+      bestTime: "Year-round destination; clear weather periods are best for mountain views.",
+      sourceLinks: [{ label: "ZTA: Nyanga", url: "https://zimbabwetourism.net/" }],
+    },
+    {
+      name: t("tourism.other_attractions.gonarezhou.name") || "Gonarezhou",
+      image: "/images/pages/tourism/dest_gonarezhou.jpg",
+      highlights: ["Chilojo Cliffs", "Elephants", "Wild Frontier"],
+      summary:
+        t("tourism.other_attractions.gonarezhou.desc") ||
+        "The 'Place of Elephants,' characterized by the stunning red Chilojo Cliffs.",
+      quickFacts: [
+        "Major transfrontier conservation destination in southeastern Zimbabwe.",
+        "Known for remote, low-traffic wilderness experiences.",
+        "Home to significant elephant and predator populations.",
+      ],
+      experiences: [
+        "Remote game drives and wilderness camping.",
+        "Photography around Chilojo Cliffs and river corridors.",
+        "Cross-border circuit planning with nearby regional parks.",
+      ],
+      bestTime: "Dry months are usually best for access and concentrated wildlife viewing.",
+      sourceLinks: [{ label: "ZTA: Gonarezhou", url: "https://zimbabwetourism.net/" }],
+    },
+  ];
+
   const planningInfo = [
     { icon: MapPin, title: t('tourism.planning.visa.title') || "Visa Requirements", description: t('tourism.planning.visa.desc') || "Essential entry information for international travelers.", details: [t('tourism.planning.visa.d1') || "e-Visa application system available", t('tourism.planning.visa.d2') || "Visa on arrival for many nationalities", t('tourism.planning.visa.d3') || "Valid passport (6 months) required"] },
     { icon: Shield, title: t('tourism.planning.health.title') || "Health & Safety", description: t('tourism.planning.health.desc') || "Stay healthy and safe during your Zimbabwean adventure.", details: [t('tourism.planning.health.d1') || "Yellow fever certificate if applicable", t('tourism.planning.health.d2') || "Malaria prophylaxis recommended", t('tourism.planning.health.d3') || "Comprehensive travel insurance advised"] },
@@ -333,32 +455,25 @@ export default function Tourism() {
         <SubPageHero heroSlides={heroSlides} intro={introData} />
       </section>
 
-      {/* Zimbabwe Shop Section */}
-      <section className="py-0 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <ZimbabweShopInfo />
-          </div>
-        </div>
-      </section>
-
       {/* Onesa AI Tourist Companion Section - Glassy UI Upgrade */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">{t('tourism.onesa.title') || "Your Local Guide in Your Pocket"}</h2>
-              <p className="section-subtitle-compact">{t('tourism.onesa.subtitle') || "Navigating Zimbabwe can be complex. Onesa AI understands local travel dynamics and practical on-the-ground context to keep your trip seamless."}</p>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                {t('tourism.onesa.subtitle') || "Navigating Zimbabwe can be complex. Onesa AI understands local travel dynamics and practical on-the-ground context to keep your trip seamless."}
+              </p>
             </div>
 
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative py-12 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] group"
+              className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/5 bg-white/[0.01] group"
             >
              {/* The Crispy Edge Finish */}
-             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+             <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
             
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
               {/* Left Column */}
@@ -381,13 +496,13 @@ export default function Tourism() {
                   {onesaTouristFeatures.map((feature, idx) => {
                     const Icon = feature.icon;
                     return (
-                      <div key={idx} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4 hover:bg-slate-950/60 transition-all group/item">
-                        <div className="p-2 bg-slate-950 rounded-lg border border-white/10 group-hover/item:border-zim-gold/50 transition-colors">
-                          <Icon className="h-4 w-4 text-zim-gold" />
+                      <div key={idx} className="flex items-center gap-4 rounded-[2rem] border border-white/5 bg-white/[0.01] p-7">
+                        <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                          <Icon className="h-5 w-5 text-zim-gold" />
                         </div>
                         <div>
-                          <h4 className="text-[13px] font-bold text-white tracking-tight">{feature.title}</h4>
-                          <p className="text-[11px] text-white/40 leading-snug">{feature.description}</p>
+                          <h4 className="text-lg font-black text-white tracking-tight">{feature.title}</h4>
+                          <p className="text-white/70 text-sm leading-relaxed">{feature.description}</p>
                         </div>
                       </div>
                     );
@@ -395,7 +510,7 @@ export default function Tourism() {
                 </div>
 
               <Link href="/onesa-ai">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white hover:scale-105 transition-all px-8 h-12 rounded-full font-black text-[11px] uppercase tracking-widest shadow-xl shadow-zim-gold/20">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]">
                   {t('tourism.onesa.chat') || "Chat with Onesa"}
                 </Button>
               </Link>
@@ -431,7 +546,7 @@ export default function Tourism() {
       {/* Key Attractions - Cinematic Glass Grid */}
       <section id="attractions" className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">{t("tourism.attractions_title") || "Must-Visit Destinations"}</h2>
               <p className="section-subtitle-compact">{t("tourism.attractions_subtitle") || "Iconic landmarks that define the Zimbabwean experience."}</p>
@@ -472,25 +587,21 @@ export default function Tourism() {
                 <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t("tourism.other_attractions_subtitle") || "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country."}</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[
-                  { name: t("tourism.other_attractions.hwange.name") || "Hwange National Park", img: "/images/pages/tourism/dest_hwange.png", desc: t("tourism.other_attractions.hwange.desc") || "Zimbabwe's largest park, famous for its massive elephant herds and diverse wildlife." },
-                  { name: t("tourism.other_attractions.matobo.name") || "Matobo National Park", img: "/images/pages/tourism/dest_matobo.jpg", desc: t("tourism.other_attractions.matobo.desc") || "A UNESCO World Heritage site known for its balancing rocks and spiritual history." },
-                  { name: t("tourism.other_attractions.eastern_highlands.name") || "Eastern Highlands", img: "/images/pages/tourism/mutarazi_falls.jpg", desc: t("tourism.other_attractions.eastern_highlands.desc") || "A cool, mountainous region offering lush forests, waterfalls, and misty peaks." },
-                  { name: t("tourism.other_attractions.mana_pools.name") || "Mana Pools", img: "/images/pages/tourism/dest_mana_pools.jpg", desc: t("tourism.other_attractions.mana_pools.desc") || "A remote UNESCO site famous for its river-fed pools and walking safaris." },
-                  { name: t("tourism.other_attractions.nyanga.name") || "Nyanga National Park", img: "/images/pages/tourism/dest_nyanga.jpg", desc: t("tourism.other_attractions.nyanga.desc") || "The 'Little Scotland' of Africa, home to Zimbabwe's highest peak and deepest falls." },
-                  { name: t("tourism.other_attractions.gonarezhou.name") || "Gonarezhou", img: "/images/pages/tourism/dest_gonarezhou.jpg", desc: t("tourism.other_attractions.gonarezhou.desc") || "The 'Place of Elephants,' characterized by the stunning red Chilojo Cliffs." }
-                ].map((dest, i) => (
+                {otherAttractions.map((dest, i) => (
                   <motion.div key={i} whileHover={{ y: -5 }} className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
-                    <a href="#plan-visit" className="block cursor-pointer">
+                    <button type="button" className="block cursor-pointer w-full text-left" onClick={() => setSelectedAttraction(dest)}>
                       <div className="h-44 overflow-hidden relative">
-                        <img src={dest.img} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-700" />
+                        <img src={dest.image} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
                       </div>
                       <div className="p-5">
                         <h4 className="text-base font-bold text-white mb-2 group-hover:text-zim-gold transition-colors">{dest.name}</h4>
-                        <p className="text-xs text-white/40 leading-snug font-light">{dest.desc}</p>
+                        <p className="text-xs text-white/40 leading-snug font-light">{dest.summary}</p>
+                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
+                          {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
+                        </p>
                       </div>
-                    </a>
+                    </button>
                   </motion.div>
                 ))}
               </div>
@@ -565,7 +676,7 @@ export default function Tourism() {
       {/* Tourism Economy Snapshot */}
       <section id="tourism-snapshot" className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">
                 {t("tourism.snapshot.title") || "Zimbabwe Tourism Snapshot (2026)"}
@@ -595,7 +706,7 @@ export default function Tourism() {
       {/* Investment Opportunities */}
       <section id="tourism-opportunities" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">
                 {t("tourism.opportunities.title") || "Tourism Investment and Growth Opportunities"}
@@ -616,7 +727,7 @@ export default function Tourism() {
       {/* Official Tourism Authorities */}
       <section id="tourism-authorities" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-center gap-3 mb-4">
               <FileText className="h-6 w-6 text-zim-gold" />
               <h2 className="section-title-compact">
@@ -646,7 +757,7 @@ export default function Tourism() {
       {/* ZTA Official Resources */}
       <section className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">
                 {t("tourism.zta_resources.title") || "ZTA Official Visitor Resources"}
@@ -680,7 +791,7 @@ export default function Tourism() {
       {/* Planning Info - High-End Dashboard Style */}
       <section id="plan-visit" className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">{t("tourism.planning.essential_info") || "Essential Planning Information"}</h2>
               <p className="section-subtitle-compact">{t("tourism.planning.essential_desc") || "Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe."}</p>
@@ -690,7 +801,7 @@ export default function Tourism() {
               {planningInfo.map((info, index) => {
                 const Icon = info.icon;
                 return (
-                  <div key={index} className="relative p-8 rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] group">
+                  <div key={index} className="outer-glass-panel relative p-8 rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] group">
                     <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
                     <div className="flex items-center gap-4 mb-6">
                       <div className="p-3 bg-zim-gold/10 rounded-xl">

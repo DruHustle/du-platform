@@ -26,6 +26,14 @@ import {
   searchNtirEntities,
   updateNtirEntity,
   updateUserPassword,
+  listShopProducts,
+  createShopOrder,
+  getShopOrderByRef,
+  confirmShopOrderPayment,
+  getShopProductsAdmin,
+  createShopProductAdmin,
+  updateShopProductAdmin,
+  deleteShopProductAdmin,
 } from "./db";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -1636,6 +1644,104 @@ async function startServer() {
     return res.status(201).json({ story });
   });
 
+  app.get("/api/admin/shop-products", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return res.status(401).json({ message: "Unauthorized." });
+    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    const rows = await getShopProductsAdmin();
+    return res.json({ count: rows.length, rows });
+  });
+
+  app.post("/api/admin/shop-products", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return res.status(401).json({ message: "Unauthorized." });
+    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+
+    const slug = String(req.body?.slug ?? "").trim();
+    const name = String(req.body?.name ?? "").trim();
+    const category = String(req.body?.category ?? "").trim().toLowerCase();
+    const description = String(req.body?.description ?? "").trim();
+    const image_url = String(req.body?.image_url ?? "").trim();
+    const price_cents = Number(req.body?.price_cents ?? 0);
+    const currency = String(req.body?.currency ?? "EUR").trim().toUpperCase();
+    const stock_qty = Math.max(0, Math.floor(Number(req.body?.stock_qty ?? 0)));
+    const is_active = req.body?.is_active === 0 || req.body?.is_active === false ? (0 as const) : (1 as const);
+
+    if (!slug || !name || !description || !image_url) {
+      return res.status(400).json({ message: "Slug, name, description and image are required." });
+    }
+    if (!["sports", "crafts", "food"].includes(category)) {
+      return res.status(400).json({ message: "Category must be sports, crafts, or food." });
+    }
+    if (!Number.isFinite(price_cents) || price_cents <= 0) {
+      return res.status(400).json({ message: "Price must be greater than zero." });
+    }
+
+    try {
+      const row = await createShopProductAdmin({
+        slug,
+        name,
+        category: category as "sports" | "crafts" | "food",
+        description,
+        image_url,
+        price_cents: Math.floor(price_cents),
+        currency: currency || "EUR",
+        stock_qty,
+        is_active,
+      });
+      return res.status(201).json({ row });
+    } catch (error: any) {
+      return res.status(400).json({ message: String(error?.message ?? "Unable to create product.") });
+    }
+  });
+
+  app.put("/api/admin/shop-products/:id", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return res.status(401).json({ message: "Unauthorized." });
+    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid product id." });
+
+    const rawCategory = req.body?.category !== undefined ? String(req.body.category).trim().toLowerCase() : undefined;
+    if (rawCategory !== undefined && !["sports", "crafts", "food"].includes(rawCategory)) {
+      return res.status(400).json({ message: "Category must be sports, crafts, or food." });
+    }
+    const rawPrice = req.body?.price_cents !== undefined ? Number(req.body.price_cents) : undefined;
+    if (rawPrice !== undefined && (!Number.isFinite(rawPrice) || rawPrice <= 0)) {
+      return res.status(400).json({ message: "Price must be greater than zero." });
+    }
+    const rawStock = req.body?.stock_qty !== undefined ? Number(req.body.stock_qty) : undefined;
+    if (rawStock !== undefined && (!Number.isFinite(rawStock) || rawStock < 0)) {
+      return res.status(400).json({ message: "Stock must be zero or greater." });
+    }
+
+    const payload: any = {};
+    if (req.body?.slug !== undefined) payload.slug = String(req.body.slug).trim();
+    if (req.body?.name !== undefined) payload.name = String(req.body.name).trim();
+    if (req.body?.description !== undefined) payload.description = String(req.body.description).trim();
+    if (req.body?.image_url !== undefined) payload.image_url = String(req.body.image_url).trim();
+    if (rawCategory !== undefined) payload.category = rawCategory;
+    if (rawPrice !== undefined) payload.price_cents = Math.floor(rawPrice);
+    if (req.body?.currency !== undefined) payload.currency = String(req.body.currency).trim().toUpperCase();
+    if (rawStock !== undefined) payload.stock_qty = Math.floor(rawStock);
+    if (req.body?.is_active !== undefined) payload.is_active = req.body.is_active === 0 || req.body.is_active === false ? 0 : 1;
+
+    const row = await updateShopProductAdmin(id, payload);
+    if (!row) return res.status(404).json({ message: "Product not found." });
+    return res.json({ row });
+  });
+
+  app.delete("/api/admin/shop-products/:id", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return res.status(401).json({ message: "Unauthorized." });
+    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid product id." });
+    const deleted = await deleteShopProductAdmin(id);
+    if (!deleted) return res.status(404).json({ message: "Product not found." });
+    return res.json({ ok: true });
+  });
+
   app.get("/api/ntir/search", async (req, res) => {
     const query = String(req.query.q ?? "");
     try {
@@ -1643,6 +1749,78 @@ async function startServer() {
       return res.json({ query, count: results.length, results });
     } catch {
       return res.status(500).json({ message: "Unable to search NTIR database." });
+    }
+  });
+
+  app.get("/api/shop/products", async (req, res) => {
+    try {
+      const category = String(req.query.category ?? "").trim();
+      const products = await listShopProducts(category);
+      return res.json({ count: products.length, products });
+    } catch {
+      return res.status(500).json({ message: "Unable to load shop products." });
+    }
+  });
+
+  app.post("/api/shop/orders", async (req, res) => {
+    try {
+      const customerName = String(req.body?.customerName ?? "").trim();
+      const customerEmail = String(req.body?.customerEmail ?? "").trim();
+      const shippingCountry = String(req.body?.shippingCountry ?? "").trim();
+      const shippingCity = String(req.body?.shippingCity ?? "").trim();
+      const shippingAddress = String(req.body?.shippingAddress ?? "").trim();
+      const paymentMethod = String(req.body?.paymentMethod ?? "").trim();
+      const items = Array.isArray(req.body?.items) ? req.body.items : [];
+
+      if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
+        return res.status(400).json({ message: "Customer and shipping fields are required." });
+      }
+      if (!["stripe", "paypal", "amazon_pay"].includes(paymentMethod)) {
+        return res.status(400).json({ message: "Invalid payment method." });
+      }
+      if (items.length === 0) {
+        return res.status(400).json({ message: "At least one cart item is required." });
+      }
+
+      const order = await createShopOrder({
+        customerName,
+        customerEmail,
+        shippingCountry,
+        shippingCity,
+        shippingAddress,
+        paymentMethod: paymentMethod as "stripe" | "paypal" | "amazon_pay",
+        items: items.map((item: any) => ({
+          productId: Number(item?.productId),
+          quantity: Number(item?.quantity),
+        })),
+      });
+      return res.status(201).json({ order });
+    } catch (error: any) {
+      const message = String(error?.message ?? "Unable to create order.");
+      return res.status(400).json({ message });
+    }
+  });
+
+  app.get("/api/shop/orders/:orderRef", async (req, res) => {
+    try {
+      const orderRef = String(req.params.orderRef ?? "").trim();
+      const order = await getShopOrderByRef(orderRef);
+      if (!order) return res.status(404).json({ message: "Order not found." });
+      return res.json({ order });
+    } catch {
+      return res.status(500).json({ message: "Unable to load order." });
+    }
+  });
+
+  app.post("/api/shop/orders/:orderRef/confirm-payment", async (req, res) => {
+    try {
+      const orderRef = String(req.params.orderRef ?? "").trim();
+      const paymentReference = String(req.body?.paymentReference ?? "").trim();
+      const updated = await confirmShopOrderPayment(orderRef, paymentReference);
+      if (!updated) return res.status(404).json({ message: "Order not found." });
+      return res.json({ order: updated });
+    } catch {
+      return res.status(500).json({ message: "Unable to confirm payment." });
     }
   });
 

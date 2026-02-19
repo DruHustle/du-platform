@@ -378,10 +378,10 @@ const heroSlides = useMemo(() => [
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
         
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="section-title-compact">{t('data.overview_title') || "Key Economic Indicators"}</h2>
-              <p className="section-subtitle-compact">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
+              <h2 className="text-xl font-black text-white tracking-tight">{t('data.overview_title') || "Key Economic Indicators"}</h2>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -391,9 +391,8 @@ const heroSlides = useMemo(() => [
                   <motion.div 
                     key={index}
                     whileHover={{ y: -5 }}
-                    className={`relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500`}
+                    className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-500"
                   >
-                    <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
                     <div className="flex items-center gap-3 mb-4">
                       <div className={`p-2 rounded-xl bg-white/5 ${metric.color}`}>
                         <Icon className="h-4 w-4" />
@@ -432,14 +431,13 @@ const heroSlides = useMemo(() => [
       
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="section-title-compact">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
-              <p className="section-subtitle-compact">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
+              <h2 className="text-xl font-black text-white tracking-tight">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
             </div>
 
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-16 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
-              <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
               <div className="mb-8 flex justify-between items-end">
                 <div>
                   <h3 className="text-lg font-black text-white tracking-tight">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
@@ -476,10 +474,10 @@ const heroSlides = useMemo(() => [
       
       <section id="sectors-gdp" className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="section-title-compact">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
-              <p className="section-subtitle-compact">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
+              <h2 className="text-xl font-black text-white tracking-tight">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
@@ -606,7 +604,7 @@ const heroSlides = useMemo(() => [
               <Badge className="bg-zim-gold/10 text-zim-gold border-zim-gold/20 text-[10px] font-black uppercase tracking-widest px-4 py-1.5">
                 {t('data.diaspora_remittance_impact_badge') || "Diaspora Impact"}
               </Badge>
-              <h2 className="section-title-compact leading-tight">
+              <h2 className="text-xl font-black text-white tracking-tight leading-tight">
                 {t('data.diaspora_remittance_impact_title') || "Diaspora Economic Impact"}
               </h2>
               <p className="text-sm text-white/75 font-light leading-relaxed">
@@ -663,12 +661,12 @@ const heroSlides = useMemo(() => [
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-zim-gold/[0.02] blur-[120px] rounded-full pointer-events-none" />
 
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <motion.h2 
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                className="section-title-compact"
+                className="text-xl font-black text-white tracking-tight"
               >
                 {t('data.diaspora_distribution') || "Global Diaspora Distribution"}
               </motion.h2>

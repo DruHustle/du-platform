@@ -39,6 +39,7 @@
   },
   "nav": {
     "home": "Ekhaya",
+    "shop": "Shop",
     "export": "Indawo yokuthumela phandle",
     "tourism": "Ezokuvakasha",
     "investment": "Ukutshala Imali",
@@ -1942,8 +1943,44 @@
   },
   "shop": {
     "collections": "Amaqoqo (Collections)",
-    "title": "Ubungcweti baseZimbabwe obukhethiweyo",
+    "title": "Ikhaya Likhona Lanxa Ukude",
+    "collections_title": "Ubungcweti baseZimbabwe obukhethiweyo",
     "desc": "Kusukela kwimpahla esemthethweni kusiya emagugwini enziwe ngezandla, yonke impahla ilendaba yamasiko le-quality.",
+    "collections_description": "Ubungcweti baseZimbabwe obukhethiweyo buletha imikhiqizo yeZimbabwe eqotho emnyango wakho, kusukela kokudla leziselo kuye kwezobuciko lezimpahla zemidlalo, kukhethwe ngekhwalithi lokwanelisa i-diaspora.",
+    "explore": "Hlola",
+    "explore_shop": "Hlola iShop",
+    "trade_support": "Hlola Ukusekelwa KweTrade",
+    "export_readiness": "Isiqondiso Sokulungela i-Export",
+    "hero": {
+      "badge1": "Imikhiqizo yeZimbabwe eqotho",
+      "title1": "Thenga iZimbabwe",
+      "subtitle1": "Thenga imikhiqizo ekhethiweyo evela eZimbabwe nge-delivery ehambelana le-diaspora kanye le-sourcing ethembekileyo.",
+      "button1": "Buka Amaqoqo",
+      "badge2": "Ifa Lezobuciko",
+      "title2": "Ubungcweti Benziwe Ngezandla",
+      "subtitle2": "Kusukela ku-Shona stone sculpture kuye kumabasket alukiwe ngezandla, thola imikhiqizo egxile emasikweni lasekhwalithini.",
+      "badge3": "Ukunambitheka Kwekhaya",
+      "title3": "Ukudla le-Nostalgia",
+      "subtitle3": "Jabulela izinto ozaziyo zaseZimbabwe ezilawulwa ngekhwalithi kubathengi basekhaya labanxusa i-export."
+    },
+    "how_it_works": {
+      "title": "IShop Isebenza Njani",
+      "subtitle": "Indlela esebenzayo yokuthengisa imikhiqizo eyenziwe eZimbabwe, eyakhiwe ngokwethemba, ukulula, kanye lomthelela we-diaspora."
+    },
+    "process": {
+      "verified": {
+        "title": "Ukutholakala Okuqinisekisiweyo",
+        "desc": "Imikhiqizo iqoqwa kubakhiqizi abathembelekayo, izingcwethi zezandla, kanye labahlinzeki abahambisana lemigomo."
+      },
+      "delivery": {
+        "title": "Ukusekelwa Kwe-Delivery yeDiaspora",
+        "desc": "Sibeka phambili imigudu yokuletha esebenzayo kubathengi basekhaya, esigabeni, kanye labamazwe ngamazwe."
+      },
+      "payment": {
+        "title": "Izindlela Zokukhokha Eziguquguqukayo",
+        "desc": "Ukusekelwa kwezindlela zesimanje zokukhokha kanye lentengo ecacileyo ukunciphisa ukuhlupheka ngesikhathi se-checkout."
+      }
+    },
     "sports_title": "Imidlalo yesizwe",
     "sports_desc": "Impahla esemthethweni ye-Sables, Chevrons, le-Warriors.",
     "sports_mech_soccer": "I-Soccer Kit.",
@@ -1952,7 +1989,122 @@
     "crafts_title": "Ezobuciko lezandla",
     "crafts_desc": "Ukusekela abenzi bezandla zasemaphandleni lezinhlanganiso zabomama.",
     "food_title": "Ukudla le-Nostalgia",
-    "food_desc": "Umnambitheko wasekhaya, ohambisana lemithetho ye-EU."
+    "food_desc": "Umnambitheko wasekhaya, ohambisana lemithetho ye-EU.",
+    "image": "image",
+    "categories": {
+      "beverages": {
+        "title": "Beverages",
+        "description": "Mazoe, Maheu, and other homegrown drink favorites."
+      },
+      "cereals": {
+        "title": "Cereals & Breakfast",
+        "description": "Cerevita blends and everyday breakfast staples."
+      },
+      "sauces_spices": {
+        "title": "Sauces & Spices",
+        "description": "Madras curry, peri-peri sauces, and flavor essentials."
+      },
+      "snacks": {
+        "title": "Snacks & Treats",
+        "description": "Maputi, biscuits, and nostalgic grab-and-go bites."
+      },
+      "oils_spreads": {
+        "title": "Cooking Oils & Spreads",
+        "description": "Everyday cooking oils and pantry spread essentials."
+      },
+      "proteins": {
+        "title": "Protein & Pantry",
+        "description": "Kapenta and protein-rich staples for family meals."
+      },
+      "crafts": {
+        "title": "Arts & Crafts",
+        "description": "Authentic artisan pieces rooted in Zimbabwean heritage."
+      },
+      "apparel": {
+        "title": "Sports Apparel",
+        "description": "Rugby, cricket, and football fan kits."
+      }
+    },
+    "products": {
+      "title": "Shop Products",
+      "subtitle": "End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay.",
+      "back_to_shop": "Back to Shop",
+      "default_country": "Germany",
+      "filters": {
+        "all": "All",
+        "sports": "Sports",
+        "crafts": "Arts & Crafts",
+        "food": "Food & Nostalgia",
+        "all_segments": "All Segments",
+        "select_segment": "Khetha i-Segment"
+      },
+      "loading": "Loading products...",
+      "empty_state": "No products available in this category yet.",
+      "stock": {
+        "in": "In Stock",
+        "out": "Out of Stock"
+      },
+      "actions": {
+        "buy": "Buy",
+        "creating_order": "Creating Order...",
+        "place_order": "Place Order",
+        "order_whatsapp": "Order on WhatsApp",
+        "payment_confirmed": "Payment Confirmed",
+        "processing": "Processing...",
+        "pay_with": "Pay with"
+      },
+      "cart": {
+        "title": "Cart & Checkout",
+        "empty": "No items yet. Add products to begin checkout."
+      },
+      "totals": {
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "total": "Total"
+      },
+      "guest_checkout": {
+        "title": "Guest Checkout"
+      },
+      "fields": {
+        "full_name": "Full Name",
+        "email_address": "Email Address",
+        "country": "Country",
+        "city": "City",
+        "shipping_address": "Shipping Address",
+        "name": "Name",
+        "email": "Email",
+        "address": "Address"
+      },
+      "payment_methods": {
+        "stripe": "Stripe (Credit Card)",
+        "paypal": "PayPal",
+        "amazon_pay": "Amazon Pay",
+        "stripe_short": "Stripe",
+        "paypal_short": "PayPal",
+        "amazon_pay_short": "Amazon Pay"
+      },
+      "order": {
+        "reference": "Order reference",
+        "status": "Status"
+      },
+      "notes": {
+        "guest_checkout": "Guest checkout enabled: no login required.",
+        "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
+      },
+      "errors": {
+        "empty_cart": "Your cart is empty.",
+        "complete_fields": "Please complete all checkout fields.",
+        "unable_place_order": "Unable to place order.",
+        "unable_confirm_payment": "Unable to confirm payment."
+      },
+      "whatsapp": {
+        "intro": "Hello, I want to place an order from the Zimbabwe Shop.",
+        "order_items": "Order Items:",
+        "customer_details": "Customer Details:",
+        "outro": "Please confirm availability and payment instructions.",
+        "each": "each"
+      }
+    }
   },
   "notfound": {
     "title": "404 - Ikhasi alitholakali",

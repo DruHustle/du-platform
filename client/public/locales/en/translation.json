@@ -39,6 +39,7 @@
   },
   "nav": {
     "home": "Home",
+    "shop": "Shop",
     "export": "Export Hub",
     "tourism": "Tourism",
     "investment": "Investment",
@@ -2011,8 +2012,44 @@
   },
   "shop": {
     "collections": "Collections",
-    "title": "Curated Zimbabwean Excellence",
+    "title": "Home Away From Home",
+    "collections_title": "Curated Zimbabwean Excellence",
     "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
+    "collections_description": "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience.",
+    "explore": "Explore",
+    "explore_shop": "Explore Shop",
+    "trade_support": "Explore Trade Support",
+    "export_readiness": "Export Readiness Guide",
+    "hero": {
+      "badge1": "Authentic Zimbabwe Goods",
+      "title1": "Shop Zimbabwe",
+      "subtitle1": "Buy curated products from Zimbabwe with diaspora-friendly delivery and trusted sourcing.",
+      "button1": "Browse Collections",
+      "badge2": "Craft Heritage",
+      "title2": "Handcrafted Excellence",
+      "subtitle2": "From Shona stone sculpture to handwoven baskets, discover products rooted in culture and quality.",
+      "badge3": "Taste of Home",
+      "title3": "Food and Nostalgia",
+      "subtitle3": "Enjoy Zimbabwe favorites sourced with quality controls for local and export-ready buyers."
+    },
+    "how_it_works": {
+      "title": "How The Shop Works",
+      "subtitle": "Practical commerce flow for Zimbabwe-made goods, designed for trust, convenience, and diaspora impact."
+    },
+    "process": {
+      "verified": {
+        "title": "Verified Sourcing",
+        "desc": "Goods are curated from trusted Zimbabwean producers, artisans, and compliant suppliers."
+      },
+      "delivery": {
+        "title": "Diaspora Delivery Support",
+        "desc": "We prioritize practical fulfillment routes for local, regional, and international buyers."
+      },
+      "payment": {
+        "title": "Flexible Payment Pathways",
+        "desc": "Support for modern payment flows and transparent pricing to reduce checkout friction."
+      }
+    },
     "sports_title": "National Sports",
     "sports_desc": "Official gear for the Sables, Chevrons, and Warriors.",
     "sports_mech_soccer": "Soccer Kit.",
@@ -2021,7 +2058,122 @@
     "crafts_title": "Arts & Crafts",
     "crafts_desc": "Supporting rural artisans and women cooperatives.",
     "food_title": "Food & Nostalgia",
-    "food_desc": "The flavors of home, fully EU-compliant."
+    "food_desc": "The flavors of home, fully EU-compliant.",
+    "image": "image",
+    "categories": {
+      "beverages": {
+        "title": "Beverages",
+        "description": "Mazoe, Maheu, and other homegrown drink favorites."
+      },
+      "cereals": {
+        "title": "Cereals & Breakfast",
+        "description": "Cerevita blends and everyday breakfast staples."
+      },
+      "sauces_spices": {
+        "title": "Sauces & Spices",
+        "description": "Madras curry, peri-peri sauces, and flavor essentials."
+      },
+      "snacks": {
+        "title": "Snacks & Treats",
+        "description": "Maputi, biscuits, and nostalgic grab-and-go bites."
+      },
+      "oils_spreads": {
+        "title": "Cooking Oils & Spreads",
+        "description": "Everyday cooking oils and pantry spread essentials."
+      },
+      "proteins": {
+        "title": "Protein & Pantry",
+        "description": "Kapenta and protein-rich staples for family meals."
+      },
+      "crafts": {
+        "title": "Arts & Crafts",
+        "description": "Authentic artisan pieces rooted in Zimbabwean heritage."
+      },
+      "apparel": {
+        "title": "Sports Apparel",
+        "description": "Rugby, cricket, and football fan kits."
+      }
+    },
+    "products": {
+      "title": "Shop Products",
+      "subtitle": "End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay.",
+      "back_to_shop": "Back to Shop",
+      "default_country": "Germany",
+      "filters": {
+        "all": "All",
+        "sports": "Sports",
+        "crafts": "Arts & Crafts",
+        "food": "Food & Nostalgia",
+        "all_segments": "All Segments",
+        "select_segment": "Select Segment"
+      },
+      "loading": "Loading products...",
+      "empty_state": "No products available in this category yet.",
+      "stock": {
+        "in": "In Stock",
+        "out": "Out of Stock"
+      },
+      "actions": {
+        "buy": "Buy",
+        "creating_order": "Creating Order...",
+        "place_order": "Place Order",
+        "order_whatsapp": "Order on WhatsApp",
+        "payment_confirmed": "Payment Confirmed",
+        "processing": "Processing...",
+        "pay_with": "Pay with"
+      },
+      "cart": {
+        "title": "Cart & Checkout",
+        "empty": "No items yet. Add products to begin checkout."
+      },
+      "totals": {
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "total": "Total"
+      },
+      "guest_checkout": {
+        "title": "Guest Checkout"
+      },
+      "fields": {
+        "full_name": "Full Name",
+        "email_address": "Email Address",
+        "country": "Country",
+        "city": "City",
+        "shipping_address": "Shipping Address",
+        "name": "Name",
+        "email": "Email",
+        "address": "Address"
+      },
+      "payment_methods": {
+        "stripe": "Stripe (Credit Card)",
+        "paypal": "PayPal",
+        "amazon_pay": "Amazon Pay",
+        "stripe_short": "Stripe",
+        "paypal_short": "PayPal",
+        "amazon_pay_short": "Amazon Pay"
+      },
+      "order": {
+        "reference": "Order reference",
+        "status": "Status"
+      },
+      "notes": {
+        "guest_checkout": "Guest checkout enabled: no login required.",
+        "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
+      },
+      "errors": {
+        "empty_cart": "Your cart is empty.",
+        "complete_fields": "Please complete all checkout fields.",
+        "unable_place_order": "Unable to place order.",
+        "unable_confirm_payment": "Unable to confirm payment."
+      },
+      "whatsapp": {
+        "intro": "Hello, I want to place an order from the Zimbabwe Shop.",
+        "order_items": "Order Items:",
+        "customer_details": "Customer Details:",
+        "outro": "Please confirm availability and payment instructions.",
+        "each": "each"
+      }
+    }
   },
   "notfound": {
     "title": "404",

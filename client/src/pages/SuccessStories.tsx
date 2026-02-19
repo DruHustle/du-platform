@@ -273,10 +273,10 @@ export default function SuccessStories() {
   // --- 3. IMPACT METRICS DATA WITH BOOLEAN SHIELD ---
   const impactData = useMemo(() => {
     return [
-      { display: false, icon: DollarSign, value: "$11.3M+", label: t("success.impact_metrics.economic_impact.label") || "Total Economic Impact", description: t("success.impact_metrics.economic_impact.description") || "Revenue generated across all success stories" },
-      { display: false, icon: Users, value: "700+", label: t("success.impact_metrics.jobs_created.label") || "Jobs Created", description: t("success.impact_metrics.jobs_created.description") || "Direct employment opportunities" },
-      { display: false, icon: TrendingUp, value: "1,000+", label: t("success.impact_metrics.diaspora_investors.label") || "Diaspora Investors", description: t("success.impact_metrics.diaspora_investors.description") || "Active participants in projects" },
-      { display: false, icon: Award, value: "15+", label: t("success.impact_metrics.markets_accessed.label") || "Markets Accessed", description: t("success.impact_metrics.markets_accessed.description") || "International markets reached" }
+      { display: false, emoji: "💰", value: "$11.3M+", label: t("success.impact_metrics.economic_impact.label") || "Total Economic Impact", description: t("success.impact_metrics.economic_impact.description") || "Revenue generated across all success stories" },
+      { display: false, emoji: "👥", value: "700+", label: t("success.impact_metrics.jobs_created.label") || "Jobs Created", description: t("success.impact_metrics.jobs_created.description") || "Direct employment opportunities" },
+      { display: false, emoji: "📈", value: "1,000+", label: t("success.impact_metrics.diaspora_investors.label") || "Diaspora Investors", description: t("success.impact_metrics.diaspora_investors.description") || "Active participants in projects" },
+      { display: false, emoji: "🌍", value: "15+", label: t("success.impact_metrics.markets_accessed.label") || "Markets Accessed", description: t("success.impact_metrics.markets_accessed.description") || "International markets reached" }
     ];
   }, [t]);
 
@@ -393,16 +393,20 @@ export default function SuccessStories() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {activeMetrics.map((metric, index) => {
-                const Icon = metric.icon ?? IMPACT_METRIC_ICONS[index % IMPACT_METRIC_ICONS.length];
+                const Icon = IMPACT_METRIC_ICONS[index % IMPACT_METRIC_ICONS.length];
                 return (
                   <motion.div 
                     key={index} 
                     whileHover={{ y: -5 }} 
-                    className="relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center group overflow-hidden shadow-2xl"
+                    className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center group overflow-hidden shadow-2xl"
                   >
                     <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none z-20" />
-                    <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl border border-zim-gold/20 flex items-center justify-center mb-8">
-                      {Icon && <Icon className="h-10 w-10 text-zim-gold" />}
+                    <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-zim-gold/10 transition-colors">
+                      {metric.emoji ? (
+                        <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{metric.emoji}</span>
+                      ) : (
+                        Icon && <Icon className="h-10 w-10 text-zim-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]" />
+                      )}
                     </div>
                     <h3 className="text-2xl font-black text-white tracking-tighter mb-2 tabular-nums">{metric.value}</h3>
                     <p className="text-[11px] font-black text-zim-gold uppercase tracking-[0.2em]">{metric.label}</p>
@@ -418,20 +422,20 @@ export default function SuccessStories() {
       {/* CONTACT CTA */}
       <section id="contact-cta" className="py-24 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="relative max-w-5xl mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
+          <div className="outer-glass-panel relative max-w-5xl mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-zim-gold/10 blur-[120px] pointer-events-none" />
             <div className="relative z-10 space-y-10">
-              <div className="mx-auto h-20 w-20 bg-zim-gold/10 rounded-3xl flex items-center justify-center border border-zim-gold/20">
-                <Award className="h-10 w-10 text-zim-gold" />
+              <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-zim-gold/10 transition-colors">
+                <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🏅</span>
               </div>
 
-              <div className="space-y-4 text-left">
+              <div className="space-y-4 text-center">
                 <h2 className="text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have a Success Story to Share?"}</h2>
                 <p className="text-sm text-white/75 font-light max-w-3xl mx-auto leading-relaxed">{t("success.cta_subtitle") || "We are always looking for inspiring stories of diaspora impact. Share yours with us!"}</p>
               </div>
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
-                  <Button size="lg" className="bg-zim-gold text-zim-black hover:bg-white transition-all px-12 h-16 rounded-full font-black text-[12px] uppercase tracking-widest shadow-2xl">
+                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
                     {t("success.cta_button") || "Share Your Story"}
                   </Button>
                 </DialogTrigger>

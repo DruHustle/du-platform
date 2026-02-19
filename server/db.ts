@@ -107,6 +107,452 @@ const memoryRemittanceImpact: Array<{ sector: string; percentage: number }> = [
   { sector: "Small Business", percentage: 20 },
 ];
 
+export type ShopPaymentMethod = "stripe" | "paypal" | "amazon_pay";
+export type ShopOrderStatus = "awaiting_payment" | "paid" | "failed";
+
+type ShopProduct = {
+  id: number;
+  slug: string;
+  name: string;
+  category: "sports" | "crafts" | "food";
+  description: string;
+  image_url: string;
+  price_cents: number;
+  currency: string;
+  stock_qty: number;
+  is_active: 0 | 1;
+};
+
+type ShopOrder = {
+  id: number;
+  order_ref: string;
+  customer_name: string;
+  customer_email: string;
+  shipping_country: string;
+  shipping_city: string;
+  shipping_address: string;
+  payment_method: ShopPaymentMethod;
+  payment_reference: string | null;
+  status: ShopOrderStatus;
+  currency: string;
+  subtotal_cents: number;
+  shipping_cents: number;
+  total_cents: number;
+  created_at: string;
+  updated_at: string;
+};
+
+type ShopOrderItem = {
+  id: number;
+  order_id: number;
+  product_id: number;
+  product_name: string;
+  unit_price_cents: number;
+  quantity: number;
+  line_total_cents: number;
+};
+
+const memoryShopProducts: ShopProduct[] = [
+  {
+    id: 1,
+    slug: "sables-rugby-home-kit",
+    name: "Sables Rugby Home Kit",
+    category: "sports",
+    description: "Official Zimbabwe rugby jersey kit.",
+    image_url: "/images/pages/shop/sports_rugby_jersey.jpg",
+    price_cents: 6900,
+    currency: "EUR",
+    stock_qty: 18,
+    is_active: 1,
+  },
+  {
+    id: 2,
+    slug: "chevrons-world-cup-jersey",
+    name: "Chevrons World Cup Jersey",
+    category: "sports",
+    description: "National cricket fan jersey.",
+    image_url: "/images/pages/shop/sports_cricket_jersey.png",
+    price_cents: 6400,
+    currency: "EUR",
+    stock_qty: 9,
+    is_active: 1,
+  },
+  {
+    id: 3,
+    slug: "warriors-football-kit",
+    name: "Warriors Football Kit",
+    category: "sports",
+    description: "Zimbabwe football supporters kit.",
+    image_url: "/images/pages/shop/sports_football_jersey.png",
+    price_cents: 5900,
+    currency: "EUR",
+    stock_qty: 24,
+    is_active: 1,
+  },
+  {
+    id: 4,
+    slug: "shona-stone-sculpture",
+    name: "Shona Stone Sculpture",
+    category: "crafts",
+    description: "Hand-carved premium stone sculpture.",
+    image_url: "/images/pages/shop/crafts_stone_sculptures1.png",
+    price_cents: 14900,
+    currency: "EUR",
+    stock_qty: 6,
+    is_active: 1,
+  },
+  {
+    id: 5,
+    slug: "binga-basket",
+    name: "Binga Basket",
+    category: "crafts",
+    description: "Handwoven basket made by local artisans.",
+    image_url: "/images/pages/shop/crafts_binga_baskets1.jpg",
+    price_cents: 3900,
+    currency: "EUR",
+    stock_qty: 15,
+    is_active: 1,
+  },
+  {
+    id: 6,
+    slug: "beaded-jewelry-set",
+    name: "Beaded Jewelry Set",
+    category: "crafts",
+    description: "Traditional beaded necklace and bracelet set.",
+    image_url: "/images/pages/shop/crafts_beaded_jewelry1.jpg",
+    price_cents: 2900,
+    currency: "EUR",
+    stock_qty: 20,
+    is_active: 1,
+  },
+  {
+    id: 7,
+    slug: "mazoe-variety-pack",
+    name: "Mazoe Variety Pack",
+    category: "food",
+    description: "Classic Zimbabwe cordial selection.",
+    image_url: "/images/pages/shop/food_mazoe.jpg",
+    price_cents: 2200,
+    currency: "EUR",
+    stock_qty: 35,
+    is_active: 1,
+  },
+  {
+    id: 8,
+    slug: "cerevita-instant-cereal",
+    name: "Cerevita Instant Cereal",
+    category: "food",
+    description: "Nutritious instant cereal favorite.",
+    image_url: "/images/pages/shop/food_cerevita1.png",
+    price_cents: 1900,
+    currency: "EUR",
+    stock_qty: 28,
+    is_active: 1,
+  },
+  {
+    id: 9,
+    slug: "kapenta-dried-fish",
+    name: "Kapenta Dried Fish",
+    category: "food",
+    description: "Traditional dried kapenta, export packed.",
+    image_url: "/images/pages/shop/food_kapenta1.jpg",
+    price_cents: 3300,
+    currency: "EUR",
+    stock_qty: 14,
+    is_active: 1,
+  },
+  {
+    id: 10,
+    slug: "mazoe-raspberry-2l-case-6",
+    name: "Mazoe Raspberry 2L Case (6 Units)",
+    category: "food",
+    description: "Bulk case pack for family and gifting.",
+    image_url: "/images/pages/shop/food_mazoe.jpg",
+    price_cents: 44999,
+    currency: "EUR",
+    stock_qty: 4,
+    is_active: 1,
+  },
+  {
+    id: 11,
+    slug: "mazoe-orange-2l-case-6",
+    name: "Mazoe Orange 2L Case (6 Units)",
+    category: "food",
+    description: "Best-selling orange crush case pack.",
+    image_url: "/images/pages/shop/food_mazoe.jpg",
+    price_cents: 44999,
+    currency: "EUR",
+    stock_qty: 3,
+    is_active: 1,
+  },
+  {
+    id: 12,
+    slug: "mazoe-orange-2l",
+    name: "Mazoe Orange 2L",
+    category: "food",
+    description: "Single bottle orange cordial.",
+    image_url: "/images/pages/shop/food_mazoe.jpg",
+    price_cents: 7499,
+    currency: "EUR",
+    stock_qty: 16,
+    is_active: 1,
+  },
+  {
+    id: 13,
+    slug: "pfuko-maheu-traditional-500ml-case-12",
+    name: "Pfuko Maheu Traditional 500ml Case (12 Units)",
+    category: "food",
+    description: "Traditional maheu in a value case pack.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 19199,
+    currency: "EUR",
+    stock_qty: 5,
+    is_active: 1,
+  },
+  {
+    id: 14,
+    slug: "kariba-kapenta-matemba-100g",
+    name: "Kariba Kapenta (Matemba) 100g",
+    category: "food",
+    description: "Classic kapenta staple, premium packed.",
+    image_url: "/images/pages/shop/food_kapenta1.jpg",
+    price_cents: 3499,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 15,
+    slug: "royco-usavi-beef-75g",
+    name: "Royco Usavi Beef 75g",
+    category: "food",
+    description: "Flavor blend for local stews and gravies.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 1699,
+    currency: "EUR",
+    stock_qty: 22,
+    is_active: 1,
+  },
+  {
+    id: 16,
+    slug: "colcom-pork-pie-100g",
+    name: "Colcom Pork Pie 100g",
+    category: "food",
+    description: "Ready-to-eat savory pie.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 1999,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 17,
+    slug: "cerevita-corn-banana-500g",
+    name: "Cerevita Corn & Banana 500g",
+    category: "food",
+    description: "Popular flavored cereal blend.",
+    image_url: "/images/pages/shop/food_cerevita1.png",
+    price_cents: 8499,
+    currency: "EUR",
+    stock_qty: 10,
+    is_active: 1,
+  },
+  {
+    id: 18,
+    slug: "cheeky-chilli-peri-peri-sauce-100ml",
+    name: "Cheeky Chilli Peri Peri Sauce 100ml",
+    category: "food",
+    description: "Hot peri-peri kick for grills and chips.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 1799,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 19,
+    slug: "mazoe-blackberry-2l",
+    name: "Mazoe Blackberry 2L",
+    category: "food",
+    description: "Blackberry cordial favorite.",
+    image_url: "/images/pages/shop/food_mazoe.jpg",
+    price_cents: 7499,
+    currency: "EUR",
+    stock_qty: 18,
+    is_active: 1,
+  },
+  {
+    id: 20,
+    slug: "mazoe-cream-soda-2l",
+    name: "Mazoe Cream Soda 2L",
+    category: "food",
+    description: "Cream soda cordial flavor.",
+    image_url: "/images/pages/shop/food_mazoe.jpg",
+    price_cents: 7499,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 21,
+    slug: "maputi-40g",
+    name: "Maputi 40g",
+    category: "food",
+    description: "Traditional puffed-maize snack.",
+    image_url: "/images/pages/shop/food_maputi.png",
+    price_cents: 299,
+    currency: "EUR",
+    stock_qty: 40,
+    is_active: 1,
+  },
+  {
+    id: 22,
+    slug: "cheeky-chilli-peri-peri-sauce-200ml",
+    name: "Cheeky Chilli Peri Peri Sauce 200ml",
+    category: "food",
+    description: "Larger peri-peri sauce bottle.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 2599,
+    currency: "EUR",
+    stock_qty: 11,
+    is_active: 1,
+  },
+  {
+    id: 23,
+    slug: "excella-sunflower-oil-2l",
+    name: "Excella Sunflower Oil 2L",
+    category: "food",
+    description: "Sunflower oil enriched with Vitamins A and D.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 7999,
+    currency: "EUR",
+    stock_qty: 12,
+    is_active: 1,
+  },
+  {
+    id: 24,
+    slug: "lobels-lemon-creams-150g",
+    name: "Lobels Lemon Creams 150g",
+    category: "food",
+    description: "Classic lemon cream biscuits.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 999,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 25,
+    slug: "sun-jam-500g",
+    name: "Sun Jam 500g",
+    category: "food",
+    description: "Fruit jam made from Eastern Highlands produce.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 3799,
+    currency: "EUR",
+    stock_qty: 8,
+    is_active: 1,
+  },
+  {
+    id: 26,
+    slug: "masau-1kg",
+    name: "Masau 1kg",
+    category: "food",
+    description: "Dried masau fruit pack.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 4199,
+    currency: "EUR",
+    stock_qty: 5,
+    is_active: 1,
+  },
+  {
+    id: 27,
+    slug: "madras-hot-curry-powder-100g",
+    name: "Madras Hot Curry Powder 100g",
+    category: "food",
+    description: "Spice blend for hot curry dishes.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 2699,
+    currency: "EUR",
+    stock_qty: 14,
+    is_active: 1,
+  },
+  {
+    id: 28,
+    slug: "madras-mild-curry-powder-100g",
+    name: "Madras Mild Curry Powder 100g",
+    category: "food",
+    description: "Mild curry spice blend.",
+    image_url: "/images/pages/shop/shop_food.webp",
+    price_cents: 2699,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 29,
+    slug: "cerevita-corn-cocoa-malt-500g",
+    name: "Cerevita Corn, Cocoa & Malt 500g",
+    category: "food",
+    description: "Chocolate malt flavored Cerevita breakfast cereal.",
+    image_url: "/images/pages/shop/food_cerevita1.png",
+    price_cents: 8499,
+    currency: "EUR",
+    stock_qty: 9,
+    is_active: 1,
+  },
+  {
+    id: 30,
+    slug: "cerevita-corn-wheat-500g",
+    name: "Cerevita Corn & Wheat 500g",
+    category: "food",
+    description: "Corn and wheat Cerevita breakfast cereal.",
+    image_url: "/images/pages/shop/food_cerevita1.png",
+    price_cents: 8499,
+    currency: "EUR",
+    stock_qty: 7,
+    is_active: 1,
+  },
+];
+
+const memoryShopOrders: ShopOrder[] = [];
+const memoryShopOrderItems: ShopOrderItem[] = [];
+
+async function syncShopProductsSeedData(): Promise<void> {
+  if (!db) return;
+  for (const product of memoryShopProducts) {
+    await db.execute(
+      `
+      INSERT INTO shop_products (slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        category = VALUES(category),
+        description = VALUES(description),
+        image_url = VALUES(image_url),
+        price_cents = VALUES(price_cents),
+        currency = VALUES(currency),
+        is_active = VALUES(is_active),
+        stock_qty = CASE
+          WHEN shop_products.stock_qty <= 0 THEN VALUES(stock_qty)
+          ELSE shop_products.stock_qty
+        END
+      `,
+      [
+        product.slug,
+        product.name,
+        product.category,
+        product.description,
+        product.image_url,
+        product.price_cents,
+        product.currency,
+        product.stock_qty,
+        product.is_active,
+      ]
+    );
+  }
+}
+
 async function syncEconomicStatsSeedData(): Promise<void> {
   if (!db) return;
 
@@ -372,8 +818,63 @@ export async function initializeDatabase(): Promise<void> {
     )
   `);
 
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS shop_products (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      slug VARCHAR(160) NOT NULL UNIQUE,
+      name VARCHAR(255) NOT NULL,
+      category VARCHAR(60) NOT NULL,
+      description TEXT NOT NULL,
+      image_url VARCHAR(500) NOT NULL,
+      price_cents INT NOT NULL,
+      currency VARCHAR(10) NOT NULL DEFAULT 'EUR',
+      stock_qty INT NOT NULL DEFAULT 0,
+      is_active TINYINT(1) NOT NULL DEFAULT 1,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_shop_products_category (category)
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS shop_orders (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      order_ref VARCHAR(64) NOT NULL UNIQUE,
+      customer_name VARCHAR(255) NOT NULL,
+      customer_email VARCHAR(255) NOT NULL,
+      shipping_country VARCHAR(120) NOT NULL,
+      shipping_city VARCHAR(120) NOT NULL,
+      shipping_address VARCHAR(500) NOT NULL,
+      payment_method VARCHAR(40) NOT NULL,
+      payment_reference VARCHAR(255) NULL,
+      status VARCHAR(40) NOT NULL DEFAULT 'awaiting_payment',
+      currency VARCHAR(10) NOT NULL DEFAULT 'EUR',
+      subtotal_cents INT NOT NULL,
+      shipping_cents INT NOT NULL DEFAULT 0,
+      total_cents INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS shop_order_items (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      order_id INT NOT NULL,
+      product_id INT NOT NULL,
+      product_name VARCHAR(255) NOT NULL,
+      unit_price_cents INT NOT NULL,
+      quantity INT NOT NULL,
+      line_total_cents INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_shop_order_items_order_id (order_id),
+      CONSTRAINT fk_shop_order_items_order FOREIGN KEY (order_id) REFERENCES shop_orders(id) ON DELETE CASCADE
+    )
+  `);
+
   await syncNtirSeedData();
   await syncEconomicStatsSeedData();
+  await syncShopProductsSeedData();
 }
 
 export async function findUserByEmail(email: string) {
@@ -942,5 +1443,486 @@ export async function getEconomicStats() {
       sectorData: memoryEconomicSectorData,
       remittanceImpact: memoryRemittanceImpact,
     };
+  }
+}
+
+export async function listShopProducts(category?: string) {
+  const normalizedCategory = String(category ?? "").trim().toLowerCase();
+  const categoryFilter = normalizedCategory && ["sports", "crafts", "food"].includes(normalizedCategory)
+    ? normalizedCategory
+    : "";
+
+  if (!db) {
+    const rows = memoryShopProducts.filter((product) => {
+      if (product.is_active !== 1) return false;
+      if (categoryFilter && String(product.category).toLowerCase() !== categoryFilter) return false;
+      return true;
+    });
+    if (categoryFilter && rows.length === 0) {
+      return memoryShopProducts.filter((product) => product.is_active === 1);
+    }
+    return rows;
+  }
+
+  try {
+    if (categoryFilter) {
+      const [rows] = await db.query<mysql.RowDataPacket[]>(
+        `
+        SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
+        FROM shop_products
+        WHERE is_active = 1 AND LOWER(category) = ?
+        ORDER BY id ASC
+        `,
+        [categoryFilter]
+      );
+      if (rows.length > 0) return rows;
+    }
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
+      FROM shop_products
+      WHERE is_active = 1
+      ORDER BY id ASC
+      `
+    );
+    return rows;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const rows = memoryShopProducts.filter((product) => {
+      if (product.is_active !== 1) return false;
+      if (categoryFilter && String(product.category).toLowerCase() !== categoryFilter) return false;
+      return true;
+    });
+    if (categoryFilter && rows.length === 0) {
+      return memoryShopProducts.filter((product) => product.is_active === 1);
+    }
+    return rows;
+  }
+}
+
+export async function createShopOrder(payload: {
+  customerName: string;
+  customerEmail: string;
+  shippingCountry: string;
+  shippingCity: string;
+  shippingAddress: string;
+  paymentMethod: ShopPaymentMethod;
+  items: Array<{ productId: number; quantity: number }>;
+}) {
+  const customerName = payload.customerName.trim();
+  const customerEmail = payload.customerEmail.trim().toLowerCase();
+  const shippingCountry = payload.shippingCountry.trim();
+  const shippingCity = payload.shippingCity.trim();
+  const shippingAddress = payload.shippingAddress.trim();
+  const paymentMethod = payload.paymentMethod;
+  const items = payload.items
+    .map((item) => ({
+      productId: Number(item.productId),
+      quantity: Math.max(1, Math.floor(Number(item.quantity) || 1)),
+    }))
+    .filter((item) => Number.isFinite(item.productId) && item.productId > 0);
+
+  if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
+    throw new Error("Missing customer or shipping fields.");
+  }
+  if (!["stripe", "paypal", "amazon_pay"].includes(paymentMethod)) {
+    throw new Error("Unsupported payment method.");
+  }
+  if (items.length === 0) {
+    throw new Error("Cart is empty.");
+  }
+
+  const orderRef = `ZIGD-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+
+  if (!db) {
+    const selectedProducts = items.map((item) => {
+      const product = memoryShopProducts.find((p) => p.id === item.productId && p.is_active === 1);
+      if (!product) throw new Error("A product is unavailable.");
+      if (product.stock_qty < item.quantity) throw new Error(`Insufficient stock for ${product.name}.`);
+      return { product, quantity: item.quantity };
+    });
+
+    const subtotalCents = selectedProducts.reduce((sum, entry) => sum + entry.product.price_cents * entry.quantity, 0);
+    const shippingCents = subtotalCents >= 7500 ? 0 : 1200;
+    const totalCents = subtotalCents + shippingCents;
+    const currency = selectedProducts[0]?.product.currency ?? "EUR";
+
+    const orderId = memoryShopOrders.length + 1;
+    const now = new Date().toISOString();
+    const order: ShopOrder = {
+      id: orderId,
+      order_ref: orderRef,
+      customer_name: customerName,
+      customer_email: customerEmail,
+      shipping_country: shippingCountry,
+      shipping_city: shippingCity,
+      shipping_address: shippingAddress,
+      payment_method: paymentMethod,
+      payment_reference: null,
+      status: "awaiting_payment",
+      currency,
+      subtotal_cents: subtotalCents,
+      shipping_cents: shippingCents,
+      total_cents: totalCents,
+      created_at: now,
+      updated_at: now,
+    };
+    memoryShopOrders.unshift(order);
+
+    for (const entry of selectedProducts) {
+      entry.product.stock_qty = Math.max(0, entry.product.stock_qty - entry.quantity);
+      const lineTotal = entry.product.price_cents * entry.quantity;
+      memoryShopOrderItems.push({
+        id: memoryShopOrderItems.length + 1,
+        order_id: orderId,
+        product_id: entry.product.id,
+        product_name: entry.product.name,
+        unit_price_cents: entry.product.price_cents,
+        quantity: entry.quantity,
+        line_total_cents: lineTotal,
+      });
+    }
+
+    return {
+      orderRef: order.order_ref,
+      status: order.status,
+      paymentMethod: order.payment_method,
+      currency: order.currency,
+      subtotalCents: order.subtotal_cents,
+      shippingCents: order.shipping_cents,
+      totalCents: order.total_cents,
+    };
+  }
+
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const productIds = items.map((item) => item.productId);
+    const placeholders = productIds.map(() => "?").join(",");
+    const [productRows] = await conn.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
+      FROM shop_products
+      WHERE id IN (${placeholders})
+      FOR UPDATE
+      `,
+      productIds
+    );
+    const productsById = new Map(productRows.map((row) => [Number(row.id), row]));
+
+    const selectedProducts = items.map((item) => {
+      const product = productsById.get(item.productId);
+      if (!product || Number(product.is_active) !== 1) {
+        throw new Error("A product is unavailable.");
+      }
+      if (Number(product.stock_qty) < item.quantity) {
+        throw new Error(`Insufficient stock for ${String(product.name)}.`);
+      }
+      return { product, quantity: item.quantity };
+    });
+
+    const subtotalCents = selectedProducts.reduce(
+      (sum, entry) => sum + Number(entry.product.price_cents) * entry.quantity,
+      0
+    );
+    const shippingCents = subtotalCents >= 7500 ? 0 : 1200;
+    const totalCents = subtotalCents + shippingCents;
+    const currency = String(selectedProducts[0]?.product.currency ?? "EUR");
+
+    const [orderResult] = await conn.execute<mysql.ResultSetHeader>(
+      `
+      INSERT INTO shop_orders
+      (order_ref, customer_name, customer_email, shipping_country, shipping_city, shipping_address, payment_method, payment_reference, status, currency, subtotal_cents, shipping_cents, total_cents)
+      VALUES (?, ?, ?, ?, ?, ?, ?, NULL, 'awaiting_payment', ?, ?, ?, ?)
+      `,
+      [
+        orderRef,
+        customerName,
+        customerEmail,
+        shippingCountry,
+        shippingCity,
+        shippingAddress,
+        paymentMethod,
+        currency,
+        subtotalCents,
+        shippingCents,
+        totalCents,
+      ]
+    );
+
+    const orderId = Number(orderResult.insertId);
+    for (const entry of selectedProducts) {
+      const lineTotal = Number(entry.product.price_cents) * entry.quantity;
+      await conn.execute(
+        `
+        INSERT INTO shop_order_items (order_id, product_id, product_name, unit_price_cents, quantity, line_total_cents)
+        VALUES (?, ?, ?, ?, ?, ?)
+        `,
+        [
+          orderId,
+          Number(entry.product.id),
+          String(entry.product.name),
+          Number(entry.product.price_cents),
+          entry.quantity,
+          lineTotal,
+        ]
+      );
+      await conn.execute("UPDATE shop_products SET stock_qty = stock_qty - ? WHERE id = ?", [
+        entry.quantity,
+        Number(entry.product.id),
+      ]);
+    }
+
+    await conn.commit();
+    return {
+      orderRef,
+      status: "awaiting_payment" as ShopOrderStatus,
+      paymentMethod,
+      currency,
+      subtotalCents,
+      shippingCents,
+      totalCents,
+    };
+  } catch (error) {
+    await conn.rollback();
+    throw error;
+  } finally {
+    conn.release();
+  }
+}
+
+export async function getShopOrderByRef(orderRef: string) {
+  const ref = orderRef.trim();
+  if (!ref) return null;
+
+  if (!db) {
+    const order = memoryShopOrders.find((row) => row.order_ref === ref);
+    if (!order) return null;
+    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    return { ...order, items };
+  }
+
+  try {
+    const [orderRows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, order_ref, customer_name, customer_email, shipping_country, shipping_city, shipping_address, payment_method, payment_reference, status, currency, subtotal_cents, shipping_cents, total_cents, created_at, updated_at
+      FROM shop_orders
+      WHERE order_ref = ?
+      LIMIT 1
+      `,
+      [ref]
+    );
+    const order = orderRows[0];
+    if (!order) return null;
+    const [itemRows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, order_id, product_id, product_name, unit_price_cents, quantity, line_total_cents
+      FROM shop_order_items
+      WHERE order_id = ?
+      ORDER BY id ASC
+      `,
+      [Number(order.id)]
+    );
+    return { ...order, items: itemRows };
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const order = memoryShopOrders.find((row) => row.order_ref === ref);
+    if (!order) return null;
+    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    return { ...order, items };
+  }
+}
+
+export async function confirmShopOrderPayment(orderRef: string, paymentReference: string) {
+  const ref = orderRef.trim();
+  const paymentRef = paymentReference.trim() || `SIM-${Date.now()}`;
+  if (!ref) return null;
+
+  if (!db) {
+    const order = memoryShopOrders.find((row) => row.order_ref === ref);
+    if (!order) return null;
+    order.status = "paid";
+    order.payment_reference = paymentRef;
+    order.updated_at = new Date().toISOString();
+    return order;
+  }
+
+  try {
+    await db.execute(
+      `
+      UPDATE shop_orders
+      SET status = 'paid', payment_reference = ?, updated_at = NOW()
+      WHERE order_ref = ?
+      `,
+      [paymentRef, ref]
+    );
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, order_ref, customer_name, customer_email, shipping_country, shipping_city, shipping_address, payment_method, payment_reference, status, currency, subtotal_cents, shipping_cents, total_cents, created_at, updated_at
+      FROM shop_orders
+      WHERE order_ref = ?
+      LIMIT 1
+      `,
+      [ref]
+    );
+    return rows[0] ?? null;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const order = memoryShopOrders.find((row) => row.order_ref === ref);
+    if (!order) return null;
+    order.status = "paid";
+    order.payment_reference = paymentRef;
+    order.updated_at = new Date().toISOString();
+    return order;
+  }
+}
+
+export async function getShopProductsAdmin() {
+  if (!db) {
+    return [...memoryShopProducts].sort((a, b) => b.id - a.id);
+  }
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active, created_at, updated_at
+      FROM shop_products
+      ORDER BY id DESC
+      `
+    );
+    return rows;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return [...memoryShopProducts].sort((a, b) => b.id - a.id);
+  }
+}
+
+export async function createShopProductAdmin(payload: {
+  slug: string;
+  name: string;
+  category: "sports" | "crafts" | "food";
+  description: string;
+  image_url: string;
+  price_cents: number;
+  currency: string;
+  stock_qty: number;
+  is_active: 0 | 1;
+}) {
+  if (!db) {
+    const row: ShopProduct = {
+      id: memoryShopProducts.length + 1,
+      ...payload,
+    };
+    memoryShopProducts.unshift(row);
+    return row;
+  }
+
+  try {
+    const [result] = await db.execute<mysql.ResultSetHeader>(
+      `
+      INSERT INTO shop_products (slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+        payload.slug,
+        payload.name,
+        payload.category,
+        payload.description,
+        payload.image_url,
+        payload.price_cents,
+        payload.currency,
+        payload.stock_qty,
+        payload.is_active,
+      ]
+    );
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active FROM shop_products WHERE id = ? LIMIT 1",
+      [result.insertId]
+    );
+    return rows[0] ?? null;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const row: ShopProduct = {
+      id: memoryShopProducts.length + 1,
+      ...payload,
+    };
+    memoryShopProducts.unshift(row);
+    return row;
+  }
+}
+
+export async function updateShopProductAdmin(
+  id: number,
+  payload: Partial<{
+    slug: string;
+    name: string;
+    category: "sports" | "crafts" | "food";
+    description: string;
+    image_url: string;
+    price_cents: number;
+    currency: string;
+    stock_qty: number;
+    is_active: 0 | 1;
+  }>
+) {
+  if (!db) {
+    const idx = memoryShopProducts.findIndex((item) => item.id === id);
+    if (idx < 0) return null;
+    memoryShopProducts[idx] = { ...memoryShopProducts[idx], ...payload } as ShopProduct;
+    return memoryShopProducts[idx];
+  }
+
+  try {
+    const updates: string[] = [];
+    const params: any[] = [];
+    const pushIf = (key: keyof typeof payload, column = key) => {
+      if (payload[key] !== undefined) {
+        updates.push(`${String(column)} = ?`);
+        params.push(payload[key]);
+      }
+    };
+    pushIf("slug");
+    pushIf("name");
+    pushIf("category");
+    pushIf("description");
+    pushIf("image_url");
+    pushIf("price_cents");
+    pushIf("currency");
+    pushIf("stock_qty");
+    pushIf("is_active");
+
+    if (updates.length === 0) return null;
+    params.push(id);
+    await db.execute(`UPDATE shop_products SET ${updates.join(", ")} WHERE id = ?`, params);
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active FROM shop_products WHERE id = ? LIMIT 1",
+      [id]
+    );
+    return rows[0] ?? null;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const idx = memoryShopProducts.findIndex((item) => item.id === id);
+    if (idx < 0) return null;
+    memoryShopProducts[idx] = { ...memoryShopProducts[idx], ...payload } as ShopProduct;
+    return memoryShopProducts[idx];
+  }
+}
+
+export async function deleteShopProductAdmin(id: number) {
+  if (!db) {
+    const idx = memoryShopProducts.findIndex((item) => item.id === id);
+    if (idx < 0) return false;
+    memoryShopProducts.splice(idx, 1);
+    return true;
+  }
+  try {
+    const [result] = await db.execute<mysql.ResultSetHeader>("DELETE FROM shop_products WHERE id = ?", [id]);
+    return Number(result.affectedRows ?? 0) > 0;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const idx = memoryShopProducts.findIndex((item) => item.id === id);
+    if (idx < 0) return false;
+    memoryShopProducts.splice(idx, 1);
+    return true;
   }
 }

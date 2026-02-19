@@ -53,6 +53,13 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
 
   const current = heroSlides[currentHeroIndex];
 
+  const resolveText = (value?: string) => {
+    if (!value) return "";
+    const translated = t(value);
+    if (!translated || translated === value) return value;
+    return translated;
+  };
+
   // Helper to render icons from the heroSlides array
   const renderIcon = (IconInput: any, className: string) => {
     if (!IconInput) return null;
@@ -208,17 +215,19 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-2xl transition-all duration-500"
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
             >
+               <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+               
               <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center text-center space-y-3">
                {IntroIcon && <IntroIcon className="h-6 w-6 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)]" />}
                 <p className="text-sm md:text-base text-white/90 leading-relaxed max-w-2xl mx-auto mb-4">
-                  {t(intro.description)}
+                  {resolveText(intro.description)}
                 </p>
                 <div className="flex items-center justify-center gap-4">
                   <div className="h-px w-8 bg-zim-gold/40" />
                   <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                    {t(intro.title)}
+                    {resolveText(intro.title)}
                   </p>
                   <div className="h-px w-8 bg-zim-gold/40" />
                 </div>
