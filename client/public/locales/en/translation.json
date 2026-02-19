@@ -80,7 +80,7 @@
     "made_in_zimbabwe_alt": "Made in Zimbabwe",
     "hero_title": "Diaspora Unlocked",
     "hero_subtitle": "ICT, Trade, Tourism and Investment Acceleration for Vision 2030",
-    "export_hub": "Export Hub",
+    "export_hub": "Exports",
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
@@ -95,7 +95,7 @@
     "success_stories": "Success Stories",
     "modules": {
       "export": {
-        "title": "Export Hub",
+        "title": "Exports",
         "desc": "Access EU market requirements and connect with verified partners for exports.",
         "stats": "Verified Partners"
       },
@@ -350,7 +350,7 @@
     "objective_subtitle": "Zimbabwe exporters can access the EU under iEPA duty-free and quota-free terms. Focus on REX registration, origin documentation, SPS compliance, and current EU regulatory changes.",
     "explore_market_requirements": "Explore Market Requirements",
     "contact_us": "Contact Us",
-    "contact_form_title": "Export Hub Inquiry",
+    "contact_form_title": "Exports Inquiry",
     "contact_form_subtitle": "Fill out the form below to get in touch with our export specialists.",
     "market_requirements_title": "Key Registration and Documentation",
     "market_requirements_subtitle": "Core steps required to claim preferential access and clear EU import controls.",
@@ -1949,7 +1949,7 @@
     "cta": {
       "back": "Back",
       "investment_opportunities": "Investment Opportunities",
-      "export_hub": "Export Hub",
+      "export_hub": "Exports",
       "search_ntir": "Search NTIR"
     }
   },

@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
 
-export default function ExportHub() {
+export default function Exports() {
   const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);

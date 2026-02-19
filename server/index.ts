@@ -1458,7 +1458,7 @@ async function startServer() {
 
     try {
       const routeIndex = [
-        { title: "Export Hub", href: "/export-hub", category: "Trade", tags: ["export", "germany", "market", "trade"] },
+        { title: "Exports", href: "/exports", category: "Trade", tags: ["export", "germany", "market", "trade"] },
         { title: "Tourism", href: "/tourism", category: "Tourism", tags: ["visit", "travel", "attractions", "victoria falls"] },
         { title: "Investment", href: "/investment", category: "Investment", tags: ["money", "capital", "projects", "masuwe", "sez"] },
         { title: "Trade", href: "/trade", category: "Trade", tags: ["business", "commerce", "sectors"] },

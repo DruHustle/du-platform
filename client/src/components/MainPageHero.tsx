@@ -102,12 +102,12 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
               <Button
                 variant="outline"
                 className="
-                  group relative h-14 px-5 rounded-full overflow-hidden border-none
+                  group relative h-12 px-4 rounded-full overflow-hidden border-none
                   bg-white/[0.1] backdrop-blur-xl
                   text-white text-xs font-black uppercase
                   shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
                   transition-all duration-500 
-                  hover:scale-105 active:scale-95 min-w-[180px]
+                  hover:scale-105 active:scale-95 min-w-[160px]
                   
                   /* THE WHITE GLOW EFFECT */
                   hover:bg-white/[0.2] 

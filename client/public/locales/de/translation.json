@@ -80,7 +80,7 @@
     "made_in_zimbabwe_alt": "Hergestellt in Simbabwe",
     "hero_title": "Diaspora freigeschaltet",
     "hero_subtitle": "Beschleunigung von IKT, Handel, Tourismus und Investitionen für die Vision 2030",
-    "export_hub": "Export-Hub",
+    "export_hub": "Exporte",
     "tourism": "Tourismus",
     "technology": "Technologie",
     "investments": "Investitionen",
@@ -95,7 +95,7 @@
     "success_stories": "Erfolgsgeschichten",
     "modules": {
       "export": {
-        "title": "Export-Hub",
+        "title": "Exporte",
         "desc": "Greifen Sie auf EU-Marktanforderungen zu und vernetzen Sie sich mit verifizierten Partnern für den Export.",
         "stats": "Verifizierte Partner"
       },
@@ -350,7 +350,7 @@
     "objective_subtitle": "Verbindung von Produkten, Partnern und Marktinformationen, um Exporteuren den Erfolg in der EU zu ermöglichen.",
     "explore_market_requirements": "Marktanforderungen erkunden",
     "contact_us": "Kontaktieren Sie uns",
-    "contact_form_title": "Export-Hub Anfrage",
+    "contact_form_title": "Exporte-Anfrage",
     "contact_form_subtitle": "Füllen Sie das Formular aus, um mit unseren Exportspezialisten in Kontakt zu treten.",
     "market_requirements_title": "EU-Marktanforderungen",
     "market_requirements_subtitle": "Verstehen Sie die spezifischen Vorschriften, Zertifizierungen und Standards für den Export nach Deutschland.",
@@ -2176,7 +2176,7 @@
     "cta": {
       "back": "Zuruck",
       "investment_opportunities": "Investitionsmöglichkeiten",
-      "export_hub": "Export-Hub",
+      "export_hub": "Exporte",
       "search_ntir": "NTIR durchsuchen"
     }
   },
