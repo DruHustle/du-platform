@@ -1,4 +1,4 @@
-export type ShopBaseCategory = "sports" | "crafts" | "food";
+export type ShopBaseCategory = "sports" | "crafts" | "food"| "beverages";
 
 export type ShopSegmentKey =
   | "beverages"
@@ -26,13 +26,17 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
     title: "Beverages",
     description: "Mazoe, Maheu, and other homegrown drink favorites.",
     images: [
-      "/images/pages/shop/food_mazoe.jpg",
-      "/images/pages/shop/food_mazoe.jpg",
-      "/images/pages/shop/food_mazoe.jpg",
-      "/images/pages/shop/food_mazoe.jpg",
-      "/images/pages/shop/food_mazoe.jpg",
+      "/images/pages/shop/beverage_mazoe_blackberry_1.png",
+      "/images/pages/shop/beverage_mazoe_creamsoda_1.png",
+      "/images/pages/shop/beverage_mazoe_orange_1.png",
+      "/images/pages/shop/beverage_mazoe_orange_6.png",
+      "/images/pages/shop/beverage_mazoe_raspberry_1.png",
+      "/images/pages/shop/beverage_mazoe_raspberry_6.png",
+      "/images/pages/shop/beverage_pfuko_1.png",
+      "/images/pages/shop/beverage_pfuko_6.png",
+      
     ],
-    keywords: ["mazoe", "maheu", "drink", "beverage", "cordial", "juice"],
+    keywords: ["mazoe", "maheu", "drink", "pfuko", "beverage", "cordial", "juice"],
   },
   {
     key: "cereals",
@@ -40,11 +44,10 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
     title: "Cereals & Breakfast",
     description: "Cerevita blends and everyday breakfast staples.",
     images: [
-      "/images/pages/shop/food_cerevita1.png",
-      "/images/pages/shop/food_cerevita1.png",
-      "/images/pages/shop/food_cerevita1.png",
-      "/images/pages/shop/food_cerevita1.png",
-      "/images/pages/shop/food_cerevita1.png",
+      "/images/pages/shop/food_cerevita_choco_malt_1.png",
+      "/images/pages/shop/food_cerevita_corn_banana_1.png",
+      "/images/pages/shop/food_cerevita_corn_wheat_1.png",
+  
     ],
     keywords: ["cerevita", "cereal", "corn", "wheat", "banana", "malt", "breakfast"],
   },
@@ -54,11 +57,12 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
     title: "Sauces & Spices",
     description: "Madras curry, peri-peri sauces, and flavor essentials.",
     images: [
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
+
+      "/images/pages/shop/food_periperi_1.png",
+      "/images/pages/shop/food_royco_beef_1.png",
+       "/images/pages/shop/food_curry_mild_1.png",
+      "/images/pages/shop/food_curry_hot_1.png",
+    
     ],
     keywords: ["curry", "sauce", "spice", "seasoning", "royco", "peri peri", "masala", "madras"],
   },
@@ -69,26 +73,22 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
     description: "Maputi, biscuits, and nostalgic grab-and-go bites.",
     images: [
       "/images/pages/shop/food_maputi.png",
-      "/images/pages/shop/food_maputi.png",
-      "/images/pages/shop/food_maputi.png",
-      "/images/pages/shop/food_maputi.png",
-      "/images/pages/shop/food_maputi.png",
+      "/images/pages/shop/food_pork_pie_1.png",
+      "/images/pages/shop/food_dried_mango_1.jpg",
+    
     ],
     keywords: ["maputi", "biscuit", "cream", "snack", "pie", "treat"],
   },
   {
     key: "oils_spreads",
     baseCategory: "food",
-    title: "Cooking Oils & Spreads",
-    description: "Everyday cooking oils and pantry spread essentials.",
+    title: "Spreads",
+    description: "Everyday pantry spread essentials.",
     images: [
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
-      "/images/pages/shop/food_dovi1.webp",
+     "/images/pages/shop/food_sunjam_1.png",
+    "/images/pages/shop/food_mama_dovi_1.png",
     ],
-    keywords: ["oil", "sunflower", "jam", "spread", "butter", "cooking"],
+    keywords: [ "jam", "spread", "butter",],
   },
   {
     key: "proteins",
@@ -96,11 +96,9 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
     title: "Protein & Pantry",
     description: "Kapenta and protein-rich staples for family meals.",
     images: [
-      "/images/pages/shop/food_kapenta1.jpg",
-      "/images/pages/shop/food_kapenta1.jpg",
-      "/images/pages/shop/food_kapenta1.jpg",
-      "/images/pages/shop/food_kapenta1.jpg",
-      "/images/pages/shop/food_kapenta1.jpg",
+      "/images/pages/shop/food_kapenta_1.jpg",
+      "/images/pages/shop/food_madora_1.png",
+  
     ],
     keywords: ["kapenta", "fish", "meat", "beef", "pork", "protein"],
   },
