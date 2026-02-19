@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
 
-type ProductCategory = "all" | "sports" | "crafts" | "food";
+type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
 type PaymentMethod = "stripe" | "paypal" | "amazon_pay";
 
 type ShopProduct = {
@@ -40,6 +40,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 6900,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 2,
@@ -51,6 +52,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 6400,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 3,
@@ -62,6 +64,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 5090,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 4,
@@ -73,6 +76,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 1490,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 5,
@@ -84,6 +88,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 390,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 6,
@@ -95,42 +100,155 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 290,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 7,
     slug: "mazoe-variety-pack",
     name: "Mazoe Variety Pack",
-    category: "food",
+    category: "beverage",
     description: "Classic Zimbabwe cordial selection.",
     image_url: "/images/pages/shop/beverage_mazoe_mixed_6.jpg",
     price_cents: 220,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 8,
-    slug: "cerevita-instant-cereal",
-    name: "Cerevita Instant Cereal",
+    slug: "cerevita-corn-banana-500g",
+    name: "Cerevita Corn and Banana Cereal",
     category: "food",
     description: "Nutritious instant cereal favorite.",
     image_url: "/images/pages/shop/food_cerevita_corn_banana_1.png",
     price_cents: 190,
     currency: "EUR",
     stock_qty: 0,
+
   },
+
   {
     id: 9,
-    slug: "kapenta-dried-fish",
-    name: "Kapenta Dried Fish",
-    category: "food",
-    description: "Traditional dried kapenta, export packed.",
-    image_url: "/images/pages/shop/food_kapenta_1.jpg",
-    price_cents: 330,
+    slug: "mazoe-raspberry-2l-case-6",
+    name: "Mazoe Raspberry 2L Case (6 Units)",
+    category: "beverage",
+    description: "Bulk case pack for family and gifting.",
+    image_url: "/images/pages/shop/beverage_mazoe_raspberry_6.png",
+    price_cents: 449,
     currency: "EUR",
     stock_qty: 0,
+
   },
   {
     id: 10,
+    slug: "mazoe-orange-2l-case-6",
+    name: "Mazoe Orange 2L Case (6 Units)",
+    category: "beverage",
+    description: "Best-selling orange crush case pack.",
+    image_url: "/images/pages/shop/beverage_mazoe_orange_6.png",
+    price_cents: 449,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 11,
+    slug: "mazoe-orange-2l",
+    name: "Mazoe Orange 2L",
+    category: "beverage",
+    description: "Single bottle orange cordial.",
+    image_url: "/images/pages/shop/beverage_mazoe_orange_1.png",
+    price_cents: 749,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 12,
+    slug: "pfuko-maheu-traditional-500ml-case-12",
+    name: "Pfuko Maheu Traditional 500ml Case (12 Units)",
+    category: "beverage",
+    description: "Traditional maheu in a value case pack.",
+    image_url: "/images/pages/shop/beverage_pfuko_12.png",
+    price_cents: 191,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 13,
+    slug: "kariba-kapenta-matemba-100g",
+    name: "Kariba Kapenta (Matemba) 100g",
+    category: "food",
+    description: "Classic kapenta staple, premium packed.",
+    image_url: "/images/pages/shop/food_kapenta_1.jpg",
+    price_cents: 349,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 14,
+    slug: "royco-usavi-beef-75g",
+    name: "Royco Usavi Beef 75g",
+    category: "food",
+    description: "Flavor blend for local stews and gravies.",
+    image_url: "/images/pages/shop/food_royco_beef_1.png",
+    price_cents: 169,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 15,
+    slug: "colcom-pork-pie-100g",
+    name: "Colcom Pork Pie 100g",
+    category: "food",
+    description: "Ready-to-eat savory pie.",
+    image_url: "/images/pages/shop/food_pork_pie_1.png",
+    price_cents: 199,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 16,
+    slug: "cheeky-chilli-peri-peri-sauce-100ml",
+    name: "Cheeky Chilli Peri Peri Sauce 100ml",
+    category: "food",
+    description: "Hot peri-peri kick for grills and chips.",
+    image_url: "/images/pages/shop/food_periperi_1.png",
+    price_cents: 179,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 17,
+    slug: "mazoe-blackberry-2l",
+    name: "Mazoe Blackberry 2L",
+    category: "food",
+    description: "Blackberry cordial favorite.",
+    image_url: "/images/pages/shop/beverage_mazoe_blackberry_1.png",
+    price_cents: 749,
+    currency: "EUR",
+    stock_qty: 18,
+
+  },
+  {
+    id: 18,
+    slug: "mazoe-cream-soda-2l",
+    name: "Mazoe Cream Soda 2L",
+    category: "food",
+    description: "Cream soda cordial flavor.",
+    image_url: "/images/pages/shop/beverage_mazoe_creamsoda_1.png",
+    price_cents: 249,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 19,
     slug: "maputi-40g",
     name: "Maputi 40g",
     category: "food",
@@ -139,6 +257,91 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 99,
     currency: "EUR",
     stock_qty: 0,
+
+  },
+  {
+    id: 20,
+    slug: "lobels-lemon-creams-150g",
+    name: "Lobels Lemon Creams 150g",
+    category: "food",
+    description: "Classic lemon cream biscuits.",
+    image_url: "/images/pages/shop/food_lemoncreams_1.png",
+    price_cents: 99,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 21,
+    slug: "sun-jam-500g",
+    name: "Sun Jam 500g",
+    category: "food",
+    description: "Fruit jam made from Eastern Highlands produce.",
+    image_url: "/images/pages/shop/food_sunjam_1.png",
+    price_cents: 179,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 22,
+    slug: "madras-hot-curry-powder-100g",
+    name: "Madras Hot Curry Powder 100g",
+    category: "food",
+    description: "Spice blend for hot curry dishes.",
+    image_url: "/images/pages/shop/food_curry_hot_1.png",
+    price_cents: 69,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 23,
+    slug: "madras-mild-curry-powder-100g",
+    name: "Madras Mild Curry Powder 100g",
+    category: "food",
+    description: "Mild curry spice blend.",
+    image_url: "/images/pages/shop/food_curry_mild_1.png",
+    price_cents: 69,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 24,
+    slug: "cerevita-corn-cocoa-malt-500g",
+    name: "Cerevita Corn, Cocoa & Malt 500g",
+    category: "food",
+    description: "Chocolate malt flavored Cerevita breakfast cereal.",
+    image_url: "/images/pages/shop/food_cerevita_choco_malt_1.png",
+    price_cents: 349,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+  {
+    id: 25,
+    slug: "cerevita-corn-wheat-500g",
+    name: "Cerevita Corn & Wheat 500g",
+    category: "food",
+    description: "Corn and wheat Cerevita breakfast cereal.",
+    image_url: "/images/pages/shop/food_cerevita_corn_wheat_1.png",
+    price_cents: 349,
+    currency: "EUR",
+    stock_qty: 0,
+
+  },
+    {
+    id: 26,
+    slug: "mama-dovi_750ml",
+    name: "Mama Dovi 750ml",
+    category: "food",
+    description: "Mama Dovi 750ml.",
+    image_url: "/images/pages/shop/food_mama_dovi_1.png",
+    price_cents: 149,
+    currency: "EUR",
+    stock_qty: 0,
+
   },
 ];
 
@@ -178,6 +381,14 @@ function formatMoney(cents: number, currency = "EUR") {
 function normalizeWhatsAppPhone(raw: string) {
   const digits = String(raw ?? "").replace(/\D/g, "");
   return digits || "263780000000";
+}
+
+function normalizeProductCategory(raw: unknown): ProductCategory {
+  const value = String(raw ?? "").trim().toLowerCase();
+  if (value === "sports" || value === "crafts" || value === "food") return value;
+  // Treat beverage-like categories as food for UI filters.
+  if (value === "beverage" || value === "beverages" || value === "drinks" || value === "drink") return "food";
+  return "all";
 }
 
 export default function ShopProducts() {
@@ -255,7 +466,7 @@ export default function ShopProducts() {
 
   useEffect(() => {
     const filtered = allProducts.filter((product) => {
-      const normalized = String(product.category ?? "").toLowerCase();
+      const normalized = normalizeProductCategory(product.category);
       const categoryMatch = category === "all" ? true : normalized === category;
       return categoryMatch && matchesSegment(product, segment);
     });
