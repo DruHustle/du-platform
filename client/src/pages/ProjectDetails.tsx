@@ -89,66 +89,66 @@ export default function ProjectDetails() {
           </Link>
 
           {!project ? (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-white">
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
               <h1 className="text-3xl font-black">Project not found</h1>
-              <p className="text-white/60 mt-2">The selected project ID does not exist.</p>
+              <p className="text-white/75 mt-2">The selected project ID does not exist.</p>
             </div>
           ) : (
             <>
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-10 text-white">
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 text-white">
                 <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase text-[10px] tracking-widest font-black">
                   Project Details
                 </Badge>
-                <h1 className="text-3xl md:text-5xl font-black tracking-tighter">{project.title}</h1>
-                <p className="mt-3 text-white/60">{project.subtitle}</p>
-                <p className="mt-6 text-white/80 leading-relaxed">{project.overview}</p>
+                <h1 className="!text-xl md:!text-2xl font-black tracking-tighter">{project.title}</h1>
+                <p className="mt-3 !text-sm text-white/75">{project.subtitle}</p>
+                <p className="mt-6 !text-sm text-white/80 leading-relaxed">{project.overview}</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-white">
-                  <h2 className="text-xl font-black mb-4 flex items-center gap-2">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+                  <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-zim-gold" /> Highlights
                   </h2>
                   <ul className="space-y-3">
                     {project.highlights.map((item) => (
-                      <li key={item} className="text-sm text-white/80 leading-relaxed">
+                      <li key={item} className="!text-xs text-white/80 leading-relaxed">
                         {item}
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-white">
-                  <h2 className="text-xl font-black mb-4 flex items-center gap-2">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+                  <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
                     <Building2 className="h-5 w-5 text-zim-gold" /> Key Metrics
                   </h2>
                   <div className="space-y-3">
                     {project.stats.map((stat) => (
                       <div key={stat.label} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
-                        <span className="text-white/60 text-sm">{stat.label}</span>
-                        <span className="font-black">{stat.value}</span>
+                        <span className="text-white/75 !text-xs">{stat.label}</span>
+                        <span className="font-black !text-sm">{stat.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-white grid md:grid-cols-3 gap-4">
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white grid md:grid-cols-3 gap-4">
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Location</p>
-                  <p className="font-bold mt-2 flex items-center gap-2">
+                  <p className="text-white/40 !text-[11px] uppercase tracking-widest">Location</p>
+                  <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-zim-gold" /> Victoria Falls Corridor
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Land Framework</p>
-                  <p className="font-bold mt-2 flex items-center gap-2">
+                  <p className="text-white/40 !text-[11px] uppercase tracking-widest">Land Framework</p>
+                  <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-zim-gold" /> Phased Servicing
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Regulatory</p>
-                  <p className="font-bold mt-2 flex items-center gap-2">
+                  <p className="text-white/40 !text-[11px] uppercase tracking-widest">Regulatory</p>
+                  <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <Landmark className="h-4 w-4 text-zim-gold" /> ZIDA / SI 29 (IFSC)
                   </p>
                 </div>
@@ -156,8 +156,8 @@ export default function ProjectDetails() {
 
               <div>
                 <Link href="/ntir">
-                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest rounded-xl">
-                    Search NTIR Database
+                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
+                    Search NTIR Database.
                   </Button>
                 </Link>
               </div>
@@ -168,4 +168,3 @@ export default function ProjectDetails() {
     </Layout>
   );
 }
-

@@ -11,6 +11,7 @@ import SubPageHero from "@/components/SubPageHero";
 export default function Technology() {
   const { t } = useTranslation();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [showInnovationHubs, setShowInnovationHubs] = useState(false);
 
   const heroSlides = useMemo(() => [
     {
@@ -94,10 +95,16 @@ export default function Technology() {
     return () => clearInterval(heroTimer);
   }, [heroSlides.length]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#technology-hubs") {
+      setShowInnovationHubs(true);
+    }
+  }, []);
+
  const introData = {
-  icon: Brain, // 
-  title: t('tech.objective_title') || "Tech Enabled",
-  description: t('tech.objective_subtitle') || "Leveraging AI and digital solutions to seamlessly connect Zimbabwe and the diaspora, driving collaboration, sustainable development, and long-term economic growth."
+  icon: Brain,
+  title: "tech.objective_title",
+  description: "tech.objective_subtitle"
  };
 
   const sectors = [
@@ -361,148 +368,139 @@ export default function Technology() {
       </section>
 
     {/* Onesa Intro - Glassy UI */}
-    <section id="technology-capabilities" className="pt-12 pb-5 bg-slate-950 relative overflow-hidden">
+    <section id="onesa-intro" className="pt-12 pb-5 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="max-w-4xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
+        {/* Unified Onesa glass container, aligned to full content width */}
+        <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative py-8 px-8 md:px-16 rounded-[2.5rem] overflow-hidden border border-white/10 backdrop-blur-3xl bg-white/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
+            className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
           >
-            {/* The Crispy Edge Finish */}
-            <span className="absolute inset-0 rounded-[2.5rem] border border-white/10 pointer-events-none" />
-            
-            {/* Subtle Animated Glow in the corner */}
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-zim-gold/10 blur-[80px] rounded-full group-hover:bg-zim-gold/20 transition-all duration-700" />
 
+            {/* Top row: Onesa intro, status, and demo preview */}
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-              
-              {/* Left Column: AI Interface Simulation */}
               <div className="w-full md:w-1/2 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-zim-gold/10 rounded-lg">
                     <Sparkles className="h-5 w-5 text-zim-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white">Onesa AI</h3>
+                    <h3 className="text-lg font-black text-white tracking-tight">Onesa AI</h3>
                     <span className="text-zim-gold text-[9px] uppercase font-black tracking-widest border-l border-zim-gold/30 pl-3">
-                      {t('tech.ai_status') || "Beta Version"}
+                      {t("tech.ai_status") || "Beta Version"}
                     </span>
                   </div>
                 </div>
 
-                <div className="bg-white/5 p-5 rounded-2xl border border-white/5 space-y-3 relative">
+                <div className="bg-white/[0.02] p-5 rounded-2xl border border-white/10 space-y-3 relative">
                   <p className="text-white/40 italic text-[11px] font-medium leading-relaxed">
-                    "{t('tech.ai_demo_question') || "What are some high ROI investment opportunities in Zimbabwe's agriculture sector right now?"}"
+                    "{t("tech.ai_demo_question") || "What are some high ROI investment opportunities in Zimbabwe's agriculture sector right now?"}"
                   </p>
                   <div className="flex items-start gap-3">
                     <div className="h-6 w-6 rounded-full bg-zim-gold flex-shrink-0 flex items-center justify-center text-zim-black font-black text-[10px] shadow-[0_0_15px_rgba(212,175,55,0.4)]">
                       O
                     </div>
                     <p className="text-[13px] text-white/90 leading-relaxed font-light">
-                      {t('tech.ai_demo_response') || "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk..."}
+                      {t("tech.ai_demo_response") || "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk..."}
                     </p>
                   </div>
-                  {/* Subtle scanning line effect */}
                   <div className="absolute bottom-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-zim-gold/20 to-transparent" />
                 </div>
               </div>
 
-              {/* Right Column: Onesa Positioning */}
               <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
                 <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
                   Onesa = Illuminate
                 </Badge>
                 <p className="text-sm text-white/60 leading-relaxed font-light">
-                  {t('tech.onesa_desc1') || "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model."}
+                  {t("tech.onesa_desc1") || "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model."}
                 </p>
-                
+
                 <div className="flex flex-wrap gap-2 pt-2 justify-center md:justify-start">
-                  <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
+                  <div className="flex items-center gap-3 bg-white/[0.02] px-4 py-2 rounded-full border border-white/10">
                     <div className="flex items-center gap-1.5">
                       <CheckCircle className="h-3 w-3 text-zim-gold" />
-                      <span className="text-[10px] text-white/80 font-bold uppercase tracking-wider">{t('tech.onesa_usp1') || "Contextual Understanding"}</span>
+                      <span className="text-[10px] text-white/80 font-bold uppercase tracking-wider">{t("tech.onesa_usp1") || "Contextual Understanding"}</span>
                     </div>
                     <div className="h-3 w-[1px] bg-white/10" />
                     <div className="flex items-center gap-1.5">
                       <CheckCircle className="h-3 w-3 text-zim-gold" />
-                      <span className="text-[10px] text-white/80 font-bold uppercase tracking-wider">{t('tech.onesa_usp2') || "Accurate Language Translation"}</span>
+                      <span className="text-[10px] text-white/80 font-bold uppercase tracking-wider">{t("tech.onesa_usp2") || "Accurate Language Translation"}</span>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
+            {/* Bottom row: Why Onesa AI matters and value pillars */}
+            <div id="technology-onesa-vision" className="relative z-10 mt-10 pt-8 border-t border-white/10">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                  <Sparkles className="h-5 w-5 text-zim-gold" />
+                </div>
+                <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
+                  {t("tech.onesa_matter.badge") || "Africa-Centric AI"}
+                </Badge>
+              </div>
+
+              <div className="space-y-8">
+                <div>
+                  <div className="flex flex-col items-center gap-3 mb-4 text-center">
+                    <div className="flex items-center justify-center gap-3">
+                      <Sparkles className="h-6 w-6 text-zim-gold" />
+                      <h3 className="text-xl font-black text-white tracking-tight">
+                        {t("tech.onesa_matter.title") || "Why Onesa AI Matters"}
+                      </h3>
+                    </div>
+                    <Link href="/onesa-ai">
+                      <Button className="shrink-0 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                        {t('tech.chat_with_onesa') || "Chat with Onesa"}
+                      </Button>
+                    </Link>
+                  </div>
+                  <p className="max-w-3xl mx-auto text-center text-white/75 text-sm leading-relaxed mb-4">
+                    {t("tech.onesa_matter.headline") || "Africa deserves AI that understands Africa."}
+                  </p>
+                  <p className="text-white/75 text-sm leading-relaxed mb-4">
+                    {t("tech.onesa_matter.p1") ||
+                      "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}
+                  </p>
+                  <p className="text-white/75 text-sm leading-relaxed mb-4">
+                    {t("tech.onesa_matter.p2") ||
+                      "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
+                  </p>
+                  <p className="text-white/75 text-sm leading-relaxed mb-4">
+                    {t("tech.onesa_matter.p3") ||
+                      "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}
+                  </p>
+                  <p className="text-white/75 text-sm leading-relaxed mb-4">
+                    {t("tech.onesa_matter.p4") ||
+                      "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
+                  </p>
+                  <p className="text-white/85 text-sm leading-relaxed font-medium">
+                    {t("tech.onesa_matter.p5") ||
+                      "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {onesaVisionTiles.map((tile) => (
+                    <div key={tile.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 h-full">
+                      <div className="flex items-center gap-2 mb-3">
+                        <tile.icon className="h-4 w-4 text-zim-gold" />
+                        <h3 className="text-white font-black text-sm tracking-tight">{tile.title}</h3>
+                      </div>
+                      <p className="text-white/70 text-xs leading-relaxed">{tile.detail}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
-        </div>
-      </div>
-    </section>
-
-    {/* Why Onesa AI Matters */}
-    <section id="technology-onesa-vision" className="pb-10 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="max-w-6xl mx-auto rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-              <Sparkles className="h-5 w-5 text-zim-gold" />
-            </div>
-            <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
-              {t("tech.onesa_matter.badge") || "Africa-Centric AI"}
-            </Badge>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-            <div className="lg:col-span-7">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
-                  {t("tech.onesa_matter.title") || "Why Onesa AI Matters"}
-                </h2>
-                <Link href="/onesa-ai">
-                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                    {t('tech.chat_with_onesa') || "Chat with Onesa"}
-                  </Button>
-                </Link>
-              </div>
-              <p className="text-white text-base md:text-lg leading-relaxed font-medium mb-4">
-                {t("tech.onesa_matter.headline") || "Africa deserves AI that understands Africa."}
-              </p>
-              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-                {t("tech.onesa_matter.p1") ||
-                  "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}
-              </p>
-              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-                {t("tech.onesa_matter.p2") ||
-                  "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
-              </p>
-              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-                {t("tech.onesa_matter.p3") ||
-                  "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}
-              </p>
-              <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
-                {t("tech.onesa_matter.p4") ||
-                  "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
-              </p>
-              <p className="text-white text-sm md:text-base leading-relaxed font-medium">
-                {t("tech.onesa_matter.p5") ||
-                  "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
-              </p>
-            </div>
-
-            <div className="lg:col-span-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {onesaVisionTiles.map((tile) => (
-                  <div key={tile.title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 h-full">
-                    <div className="flex items-center gap-2 mb-3">
-                      <tile.icon className="h-4 w-4 text-zim-gold" />
-                      <h3 className="text-white font-black text-sm tracking-tight">{tile.title}</h3>
-                    </div>
-                    <p className="text-white/70 text-xs leading-relaxed">{tile.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -513,64 +511,65 @@ export default function Technology() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-            {t('tech.sectors_title') || "Powering Key Industries"}
-          </h2>
-          <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
-            {t('tech.sectors_subtitle') || "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors."}
-          </p>
-        </div>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <BarChart3 className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">
+              {t('tech.sectors_title') || "Powering Key Industries"}
+              </h3>
+            </div>
+            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+              {t('tech.sectors_subtitle') || "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors."}
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {sectors.map((sector, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative"
-            >
-              {/* Glass Card Container */}
-              <div className="global-hover-card relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-1 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                
-                {/* Internal "Crispy" Edge */}
-                <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
-                
-                <div className="flex flex-col sm:flex-row h-full">
-                  {/* Image Section */}
-                  <div className="sm:w-2/5 h-44 sm:h-auto relative overflow-hidden rounded-l-[2rem]">
-                    <img
-                      src={sector.image}
-                      alt={sector.title}
-                      className="h-full w-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {sectors.map((sector, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group relative"
+              >
+                {/* Standardized glass card style */}
+                <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02]">
+                  <div className="flex flex-col sm:flex-row h-full">
+                    {/* Image Section */}
+                    <div className="sm:w-2/5 h-44 sm:h-auto relative overflow-hidden rounded-l-[2rem]">
+                      <img
+                        src={sector.image}
+                        alt={sector.title}
+                        className="h-full w-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
+                    </div>
 
-                  {/* Content Section */}
-                  <div className="p-8 sm:w-3/5 flex flex-col justify-center">
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-zim-gold transition-colors">
-                      {sector.title}
-                    </h3>
-                    <p className="text-[13px] text-white/60 mb-5 leading-relaxed font-light">
-                      {sector.description}
-                    </p>
-                    
-                    <ul className="space-y-2.5">
-                      {sector.details.map((detail, dIdx) => (
-                        <li key={dIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
-                          <div className="h-1.5 w-1.5 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {/* Content Section */}
+                    <div className="p-8 sm:w-3/5 flex flex-col justify-center">
+                      <h3 className="text-lg font-black text-white tracking-tight mb-2 group-hover:text-zim-gold transition-colors">
+                        {sector.title}
+                      </h3>
+                      <p className="text-[13px] text-white/60 mb-5 leading-relaxed font-light">
+                        {sector.description}
+                      </p>
+                      
+                      <ul className="space-y-2.5">
+                        {sector.details.map((detail, dIdx) => (
+                          <li key={dIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
+                            <div className="h-1.5 w-1.5 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+                            <span>{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -578,23 +577,57 @@ export default function Technology() {
     {/* Digital Transformation Snapshot */}
     <section id="technology-momentum" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
-            {t("tech.momentum.title") || "Zimbabwe Technology Momentum (2026)"}
-          </h2>
-          <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-            {t("tech.momentum.subtitle") ||
-              "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption."}
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {digitalMomentum.map((item) => (
-            <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-7">
-              <item.icon className="h-6 w-6 text-zim-gold mb-4" />
-              <h3 className="text-white font-black mb-2">{item.title}</h3>
-              <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <Signal className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">
+              {t("tech.momentum.title") || "Zimbabwe Technology Momentum (2026)"}
+              </h3>
             </div>
-          ))}
+            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+              {t("tech.momentum.subtitle") ||
+                "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption."}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {digitalMomentum.map((item) => (
+              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <item.icon className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                  <Building2 className="h-5 w-5 text-zim-gold" />
+                </div>
+                <h3 className="text-lg font-black text-white tracking-tight">
+                  {t("tech.momentum.hubs.title") || "Innovation Hubs and Incubators"}
+                </h3>
+              </div>
+              <p className="text-white/70 text-sm leading-relaxed mb-5">
+                {t("tech.momentum.hubs.detail") || "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."}
+              </p>
+              <Button
+                className="bg-zim-gold text-zim-black hover:bg-white font-bold text-xs md:text-sm rounded-full px-5 h-10 whitespace-normal"
+                onClick={() => {
+                  setShowInnovationHubs(true);
+                  setTimeout(() => {
+                    const target = document.getElementById("technology-hubs");
+                    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }, 0);
+                }}
+              >
+                {t("tech.hubs.open_button") || "Tech Hubs in Zimbabwe"}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -602,25 +635,30 @@ export default function Technology() {
     {/* Diaspora Use Cases */}
     <section id="technology-diaspora-use-cases" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">How Diaspora Unlocked Uses AI</h2>
-          <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-            Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {diasporaUseCases.map((item) => (
-            <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-7">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                  <item.icon className="h-5 w-5 text-zim-gold" />
-                </div>
-                <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
-              </div>
-              <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <Globe className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">How Diaspora Unlocked Uses AI</h3>
             </div>
-          ))}
+            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+              Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {diasporaUseCases.map((item) => (
+              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <item.icon className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -628,12 +666,16 @@ export default function Technology() {
     {/* Opportunities and Challenges */}
     <section id="technology-opportunities" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8">
-            <h3 className="text-2xl font-black text-white tracking-tight mb-5">
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8">
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <Lightbulb className="h-6 w-6 text-zim-gold" />
+            <h3 className="text-xl font-black text-white tracking-tight">
               {t("tech.opportunities.title") || "Top Opportunities for Investment and Innovation"}
             </h3>
-            <div className="space-y-4">
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            <div className="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
               {opportunityAreas.map((item) => (
                 <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
                   <p className="text-zim-gold text-xs uppercase font-black tracking-widest mb-2">{item.title}</p>
@@ -641,19 +683,20 @@ export default function Technology() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8">
-            <h3 className="text-2xl font-black text-white tracking-tight mb-5">
-              {t("tech.challenges.title") || "Critical Challenges to Address"}
-            </h3>
-            <ul className="space-y-4">
-              {criticalChallenges.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <AlertTriangle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                  <span className="text-white/75 text-sm leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
+
+            <div className="xl:col-span-5 rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <h4 className="text-lg font-black text-white tracking-tight mb-4">
+                {t("tech.challenges.title") || "Critical Challenges to Address"}
+              </h4>
+              <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-3">
+                {criticalChallenges.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <AlertTriangle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
+                    <span className="text-white/75 text-sm leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -662,21 +705,23 @@ export default function Technology() {
     {/* Fintech Regulatory Environment */}
     <section id="technology-fintech-regulation" className="pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-10">
-          <div className="flex items-center gap-3 mb-4">
-            <Shield className="h-6 w-6 text-zim-gold" />
-            <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter">
-              {t("tech.fintech.title") || "Fintech Regulatory Requirements (RBZ)"}
-            </h2>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="mb-10 text-center">
+            <div className="flex items-center gap-3">
+              <Shield className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">
+                {t("tech.fintech.title") || "Fintech Regulatory Requirements (RBZ)"}
+              </h3>
+            </div>
+            <p className="mt-4 text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+              {t("tech.fintech.subtitle") ||
+                "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations."}
+            </p>
           </div>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed mb-8">
-            {t("tech.fintech.subtitle") ||
-              "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations."}
-          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-              <h3 className="text-white font-black mb-3">{t("tech.fintech.sandbox_title") || "Regulatory Sandbox"}</h3>
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <h4 className="text-lg font-black text-white tracking-tight mb-4">{t("tech.fintech.sandbox_title") || "Regulatory Sandbox"}</h4>
               <p className="text-white/70 text-sm mb-4">
                 {t("tech.fintech.sandbox_detail") ||
                   "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded."}
@@ -687,8 +732,8 @@ export default function Technology() {
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-              <h3 className="text-white font-black mb-3">{t("tech.fintech.licensing_title") || "Licensing and Operating Requirements"}</h3>
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <h4 className="text-lg font-black text-white tracking-tight mb-4">{t("tech.fintech.licensing_title") || "Licensing and Operating Requirements"}</h4>
               <ul className="space-y-3">
                 <li className="text-white/75 text-sm">{t("tech.fintech.l1") || "Register legal entity first (typically Private Limited) before regulated fintech operations."}</li>
                 <li className="text-white/75 text-sm">{t("tech.fintech.l2") || "Plan for PSP licensing costs and ongoing compliance obligations."}</li>
@@ -708,46 +753,63 @@ export default function Technology() {
     </section>
 
     {/* Innovation Hubs */}
-    <section id="technology-hubs" className="pb-10 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
-            {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {innovationHubs.map((hub) => (
-            <div key={hub.name} className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Building2 className="h-4 w-4 text-zim-gold" />
-                <h3 className="text-white font-black">{hub.name}</h3>
-              </div>
-              <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
-              <div className="flex items-center justify-between gap-2 text-white/50 text-xs">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span>{hub.city}, Zimbabwe</span>
-                </div>
-                <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
-                  {t("tech.hubs.visit_site") || "Visit site"}
-                </a>
-              </div>
+    {showInnovationHubs && (
+      <section id="technology-hubs" className="pb-10 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <h2 className="text-xl font-black text-white tracking-tight">
+                {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
+              </h2>
             </div>
-          ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {innovationHubs.map((hub) => (
+                <div key={hub.name} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Building2 className="h-4 w-4 text-zim-gold" />
+                    <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
+                  </div>
+                  <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
+                  <div className="flex items-center justify-between gap-2 text-white/50 text-xs">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-3.5 w-3.5" />
+                      <span>{hub.city}, Zimbabwe</span>
+                    </div>
+                    <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
+                      {t("tech.hubs.visit_site") || "Visit site"}
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    )}
 
     {/* Governance & Trust */}
     <section id="technology-governance" className="pb-24 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
-        <div className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 md:p-12">
-          <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter mb-8">Trust, Data, and Operating Standards</h2>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-12">
+          <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <Shield className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">Trust, Data, and Operating Standards</h3>
+            </div>
+            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+              {t("tech.governance.subtitle") ||
+                "Operational standards ensure reliable guidance, secure handling of user data, and responsible AI adoption across use cases."}
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {trustAndGovernance.map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                <item.icon className="h-6 w-6 text-zim-gold mb-4" />
-                <h3 className="text-white font-black mb-2">{item.title}</h3>
+              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <item.icon className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+                </div>
                 <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
               </div>
             ))}

@@ -18,6 +18,7 @@ import {
   findUserByEmail,
   findUserById,
   getFeatureNotifications,
+  getEconomicStats,
   getNtirEntities,
   getSession,
   getSuccessStories,
@@ -1303,26 +1304,13 @@ async function startServer() {
     console.warn(error);
   }
 
-  app.get("/api/economic-stats", (_req, res) => {
-    res.json({
-      remittances: 1500,
-      gdp: 28000,
-      diasporaPopulation: 3000000,
-      exportValue: 4500,
-      growthRate: 5.3,
-      sectorData: [
-        { name: "Mining", growth: 8.2 },
-        { name: "Agriculture", growth: 4.5 },
-        { name: "Tourism", growth: 6.1 },
-        { name: "Manufacturing", growth: 3.2 },
-      ],
-      remittanceImpact: [
-        { sector: "Education", percentage: 35 },
-        { sector: "Real Estate", percentage: 25 },
-        { sector: "Healthcare", percentage: 20 },
-        { sector: "Small Business", percentage: 20 },
-      ],
-    });
+  app.get("/api/economic-stats", async (_req, res) => {
+    try {
+      const stats = await getEconomicStats();
+      res.json(stats);
+    } catch {
+      res.status(500).json({ message: "Failed to load economic stats." });
+    }
   });
 
   app.get("/api/health/db", async (_req, res) => {

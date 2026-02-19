@@ -358,6 +358,8 @@ const heroSlides = useMemo(() => [
     "#60A5FA", "#34D399", "#FBBF24", "#F97316", "#A78BFA"
   ];
   const activeSector = pieData[activeSectorIndex] ?? pieData[0];
+  const gdpBillions = data.gdp / 1000;
+  const formatSectorValue = (share: number) => `$${(gdpBillions * (share / 100)).toFixed(1)}B`;
 
   return (
   <Layout>
@@ -376,46 +378,52 @@ const heroSlides = useMemo(() => [
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
         
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.overview_title') || "Key Economic Indicators"}</h2>
-            <p className="text-sm md:text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {metrics.map((metric, index) => {
-              const Icon = metric.icon;
-              return (
-                <motion.div 
-                  key={index}
-                  whileHover={{ y: -5 }}
-                  className={`relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500`}
-                >
-                  <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`p-2 rounded-xl bg-white/5 ${metric.color}`}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <span className="text-[10px] font-black text-white/40 uppercase tracking-widest truncate">
-                      {metric.title}
-                    </span>
-                  </div>
-                  <div className="relative">
-                    <p className="text-2xl font-black text-white tracking-tighter">{metric.value}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`text-[10px] font-bold ${metric.color}`}>
-                        {metric.change}
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <h2 className="section-title-compact">{t('data.overview_title') || "Key Economic Indicators"}</h2>
+              <p className="section-subtitle-compact">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+              {metrics.map((metric, index) => {
+                const Icon = metric.icon;
+                return (
+                  <motion.div 
+                    key={index}
+                    whileHover={{ y: -5 }}
+                    className={`relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500`}
+                  >
+                    <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`p-2 rounded-xl bg-white/5 ${metric.color}`}>
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <span className="text-[10px] font-black text-white/40 uppercase tracking-widest truncate">
+                        {metric.title}
                       </span>
-                      {metric.isLive && (
-                        <span className="flex h-2 w-2 relative">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-                        </span>
-                      )}
                     </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                    <div className="relative">
+                      <p className="text-lg font-black text-white tracking-tighter">{metric.value}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`text-[10px] font-bold ${metric.color}`}>
+                          {metric.change}
+                        </span>
+                        {metric.isLive && (
+                          <span className="flex h-2 w-2 relative">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <p className="mt-8 text-[11px] text-white/55 italic font-light leading-relaxed tracking-wide text-center">
+              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
+            </p>
           </div>
         </div>
       </section>
@@ -424,22 +432,22 @@ const heroSlides = useMemo(() => [
       
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
-              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <h2 className="section-title-compact">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
+              <p className="section-subtitle-compact">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
             </div>
 
-            <div className="relative overflow-hidden rounded-[3rem] border border-white/10 bg-white/[0.02] backdrop-blur-3xl p-10 md:p-16 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
-              <span className="absolute inset-0 rounded-[3rem] border border-white/5 pointer-events-none" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-16 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
+              <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
               <div className="mb-8 flex justify-between items-end">
                 <div>
-                  <h3 className="text-xl font-bold text-white">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
+                  <h3 className="text-lg font-black text-white tracking-tight">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
                   <p className="text-xs text-white/30 uppercase tracking-widest mt-1">{t('data.gdp_data_source') || "Source: World Bank, IMF, ZIMSTAT"}</p>
                 </div>
                 <TrendingUp className="text-zim-gold h-6 w-6 opacity-50" />
               </div>
-              
+
               <div className="space-y-6">
                 {SECTOR_DATA.gdpGrowth.map((item, index) => (
                   <div key={index} className="flex items-center gap-6 group">
@@ -464,144 +472,123 @@ const heroSlides = useMemo(() => [
         </div>
       </section>
 
-      {/* Mining Sector - Detailed Glass Tiles */}
-      <section id="sectors-mining" className="py-10 bg-slate-950 relative">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.sectoral_data_mining_title') || "Mining Sector Breakdown"}</h2>
-              <p className="text-base text-white/50 max-w-2xl mx-auto font-light leading-relaxed">{t('data.sectoral_data_mining_subtitle') || "Zimbabwe's mineral wealth contributing $5.56B to the economy."}</p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {SECTOR_DATA.mining.map((mineral, index) => (
-                <motion.div 
-                  key={index} 
-                  whileHover={{ y: -5, backgroundColor: 'rgba(255,255,255,0.06)' }}
-                  className="relative text-center p-8 rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl transition-all duration-500 group"
-                >
-                  <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
-                  <div className="space-y-3">
-                    <h3 className="text-[11px] font-black text-white/40 uppercase tracking-widest">{mineral.name}</h3>
-                    <p className="text-3xl font-black text-zim-gold tracking-tighter group-hover:scale-110 transition-transform">{mineral.value}%</p>
-                    <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{t('data.sectoral_data_mining_contribution') || "Contribution"}</p>
-                    <div className="mt-4 pt-4 border-t border-white/10">
-                      <p className="text-lg font-black text-white">${mineral.revenue}B</p>
-                      <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{t('data.sectoral_data_mining_revenue') || "Revenue"}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* GDP Composition - Glass Donut Terminal */}
       
       <section id="sectors-gdp" className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
-            <p className="text-base text-white/50 max-w-3xl mx-auto font-light leading-relaxed">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
-            {/* Projections List */}
-            <div className="space-y-8">
-              <h3 className="text-[12px] font-black text-zim-gold uppercase tracking-[0.4em] mb-10 border-l-2 border-zim-gold/30 pl-4">
-                {t('data.sectoral_data_projections') || "Growth Projections"} ({data.year})
-              </h3> 
-              {sectorGrowthData.map((sector, index) => (
-                <button
-                  key={sector.name}
-                  onClick={() => setActiveSectorIndex(index)}
-                  className={`w-full text-left space-y-3 rounded-xl p-3 border transition-all ${
-                    activeSectorIndex === index
-                      ? "border-zim-gold/40 bg-zim-gold/10"
-                      : "border-transparent hover:border-white/20 hover:bg-white/[0.03]"
-                  }`}
-                >
-                  <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
-                    <span className="text-white/80">{sector.name}</span>
-                    <span className="text-zim-gold">+{sector.growth}%</span>
-                  </div>
-                  <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${(sector.growth / 10) * 100}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.5, ease: "circOut" }}
-                      className="bg-zim-gold h-full rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]"
-                    />
-                  </div>
-                  <p className="text-[10px] text-white/50 uppercase tracking-widest">
-                    GDP Share: {sector.share.toFixed(1)}%
-                  </p>
-                </button>
-              ))}
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <h2 className="section-title-compact">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
+              <p className="section-subtitle-compact">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
             </div>
 
-            {/* Cinematic Donut Chart */}
-            <div className="relative p-1 rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent">
-              <div className="h-[500px] w-full bg-slate-950/40 backdrop-blur-3xl p-10 rounded-[2.9rem] relative overflow-visible">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={85}
-                      outerRadius={120}
-                      paddingAngle={8}
-                      dataKey="value"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
-                      onMouseEnter={(_, index) => setActiveSectorIndex(index)}
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                          className="outline-none stroke-slate-900"
-                          strokeWidth={activeSectorIndex === index ? 4 : 2}
-                          opacity={activeSectorIndex === index ? 1 : 0.65}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      formatter={(value, _name, entry) => {
-                        const growth = (entry as { payload?: { growth?: number } })?.payload?.growth ?? 0;
-                        return [`${Number(value).toFixed(1)}% share`, `Growth: +${growth.toFixed(1)}%`];
-                      }}
-                      wrapperStyle={{
-                        zIndex: 60,
-                        outline: "none",
-                      }}
-                      contentStyle={{
-                        backgroundColor: "rgba(2, 6, 23, 0.92)",
-                        backdropFilter: "blur(12px)",
-                        borderRadius: "16px",
-                        border: "1px solid rgba(255,255,255,0.18)",
-                        color: "#fff",
-                        boxShadow: "0 12px 32px rgba(0, 0, 0, 0.45)",
-                      }}
-                      labelStyle={{ color: "#F8FAFC", fontWeight: 700 }}
-                      itemStyle={{ color: "#F8FAFC", fontWeight: 600 }}
-                    />
-                    <Legend 
-                      verticalAlign="bottom" 
-                      height={50} 
-                      iconType="circle"
-                      formatter={(value) => <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">{value}</span>}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-                {/* Center Label */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">{activeSector?.name ?? "Sector"}</p>
-                  <p className="text-2xl font-black text-white">{activeSector?.value?.toFixed(1) ?? "0"}%</p>
-                  <p className="text-[11px] font-bold text-zim-gold">+{activeSector?.growth?.toFixed(1) ?? "0"}% growth</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
+              {/* Projections List */}
+              <div className="space-y-8">
+                <h3 className="text-[12px] font-black text-zim-gold uppercase tracking-[0.4em] mb-10 border-l-2 border-zim-gold/30 pl-4">
+                  {t('data.sectoral_data_projections') || "Growth Projections"} ({data.year})
+                </h3> 
+                {sectorGrowthData.map((sector, index) => (
+                  <button
+                    key={sector.name}
+                    onClick={() => setActiveSectorIndex(index)}
+                    className={`w-full text-left space-y-3 rounded-xl p-3 border transition-all ${
+                      activeSectorIndex === index
+                        ? "border-zim-gold/40 bg-zim-gold/10"
+                        : "border-transparent hover:border-white/20 hover:bg-white/[0.02]"
+                    }`}
+                  >
+                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
+                      <span className="text-white/80">{sector.name}</span>
+                      <span className="text-right">
+                        <span className="block text-zim-gold">{formatSectorValue(sector.share)}</span>
+                        <span className="block text-[10px] text-white/55">+{sector.growth}% growth</span>
+                      </span>
+                    </div>
+                    <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${(sector.growth / 10) * 100}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.5, ease: "circOut" }}
+                        className="bg-zim-gold h-full rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]"
+                      />
+                    </div>
+                    <p className="text-[10px] text-white/50 uppercase tracking-widest">
+                      GDP Share: {sector.share.toFixed(1)}%
+                    </p>
+                    <p className="text-[10px] text-white/70 uppercase tracking-widest">
+                      Est. Value: {formatSectorValue(sector.share)}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Cinematic Donut Chart */}
+              <div className="relative p-1 rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent">
+                <div className="h-[500px] w-full bg-slate-950/40 backdrop-blur-3xl p-10 rounded-[2.9rem] relative overflow-visible">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={85}
+                        outerRadius={120}
+                        paddingAngle={8}
+                        dataKey="value"
+                        labelLine={false}
+                        label={({ name, value }) => `${name} ${formatSectorValue(Number(value ?? 0))}`}
+                        onMouseEnter={(_, index) => setActiveSectorIndex(index)}
+                      >
+                        {pieData.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                            className="outline-none stroke-slate-900"
+                            strokeWidth={activeSectorIndex === index ? 4 : 2}
+                            opacity={activeSectorIndex === index ? 1 : 0.65}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value, _name, entry) => {
+                          const growth = (entry as { payload?: { growth?: number } })?.payload?.growth ?? 0;
+                          return [
+                            `${formatSectorValue(Number(value))} • ${Number(value).toFixed(1)}% share • +${growth.toFixed(1)}% growth`,
+                            "Sector Value"
+                          ];
+                        }}
+                        wrapperStyle={{
+                          zIndex: 60,
+                          outline: "none",
+                        }}
+                        contentStyle={{
+                          backgroundColor: "rgba(2, 6, 23, 0.92)",
+                          backdropFilter: "blur(12px)",
+                          borderRadius: "16px",
+                          border: "1px solid rgba(255,255,255,0.18)",
+                          color: "#fff",
+                          boxShadow: "0 12px 32px rgba(0, 0, 0, 0.45)",
+                        }}
+                        labelStyle={{ color: "#F8FAFC", fontWeight: 700 }}
+                        itemStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+                      />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={50} 
+                        iconType="circle"
+                        formatter={(value) => <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">{value}</span>}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Center Label */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                    <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">{activeSector?.name ?? "Sector"}</p>
+                    <p className="text-lg font-black text-white">{formatSectorValue(activeSector?.value ?? 0)}</p>
+                    <p className="text-[11px] font-bold text-zim-gold">+{activeSector?.growth?.toFixed(1) ?? "0"}% growth</p>
+                    <p className="text-[10px] font-bold text-white/70 mt-1">{activeSector?.value?.toFixed(1) ?? "0"}% share</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -610,23 +597,25 @@ const heroSlides = useMemo(() => [
       </section>
 
       {/* Remittances - High-End Financial Panel */}
-      <section id="remittance-impact" className="py-10 bg-slate-950 relative overflow-hidden px-6">
-        <div className="container max-w-6xl mx-auto relative z-10 py-20 px-10 md:px-16 rounded-[4rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_40px_80px_rgba(0,0,0,0.5)]">
-          <span className="absolute inset-0 rounded-[4rem] border border-white/5 pointer-events-none" />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8">
+      <section id="remittance-impact" className="py-10 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="relative py-14 md:py-16 px-8 md:px-12 rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_40px_80px_rgba(0,0,0,0.5)]">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+            
+            <div className="text-center max-w-3xl mx-auto space-y-4 mb-10">
               <Badge className="bg-zim-gold/10 text-zim-gold border-zim-gold/20 text-[10px] font-black uppercase tracking-widest px-4 py-1.5">
                 {t('data.diaspora_remittance_impact_badge') || "Diaspora Impact"}
               </Badge>
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-tight">
+              <h2 className="section-title-compact leading-tight">
                 {t('data.diaspora_remittance_impact_title') || "Diaspora Economic Impact"}
               </h2>
-              <p className="text-base text-white/50 font-light leading-relaxed">
+              <p className="text-sm text-white/75 font-light leading-relaxed">
                 {t('data.diaspora_remittance_impact_subtitle') || "Understanding the significant contribution of the Zimbabwean diaspora to the national economy."}
               </p>
-              
-              <div className="space-y-6 pt-6">
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+              <div className="space-y-5 lg:col-span-7 lg:order-1">
                 {remittanceImpact.map((item, index) => (
                   <div key={index} className="space-y-3 group">
                     <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
@@ -647,20 +636,24 @@ const heroSlides = useMemo(() => [
                   </div>
                 ))}
               </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-5 lg:col-span-5 lg:order-2">
+                {[
+                  { label: t('data.diaspora_remittance_value') || "Annual Remittances", val: "$1.8B", highlight: true },
+                  { label: t('data.diaspora_number_value') || "Global Diaspora", val: "3.5M" },
+                  { label: t('data.diaspora_investment_potential') || "Investment Potential", val: "$500M", span: true }
+                ].map((stat, i) => (
+                  <div key={i} className={`p-6 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all hover:bg-slate-950/60 ${stat.span ? 'col-span-2 lg:col-span-1' : ''}`}>
+                    <p className="text-base md:text-lg font-black text-zim-gold tracking-tighter mb-2">{stat.val}</p>
+                    <p className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-snug">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { label: t('data.diaspora_remittance_value') || "Annual Remittances", val: "$1.8B", highlight: true },
-                { label: t('data.diaspora_number_value') || "Global Diaspora", val: "3.5M" },
-                { label: t('data.diaspora_investment_potential') || "Investment Potential", val: "$500M", span: true }
-              ].map((stat, i) => (
-                <div key={i} className={`p-8 rounded-[2.5rem] border border-white/10 bg-white/5 transition-all hover:bg-white/10 ${stat.span ? 'col-span-2' : ''}`}>
-                  <p className="text-4xl font-black text-zim-gold tracking-tighter mb-2">{stat.val}</p>
-                  <p className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-snug">{stat.label}</p>
-                </div>
-              ))}
-            </div>
+            <p className="mt-8 text-[11px] text-white/55 italic font-light leading-relaxed tracking-wide text-center">
+              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
+            </p>
           </div>
         </div>
       </section>
@@ -670,12 +663,12 @@ const heroSlides = useMemo(() => [
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-zim-gold/[0.02] blur-[120px] rounded-full pointer-events-none" />
 
         <div className="container px-6 mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16 space-y-4">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
               <motion.h2 
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                className="text-3xl font-black text-white tracking-tighter"
+                className="section-title-compact"
               >
                 {t('data.diaspora_distribution') || "Global Diaspora Distribution"}
               </motion.h2>
@@ -683,7 +676,7 @@ const heroSlides = useMemo(() => [
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-sm text-white/50 font-light"
+                className="text-sm text-white/75 font-light leading-relaxed mt-4"
               >
                 {t('data.diaspora_residence') || "Zimbabwean diaspora residence worldwide"}
               </motion.p>
@@ -693,7 +686,7 @@ const heroSlides = useMemo(() => [
               initial={{ opacity: 0, scale: 0.98 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-2xl relative"
+              className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-2xl relative"
             >
               {/* Internal Crispy Edge */}
               <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
@@ -721,7 +714,7 @@ const heroSlides = useMemo(() => [
                       className="transition-colors hover:bg-white/5 group cursor-default"
                     >
                       <td className="p-6 flex items-center gap-4">
-                        <span className="text-2xl drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110 duration-500">{item.flag}</span>
+                        <span className="text-lg drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110 duration-500">{item.flag}</span>
                         <span className="text-sm font-bold text-white/80 group-hover:text-zim-gold transition-colors">{item.region}</span>
                       </td>
                       <td className="p-6 text-xs text-white/40 font-medium tracking-wide">{item.population}</td>
@@ -731,27 +724,13 @@ const heroSlides = useMemo(() => [
                 </tbody>
               </table>
             </motion.div>
+
+            <p className="mt-8 text-[11px] text-white/55 italic font-light leading-relaxed tracking-wide text-center">
+              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
+            </p>
           </div>
         </div>
       </section>
-
-      {/* Professional Data Disclaimer - Glass Etched Style */}
-      <section id="disclaimer" className="pb-24 bg-slate-950"> 
-        <div className="container px-6 mx-auto">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="max-w-2xl mx-auto p-6 rounded-2xl bg-white/[0.02] border border-white/5 text-center"
-          >
-            <p className="text-[11px] text-white italic font-light leading-relaxed tracking-wide">
-              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-
-
       
     </Layout>
   );

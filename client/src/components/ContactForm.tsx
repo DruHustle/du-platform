@@ -58,9 +58,9 @@ export default function ContactForm({ title, description, module }: ContactFormP
   const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl";
 
   return (
-    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
+    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
       {/* Internal Crispy Edge */}
-      <span className="absolute inset-0 rounded-[2.5rem] border border-white/5 pointer-events-none z-20" />
+      <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none z-20" />
       
       {/* Decorative Glow */}
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-zim-gold/5 blur-[80px] pointer-events-none" />

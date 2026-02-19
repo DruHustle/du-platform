@@ -71,7 +71,7 @@ export default function SearchResults() {
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
                       <Link href={result.href}>
-                        <Card className="h-full hover:shadow-xl transition-all cursor-pointer group border border-white/10 bg-white/[0.03] text-white">
+                        <Card className="h-full hover:shadow-xl transition-all cursor-pointer group border border-white/10 bg-white/[0.02] text-white">
                           <CardHeader className="flex flex-row items-center gap-4 pb-2">
                             <div className="p-3 bg-zim-gold/10 rounded-xl text-zim-gold group-hover:bg-zim-gold group-hover:text-zim-black transition-colors">
                               <Icon className="h-6 w-6" />
@@ -94,7 +94,7 @@ export default function SearchResults() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white/[0.03] rounded-3xl border border-white/10">
+              <div className="text-center py-20 bg-white/[0.02] rounded-3xl border border-white/10">
                 <Search className="h-16 w-16 text-white/30 mx-auto mb-6 opacity-40" />
                 <h2 className="text-2xl font-semibold mb-2 text-white">No results found</h2>
                 <p className="text-white/60 max-w-md mx-auto">

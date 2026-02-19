@@ -144,74 +144,76 @@ export default function Home() {
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                   className="h-full"
                 >
-                  <div className="
-                    relative h-full py-8 px-6 rounded-[2.5rem] overflow-hidden 
-                    /* EXACT GLASS EDGES */
-                    border-t border-l border-white/25 
-                    border-b border-r border-white/10 
-                    backdrop-blur-3xl bg-white/[0.03] 
-                    /* EXACT SHADOW & INSET */
-                    shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_2px_rgba(255,255,255,0.15)] 
-                    transition-all duration-500 group hover:scale-[1.02] hover:border-white/30
-                  ">
-                    {/* EXACT SHINE & TEXTURE */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
+                  <div className="block h-full focus:outline-none">
+                    <div className="
+                      relative h-full py-8 px-6 rounded-[2rem] overflow-hidden 
+                      /* EXACT GLASS EDGES */
+                      border-t border-l border-white/25 
+                      border-b border-r border-white/10 
+                      bg-white/[0.02] 
+                      /* EXACT SHADOW & INSET */
+                      shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_2px_rgba(255,255,255,0.15)] 
+                      transition-all duration-500 group hover:scale-[1.02] hover:border-white/30
+                    ">
+                      {/* EXACT SHINE & TEXTURE */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
 
-                    <div className="relative z-10 flex flex-col items-center text-center h-full">
-                      
-                      {/* 1. Icon (Matching Intro Styling) */}
-                      {Icon && (
-                        <div className="relative mb-4">
-                          <Icon className="h-8 w-8 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)] transition-transform duration-500 group-hover:scale-110" />
-                          <div className="absolute inset-0 bg-zim-gold/10 blur-xl rounded-full" />
+                      <div className="relative z-10 flex flex-col items-center text-center h-full">
+                        
+                        {/* 1. Icon (Matching Intro Styling) */}
+                        {Icon && (
+                          <div className="relative mb-4">
+                            <Icon className="h-8 w-8 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)] transition-transform duration-500 group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-zim-gold/10 blur-xl rounded-full" />
+                          </div>
+                        )}
+                        
+                        {/* 2. Image Preview (Integrated into the glass tile) */}
+                        <div className="w-full h-56 md:h-64 rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-inner">
+                          <div 
+                            className="w-full h-full bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
+                            style={{ backgroundImage: `url('${module.bgImage}')` }}
+                          >
+                            {/* Refined gradient overlay for better text legibility */}
+                            <div className="w-full h-full bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent" />
+                          </div>
                         </div>
-                      )}
-                      
-                      {/* 2. Image Preview (Integrated into the glass tile) */}
-                      <div className="w-full h-56 md:h-64 rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-inner">
-                        <div 
-                          className="w-full h-full bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
-                          style={{ backgroundImage: `url('${module.bgImage}')` }}
-                        >
-                          {/* Refined gradient overlay for better text legibility */}
-                          <div className="w-full h-full bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent" />
-                        </div>
-                      </div>
 
-                      {/* 3. Title (Matching Intro Description Styling) */}
-                      <h3 className="text-lg md:text-xl font-bold text-white/95 leading-snug mb-3">
-                        {module.title}
-                      </h3>
-                      
-                      {/* 4. Description (Subtle) */}
-                      <p className="text-sm text-white/60 leading-relaxed mb-6 flex-grow px-2">
-                        {module.description}
-                      </p>
-
-                      {/* 5. Stat/Label (Matching Intro Label Styling) */}
-                      <div className="flex items-center justify-center gap-4 mb-6">
-                        <div className="h-px w-6 bg-zim-gold/40" />
-                        <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                          {module.stats}
+                        {/* 3. Title (Matching Intro Description Styling) */}
+                        <h3 className="text-lg md:text-xl font-black tracking-tight text-white/95 leading-snug mb-3">
+                          {module.title}
+                        </h3>
+                        
+                        {/* 4. Description (Subtle) */}
+                        <p className="text-sm text-white/60 leading-relaxed mb-6 flex-grow px-2">
+                          {module.description}
                         </p>
-                        <div className="h-px w-6 bg-zim-gold/40" />
+
+                        {/* 5. Stat/Label (Matching Intro Label Styling) */}
+                        <div className="flex items-center justify-center gap-4 mb-6">
+                          <div className="h-px w-6 bg-zim-gold/40" />
+                          <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                            {module.stats}
+                          </p>
+                          <div className="h-px w-6 bg-zim-gold/40" />
+                        </div>
+
+                        {/* 6. Explore Button (kept as direct CTA link) */}
+                        <Link href={module.href} className="w-full">
+                          <button className="
+                            w-full py-4 rounded-full border-t border-l border-white/20 border-b border-r border-white/5 
+                            bg-white/5 text-white text-[10px] font-black uppercase tracking-[0.2em] 
+                            hover:bg-white hover:text-black transition-all duration-500
+                          ">
+                            {t('home.explore_now') || "Explore Now"}
+                          </button>
+                        </Link>
                       </div>
 
-                      {/* 6. Explore Button (Matches Hero Buttons) */}
-                      <Link href={module.href} className="w-full">
-                        <button className="
-                          w-full py-4 rounded-full border-t border-l border-white/20 border-b border-r border-white/5 
-                          bg-white/5 text-white text-[10px] font-black uppercase tracking-[0.2em] 
-                          hover:bg-white hover:text-black transition-all duration-500
-                        ">
-                          {t('home.explore_now') || "Explore Now"}
-                        </button>
-                      </Link>
+                      {/* Edge Polish Line */}
+                      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                     </div>
-
-                    {/* Edge Polish Line */}
-                    <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   </div>
                 </motion.div>
               );

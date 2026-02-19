@@ -1,6 +1,6 @@
 # CI/CD Pipeline Setup Guide
 
-This document explains how to configure the GitHub Actions CI/CD pipeline for automatic deployment to Vercel and Render.
+This document explains how to configure the GitHub Actions CI/CD pipeline for deployment to Vercel and Render, plus scheduled infrastructure health checks.
 
 ## Overview
 
@@ -10,6 +10,7 @@ The ZIGD Gateway Platform uses GitHub Actions for continuous integration and dep
 2. **Code Quality Checks** - TypeScript type checking and formatting
 3. **Vercel Deployment** - Automatic deployment to Vercel (production and preview)
 4. **Render Deployment** - Automatic deployment to Render on main branch pushes
+5. **Infra Health Check** - Scheduled app + DB health pings for Render service uptime
 
 ## Workflow Files
 
@@ -35,6 +36,17 @@ Triggers Render deployment via webhook.
 - Push to `main` branch
 - Manual workflow dispatch
 
+### 3. `infra-health-check.yml` - Scheduled Health Check
+
+Runs scheduled health checks against the Render app endpoint and DB health endpoint.
+
+**Triggers:**
+- Schedule: every 4 hours (`0 */4 * * *`)
+- Manual workflow dispatch
+
+**Jobs:**
+- `health-check`: pings app endpoint and DB endpoint using `scripts/keepalive-ping.sh`
+
 ## Required GitHub Secrets
 
 To enable the CI/CD pipeline, add these secrets to your GitHub repository:
@@ -59,18 +71,28 @@ To enable the CI/CD pipeline, add these secrets to your GitHub repository:
 
 1. **RENDER_DEPLOY_HOOK_URL**
    - Go to your Render Dashboard
-   - Select your static site
+   - Select your Render service
    - Go to Settings → Deploy Hook
    - Copy the deploy hook URL
    - Add to GitHub Secrets
 
-## Adding Secrets to GitHub
+## Required GitHub Variables
+
+The infra health-check workflow uses repository **variables** (not secrets):
+
+1. **RENDER_KEEPALIVE_URL** (required)
+   - Recommended: `https://<your-service>.onrender.com/api/ping`
+2. **RENDER_DB_KEEPALIVE_URL** (optional)
+   - Recommended: `https://<your-service>.onrender.com/api/health/db`
+   - If omitted, workflow derives it from `RENDER_KEEPALIVE_URL` + `/api/health/db`
+
+## Adding Secrets and Variables to GitHub
 
 1. Go to your GitHub repository
 2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Click **New repository secret**
-4. Add each secret with its name and value
-5. Click **Add secret**
+3. For secrets, click **New repository secret**
+4. For variables, click **Variables** tab then **New repository variable**
+5. Add each item with its exact name and value
 
 ## Vercel Setup
 
@@ -118,16 +140,14 @@ vercel --prod
 
 ### Initial Setup
 
-1. **Create Static Site on Render**:
+1. **Create Render Service**:
    - Go to https://dashboard.render.com
-   - Click "New +" → "Static Site"
+   - Click "New +" and choose the service type you use (`Web Service` or `Static Site`)
    - Connect your GitHub repository
-   - Configure:
-     - Build Command: `pnpm install && pnpm build`
-     - Publish Directory: `dist/public`
+   - Configure build/start settings based on service type
 
 2. **Get Deploy Hook**:
-   - Go to your site's Settings
+   - Go to your service's Settings
    - Scroll to "Deploy Hook"
    - Click "Create Deploy Hook"
    - Copy the URL
@@ -157,7 +177,11 @@ Render can also auto-deploy directly from GitHub:
 1. Runs build and test
 2. Runs code quality checks
 3. Deploys Vercel preview
-4. Preview URL posted in PR comments
+
+### On Schedule (every 4 hours):
+1. Runs infra health check workflow
+2. Pings app endpoint (`RENDER_KEEPALIVE_URL`)
+3. Pings DB health endpoint (`RENDER_DB_KEEPALIVE_URL` or derived URL)
 
 ## Monitoring Deployments
 
@@ -206,6 +230,12 @@ Render can also auto-deploy directly from GitHub:
 - Check Render dashboard for webhook logs
 - Manually trigger deployment from Render dashboard
 
+**Issue**: Infra health check fails with missing variable
+**Solution**:
+- Set `RENDER_KEEPALIVE_URL` in GitHub repository variables
+- Optionally set `RENDER_DB_KEEPALIVE_URL` explicitly
+- Re-run `infra-health-check.yml` manually from Actions tab
+
 ### Secret Issues
 
 **Issue**: "Invalid token" or "Unauthorized" errors
@@ -247,7 +277,7 @@ vercel --prod --token=YOUR_VERCEL_TOKEN
 
 ### Render
 - Go to Render Dashboard
-- Select your site
+- Select your service
 - Click "Manual Deploy" → "Deploy latest commit"
 
 ## Additional Resources

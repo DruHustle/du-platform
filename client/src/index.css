@@ -412,6 +412,34 @@
     @apply bg-amber-100 text-amber-800 border border-amber-200;
     @apply px-3 py-1 rounded-full text-sm font-medium;
   }
+
+  /* Shared section typography to avoid page-level drift/clashes */
+  .section-title {
+    @apply text-lg font-black text-white tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4;
+  }
+
+  .section-title-compact {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.025em !important;
+    color: rgb(255 255 255) !important;
+  }
+
+  .section-subtitle-compact {
+    font-size: 0.875rem !important;
+    line-height: 1.625 !important;
+    font-weight: 300 !important;
+    color: rgb(255 255 255 / 0.75) !important;
+    max-width: 48rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 1rem !important;
+  }
   
   /* Gradient text */
   .gradient-text {

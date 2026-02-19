@@ -208,7 +208,7 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative py-6 px-8 md:px-16 rounded-[2.5rem] overflow-hidden border border-white/10 backdrop-blur-3xl bg-white/[0.03] shadow-2xl transition-all duration-500"
+              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-2xl transition-all duration-500"
             >
               <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center text-center space-y-3">
                {IntroIcon && <IntroIcon className="h-6 w-6 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)]" />}

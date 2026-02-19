@@ -1,7 +1,5 @@
 import Layout from "@/components/Layout";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FileCheck, Shield, Landmark, Globe, DollarSign, ClipboardCheck } from "lucide-react";
+import { FileCheck, Shield, Landmark, Globe, DollarSign, ClipboardCheck, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 
@@ -101,13 +99,14 @@ export default function Regulations() {
       <section className="min-h-screen bg-slate-950 px-6 py-28">
         <div className="container mx-auto max-w-6xl space-y-10">
           <div className="text-white space-y-4">
-            <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
-              {t("regulations.badge") || "Compliance Hub"}
-            </Badge>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter">
+            <Link href="/" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+              <ArrowLeft className="h-3.5 w-3.5 mr-2" />
+              {t("regulations.cta.back") || "Back"}
+            </Link>
+            <h1 className="!text-xl md:!text-3xl font-black tracking-tighter">
               {t("regulations.title") || "Regulations & Compliance Guide"}
             </h1>
-            <p className="text-white/60 max-w-3xl">
+            <p className="!text-xs md:!text-sm text-white/75 max-w-3xl leading-relaxed">
               {t("regulations.subtitle") ||
                 "Practical regulatory guidance for diaspora investors, exporters, and returnees. Use this as an execution checklist and align final decisions with qualified legal, tax, and sector advisors."}
             </p>
@@ -115,41 +114,22 @@ export default function Regulations() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {regulationSections.map((section) => (
-              <div id={section.id} key={section.id} className="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-7 scroll-mt-24">
+              <div id={section.id} key={section.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 scroll-mt-24">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
                     <section.icon className="h-5 w-5 text-zim-gold" />
                   </div>
-                  <h2 className="text-xl font-black text-white tracking-tight">{section.title}</h2>
+                  <h2 className="!text-lg font-black text-white tracking-tight">{section.title}</h2>
                 </div>
                 <ul className="space-y-3">
                   {section.points.map((point) => (
-                    <li key={point} className="text-sm text-white/75 leading-relaxed">
+                    <li key={point} className="!text-xs md:!text-sm text-white/75 leading-relaxed">
                       {point}
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <Link href="/investment">
-              <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[11px]">
-                {t("regulations.cta.investment_opportunities") ||
-                  "Investment Opportunities"}
-              </Button>
-            </Link>
-            <Link href="/export-hub">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[11px]">
-                {t("regulations.cta.export_hub") || "Export Hub"}
-              </Button>
-            </Link>
-            <Link href="/ntir">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[11px]">
-                {t("regulations.cta.search_ntir") || "Search NTIR"}
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

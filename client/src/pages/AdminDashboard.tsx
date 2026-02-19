@@ -151,7 +151,7 @@ export default function AdminDashboard() {
         <div className="container mx-auto max-w-6xl space-y-8">
           <div className="text-white">
             <h1 className="text-4xl font-black tracking-tighter">Admin Dashboard</h1>
-            <p className="text-white/60 mt-2">Manage notify requests, NTIR records, and success stories.</p>
+            <p className="text-white/75 mt-2">Manage notify requests, NTIR records, and success stories.</p>
           </div>
 
           {error ? <p className="text-red-400">{error}</p> : null}
@@ -173,16 +173,16 @@ export default function AdminDashboard() {
             ))}
           </div>
 
-          {loading ? <p className="text-white/60">Loading...</p> : null}
+          {loading ? <p className="text-white/75">Loading...</p> : null}
 
           {!loading && activeTab === "notify" ? (
             <div className="grid gap-4">
               {notifyRows.map((row) => (
-                <div key={row.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-white">
+                <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-black">{row.email}</p>
-                      <p className="text-white/60 text-sm">{row.feature}</p>
+                      <p className="text-white/75 text-sm">{row.feature}</p>
                     </div>
                     <p className="text-xs text-white/50">{new Date(row.created_at).toLocaleString()}</p>
                   </div>
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "ntir" ? (
             <div className="space-y-6">
-              <form onSubmit={submitNtir} className="grid md:grid-cols-4 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <form onSubmit={submitNtir} className="grid md:grid-cols-4 gap-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                 <Input
                   value={ntirForm.name}
                   onChange={(e) => setNtirForm((prev) => ({ ...prev, name: e.target.value }))}
@@ -220,11 +220,11 @@ export default function AdminDashboard() {
 
               <div className="grid gap-4">
                 {ntirRows.map((row) => (
-                  <div key={row.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-white">
+                  <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-black">{row.name}</p>
-                        <p className="text-white/60 text-sm">
+                        <p className="text-white/75 text-sm">
                           {row.sector} - {row.location}
                         </p>
                       </div>
@@ -244,7 +244,7 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "stories" ? (
             <div className="space-y-6">
-              <form onSubmit={submitStory} className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <form onSubmit={submitStory} className="space-y-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                 <div className="grid md:grid-cols-3 gap-3">
                   <Input
                     value={storyForm.title}
@@ -318,11 +318,11 @@ export default function AdminDashboard() {
 
               <div className="grid gap-4">
                 {storyRows.map((story) => (
-                  <div key={story.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-white">
+                  <div key={story.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-black">{story.title}</p>
-                        <p className="text-white/60 text-sm">
+                        <p className="text-white/75 text-sm">
                           {story.category} - {story.author}
                         </p>
                       </div>
