@@ -4,7 +4,7 @@
 
 ## Overview
 
-The ZIGD Gateway Platform addresses critical gaps in Zimbabwe's diaspora engagement strategy by providing:
+The ZIGD Platform addresses critical gaps in Zimbabwe's diaspora engagement strategy by providing:
 
 - **Export Knowledge Hub**: Comprehensive guidance on German market requirements, certifications, and partnerships.
 - **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
@@ -172,7 +172,7 @@ KEEPALIVE_URL=https://<your-backend>/api/ping pnpm keepalive:ping
 
 ## Strategic Framework Alignment
 
-The ZIGD Gateway Platform addresses key gaps identified in the Diaspora Unlocked Strategic Framework:
+The ZIGD Platform addresses key gaps identified in the Diaspora Unlocked Strategic Framework:
 - ✅ **SME Visibility**: Knowledge of international market requirements.
 - ✅ **Trust Infrastructure**: National Trusted Investment Registry (NTIR).
 - ✅ **Unified Presence**: Centralized digital hub for all diaspora engagement.
