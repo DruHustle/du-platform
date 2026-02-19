@@ -102,7 +102,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     name: "Mazoe Variety Pack",
     category: "food",
     description: "Classic Zimbabwe cordial selection.",
-    image_url: "/images/pages/shop/food_mazoe.jpg",
+    image_url: "/images/pages/shop/beverage_mazoe_mixed_6.jpg",
     price_cents: 2200,
     currency: "EUR",
     stock_qty: 35,
@@ -113,7 +113,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     name: "Cerevita Instant Cereal",
     category: "food",
     description: "Nutritious instant cereal favorite.",
-    image_url: "/images/pages/shop/food_cerevita1.png",
+    image_url: "/images/pages/shop/food_cerevita_corn_banana_1.png",
     price_cents: 1900,
     currency: "EUR",
     stock_qty: 28,
@@ -124,7 +124,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     name: "Kapenta Dried Fish",
     category: "food",
     description: "Traditional dried kapenta, export packed.",
-    image_url: "/images/pages/shop/food_kapenta1.jpg",
+    image_url: "/images/pages/shop/food_kapenta_1.jpg",
     price_cents: 3300,
     currency: "EUR",
     stock_qty: 14,
@@ -492,7 +492,15 @@ export default function ShopProducts() {
                       {products.map((product) => (
                         <div key={product.id} className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]">
                           <div className="h-48 overflow-hidden relative bg-slate-900">
-                            <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                            <img
+                              src={product.image_url}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                              onError={(event) => {
+                                event.currentTarget.onerror = null;
+                                event.currentTarget.src = "/images/pages/shop/zimbabwe_shop_hero.jpg";
+                              }}
+                            />
                             <span
                               className="absolute z-20 top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-rose-200/60 bg-rose-600/80 text-white shadow-[0_8px_20px_rgba(0,0,0,0.45)] backdrop-blur-sm"
                             >

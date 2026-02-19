@@ -33,7 +33,7 @@ export const SHOP_CATEGORY_CONFIG: ShopCategoryConfig[] = [
       "/images/pages/shop/beverage_mazoe_raspberry_1.png",
       "/images/pages/shop/beverage_mazoe_raspberry_6.png",
       "/images/pages/shop/beverage_pfuko_1.png",
-      "/images/pages/shop/beverage_pfuko_6.png",
+      "/images/pages/shop/beverage_pfuko_12.png",
       
     ],
     keywords: ["mazoe", "maheu", "drink", "pfuko", "beverage", "cordial", "juice"],
