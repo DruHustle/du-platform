@@ -13,6 +13,16 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+export function getDesktopUtilityIconsClass(viewportWidth: number): string {
+  if (viewportWidth >= 1680) {
+    return "lg:flex-row lg:items-center lg:gap-0.5";
+  }
+  if (viewportWidth >= 1024) {
+    return "lg:absolute lg:top-0 lg:right-0 lg:flex-col lg:items-end lg:gap-1.5";
+  }
+  return "";
+}
+
 export default function Layout({ children }: LayoutProps) {
   const { t, i18n } = useTranslation();
   const [location] = useLocation();
@@ -25,6 +35,7 @@ export default function Layout({ children }: LayoutProps) {
   const [phoneActionOpen, setPhoneActionOpen] = useState(false);
   const [showWhatsIcon, setShowWhatsIcon] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [desktopViewportWidth, setDesktopViewportWidth] = useState(1440);
   const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
   const scrolledRef = useRef(false);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
@@ -115,9 +126,6 @@ export default function Layout({ children }: LayoutProps) {
     { name: "isiNdebele", flag: "🇿🇼", code: "nd" },
     { name: "Deutsch", flag: "🇩🇪", code: "de" }
   ];
-  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language ?? "").toLowerCase();
-  const useEdgeIconColumn = ["de", "sn", "nd"].some((code) => activeLanguage.startsWith(code));
-
   const navigation = [
     { name: t('nav.home'), href: "/" },
     { name: t('nav.technology'), href: "/technology" },
@@ -146,6 +154,11 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     const onResize = () => {
       setIsMobileViewport(window.innerWidth < 768);
+      setDesktopViewportWidth(window.innerWidth);
+      if (window.innerWidth >= 1024) {
+        // Prevent stale mobile menu state from hiding utility icons after resizing to desktop.
+        setMobileMenuOpen(false);
+      }
     };
     onResize();
     window.addEventListener("resize", onResize);
@@ -339,9 +352,9 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* 3. Right Section: Utility Icons (Pushed to the far end) */}
           <div
-            className={`flex items-center justify-end gap-0 md:gap-0.5 flex-1 lg:flex-none lg:min-w-[200px] ${
-              useEdgeIconColumn ? "lg:absolute lg:top-0 lg:-right-8 xl:-right-10 lg:flex-col lg:items-end lg:gap-1.5" : ""
-            }`}
+            className={`relative z-[230] flex items-center justify-end gap-0 md:gap-0.5 flex-1 lg:flex-none lg:min-w-[200px] ${getDesktopUtilityIconsClass(
+              desktopViewportWidth
+            )}`}
           >
             {/* Search Tool */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
