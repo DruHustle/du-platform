@@ -448,6 +448,51 @@ export default function Tourism() {
     },
   ];
 
+  const evisaInfo = {
+    title: t("tourism.evisa.title") || "Zimbabwe eVisa and Entry Guidance",
+    subtitle:
+      t("tourism.evisa.subtitle") ||
+      "Who qualifies, indicative costs, processing windows, and the core documents most travelers prepare before arrival.",
+    qualification: {
+      title: t("tourism.evisa.qualification.title") || "Who qualifies",
+      details: getTranslatedList("tourism.evisa.qualification.details", [
+        "Many nationalities can apply online through Zimbabwe's eVisa portal.",
+        "Some travelers may still qualify for visa on arrival depending on nationality and travel purpose.",
+        "Always confirm your category before booking flights because entry requirements can change.",
+      ]),
+    },
+    costs: {
+      title: t("tourism.evisa.costs.title") || "Indicative visa costs (USD)",
+      details: getTranslatedList("tourism.evisa.costs.details", [
+        "Single-entry visas are commonly around USD 30 for many categories.",
+        "Double-entry visas are commonly around USD 45 to USD 60 depending on nationality category.",
+        "KAZA UniVisa is typically around USD 50 when available and eligible.",
+      ]),
+    },
+    processing: {
+      title: t("tourism.evisa.processing.title") || "Typical processing times",
+      details: getTranslatedList("tourism.evisa.processing.details", [
+        "Many applications are processed within approximately 2 to 7 working days.",
+        "Complex cases can take longer if supporting checks are needed.",
+        "Apply early in peak travel periods to reduce last-minute risk.",
+      ]),
+    },
+    documents: {
+      title: t("tourism.evisa.documents.title") || "Key documents",
+      details: getTranslatedList("tourism.evisa.documents.details", [
+        "Passport valid for at least 6 months from your arrival date.",
+        "Travel itinerary and return or onward booking evidence.",
+        "Accommodation details and proof of sufficient travel funds.",
+      ]),
+    },
+    disclaimer:
+      t("tourism.evisa.disclaimer") ||
+      "Visa eligibility, fees, and processing times vary by nationality and policy updates. Verify current requirements on official portals before travel.",
+    applyCta: t("tourism.evisa.apply_cta") || "Apply via eVisa Portal",
+    immigrationCta: t("tourism.evisa.immigration_cta") || "Zimbabwe Immigration",
+    ztaCta: t("tourism.evisa.zta_cta") || "Plan Your Trip (ZTA)",
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -821,6 +866,98 @@ export default function Tourism() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* eVisa Information */}
+      <section id="evisa-info" className="pb-10 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <h2 className="section-title-compact">{evisaInfo.title}</h2>
+              <p className="section-subtitle-compact">{evisaInfo.subtitle}</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <Globe className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.qualification.title}</h3>
+                </div>
+                <ul className="space-y-2">
+                  {evisaInfo.qualification.details.map((detail) => (
+                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <CreditCard className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.costs.title}</h3>
+                </div>
+                <ul className="space-y-2">
+                  {evisaInfo.costs.details.map((detail) => (
+                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <Calendar className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.processing.title}</h3>
+                </div>
+                <ul className="space-y-2">
+                  {evisaInfo.processing.details.map((detail) => (
+                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <FileText className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.documents.title}</h3>
+                </div>
+                <ul className="space-y-2">
+                  {evisaInfo.documents.details.map((detail) => (
+                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 rounded-[1.5rem] border border-zim-gold/20 bg-zim-gold/5 p-5">
+              <p className="text-xs text-white/80 leading-relaxed">{evisaInfo.disclaimer}</p>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="https://evisa.gov.zw/home" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {evisaInfo.applyCta}
+                </Button>
+              </a>
+              <a href="https://www.zimimmigration.gov.zw/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {evisaInfo.immigrationCta}
+                </Button>
+              </a>
+              <a href="https://zimbabwetourism.net/plan-your-trip/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {evisaInfo.ztaCta}
+                </Button>
+              </a>
             </div>
           </div>
         </div>

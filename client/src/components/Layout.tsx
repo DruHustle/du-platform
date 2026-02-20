@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, type AuthUser } from "@/lib/api";
@@ -13,14 +13,44 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function getDesktopUtilityIconsClass(viewportWidth: number): string {
-  if (viewportWidth >= 1680) {
-    return "lg:flex-row lg:items-center lg:gap-0.5";
+type BrowserLayoutProfile = {
+  enterBuffer: number;
+  exitBuffer: number;
+  edgeRightPx: number;
+  horizontalReservedPx: number;
+};
+
+const DEFAULT_BROWSER_LAYOUT_PROFILE: BrowserLayoutProfile = {
+  enterBuffer: 8,
+  exitBuffer: 2,
+  edgeRightPx: 8,
+  horizontalReservedPx: 104,
+};
+
+function getBrowserLayoutProfile(userAgent: string): BrowserLayoutProfile {
+  const ua = userAgent.toLowerCase();
+  const isEdge = ua.includes("edg/");
+  const isFirefox = ua.includes("firefox/");
+  const isSafari = ua.includes("safari/") && !ua.includes("chrome/") && !isEdge;
+
+  if (isEdge) {
+    // Edge text metrics can differ; use an earlier enter but easier exit back to horizontal.
+    return { enterBuffer: 14, exitBuffer: -2, edgeRightPx: 8, horizontalReservedPx: 96 };
   }
-  if (viewportWidth >= 1024) {
-    return "lg:absolute lg:top-0 lg:right-0 lg:flex-col lg:items-end lg:gap-1.5";
+  if (isFirefox) {
+    return { enterBuffer: 13, exitBuffer: 5, edgeRightPx: 6, horizontalReservedPx: 108 };
   }
-  return "";
+  if (isSafari) {
+    return { enterBuffer: 14, exitBuffer: 5, edgeRightPx: 8, horizontalReservedPx: 108 };
+  }
+  return DEFAULT_BROWSER_LAYOUT_PROFILE;
+}
+
+export function getDesktopUtilityIconsClass(useEdgePosition: boolean): string {
+  if (useEdgePosition) {
+    return "flex items-center gap-0 md:gap-0.5 lg:fixed lg:top-2 lg:flex lg:flex-col lg:items-end lg:gap-1.5";
+  }
+  return "flex items-center gap-0 md:gap-0.5";
 }
 
 export default function Layout({ children }: LayoutProps) {
@@ -36,9 +66,14 @@ export default function Layout({ children }: LayoutProps) {
   const [showWhatsIcon, setShowWhatsIcon] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [desktopViewportWidth, setDesktopViewportWidth] = useState(1440);
+  const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
+  const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
   const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
   const scrolledRef = useRef(false);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const navPillRef = useRef<HTMLDivElement | null>(null);
+  const utilitySlotRef = useRef<HTMLDivElement | null>(null);
+  const utilityIconsRef = useRef<HTMLDivElement | null>(null);
   const suppressBubbleClickRef = useRef(false);
   const dragStateRef = useRef<{
     pointerId: number;
@@ -142,6 +177,46 @@ export default function Layout({ children }: LayoutProps) {
   const showOnesaBubble = !location.startsWith("/onesa-ai");
   const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
 
+  const evaluateUtilityOverlap = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    if (window.innerWidth < 1024) {
+      setUseEdgeIconColumn(false);
+      return;
+    }
+
+    const navRect = navPillRef.current?.getBoundingClientRect();
+    const utilitySlotRect = utilitySlotRef.current?.getBoundingClientRect();
+    const utilityIconsRect = utilityIconsRef.current?.getBoundingClientRect();
+    if (!navRect || !utilitySlotRect) {
+      setUseEdgeIconColumn(false);
+      return;
+    }
+
+    // Project icon block in its horizontal position inside the right slot, then check overlap.
+    // Edge (Chromium) can report slightly different text/icon widths, so use a conservative buffer.
+    const projectedIconsLeft = utilitySlotRect.right - browserLayoutProfile.horizontalReservedPx;
+    const utilityIconsLeft = utilityIconsRect?.left ?? projectedIconsLeft;
+    setUseEdgeIconColumn((isCurrentlyEdgeColumn) => {
+      if (isCurrentlyEdgeColumn) {
+        // Return to original horizontal state as soon as overlap clears with a small hysteresis.
+        const canReturnHorizontal = navRect.right < projectedIconsLeft - browserLayoutProfile.exitBuffer;
+        return !canReturnHorizontal;
+      }
+
+      // Switch to vertical only when horizontal layout would overlap.
+      const hasProjectedOverlap = navRect.right >= projectedIconsLeft - browserLayoutProfile.enterBuffer;
+      const hasActualOverlap = navRect.right >= utilityIconsLeft - browserLayoutProfile.enterBuffer;
+      const navReachesUtilityZone = navRect.right >= utilitySlotRect.left - browserLayoutProfile.enterBuffer;
+      return hasProjectedOverlap || hasActualOverlap || navReachesUtilityZone;
+    });
+  }, [browserLayoutProfile.enterBuffer, browserLayoutProfile.exitBuffer, browserLayoutProfile.horizontalReservedPx]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setBrowserLayoutProfile(getBrowserLayoutProfile(window.navigator.userAgent));
+  }, []);
+
   const clampMobileBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
     // Keep floating bubble fully visible inside the viewport.
     const minX = 8;
@@ -159,11 +234,26 @@ export default function Layout({ children }: LayoutProps) {
         // Prevent stale mobile menu state from hiding utility icons after resizing to desktop.
         setMobileMenuOpen(false);
       }
+      evaluateUtilityOverlap();
     };
     onResize();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, []);
+  }, [evaluateUtilityOverlap]);
+
+  useEffect(() => {
+    const rafId = window.requestAnimationFrame(evaluateUtilityOverlap);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [i18n.language, i18n.resolvedLanguage, location, desktopViewportWidth, evaluateUtilityOverlap]);
+
+  useEffect(() => {
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => evaluateUtilityOverlap());
+    if (navPillRef.current) observer.observe(navPillRef.current);
+    if (utilitySlotRef.current) observer.observe(utilitySlotRef.current);
+    if (utilityIconsRef.current) observer.observe(utilityIconsRef.current);
+    return () => observer.disconnect();
+  }, [evaluateUtilityOverlap]);
 
   useEffect(() => {
     if (!showOnesaBubble || !isMobileViewport) return;
@@ -317,13 +407,16 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* 2. Middle Section: Desktop Navigation (Absolute Center) */}
           <nav className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center">
-            <div className={`
+            <div
+              ref={navPillRef}
+              className={`
               relative flex items-center gap-1 p-1 px-10 rounded-full transition-all duration-700 overflow-hidden
               ${scrolled 
                 ? 'bg-slate-900/90 backdrop-blur-md border border-white/10' 
                 : 'bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]' 
               }
-            `}>
+            `}
+            >
               {/* The Crispy Edge Finish (Only visible when not scrolled) */}
               {!scrolled && (
                 <span className="absolute inset-0 rounded-full border border-white/20 pointer-events-none" />
@@ -352,10 +445,14 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* 3. Right Section: Utility Icons (Pushed to the far end) */}
           <div
-            className={`relative z-[230] flex items-center justify-end gap-0 md:gap-0.5 flex-1 lg:flex-none lg:min-w-[200px] ${getDesktopUtilityIconsClass(
-              desktopViewportWidth
-            )}`}
+            ref={utilitySlotRef}
+            className="relative z-[230] flex items-center justify-end flex-1 lg:flex-none lg:min-w-[200px]"
           >
+            <div
+              ref={utilityIconsRef}
+              className={getDesktopUtilityIconsClass(useEdgeIconColumn)}
+              style={useEdgeIconColumn ? { right: `${browserLayoutProfile.edgeRightPx}px` } : undefined}
+            >
             {/* Search Tool */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
@@ -468,8 +565,8 @@ export default function Layout({ children }: LayoutProps) {
                   : 'bg-white/10 text-white hover:bg-white/20'
               }`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <motion.div
+              >
+                <motion.div
                 key={mobileMenuOpen ? "open" : "closed"}
                 initial={{ opacity: 0, rotate: -45 }}
                 animate={{ opacity: 1, rotate: 0 }}
@@ -478,6 +575,7 @@ export default function Layout({ children }: LayoutProps) {
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </motion.div>
             </Button>
+            </div>
           </div>
         </div>
       </header>
