@@ -115,6 +115,8 @@ export default function Layout({ children }: LayoutProps) {
     { name: "isiNdebele", flag: "🇿🇼", code: "nd" },
     { name: "Deutsch", flag: "🇩🇪", code: "de" }
   ];
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language ?? "").toLowerCase();
+  const useEdgeIconColumn = ["de", "sn", "nd"].some((code) => activeLanguage.startsWith(code));
 
   const navigation = [
     { name: t('nav.home'), href: "/" },
@@ -336,7 +338,11 @@ export default function Layout({ children }: LayoutProps) {
           </nav>
 
           {/* 3. Right Section: Utility Icons (Pushed to the far end) */}
-          <div className="flex items-center justify-end gap-0 md:gap-0.5 flex-1 lg:flex-none lg:min-w-[200px]">
+          <div
+            className={`flex items-center justify-end gap-0 md:gap-0.5 flex-1 lg:flex-none lg:min-w-[200px] ${
+              useEdgeIconColumn ? "lg:absolute lg:top-0 lg:-right-8 xl:-right-10 lg:flex-col lg:items-end lg:gap-1.5" : ""
+            }`}
+          >
             {/* Search Tool */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
