@@ -314,8 +314,32 @@ const memoryShopProducts: ShopProduct[] = [
     stock_qty: 0,
     is_active: 1,
   },
-  {
+    {
     id: 13,
+    slug: "pfuko-maheu-traditional-500ml-1",
+    name: "Pfuko Maheu Traditional 500ml 1 Unit",
+    category: "beverage",
+    description: "Traditional maheu in a value case pack.",
+    image_url: "/images/pages/shop/beverage_pfuko_1.png",
+    price_cents: 61,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+    {
+    id: 14,
+    slug: "cascade-orange-400ml-case-6",
+    name: "Cascade Orange 500ml Case (6 Units)",
+    category: "beverage",
+    description: "Cascade Orange is the perfect adventure for a Dairy Fruit Mix drink.",
+    image_url: "/images/pages/shop/beverage_cascade_6.png",
+    price_cents: 191,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 15,
     slug: "kariba-kapenta-matemba-100g",
     name: "Kariba Kapenta (Matemba) 100g",
     category: "food",
@@ -327,7 +351,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 14,
+    id: 16,
     slug: "royco-usavi-beef-75g",
     name: "Royco Usavi Beef 75g",
     category: "food",
@@ -339,7 +363,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 15,
+    id: 17,
     slug: "colcom-pork-pie-100g",
     name: "Colcom Pork Pie 100g",
     category: "food",
@@ -351,7 +375,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 16,
+    id: 18,
     slug: "cheeky-chilli-peri-peri-sauce-100ml",
     name: "Cheeky Chilli Peri Peri Sauce 100ml",
     category: "food",
@@ -363,7 +387,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 17,
+    id: 19,
     slug: "mazoe-blackberry-2l",
     name: "Mazoe Blackberry 2L",
     category: "food",
@@ -375,7 +399,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 18,
+    id: 20,
     slug: "mazoe-cream-soda-2l",
     name: "Mazoe Cream Soda 2L",
     category: "food",
@@ -387,7 +411,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 19,
+    id: 21,
     slug: "maputi-40g",
     name: "Maputi 40g",
     category: "food",
@@ -399,7 +423,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 20,
+    id: 22,
     slug: "lobels-lemon-creams-150g",
     name: "Lobels Lemon Creams 150g",
     category: "food",
@@ -411,7 +435,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 21,
+    id: 23,
     slug: "sun-jam-500g",
     name: "Sun Jam 500g",
     category: "food",
@@ -423,7 +447,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 22,
+    id: 24,
     slug: "madras-hot-curry-powder-100g",
     name: "Madras Hot Curry Powder 100g",
     category: "food",
@@ -435,7 +459,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 23,
+    id: 25,
     slug: "madras-mild-curry-powder-100g",
     name: "Madras Mild Curry Powder 100g",
     category: "food",
@@ -447,7 +471,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 24,
+    id: 26,
     slug: "cerevita-corn-cocoa-malt-500g",
     name: "Cerevita Corn, Cocoa & Malt 500g",
     category: "food",
@@ -459,7 +483,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 25,
+    id: 27,
     slug: "cerevita-corn-wheat-500g",
     name: "Cerevita Corn & Wheat 500g",
     category: "food",
@@ -471,7 +495,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
     {
-    id: 26,
+    id: 28,
     slug: "mama-dovi_750ml",
     name: "Mama Dovi 750ml",
     category: "food",
