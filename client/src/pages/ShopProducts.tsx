@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
 
 type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
-type PaymentMethod = "stripe" | "paypal" | "amazon_pay";
+type PaymentMethod = "stripe" | "paypal" | "amazon_pay" | "dummy_gateway";
 
 type ShopProduct = {
   id: number;
@@ -418,6 +418,8 @@ export default function ShopProducts() {
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [order, setOrder] = useState<any | null>(null);
+  const [notifyState, setNotifyState] = useState<Record<number, "idle" | "saving" | "saved">>({});
+  const [notifyMessage, setNotifyMessage] = useState("");
 
   useEffect(() => {
     setCategory(queryCategory);
@@ -555,6 +557,52 @@ export default function ShopProducts() {
       if (qty <= 0) return prev.filter((item) => item.productId !== productId);
       return prev.map((item) => (item.productId === productId ? { ...item, quantity: qty } : item));
     });
+  };
+
+  const notifyWhenAvailable = async (product: ShopProduct) => {
+    if (notifyState[product.id] === "saving") return;
+
+    const fromCheckout = String(customerEmail ?? "").trim();
+    const promptLabel =
+      t("shop.products.notify.enter_email_prompt") ||
+      "Enter your email address to be notified when this product is back in stock:";
+    const entered = window.prompt(promptLabel, fromCheckout);
+    const email = String(entered ?? "").trim().toLowerCase();
+    if (!email) return;
+
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!validEmail) {
+      setNotifyMessage(
+        t("shop.products.notify.invalid_email") || "Please enter a valid email address."
+      );
+      return;
+    }
+
+    setNotifyState((prev) => ({ ...prev, [product.id]: "saving" }));
+    setNotifyMessage("");
+    try {
+      const { data } = await api.post("/shop/restock-notifications", {
+        productId: product.id,
+        productSlug: product.slug,
+        productName: product.name,
+        email,
+      });
+      const message = String(
+        data?.message ??
+          (t("shop.products.notify.saved") || "We'll notify you when this product is available.")
+      );
+      setNotifyMessage(message);
+      setCustomerEmail(email);
+      setNotifyState((prev) => ({ ...prev, [product.id]: "saved" }));
+    } catch (error: any) {
+      setNotifyMessage(
+        String(
+          error?.response?.data?.message ??
+            (t("shop.products.notify.failed") || "Unable to save notify request right now.")
+        )
+      );
+      setNotifyState((prev) => ({ ...prev, [product.id]: "idle" }));
+    }
   };
 
   const placeOrder = async () => {
@@ -727,11 +775,15 @@ export default function ShopProducts() {
                               <p className="text-zim-gold font-black">{formatMoney(product.price_cents, product.currency)}</p>
                               <Button
                                 type="button"
-                                disabled
-                                onClick={() => addToCart(product)}
-                                className="rounded-full px-5 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-40 font-black text-[10px] uppercase tracking-[0.2em]"
+                                disabled={notifyState[product.id] === "saving"}
+                                onClick={() => notifyWhenAvailable(product)}
+                                className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 disabled:opacity-40 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
                               >
-                                {t("shop.products.stock.out") || "Out of Stock"}
+                                {notifyState[product.id] === "saving"
+                                  ? t("shop.products.notify.saving") || "Saving..."
+                                  : notifyState[product.id] === "saved"
+                                    ? t("shop.products.notify.saved_short") || "Notify Saved"
+                                    : t("shop.products.notify.cta") || "Notify Me"}
                               </Button>
                             </div>
                           </div>
@@ -805,6 +857,9 @@ export default function ShopProducts() {
                         { value: "stripe", label: t("shop.products.payment_methods.stripe") || "Stripe (Credit Card)" },
                         { value: "paypal", label: t("shop.products.payment_methods.paypal") || "PayPal" },
                         { value: "amazon_pay", label: t("shop.products.payment_methods.amazon_pay") || "Amazon Pay" },
+                        ...((import.meta.env.DEV || import.meta.env.MODE === "test")
+                          ? [{ value: "dummy_gateway", label: t("shop.products.payment_methods.dummy_gateway") || "Dummy Gateway (Dev/Test)" }]
+                          : []),
                       ].map((option) => (
                         <label key={option.value} className="flex items-center gap-1 text-[11px] text-white/80">
                           <input
@@ -818,6 +873,7 @@ export default function ShopProducts() {
                       </div>
 
                       {checkoutError ? <p className="mt-2 text-[11px] text-rose-300">{checkoutError}</p> : null}
+                      {notifyMessage ? <p className="mt-2 text-[11px] text-white/75">{notifyMessage}</p> : null}
 
                       {!order ? (
                         <>
@@ -867,7 +923,9 @@ export default function ShopProducts() {
                                       ? t("shop.products.payment_methods.amazon_pay_short") || "Amazon Pay"
                                       : paymentMethod === "paypal"
                                         ? t("shop.products.payment_methods.paypal_short") || "PayPal"
-                                        : t("shop.products.payment_methods.stripe_short") || "Stripe"
+                                        : paymentMethod === "dummy_gateway"
+                                          ? t("shop.products.payment_methods.dummy_gateway_short") || "Dummy Gateway"
+                                          : t("shop.products.payment_methods.stripe_short") || "Stripe"
                                   }`}
                           </Button>
                         </div>

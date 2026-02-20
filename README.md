@@ -102,6 +102,39 @@ pnpm build
 
 The development server will start at `http://localhost:3000`
 
+## Payment Provider Setup
+
+The shop supports Stripe, PayPal, and Amazon Pay in production, plus a Dummy Gateway in development/testing.
+
+### Register with Stripe
+
+1. Create an account at [stripe.com](https://stripe.com/).
+2. Complete business verification in Stripe Dashboard.
+3. Create API keys (test + live) in Developers > API keys.
+4. Store keys in your deployment environment (never commit secrets).
+5. Use Stripe test cards in non-production environments.
+
+### Register with PayPal
+
+1. Create a PayPal Business account at [paypal.com/business](https://www.paypal.com/business/).
+2. Go to [developer.paypal.com](https://developer.paypal.com/) and create a REST app.
+3. Capture sandbox and live client credentials.
+4. Add credentials to your deployment environment.
+5. Validate checkout flows using PayPal sandbox accounts before going live.
+
+### Register with Amazon Pay
+
+1. Create a merchant account at [pay.amazon.com](https://pay.amazon.com/).
+2. Enable Amazon Pay for your merchant region.
+3. Generate API credentials and merchant identifiers in Seller Central/Amazon Pay console.
+4. Store credentials in deployment environment variables.
+5. Run end-to-end sandbox tests before production rollout.
+
+### Development and Testing Mode
+
+- In non-production (`NODE_ENV !== production`), a **Dummy Gateway (Dev/Test)** payment option is enabled.
+- In production, only Stripe, PayPal, and Amazon Pay are accepted by the API.
+
 ## End-to-End Testing (Onesa Chat)
 
 This project includes an Onesa API smoke E2E test script:

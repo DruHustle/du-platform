@@ -2081,7 +2081,9 @@
         "amazon_pay": "Amazon Pay",
         "stripe_short": "Stripe",
         "paypal_short": "PayPal",
-        "amazon_pay_short": "Amazon Pay"
+        "amazon_pay_short": "Amazon Pay",
+        "dummy_gateway": "Dummy Gateway (Dev/Test)",
+        "dummy_gateway_short": "Dummy Gateway"
       },
       "order": {
         "reference": "Order reference",
@@ -2103,6 +2105,16 @@
         "customer_details": "Customer Details:",
         "outro": "Please confirm availability and payment instructions.",
         "each": "each"
+      },
+      "notify": {
+        "cta": "Notify Me",
+        "saving": "Saving...",
+        "saved": "We'll notify you when this product is available.",
+        "saved_short": "Notify Saved",
+        "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
+        "invalid_email": "Please enter a valid email address.",
+        "login_required": "Please login to enable stock notifications.",
+        "failed": "Unable to save notify request right now."
       }
     }
   },

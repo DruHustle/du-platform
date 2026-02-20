@@ -31,9 +31,13 @@ import {
   getShopOrderByRef,
   confirmShopOrderPayment,
   getShopProductsAdmin,
+  getShopProductById,
   createShopProductAdmin,
   updateShopProductAdmin,
   deleteShopProductAdmin,
+  createShopRestockNotification,
+  getShopRestockNotifications,
+  getShopRestockNotificationsBySlug,
 } from "./db";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -166,6 +170,63 @@ function isAdminEmail(email: string): boolean {
   return configured.includes(email.trim().toLowerCase());
 }
 
+function getAdminEmails(): string[] {
+  return String(process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function isValidEmail(email: string): boolean {
+  const value = String(email ?? "").trim();
+  if (!value) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+async function sendEmailMessage(payload: {
+  to: string | string[];
+  subject: string;
+  html?: string;
+  text?: string;
+}) {
+  const recipients = (Array.isArray(payload.to) ? payload.to : [payload.to])
+    .map((value) => String(value ?? "").trim())
+    .filter(Boolean);
+  if (recipients.length === 0) return;
+
+  const provider = process.env.RESET_EMAIL_PROVIDER?.toLowerCase() ?? "resend";
+  const from = process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com";
+
+  if (provider === "resend") {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.log(
+        `[email:dry-run] to=${recipients.join(",")} subject=${payload.subject}`
+      );
+      return;
+    }
+    await axios.post(
+      "https://api.resend.com/emails",
+      {
+        from,
+        to: recipients,
+        subject: payload.subject,
+        html: payload.html,
+        text: payload.text,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return;
+  }
+
+  console.log(`[email:unsupported-provider:${provider}] to=${recipients.join(",")}`);
+}
+
 async function sendResetEmail(to: string, resetUrl: string) {
   const provider = process.env.RESET_EMAIL_PROVIDER?.toLowerCase() ?? "resend";
   const from = process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com";
@@ -196,6 +257,60 @@ async function sendResetEmail(to: string, resetUrl: string) {
   }
 
   console.log(`[reset-email:unsupported-provider:${provider}] ${to} -> ${resetUrl}`);
+}
+
+async function notifyRestockSubscribersAndAdmins(input: {
+  productId: number;
+  productName: string;
+  productSlug: string;
+  stockQty: number;
+  updatedByEmail: string;
+}) {
+  if ((process.env.NODE_ENV ?? "development") !== "production") return;
+
+  const productSlug = String(input.productSlug ?? "").trim().toLowerCase();
+  if (!productSlug) return;
+
+  try {
+    const rows = await getShopRestockNotificationsBySlug(productSlug);
+    const uniqueEmails = Array.from(
+      new Set(
+        rows
+          .map((row: any) => String(row?.email ?? "").trim().toLowerCase())
+          .filter((email) => isValidEmail(email))
+      )
+    );
+
+    if (uniqueEmails.length > 0) {
+      const subject = `${input.productName} is back in stock`;
+      const html = `<p>Hello,</p>
+<p><strong>${input.productName}</strong> is now back in stock on the Zimbabwe Shop.</p>
+<p>You can return to the shop and place your order.</p>
+<p>Thank you.</p>`;
+
+      const text = `${input.productName} is now back in stock on the Zimbabwe Shop. You can return to the shop and place your order.`;
+      await sendEmailMessage({ to: uniqueEmails, subject, html, text });
+    }
+
+    const adminEmails = getAdminEmails();
+    if (adminEmails.length > 0) {
+      const subject = `Restock alert: ${input.productName}`;
+      const html = `<p><strong>Restock detected.</strong></p>
+<p>Product: ${input.productName}</p>
+<p>Slug: ${productSlug}</p>
+<p>Current stock: ${input.stockQty}</p>
+<p>Subscribers notified automatically: ${uniqueEmails.length}</p>
+<p>Action: please review Admin > Notify Me and send any additional manual communication if needed.</p>
+<p>Updated by: ${input.updatedByEmail}</p>`;
+      const text = `Restock detected for ${input.productName} (${productSlug}). Current stock: ${input.stockQty}. Subscribers notified automatically: ${uniqueEmails.length}. Action: review Admin > Notify Me and send any additional manual communication if needed. Updated by: ${input.updatedByEmail}`;
+      await sendEmailMessage({ to: adminEmails, subject, html, text });
+    }
+  } catch (error: any) {
+    console.error("[shop/restock-notify] failed", {
+      productSlug,
+      message: String(error?.message ?? error),
+    });
+  }
 }
 
 type ChatMessage = {
@@ -1640,7 +1755,28 @@ async function startServer() {
     const user = await resolveAuthUser(req);
     if (!user) return res.status(401).json({ message: "Unauthorized." });
     if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
-    const rows = await getFeatureNotifications();
+    const [featureRows, shopRows] = await Promise.all([
+      getFeatureNotifications(),
+      getShopRestockNotifications(),
+    ]);
+    const rows = [
+      ...featureRows.map((row: any) => ({
+        id: Number(row.id),
+        email: String(row.email),
+        feature: String(row.feature),
+        created_at: row.created_at,
+      })),
+      ...shopRows.map((row: any) => ({
+        id: Number(row.id) + 1_000_000,
+        email: String(row.email),
+        feature: `shop_restock_${String(row.product_slug ?? "")}`,
+        created_at: row.created_at,
+      })),
+    ].sort((a, b) => {
+      const aTs = new Date(a.created_at ?? 0).getTime();
+      const bTs = new Date(b.created_at ?? 0).getTime();
+      return bTs - aTs;
+    });
     return res.json({ count: rows.length, rows });
   });
 
@@ -1806,8 +1942,23 @@ async function startServer() {
     if (rawStock !== undefined) payload.stock_qty = Math.floor(rawStock);
     if (req.body?.is_active !== undefined) payload.is_active = req.body.is_active === 0 || req.body.is_active === false ? 0 : 1;
 
+    const beforeRow = await getShopProductById(id);
     const row = await updateShopProductAdmin(id, payload);
     if (!row) return res.status(404).json({ message: "Product not found." });
+
+    const prevStock = Number((beforeRow as any)?.stock_qty ?? 0);
+    const nextStock = Number((row as any)?.stock_qty ?? 0);
+    const restocked = prevStock <= 0 && nextStock > 0;
+    if (restocked) {
+      await notifyRestockSubscribersAndAdmins({
+        productId: Number((row as any)?.id ?? id),
+        productName: String((row as any)?.name ?? ""),
+        productSlug: String((row as any)?.slug ?? ""),
+        stockQty: Math.max(0, Math.floor(nextStock)),
+        updatedByEmail: String(user.email ?? ""),
+      });
+    }
+
     return res.json({ row });
   });
 
@@ -1842,6 +1993,44 @@ async function startServer() {
     }
   });
 
+  app.post("/api/shop/restock-notifications", async (req, res) => {
+    try {
+      const productIdRaw = req.body?.productId;
+      const productSlug = String(req.body?.productSlug ?? "").trim();
+      const productName = String(req.body?.productName ?? "").trim();
+      const email = String(req.body?.email ?? "").trim().toLowerCase();
+
+      if (!productSlug || !productName) {
+        return res.status(400).json({ message: "Product details are required." });
+      }
+      if (!isValidEmail(email)) {
+        return res.status(400).json({ message: "A valid email address is required." });
+      }
+
+      const productId =
+        productIdRaw == null || !Number.isFinite(Number(productIdRaw))
+          ? null
+          : Math.max(1, Math.floor(Number(productIdRaw)));
+
+      const result = await createShopRestockNotification({
+        productId,
+        productSlug,
+        productName,
+        email,
+      });
+
+      return res.status(200).json({
+        created: result.created,
+        message: result.created
+          ? "Notify request saved. We will email you when stock is available."
+          : "You are already subscribed for this product.",
+        record: result.record,
+      });
+    } catch {
+      return res.status(500).json({ message: "Unable to save notify request." });
+    }
+  });
+
   app.post("/api/shop/orders", async (req, res) => {
     try {
       const customerName = String(req.body?.customerName ?? "").trim();
@@ -1855,7 +2044,11 @@ async function startServer() {
       if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
         return res.status(400).json({ message: "Customer and shipping fields are required." });
       }
-      if (!["stripe", "paypal", "amazon_pay"].includes(paymentMethod)) {
+      const allowedPaymentMethods =
+        process.env.NODE_ENV === "production"
+          ? ["stripe", "paypal", "amazon_pay"]
+          : ["stripe", "paypal", "amazon_pay", "dummy_gateway"];
+      if (!allowedPaymentMethods.includes(paymentMethod)) {
         return res.status(400).json({ message: "Invalid payment method." });
       }
       if (items.length === 0) {
@@ -1868,7 +2061,7 @@ async function startServer() {
         shippingCountry,
         shippingCity,
         shippingAddress,
-        paymentMethod: paymentMethod as "stripe" | "paypal" | "amazon_pay",
+        paymentMethod: paymentMethod as "stripe" | "paypal" | "amazon_pay" | "dummy_gateway",
         items: items.map((item: any) => ({
           productId: Number(item?.productId),
           quantity: Number(item?.quantity),

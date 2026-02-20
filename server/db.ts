@@ -69,6 +69,15 @@ const memoryFeatureNotifications: Array<{
   created_at: string;
 }> = [];
 
+const memoryShopRestockNotifications: Array<{
+  id: number;
+  product_id: number | null;
+  product_slug: string;
+  product_name: string;
+  email: string;
+  created_at: string;
+}> = [];
+
 const memorySuccessStories: Array<{
   id: number;
   title: string;
@@ -107,7 +116,7 @@ const memoryRemittanceImpact: Array<{ sector: string; percentage: number }> = [
   { sector: "Small Business", percentage: 20 },
 ];
 
-export type ShopPaymentMethod = "stripe" | "paypal" | "amazon_pay";
+export type ShopPaymentMethod = "stripe" | "paypal" | "amazon_pay" | "dummy_gateway";
 export type ShopOrderStatus = "awaiting_payment" | "paid" | "failed";
 export type ShopProductsSource = "db" | "memory";
 
@@ -761,6 +770,20 @@ export async function initializeDatabase(): Promise<void> {
   `);
 
   await db.execute(`
+    CREATE TABLE IF NOT EXISTS shop_restock_notifications (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      product_id INT NULL,
+      product_slug VARCHAR(255) NOT NULL,
+      product_name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY uniq_shop_restock_slug_email (product_slug, email),
+      INDEX idx_shop_restock_slug (product_slug),
+      INDEX idx_shop_restock_email (email)
+    )
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS success_stories (
       id INT AUTO_INCREMENT PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
@@ -1197,6 +1220,137 @@ export async function getFeatureNotifications() {
   }
 }
 
+export async function createShopRestockNotification(payload: {
+  productId?: number | null;
+  productSlug: string;
+  productName: string;
+  email: string;
+}) {
+  const productSlug = String(payload.productSlug ?? "").trim().toLowerCase();
+  const productName = String(payload.productName ?? "").trim();
+  const email = String(payload.email ?? "").trim().toLowerCase();
+  const productId =
+    payload.productId == null || !Number.isFinite(Number(payload.productId))
+      ? null
+      : Math.max(1, Math.floor(Number(payload.productId)));
+
+  if (!productSlug || !email || !productName) {
+    throw new Error("Product and email are required.");
+  }
+
+  if (!db) {
+    const existing = memoryShopRestockNotifications.find(
+      (row) => row.product_slug === productSlug && row.email === email
+    );
+    if (existing) return { created: false, record: existing };
+
+    const record = {
+      id: memoryShopRestockNotifications.length + 1,
+      product_id: productId,
+      product_slug: productSlug,
+      product_name: productName,
+      email,
+      created_at: new Date().toISOString(),
+    };
+    memoryShopRestockNotifications.push(record);
+    return { created: true, record };
+  }
+
+  try {
+    const [result] = await db.execute<mysql.ResultSetHeader>(
+      `
+      INSERT IGNORE INTO shop_restock_notifications (product_id, product_slug, product_name, email)
+      VALUES (?, ?, ?, ?)
+      `,
+      [productId, productSlug, productName, email]
+    );
+
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, product_id, product_slug, product_name, email, created_at
+      FROM shop_restock_notifications
+      WHERE product_slug = ? AND email = ?
+      LIMIT 1
+      `,
+      [productSlug, email]
+    );
+
+    return {
+      created: Number(result.affectedRows ?? 0) > 0,
+      record: rows[0] ?? null,
+    };
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+
+    const existing = memoryShopRestockNotifications.find(
+      (row) => row.product_slug === productSlug && row.email === email
+    );
+    if (existing) return { created: false, record: existing };
+
+    const record = {
+      id: memoryShopRestockNotifications.length + 1,
+      product_id: productId,
+      product_slug: productSlug,
+      product_name: productName,
+      email,
+      created_at: new Date().toISOString(),
+    };
+    memoryShopRestockNotifications.push(record);
+    return { created: true, record };
+  }
+}
+
+export async function getShopRestockNotifications() {
+  if (!db) {
+    return [...memoryShopRestockNotifications].sort((a, b) => b.id - a.id);
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, product_id, product_slug, product_name, email, created_at
+      FROM shop_restock_notifications
+      ORDER BY id DESC
+      LIMIT 1000
+      `
+    );
+    return rows;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return [...memoryShopRestockNotifications].sort((a, b) => b.id - a.id);
+  }
+}
+
+export async function getShopRestockNotificationsBySlug(productSlug: string) {
+  const slug = String(productSlug ?? "").trim().toLowerCase();
+  if (!slug) return [];
+
+  if (!db) {
+    return memoryShopRestockNotifications
+      .filter((row) => row.product_slug === slug)
+      .sort((a, b) => b.id - a.id);
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, product_id, product_slug, product_name, email, created_at
+      FROM shop_restock_notifications
+      WHERE product_slug = ?
+      ORDER BY id DESC
+      LIMIT 1000
+      `,
+      [slug]
+    );
+    return rows;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return memoryShopRestockNotifications
+      .filter((row) => row.product_slug === slug)
+      .sort((a, b) => b.id - a.id);
+  }
+}
+
 export async function getNtirEntities() {
   if (!db) {
     return [...memoryNtirEntities].sort((a, b) => b.id - a.id);
@@ -1564,7 +1718,11 @@ export async function createShopOrder(payload: {
   if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
     throw new Error("Missing customer or shipping fields.");
   }
-  if (!["stripe", "paypal", "amazon_pay"].includes(paymentMethod)) {
+  const allowedPaymentMethods =
+    process.env.NODE_ENV === "production"
+      ? ["stripe", "paypal", "amazon_pay"]
+      : ["stripe", "paypal", "amazon_pay", "dummy_gateway"];
+  if (!allowedPaymentMethods.includes(paymentMethod)) {
     throw new Error("Unsupported payment method.");
   }
   if (items.length === 0) {
@@ -1833,6 +1991,31 @@ export async function getShopProductsAdmin() {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     return [...memoryShopProducts].sort((a, b) => b.id - a.id);
+  }
+}
+
+export async function getShopProductById(id: number) {
+  const productId = Math.floor(Number(id));
+  if (!Number.isFinite(productId) || productId <= 0) return null;
+
+  if (!db) {
+    return memoryShopProducts.find((item) => item.id === productId) ?? null;
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
+      FROM shop_products
+      WHERE id = ?
+      LIMIT 1
+      `,
+      [productId]
+    );
+    return rows[0] ?? null;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return memoryShopProducts.find((item) => item.id === productId) ?? null;
   }
 }
 
