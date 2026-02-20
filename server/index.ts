@@ -56,13 +56,13 @@ const DEFAULT_ONESA_SYSTEM_PROMPT = [
 ].join(" ");
 const ONESA_IDENTITY_REPLIES: Record<SupportedOnesaLanguage, string> = {
   en:
-    "Onesa means illuminate and that’s exactly what we’re here to do. We’re building AI that brings relevant, up-to-date local information to communities that are too often overlooked or under-served. The goal is simple: help people make more accurate, informed decisions in their own context.\n\nBig AI companies build powerful tools, but they usually miss the local nuance. What matters in one city, neighborhood, or community can be totally different in another. We’re focused on closing that gap by working with local data, local realities, and real community needs.",
+    "Onesa was built by developers at Onesa AI. Onesa means illuminate and that’s exactly what we’re here to do. We’re building AI that brings relevant, up-to-date local information to communities that are too often overlooked or under-served. The goal is simple: help people make more accurate, informed decisions in their own context.\n\nBig AI companies build powerful tools, but they usually miss the local nuance. What matters in one city, neighborhood, or community can be totally different in another. We’re focused on closing that gap by working with local data, local realities, and real community needs.",
   sn:
-    "Onesa zvinoreva kuvhenekera, uye ndizvo chaizvo zvatiri pano kuita. Tiri kuvaka AI inounza ruzivo rwemuno rwakakodzera uye rwemazuva ano kunharaunda dzinowanzoregeredzwa kana kusashandirwa zvakakwana. Chinangwa chiri nyore: kubatsira vanhu kuita sarudzo dzakarurama uye dzine ruzivo mumamiriro avo chaiwo.\n\nMakambani makuru eAI anovaka maturusi ane simba, asi kazhinji anopotsa nuance yemuno. Chinokosha muguta rimwe, munharaunda imwe, kana munzvimbo imwe chinogona kusiyana zvikuru mune imwe. Isu takatarisa kuvhara gaka iri nekushanda nedata remuno, chokwadi chemuno, uye zvinodiwa chaizvo nenharaunda.",
+    "Onesa yakavakwa nevagadziri vari paOnesa AI. Onesa zvinoreva kuvhenekera, uye ndizvo chaizvo zvatiri pano kuita. Tiri kuvaka AI inounza ruzivo rwemuno rwakakodzera uye rwemazuva ano kunharaunda dzinowanzoregeredzwa kana kusashandirwa zvakakwana. Chinangwa chiri nyore: kubatsira vanhu kuita sarudzo dzakarurama uye dzine ruzivo mumamiriro avo chaiwo.\n\nMakambani makuru eAI anovaka maturusi ane simba, asi kazhinji anopotsa nuance yemuno. Chinokosha muguta rimwe, munharaunda imwe, kana munzvimbo imwe chinogona kusiyana zvikuru mune imwe. Isu takatarisa kuvhara gaka iri nekushanda nedata remuno, chokwadi chemuno, uye zvinodiwa chaizvo nenharaunda.",
   nd:
-    "Onesa kutsho ukukhanyisa, njalo yikho kanye esilapha ukukwenza. Sakha i-AI eletha ulwazi lwendawo olufaneleyo, olusesikhathini, emiphakathini evame ukunganakwa loba engasizakali kahle. Injongo ilula: ukusiza abantu benze izinqumo ezinembile, ezinolwazi, endaweni yabo.\n\nAmankampani amakhulu e-AI akha amathuluzi alomfutho, kodwa kuvamile ukuthi aphuthe umehluko wendawo. Okubalulekileyo kwelinye idolobho, umakhelwane, loba umphakathi kungahluka kakhulu kwenye indawo. Thina sigxile ukuvala lowo mgodi ngokusebenza ngedatha yendawo, izimo zendawo, kanye lezidingo zangempela zomphakathi.",
+    "Onesa yakhiwe ngabaqambi abaseOnesa AI. Onesa kutsho ukukhanyisa, njalo yikho kanye esilapha ukukwenza. Sakha i-AI eletha ulwazi lwendawo olufaneleyo, olusesikhathini, emiphakathini evame ukunganakwa loba engasizakali kahle. Injongo ilula: ukusiza abantu benze izinqumo ezinembile, ezinolwazi, endaweni yabo.\n\nAmankampani amakhulu e-AI akha amathuluzi alomfutho, kodwa kuvamile ukuthi aphuthe umehluko wendawo. Okubalulekileyo kwelinye idolobho, umakhelwane, loba umphakathi kungahluka kakhulu kwenye indawo. Thina sigxile ukuvala lowo mgodi ngokusebenza ngedatha yendawo, izimo zendawo, kanye lezidingo zangempela zomphakathi.",
   de:
-    "Onesa bedeutet erleuchten, und genau das ist unser Auftrag. Wir entwickeln KI, die relevante und aktuelle lokale Informationen in Gemeinschaften bringt, die zu oft übersehen oder unterversorgt sind. Das Ziel ist einfach: Menschen dabei zu helfen, in ihrem eigenen Kontext präzisere und fundiertere Entscheidungen zu treffen.\n\nGroße KI-Unternehmen bauen leistungsstarke Werkzeuge, aber ihnen entgeht oft die lokale Nuance. Was in einer Stadt, Nachbarschaft oder Gemeinschaft wichtig ist, kann in einer anderen völlig anders sein. Wir schließen diese Lücke, indem wir mit lokalen Daten, lokalen Realitäten und echten Bedürfnissen der Gemeinschaft arbeiten.",
+    "Onesa wurde von Entwicklerinnen und Entwicklern bei Onesa AI aufgebaut. Onesa bedeutet erleuchten, und genau das ist unser Auftrag. Wir entwickeln KI, die relevante und aktuelle lokale Informationen in Gemeinschaften bringt, die zu oft übersehen oder unterversorgt sind. Das Ziel ist einfach: Menschen dabei zu helfen, in ihrem eigenen Kontext präzisere und fundiertere Entscheidungen zu treffen.\n\nGroße KI-Unternehmen bauen leistungsstarke Werkzeuge, aber ihnen entgeht oft die lokale Nuance. Was in einer Stadt, Nachbarschaft oder Gemeinschaft wichtig ist, kann in einer anderen völlig anders sein. Wir schließen diese Lücke, indem wir mit lokalen Daten, lokalen Realitäten und echten Bedürfnissen der Gemeinschaft arbeiten.",
 };
 
 function getOnesaIdentityReply(language: SupportedOnesaLanguage): string {
@@ -584,10 +584,23 @@ function getSmallTalkReply(
     /\bwhat are you\b/,
     /\bwhat is onesa\b/,
     /\bwho is onesa\b/,
+    /\bwhere are you from\b/,
+    /\bwhere r you from\b/,
+    /\bwhat is your origin\b/,
+    /\bwhat's your origin\b/,
+    /\bwhere do you come from\b/,
     /\bwho built you\b/,
     /\bwho created you\b/,
+    /\bare you made by\b/,
+    /\bwho made you\b/,
     /\bwho trained you\b/,
     /\bare you trained by\b/,
+    /\bname of (the )?team\b/,
+    /\bteam name\b/,
+    /\bwho is your team\b/,
+    /\bwho are your developers\b/,
+    /\bwho developed you\b/,
+    /\bwhat('?s| is) the name of (your|the) team\b/,
   ];
   if (identityPatterns.some((pattern) => pattern.test(normalized))) {
     const identityLanguage = detectLatestUserLanguage(content) ?? defaultLanguage;
@@ -602,6 +615,53 @@ function getSmallTalkReply(
     return "Hi! I am Onesa. How can I help you today?";
   }
   return null;
+}
+
+function hasForbiddenOriginClaim(reply: string): boolean {
+  const text = String(reply ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+  if (!text) return false;
+
+  const llmSelfIdPatterns = [
+    /\bas an ai\b/,
+    /\bi am an ai model\b/,
+    /\bi'm an ai model\b/,
+    /\bi am a large language model\b/,
+    /\bi'm a large language model\b/,
+    /\bi am (an )?ai[, ]+a large language model\b/,
+    /\bi'm (an )?ai[, ]+a large language model\b/,
+    /\bi am an ai language model\b/,
+    /\bi'm an ai language model\b/,
+    /\blarge language model trained by\b/,
+  ];
+  if (llmSelfIdPatterns.some((pattern) => pattern.test(text))) {
+    return true;
+  }
+
+  const providerPattern =
+    /(google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama|big tech|big-tech)/;
+  const subjectPattern = /\b(i am|i'm|i was|im|onesa is|onesa was)\b/;
+  const verbPattern = /\b(developed|created|trained|built|made)\b/;
+  const orgPattern = providerPattern;
+
+  if (subjectPattern.test(text) && verbPattern.test(text) && orgPattern.test(text)) {
+    return true;
+  }
+
+  const directClaimPatterns = [
+    /\bmade by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
+    /\bdeveloped by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
+    /\bcreated by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
+    /\btrained by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
+    /\bbuilt by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
+  ];
+  return directClaimPatterns.some((pattern) => pattern.test(text));
+}
+
+function enforceOnesaIdentityGuard(reply: string, language: SupportedOnesaLanguage): string {
+  if (hasForbiddenOriginClaim(reply)) {
+    return getOnesaIdentityReply(language);
+  }
+  return reply;
 }
 
 type CloudProviderTarget = {
@@ -1002,9 +1062,10 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
             }
           }
 
-          if (reply && !isLowQualityOnesaReply(reply) && !isMixedLanguageReply(reply, responseLanguage)) {
+          const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
+          if (guardedReply && !isLowQualityOnesaReply(guardedReply) && !isMixedLanguageReply(guardedReply, responseLanguage)) {
             lastOnesaSuccessAt = Date.now();
-            return { reply, truncated, finishReason };
+            return { reply: guardedReply, truncated, finishReason };
           }
         } catch (error: any) {
           if (isRateLimitedUpstreamError(error)) {
@@ -1141,13 +1202,14 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   for (const candidate of candidates) {
     try {
       const reply = await tryModel(candidate);
-      if (reply) {
-        if (isLowQualityOnesaReply(reply)) {
-          lowQualityReply = reply;
+      const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
+      if (guardedReply) {
+        if (isLowQualityOnesaReply(guardedReply)) {
+          lowQualityReply = guardedReply;
           continue;
         }
         lastOnesaSuccessAt = Date.now();
-        return { reply, truncated: false };
+        return { reply: guardedReply, truncated: false };
       }
     } catch (error: any) {
       lastError = error;
@@ -1157,13 +1219,14 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   for (const candidate of fallbackCandidates) {
     try {
       const reply = await tryModel(candidate);
-      if (reply) {
-        if (isLowQualityOnesaReply(reply)) {
-          lowQualityReply = reply;
+      const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
+      if (guardedReply) {
+        if (isLowQualityOnesaReply(guardedReply)) {
+          lowQualityReply = guardedReply;
           continue;
         }
         lastOnesaSuccessAt = Date.now();
-        return { reply, truncated: false };
+        return { reply: guardedReply, truncated: false };
       }
     } catch (error: any) {
       lastError = error;
@@ -2118,9 +2181,11 @@ async function startServer() {
       if (!result?.reply) {
         return res.status(502).json({ message: "Onesa model returned an empty response." });
       }
+      const guardLanguage = normalizeOnesaLanguage(requestedLanguage ?? "");
+      const safeReply = enforceOnesaIdentityGuard(result.reply, guardLanguage);
       lastOnesaSuccessAt = Date.now();
       onesaReadinessCache = null;
-      return res.json({ reply: result.reply, truncated: Boolean(result.truncated) });
+      return res.json({ reply: safeReply, truncated: Boolean(result.truncated) });
     } catch (error: any) {
       const upstreamStatus = getUpstreamStatus(error);
       const retryAfterMs = getRetryAfterMs(error) ?? getGlobalBackoffRemainingMs();
