@@ -69,6 +69,15 @@ const memoryFeatureNotifications: Array<{
   created_at: string;
 }> = [];
 
+const memoryShopRestockNotifications: Array<{
+  id: number;
+  product_id: number | null;
+  product_slug: string;
+  product_name: string;
+  email: string;
+  created_at: string;
+}> = [];
+
 const memorySuccessStories: Array<{
   id: number;
   title: string;
@@ -107,7 +116,7 @@ const memoryRemittanceImpact: Array<{ sector: string; percentage: number }> = [
   { sector: "Small Business", percentage: 20 },
 ];
 
-export type ShopPaymentMethod = "stripe" | "paypal" | "amazon_pay";
+export type ShopPaymentMethod = "stripe" | "paypal" | "amazon_pay" | "dummy_gateway";
 export type ShopOrderStatus = "awaiting_payment" | "paid" | "failed";
 export type ShopProductsSource = "db" | "memory";
 
@@ -305,8 +314,32 @@ const memoryShopProducts: ShopProduct[] = [
     stock_qty: 0,
     is_active: 1,
   },
-  {
+    {
     id: 13,
+    slug: "pfuko-maheu-traditional-500ml-1",
+    name: "Pfuko Maheu Traditional 500ml 1 Unit",
+    category: "beverage",
+    description: "Traditional maheu in a value case pack.",
+    image_url: "/images/pages/shop/beverage_pfuko_1.png",
+    price_cents: 61,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+    {
+    id: 14,
+    slug: "cascade-orange-400ml-case-6",
+    name: "Cascade Orange 500ml Case (6 Units)",
+    category: "beverage",
+    description: "Cascade Orange is the perfect adventure for a Dairy Fruit Mix drink.",
+    image_url: "/images/pages/shop/beverage_cascade_6.png",
+    price_cents: 191,
+    currency: "EUR",
+    stock_qty: 0,
+    is_active: 1,
+  },
+  {
+    id: 15,
     slug: "kariba-kapenta-matemba-100g",
     name: "Kariba Kapenta (Matemba) 100g",
     category: "food",
@@ -318,7 +351,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 14,
+    id: 16,
     slug: "royco-usavi-beef-75g",
     name: "Royco Usavi Beef 75g",
     category: "food",
@@ -330,7 +363,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 15,
+    id: 17,
     slug: "colcom-pork-pie-100g",
     name: "Colcom Pork Pie 100g",
     category: "food",
@@ -342,7 +375,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 16,
+    id: 18,
     slug: "cheeky-chilli-peri-peri-sauce-100ml",
     name: "Cheeky Chilli Peri Peri Sauce 100ml",
     category: "food",
@@ -354,7 +387,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 17,
+    id: 19,
     slug: "mazoe-blackberry-2l",
     name: "Mazoe Blackberry 2L",
     category: "food",
@@ -366,7 +399,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 18,
+    id: 20,
     slug: "mazoe-cream-soda-2l",
     name: "Mazoe Cream Soda 2L",
     category: "food",
@@ -378,7 +411,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 19,
+    id: 21,
     slug: "maputi-40g",
     name: "Maputi 40g",
     category: "food",
@@ -390,7 +423,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 20,
+    id: 22,
     slug: "lobels-lemon-creams-150g",
     name: "Lobels Lemon Creams 150g",
     category: "food",
@@ -402,7 +435,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 21,
+    id: 23,
     slug: "sun-jam-500g",
     name: "Sun Jam 500g",
     category: "food",
@@ -414,7 +447,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 22,
+    id: 24,
     slug: "madras-hot-curry-powder-100g",
     name: "Madras Hot Curry Powder 100g",
     category: "food",
@@ -426,7 +459,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 23,
+    id: 25,
     slug: "madras-mild-curry-powder-100g",
     name: "Madras Mild Curry Powder 100g",
     category: "food",
@@ -438,7 +471,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 24,
+    id: 26,
     slug: "cerevita-corn-cocoa-malt-500g",
     name: "Cerevita Corn, Cocoa & Malt 500g",
     category: "food",
@@ -450,7 +483,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
   {
-    id: 25,
+    id: 27,
     slug: "cerevita-corn-wheat-500g",
     name: "Cerevita Corn & Wheat 500g",
     category: "food",
@@ -462,7 +495,7 @@ const memoryShopProducts: ShopProduct[] = [
     is_active: 1,
   },
     {
-    id: 26,
+    id: 28,
     slug: "mama-dovi_750ml",
     name: "Mama Dovi 750ml",
     category: "food",
@@ -757,6 +790,20 @@ export async function initializeDatabase(): Promise<void> {
       UNIQUE KEY uniq_feature_notifications_feature_email (feature, email),
       INDEX idx_feature_notifications_user_id (user_id),
       CONSTRAINT fk_feature_notifications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS shop_restock_notifications (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      product_id INT NULL,
+      product_slug VARCHAR(255) NOT NULL,
+      product_name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY uniq_shop_restock_slug_email (product_slug, email),
+      INDEX idx_shop_restock_slug (product_slug),
+      INDEX idx_shop_restock_email (email)
     )
   `);
 
@@ -1197,6 +1244,137 @@ export async function getFeatureNotifications() {
   }
 }
 
+export async function createShopRestockNotification(payload: {
+  productId?: number | null;
+  productSlug: string;
+  productName: string;
+  email: string;
+}) {
+  const productSlug = String(payload.productSlug ?? "").trim().toLowerCase();
+  const productName = String(payload.productName ?? "").trim();
+  const email = String(payload.email ?? "").trim().toLowerCase();
+  const productId =
+    payload.productId == null || !Number.isFinite(Number(payload.productId))
+      ? null
+      : Math.max(1, Math.floor(Number(payload.productId)));
+
+  if (!productSlug || !email || !productName) {
+    throw new Error("Product and email are required.");
+  }
+
+  if (!db) {
+    const existing = memoryShopRestockNotifications.find(
+      (row) => row.product_slug === productSlug && row.email === email
+    );
+    if (existing) return { created: false, record: existing };
+
+    const record = {
+      id: memoryShopRestockNotifications.length + 1,
+      product_id: productId,
+      product_slug: productSlug,
+      product_name: productName,
+      email,
+      created_at: new Date().toISOString(),
+    };
+    memoryShopRestockNotifications.push(record);
+    return { created: true, record };
+  }
+
+  try {
+    const [result] = await db.execute<mysql.ResultSetHeader>(
+      `
+      INSERT IGNORE INTO shop_restock_notifications (product_id, product_slug, product_name, email)
+      VALUES (?, ?, ?, ?)
+      `,
+      [productId, productSlug, productName, email]
+    );
+
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, product_id, product_slug, product_name, email, created_at
+      FROM shop_restock_notifications
+      WHERE product_slug = ? AND email = ?
+      LIMIT 1
+      `,
+      [productSlug, email]
+    );
+
+    return {
+      created: Number(result.affectedRows ?? 0) > 0,
+      record: rows[0] ?? null,
+    };
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+
+    const existing = memoryShopRestockNotifications.find(
+      (row) => row.product_slug === productSlug && row.email === email
+    );
+    if (existing) return { created: false, record: existing };
+
+    const record = {
+      id: memoryShopRestockNotifications.length + 1,
+      product_id: productId,
+      product_slug: productSlug,
+      product_name: productName,
+      email,
+      created_at: new Date().toISOString(),
+    };
+    memoryShopRestockNotifications.push(record);
+    return { created: true, record };
+  }
+}
+
+export async function getShopRestockNotifications() {
+  if (!db) {
+    return [...memoryShopRestockNotifications].sort((a, b) => b.id - a.id);
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, product_id, product_slug, product_name, email, created_at
+      FROM shop_restock_notifications
+      ORDER BY id DESC
+      LIMIT 1000
+      `
+    );
+    return rows;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return [...memoryShopRestockNotifications].sort((a, b) => b.id - a.id);
+  }
+}
+
+export async function getShopRestockNotificationsBySlug(productSlug: string) {
+  const slug = String(productSlug ?? "").trim().toLowerCase();
+  if (!slug) return [];
+
+  if (!db) {
+    return memoryShopRestockNotifications
+      .filter((row) => row.product_slug === slug)
+      .sort((a, b) => b.id - a.id);
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, product_id, product_slug, product_name, email, created_at
+      FROM shop_restock_notifications
+      WHERE product_slug = ?
+      ORDER BY id DESC
+      LIMIT 1000
+      `,
+      [slug]
+    );
+    return rows;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return memoryShopRestockNotifications
+      .filter((row) => row.product_slug === slug)
+      .sort((a, b) => b.id - a.id);
+  }
+}
+
 export async function getNtirEntities() {
   if (!db) {
     return [...memoryNtirEntities].sort((a, b) => b.id - a.id);
@@ -1564,7 +1742,11 @@ export async function createShopOrder(payload: {
   if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
     throw new Error("Missing customer or shipping fields.");
   }
-  if (!["stripe", "paypal", "amazon_pay"].includes(paymentMethod)) {
+  const allowedPaymentMethods =
+    process.env.NODE_ENV === "production"
+      ? ["stripe", "paypal", "amazon_pay"]
+      : ["stripe", "paypal", "amazon_pay", "dummy_gateway"];
+  if (!allowedPaymentMethods.includes(paymentMethod)) {
     throw new Error("Unsupported payment method.");
   }
   if (items.length === 0) {
@@ -1833,6 +2015,31 @@ export async function getShopProductsAdmin() {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     return [...memoryShopProducts].sort((a, b) => b.id - a.id);
+  }
+}
+
+export async function getShopProductById(id: number) {
+  const productId = Math.floor(Number(id));
+  if (!Number.isFinite(productId) || productId <= 0) return null;
+
+  if (!db) {
+    return memoryShopProducts.find((item) => item.id === productId) ?? null;
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
+      FROM shop_products
+      WHERE id = ?
+      LIMIT 1
+      `,
+      [productId]
+    );
+    return rows[0] ?? null;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    return memoryShopProducts.find((item) => item.id === productId) ?? null;
   }
 }
 

@@ -64,12 +64,12 @@ choose_onesa_provider_mode() {
   # Prompt only in interactive terminals. Non-interactive runs keep env behavior.
   if [[ -t 0 && -t 1 ]]; then
     echo "[dev:all] AI mode:"
-    echo "[dev:all]   y = Local model (Ollama)"
-    echo "[dev:all]   n = Cloud endpoint"
+    echo "[dev:all]   L = Local model (Ollama)"
+    echo "[dev:all]   C = Cloud endpoint"
     local use_local
-    read -r -p "[dev:all] Use local model? (y/N): " use_local
+    read -r -p "[dev:all] Choose AI mode (L/C, default C): " use_local
     case "$(printf '%s' "${use_local:-}" | tr '[:upper:]' '[:lower:]')" in
-      y|yes)
+      l|local)
         ONESA_PROVIDER_RUNTIME="ollama"
         ;;
       *)
@@ -184,6 +184,41 @@ ensure_ollama() {
   return 0
 }
 
+ensure_mysql() {
+  if command -v mysql.server >/dev/null 2>&1; then
+    if mysql.server status >/dev/null 2>&1; then
+      echo "[dev:all] MySQL is already running."
+      return 0
+    fi
+    echo "[dev:all] Starting MySQL (mysql.server start)..."
+    if mysql.server start >/dev/null 2>&1; then
+      echo "[dev:all] MySQL started."
+      return 0
+    fi
+    echo "[dev:all] WARNING: Failed to start MySQL via mysql.server."
+    return 0
+  fi
+
+  echo "[dev:all] mysql.server not found."
+  if command -v brew >/dev/null 2>&1; then
+    echo "[dev:all] Attempting to install MySQL with Homebrew..."
+    if brew list mysql >/dev/null 2>&1 || brew install mysql; then
+      echo "[dev:all] Attempting to start MySQL via Homebrew services..."
+      if brew services start mysql >/dev/null 2>&1; then
+        echo "[dev:all] MySQL installed and started with Homebrew."
+        return 0
+      fi
+      echo "[dev:all] WARNING: MySQL installed, but failed to start via brew services."
+      return 0
+    fi
+    echo "[dev:all] WARNING: Homebrew MySQL installation failed."
+    return 0
+  fi
+
+  echo "[dev:all] WARNING: Homebrew not found; cannot auto-install MySQL."
+  return 0
+}
+
 cleanup() {
   local code=$?
   trap - INT TERM EXIT
@@ -203,6 +238,7 @@ cleanup() {
 trap cleanup INT TERM EXIT
 
 choose_onesa_provider_mode
+ensure_mysql
 ensure_ollama
 
 BACKEND_PORT="$(get_backend_port)"

@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
 
 type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
-type PaymentMethod = "stripe" | "paypal" | "amazon_pay";
+type PaymentMethod = "stripe" | "paypal" | "amazon_pay" | "dummy_gateway";
 
 type ShopProduct = {
   id: number;
@@ -40,7 +40,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 6900,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 2,
@@ -52,7 +51,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 6400,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 3,
@@ -64,7 +62,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 5090,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 4,
@@ -76,7 +73,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 1490,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 5,
@@ -88,7 +84,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 390,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 6,
@@ -100,7 +95,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 290,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 7,
@@ -112,7 +106,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 220,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 8,
@@ -124,7 +117,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 190,
     currency: "EUR",
     stock_qty: 0,
-
   },
 
   {
@@ -137,7 +129,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 449,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 10,
@@ -149,7 +140,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 449,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 11,
@@ -161,7 +151,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 749,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
     id: 12,
@@ -173,10 +162,31 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 191,
     currency: "EUR",
     stock_qty: 0,
-
+  },
+    {
+    id: 13,
+    slug: "pfuko-maheu-traditional-500ml-1",
+    name: "Pfuko Maheu Traditional 500ml 1 Unit",
+    category: "beverage",
+    description: "Traditional maheu in a value case pack.",
+    image_url: "/images/pages/shop/beverage_pfuko_1.png",
+    price_cents: 61,
+    currency: "EUR",
+    stock_qty: 0,
+  },
+    {
+    id: 14,
+    slug: "cascade-orange-400ml-case-6",
+    name: "Cascade Orange 500ml Case (6 Units)",
+    category: "beverage",
+    description: "Cascade Orange is the perfect adventure for a Dairy Fruit Mix drink.",
+    image_url: "/images/pages/shop/beverage_cascade_6.png",
+    price_cents: 191,
+    currency: "EUR",
+    stock_qty: 0,
   },
   {
-    id: 13,
+    id: 15,
     slug: "kariba-kapenta-matemba-100g",
     name: "Kariba Kapenta (Matemba) 100g",
     category: "food",
@@ -185,10 +195,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 349,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 14,
+    id: 16,
     slug: "royco-usavi-beef-75g",
     name: "Royco Usavi Beef 75g",
     category: "food",
@@ -197,10 +206,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 169,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 15,
+    id: 17,
     slug: "colcom-pork-pie-100g",
     name: "Colcom Pork Pie 100g",
     category: "food",
@@ -209,10 +217,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 199,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 16,
+    id: 18,
     slug: "cheeky-chilli-peri-peri-sauce-100ml",
     name: "Cheeky Chilli Peri Peri Sauce 100ml",
     category: "food",
@@ -221,10 +228,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 179,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 17,
+    id: 19,
     slug: "mazoe-blackberry-2l",
     name: "Mazoe Blackberry 2L",
     category: "food",
@@ -233,10 +239,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 749,
     currency: "EUR",
     stock_qty: 18,
-
   },
   {
-    id: 18,
+    id: 20,
     slug: "mazoe-cream-soda-2l",
     name: "Mazoe Cream Soda 2L",
     category: "food",
@@ -245,10 +250,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 249,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 19,
+    id: 21,
     slug: "maputi-40g",
     name: "Maputi 40g",
     category: "food",
@@ -257,10 +261,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 99,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 20,
+    id: 22,
     slug: "lobels-lemon-creams-150g",
     name: "Lobels Lemon Creams 150g",
     category: "food",
@@ -269,10 +272,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 99,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 21,
+    id: 23,
     slug: "sun-jam-500g",
     name: "Sun Jam 500g",
     category: "food",
@@ -281,10 +283,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 179,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 22,
+    id: 24,
     slug: "madras-hot-curry-powder-100g",
     name: "Madras Hot Curry Powder 100g",
     category: "food",
@@ -293,10 +294,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 69,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 23,
+    id: 25,
     slug: "madras-mild-curry-powder-100g",
     name: "Madras Mild Curry Powder 100g",
     category: "food",
@@ -305,10 +305,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 69,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 24,
+    id: 26,
     slug: "cerevita-corn-cocoa-malt-500g",
     name: "Cerevita Corn, Cocoa & Malt 500g",
     category: "food",
@@ -317,10 +316,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 349,
     currency: "EUR",
     stock_qty: 0,
-
   },
   {
-    id: 25,
+    id: 27,
     slug: "cerevita-corn-wheat-500g",
     name: "Cerevita Corn & Wheat 500g",
     category: "food",
@@ -329,10 +327,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 349,
     currency: "EUR",
     stock_qty: 0,
-
   },
     {
-    id: 26,
+    id: 28,
     slug: "mama-dovi_750ml",
     name: "Mama Dovi 750ml",
     category: "food",
@@ -341,7 +338,6 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     price_cents: 149,
     currency: "EUR",
     stock_qty: 0,
-
   },
 ];
 
@@ -418,6 +414,8 @@ export default function ShopProducts() {
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [order, setOrder] = useState<any | null>(null);
+  const [notifyState, setNotifyState] = useState<Record<number, "idle" | "saving" | "saved">>({});
+  const [notifyMessage, setNotifyMessage] = useState("");
 
   useEffect(() => {
     setCategory(queryCategory);
@@ -490,6 +488,9 @@ export default function ShopProducts() {
       .filter(Boolean) as Array<{ item: CartItem; product: ShopProduct; lineTotal: number }>;
   }, [cart, productsById]);
 
+  const getLocalizedProductDescription = (product: ShopProduct) =>
+    t(`shop.products.descriptions.${product.slug}`) || product.description;
+
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
   const shippingCents = subtotalCents >= 7500 ? 0 : subtotalCents > 0 ? 1200 : 0;
   const totalCents = subtotalCents + shippingCents;
@@ -555,6 +556,52 @@ export default function ShopProducts() {
       if (qty <= 0) return prev.filter((item) => item.productId !== productId);
       return prev.map((item) => (item.productId === productId ? { ...item, quantity: qty } : item));
     });
+  };
+
+  const notifyWhenAvailable = async (product: ShopProduct) => {
+    if (notifyState[product.id] === "saving") return;
+
+    const fromCheckout = String(customerEmail ?? "").trim();
+    const promptLabel =
+      t("shop.products.notify.enter_email_prompt") ||
+      "Enter your email address to be notified when this product is back in stock:";
+    const entered = window.prompt(promptLabel, fromCheckout);
+    const email = String(entered ?? "").trim().toLowerCase();
+    if (!email) return;
+
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!validEmail) {
+      setNotifyMessage(
+        t("shop.products.notify.invalid_email") || "Please enter a valid email address."
+      );
+      return;
+    }
+
+    setNotifyState((prev) => ({ ...prev, [product.id]: "saving" }));
+    setNotifyMessage("");
+    try {
+      const { data } = await api.post("/shop/restock-notifications", {
+        productId: product.id,
+        productSlug: product.slug,
+        productName: product.name,
+        email,
+      });
+      const message = String(
+        data?.message ??
+          (t("shop.products.notify.saved") || "We'll notify you when this product is available.")
+      );
+      setNotifyMessage(message);
+      setCustomerEmail(email);
+      setNotifyState((prev) => ({ ...prev, [product.id]: "saved" }));
+    } catch (error: any) {
+      setNotifyMessage(
+        String(
+          error?.response?.data?.message ??
+            (t("shop.products.notify.failed") || "Unable to save notify request right now.")
+        )
+      );
+      setNotifyState((prev) => ({ ...prev, [product.id]: "idle" }));
+    }
   };
 
   const placeOrder = async () => {
@@ -722,16 +769,25 @@ export default function ShopProducts() {
                           </div>
                           <div className="p-6">
                             <h3 className="text-lg font-black text-white tracking-tight">{product.name}</h3>
-                            <p className="text-sm text-white/70 mt-2">{product.description}</p>
+                            <p className="text-sm text-white/70 mt-2">{getLocalizedProductDescription(product)}</p>
+                            {product.stock_qty <= 0 ? (
+                              <p className="mt-3 text-[11px] font-semibold text-rose-200">
+                                {t("shop.products.stock.out_message") || "We are sorry. The item is currently out of stock"}
+                              </p>
+                            ) : null}
                             <div className="mt-4 flex items-center justify-between">
                               <p className="text-zim-gold font-black">{formatMoney(product.price_cents, product.currency)}</p>
                               <Button
                                 type="button"
-                                disabled
-                                onClick={() => addToCart(product)}
-                                className="rounded-full px-5 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-40 font-black text-[10px] uppercase tracking-[0.2em]"
+                                disabled={notifyState[product.id] === "saving"}
+                                onClick={() => notifyWhenAvailable(product)}
+                                className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 disabled:opacity-40 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
                               >
-                                {t("shop.products.stock.out") || "Out of Stock"}
+                                {notifyState[product.id] === "saving"
+                                  ? t("shop.products.notify.saving") || "Saving..."
+                                  : notifyState[product.id] === "saved"
+                                    ? t("shop.products.notify.saved_short") || "Notify Saved"
+                                    : t("shop.products.notify.cta") || "Notify Me"}
                               </Button>
                             </div>
                           </div>
@@ -805,6 +861,9 @@ export default function ShopProducts() {
                         { value: "stripe", label: t("shop.products.payment_methods.stripe") || "Stripe (Credit Card)" },
                         { value: "paypal", label: t("shop.products.payment_methods.paypal") || "PayPal" },
                         { value: "amazon_pay", label: t("shop.products.payment_methods.amazon_pay") || "Amazon Pay" },
+                        ...((import.meta.env.DEV || import.meta.env.MODE === "test")
+                          ? [{ value: "dummy_gateway", label: t("shop.products.payment_methods.dummy_gateway") || "Dummy Gateway (Dev/Test)" }]
+                          : []),
                       ].map((option) => (
                         <label key={option.value} className="flex items-center gap-1 text-[11px] text-white/80">
                           <input
@@ -818,6 +877,7 @@ export default function ShopProducts() {
                       </div>
 
                       {checkoutError ? <p className="mt-2 text-[11px] text-rose-300">{checkoutError}</p> : null}
+                      {notifyMessage ? <p className="mt-2 text-[11px] text-white/75">{notifyMessage}</p> : null}
 
                       {!order ? (
                         <>
@@ -867,7 +927,9 @@ export default function ShopProducts() {
                                       ? t("shop.products.payment_methods.amazon_pay_short") || "Amazon Pay"
                                       : paymentMethod === "paypal"
                                         ? t("shop.products.payment_methods.paypal_short") || "PayPal"
-                                        : t("shop.products.payment_methods.stripe_short") || "Stripe"
+                                        : paymentMethod === "dummy_gateway"
+                                          ? t("shop.products.payment_methods.dummy_gateway_short") || "Dummy Gateway"
+                                          : t("shop.products.payment_methods.stripe_short") || "Stripe"
                                   }`}
                           </Button>
                         </div>

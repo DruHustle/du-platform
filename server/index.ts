@@ -31,9 +31,13 @@ import {
   getShopOrderByRef,
   confirmShopOrderPayment,
   getShopProductsAdmin,
+  getShopProductById,
   createShopProductAdmin,
   updateShopProductAdmin,
   deleteShopProductAdmin,
+  createShopRestockNotification,
+  getShopRestockNotifications,
+  getShopRestockNotificationsBySlug,
 } from "./db";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,11 +47,27 @@ const SESSION_COOKIE = "zigd_session";
 const DEFAULT_ONESA_SYSTEM_PROMPT = [
   "You are Onesa AI, a Zimbabwe-focused diaspora decision-support assistant.",
   "Be warm, clear, and conversational.",
+  "Do not claim to be trained by Google, OpenAI, or any other big-tech company.",
+  "If asked who you are or who trained/built you, identify as Onesa and describe the local-community mission.",
   "If the user sends a simple greeting (for example: hello, hi, hey, mhoro, hesi, ndeipi), respond briefly in 1-2 short sentences and ask one simple follow-up question.",
   "Do not auto-translate or explain language unless the user explicitly asks for translation.",
   "Do not dump long bullet lists unless the user asks for detailed guidance.",
   "For normal requests, provide practical and concise guidance for tourism, trade, and investment, and clearly mark uncertainty.",
 ].join(" ");
+const ONESA_IDENTITY_REPLIES: Record<SupportedOnesaLanguage, string> = {
+  en:
+    "Onesa means illuminate and that’s exactly what we’re here to do. We’re building AI that brings relevant, up-to-date local information to communities that are too often overlooked or under-served. The goal is simple: help people make more accurate, informed decisions in their own context.\n\nBig AI companies build powerful tools, but they usually miss the local nuance. What matters in one city, neighborhood, or community can be totally different in another. We’re focused on closing that gap by working with local data, local realities, and real community needs.",
+  sn:
+    "Onesa zvinoreva kuvhenekera, uye ndizvo chaizvo zvatiri pano kuita. Tiri kuvaka AI inounza ruzivo rwemuno rwakakodzera uye rwemazuva ano kunharaunda dzinowanzoregeredzwa kana kusashandirwa zvakakwana. Chinangwa chiri nyore: kubatsira vanhu kuita sarudzo dzakarurama uye dzine ruzivo mumamiriro avo chaiwo.\n\nMakambani makuru eAI anovaka maturusi ane simba, asi kazhinji anopotsa nuance yemuno. Chinokosha muguta rimwe, munharaunda imwe, kana munzvimbo imwe chinogona kusiyana zvikuru mune imwe. Isu takatarisa kuvhara gaka iri nekushanda nedata remuno, chokwadi chemuno, uye zvinodiwa chaizvo nenharaunda.",
+  nd:
+    "Onesa kutsho ukukhanyisa, njalo yikho kanye esilapha ukukwenza. Sakha i-AI eletha ulwazi lwendawo olufaneleyo, olusesikhathini, emiphakathini evame ukunganakwa loba engasizakali kahle. Injongo ilula: ukusiza abantu benze izinqumo ezinembile, ezinolwazi, endaweni yabo.\n\nAmankampani amakhulu e-AI akha amathuluzi alomfutho, kodwa kuvamile ukuthi aphuthe umehluko wendawo. Okubalulekileyo kwelinye idolobho, umakhelwane, loba umphakathi kungahluka kakhulu kwenye indawo. Thina sigxile ukuvala lowo mgodi ngokusebenza ngedatha yendawo, izimo zendawo, kanye lezidingo zangempela zomphakathi.",
+  de:
+    "Onesa bedeutet erleuchten, und genau das ist unser Auftrag. Wir entwickeln KI, die relevante und aktuelle lokale Informationen in Gemeinschaften bringt, die zu oft übersehen oder unterversorgt sind. Das Ziel ist einfach: Menschen dabei zu helfen, in ihrem eigenen Kontext präzisere und fundiertere Entscheidungen zu treffen.\n\nGroße KI-Unternehmen bauen leistungsstarke Werkzeuge, aber ihnen entgeht oft die lokale Nuance. Was in einer Stadt, Nachbarschaft oder Gemeinschaft wichtig ist, kann in einer anderen völlig anders sein. Wir schließen diese Lücke, indem wir mit lokalen Daten, lokalen Realitäten und echten Bedürfnissen der Gemeinschaft arbeiten.",
+};
+
+function getOnesaIdentityReply(language: SupportedOnesaLanguage): string {
+  return ONESA_IDENTITY_REPLIES[language] ?? ONESA_IDENTITY_REPLIES.en;
+}
 const ONESA_READINESS_CACHE_MS = 120000;
 const ONESA_READINESS_GRACE_MS = 120000;
 const SERVER_STARTED_AT = Date.now();
@@ -150,6 +170,63 @@ function isAdminEmail(email: string): boolean {
   return configured.includes(email.trim().toLowerCase());
 }
 
+function getAdminEmails(): string[] {
+  return String(process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function isValidEmail(email: string): boolean {
+  const value = String(email ?? "").trim();
+  if (!value) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+async function sendEmailMessage(payload: {
+  to: string | string[];
+  subject: string;
+  html?: string;
+  text?: string;
+}) {
+  const recipients = (Array.isArray(payload.to) ? payload.to : [payload.to])
+    .map((value) => String(value ?? "").trim())
+    .filter(Boolean);
+  if (recipients.length === 0) return;
+
+  const provider = process.env.RESET_EMAIL_PROVIDER?.toLowerCase() ?? "resend";
+  const from = process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com";
+
+  if (provider === "resend") {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.log(
+        `[email:dry-run] to=${recipients.join(",")} subject=${payload.subject}`
+      );
+      return;
+    }
+    await axios.post(
+      "https://api.resend.com/emails",
+      {
+        from,
+        to: recipients,
+        subject: payload.subject,
+        html: payload.html,
+        text: payload.text,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return;
+  }
+
+  console.log(`[email:unsupported-provider:${provider}] to=${recipients.join(",")}`);
+}
+
 async function sendResetEmail(to: string, resetUrl: string) {
   const provider = process.env.RESET_EMAIL_PROVIDER?.toLowerCase() ?? "resend";
   const from = process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com";
@@ -182,9 +259,69 @@ async function sendResetEmail(to: string, resetUrl: string) {
   console.log(`[reset-email:unsupported-provider:${provider}] ${to} -> ${resetUrl}`);
 }
 
+async function notifyRestockSubscribersAndAdmins(input: {
+  productId: number;
+  productName: string;
+  productSlug: string;
+  stockQty: number;
+  updatedByEmail: string;
+}) {
+  if ((process.env.NODE_ENV ?? "development") !== "production") return;
+
+  const productSlug = String(input.productSlug ?? "").trim().toLowerCase();
+  if (!productSlug) return;
+
+  try {
+    const rows = await getShopRestockNotificationsBySlug(productSlug);
+    const uniqueEmails = Array.from(
+      new Set(
+        rows
+          .map((row: any) => String(row?.email ?? "").trim().toLowerCase())
+          .filter((email) => isValidEmail(email))
+      )
+    );
+
+    if (uniqueEmails.length > 0) {
+      const subject = `${input.productName} is back in stock`;
+      const html = `<p>Hello,</p>
+<p><strong>${input.productName}</strong> is now back in stock on the Zimbabwe Shop.</p>
+<p>You can return to the shop and place your order.</p>
+<p>Thank you.</p>`;
+
+      const text = `${input.productName} is now back in stock on the Zimbabwe Shop. You can return to the shop and place your order.`;
+      await sendEmailMessage({ to: uniqueEmails, subject, html, text });
+    }
+
+    const adminEmails = getAdminEmails();
+    if (adminEmails.length > 0) {
+      const subject = `Restock alert: ${input.productName}`;
+      const html = `<p><strong>Restock detected.</strong></p>
+<p>Product: ${input.productName}</p>
+<p>Slug: ${productSlug}</p>
+<p>Current stock: ${input.stockQty}</p>
+<p>Subscribers notified automatically: ${uniqueEmails.length}</p>
+<p>Action: please review Admin > Notify Me and send any additional manual communication if needed.</p>
+<p>Updated by: ${input.updatedByEmail}</p>`;
+      const text = `Restock detected for ${input.productName} (${productSlug}). Current stock: ${input.stockQty}. Subscribers notified automatically: ${uniqueEmails.length}. Action: review Admin > Notify Me and send any additional manual communication if needed. Updated by: ${input.updatedByEmail}`;
+      await sendEmailMessage({ to: adminEmails, subject, html, text });
+    }
+  } catch (error: any) {
+    console.error("[shop/restock-notify] failed", {
+      productSlug,
+      message: String(error?.message ?? error),
+    });
+  }
+}
+
 type ChatMessage = {
   role: "system" | "user" | "assistant";
   content: string;
+};
+
+type OnesaReplyResult = {
+  reply: string;
+  truncated: boolean;
+  finishReason?: string;
 };
 
 type SupportedOnesaLanguage = "en" | "sn" | "nd" | "de";
@@ -442,6 +579,20 @@ function getSmallTalkReply(
   defaultLanguage: SupportedOnesaLanguage
 ): string | null {
   const normalized = content.trim().toLowerCase();
+  const identityPatterns = [
+    /\bwho are you\b/,
+    /\bwhat are you\b/,
+    /\bwhat is onesa\b/,
+    /\bwho is onesa\b/,
+    /\bwho built you\b/,
+    /\bwho created you\b/,
+    /\bwho trained you\b/,
+    /\bare you trained by\b/,
+  ];
+  if (identityPatterns.some((pattern) => pattern.test(normalized))) {
+    const identityLanguage = detectLatestUserLanguage(content) ?? defaultLanguage;
+    return getOnesaIdentityReply(identityLanguage);
+  }
   const greetingLanguage = detectGreetingLanguage(normalized);
   if (greetingLanguage) {
     const language = greetingLanguage ?? defaultLanguage;
@@ -590,8 +741,9 @@ function getOnesaConfig() {
   const tertiaryOpenaiApiKey = process.env.ONESA_TERTIARY_AI_API_KEY ?? "";
   const timeoutRaw = Number(process.env.ONESA_REQUEST_TIMEOUT_MS ?? "180000");
   const timeoutMs = Number.isFinite(timeoutRaw) && timeoutRaw > 0 ? timeoutRaw : 180000;
-  const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "220");
-  const maxTokens = Number.isFinite(maxTokensRaw) && maxTokensRaw > 0 ? Math.floor(maxTokensRaw) : 220;
+  // Default response budget tuned to reduce mid-sentence truncation.
+  const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "500");
+  const maxTokens = Number.isFinite(maxTokensRaw) && maxTokensRaw > 0 ? Math.floor(maxTokensRaw) : 500;
   return {
     provider,
     model,
@@ -707,7 +859,7 @@ function extractAnthropicText(data: any): string {
     .trim();
 }
 
-async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: string) {
+async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: string): Promise<OnesaReplyResult> {
   const config = getOnesaConfig();
   const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = config;
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
@@ -729,7 +881,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
     : null;
   if (smallTalkReply) {
     lastOnesaSuccessAt = Date.now();
-    return smallTalkReply;
+    return { reply: smallTalkReply, truncated: false };
   }
   const normalizedMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
@@ -742,7 +894,69 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
     if (providers.length === 0) {
       throw new Error("No configured cloud provider with valid API key.");
     }
-    const anthropicInput = buildAnthropicInput(normalizedMessages);
+    const requestCloudCompletion = async (
+      providerTarget: ReturnType<typeof buildCloudProviderTargets>[number],
+      targetModel: string,
+      chatMessages: ChatMessage[]
+    ) => {
+      const anthropicInput = buildAnthropicInput(chatMessages);
+      const response = await withRetry(
+        () => {
+          if (providerTarget.kind === "anthropic") {
+            return axios.post(
+              `${providerTarget.baseUrl}/v1/messages`,
+              {
+                model: targetModel,
+                system: anthropicInput.system || undefined,
+                messages: anthropicInput.chatMessages,
+                temperature: 0.3,
+                max_tokens: maxTokens,
+              },
+              {
+                timeout: timeoutMs,
+                headers: {
+                  "x-api-key": providerTarget.apiKey,
+                  "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+          }
+          return axios.post(
+            `${providerTarget.baseUrl}/chat/completions`,
+            {
+              model: targetModel,
+              messages: chatMessages,
+              temperature: 0.3,
+              max_tokens: maxTokens,
+            },
+            {
+              timeout: timeoutMs,
+              headers: {
+                Authorization: `Bearer ${providerTarget.apiKey}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        },
+        3,
+        providerTarget.baseUrl
+      );
+      if (providerTarget.kind === "anthropic") {
+        const finishReason = String(response.data?.stop_reason ?? "").trim();
+        return {
+          reply: extractAnthropicText(response.data),
+          truncated: finishReason === "max_tokens",
+          finishReason,
+        };
+      }
+      const finishReason = String(response.data?.choices?.[0]?.finish_reason ?? "").trim();
+      return {
+        reply: String(response.data?.choices?.[0]?.message?.content ?? "").trim(),
+        truncated: finishReason === "length",
+        finishReason,
+      };
+    };
 
     let lastRateLimitError: any = null;
     let lastError: any = null;
@@ -761,55 +975,36 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
           break;
         }
         try {
-          const response = await withRetry(
-            () => {
-              if (providerTarget.kind === "anthropic") {
-                return axios.post(
-                  `${providerTarget.baseUrl}/v1/messages`,
-                  {
-                    model: targetModel,
-                    system: anthropicInput.system || undefined,
-                    messages: anthropicInput.chatMessages,
-                    temperature: 0.3,
-                    max_tokens: maxTokens,
-                  },
-                  {
-                    timeout: timeoutMs,
-                    headers: {
-                      "x-api-key": providerTarget.apiKey,
-                      "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
-                      "Content-Type": "application/json",
-                    },
-                  }
-                );
+          const firstPass = await requestCloudCompletion(providerTarget, targetModel, normalizedMessages);
+          let reply = firstPass.reply;
+          let truncated = firstPass.truncated;
+          let finishReason = firstPass.finishReason;
+
+          if (reply && truncated) {
+            // Attempt one continuation pass when upstream stopped on token length.
+            const continuationMessages: ChatMessage[] = [
+              ...normalizedMessages,
+              { role: "assistant", content: reply },
+              {
+                role: "user",
+                content: "Continue exactly from where you stopped. Do not repeat previous text.",
+              },
+            ];
+            try {
+              const continuation = await requestCloudCompletion(providerTarget, targetModel, continuationMessages);
+              if (continuation.reply) {
+                reply = `${reply} ${continuation.reply}`.trim();
+                truncated = continuation.truncated;
+                finishReason = continuation.finishReason ?? finishReason;
               }
-              return axios.post(
-                `${providerTarget.baseUrl}/chat/completions`,
-                {
-                  model: targetModel,
-                  messages: normalizedMessages,
-                  temperature: 0.3,
-                  max_tokens: maxTokens,
-                },
-                {
-                  timeout: timeoutMs,
-                  headers: {
-                    Authorization: `Bearer ${providerTarget.apiKey}`,
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
-            },
-            3,
-            providerTarget.baseUrl
-          );
-          const reply =
-            providerTarget.kind === "anthropic"
-              ? extractAnthropicText(response.data)
-              : String(response.data?.choices?.[0]?.message?.content ?? "").trim();
+            } catch {
+              // Keep initial partial reply when continuation fails.
+            }
+          }
+
           if (reply && !isLowQualityOnesaReply(reply) && !isMixedLanguageReply(reply, responseLanguage)) {
             lastOnesaSuccessAt = Date.now();
-            return reply;
+            return { reply, truncated, finishReason };
           }
         } catch (error: any) {
           if (isRateLimitedUpstreamError(error)) {
@@ -855,7 +1050,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
       throw lastRateLimitError;
     }
     if (lastError) throw lastError;
-    return safeFallbackReply;
+    return { reply: safeFallbackReply, truncated: false };
   }
 
   const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
@@ -952,7 +1147,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
           continue;
         }
         lastOnesaSuccessAt = Date.now();
-        return reply;
+        return { reply, truncated: false };
       }
     } catch (error: any) {
       lastError = error;
@@ -968,7 +1163,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
           continue;
         }
         lastOnesaSuccessAt = Date.now();
-        return reply;
+        return { reply, truncated: false };
       }
     } catch (error: any) {
       lastError = error;
@@ -976,7 +1171,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   }
 
   if (lowQualityReply) {
-    return safeFallbackReply;
+    return { reply: safeFallbackReply, truncated: false };
   }
   if (lastError) throw lastError;
   throw new Error(
@@ -1560,7 +1755,28 @@ async function startServer() {
     const user = await resolveAuthUser(req);
     if (!user) return res.status(401).json({ message: "Unauthorized." });
     if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
-    const rows = await getFeatureNotifications();
+    const [featureRows, shopRows] = await Promise.all([
+      getFeatureNotifications(),
+      getShopRestockNotifications(),
+    ]);
+    const rows = [
+      ...featureRows.map((row: any) => ({
+        id: Number(row.id),
+        email: String(row.email),
+        feature: String(row.feature),
+        created_at: row.created_at,
+      })),
+      ...shopRows.map((row: any) => ({
+        id: Number(row.id) + 1_000_000,
+        email: String(row.email),
+        feature: `shop_restock_${String(row.product_slug ?? "")}`,
+        created_at: row.created_at,
+      })),
+    ].sort((a, b) => {
+      const aTs = new Date(a.created_at ?? 0).getTime();
+      const bTs = new Date(b.created_at ?? 0).getTime();
+      return bTs - aTs;
+    });
     return res.json({ count: rows.length, rows });
   });
 
@@ -1726,8 +1942,23 @@ async function startServer() {
     if (rawStock !== undefined) payload.stock_qty = Math.floor(rawStock);
     if (req.body?.is_active !== undefined) payload.is_active = req.body.is_active === 0 || req.body.is_active === false ? 0 : 1;
 
+    const beforeRow = await getShopProductById(id);
     const row = await updateShopProductAdmin(id, payload);
     if (!row) return res.status(404).json({ message: "Product not found." });
+
+    const prevStock = Number((beforeRow as any)?.stock_qty ?? 0);
+    const nextStock = Number((row as any)?.stock_qty ?? 0);
+    const restocked = prevStock <= 0 && nextStock > 0;
+    if (restocked) {
+      await notifyRestockSubscribersAndAdmins({
+        productId: Number((row as any)?.id ?? id),
+        productName: String((row as any)?.name ?? ""),
+        productSlug: String((row as any)?.slug ?? ""),
+        stockQty: Math.max(0, Math.floor(nextStock)),
+        updatedByEmail: String(user.email ?? ""),
+      });
+    }
+
     return res.json({ row });
   });
 
@@ -1762,6 +1993,44 @@ async function startServer() {
     }
   });
 
+  app.post("/api/shop/restock-notifications", async (req, res) => {
+    try {
+      const productIdRaw = req.body?.productId;
+      const productSlug = String(req.body?.productSlug ?? "").trim();
+      const productName = String(req.body?.productName ?? "").trim();
+      const email = String(req.body?.email ?? "").trim().toLowerCase();
+
+      if (!productSlug || !productName) {
+        return res.status(400).json({ message: "Product details are required." });
+      }
+      if (!isValidEmail(email)) {
+        return res.status(400).json({ message: "A valid email address is required." });
+      }
+
+      const productId =
+        productIdRaw == null || !Number.isFinite(Number(productIdRaw))
+          ? null
+          : Math.max(1, Math.floor(Number(productIdRaw)));
+
+      const result = await createShopRestockNotification({
+        productId,
+        productSlug,
+        productName,
+        email,
+      });
+
+      return res.status(200).json({
+        created: result.created,
+        message: result.created
+          ? "Notify request saved. We will email you when stock is available."
+          : "You are already subscribed for this product.",
+        record: result.record,
+      });
+    } catch {
+      return res.status(500).json({ message: "Unable to save notify request." });
+    }
+  });
+
   app.post("/api/shop/orders", async (req, res) => {
     try {
       const customerName = String(req.body?.customerName ?? "").trim();
@@ -1775,7 +2044,11 @@ async function startServer() {
       if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
         return res.status(400).json({ message: "Customer and shipping fields are required." });
       }
-      if (!["stripe", "paypal", "amazon_pay"].includes(paymentMethod)) {
+      const allowedPaymentMethods =
+        process.env.NODE_ENV === "production"
+          ? ["stripe", "paypal", "amazon_pay"]
+          : ["stripe", "paypal", "amazon_pay", "dummy_gateway"];
+      if (!allowedPaymentMethods.includes(paymentMethod)) {
         return res.status(400).json({ message: "Invalid payment method." });
       }
       if (items.length === 0) {
@@ -1788,7 +2061,7 @@ async function startServer() {
         shippingCountry,
         shippingCity,
         shippingAddress,
-        paymentMethod: paymentMethod as "stripe" | "paypal" | "amazon_pay",
+        paymentMethod: paymentMethod as "stripe" | "paypal" | "amazon_pay" | "dummy_gateway",
         items: items.map((item: any) => ({
           productId: Number(item?.productId),
           quantity: Number(item?.quantity),
@@ -1841,13 +2114,13 @@ async function startServer() {
         return res.status(400).json({ message: "At least one user message is required." });
       }
 
-      const reply = await generateOnesaReply(messages, requestedLanguage);
-      if (!reply) {
+      const result = await generateOnesaReply(messages, requestedLanguage);
+      if (!result?.reply) {
         return res.status(502).json({ message: "Onesa model returned an empty response." });
       }
       lastOnesaSuccessAt = Date.now();
       onesaReadinessCache = null;
-      return res.json({ reply });
+      return res.json({ reply: result.reply, truncated: Boolean(result.truncated) });
     } catch (error: any) {
       const upstreamStatus = getUpstreamStatus(error);
       const retryAfterMs = getRetryAfterMs(error) ?? getGlobalBackoffRemainingMs();
