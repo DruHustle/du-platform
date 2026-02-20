@@ -47,7 +47,7 @@ export default function CookieConsent() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-[100]">
-      <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 shadow-2xl">
+      <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/20 bg-slate-900/95 backdrop-blur-xl p-5 shadow-2xl">
         <p className="text-white/90 text-sm leading-relaxed">
           Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.
         </p>

@@ -40,8 +40,8 @@ export default function Home() {
   ], []);
 
 const navButtons = [
-  { href: '/shop', label: 'nav.shop' },
   { href: '/technology', label: 'home.technology' },
+  { href: '/shop', label: 'nav.shop' },
   { href: '/exports', label: 'home.export_hub' },
   { href: '/tourism', label: 'home.tourism' },
   { href: '/investment', label: 'home.investments' },

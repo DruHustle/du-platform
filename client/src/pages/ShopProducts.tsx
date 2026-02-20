@@ -236,9 +236,9 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     category: "food",
     description: "Blackberry cordial favorite.",
     image_url: "/images/pages/shop/beverage_mazoe_blackberry_1.png",
-    price_cents: 749,
+    price_cents: 249,
     currency: "EUR",
-    stock_qty: 18,
+    stock_qty: 0,
   },
   {
     id: 20,
@@ -761,11 +761,15 @@ export default function ShopProducts() {
                                 event.currentTarget.src = "/images/pages/shop/zimbabwe_shop_hero.jpg";
                               }}
                             />
-                            <span
-                              className="absolute z-20 top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-rose-200/60 bg-rose-600/80 text-white shadow-[0_8px_20px_rgba(0,0,0,0.45)] backdrop-blur-sm"
-                            >
-                              {t("shop.products.stock.out") || "Out of Stock"}
-                            </span>
+                            {product.stock_qty <= 0 ? (
+                              <span className="absolute z-20 top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-rose-200/60 bg-rose-600/80 text-white shadow-[0_8px_20px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+                                {t("shop.products.stock.out") || "Out of Stock"}
+                              </span>
+                            ) : (
+                              <span className="absolute z-20 top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-200/60 bg-emerald-600/80 text-white shadow-[0_8px_20px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+                                {t("shop.products.stock.in") || "In Stock"}
+                              </span>
+                            )}
                           </div>
                           <div className="p-6">
                             <h3 className="text-lg font-black text-white tracking-tight">{product.name}</h3>
@@ -777,18 +781,28 @@ export default function ShopProducts() {
                             ) : null}
                             <div className="mt-4 flex items-center justify-between">
                               <p className="text-zim-gold font-black">{formatMoney(product.price_cents, product.currency)}</p>
-                              <Button
-                                type="button"
-                                disabled={notifyState[product.id] === "saving"}
-                                onClick={() => notifyWhenAvailable(product)}
-                                className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 disabled:opacity-40 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
-                              >
-                                {notifyState[product.id] === "saving"
-                                  ? t("shop.products.notify.saving") || "Saving..."
-                                  : notifyState[product.id] === "saved"
-                                    ? t("shop.products.notify.saved_short") || "Notify Saved"
-                                    : t("shop.products.notify.cta") || "Notify Me"}
-                              </Button>
+                              {product.stock_qty <= 0 ? (
+                                <Button
+                                  type="button"
+                                  disabled={notifyState[product.id] === "saving"}
+                                  onClick={() => notifyWhenAvailable(product)}
+                                  className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 disabled:opacity-40 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
+                                >
+                                  {notifyState[product.id] === "saving"
+                                    ? t("shop.products.notify.saving") || "Saving..."
+                                    : notifyState[product.id] === "saved"
+                                      ? t("shop.products.notify.saved_short") || "Notify Saved"
+                                      : t("shop.products.notify.cta") || "Notify Me"}
+                                </Button>
+                              ) : (
+                                <Button
+                                  type="button"
+                                  onClick={() => addToCart(product)}
+                                  className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
+                                >
+                                  {t("shop.products.actions.add_to_cart") || "Add to Cart"}
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </div>

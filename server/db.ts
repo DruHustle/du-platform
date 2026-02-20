@@ -393,9 +393,9 @@ const memoryShopProducts: ShopProduct[] = [
     category: "food",
     description: "Blackberry cordial favorite.",
     image_url: "/images/pages/shop/beverage_mazoe_blackberry_1.png",
-    price_cents: 749,
+    price_cents: 249,
     currency: "EUR",
-    stock_qty: 18,
+    stock_qty: 0,
     is_active: 1,
   },
   {
