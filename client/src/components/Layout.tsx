@@ -118,11 +118,10 @@ export default function Layout({ children }: LayoutProps) {
 
   const navigation = [
     { name: t('nav.home'), href: "/" },
-    { name: t('nav.shop'), href: "/shop" },
     { name: t('nav.technology'), href: "/technology" },
+    { name: t('nav.shop'), href: "/shop" },
     { name: t('nav.export'), href: "/exports" },
     { name: t('nav.tourism'), href: "/tourism" },
-
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
     { name: t('nav.data'), href: "/data-visualization" },

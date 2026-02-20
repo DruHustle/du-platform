@@ -14,14 +14,14 @@ export default function CookieSettings() {
     <Layout>
       <section className="py-16 bg-slate-950 min-h-[70vh]">
         <div className="container px-6 mx-auto max-w-3xl">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/20 bg-slate-900/95 backdrop-blur-xl p-8 md:p-10">
             <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
               Cookie settings
             </h1>
             <p className="text-white/80 leading-relaxed mb-6">
               Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.
             </p>
-            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 mb-6">
+            <div className="rounded-xl border border-white/20 bg-slate-900/90 p-4 mb-6">
               <p className="text-white font-semibold">Anonymised analytics cookies</p>
               <p className="text-white/70 text-sm mt-1">Enabled to help us improve performance and usability.</p>
             </div>

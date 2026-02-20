@@ -2077,6 +2077,7 @@
       },
       "actions": {
         "buy": "Buy",
+        "add_to_cart": "Add to Cart",
         "creating_order": "Creating Order...",
         "place_order": "Place Order",
         "order_whatsapp": "Order on WhatsApp",
