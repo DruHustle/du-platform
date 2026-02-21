@@ -24,7 +24,7 @@ const DEFAULT_BROWSER_LAYOUT_PROFILE: BrowserLayoutProfile = {
   enterBuffer: 8,
   exitBuffer: 2,
   edgeRightPx: 8,
-  horizontalReservedPx: 104,
+  horizontalReservedPx: 88,
 };
 
 function getBrowserLayoutProfile(userAgent: string): BrowserLayoutProfile {
@@ -34,14 +34,13 @@ function getBrowserLayoutProfile(userAgent: string): BrowserLayoutProfile {
   const isSafari = ua.includes("safari/") && !ua.includes("chrome/") && !isEdge;
 
   if (isEdge) {
-    // Edge text metrics can differ; use an earlier enter but easier exit back to horizontal.
-    return { enterBuffer: 14, exitBuffer: -2, edgeRightPx: 8, horizontalReservedPx: 96 };
+    return { enterBuffer: 12, exitBuffer: 2, edgeRightPx: 8, horizontalReservedPx: 92 };
   }
   if (isFirefox) {
-    return { enterBuffer: 13, exitBuffer: 5, edgeRightPx: 6, horizontalReservedPx: 108 };
+    return { enterBuffer: 11, exitBuffer: 3, edgeRightPx: 6, horizontalReservedPx: 92 };
   }
   if (isSafari) {
-    return { enterBuffer: 14, exitBuffer: 5, edgeRightPx: 8, horizontalReservedPx: 108 };
+    return { enterBuffer: 12, exitBuffer: 3, edgeRightPx: 8, horizontalReservedPx: 92 };
   }
   return DEFAULT_BROWSER_LAYOUT_PROFILE;
 }
@@ -73,7 +72,6 @@ export default function Layout({ children }: LayoutProps) {
   const bubbleRef = useRef<HTMLDivElement | null>(null);
   const navPillRef = useRef<HTMLDivElement | null>(null);
   const utilitySlotRef = useRef<HTMLDivElement | null>(null);
-  const utilityIconsRef = useRef<HTMLDivElement | null>(null);
   const suppressBubbleClickRef = useRef(false);
   const dragStateRef = useRef<{
     pointerId: number;
@@ -187,7 +185,6 @@ export default function Layout({ children }: LayoutProps) {
 
     const navRect = navPillRef.current?.getBoundingClientRect();
     const utilitySlotRect = utilitySlotRef.current?.getBoundingClientRect();
-    const utilityIconsRect = utilityIconsRef.current?.getBoundingClientRect();
     if (!navRect || !utilitySlotRect) {
       setUseEdgeIconColumn(false);
       return;
@@ -196,7 +193,6 @@ export default function Layout({ children }: LayoutProps) {
     // Project icon block in its horizontal position inside the right slot, then check overlap.
     // Edge (Chromium) can report slightly different text/icon widths, so use a conservative buffer.
     const projectedIconsLeft = utilitySlotRect.right - browserLayoutProfile.horizontalReservedPx;
-    const utilityIconsLeft = utilityIconsRect?.left ?? projectedIconsLeft;
     setUseEdgeIconColumn((isCurrentlyEdgeColumn) => {
       if (isCurrentlyEdgeColumn) {
         // Return to original horizontal state as soon as overlap clears with a small hysteresis.
@@ -206,9 +202,7 @@ export default function Layout({ children }: LayoutProps) {
 
       // Switch to vertical only when horizontal layout would overlap.
       const hasProjectedOverlap = navRect.right >= projectedIconsLeft - browserLayoutProfile.enterBuffer;
-      const hasActualOverlap = navRect.right >= utilityIconsLeft - browserLayoutProfile.enterBuffer;
-      const navReachesUtilityZone = navRect.right >= utilitySlotRect.left - browserLayoutProfile.enterBuffer;
-      return hasProjectedOverlap || hasActualOverlap || navReachesUtilityZone;
+      return hasProjectedOverlap;
     });
   }, [browserLayoutProfile.enterBuffer, browserLayoutProfile.exitBuffer, browserLayoutProfile.horizontalReservedPx]);
 
@@ -251,7 +245,6 @@ export default function Layout({ children }: LayoutProps) {
     const observer = new ResizeObserver(() => evaluateUtilityOverlap());
     if (navPillRef.current) observer.observe(navPillRef.current);
     if (utilitySlotRef.current) observer.observe(utilitySlotRef.current);
-    if (utilityIconsRef.current) observer.observe(utilityIconsRef.current);
     return () => observer.disconnect();
   }, [evaluateUtilityOverlap]);
 
@@ -449,7 +442,6 @@ export default function Layout({ children }: LayoutProps) {
             className="relative z-[230] flex items-center justify-end flex-1 lg:flex-none lg:min-w-[200px]"
           >
             <div
-              ref={utilityIconsRef}
               className={getDesktopUtilityIconsClass(useEdgeIconColumn)}
               style={useEdgeIconColumn ? { right: `${browserLayoutProfile.edgeRightPx}px` } : undefined}
             >

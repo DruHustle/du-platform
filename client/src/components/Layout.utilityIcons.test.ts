@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { getDesktopUtilityIconsClass } from "./Layout";
 
 describe("getDesktopUtilityIconsClass", () => {
-  it("uses right-edge icon column when overlap is detected", () => {
+  it("uses edge icon column when overlap is detected", () => {
     const cls = getDesktopUtilityIconsClass(true);
     expect(cls).toContain("lg:fixed");
-    expect(cls).toContain("lg:right-6");
+    expect(cls).toContain("lg:top-2");
     expect(cls).toContain("lg:flex-col");
   });
 
