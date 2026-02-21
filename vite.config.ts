@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
           data: {
             // Mapping variables for EJS replacement in index.html
             VITE_SITE_URL: env.VITE_SITE_URL,
-            VITE_SITE_NAME: env.VITE_SITE_NAME || "ZIGD Platform",
+            VITE_SITE_NAME: env.VITE_SITE_NAME || "Diaspora Unlocked Platform",
             VITE_ANALYTICS_ENDPOINT: env.VITE_ANALYTICS_ENDPOINT,
             VITE_ANALYTICS_WEBSITE_ID: env.VITE_ANALYTICS_WEBSITE_ID,
           },
