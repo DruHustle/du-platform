@@ -10,7 +10,7 @@
   "my_investments": "Ukutshala kwami kwemali",
   "settings": "Izisetho",
   "search_placeholder": "Dingisisa ngezokuthunyelwa ngaphandle, ukutshala imali, ezokuvakasha...",
-  "search_title": "Dingisisa ku-ZIGD Ipulatifomu",
+  "search_title": "Dingisisa ku-Diaspora Unlocked Ipulatifomu",
   "search_button": "Dinga",
   "explore": "Hlolisisa",
   "all_rights_reserved": "Wonke amalungelo agodliwe.",
@@ -20,7 +20,7 @@
   "partners": "Abahlanganyeli",
   "contact": "Thintana lathi",
   "auth": {
-    "create_account": "Hlanganyela le-ZIGD Platform",
+    "create_account": "Hlanganyela le-Diaspora Unlocked Platform",
     "register_subtitle": "Qalisa uhambo lwakho lokusebenzisana okubalulekileyo labantu baphandle kwelizwe.",
     "full_name": "Ibhizo lalo lonke",
     "email": "Ikheli ye-Imeyili",
@@ -1678,7 +1678,7 @@
         "title": "Impumelelo yokuthunyelwa kwempahla yesikhumba",
         "category": "Thekelisa",
         "story": "Iqembu labachwepheshe baseZimbabwe abahlala e-Germany baxhumanise abakhiqizi besikhumba basekhaya labathengisi baseYurophu.",
-        "testimonial": "Ipulatifomu ye-ZIGD isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
+        "testimonial": "Ipulatifomu ye-Diaspora Unlocked isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
         "author": "Tendai Moyo",
         "role": "Umphathintambo weZimbabwe Leather Collective"
       },
@@ -1693,7 +1693,7 @@
       "tourism_lodge": {
         "title": "Ukutshala imali ku-Tourism Lodge",
         "category": "Ukutshala imali",
-        "story": "Ngepulatifomu ye-crowdfunding ye-ZIGD, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
+        "story": "Ngepulatifomu ye-crowdfunding ye-Diaspora Unlocked, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
         "testimonial": "Ngaletshala u-$2,000 ngivela e-UK njalo manje sengiyingxenye yabanikazi be-lodge enhle ekhaya.",
         "author": "Simba Chikwanha",
         "role": "I-Diaspora Investor, eLondon"
@@ -1787,7 +1787,7 @@
           "markets": "3 countries"
         },
         "story": "Iqembu labachwepheshe baseZimbabwe abahlala e-Germany baxhumanise abakhiqizi besikhumba basekhaya labathengisi baseYurophu.",
-        "testimonial": "Ipulatifomu ye-ZIGD isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
+        "testimonial": "Ipulatifomu ye-Diaspora Unlocked isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
         "author": "Tendai Moyo",
         "role": "Managing Director, Zimbabwe Leather Collective"
       },
@@ -1816,7 +1816,7 @@
           "jobs": "45",
           "investors": "280 diaspora"
         },
-        "story": "Ngepulatifomu ye-crowdfunding ye-ZIGD, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
+        "story": "Ngepulatifomu ye-crowdfunding ye-Diaspora Unlocked, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
         "testimonial": "Ngaletshala u-$2,000 ngivela e-UK njalo manje sengiyingxenye yabanikazi be-lodge enhle ekhaya.",
         "author": "Simba Chikwanha",
         "role": "Diaspora Investor, London"

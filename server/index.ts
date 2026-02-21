@@ -243,7 +243,7 @@ async function sendResetEmail(to: string, resetUrl: string) {
       {
         from,
         to: [to],
-        subject: "Reset your ZIGD password",
+        subject: "Reset your Diaspora Unlocked password",
         html: `<p>We received a request to reset your password.</p><p><a href=\"${resetUrl}\">Reset Password</a></p><p>If you did not request this, ignore this email.</p>`,
       },
       {

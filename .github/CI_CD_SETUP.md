@@ -4,7 +4,7 @@ This document explains how to configure the GitHub Actions CI/CD pipeline for de
 
 ## Overview
 
-The ZIGD Gateway Platform uses GitHub Actions for continuous integration and deployment. The pipeline includes:
+The Diaspora Unlocked Platform uses GitHub Actions for continuous integration and deployment. The pipeline includes:
 
 1. **Build and Test** - Runs on every push and pull request
 2. **Code Quality Checks** - TypeScript type checking and formatting

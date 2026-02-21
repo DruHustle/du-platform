@@ -1753,7 +1753,7 @@ export async function createShopOrder(payload: {
     throw new Error("Cart is empty.");
   }
 
-  const orderRef = `ZIGD-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+  const orderRef = `Diaspora Unlocked-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
 
   if (!db) {
     const selectedProducts = items.map((item) => {
