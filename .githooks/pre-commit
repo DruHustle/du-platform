@@ -1,17 +1,19 @@
-#!/bin/sh
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 EN_FILE="client/public/locales/en/translation.json"
-
-# Run only if English translation file is staged for commit.
-if ! git diff --cached --name-only | grep -qx "$EN_FILE"; then
-  exit 0
+if git diff --cached --name-only | grep -qx "$EN_FILE"; then
+  echo "[pre-commit] English translations changed. Syncing locale keys..."
+  python3 sync_translations.py --mode sync
+  git add client/public/locales/*/translation.json
+else
+  echo "[pre-commit] No English translation key changes detected. Skipping translation sync."
 fi
 
-echo "[pre-commit] English translations changed. Syncing locale files..."
-pnpm translations:sync
+echo "[pre-commit] Generating sitemap..."
+node scripts/generate-sitemap.mjs
 
-# Re-stage synced locale files.
-git add client/public/locales/*/translation.json
+echo "[pre-commit] Staging generated files..."
+git add client/public/sitemap.xml
 
-echo "[pre-commit] Translation sync complete."
+echo "[pre-commit] Done."
