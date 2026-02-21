@@ -814,6 +814,46 @@
         "d3": "Isimo sezulu esihle unyaka wonke"
       }
     },
+    "evisa": {
+      "title": "I-Zimbabwe eVisa leziqondiso zokungena",
+      "subtitle": "Ngubani ofanele, indleko ezilinganiselweyo, izikhathi zokucutshungulwa, kanye lamadokhumenti ayisisekelo ngaphambi kohambo.",
+      "qualification": {
+        "title": "Ngubani ofanele",
+        "details": [
+          "Izizwe ezinengi zingafaka isicelo online ku-portal yeZimbabwe eVisa.",
+          "Abanye abahambi bangathola i-visa lapho befika kuye ngobuzwe langenjongo yohambo.",
+          "Qinisekisa isigaba sakho ngaphambi kokubhuka indiza ngoba izidingo zingatshintsha."
+        ]
+      },
+      "costs": {
+        "title": "Indleko ze-visa ezilinganiselweyo (USD)",
+        "details": [
+          "I-single-entry visa ivamise ukuba seduze le-USD 30 kwizigaba ezinengi.",
+          "I-double-entry visa ivamise ukuba phakathi kwe-USD 45 le-USD 60 kuye ngesigaba sobuzwe.",
+          "I-KAZA UniVisa ivamise ukuba seduze le-USD 50 lapho ikhona njalo ufanele."
+        ]
+      },
+      "processing": {
+        "title": "Izikhathi ezivamileyo zokucutshungulwa",
+        "details": [
+          "Izicelo ezinengi ziqedwa phakathi kwamalanga okusebenza angu-2 kuya ku-7.",
+          "Amacala adinga ukuhlolwa okwengeziwe angathatha isikhathi eside.",
+          "Faka isicelo kusenesikhathi ngezikhathi zokuhamba ezimatasatasa."
+        ]
+      },
+      "documents": {
+        "title": "Amadokhumenti aqakathekileyo",
+        "details": [
+          "I-passport esasebenza okungenani izinyanga eziyisi-6 kusukela ngosuku lokufika.",
+          "Uhlelo lohambo kanye lobufakazi bethikithi lokubuya kumbe lokuqhubeka.",
+          "Imininingwane yokuhlala kanye lobufakazi bemali eyeneleyo yohambo."
+        ]
+      },
+      "disclaimer": "Ukufaneleka kwe-visa, indleko, lezikhathi zokucutshungulwa kuyatshintsha kuye ngobuzwe lemithetho emitsha. Qinisekisa izidingo zakamuva kuma-portal asemthethweni ngaphambi kohambo.",
+      "apply_cta": "Faka isicelo ku-eVisa Portal",
+      "immigration_cta": "Zimbabwe Immigration",
+      "zta_cta": "Hlela Uhambo (ZTA)"
+    },
     "objective_title": "Umbono wethu",
     "objective_subtitle": "Ukwakha isango lomhlaba elixhumanisa amasiko, imikhiqizo, ezokuvakasha, lamathuba okutshala imali eZimbabwe.",
     "cta_title": "Usulungele ukuqalisa uhambo lwakho?",

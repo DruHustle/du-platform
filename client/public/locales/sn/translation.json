@@ -814,6 +814,46 @@
         "d3": "Kunze kwakanaka gore rose"
       }
     },
+    "evisa": {
+      "title": "Zimbabwe eVisa neMirayiridzo Yekupinda",
+      "subtitle": "Ndiani anokodzera, mari inotarisirwa, nguva dzekugadziriswa, uye magwaro anodiwa usati wasvika.",
+      "qualification": {
+        "title": "Ndiani anokodzera",
+        "details": [
+          "Nyika dzakawanda dzinokwanisa kunyorera online paZimbabwe eVisa portal.",
+          "Vamwe vafambi vanogona kupihwa visa pakusvika zvichienderana nenyika nekuda kwerwendo.",
+          "Simbisa category yako usati wabhuka ndege nekuti zvinodiwa zvinogona kuchinja."
+        ]
+      },
+      "costs": {
+        "title": "Mari inotarisirwa yevisa (USD)",
+        "details": [
+          "Single-entry visa inowanzova pedyo neUSD 30 kumapoka mazhinji.",
+          "Double-entry visa inowanzova pakati peUSD 45 neUSD 60 zvichienderana necategory yenyika.",
+          "KAZA UniVisa inowanzova pedyo neUSD 50 kana iripo uye uchikodzera."
+        ]
+      },
+      "processing": {
+        "title": "Nguva dzinowanzotorwa kugadzirisa",
+        "details": [
+          "Zvikumbiro zvakawanda zvinopedzwa mukati memazuva ebasa 2 kusvika 7.",
+          "Nyaya dzine kuongororwa kwakawanda dzinogona kutora nguva yakareba.",
+          "Nyorera mberi panguva dzine vanhu vakawanda kuti udzivise kunonoka kwekupedzisira."
+        ]
+      },
+      "documents": {
+        "title": "Magwaro akakosha",
+        "details": [
+          "Pasipoti ine mwedzi inodarika 6 yekushanda kubva pazuva rekusvika.",
+          "Urongwa hwerwendo uye humbowo hwetikiti rekudzoka kana kuenderera mberi.",
+          "Ruzivo rwekugara uye humbowo hwemari yakakwana yerwendo."
+        ]
+      },
+      "disclaimer": "Kukodzera visa, mari, uye nguva yekugadzirisa zvinochinja zvichienderana nenyika nemitemo mitsva. Tarisa zvinodiwa zvazvino pama portal epamutemo usati wafamba.",
+      "apply_cta": "Nyorera paeVisa Portal",
+      "immigration_cta": "Zimbabwe Immigration",
+      "zta_cta": "Ronga Rwendo (ZTA)"
+    },
     "objective_title": "Chiono chedu",
     "objective_subtitle": "Kuvaka mukova unobatanidza tsika, zvigadzirwa, ushanyi nemikana yeZimbabwe pasi rese.",
     "cta_title": "Wagadzirira kutanga Kufara Here?",

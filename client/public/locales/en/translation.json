@@ -812,6 +812,46 @@
         "d3": "Pleasant year-round temperate climate"
       }
     },
+    "evisa": {
+      "title": "Zimbabwe eVisa and Entry Guidance",
+      "subtitle": "Who qualifies, indicative costs, processing windows, and the core documents most travelers prepare before arrival.",
+      "qualification": {
+        "title": "Who qualifies",
+        "details": [
+          "Many nationalities can apply online through Zimbabwe's eVisa portal.",
+          "Some travelers may still qualify for visa on arrival depending on nationality and travel purpose.",
+          "Always confirm your category before booking flights because entry requirements can change."
+        ]
+      },
+      "costs": {
+        "title": "Indicative visa costs (USD)",
+        "details": [
+          "Single-entry visas are commonly around USD 30 for many categories.",
+          "Double-entry visas are commonly around USD 45 to USD 60 depending on nationality category.",
+          "KAZA UniVisa is typically around USD 50 when available and eligible."
+        ]
+      },
+      "processing": {
+        "title": "Typical processing times",
+        "details": [
+          "Many applications are processed within approximately 2 to 7 working days.",
+          "Complex cases can take longer if supporting checks are needed.",
+          "Apply early in peak travel periods to reduce last-minute risk."
+        ]
+      },
+      "documents": {
+        "title": "Key documents",
+        "details": [
+          "Passport valid for at least 6 months from your arrival date.",
+          "Travel itinerary and return or onward booking evidence.",
+          "Accommodation details and proof of sufficient travel funds."
+        ]
+      },
+      "disclaimer": "Visa eligibility, fees, and processing times vary by nationality and policy updates. Verify current requirements on official portals before travel.",
+      "apply_cta": "Apply via eVisa Portal",
+      "immigration_cta": "Zimbabwe Immigration",
+      "zta_cta": "Plan Your Trip (ZTA)"
+    },
     "snapshot": {
       "title": "Zimbabwe Tourism Snapshot (2026)",
       "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",

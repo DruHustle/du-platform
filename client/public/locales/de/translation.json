@@ -814,6 +814,46 @@
         "d3": "Ganzjährig angenehmes gemäßigtes Klima"
       }
     },
+    "evisa": {
+      "title": "Simbabwe eVisa- und Einreisehinweise",
+      "subtitle": "Wer berechtigt ist, ungefähre Kosten, Bearbeitungszeiten und wichtige Unterlagen vor der Anreise.",
+      "qualification": {
+        "title": "Wer ist berechtigt",
+        "details": [
+          "Viele Nationalitäten können online über das eVisa-Portal Simbabwes beantragen.",
+          "Für einige Reisende ist je nach Nationalität und Reisezweck weiterhin Visa-on-Arrival möglich.",
+          "Prüfen Sie Ihre Kategorie immer vor der Flugbuchung, da sich Anforderungen ändern können."
+        ]
+      },
+      "costs": {
+        "title": "Ungefähre Visakosten (USD)",
+        "details": [
+          "Einreisevisa (single entry) liegen für viele Kategorien häufig bei etwa 30 USD.",
+          "Doppeleinreisevisa liegen je nach Nationalitätskategorie häufig bei etwa 45 bis 60 USD.",
+          "Das KAZA UniVisa kostet in der Regel etwa 50 USD, sofern verfügbar und berechtigt."
+        ]
+      },
+      "processing": {
+        "title": "Übliche Bearbeitungszeiten",
+        "details": [
+          "Viele Anträge werden innerhalb von ca. 2 bis 7 Arbeitstagen bearbeitet.",
+          "Komplexere Fälle können bei zusätzlichen Prüfungen länger dauern.",
+          "In Hauptreisezeiten frühzeitig beantragen, um Last-Minute-Risiken zu reduzieren."
+        ]
+      },
+      "documents": {
+        "title": "Wichtige Unterlagen",
+        "details": [
+          "Reisepass mit mindestens 6 Monaten Gültigkeit ab Einreisedatum.",
+          "Reiseplan sowie Nachweis über Rück- oder Weiterreise.",
+          "Unterkunftsnachweis und Nachweis ausreichender finanzieller Mittel."
+        ]
+      },
+      "disclaimer": "Visaberechtigung, Gebühren und Bearbeitungszeiten variieren nach Nationalität und politischen Aktualisierungen. Prüfen Sie aktuelle Anforderungen vor der Reise auf den offiziellen Portalen.",
+      "apply_cta": "Über eVisa-Portal beantragen",
+      "immigration_cta": "Einwanderungsbehörde Simbabwe",
+      "zta_cta": "Reise planen (ZTA)"
+    },
     "objective_title": "Unsere Vision",
     "objective_subtitle": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
     "cta_title": "Bereit für Ihr Abenteuer?",
