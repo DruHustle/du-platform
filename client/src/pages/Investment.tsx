@@ -313,6 +313,282 @@ const projects = [
         "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO.",
     },
   ];
+  const tourismSectorSnapshot = [
+    {
+      icon: TrendingUp,
+      title: t("investment.tourism.snapshot.performance.title") || "Sector Recovery and Contribution",
+      detail:
+        t("investment.tourism.snapshot.performance.detail") ||
+        "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP.",
+    },
+    {
+      icon: Globe,
+      title: t("investment.tourism.snapshot.attractions.title") || "UNESCO and Wildlife Anchors",
+      detail:
+        t("investment.tourism.snapshot.attractions.detail") ||
+        "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors.",
+    },
+    {
+      icon: Building,
+      title: t("investment.tourism.snapshot.infrastructure.title") || "Access and Infrastructure Upgrades",
+      detail:
+        t("investment.tourism.snapshot.infrastructure.detail") ||
+        "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits.",
+    },
+  ];
+  const tourismGrowthOpportunities = [
+    {
+      title: t("investment.tourism.opportunities.ecotourism.title") || "Ecotourism and Sustainability",
+      detail:
+        t("investment.tourism.opportunities.ecotourism.detail") ||
+        "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas.",
+    },
+    {
+      title: t("investment.tourism.opportunities.cbt.title") || "Community-Based Tourism",
+      detail:
+        t("investment.tourism.opportunities.cbt.detail") ||
+        "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences.",
+    },
+    {
+      title: t("investment.tourism.opportunities.hospitality.title") || "Hospitality and Infrastructure",
+      detail:
+        t("investment.tourism.opportunities.hospitality.detail") ||
+        "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes.",
+    },
+    {
+      title: t("investment.tourism.opportunities.gastronomy.title") || "Gastronomy Tourism",
+      detail:
+        t("investment.tourism.opportunities.gastronomy.detail") ||
+        "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand.",
+    },
+    {
+      title: t("investment.tourism.opportunities.adventure.title") || "Adventure Tourism",
+      detail:
+        t("investment.tourism.opportunities.adventure.detail") ||
+        "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor.",
+    },
+    {
+      title: t("investment.tourism.opportunities.regional.title") || "Regional Hub Packaging",
+      detail:
+        t("investment.tourism.opportunities.regional.detail") ||
+        "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits.",
+    },
+  ];
+  const sectorInsights: Record<
+    string,
+    {
+      snapshotTitle: string;
+      snapshotSubtitle: string;
+      snapshotCards: Array<{ icon: any; title: string; detail: string }>;
+      opportunitiesTitle: string;
+      opportunities: Array<{ title: string; detail: string }>;
+    }
+  > = {
+    agriculture: {
+      snapshotTitle: t("investment.agriculture.snapshot.title") || "Agriculture Snapshot (2026)",
+      snapshotSubtitle:
+        t("investment.agriculture.snapshot.subtitle") ||
+        "Agriculture remains a core export growth pillar, supported by horticulture demand, irrigation upgrades, and value-chain financing.",
+      snapshotCards: [
+        {
+          icon: Leaf,
+          title: t("investment.agriculture.snapshot.horticulture.title") || "Horticulture Export Momentum",
+          detail:
+            t("investment.agriculture.snapshot.horticulture.detail") ||
+            "Blueberries, citrus, and premium produce continue to attract regional and EU buyer interest, especially where quality standards are met.",
+        },
+        {
+          icon: TrendingUp,
+          title: t("investment.agriculture.snapshot.value_chain.title") || "Value-Chain Expansion",
+          detail:
+            t("investment.agriculture.snapshot.value_chain.detail") ||
+            "Cold-chain, grading, and logistics investments are improving market access and reducing post-harvest losses.",
+        },
+        {
+          icon: Shield,
+          title: t("investment.agriculture.snapshot.compliance.title") || "Standards and Compliance Readiness",
+          detail:
+            t("investment.agriculture.snapshot.compliance.detail") ||
+            "Export competitiveness increasingly depends on SPS controls, traceability, and certification pathways.",
+        },
+      ],
+      opportunitiesTitle:
+        t("investment.agriculture.opportunities.title") || "Agriculture Investment and Growth Opportunities",
+      opportunities: [
+        {
+          title: t("investment.agriculture.opportunities.irrigation.title") || "Irrigation and Water Efficiency",
+          detail:
+            t("investment.agriculture.opportunities.irrigation.detail") ||
+            "Scale climate-resilient irrigation, storage, and smart-farm systems for more stable yields.",
+        },
+        {
+          title: t("investment.agriculture.opportunities.cold_chain.title") || "Cold Chain and Logistics",
+          detail:
+            t("investment.agriculture.opportunities.cold_chain.detail") ||
+            "Invest in packhouses, refrigerated transport, and aggregation hubs to raise export quality and margins.",
+        },
+        {
+          title: t("investment.agriculture.opportunities.processing.title") || "Agro-Processing",
+          detail:
+            t("investment.agriculture.opportunities.processing.detail") ||
+            "Build local value addition for fruit, grains, and oils to increase retained earnings before export.",
+        },
+      ],
+    },
+    manufacturing: {
+      snapshotTitle: t("investment.manufacturing.snapshot.title") || "Manufacturing Snapshot (2026)",
+      snapshotSubtitle:
+        t("investment.manufacturing.snapshot.subtitle") ||
+        "Manufacturing is gaining traction through import substitution, regional trade demand, and value-added production.",
+      snapshotCards: [
+        {
+          icon: Building,
+          title: t("investment.manufacturing.snapshot.capacity.title") || "Industrial Capacity Rebuild",
+          detail:
+            t("investment.manufacturing.snapshot.capacity.detail") ||
+            "Factory upgrades and SME supplier integration are improving domestic output and reliability.",
+        },
+        {
+          icon: Globe,
+          title: t("investment.manufacturing.snapshot.regional.title") || "Regional Market Access",
+          detail:
+            t("investment.manufacturing.snapshot.regional.detail") ||
+            "SADC and COMESA linkages provide growing routes for manufactured exports and contract production.",
+        },
+        {
+          icon: DollarSign,
+          title: t("investment.manufacturing.snapshot.fx.title") || "Foreign-Currency Upside",
+          detail:
+            t("investment.manufacturing.snapshot.fx.detail") ||
+            "Export-ready manufacturing can generate recurring FX flows where quality and delivery standards are consistent.",
+        },
+      ],
+      opportunitiesTitle:
+        t("investment.manufacturing.opportunities.title") || "Manufacturing Investment and Growth Opportunities",
+      opportunities: [
+        {
+          title: t("investment.manufacturing.opportunities.textiles.title") || "Textiles and Apparel Scale-Up",
+          detail:
+            t("investment.manufacturing.opportunities.textiles.detail") ||
+            "Expand garment and branded manufacturing with stronger quality-control and buyer-linked contracts.",
+        },
+        {
+          title: t("investment.manufacturing.opportunities.leather.title") || "Leather and Finished Goods",
+          detail:
+            t("investment.manufacturing.opportunities.leather.detail") ||
+            "Upgrade tanning and finishing to capture more value in footwear, accessories, and industrial products.",
+        },
+        {
+          title: t("investment.manufacturing.opportunities.packaging.title") || "Packaging and Inputs",
+          detail:
+            t("investment.manufacturing.opportunities.packaging.detail") ||
+            "Local packaging, components, and light engineering can reduce import dependence across sectors.",
+        },
+      ],
+    },
+    it: {
+      snapshotTitle: t("investment.it.snapshot.title") || "IT & Fintech Snapshot (2026)",
+      snapshotSubtitle:
+        t("investment.it.snapshot.subtitle") ||
+        "Digital adoption, mobile usage, and fintech demand continue to expand opportunities for scalable platforms and services.",
+      snapshotCards: [
+        {
+          icon: Brain,
+          title: t("investment.it.snapshot.adoption.title") || "Digital Adoption Growth",
+          detail:
+            t("investment.it.snapshot.adoption.detail") ||
+            "SMEs and consumers increasingly rely on digital channels for payments, commerce, and service access.",
+        },
+        {
+          icon: Repeat,
+          title: t("investment.it.snapshot.payments.title") || "Payments and Remittance Rails",
+          detail:
+            t("investment.it.snapshot.payments.detail") ||
+            "Cross-border remittance and digital payments infrastructure remains a strong fintech demand driver.",
+        },
+        {
+          icon: Shield,
+          title: t("investment.it.snapshot.regulatory.title") || "Regulatory Maturity",
+          detail:
+            t("investment.it.snapshot.regulatory.detail") ||
+            "Compliance-first models aligned to licensing and AML controls can scale faster and sustain trust.",
+        },
+      ],
+      opportunitiesTitle:
+        t("investment.it.opportunities.title") || "IT & Fintech Investment and Growth Opportunities",
+      opportunities: [
+        {
+          title: t("investment.it.opportunities.saas.title") || "SME SaaS and Workflow Tools",
+          detail:
+            t("investment.it.opportunities.saas.detail") ||
+            "Build practical software products for inventory, trade documentation, and operations digitization.",
+        },
+        {
+          title: t("investment.it.opportunities.payments.title") || "Embedded Payments and Wallets",
+          detail:
+            t("investment.it.opportunities.payments.detail") ||
+            "Integrate compliant payment rails into commerce and marketplace products for diaspora and local users.",
+        },
+        {
+          title: t("investment.it.opportunities.ai.title") || "Localized AI and Data Products",
+          detail:
+            t("investment.it.opportunities.ai.detail") ||
+            "Develop local-context AI services for support, compliance guidance, and decision intelligence.",
+        },
+      ],
+    },
+    energy: {
+      snapshotTitle: t("investment.energy.snapshot.title") || "Energy Snapshot (2026)",
+      snapshotSubtitle:
+        t("investment.energy.snapshot.subtitle") ||
+        "Power reliability remains a strategic priority, creating strong demand for generation, storage, and distributed energy.",
+      snapshotCards: [
+        {
+          icon: TrendingUp,
+          title: t("investment.energy.snapshot.demand.title") || "Rising Power Demand",
+          detail:
+            t("investment.energy.snapshot.demand.detail") ||
+            "Industrial and commercial growth continues to increase demand for stable, predictable electricity supply.",
+        },
+        {
+          icon: Leaf,
+          title: t("investment.energy.snapshot.renewables.title") || "Renewables Expansion",
+          detail:
+            t("investment.energy.snapshot.renewables.detail") ||
+            "Solar and hybrid projects are expanding as viable options for both grid support and private offtake.",
+        },
+        {
+          icon: FileText,
+          title: t("investment.energy.snapshot.bankability.title") || "Project Bankability Focus",
+          detail:
+            t("investment.energy.snapshot.bankability.detail") ||
+            "Clear offtake structures, permitting readiness, and grid integration planning are key to execution success.",
+        },
+      ],
+      opportunitiesTitle: t("investment.energy.opportunities.title") || "Energy Investment and Growth Opportunities",
+      opportunities: [
+        {
+          title: t("investment.energy.opportunities.solar.title") || "Solar Generation Projects",
+          detail:
+            t("investment.energy.opportunities.solar.detail") ||
+            "Utility-scale and embedded solar assets can deliver stable medium-term cash flows with strong demand.",
+        },
+        {
+          title: t("investment.energy.opportunities.storage.title") || "Battery Storage and Reliability",
+          detail:
+            t("investment.energy.opportunities.storage.detail") ||
+            "Storage investments improve uptime, smooth intermittency, and support productive-use energy customers.",
+        },
+        {
+          title: t("investment.energy.opportunities.mini_grids.title") || "Mini-Grids and Productive Use",
+          detail:
+            t("investment.energy.opportunities.mini_grids.detail") ||
+            "Distributed systems can unlock economic activity in underserved zones with industrial and agri demand.",
+        },
+      ],
+    },
+  };
+  const selectedSectorInfo = activeFilter !== "all" && activeFilter !== "tourism" ? sectorInsights[activeFilter] : null;
   const europePartners = [
     "Team Europe",
     "European Investment Bank (EIB Global)",
@@ -402,6 +678,43 @@ const projects = [
         <SubPageHero heroSlides={heroSlides} intro={introData} />
       </section>
 
+      {/* How it Works - Glass Dashboard */}
+      <section className="py-10 bg-slate-950">
+        <div className="container px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Repeat className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
+              </div>
+             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+            </div>
+            
+            <div className="grid md:grid-cols-4 gap-8">
+              {[
+                { title: t("investment.crowdfunding_steps.browse") || "Browse Projects", emoji: "🧭" },
+                { title: t("investment.crowdfunding_steps.invest") || "Invest Your Share", emoji: "💵" },
+                { title: t("investment.crowdfunding_steps.track") || "Track Performance", emoji: "📈" },
+                { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", emoji: "✅" }
+              ].map((step, i) => (
+                <div key={i} className="relative pt-10 group">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                    {i + 1}
+                  </div>
+                  <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
+                    <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
+                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
+                    </div>
+                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{step.title}</h3>
+                    <p className="text-white/40 text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Collective Model */}
       <section id="collective-model" className="pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
@@ -422,75 +735,6 @@ const projects = [
                   {item}
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* European Investment Partnerships */}
-      <section id="eu-partnerships" className="pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Globe className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  {t("investment.eu_focus.title") || "European Partnership Capital in Zimbabwe"}
-                </h3>
-              </div>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-                {t("investment.eu_focus.subtitle") ||
-                  "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure."}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2 justify-center mb-8">
-              {europePartners.map((partner) => (
-                <Badge key={partner} className="bg-white/5 text-white/70 border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1">
-                  {partner}
-                </Badge>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {europeFocusAreas.map((item) => (
-                <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                  <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-              <h4 className="text-lg font-black text-white tracking-tight mb-4">
-                {t("investment.eu_focus.eib_takeaways_title") || "EIB Practical Takeaways for Diaspora Investors"}
-              </h4>
-              <ul className="space-y-3">
-                {eibTakeaways.map((point) => (
-                  <li key={point} className="flex items-start gap-3 text-white/75 text-sm">
-                    <CheckCircle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3 justify-center">
-              <a href="https://www.get-invest.eu/about/country-windows/zimbabwe/" target="_blank" rel="noopener noreferrer">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.eu_focus.source_getinvest") || "Source: GET.invest Zimbabwe"}
-                </Button>
-              </a>
-              <a href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en" target="_blank" rel="noopener noreferrer">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.eu_focus.source_eu") || "Source: EU International Partnerships"}
-                </Button>
-              </a>
-              <a href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business" target="_blank" rel="noopener noreferrer">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.eu_focus.source_eib") || "Source: EIB Zimbabwe Essay"}
-                </Button>
-              </a>
             </div>
           </div>
         </div>
@@ -600,42 +844,175 @@ const projects = [
                 </motion.div>
               ))}
             </div>
+
+            {activeFilter === "tourism" && (
+              <div className="mt-10 space-y-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                  <div className="mb-10 text-center">
+                    <h2 className="section-title-compact">
+                      {t("investment.tourism.snapshot.title") || "Zimbabwe Tourism Snapshot (2026)"}
+                    </h2>
+                    <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                      {t("investment.tourism.snapshot.subtitle") ||
+                        "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades."}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {tourismSectorSnapshot.map((item) => (
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                            <item.icon className="h-5 w-5 text-zim-gold" />
+                          </div>
+                          <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+                        </div>
+                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                  <div className="mb-10 text-center">
+                    <h2 className="section-title-compact">
+                      {t("investment.tourism.opportunities.title") || "Tourism Investment and Growth Opportunities"}
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {tourismGrowthOpportunities.map((item) => (
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                        <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
+                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {selectedSectorInfo && (
+              <div className="mt-10 space-y-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                  <div className="mb-10 text-center">
+                    <h2 className="section-title-compact">{selectedSectorInfo.snapshotTitle}</h2>
+                    <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                      {selectedSectorInfo.snapshotSubtitle}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {selectedSectorInfo.snapshotCards.map((item) => (
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                            <item.icon className="h-5 w-5 text-zim-gold" />
+                          </div>
+                          <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+                        </div>
+                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                  <div className="mb-10 text-center">
+                    <h2 className="section-title-compact">{selectedSectorInfo.opportunitiesTitle}</h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {selectedSectorInfo.opportunities.map((item) => (
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                        <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
+                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* How it Works - Glass Dashboard */}
-      <section className="py-10 bg-slate-950">
-        <div className="container px-6 mx-auto">
+      {/* Calculator Section */}
+      <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto relative z-10">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
-                <Repeat className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
+                <Brain className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.calculator_title') || "Smart Investment Calculator"}</h3>
               </div>
-             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
             </div>
-            
-            <div className="grid md:grid-cols-4 gap-8">
-              {[
-                { title: t("investment.crowdfunding_steps.browse") || "Browse Projects", emoji: "🧭" },
-                { title: t("investment.crowdfunding_steps.invest") || "Invest Your Share", emoji: "💵" },
-                { title: t("investment.crowdfunding_steps.track") || "Track Performance", emoji: "📈" },
-                { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", emoji: "✅" }
-              ].map((step, i) => (
-                <div key={i} className="relative pt-10 group">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-                    {i + 1}
-                  </div>
-                  <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
-                    <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
-                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
-                    </div>
-                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{step.title}</h3>
-                    <p className="text-white/40 text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
-                  </div>
+            <InvestmentCalculator />
+          </div>
+        </div>
+      </section>
+
+      {/* European Investment Partnerships */}
+      <section id="eu-partnerships" className="pb-10 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Globe className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">
+                  {t("investment.eu_focus.title") || "European Partnership Capital in Zimbabwe"}
+                </h3>
+              </div>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                {t("investment.eu_focus.subtitle") ||
+                  "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure."}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 justify-center mb-8">
+              {europePartners.map((partner) => (
+                <Badge key={partner} className="bg-white/5 text-white/70 border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1">
+                  {partner}
+                </Badge>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {europeFocusAreas.map((item) => (
+                <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                  <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
+                  <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <h4 className="text-lg font-black text-white tracking-tight mb-4">
+                {t("investment.eu_focus.eib_takeaways_title") || "EIB Practical Takeaways for Diaspora Investors"}
+              </h4>
+              <ul className="space-y-3">
+                {eibTakeaways.map((point) => (
+                  <li key={point} className="flex items-start gap-3 text-white/75 text-sm">
+                    <CheckCircle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3 justify-center">
+              <a href="https://www.get-invest.eu/about/country-windows/zimbabwe/" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.eu_focus.source_getinvest") || "Source: GET.invest Zimbabwe"}
+                </Button>
+              </a>
+              <a href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.eu_focus.source_eu") || "Source: EU International Partnerships"}
+                </Button>
+              </a>
+              <a href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.eu_focus.source_eib") || "Source: EIB Zimbabwe Essay"}
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -704,6 +1081,38 @@ const projects = [
         </div>
       </section>
 
+      {/* Regulatory Snapshot */}
+      <section className="py-10 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
+              <div className="space-y-3 max-w-3xl mx-auto">
+                <h3 className="text-xl font-black text-white tracking-tight">
+                  {t("investment.regulatory_snapshot.title") || "Investment Regulation Snapshot"}
+                </h3>
+                <p className="text-white/75 text-sm leading-relaxed">
+                  {t("investment.regulatory_snapshot.subtitle") ||
+                    "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation."}
+                </p>
+              </div>
+              <Link href="/regulations#investment-compliance">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  {t("investment.regulatory_snapshot.open_full_guide") || "Open Full Guide"}
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 mt-8">
+              {regulatoryChecklist.map((item) => (
+                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-white/75 text-sm">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ZIDA Information Section */}
       <section className="py-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
@@ -747,55 +1156,6 @@ const projects = [
           </div>
         </div>
       </section>
-
-      {/* Regulatory Snapshot */}
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
-        <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
-              <div className="space-y-3 max-w-3xl mx-auto">
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  {t("investment.regulatory_snapshot.title") || "Investment Regulation Snapshot"}
-                </h3>
-                <p className="text-white/75 text-sm leading-relaxed">
-                  {t("investment.regulatory_snapshot.subtitle") ||
-                    "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation."}
-                </p>
-              </div>
-              <Link href="/regulations#investment-compliance">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.regulatory_snapshot.open_full_guide") || "Open Full Guide"}
-                </Button>
-              </Link>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 mt-8">
-              {regulatoryChecklist.map((item) => (
-                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-white/75 text-sm">
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Calculator Section */}
-      <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
-        <div className="container px-6 mx-auto relative z-10">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Brain className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.calculator_title') || "Smart Investment Calculator"}</h3>
-              </div>
-               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
-            </div>
-            <InvestmentCalculator />
-          </div>
-        </div>
-      </section>
-
 
     </Layout>
   );

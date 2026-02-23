@@ -600,6 +600,9 @@
       "subtitle5": "Erleben Sie den „Donnernden Rauch“ an den Victoriafällen.",
       "plan_journey": "Reise planen",
       "watch_exp": "Erlebnis ansehen",
+      "book_trip": "Reise buchen",
+      "virtual_center": "Virtual-Reality-Zentrum besuchen",
+      "local_guide_ar": "Lokaler AR-Guide",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -611,7 +614,6 @@
       "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
     },
     "attractions_title": "Top-Reiseziele",
-    "attractions_subtitle": "Ikonische Wahrzeichen, die das simbabwische Erlebnis definieren.",
     "attractions": {
       "vicfalls": {
         "name": "Victoriafälle",
@@ -779,7 +781,82 @@
       "plan": {
         "title": "Individuelle Reisepläne",
         "desc": "KI-generierte Pläne basierend auf Ihren Interessen und Ihrem Reisestil."
-      }
+      },
+      "plan_trip_cta": "Reise mit Onesa planen",
+      "trip_planner": {
+        "badge": "Onesa AI Reise",
+        "title": "Onesa Buchungsinformationen",
+        "subtitle": "Erstelle eine saisongerechte Reise, optimiert für Kosten und Komfort bei Flügen, Hotels, Erlebnissen und Mietwagen.",
+        "origin": "Abflugstadt",
+        "season": "Saison",
+        "budget": "Budgetprofil",
+        "comfort": "Komfortniveau",
+        "days": "Reisetage",
+        "travelers": "Reisende",
+        "passengers": "Passagiere",
+        "adults": "Erwachsene",
+        "adult": "Erwachsener",
+        "infants": "Säuglinge",
+        "infant": "Säugling",
+        "interests": "Interessen",
+        "error": "Dein Reiseplan kann gerade nicht erstellt werden. Bitte versuche es gleich erneut.",
+        "generating": "Wird erstellt...",
+        "generate": "Reiseplan erstellen",
+        "ai_optimized": "KI-optimiert",
+        "fallback_plan": "Intelligenter Fallback-Plan",
+        "estimated_total": "Geschätzte Gesamtkosten",
+        "flights": "Flüge",
+        "hotels": "Hotels",
+        "car_hire": "Mietwagen",
+        "experiences": "Erlebnisse",
+        "itinerary": "Personalisierte Reiseroute",
+        "day": "Tag",
+        "estimated": "Geschätzt",
+        "season_options": {
+          "dry": "Trockenzeit",
+          "green": "Grüne Saison",
+          "shoulder": "Nebensaison"
+        },
+        "budget_options": {
+          "low": "Niedrig",
+          "medium": "Mittel",
+          "high": "Hoch"
+        },
+        "comfort_options": {
+          "budget": "Einfach",
+          "standard": "Standard",
+          "premium": "Premium"
+        },
+        "interests_options": {
+          "wildlife": "Tierwelt",
+          "culture": "Kultur",
+          "adventure": "Abenteuer",
+          "food": "Essen",
+          "history": "Geschichte",
+          "nature": "Natur"
+        },
+        "booking_focus": "Nutze diese Seite für Buchungsinformationen und Empfehlungen, bevor du deine Reise bestätigst.",
+        "download_pdf": "PDF herunterladen",
+        "pdf_title": "Onesa Reiseplan",
+        "pdf_filename": "onesa-reiseplan",
+        "summary": "Zusammenfassung",
+        "optimized_for": "Optimiert für",
+        "arrival_city": "Ankunftsstadt",
+        "trip_type": "Reisetyp",
+        "trip_type_options": {
+          "one_way": "Einfach",
+          "round_trip": "Hin- und Rückreise",
+          "multi_trip": "Mehrfachreise"
+        },
+        "start_date": "Startdatum",
+        "open_start_date_picker": "Kalender für Startdatum öffnen",
+        "end_date": "Enddatum",
+        "open_end_date_picker": "Kalender für Rückreisedatum öffnen",
+        "multi_city": "Mehrstadt-Reise",
+        "multi_city_cities": "Städte (durch Komma getrennt)",
+        "multi_city_hint": "Wähle Mehrfachreise, um zusätzliche Städte hinzuzufügen."
+      },
+      "personalized_experience": "Personalisierte Erlebnisse. - leistungsstarke Empfehlungstechnologie, die Informationen liefert, um Ihre Reise einzigartig und unvergesslich zu machen."
     },
     "planning": {
       "guide_badge": "Reiseführer",
@@ -863,49 +940,6 @@
     "explore_title": "Weitere Reiseinformationen",
     "explore_subtitle": "Für umfassende offizielle Richtlinien besuchen Sie die Website der Zimbabwe Tourism Authority.",
     "explore_site": "Zimbabwe Tourism Authority besuchen",
-    "snapshot": {
-      "title": "Simbabwe Tourismus-Schnappschuss (2026)",
-      "subtitle": "Der Tourismus befindet sich auf einem starken Erholungspfad, unterstützt durch ikonische Vermögenswerte, wachsende Nachfrage und kontinuierliche Infrastrukturverbesserungen.",
-      "performance": {
-        "title": "Erholung und Beitrag des Sektors",
-        "detail": "Die Tourismuseinnahmen erholen sich weiterhin stark, wobei der Sektor einen Beitrag von mehreren Milliarden Dollar und einen wachsenden Anteil am nationalen BIP anstrebt."
-      },
-      "attractions": {
-        "title": "UNESCO- und Wildlife-Anker",
-        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe und Flaggschiff-Nationalparks bleiben die Hauptnachfragetreiber für internationale Besucher."
-      },
-      "infrastructure": {
-        "title": "Zugangs- und Infrastruktur-Upgrades",
-        "detail": "Durch die Sanierung von Straßen und Flughäfen wird der Zugang zu wichtigen Tourismuskorridoren und regionalen Zielrouten verbessert."
-      }
-    },
-    "opportunities": {
-      "title": "Tourismusinvestitionen und Wachstumschancen",
-      "ecotourism": {
-        "title": "Ökotourismus und Nachhaltigkeit",
-        "detail": "Entwickeln Sie Öko-Lodges und schonende Naturschutzerlebnisse rund um Premiumparks und Schutzgebiete."
-      },
-      "cbt": {
-        "title": "Community-basierter Tourismus",
-        "detail": "Skalieren Sie Projekte, die lokale Gemeinschaften durch geführte Kulturtouren, Aufführungen und lokale Erlebnisse stärken."
-      },
-      "hospitality": {
-        "title": "Gastgewerbe und Infrastruktur",
-        "detail": "Erweitern Sie hochwertige Unterkünfte und Besuchereinrichtungen in Harare, Bulawayo, Mutare und wichtigen Gateway-Routen."
-      },
-      "gastronomy": {
-        "title": "Gastronomietourismus",
-        "detail": "Schaffen Sie Erlebnisse vom Bauernhof bis zum Tisch und lokale Küchenerlebnisse in Verbindung mit Kleinproduzenten und der Nachfrage nach kulinarischem Tourismus."
-      },
-      "adventure": {
-        "title": "Abenteuertourismus",
-        "detail": "Bauen Sie hochwertige Aktivitäten wie Rafting, Bungee, Kanufahren und Wildnisexpeditionen rund um die Victoriafälle und den Sambesi-Korridor aus."
-      },
-      "regional": {
-        "title": "Regionale Hub-Verpackung",
-        "detail": "Positionieren Sie Harare und Bulawayo als Gateway-Hubs für länderübergreifende Reiserouten, einschließlich KAZA und grenzüberschreitende Strecken."
-      }
-    },
     "authorities": {
       "title": "Offizielle Tourismusbehörden",
       "subtitle": "Nutzen Sie die offiziellen Richtlinien der Zimbabwe Tourism Authority und der Zimbabwe Parks and Wildlife Management Authority für Genehmigungen, Parkinformationen und Reisezielstandards.",
@@ -1235,6 +1269,51 @@
         "investor_register": {
           "title": "Licensed Investor Register",
           "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
+        }
+      }
+    },
+    "tourism": {
+      "snapshot": {
+        "title": "Simbabwe Tourismus-Schnappschuss (2026)",
+        "subtitle": "Der Tourismus befindet sich auf einem starken Erholungspfad, unterstützt durch ikonische Vermögenswerte, wachsende Nachfrage und kontinuierliche Infrastrukturverbesserungen.",
+        "performance": {
+          "title": "Erholung und Beitrag des Sektors",
+          "detail": "Die Tourismuseinnahmen erholen sich weiterhin stark, wobei der Sektor einen Beitrag von mehreren Milliarden Dollar und einen wachsenden Anteil am nationalen BIP anstrebt."
+        },
+        "attractions": {
+          "title": "UNESCO- und Wildlife-Anker",
+          "detail": "Victoria Falls, Mana Pools, Great Zimbabwe und Flaggschiff-Nationalparks bleiben die Hauptnachfragetreiber für internationale Besucher."
+        },
+        "infrastructure": {
+          "title": "Zugangs- und Infrastruktur-Upgrades",
+          "detail": "Durch die Sanierung von Straßen und Flughäfen wird der Zugang zu wichtigen Tourismuskorridoren und regionalen Zielrouten verbessert."
+        }
+      },
+      "opportunities": {
+        "title": "Tourismusinvestitionen und Wachstumschancen",
+        "ecotourism": {
+          "title": "Ökotourismus und Nachhaltigkeit",
+          "detail": "Entwickeln Sie Öko-Lodges und schonende Naturschutzerlebnisse rund um Premiumparks und Schutzgebiete."
+        },
+        "cbt": {
+          "title": "Community-basierter Tourismus",
+          "detail": "Skalieren Sie Projekte, die lokale Gemeinschaften durch geführte Kulturtouren, Aufführungen und lokale Erlebnisse stärken."
+        },
+        "hospitality": {
+          "title": "Gastgewerbe und Infrastruktur",
+          "detail": "Erweitern Sie hochwertige Unterkünfte und Besuchereinrichtungen in Harare, Bulawayo, Mutare und wichtigen Gateway-Routen."
+        },
+        "gastronomy": {
+          "title": "Gastronomietourismus",
+          "detail": "Schaffen Sie Erlebnisse vom Bauernhof bis zum Tisch und lokale Küchenerlebnisse in Verbindung mit Kleinproduzenten und der Nachfrage nach kulinarischem Tourismus."
+        },
+        "adventure": {
+          "title": "Abenteuertourismus",
+          "detail": "Bauen Sie hochwertige Aktivitäten wie Rafting, Bungee, Kanufahren und Wildnisexpeditionen rund um die Victoriafälle und den Sambesi-Korridor aus."
+        },
+        "regional": {
+          "title": "Regionale Hub-Verpackung",
+          "detail": "Positionieren Sie Harare und Bulawayo als Gateway-Hubs für länderübergreifende Reiserouten, einschließlich KAZA und grenzüberschreitende Strecken."
         }
       }
     }

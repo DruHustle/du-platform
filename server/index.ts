@@ -39,6 +39,7 @@ import {
   getShopRestockNotifications,
   getShopRestockNotificationsBySlug,
 } from "./db";
+import { registerApiRoutes } from "./api";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -318,6 +319,51 @@ type ChatMessage = {
   content: string;
 };
 
+type TripPlanPayload = {
+  origin: string;
+  season: "dry" | "green" | "shoulder";
+  budget: "low" | "medium" | "high";
+  comfort: "budget" | "standard" | "premium";
+  days: number;
+  travelers: number;
+  interests: string[];
+};
+
+type TripPlanResult = {
+  summary: string;
+  optimizedFor: string;
+  estimatedTotalUsd: number;
+  flights: {
+    route: string;
+    cabin: string;
+    estimatedCostUsd: number;
+    rationale: string;
+  };
+  hotels: {
+    area: string;
+    style: string;
+    estimatedCostUsd: number;
+    rationale: string;
+  };
+  carHire: {
+    vehicleClass: string;
+    estimatedCostUsd: number;
+    rationale: string;
+  };
+  experiences: Array<{
+    name: string;
+    location: string;
+    estimatedCostUsd: number;
+    rationale: string;
+  }>;
+  itinerary: Array<{
+    day: number;
+    title: string;
+    details: string;
+    estimatedDailyCostUsd: number;
+  }>;
+};
+
 type OnesaReplyResult = {
   reply: string;
   truncated: boolean;
@@ -355,6 +401,216 @@ function getOnesaLanguageFallbackReply(language: SupportedOnesaLanguage): string
     return "Ich habe gerade ein kleines Problem beim Antworten. Bitte versuchen Sie es in Kürze erneut.";
   }
   return "I am having trouble generating a reliable response right now. Please try again.";
+}
+
+function normalizeTripPlanPayload(raw: any): TripPlanPayload {
+  const toText = (value: unknown, fallback: string) => {
+    const text = String(value ?? "").trim();
+    return text.length > 0 ? text.slice(0, 120) : fallback;
+  };
+  const toEnum = <T extends string>(value: unknown, allowed: T[], fallback: T): T => {
+    const text = String(value ?? "").trim().toLowerCase() as T;
+    return allowed.includes(text) ? text : fallback;
+  };
+  const toInt = (value: unknown, min: number, max: number, fallback: number) => {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.max(min, Math.min(max, Math.floor(parsed)));
+  };
+
+  const interestsRaw = Array.isArray(raw?.interests) ? raw.interests : [];
+  const interestWhitelist = new Set(["wildlife", "culture", "adventure", "food", "history", "nature"]);
+  const interests = interestsRaw
+    .map((value: unknown) => String(value ?? "").trim().toLowerCase())
+    .filter((value: string) => interestWhitelist.has(value))
+    .slice(0, 6);
+
+  return {
+    origin: toText(raw?.origin, "Berlin"),
+    season: toEnum(raw?.season, ["dry", "green", "shoulder"], "dry"),
+    budget: toEnum(raw?.budget, ["low", "medium", "high"], "medium"),
+    comfort: toEnum(raw?.comfort, ["budget", "standard", "premium"], "standard"),
+    days: toInt(raw?.days, 3, 14, 7),
+    travelers: toInt(raw?.travelers, 1, 8, 2),
+    interests: interests.length > 0 ? interests : ["wildlife", "culture"],
+  };
+}
+
+function tryParseJsonObject(input: string): Record<string, any> | null {
+  const text = String(input ?? "").trim();
+  if (!text) return null;
+  const direct = (() => {
+    try {
+      const parsed = JSON.parse(text);
+      return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, any>) : null;
+    } catch {
+      return null;
+    }
+  })();
+  if (direct) return direct;
+
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start < 0 || end <= start) return null;
+  const candidate = text.slice(start, end + 1);
+  try {
+    const parsed = JSON.parse(candidate);
+    return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, any>) : null;
+  } catch {
+    return null;
+  }
+}
+
+function buildFallbackTripPlan(payload: TripPlanPayload): TripPlanResult {
+  const seasonMultiplier = payload.season === "dry" ? 1.2 : payload.season === "green" ? 0.9 : 1.0;
+  const flightBaseByBudget: Record<TripPlanPayload["budget"], number> = {
+    low: 620,
+    medium: 910,
+    high: 1380,
+  };
+  const hotelNightByComfort: Record<TripPlanPayload["comfort"], number> = {
+    budget: 85,
+    standard: 150,
+    premium: 260,
+  };
+  const carDayByComfort: Record<TripPlanPayload["comfort"], number> = {
+    budget: 42,
+    standard: 65,
+    premium: 110,
+  };
+
+  const experiencesCatalog = [
+    { tag: "wildlife", name: "Hwange Guided Safari", location: "Hwange", cost: 120 },
+    { tag: "culture", name: "Mbare Cultural Food Walk", location: "Harare", cost: 45 },
+    { tag: "adventure", name: "Zambezi Whitewater Rafting", location: "Victoria Falls", cost: 145 },
+    { tag: "history", name: "Great Zimbabwe Guided Tour", location: "Masvingo", cost: 60 },
+    { tag: "nature", name: "Eastern Highlands Hike", location: "Nyanga", cost: 55 },
+    { tag: "food", name: "Harare Local Dining Circuit", location: "Harare", cost: 50 },
+  ];
+
+  const selectedExperiences = experiencesCatalog
+    .filter((item) => payload.interests.includes(item.tag))
+    .slice(0, Math.min(4, payload.days));
+  const fallbackExperiences = selectedExperiences.length > 0 ? selectedExperiences : experiencesCatalog.slice(0, 3);
+
+  const flightsCost = Math.round(flightBaseByBudget[payload.budget] * seasonMultiplier * payload.travelers);
+  const hotelsCost = Math.round(hotelNightByComfort[payload.comfort] * payload.days * payload.travelers);
+  const carCost = Math.round(carDayByComfort[payload.comfort] * payload.days);
+  const experiencesCost = fallbackExperiences.reduce((sum, item) => sum + item.cost * payload.travelers, 0);
+  const buffer = Math.round((flightsCost + hotelsCost + carCost + experiencesCost) * 0.12);
+  const total = flightsCost + hotelsCost + carCost + experiencesCost + buffer;
+
+  const itinerary = Array.from({ length: payload.days }, (_unused, idx) => {
+    const day = idx + 1;
+    const exp = fallbackExperiences[idx % fallbackExperiences.length];
+    const transferCost = day === 1 || day === payload.days ? 60 : 35;
+    const dayCost = Math.round(exp.cost * payload.travelers + hotelNightByComfort[payload.comfort] * payload.travelers + transferCost);
+    return {
+      day,
+      title: day === 1 ? "Arrival and Check-in" : day === payload.days ? "Departure Day" : `${exp.name}`,
+      details:
+        day === 1
+          ? `Arrive from ${payload.origin}, transfer to hotel, and settle in with a light orientation walk.`
+          : day === payload.days
+            ? "Final breakfast, optional short activity, and airport transfer."
+            : `Focus on ${exp.name} in ${exp.location}, with timing optimized for ${payload.season} season conditions.`,
+      estimatedDailyCostUsd: dayCost,
+    };
+  });
+
+  return {
+    summary: `A ${payload.days}-day Zimbabwe itinerary tuned for ${payload.season} season with ${payload.comfort} comfort and ${payload.budget} budget priorities.`,
+    optimizedFor: "Balanced between seasonal value, comfort level, and total trip cost.",
+    estimatedTotalUsd: total,
+    flights: {
+      route: `${payload.origin} → Harare / Victoria Falls`,
+      cabin: payload.comfort === "premium" ? "Business + flexible fares" : payload.comfort === "standard" ? "Economy Flex" : "Economy Saver",
+      estimatedCostUsd: flightsCost,
+      rationale: "Flight estimate includes seasonal fare multiplier and passenger count.",
+    },
+    hotels: {
+      area: payload.interests.includes("wildlife") ? "Victoria Falls + Hwange corridor" : "Harare + destination hubs",
+      style: payload.comfort === "premium" ? "4-5 star mix" : payload.comfort === "standard" ? "3-4 star mix" : "2-3 star value lodges",
+      estimatedCostUsd: hotelsCost,
+      rationale: "Hotel budget calculated per night, per traveler, aligned to comfort profile.",
+    },
+    carHire: {
+      vehicleClass: payload.comfort === "premium" ? "Premium SUV" : payload.comfort === "standard" ? "Standard SUV" : "Compact crossover",
+      estimatedCostUsd: carCost,
+      rationale: "Daily rental estimate includes route flexibility for major tourism corridors.",
+    },
+    experiences: fallbackExperiences.map((item) => ({
+      name: item.name,
+      location: item.location,
+      estimatedCostUsd: Math.round(item.cost * payload.travelers),
+      rationale: "Selected from your interest profile and seasonal suitability.",
+    })),
+    itinerary,
+  };
+}
+
+function coerceTripPlanFromAiPayload(raw: Record<string, any>, fallback: TripPlanResult): TripPlanResult | null {
+  const summary = typeof raw?.summary === "string" ? raw.summary.trim() : "";
+  const optimizedFor = typeof raw?.optimizedFor === "string" ? raw.optimizedFor.trim() : "";
+  const estimatedTotalUsd = Number(raw?.estimatedTotalUsd);
+  const flights = raw?.flights;
+  const hotels = raw?.hotels;
+  const carHire = raw?.carHire;
+  const experiences = Array.isArray(raw?.experiences) ? raw.experiences : [];
+  const itinerary = Array.isArray(raw?.itinerary) ? raw.itinerary : [];
+
+  if (!summary || !optimizedFor || !Number.isFinite(estimatedTotalUsd)) return null;
+  if (!flights || !hotels || !carHire || experiences.length === 0 || itinerary.length === 0) return null;
+
+  return {
+    summary,
+    optimizedFor,
+    estimatedTotalUsd: Math.max(0, Math.round(estimatedTotalUsd)),
+    flights: {
+      route: typeof flights.route === "string" ? flights.route : fallback.flights.route,
+      cabin: typeof flights.cabin === "string" ? flights.cabin : fallback.flights.cabin,
+      estimatedCostUsd: Math.max(0, Math.round(Number(flights.estimatedCostUsd) || fallback.flights.estimatedCostUsd)),
+      rationale: typeof flights.rationale === "string" ? flights.rationale : fallback.flights.rationale,
+    },
+    hotels: {
+      area: typeof hotels.area === "string" ? hotels.area : fallback.hotels.area,
+      style: typeof hotels.style === "string" ? hotels.style : fallback.hotels.style,
+      estimatedCostUsd: Math.max(0, Math.round(Number(hotels.estimatedCostUsd) || fallback.hotels.estimatedCostUsd)),
+      rationale: typeof hotels.rationale === "string" ? hotels.rationale : fallback.hotels.rationale,
+    },
+    carHire: {
+      vehicleClass: typeof carHire.vehicleClass === "string" ? carHire.vehicleClass : fallback.carHire.vehicleClass,
+      estimatedCostUsd: Math.max(0, Math.round(Number(carHire.estimatedCostUsd) || fallback.carHire.estimatedCostUsd)),
+      rationale: typeof carHire.rationale === "string" ? carHire.rationale : fallback.carHire.rationale,
+    },
+    experiences: experiences.slice(0, 6).map((item: any, idx: number) => ({
+      name: typeof item?.name === "string" ? item.name : fallback.experiences[idx % fallback.experiences.length].name,
+      location:
+        typeof item?.location === "string"
+          ? item.location
+          : fallback.experiences[idx % fallback.experiences.length].location,
+      estimatedCostUsd: Math.max(
+        0,
+        Math.round(Number(item?.estimatedCostUsd) || fallback.experiences[idx % fallback.experiences.length].estimatedCostUsd)
+      ),
+      rationale:
+        typeof item?.rationale === "string"
+          ? item.rationale
+          : fallback.experiences[idx % fallback.experiences.length].rationale,
+    })),
+    itinerary: itinerary.slice(0, 14).map((item: any, idx: number) => ({
+      day: Math.max(1, Math.round(Number(item?.day) || idx + 1)),
+      title: typeof item?.title === "string" ? item.title : fallback.itinerary[idx % fallback.itinerary.length].title,
+      details:
+        typeof item?.details === "string"
+          ? item.details
+          : fallback.itinerary[idx % fallback.itinerary.length].details,
+      estimatedDailyCostUsd: Math.max(
+        0,
+        Math.round(Number(item?.estimatedDailyCostUsd) || fallback.itinerary[idx % fallback.itinerary.length].estimatedDailyCostUsd)
+      ),
+    })),
+  };
 }
 
 function getUpstreamStatus(error: any): number {
@@ -665,7 +921,7 @@ function enforceOnesaIdentityGuard(reply: string, language: SupportedOnesaLangua
 }
 
 type CloudProviderTarget = {
-  name: "primary" | "secondary" | "tertiary" | "claude" | "cerebras";
+  name: "primary" | "secondary" | "claude" | "cerebras" | "perplexity";
   kind: "openai" | "anthropic";
   baseUrl: string;
   apiKey: string;
@@ -679,6 +935,7 @@ function isPlaceholderApiKey(value: string): boolean {
     !normalized ||
     normalized === "YOUR_GEMINI_API_KEY" ||
     normalized === "YOUR_GROQ_API_KEY" ||
+    normalized === "YOUR_PERPLEXITY_API_KEY" ||
     normalized.startsWith("YOUR_")
   );
 }
@@ -692,16 +949,14 @@ function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): C
       [...config.secondaryModelCandidates, config.secondaryModel, config.secondaryFallbackModel].filter(Boolean)
     )
   );
-  const tertiaryModels = Array.from(
-    new Set(
-      [...config.tertiaryModelCandidates, config.tertiaryModel, config.tertiaryFallbackModel].filter(Boolean)
-    )
-  );
   const claudeModels = Array.from(
     new Set([...config.claudeModelCandidates, config.claudeModel, config.claudeFallbackModel].filter(Boolean))
   );
   const cerebrasModels = Array.from(
     new Set([...config.cerebrasModelCandidates, config.cerebrasModel, config.cerebrasFallbackModel].filter(Boolean))
+  );
+  const perplexityModels = Array.from(
+    new Set([...config.perplexityModelCandidates, config.perplexityModel, config.perplexityFallbackModel].filter(Boolean))
   );
 
   const targets: CloudProviderTarget[] = [];
@@ -723,15 +978,6 @@ function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): C
       models: secondaryModels.length > 0 ? secondaryModels : [config.secondaryModel || config.model],
     });
   }
-  if (config.tertiaryOpenaiBase && !isPlaceholderApiKey(config.tertiaryOpenaiApiKey)) {
-    targets.push({
-      name: "tertiary",
-      kind: "openai",
-      baseUrl: config.tertiaryOpenaiBase,
-      apiKey: config.tertiaryOpenaiApiKey,
-      models: tertiaryModels.length > 0 ? tertiaryModels : [config.tertiaryModel || config.model],
-    });
-  }
   if (!isPlaceholderApiKey(config.claudeApiKey)) {
     targets.push({
       name: "claude",
@@ -749,6 +995,15 @@ function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): C
       baseUrl: config.cerebrasBase || "https://api.cerebras.ai/v1",
       apiKey: config.cerebrasApiKey,
       models: cerebrasModels.length > 0 ? cerebrasModels : [config.model],
+    });
+  }
+  if (!isPlaceholderApiKey(config.perplexityApiKey)) {
+    targets.push({
+      name: "perplexity",
+      kind: "openai",
+      baseUrl: config.perplexityBase || "https://api.perplexity.ai",
+      apiKey: config.perplexityApiKey,
+      models: perplexityModels.length > 0 ? perplexityModels : [config.model],
     });
   }
   return targets;
@@ -792,6 +1047,14 @@ function getOnesaConfig() {
     .split(",")
     .map((x) => x.trim())
     .filter(Boolean);
+  const perplexityBase = String(process.env.ONESA_PERPLEXITY_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  const perplexityApiKey = process.env.ONESA_PERPLEXITY_API_KEY ?? "";
+  const perplexityModel = process.env.ONESA_PERPLEXITY_MODEL ?? "";
+  const perplexityFallbackModel = process.env.ONESA_PERPLEXITY_FALLBACK_MODEL ?? "";
+  const perplexityModelCandidates = String(process.env.ONESA_PERPLEXITY_MODEL_CANDIDATES ?? "")
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
   const ollamaBase = (process.env.ONESA_OLLAMA_URL ?? "http://127.0.0.1:11434").replace(/\/+$/, "");
   const openaiBase = (process.env.ONESA_AI_BASE_URL ?? "http://127.0.0.1:1234/v1").replace(/\/+$/, "");
   const openaiApiKey = process.env.ONESA_AI_API_KEY ?? "";
@@ -826,6 +1089,11 @@ function getOnesaConfig() {
     cerebrasModel,
     cerebrasFallbackModel,
     cerebrasModelCandidates,
+    perplexityBase,
+    perplexityApiKey,
+    perplexityModel,
+    perplexityFallbackModel,
+    perplexityModelCandidates,
     ollamaBase,
     openaiBase,
     openaiApiKey,
@@ -949,10 +1217,139 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
     ...messages.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim()),
   ];
 
+  const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
+    chatMessages
+      .map((m) => {
+        if (m.role === "system") return `System: ${m.content}`;
+        if (m.role === "assistant") return `Assistant: ${m.content}`;
+        return `User: ${m.content}`;
+      })
+      .join("\n\n");
+
+  const extractOllamaText = (data: any) =>
+    String(data?.message?.content ?? data?.response ?? data?.content ?? "").trim();
+
+  const sendOllamaChat = async (targetModel: string) => {
+    const response = await axios.post(
+      `${ollamaBase}/api/chat`,
+      {
+        model: targetModel,
+        messages: normalizedMessages,
+        stream: false,
+        options: {
+          temperature: 0.3,
+          num_predict: maxTokens,
+        },
+      },
+      {
+        timeout: timeoutMs,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return extractOllamaText(response.data);
+  };
+
+  const sendOllamaGenerate = async (targetModel: string) => {
+    const response = await axios.post(
+      `${ollamaBase}/api/generate`,
+      {
+        model: targetModel,
+        prompt: buildPromptFromMessages(normalizedMessages),
+        stream: false,
+        options: {
+          temperature: 0.3,
+          num_predict: maxTokens,
+        },
+      },
+      {
+        timeout: timeoutMs,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return extractOllamaText(response.data);
+  };
+
+  const tryOllamaModel = async (targetModel: string): Promise<string> => {
+    try {
+      const chatReply = await sendOllamaChat(targetModel);
+      if (chatReply) return chatReply;
+    } catch {
+      // Fall back to /api/generate for models that don't support chat templates.
+    }
+    return await sendOllamaGenerate(targetModel);
+  };
+
+  const runOllamaFallback = async (): Promise<OnesaReplyResult> => {
+    let availableModels: string[] = [];
+    try {
+      const tagsResponse = await axios.get(`${ollamaBase}/api/tags`, { timeout: 5000 });
+      availableModels = Array.isArray(tagsResponse.data?.models)
+        ? tagsResponse.data.models.map((m: any) => String(m?.name ?? ""))
+        : [];
+    } catch {
+      // Tags endpoint unavailable: continue with requested model only.
+    }
+
+    const candidates = Array.from(
+      new Set([model, resolveOllamaModelName(model, availableModels)].filter((m): m is string => Boolean(m)))
+    );
+    const fallbackCandidates = Array.from(
+      new Set([fallbackModel, resolveOllamaModelName(fallbackModel, availableModels)].filter((m): m is string => Boolean(m)))
+    ).filter((candidate) => !candidates.includes(candidate));
+
+    let lastError: any = null;
+    let lowQualityReply: string | null = null;
+    for (const candidate of candidates) {
+      try {
+        const reply = await tryOllamaModel(candidate);
+        const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
+        if (guardedReply) {
+          if (isLowQualityOnesaReply(guardedReply)) {
+            lowQualityReply = guardedReply;
+            continue;
+          }
+          lastOnesaSuccessAt = Date.now();
+          return { reply: guardedReply, truncated: false };
+        }
+      } catch (error: any) {
+        lastError = error;
+      }
+    }
+
+    for (const candidate of fallbackCandidates) {
+      try {
+        const reply = await tryOllamaModel(candidate);
+        const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
+        if (guardedReply) {
+          if (isLowQualityOnesaReply(guardedReply)) {
+            lowQualityReply = guardedReply;
+            continue;
+          }
+          lastOnesaSuccessAt = Date.now();
+          return { reply: guardedReply, truncated: false };
+        }
+      } catch (error: any) {
+        lastError = error;
+      }
+    }
+
+    if (lowQualityReply) {
+      return { reply: safeFallbackReply, truncated: false };
+    }
+    if (lastError) throw lastError;
+    throw new Error(
+      `Onesa model returned an empty response for: ${[...candidates, ...fallbackCandidates].join(", ") || model}`
+    );
+  };
+
   if (provider === "openai_compatible") {
     const providers = buildCloudProviderTargets(config);
     if (providers.length === 0) {
-      throw new Error("No configured cloud provider with valid API key.");
+      return await runOllamaFallback();
     }
     const requestCloudCompletion = async (
       providerTarget: ReturnType<typeof buildCloudProviderTargets>[number],
@@ -1090,6 +1487,11 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
     }
 
     if (lastRateLimitError) {
+      try {
+        return await runOllamaFallback();
+      } catch {
+        // Keep cloud rate-limit signal when local fallback is unavailable.
+      }
       const retryAfterMs = longestBackoffMs > 0 ? longestBackoffMs : getRetryAfterMs(lastRateLimitError);
       if (retryAfterMs && retryAfterMs > 0) {
         const existing = Number(lastRateLimitError?.response?.headers?.["retry-after"] ?? 0);
@@ -1110,136 +1512,20 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
       }
       throw lastRateLimitError;
     }
-    if (lastError) throw lastError;
-    return { reply: safeFallbackReply, truncated: false };
-  }
-
-  const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
-    chatMessages
-      .map((m) => {
-        if (m.role === "system") return `System: ${m.content}`;
-        if (m.role === "assistant") return `Assistant: ${m.content}`;
-        return `User: ${m.content}`;
-      })
-      .join("\n\n");
-
-  const extractOllamaText = (data: any) =>
-    String(data?.message?.content ?? data?.response ?? data?.content ?? "").trim();
-
-  const sendOllamaChat = async (targetModel: string) => {
-    const response = await axios.post(
-      `${ollamaBase}/api/chat`,
-      {
-        model: targetModel,
-        messages: normalizedMessages,
-        stream: false,
-        options: {
-          temperature: 0.3,
-          num_predict: maxTokens,
-        },
-      },
-      {
-        timeout: timeoutMs,
-        headers: {
-          "Content-Type": "application/json",
-        },
+    if (lastError) {
+      try {
+        return await runOllamaFallback();
+      } catch {
+        throw lastError;
       }
-    );
-    return extractOllamaText(response.data);
-  };
-
-  const sendOllamaGenerate = async (targetModel: string) => {
-    const response = await axios.post(
-      `${ollamaBase}/api/generate`,
-      {
-        model: targetModel,
-        prompt: buildPromptFromMessages(normalizedMessages),
-        stream: false,
-        options: {
-          temperature: 0.3,
-          num_predict: maxTokens,
-        },
-      },
-      {
-        timeout: timeoutMs,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return extractOllamaText(response.data);
-  };
-
-  const tryModel = async (targetModel: string): Promise<string> => {
+    }
     try {
-      const chatReply = await sendOllamaChat(targetModel);
-      if (chatReply) return chatReply;
+      return await runOllamaFallback();
     } catch {
-      // Fall back to /api/generate for models that don't support chat templates.
-    }
-    return await sendOllamaGenerate(targetModel);
-  };
-
-  let availableModels: string[] = [];
-  try {
-    const tagsResponse = await axios.get(`${ollamaBase}/api/tags`, { timeout: 5000 });
-    availableModels = Array.isArray(tagsResponse.data?.models)
-      ? tagsResponse.data.models.map((m: any) => String(m?.name ?? ""))
-      : [];
-  } catch {
-    // Tags endpoint unavailable: continue with requested model only.
-  }
-
-  const candidates = Array.from(
-    new Set([model, resolveOllamaModelName(model, availableModels)].filter((m): m is string => Boolean(m)))
-  );
-  const fallbackCandidates = Array.from(
-    new Set([fallbackModel, resolveOllamaModelName(fallbackModel, availableModels)].filter((m): m is string => Boolean(m)))
-  ).filter((candidate) => !candidates.includes(candidate));
-
-  let lastError: any = null;
-  let lowQualityReply: string | null = null;
-  for (const candidate of candidates) {
-    try {
-      const reply = await tryModel(candidate);
-      const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
-      if (guardedReply) {
-        if (isLowQualityOnesaReply(guardedReply)) {
-          lowQualityReply = guardedReply;
-          continue;
-        }
-        lastOnesaSuccessAt = Date.now();
-        return { reply: guardedReply, truncated: false };
-      }
-    } catch (error: any) {
-      lastError = error;
+      return { reply: safeFallbackReply, truncated: false };
     }
   }
-
-  for (const candidate of fallbackCandidates) {
-    try {
-      const reply = await tryModel(candidate);
-      const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
-      if (guardedReply) {
-        if (isLowQualityOnesaReply(guardedReply)) {
-          lowQualityReply = guardedReply;
-          continue;
-        }
-        lastOnesaSuccessAt = Date.now();
-        return { reply: guardedReply, truncated: false };
-      }
-    } catch (error: any) {
-      lastError = error;
-    }
-  }
-
-  if (lowQualityReply) {
-    return { reply: safeFallbackReply, truncated: false };
-  }
-  if (lastError) throw lastError;
-  throw new Error(
-    `Onesa model returned an empty response for: ${[...candidates, ...fallbackCandidates].join(", ") || model}`
-  );
+  return await runOllamaFallback();
 }
 
 async function getOnesaHealth() {
@@ -1260,12 +1546,19 @@ async function getOnesaHealth() {
         Boolean(config.cerebrasModel) ||
         Boolean(config.cerebrasFallbackModel) ||
         config.cerebrasModelCandidates.length > 0;
+      const perplexityConfigured =
+        Boolean(config.perplexityBase) ||
+        Boolean(config.perplexityApiKey) ||
+        Boolean(config.perplexityModel) ||
+        Boolean(config.perplexityFallbackModel) ||
+        config.perplexityModelCandidates.length > 0;
       const tiers = [
         { name: "primary", base: config.openaiBase, key: config.openaiApiKey },
         { name: "secondary", base: config.secondaryOpenaiBase, key: config.secondaryOpenaiApiKey },
         { name: "tertiary", base: config.tertiaryOpenaiBase, key: config.tertiaryOpenaiApiKey },
         ...(claudeConfigured ? [{ name: "claude", base: config.claudeBase || "https://api.anthropic.com", key: config.claudeApiKey }] : []),
         ...(cerebrasConfigured ? [{ name: "cerebras", base: config.cerebrasBase || "https://api.cerebras.ai/v1", key: config.cerebrasApiKey }] : []),
+        ...(perplexityConfigured ? [{ name: "perplexity", base: config.perplexityBase || "https://api.perplexity.ai", key: config.perplexityApiKey }] : []),
       ].filter((tier) => Boolean(tier.base));
       const missingKeyTiers = tiers.filter((tier) => isPlaceholderApiKey(tier.key)).map((tier) => tier.name);
 
@@ -1569,27 +1862,6 @@ async function startServer() {
     console.warn("[db] Database initialization failed. Continuing with in-memory fallback mode.");
     console.warn(error);
   }
-
-  app.get("/api/economic-stats", async (_req, res) => {
-    try {
-      const stats = await getEconomicStats();
-      res.json(stats);
-    } catch {
-      res.status(500).json({ message: "Failed to load economic stats." });
-    }
-  });
-
-  app.get("/api/health/db", async (_req, res) => {
-    if (!db) {
-      return res.json({ ok: true, mode: "memory-fallback", message: "No MySQL env vars set. Using in-memory fallback." });
-    }
-    try {
-      await db.query("SELECT 1");
-      return res.json({ ok: true, mode: "mysql" });
-    } catch {
-      return res.status(500).json({ ok: false, mode: "mysql", error: "Database connection failed." });
-    }
-  });
 
   app.post("/api/auth/register", async (req, res) => {
     try {
@@ -2160,82 +2432,27 @@ async function startServer() {
     }
   });
 
-  app.post("/api/onesa/chat", async (req, res) => {
-    try {
-      const rawMessages = Array.isArray(req.body?.messages) ? req.body.messages : [];
-      const requestedLanguage = typeof req.body?.language === "string" ? req.body.language : undefined;
-      // Keep request payload bounded to control prompt size and provider cost.
-      const messages: ChatMessage[] = rawMessages
-        .map((m: any) => ({
-          role: m?.role,
-          content: typeof m?.content === "string" ? m.content.trim() : "",
-        }))
-        .filter((m: ChatMessage) => (m.role === "user" || m.role === "assistant" || m.role === "system") && m.content.length > 0)
-        .slice(-20);
-
-      if (messages.length === 0) {
-        return res.status(400).json({ message: "At least one user message is required." });
-      }
-
-      const result = await generateOnesaReply(messages, requestedLanguage);
-      if (!result?.reply) {
-        return res.status(502).json({ message: "Onesa model returned an empty response." });
-      }
-      const guardLanguage = normalizeOnesaLanguage(requestedLanguage ?? "");
-      const safeReply = enforceOnesaIdentityGuard(result.reply, guardLanguage);
-      lastOnesaSuccessAt = Date.now();
-      onesaReadinessCache = null;
-      return res.json({ reply: safeReply, truncated: Boolean(result.truncated) });
-    } catch (error: any) {
-      const upstreamStatus = getUpstreamStatus(error);
-      const retryAfterMs = getRetryAfterMs(error) ?? getGlobalBackoffRemainingMs();
-      // Surface throttling explicitly so clients can implement countdown/retry UX.
-      if (upstreamStatus === 429 || isRateLimitedUpstreamError(error)) {
-        return res.status(429).json({
-          message: "Onesa is receiving too many requests right now. Please try again shortly.",
-          retryAfterMs: retryAfterMs > 0 ? retryAfterMs : undefined,
-        });
-      }
-      if (upstreamStatus === 503 || upstreamStatus === 504) {
-        return res.status(503).json({
-          message: "Onesa provider is temporarily unavailable. Please try again shortly.",
-        });
-      }
-      if (upstreamStatus === 401 || upstreamStatus === 403) {
-        return res.status(503).json({
-          message: "Onesa provider is temporarily unavailable. Please try again shortly.",
-        });
-      }
-      const upstream = String(error?.response?.data?.error ?? error?.response?.data?.message ?? error?.message ?? "").trim();
-      console.error("[onesa/chat] request failed", { upstreamStatus, upstream });
-      return res.status(500).json({
-        message: "Onesa chat request failed.",
-      });
-    }
-  });
-
-  app.get("/api/onesa/health", async (_req, res) => {
-    const health = await getOnesaHealth();
-    const status = health.ok ? 200 : 503;
-    return res.status(status).json(health);
-  });
-
-  app.get("/api/onesa/ready", async (_req, res) => {
-    // Readiness may probe upstream providers; avoid using this for high-frequency keepalive.
-    const readiness = await getOnesaReadiness();
-    const status = readiness.ready ? 200 : 503;
-    return res.status(status).json(readiness);
-  });
-
-  // Lightweight keepalive endpoint that does not call upstream AI providers.
-  app.get("/api/ping", (_req, res) => {
-    return res.json({
-      ok: true,
-      service: "zigd-platform",
-      uptimeSeconds: Math.floor(process.uptime()),
-      startedAt: new Date(SERVER_STARTED_AT).toISOString(),
-      now: new Date().toISOString(),
-    });
+  registerApiRoutes(app, {
+    backend: {
+      getEconomicStats,
+      db,
+      serverStartedAt: SERVER_STARTED_AT,
+    },
+    onesa: {
+      generateOnesaReply,
+      normalizeOnesaLanguage,
+      enforceOnesaIdentityGuard,
+      getOnesaHealth,
+      getOnesaReadiness,
+      getUpstreamStatus,
+      getRetryAfterMs,
+      getGlobalBackoffRemainingMs,
+      isRateLimitedUpstreamError,
+      onChatSuccess: () => {
+        lastOnesaSuccessAt = Date.now();
+        onesaReadinessCache = null;
+      },
+    },
   });
 
   const staticPath =

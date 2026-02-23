@@ -25,7 +25,7 @@ export default function Technology() {
         {
           text: t('tech.chat_with_onesa') || "Chat with Onesa",
           variant: "primary",
-          link: "/onesa-ai",
+          link: "/onesa-ai-chat",
           showArrow: true,
         },
       ]
@@ -452,7 +452,7 @@ export default function Technology() {
                         {t("tech.onesa_matter.title") || "Why Onesa AI Matters"}
                       </h3>
                     </div>
-                    <Link href="/onesa-ai">
+                    <Link href="/onesa-ai-chat">
                       <Button className="shrink-0 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
                         {t('tech.chat_with_onesa') || "Chat with Onesa"}
                       </Button>

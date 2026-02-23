@@ -2,11 +2,14 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Textarea } from "@/components/ui/textarea";
+import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/pages/OnesaAI";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, type AuthUser } from "@/lib/api";
+import { Send } from "lucide-react";
 
 
 interface LayoutProps {
@@ -68,8 +71,26 @@ export default function Layout({ children }: LayoutProps) {
   const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
   const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
   const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
+  const [isOnesaChatOpen, setIsOnesaChatOpen] = useState(false);
+  const [onesaMessages, setOnesaMessages] = useState<OnesaChatMessage[]>([
+    {
+      role: "assistant",
+      content:
+        t("onesa.welcome", {
+          defaultValue:
+            "I am an expert on Zimbabwe. Let me help you navigate everything from investment, trade, and tourism to your day-to-day tasks.",
+        }) || "I am an expert on Zimbabwe. Let me help you navigate everything from investment, trade, and tourism to your day-to-day tasks.",
+    },
+  ]);
+  const [onesaInput, setOnesaInput] = useState("");
+  const [onesaLoading, setOnesaLoading] = useState(false);
+  const [onesaError, setOnesaError] = useState("");
+  const [onesaStatus, setOnesaStatus] = useState("");
+  const [onesaIsOnline, setOnesaIsOnline] = useState(false);
+  const [onesaRetryAfterSecondsRemaining, setOnesaRetryAfterSecondsRemaining] = useState<number | null>(null);
   const scrolledRef = useRef(false);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const onesaMessagesEndRef = useRef<HTMLDivElement | null>(null);
   const navPillRef = useRef<HTMLDivElement | null>(null);
   const utilitySlotRef = useRef<HTMLDivElement | null>(null);
   const suppressBubbleClickRef = useRef(false);
@@ -163,8 +184,8 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.home'), href: "/" },
     { name: t('nav.technology'), href: "/technology" },
     { name: t('nav.shop'), href: "/shop" },
-    { name: t('nav.export'), href: "/exports" },
     { name: t('nav.tourism'), href: "/tourism" },
+    { name: t('nav.export'), href: "/exports" },
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
     { name: t('nav.data'), href: "/data-visualization" },
@@ -172,7 +193,17 @@ export default function Layout({ children }: LayoutProps) {
   ];
 
   const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
-  const showOnesaBubble = !location.startsWith("/onesa-ai");
+  // Hide the floating chat bubble on dedicated chat/tourism-experience routes to avoid duplicate UX.
+  const hideOnesaBubbleRoutes = [
+    "/onesa-ai-chat",
+    "/onesa-ai-tourism-virtual-experince",
+    "/onesa-ai-tourism-augmented-experince",
+    "/onesa-ai-tourism-virtual-experience",
+    "/onesa-ai-tourism-augmented-experience",
+  ];
+  // Bubble is visible on all other routes by default.
+  const showOnesaBubble = !hideOnesaBubbleRoutes.some((route) => location.startsWith(route));
+  const hasOnesaChatStarted = onesaMessages.some((message) => message.role === "user");
   const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
 
   const evaluateUtilityOverlap = useCallback(() => {
@@ -301,6 +332,113 @@ export default function Layout({ children }: LayoutProps) {
     setSearchQuery("");
   };
 
+  const checkOnesaPopupHealth = useCallback(async (): Promise<boolean> => {
+    // Shared health check for the floating chat modal and status indicator.
+    const backendUnreachableStatus =
+      t("onesa.status_backend_unreachable", {
+        defaultValue: "Onesa is currently unavailable. AI mode is off",
+      }) || "Onesa is currently unavailable. AI mode is off";
+    const health = await checkOnesaHealth(backendUnreachableStatus);
+    setOnesaIsOnline(health.online);
+    setOnesaStatus(health.statusText);
+    return health.online;
+  }, [t]);
+
+  useEffect(() => {
+    if (!isOnesaChatOpen) return;
+    void checkOnesaPopupHealth();
+  }, [isOnesaChatOpen, checkOnesaPopupHealth]);
+
+  useEffect(() => {
+    if (onesaRetryAfterSecondsRemaining === null) return;
+    if (onesaRetryAfterSecondsRemaining <= 0) {
+      setOnesaRetryAfterSecondsRemaining(null);
+      return;
+    }
+    const timeoutId = window.setTimeout(() => {
+      setOnesaRetryAfterSecondsRemaining((current) => {
+        if (current === null) return null;
+        return Math.max(0, current - 1);
+      });
+    }, 1000);
+    return () => window.clearTimeout(timeoutId);
+  }, [onesaRetryAfterSecondsRemaining]);
+
+  useEffect(() => {
+    if (!isOnesaChatOpen) return;
+    const frameId = window.requestAnimationFrame(() => {
+      onesaMessagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [isOnesaChatOpen, onesaMessages, onesaLoading]);
+
+  const sendOnesaPopupMessage = async () => {
+    const trimmed = onesaInput.trim();
+    if (!trimmed || onesaLoading) return;
+    void checkOnesaPopupHealth();
+
+    const nextMessages: OnesaChatMessage[] = [...onesaMessages, { role: "user", content: trimmed }];
+    setOnesaMessages(nextMessages);
+    setOnesaInput("");
+    setOnesaError("");
+    setOnesaRetryAfterSecondsRemaining(null);
+    setOnesaLoading(true);
+
+    try {
+      const { data } = await sendOnesaChatMessage({
+        messages: nextMessages,
+        language: i18n.resolvedLanguage ?? i18n.language ?? "en",
+      });
+      const reply = String(data?.reply ?? "").trim();
+      if (!reply) throw new Error("Empty model response.");
+      setOnesaMessages((prev) => [...prev, { role: "assistant", content: reply }]);
+      setOnesaIsOnline(true);
+      setOnesaStatus("");
+    } catch (err: any) {
+      const statusCode = Number(err?.response?.status ?? 0);
+      const responseMessage = err?.response?.data?.message;
+      const retryAfterMs = Number(err?.response?.data?.retryAfterMs ?? 0);
+      const retryAfterSeconds = retryAfterMs > 0 ? Math.max(1, Math.ceil(retryAfterMs / 1000)) : null;
+      const isRateLimited =
+        statusCode === 429 ||
+        /status code 429|rate limit|too many requests/i.test(String(err?.message ?? responseMessage ?? ""));
+      const rateLimitedError =
+        t("onesa.error_rate_limited", {
+          defaultValue: "Onesa is busy right now. Please try again in a few seconds.",
+        }) || "Onesa is busy right now. Please try again in a few seconds.";
+      const genericContactError =
+        t("onesa.error_unable_contact", {
+          defaultValue: "Onesa is currently unavailable. AI mode is off",
+        }) || "Onesa is currently unavailable. AI mode is off";
+      const timeoutMessage =
+        err?.code === "ECONNABORTED"
+          ? t("onesa.error_timeout", { defaultValue: "Onesa request timed out after 3 minutes. Please try again." })
+          : null;
+      const safeResponseMessage =
+        typeof responseMessage === "string" && !/status code \d+/i.test(responseMessage) ? responseMessage : null;
+      const message = isRateLimited ? rateLimitedError : timeoutMessage ?? safeResponseMessage ?? genericContactError;
+      setOnesaRetryAfterSecondsRemaining(isRateLimited ? retryAfterSeconds : null);
+      setOnesaError(message);
+      if (!isRateLimited) {
+        void checkOnesaPopupHealth();
+      }
+    } finally {
+      setOnesaLoading(false);
+    }
+  };
+
+  const handleOnesaPopupSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await sendOnesaPopupMessage();
+  };
+
+  const handleOnesaPopupInputKeyDown = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      await sendOnesaPopupMessage();
+    }
+  };
+
   const handleBubblePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isMobileViewport || !mobileBubblePosition) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -361,11 +499,17 @@ export default function Layout({ children }: LayoutProps) {
     dragStateRef.current = null;
   };
 
-  const handleBubbleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleBubbleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!suppressBubbleClickRef.current) return;
     event.preventDefault();
     event.stopPropagation();
     suppressBubbleClickRef.current = false;
+  };
+
+  const handleBubbleOpenChat = (event: React.MouseEvent<HTMLButtonElement>) => {
+    handleBubbleClick(event);
+    if (event.defaultPrevented) return;
+    setIsOnesaChatOpen(true);
   };
 
   return (
@@ -705,27 +849,149 @@ export default function Layout({ children }: LayoutProps) {
           onPointerUp={handleBubblePointerEnd}
           onPointerCancel={handleBubblePointerEnd}
         >
-          <Link href="/onesa-ai" onClick={handleBubbleClick}>
-            <button
-              aria-label="Chat with Onesa"
-              className="group relative flex items-center gap-3 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 py-2 shadow-2xl hover:bg-slate-900 transition-colors will-change-transform"
-            >
-              <span className="relative h-12 w-12 rounded-full overflow-hidden border border-zim-gold/40">
-                <img
-                  src="/images/pages/technology/zim_think.jpg"
-                  alt="Onesa AI assistant"
-                  className="h-full w-full object-cover"
-                />
-                <span className="absolute inset-0 bg-gradient-to-t from-slate-950/30 to-transparent" />
-              </span>
-              <span className="text-left">
-                <span className="block text-zim-gold text-[10px] font-black uppercase tracking-widest">Onesa</span>
-                <span className="block text-white text-xs font-semibold">{t("tech.chat_with_onesa") || "Chat with Onesa"}</span>
-              </span>
-            </button>
-          </Link>
+          <button
+            type="button"
+            onClick={handleBubbleOpenChat}
+            aria-label={t("tech.chat_with_onesa") || "Chat with Onesa"}
+            className="group relative flex items-center gap-3 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 py-2 shadow-2xl hover:bg-slate-900 transition-colors will-change-transform"
+          >
+            <span className="relative h-12 w-12 rounded-full overflow-hidden border border-zim-gold/40">
+              <img
+                src="/images/pages/technology/zim_think.jpg"
+                alt="Onesa AI assistant"
+                className="h-full w-full object-cover"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-slate-950/30 to-transparent" />
+            </span>
+            <span className="text-left">
+              <span className="block text-zim-gold text-[10px] font-black uppercase tracking-widest">Onesa</span>
+              <span className="block text-white text-xs font-semibold">{t("tech.chat_with_onesa") || "Chat with Onesa"}</span>
+            </span>
+          </button>
         </motion.div>
       )}
+
+      <AnimatePresence>
+        {isOnesaChatOpen && (
+          <>
+            <motion.button
+              type="button"
+              aria-label={t("close") || "Close"}
+              onClick={() => setIsOnesaChatOpen(false)}
+              className="fixed inset-0 z-[240] bg-slate-950/55 backdrop-blur-[2px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.section
+              initial={isMobileViewport ? { opacity: 0, y: 40 } : { opacity: 0, y: 24, scale: 0.98 }}
+              animate={isMobileViewport ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, scale: 1 }}
+              exit={isMobileViewport ? { opacity: 0, y: 40 } : { opacity: 0, y: 16, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={`fixed z-[250] overflow-hidden border border-zim-gold/20 bg-slate-950/95 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl ${
+                isMobileViewport
+                  ? "left-3 right-3 top-[6.5rem] bottom-4 rounded-[1.4rem]"
+                  : "bottom-24 right-5 md:right-10 h-[min(72vh,640px)] w-[min(440px,calc(100vw-2rem))] rounded-[1.8rem]"
+              }`}
+            >
+              <div className="flex h-full flex-col">
+                <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                  <div className="min-w-0">
+                    <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.22em]">Onesa</p>
+                    <h2 className="truncate !text-sm font-black text-white">
+                      {t("onesa.title", { defaultValue: "Chat with Onesa AI" })}
+                    </h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${
+                        onesaIsOnline
+                          ? "border border-emerald-300/40 bg-emerald-500/15 text-emerald-300"
+                          : "border border-red-300/40 bg-red-500/15 text-red-300"
+                      }`}
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          onesaIsOnline ? "bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]" : "bg-red-400"
+                        }`}
+                      />
+                      {onesaIsOnline
+                        ? t("onesa.online_text", { defaultValue: "Online" })
+                        : t("onesa.offline_text", { defaultValue: "Offline" })}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsOnesaChatOpen(false)}
+                      className="h-8 w-8 rounded-full text-white/70 hover:text-white hover:bg-white/10"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {onesaStatus ? (
+                  <p className="border-b border-white/10 px-4 py-2 text-[11px] leading-relaxed text-white/70">{onesaStatus}</p>
+                ) : null}
+
+                <div className="flex-1 overflow-y-auto px-4 py-4">
+                  <div className="space-y-4">
+                    {onesaMessages.map((message, index) => (
+                      <div key={`${message.role}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                        <div
+                          className={`max-w-[92%] px-3 py-2 text-sm leading-relaxed ${
+                            message.role === "user"
+                              ? "rounded-[1.25rem] rounded-br-[0.45rem] bg-slate-900/90 border border-zim-gold/30 text-white"
+                              : "rounded-[1.25rem] rounded-bl-[0.45rem] bg-zim-gold/10 border border-zim-gold/45 text-white shadow-[0_0_24px_rgba(212,175,55,0.22)]"
+                          }`}
+                        >
+                          {message.content}
+                        </div>
+                      </div>
+                    ))}
+                    <div ref={onesaMessagesEndRef} />
+                  </div>
+                </div>
+
+                <form onSubmit={handleOnesaPopupSubmit} className="border-t border-white/10 px-4 py-3 space-y-2">
+                  <Textarea
+                    value={onesaInput}
+                    onChange={(e) => setOnesaInput(e.target.value)}
+                    onKeyDown={handleOnesaPopupInputKeyDown}
+                    placeholder={
+                      hasOnesaChatStarted
+                        ? ""
+                        : t("onesa.starter_prompt", {
+                            defaultValue: "Start chat....",
+                          })
+                    }
+                    className="min-h-[96px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/30"
+                  />
+                  {onesaError ? (
+                    <p className="text-red-400 text-xs">
+                      {onesaError}
+                      {onesaRetryAfterSecondsRemaining !== null ? ` (${onesaRetryAfterSecondsRemaining}s)` : ""}
+                    </p>
+                  ) : null}
+                  <div className="flex justify-end">
+                    <Button
+                      type="submit"
+                      disabled={onesaLoading}
+                      className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[11px] rounded-full px-6"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      {onesaLoading
+                        ? t("onesa.thinking", { defaultValue: "Thinking..." })
+                        : t("onesa.send", { defaultValue: "Send" })}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </motion.section>
+          </>
+        )}
+      </AnimatePresence>
 
      {/* Footer */}
       <footer className="relative bg-slate-950 pt-20 pb-12 overflow-hidden">
