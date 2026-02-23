@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Globe from "react-globe.gl";
-
-type GlobeRef = {
-  pointOfView: (coords: { lat: number; lng: number; altitude: number }, ms: number) => void;
-  controls: () => {
-    autoRotate: boolean;
-    autoRotateSpeed: number;
-    enableDamping: boolean;
-  };
-};
+import Globe, { type GlobeMethods } from "react-globe.gl";
 
 type ArcDatum = {
   startLat: number;
@@ -20,7 +11,7 @@ type ArcDatum = {
 };
 
 export default function ZimbabweInteractiveGlobe() {
-  const globeRef = useRef<GlobeRef | null>(null);
+  const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -90,6 +81,7 @@ export default function ZimbabweInteractiveGlobe() {
   const attemptAutoPlay = useCallback(async () => {
     if (!audioRef.current || !audioEnabled) return;
     try {
+      audioRef.current.muted = false;
       await audioRef.current.play();
       setAudioBlocked(false);
       setAudioPlaying(true);
@@ -101,28 +93,75 @@ export default function ZimbabweInteractiveGlobe() {
   }, [audioEnabled]);
 
   useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.muted = false;
+    audioRef.current.volume = 0.5;
     void attemptAutoPlay();
-  }, [attemptAutoPlay]);
+    const retry1 = window.setTimeout(() => {
+      if (!audioPlaying && audioEnabled) void attemptAutoPlay();
+    }, 1000);
+    const retry2 = window.setTimeout(() => {
+      if (!audioPlaying && audioEnabled) void attemptAutoPlay();
+    }, 3000);
+    return () => {
+      window.clearTimeout(retry1);
+      window.clearTimeout(retry2);
+    };
+  }, [attemptAutoPlay, audioEnabled, audioPlaying]);
 
   useEffect(() => {
     if (!audioRef.current) return;
     const handleCanPlay = () => {
       void attemptAutoPlay();
     };
+    const handleCanPlayThrough = () => {
+      void attemptAutoPlay();
+    };
+    const handlePlay = () => {
+      if (audioRef.current) {
+        audioRef.current.muted = false;
+      }
+      setAudioPlaying(true);
+    };
+    const handlePause = () => {
+      setAudioPlaying(false);
+    };
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         void attemptAutoPlay();
       }
     };
+    const handlePointer = () => {
+      if (!audioRef.current || audioPlaying || !audioEnabled) return;
+      audioRef.current.muted = false;
+      void audioRef.current
+        .play()
+        .then(() => {
+          setAudioBlocked(false);
+          setAudioPlaying(true);
+        })
+        .catch(() => {
+          setAudioBlocked(true);
+          setAudioPlaying(false);
+        });
+    };
     audioRef.current.addEventListener("canplay", handleCanPlay);
+    audioRef.current.addEventListener("canplaythrough", handleCanPlayThrough);
+    audioRef.current.addEventListener("play", handlePlay);
+    audioRef.current.addEventListener("pause", handlePause);
     document.addEventListener("visibilitychange", handleVisibility);
     window.addEventListener("focus", handleVisibility);
+    window.addEventListener("pointerdown", handlePointer);
     return () => {
       audioRef.current?.removeEventListener("canplay", handleCanPlay);
+      audioRef.current?.removeEventListener("canplaythrough", handleCanPlayThrough);
+      audioRef.current?.removeEventListener("play", handlePlay);
+      audioRef.current?.removeEventListener("pause", handlePause);
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("focus", handleVisibility);
+      window.removeEventListener("pointerdown", handlePointer);
     };
-  }, [attemptAutoPlay]);
+  }, [attemptAutoPlay, audioEnabled, audioPlaying]);
 
   useEffect(() => {
     let rafId = 0;
@@ -169,8 +208,14 @@ export default function ZimbabweInteractiveGlobe() {
         src="/sounds/zimbabwe_a_world_of_wonders.mp3"
         autoPlay
         loop
+        preload="auto"
         onLoadedMetadata={(e) => {
-          e.currentTarget.volume = 0.15;
+          e.currentTarget.muted = false;
+          e.currentTarget.volume = 0.5;
+          void attemptAutoPlay();
+        }}
+        onPlay={() => {
+          if (audioRef.current) audioRef.current.muted = false;
         }}
       />
 
@@ -181,7 +226,6 @@ export default function ZimbabweInteractiveGlobe() {
           height={size.height}
         globeImageUrl="/globe/earth-blue-marble.jpg"
         bumpImageUrl="/globe/earth-topology.png"
-        nightImageUrl="/globe/earth-night.jpg"
         backgroundImageUrl="/globe/night-sky.png"
         showAtmosphere
         atmosphereColor="#3a86ff"
@@ -192,11 +236,11 @@ export default function ZimbabweInteractiveGlobe() {
         arcDashGap={2}
         arcDashAnimateTime={2000}
         arcStroke={0.4}
-        onArcClick={(arc) =>
+        onArcClick={(arc: any) =>
           handleFlyTo({ lat: arc.endLat, lng: arc.endLng }, 1.2)
         }
         htmlElementsData={[{ ...zimCoords, name: "ZIMBABWE" }]}
-        htmlElement={(d) => {
+        htmlElement={(d: any) => {
           const el = document.createElement("div");
           el.innerHTML = `
             <div class="group flex flex-col items-center cursor-pointer">
@@ -221,10 +265,9 @@ export default function ZimbabweInteractiveGlobe() {
         type="button"
         onClick={() => {
           if (!audioRef.current) return;
-          if (audioEnabled || audioPlaying) {
+          if (audioPlaying) {
             audioRef.current.pause();
             setAudioEnabled(false);
-            setAudioPlaying(false);
             return;
           }
           setAudioEnabled(true);
@@ -243,11 +286,7 @@ export default function ZimbabweInteractiveGlobe() {
       >
         {audioPlaying ? "Music: On" : "Music: Off"}
       </button>
-      {audioBlocked ? (
-        <p className="absolute bottom-6 left-6 text-[9px] text-white/60 uppercase tracking-widest">
-          Click anywhere to start audio
-        </p>
-      ) : null}
+      {audioBlocked ? null : null}
     </div>
   );
 }

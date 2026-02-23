@@ -276,6 +276,7 @@ export default function OnesaAITourismVirtualExperience() {
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [aiStatus, setAiStatus] = useState("System Ready");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -390,9 +391,12 @@ export default function OnesaAITourismVirtualExperience() {
           language: i18n.resolvedLanguage ?? "en",
         });
         const reply = String(data?.reply ?? "").trim();
-        setVirtualNarrative(reply || destination.summary);
+        const finalText = reply || destination.summary;
+        setVirtualNarrative(finalText);
+        await speakWithTts(finalText);
       } catch {
         setVirtualNarrative(destination.summary);
+        await speakWithTts(destination.summary);
       } finally {
         setAiStatus("System Ready");
         setLoading(false);
@@ -414,14 +418,37 @@ export default function OnesaAITourismVirtualExperience() {
     }
   }, [isConversationMode]);
 
-  const speak = (text: string) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.95;
-    const voices = window.speechSynthesis.getVoices();
-    utterance.voice = voices.find(v => v.name.includes("Google") || v.name.includes("Natural")) || voices[0];
-    window.speechSynthesis.speak(utterance);
+  const speakWithTts = async (text: string) => {
+    if (!text) return;
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text,
+          voice: "alloy",
+          speed: 1,
+        }),
+      });
+      if (!res.ok) throw new Error("TTS failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      if (!ttsAudioRef.current) {
+        ttsAudioRef.current = new Audio();
+      }
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.src = url;
+      ttsAudioRef.current.volume = 0.9;
+      await ttsAudioRef.current.play();
+    } catch {
+      if (typeof window === "undefined" || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      const voices = window.speechSynthesis.getVoices();
+      utterance.voice = voices.find((v) => v.name.includes("Google") || v.name.includes("Natural")) || voices[0];
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   const processConversation = async (blob: Blob) => {
@@ -443,7 +470,7 @@ export default function OnesaAITourismVirtualExperience() {
 
       const reply = data?.reply || "I am currently analyzing the scenery.";
       setVirtualNarrative(reply);
-      speak(reply);
+      await speakWithTts(reply);
       setAiStatus("System Ready");
     } catch (err) {
       setAiStatus("Voice Error");
@@ -483,11 +510,8 @@ export default function OnesaAITourismVirtualExperience() {
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          {/* Glass container for the full VR walkthrough layout */}
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            
-            {/* Main two-column layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main two-column layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               
               {/* NARRATION SIDEBAR */}
               <div className="lg:col-span-3 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 space-y-4 flex flex-col">
@@ -587,12 +611,12 @@ export default function OnesaAITourismVirtualExperience() {
                 {/* CONTROL PANEL (AR-style structure) */}
                 <div className="space-y-3">
                   <div className="rounded-xl border border-zim-gold/20 bg-zim-gold/5 p-3 mt-2">
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <MapPin className="h-2.5 w-2.5 text-zim-gold" />
-                        <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold whitespace-nowrap">Current Context</p>
+                        <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold">Current Context</p>
                       </div>
-                      <div className="flex items-center gap-2 whitespace-nowrap">
+                      <div className="flex flex-wrap items-center gap-2">
                         <Button
                           onClick={() => setIsConversationMode((current) => !current)}
                           variant="outline"
@@ -630,7 +654,6 @@ export default function OnesaAITourismVirtualExperience() {
                 </div>
               </div>
 
-            </div>
           </div>
         </div>
       </section>
