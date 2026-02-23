@@ -197,6 +197,7 @@ export default function OnesaAITourismAugmentedExperience() {
   const [narrationVolume, setNarrationVolume] = useState(0.9);
   const [fallbackImageIndex, setFallbackImageIndex] = useState(0);
   const [settingsPanelHeight, setSettingsPanelHeight] = useState(0);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
   const voiceModeRef = useRef(false);
   const loadingRef = useRef(false);
@@ -376,6 +377,54 @@ export default function OnesaAITourismAugmentedExperience() {
     }
   };
 
+  const speakWithTts = async (text: string) => {
+    if (!text) return;
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text,
+          voice: selectedVoiceGender === "male" ? "echo" : "alloy",
+          speed: 1,
+        }),
+      });
+      if (!res.ok) throw new Error("TTS failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      if (!ttsAudioRef.current) {
+        ttsAudioRef.current = new Audio();
+      }
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.src = url;
+      ttsAudioRef.current.volume = narrationVolume;
+      await ttsAudioRef.current.play();
+    } catch {
+      // Fallback to browser TTS if OpenAI TTS fails.
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = i18n.resolvedLanguage ?? i18n.language ?? "en-US";
+        utterance.volume = narrationVolume;
+        const targetPrefixes = voiceLanguageMap[selectedVoiceLanguage] ?? ["en"];
+        const languageMatches = availableVoices.filter((item) =>
+          targetPrefixes.some((prefix) => item.lang.toLowerCase().startsWith(prefix))
+        );
+        const genderKeywords = genderKeywordMap[selectedVoiceGender];
+        const voiceByGender = languageMatches.find((item) => {
+          const name = `${item.name} ${item.voiceURI}`.toLowerCase();
+          return genderKeywords.some((keyword) => name.includes(keyword));
+        });
+        const voice = voiceByGender ?? languageMatches[0] ?? availableVoices[0];
+        if (voice) utterance.voice = voice;
+        window.speechSynthesis.speak(utterance);
+      } catch {
+        // no-op
+      }
+    }
+  };
+
   const toggleRecording = () => {
     if (!isConversationMode) return;
     if (isRecording) {
@@ -515,33 +564,17 @@ export default function OnesaAITourismAugmentedExperience() {
 
   useEffect(() => {
     // Speak only when overlay + voice narration are enabled and there is content.
-    if (!arOverlayEnabled || !voiceNarrationEnabled || !answer || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(answer);
-      utterance.lang = i18n.resolvedLanguage ?? i18n.language ?? "en-US";
-      utterance.volume = narrationVolume;
-      const targetPrefixes = voiceLanguageMap[selectedVoiceLanguage] ?? ["en"];
-      const languageMatches = availableVoices.filter((item) =>
-        targetPrefixes.some((prefix) => item.lang.toLowerCase().startsWith(prefix))
-      );
-      const genderKeywords = genderKeywordMap[selectedVoiceGender];
-      const voiceByGender = languageMatches.find((item) => {
-        const name = `${item.name} ${item.voiceURI}`.toLowerCase();
-        return genderKeywords.some((keyword) => name.includes(keyword));
-      });
-      const voice = voiceByGender ?? languageMatches[0] ?? availableVoices[0];
-      if (voice) utterance.voice = voice;
-      window.speechSynthesis.speak(utterance);
-    } catch {
-      // no-op
-    }
-  }, [answer, arOverlayEnabled, availableVoices, i18n.language, i18n.resolvedLanguage, narrationVolume, selectedVoiceGender, selectedVoiceLanguage, voiceNarrationEnabled]);
+    if (!arOverlayEnabled || !voiceNarrationEnabled || !answer || isConversationMode) return;
+    void speakWithTts(answer);
+  }, [answer, arOverlayEnabled, voiceNarrationEnabled, isConversationMode]);
 
   useEffect(() => {
     if (voiceNarrationEnabled) return;
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
+    }
+    if (ttsAudioRef.current) {
+      ttsAudioRef.current.pause();
     }
   }, [voiceNarrationEnabled]);
 
@@ -646,10 +679,8 @@ export default function OnesaAITourismAugmentedExperience() {
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          {/* Glass container for the full AR experience layout */}
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            {/* Main two-column layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main two-column layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left rail: location controls + narration transcript */}
               <div className="lg:col-span-3 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 space-y-4">
                 <Button
@@ -752,12 +783,12 @@ export default function OnesaAITourismAugmentedExperience() {
 
                 <div className={`${voiceNarrationEnabled ? "mt-auto" : ""} space-y-3`}>
                   <div className="rounded-xl border border-zim-gold/20 bg-zim-gold/5 p-3 mt-2">
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-1.5">
                         <MapPin className="h-2.5 w-2.5 text-zim-gold" />
                         <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold">Current Context</p>
                       </div>
-                      <div className="flex items-center gap-2 whitespace-nowrap">
+                      <div className="flex flex-wrap items-center gap-2">
                         <Button
                           onClick={() => setIsConversationMode((current) => !current)}
                           variant="outline"
@@ -864,7 +895,6 @@ export default function OnesaAITourismAugmentedExperience() {
 
                 
               </div>
-            </div>
           </div>
         </div>
       </section>

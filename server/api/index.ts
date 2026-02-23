@@ -2,6 +2,8 @@ import type express from "express";
 import { registerBackendApiRoutes } from "./backend";
 import { registerOnesaApiRoutes } from "./onesa";
 import type { OnesaApiDeps } from "./onesa";
+import { registerWhisperRoutes } from "./whisper";
+import { registerTtsRoutes } from "./tts";
 
 type ApiDeps = {
   onesa: OnesaApiDeps;
@@ -18,6 +20,12 @@ export function registerApiRoutes(app: express.Express, deps: ApiDeps) {
   // - GET /api/health/db
   // - GET /api/ping
   registerBackendApiRoutes(app, deps.backend);
+
+  // Audio routes:
+  // - POST /api/whisper
+  // - POST /api/tts
+  registerWhisperRoutes(app);
+  registerTtsRoutes(app);
 
   // Onesa AI routes (registered from onesaAI.ts), including:
   // - POST /api/onesa/chat

@@ -1010,11 +1010,13 @@ function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): C
 }
 
 function getOnesaConfig() {
-  const provider = (process.env.ONESA_PROVIDER ?? "ollama").toLowerCase();
-  const model = process.env.ONESA_MODEL ?? "llama3.1:8b";
+  const provider = (process.env.ONESA_AI_PROVIDER ?? "ollama").toLowerCase();
+  const model = process.env.OPENAI_MODEL ?? process.env.ONESA_AI_MODEL ?? "llama3.1:8b";
   const fallbackModel =
-    process.env.ONESA_FALLBACK_MODEL ?? (provider === "openai_compatible" ? model : "llama3.1:8b");
-  const modelCandidates = String(process.env.ONESA_MODEL_CANDIDATES ?? "")
+    process.env.OPENAI_FALLBACK_MODEL ??
+    process.env.ONESA_AI_FALLBACK_MODEL ??
+    (provider === "openai_compatible" ? model : "llama3.1:8b");
+  const modelCandidates = String(process.env.OPENAI_MODEL_CANDIDATES ?? process.env.ONESA_AI_MODEL_CANDIDATES ?? "")
     .split(",")
     .map((x) => x.trim())
     .filter(Boolean);
@@ -1056,8 +1058,8 @@ function getOnesaConfig() {
     .map((x) => x.trim())
     .filter(Boolean);
   const ollamaBase = (process.env.ONESA_OLLAMA_URL ?? "http://127.0.0.1:11434").replace(/\/+$/, "");
-  const openaiBase = (process.env.ONESA_AI_BASE_URL ?? "http://127.0.0.1:1234/v1").replace(/\/+$/, "");
-  const openaiApiKey = process.env.ONESA_AI_API_KEY ?? "";
+  const openaiBase = (process.env.OPENAI_BASE_URL ?? process.env.ONESA_AI_BASE_URL ?? "http://127.0.0.1:1234/v1").replace(/\/+$/, "");
+  const openaiApiKey = process.env.OPENAI_API_KEY ?? "";
   const secondaryOpenaiBase = String(process.env.ONESA_SECONDARY_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
   const secondaryOpenaiApiKey = process.env.ONESA_SECONDARY_AI_API_KEY ?? "";
   const tertiaryOpenaiBase = String(process.env.ONESA_TERTIARY_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
