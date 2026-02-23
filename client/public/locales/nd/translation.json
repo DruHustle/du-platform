@@ -600,6 +600,9 @@
       "subtitle5": "Zibonele intuthu iduma eVitoria Falls.",
       "plan_journey": "Hlela uhambo lwakho",
       "watch_exp": "Bukela okwenzakalayo",
+      "book_trip": "Bhuka Uhambo",
+      "virtual_center": "Vakashela i-Virtual Reality Center",
+      "local_guide_ar": "Local guide AR Experience",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -611,7 +614,6 @@
       "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
     },
     "attractions_title": "Izindawo okumele uzivakashele",
-    "attractions_subtitle": "Izindawo eziveleleyo ezichaza isimo seZimbabwe.",
     "attractions": {
       "vicfalls": {
         "name": "I-Victoria Falls",
@@ -779,7 +781,82 @@
       "plan": {
         "title": "Izinhlelo ezenziwe wena",
         "desc": "Izinhlelo ezenziwe yi-AI kuye ngezinto ozithandayo lendlela yakho yokuhamba."
-      }
+      },
+      "plan_trip_cta": "Hlela uhambo loOnesa",
+      "trip_planner": {
+        "badge": "Onesa AI Uhambo",
+        "title": "Ulwazi Lokubhuka lwe-Onesa",
+        "subtitle": "Yakha uhambo oluhambelana lesizini, olulungiselelwe izindleko lokunethezeka kwezindiza, amahhotela, okuhlangenwe nakho, lemota yokuqasha.",
+        "origin": "Idolobha lokusuka",
+        "season": "Isizini",
+        "budget": "Iphrofayili yebhajethi",
+        "comfort": "Izinga lenethezeka",
+        "days": "Izinsuku zohambo",
+        "travelers": "Abahambi",
+        "passengers": "Abagibeli",
+        "adults": "Abadala",
+        "adult": "Omdala",
+        "infants": "Izingane ezincane",
+        "infant": "Usana",
+        "interests": "Okuthandayo",
+        "error": "Asikwazanga ukwenza uhlelo lohambo okwamanje. Sicela uzame njalo emuva kwesikhatshana.",
+        "generating": "Kuyakhiwa...",
+        "generate": "Yakha uhlelo lohambo",
+        "ai_optimized": "Kulungeleliswe yi-AI",
+        "fallback_plan": "Uhlelo lokubuyisela oluhlakaniphile",
+        "estimated_total": "Ingqikithi ecabangwayo",
+        "flights": "Izindiza",
+        "hotels": "Amahhotela",
+        "car_hire": "Ukuqasha imota",
+        "experiences": "Okuhlangenwe nakho",
+        "itinerary": "Uhlelo lohambo oluqondene lawe",
+        "day": "Usuku",
+        "estimated": "Kucabangwayo",
+        "season_options": {
+          "dry": "Isizini eyomileyo",
+          "green": "Isizini eluhlaza",
+          "shoulder": "Isizini ephakathi"
+        },
+        "budget_options": {
+          "low": "Phansi",
+          "medium": "Phakathi",
+          "high": "Phezulu"
+        },
+        "comfort_options": {
+          "budget": "Yebhajethi",
+          "standard": "Ejwayelekile",
+          "premium": "Ephezulu"
+        },
+        "interests_options": {
+          "wildlife": "Izilwane zendle",
+          "culture": "Amasiko",
+          "adventure": "Uhambo lwe-adventure",
+          "food": "Ukudla",
+          "history": "Umlando",
+          "nature": "Imvelo"
+        },
+        "booking_focus": "Sebenzisa leli khasi ukuthola ulwazi lokubhuka lezincomo ngaphambi kokuqinisekisa uhambo lwakho.",
+        "download_pdf": "Landa i-PDF",
+        "pdf_title": "Uhlelo Lohambo lwe-Onesa",
+        "pdf_filename": "onesa-uhlelo-lohambo",
+        "summary": "Isifinyezo",
+        "optimized_for": "Kulungiselelwe",
+        "arrival_city": "Idolobha lokufika",
+        "trip_type": "Uhlobo lohambo",
+        "trip_type_options": {
+          "one_way": "Indlela eyodwa",
+          "round_trip": "Ukuya ubuye",
+          "multi_trip": "Uhambo olunengi"
+        },
+        "start_date": "Usuku lokuqala",
+        "open_start_date_picker": "Vula ikhalenda yosuku lokuqala",
+        "end_date": "Usuku lokuphela",
+        "open_end_date_picker": "Vula ikhalenda yosuku lokubuya",
+        "multi_city": "Uhambo lwamadolobha amanengi",
+        "multi_city_cities": "Amadolobha (ahlukaniswe ngekoma)",
+        "multi_city_hint": "Khetha uhambo olunengi ukuze ungeze amanye amadolobha."
+      },
+      "personalized_experience": "Okuhlangenwe nakho okuqondene lawe. - injini enamandla yokuncoma enikeza ulwazi olwenza uhambo lwakho lube lwehlukile futhi lungalibaleki."
     },
     "planning": {
       "guide_badge": "Isikhokhelo sohambo",
@@ -863,49 +940,6 @@
     "explore_title": "Hlola eminye imininingwane yezokuvakasha",
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi yezokuvakasha leziqondiso ezisemthethweni, vakashela i-website ye-Zimbabwe Tourism Authority.",
     "explore_site": "Vakashela i-ZTA",
-    "snapshot": {
-      "title": "Isithombe se-Zimbabwe Tourism (2026)",
-      "subtitle": "Ezokuvakasha zisendleleni eqinile yokusimama, esekelwa yizimpahla eziwuphawu, isidingo esikhulayo, nokuthuthukiswa okuqhubekayo kwengqalasizinda.",
-      "performance": {
-        "title": "Ukubuyiselwa Komkhakha kanye Nomnikelo",
-        "detail": "Amarisidi ezokuvakasha ayaqhubeka nokusimama kahle, njengoba umkhakha ugxile ekunikeleni ngezigidigidi zamarandi kanye nesabelo esikhulayo se-GDP kazwelonke."
-      },
-      "attractions": {
-        "title": "I-UNESCO kanye ne-Wildlife Anchors",
-        "detail": "IVictoria Falls, iMana Pools, iGreat Zimbabwe, kanye namapaki kazwelonke aphambili kusalokhu kuyisidingo esikhulu sezivakashi zakwamanye amazwe."
-      },
-      "infrastructure": {
-        "title": "Ukufinyelela kanye Nokuthuthukiswa Kwengqalasizinda",
-        "detail": "Ukulungiswa kabusha kwemigwaqo nesikhumulo sezindiza kuthuthukisa ukufinyelela emihubheni yezokuvakasha ebalulekile namasekethe ezindawo okuyiwa kuzo."
-      }
-    },
-    "opportunities": {
-      "title": "Ukutshalwa kwezimali kwezokuvakasha kanye namathuba okukhula",
-      "ecotourism": {
-        "title": "I-Ecotourism kanye Nokusimama",
-        "detail": "Thuthukisa ama-eco-lodge kanye nokongiwa kwemvelo okunomthelela omncane ezizungeze amapaki aphambili nezindawo ezivikelekile."
-      },
-      "cbt": {
-        "title": "Ezokuvakasha Ezizinze Emphakathini",
-        "detail": "Linganisa amaphrojekthi anika amandla imiphakathi yasendaweni ngohambo lwamasiko oluqondisiwe, amakhonsathi, nolwazi oluphethwe endaweni."
-      },
-      "hospitality": {
-        "title": "Izihambi kanye nengqalasizinda",
-        "detail": "Nweba izindawo zokuhlala ezisezingeni eliphezulu kanye nezinsiza zezivakashi eHarare, Bulawayo, Mutare, kanye nemizila eyisihluthulelo yesango."
-      },
-      "gastronomy": {
-        "title": "I-Gastronomy Tourism",
-        "detail": "Yakha ipulazi ukuya etafuleni kanye nesipiliyoni sendawo yokudlela exhunywe kubakhiqizi abancane kanye nesidingo sezokuvakasha zokupheka."
-      },
-      "adventure": {
-        "title": "I-Adventure Tourism",
-        "detail": "Khulisa imisebenzi enenani eliphezulu efana ne-rafting, bungee, canoeing, kanye nohambo lwasogwadule oluzungeze i-Victoria Falls kanye ne-Zambezi corridor."
-      },
-      "regional": {
-        "title": "I-Regional Hub Packaging",
-        "detail": "Beka iHarare kanye noBulawayo njengendawo yokungena ezindleleni zamazwe amaningi ezihlanganisa iKAZA kanye namasekethe awela imingcele."
-      }
-    },
     "authorities": {
       "title": "Iziphathimandla Zokuvakasha Ezisemthethweni",
       "subtitle": "Sebenzisa iziqondiso ezisemthethweni ezivela eZimbabwe Tourism Authority kanye neZimbabwe Parks and Wildlife Management Authority ukuze uthole izimvume, ulwazi lwepaki kanye nezindinganiso zendawo.",
@@ -1235,6 +1269,51 @@
         "investor_register": {
           "title": "Licensed Investor Register",
           "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
+        }
+      }
+    },
+    "tourism": {
+      "snapshot": {
+        "title": "Isithombe se-Zimbabwe Tourism (2026)",
+        "subtitle": "Ezokuvakasha zisendleleni eqinile yokusimama, esekelwa yizimpahla eziwuphawu, isidingo esikhulayo, nokuthuthukiswa okuqhubekayo kwengqalasizinda.",
+        "performance": {
+          "title": "Ukubuyiselwa Komkhakha kanye Nomnikelo",
+          "detail": "Amarisidi ezokuvakasha ayaqhubeka nokusimama kahle, njengoba umkhakha ugxile ekunikeleni ngezigidigidi zamarandi kanye nesabelo esikhulayo se-GDP kazwelonke."
+        },
+        "attractions": {
+          "title": "I-UNESCO kanye ne-Wildlife Anchors",
+          "detail": "IVictoria Falls, iMana Pools, iGreat Zimbabwe, kanye namapaki kazwelonke aphambili kusalokhu kuyisidingo esikhulu sezivakashi zakwamanye amazwe."
+        },
+        "infrastructure": {
+          "title": "Ukufinyelela kanye Nokuthuthukiswa Kwengqalasizinda",
+          "detail": "Ukulungiswa kabusha kwemigwaqo nesikhumulo sezindiza kuthuthukisa ukufinyelela emihubheni yezokuvakasha ebalulekile namasekethe ezindawo okuyiwa kuzo."
+        }
+      },
+      "opportunities": {
+        "title": "Ukutshalwa kwezimali kwezokuvakasha kanye namathuba okukhula",
+        "ecotourism": {
+          "title": "I-Ecotourism kanye Nokusimama",
+          "detail": "Thuthukisa ama-eco-lodge kanye nokongiwa kwemvelo okunomthelela omncane ezizungeze amapaki aphambili nezindawo ezivikelekile."
+        },
+        "cbt": {
+          "title": "Ezokuvakasha Ezizinze Emphakathini",
+          "detail": "Linganisa amaphrojekthi anika amandla imiphakathi yasendaweni ngohambo lwamasiko oluqondisiwe, amakhonsathi, nolwazi oluphethwe endaweni."
+        },
+        "hospitality": {
+          "title": "Izihambi kanye nengqalasizinda",
+          "detail": "Nweba izindawo zokuhlala ezisezingeni eliphezulu kanye nezinsiza zezivakashi eHarare, Bulawayo, Mutare, kanye nemizila eyisihluthulelo yesango."
+        },
+        "gastronomy": {
+          "title": "I-Gastronomy Tourism",
+          "detail": "Yakha ipulazi ukuya etafuleni kanye nesipiliyoni sendawo yokudlela exhunywe kubakhiqizi abancane kanye nesidingo sezokuvakasha zokupheka."
+        },
+        "adventure": {
+          "title": "I-Adventure Tourism",
+          "detail": "Khulisa imisebenzi enenani eliphezulu efana ne-rafting, bungee, canoeing, kanye nohambo lwasogwadule oluzungeze i-Victoria Falls kanye ne-Zambezi corridor."
+        },
+        "regional": {
+          "title": "I-Regional Hub Packaging",
+          "detail": "Beka iHarare kanye noBulawayo njengendawo yokungena ezindleleni zamazwe amaningi ezihlanganisa iKAZA kanye namasekethe awela imingcele."
         }
       }
     }

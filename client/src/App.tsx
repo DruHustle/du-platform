@@ -28,7 +28,10 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import ResetPassword from "./pages/ResetPassword";
 import Regulations from "./pages/Regulations";
-import OnesaAI from "./pages/OnesaAI";
+import OnesaAIChat from "./pages/OnesaAIChat";
+import OnesaAIBookTrip from "./pages/OnesaAIBookTrip";
+import OnesaAITourismVirtualExperience from "./pages/OnesaAITourismVirtualExperience";
+import OnesaAITourismAugmentedExperience from "./pages/OnesaAITourismAugmentedExperience";
 import AdminDashboard from "./pages/AdminDashboard";
 import CookieConsent from "./components/CookieConsent";
 import CookieSettings from "./pages/CookieSettings";
@@ -55,7 +58,10 @@ function Router() {
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/regulations" component={Regulations} />
-      <Route path="/onesa-ai" component={OnesaAI} />
+      <Route path="/onesa-ai-chat" component={OnesaAIChat} />
+      <Route path="/onesa-ai-book-trip" component={OnesaAIBookTrip} />
+      <Route path="/onesa-ai-tourism-virtual-experince" component={OnesaAITourismVirtualExperience} />
+      <Route path="/onesa-ai-tourism-augmented-experince" component={OnesaAITourismAugmentedExperience} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/cookie-settings" component={CookieSettings} />
       <Route path="/ntir" component={NtirDatabase} />

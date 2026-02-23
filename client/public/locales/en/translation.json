@@ -598,6 +598,9 @@
       "subtitle5": "Experience the smoke that thunders in Victoria Falls.",
       "plan_journey": "Plan Your Journey",
       "watch_exp": "Watch Experience",
+      "book_trip": "Book Trip",
+      "virtual_center": "Virtual Reality Center",
+      "local_guide_ar": "Local AR Experience",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -609,7 +612,6 @@
       "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
     },
     "attractions_title": "Must-Visit Destinations",
-    "attractions_subtitle": "Iconic landmarks that define the Zimbabwean experience.",
     "attractions": {
       "vicfalls": {
         "name": "Victoria Falls",
@@ -777,7 +779,82 @@
       "plan": {
         "title": "Custom Itineraries",
         "desc": "AI-generated plans based on your interests and travel style."
-      }
+      },
+      "plan_trip_cta": "Plan trip with Onesa",
+      "trip_planner": {
+        "badge": "Onesa AI Travel",
+        "title": "Onesa Booking Information",
+        "subtitle": "Build a season-aware trip optimized for cost and comfort across flights, hotels, experiences, and car hire.",
+        "origin": "Departure city",
+        "season": "Season",
+        "budget": "Budget profile",
+        "comfort": "Comfort preference",
+        "days": "Trip days",
+        "travelers": "Travelers",
+        "passengers": "Passengers",
+        "adults": "Adults",
+        "adult": "Adult",
+        "infants": "Infants",
+        "infant": "Infant",
+        "interests": "Interests",
+        "error": "Unable to generate your trip plan right now. Please try again in a moment.",
+        "generating": "Generating...",
+        "generate": "Generate trip plan",
+        "ai_optimized": "AI Optimized",
+        "fallback_plan": "Smart Fallback Plan",
+        "estimated_total": "Estimated total",
+        "flights": "Flights",
+        "hotels": "Hotels",
+        "car_hire": "Car hire",
+        "experiences": "Experiences",
+        "itinerary": "Personalized Itinerary",
+        "day": "Day",
+        "estimated": "Estimated",
+        "season_options": {
+          "dry": "Dry season",
+          "green": "Green season",
+          "shoulder": "Shoulder season"
+        },
+        "budget_options": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "comfort_options": {
+          "budget": "Budget",
+          "standard": "Standard",
+          "premium": "Premium"
+        },
+        "interests_options": {
+          "wildlife": "Wildlife",
+          "culture": "Culture",
+          "adventure": "Adventure",
+          "food": "Food",
+          "history": "History",
+          "nature": "Nature"
+        },
+        "booking_focus": "Use this page for booking information and recommendations before you confirm travel.",
+        "download_pdf": "Download PDF",
+        "pdf_title": "Onesa Trip Plan",
+        "pdf_filename": "onesa-trip-plan",
+        "summary": "Summary",
+        "optimized_for": "Optimized for",
+        "arrival_city": "Arrival city",
+        "trip_type": "Trip type",
+        "trip_type_options": {
+          "one_way": "One way",
+          "round_trip": "Round trip",
+          "multi_trip": "Multi-trip"
+        },
+        "start_date": "Start date",
+        "open_start_date_picker": "Open start date calendar",
+        "end_date": "End date",
+        "open_end_date_picker": "Open return date calendar",
+        "multi_city": "Multi-city trip",
+        "multi_city_cities": "Cities (comma separated)",
+        "multi_city_hint": "Select Multi-trip to add additional cities."
+      },
+      "personalized_experience": "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable."
     },
     "planning": {
       "guide_badge": "Travel Guide",
@@ -851,49 +928,6 @@
       "apply_cta": "Apply via eVisa Portal",
       "immigration_cta": "Zimbabwe Immigration",
       "zta_cta": "Plan Your Trip (ZTA)"
-    },
-    "snapshot": {
-      "title": "Zimbabwe Tourism Snapshot (2026)",
-      "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
-      "performance": {
-        "title": "Sector Recovery and Contribution",
-        "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
-      },
-      "attractions": {
-        "title": "UNESCO and Wildlife Anchors",
-        "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
-      },
-      "infrastructure": {
-        "title": "Access and Infrastructure Upgrades",
-        "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
-      }
-    },
-    "opportunities": {
-      "title": "Tourism Investment and Growth Opportunities",
-      "ecotourism": {
-        "title": "Ecotourism and Sustainability",
-        "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
-      },
-      "cbt": {
-        "title": "Community-Based Tourism",
-        "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
-      },
-      "hospitality": {
-        "title": "Hospitality and Infrastructure",
-        "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
-      },
-      "gastronomy": {
-        "title": "Gastronomy Tourism",
-        "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
-      },
-      "adventure": {
-        "title": "Adventure Tourism",
-        "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
-      },
-      "regional": {
-        "title": "Regional Hub Packaging",
-        "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
-      }
     },
     "authorities": {
       "title": "Official Tourism Authorities",
@@ -1237,6 +1271,51 @@
         "investor_register": {
           "title": "Licensed Investor Register",
           "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
+        }
+      }
+    },
+    "tourism": {
+      "snapshot": {
+        "title": "Zimbabwe Tourism Snapshot (2026)",
+        "subtitle": "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades.",
+        "performance": {
+          "title": "Sector Recovery and Contribution",
+          "detail": "Tourism receipts continue to recover strongly, with the sector targeting multi-billion-dollar contribution and a growing share of national GDP."
+        },
+        "attractions": {
+          "title": "UNESCO and Wildlife Anchors",
+          "detail": "Victoria Falls, Mana Pools, Great Zimbabwe, and flagship national parks remain the core demand drivers for international visitors."
+        },
+        "infrastructure": {
+          "title": "Access and Infrastructure Upgrades",
+          "detail": "Road and airport rehabilitation is improving access to key tourism corridors and regional destination circuits."
+        }
+      },
+      "opportunities": {
+        "title": "Tourism Investment and Growth Opportunities",
+        "ecotourism": {
+          "title": "Ecotourism and Sustainability",
+          "detail": "Develop eco-lodges and low-impact conservation experiences around premium parks and protected areas."
+        },
+        "cbt": {
+          "title": "Community-Based Tourism",
+          "detail": "Scale projects that empower local communities through guided culture tours, performances, and locally owned experiences."
+        },
+        "hospitality": {
+          "title": "Hospitality and Infrastructure",
+          "detail": "Expand quality accommodation and visitor facilities in Harare, Bulawayo, Mutare, and key gateway routes."
+        },
+        "gastronomy": {
+          "title": "Gastronomy Tourism",
+          "detail": "Build farm-to-table and local cuisine experiences connected to small-scale producers and culinary tourism demand."
+        },
+        "adventure": {
+          "title": "Adventure Tourism",
+          "detail": "Grow high-value activities such as rafting, bungee, canoeing, and wilderness expeditions around Victoria Falls and the Zambezi corridor."
+        },
+        "regional": {
+          "title": "Regional Hub Packaging",
+          "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
         }
       }
     }
@@ -2275,8 +2354,8 @@
     "welcome": "I am an expert on Zimbabwe. Let me help you navigate everything from investment, trade, and tourism to your day-to-day tasks.",
     "status_prefix": "Onesa status",
     "status_offline": "Offline",
-    "status_backend_unreachable": "Onesa is currently unavailable. Please try again shortly.",
-    "error_unable_contact": "Onesa is currently unavailable. Please try again shortly.",
+    "status_backend_unreachable": "Onesa is currently unavailable. AI mode is off",
+    "error_unable_contact": "Onesa is currently unavailable. AI mode is off",
     "online_indicator_aria": "Onesa online",
     "online_text": "Online",
     "error_timeout": "Onesa request timed out after 3 minutes. Please try again.",

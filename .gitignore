@@ -32,6 +32,7 @@ out/
 !.env.example
 secrets.json
 *.pem
+.cert/
 
 # --- Logs & Runtime ---
 [Ll]og/

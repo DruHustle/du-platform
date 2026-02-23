@@ -600,6 +600,9 @@
       "subtitle5": "Zvionere utsi hunotinhira paVictoria Falls.",
       "plan_journey": "Ronga Rwendo Rwako",
       "watch_exp": "Ona Zviri Kuitika",
+      "book_trip": "Bhuka Rwendo",
+      "virtual_center": "Shanyira Virtual Reality Center",
+      "local_guide_ar": "Local guide AR Experience",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -611,7 +614,6 @@
       "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
     },
     "attractions_title": "Nzvimbo dzinofanirwa Kushanyirwa",
-    "attractions_subtitle": "Zvivakwa nezvinhu zvinotsanangura Zimbabwe.",
     "attractions": {
       "vicfalls": {
         "name": "Mapopoma eVhitori",
@@ -779,7 +781,82 @@
       "plan": {
         "title": "Zvirongwa Zvako",
         "desc": "Zvirongwa zvinogadzirwa neAI zvichienderana nezvaunoda."
-      }
+      },
+      "plan_trip_cta": "Ronga rwendo naOnesa",
+      "trip_planner": {
+        "badge": "Onesa AI Rwendo",
+        "title": "Ruzivo rweKubhuka naOnesa",
+        "subtitle": "Gadzira rwendo runoenderana nemwaka rwakagadzirirwa mutengo nekunyaradza pandege, mahotera, zviitiko nemotokari dzekuhaya.",
+        "origin": "Guta rekubva",
+        "season": "Mwaka",
+        "budget": "Chimiro chebhajeti",
+        "comfort": "Chiyero chekunyaradza",
+        "days": "Mazuva erwendo",
+        "travelers": "Vafambi",
+        "passengers": "Vatakuri",
+        "adults": "Vakuru",
+        "adult": "Mukuru",
+        "infants": "Vacheche",
+        "infant": "Mucheche",
+        "interests": "Zvaunofarira",
+        "error": "Hatina kukwanisa kugadzira hurongwa hwerwendo pari zvino. Edza zvakare munguva pfupi.",
+        "generating": "Tiri kugadzira...",
+        "generate": "Gadzira hurongwa hwerwendo",
+        "ai_optimized": "Yakagadziridzwa neAI",
+        "fallback_plan": "Hurongwa hwekutsiva hwakangwara",
+        "estimated_total": "Mari inofungidzirwa yose",
+        "flights": "Ndege",
+        "hotels": "Mahotera",
+        "car_hire": "Kuhaya mota",
+        "experiences": "Zviitiko",
+        "itinerary": "Purogiramu yakasarudzika yerwendo",
+        "day": "Zuva",
+        "estimated": "Inofungidzirwa",
+        "season_options": {
+          "dry": "Mwaka wakaoma",
+          "green": "Mwaka wakasvibira",
+          "shoulder": "Mwaka wepakati"
+        },
+        "budget_options": {
+          "low": "Shoma",
+          "medium": "Pakati",
+          "high": "Yakakwira"
+        },
+        "comfort_options": {
+          "budget": "Yechibhajeti",
+          "standard": "Yakajairika",
+          "premium": "Yepamusoro"
+        },
+        "interests_options": {
+          "wildlife": "Mhuka dzesango",
+          "culture": "Tsika",
+          "adventure": "Kushanya kwechiitiko",
+          "food": "Chikafu",
+          "history": "Nhoroondo",
+          "nature": "Zvisikwa"
+        },
+        "booking_focus": "Shandisa peji iri kuwana ruzivo rwekubhuka nezano usati wasimbisa rwendo rwako.",
+        "download_pdf": "Dhawunirodha PDF",
+        "pdf_title": "Hurongwa hweRwendo hwaOnesa",
+        "pdf_filename": "onesa-hurongwa-rwendo",
+        "summary": "Pfupiso",
+        "optimized_for": "Yakagadzirirwa",
+        "arrival_city": "Guta rekusvika",
+        "trip_type": "Rudzi rwerwendo",
+        "trip_type_options": {
+          "one_way": "Rwendo rwekunoenda chete",
+          "round_trip": "Rwendo rwekudzoka",
+          "multi_trip": "Rwendo rwenzvimbo dzakawanda"
+        },
+        "start_date": "Zuva rekutanga",
+        "open_start_date_picker": "Vhura kalenda yezuva rekutanga",
+        "end_date": "Zuva rekupedzisa",
+        "open_end_date_picker": "Vhura kalenda yezuva rekudzoka",
+        "multi_city": "Rwendo rwemaguta akawanda",
+        "multi_city_cities": "Maguta (aparadzaniswa nekomma)",
+        "multi_city_hint": "Sarudza rwendo rwenzvimbo dzakawanda kuti uwedzere mamwe maguta."
+      },
+      "personalized_experience": "Chiitiko chakagadzirirwa iwe. - injini ine simba yekurudziro inopa ruzivo runoita kuti rwendo rwako ruve rwakasiyana uye rusingakanganwiki."
     },
     "planning": {
       "guide_badge": "Gwara reMufambi",
@@ -863,49 +940,6 @@
     "explore_title": "Ongorora Rumwe Ruzivo rweUshanyi",
     "explore_subtitle": "Kuti uwane ruzivo rwakazara nemitemo, shanyirai website yeZimbabwe Tourism Authority.",
     "explore_site": "Shanyira ZTA",
-    "snapshot": {
-      "title": "Mufananidzo weKushanya weZimbabwe (2026)",
-      "subtitle": "Tourism iri munzira yakasimba yekudzoreredza, inotsigirwa neiyo iconic assets, kukura kudiwa, uye kuenderera mberi kwekuvandudzwa kwezvivakwa.",
-      "performance": {
-        "title": "Sector Recovery uye Mupiro",
-        "detail": "Maresiti ekushanya ari kuramba achidzoreredzwa nesimba, nechikamu chakanangana nemamiriyoni emadhora-madhora uye chikamu chiri kukura cheGDP yenyika."
-      },
-      "attractions": {
-        "title": "UNESCO uye Wildlife Anchors",
-        "detail": "Mapopoma eVictoria Falls, Mana Pools, Great Zimbabwe, nemapaki enzvimbo dzinochengeterwa mhuka ndiwo ndiwo ari kudiwa zvakanyanya nevashanyi vekunze."
-      },
-      "infrastructure": {
-        "title": "Access uye Infrastructure Upgrades",
-        "detail": "Kugadziridzwa kwemigwagwa nenhandare yendege kuri kuvandudza kuwanikwa kwenzira dzakakosha dzekushanya uye maseketi enzvimbo dzekuenda."
-      }
-    },
-    "opportunities": {
-      "title": "Tourism Investment uye Kukura Mikana",
-      "ecotourism": {
-        "title": "Ecotourism uye Sustainability",
-        "detail": "Gadzira eco-lodges uye yakaderera-inokanganisa kuchengetedza zviitiko zvakatenderedza mapaki ekutanga uye nzvimbo dzakachengetedzwa."
-      },
-      "cbt": {
-        "title": "Kushanya kunotungamirirwa nenharaunda",
-        "detail": "Chikero mapurojekiti anosimbisa nharaunda dzemunharaunda kuburikidza neinotungamirwa tsika kushanya, mitambo, uye zviitiko zvemuno."
-      },
-      "hospitality": {
-        "title": "Kugamuchira Vaenzi uye Zvivakwa",
-        "detail": "Wedzerai pekugara zvakanaka uye zvivakwa zvevaenzi muHarare, Bulawayo, Mutare, uye nzira dzakakosha dzemusuwo."
-      },
-      "gastronomy": {
-        "title": "Kushanya kwechikafu",
-        "detail": "Vakai purazi-ku-tafura uye zvemuno cuisine zviitiko zvakabatana nevadiki-vagadziri vanogadzira uye culinary kushanya kudiwa."
-      },
-      "adventure": {
-        "title": "Kushanya kwezviitiko",
-        "detail": "Ridzai zviitiko zvemhando yepamusoro zvakaita serafting, bungee, canoeing, uye nzendo dzemurenje dzakatenderedza Victoria Falls nemukoto weZambezi."
-      },
-      "regional": {
-        "title": "Kurongedza hub yedunhu",
-        "detail": "Isa Harare neBulawayo semasuwo enzira dzekufamba nenyika dzakawanda dzinosanganisira KAZA nemaseketi ekuyambuka miganhu."
-      }
-    },
     "authorities": {
       "title": "Official Tourism Authority",
       "subtitle": "Shandisai mazano ari pamutemo kubva kuZimbabwe Tourism Authority neZimbabwe Parks and Wildlife Management Authority kuti mupe mvumo, ruzivo rwepaka, uye mitemo yekwamunoenda.",
@@ -1235,6 +1269,51 @@
         "investor_register": {
           "title": "Licensed Investor Register",
           "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
+        }
+      }
+    },
+    "tourism": {
+      "snapshot": {
+        "title": "Mufananidzo weKushanya weZimbabwe (2026)",
+        "subtitle": "Tourism iri munzira yakasimba yekudzoreredza, inotsigirwa neiyo iconic assets, kukura kudiwa, uye kuenderera mberi kwekuvandudzwa kwezvivakwa.",
+        "performance": {
+          "title": "Sector Recovery uye Mupiro",
+          "detail": "Maresiti ekushanya ari kuramba achidzoreredzwa nesimba, nechikamu chakanangana nemamiriyoni emadhora-madhora uye chikamu chiri kukura cheGDP yenyika."
+        },
+        "attractions": {
+          "title": "UNESCO uye Wildlife Anchors",
+          "detail": "Mapopoma eVictoria Falls, Mana Pools, Great Zimbabwe, nemapaki enzvimbo dzinochengeterwa mhuka ndiwo ndiwo ari kudiwa zvakanyanya nevashanyi vekunze."
+        },
+        "infrastructure": {
+          "title": "Access uye Infrastructure Upgrades",
+          "detail": "Kugadziridzwa kwemigwagwa nenhandare yendege kuri kuvandudza kuwanikwa kwenzira dzakakosha dzekushanya uye maseketi enzvimbo dzekuenda."
+        }
+      },
+      "opportunities": {
+        "title": "Tourism Investment uye Kukura Mikana",
+        "ecotourism": {
+          "title": "Ecotourism uye Sustainability",
+          "detail": "Gadzira eco-lodges uye yakaderera-inokanganisa kuchengetedza zviitiko zvakatenderedza mapaki ekutanga uye nzvimbo dzakachengetedzwa."
+        },
+        "cbt": {
+          "title": "Kushanya kunotungamirirwa nenharaunda",
+          "detail": "Chikero mapurojekiti anosimbisa nharaunda dzemunharaunda kuburikidza neinotungamirwa tsika kushanya, mitambo, uye zviitiko zvemuno."
+        },
+        "hospitality": {
+          "title": "Kugamuchira Vaenzi uye Zvivakwa",
+          "detail": "Wedzerai pekugara zvakanaka uye zvivakwa zvevaenzi muHarare, Bulawayo, Mutare, uye nzira dzakakosha dzemusuwo."
+        },
+        "gastronomy": {
+          "title": "Kushanya kwechikafu",
+          "detail": "Vakai purazi-ku-tafura uye zvemuno cuisine zviitiko zvakabatana nevadiki-vagadziri vanogadzira uye culinary kushanya kudiwa."
+        },
+        "adventure": {
+          "title": "Kushanya kwezviitiko",
+          "detail": "Ridzai zviitiko zvemhando yepamusoro zvakaita serafting, bungee, canoeing, uye nzendo dzemurenje dzakatenderedza Victoria Falls nemukoto weZambezi."
+        },
+        "regional": {
+          "title": "Kurongedza hub yedunhu",
+          "detail": "Isa Harare neBulawayo semasuwo enzira dzekufamba nenyika dzakawanda dzinosanganisira KAZA nemaseketi ekuyambuka miganhu."
         }
       }
     }
