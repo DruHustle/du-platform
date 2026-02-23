@@ -1,4 +1,4 @@
-import type express from "express";
+import express, { type Express } from "express";
 
 type TtsRequest = {
   text?: string;
@@ -7,7 +7,7 @@ type TtsRequest = {
   speed?: number;
 };
 
-export function registerTtsRoutes(app: express.Express) {
+export function registerTtsRoutes(app: Express) {
   app.post("/api/tts", express.json({ limit: "1mb" }), async (req, res) => {
     if (!process.env.OPENAI_API_KEY) {
       return res.status(503).json({ error: "OPENAI_API_KEY is not configured." });

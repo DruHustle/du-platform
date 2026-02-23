@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Globe from "react-globe.gl";
-
-type GlobeRef = {
-  pointOfView: (coords: { lat: number; lng: number; altitude: number }, ms: number) => void;
-  controls: () => {
-    autoRotate: boolean;
-    autoRotateSpeed: number;
-    enableDamping: boolean;
-  };
-};
+import Globe, { type GlobeMethods } from "react-globe.gl";
 
 type ArcDatum = {
   startLat: number;
@@ -20,7 +11,7 @@ type ArcDatum = {
 };
 
 export default function ZimbabweInteractiveGlobe() {
-  const globeRef = useRef<GlobeRef | null>(null);
+  const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -235,7 +226,6 @@ export default function ZimbabweInteractiveGlobe() {
           height={size.height}
         globeImageUrl="/globe/earth-blue-marble.jpg"
         bumpImageUrl="/globe/earth-topology.png"
-        nightImageUrl="/globe/earth-night.jpg"
         backgroundImageUrl="/globe/night-sky.png"
         showAtmosphere
         atmosphereColor="#3a86ff"
@@ -246,11 +236,11 @@ export default function ZimbabweInteractiveGlobe() {
         arcDashGap={2}
         arcDashAnimateTime={2000}
         arcStroke={0.4}
-        onArcClick={(arc) =>
+        onArcClick={(arc: any) =>
           handleFlyTo({ lat: arc.endLat, lng: arc.endLng }, 1.2)
         }
         htmlElementsData={[{ ...zimCoords, name: "ZIMBABWE" }]}
-        htmlElement={(d) => {
+        htmlElement={(d: any) => {
           const el = document.createElement("div");
           el.innerHTML = `
             <div class="group flex flex-col items-center cursor-pointer">
