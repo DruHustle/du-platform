@@ -644,7 +644,7 @@ export default function OnesaAITourismAugmentedExperience() {
   return (
     <Layout>
       {/* Page shell */}
-      <section className="pt-28 pb-0 md:pt-32 bg-slate-950 relative overflow-hidden">
+      <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           {/* Glass container for the full AR experience layout */}
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">

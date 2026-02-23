@@ -481,7 +481,7 @@ export default function OnesaAITourismVirtualExperience() {
   return (
     <Layout>
       {/* Page shell */}
-      <section className="pt-28 pb-0 md:pt-32 bg-slate-950 relative overflow-hidden">
+      <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           {/* Glass container for the full VR walkthrough layout */}
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
@@ -544,7 +544,7 @@ export default function OnesaAITourismVirtualExperience() {
               </div>
 
               {/* MAIN VIEWPORT */}
-              <div className="lg:col-span-9 flex flex-col gap-4">
+              <div className="lg:col-span-9 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-6 !pb-2 space-y-5 flex flex-col">
                 {/* 360 viewport */}
                 <div
                   ref={containerRef}
