@@ -72,9 +72,7 @@
     "technology_capabilities": "Technologische Kapazitäten",
     "technology_capabilities_desc": "Simbabwes Technologie- und Innovationslandschaft",
     "technology_industries": "Technologiebranchen",
-    "technology_industries_desc": "Wichtige Technologiesektoren in Simbabwe",
-    "zimtrade_programs": "ZimTrade-Programme",
-    "zimtrade_programs_desc": "Initiativen zur Exportentwicklung"
+    "technology_industries_desc": "Wichtige Technologiesektoren in Simbabwe"
   },
   "home": {
     "made_in_zimbabwe_alt": "Hergestellt in Simbabwe",
@@ -485,7 +483,12 @@
         ],
         "buyers1": "Kosmetikhersteller",
         "buyers2": "Wellness-Marken"
-      }
+      },
+      "demand_outlook": "Demand Outlook",
+      "demand_status": "Sustained EU Demand",
+      "compliance_requirements": "Compliance Requirements",
+      "buyer_channels": "Buyer Channels",
+      "contact_verified_buyers": "Contact Verified Buyers"
     },
     "partner_network_badge": "Netzwerk",
     "partner_network_title": "Verifiziertes Partner-Netzwerk",
@@ -557,7 +560,9 @@
       "c3": "Issue a valid Statement on Origin for each shipment.",
       "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
       "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
+      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
+      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
+      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
     },
     "registration": {
       "title": "Key Registration and Documentation",
@@ -589,38 +594,6 @@
         "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
         "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
         "tag": "SPS Critical"
-      }
-    },
-    "strategic_resources": {
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade portal for exporter support services, market information, and trade publications.",
-        "cta": "Open Trade Zimbabwe"
-      },
-      "access2markets": {
-        "title": "EU Access2Markets Portal",
-        "description": "Check duties, taxes, rules of origin, and technical requirements by exact HS code.",
-        "cta": "Open Access2Markets"
-      },
-      "rex": {
-        "title": "EU REX Information",
-        "description": "Reference rules and guidance for origin self-certification under the REX framework.",
-        "cta": "View REX Guidance"
-      },
-      "zimtrade_support": {
-        "title": "ZimTrade Export Support",
-        "description": "Use ZimTrade support for market surveys, buyer readiness, and export development programs.",
-        "cta": "Visit ZimTrade"
-      },
-      "virtual_library": {
-        "title": "Trade Zimbabwe Virtual Library",
-        "description": "Access trade directories, country briefs, market studies, and exporter-focused guidance documents.",
-        "cta": "Open Virtual Library"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use Zimbabwe-EU Business Information Centre resources for EU market intelligence and trade facilitation.",
-        "cta": "Open ZIM-EBIC"
       }
     }
   },
@@ -1453,63 +1426,25 @@
         ]
       }
     },
-    "zimtrade_programs_badge": "Programme",
-    "zimtrade_programs_title": "ZimTrade Export-Entwicklungsprogramme",
-    "zimtrade_programs_subtitle": "Initiativen zur Stärkung simbabwischer Unternehmen.",
-    "programs": {
-      "eagles_nest": {
-        "title": "Adlernest",
-        "description": "Inkubatorprogramm für junge Exporteure der nächsten Generation.",
-        "target": "Junge Unternehmer (18-35 Jahre)",
-        "benefits": [
-          "Export-Training",
-          "Mentoring",
-          "Marktzugang",
-          "Finanzierungshilfe"
-        ]
-      },
-      "next_she_exporter": {
-        "title": "Als nächstes ist sie Exporteur",
-        "description": "Stärkung von frauengeführten Unternehmen im Export.",
-        "target": "Unternehmen in Frauenhand",
-        "benefits": [
-          "Kapazitätsaufbau",
-          "Networking",
-          "Handelsmissionen",
-          "Zertifizierungsunterstützung"
-        ]
-      },
-      "shop_at_zim": {
-        "title": "Kaufen Sie bei Zim ein",
-        "description": "B2B-E-Commerce-Plattform für simbabwische Lieferanten.",
-        "target": "Exportbereite Unternehmen",
-        "benefits": [
-          "Online-Marktplatz",
-          "Käuferkontakte",
-          "Zahlungslösungen",
-          "Logistik-Support"
-        ]
-      }
-    },
     "diaspora_role_badge": "Rolle der Diaspora",
-    "diaspora_role_title": "Ihre Rolle beim Exportwachstum",
-    "diaspora_role_subtitle": "Die Diaspora spielt eine entscheidende Rolle bei der Exportförderung.",
+    "diaspora_role_title": "Unsere Rolle beim Exportwachstum",
+    "diaspora_role_subtitle": "Diaspora Unlocked bietet praxisnahe Marktunterstützung, damit simbabwische Exporteure internationale Märkte validieren, betreten und skalieren können.",
     "diaspora_roles": {
       "market_intelligence": {
         "title": "Marktinformationen",
-        "description": "Teilen Sie Einblicke über Trends und Chancen in Ihrem Gastland."
+        "description": "Wir liefern praxisnahe Einblicke in Käuferverhalten, Nachfrageverschiebungen und Produktchancen in Zielmärkten."
       },
       "buyer_connections": {
         "title": "Käuferkontakte",
-        "description": "Stellen Sie Exporteure bei Einzelhändlern und Importeuren in Ihrem Netzwerk vor."
+        "description": "Wir verbinden simbabwische Exporteure mit relevanten Einzelhändlern, Distributoren und Importeuren über kuratierte Handelsbeziehungen."
       },
       "quality_feedback": {
         "title": "Qualitäts-Feedback",
-        "description": "Geben Sie Rückmeldungen zu Qualität, Verpackung und Marktfähigkeit."
+        "description": "Wir verbessern die Exportbereitschaft durch strukturiertes Feedback zu Produktqualität, Verpackung und Markttauglichkeit."
       },
       "brand_ambassadors": {
         "title": "Markenbotschafter",
-        "description": "Fördern Sie simbabwische Produkte auf internationalen Märkten."
+        "description": "Wir fördern simbabwische Produkte und Marken in internationalen Märkten durch koordinierte Sichtbarkeit und Reichweite."
       }
     },
     "cta_title": "Bereit für den Export?",
@@ -1535,21 +1470,6 @@
         "title": "ZIM-EBIC",
         "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
         "badge": "EU Business Support"
-      },
-      "directory": {
-        "title": "Trade Directory 2023",
-        "description": "Find exporter profiles and business contacts from Trade Zimbabwe's 2023 directory used for marketplace discovery.",
-        "badge": "Business Directory"
-      },
-      "library": {
-        "title": "Virtual Library",
-        "description": "Browse trade directories, market briefs, newsletters, and exporter guides for market-entry planning.",
-        "badge": "Publications"
-      },
-      "contacts": {
-        "title": "Useful Contacts",
-        "description": "Access Trade Zimbabwe office and trade-support contact points for follow-up on market and export enquiries.",
-        "badge": "Contact Points"
       }
     }
   },
@@ -1737,7 +1657,8 @@
     "investment_calculator_disclaimer": "Dieser Rechner liefert Schätzungen basierend auf angenommenen konstanten Renditen. Die tatsächliche Anlageentwicklung kann variieren. Wertentwicklungen in der Vergangenheit garantieren keine zukünftigen Ergebnisse. Bitte konsultieren Sie Finanzberater und prüfen Sie die Projektdetails vor einer Investition.",
     "cta_title": "Benötigen Sie tiefere Daten?",
     "cta_subtitle": "Nutzen Sie unsere Berichte und Analysedienste.",
-    "cta_button": "Individuellen Bericht anfordern"
+    "cta_button": "Individuellen Bericht anfordern",
+    "diaspora_residence_extra": "Diese Verteilung zeigt priorisierte Diaspora-Korridore für Handel, Rücküberweisungsströme und Investitionsansprache in wichtigen Aufnahmemärkten."
   },
   "success": {
     "hero": {

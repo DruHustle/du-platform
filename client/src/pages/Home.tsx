@@ -129,9 +129,8 @@ const navButtons = [
         intro={introData} 
       />
 
-
       {/* Modules Section */}
-      <section className="py-20  bg-slate-950 relative overflow-hidden">
+      <section className="p-5 pb-15 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {modules.map((module, index) => {

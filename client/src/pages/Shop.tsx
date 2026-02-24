@@ -13,6 +13,7 @@ const OUTER_PANEL_CLASS =
 
 export default function Shop() {
   const { t } = useTranslation();
+  const tx = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [carouselIndex, setCarouselIndex] = useState<Record<ShopSegmentKey, number>>(() =>
     Object.fromEntries(SHOP_CATEGORY_CONFIG.map((item) => [item.key, 0])) as Record<ShopSegmentKey, number>
   );
@@ -21,58 +22,70 @@ export default function Shop() {
     () => [
       {
         image: "/images/pages/shop/zimbabwe_shop_hero.jpg",
-        badge: t("shop.hero.badge1") || "Authentic Zimbabwe Goods",
+        badge: tx("shop.hero.badge1", "Authentic Zimbabwe Goods"),
         badgeIcon: ShoppingBag,
-        title: t("shop.hero.title1") || "Shop Zimbabwe",
+        title: tx("shop.hero.title1", "Shop Zimbabwe"),
         subtitle:
-          t("shop.hero.subtitle1") ||
+          tx(
+            "shop.hero.subtitle1",
           "Buy curated products from Zimbabwe with diaspora-friendly delivery and trusted sourcing.",
-        buttons: [{ text: t("shop.hero.button1") || "Browse Collections", link: "/shop#collections", variant: "primary", showArrow: true }],
+          ),
+        buttons: [{ text: tx("shop.hero.button1", "Browse Collections"), link: "/shop#collections", variant: "primary", showArrow: true }],
       },
       {
         image: "/images/pages/shop/crafts_stone_sculptures1.png",
-        badge: t("shop.hero.badge2") || "Craft Heritage",
+        badge: tx("shop.hero.badge2", "Craft Heritage"),
         badgeIcon: Globe2,
-        title: t("shop.hero.title2") || "Handcrafted Excellence",
+        title: tx("shop.hero.title2", "Handcrafted Excellence"),
         subtitle:
-          t("shop.hero.subtitle2") ||
+          tx(
+            "shop.hero.subtitle2",
           "From Shona stone sculpture to handwoven baskets, discover products rooted in culture and quality.",
+          ),
       },
       {
         image: "/images/pages/shop/food_dried_mango_1.jpg",
-        badge: t("shop.hero.badge3") || "Taste of Home",
+        badge: tx("shop.hero.badge3", "Taste of Home"),
         badgeIcon: Package,
-        title: t("shop.hero.title3") || "Food and Nostalgia",
+        title: tx("shop.hero.title3", "Food and Nostalgia"),
         subtitle:
-          t("shop.hero.subtitle3") ||
+          tx(
+            "shop.hero.subtitle3",
           "Enjoy Zimbabwe favorites sourced with quality controls for local and export-ready buyers.",
+          ),
       },
       {
         image: "/images/pages/shop/beverage_mazoe_orange_6.png",
-        badge: t("shop.hero.badge4") || "Beverage Favorites",
+        badge: tx("shop.hero.badge4", "Beverage Favorites"),
         badgeIcon: ShoppingBag,
-        title: t("shop.hero.title4") || "Mazoe and Maheu Classics",
+        title: tx("shop.hero.title4", "Mazoe and Maheu Classics"),
         subtitle:
-          t("shop.hero.subtitle4") ||
+          tx(
+            "shop.hero.subtitle4",
           "Discover homegrown drink favorites curated for diaspora shelves and family tables.",
+          ),
       },
       {
         image: "/images/pages/shop/sports_rugby_jersey.jpg",
-        badge: t("shop.hero.badge5") || "Sports Pride",
+        badge: tx("shop.hero.badge5", "Sports Pride"),
         badgeIcon: Globe2,
-        title: t("shop.hero.title5") || "Wear Zimbabwe with Pride",
+        title: tx("shop.hero.title5", "Wear Zimbabwe with Pride"),
         subtitle:
-          t("shop.hero.subtitle5") ||
+          tx(
+            "shop.hero.subtitle5",
           "Support local teams with official fan kits and sportswear inspired by Zimbabwean spirit.",
+          ),
       },
       {
         image: "/images/pages/shop/crafts_binga_baskets1.jpg",
-        badge: t("shop.hero.badge6") || "Artisan Economy",
+        badge: tx("shop.hero.badge6", "Artisan Economy"),
         badgeIcon: Package,
-        title: t("shop.hero.title6") || "Crafts with a Story",
+        title: tx("shop.hero.title6", "Crafts with a Story"),
         subtitle:
-          t("shop.hero.subtitle6") ||
+          tx(
+            "shop.hero.subtitle6",
           "Shop handmade products that preserve heritage and support artisan communities.",
+          ),
       },
     ],
     [t],

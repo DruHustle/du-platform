@@ -72,9 +72,7 @@
     "technology_capabilities": "Amandla ezobuchwepheshe",
     "technology_capabilities_desc": "Isimo sezobuchwepheshe lokusungula eZimbabwe",
     "technology_industries": "Izimboni zezobuchwepheshe",
-    "technology_industries_desc": "Ingxenye zezobuchwepheshe eziyinhloko eZimbabwe",
-    "zimtrade_programs": "Izinhlelo ze-ZimTrade",
-    "zimtrade_programs_desc": "Imisebenzi yokuthuthukisa ukuthunyelwa ngaphandle"
+    "technology_industries_desc": "Ingxenye zezobuchwepheshe eziyinhloko eZimbabwe"
   },
   "home": {
     "made_in_zimbabwe_alt": "Kwenziwe eZimbabwe",
@@ -485,7 +483,12 @@
         ],
         "buyers1": "Abakhiqizi bezimonyo",
         "buyers2": "Amabhrendi ezempilo"
-      }
+      },
+      "demand_outlook": "Demand Outlook",
+      "demand_status": "Sustained EU Demand",
+      "compliance_requirements": "Compliance Requirements",
+      "buyer_channels": "Buyer Channels",
+      "contact_verified_buyers": "Contact Verified Buyers"
     },
     "partner_network_badge": "Inethiwekhi",
     "partner_network_title": "Inethiwekhi yabahlanganyeli abaqinisekisiweyo",
@@ -557,7 +560,9 @@
       "c3": "Issue a valid Statement on Origin for each shipment.",
       "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
       "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
+      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
+      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
+      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
     },
     "registration": {
       "title": "Key Registration and Documentation",
@@ -589,38 +594,6 @@
         "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
         "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
         "tag": "SPS Critical"
-      }
-    },
-    "strategic_resources": {
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade portal for exporter support services, market information, and trade publications.",
-        "cta": "Open Trade Zimbabwe"
-      },
-      "access2markets": {
-        "title": "EU Access2Markets Portal",
-        "description": "Check duties, taxes, rules of origin, and technical requirements by exact HS code.",
-        "cta": "Open Access2Markets"
-      },
-      "rex": {
-        "title": "EU REX Information",
-        "description": "Reference rules and guidance for origin self-certification under the REX framework.",
-        "cta": "View REX Guidance"
-      },
-      "zimtrade_support": {
-        "title": "ZimTrade Export Support",
-        "description": "Use ZimTrade support for market surveys, buyer readiness, and export development programs.",
-        "cta": "Visit ZimTrade"
-      },
-      "virtual_library": {
-        "title": "Trade Zimbabwe Virtual Library",
-        "description": "Access trade directories, country briefs, market studies, and exporter-focused guidance documents.",
-        "cta": "Open Virtual Library"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use Zimbabwe-EU Business Information Centre resources for EU market intelligence and trade facilitation.",
-        "cta": "Open ZIM-EBIC"
       }
     }
   },
@@ -1453,63 +1426,25 @@
         ]
       }
     },
-    "zimtrade_programs_badge": "Izinhlelo",
-    "zimtrade_programs_title": "Izinhlelo ze-ZimTrade zokuthuthukisa ukuthumela phandle",
-    "zimtrade_programs_subtitle": "Imizamo eyakhelwe ukupha amandla amabhizinisi aseZimbabwe kwezezohwebo zomhlaba.",
-    "programs": {
-      "eagles_nest": {
-        "title": "I-Eagles Nest",
-        "description": "Uhlelo lwabatsha lokuthuthukisa ukuthumela phandle.",
-        "target": "Osontshanti abatsha (18-35)",
-        "benefits": [
-          "Uqeqesho lokuthumela phandle",
-          "Ukunikwa iseluleko (Mentorship)",
-          "Ukungena emakethe",
-          "Usekelo lwemali"
-        ]
-      },
-      "next_she_exporter": {
-        "title": "Okulandelayo Yena Umthumeli",
-        "description": "Ukupha amandla amabhizinisi abomama ngolwazi lokuthumela phandle.",
-        "target": "Amabhizinisi abomama",
-        "benefits": [
-          "Ukwakha amandla (Capacity building)",
-          "Inethiwekhi",
-          "Uhambo zezohwebo",
-          "Usekelo lwezitifiketi"
-        ]
-      },
-      "shop_at_zim": {
-        "title": "Thenga EZim",
-        "description": "Ipulatifomu ye-e-commerce exhuma abakhiqizi baseZimbabwe labathengi bomhlaba.",
-        "target": "Amabhizinisi aselungele ukuthumela",
-        "benefits": [
-          "Imakethe ye-online",
-          "Ukuxhunywa labathengi",
-          "Izisombululo zokubhadala",
-          "Usekelo lwezokuthutha"
-        ]
-      }
-    },
     "diaspora_role_badge": "Iqhaza le-Diaspora",
-    "diaspora_role_title": "Iqhaza lakho ekukhuleni kokuthumela phandle",
-    "diaspora_role_subtitle": "Ama-diaspora aseZimbabwe alawo iqhaza elikhulu ekuthuthukiseni ezokuthumela phandle.",
+    "diaspora_role_title": "Indima yethu ekukhuleni kokuthumela phandle",
+    "diaspora_role_subtitle": "I-Diaspora Unlocked inikeza usekelo lwemakethe olusebenzayo ukusiza abathumeli baseZimbabwe ukuqinisekisa, ukungena, lokukhulisa ezimakethe zomhlaba.",
     "diaspora_roles": {
       "market_intelligence": {
         "title": "Ulwazi lwemakethe",
-        "description": "Yabelana ngolwazi mayelana lalokho okuthandwa ngabathengi emazweni elihlala kuwo."
+        "description": "Sinikeza ulwazi olusebenzayo ngendlela yokuziphatha kwabathengi, ukuguquka kwemfuno, lamathuba omkhiqizo ezimakethe eziqondiweyo."
       },
       "buyer_connections": {
         "title": "Ukuxhuma abathengi",
-        "description": "Xhumanisa abathumeli baseZimbabwe labathengisi (retailers) labasabalalisi emazweni eningaphandle."
+        "description": "Sixhumanisa abathumeli baseZimbabwe labathengisi, abasabalalisi, labangenisi abafaneleyo ngokusebenzisa ubudlelwano bezohwebo obukhethiwe."
       },
       "quality_feedback": {
         "title": "Imibono ngeqophelo",
-        "description": "Nika imibono ngeqophelo lomkhiqizo, ukupakishwa, lokulungela imakethe."
+        "description": "Siyasiza ukuthuthukisa ukulungela ukuthumela phandle ngokuphendula okuhlelekile mayelana lekhwalithi yomkhiqizo, ukupakishwa, lokufaneleka kwemakethe."
       },
       "brand_ambassadors": {
         "title": "Abanxusa be-Brand",
-        "description": "Phakamisa imikhiqizo lamabhrendi aseZimbabwe emazweni omhlaba."
+        "description": "Siphakamisa imikhiqizo lamabhrendi aseZimbabwe ezimakethe zomhlaba ngokubonakala okuhleliwe lokufinyelela kwabantu."
       }
     },
     "cta_title": "Usulungele ukuthumela phandle?",
@@ -1535,21 +1470,6 @@
         "title": "ZIM-EBIC",
         "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
         "badge": "EU Business Support"
-      },
-      "directory": {
-        "title": "Trade Directory 2023",
-        "description": "Find exporter profiles and business contacts from Trade Zimbabwe's 2023 directory used for marketplace discovery.",
-        "badge": "Business Directory"
-      },
-      "library": {
-        "title": "Virtual Library",
-        "description": "Browse trade directories, market briefs, newsletters, and exporter guides for market-entry planning.",
-        "badge": "Publications"
-      },
-      "contacts": {
-        "title": "Useful Contacts",
-        "description": "Access Trade Zimbabwe office and trade-support contact points for follow-up on market and export enquiries.",
-        "badge": "Contact Points"
       }
     }
   },
@@ -1737,7 +1657,8 @@
     "investment_calculator_disclaimer": "Lesi sibali sinika izilinganiso kuye ngenzuzo elindelekileyo. Ukusebenza kwangempela kungatshiyana.",
     "cta_title": "Udinga idatha ejule kakhulu?",
     "cta_subtitle": "Finyelela imibiko yethu ebanzi lezinsizakalo zokuhlaziya idatha.",
-    "cta_button": "Cela umbiko owenzelwe wena"
+    "cta_button": "Cela umbiko owenzelwe wena",
+    "diaspora_residence_extra": "Ukusabalala lokhu kutshengisa imigudu eqakathekileyo yama-diaspora yokuhweba, ukugeleza kwemali ethunyelwayo, kanye lokuhlela ukuxhumana lokutshala imali ezimakethe ezinkulu."
   },
   "success": {
     "hero": {
