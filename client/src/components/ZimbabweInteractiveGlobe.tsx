@@ -10,18 +10,30 @@ type ArcDatum = {
   name: string;
 };
 
-export default function ZimbabweInteractiveGlobe() {
+type ZimbabweInteractiveGlobeProps = {
+  zoomToHarare?: boolean;
+};
+
+export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: ZimbabweInteractiveGlobeProps) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const zoomSequenceTimerRef = useRef<number | null>(null);
+  const previousZoomToHarareRef = useRef(false);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [audioBlocked, setAudioBlocked] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [zimbabweBoundary, setZimbabweBoundary] = useState<any[]>([]);
   const wasZimbabweVisibleRef = useRef(true);
 
   const locations = useMemo(
     () => [
+      { id: "vic_falls", name: "Victoria Falls", lat: -17.9243, lng: 25.856, label: "VFA" },
+      { id: "bulawayo", name: "Bulawayo", lat: -20.1325, lng: 28.6265, label: "BUQ" },
+      { id: "mutare", name: "Mutare", lat: -18.9707, lng: 32.6709, label: "UTA" },
+      { id: "johannesburg", name: "Johannesburg", lat: -26.2041, lng: 28.0473, label: "JNB" },
+      { id: "cape_town", name: "Cape Town", lat: -33.9249, lng: 18.4241, label: "CPT" },
       { id: "london", name: "London", lat: 51.5074, lng: -0.1278, label: "LHR" },
       { id: "dubai", name: "Dubai", lat: 25.2048, lng: 55.2708, label: "DXB" },
       { id: "ny", name: "New York", lat: 40.7128, lng: -74.006, label: "JFK" },
@@ -33,7 +45,8 @@ export default function ZimbabweInteractiveGlobe() {
     []
   );
 
-  const zimCoords = { lat: -20.0, lng: 31.0522 };
+  // Harare (Zimbabwe) exact reference point for marker + arc origin
+  const zimCoords = { lat: -17.8252, lng: 31.0335 };
   const zimVector = useMemo(() => {
     const lat = (zimCoords.lat * Math.PI) / 180;
     const lng = (zimCoords.lng * Math.PI) / 180;
@@ -56,6 +69,30 @@ export default function ZimbabweInteractiveGlobe() {
       })),
     [locations]
   );
+  const showZimbabweMarker = !zoomToHarare;
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadBoundary = async () => {
+      try {
+        const response = await fetch("/globe/zimbabwe.geo.json");
+        if (!response.ok) return;
+        const geojson = await response.json();
+        const features = Array.isArray(geojson?.features) ? geojson.features : [];
+        if (!cancelled) {
+          setZimbabweBoundary(features);
+        }
+      } catch {
+        if (!cancelled) {
+          setZimbabweBoundary([]);
+        }
+      }
+    };
+    void loadBoundary();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleFlyTo = useCallback((coords: { lat: number; lng: number }, altitude = 1.8) => {
     globeRef.current?.pointOfView(
@@ -67,6 +104,26 @@ export default function ZimbabweInteractiveGlobe() {
       2000
     );
   }, []);
+
+  useEffect(() => {
+    const justTriggered = zoomToHarare && !previousZoomToHarareRef.current;
+    previousZoomToHarareRef.current = zoomToHarare;
+    if (!justTriggered) return;
+    const controls = globeRef.current?.controls();
+    if (controls) {
+      controls.autoRotate = false;
+    }
+    // Ensure Harare is centered first, then perform a tighter zoom-in.
+    globeRef.current?.pointOfView({ lat: zimCoords.lat, lng: zimCoords.lng, altitude: 2.4 }, 500);
+    if (zoomSequenceTimerRef.current !== null) {
+      window.clearTimeout(zoomSequenceTimerRef.current);
+      zoomSequenceTimerRef.current = null;
+    }
+    zoomSequenceTimerRef.current = window.setTimeout(() => {
+      globeRef.current?.pointOfView({ lat: zimCoords.lat, lng: zimCoords.lng, altitude: 0.85 }, 1500);
+      zoomSequenceTimerRef.current = null;
+    }, 520);
+  }, [zoomToHarare, zimCoords.lat, zimCoords.lng]);
 
   useEffect(() => {
     handleFlyTo(zimCoords, 2.5);
@@ -186,6 +243,15 @@ export default function ZimbabweInteractiveGlobe() {
     return () => window.cancelAnimationFrame(rafId);
   }, [handleFlyTo, zimCoords, zimVector.x, zimVector.y, zimVector.z]);
 
+  useEffect(
+    () => () => {
+      if (zoomSequenceTimerRef.current !== null) {
+        window.clearTimeout(zoomSequenceTimerRef.current);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     if (!containerRef.current) return;
     const updateSize = () => {
@@ -236,10 +302,16 @@ export default function ZimbabweInteractiveGlobe() {
         arcDashGap={2}
         arcDashAnimateTime={2000}
         arcStroke={0.4}
+        polygonsData={zimbabweBoundary}
+        polygonAltitude={0.012}
+        polygonCapColor={() => "rgba(250, 204, 21, 0.3)"}
+        polygonSideColor={() => "rgba(250, 204, 21, 0.18)"}
+        polygonStrokeColor={() => "#facc15"}
+        polygonsTransitionDuration={0}
         onArcClick={(arc: any) =>
           handleFlyTo({ lat: arc.endLat, lng: arc.endLng }, 1.2)
         }
-        htmlElementsData={[{ ...zimCoords, name: "ZIMBABWE" }]}
+        htmlElementsData={showZimbabweMarker ? [{ ...zimCoords, name: "ZIMBABWE" }] : []}
         htmlElement={(d: any) => {
           const el = document.createElement("div");
           el.innerHTML = `
@@ -247,11 +319,6 @@ export default function ZimbabweInteractiveGlobe() {
               <div class="h-6 w-6 flex items-center justify-center">
                 <div class="absolute h-6 w-6 animate-ping rounded-full bg-yellow-500/30"></div>
                 <div class="h-3 w-3 rounded-full bg-yellow-500 border-2 border-white shadow-[0_0_15px_#facc15]"></div>
-              </div>
-              <div class="bg-black/80 backdrop-blur-md px-3 py-1 mt-2 border border-yellow-500/50 rounded-sm">
-                <span class="text-[11px] font-bold text-white tracking-[0.2em] uppercase whitespace-nowrap">
-                   ${d.name}
-                </span>
               </div>
             </div>
           `;
