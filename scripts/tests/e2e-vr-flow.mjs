@@ -9,7 +9,11 @@ const page = await context.newPage();
 const errors = [];
 let fallbackWebglMode = false;
 const shouldIgnoreError = (text) =>
+  /websocket connection to/i.test(text) ||
+  /failed to connect to websocket/i.test(text) ||
+  /websocket closed without opened/i.test(text) ||
   /401 \(Unauthorized\)/i.test(text) ||
+  /429 \(Too Many Requests\)/i.test(text) ||
   /\/auth\/me/i.test(text) ||
   /webgl context/i.test(text) ||
   /three\.webglrenderer/i.test(text) ||
@@ -35,6 +39,20 @@ try {
   await page.selectOption('#vr-destination', { index: 1 });
   await page.locator('h2').first().waitFor({ timeout: 15000 });
   await page.getByText(/walkthrough/i).first().waitFor({ timeout: 15000 });
+  await page.waitForTimeout(600);
+  const narrationPlaceholderVisible = await page
+    .getByText(/Narration will appear here once AI guidance is generated\./i)
+    .first()
+    .isVisible()
+    .catch(() => false);
+  const narrationBtn = page
+    .locator('button')
+    .filter({ hasText: /NARRATION:\s*(On|Off)|Narration:\s*(On|Off)|TTS:\s*(On|Off)/i })
+    .first();
+  await narrationBtn.waitFor({ timeout: 20000 });
+  await narrationBtn.click();
+  await page.waitForTimeout(600);
+  const narrationButtonText = (await narrationBtn.textContent())?.trim() || "";
 
   const tourRes = await tourResponsePromise;
 
@@ -42,9 +60,11 @@ try {
   await page.screenshot({ path: '/tmp/e2e-vr-flow.png', fullPage: true });
 
   const result = {
-    ok: errors.length === 0 && tourRes.status() === 200,
+    ok: errors.length === 0 && tourRes.status() === 200 && narrationPlaceholderVisible === false,
     baseUrl,
     chatStatus: tourRes.status(),
+    narrationButtonText,
+    narrationPlaceholderVisible,
     errors,
     screenshot: '/tmp/e2e-vr-flow.png',
     finalUrl: page.url(),

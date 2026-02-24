@@ -15,7 +15,7 @@
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "sitemap:generate": "node scripts/generate-sitemap.mjs",
-    "test:e2e:onesa": "bash scripts/e2e-onesa.sh",
+    "test:e2e:onesa": "bash scripts/tests/e2e-onesa.sh",
     "keepalive:ping": "bash scripts/keepalive-ping.sh",
     "format": "prettier --write .",
     "translations:sync": "python3 sync_translations.py --mode sync",
