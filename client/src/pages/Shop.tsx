@@ -39,13 +39,40 @@ export default function Shop() {
           "From Shona stone sculpture to handwoven baskets, discover products rooted in culture and quality.",
       },
       {
-        image: "/images/pages/shop/food_mazoe.jpg",
+        image: "/images/pages/shop/food_dried_mango_1.jpg",
         badge: t("shop.hero.badge3") || "Taste of Home",
         badgeIcon: Package,
         title: t("shop.hero.title3") || "Food and Nostalgia",
         subtitle:
           t("shop.hero.subtitle3") ||
           "Enjoy Zimbabwe favorites sourced with quality controls for local and export-ready buyers.",
+      },
+      {
+        image: "/images/pages/shop/beverage_mazoe_orange_6.png",
+        badge: t("shop.hero.badge4") || "Beverage Favorites",
+        badgeIcon: ShoppingBag,
+        title: t("shop.hero.title4") || "Mazoe and Maheu Classics",
+        subtitle:
+          t("shop.hero.subtitle4") ||
+          "Discover homegrown drink favorites curated for diaspora shelves and family tables.",
+      },
+      {
+        image: "/images/pages/shop/sports_rugby_jersey.jpg",
+        badge: t("shop.hero.badge5") || "Sports Pride",
+        badgeIcon: Globe2,
+        title: t("shop.hero.title5") || "Wear Zimbabwe with Pride",
+        subtitle:
+          t("shop.hero.subtitle5") ||
+          "Support local teams with official fan kits and sportswear inspired by Zimbabwean spirit.",
+      },
+      {
+        image: "/images/pages/shop/crafts_binga_baskets1.jpg",
+        badge: t("shop.hero.badge6") || "Artisan Economy",
+        badgeIcon: Package,
+        title: t("shop.hero.title6") || "Crafts with a Story",
+        subtitle:
+          t("shop.hero.subtitle6") ||
+          "Shop handmade products that preserve heritage and support artisan communities.",
       },
     ],
     [t],
@@ -106,7 +133,8 @@ export default function Shop() {
         <SubPageHero heroSlides={heroSlides} intro={introData} />
       </section>
 
-      <section id="collections" className="py-10 bg-slate-950 relative overflow-hidden">
+     {/* Online shop */}
+      <section id="collections" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className={OUTER_PANEL_CLASS}>
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
@@ -173,16 +201,16 @@ export default function Shop() {
                       </div>
 
                       <div className="p-4 flex flex-col flex-grow relative z-10">
-                        <h4 className="text-sm font-black text-white tracking-tight mb-2 group-hover:text-zim-gold transition-colors duration-300">
+                        <h4 className="text-sm font-black text-white tracking-tight mb-2 text-center group-hover:text-zim-gold transition-colors duration-300">
                           {getCategoryTitle(category.key, category.title)}
                         </h4>
-                        <p className="text-xs text-white/70 mb-4 flex-grow leading-relaxed font-light">
+                        <p className="text-xs text-white/70 mb-4 flex-grow leading-relaxed font-light text-justify">
                           {getCategoryDescription(category.key, category.description)}
                         </p>
-                        <div>
+                        <div className="flex justify-center">
                           <Button
                             asChild
-                            className="rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.16em]"
+                            className="rounded-full px-5 py-1.5 h-auto border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:text-white font-black text-[9px] uppercase tracking-[0.16em]"
                           >
                             <Link href={`/shop/products?category=${category.baseCategory}&segment=${category.key}`}>
                               {t("shop.explore") || "Explore"}
@@ -210,7 +238,8 @@ export default function Shop() {
         </div>
       </section>
 
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
+      {/* How shop works*/}
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className={OUTER_PANEL_CLASS}>
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />

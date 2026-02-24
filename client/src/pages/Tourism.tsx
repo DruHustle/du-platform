@@ -4,7 +4,7 @@ import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Heart, FileText, Dog, TrendingUp } from "lucide-react";
+import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Heart, Dog, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
@@ -401,51 +401,6 @@ export default function Tourism() {
     },
   ];
 
-  const evisaInfo = {
-    title: t("tourism.evisa.title") || "Zimbabwe eVisa and Entry Guidance",
-    subtitle:
-      t("tourism.evisa.subtitle") ||
-      "Who qualifies, indicative costs, processing windows, and the core documents most travelers prepare before arrival.",
-    qualification: {
-      title: t("tourism.evisa.qualification.title") || "Who qualifies",
-      details: getTranslatedList("tourism.evisa.qualification.details", [
-        "Many nationalities can apply online through Zimbabwe's eVisa portal.",
-        "Some travelers may still qualify for visa on arrival depending on nationality and travel purpose.",
-        "Always confirm your category before booking flights because entry requirements can change.",
-      ]),
-    },
-    costs: {
-      title: t("tourism.evisa.costs.title") || "Indicative visa costs (USD)",
-      details: getTranslatedList("tourism.evisa.costs.details", [
-        "Single-entry visas are commonly around USD 30 for many categories.",
-        "Double-entry visas are commonly around USD 45 to USD 60 depending on nationality category.",
-        "KAZA UniVisa is typically around USD 50 when available and eligible.",
-      ]),
-    },
-    processing: {
-      title: t("tourism.evisa.processing.title") || "Typical processing times",
-      details: getTranslatedList("tourism.evisa.processing.details", [
-        "Many applications are processed within approximately 2 to 7 working days.",
-        "Complex cases can take longer if supporting checks are needed.",
-        "Apply early in peak travel periods to reduce last-minute risk.",
-      ]),
-    },
-    documents: {
-      title: t("tourism.evisa.documents.title") || "Key documents",
-      details: getTranslatedList("tourism.evisa.documents.details", [
-        "Passport valid for at least 6 months from your arrival date.",
-        "Travel itinerary and return or onward booking evidence.",
-        "Accommodation details and proof of sufficient travel funds.",
-      ]),
-    },
-    disclaimer:
-      t("tourism.evisa.disclaimer") ||
-      "Visa eligibility, fees, and processing times vary by nationality and policy updates. Verify current requirements on official portals before travel.",
-    applyCta: t("tourism.evisa.apply_cta") || "Apply via eVisa Portal",
-    immigrationCta: t("tourism.evisa.immigration_cta") || "Zimbabwe Immigration",
-    ztaCta: t("tourism.evisa.zta_cta") || "Plan Your Trip (ZTA)",
-  };
-
   return (
     <Layout>
       {/* Hero Section */}
@@ -453,100 +408,100 @@ export default function Tourism() {
         <SubPageHero heroSlides={heroSlides} intro={introData} />
       </section>
 
-      {/* eVisa Information */}
-      <section id="evisa-info" className="pb-10 bg-slate-950 relative overflow-hidden">
+      {/* Key Attractions - Cinematic Glass Grid */}
+      <section id="attractions" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="section-title-compact transition-none hover:!text-white hover:!scale-100">{evisaInfo.title}</h2>
-              <p className="section-subtitle-compact">{evisaInfo.subtitle}</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <Globe className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.qualification.title}</h3>
-                </div>
-                <ul className="space-y-2">
-                  {evisaInfo.qualification.details.map((detail) => (
-                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <CreditCard className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.costs.title}</h3>
-                </div>
-                <ul className="space-y-2">
-                  {evisaInfo.costs.details.map((detail) => (
-                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <Calendar className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.processing.title}</h3>
-                </div>
-                <ul className="space-y-2">
-                  {evisaInfo.processing.details.map((detail) => (
-                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <FileText className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{evisaInfo.documents.title}</h3>
-                </div>
-                <ul className="space-y-2">
-                  {evisaInfo.documents.details.map((detail) => (
-                    <li key={detail} className="text-sm text-white/75 leading-relaxed">• {detail}</li>
-                  ))}
-                </ul>
+              <h2 className="section-title-compact">{t("tourism.attractions_title") || "Must-Visit Destinations"}</h2>
+              <p className="text-sm text-white/75 max-w-4xl mx-auto mt-4 font-light leading-relaxed">
+                {t("tourism.intro.p1") ||
+                  "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality."}
+              </p>
+              <p className="text-sm text-white/70 max-w-4xl mx-auto mt-3 font-light leading-relaxed">
+                {t("tourism.intro.p2_before_ar") || "When you are onsite, use Onesa's"}{" "}
+                <span className="text-zim-gold font-semibold">{t("tourism.intro.local_guide_ar") || "Local guide AR"}</span>{" "}
+                {t("tourism.intro.p2_after_ar") ||
+                  "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
+              </p>
+              <p className="text-sm text-white/70 max-w-4xl mx-auto mt-3 font-light leading-relaxed">
+                {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
+                <span className="text-zim-gold font-semibold">{t("tourism.intro.gastronomy_tourism") || "gastronomy tourism"}</span>{" "}
+                {t("tourism.intro.p3_between") ||
+                  "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities."}{" "}
+                <span className="text-zim-gold font-semibold">{t("tourism.intro.cultural_tourism") || "Cultural tourism"}</span>{" "}
+                {t("tourism.intro.p3_after_cultural") ||
+                  "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
+              </p>
+              <div className="mt-6 flex justify-center">
+                <Link href="/onesa-ai-tourism-virtual-experince">
+                  <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]">
+                    {t("tourism.intro.virtual_experience_center_cta") || "Virtual Experience Center"}
+                  </Button>
+                </Link>
               </div>
             </div>
 
-            <div className="mt-8 rounded-[1.5rem] border border-zim-gold/20 bg-zim-gold/5 p-5">
-              <p className="text-xs text-white/80 leading-relaxed">{evisaInfo.disclaimer}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {attractions.map((attraction, index) => (
+                <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <button type="button" className="block w-full text-left" onClick={() => setSelectedAttraction(attraction)}>
+                    <div className="group relative h-[450px] rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-2 cursor-pointer">
+                      <img src={attraction.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 saturate-[0.8]" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                      
+                      <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                        <h3 className="text-lg font-black text-white tracking-tight mb-4 group-hover:text-zim-gold transition-colors">{attraction.name}</h3>
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {attraction.highlights.map((highlight, idx) => (
+                            <span key={idx} className="text-[10px] font-black uppercase tracking-widest bg-white/10 backdrop-blur-xl text-white/80 px-3 py-1 rounded-full border border-white/10">
+                              {highlight}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-sm text-white/60 font-light leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{attraction.summary}</p>
+                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
+                          {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                </motion.div>
+              ))}
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="https://evisa.gov.zw/home" target="_blank" rel="noopener noreferrer">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {evisaInfo.applyCta}
-                </Button>
-              </a>
-              <a href="https://www.zimimmigration.gov.zw/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {evisaInfo.immigrationCta}
-                </Button>
-              </a>
-              <a href="https://zimbabwetourism.net/plan-your-trip/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {evisaInfo.ztaCta}
-                </Button>
-              </a>
+            {/* Other Destinations - Compact Glass Grid */}
+            <div className="pt-10">
+              <div className="mb-10 text-center">
+                <h2 className="section-title-compact mb-3">{t("tourism.other_attractions_title") || "Other Incredible Destinations"}</h2>
+                <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t("tourism.other_attractions_subtitle") || "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country."}</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {otherAttractions.map((dest, i) => (
+                  <motion.div key={i} whileHover={{ y: -5 }} className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+                    <button type="button" className="block cursor-pointer w-full text-left" onClick={() => setSelectedAttraction(dest)}>
+                      <div className="h-44 overflow-hidden relative">
+                        <img src={dest.image} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                      </div>
+                      <div className="p-5">
+                        <h4 className="text-base font-bold text-white mb-2 group-hover:text-zim-gold transition-colors">{dest.name}</h4>
+                        <p className="text-xs text-white/40 leading-snug font-light">{dest.summary}</p>
+                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
+                          {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
+                        </p>
+                      </div>
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Onesa AI Tourist Companion Section - Glassy UI Upgrade */}
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -651,88 +606,6 @@ export default function Tourism() {
         </div>
       </section>
 
-      {/* Key Attractions - Cinematic Glass Grid */}
-      <section id="attractions" className="py-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="section-title-compact">{t("tourism.attractions_title") || "Must-Visit Destinations"}</h2>
-              <p className="text-sm text-white/75 max-w-4xl mx-auto mt-4 font-light leading-relaxed">
-                Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures.
-                Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes,
-                story, culture, and unforgettable hospitality.
-              </p>
-              <p className="text-sm text-white/70 max-w-4xl mx-auto mt-3 font-light leading-relaxed">
-                When you are onsite, use Onesa&apos;s <span className="text-zim-gold font-semibold">Local guide AR</span> feature for a full AI-powered AR experience.
-                You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip.
-              </p>
-              <div className="mt-6 flex justify-center">
-                <Link href="/onesa-ai-tourism-virtual-experince">
-                  <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]">
-                    Virtual Experience Center
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {attractions.map((attraction, index) => (
-                <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <button type="button" className="block w-full text-left" onClick={() => setSelectedAttraction(attraction)}>
-                    <div className="group relative h-[450px] rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                      <img src={attraction.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 saturate-[0.8]" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-                      
-                      <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                        <h3 className="text-lg font-black text-white tracking-tight mb-4 group-hover:text-zim-gold transition-colors">{attraction.name}</h3>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {attraction.highlights.map((highlight, idx) => (
-                            <span key={idx} className="text-[10px] font-black uppercase tracking-widest bg-white/10 backdrop-blur-xl text-white/80 px-3 py-1 rounded-full border border-white/10">
-                              {highlight}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-sm text-white/60 font-light leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{attraction.summary}</p>
-                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
-                          {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Other Destinations - Compact Glass Grid */}
-            <div className="pt-24">
-              <div className="mb-10 text-center">
-                <h2 className="section-title-compact mb-3">{t("tourism.other_attractions_title") || "Other Incredible Destinations"}</h2>
-                <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t("tourism.other_attractions_subtitle") || "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country."}</p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {otherAttractions.map((dest, i) => (
-                  <motion.div key={i} whileHover={{ y: -5 }} className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
-                    <button type="button" className="block cursor-pointer w-full text-left" onClick={() => setSelectedAttraction(dest)}>
-                      <div className="h-44 overflow-hidden relative">
-                        <img src={dest.image} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-700" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
-                      </div>
-                      <div className="p-5">
-                        <h4 className="text-base font-bold text-white mb-2 group-hover:text-zim-gold transition-colors">{dest.name}</h4>
-                        <p className="text-xs text-white/40 leading-snug font-light">{dest.summary}</p>
-                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
-                          {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
-                        </p>
-                      </div>
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Dialog open={Boolean(selectedAttraction)} onOpenChange={(open) => !open && setSelectedAttraction(null)}>
         <DialogContent className="max-w-3xl mx-auto max-h-[85vh] overflow-y-auto bg-slate-950 border-white/10 text-white">
           {selectedAttraction ? (
@@ -797,7 +670,7 @@ export default function Tourism() {
       </Dialog>
 
       {/* Planning Info - High-End Dashboard Style */}
-      <section id="plan-visit" className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
+      <section id="plan-visit" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -835,7 +708,7 @@ export default function Tourism() {
       </section>
 
       {/* ZTA Official Resources */}
-      <section className="pb-10 bg-slate-950 relative overflow-hidden">
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -863,36 +736,6 @@ export default function Tourism() {
                   </a>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Official Tourism Authorities */}
-      <section id="tourism-authorities" className="pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-4">
-              <FileText className="h-6 w-6 text-zim-gold" />
-              <h2 className="section-title-compact">
-                {t("tourism.authorities.title") || "Official Tourism Authorities"}
-              </h2>
-            </div>
-            <p className="text-white/70 text-sm leading-relaxed mb-6">
-              {t("tourism.authorities.subtitle") ||
-                "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards."}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("tourism.authorities.zta") || "Visit Zimbabwe Tourism Authority"}
-                </Button>
-              </a>
-              <a href="https://zimparks.org.zw/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("tourism.authorities.zimparks") || "Visit ZimParks"}
-                </Button>
-              </a>
             </div>
           </div>
         </div>

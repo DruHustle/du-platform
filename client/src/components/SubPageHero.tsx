@@ -208,7 +208,7 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
 
 
       {/* SECTION 2: GLASSY INTRO */}
-      <section className="py-8 bg-slate-950 relative overflow-hidden">
+      <section className="py-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div

@@ -139,7 +139,27 @@
       "badge3": "Izisetshenziswa zabatshali mali",
       "title3": "Ukuhlela amabhizinisi ngobuhlakani",
       "subtitle3": "Hlola izingozi njalo usungule imicabango yamabhizinisi angaphumelela emakethe yakhona ekhaya.",
-      "highlight3": "Impumelelo eqhutshwa yidatha"
+      "highlight3": "Impumelelo eqhutshwa yidatha",
+      "badge4": "Imfundo 5.0",
+      "title4": "Ukuvuselelwa Eziklilasini",
+      "subtitle4": "Ukufunda ngedijithali lokuthuthukiswa kwamakhono kukhuphula isizukulwane esilandelayo sethalente ye-tech eZimbabwe.",
+      "highlight4": "Amakhono Esikhathi Esizayo",
+      "badge5": "Ukuhweba Kwedijithali",
+      "title5": "Ubuchwepheshe beLogistics",
+      "subtitle5": "Amahlelo akhaliphileyo e-export le supply-chain adala ukufinyelela okuthembekileyo ezimakethe zesifunda lezomhlaba.",
+      "highlight5": "Ukuhweba Okuxhumene",
+      "badge6": "Industrial AI",
+      "title6": "I-Tech Emisebenzini Yezezimayini",
+      "subtitle6": "Imisebenzi eqhutshwa yidatha, predictive maintenance, le process optimization kuthuthukisa output lokuphepha.",
+      "highlight6": "Ukusebenza Ngokuphumelelayo",
+      "badge7": "Ukukhula kwe-Agritech",
+      "title7": "Amahlelo Okuhlakanipha Ekulima",
+      "subtitle7": "Precision agriculture le real-time monitoring kusekela isivuno esiqinileyo kanye lokuvikeleka kokudla.",
+      "highlight7": "Climate-Smart Agriculture",
+      "badge8": "Abakhi beDiaspora",
+      "title8": "Ithalente le-Tech Ngaphesheya Kwemingcele",
+      "subtitle8": "Ochwepheshe be-diaspora baletha imali, mentorship, losizo olusebenzayo kuma-startup akuleli.",
+      "highlight8": "Ukubambisana Komhlaba"
     },
     "objective_title": "Kuvuselelwa kweThekhinoloji",
     "objective_subtitle": "Ukusebenzisa i-Artificial Intelligence (AI) lezinye indlela zedijithali ukuxhumanisa iZimbabwe labantu bayo abasuka kwamanye amazwe, ngenjongo yokukhuthaza ukubambisana, intuthuko eqhubekayo, lokukhula komnotho kwesikhathi eside.",
@@ -276,7 +296,8 @@
       "nust": "Amasu amasha aqhutshwa yinyuvesi kanye ne-ecosystem yokuhweba esekela amabhizinisi aholwa yintsha nezisombululo ezigxile embonini.",
       "msu": "Inkundla yokufukamela esekwe e-Midlands kanye nenkundla yokuthengisa esekela osomabhizinisi, ama-SME, kanye nokusetshenziswa kocwaningo.",
       "digital_village": "Indawo yokusungula egxile emphakathini eMutare ihlinzeka ngendawo yokusebenza ngokubambisana, ukuqeqeshwa, nokusekelwa kwebhizinisi ledijithali.",
-      "open_button": "Tech Hubs in Zimbabwe"
+      "open_button": "Tech Hubs in Zimbabwe",
+      "location_suffix": ", Zimbabwe"
     },
     "onesa_matter": {
       "badge": "I-Africa-Centric AI",
@@ -304,7 +325,32 @@
           "title": "Ukukhula Okulungele Ikusasa",
           "detail": "I-Onesa isekela ukusungula izinto ezintsha, ukuzethemba kokutshalwa kwezimali, nokubamba iqhaza okuqinile kwedijithali ezizukulwaneni ezizayo."
         }
+      },
+      "combined": "I-Africa ifuna i-AI eyaziyo i-Africa. I-Onesa AI yakhiwe yiDiaspora Unlocked ukuze ilethe ulwazi olusebenzayo, olwendawo, olufanele iZimbabwe kanye le-Africa yonke, hatshi izeluleko ezijwayelekileyo ezingahambelani lezimo zendawo. Sibona i-AI sovereignty njengento eqakathekileyo ekukhuleni kwesikhathi eside, ekuqineni, lasekuzimeleni kweqhinga, njalo le platform yisithembiso sethu sokwakha lelo kusasa kanye lemiphakathi ye-Africa."
+    },
+    "diaspora_use_cases": {
+      "relocation": {
+        "title": "Ukubuyela Lekuhlanganiswa Kutsha",
+        "detail": "Thola ukuqondisa okusebenzayo ngezindlu, legal setup, izikolo, labaniki bezinsiza ngaphambi kokufika."
+      },
+      "investment": {
+        "title": "Ukuhlolwa Kwezokutshalwa Kwezimali",
+        "detail": "Qhathanisa amathuba ngomkhakha, expected returns, ukulungela umthetho, kanye lezimpawu zemfuno yemakethe."
+      },
+      "business_intelligence": {
+        "title": "Business Intelligence",
+        "detail": "Yakha ama-market-entry briefs e-export, pricing benchmarks, lama-demand snapshots ngemakethe okuyiwa kuyo."
+      },
+      "collaboration": {
+        "title": "Ukubambisana kweDiaspora",
+        "detail": "Hlela mentors, co-investors, lama-operators emazweni ahlukene usebenzisa i-project context ehlanganyelwayo."
       }
+    },
+    "onesa_name": "Onesa AI",
+    "onesa_meaning_badge": "Onesa = Khanyisa",
+    "diaspora_ai": {
+      "title": "Indlela iDiaspora Unlocked Esebenzisa Ngayo i-AI",
+      "subtitle": "I-Onesa AI yakhelwe ukusekela uhambo lonke lwe-diaspora, kusukela ekuxhumaneni kabusha lokubuya kuze kufike ekuhloleni amathuba kanye lokuqhuba amabhizimusi."
     }
   },
   "export": {
@@ -891,46 +937,6 @@
         "d3": "Isimo sezulu esihle unyaka wonke"
       }
     },
-    "evisa": {
-      "title": "I-Zimbabwe eVisa leziqondiso zokungena",
-      "subtitle": "Ngubani ofanele, indleko ezilinganiselweyo, izikhathi zokucutshungulwa, kanye lamadokhumenti ayisisekelo ngaphambi kohambo.",
-      "qualification": {
-        "title": "Ngubani ofanele",
-        "details": [
-          "Izizwe ezinengi zingafaka isicelo online ku-portal yeZimbabwe eVisa.",
-          "Abanye abahambi bangathola i-visa lapho befika kuye ngobuzwe langenjongo yohambo.",
-          "Qinisekisa isigaba sakho ngaphambi kokubhuka indiza ngoba izidingo zingatshintsha."
-        ]
-      },
-      "costs": {
-        "title": "Indleko ze-visa ezilinganiselweyo (USD)",
-        "details": [
-          "I-single-entry visa ivamise ukuba seduze le-USD 30 kwizigaba ezinengi.",
-          "I-double-entry visa ivamise ukuba phakathi kwe-USD 45 le-USD 60 kuye ngesigaba sobuzwe.",
-          "I-KAZA UniVisa ivamise ukuba seduze le-USD 50 lapho ikhona njalo ufanele."
-        ]
-      },
-      "processing": {
-        "title": "Izikhathi ezivamileyo zokucutshungulwa",
-        "details": [
-          "Izicelo ezinengi ziqedwa phakathi kwamalanga okusebenza angu-2 kuya ku-7.",
-          "Amacala adinga ukuhlolwa okwengeziwe angathatha isikhathi eside.",
-          "Faka isicelo kusenesikhathi ngezikhathi zokuhamba ezimatasatasa."
-        ]
-      },
-      "documents": {
-        "title": "Amadokhumenti aqakathekileyo",
-        "details": [
-          "I-passport esasebenza okungenani izinyanga eziyisi-6 kusukela ngosuku lokufika.",
-          "Uhlelo lohambo kanye lobufakazi bethikithi lokubuya kumbe lokuqhubeka.",
-          "Imininingwane yokuhlala kanye lobufakazi bemali eyeneleyo yohambo."
-        ]
-      },
-      "disclaimer": "Ukufaneleka kwe-visa, indleko, lezikhathi zokucutshungulwa kuyatshintsha kuye ngobuzwe lemithetho emitsha. Qinisekisa izidingo zakamuva kuma-portal asemthethweni ngaphambi kohambo.",
-      "apply_cta": "Faka isicelo ku-eVisa Portal",
-      "immigration_cta": "Zimbabwe Immigration",
-      "zta_cta": "Hlela Uhambo (ZTA)"
-    },
     "objective_title": "Umbono wethu",
     "objective_subtitle": "Ukwakha isango lomhlaba elixhumanisa amasiko, imikhiqizo, ezokuvakasha, lamathuba okutshala imali eZimbabwe.",
     "cta_title": "Usulungele ukuqalisa uhambo lwakho?",
@@ -940,12 +946,6 @@
     "explore_title": "Hlola eminye imininingwane yezokuvakasha",
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi yezokuvakasha leziqondiso ezisemthethweni, vakashela i-website ye-Zimbabwe Tourism Authority.",
     "explore_site": "Vakashela i-ZTA",
-    "authorities": {
-      "title": "Iziphathimandla Zokuvakasha Ezisemthethweni",
-      "subtitle": "Sebenzisa iziqondiso ezisemthethweni ezivela eZimbabwe Tourism Authority kanye neZimbabwe Parks and Wildlife Management Authority ukuze uthole izimvume, ulwazi lwepaki kanye nezindinganiso zendawo.",
-      "zta": "Vakashela iZimbabwe Tourism Authority",
-      "zimparks": "Vakashela iZimParks"
-    },
     "attraction_card": {
       "tap_for_details": "Tap for more details"
     },
@@ -983,6 +983,18 @@
         "title": "Useful Apps",
         "description": "Find recommended travel-support applications listed by Zimbabwe Tourism Authority."
       }
+    },
+    "intro": {
+      "p1": "IZimbabwe yakhelwe ukutholwa, kusukela ezimpophomeni ezidume emhlabeni wonke lezinqaba zamatshe zasendulo kuya kuma-safari frontiers kanye lezokungcebeleka echibini. Iqondiswa ngumbono weZimBho tourism kanye lesithembiso selizwe, Zimbabwe: A World of Wonders, indlela ngayinye ingahlanganisa imvelo, indaba, amasiko, lobungane obungasoze bakhohlwe.",
+      "p2_before_ar": "Nxa usukhona endaweni, sebenzisa",
+      "local_guide_ar": "Local guide AR",
+      "p2_after_ar": "yeOnesa ukuze uthole AI-powered AR experience epheleleyo. Ungavakatshela futhi i-AI-powered Virtual Experience Center yethu ukuze ubone izindawo ngaphambi kohambo.",
+      "p3_before_gastro": "I-Zimbabwe",
+      "gastronomy_tourism": "gastronomy tourism",
+      "p3_between": "layo iqakathekile ohambweni: kusukela ekudleni kwesintu okufana le-sadza lenyama lomuriwo, inhlanzi zamanzi aphesheya eKariba, imizila yekhofi e-Eastern Highlands, kuze kufike kuma-market-to-table food experiences emadolobheni amakhulu.",
+      "cultural_tourism": "Cultural tourism",
+      "p3_after_cultural": "kungeza olunye ungqimba ngamasiko aphilayo, izindaba zomphakathi, umculo wembira lokugida, i-stone sculpture yesimanje, lezindawo zomlando ezixhumanisa izivakashi lobuwena belizwe ezizukulwaneni. I-Wildlife tourism igcwalisa loluhambo ngeBig Five lama-birding circuits, ama-guided safari drives eHwange laseMana Pools, kanye lokuhlangana okugxile ekongiweni kwemvelo emapaki lendawo ezivikelweyo zeZimbabwe.",
+      "virtual_experience_center_cta": "Virtual Experience Center"
     }
   },
   "investment": {

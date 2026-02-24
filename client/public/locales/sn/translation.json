@@ -139,7 +139,27 @@
       "badge3": "Zvishandiso zveMudyari",
       "title3": "Kuronga Bhizimusi neUngwaru",
       "subtitle3": "Ongorora njodzi uye gadzira mazano ebhizimusi anobudirira pamusika wemuno.",
-      "highlight3": "Kubudirira neNhamba"
+      "highlight3": "Kubudirira neNhamba",
+      "badge4": "Dzidzo 5.0",
+      "title4": "Hunyanzvi Mumakirasi",
+      "subtitle4": "Kudzidza kwedhijitari nekuvandudzwa kwehunyanzvi kuri kusimudzira chizvarwa chinotevera chevane tarenda rehunyanzvi muZimbabwe.",
+      "highlight4": "Hunyanzvi Hweramangwana",
+      "badge5": "Kutengeserana kweDijitari",
+      "title5": "Tekinoroji yeLogistics",
+      "subtitle5": "Masisitimu akangwara ekuendesa kunze ne supply-chain anopa kupinda kwakavimbika mumisika yedunhu nepasirese.",
+      "highlight5": "Kutengeserana Kwakabatana",
+      "badge6": "Industrial AI",
+      "title6": "Tekinoroji muMabasa eMigodhi",
+      "subtitle6": "Mashandiro anofambiswa nedata, predictive maintenance, uye process optimization zvinowedzera output nekuchengeteka.",
+      "highlight6": "Kushanda Kwakanaka",
+      "badge7": "Kukura kweAgritech",
+      "title7": "Masisitimu Akangwara Ekurima",
+      "subtitle7": "Precision agriculture uye real-time monitoring zvinotsigira goho riri nani nekuchengetedzwa kwechikafu.",
+      "highlight7": "Climate-Smart Agriculture",
+      "badge8": "Vavaki veDiaspora",
+      "title8": "Tarenda reTekinoroji Mhiri kweMiganhu",
+      "subtitle8": "Nyanzvi dzediaspora dzinounza mari, mentorship, nerutsigiro rwekushandisa zvinooneka kumastartup emuno.",
+      "highlight8": "Kubatana Kwepasi Rose"
     },
     "objective_title": "Zvigadzirwa zvemazuva ano",
     "objective_subtitle": "Kushandisa hungwaru hweArtificial Intelligence (AI) nehunyanzvi hwedhijitari kubatanidza Zimbabwe nevanhu vayo vari kunze kwenyika, kuitira kukurudzira kushanda pamwe chete, budiriro inogara, nekukura kwehupfumi kwenguva refu.",
@@ -276,7 +296,8 @@
       "nust": "Yunivhesiti-inotungamirwa hunyanzvi uye kutengeserana ecosystem inotsigira vechidiki-inotungamirwa bhizinesi uye indasitiri-yakatarisana nemhinduro.",
       "msu": "Midlands-yakavakirwa incubation uye kushambadzira chikuva chinotsigira mabhizinesi, maSME, uye kushandisa tsvakiridzo spin-outs.",
       "digital_village": "Nzvimbo yakatarisana nenharaunda yekuvandudza maMutare ichipa nzvimbo yekushandira pamwe, kudzidzisa, nerutsigiro rwebhizinesi redhijitari.",
-      "open_button": "Tech Hubs in Zimbabwe"
+      "open_button": "Tech Hubs in Zimbabwe",
+      "location_suffix": ", Zimbabwe"
     },
     "onesa_matter": {
       "badge": "AI yakatarisana neAfrica",
@@ -304,7 +325,32 @@
           "title": "Kukura Kwenguva Yemberi",
           "detail": "Onesa inotsigira hunyanzvi, kuvimba kwekudyara, uye kutora chikamu kwakasimba kwedhijitari kuzvizvarwa zvinotevera."
         }
+      },
+      "combined": "Africa inoda AI inonzwisisa Africa. Onesa AI yakavakwa neDiaspora Unlocked kuti ipe ruzivo runobatsira, rwemuno uye rwakanyatsokodzera Zimbabwe pamwe neAfrica yose, kwete mazano akajairika asingabatani nemamiriro emuno. Tinoona AI sovereignty sechinhu chakakosha mukukura kwenguva refu, kusimba, uye kuzvimirira kwehurongwa, uye chikuva ichi chiratidzo chekuzvipira kwedu kuvaka ramangwana iri pamwe nenharaunda dzeAfrica."
+    },
+    "diaspora_use_cases": {
+      "relocation": {
+        "title": "Kudzoka nekubatanidzwazve",
+        "detail": "Wana gwara rinoshanda panyaya dzekugara, legal setup, sarudzo dzezvikoro, nevapi vemasevhisi usati wasvika."
+      },
+      "investment": {
+        "title": "Kuongorora Mari",
+        "detail": "Enzanisa mikana nechikamu, expected returns, kugadzirira kwemitemo, uye market demand signals."
+      },
+      "business_intelligence": {
+        "title": "Business Intelligence",
+        "detail": "Gadzira market-entry briefs yezvekutumira kunze, pricing benchmarks, uye demand snapshots nemusika wauri kuenda."
+      },
+      "collaboration": {
+        "title": "Kubatana kweDiaspora",
+        "detail": "Ronga mentors, co-investors, uye operators munyika dzakasiyana uchishandisa project context yakagovaniswa."
       }
+    },
+    "onesa_name": "Onesa AI",
+    "onesa_meaning_badge": "Onesa = Kujekesa",
+    "diaspora_ai": {
+      "title": "Mashandisirwo eAI neDiaspora Unlocked",
+      "subtitle": "Onesa AI yakavakwa kutsigira rwendo rwese rwediaspora, kubva pakubatanazve nekudzoka kusvika pakuongorora mikana nekushanda mabhizimusi."
     }
   },
   "export": {
@@ -891,46 +937,6 @@
         "d3": "Kunze kwakanaka gore rose"
       }
     },
-    "evisa": {
-      "title": "Zimbabwe eVisa neMirayiridzo Yekupinda",
-      "subtitle": "Ndiani anokodzera, mari inotarisirwa, nguva dzekugadziriswa, uye magwaro anodiwa usati wasvika.",
-      "qualification": {
-        "title": "Ndiani anokodzera",
-        "details": [
-          "Nyika dzakawanda dzinokwanisa kunyorera online paZimbabwe eVisa portal.",
-          "Vamwe vafambi vanogona kupihwa visa pakusvika zvichienderana nenyika nekuda kwerwendo.",
-          "Simbisa category yako usati wabhuka ndege nekuti zvinodiwa zvinogona kuchinja."
-        ]
-      },
-      "costs": {
-        "title": "Mari inotarisirwa yevisa (USD)",
-        "details": [
-          "Single-entry visa inowanzova pedyo neUSD 30 kumapoka mazhinji.",
-          "Double-entry visa inowanzova pakati peUSD 45 neUSD 60 zvichienderana necategory yenyika.",
-          "KAZA UniVisa inowanzova pedyo neUSD 50 kana iripo uye uchikodzera."
-        ]
-      },
-      "processing": {
-        "title": "Nguva dzinowanzotorwa kugadzirisa",
-        "details": [
-          "Zvikumbiro zvakawanda zvinopedzwa mukati memazuva ebasa 2 kusvika 7.",
-          "Nyaya dzine kuongororwa kwakawanda dzinogona kutora nguva yakareba.",
-          "Nyorera mberi panguva dzine vanhu vakawanda kuti udzivise kunonoka kwekupedzisira."
-        ]
-      },
-      "documents": {
-        "title": "Magwaro akakosha",
-        "details": [
-          "Pasipoti ine mwedzi inodarika 6 yekushanda kubva pazuva rekusvika.",
-          "Urongwa hwerwendo uye humbowo hwetikiti rekudzoka kana kuenderera mberi.",
-          "Ruzivo rwekugara uye humbowo hwemari yakakwana yerwendo."
-        ]
-      },
-      "disclaimer": "Kukodzera visa, mari, uye nguva yekugadzirisa zvinochinja zvichienderana nenyika nemitemo mitsva. Tarisa zvinodiwa zvazvino pama portal epamutemo usati wafamba.",
-      "apply_cta": "Nyorera paeVisa Portal",
-      "immigration_cta": "Zimbabwe Immigration",
-      "zta_cta": "Ronga Rwendo (ZTA)"
-    },
     "objective_title": "Chiono chedu",
     "objective_subtitle": "Kuvaka mukova unobatanidza tsika, zvigadzirwa, ushanyi nemikana yeZimbabwe pasi rese.",
     "cta_title": "Wagadzirira kutanga Kufara Here?",
@@ -940,12 +946,6 @@
     "explore_title": "Ongorora Rumwe Ruzivo rweUshanyi",
     "explore_subtitle": "Kuti uwane ruzivo rwakazara nemitemo, shanyirai website yeZimbabwe Tourism Authority.",
     "explore_site": "Shanyira ZTA",
-    "authorities": {
-      "title": "Official Tourism Authority",
-      "subtitle": "Shandisai mazano ari pamutemo kubva kuZimbabwe Tourism Authority neZimbabwe Parks and Wildlife Management Authority kuti mupe mvumo, ruzivo rwepaka, uye mitemo yekwamunoenda.",
-      "zta": "Shanyira Zimbabwe Tourism Authority",
-      "zimparks": "Shanyira ZimParks"
-    },
     "attraction_card": {
       "tap_for_details": "Tap for more details"
     },
@@ -983,6 +983,18 @@
         "title": "Useful Apps",
         "description": "Find recommended travel-support applications listed by Zimbabwe Tourism Authority."
       }
+    },
+    "intro": {
+      "p1": "Zimbabwe yakagadzirirwa kuwanikwa, kubva kumapopoma anozivikanwa pasi rose nemaguta ekare ematombo kusvika kumasafari emuganhu nemabasa emadziva. Ichitungamirirwa nechiono cheZimBho tourism uye chivimbiso chenyika, Zimbabwe: A World of Wonders, nzira imwe neimwe inogona kubatanidza nzvimbo, nyaya, tsika, uye kugamuchira kwevanhu kusingakanganwiki.",
+      "p2_before_ar": "Paunenge uri panzvimbo, shandisa",
+      "local_guide_ar": "Local guide AR",
+      "p2_after_ar": "yaOnesa kuti uwane AI-powered AR experience yakazara. Unogonawo kushanyira AI-powered Virtual Experience Center yedu kuti uone nzvimbo usati wafamba.",
+      "p3_before_gastro": "Zimbabwe",
+      "gastronomy_tourism": "gastronomy tourism",
+      "p3_between": "inhengo yakakosha yerwendo: kubva kuzvokudya zvechivanhu zvakaita se sadza nenyama nemuriwo, kuhove dzemumvura yeKariba, nzira dzekofi dzeEastern Highlands, kusvika kumarket-to-table food experiences mumaguta makuru.",
+      "cultural_tourism": "Cultural tourism",
+      "p3_after_cultural": "inowedzera kuburikidza netsika dzinorarama, nyaya dzenharaunda, mimhanzi yembira nekutamba, stone sculpture yemazuva ano, nenzvimbo dzenhoroondo dzinobatanidza vashanyi kuzivikanwa kwenyika muzvizvarwa. Wildlife tourism inopedzisa ruzivo urwu neBig Five uye birding circuits, guided safari drives muHwange neMana Pools, pamwe nezviitiko zvinotsigira kuchengetedzwa kwezvisikwa mumapaki enzvimbo dzakachengetedzwa eZimbabwe.",
+      "virtual_experience_center_cta": "Virtual Experience Center"
     }
   },
   "investment": {

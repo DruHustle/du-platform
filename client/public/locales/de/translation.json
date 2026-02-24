@@ -139,7 +139,27 @@
       "badge3": "Investor-Tools",
       "title3": "Smartes Investment-Brainstorming",
       "subtitle3": "Bewerten Sie Risiken und generieren Sie Geschäftsideen, die im lokalen Markt tatsächlich Erfolg haben.",
-      "highlight3": "Datengestützter Erfolg"
+      "highlight3": "Datengestützter Erfolg",
+      "badge4": "Bildung 5.0",
+      "title4": "Innovation in Klassenzimmern",
+      "subtitle4": "Digitales Lernen und Kompetenzaufbau treiben Simbabwes nächste Generation von Tech-Talenten voran.",
+      "highlight4": "Zukunftskompetenzen",
+      "badge5": "Digitaler Handel",
+      "title5": "Technologie für Logistik",
+      "subtitle5": "Intelligentere Export- und Lieferketten schaffen verlässlicheren Zugang zu regionalen und globalen Märkten.",
+      "highlight5": "Vernetzter Handel",
+      "badge6": "Industrielle KI",
+      "title6": "Technologie im Bergbau",
+      "subtitle6": "Datengetriebene Abläufe, vorausschauende Wartung und Prozessoptimierung verbessern Output und Sicherheit.",
+      "highlight6": "Operative Effizienz",
+      "badge7": "Agritech-Wachstum",
+      "title7": "Intelligentere Agrarsysteme",
+      "subtitle7": "Präzisionslandwirtschaft und Echtzeit-Monitoring unterstützen höhere Erträge und Ernährungssicherheit.",
+      "highlight7": "Klimaintelligente Landwirtschaft",
+      "badge8": "Diaspora-Builders",
+      "title8": "Tech-Talente über Grenzen hinweg",
+      "subtitle8": "Diaspora-Fachkräfte bringen Kapital, Mentoring und praktische Umsetzungshilfe für lokale Startups ein.",
+      "highlight8": "Globale Zusammenarbeit"
     },
     "objective_title": "Technologiegestützt",
     "objective_subtitle": "Nutzung von KI und digitalen Lösungen zur nahtlosen Verbindung von Simbabwe und der Diaspora, um Zusammenarbeit, nachhaltige Entwicklung und langfristiges Wirtschaftswachstum voranzutreiben.",
@@ -276,7 +296,8 @@
       "nust": "Von der Universität betriebenes Innovations- und Kommerzialisierungsökosystem, das jugendgeführte unternehmens- und branchenorientierte Lösungen unterstützt.",
       "msu": "In den Midlands ansässige Inkubations- und Kommerzialisierungsplattform zur Unterstützung von Unternehmern, KMU und Spin-outs aus der angewandten Forschung.",
       "digital_village": "Community-orientierter Innovationsraum in Mutare, der kollaborativen Arbeitsbereich, Schulungen und Unterstützung für digitale Unternehmen bietet.",
-      "open_button": "Tech Hubs in Zimbabwe"
+      "open_button": "Tech Hubs in Zimbabwe",
+      "location_suffix": ", Simbabwe"
     },
     "onesa_matter": {
       "badge": "Afrikazentrierte KI",
@@ -304,7 +325,32 @@
           "title": "Zukunftsfähiges Wachstum",
           "detail": "Onesa unterstützt Innovation, Investitionsvertrauen und eine stärkere digitale Teilhabe künftiger Generationen."
         }
+      },
+      "combined": "Afrika verdient KI, die Afrika versteht. Onesa AI wurde von Diaspora Unlocked entwickelt, um praxisnahe, lokal relevante Intelligenz für Zimbabwe und den gesamten Kontinent bereitzustellen, statt generischer Empfehlungen ohne Bezug zur Realität vor Ort. Wir sehen KI-Souveränität als zentral für langfristiges Wachstum, Resilienz und strategische Unabhängigkeit, und diese Plattform ist unser klares Bekenntnis, diese Zukunft gemeinsam mit afrikanischen Gemeinschaften aufzubauen."
+    },
+    "diaspora_use_cases": {
+      "relocation": {
+        "title": "Relocation & Reintegration",
+        "detail": "Erhalten Sie praxisnahe Hinweise zu Wohnen, rechtlicher Einrichtung, Schuloptionen und Dienstleistern vor der Ankunft."
+      },
+      "investment": {
+        "title": "Investment Screening",
+        "detail": "Vergleichen Sie Chancen nach Sektor, erwarteter Rendite, regulatorischer Reife und Marktnachfragesignalen."
+      },
+      "business_intelligence": {
+        "title": "Business Intelligence",
+        "detail": "Erstellen Sie Markt-Eintritts-Briefs für Exporte, Preis-Benchmarks und Nachfrage-Snapshots nach Zielmarkt."
+      },
+      "collaboration": {
+        "title": "Diaspora-Zusammenarbeit",
+        "detail": "Koordinieren Sie Mentoren, Co-Investoren und Betreiber über Länder hinweg mit gemeinsamem Projektkontext."
       }
+    },
+    "onesa_name": "Onesa AI",
+    "onesa_meaning_badge": "Onesa = Erleuchten",
+    "diaspora_ai": {
+      "title": "Wie Diaspora Unlocked KI einsetzt",
+      "subtitle": "Onesa AI unterstützt die gesamte Diaspora-Reise: von Wiederanbindung und Rückkehr bis zur Bewertung von Chancen und dem Betrieb von Unternehmen."
     }
   },
   "export": {
@@ -891,46 +937,6 @@
         "d3": "Ganzjährig angenehmes gemäßigtes Klima"
       }
     },
-    "evisa": {
-      "title": "Simbabwe eVisa- und Einreisehinweise",
-      "subtitle": "Wer berechtigt ist, ungefähre Kosten, Bearbeitungszeiten und wichtige Unterlagen vor der Anreise.",
-      "qualification": {
-        "title": "Wer ist berechtigt",
-        "details": [
-          "Viele Nationalitäten können online über das eVisa-Portal Simbabwes beantragen.",
-          "Für einige Reisende ist je nach Nationalität und Reisezweck weiterhin Visa-on-Arrival möglich.",
-          "Prüfen Sie Ihre Kategorie immer vor der Flugbuchung, da sich Anforderungen ändern können."
-        ]
-      },
-      "costs": {
-        "title": "Ungefähre Visakosten (USD)",
-        "details": [
-          "Einreisevisa (single entry) liegen für viele Kategorien häufig bei etwa 30 USD.",
-          "Doppeleinreisevisa liegen je nach Nationalitätskategorie häufig bei etwa 45 bis 60 USD.",
-          "Das KAZA UniVisa kostet in der Regel etwa 50 USD, sofern verfügbar und berechtigt."
-        ]
-      },
-      "processing": {
-        "title": "Übliche Bearbeitungszeiten",
-        "details": [
-          "Viele Anträge werden innerhalb von ca. 2 bis 7 Arbeitstagen bearbeitet.",
-          "Komplexere Fälle können bei zusätzlichen Prüfungen länger dauern.",
-          "In Hauptreisezeiten frühzeitig beantragen, um Last-Minute-Risiken zu reduzieren."
-        ]
-      },
-      "documents": {
-        "title": "Wichtige Unterlagen",
-        "details": [
-          "Reisepass mit mindestens 6 Monaten Gültigkeit ab Einreisedatum.",
-          "Reiseplan sowie Nachweis über Rück- oder Weiterreise.",
-          "Unterkunftsnachweis und Nachweis ausreichender finanzieller Mittel."
-        ]
-      },
-      "disclaimer": "Visaberechtigung, Gebühren und Bearbeitungszeiten variieren nach Nationalität und politischen Aktualisierungen. Prüfen Sie aktuelle Anforderungen vor der Reise auf den offiziellen Portalen.",
-      "apply_cta": "Über eVisa-Portal beantragen",
-      "immigration_cta": "Einwanderungsbehörde Simbabwe",
-      "zta_cta": "Reise planen (ZTA)"
-    },
     "objective_title": "Unsere Vision",
     "objective_subtitle": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
     "cta_title": "Bereit für Ihr Abenteuer?",
@@ -940,12 +946,6 @@
     "explore_title": "Weitere Reiseinformationen",
     "explore_subtitle": "Für umfassende offizielle Richtlinien besuchen Sie die Website der Zimbabwe Tourism Authority.",
     "explore_site": "Zimbabwe Tourism Authority besuchen",
-    "authorities": {
-      "title": "Offizielle Tourismusbehörden",
-      "subtitle": "Nutzen Sie die offiziellen Richtlinien der Zimbabwe Tourism Authority und der Zimbabwe Parks and Wildlife Management Authority für Genehmigungen, Parkinformationen und Reisezielstandards.",
-      "zta": "Besuchen Sie die Tourismusbehörde von Simbabwe",
-      "zimparks": "Besuchen Sie ZimParks"
-    },
     "attraction_card": {
       "tap_for_details": "Tap for more details"
     },
@@ -983,6 +983,18 @@
         "title": "Useful Apps",
         "description": "Find recommended travel-support applications listed by Zimbabwe Tourism Authority."
       }
+    },
+    "intro": {
+      "p1": "Simbabwe ist für Entdeckungen gemacht: von weltberühmten Wasserfällen und alten Steinruinen bis zu Safari-Grenzregionen und Abenteuern am See. Geleitet von der ZimBho-Tourismusvision und dem nationalen Markenversprechen Zimbabwe: A World of Wonders kann jede Route Landschaft, Geschichte, Kultur und unvergessliche Gastfreundschaft verbinden.",
+      "p2_before_ar": "Wenn Sie vor Ort sind, nutzen Sie Onesas",
+      "local_guide_ar": "Local guide AR",
+      "p2_after_ar": "für ein vollständiges KI-gestütztes AR-Erlebnis. Sie können auch unser KI-gestütztes Virtual Experience Center besuchen, um Reiseziele vor Ihrer Reise vorzuerkunden.",
+      "p3_before_gastro": "Simbabwes",
+      "gastronomy_tourism": "Gastronomie-Tourismus",
+      "p3_between": "ist ebenfalls ein zentraler Teil der Reise: von traditionellen Gerichten wie Sadza mit Nyama und Muriwo über Süßwasserfisch aus Kariba und lokale Kaffeerouten in den Eastern Highlands bis hin zu Market-to-Table-Erlebnissen in den großen Städten.",
+      "cultural_tourism": "Kulturtourismus",
+      "p3_after_cultural": "fügt eine weitere Ebene hinzu: lebendige Traditionen, Community-Storytelling, Mbira- und Tanzaufführungen, zeitgenössische Steinskulpturen und historische Stätten, die Besucher mit der Identität des Landes über Generationen verbinden. Wildtiertourismus vervollständigt das Erlebnis mit Big-Five- und Birding-Routen, geführten Safarifahrten in Hwange und Mana Pools sowie naturschutzorientierten Begegnungen in Simbabwes Nationalparks und Schutzlandschaften.",
+      "virtual_experience_center_cta": "Virtual Experience Center"
     }
   },
   "investment": {
