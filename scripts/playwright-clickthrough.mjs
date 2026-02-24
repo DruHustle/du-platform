@@ -48,7 +48,7 @@ try {
 
   await page.goto(`${baseUrl}/tourism`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(1200);
-  await page.getByRole('link', { name: /plan trip with onesa/i }).first().click();
+  await page.locator('a[href="/onesa-ai-book-trip"]').first().click();
   await page.waitForURL(/\/onesa-ai-book-trip/, { timeout: 15000 });
   pass('navigate_to_book_trip');
 
@@ -95,6 +95,24 @@ try {
   } else {
     throw new Error('Trip planner did not render success or error state in time.');
   }
+
+  await page.goto(`${baseUrl}/tourism`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForTimeout(800);
+  await page.locator('a[href="/onesa-ai-tourism-virtual-experince"]').first().click();
+  await page.waitForURL(/\/onesa-ai-tourism-virtual-experince/, { timeout: 15000 });
+  await page.locator('#vr-destination').waitFor({ timeout: 30000 });
+  await page.selectOption('#vr-destination', { index: 1 });
+  await page.getByRole('button', { name: /conversation:\s*off/i }).first().waitFor({ timeout: 15000 });
+  pass('vr_page_load_and_destination_select');
+
+  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experince`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.locator('#aug-place').waitFor({ timeout: 15000 });
+  await page.selectOption('#aug-place', { index: 1 });
+  const arConversation = page.getByRole('button', { name: /conversation:\s*off/i }).first();
+  await arConversation.waitFor({ timeout: 15000 });
+  await arConversation.click();
+  await page.getByRole('button', { name: /conversation:\s*on/i }).first().waitFor({ timeout: 10000 });
+  pass('ar_conversation_toggle_on');
 } catch (err) {
   fail('unexpected_error', err);
 } finally {

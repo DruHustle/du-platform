@@ -6,7 +6,23 @@ import { Html, OrbitControls, useTexture, Points, PointMaterial, PositionalAudio
 import { XR, createXRStore } from "@react-three/xr";
 import * as THREE from "three";
 import { ACESFilmicToneMapping, Vector3 } from "three";
-import { MapPin, Maximize, Minimize, MessageSquare, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  CircleHelp,
+  FileText,
+  MapPin,
+  Maximize,
+  Minimize,
+  MessageSquare,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import { sendOnesaChatMessage } from "./OnesaAI";
 import { useTranslation } from "react-i18next";
 import ZimbabweInteractiveGlobe from "@/components/ZimbabweInteractiveGlobe";
@@ -59,14 +75,35 @@ function formatNarrationLines(text: string): string[] {
 
 function VRScene({
   stage,
+  currentStageIndex,
+  stageOrder,
   onNavigate,
+  onPointOfInterestClick,
+  onPointOfInterestInfoClick,
   ambientAudioEnabled,
 }: {
   stage: VirtualWalkStage;
+  currentStageIndex: number;
+  stageOrder: string[];
   onNavigate: (targetId: string) => void;
+  onPointOfInterestClick: (poiLabel: string, poiPosition: [number, number, number]) => void;
+  onPointOfInterestInfoClick: (poiLabel: string) => void;
   ambientAudioEnabled: boolean;
 }) {
   const { scene } = useThree();
+  const hotspotBuckets = useMemo(() => {
+    const byId = new Map(stageOrder.map((id, idx) => [id, idx]));
+    const all = stage.hotspots ?? [];
+    const forward = all.filter((hs) => {
+      const targetIdx = byId.get(hs.targetId);
+      return typeof targetIdx === "number" ? targetIdx > currentStageIndex : !/back/i.test(hs.label);
+    });
+    const backward = all.filter((hs) => {
+      const targetIdx = byId.get(hs.targetId);
+      return typeof targetIdx === "number" ? targetIdx < currentStageIndex : /back/i.test(hs.label);
+    });
+    return { forward, backward };
+  }, [stage.hotspots, stageOrder, currentStageIndex]);
   
   // FIX: Type assertion to handle the TypeScript 'MappedTextureType' error
   const texture = useTexture(stage.image) as THREE.Texture;
@@ -94,28 +131,149 @@ function VRScene({
         />
       ) : null}
       <AtmosphericParticles />
-      {stage.hotspots?.map((hs) => (
-        <GazeHotspot 
-          key={hs.targetId} 
-          position={hs.position} 
-          label={hs.label} 
-          onClick={() => onNavigate(hs.targetId)} 
-        />
+      {hotspotBuckets.forward.map((hs) => (
+        <ForwardWalkRing key={`forward-${hs.targetId}`} position={hs.position} onClick={() => onNavigate(hs.targetId)} />
+      ))}
+      {hotspotBuckets.backward.map((hs) => (
+        <BackwardWalkRing key={`back-${hs.targetId}`} position={hs.position} onClick={() => onNavigate(hs.targetId)} />
       ))}
       {stage.pointsOfInterest?.map((poi) => (
-        <InterestRing key={poi.id} position={poi.position} label={poi.label} />
+        <InterestRing
+          key={poi.id}
+          position={poi.position}
+          label={poi.label}
+          onClick={() => onPointOfInterestClick(poi.label, poi.position)}
+          onInfoClick={() => onPointOfInterestInfoClick(poi.label)}
+        />
       ))}
+    </group>
+  );
+}
+
+function ForwardWalkRing({
+  position,
+  onClick,
+}: {
+  position: [number, number, number];
+  onClick: () => void;
+}) {
+  const { camera } = useThree();
+  const ringRef = useRef<THREE.Mesh>(null);
+  const haloRef = useRef<THREE.Mesh>(null);
+  const hitRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (ringRef.current) {
+      ringRef.current.lookAt(camera.position);
+      const s = 1 + Math.sin(t * 2.4) * 0.08;
+      ringRef.current.scale.set(s, s, s);
+    }
+    if (haloRef.current) {
+      haloRef.current.lookAt(camera.position);
+      const s = 1.08 + Math.sin(t * 1.6) * 0.1;
+      haloRef.current.scale.set(s, s, s);
+    }
+    if (hitRef.current) {
+      hitRef.current.lookAt(camera.position);
+    }
+  });
+
+  return (
+    <group position={position}>
+      <mesh ref={haloRef}>
+        <ringGeometry args={[0.28, 0.4, 48]} />
+        <meshBasicMaterial color="#d4af37" transparent opacity={0.3} />
+      </mesh>
+      <mesh ref={ringRef}>
+        <ringGeometry args={[0.2, 0.26, 48]} />
+        <meshBasicMaterial color="#facc15" transparent opacity={0.92} />
+      </mesh>
+
+      {/* Fused control: ring + up-arrow as one in-scene marker */}
+      <group>
+        <mesh position={[0, 0.055, 0]}>
+          <coneGeometry args={[0.05, 0.095, 22]} />
+          <meshBasicMaterial color="#fff6c2" transparent opacity={0.98} />
+        </mesh>
+        <mesh position={[0, -0.005, 0]}>
+          <cylinderGeometry args={[0.012, 0.012, 0.07, 16]} />
+          <meshBasicMaterial color="#fff6c2" transparent opacity={0.95} />
+        </mesh>
+      </group>
+
+      <mesh ref={hitRef} onClick={onClick}>
+        <circleGeometry args={[0.17, 40]} />
+        <meshBasicMaterial transparent opacity={0} side={THREE.DoubleSide} />
+      </mesh>
+    </group>
+  );
+}
+
+function BackwardWalkRing({
+  position,
+  onClick,
+}: {
+  position: [number, number, number];
+  onClick: () => void;
+}) {
+  const { camera } = useThree();
+  const ringRef = useRef<THREE.Mesh>(null);
+  const haloRef = useRef<THREE.Mesh>(null);
+  const hitRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (ringRef.current) {
+      ringRef.current.lookAt(camera.position);
+      const s = 1 + Math.sin(t * 2.2) * 0.08;
+      ringRef.current.scale.set(s, s, s);
+    }
+    if (haloRef.current) {
+      haloRef.current.lookAt(camera.position);
+      const s = 1.08 + Math.sin(t * 1.5) * 0.1;
+      haloRef.current.scale.set(s, s, s);
+    }
+    if (hitRef.current) {
+      hitRef.current.lookAt(camera.position);
+    }
+  });
+
+  return (
+    <group position={position}>
+      <mesh ref={haloRef}>
+        <ringGeometry args={[0.28, 0.4, 48]} />
+        <meshBasicMaterial color="#60a5fa" transparent opacity={0.28} />
+      </mesh>
+      <mesh ref={ringRef}>
+        <ringGeometry args={[0.2, 0.26, 48]} />
+        <meshBasicMaterial color="#93c5fd" transparent opacity={0.9} />
+      </mesh>
+
+      <group>
+        <mesh position={[0, -0.055, 0]} rotation={[Math.PI, 0, 0]}>
+          <coneGeometry args={[0.05, 0.095, 22]} />
+          <meshBasicMaterial color="#e0f2fe" transparent opacity={0.98} />
+        </mesh>
+        <mesh position={[0, 0.005, 0]}>
+          <cylinderGeometry args={[0.012, 0.012, 0.07, 16]} />
+          <meshBasicMaterial color="#e0f2fe" transparent opacity={0.95} />
+        </mesh>
+      </group>
+
+      <mesh ref={hitRef} onClick={onClick}>
+        <circleGeometry args={[0.17, 40]} />
+        <meshBasicMaterial transparent opacity={0} side={THREE.DoubleSide} />
+      </mesh>
     </group>
   );
 }
 
 function GazeHotspot({
   position,
-  label,
   onClick,
 }: {
   position: [number, number, number];
-  label: string;
   onClick: () => void;
 }) {
   const { camera } = useThree();
@@ -193,13 +351,6 @@ function GazeHotspot({
           <meshBasicMaterial color="#facc15" transparent opacity={hovered ? 0.85 : 0.55} />
         </mesh>
       </group>
-      <Html distanceFactor={8} position={[0, 0.4, 0]} center>
-        <div className={`transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="rounded-full bg-black/90 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-white border border-zim-gold/40 shadow-xl">
-            {label}
-          </div>
-        </div>
-      </Html>
     </group>
   );
 }
@@ -207,9 +358,13 @@ function GazeHotspot({
 function InterestRing({
   position,
   label,
+  onClick,
+  onInfoClick,
 }: {
   position: [number, number, number];
   label: string;
+  onClick: () => void;
+  onInfoClick: () => void;
 }) {
   const { camera } = useThree();
   const ringRef = useRef<THREE.Mesh>(null);
@@ -239,13 +394,21 @@ function InterestRing({
         <ringGeometry args={[0.17, 0.2, 40]} />
         <meshBasicMaterial color="#93c5fd" transparent opacity={0.8} />
       </mesh>
-      <mesh>
+      <mesh onClick={onClick}>
         <circleGeometry args={[0.03, 20]} />
         <meshBasicMaterial color="#dbeafe" transparent opacity={0.95} />
       </mesh>
       <Html distanceFactor={9} position={[0, 0.33, 0]} center>
-        <div className="rounded-full bg-slate-950/90 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-blue-100 border border-blue-200/40 shadow-xl">
-          {label}
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={onInfoClick}
+            className="h-6 w-6 inline-flex items-center justify-center rounded-full bg-zim-gold text-zim-black border border-white/50 shadow-xl cursor-pointer hover:bg-white"
+            aria-label={`Show information for ${label}`}
+            title="POI information"
+          >
+            <FileText className="h-3.5 w-3.5" />
+          </button>
         </div>
       </Html>
     </group>
@@ -270,22 +433,37 @@ export default function OnesaAITourismVirtualExperience() {
   const [virtualNarrative, setVirtualNarrative] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedDestinationId, setSelectedDestinationId] = useState("");
+  const [isGlobeZoomTransitioning, setIsGlobeZoomTransitioning] = useState(false);
   const [walkStageIndex, setWalkStageIndex] = useState(0);
   const [isConversationMode, setIsConversationMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+  const [isTtsEnabled, setIsTtsEnabled] = useState(true);
   const [aiStatus, setAiStatus] = useState("System Ready");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showStageInfo, setShowStageInfo] = useState(false);
+  const [showPoiInfo, setShowPoiInfo] = useState(false);
+  const [poiInfoTitle, setPoiInfoTitle] = useState("");
+  const [poiInfoText, setPoiInfoText] = useState("");
+  const [poiInfoLoading, setPoiInfoLoading] = useState(false);
+  const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
+  const ttsAudioUrlRef = useRef<string | null>(null);
+  const orbitControlsRef = useRef<any>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const rotationAnimFrameRef = useRef<number | null>(null);
+  const pinchScaleRef = useRef<number>(1);
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const recordingStream = useRef<MediaStream | null>(null);
   const audioChunks = useRef<Blob[]>([]);
+  const globeTransitionTimerRef = useRef<number | null>(null);
 
   const destinations: VirtualDestination[] = useMemo(
     () => [
       {
         id: "cape_town",
-        name: "Cape Town",
+        name: "Sample City",
         image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
         vibe: "Clifftop + Coastal View",
         summary:
@@ -361,11 +539,19 @@ export default function OnesaAITourismVirtualExperience() {
   }, [walkStageIndex, walkStages.length]);
 
   useEffect(() => {
+    const getFullscreenElement = () => {
+      const doc = document as Document & { webkitFullscreenElement?: Element | null };
+      return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+    };
     const onFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === containerRef.current);
+      setIsFullscreen(getFullscreenElement() === containerRef.current);
     };
     document.addEventListener("fullscreenchange", onFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", onFullscreenChange as EventListener);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", onFullscreenChange as EventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -420,6 +606,8 @@ export default function OnesaAITourismVirtualExperience() {
 
   const speakWithTts = async (text: string) => {
     if (!text) return;
+    if (!isTtsEnabled) return;
+    let ttsQuotaBlocked = false;
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -430,17 +618,28 @@ export default function OnesaAITourismVirtualExperience() {
           speed: 1,
         }),
       });
-      if (!res.ok) throw new Error("TTS failed");
+      if (!res.ok) {
+        const errorText = await res.text().catch(() => "");
+        ttsQuotaBlocked = res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(errorText);
+        throw new Error("TTS failed");
+      }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       if (!ttsAudioRef.current) {
         ttsAudioRef.current = new Audio();
       }
+      if (ttsAudioUrlRef.current) {
+        URL.revokeObjectURL(ttsAudioUrlRef.current);
+      }
+      ttsAudioUrlRef.current = url;
       ttsAudioRef.current.pause();
       ttsAudioRef.current.src = url;
       ttsAudioRef.current.volume = 0.9;
       await ttsAudioRef.current.play();
     } catch {
+      if (ttsQuotaBlocked) {
+        setAiStatus("TTS quota hit. Using Onesa guidance fallback.");
+      }
       if (typeof window === "undefined" || !window.speechSynthesis) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -451,15 +650,53 @@ export default function OnesaAITourismVirtualExperience() {
     }
   };
 
+  useEffect(() => {
+    if (isTtsEnabled) return;
+    if (ttsAudioRef.current) {
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.currentTime = 0;
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }, [isTtsEnabled]);
+
   const processConversation = async (blob: Blob) => {
     setLoading(true);
     setAiStatus("Transcribing...");
     try {
       // 1. Send to Whisper API
       const res = await fetch("/api/whisper", { method: "POST", body: blob });
-      const { text } = await res.json();
-      
-      if (!text) throw new Error("No transcription");
+      const whisperPayload = await res.json().catch(() => ({} as { text?: string; error?: string }));
+      const whisperError = String(whisperPayload?.error ?? "");
+      const whisperQuotaBlocked =
+        res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(whisperError);
+
+      if (!res.ok || !whisperPayload?.text) {
+        if (whisperQuotaBlocked) {
+          setAiStatus("Whisper unavailable. Falling back to Onesa AI...");
+          const fallbackPrompt = [
+            "Whisper transcription is temporarily unavailable due quota/rate limits.",
+            `Destination: ${currentDestination.name}.`,
+            `Current stage: ${currentStage.title}.`,
+            `Stage context: ${currentStage.caption}`,
+            `Destination summary: ${currentDestination.summary}`,
+            "Provide concise visitor guidance in 3-5 sentences.",
+          ].join("\n");
+          const { data } = await sendOnesaChatMessage({
+            messages: [{ role: "user", content: fallbackPrompt }],
+            language: i18n.resolvedLanguage ?? "en",
+          });
+          const reply = String(data?.reply ?? "").trim() || "I am currently analyzing the scenery.";
+          setVirtualNarrative(reply);
+          await speakWithTts(reply);
+          setAiStatus("Using Onesa AI fallback.");
+          return;
+        }
+        throw new Error("Whisper failed");
+      }
+
+      const text = whisperPayload.text;
       setAiStatus("Guide is thinking...");
 
       // 2. Send text to Onesa AI
@@ -472,37 +709,375 @@ export default function OnesaAITourismVirtualExperience() {
       setVirtualNarrative(reply);
       await speakWithTts(reply);
       setAiStatus("System Ready");
-    } catch (err) {
+    } catch {
       setAiStatus("Voice Error");
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleRecording = () => {
-    if (isRecording) {
+  const stopRecording = useCallback(() => {
+    if (!isRecording) return;
+    try {
       mediaRecorder.current?.stop();
-      setIsRecording(false);
-    } else {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        mediaRecorder.current = new MediaRecorder(stream);
-        audioChunks.current = [];
-        mediaRecorder.current.ondataavailable = (e) => audioChunks.current.push(e.data);
-        mediaRecorder.current.onstop = () => processConversation(new Blob(audioChunks.current));
-        mediaRecorder.current.start();
-        setIsRecording(true);
-        setAiStatus("Listening...");
-      });
+    } catch {
+      // no-op
     }
-  };
+    setIsRecording(false);
+  }, [isRecording, processConversation]);
+
+  const startRecording = useCallback(async () => {
+    if (isRecording) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setAiStatus("Microphone not supported");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recordingStream.current = stream;
+      mediaRecorder.current = new MediaRecorder(stream);
+      audioChunks.current = [];
+      mediaRecorder.current.ondataavailable = (e) => audioChunks.current.push(e.data);
+      mediaRecorder.current.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        recordingStream.current = null;
+        void processConversation(new Blob(audioChunks.current));
+      };
+      mediaRecorder.current.start();
+      setIsRecording(true);
+      setAiStatus("Listening...");
+    } catch {
+      setAiStatus("Microphone access denied");
+      setIsConversationMode(false);
+      setIsRecording(false);
+    }
+  }, [isRecording]);
+
+  const goToNextStage = useCallback(() => {
+    if (!walkStages.length) return;
+    setWalkStageIndex((current) => (current + 1) % walkStages.length);
+  }, [walkStages.length]);
+
+  const rotateView = useCallback((direction: "left" | "right" | "up" | "down") => {
+    setAutoRotateEnabled(false);
+    const controls = orbitControlsRef.current;
+    if (controls) {
+      controls.autoRotate = false;
+    }
+    if (rotationAnimFrameRef.current !== null) {
+      window.cancelAnimationFrame(rotationAnimFrameRef.current);
+      rotationAnimFrameRef.current = null;
+    }
+    const step = Math.PI / 14;
+    const startAzimuth = typeof controls?.getAzimuthalAngle === "function" ? controls.getAzimuthalAngle() : 0;
+    const startPolar = typeof controls?.getPolarAngle === "function" ? controls.getPolarAngle() : Math.PI / 2;
+    const targetAzimuth =
+      direction === "left" ? startAzimuth + step : direction === "right" ? startAzimuth - step : startAzimuth;
+    const targetPolarUnclamped =
+      direction === "up" ? startPolar - step : direction === "down" ? startPolar + step : startPolar;
+    const targetPolar = THREE.MathUtils.clamp(targetPolarUnclamped, 0.05, Math.PI - 0.05);
+    const fallbackStartX = cameraRef.current?.rotation.x ?? 0;
+    const fallbackStartY = cameraRef.current?.rotation.y ?? 0;
+    const fallbackTargetX =
+      direction === "up" ? fallbackStartX + step : direction === "down" ? fallbackStartX - step : fallbackStartX;
+    const fallbackTargetY =
+      direction === "left"
+        ? fallbackStartY + step
+        : direction === "right"
+          ? fallbackStartY - step
+          : fallbackStartY;
+    const durationMs = 220;
+    const startAt = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - startAt) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      if (typeof controls?.setAzimuthalAngle === "function" && typeof controls?.setPolarAngle === "function") {
+        const az = startAzimuth + (targetAzimuth - startAzimuth) * eased;
+        const pol = startPolar + (targetPolar - startPolar) * eased;
+        controls.setAzimuthalAngle(az);
+        controls.setPolarAngle(pol);
+      } else if (cameraRef.current) {
+        const camera = cameraRef.current;
+        camera.rotation.x = fallbackStartX + (fallbackTargetX - fallbackStartX) * eased;
+        camera.rotation.y = fallbackStartY + (fallbackTargetY - fallbackStartY) * eased;
+        camera.updateProjectionMatrix();
+      }
+      controls?.update?.();
+      if (t < 1) {
+        rotationAnimFrameRef.current = window.requestAnimationFrame(tick);
+      } else {
+        rotationAnimFrameRef.current = null;
+      }
+    };
+    rotationAnimFrameRef.current = window.requestAnimationFrame(tick);
+  }, []);
+
+  const zoomView = useCallback((direction: "in" | "out") => {
+    const camera = cameraRef.current;
+    if (!camera) return;
+    camera.fov = THREE.MathUtils.clamp(camera.fov + (direction === "in" ? -6 : 6), 28, 100);
+    camera.updateProjectionMatrix();
+    orbitControlsRef.current?.update?.();
+  }, []);
+
+  const resetView = useCallback(() => {
+    const controls = orbitControlsRef.current;
+    if (controls?.reset) controls.reset();
+    const camera = cameraRef.current;
+    if (camera) {
+      camera.position.set(0, 0, 0.1);
+      camera.fov = 65;
+      camera.updateProjectionMatrix();
+    }
+    controls?.update?.();
+  }, []);
+
+  useEffect(() => {
+    const controls = orbitControlsRef.current;
+    if (!controls) return;
+    controls.autoRotate = autoRotateEnabled;
+    controls.autoRotateSpeed = -0.4;
+    controls.update?.();
+  }, [autoRotateEnabled]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const applyFovDelta = (delta: number) => {
+      const camera = cameraRef.current;
+      if (!camera) return;
+      camera.fov = THREE.MathUtils.clamp(camera.fov + delta, 28, 100);
+      camera.updateProjectionMatrix();
+      orbitControlsRef.current?.update?.();
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (!selectedDestinationId || isGlobeZoomTransitioning) return;
+      event.preventDefault();
+      const direction = Math.sign(event.deltaY || 0);
+      if (direction !== 0) applyFovDelta(direction * 2.5);
+    };
+
+    const onGestureStart = (event: Event) => {
+      if (!selectedDestinationId || isGlobeZoomTransitioning) return;
+      event.preventDefault();
+      const gestureEvent = event as Event & { scale?: number };
+      pinchScaleRef.current = gestureEvent.scale ?? 1;
+    };
+
+    const onGestureChange = (event: Event) => {
+      if (!selectedDestinationId || isGlobeZoomTransitioning) return;
+      event.preventDefault();
+      const gestureEvent = event as Event & { scale?: number };
+      const currentScale = gestureEvent.scale ?? 1;
+      const deltaScale = currentScale - pinchScaleRef.current;
+      pinchScaleRef.current = currentScale;
+      if (Math.abs(deltaScale) > 0.0005) {
+        // Pinch-in/out mapped to FOV zoom for panorama readability.
+        applyFovDelta(-deltaScale * 30);
+      }
+    };
+
+    container.addEventListener("wheel", onWheel, { passive: false });
+    container.addEventListener("gesturestart", onGestureStart as EventListener, { passive: false });
+    container.addEventListener("gesturechange", onGestureChange as EventListener, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", onWheel as EventListener);
+      container.removeEventListener("gesturestart", onGestureStart as EventListener);
+      container.removeEventListener("gesturechange", onGestureChange as EventListener);
+    };
+  }, [isGlobeZoomTransitioning, selectedDestinationId]);
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+    setAutoRotateEnabled(true);
+  }, [isFullscreen]);
+
+  const handleConversationToggle = useCallback(async () => {
+    if (!isConversationMode) {
+      setIsConversationMode(true);
+      await startRecording();
+      return;
+    }
+    stopRecording();
+    setIsConversationMode(false);
+    setAiStatus("System Ready");
+  }, [isConversationMode, startRecording, stopRecording]);
+
+  const handlePointOfInterestClick = useCallback(
+    async (poiLabel: string, poiPosition: [number, number, number]) => {
+      setAutoRotateEnabled(false);
+      const camera = cameraRef.current;
+      const controls = orbitControlsRef.current;
+      if (camera) {
+        const target = new THREE.Vector3(...poiPosition);
+        camera.lookAt(target);
+        camera.fov = THREE.MathUtils.clamp(48, 35, 95);
+        camera.updateProjectionMatrix();
+      }
+      if (controls) {
+        controls.autoRotate = false;
+        if (controls.target) {
+          controls.target.set(poiPosition[0], poiPosition[1], poiPosition[2]);
+        }
+        controls.update?.();
+      }
+      setAiStatus(`Analyzing: ${poiLabel}`);
+      const localRichNarration = [
+        `${currentDestination.name} - ${currentStage.title}.`,
+        `Point of interest: ${poiLabel}.`,
+        currentStage.caption,
+        currentDestination.summary,
+        currentDestination.locationHighlights?.length
+          ? `Nearby highlights: ${currentDestination.locationHighlights.join(", ")}.`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      try {
+        const prompt = [
+          "You are Onesa AI local tourism guide.",
+          `Destination: ${currentDestination.name}.`,
+          `Stage: ${currentStage.title}.`,
+          `Point of interest clicked: ${poiLabel}.`,
+          `Stage context: ${currentStage.caption}`,
+          `Destination summary: ${currentDestination.summary}`,
+          currentDestination.locationHighlights?.length
+            ? `Related highlights: ${currentDestination.locationHighlights.join("; ")}.`
+            : "",
+          "Provide 4-6 short sentences describing why this exact point matters, what visitors should notice, and one practical tip.",
+        ]
+          .filter(Boolean)
+          .join("\n");
+        const { data } = await sendOnesaChatMessage({
+          messages: [{ role: "user", content: prompt }],
+          language: i18n.resolvedLanguage ?? "en",
+        });
+        const enrichedNarration = String(data?.reply ?? "").trim() || localRichNarration;
+        setVirtualNarrative(enrichedNarration);
+        setAiStatus(`Point selected: ${poiLabel}`);
+        if (!isConversationMode) {
+          await speakWithTts(enrichedNarration);
+        }
+      } catch {
+        setVirtualNarrative(localRichNarration);
+        setAiStatus(`Point selected: ${poiLabel}`);
+        if (!isConversationMode) {
+          await speakWithTts(localRichNarration);
+        }
+      }
+    },
+    [
+      currentDestination.locationHighlights,
+      currentDestination.name,
+      currentDestination.summary,
+      currentStage.caption,
+      currentStage.title,
+      i18n.resolvedLanguage,
+      isConversationMode,
+      setAutoRotateEnabled,
+    ]
+  );
+
+  const handlePointOfInterestInfoClick = useCallback(
+    async (poiLabel: string) => {
+      setShowPoiInfo(true);
+      setPoiInfoTitle(`${currentDestination.name} - ${poiLabel}`);
+      setPoiInfoLoading(true);
+      const fallbackInfo = [
+        `Point of interest: ${poiLabel}.`,
+        currentStage.caption,
+        currentDestination.summary,
+        currentDestination.locationHighlights?.length
+          ? `Related highlights: ${currentDestination.locationHighlights.join(", ")}.`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      try {
+        const prompt = [
+          "You are Onesa AI tourism guide.",
+          `Destination: ${currentDestination.name}.`,
+          `Stage: ${currentStage.title}.`,
+          `Point of interest: ${poiLabel}.`,
+          `Stage context: ${currentStage.caption}`,
+          `Destination summary: ${currentDestination.summary}`,
+          "Provide detailed POI information in 4-6 concise sentences: what this spot is, why it matters, what to notice, and one visitor tip.",
+        ].join("\n");
+        const { data } = await sendOnesaChatMessage({
+          messages: [{ role: "user", content: prompt }],
+          language: i18n.resolvedLanguage ?? "en",
+        });
+        const info = String(data?.reply ?? "").trim() || fallbackInfo;
+        setPoiInfoText(info);
+      } catch {
+        setPoiInfoText(fallbackInfo);
+      } finally {
+        setPoiInfoLoading(false);
+      }
+    },
+    [
+      currentDestination.locationHighlights,
+      currentDestination.name,
+      currentDestination.summary,
+      currentStage.caption,
+      currentStage.title,
+      i18n.resolvedLanguage,
+    ]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (globeTransitionTimerRef.current !== null) {
+        window.clearTimeout(globeTransitionTimerRef.current);
+        globeTransitionTimerRef.current = null;
+      }
+      if (rotationAnimFrameRef.current !== null) {
+        window.cancelAnimationFrame(rotationAnimFrameRef.current);
+        rotationAnimFrameRef.current = null;
+      }
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+      }
+      if (ttsAudioUrlRef.current) {
+        URL.revokeObjectURL(ttsAudioUrlRef.current);
+        ttsAudioUrlRef.current = null;
+      }
+      try {
+        mediaRecorder.current?.stop();
+      } catch {
+        // no-op
+      }
+      recordingStream.current?.getTracks().forEach((track) => track.stop());
+      recordingStream.current = null;
+    };
+  }, []);
 
   const toggleFullscreen = async () => {
     if (!containerRef.current) return;
-    if (document.fullscreenElement === containerRef.current) {
-      await document.exitFullscreen?.();
+    const doc = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => Promise<void> | void;
+    };
+    const container = containerRef.current as HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void> | void;
+    };
+    const fullscreenElement = doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+    if (fullscreenElement === containerRef.current) {
+      if (doc.exitFullscreen) {
+        await doc.exitFullscreen();
+      } else if (doc.webkitExitFullscreen) {
+        await doc.webkitExitFullscreen();
+      }
       return;
     }
-    await containerRef.current.requestFullscreen?.();
+    if (container.requestFullscreen) {
+      await container.requestFullscreen();
+    } else if (container.webkitRequestFullscreen) {
+      await container.webkitRequestFullscreen();
+    }
   };
 
   return (
@@ -522,7 +1097,18 @@ export default function OnesaAITourismVirtualExperience() {
                     className="mt-2 w-full rounded-xl border border-white/15 bg-slate-950 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-zim-gold/60"
                     value={selectedDestinationId}
                     onChange={(event) => {
-                      setSelectedDestinationId(event.target.value);
+                      const nextId = event.target.value;
+                      if (!selectedDestinationId && nextId) {
+                        setIsGlobeZoomTransitioning(true);
+                        if (globeTransitionTimerRef.current !== null) {
+                          window.clearTimeout(globeTransitionTimerRef.current);
+                        }
+                        globeTransitionTimerRef.current = window.setTimeout(() => {
+                          setIsGlobeZoomTransitioning(false);
+                          globeTransitionTimerRef.current = null;
+                        }, 2200);
+                      }
+                      setSelectedDestinationId(nextId);
                       setWalkStageIndex(0);
                     }}
                   >
@@ -574,38 +1160,232 @@ export default function OnesaAITourismVirtualExperience() {
                   ref={containerRef}
                   className="rounded-2xl border border-white/15 overflow-hidden bg-black h-[500px] md:h-[600px] relative group"
                 >
-                  {!selectedDestinationId ? (
-                    <ZimbabweInteractiveGlobe />
+                  {!selectedDestinationId || isGlobeZoomTransitioning ? (
+                    <div
+                      className={`h-full w-full transition-transform duration-[2200ms] ease-in ${
+                        isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
+                      }`}
+                    >
+                      <ZimbabweInteractiveGlobe zoomToHarare={isGlobeZoomTransitioning} />
+                    </div>
                   ) : (
                     <Canvas
                       camera={{ position: [0, 0, 0.1], fov: 65 }}
                       gl={{ antialias: true, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
+                      onCreated={({ camera }) => {
+                        cameraRef.current = camera as THREE.PerspectiveCamera;
+                      }}
                     >
                       <XR store={xrStore}>
                         <VRScene
                           stage={currentStage}
+                          currentStageIndex={walkStageIndex}
+                          stageOrder={walkStages.map((s) => s.id)}
                           onNavigate={(id: string) => {
                             const nextIndex = walkStages.findIndex((stage) => stage.id === id);
                             if (nextIndex >= 0) setWalkStageIndex(nextIndex);
                           }}
+                          onPointOfInterestClick={handlePointOfInterestClick}
+                          onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
                           ambientAudioEnabled={!isConversationMode && isSoundEnabled}
                         />
-                        <OrbitControls enableZoom={false} enablePan={false} rotateSpeed={-0.3} dampingFactor={0.05} enableDamping />
+                        <OrbitControls
+                          ref={orbitControlsRef}
+                          enableZoom
+                          enablePan
+                          rotateSpeed={-0.3}
+                          dampingFactor={0.05}
+                          enableDamping
+                          autoRotate={autoRotateEnabled}
+                          autoRotateSpeed={-0.4}
+                        />
                       </XR>
                     </Canvas>
                   )}
 
                   {/* Fullscreen Toggle */}
-                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-6 right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                     <Button 
                       onClick={() => void toggleFullscreen()}
                       variant="outline" 
-                      className="h-10 w-10 p-0 rounded-full border-white/20 bg-black/40 text-white"
+                      className="h-10 px-3 rounded-full border-white/20 bg-black/40 text-white flex items-center gap-1.5"
                       aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                     >
+                      <span className="text-[9px] font-black uppercase tracking-widest">
+                        {isFullscreen ? "Minimize" : "Fullscreen"}
+                      </span>
                       {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
                     </Button>
                   </div>
+
+                  {/* HUD controls (available in normal + fullscreen) */}
+                  {selectedDestinationId ? (
+                    <>
+                      <div
+                        className="absolute z-30 top-6 left-6 pointer-events-auto flex flex-wrap items-center gap-2"
+                        onPointerDown={(event) => event.stopPropagation()}
+                      >
+                        <Button
+                          type="button"
+                          onClick={() => zoomView("in")}
+                          variant="outline"
+                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
+                          aria-label="Zoom in"
+                        >
+                          <ZoomIn className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => zoomView("out")}
+                          variant="outline"
+                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
+                          aria-label="Zoom out"
+                        >
+                          <ZoomOut className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={resetView}
+                          variant="outline"
+                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
+                          aria-label="Reset view"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => setAutoRotateEnabled((prev) => !prev)}
+                          variant="outline"
+                          className={`h-8 px-3 rounded-full border text-[9px] font-black uppercase tracking-widest ${
+                            autoRotateEnabled
+                              ? "bg-zim-gold text-zim-black border-zim-gold"
+                              : "border-white/20 bg-black/50 text-white"
+                          }`}
+                          aria-label="Toggle auto rotate"
+                        >
+                          {autoRotateEnabled ? "Auto: On" : "Auto: Off"}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => setShowStageInfo(true)}
+                          variant="outline"
+                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
+                          aria-label="Show place information"
+                        >
+                          <CircleHelp className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      <div className="absolute z-30 inset-x-0 bottom-4 flex flex-col items-center gap-2 pointer-events-none">
+                        <div
+                          className="pointer-events-auto rounded-2xl border border-zim-gold/40 bg-black/55 px-3 py-3 shadow-[0_0_30px_rgba(212,175,55,0.25)]"
+                          onPointerDown={(event) => event.stopPropagation()}
+                        >
+                          <div className="grid grid-cols-3 gap-1 items-center">
+                            <span />
+                            <Button
+                              type="button"
+                              onClick={() => rotateView("up")}
+                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                              aria-label="Look up"
+                            >
+                              <ArrowUp className="h-4 w-4" />
+                            </Button>
+                            <span />
+                            <Button
+                              type="button"
+                              onClick={() => rotateView("left")}
+                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                              aria-label="Look left"
+                            >
+                              <ArrowLeft className="h-4 w-4" />
+                            </Button>
+                            <span className="h-7 w-7" />
+                            <Button
+                              type="button"
+                              onClick={() => rotateView("right")}
+                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                              aria-label="Look right"
+                            >
+                              <ArrowRight className="h-4 w-4" />
+                            </Button>
+                            <span />
+                            <Button
+                              type="button"
+                              onClick={() => rotateView("down")}
+                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                              aria-label="Look down"
+                            >
+                              <ArrowDown className="h-4 w-4" />
+                            </Button>
+                            <span />
+                          </div>
+                        </div>
+                        <p className="text-[9px] uppercase tracking-widest font-black text-white/75 pointer-events-none">
+                          Walkthrough {walkStageIndex + 1}/{walkStages.length}
+                        </p>
+                      </div>
+                    </>
+                  ) : null}
+
+                  {showStageInfo && selectedDestinationId ? (
+                    <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/65 p-4">
+                      <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
+                            {currentDestination.name} - {currentStage.title}
+                          </h3>
+                          <Button
+                            onClick={() => setShowStageInfo(false)}
+                            variant="outline"
+                            className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                          >
+                            Close
+                          </Button>
+                        </div>
+                        <p className="text-sm text-white/80 mt-3 leading-relaxed">{currentStage.caption}</p>
+                        <p className="text-sm text-white/70 mt-2 leading-relaxed">{currentDestination.summary}</p>
+                        {currentDestination.locationHighlights?.length ? (
+                          <div className="mt-3">
+                            <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">Highlights</p>
+                            <div className="space-y-1">
+                              {currentDestination.locationHighlights.map((item) => (
+                                <p key={item} className="text-xs text-white/70 leading-relaxed">
+                                  - {item}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {showPoiInfo && selectedDestinationId ? (
+                    <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/65 p-4">
+                      <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
+                            {poiInfoTitle}
+                          </h3>
+                          <Button
+                            type="button"
+                            onClick={() => setShowPoiInfo(false)}
+                            variant="outline"
+                            className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                          >
+                            Close
+                          </Button>
+                        </div>
+                        {poiInfoLoading ? (
+                          <p className="text-sm text-white/80 mt-3 leading-relaxed">Loading POI information...</p>
+                        ) : (
+                          <p className="text-sm text-white/80 mt-3 leading-relaxed">{poiInfoText}</p>
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+
                 </div>
 
                 {/* CONTROL PANEL (AR-style structure) */}
@@ -618,7 +1398,7 @@ export default function OnesaAITourismVirtualExperience() {
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
-                          onClick={() => setIsConversationMode((current) => !current)}
+                          onClick={handleConversationToggle}
                           variant="outline"
                           aria-pressed={isConversationMode}
                           className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap shrink-0 border ${
@@ -638,6 +1418,19 @@ export default function OnesaAITourismVirtualExperience() {
                         >
                           {isSoundEnabled ? <Volume2 className="h-3 w-3 mr-1" /> : <VolumeX className="h-3 w-3 mr-1" />}
                           {isSoundEnabled ? "Ambient: On" : "Ambient: Off"}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => setIsTtsEnabled((prev) => !prev)}
+                          variant="outline"
+                          className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap border ${
+                            isTtsEnabled
+                              ? "bg-zim-gold text-zim-black border-zim-gold hover:bg-white"
+                              : "border-white/20 text-white hover:bg-white hover:text-zim-black"
+                          }`}
+                          aria-label={isTtsEnabled ? "Disable text-to-speech" : "Enable text-to-speech"}
+                        >
+                          {isTtsEnabled ? "TTS: On" : "TTS: Off"}
                         </Button>
                       </div>
                     </div>

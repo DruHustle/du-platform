@@ -177,6 +177,7 @@ export default function OnesaAITourismAugmentedExperience() {
   );
 
   const [selectedPlaceId, setSelectedPlaceId] = useState("");
+  const [isGlobeZoomTransitioning, setIsGlobeZoomTransitioning] = useState(false);
   const [answer, setAnswer] = useState("");
   const [locationStatus, setLocationStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -198,16 +199,19 @@ export default function OnesaAITourismAugmentedExperience() {
   const [fallbackImageIndex, setFallbackImageIndex] = useState(0);
   const [settingsPanelHeight, setSettingsPanelHeight] = useState(0);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
+  const ttsAudioUrlRef = useRef<string | null>(null);
   const recognitionRef = useRef<any>(null);
   const voiceModeRef = useRef(false);
   const loadingRef = useRef(false);
   const aiBackoffUntilRef = useRef(0);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
+  const recordingStreamRef = useRef<MediaStream | null>(null);
   const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
   const guidanceIntervalRef = useRef<number | null>(null);
   const settingsPanelRef = useRef<HTMLDivElement | null>(null);
+  const globeTransitionTimerRef = useRef<number | null>(null);
   const previewImagesByPlace = useMemo<Record<string, string[]>>(
     () => ({
       victoria_falls: ["/images/pages/tourism/victoria_falls.jpg"],
@@ -351,8 +355,35 @@ export default function OnesaAITourismAugmentedExperience() {
     setVoiceStatus("Transcribing...");
     try {
       const res = await fetch("/api/whisper", { method: "POST", body: blob });
-      const { text } = await res.json();
-      if (!text) throw new Error("No transcription");
+      const whisperPayload = await res.json().catch(() => ({} as { text?: string; error?: string }));
+      const whisperError = String(whisperPayload?.error ?? "");
+      const whisperQuotaBlocked =
+        res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(whisperError);
+
+      if (!res.ok || !whisperPayload?.text) {
+        if (whisperQuotaBlocked) {
+          setVoiceStatus("Whisper unavailable. Falling back to Onesa AI guidance...");
+          const fallbackPrompt = [
+            "Whisper transcription is temporarily unavailable due quota/rate limits.",
+            `Current destination: ${selectedPlace.name}.`,
+            `Heritage context: ${selectedPlace.heritage}`,
+            `History context: ${selectedPlace.history}`,
+            `Culture context: ${selectedPlace.culture}`,
+            "Provide concise visitor guidance in 3-5 sentences.",
+          ].join("\n");
+          const { data } = await sendOnesaChatMessage({
+            messages: [{ role: "user", content: fallbackPrompt }],
+            language: i18n.resolvedLanguage ?? i18n.language ?? "en",
+          });
+          const reply = String(data?.reply ?? "").trim();
+          setAnswer(reply || buildLocalGuidance(selectedPlace, cameraEnabled));
+          setVoiceStatus("Using Onesa AI fallback.");
+          return;
+        }
+        throw new Error("Whisper failed");
+      }
+
+      const text = whisperPayload.text;
       setVoiceStatus("Guide is thinking...");
       const prompt = [
         `You are Onesa AI Local Guide for Zimbabwe.`,
@@ -379,6 +410,7 @@ export default function OnesaAITourismAugmentedExperience() {
 
   const speakWithTts = async (text: string) => {
     if (!text) return;
+    let ttsQuotaBlocked = false;
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -389,17 +421,28 @@ export default function OnesaAITourismAugmentedExperience() {
           speed: 1,
         }),
       });
-      if (!res.ok) throw new Error("TTS failed");
+      if (!res.ok) {
+        const errorText = await res.text().catch(() => "");
+        ttsQuotaBlocked = res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(errorText);
+        throw new Error("TTS failed");
+      }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       if (!ttsAudioRef.current) {
         ttsAudioRef.current = new Audio();
       }
+      if (ttsAudioUrlRef.current) {
+        URL.revokeObjectURL(ttsAudioUrlRef.current);
+      }
+      ttsAudioUrlRef.current = url;
       ttsAudioRef.current.pause();
       ttsAudioRef.current.src = url;
       ttsAudioRef.current.volume = narrationVolume;
       await ttsAudioRef.current.play();
     } catch {
+      if (ttsQuotaBlocked) {
+        setVoiceStatus("OpenAI TTS unavailable. Using Onesa AI text guidance.");
+      }
       // Fallback to browser TTS if OpenAI TTS fails.
       if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
       try {
@@ -425,23 +468,63 @@ export default function OnesaAITourismAugmentedExperience() {
     }
   };
 
-  const toggleRecording = () => {
+  const stopRecording = useCallback(() => {
+    if (!isRecording) return;
+    try {
+      mediaRecorder.current?.stop();
+    } catch {
+      recordingStreamRef.current?.getTracks().forEach((track) => track.stop());
+      recordingStreamRef.current = null;
+    }
+    setIsRecording(false);
+  }, [isRecording]);
+
+  const startRecording = useCallback(async () => {
+    if (isRecording) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setVoiceStatus("Microphone not supported in this browser.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recordingStreamRef.current = stream;
+      mediaRecorder.current = new MediaRecorder(stream);
+      audioChunks.current = [];
+      mediaRecorder.current.ondataavailable = (e) => audioChunks.current.push(e.data);
+      mediaRecorder.current.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        recordingStreamRef.current = null;
+        void processConversation(new Blob(audioChunks.current));
+      };
+      mediaRecorder.current.start();
+      setIsRecording(true);
+      setVoiceStatus("Listening...");
+    } catch {
+      setVoiceStatus("Microphone access denied.");
+      setIsConversationMode(false);
+      setIsRecording(false);
+    }
+  }, [isRecording, processConversation]);
+
+  const toggleRecording = useCallback(() => {
     if (!isConversationMode) return;
     if (isRecording) {
-      mediaRecorder.current?.stop();
-      setIsRecording(false);
-    } else {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        mediaRecorder.current = new MediaRecorder(stream);
-        audioChunks.current = [];
-        mediaRecorder.current.ondataavailable = (e) => audioChunks.current.push(e.data);
-        mediaRecorder.current.onstop = () => processConversation(new Blob(audioChunks.current));
-        mediaRecorder.current.start();
-        setIsRecording(true);
-        setVoiceStatus("Listening...");
-      });
+      stopRecording();
+      return;
     }
-  };
+    void startRecording();
+  }, [isConversationMode, isRecording, startRecording, stopRecording]);
+
+  const handleConversationToggle = useCallback(async () => {
+    if (!isConversationMode) {
+      setIsConversationMode(true);
+      await startRecording();
+      return;
+    }
+    stopRecording();
+    setIsConversationMode(false);
+    setVoiceStatus("");
+  }, [isConversationMode, startRecording, stopRecording]);
 
   const stopCamera = useCallback(() => {
     // Stop periodic guidance loop and release hardware resources immediately.
@@ -602,6 +685,10 @@ export default function OnesaAITourismAugmentedExperience() {
   useEffect(() => {
     // Global cleanup for recognition, camera, timers, and TTS on unmount.
     return () => {
+      if (globeTransitionTimerRef.current !== null) {
+        window.clearTimeout(globeTransitionTimerRef.current);
+        globeTransitionTimerRef.current = null;
+      }
       if (guidanceIntervalRef.current !== null) {
         window.clearInterval(guidanceIntervalRef.current);
       }
@@ -616,6 +703,20 @@ export default function OnesaAITourismAugmentedExperience() {
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+      }
+      if (ttsAudioUrlRef.current) {
+        URL.revokeObjectURL(ttsAudioUrlRef.current);
+        ttsAudioUrlRef.current = null;
+      }
+      try {
+        mediaRecorder.current?.stop();
+      } catch {
+        // no-op
+      }
+      recordingStreamRef.current?.getTracks().forEach((track) => track.stop());
+      recordingStreamRef.current = null;
     };
   }, []);
 
@@ -695,7 +796,20 @@ export default function OnesaAITourismAugmentedExperience() {
                     id="aug-place"
                     className="mt-2 w-full rounded-xl border border-white/15 bg-slate-950 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-zim-gold/60"
                     value={selectedPlaceId}
-                    onChange={(event) => setSelectedPlaceId(event.target.value)}
+                    onChange={(event) => {
+                      const nextId = event.target.value;
+                      if (!selectedPlaceId && nextId) {
+                        setIsGlobeZoomTransitioning(true);
+                        if (globeTransitionTimerRef.current !== null) {
+                          window.clearTimeout(globeTransitionTimerRef.current);
+                        }
+                        globeTransitionTimerRef.current = window.setTimeout(() => {
+                          setIsGlobeZoomTransitioning(false);
+                          globeTransitionTimerRef.current = null;
+                        }, 2200);
+                      }
+                      setSelectedPlaceId(nextId);
+                    }}
                   >
                     <option value="" disabled>
                       Select destination
@@ -755,8 +869,14 @@ export default function OnesaAITourismAugmentedExperience() {
                     style={previewHeightStyle}
                     className="rounded-xl border border-white/10 overflow-hidden bg-black/40 flex-1 min-h-[calc(26rem+var(--settings-space))] md:min-h-[calc(32rem+var(--settings-space))]"
                   >
-                    {!selectedPlaceId ? (
-                      <ZimbabweInteractiveGlobe />
+                    {!selectedPlaceId || isGlobeZoomTransitioning ? (
+                      <div
+                        className={`h-full w-full transition-transform duration-[2200ms] ease-in ${
+                          isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
+                        }`}
+                      >
+                        <ZimbabweInteractiveGlobe />
+                      </div>
                     ) : cameraEnabled ? (
                       <video
                         ref={cameraVideoRef}
@@ -790,7 +910,7 @@ export default function OnesaAITourismAugmentedExperience() {
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
-                          onClick={() => setIsConversationMode((current) => !current)}
+                          onClick={() => void handleConversationToggle()}
                           variant="outline"
                           aria-pressed={isConversationMode}
                           className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full ${
