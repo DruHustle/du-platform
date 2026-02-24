@@ -29,6 +29,7 @@ const DEFAULT_BROWSER_LAYOUT_PROFILE: BrowserLayoutProfile = {
   edgeRightPx: 8,
   horizontalReservedPx: 88,
 };
+const LANGUAGE_HINT_SEEN_KEY = "du_language_hint_v1";
 
 function getBrowserLayoutProfile(userAgent: string): BrowserLayoutProfile {
   const ua = userAgent.toLowerCase();
@@ -71,6 +72,7 @@ export default function Layout({ children }: LayoutProps) {
   const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
   const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
   const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
+  const [showLanguageHint, setShowLanguageHint] = useState(false);
   const [isOnesaChatOpen, setIsOnesaChatOpen] = useState(false);
   const [onesaMessages, setOnesaMessages] = useState<OnesaChatMessage[]>([
     {
@@ -103,6 +105,14 @@ export default function Layout({ children }: LayoutProps) {
     dragging: boolean;
   } | null>(null);
 
+  const markLanguageHintSeen = useCallback(() => {
+    try {
+      window.localStorage.setItem(LANGUAGE_HINT_SEEN_KEY, "seen");
+    } catch {
+      // Ignore storage failures.
+    }
+  }, []);
+
   useEffect(() => {
     // Throttle scroll-driven header state updates via RAF to avoid excessive re-renders.
     let rafId = 0;
@@ -130,6 +140,29 @@ export default function Layout({ children }: LayoutProps) {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (isMobileViewport || mobileMenuOpen) return;
+    try {
+      const seen = window.localStorage.getItem(LANGUAGE_HINT_SEEN_KEY);
+      if (seen) return;
+    } catch {
+      // Ignore storage read failures.
+    }
+
+    const showTimer = window.setTimeout(() => {
+      setShowLanguageHint(true);
+      markLanguageHintSeen();
+    }, 900);
+    const hideTimer = window.setTimeout(() => {
+      setShowLanguageHint(false);
+    }, 9000);
+
+    return () => {
+      window.clearTimeout(showTimer);
+      window.clearTimeout(hideTimer);
+    };
+  }, [isMobileViewport, mobileMenuOpen, markLanguageHintSeen]);
 
   useEffect(() => {
     // Footer contact icon alternates between call/WhatsApp affordances.
@@ -583,12 +616,45 @@ export default function Layout({ children }: LayoutProps) {
           {/* 3. Right Section: Utility Icons (Pushed to the far end) */}
           <div
             ref={utilitySlotRef}
-            className="relative z-[230] flex items-center justify-end flex-1 lg:flex-none lg:min-w-[200px]"
+            className="relative z-[230] flex items-center justify-end flex-1 lg:flex-none lg:min-w-[200px] pointer-events-none"
           >
             <div
-              className={getDesktopUtilityIconsClass(useEdgeIconColumn)}
+              className={`${getDesktopUtilityIconsClass(useEdgeIconColumn)} pointer-events-auto`}
               style={useEdgeIconColumn ? { right: `${browserLayoutProfile.edgeRightPx}px` } : undefined}
             >
+            <AnimatePresence>
+              {showLanguageHint && !mobileMenuOpen && !isMobileViewport && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className="hidden md:block absolute top-10 right-10 z-[260]"
+                >
+                  <div className="relative max-w-[220px] rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.35)] px-3 py-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowLanguageHint(false);
+                        markLanguageHintSeen();
+                      }}
+                      className="absolute -top-2 -right-2 h-5 w-5 rounded-full border border-white/30 bg-slate-900/80 text-white/80 text-[10px] leading-none hover:bg-white hover:text-zim-black"
+                      aria-label={t("nav.language_hint_dismiss", { defaultValue: "Dismiss language hint" })}
+                    >
+                      ×
+                    </button>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zim-gold">
+                      {t("nav.language_hint_title", { defaultValue: "Language options" })}
+                    </p>
+                    <p className="mt-1 text-[11px] leading-relaxed text-white/90">
+                      {t("nav.language_hint", { defaultValue: "Use the globe icon to change language." })}
+                    </p>
+                    <span className="absolute -bottom-1 right-6 h-2.5 w-2.5 rotate-45 border-r border-b border-white/20 bg-white/10" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Search Tool */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
@@ -610,12 +676,20 @@ export default function Layout({ children }: LayoutProps) {
             </Dialog>
 
             {/* Desktop Language Switcher */}
-            <DropdownMenu>
+            <DropdownMenu
+              onOpenChange={(open) => {
+                if (open) {
+                  setShowLanguageHint(false);
+                  markLanguageHintSeen();
+                }
+              }}
+            >
               <DropdownMenuTrigger asChild>
                 {/* Hidden on mobile while menu is open to avoid duplicate controls. */}
                 <Button 
                   variant="ghost" 
                   size="icon" 
+                  aria-label={t("nav.language_hint", { defaultValue: "Use the globe icon to change language." })}
                   className={`
                     ${mobileMenuOpen ? 'hidden' : 'hidden md:flex'} 
                     text-white/60 hover:text-yellow-400 rounded-full h-8 w-8

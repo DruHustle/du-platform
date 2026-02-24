@@ -94,7 +94,7 @@ export default function Trade() {
   const introData = {
   icon: Handshake, // 
   title: t('trade.objective_title') || "Zimbabwe Trade Execution",
-  description:  t('trade.objective_subtitle') || "Practical export guidance for 2026: market access, compliance, shipping, and diaspora-led buyer linkages."
+  description:  t('trade.objective_subtitle') || "Execute export growth with a practical playbook for market access, regulatory compliance, shipping controls, and diaspora-enabled buyer connections."
  };
 
   const exportSectors = [
@@ -128,49 +128,28 @@ export default function Trade() {
     }
   ];
 
-  const programs = [
-    {
-      title: t("trade.programs.eagles_nest.title") || "Eagles Nest",
-      description: t("trade.programs.eagles_nest.description") || "Youth export incubator program developing the next generation of Zimbabwean exporters",
-      target: t("trade.programs.eagles_nest.target") || "Young entrepreneurs (18-35)",
-      benefits: t("trade.programs.eagles_nest.benefits", { returnObjects: true }) as string[]
-    },
-    {
-      title: t("trade.programs.next_she_exporter.title") || "Next She Exporter",
-      description: t("trade.programs.next_she_exporter.description") || "Empowering female-owned businesses with export knowledge, skills, and market connections",
-      target: t("trade.programs.next_she_exporter.target") || "Women-owned businesses",
-      benefits: t("trade.programs.next_she_exporter.benefits", { returnObjects: true }) as string[]
-    },
-    {
-      title: t("trade.programs.shop_at_zim.title") || "Shop At Zim",
-      description: t("trade.programs.shop_at_zim.description") || "B2B e-commerce platform connecting Zimbabwean suppliers with international buyers",
-      target: t("trade.programs.shop_at_zim.target") || "Export-ready businesses",
-      benefits: t("trade.programs.shop_at_zim.benefits", { returnObjects: true }) as string[]
-    }
-  ];
-
   const diasporaRole = [
     {
       title: t("trade.diaspora_roles.market_intelligence.title") || "Market Intelligence",
-      description: t("trade.diaspora_roles.market_intelligence.description") || "Share insights about consumer preferences, trends, and opportunities in your host country",
+      description: t("trade.diaspora_roles.market_intelligence.description") || "We provide practical insight on buyer behavior, demand shifts, and product opportunities across target export markets.",
       icon: Globe,
       emoji: "🌍",
     },
     {
       title: t("trade.diaspora_roles.buyer_connections.title") || "Buyer Connections",
-      description: t("trade.diaspora_roles.buyer_connections.description") || "Introduce Zimbabwean exporters to retailers, distributors, and importers in your network",
+      description: t("trade.diaspora_roles.buyer_connections.description") || "We connect Zimbabwean exporters to relevant retailers, distributors, and importers through curated trade relationships.",
       icon: Users,
       emoji: "🤝",
     },
     {
       title: t("trade.diaspora_roles.quality_feedback.title") || "Quality Feedback",
-      description: t("trade.diaspora_roles.quality_feedback.description") || "Provide feedback on product quality, packaging, and market readiness",
+      description: t("trade.diaspora_roles.quality_feedback.description") || "We help improve export readiness with structured feedback on product quality, packaging, and market fit.",
       icon: Award,
       emoji: "✅",
     },
     {
       title: t("trade.diaspora_roles.brand_ambassadors.title") || "Brand Ambassadors",
-      description: t("trade.diaspora_roles.brand_ambassadors.description") || "Promote Zimbabwean products and brands in international markets",
+      description: t("trade.diaspora_roles.brand_ambassadors.description") || "We promote Zimbabwean products and brands in international markets through coordinated visibility and outreach.",
       icon: TrendingUp,
       emoji: "📢",
     }
@@ -246,24 +225,6 @@ export default function Trade() {
       href: "https://tradezimbabwe.com/zim-ebic/",
       badge: t("trade.market_resources.zim_ebic.badge") || "EU Business Support",
     },
-    {
-      title: t("trade.market_resources.directory.title") || "Trade Directory 2023",
-      description: t("trade.market_resources.directory.description") || "Find exporter profiles and business contacts from Trade Zimbabwe's 2023 directory used for marketplace discovery.",
-      href: "https://tradezimbabwe.com/wp-content/uploads/2023/06/TradeDirectory_2023_WEB.pdf",
-      badge: t("trade.market_resources.directory.badge") || "Business Directory",
-    },
-    {
-      title: t("trade.market_resources.library.title") || "Virtual Library",
-      description: t("trade.market_resources.library.description") || "Browse trade directories, market briefs, newsletters, and exporter guides for market-entry planning.",
-      href: "https://tradezimbabwe.com/virtual-library/",
-      badge: t("trade.market_resources.library.badge") || "Publications",
-    },
-    {
-      title: t("trade.market_resources.contacts.title") || "Useful Contacts",
-      description: t("trade.market_resources.contacts.description") || "Access Trade Zimbabwe office and trade-support contact points for follow-up on market and export enquiries.",
-      href: "https://tradezimbabwe.com/useful-contacts/",
-      badge: t("trade.market_resources.contacts.badge") || "Contact Points",
-    },
   ];
 
   return (
@@ -277,8 +238,90 @@ export default function Trade() {
           />
       </section>
 
+      {/* Diaspora Role Section - Floating Glass Icons */}
+      <section id="diaspora-role" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Handshake className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t("trade.diaspora_role_title") || "Our Role in Export Growth"}</h3>
+              </div>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
+                {t("trade.diaspora_role_subtitle") || "Diaspora Unlocked provides practical market support to help Zimbabwean exporters validate, enter, and scale in international markets."}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {diasporaRole.map((role, index) => {
+                return (
+                  <div key={index} className="text-center p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
+                    <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
+                    </div>
+                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{role.title}</h3>
+                    <p className="text-xs text-white/40 leading-relaxed font-light">{role.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* Export Sectors Section - Cinematic Glass Grid */}
+      <section id="export-sectors" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-10 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <Award className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">{t("trade.export_sectors_title") || "Key Export Sectors"}</h3>
+              </div>
+              <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+                {t("trade.export_sectors_subtitle") || "Discover the primary sectors driving Zimbabwe's export economy."}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {exportSectors.map((sector, index) => {
+                const Icon = sector.icon;
+                return (
+                  <motion.div key={index} whileHover={{ y: -5 }} className="group relative rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-2xl transition-all duration-500">
+                    <div className="relative h-48 overflow-hidden">
+                      <img src={sector.image} alt={sector.name} className="w-full h-full object-cover saturate-[0.8] group-hover:saturate-100 group-hover:scale-110 transition-all duration-1000" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                      <div className="absolute bottom-4 left-6">
+                         <h3 className="text-lg font-black text-white tracking-tight">{sector.name}</h3>
+                      </div>
+                    </div>
+                    
+                    <div className="p-8 space-y-6">
+                      <p className="text-xs text-white/50 leading-relaxed font-light line-clamp-2">{sector.description}</p>
+                      
+                      <div className="space-y-3">
+                        <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.export_sectors_badge') || "Sectors"}</h4>
+                        <ul className="space-y-2">
+                          {sector.opportunities.map((opp, oppIdx) => (
+                            <li key={oppIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
+                              <div className="h-1 w-1 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,1)]" />
+                              <span>{opp}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
      {/* Export Process Flow Section - Glassy UI Upgrade */}
-      <section id="export-roadmap" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
+      <section id="export-roadmap" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
         {/* Ambient background glow */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         
@@ -333,7 +376,8 @@ export default function Trade() {
         </div>
       </section>
 
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
+     {/* Trade Market information */}
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -370,124 +414,6 @@ export default function Trade() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Export Sectors Section - Cinematic Glass Grid */}
-      <section id="export-sectors" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Award className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t("trade.export_sectors_title") || "Key Export Sectors"}</h3>
-              </div>
-              <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-                {t("trade.export_sectors_subtitle") || "Discover the primary sectors driving Zimbabwe's export economy."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {exportSectors.map((sector, index) => {
-                const Icon = sector.icon;
-                return (
-                  <motion.div key={index} whileHover={{ y: -5 }} className="group relative rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]  shadow-2xl transition-all duration-500">
-                    <div className="relative h-48 overflow-hidden">
-                      <img src={sector.image} alt={sector.name} className="w-full h-full object-cover saturate-[0.8] group-hover:saturate-100 group-hover:scale-110 transition-all duration-1000" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-                      <div className="absolute bottom-4 left-6">
-                         <h3 className="text-lg font-black text-white tracking-tight">{sector.name}</h3>
-                      </div>
-                    </div>
-                    
-                    <div className="p-8 space-y-6">
-                      <p className="text-xs text-white/50 leading-relaxed font-light line-clamp-2">{sector.description}</p>
-                      
-                      <div className="space-y-3">
-                        <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.export_sectors_badge') || "Sectors"}</h4>
-                        <ul className="space-y-2">
-                          {sector.opportunities.map((opp, oppIdx) => (
-                            <li key={oppIdx} className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80">
-                              <div className="h-1 w-1 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,1)]" />
-                              <span>{opp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ZimTrade Programs Section - High-Density Dashboard */}
-      <section id="zimtrade-programs" className="py-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Users className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t("trade.zimtrade_programs_title") || "ZimTrade Export Development Programs"}</h3>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {programs.map((program, index) => (
-                <div key={index} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                  
-                  <h3 className="text-xl font-black text-white mb-4 tracking-tight">{program.title}</h3>
-                  <p className="text-sm text-white/40 mb-8 font-light leading-relaxed">{program.description}</p>
-                  
-                  <div className="space-y-8">
-                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                      <h4 className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Target Audience</h4>
-                      <p className="text-[13px] text-white/80 font-medium">{program.target}</p>
-                    </div>
-                    
-                    <ul className="space-y-3">
-                      {program.benefits.map((benefit, bIdx) => (
-                        <li key={bIdx} className="flex items-start gap-3">
-                          <CheckCircle2 className="h-4 w-4 text-zim-gold opacity-60 shrink-0" />
-                          <span className="text-[11px] text-white/70 font-black uppercase tracking-widest leading-tight">{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Diaspora Role Section - Floating Glass Icons */}
-      <section id="diaspora-role" className="pb-24 pt-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Handshake className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t("trade.diaspora_role_title") || "Your Role in Export Growth"}</h3>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {diasporaRole.map((role, index) => {
-                return (
-                  <div key={index} className="text-center p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
-                    <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
-                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
-                    </div>
-                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{role.title}</h3>
-                    <p className="text-xs text-white/40 leading-relaxed font-light">{role.description}</p>
-                  </div>
-                );
-              })}
             </div>
           </div>
         </div>

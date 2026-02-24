@@ -331,7 +331,7 @@ export default function SuccessStories() {
 
       {/* SUCCESS STORIES SECTION */}
       {activeStories.length > 0 && (
-        <section id="stories" className="py-24 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <section id="stories" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
             <div className="mb-10 text-center">
@@ -384,7 +384,7 @@ export default function SuccessStories() {
 
       {/* IMPACT METRICS SECTION */}
       {activeMetrics.length > 0 && (
-        <section className="py-24 bg-slate-950 border-t border-white/5 relative overflow-hidden">
+        <section className="p-5 bg-slate-950 border-t border-white/5 relative overflow-hidden">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
             <div className="mb-10 text-center">
@@ -420,7 +420,7 @@ export default function SuccessStories() {
       )}
 
       {/* CONTACT CTA */}
-      <section id="contact-cta" className="py-24 bg-slate-950">
+      <section id="contact-cta" className="pt-5 p-10 bg-slate-950">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel relative max-w-5xl mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-zim-gold/10 blur-[120px] pointer-events-none" />
@@ -430,7 +430,7 @@ export default function SuccessStories() {
               </div>
 
               <div className="space-y-4 text-center">
-                <h2 className="text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have a Success Story to Share?"}</h2>
+                <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have a Success Story to Share?"}</h2>
                 <p className="text-sm text-white/75 font-light max-w-3xl mx-auto leading-relaxed">{t("success.cta_subtitle") || "We are always looking for inspiring stories of diaspora impact. Share yours with us!"}</p>
               </div>
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
@@ -458,6 +458,7 @@ export default function SuccessStories() {
           </div>
         </div>
       </section>
+
     </Layout>
   );
 }

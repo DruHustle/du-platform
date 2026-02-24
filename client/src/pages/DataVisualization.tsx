@@ -1,6 +1,5 @@
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, DollarSign, Users, Globe, Mountain, Plane, Award, Activity, BarChart3, Factory, Coins, Wallet, Handshake, Currency, BarChart } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
@@ -282,7 +281,8 @@ const heroSlides = useMemo(() => [
       icon: DollarSign,
       color: "text-green-600",
       bgColor: "bg-green-600/5",
-      change: t('data.overview.remittances.subtitle') || "Forex leader"
+      change: t('data.overview.remittances.subtitle') || "Forex leader",
+      largeTitle: true
     },
     {
       title: t('data.overview.total_exports.title') || "Total Exports",
@@ -373,20 +373,21 @@ const heroSlides = useMemo(() => [
       </section>
 
      {/* Key Indicators - Glassy Dashboard Grid */}
-      <section id="indicators" className="pt-10 pb-12 bg-slate-950 relative overflow-hidden">
+      <section id="indicators" className="p-5 bg-slate-950 relative overflow-hidden">
         {/* Ambient background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
         
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="text-xl font-black text-white tracking-tight">{t('data.overview_title') || "Key Economic Indicators"}</h2>
+              <h2 className="!text-xl font-black text-white tracking-tight">{t('data.overview_title') || "Key Economic Indicators"}</h2>
               <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
               {metrics.map((metric, index) => {
                 const Icon = metric.icon;
+                const isRemittancesTile = index === 2;
                 return (
                   <motion.div 
                     key={index}
@@ -397,7 +398,10 @@ const heroSlides = useMemo(() => [
                       <div className={`p-2 rounded-xl bg-white/5 ${metric.color}`}>
                         <Icon className="h-4 w-4" />
                       </div>
-                      <span className="text-[10px] font-black text-white/40 uppercase tracking-widest truncate">
+                      <span
+                        className={`${isRemittancesTile ? "!tracking-tight !normal-case !text-white" : "text-[10px] tracking-widest uppercase text-white/40"} font-black ${isRemittancesTile ? "" : "truncate"}`}
+                        style={isRemittancesTile ? { fontSize: "0.75rem", lineHeight: "1.15" } : undefined}
+                      >
                         {metric.title}
                       </span>
                     </div>
@@ -429,18 +433,18 @@ const heroSlides = useMemo(() => [
 
       {/* GDP Growth Trajectory - Animated Ice Bars */}
       
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="text-xl font-black text-white tracking-tight">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
+              <h2 className="!text-xl font-black text-white tracking-tight">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
               <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
             </div>
 
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
               <div className="mb-8 flex justify-between items-end">
                 <div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
+                  <h3 className="!text-lg font-black text-white tracking-tight">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
                   <p className="text-xs text-white/30 uppercase tracking-widest mt-1">{t('data.gdp_data_source') || "Source: World Bank, IMF, ZIMSTAT"}</p>
                 </div>
                 <TrendingUp className="text-zim-gold h-6 w-6 opacity-50" />
@@ -472,18 +476,18 @@ const heroSlides = useMemo(() => [
 
       {/* GDP Composition - Glass Donut Terminal */}
       
-      <section id="sectors-gdp" className="py-10 bg-slate-950 relative overflow-hidden">
+      <section id="sectors-gdp" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
-              <h2 className="text-xl font-black text-white tracking-tight">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
+              <h2 className="!text-xl font-black text-white tracking-tight">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
               <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
               {/* Projections List */}
               <div className="space-y-8">
-                <h3 className="text-[12px] font-black text-zim-gold uppercase tracking-[0.4em] mb-10 border-l-2 border-zim-gold/30 pl-4">
+                <h3 className="!text-[12px] font-black text-zim-gold uppercase tracking-[0.4em] mb-10 border-l-2 border-zim-gold/30 pl-4">
                   {t('data.sectoral_data_projections') || "Growth Projections"} ({data.year})
                 </h3> 
                 {sectorGrowthData.map((sector, index) => (
@@ -595,16 +599,13 @@ const heroSlides = useMemo(() => [
       </section>
 
       {/* Remittances - High-End Financial Panel */}
-      <section id="remittance-impact" className="py-10 bg-slate-950 relative overflow-hidden">
+      <section id="remittance-impact" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="relative py-14 md:py-16 px-8 md:px-12 rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_40px_80px_rgba(0,0,0,0.5)]">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
             
             <div className="text-center max-w-3xl mx-auto space-y-4 mb-10">
-              <Badge className="bg-zim-gold/10 text-zim-gold border-zim-gold/20 text-[10px] font-black uppercase tracking-widest px-4 py-1.5">
-                {t('data.diaspora_remittance_impact_badge') || "Diaspora Impact"}
-              </Badge>
-              <h2 className="text-xl font-black text-white tracking-tight leading-tight">
+              <h2 className="!text-xl font-black text-white tracking-tight leading-tight">
                 {t('data.diaspora_remittance_impact_title') || "Diaspora Economic Impact"}
               </h2>
               <p className="text-sm text-white/75 font-light leading-relaxed">
@@ -655,8 +656,9 @@ const heroSlides = useMemo(() => [
           </div>
         </div>
       </section>
-{/* Global Diaspora Distribution - Animated Glass Table */}
-      <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
+       
+      {/* Global Diaspora Distribution - Animated Glass Table */}
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         {/* Subtle bottom-right glow for table depth */}
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-zim-gold/[0.02] blur-[120px] rounded-full pointer-events-none" />
 
@@ -666,7 +668,7 @@ const heroSlides = useMemo(() => [
               <motion.h2 
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                className="text-xl font-black text-white tracking-tight"
+                className="!text-xl font-black text-white tracking-tight"
               >
                 {t('data.diaspora_distribution') || "Global Diaspora Distribution"}
               </motion.h2>
@@ -677,6 +679,15 @@ const heroSlides = useMemo(() => [
                 className="text-sm text-white/75 font-light leading-relaxed mt-4"
               >
                 {t('data.diaspora_residence') || "Zimbabwean diaspora residence worldwide"}
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-xs text-white/60 font-light leading-relaxed max-w-3xl mx-auto mt-3"
+              >
+                {t('data.diaspora_residence_extra') ||
+                  "This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets."}
               </motion.p>
             </div>
             

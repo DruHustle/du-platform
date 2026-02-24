@@ -72,9 +72,7 @@
     "technology_capabilities": "Technology Capabilities",
     "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
     "technology_industries": "Technology Industries",
-    "technology_industries_desc": "Key technology sectors in Zimbabwe",
-    "zimtrade_programs": "ZimTrade Programs",
-    "zimtrade_programs_desc": "Export development initiatives"
+    "technology_industries_desc": "Key technology sectors in Zimbabwe"
   },
   "home": {
     "made_in_zimbabwe_alt": "Made in Zimbabwe",
@@ -393,7 +391,7 @@
       "highlight9": "Emerging Segments"
     },
     "objective_title": "Export to the EU with Confidence",
-    "objective_subtitle": "Zimbabwe exporters can access the EU under iEPA duty-free and quota-free terms. Focus on REX registration, origin documentation, SPS compliance, and current EU regulatory changes.",
+    "objective_subtitle": "Zimbabwean exporters can access the EU under iEPA duty-free and quota-free terms. This guide outlines the essentials for compliant market entry, including REX registration, origin documentation, SPS readiness, and key EU regulatory updates.",
     "explore_market_requirements": "Explore Market Requirements",
     "contact_us": "Contact Us",
     "contact_form_title": "Exports Inquiry",
@@ -481,7 +479,12 @@
         ],
         "buyers1": "Cosmetic manufacturers",
         "buyers2": "Wellness brands"
-      }
+      },
+      "demand_outlook": "Demand Outlook",
+      "demand_status": "Sustained EU Demand",
+      "compliance_requirements": "Compliance Requirements",
+      "buyer_channels": "Buyer Channels",
+      "contact_verified_buyers": "Contact Verified Buyers"
     },
     "partner_network_badge": "Network",
     "partner_network_title": "Verified Partner Network",
@@ -535,7 +538,9 @@
       "c3": "Issue a valid Statement on Origin for each shipment.",
       "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
       "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
+      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
+      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
+      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
     },
     "regulatory_updates": {
       "eu_sanctions_easing": {
@@ -587,38 +592,6 @@
         "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
         "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
         "tag": "SPS Critical"
-      }
-    },
-    "strategic_resources": {
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade portal for exporter support services, market information, and trade publications.",
-        "cta": "Open Trade Zimbabwe"
-      },
-      "access2markets": {
-        "title": "EU Access2Markets Portal",
-        "description": "Check duties, taxes, rules of origin, and technical requirements by exact HS code.",
-        "cta": "Open Access2Markets"
-      },
-      "rex": {
-        "title": "EU REX Information",
-        "description": "Reference rules and guidance for origin self-certification under the REX framework.",
-        "cta": "View REX Guidance"
-      },
-      "zimtrade_support": {
-        "title": "ZimTrade Export Support",
-        "description": "Use ZimTrade support for market surveys, buyer readiness, and export development programs.",
-        "cta": "Visit ZimTrade"
-      },
-      "virtual_library": {
-        "title": "Trade Zimbabwe Virtual Library",
-        "description": "Access trade directories, country briefs, market studies, and exporter-focused guidance documents.",
-        "cta": "Open Virtual Library"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use Zimbabwe-EU Business Information Centre resources for EU market intelligence and trade facilitation.",
-        "cta": "Open ZIM-EBIC"
       }
     }
   },
@@ -1368,7 +1341,7 @@
       "highlight8": "Risk Balanced Growth"
     },
     "objective_title": "Zimbabwe Trade Execution",
-    "objective_subtitle": "Practical export guidance for 2026: market access, compliance, shipping, and diaspora-led buyer linkages.",
+    "objective_subtitle": "Execute export growth with a practical playbook for market access, regulatory compliance, shipping controls, and diaspora-enabled buyer connections.",
     "export_roadmap_badge": "Export Roadmap",
     "export_roadmap_title": "Zimbabwe Export Roadmap (2026)",
     "export_roadmap_subtitle": "A practical path for exporters using ZimTrade support, ZIMRA/REX processes, and EU compliance requirements.",
@@ -1455,63 +1428,25 @@
         ]
       }
     },
-    "zimtrade_programs_badge": "Programs",
-    "zimtrade_programs_title": "ZimTrade Export Development Programs",
-    "zimtrade_programs_subtitle": "Initiatives designed to empower Zimbabwean businesses for international trade.",
-    "programs": {
-      "eagles_nest": {
-        "title": "Eagles Nest",
-        "description": "Youth export incubator program developing the next generation of Zimbabwean exporters",
-        "target": "Young entrepreneurs (18-35)",
-        "benefits": [
-          "Export training",
-          "Mentorship",
-          "Market access",
-          "Funding support"
-        ]
-      },
-      "next_she_exporter": {
-        "title": "Next She Exporter",
-        "description": "Empowering female-owned businesses with export knowledge, skills, and market connections",
-        "target": "Women-owned businesses",
-        "benefits": [
-          "Capacity building",
-          "Networking",
-          "Trade missions",
-          "Certification support"
-        ]
-      },
-      "shop_at_zim": {
-        "title": "Shop At Zim",
-        "description": "B2B e-commerce platform connecting Zimbabwean suppliers with international buyers",
-        "target": "Export-ready businesses",
-        "benefits": [
-          "Online marketplace",
-          "Buyer connections",
-          "Payment solutions",
-          "Logistics support"
-        ]
-      }
-    },
     "diaspora_role_badge": "Diaspora Role",
-    "diaspora_role_title": "Your Role in Export Growth",
-    "diaspora_role_subtitle": "The Zimbabwean diaspora plays a crucial role in promoting and facilitating exports.",
+    "diaspora_role_title": "Our Role in Export Growth",
+    "diaspora_role_subtitle": "Diaspora Unlocked provides practical market support to help Zimbabwean exporters validate, enter, and scale in international markets.",
     "diaspora_roles": {
       "market_intelligence": {
         "title": "Market Intelligence",
-        "description": "Share insights about consumer preferences, trends, and opportunities in your host country"
+        "description": "We provide practical insight on buyer behavior, demand shifts, and product opportunities across target export markets."
       },
       "buyer_connections": {
         "title": "Buyer Connections",
-        "description": "Introduce Zimbabwean exporters to retailers, distributors, and importers in your network"
+        "description": "We connect Zimbabwean exporters to relevant retailers, distributors, and importers through curated trade relationships."
       },
       "quality_feedback": {
         "title": "Quality Feedback",
-        "description": "Provide feedback on product quality, packaging, and market readiness"
+        "description": "We help improve export readiness with structured feedback on product quality, packaging, and market fit."
       },
       "brand_ambassadors": {
         "title": "Brand Ambassadors",
-        "description": "Promote Zimbabwean products and brands in international markets"
+        "description": "We promote Zimbabwean products and brands in international markets through coordinated visibility and outreach."
       }
     },
     "cta_title": "Ready to Export?",
@@ -1537,21 +1472,6 @@
         "title": "ZIM-EBIC",
         "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
         "badge": "EU Business Support"
-      },
-      "directory": {
-        "title": "Trade Directory 2023",
-        "description": "Find exporter profiles and business contacts from Trade Zimbabwe's 2023 directory used for marketplace discovery.",
-        "badge": "Business Directory"
-      },
-      "library": {
-        "title": "Virtual Library",
-        "description": "Browse trade directories, market briefs, newsletters, and exporter guides for market-entry planning.",
-        "badge": "Publications"
-      },
-      "contacts": {
-        "title": "Useful Contacts",
-        "description": "Access Trade Zimbabwe office and trade-support contact points for follow-up on market and export enquiries.",
-        "badge": "Contact Points"
       }
     }
   },
@@ -1739,7 +1659,8 @@
     "investment_calculator_disclaimer": "This calculator provides estimates based on assumed constant returns. Actual investment performance may vary. Past performance does not guarantee future results. Please consult with financial advisors and review project details before investing.",
     "cta_title": "Need More In-depth Data?",
     "cta_subtitle": "Access our comprehensive reports and custom data analytics services for your specific needs.",
-    "cta_button": "Request Custom Report"
+    "cta_button": "Request Custom Report",
+    "diaspora_residence_extra": "This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets."
   },
   "success": {
     "hero": {

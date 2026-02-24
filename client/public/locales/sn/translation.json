@@ -72,9 +72,7 @@
     "technology_capabilities": "Simba reTekinoroji",
     "technology_capabilities_desc": "Mamiriro erunhare nesainzi muZimbabwe",
     "technology_industries": "Maindasitiri eTekinoroji",
-    "technology_industries_desc": "Zvikamu zvikuru zveunhare nesainzi muZimbabwe",
-    "zimtrade_programs": "Zvirongwa zveZimTrade",
-    "zimtrade_programs_desc": "Zvirongwa zvekusimudzira kutumira zvinhu kunze"
+    "technology_industries_desc": "Zvikamu zvikuru zveunhare nesainzi muZimbabwe"
   },
   "home": {
     "made_in_zimbabwe_alt": "Chakagadzirwa muZimbabwe",
@@ -485,7 +483,12 @@
         ],
         "buyers1": "Vagadziri vezvekuzora",
         "buyers2": "Mabhrendi ehutano"
-      }
+      },
+      "demand_outlook": "Demand Outlook",
+      "demand_status": "Sustained EU Demand",
+      "compliance_requirements": "Compliance Requirements",
+      "buyer_channels": "Buyer Channels",
+      "contact_verified_buyers": "Contact Verified Buyers"
     },
     "partner_network_badge": "Dandira",
     "partner_network_title": "Dandira reVatishandi rakasimbiswa",
@@ -557,7 +560,9 @@
       "c3": "Issue a valid Statement on Origin for each shipment.",
       "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
       "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
+      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
+      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
+      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
     },
     "registration": {
       "title": "Key Registration and Documentation",
@@ -589,38 +594,6 @@
         "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
         "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
         "tag": "SPS Critical"
-      }
-    },
-    "strategic_resources": {
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade portal for exporter support services, market information, and trade publications.",
-        "cta": "Open Trade Zimbabwe"
-      },
-      "access2markets": {
-        "title": "EU Access2Markets Portal",
-        "description": "Check duties, taxes, rules of origin, and technical requirements by exact HS code.",
-        "cta": "Open Access2Markets"
-      },
-      "rex": {
-        "title": "EU REX Information",
-        "description": "Reference rules and guidance for origin self-certification under the REX framework.",
-        "cta": "View REX Guidance"
-      },
-      "zimtrade_support": {
-        "title": "ZimTrade Export Support",
-        "description": "Use ZimTrade support for market surveys, buyer readiness, and export development programs.",
-        "cta": "Visit ZimTrade"
-      },
-      "virtual_library": {
-        "title": "Trade Zimbabwe Virtual Library",
-        "description": "Access trade directories, country briefs, market studies, and exporter-focused guidance documents.",
-        "cta": "Open Virtual Library"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use Zimbabwe-EU Business Information Centre resources for EU market intelligence and trade facilitation.",
-        "cta": "Open ZIM-EBIC"
       }
     }
   },
@@ -1453,63 +1426,25 @@
         ]
       }
     },
-    "zimtrade_programs_badge": "Zvirongwa",
-    "zimtrade_programs_title": "Zvirongwa zveZimTrade zvekusimudzira kutengeserana",
-    "zimtrade_programs_subtitle": "Mabasa ekusimudzira mabhizimusi emuZimbabwe kuitira kutengesa kunze.",
-    "programs": {
-      "eagles_nest": {
-        "title": "Eagles Nest",
-        "description": "Chirongwa chevechidiki chiri kuumbira vatengesi vezvinhu kunze vemangwana.",
-        "target": "Vatambi vezvemabhizimusi vechidiki (18-35)",
-        "benefits": [
-          "Kudzidzira kutengesa kunze",
-          "Kurairwa nenyanzvi",
-          "Kupinda mumisika",
-          "Rubatsiro rwemari"
-        ]
-      },
-      "next_she_exporter": {
-        "title": "Next Iye Exporter",
-        "description": "Kusimbisa mabhizimusi emadzimai neruzivo rwekutengesa kunze.",
-        "target": "Mabhizimusi emadzimai",
-        "benefits": [
-          "Kuvaka unyanzvi",
-          "Kuzivana nevatengesi",
-          "Nzendo dzezvekutengeserana",
-          "Rubatsiro rwezvitupa"
-        ]
-      },
-      "shop_at_zim": {
-        "title": "Shop KuZim",
-        "description": "Dandira re-ecommerce rinobatanidza vatengesi vemuZimbabwe nevatengi vekunze.",
-        "target": "Mabhizimusi akagadzirira kutengesa",
-        "benefits": [
-          "Chitoro chepa-internet",
-          "Kubatana nevatengi",
-          "Kubhadharwa kuri nyore",
-          "Rubatsiro rwekutakura"
-        ]
-      }
-    },
     "diaspora_role_badge": "Basa reVana vari Kunze",
-    "diaspora_role_title": "Basa rako pakukura kweKutengesa Kunze",
-    "diaspora_role_subtitle": "Vana veZimbabwe vari kunze vane basa guru mukufambisa nekusimudzira kutengeserana.",
+    "diaspora_role_title": "Basa redu pakukura kweKutengesa Kunze",
+    "diaspora_role_subtitle": "Diaspora Unlocked inopa rutsigiro rwemusika runobatsira vatengesi vekuZimbabwe kusimbisa, kupinda, nekukura mumisika yepasi rose.",
     "diaspora_roles": {
       "market_intelligence": {
         "title": "Ruzivo rweMusika",
-        "description": "Ipai ruzivo nezvezvido zvevatengi nekufamba kwezvinhu munyika mumarere."
+        "description": "Tinopa ruzivo runoshanda nezvemaitiro evatengi, kushanduka kwekudiwa, nemikana yezvigadzirwa mumisika yatiri kunanga."
       },
       "buyer_connections": {
         "title": "Kubatana neVatengi",
-        "description": "Zivisai vatengesi vemuZimbabwe kuvatengesi vakuru munyika mamuri."
+        "description": "Tinobatanidza vatengesi vekuZimbabwe nevatengesi vakuru, vanogovera, nevanotenga kunze kuburikidza nehukama hwekutengeserana hwakasarudzwa."
       },
       "quality_feedback": {
         "title": "Maonero pamusoro peHunhu",
-        "description": "Ipai mazano pamusoro pekunaka kwechigadzirwa nekupakwa kwacho."
+        "description": "Tinobatsira kuvandudza kugadzirira kutengesa kunze kuburikidza nemaonero akarongwa pamusoro pehunhu hwechigadzirwa, kupakisha, uye kukodzera musika."
       },
       "brand_ambassadors": {
         "title": "Vamiriri veBhrendi",
-        "description": "Simudzirai zvigadzirwa nemabhrendi eZimbabwe mumisika yepasi rose."
+        "description": "Tinosimudzira zvigadzirwa nemabhrendi eZimbabwe mumisika yepasi rose kuburikidza nekuonekwa kwakarongeka nekusvika kuvanhu."
       }
     },
     "cta_title": "Wagadzirira kutengesa kunze here?",
@@ -1535,21 +1470,6 @@
         "title": "ZIM-EBIC",
         "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
         "badge": "EU Business Support"
-      },
-      "directory": {
-        "title": "Trade Directory 2023",
-        "description": "Find exporter profiles and business contacts from Trade Zimbabwe's 2023 directory used for marketplace discovery.",
-        "badge": "Business Directory"
-      },
-      "library": {
-        "title": "Virtual Library",
-        "description": "Browse trade directories, market briefs, newsletters, and exporter guides for market-entry planning.",
-        "badge": "Publications"
-      },
-      "contacts": {
-        "title": "Useful Contacts",
-        "description": "Access Trade Zimbabwe office and trade-support contact points for follow-up on market and export enquiries.",
-        "badge": "Contact Points"
       }
     }
   },
@@ -1737,7 +1657,8 @@
     "investment_calculator_disclaimer": "Ichi chirongwa chekuverenga chinopa fungidziro zvichienderana nenhamba dziripo. Mhindu chaiyo inogona kuchinja. Kumbirai mazano kunyanzvi dzezvemari musati madyara mari.",
     "cta_title": "Munoda Nhamba dzakadzama here?",
     "cta_button": "Kumbirai Umbiko Wakakosha",
-    "cta_subtitle": "Svika yedu yakazara mishumo uye tsika data analytics masevhisi kune zvaunoda chaizvo."
+    "cta_subtitle": "Svika yedu yakazara mishumo uye tsika data analytics masevhisi kune zvaunoda chaizvo.",
+    "diaspora_residence_extra": "Kugoverwa uku kunoratidza nzira dzakakosha dzevavari kunze dzinobatsira pakuronga kutengeserana, kuyerera kwemari dzinotumirwa, uye kuwedzera mikana yekudyara mumisika mikuru."
   },
   "success": {
     "hero": {
