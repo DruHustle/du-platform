@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Sparkles, Globe, Shield, TrendingUp, Lightbulb, CheckCircle, Tractor, Pickaxe, Truck, GraduationCap, Database, LockKeyhole, Network, BarChart3, Wallet, Cpu, Signal, AlertTriangle, Building2, MapPin } from "lucide-react";
+import { Brain, Sparkles, Globe, Shield, TrendingUp, Lightbulb, CheckCircle, Tractor, Pickaxe, Truck, GraduationCap, Network, BarChart3, Wallet, Cpu, Signal, AlertTriangle, Building2, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
@@ -48,43 +48,43 @@ export default function Technology() {
     },
     {
       image: "/images/pages/technology/zim_tech_map.jpg",
-      badge: "Education 5.0",
+      badge: t("tech.hero.badge4") || "Education 5.0",
       badgeIcon: TrendingUp,
-      title: "Innovation in Classrooms",
-      subtitle: "Digital learning and skills development are powering Zimbabwe's next generation of tech talent.",
-      highlight: "Future Skills"
+      title: t("tech.hero.title4") || "Innovation in Classrooms",
+      subtitle: t("tech.hero.subtitle4") || "Digital learning and skills development are powering Zimbabwe's next generation of tech talent.",
+      highlight: t("tech.hero.highlight4") || "Future Skills"
     },
     {
       image: "/images/pages/trade/export_port1.jpg",
-      badge: "Digital Trade",
+      badge: t("tech.hero.badge5") || "Digital Trade",
       badgeIcon: Network,
-      title: "Technology for Logistics",
-      subtitle: "Smarter export and supply-chain systems create more reliable access to regional and global markets.",
-      highlight: "Connected Trade"
+      title: t("tech.hero.title5") || "Technology for Logistics",
+      subtitle: t("tech.hero.subtitle5") || "Smarter export and supply-chain systems create more reliable access to regional and global markets.",
+      highlight: t("tech.hero.highlight5") || "Connected Trade"
     },
     {
       image: "/images/pages/shared/minerals_mining.png",
-      badge: "Industrial AI",
+      badge: t("tech.hero.badge6") || "Industrial AI",
       badgeIcon: BarChart3,
-      title: "Tech in Mining Operations",
-      subtitle: "Data-driven operations, predictive maintenance, and process optimization improve output and safety.",
-      highlight: "Operational Efficiency"
+      title: t("tech.hero.title6") || "Tech in Mining Operations",
+      subtitle: t("tech.hero.subtitle6") || "Data-driven operations, predictive maintenance, and process optimization improve output and safety.",
+      highlight: t("tech.hero.highlight6") || "Operational Efficiency"
     },
     {
       image: "/images/pages/shared/horticulture.jpg",
-      badge: "Agritech Growth",
+      badge: t("tech.hero.badge7") || "Agritech Growth",
       badgeIcon: MapPin,
-      title: "Smarter Farming Systems",
-      subtitle: "Precision agriculture and real-time monitoring support stronger yields and food security outcomes.",
-      highlight: "Climate-Smart Agriculture"
+      title: t("tech.hero.title7") || "Smarter Farming Systems",
+      subtitle: t("tech.hero.subtitle7") || "Precision agriculture and real-time monitoring support stronger yields and food security outcomes.",
+      highlight: t("tech.hero.highlight7") || "Climate-Smart Agriculture"
     },
     {
       image: "/images/pages/home/partnership_handshake.png",
-      badge: "Diaspora Builders",
+      badge: t("tech.hero.badge8") || "Diaspora Builders",
       badgeIcon: Building2,
-      title: "Tech Talent Across Borders",
-      subtitle: "Diaspora professionals contribute capital, mentorship, and practical execution support for local startups.",
-      highlight: "Global Collaboration"
+      title: t("tech.hero.title8") || "Tech Talent Across Borders",
+      subtitle: t("tech.hero.subtitle8") || "Diaspora professionals contribute capital, mentorship, and practical execution support for local startups.",
+      highlight: t("tech.hero.highlight8") || "Global Collaboration"
     }
   ], [t]);
 
@@ -137,41 +137,23 @@ export default function Technology() {
   const diasporaUseCases = [
     {
       icon: Globe,
-      title: "Relocation & Reintegration",
-      detail: "Get practical guidance on housing, legal setup, schooling options, and service providers before arrival."
+      title: t("tech.diaspora_use_cases.relocation.title") || "Relocation & Reintegration",
+      detail: t("tech.diaspora_use_cases.relocation.detail") || "Get practical guidance on housing, legal setup, schooling options, and service providers before arrival."
     },
     {
       icon: TrendingUp,
-      title: "Investment Screening",
-      detail: "Compare opportunities by sector, expected returns, regulatory readiness, and market demand signals."
+      title: t("tech.diaspora_use_cases.investment.title") || "Investment Screening",
+      detail: t("tech.diaspora_use_cases.investment.detail") || "Compare opportunities by sector, expected returns, regulatory readiness, and market demand signals."
     },
     {
       icon: BarChart3,
-      title: "Business Intelligence",
-      detail: "Generate market-entry briefs for exports, pricing benchmarks, and demand snapshots by destination market."
+      title: t("tech.diaspora_use_cases.business_intelligence.title") || "Business Intelligence",
+      detail: t("tech.diaspora_use_cases.business_intelligence.detail") || "Generate market-entry briefs for exports, pricing benchmarks, and demand snapshots by destination market."
     },
     {
       icon: Network,
-      title: "Diaspora Collaboration",
-      detail: "Coordinate mentors, co-investors, and operators across countries using shared project context."
-    }
-  ];
-
-  const trustAndGovernance = [
-    {
-      icon: Database,
-      title: "Grounded Data Sources",
-      detail: "Responses are designed to align with curated economic, regulatory, and sector data relevant to Zimbabwe and diaspora users."
-    },
-    {
-      icon: LockKeyhole,
-      title: "Privacy & Security",
-      detail: "Account flows are protected with secure session handling and password-reset token controls on the backend."
-    },
-    {
-      icon: Shield,
-      title: "Responsible Guidance",
-      detail: "Onesa is positioned as a decision-support assistant, not a substitute for regulated legal, tax, or financial advice."
+      title: t("tech.diaspora_use_cases.collaboration.title") || "Diaspora Collaboration",
+      detail: t("tech.diaspora_use_cases.collaboration.detail") || "Coordinate mentors, co-investors, and operators across countries using shared project context."
     }
   ];
 
@@ -256,6 +238,7 @@ export default function Technology() {
         "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure.",
     },
   ];
+
 
   const criticalChallenges = [
     t("tech.challenges.infrastructure") ||
@@ -368,7 +351,7 @@ export default function Technology() {
       </section>
 
     {/* Onesa Intro - Glassy UI */}
-    <section id="onesa-intro" className="pt-12 pb-5 bg-slate-950 relative overflow-hidden">
+    <section id="onesa-intro" className="p-5 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
         {/* Unified Onesa glass container, aligned to full content width */}
         <div>
@@ -388,7 +371,7 @@ export default function Technology() {
                     <Sparkles className="h-5 w-5 text-zim-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-white tracking-tight">Onesa AI</h3>
+                    <h3 className="text-lg font-black text-white tracking-tight">{t("tech.onesa_name") || "Onesa AI"}</h3>
                     <span className="text-zim-gold text-[9px] uppercase font-black tracking-widest border-l border-zim-gold/30 pl-3">
                       {t("tech.ai_status") || "Beta Version"}
                     </span>
@@ -413,7 +396,7 @@ export default function Technology() {
 
               <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
                 <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
-                  Onesa = Illuminate
+                  {t("tech.onesa_meaning_badge") || "Onesa = Illuminate"}
                 </Badge>
                 <p className="text-sm text-white/60 leading-relaxed font-light">
                   {t("tech.onesa_desc1") || "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model."}
@@ -464,17 +447,15 @@ export default function Technology() {
                   <p className="text-white/75 text-sm leading-relaxed mb-4">
                     {t("tech.onesa_matter.p1") ||
                       "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}
-                  </p>
-                  <p className="text-white/75 text-sm leading-relaxed mb-4">
-                    {t("tech.onesa_matter.p2") ||
+                     
+                     {t("tech.onesa_matter.p2") ||
                       "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
                   </p>
                   <p className="text-white/75 text-sm leading-relaxed mb-4">
                     {t("tech.onesa_matter.p3") ||
                       "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}
-                  </p>
-                  <p className="text-white/75 text-sm leading-relaxed mb-4">
-                    {t("tech.onesa_matter.p4") ||
+                     
+                     {t("tech.onesa_matter.p4") ||
                       "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
                   </p>
                   <p className="text-white/85 text-sm leading-relaxed font-medium">
@@ -501,8 +482,40 @@ export default function Technology() {
       </div>
     </section>
 
+    {/* Diaspora Use Cases */}
+    <section id="technology-diaspora-use-cases" className="p-5 bg-slate-950 relative overflow-hidden">
+      <div className="container relative z-10 px-6 mx-auto">
+        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
+          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+          <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <Globe className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">{t("tech.diaspora_ai.title") || "How Diaspora Unlocked Uses AI"}</h3>
+            </div>
+            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
+              {t("tech.diaspora_ai.subtitle") || "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses."}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {diasporaUseCases.map((item) => (
+              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
+                    <item.icon className="h-5 w-5 text-zim-gold" />
+                  </div>
+                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
     {/* Sector Transformation - Cinematic Glass Grid */}
-    <section id="technology-industries" className="pt-10 pb-20 bg-slate-950 relative overflow-hidden">
+    <section id="technology-industries" className="p-5 bg-slate-950 relative overflow-hidden">
       {/* Background glow for depth */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
 
@@ -571,8 +584,44 @@ export default function Technology() {
       </div>
     </section>
 
+    {/* Innovation Hubs */}
+    {showInnovationHubs && (
+      <section id="technology-hubs" className="p-5 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+            <div className="mb-10 text-center">
+              <h2 className="text-xl font-black text-white tracking-tight">
+                {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {innovationHubs.map((hub) => (
+                <div key={hub.name} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Building2 className="h-4 w-4 text-zim-gold" />
+                    <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
+                  </div>
+                  <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
+                  <div className="flex items-center justify-between gap-2 text-white/50 text-xs">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-3.5 w-3.5" />
+                      <span>{hub.city}{t("tech.hubs.location_suffix") || ", Zimbabwe"}</span>
+                    </div>
+                    <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
+                      {t("tech.hubs.visit_site") || "Visit site"}
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
     {/* Digital Transformation Snapshot */}
-    <section id="technology-momentum" className="pb-10 bg-slate-950 relative overflow-hidden">
+    <section id="technology-momentum" className="p-5 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
         <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
           <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
@@ -630,40 +679,8 @@ export default function Technology() {
       </div>
     </section>
 
-    {/* Diaspora Use Cases */}
-    <section id="technology-diaspora-use-cases" className="pb-10 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-          <div className="mb-10 text-center">
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <Globe className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">How Diaspora Unlocked Uses AI</h3>
-            </div>
-            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-              Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {diasporaUseCases.map((item) => (
-              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <item.icon className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
     {/* Opportunities and Challenges */}
-    <section id="technology-opportunities" className="pb-10 bg-slate-950 relative overflow-hidden">
+    <section id="technology-opportunities" className="p-5 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
         <div className="relative p-8 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
           <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
@@ -703,7 +720,7 @@ export default function Technology() {
     </section>
 
     {/* Fintech Regulatory Environment */}
-    <section id="technology-fintech-regulation" className="pb-10 bg-slate-950 relative overflow-hidden">
+    <section id="technology-fintech-regulation" className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
         <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
           <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
@@ -753,80 +770,7 @@ export default function Technology() {
       </div>
     </section>
 
-    {/* Innovation Hubs */}
-    {showInnovationHubs && (
-      <section id="technology-hubs" className="pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="mb-10 text-center">
-              <h2 className="text-xl font-black text-white tracking-tight">
-                {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {innovationHubs.map((hub) => (
-                <div key={hub.name} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Building2 className="h-4 w-4 text-zim-gold" />
-                    <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
-                  </div>
-                  <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
-                  <div className="flex items-center justify-between gap-2 text-white/50 text-xs">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-3.5 w-3.5" />
-                      <span>{hub.city}, Zimbabwe</span>
-                    </div>
-                    <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
-                      {t("tech.hubs.visit_site") || "Visit site"}
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    )}
 
-    {/* Governance & Trust */}
-    <section id="technology-governance" className="pb-24 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="relative p-8 md:p-12 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-          <div className="mb-10 text-center">
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <Shield className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">Trust, Data, and Operating Standards</h3>
-            </div>
-            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-              {t("tech.governance.subtitle") ||
-                "Operational standards ensure reliable guidance, secure handling of user data, and responsible AI adoption across use cases."}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {trustAndGovernance.map((item) => (
-              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <item.icon className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8">
-            <Link href="/regulations#due-diligence-checklist">
-              <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                {t("tech.more_compliance_information") || "More Compliance Information"}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
 
     </Layout>
   );

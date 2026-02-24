@@ -78,6 +78,7 @@ function VRScene({
   currentStageIndex,
   stageOrder,
   onNavigate,
+  onNavigatePrevious,
   onPointOfInterestClick,
   onPointOfInterestInfoClick,
   ambientAudioEnabled,
@@ -86,6 +87,7 @@ function VRScene({
   currentStageIndex: number;
   stageOrder: string[];
   onNavigate: (targetId: string) => void;
+  onNavigatePrevious: () => void;
   onPointOfInterestClick: (poiLabel: string, poiPosition: [number, number, number]) => void;
   onPointOfInterestInfoClick: (poiLabel: string) => void;
   ambientAudioEnabled: boolean;
@@ -135,7 +137,7 @@ function VRScene({
         <ForwardWalkRing key={`forward-${hs.targetId}`} position={hs.position} onClick={() => onNavigate(hs.targetId)} />
       ))}
       {hotspotBuckets.backward.map((hs) => (
-        <BackwardWalkRing key={`back-${hs.targetId}`} position={hs.position} onClick={() => onNavigate(hs.targetId)} />
+        <BackwardWalkRing key={`back-${hs.targetId}`} position={hs.position} onClick={onNavigatePrevious} />
       ))}
       {stage.pointsOfInterest?.map((poi) => (
         <InterestRing
@@ -608,6 +610,7 @@ export default function OnesaAITourismVirtualExperience() {
     if (!text) return;
     if (!isTtsEnabled) return;
     let ttsQuotaBlocked = false;
+    let ttsErrorText = "";
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -619,8 +622,24 @@ export default function OnesaAITourismVirtualExperience() {
         }),
       });
       if (!res.ok) {
-        const errorText = await res.text().catch(() => "");
-        ttsQuotaBlocked = res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(errorText);
+        ttsErrorText = await res.text().catch(() => "");
+        let throttledFromPayload = false;
+        try {
+          const payload = JSON.parse(ttsErrorText) as {
+            throttled?: boolean;
+            modelsTried?: Array<{ status?: number }>;
+            error?: string;
+          };
+          throttledFromPayload =
+            payload.throttled === true || (payload.modelsTried ?? []).some((item) => Number(item?.status) === 429);
+          if (payload.error && !ttsErrorText) ttsErrorText = payload.error;
+        } catch {
+          // Ignore parse errors and fallback to regex check.
+        }
+        ttsQuotaBlocked =
+          res.status === 429 ||
+          throttledFromPayload ||
+          /insufficient_quota|quota|rate[\s_-]?limit|throttl|\"status\"\s*:\s*429/i.test(ttsErrorText);
         throw new Error("TTS failed");
       }
       const blob = await res.blob();
@@ -637,9 +656,7 @@ export default function OnesaAITourismVirtualExperience() {
       ttsAudioRef.current.volume = 0.9;
       await ttsAudioRef.current.play();
     } catch {
-      if (ttsQuotaBlocked) {
-        setAiStatus("TTS quota hit. Using Onesa guidance fallback.");
-      }
+      setAiStatus(ttsQuotaBlocked ? "TTS throttled. Using browser voice." : "TTS unavailable. Using browser voice.");
       if (typeof window === "undefined" || !window.speechSynthesis) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -1184,6 +1201,9 @@ export default function OnesaAITourismVirtualExperience() {
                           onNavigate={(id: string) => {
                             const nextIndex = walkStages.findIndex((stage) => stage.id === id);
                             if (nextIndex >= 0) setWalkStageIndex(nextIndex);
+                          }}
+                          onNavigatePrevious={() => {
+                            setWalkStageIndex((current) => Math.max(0, current - 1));
                           }}
                           onPointOfInterestClick={handlePointOfInterestClick}
                           onPointOfInterestInfoClick={handlePointOfInterestInfoClick}

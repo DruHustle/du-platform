@@ -411,6 +411,7 @@ export default function OnesaAITourismAugmentedExperience() {
   const speakWithTts = async (text: string) => {
     if (!text) return;
     let ttsQuotaBlocked = false;
+    let ttsErrorText = "";
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -422,8 +423,24 @@ export default function OnesaAITourismAugmentedExperience() {
         }),
       });
       if (!res.ok) {
-        const errorText = await res.text().catch(() => "");
-        ttsQuotaBlocked = res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(errorText);
+        ttsErrorText = await res.text().catch(() => "");
+        let throttledFromPayload = false;
+        try {
+          const payload = JSON.parse(ttsErrorText) as {
+            throttled?: boolean;
+            modelsTried?: Array<{ status?: number }>;
+            error?: string;
+          };
+          throttledFromPayload =
+            payload.throttled === true || (payload.modelsTried ?? []).some((item) => Number(item?.status) === 429);
+          if (payload.error && !ttsErrorText) ttsErrorText = payload.error;
+        } catch {
+          // Ignore parse errors and fallback to regex check.
+        }
+        ttsQuotaBlocked =
+          res.status === 429 ||
+          throttledFromPayload ||
+          /insufficient_quota|quota|rate[\s_-]?limit|throttl|\"status\"\s*:\s*429/i.test(ttsErrorText);
         throw new Error("TTS failed");
       }
       const blob = await res.blob();
@@ -440,10 +457,7 @@ export default function OnesaAITourismAugmentedExperience() {
       ttsAudioRef.current.volume = narrationVolume;
       await ttsAudioRef.current.play();
     } catch {
-      if (ttsQuotaBlocked) {
-        setVoiceStatus("OpenAI TTS unavailable. Using Onesa AI text guidance.");
-      }
-      // Fallback to browser TTS if OpenAI TTS fails.
+      setVoiceStatus(ttsQuotaBlocked ? "TTS throttled. Using browser voice." : "TTS unavailable. Using browser voice.");
       if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
       try {
         window.speechSynthesis.cancel();

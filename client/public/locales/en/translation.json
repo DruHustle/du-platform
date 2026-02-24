@@ -139,7 +139,27 @@
       "badge3": "Investor Tools",
       "title3": "Smart Investment Brainstorming",
       "subtitle3": "Assess risks and generate business ideas that actually succeed in the local market.",
-      "highlight3": "Data-Driven Success"
+      "highlight3": "Data-Driven Success",
+      "badge4": "Education 5.0",
+      "title4": "Innovation in Classrooms",
+      "subtitle4": "Digital learning and skills development are powering Zimbabwe's next generation of tech talent.",
+      "highlight4": "Future Skills",
+      "badge5": "Digital Trade",
+      "title5": "Technology for Logistics",
+      "subtitle5": "Smarter export and supply-chain systems create more reliable access to regional and global markets.",
+      "highlight5": "Connected Trade",
+      "badge6": "Industrial AI",
+      "title6": "Tech in Mining Operations",
+      "subtitle6": "Data-driven operations, predictive maintenance, and process optimization improve output and safety.",
+      "highlight6": "Operational Efficiency",
+      "badge7": "Agritech Growth",
+      "title7": "Smarter Farming Systems",
+      "subtitle7": "Precision agriculture and real-time monitoring support stronger yields and food security outcomes.",
+      "highlight7": "Climate-Smart Agriculture",
+      "badge8": "Diaspora Builders",
+      "title8": "Tech Talent Across Borders",
+      "subtitle8": "Diaspora professionals contribute capital, mentorship, and practical execution support for local startups.",
+      "highlight8": "Global Collaboration"
     },
     "objective_title": " Tech Enabled",
     "objective_subtitle": "Leveraging AI and digital solutions to seamlessly connect Zimbabwe and the diaspora, driving collaboration, sustainable development, and long-term economic growth.",
@@ -274,7 +294,8 @@
       "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
       "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
       "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
-      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support."
+      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support.",
+      "location_suffix": ", Zimbabwe"
     },
     "chat_with_onesa": "Chat with Onesa",
     "more_compliance_information": "More Compliance Information",
@@ -304,7 +325,32 @@
           "title": "Future-Ready Growth",
           "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
         }
+      },
+      "combined": "Africa deserves AI that understands Africa. Onesa AI was built by Diaspora Unlocked to deliver practical, locally relevant intelligence for Zimbabwe and the wider continent, not generic advice detached from local realities. We see AI sovereignty as essential for long-term growth, resilience, and strategic independence, and this platform is our commitment to building that future with and for African communities."
+    },
+    "diaspora_use_cases": {
+      "relocation": {
+        "title": "Relocation & Reintegration",
+        "detail": "Get practical guidance on housing, legal setup, schooling options, and service providers before arrival."
+      },
+      "investment": {
+        "title": "Investment Screening",
+        "detail": "Compare opportunities by sector, expected returns, regulatory readiness, and market demand signals."
+      },
+      "business_intelligence": {
+        "title": "Business Intelligence",
+        "detail": "Generate market-entry briefs for exports, pricing benchmarks, and demand snapshots by destination market."
+      },
+      "collaboration": {
+        "title": "Diaspora Collaboration",
+        "detail": "Coordinate mentors, co-investors, and operators across countries using shared project context."
       }
+    },
+    "onesa_name": "Onesa AI",
+    "onesa_meaning_badge": "Onesa = Illuminate",
+    "diaspora_ai": {
+      "title": "How Diaspora Unlocked Uses AI",
+      "subtitle": "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses."
     }
   },
   "export": {
@@ -889,52 +935,6 @@
         "d3": "Pleasant year-round temperate climate"
       }
     },
-    "evisa": {
-      "title": "Zimbabwe eVisa and Entry Guidance",
-      "subtitle": "Who qualifies, indicative costs, processing windows, and the core documents most travelers prepare before arrival.",
-      "qualification": {
-        "title": "Who qualifies",
-        "details": [
-          "Many nationalities can apply online through Zimbabwe's eVisa portal.",
-          "Some travelers may still qualify for visa on arrival depending on nationality and travel purpose.",
-          "Always confirm your category before booking flights because entry requirements can change."
-        ]
-      },
-      "costs": {
-        "title": "Indicative visa costs (USD)",
-        "details": [
-          "Single-entry visas are commonly around USD 30 for many categories.",
-          "Double-entry visas are commonly around USD 45 to USD 60 depending on nationality category.",
-          "KAZA UniVisa is typically around USD 50 when available and eligible."
-        ]
-      },
-      "processing": {
-        "title": "Typical processing times",
-        "details": [
-          "Many applications are processed within approximately 2 to 7 working days.",
-          "Complex cases can take longer if supporting checks are needed.",
-          "Apply early in peak travel periods to reduce last-minute risk."
-        ]
-      },
-      "documents": {
-        "title": "Key documents",
-        "details": [
-          "Passport valid for at least 6 months from your arrival date.",
-          "Travel itinerary and return or onward booking evidence.",
-          "Accommodation details and proof of sufficient travel funds."
-        ]
-      },
-      "disclaimer": "Visa eligibility, fees, and processing times vary by nationality and policy updates. Verify current requirements on official portals before travel.",
-      "apply_cta": "Apply via eVisa Portal",
-      "immigration_cta": "Zimbabwe Immigration",
-      "zta_cta": "Plan Your Trip (ZTA)"
-    },
-    "authorities": {
-      "title": "Official Tourism Authorities",
-      "subtitle": "Use official guidance from Zimbabwe Tourism Authority and Zimbabwe Parks and Wildlife Management Authority for permits, park information, and destination standards.",
-      "zta": "Visit Zimbabwe Tourism Authority",
-      "zimparks": "Visit ZimParks"
-    },
     "objective_title": "Our Vision",
     "objective_subtitle": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
     "cta_title": "Ready to Start Your Adventure?",
@@ -981,6 +981,18 @@
         "title": "Useful Apps",
         "description": "Find recommended travel-support applications listed by Zimbabwe Tourism Authority."
       }
+    },
+    "intro": {
+      "p1": "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality.",
+      "p2_before_ar": "When you are onsite, use Onesa's",
+      "local_guide_ar": "Local guide AR",
+      "p2_after_ar": "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip.",
+      "p3_before_gastro": "Zimbabwe's",
+      "gastronomy_tourism": "gastronomy tourism",
+      "p3_between": "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities.",
+      "cultural_tourism": "Cultural tourism",
+      "p3_after_cultural": "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes.",
+      "virtual_experience_center_cta": "Virtual Experience Center"
     }
   },
   "investment": {
