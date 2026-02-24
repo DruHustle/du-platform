@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import ZimbabweInteractiveGlobe from "@/components/ZimbabweInteractiveGlobe";
 
 const xrStore = createXRStore({ controller: { teleportPointer: {} } });
+const CLOUD_TTS_ENABLED = String(import.meta.env.VITE_ELEVENLABS_TTS_ENABLED ?? "").toLowerCase() === "true";
 
 type Hotspot = {
   targetId: string;
@@ -441,6 +442,7 @@ export default function OnesaAITourismVirtualExperience() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [isTtsEnabled, setIsTtsEnabled] = useState(true);
+  const [audioReady, setAudioReady] = useState(false);
   const [aiStatus, setAiStatus] = useState("System Ready");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showStageInfo, setShowStageInfo] = useState(false);
@@ -449,8 +451,9 @@ export default function OnesaAITourismVirtualExperience() {
   const [poiInfoText, setPoiInfoText] = useState("");
   const [poiInfoLoading, setPoiInfoLoading] = useState(false);
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
-  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(typeof Audio !== "undefined" ? new Audio() : null);
   const ttsAudioUrlRef = useRef<string | null>(null);
+  const speechUnlockedRef = useRef(false);
   const orbitControlsRef = useRef<any>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rotationAnimFrameRef = useRef<number | null>(null);
@@ -534,6 +537,46 @@ export default function OnesaAITourismVirtualExperience() {
   }, [currentDestination.summary, currentStage.caption, currentStage.title, isConversationMode, virtualNarrative]);
   const sidebarNarrationLines = useMemo(() => formatNarrationLines(sidebarNarration), [sidebarNarration]);
 
+  const unlockAudio = useCallback(async (): Promise<boolean> => {
+    if (speechUnlockedRef.current) {
+      setAudioReady(true);
+      return true;
+    }
+    speechUnlockedRef.current = true;
+    try {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.resume();
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(" ");
+        utterance.volume = 0;
+        window.speechSynthesis.speak(utterance);
+      }
+      const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtx) {
+        const ctx = new AudioCtx();
+        if (ctx.state === "suspended") await ctx.resume();
+        const buffer = ctx.createBuffer(1, 1, 22050);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(ctx.destination);
+        source.start(0);
+        source.disconnect();
+        await ctx.close();
+      }
+      setAudioReady(true);
+      return true;
+    } catch {
+      setAudioReady(false);
+      return false;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedDestinationId) return;
+    if (!destinations.length) return;
+    setSelectedDestinationId(destinations[0].id);
+  }, [destinations, selectedDestinationId]);
+
   useEffect(() => {
     if (walkStageIndex >= walkStages.length) {
       setWalkStageIndex(0);
@@ -557,12 +600,36 @@ export default function OnesaAITourismVirtualExperience() {
   }, []);
 
   useEffect(() => {
+    const unlockSpeech = () => {
+      void unlockAudio();
+    };
+    window.addEventListener("pointerdown", unlockSpeech, { once: true, passive: true, capture: true });
+    return () => window.removeEventListener("pointerdown", unlockSpeech, true);
+  }, [unlockAudio]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    const timer = window.setInterval(() => {
+      try {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }
+      } catch {
+        // no-op
+      }
+    }, 10000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     if (!selectedDestinationId || isConversationMode) return;
     const destination = destinations.find((item) => item.id === selectedDestinationId);
     if (!destination) return;
     const runNarration = async () => {
       setLoading(true);
       setAiStatus("Guide is thinking...");
+      setVirtualNarrative(destination.summary);
       try {
         const prompt = [
           "Provide a concise, visitor-friendly narration for this destination in 3-4 sentences.",
@@ -606,11 +673,87 @@ export default function OnesaAITourismVirtualExperience() {
     }
   }, [isConversationMode]);
 
-  const speakWithTts = async (text: string) => {
-    if (!text) return;
-    if (!isTtsEnabled) return;
-    let ttsQuotaBlocked = false;
-    let ttsErrorText = "";
+  const speakWithTts = async (text: string, force = false): Promise<boolean> => {
+    if (!text) return false;
+    if (!force && !isTtsEnabled) return false;
+
+    const speakWithBrowserVoice = async () => {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+      try {
+        const speakAttempt = async (useBestVoice: boolean) => {
+          window.speechSynthesis.resume();
+          window.speechSynthesis.cancel();
+          await new Promise((resolve) => window.setTimeout(resolve, 50));
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.volume = 0.9;
+          utterance.rate = 1;
+          utterance.pitch = 1;
+          const safeLang = "en-US";
+          utterance.lang = safeLang;
+
+          const voices = window.speechSynthesis.getVoices();
+          const localVoices = voices.filter((v) => v.localService);
+          const pool = localVoices.length ? localVoices : voices;
+          if (useBestVoice) {
+            const preferred =
+              pool.find((v) => v.lang.toLowerCase().startsWith("en") && /google|natural|samantha|david/i.test(v.name)) ??
+              pool.find((v) => v.default) ??
+              pool.find((v) => v.lang.toLowerCase().startsWith("en")) ??
+              pool[0];
+            if (preferred) {
+              utterance.voice = preferred;
+              utterance.lang = preferred.lang || safeLang;
+            } else {
+              utterance.lang = safeLang;
+            }
+          }
+
+          return await new Promise<boolean>((resolve) => {
+            let settled = false;
+            const finish = (ok: boolean) => {
+              if (settled) return;
+              settled = true;
+              window.clearTimeout(timer);
+              resolve(ok);
+            };
+            const timer = window.setTimeout(() => {
+              const synth = window.speechSynthesis;
+              if (synth.speaking) {
+                finish(true);
+                return;
+              }
+              finish(false);
+            }, 2300);
+            utterance.onstart = () => finish(true);
+            utterance.onend = () => finish(true);
+            utterance.onerror = () => finish(false);
+            try {
+              window.speechSynthesis.speak(utterance);
+            } catch {
+              finish(false);
+            }
+          });
+        };
+
+        let started = await speakAttempt(true);
+        if (!started) started = await speakAttempt(false);
+        return started;
+      } catch (e) {
+        console.error("TTS Error:", e);
+        return false;
+      }
+    };
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (force || isMobile) {
+      const success = await speakWithBrowserVoice();
+      if (success) return true;
+    }
+    if (!CLOUD_TTS_ENABLED) {
+      return await speakWithBrowserVoice();
+    }
+
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -621,51 +764,43 @@ export default function OnesaAITourismVirtualExperience() {
           speed: 1,
         }),
       });
-      if (!res.ok) {
-        ttsErrorText = await res.text().catch(() => "");
-        let throttledFromPayload = false;
-        try {
-          const payload = JSON.parse(ttsErrorText) as {
-            throttled?: boolean;
-            modelsTried?: Array<{ status?: number }>;
-            error?: string;
-          };
-          throttledFromPayload =
-            payload.throttled === true || (payload.modelsTried ?? []).some((item) => Number(item?.status) === 429);
-          if (payload.error && !ttsErrorText) ttsErrorText = payload.error;
-        } catch {
-          // Ignore parse errors and fallback to regex check.
+
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        if (ttsAudioRef.current) {
+          if (ttsAudioUrlRef.current) URL.revokeObjectURL(ttsAudioUrlRef.current);
+          ttsAudioUrlRef.current = url;
+          ttsAudioRef.current.src = url;
+          ttsAudioRef.current.volume = 0.9;
+          await ttsAudioRef.current.play();
+          return true;
         }
-        ttsQuotaBlocked =
-          res.status === 429 ||
-          throttledFromPayload ||
-          /insufficient_quota|quota|rate[\s_-]?limit|throttl|\"status\"\s*:\s*429/i.test(ttsErrorText);
-        throw new Error("TTS failed");
       }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      if (!ttsAudioRef.current) {
-        ttsAudioRef.current = new Audio();
-      }
-      if (ttsAudioUrlRef.current) {
-        URL.revokeObjectURL(ttsAudioUrlRef.current);
-      }
-      ttsAudioUrlRef.current = url;
-      ttsAudioRef.current.pause();
-      ttsAudioRef.current.src = url;
-      ttsAudioRef.current.volume = 0.9;
-      await ttsAudioRef.current.play();
     } catch {
-      setAiStatus(ttsQuotaBlocked ? "TTS throttled. Using browser voice." : "TTS unavailable. Using browser voice.");
-      if (typeof window === "undefined" || !window.speechSynthesis) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      const voices = window.speechSynthesis.getVoices();
-      utterance.voice = voices.find((v) => v.name.includes("Google") || v.name.includes("Natural")) || voices[0];
-      window.speechSynthesis.speak(utterance);
+      return await speakWithBrowserVoice();
     }
+    return false;
   };
+
+  const handleNarrationToggle = useCallback(() => {
+    const nextEnabled = !isTtsEnabled;
+    setIsTtsEnabled(nextEnabled);
+
+    if (!nextEnabled) {
+      window.speechSynthesis.cancel();
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+      }
+      return;
+    }
+
+    const currentText = String(virtualNarrative || currentStage.caption || currentDestination.summary || "").trim();
+    void (async () => {
+      await unlockAudio();
+      void speakWithTts(currentText, true);
+    })();
+  }, [isTtsEnabled, virtualNarrative, currentStage.caption, currentDestination.summary, unlockAudio]);
 
   useEffect(() => {
     if (isTtsEnabled) return;
@@ -700,17 +835,28 @@ export default function OnesaAITourismVirtualExperience() {
             `Destination summary: ${currentDestination.summary}`,
             "Provide concise visitor guidance in 3-5 sentences.",
           ].join("\n");
-          const { data } = await sendOnesaChatMessage({
-            messages: [{ role: "user", content: fallbackPrompt }],
-            language: i18n.resolvedLanguage ?? "en",
-          });
-          const reply = String(data?.reply ?? "").trim() || "I am currently analyzing the scenery.";
-          setVirtualNarrative(reply);
-          await speakWithTts(reply);
-          setAiStatus("Using Onesa AI fallback.");
+          try {
+            const { data } = await sendOnesaChatMessage({
+              messages: [{ role: "user", content: fallbackPrompt }],
+              language: i18n.resolvedLanguage ?? "en",
+            });
+            const reply = String(data?.reply ?? "").trim() || currentDestination.summary;
+            setVirtualNarrative(reply);
+            await speakWithTts(reply);
+            setAiStatus("Using Onesa AI fallback.");
+          } catch {
+            const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
+            setVirtualNarrative(localFallback);
+            await speakWithTts(localFallback);
+            setAiStatus("Using local guidance mode.");
+          }
           return;
         }
-        throw new Error("Whisper failed");
+        const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
+        setVirtualNarrative(localFallback);
+        await speakWithTts(localFallback);
+        setAiStatus("Using local guidance mode.");
+        return;
       }
 
       const text = whisperPayload.text;
@@ -727,7 +873,10 @@ export default function OnesaAITourismVirtualExperience() {
       await speakWithTts(reply);
       setAiStatus("System Ready");
     } catch {
-      setAiStatus("Voice Error");
+      const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
+      setVirtualNarrative(localFallback);
+      await speakWithTts(localFallback);
+      setAiStatus("Using local guidance mode.");
     } finally {
       setLoading(false);
     }
@@ -1441,7 +1590,7 @@ export default function OnesaAITourismVirtualExperience() {
                         </Button>
                         <Button
                           type="button"
-                          onClick={() => setIsTtsEnabled((prev) => !prev)}
+                          onClick={handleNarrationToggle}
                           variant="outline"
                           className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap border ${
                             isTtsEnabled
@@ -1450,8 +1599,20 @@ export default function OnesaAITourismVirtualExperience() {
                           }`}
                           aria-label={isTtsEnabled ? "Disable text-to-speech" : "Enable text-to-speech"}
                         >
-                          {isTtsEnabled ? "TTS: On" : "TTS: Off"}
+                          {isTtsEnabled ? "NARRATION: On" : "NARRATION: Off"}
                         </Button>
+                        {!audioReady ? (
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              void unlockAudio();
+                            }}
+                            variant="outline"
+                            className="h-6 px-2.5 border-zim-gold/40 text-zim-gold hover:bg-zim-gold hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap"
+                          >
+                            Enable Audio
+                          </Button>
+                        ) : null}
                       </div>
                     </div>
                     <div className="mt-2 border-t border-white/15" />

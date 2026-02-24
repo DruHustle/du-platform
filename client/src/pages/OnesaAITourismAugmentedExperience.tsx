@@ -18,6 +18,21 @@ type PlaceProfile = {
   safetyNote: string;
 };
 
+const VOICE_LANGUAGE_MAP: Record<string, string[]> = {
+  english: ["en"],
+  shona: ["sn"],
+  german: ["de"],
+  french: ["fr"],
+  spanish: ["es"],
+  ndebele: ["nd", "nr"],
+};
+
+const GENDER_KEYWORD_MAP: Record<"male" | "female", string[]> = {
+  male: ["male", "man", "david", "daniel", "george", "john", "paul", "tom", "michael", "alex"],
+  female: ["female", "woman", "samantha", "karen", "zira", "emma", "aria", "victoria", "linda", "anna", "zoe"],
+};
+const CLOUD_TTS_ENABLED = String(import.meta.env.VITE_ELEVENLABS_TTS_ENABLED ?? "").toLowerCase() === "true";
+
 // Rough geofencing used only to preselect a likely nearby destination on-device.
 function inferNearestPlace(latitude: number, longitude: number): string {
   // Lightweight location heuristic based on rough city bounds to keep this fully client-side.
@@ -230,18 +245,59 @@ export default function OnesaAITourismAugmentedExperience() {
     () => ({ ["--settings-space" as string]: `${voiceNarrationEnabled ? 0 : settingsPanelHeight}px` }),
     [voiceNarrationEnabled, settingsPanelHeight]
   );
-  const voiceLanguageMap: Record<string, string[]> = {
-    english: ["en"],
-    shona: ["sn"],
-    german: ["de"],
-    french: ["fr"],
-    spanish: ["es"],
-    ndebele: ["nd", "nr"],
-  };
-  const genderKeywordMap: Record<"male" | "female", string[]> = {
-    male: ["male", "man", "david", "daniel", "george", "john", "paul", "tom", "michael", "alex"],
-    female: ["female", "woman", "samantha", "karen", "zira", "emma", "aria", "victoria", "linda", "anna", "zoe"],
-  };
+
+  const speakWithBrowserVoice = useCallback(
+    async (text: string): Promise<boolean> => {
+      if (!text) return false;
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+      return await new Promise<boolean>((resolve) => {
+        try {
+          window.speechSynthesis.resume();
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = i18n.resolvedLanguage ?? i18n.language ?? "en-US";
+          utterance.volume = narrationVolume;
+
+          const targetPrefixes = VOICE_LANGUAGE_MAP[selectedVoiceLanguage] ?? ["en"];
+          const languageMatches = availableVoices.filter((item) =>
+            targetPrefixes.some((prefix) => item.lang.toLowerCase().startsWith(prefix))
+          );
+          const genderKeywords = GENDER_KEYWORD_MAP[selectedVoiceGender];
+          const voiceByGender = languageMatches.find((item) => {
+            const name = `${item.name} ${item.voiceURI}`.toLowerCase();
+            return genderKeywords.some((keyword) => name.includes(keyword));
+          });
+          const voice = voiceByGender ?? languageMatches[0] ?? availableVoices[0];
+          if (voice) utterance.voice = voice;
+
+          let settled = false;
+          const done = (ok: boolean) => {
+            if (settled) return;
+            settled = true;
+            resolve(ok);
+          };
+
+          utterance.onstart = () => {
+            setVoiceStatus("Narrating (Browser Voice)...");
+            done(true);
+          };
+          utterance.onerror = () => done(false);
+          window.speechSynthesis.speak(utterance);
+          window.setTimeout(() => done(window.speechSynthesis.speaking), 1800);
+        } catch {
+          resolve(false);
+        }
+      });
+    },
+    [
+      availableVoices,
+      i18n.language,
+      i18n.resolvedLanguage,
+      narrationVolume,
+      selectedVoiceGender,
+      selectedVoiceLanguage,
+    ]
+  );
 
   const handleUseMyLocation = () => {
     if (!navigator.geolocation) {
@@ -282,6 +338,8 @@ export default function OnesaAITourismAugmentedExperience() {
     setLoading(true);
     setError("");
     let response = buildLocalGuidance(selectedPlace, cameraEnabled);
+    // Render useful guidance immediately while cloud AI is still in-flight.
+    setAnswer(response);
 
     try {
       const defaultGuidancePrompt = arOverlayEnabled && cameraEnabled
@@ -348,42 +406,47 @@ export default function OnesaAITourismAugmentedExperience() {
       loadingRef.current = false;
       setLoading(false);
     }
-  }, [cameraEnabled, i18n.language, i18n.resolvedLanguage, selectedPlace.culture, selectedPlace.heritage, selectedPlace.history, selectedPlace.name]);
+  }, [cameraEnabled, i18n.language, i18n.resolvedLanguage, selectedPlace.culture, selectedPlace.heritage, selectedPlace.history, selectedPlace.name, arOverlayEnabled, checkHealth]);
+
+  const transcribeWithSpeechProvider = useCallback(
+    async (blob: Blob, provider: "elevenlabs" | "groq"): Promise<string> => {
+      const formData = new FormData();
+      formData.append("file", blob, "audio.webm");
+      formData.append("action", "stt");
+      formData.append("provider", provider);
+      const res = await fetch("/api/speech", { method: "POST", body: formData });
+      if (!res.ok) {
+        const msg = await res.text().catch(() => "");
+        throw new Error(msg || `${provider} stt failed`);
+      }
+      const payload = await res.json().catch(() => ({} as { text?: string }));
+      return String(payload?.text ?? "").trim();
+    },
+    []
+  );
 
   const processConversation = async (blob: Blob) => {
     setLoading(true);
     setVoiceStatus("Transcribing...");
     try {
-      const res = await fetch("/api/whisper", { method: "POST", body: blob });
-      const whisperPayload = await res.json().catch(() => ({} as { text?: string; error?: string }));
-      const whisperError = String(whisperPayload?.error ?? "");
-      const whisperQuotaBlocked =
-        res.status === 429 || /insufficient_quota|quota|rate[\s_-]?limit/i.test(whisperError);
-
-      if (!res.ok || !whisperPayload?.text) {
-        if (whisperQuotaBlocked) {
-          setVoiceStatus("Whisper unavailable. Falling back to Onesa AI guidance...");
-          const fallbackPrompt = [
-            "Whisper transcription is temporarily unavailable due quota/rate limits.",
-            `Current destination: ${selectedPlace.name}.`,
-            `Heritage context: ${selectedPlace.heritage}`,
-            `History context: ${selectedPlace.history}`,
-            `Culture context: ${selectedPlace.culture}`,
-            "Provide concise visitor guidance in 3-5 sentences.",
-          ].join("\n");
-          const { data } = await sendOnesaChatMessage({
-            messages: [{ role: "user", content: fallbackPrompt }],
-            language: i18n.resolvedLanguage ?? i18n.language ?? "en",
-          });
-          const reply = String(data?.reply ?? "").trim();
-          setAnswer(reply || buildLocalGuidance(selectedPlace, cameraEnabled));
-          setVoiceStatus("Using Onesa AI fallback.");
+      let text = "";
+      try {
+        setVoiceStatus("Listening (ElevenLabs)...");
+        text = await transcribeWithSpeechProvider(blob, "elevenlabs");
+      } catch {
+        try {
+          setVoiceStatus("Listening (Groq)...");
+          text = await transcribeWithSpeechProvider(blob, "groq");
+        } catch {
+          setVoiceStatus("Listening unavailable. Using local guidance mode.");
+          setAnswer(buildLocalGuidance(selectedPlace, cameraEnabled));
           return;
         }
-        throw new Error("Whisper failed");
       }
-
-      const text = whisperPayload.text;
+      if (!text) {
+        setVoiceStatus("No speech detected.");
+        return;
+      }
       setVoiceStatus("Guide is thinking...");
       const prompt = [
         `You are Onesa AI Local Guide for Zimbabwe.`,
@@ -408,40 +471,43 @@ export default function OnesaAITourismAugmentedExperience() {
     }
   };
 
-  const speakWithTts = async (text: string) => {
+  const speakWithTts = useCallback(async (text: string, force = false) => {
     if (!text) return;
-    let ttsQuotaBlocked = false;
-    let ttsErrorText = "";
+    if (force && typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.resume();
+        window.speechSynthesis.cancel();
+        const warm = new SpeechSynthesisUtterance(" ");
+        warm.volume = 0;
+        window.speechSynthesis.speak(warm);
+      } catch {
+        // no-op
+      }
+    }
+    if (!CLOUD_TTS_ENABLED) {
+      setVoiceStatus("Using browser voice.");
+      const browserOk = await speakWithBrowserVoice(text);
+      if (!browserOk) {
+        setVoiceStatus("Browser voice blocked. Tap Voice Narration On again.");
+      }
+      return;
+    }
+    let ttsUnavailable = false;
+    const femaleVoiceId = "EXAVITQu4vr4xnSDxMaL";
+    const maleVoiceId = "VR6AewLTigWG4xSOukaG";
     try {
-      const res = await fetch("/api/tts", {
+      const res = await fetch("/api/speech", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          action: "tts",
           text,
-          voice: selectedVoiceGender === "male" ? "echo" : "alloy",
-          speed: 1,
+          voiceId: selectedVoiceGender === "male" ? maleVoiceId : femaleVoiceId,
         }),
       });
       if (!res.ok) {
-        ttsErrorText = await res.text().catch(() => "");
-        let throttledFromPayload = false;
-        try {
-          const payload = JSON.parse(ttsErrorText) as {
-            throttled?: boolean;
-            modelsTried?: Array<{ status?: number }>;
-            error?: string;
-          };
-          throttledFromPayload =
-            payload.throttled === true || (payload.modelsTried ?? []).some((item) => Number(item?.status) === 429);
-          if (payload.error && !ttsErrorText) ttsErrorText = payload.error;
-        } catch {
-          // Ignore parse errors and fallback to regex check.
-        }
-        ttsQuotaBlocked =
-          res.status === 429 ||
-          throttledFromPayload ||
-          /insufficient_quota|quota|rate[\s_-]?limit|throttl|\"status\"\s*:\s*429/i.test(ttsErrorText);
-        throw new Error("TTS failed");
+        ttsUnavailable = true;
+        throw new Error("ElevenLabs TTS failed");
       }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -456,31 +522,38 @@ export default function OnesaAITourismAugmentedExperience() {
       ttsAudioRef.current.src = url;
       ttsAudioRef.current.volume = narrationVolume;
       await ttsAudioRef.current.play();
+      setVoiceStatus("Narrating...");
     } catch {
-      setVoiceStatus(ttsQuotaBlocked ? "TTS throttled. Using browser voice." : "TTS unavailable. Using browser voice.");
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      try {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = i18n.resolvedLanguage ?? i18n.language ?? "en-US";
-        utterance.volume = narrationVolume;
-        const targetPrefixes = voiceLanguageMap[selectedVoiceLanguage] ?? ["en"];
-        const languageMatches = availableVoices.filter((item) =>
-          targetPrefixes.some((prefix) => item.lang.toLowerCase().startsWith(prefix))
-        );
-        const genderKeywords = genderKeywordMap[selectedVoiceGender];
-        const voiceByGender = languageMatches.find((item) => {
-          const name = `${item.name} ${item.voiceURI}`.toLowerCase();
-          return genderKeywords.some((keyword) => name.includes(keyword));
-        });
-        const voice = voiceByGender ?? languageMatches[0] ?? availableVoices[0];
-        if (voice) utterance.voice = voice;
-        window.speechSynthesis.speak(utterance);
-      } catch {
-        // no-op
+      setVoiceStatus(ttsUnavailable ? "TTS unavailable. Using browser voice." : "Using browser voice.");
+      const browserOk = await speakWithBrowserVoice(text);
+      if (!browserOk) {
+        setVoiceStatus("Browser voice blocked. Tap Voice Narration On again.");
       }
     }
-  };
+  }, [
+    narrationVolume,
+    selectedVoiceGender,
+    speakWithBrowserVoice,
+  ]);
+
+  const handleVoiceNarrationToggle = useCallback(() => {
+    const next = !voiceNarrationEnabled;
+    setVoiceNarrationEnabled(next);
+
+    if (!next) {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+      }
+      setVoiceStatus("Voice narration off.");
+      return;
+    }
+
+    const textToRead = answer || buildLocalGuidance(selectedPlace, cameraEnabled);
+    void speakWithTts(textToRead, true);
+  }, [answer, cameraEnabled, selectedPlace, speakWithTts, voiceNarrationEnabled]);
 
   const stopRecording = useCallback(() => {
     if (!isRecording) return;
@@ -518,7 +591,7 @@ export default function OnesaAITourismAugmentedExperience() {
       setIsConversationMode(false);
       setIsRecording(false);
     }
-  }, [isRecording, processConversation]);
+  }, [isRecording]);
 
   const toggleRecording = useCallback(() => {
     if (!isConversationMode) return;
@@ -663,7 +736,7 @@ export default function OnesaAITourismAugmentedExperience() {
     // Speak only when overlay + voice narration are enabled and there is content.
     if (!arOverlayEnabled || !voiceNarrationEnabled || !answer || isConversationMode) return;
     void speakWithTts(answer);
-  }, [answer, arOverlayEnabled, voiceNarrationEnabled, isConversationMode]);
+  }, [answer, arOverlayEnabled, voiceNarrationEnabled, isConversationMode, speakWithTts]);
 
   useEffect(() => {
     if (voiceNarrationEnabled) return;
@@ -936,7 +1009,7 @@ export default function OnesaAITourismAugmentedExperience() {
                           {isConversationMode ? "Conversation: On" : "Conversation: Off"}
                         </Button>
                         <Button
-                          onClick={() => setVoiceNarrationEnabled((current) => !current)}
+                          onClick={handleVoiceNarrationToggle}
                           variant="outline"
                           className="h-6 px-2.5 border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full"
                         >

@@ -10,6 +10,7 @@ import { createHtmlPlugin } from "vite-plugin-html";
 export default defineConfig(({ mode }) => {
   // Load env vars. The third argument "" ensures all variables are loaded, not just those starting with VITE_
   const env = loadEnv(mode, path.resolve(import.meta.dirname), "");
+  const siteUrl = (env.VITE_SITE_URL || env.APP_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
   const useDevHttps = env.VITE_DEV_HTTPS !== "false";
   const certDir = path.resolve(import.meta.dirname, ".cert");
   const keyPath = path.join(certDir, "localhost-key.pem");
@@ -26,7 +27,7 @@ export default defineConfig(({ mode }) => {
         inject: {
           data: {
             // Mapping variables for EJS replacement in index.html
-            VITE_SITE_URL: env.VITE_SITE_URL,
+            VITE_SITE_URL: siteUrl,
             VITE_SITE_NAME: env.VITE_SITE_NAME || "Diaspora Unlocked Platform",
             VITE_ANALYTICS_ENDPOINT: env.VITE_ANALYTICS_ENDPOINT,
             VITE_ANALYTICS_WEBSITE_ID: env.VITE_ANALYTICS_WEBSITE_ID,

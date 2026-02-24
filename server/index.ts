@@ -41,6 +41,14 @@ import {
 } from "./db";
 import { registerApiRoutes } from "./api";
 
+process.on("unhandledRejection", (reason) => {
+  console.error("[process] Unhandled promise rejection:", reason);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("[process] Uncaught exception:", error);
+});
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -1065,9 +1073,9 @@ function getOnesaConfig() {
     .split(",")
     .map((x) => x.trim())
     .filter(Boolean);
-  const secondaryModel = process.env.ONESA_SECONDARY_MODEL ?? "";
-  const secondaryFallbackModel = process.env.ONESA_SECONDARY_FALLBACK_MODEL ?? "";
-  const secondaryModelCandidates = String(process.env.ONESA_SECONDARY_MODEL_CANDIDATES ?? "")
+  const secondaryModel = process.env.ONESA_GROK_MODEL ?? "";
+  const secondaryFallbackModel = process.env.ONESA_GROK_FALLBACK_MODEL ?? "";
+  const secondaryModelCandidates = String(process.env.ONESA_GROK_MODEL_CANDIDATES ?? "")
     .split(",")
     .map((x) => x.trim())
     .filter(Boolean);
@@ -1112,8 +1120,8 @@ function getOnesaConfig() {
     process.env.ONESA_GEMINI_API_KEY ??
     process.env.ONESA_AI_API_KEY ??
     "";
-  const secondaryOpenaiBase = String(process.env.ONESA_SECONDARY_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
-  const secondaryOpenaiApiKey = process.env.ONESA_SECONDARY_AI_API_KEY ?? "";
+  const secondaryOpenaiBase = String(process.env.ONESA_GROK_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  const secondaryOpenaiApiKey = process.env.ONESA_GROK_AI_API_KEY ?? "";
   const tertiaryOpenaiBase = String(process.env.ONESA_TERTIARY_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
   const tertiaryOpenaiApiKey = process.env.ONESA_TERTIARY_AI_API_KEY ?? "";
   const timeoutRaw = Number(process.env.ONESA_REQUEST_TIMEOUT_MS ?? "180000");
@@ -2001,10 +2009,14 @@ async function startServer() {
   });
 
   app.post("/api/auth/logout", async (req, res) => {
-    const token = await resolveAuthToken(req);
-    if (token) await deleteSession(token);
-    clearSessionCookie(res);
-    return res.json({ message: "Logged out." });
+    try {
+      const token = await resolveAuthToken(req);
+      if (token) await deleteSession(token);
+      clearSessionCookie(res);
+      return res.json({ message: "Logged out." });
+    } catch {
+      return res.status(500).json({ message: "Logout failed." });
+    }
   });
 
   app.post("/api/auth/forgot-password", async (req, res) => {
@@ -2046,18 +2058,22 @@ async function startServer() {
   });
 
   app.get("/api/auth/me", async (req, res) => {
-    const token = await resolveAuthToken(req);
-    if (!token) return res.status(401).json({ message: "Unauthorized." });
+    try {
+      const token = await resolveAuthToken(req);
+      if (!token) return res.status(401).json({ message: "Unauthorized." });
 
-    const session = await getSession(token);
-    if (!session) return res.status(401).json({ message: "Session expired." });
+      const session = await getSession(token);
+      if (!session) return res.status(401).json({ message: "Session expired." });
 
-    const user = await findUserById(Number(session.user_id));
-    if (!user) return res.status(401).json({ message: "User not found." });
+      const user = await findUserById(Number(session.user_id));
+      if (!user) return res.status(401).json({ message: "User not found." });
 
-    return res.json({
-      user: { id: user.id, fullName: user.full_name, email: user.email },
-    });
+      return res.json({
+        user: { id: user.id, fullName: user.full_name, email: user.email },
+      });
+    } catch {
+      return res.status(500).json({ message: "Failed to resolve current user." });
+    }
   });
 
   app.get("/api/search", async (req, res) => {

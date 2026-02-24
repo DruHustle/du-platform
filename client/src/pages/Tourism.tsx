@@ -558,24 +558,25 @@ export default function Tourism() {
                   })}
                 </div>
 
-                <div className="flex flex-nowrap items-center gap-2">
-                  <Link href="/onesa-ai-chat">
-                    <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap">
-                      Chat with Onesa
-                    </Button>
-                  </Link>
-                  <Link href="/onesa-ai-book-trip">
-                    <Button
-                      className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap"
-                    >
-                      Plan your trip
-                    </Button>
-                  </Link>
-                  <Link href="/onesa-ai-tourism-augmented-experince">
-                    <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap">
-                      Local guide AR
-                    </Button>
-                  </Link>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    asChild
+                    className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2.5 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap min-h-10"
+                  >
+                    <Link href="/onesa-ai-chat">Chat with Onesa</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2.5 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap min-h-10"
+                  >
+                    <Link href="/onesa-ai-book-trip">Plan your trip</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2.5 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap min-h-10"
+                  >
+                    <Link href="/onesa-ai-tourism-augmented-experince">Local guide AR</Link>
+                  </Button>
                 </div>
               </div>
 

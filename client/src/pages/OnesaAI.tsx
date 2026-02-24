@@ -59,6 +59,6 @@ export async function sendOnesaChatMessage(input: {
       messages: input.messages.map((m) => ({ role: m.role, content: m.content })),
       language: input.language,
     },
-    { timeout: 180000 }
+    { timeout: 12000 }
   );
 }

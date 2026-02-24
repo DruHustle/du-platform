@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Component, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
 
 type ArcDatum = {
@@ -14,6 +14,26 @@ type ZimbabweInteractiveGlobeProps = {
   zoomToHarare?: boolean;
 };
 
+class GlobeRenderBoundary extends Component<{ onError: () => void; children: ReactNode }, { hasError: boolean }> {
+  constructor(props: { onError: () => void; children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch() {
+    this.props.onError();
+  }
+
+  render() {
+    if (this.state.hasError) return null;
+    return this.props.children;
+  }
+}
+
 export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: ZimbabweInteractiveGlobeProps) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -25,6 +45,8 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
   const [audioBlocked, setAudioBlocked] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [zimbabweBoundary, setZimbabweBoundary] = useState<any[]>([]);
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+  const [globeCrashed, setGlobeCrashed] = useState(false);
   const wasZimbabweVisibleRef = useRef(true);
 
   const locations = useMemo(
@@ -70,6 +92,22 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
     [locations]
   );
   const showZimbabweMarker = !zoomToHarare;
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      setWebglSupported(false);
+      return;
+    }
+    try {
+      const canvas = document.createElement("canvas");
+      const context =
+        canvas.getContext("webgl", { failIfMajorPerformanceCaveat: true }) ||
+        canvas.getContext("experimental-webgl");
+      setWebglSupported(Boolean(context));
+    } catch {
+      setWebglSupported(false);
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -286,46 +324,56 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
       />
 
       <div className="absolute inset-0 flex items-center justify-center">
-        <Globe
-          ref={globeRef}
-          width={size.width}
-          height={size.height}
-        globeImageUrl="/globe/earth-blue-marble.jpg"
-        bumpImageUrl="/globe/earth-topology.png"
-        backgroundImageUrl="/globe/night-sky.png"
-        showAtmosphere
-        atmosphereColor="#3a86ff"
-        atmosphereAltitude={0.18}
-        arcsData={arcsData}
-        arcColor="color"
-        arcDashLength={0.5}
-        arcDashGap={2}
-        arcDashAnimateTime={2000}
-        arcStroke={0.4}
-        polygonsData={zimbabweBoundary}
-        polygonAltitude={0.012}
-        polygonCapColor={() => "rgba(250, 204, 21, 0.3)"}
-        polygonSideColor={() => "rgba(250, 204, 21, 0.18)"}
-        polygonStrokeColor={() => "#facc15"}
-        polygonsTransitionDuration={0}
-        onArcClick={(arc: any) =>
-          handleFlyTo({ lat: arc.endLat, lng: arc.endLng }, 1.2)
-        }
-        htmlElementsData={showZimbabweMarker ? [{ ...zimCoords, name: "ZIMBABWE" }] : []}
-        htmlElement={(d: any) => {
-          const el = document.createElement("div");
-          el.innerHTML = `
-            <div class="group flex flex-col items-center cursor-pointer">
-              <div class="h-6 w-6 flex items-center justify-center">
-                <div class="absolute h-6 w-6 animate-ping rounded-full bg-yellow-500/30"></div>
-                <div class="h-3 w-3 rounded-full bg-yellow-500 border-2 border-white shadow-[0_0_15px_#facc15]"></div>
-              </div>
-            </div>
-          `;
-          el.onclick = () => handleFlyTo(zimCoords, 1.8);
-          return el;
-        }}
-        />
+        {webglSupported === false || globeCrashed ? (
+          <div className="relative h-full w-full">
+            <img src="/globe/earth-blue-marble.jpg" alt="Globe preview" className="h-full w-full object-cover opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+            <p className="absolute left-4 bottom-4 text-[10px] uppercase tracking-widest font-black text-white/85">
+              Globe preview mode (WebGL unavailable)
+            </p>
+          </div>
+        ) : (
+          <GlobeRenderBoundary onError={() => setGlobeCrashed(true)}>
+            <Globe
+              ref={globeRef}
+              width={size.width}
+              height={size.height}
+              globeImageUrl="/globe/earth-blue-marble.jpg"
+              bumpImageUrl="/globe/earth-topology.png"
+              backgroundImageUrl="/globe/night-sky.png"
+              showAtmosphere
+              atmosphereColor="#3a86ff"
+              atmosphereAltitude={0.18}
+              arcsData={arcsData}
+              arcColor="color"
+              arcDashLength={0.5}
+              arcDashGap={2}
+              arcDashAnimateTime={2000}
+              arcStroke={0.4}
+              polygonsData={zimbabweBoundary}
+              polygonAltitude={0.012}
+              polygonCapColor={() => "rgba(250, 204, 21, 0.3)"}
+              polygonSideColor={() => "rgba(250, 204, 21, 0.18)"}
+              polygonStrokeColor={() => "#facc15"}
+              polygonsTransitionDuration={0}
+              onArcClick={(arc: any) => handleFlyTo({ lat: arc.endLat, lng: arc.endLng }, 1.2)}
+              htmlElementsData={showZimbabweMarker ? [{ ...zimCoords, name: "ZIMBABWE" }] : []}
+              htmlElement={(d: any) => {
+                const el = document.createElement("div");
+                el.innerHTML = `
+                  <div class="group flex flex-col items-center cursor-pointer">
+                    <div class="h-6 w-6 flex items-center justify-center">
+                      <div class="absolute h-6 w-6 animate-ping rounded-full bg-yellow-500/30"></div>
+                      <div class="h-3 w-3 rounded-full bg-yellow-500 border-2 border-white shadow-[0_0_15px_#facc15]"></div>
+                    </div>
+                  </div>
+                `;
+                el.onclick = () => handleFlyTo(zimCoords, 1.8);
+                return el;
+              }}
+            />
+          </GlobeRenderBoundary>
+        )}
       </div>
 
       <button
