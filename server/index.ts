@@ -1253,19 +1253,29 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   const config = getOnesaConfig();
   const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = config;
   const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
+  const hasRequestedLanguage = typeof requestedLanguage === "string" && requestedLanguage.trim().length > 0;
   const preferredLanguage = normalizeOnesaLanguage(requestedLanguage);
   const latestUserMessage = getLatestUserMessage(messages);
   const detectedUserLanguage = latestUserMessage ? detectLatestUserLanguage(latestUserMessage) : null;
-  const responseLanguage = detectedUserLanguage ?? preferredLanguage;
-  const languageInstruction = [
-    `Respond only in ${getOnesaLanguageLabel(responseLanguage)}.`,
-    "Do not mix languages in the same response unless the user explicitly asks.",
-    "Always respond in the same language as the user's latest message.",
-    `If the latest message language is ambiguous, use ${getOnesaLanguageLabel(responseLanguage)} only.`,
-    "If the user switches language, switch with them.",
-    "Do not translate unless the user asks for translation.",
-    "Do not mention language detection or switching languages in your response.",
-  ].join(" ");
+  const responseLanguage = hasRequestedLanguage ? preferredLanguage : detectedUserLanguage ?? preferredLanguage;
+  const languageInstruction = hasRequestedLanguage
+    ? [
+        `Respond only in ${getOnesaLanguageLabel(responseLanguage)}.`,
+        "Do not mix languages in the same response unless the user explicitly asks.",
+        "Treat any other-language snippets in context as metadata, not reply language targets.",
+        `Use ${getOnesaLanguageLabel(responseLanguage)} for the full reply.`,
+        "Do not translate unless the user asks for translation.",
+        "Do not mention language detection or switching languages in your response.",
+      ].join(" ")
+    : [
+        `Respond only in ${getOnesaLanguageLabel(responseLanguage)}.`,
+        "Do not mix languages in the same response unless the user explicitly asks.",
+        "Always respond in the same language as the user's latest message.",
+        `If the latest message language is ambiguous, use ${getOnesaLanguageLabel(responseLanguage)} only.`,
+        "If the user switches language, switch with them.",
+        "Do not translate unless the user asks for translation.",
+        "Do not mention language detection or switching languages in your response.",
+      ].join(" ");
   const safeFallbackReply = getOnesaLanguageFallbackReply(responseLanguage);
   const smallTalkReply = latestUserMessage
     ? getSmallTalkReply(latestUserMessage, responseLanguage)
