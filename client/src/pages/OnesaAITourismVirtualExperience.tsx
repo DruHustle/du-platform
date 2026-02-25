@@ -28,7 +28,6 @@ import { useTranslation } from "react-i18next";
 import ZimbabweInteractiveGlobe from "@/components/ZimbabweInteractiveGlobe";
 
 const xrStore = createXRStore({ controller: { teleportPointer: {} } });
-const CLOUD_TTS_ENABLED = String(import.meta.env.VITE_ELEVENLABS_TTS_ENABLED ?? "").toLowerCase() === "true";
 
 type Hotspot = {
   targetId: string;
@@ -72,6 +71,202 @@ function formatNarrationLines(text: string): string[] {
     .filter(Boolean);
 }
 
+type UiLanguage = "en" | "sn" | "nd" | "de";
+
+function normalizeUiLanguage(value: unknown): UiLanguage {
+  const raw = String(value ?? "").trim().toLowerCase();
+  if (!raw) return "en";
+  const base = raw.split("-")[0];
+  if (base === "en" || base === "sn" || base === "nd" || base === "de") return base;
+  if (raw === "shona") return "sn";
+  if (raw === "ndebele") return "nd";
+  if (raw === "german" || raw === "deutsch") return "de";
+  return "en";
+}
+
+function getLanguageLabel(language: UiLanguage): string {
+  if (language === "sn") return "Shona";
+  if (language === "nd") return "Ndebele";
+  if (language === "de") return "German";
+  return "English";
+}
+
+function buildPostIntroStartGuidance(language: UiLanguage, stage: VirtualWalkStage): string {
+  const hotspotLabel = stage.hotspots?.[0]?.label;
+  const poiLabel = stage.pointsOfInterest?.[0]?.label;
+  if (language === "sn") {
+    return [
+      "Nhanganyaya yapera. Tangai demo zvino.",
+      hotspotLabel
+        ? `Dzvanya mhete yegoridhe ine zita rekuti ${hotspotLabel} kuti mufambe kuenda kune inotevera stage.`
+        : "Dzvanya mhete dzegoridhe kuti mufambe kuenda kune inotevera stage.",
+      poiLabel
+        ? `Wobva wadzvanya point rekuti ${poiLabel} uye chiratidzo chefaira kuti muwane ruzivo rwenzvimbo.`
+        : "Wobva wadzvanya point yebhuruu nechiratidzo chefaira kuti muwane ruzivo rwenzvimbo.",
+    ].join(" ");
+  }
+  if (language === "de") {
+    return [
+      "Die Einfuehrung ist beendet. Starten Sie jetzt die Demo.",
+      hotspotLabel
+        ? `Klicken Sie auf den goldenen Ring ${hotspotLabel}, um zur naechsten Szene zu wechseln.`
+        : "Klicken Sie auf die goldenen Ringe, um zur naechsten Szene zu wechseln.",
+      poiLabel
+        ? `Klicken Sie danach auf den Punkt ${poiLabel} und auf das Dokument-Symbol fuer Ortsinformationen.`
+        : "Klicken Sie danach auf einen blauen Punkt und auf das Dokument-Symbol fuer Ortsinformationen.",
+    ].join(" ");
+  }
+  if (language === "nd") {
+    return [
+      "Isingeniso sesiphelile. Qalisa idemo khathesi.",
+      hotspotLabel
+        ? `Chofoza iringi yegolide ethi ${hotspotLabel} ukuze uye esigabeni esilandelayo.`
+        : "Chofoza amaringi egolide ukuze uye esigabeni esilandelayo.",
+      poiLabel
+        ? `Bese uchofoza iphoyinti ethi ${poiLabel} kanye lesithonjana sedokhumenti ukuze uthole ulwazi lwendawo.`
+        : "Bese uchofoza iphoyinti eliluhlaza kanye lesithonjana sedokhumenti ukuze uthole ulwazi lwendawo.",
+    ].join(" ");
+  }
+  return [
+    "The intro is complete. Start the demo now.",
+    hotspotLabel
+      ? `Click the gold movement ring labeled ${hotspotLabel} to go to the next scene.`
+      : "Click the gold movement rings to go to the next scene.",
+    poiLabel
+      ? `Then click the point named ${poiLabel} and use the document icon for place information.`
+      : "Then click a blue point and use the document icon for place information.",
+  ].join(" ");
+}
+
+const VR_UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
+  en: {
+    systemReady: "System Ready",
+    guideThinking: "Guide is thinking...",
+    requestingCloudNarration: "Requesting cloud narration...",
+    transcribing: "Transcribing...",
+    whisperFallback: "Speech transcription unavailable. Falling back to Onesa AI...",
+    onesaFallback: "Using Onesa AI fallback.",
+    localGuidance: "Using local guidance mode.",
+    listening: "Listening...",
+    micNotSupported: "Microphone not supported",
+    micDenied: "Microphone access denied",
+    noAudio: "Audio unavailable. Using browser voice.",
+    cloudQuotaExceeded: "Cloud TTS quota exceeded. Top up credits to keep cloud narration on.",
+    cloudFailed: "Cloud TTS unavailable. Using browser voice.",
+    browserBlocked: "Browser voice blocked. Tap Narration again.",
+    selectDestination: "Select destination",
+    narration: "Narration",
+    selectLocation: "Select location",
+    narrationPending: "Narration will appear here once AI guidance is generated.",
+    conversationEnabled: "enabled",
+    conversationDisabled: "disabled",
+    ambientOn: "on",
+    ambientOff: "off",
+    conversation: "Conversation",
+    ambient: "Ambient sound",
+    currentContext: "Current Context",
+    conversationOn: "Conversation: On",
+    conversationOff: "Conversation: Off",
+    ambientOnBadge: "Ambient: On",
+    ambientOffBadge: "Ambient: Off",
+    narrationOn: "NARRATION: On",
+    narrationOff: "NARRATION: Off",
+    minimize: "Minimize",
+    fullscreen: "Fullscreen",
+    autoOn: "Auto: On",
+    autoOff: "Auto: Off",
+    walkthrough: "Walkthrough",
+    close: "Close",
+    highlights: "Highlights",
+    loadingPoi: "Loading POI information...",
+    stageLabel: "Stage",
+    pointOfInterest: "Point of interest",
+    nearbyHighlights: "Nearby highlights",
+    relatedHighlights: "Related highlights",
+    enterFullscreen: "Enter fullscreen",
+    exitFullscreen: "Exit fullscreen",
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    resetView: "Reset view",
+    toggleAutoRotate: "Toggle auto rotate",
+    showPlaceInformation: "Show place information",
+    lookUp: "Look up",
+    lookLeft: "Look left",
+    lookRight: "Look right",
+    lookDown: "Look down",
+    muteAmbientSound: "Mute ambient sound",
+    enableAmbientSound: "Enable ambient sound",
+    disableTts: "Disable text-to-speech",
+    enableTts: "Enable text-to-speech",
+  },
+  sn: {
+    systemReady: "System yagadzirira",
+    guideThinking: "Gwara riri kufunga...",
+    requestingCloudNarration: "Kukumbira rondedzero yegore...",
+    transcribing: "Tiri kushandura izwi kuita chinyorwa...",
+    whisperFallback: "Kushandura izwi hakusi kuwanikwa. Tiri kushandisa Onesa AI...",
+    onesaFallback: "Kushandisa Onesa AI fallback.",
+    localGuidance: "Kushandisa gwara remuno.",
+    listening: "Tiri kuteerera...",
+    micNotSupported: "Maikorofoni haisi kutsigirwa",
+    micDenied: "Kupinda kumaikorofoni kwarambwa",
+    noAudio: "Audio haisi kuwanikwa. Kushandisa izwi rebrowser.",
+    cloudQuotaExceeded: "Makiredhiti eCloud TTS apera. Wedzera makiredhiti kuti cloud narration irambe iripo.",
+    cloudFailed: "Cloud TTS haisi kuwanikwa. Kushandisa izwi rebrowser.",
+    browserBlocked: "Izwi rebrowser rarambidzwa. Bata Narration zvakare.",
+    selectDestination: "Sarudza nzvimbo",
+    narration: "Rondedzero",
+    selectLocation: "Sarudza nzvimbo",
+    narrationPending: "Rondedzero ichaonekwa pano kana AI yapedza kugadzira gwara.",
+    conversationEnabled: "yabatidzwa",
+    conversationDisabled: "yadzimwa",
+    ambientOn: "yabatidzwa",
+    ambientOff: "yadzimwa",
+    conversation: "Hurukuro",
+    ambient: "Ruzha rwenzvimbo",
+    currentContext: "Mamiro Azvino",
+    conversationOn: "Hurukuro: Yabatidzwa",
+    conversationOff: "Hurukuro: Yadzimwa",
+    ambientOnBadge: "Ambient: Yabatidzwa",
+    ambientOffBadge: "Ambient: Yadzimwa",
+    narrationOn: "RONDEDZERO: Yabatidzwa",
+    narrationOff: "RONDEDZERO: Yadzimwa",
+    minimize: "Deredza",
+    fullscreen: "Sikirini Yakazara",
+    autoOn: "Auto: Yabatidzwa",
+    autoOff: "Auto: Yadzimwa",
+    walkthrough: "Rwendo",
+    close: "Vhara",
+    highlights: "Zvinoshamisa",
+    loadingPoi: "Tiri kurodha ruzivo rwePOI...",
+    stageLabel: "Chikamu",
+    pointOfInterest: "Nzvimbo inokosha",
+    nearbyHighlights: "Zvimwe zviri pedyo",
+    relatedHighlights: "Zvimwe zvinoenderana",
+    enterFullscreen: "Pinda fullscreen",
+    exitFullscreen: "Buda fullscreen",
+    zoomIn: "Swedera pedyo",
+    zoomOut: "Svedera kure",
+    resetView: "Dzoreredza muono",
+    toggleAutoRotate: "Batidza/dzima auto rotate",
+    showPlaceInformation: "Ratidza ruzivo rwenzvimbo",
+    lookUp: "Tarisa kumusoro",
+    lookLeft: "Tarisa kuruboshwe",
+    lookRight: "Tarisa kurudyi",
+    lookDown: "Tarisa pasi",
+    muteAmbientSound: "Dzima ambient sound",
+    enableAmbientSound: "Batidza ambient sound",
+    disableTts: "Dzima text-to-speech",
+    enableTts: "Batidza text-to-speech",
+  },
+  nd: {},
+  de: {},
+};
+
+const SILENT_WAV_DATA_URI =
+  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
+const CONVERSATION_TURN_MS = 7000;
+
 // --- 3D SUB-COMPONENTS ---
 
 function VRScene({
@@ -82,6 +277,7 @@ function VRScene({
   onNavigatePrevious,
   onPointOfInterestClick,
   onPointOfInterestInfoClick,
+  hiddenPoiInfoIconIds,
   ambientAudioEnabled,
 }: {
   stage: VirtualWalkStage;
@@ -90,7 +286,8 @@ function VRScene({
   onNavigate: (targetId: string) => void;
   onNavigatePrevious: () => void;
   onPointOfInterestClick: (poiLabel: string, poiPosition: [number, number, number]) => void;
-  onPointOfInterestInfoClick: (poiLabel: string) => void;
+  onPointOfInterestInfoClick: (poiId: string, poiLabel: string) => void;
+  hiddenPoiInfoIconIds: ReadonlySet<string>;
   ambientAudioEnabled: boolean;
 }) {
   const { scene } = useThree();
@@ -146,7 +343,8 @@ function VRScene({
           position={poi.position}
           label={poi.label}
           onClick={() => onPointOfInterestClick(poi.label, poi.position)}
-          onInfoClick={() => onPointOfInterestInfoClick(poi.label)}
+          onInfoClick={() => onPointOfInterestInfoClick(poi.id, poi.label)}
+          infoHidden={hiddenPoiInfoIconIds.has(poi.id)}
         />
       ))}
     </group>
@@ -363,11 +561,13 @@ function InterestRing({
   label,
   onClick,
   onInfoClick,
+  infoHidden,
 }: {
   position: [number, number, number];
   label: string;
   onClick: () => void;
   onInfoClick: () => void;
+  infoHidden?: boolean;
 }) {
   const { camera } = useThree();
   const ringRef = useRef<THREE.Mesh>(null);
@@ -401,19 +601,21 @@ function InterestRing({
         <circleGeometry args={[0.03, 20]} />
         <meshBasicMaterial color="#dbeafe" transparent opacity={0.95} />
       </mesh>
-      <Html distanceFactor={9} position={[0, 0.33, 0]} center>
-        <div className="flex items-center">
-          <button
-            type="button"
-            onClick={onInfoClick}
-            className="h-6 w-6 inline-flex items-center justify-center rounded-full bg-zim-gold text-zim-black border border-white/50 shadow-xl cursor-pointer hover:bg-white"
-            aria-label={`Show information for ${label}`}
-            title="POI information"
-          >
-            <FileText className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </Html>
+      {infoHidden ? null : (
+        <Html distanceFactor={9} position={[0, 0.33, 0]} center zIndexRange={[12, 0]}>
+          <div className="flex items-center">
+            <button
+              type="button"
+              onClick={onInfoClick}
+              className="h-6 w-6 inline-flex items-center justify-center rounded-full bg-zim-gold text-zim-black border border-white/50 shadow-xl cursor-pointer hover:bg-white"
+              aria-label={`Show information for ${label}`}
+              title="POI information"
+            >
+              <FileText className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
@@ -431,6 +633,21 @@ function AtmosphericParticles() {
 
 export default function OnesaAITourismVirtualExperience() {
   const { i18n } = useTranslation();
+  const uiLanguage = useMemo<UiLanguage>(
+    () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
+    [i18n.language, i18n.resolvedLanguage]
+  );
+  const ui = useMemo(
+    () => ({ ...VR_UI_COPY.en, ...(VR_UI_COPY[uiLanguage] ?? {}) }) as Record<string, string>,
+    [uiLanguage]
+  );
+  const selectedLanguageLabel = useMemo(() => getLanguageLabel(uiLanguage), [uiLanguage]);
+  const speechLanguageCode = useMemo(() => {
+    if (uiLanguage === "sn") return "sn-ZW";
+    if (uiLanguage === "nd") return "nr-ZW";
+    if (uiLanguage === "de") return "de-DE";
+    return "en-US";
+  }, [uiLanguage]);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const [virtualNarrative, setVirtualNarrative] = useState("");
@@ -443,16 +660,21 @@ export default function OnesaAITourismVirtualExperience() {
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [isTtsEnabled, setIsTtsEnabled] = useState(true);
   const [audioReady, setAudioReady] = useState(false);
-  const [aiStatus, setAiStatus] = useState("System Ready");
+  const [aiStatus, setAiStatus] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showStageInfo, setShowStageInfo] = useState(false);
   const [showPoiInfo, setShowPoiInfo] = useState(false);
   const [poiInfoTitle, setPoiInfoTitle] = useState("");
   const [poiInfoText, setPoiInfoText] = useState("");
   const [poiInfoLoading, setPoiInfoLoading] = useState(false);
+  const [hiddenPoiInfoIconIds, setHiddenPoiInfoIconIds] = useState<Set<string>>(() => new Set());
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
-  const ttsAudioRef = useRef<HTMLAudioElement | null>(typeof Audio !== "undefined" ? new Audio() : null);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const ttsAudioUrlRef = useRef<string | null>(null);
+  const cloudTtsRequestInFlightRef = useRef(false);
+  const queuedCloudNarrationRef = useRef<string | null>(null);
+  const lastVrGuidanceAtRef = useRef(0);
+  const introNarratedDestinationIdRef = useRef<string | null>(null);
   const speechUnlockedRef = useRef(false);
   const orbitControlsRef = useRef<any>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -462,6 +684,9 @@ export default function OnesaAITourismVirtualExperience() {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const recordingStream = useRef<MediaStream | null>(null);
   const audioChunks = useRef<Blob[]>([]);
+  const recordingTurnTimerRef = useRef<number | null>(null);
+  const isConversationModeRef = useRef(false);
+  const isRecordingRef = useRef(false);
   const globeTransitionTimerRef = useRef<number | null>(null);
 
   const destinations: VirtualDestination[] = useMemo(
@@ -472,13 +697,13 @@ export default function OnesaAITourismVirtualExperience() {
         image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
         vibe: "Clifftop + Coastal View",
         summary:
-          "This virtual scene uses Cape Town sample panoramas for orientation and interaction testing before final destination media is added.",
+          "Sample City is a VR demo scene showing how the experience works: pick a destination, move between 360 stages using hotspots, and listen through Narration or Conversation mode. Once Zimbabwe destination image data is uploaded, the same flow will run on those real locations.",
         experiences: [],
         coordinates: "-33.9249, 18.4241",
         locationHighlights: [
-          "Clifftop ridge perspective",
-          "Rock arch framing point",
-          "Panoramic summit viewpoint",
+          "360 stage-to-stage hotspot navigation",
+          "Point-of-interest click and info overlay flow",
+          "Narration and live conversation guidance modes",
         ],
         walkStages: [
           {
@@ -486,7 +711,7 @@ export default function OnesaAITourismVirtualExperience() {
             title: "Clifftop Vista",
             image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
             caption:
-              "High ridge orientation point with full landscape context before the falls edge.",
+              "Orientation stage for testing the core controls: look around, zoom, and inspect points of interest.",
             hotspots: [{ targetId: "vf360_2", label: "To Rock Arch View", position: [5, -1, -4] }],
             pointsOfInterest: [
               { id: "vf360_1_poi_1", label: "Ridge Edge", position: [2.1, -0.8, -5.4] },
@@ -497,7 +722,7 @@ export default function OnesaAITourismVirtualExperience() {
             id: "vf360_2",
             title: "Rock Arch View",
             image: "/images/pages/tourism/vr-walk/vf_360_02.jpg",
-            caption: "Cave-like opening framing a panoramic valley perspective.",
+            caption: "Interaction stage for moving between scenes with hotspots while testing guided narration behavior.",
             hotspots: [
               { targetId: "vf360_3", label: "To Summit Panorama", position: [4.8, -1, -3.7] },
               { targetId: "vf360_1", label: "Back to Clifftop Vista", position: [-5, -1, 4] },
@@ -512,7 +737,7 @@ export default function OnesaAITourismVirtualExperience() {
             title: "Summit Panorama",
             image: "/images/pages/tourism/vr-walk/vf_360_03.jpg",
             caption:
-              "Wide sky-and-ridge panorama to close the Cape Town sample 360 walkthrough.",
+              "Final stage showing the complete VR tour loop before production Zimbabwe destination media is connected.",
             hotspots: [{ targetId: "vf360_1", label: "Back to Clifftop Vista", position: [-4.8, -1, 3.8] }],
             pointsOfInterest: [
               { id: "vf360_3_poi_1", label: "Panorama Crest", position: [1.3, -0.8, -5.8] },
@@ -525,24 +750,58 @@ export default function OnesaAITourismVirtualExperience() {
     []
   );
 
+  const localizedDestinations = useMemo(() => {
+    if (uiLanguage !== "sn") return destinations;
+    return destinations.map((destination) => ({
+      ...destination,
+      name: "Guta Rekuyedza",
+      vibe: "Pamusoro pegomo + Muono wemahombekombe",
+      summary:
+        "Guta Rekuyedza inzvimbo yekuratidza mashandiro eVR: sarudza nzvimbo, famba pakati pema360 stages uchishandisa hotspots, uye shandisa Narration kana Conversation mode. Kana mifananidzo yenzvimbo dzekushanya dzeZimbabwe yaiswa, mashandiro aya achashanda panzvimbo chaidzo.",
+      locationHighlights: [
+        "Hotspot navigation pakati pema360 stages",
+        "Point-of-interest kubaya nekuona ruzivo",
+        "Narration neConversation guidance modes",
+      ],
+      walkStages: destination.walkStages.map((stage, idx) => ({
+        ...stage,
+        title:
+          idx === 0
+            ? "Muono wePamusoro"
+            : idx === 1
+              ? "Muono weRock Arch"
+              : "Muono Wakafara",
+        caption:
+          idx === 0
+            ? "Stage yekutanga yekuyedza ma-control: tarisa-tarisa, zoom, uye bvunza point of interest."
+            : idx === 1
+              ? "Stage yekudyidzana yekufamba pakati pezviitiko uchishandisa hotspots uye kuyedza narration."
+              : "Stage yekupedzisira inoratidza kutenderera kwakazara kweVR tisati tabatanidza media yeZimbabwe.",
+      })),
+    }));
+  }, [destinations, uiLanguage]);
+
   const currentDestination =
-    destinations.find((destination) => destination.id === selectedDestinationId) ?? destinations[0];
+    localizedDestinations.find((destination) => destination.id === selectedDestinationId) ?? localizedDestinations[0];
   const walkStages = currentDestination.walkStages;
   const currentStage = walkStages[walkStageIndex];
   const sidebarNarration = useMemo(() => {
     if (!isConversationMode) {
-      return [currentDestination.summary, `Stage: ${currentStage.title}`, currentStage.caption].join(" ");
+      return [currentDestination.summary, `${ui.stageLabel}: ${currentStage.title}`, currentStage.caption].join(" ");
     }
     return virtualNarrative;
-  }, [currentDestination.summary, currentStage.caption, currentStage.title, isConversationMode, virtualNarrative]);
+  }, [currentDestination.summary, currentStage.caption, currentStage.title, isConversationMode, ui.stageLabel, virtualNarrative]);
   const sidebarNarrationLines = useMemo(() => formatNarrationLines(sidebarNarration), [sidebarNarration]);
 
-  const unlockAudio = useCallback(async (): Promise<boolean> => {
-    if (speechUnlockedRef.current) {
-      setAudioReady(true);
-      return true;
+  const clearRecordingTurnTimer = useCallback(() => {
+    if (recordingTurnTimerRef.current !== null) {
+      window.clearTimeout(recordingTurnTimerRef.current);
+      recordingTurnTimerRef.current = null;
     }
-    speechUnlockedRef.current = true;
+  }, []);
+
+  const unlockAudio = useCallback(async (): Promise<boolean> => {
+    if (speechUnlockedRef.current && audioReady) return true;
     try {
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.resume();
@@ -550,6 +809,14 @@ export default function OnesaAITourismVirtualExperience() {
         const utterance = new SpeechSynthesisUtterance(" ");
         utterance.volume = 0;
         window.speechSynthesis.speak(utterance);
+      }
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.src = SILENT_WAV_DATA_URI;
+        ttsAudioRef.current.muted = false;
+        ttsAudioRef.current.volume = 0.01;
+        await ttsAudioRef.current.play();
+        ttsAudioRef.current.pause();
+        ttsAudioRef.current.currentTime = 0;
       }
       const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
       if (AudioCtx) {
@@ -563,19 +830,25 @@ export default function OnesaAITourismVirtualExperience() {
         source.disconnect();
         await ctx.close();
       }
+      speechUnlockedRef.current = true;
       setAudioReady(true);
       return true;
     } catch {
+      speechUnlockedRef.current = false;
       setAudioReady(false);
       return false;
     }
-  }, []);
+  }, [audioReady]);
+
+  useEffect(() => {
+    setAiStatus(ui.systemReady);
+  }, [ui.systemReady]);
 
   useEffect(() => {
     if (selectedDestinationId) return;
-    if (!destinations.length) return;
-    setSelectedDestinationId(destinations[0].id);
-  }, [destinations, selectedDestinationId]);
+    if (!localizedDestinations.length) return;
+    setSelectedDestinationId(localizedDestinations[0].id);
+  }, [localizedDestinations, selectedDestinationId]);
 
   useEffect(() => {
     if (walkStageIndex >= walkStages.length) {
@@ -624,41 +897,64 @@ export default function OnesaAITourismVirtualExperience() {
 
   useEffect(() => {
     if (!selectedDestinationId || isConversationMode) return;
-    const destination = destinations.find((item) => item.id === selectedDestinationId);
-    if (!destination) return;
+    if (introNarratedDestinationIdRef.current === selectedDestinationId) return;
+    introNarratedDestinationIdRef.current = selectedDestinationId;
+    const destination = localizedDestinations.find((item) => item.id === selectedDestinationId);
+    if (!destination) {
+      introNarratedDestinationIdRef.current = null;
+      return;
+    }
     const runNarration = async () => {
       setLoading(true);
-      setAiStatus("Guide is thinking...");
+      setAiStatus(ui.guideThinking);
       setVirtualNarrative(destination.summary);
       try {
+        const sampleCityNarrationHint =
+          destination.id === "cape_town"
+            ? "For Sample City, clearly explain this is a VR feature demo and that the same workflow will run for Zimbabwe destinations once their image data is uploaded. Mention location selection, hotspot movement, and narration/conversation audio."
+            : "";
         const prompt = [
           "Provide a concise, visitor-friendly narration for this destination in 3-4 sentences.",
+          `Response language: ${selectedLanguageLabel}.`,
           `Destination: ${destination.name}.`,
           `Summary: ${destination.summary}`,
           destination.locationHighlights?.length
             ? `Highlights: ${destination.locationHighlights.join("; ")}.`
             : "",
+          sampleCityNarrationHint,
+          `Use ${selectedLanguageLabel} only.`,
         ]
           .filter(Boolean)
           .join("\n");
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: prompt }],
-          language: i18n.resolvedLanguage ?? "en",
+          language: uiLanguage,
         });
         const reply = String(data?.reply ?? "").trim();
         const finalText = reply || destination.summary;
+        const introStage = destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
         setVirtualNarrative(finalText);
-        await speakWithTts(finalText);
+        const introFinished = await speakWithTts(finalText, false, true);
+        if (introFinished && introStage) {
+          const demoStartGuidance = buildPostIntroStartGuidance(uiLanguage, introStage);
+          await speakWithTts(demoStartGuidance);
+        }
       } catch {
-        setVirtualNarrative(destination.summary);
-        await speakWithTts(destination.summary);
+        const introStage = destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
+        const fallbackText = destination.summary;
+        setVirtualNarrative(fallbackText);
+        const introFinished = await speakWithTts(fallbackText, false, true);
+        if (introFinished && introStage) {
+          const demoStartGuidance = buildPostIntroStartGuidance(uiLanguage, introStage);
+          await speakWithTts(demoStartGuidance);
+        }
       } finally {
-        setAiStatus("System Ready");
+        setAiStatus(ui.systemReady);
         setLoading(false);
       }
     };
     void runNarration();
-  }, [destinations, i18n.resolvedLanguage, isConversationMode, selectedDestinationId]);
+  }, [localizedDestinations, ui.guideThinking, ui.systemReady, selectedLanguageLabel, isConversationMode, selectedDestinationId, uiLanguage]);
 
   // --- AUDIO & AI UTILITIES ---
 
@@ -673,31 +969,60 @@ export default function OnesaAITourismVirtualExperience() {
     }
   }, [isConversationMode]);
 
-  const speakWithTts = async (text: string, force = false): Promise<boolean> => {
+  const speakWithTts = async (text: string, force = false, waitForCompletion = false): Promise<boolean> => {
     if (!text) return false;
     if (!force && !isTtsEnabled) return false;
+    let cloudFailureReason = "";
+
+    const audio = ttsAudioRef.current;
+    const cloudPlaybackActive = Boolean(audio && !audio.paused && audio.currentSrc && !audio.currentSrc.startsWith("data:"));
+    if (cloudTtsRequestInFlightRef.current || cloudPlaybackActive) {
+      queuedCloudNarrationRef.current = text;
+      return true;
+    }
 
     const speakWithBrowserVoice = async () => {
       if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
       try {
+        if (force) {
+          await unlockAudio();
+        }
+        const synth = window.speechSynthesis;
+        const voices = synth.getVoices();
+        if (!voices.length) {
+          await new Promise<void>((resolve) => {
+            let settled = false;
+            const finish = () => {
+              if (settled) return;
+              settled = true;
+              window.clearTimeout(timerId);
+              synth.onvoiceschanged = prevHandler;
+              resolve();
+            };
+            const prevHandler = synth.onvoiceschanged;
+            synth.onvoiceschanged = () => finish();
+            const timerId = window.setTimeout(() => finish(), 1200);
+          });
+        }
+
         const speakAttempt = async (useBestVoice: boolean) => {
-          window.speechSynthesis.resume();
-          window.speechSynthesis.cancel();
-          await new Promise((resolve) => window.setTimeout(resolve, 50));
+          synth.resume();
+          synth.cancel();
 
           const utterance = new SpeechSynthesisUtterance(text);
           utterance.volume = 0.9;
           utterance.rate = 1;
           utterance.pitch = 1;
-          const safeLang = "en-US";
+          const safeLang = speechLanguageCode;
           utterance.lang = safeLang;
 
-          const voices = window.speechSynthesis.getVoices();
-          const localVoices = voices.filter((v) => v.localService);
-          const pool = localVoices.length ? localVoices : voices;
+          const runtimeVoices = synth.getVoices();
+          const localVoices = runtimeVoices.filter((v) => v.localService);
+          const pool = localVoices.length ? localVoices : runtimeVoices;
           if (useBestVoice) {
             const preferred =
-              pool.find((v) => v.lang.toLowerCase().startsWith("en") && /google|natural|samantha|david/i.test(v.name)) ??
+              pool.find((v) => v.lang.toLowerCase().startsWith(safeLang.split("-")[0])) ??
+              pool.find((v) => /google|natural|samantha|david/i.test(v.name)) ??
               pool.find((v) => v.default) ??
               pool.find((v) => v.lang.toLowerCase().startsWith("en")) ??
               pool[0];
@@ -711,25 +1036,34 @@ export default function OnesaAITourismVirtualExperience() {
 
           return await new Promise<boolean>((resolve) => {
             let settled = false;
+            let started = false;
             const finish = (ok: boolean) => {
               if (settled) return;
               settled = true;
               window.clearTimeout(timer);
               resolve(ok);
             };
+            const timerMs = waitForCompletion ? Math.min(90000, Math.max(6000, text.length * 90)) : 2300;
             const timer = window.setTimeout(() => {
-              const synth = window.speechSynthesis;
-              if (synth.speaking) {
+              if (!waitForCompletion && synth.speaking) {
+                finish(true);
+                return;
+              }
+              if (waitForCompletion && started && !synth.speaking) {
                 finish(true);
                 return;
               }
               finish(false);
-            }, 2300);
-            utterance.onstart = () => finish(true);
+            }, timerMs);
+            utterance.onstart = () => {
+              started = true;
+              setAiStatus(ui.systemReady);
+              if (!waitForCompletion) finish(true);
+            };
             utterance.onend = () => finish(true);
             utterance.onerror = () => finish(false);
             try {
-              window.speechSynthesis.speak(utterance);
+              synth.speak(utterance);
             } catch {
               finish(false);
             }
@@ -745,43 +1079,141 @@ export default function OnesaAITourismVirtualExperience() {
       }
     };
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (force || isMobile) {
-      const success = await speakWithBrowserVoice();
-      if (success) return true;
-    }
-    if (!CLOUD_TTS_ENABLED) {
-      return await speakWithBrowserVoice();
-    }
+    const playCloudResponse = async (response: Response): Promise<boolean> => {
+      if (!response.ok) {
+        cloudFailureReason = await response.text().catch(() => "");
+        return false;
+      }
+      if (!ttsAudioRef.current) return false;
+      const arrayBuffer = await response.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: "audio/mpeg" });
+      const url = URL.createObjectURL(blob);
+      if (ttsAudioUrlRef.current) URL.revokeObjectURL(ttsAudioUrlRef.current);
+      ttsAudioUrlRef.current = url;
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.src = url;
+      ttsAudioRef.current.volume = 0.9;
+      await ttsAudioRef.current.play();
+      setAiStatus(ui.systemReady);
+      if (waitForCompletion) {
+        const timeoutMs = Math.min(90000, Math.max(6000, text.length * 90));
+        await new Promise<void>((resolve) => {
+          if (!ttsAudioRef.current) {
+            resolve();
+            return;
+          }
+          const audioEl = ttsAudioRef.current;
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(timeoutId);
+            audioEl.removeEventListener("ended", finish);
+            audioEl.removeEventListener("error", finish);
+            audioEl.removeEventListener("abort", finish);
+            resolve();
+          };
+          const timeoutId = window.setTimeout(finish, timeoutMs);
+          audioEl.addEventListener("ended", finish, { once: true });
+          audioEl.addEventListener("error", finish, { once: true });
+          audioEl.addEventListener("abort", finish, { once: true });
+        });
+      }
+      return true;
+    };
 
+    const tryCloudTts = async (): Promise<boolean> => {
+      try {
+        setAiStatus(ui.requestingCloudNarration ?? ui.guideThinking);
+        const speechRes = await fetch("/api/speech", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "tts",
+            text,
+            voiceId: "EXAVITQu4vr4xnSDxMaL",
+            language: uiLanguage,
+          }),
+        });
+        if (await playCloudResponse(speechRes)) return true;
+      } catch {
+        // continue to /api/tts fallback
+      }
+      try {
+        const ttsRes = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text,
+            voiceId: "EXAVITQu4vr4xnSDxMaL",
+            language: uiLanguage,
+          }),
+        });
+        if (await playCloudResponse(ttsRes)) return true;
+      } catch {
+        // handled by browser fallback
+      }
+      return false;
+    };
+
+    cloudTtsRequestInFlightRef.current = true;
     try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text,
-          voice: "alloy",
-          speed: 1,
-        }),
-      });
-
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        if (ttsAudioRef.current) {
-          if (ttsAudioUrlRef.current) URL.revokeObjectURL(ttsAudioUrlRef.current);
-          ttsAudioUrlRef.current = url;
-          ttsAudioRef.current.src = url;
-          ttsAudioRef.current.volume = 0.9;
-          await ttsAudioRef.current.play();
-          return true;
+      try {
+        const cloudOk = await tryCloudTts();
+        if (cloudOk) return true;
+      } catch {
+        // handled by browser fallback below
+      }
+      const quotaExceeded = /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(cloudFailureReason);
+      setAiStatus(quotaExceeded ? ui.cloudQuotaExceeded : ui.cloudFailed);
+      const browserOk = await speakWithBrowserVoice();
+      if (!browserOk) {
+        setAiStatus(ui.browserBlocked);
+        return false;
+      }
+      return true;
+    } finally {
+      cloudTtsRequestInFlightRef.current = false;
+      if (isTtsEnabled && !isConversationMode) {
+        const activeAudio = ttsAudioRef.current;
+        const cloudStillPlaying = Boolean(
+          activeAudio && !activeAudio.paused && activeAudio.currentSrc && !activeAudio.currentSrc.startsWith("data:")
+        );
+        if (!cloudStillPlaying) {
+          const queued = queuedCloudNarrationRef.current;
+          if (queued) {
+            queuedCloudNarrationRef.current = null;
+            void speakWithTts(queued, false);
+          }
         }
       }
-    } catch {
-      return await speakWithBrowserVoice();
     }
-    return false;
   };
+
+  useEffect(() => {
+    const audio = ttsAudioRef.current;
+    if (!audio) return;
+    const handleCloudNarrationEnd = () => {
+      if (cloudTtsRequestInFlightRef.current) return;
+      if (!isTtsEnabled || isConversationMode) return;
+      const queued = queuedCloudNarrationRef.current;
+      if (!queued) return;
+      queuedCloudNarrationRef.current = null;
+      void speakWithTts(queued, false);
+    };
+    audio.addEventListener("ended", handleCloudNarrationEnd);
+    audio.addEventListener("error", handleCloudNarrationEnd);
+    audio.addEventListener("pause", handleCloudNarrationEnd);
+    audio.addEventListener("stalled", handleCloudNarrationEnd);
+    audio.addEventListener("abort", handleCloudNarrationEnd);
+    return () => {
+      audio.removeEventListener("ended", handleCloudNarrationEnd);
+      audio.removeEventListener("error", handleCloudNarrationEnd);
+      audio.removeEventListener("pause", handleCloudNarrationEnd);
+      audio.removeEventListener("stalled", handleCloudNarrationEnd);
+      audio.removeEventListener("abort", handleCloudNarrationEnd);
+    };
+  }, [isConversationMode, isTtsEnabled, speakWithTts]);
 
   const handleNarrationToggle = useCallback(() => {
     const nextEnabled = !isTtsEnabled;
@@ -795,12 +1227,31 @@ export default function OnesaAITourismVirtualExperience() {
       return;
     }
 
+    if (!selectedDestinationId) {
+      setAiStatus(ui.selectDestination);
+      return;
+    }
+
     const currentText = String(virtualNarrative || currentStage.caption || currentDestination.summary || "").trim();
+    if (!currentText) {
+      setAiStatus(ui.narrationPending);
+      return;
+    }
     void (async () => {
       await unlockAudio();
       void speakWithTts(currentText, true);
     })();
-  }, [isTtsEnabled, virtualNarrative, currentStage.caption, currentDestination.summary, unlockAudio]);
+  }, [
+    isTtsEnabled,
+    selectedDestinationId,
+    virtualNarrative,
+    currentStage.caption,
+    currentDestination.summary,
+    speakWithTts,
+    ui.narrationPending,
+    ui.selectDestination,
+    unlockAudio,
+  ]);
 
   useEffect(() => {
     if (isTtsEnabled) return;
@@ -811,11 +1262,21 @@ export default function OnesaAITourismVirtualExperience() {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
+    queuedCloudNarrationRef.current = null;
+    cloudTtsRequestInFlightRef.current = false;
   }, [isTtsEnabled]);
+
+  useEffect(() => {
+    isConversationModeRef.current = isConversationMode;
+  }, [isConversationMode]);
+
+  useEffect(() => {
+    isRecordingRef.current = isRecording;
+  }, [isRecording]);
 
   const processConversation = async (blob: Blob) => {
     setLoading(true);
-    setAiStatus("Transcribing...");
+    setAiStatus(ui.transcribing);
     try {
       // 1. Send to Whisper API
       const res = await fetch("/api/whisper", { method: "POST", body: blob });
@@ -826,76 +1287,132 @@ export default function OnesaAITourismVirtualExperience() {
 
       if (!res.ok || !whisperPayload?.text) {
         if (whisperQuotaBlocked) {
-          setAiStatus("Whisper unavailable. Falling back to Onesa AI...");
+          setAiStatus(ui.whisperFallback);
           const fallbackPrompt = [
             "Whisper transcription is temporarily unavailable due quota/rate limits.",
+            `Response language: ${selectedLanguageLabel}.`,
             `Destination: ${currentDestination.name}.`,
             `Current stage: ${currentStage.title}.`,
             `Stage context: ${currentStage.caption}`,
             `Destination summary: ${currentDestination.summary}`,
             "Provide concise visitor guidance in 3-5 sentences.",
+            `Use ${selectedLanguageLabel} only.`,
           ].join("\n");
           try {
             const { data } = await sendOnesaChatMessage({
               messages: [{ role: "user", content: fallbackPrompt }],
-              language: i18n.resolvedLanguage ?? "en",
+              language: uiLanguage,
             });
             const reply = String(data?.reply ?? "").trim() || currentDestination.summary;
             setVirtualNarrative(reply);
             await speakWithTts(reply);
-            setAiStatus("Using Onesa AI fallback.");
+            setAiStatus(ui.onesaFallback);
           } catch {
             const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
             setVirtualNarrative(localFallback);
             await speakWithTts(localFallback);
-            setAiStatus("Using local guidance mode.");
+            setAiStatus(ui.localGuidance);
           }
           return;
         }
         const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
         setVirtualNarrative(localFallback);
         await speakWithTts(localFallback);
-        setAiStatus("Using local guidance mode.");
+        setAiStatus(ui.localGuidance);
         return;
       }
 
       const text = whisperPayload.text;
-      setAiStatus("Guide is thinking...");
+      setAiStatus(ui.guideThinking);
 
       // 2. Send text to Onesa AI
       const { data } = await sendOnesaChatMessage({
-        messages: [{ role: "user", content: text }],
-        language: i18n.resolvedLanguage ?? "en",
+        messages: [{ role: "user", content: `Response language: ${selectedLanguageLabel}.\nUse ${selectedLanguageLabel} only.\n${text}` }],
+        language: uiLanguage,
       });
 
-      const reply = data?.reply || "I am currently analyzing the scenery.";
+      const reply = String(data?.reply ?? "").trim() || ui.guideThinking;
       setVirtualNarrative(reply);
       await speakWithTts(reply);
-      setAiStatus("System Ready");
+      setAiStatus(ui.systemReady);
     } catch {
       const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
       setVirtualNarrative(localFallback);
       await speakWithTts(localFallback);
-      setAiStatus("Using local guidance mode.");
+      setAiStatus(ui.localGuidance);
     } finally {
       setLoading(false);
     }
   };
 
+  const buildClickGuidanceNarration = useCallback(() => {
+    const hotspotLabels = (currentStage.hotspots ?? []).map((hotspot) => hotspot.label).filter(Boolean);
+    const poiLabels = (currentStage.pointsOfInterest ?? []).map((poi) => poi.label).filter(Boolean);
+    const hotspotText = hotspotLabels.length
+      ? hotspotLabels.slice(0, 3).join(", ")
+      : uiLanguage === "sn"
+        ? "mhete dzegoridhe dzekufambira mberi"
+        : "the glowing gold movement rings";
+    const poiText = poiLabels.length
+      ? poiLabels.slice(0, 2).join(", ")
+      : uiLanguage === "sn"
+        ? "mapoinzi ebhuruu"
+        : "blue points of interest";
+
+    if (uiLanguage === "sn") {
+      return [
+        `Uri pa ${currentStage.title} mu ${currentDestination.name}.`,
+        `Tinya mhete dzegoridhe kuti ufambe ku ${hotspotText}.`,
+        `Kuti uwane tsananguro yenzvimbo, tinya ${poiText}, wobva wadzvanya chiratidzo chefaira.`,
+      ].join(" ");
+    }
+
+    return [
+      `You are at ${currentStage.title} in ${currentDestination.name}.`,
+      `Tap the glowing gold rings to move to ${hotspotText}.`,
+      `For place details, tap ${poiText}, then tap the document icon.`,
+    ].join(" ");
+  }, [currentDestination.name, currentStage.hotspots, currentStage.pointsOfInterest, currentStage.title, uiLanguage]);
+
+  const handleVrPointerMissed = useCallback(() => {
+    if (!selectedDestinationId || isGlobeZoomTransitioning) return;
+    if (isConversationMode || !isTtsEnabled) return;
+    const now = Date.now();
+    if (now - lastVrGuidanceAtRef.current < 2400) return;
+    lastVrGuidanceAtRef.current = now;
+
+    const guidance = buildClickGuidanceNarration();
+    if (!guidance) return;
+    void (async () => {
+      await unlockAudio();
+      await speakWithTts(guidance);
+    })();
+  }, [
+    buildClickGuidanceNarration,
+    isConversationMode,
+    isGlobeZoomTransitioning,
+    isTtsEnabled,
+    selectedDestinationId,
+    speakWithTts,
+    unlockAudio,
+  ]);
+
   const stopRecording = useCallback(() => {
-    if (!isRecording) return;
+    if (!isRecordingRef.current) return;
+    clearRecordingTurnTimer();
     try {
       mediaRecorder.current?.stop();
     } catch {
       // no-op
     }
+    isRecordingRef.current = false;
     setIsRecording(false);
-  }, [isRecording, processConversation]);
+  }, [clearRecordingTurnTimer]);
 
   const startRecording = useCallback(async () => {
-    if (isRecording) return;
+    if (isRecordingRef.current) return;
     if (!navigator.mediaDevices?.getUserMedia) {
-      setAiStatus("Microphone not supported");
+      setAiStatus(ui.micNotSupported);
       return;
     }
     try {
@@ -905,19 +1422,44 @@ export default function OnesaAITourismVirtualExperience() {
       audioChunks.current = [];
       mediaRecorder.current.ondataavailable = (e) => audioChunks.current.push(e.data);
       mediaRecorder.current.onstop = () => {
+        clearRecordingTurnTimer();
         stream.getTracks().forEach((track) => track.stop());
         recordingStream.current = null;
-        void processConversation(new Blob(audioChunks.current));
+        isRecordingRef.current = false;
+        setIsRecording(false);
+        const recordedBlob = new Blob(audioChunks.current, {
+          type: mediaRecorder.current?.mimeType || "audio/webm",
+        });
+        void (async () => {
+          await processConversation(recordedBlob);
+          if (!isConversationModeRef.current || isRecordingRef.current) return;
+          window.setTimeout(() => {
+            if (!isConversationModeRef.current || isRecordingRef.current) return;
+            void startRecording();
+          }, 320);
+        })();
       };
       mediaRecorder.current.start();
+      clearRecordingTurnTimer();
+      recordingTurnTimerRef.current = window.setTimeout(() => {
+        if (!isConversationModeRef.current || !isRecordingRef.current) return;
+        try {
+          mediaRecorder.current?.stop();
+        } catch {
+          // no-op
+        }
+      }, CONVERSATION_TURN_MS);
+      isRecordingRef.current = true;
       setIsRecording(true);
-      setAiStatus("Listening...");
+      setAiStatus(ui.listening);
     } catch {
-      setAiStatus("Microphone access denied");
+      clearRecordingTurnTimer();
+      isRecordingRef.current = false;
+      setAiStatus(ui.micDenied);
       setIsConversationMode(false);
       setIsRecording(false);
     }
-  }, [isRecording]);
+  }, [clearRecordingTurnTimer, processConversation, ui.listening, ui.micDenied, ui.micNotSupported]);
 
   const goToNextStage = useCallback(() => {
     if (!walkStages.length) return;
@@ -1069,8 +1611,8 @@ export default function OnesaAITourismVirtualExperience() {
     }
     stopRecording();
     setIsConversationMode(false);
-    setAiStatus("System Ready");
-  }, [isConversationMode, startRecording, stopRecording]);
+    setAiStatus(ui.systemReady);
+  }, [isConversationMode, startRecording, stopRecording, ui.systemReady]);
 
   const handlePointOfInterestClick = useCallback(
     async (poiLabel: string, poiPosition: [number, number, number]) => {
@@ -1090,14 +1632,14 @@ export default function OnesaAITourismVirtualExperience() {
         }
         controls.update?.();
       }
-      setAiStatus(`Analyzing: ${poiLabel}`);
+      setAiStatus(`${ui.guideThinking} ${poiLabel}`);
       const localRichNarration = [
         `${currentDestination.name} - ${currentStage.title}.`,
-        `Point of interest: ${poiLabel}.`,
+        `${ui.pointOfInterest}: ${poiLabel}.`,
         currentStage.caption,
         currentDestination.summary,
         currentDestination.locationHighlights?.length
-          ? `Nearby highlights: ${currentDestination.locationHighlights.join(", ")}.`
+          ? `${ui.nearbyHighlights}: ${currentDestination.locationHighlights.join(", ")}.`
           : "",
       ]
         .filter(Boolean)
@@ -1105,31 +1647,33 @@ export default function OnesaAITourismVirtualExperience() {
       try {
         const prompt = [
           "You are Onesa AI local tourism guide.",
+          `Response language: ${selectedLanguageLabel}.`,
           `Destination: ${currentDestination.name}.`,
           `Stage: ${currentStage.title}.`,
           `Point of interest clicked: ${poiLabel}.`,
           `Stage context: ${currentStage.caption}`,
           `Destination summary: ${currentDestination.summary}`,
           currentDestination.locationHighlights?.length
-            ? `Related highlights: ${currentDestination.locationHighlights.join("; ")}.`
+            ? `${ui.relatedHighlights}: ${currentDestination.locationHighlights.join("; ")}.`
             : "",
           "Provide 4-6 short sentences describing why this exact point matters, what visitors should notice, and one practical tip.",
+          `Use ${selectedLanguageLabel} only.`,
         ]
           .filter(Boolean)
           .join("\n");
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: prompt }],
-          language: i18n.resolvedLanguage ?? "en",
+          language: uiLanguage,
         });
         const enrichedNarration = String(data?.reply ?? "").trim() || localRichNarration;
         setVirtualNarrative(enrichedNarration);
-        setAiStatus(`Point selected: ${poiLabel}`);
+        setAiStatus(`${ui.systemReady}: ${poiLabel}`);
         if (!isConversationMode) {
           await speakWithTts(enrichedNarration);
         }
       } catch {
         setVirtualNarrative(localRichNarration);
-        setAiStatus(`Point selected: ${poiLabel}`);
+        setAiStatus(`${ui.systemReady}: ${poiLabel}`);
         if (!isConversationMode) {
           await speakWithTts(localRichNarration);
         }
@@ -1141,23 +1685,35 @@ export default function OnesaAITourismVirtualExperience() {
       currentDestination.summary,
       currentStage.caption,
       currentStage.title,
-      i18n.resolvedLanguage,
+      selectedLanguageLabel,
       isConversationMode,
       setAutoRotateEnabled,
+      ui.guideThinking,
+      ui.nearbyHighlights,
+      ui.pointOfInterest,
+      ui.relatedHighlights,
+      ui.systemReady,
+      uiLanguage,
     ]
   );
 
   const handlePointOfInterestInfoClick = useCallback(
-    async (poiLabel: string) => {
+    async (poiId: string, poiLabel: string) => {
+      setHiddenPoiInfoIconIds((prev) => {
+        if (prev.has(poiId)) return prev;
+        const next = new Set(prev);
+        next.add(poiId);
+        return next;
+      });
       setShowPoiInfo(true);
       setPoiInfoTitle(`${currentDestination.name} - ${poiLabel}`);
       setPoiInfoLoading(true);
       const fallbackInfo = [
-        `Point of interest: ${poiLabel}.`,
+        `${ui.pointOfInterest}: ${poiLabel}.`,
         currentStage.caption,
         currentDestination.summary,
         currentDestination.locationHighlights?.length
-          ? `Related highlights: ${currentDestination.locationHighlights.join(", ")}.`
+          ? `${ui.relatedHighlights}: ${currentDestination.locationHighlights.join(", ")}.`
           : "",
       ]
         .filter(Boolean)
@@ -1165,16 +1721,18 @@ export default function OnesaAITourismVirtualExperience() {
       try {
         const prompt = [
           "You are Onesa AI tourism guide.",
+          `Response language: ${selectedLanguageLabel}.`,
           `Destination: ${currentDestination.name}.`,
           `Stage: ${currentStage.title}.`,
           `Point of interest: ${poiLabel}.`,
           `Stage context: ${currentStage.caption}`,
           `Destination summary: ${currentDestination.summary}`,
           "Provide detailed POI information in 4-6 concise sentences: what this spot is, why it matters, what to notice, and one visitor tip.",
+          `Use ${selectedLanguageLabel} only.`,
         ].join("\n");
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: prompt }],
-          language: i18n.resolvedLanguage ?? "en",
+          language: uiLanguage,
         });
         const info = String(data?.reply ?? "").trim() || fallbackInfo;
         setPoiInfoText(info);
@@ -1190,7 +1748,10 @@ export default function OnesaAITourismVirtualExperience() {
       currentDestination.summary,
       currentStage.caption,
       currentStage.title,
-      i18n.resolvedLanguage,
+      selectedLanguageLabel,
+      ui.pointOfInterest,
+      ui.relatedHighlights,
+      uiLanguage,
     ]
   );
 
@@ -1211,6 +1772,10 @@ export default function OnesaAITourismVirtualExperience() {
         URL.revokeObjectURL(ttsAudioUrlRef.current);
         ttsAudioUrlRef.current = null;
       }
+      clearRecordingTurnTimer();
+      isRecordingRef.current = false;
+      queuedCloudNarrationRef.current = null;
+      cloudTtsRequestInFlightRef.current = false;
       try {
         mediaRecorder.current?.stop();
       } catch {
@@ -1219,7 +1784,7 @@ export default function OnesaAITourismVirtualExperience() {
       recordingStream.current?.getTracks().forEach((track) => track.stop());
       recordingStream.current = null;
     };
-  }, []);
+  }, [clearRecordingTurnTimer]);
 
   const toggleFullscreen = async () => {
     if (!containerRef.current) return;
@@ -1248,6 +1813,7 @@ export default function OnesaAITourismVirtualExperience() {
 
   return (
     <Layout>
+      <audio ref={ttsAudioRef} preload="auto" style={{ display: "none" }} />
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
@@ -1279,9 +1845,9 @@ export default function OnesaAITourismVirtualExperience() {
                     }}
                   >
                     <option value="" disabled>
-                      Select destination
+                      {ui.selectDestination}
                     </option>
-                    {destinations.map((destination) => (
+                    {localizedDestinations.map((destination) => (
                       <option key={destination.id} value={destination.id}>
                         {destination.name}
                       </option>
@@ -1291,7 +1857,7 @@ export default function OnesaAITourismVirtualExperience() {
                 
                 <div className="mt-2 border-t border-white/10 pt-3">
                   <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">
-                    {selectedDestinationId ? "Narration" : "Select location"}
+                    {selectedDestinationId ? ui.narration : ui.selectLocation}
                   </p>
                   {!selectedDestinationId ? null : sidebarNarrationLines.length > 0 ? (
                     <div className="space-y-1.5">
@@ -1310,12 +1876,12 @@ export default function OnesaAITourismVirtualExperience() {
                     </div>
                   ) : (
                     <p className="text-sm text-white/70 leading-relaxed">
-                      Narration will appear here once AI guidance is generated.
+                      {ui.narrationPending}
                     </p>
                   )}
                 </div>
                 <p className="m-0 text-[11px] text-white/60 leading-relaxed mt-auto">
-                  Conversation {isConversationMode ? "enabled" : "disabled"}. Ambient sound is {isSoundEnabled ? "on" : "off"}.
+                  {ui.conversation} {isConversationMode ? ui.conversationEnabled : ui.conversationDisabled}. {ui.ambient} {isSoundEnabled ? ui.ambientOn : ui.ambientOff}.
                 </p>
               </div>
 
@@ -1338,6 +1904,9 @@ export default function OnesaAITourismVirtualExperience() {
                     <Canvas
                       camera={{ position: [0, 0, 0.1], fov: 65 }}
                       gl={{ antialias: true, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
+                      onPointerMissed={() => {
+                        handleVrPointerMissed();
+                      }}
                       onCreated={({ camera }) => {
                         cameraRef.current = camera as THREE.PerspectiveCamera;
                       }}
@@ -1356,6 +1925,7 @@ export default function OnesaAITourismVirtualExperience() {
                           }}
                           onPointOfInterestClick={handlePointOfInterestClick}
                           onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
+                          hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
                           ambientAudioEnabled={!isConversationMode && isSoundEnabled}
                         />
                         <OrbitControls
@@ -1378,10 +1948,10 @@ export default function OnesaAITourismVirtualExperience() {
                       onClick={() => void toggleFullscreen()}
                       variant="outline" 
                       className="h-10 px-3 rounded-full border-white/20 bg-black/40 text-white flex items-center gap-1.5"
-                      aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                      aria-label={isFullscreen ? ui.exitFullscreen : ui.enterFullscreen}
                     >
                       <span className="text-[9px] font-black uppercase tracking-widest">
-                        {isFullscreen ? "Minimize" : "Fullscreen"}
+                        {isFullscreen ? ui.minimize : ui.fullscreen}
                       </span>
                       {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
                     </Button>
@@ -1399,7 +1969,7 @@ export default function OnesaAITourismVirtualExperience() {
                           onClick={() => zoomView("in")}
                           variant="outline"
                           className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label="Zoom in"
+                          aria-label={ui.zoomIn}
                         >
                           <ZoomIn className="h-4 w-4" />
                         </Button>
@@ -1408,7 +1978,7 @@ export default function OnesaAITourismVirtualExperience() {
                           onClick={() => zoomView("out")}
                           variant="outline"
                           className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label="Zoom out"
+                          aria-label={ui.zoomOut}
                         >
                           <ZoomOut className="h-4 w-4" />
                         </Button>
@@ -1417,7 +1987,7 @@ export default function OnesaAITourismVirtualExperience() {
                           onClick={resetView}
                           variant="outline"
                           className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label="Reset view"
+                          aria-label={ui.resetView}
                         >
                           <RotateCcw className="h-4 w-4" />
                         </Button>
@@ -1430,16 +2000,16 @@ export default function OnesaAITourismVirtualExperience() {
                               ? "bg-zim-gold text-zim-black border-zim-gold"
                               : "border-white/20 bg-black/50 text-white"
                           }`}
-                          aria-label="Toggle auto rotate"
+                          aria-label={ui.toggleAutoRotate}
                         >
-                          {autoRotateEnabled ? "Auto: On" : "Auto: Off"}
+                          {autoRotateEnabled ? ui.autoOn : ui.autoOff}
                         </Button>
                         <Button
                           type="button"
                           onClick={() => setShowStageInfo(true)}
                           variant="outline"
                           className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label="Show place information"
+                          aria-label={ui.showPlaceInformation}
                         >
                           <CircleHelp className="h-4 w-4" />
                         </Button>
@@ -1456,7 +2026,7 @@ export default function OnesaAITourismVirtualExperience() {
                               type="button"
                               onClick={() => rotateView("up")}
                               className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label="Look up"
+                              aria-label={ui.lookUp}
                             >
                               <ArrowUp className="h-4 w-4" />
                             </Button>
@@ -1465,7 +2035,7 @@ export default function OnesaAITourismVirtualExperience() {
                               type="button"
                               onClick={() => rotateView("left")}
                               className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label="Look left"
+                              aria-label={ui.lookLeft}
                             >
                               <ArrowLeft className="h-4 w-4" />
                             </Button>
@@ -1474,7 +2044,7 @@ export default function OnesaAITourismVirtualExperience() {
                               type="button"
                               onClick={() => rotateView("right")}
                               className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label="Look right"
+                              aria-label={ui.lookRight}
                             >
                               <ArrowRight className="h-4 w-4" />
                             </Button>
@@ -1483,7 +2053,7 @@ export default function OnesaAITourismVirtualExperience() {
                               type="button"
                               onClick={() => rotateView("down")}
                               className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label="Look down"
+                              aria-label={ui.lookDown}
                             >
                               <ArrowDown className="h-4 w-4" />
                             </Button>
@@ -1491,14 +2061,14 @@ export default function OnesaAITourismVirtualExperience() {
                           </div>
                         </div>
                         <p className="text-[9px] uppercase tracking-widest font-black text-white/75 pointer-events-none">
-                          Walkthrough {walkStageIndex + 1}/{walkStages.length}
+                          {ui.walkthrough} {walkStageIndex + 1}/{walkStages.length}
                         </p>
                       </div>
                     </>
                   ) : null}
 
                   {showStageInfo && selectedDestinationId ? (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/65 p-4">
+                    <div className="absolute inset-0 z-[120] flex items-center justify-center bg-black/65 p-4">
                       <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
                         <div className="flex items-center justify-between gap-2">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
@@ -1509,14 +2079,14 @@ export default function OnesaAITourismVirtualExperience() {
                             variant="outline"
                             className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
                           >
-                            Close
+                            {ui.close}
                           </Button>
                         </div>
                         <p className="text-sm text-white/80 mt-3 leading-relaxed">{currentStage.caption}</p>
                         <p className="text-sm text-white/70 mt-2 leading-relaxed">{currentDestination.summary}</p>
                         {currentDestination.locationHighlights?.length ? (
                           <div className="mt-3">
-                            <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">Highlights</p>
+                            <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">{ui.highlights}</p>
                             <div className="space-y-1">
                               {currentDestination.locationHighlights.map((item) => (
                                 <p key={item} className="text-xs text-white/70 leading-relaxed">
@@ -1531,7 +2101,7 @@ export default function OnesaAITourismVirtualExperience() {
                   ) : null}
 
                   {showPoiInfo && selectedDestinationId ? (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/65 p-4">
+                    <div className="absolute inset-0 z-[130] flex items-center justify-center bg-black/65 p-4">
                       <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
                         <div className="flex items-center justify-between gap-2">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
@@ -1543,11 +2113,11 @@ export default function OnesaAITourismVirtualExperience() {
                             variant="outline"
                             className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
                           >
-                            Close
+                            {ui.close}
                           </Button>
                         </div>
                         {poiInfoLoading ? (
-                          <p className="text-sm text-white/80 mt-3 leading-relaxed">Loading POI information...</p>
+                          <p className="text-sm text-white/80 mt-3 leading-relaxed">{ui.loadingPoi}</p>
                         ) : (
                           <p className="text-sm text-white/80 mt-3 leading-relaxed">{poiInfoText}</p>
                         )}
@@ -1563,7 +2133,7 @@ export default function OnesaAITourismVirtualExperience() {
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <MapPin className="h-2.5 w-2.5 text-zim-gold" />
-                        <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold">Current Context</p>
+                        <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold">{ui.currentContext}</p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
@@ -1577,16 +2147,16 @@ export default function OnesaAITourismVirtualExperience() {
                           }`}
                         >
                           <MessageSquare className="h-3 w-3 mr-1" />
-                          {isConversationMode ? "Conversation: On" : "Conversation: Off"}
+                          {isConversationMode ? ui.conversationOn : ui.conversationOff}
                         </Button>
                         <Button
                           onClick={() => setIsSoundEnabled((prev) => !prev)}
                           variant="outline"
                           className="h-6 px-2.5 border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap"
-                          aria-label={isSoundEnabled ? "Mute ambient sound" : "Enable ambient sound"}
+                          aria-label={isSoundEnabled ? ui.muteAmbientSound : ui.enableAmbientSound}
                         >
                           {isSoundEnabled ? <Volume2 className="h-3 w-3 mr-1" /> : <VolumeX className="h-3 w-3 mr-1" />}
-                          {isSoundEnabled ? "Ambient: On" : "Ambient: Off"}
+                          {isSoundEnabled ? ui.ambientOnBadge : ui.ambientOffBadge}
                         </Button>
                         <Button
                           type="button"
@@ -1597,22 +2167,10 @@ export default function OnesaAITourismVirtualExperience() {
                               ? "bg-zim-gold text-zim-black border-zim-gold hover:bg-white"
                               : "border-white/20 text-white hover:bg-white hover:text-zim-black"
                           }`}
-                          aria-label={isTtsEnabled ? "Disable text-to-speech" : "Enable text-to-speech"}
+                          aria-label={isTtsEnabled ? ui.disableTts : ui.enableTts}
                         >
-                          {isTtsEnabled ? "NARRATION: On" : "NARRATION: Off"}
+                          {isTtsEnabled ? ui.narrationOn : ui.narrationOff}
                         </Button>
-                        {!audioReady ? (
-                          <Button
-                            type="button"
-                            onClick={() => {
-                              void unlockAudio();
-                            }}
-                            variant="outline"
-                            className="h-6 px-2.5 border-zim-gold/40 text-zim-gold hover:bg-zim-gold hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap"
-                          >
-                            Enable Audio
-                          </Button>
-                        ) : null}
                       </div>
                     </div>
                     <div className="mt-2 border-t border-white/15" />
