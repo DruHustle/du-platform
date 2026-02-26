@@ -17,7 +17,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LOCALES_DIR = ROOT / "client" / "public" / "locales"
+LOCALES_DIR = ROOT / "frontend" / "public" / "locales"
 EN_PATH = LOCALES_DIR / "en" / "translation.json"
 
 # Google translate API language codes.

@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = process.cwd();
-const appPath = path.join(repoRoot, "client", "src", "App.tsx");
-const sitemapPath = path.join(repoRoot, "client", "public", "sitemap.xml");
+const appPath = path.join(repoRoot, "frontend", "src", "App.tsx");
+const sitemapPath = path.join(repoRoot, "frontend", "public", "sitemap.xml");
 const siteUrl = (process.env.SITE_URL || "https://www.diasporaunlocked.com").replace(/\/+$/, "");
 
 const appSource = fs.readFileSync(appPath, "utf8");

@@ -57,7 +57,7 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 
 ```
 zigd-platform/
-├── client/
+├── frontend/
 │   ├── public/              # Static assets & localization files
 │   │   ├── images/          # High-quality visual assets
 │   │   └── locales/         # i18n translation JSONs (en, de, sn, nd)
@@ -77,6 +77,7 @@ zigd-platform/
 │   │   ├── App.tsx          # Main app with routing
 │   │   └── ...
 │   └── index.html
+├── backend/                 # Express API backend
 ├── package.json
 └── ...
 ```
@@ -93,14 +94,14 @@ zigd-platform/
 # Install dependencies
 pnpm install
 
-# Start development server
+# Start development environment
 pnpm dev
 
 # Build for production
 pnpm build
 ```
 
-The development server will start at `http://localhost:3000`
+The frontend app will start at `http://localhost:3000`
 
 ## Payment Provider Setup
 
@@ -118,7 +119,7 @@ The shop supports Stripe, PayPal, and Amazon Pay in production, plus a Dummy Gat
 
 1. Create a PayPal Business account at [paypal.com/business](https://www.paypal.com/business/).
 2. Go to [developer.paypal.com](https://developer.paypal.com/) and create a REST app.
-3. Capture sandbox and live client credentials.
+3. Capture sandbox and live app credentials.
 4. Add credentials to your deployment environment.
 5. Validate checkout flows using PayPal sandbox accounts before going live.
 

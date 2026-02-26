@@ -3,7 +3,7 @@
 ## Folder Structure
 
 ```text
-server/
+backend/
   controllers/
     remittanceController.ts
     airtimeController.ts
@@ -26,12 +26,12 @@ server/
     failedAttemptLogger.ts
 prisma/
   schema.prisma
-client/src/components/
+frontend/src/components/
   SendMoneyForm.jsx
   AirtimeTopupForm.jsx
 ```
 
-## Example TerraPay API Call (server-side)
+## Example TerraPay API Call (backend-side)
 
 ```ts
 const provider = new TerraPayProvider();
@@ -80,10 +80,10 @@ try {
 
 ## Security Notes
 
-- All TerraPay and Reloadly credentials are loaded from server environment variables.
-- All provider calls are server-side only.
+- All TerraPay and Reloadly credentials are loaded from backend environment variables.
+- All provider calls are backend-side only.
 - JWT is required for `/api/remittance/*` and `/api/airtime/*`.
-- Basic in-memory rate limiting is applied per client IP.
+- Basic in-memory rate limiting is applied per requester IP.
 - Failed attempts are persisted to `financial_failed_attempts`.
 - Standard API response format is enforced via `successResponse` and `errorResponse`.
 - Compliance notice is returned and displayed in UI:
