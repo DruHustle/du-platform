@@ -40,7 +40,6 @@
   "nav": {
     "home": "Startseite",
     "shop": "Shop",
-    "export": "Exporte",
     "tourism": "Tourismus",
     "investment": "Investitionen",
     "trade": "Handel",
@@ -72,13 +71,13 @@
     "technology_capabilities": "Technologische Kapazitäten",
     "technology_capabilities_desc": "Simbabwes Technologie- und Innovationslandschaft",
     "technology_industries": "Technologiebranchen",
-    "technology_industries_desc": "Wichtige Technologiesektoren in Simbabwe"
+    "technology_industries_desc": "Wichtige Technologiesektoren in Simbabwe",
+    "payments": "Payments"
   },
   "home": {
     "made_in_zimbabwe_alt": "Hergestellt in Simbabwe",
     "hero_title": "Diaspora erschliesen",
     "hero_subtitle": "Beschleunigung von IKT, Handel, Tourismus und Investitionen für die Vision 2030",
-    "export_hub": "Exporte",
     "tourism": "Tourismus",
     "technology": "Technologie",
     "investments": "Investitionen",
@@ -92,11 +91,6 @@
     "view_data": "Wirtschaftsdaten ansehen",
     "success_stories": "Erfolgsgeschichten",
     "modules": {
-      "export": {
-        "title": "Exporte",
-        "desc": "Greifen Sie auf EU-Marktanforderungen zu und vernetzen Sie sich mit verifizierten Partnern für den Export.",
-        "stats": "Verifizierte Partner"
-      },
       "tourism": {
         "title": "Tourismus",
         "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen und planen Sie Ihren Besuch.",
@@ -349,252 +343,6 @@
     "diaspora_ai": {
       "title": "Wie Diaspora Unlocked KI einsetzt",
       "subtitle": "Onesa AI unterstützt die gesamte Diaspora-Reise: von Wiederanbindung und Rückkehr bis zur Bewertung von Chancen und dem Betrieb von Unternehmen."
-    }
-  },
-  "export": {
-    "hero": {
-      "badge1": "EU-Marktzugang",
-      "title1": "Europäische Märkte erschließen",
-      "desc1": "Navigieren Sie mühelos durch EU-Vorschriften und Zertifizierungen, um Ihre simbabwischen Produkte zu exportieren.",
-      "highlight1": "Vereinfachte Compliance",
-      "badge2": "Fokus Deutschland",
-      "title2": "Zielmarkt Deutschland",
-      "desc2": "Spezifische Einblicke und Partner für den deutschen Markt, ein wichtiges Tor nach Europa.",
-      "highlight2": "Direkter Markteinstieg",
-      "badge3": "Handelsabkommen",
-      "title3": "EPA & ESA nutzen",
-      "desc3": "Profitieren Sie von Wirtschaftspartnerschaftsabkommen für zoll- und quotenfreien Zugang.",
-      "highlight3": "Präferenzzugang",
-      "badge4": "Globale Reichweite",
-      "title4": "Erweitern Sie Ihren Horizont",
-      "desc4": "Vernetzen Sie sich mit einem weltweiten Netzwerk von Käufern und Distributoren.",
-      "highlight4": "Weltweite Chancen",
-      "badge5": "Fokus Gartenbau",
-      "title5": "Exporte von „Grünem Gold“",
-      "desc5": "Spezialisierte Unterstützung für Frischwaren, Blumen und Bio-Produkte.",
-      "highlight5": "Hochwertige Nutzpflanzen",
-      "badge6": "Produktionsschub",
-      "title6": "Industrielle Exporte",
-      "desc6": "Beratung für Industriegüter, Textilien und verarbeitete Lebensmittel.",
-      "highlight6": "Wertschöpfungsprodukte",
-      "badge7": "Market Intelligence",
-      "title7": "High-Demand Product Windows",
-      "desc7": "Track demand and standards for high-value crops and specialty products in target EU markets.",
-      "highlight7": "Buyer-Aligned Supply",
-      "badge8": "Compliance Advantage",
-      "title8": "Certification-Ready Exports",
-      "desc8": "Use traceability, quality controls, and food-safety systems to secure repeat EU buyer contracts.",
-      "highlight8": "Trust and Quality",
-      "badge9": "Niche Growth",
-      "title9": "Natural Oils and Botanicals",
-      "desc9": "Develop premium natural products for cosmetics and wellness categories with strong EU demand.",
-      "highlight9": "Emerging Segments"
-    },
-    "objective_title": "Exporte fördern, Sie stärken",
-    "objective_subtitle": "Verbindung von Produkten, Partnern und Marktinformationen, um Exporteuren den Erfolg in der EU zu ermöglichen.",
-    "explore_market_requirements": "Marktanforderungen erkunden",
-    "contact_us": "Kontaktieren Sie uns",
-    "contact_form_title": "Exporte-Anfrage",
-    "contact_form_subtitle": "Füllen Sie das Formular aus, um mit unseren Exportspezialisten in Kontakt zu treten.",
-    "market_requirements_title": "EU-Marktanforderungen",
-    "market_requirements_subtitle": "Verstehen Sie die spezifischen Vorschriften, Zertifizierungen und Standards für den Export nach Deutschland.",
-    "german_requirements": {
-      "food_products": {
-        "category": "Lebensmittel",
-        "requirements": [
-          "EU-Lebensmittelsicherheitsvorschriften (z. B. HACCP)",
-          "Rückstandshöchstmengen für Pestizide (MRLs)",
-          "Kennzeichnungspflichten (Zutaten, Allergene, Herkunft)",
-          "Veterinär- und Pflanzengesundheitszeugnisse"
-        ],
-        "price": "Hohe Compliance-Kosten"
-      },
-      "textiles_leather": {
-        "category": "Textilien & Leder",
-        "requirements": [
-          "REACH-Verordnung (Chemikalien)",
-          "Entflammbarkeitsnormen",
-          "Kennzeichnung (Materialzusammensetzung, Pflegehinweise)",
-          "Ethische Beschaffung & Nachhaltigkeitszertifikate"
-        ],
-        "price": "Moderate Compliance-Kosten"
-      },
-      "arts_crafts": {
-        "category": "Kunst & Handwerk",
-        "requirements": [
-          "CE-Kennzeichnung (falls zutreffend, z. B. Spielzeug)",
-          "Sicherheitsdatenblätter (MSDS)",
-          "Zollerklärungen und Tarife",
-          "Rechte an geistigem Eigentum"
-        ],
-        "price": "Niedrige Compliance-Kosten"
-      },
-      "agricultural_products": {
-        "category": "Landwirtschaftliche Produkte",
-        "requirements": [
-          "GlobalG.A.P. Zertifizierung",
-          "Bio-Zertifizierungen (EU-Bio-Siegel)",
-          "Rückverfolgbarkeitssysteme",
-          "Qualitäts- und Sortierstandards"
-        ],
-        "price": "Hohe Compliance-Kosten"
-      }
-    },
-    "product_intelligence_badge": "Informationen",
-    "product_intelligence_title": "Produktspezifische Marktanalysen",
-    "product_intelligence_subtitle": "Bleiben Sie vorn mit Echtzeitdaten zu Produktnachfrage, Preisen und Käuferpräferenzen.",
-    "market_intelligence_requirements": "Wichtige Anforderungen:",
-    "market_intelligence_buyers": "Potenzielle Käufer:",
-    "market_intelligence": {
-      "blueberries": {
-        "product": "Blaubeeren",
-        "status": "Hohe Nachfrage",
-        "requirements": [
-          "GlobalG.A.P. Zertifizierung ist unerlässlich.",
-          "Strikte Einhaltung der EU-MRLs für Pestizide.",
-          "Verpackung muss EU-Standards für Frischwaren entsprechen.",
-          "Konsistente Lieferkette und Kühllagerung sind kritisch."
-        ],
-        "buyers": [
-          "LIDL",
-          "EDEKA",
-          "REWE"
-        ]
-      },
-      "honey": {
-        "product": "Honig",
-        "status": "Wachsende Nische",
-        "requirements": [
-          "Einhaltung der EU-Honigrichtlinie (Reinheit, Herkunft).",
-          "Rückstandsüberwachung auf Antibiotika und Schwermetalle.",
-          "Bio-Zertifizierung bietet signifikante Aufschläge.",
-          "Rückverfolgbarkeit vom Bienenstock bis ins Regal ist sehr wichtig."
-        ],
-        "buyers": "Feinkostläden, Biomärkte"
-      },
-      "natural_oils": {
-        "product": "Natürliche Öle (Marula)",
-        "status": "Aufstrebender Markt",
-        "requirements": [
-          "COSMOS- oder NaTrue-Zertifizierung für Kosmetika.",
-          "Dokumentation nachhaltiger Beschaffungspraktiken.",
-          "Qualitätskontrolle für Reinheit und Fettsäureprofil.",
-          "Klare Kennzeichnung des botanischen Namens und der Herkunft."
-        ],
-        "buyers1": "Kosmetikhersteller",
-        "buyers2": "Wellness-Marken"
-      },
-      "demand_outlook": "Demand Outlook",
-      "demand_status": "Sustained EU Demand",
-      "compliance_requirements": "Compliance Requirements",
-      "buyer_channels": "Buyer Channels",
-      "contact_verified_buyers": "Contact Verified Buyers"
-    },
-    "partner_network_badge": "Netzwerk",
-    "partner_network_title": "Verifiziertes Partner-Netzwerk",
-    "partner_network_subtitle": "Verbinden Sie sich mit vertrauenswürdigen deutschen Einzelhändlern, Distributoren und Logistikdienstleistern.",
-    "view_examples": "Beispiele ansehen",
-    "partner_examples": "Beispiele für Partner:",
-    "partners": {
-      "retailers": {
-        "type": "Einzelhändler & Supermärkte",
-        "description": "Direkter Zugang zu großen deutschen Einzelhandelsketten und unabhängigen Geschäften."
-      },
-      "educational_institutions": {
-        "type": "Bildungseinrichtungen",
-        "description": "Partnerschaften für Kompetenzentwicklung, Forschung und kulturellen Austausch."
-      },
-      "business_partners": {
-        "type": "Geschäftsentwicklungspartner",
-        "description": "Spezialisten für Markteintritt, Business Matching und Investitionserleichterung."
-      },
-      "logistics_partners": {
-        "type": "Logistik & Speditionen",
-        "description": "Zuverlässige und effiziente Transportlösungen für reibungslose Exportgeschäfte."
-      },
-      "regulatory_partners": {
-        "type": "Regulierungs- & Zertifizierungsstellen",
-        "description": "Beratung und Unterstützung bei der Navigation durch komplexe deutsche und EU-Vorschriften."
-      },
-      "financial_services": {
-        "type": "Finanzdienstleistungen & Handelsfinanzierung",
-        "description": "Zugang zu Handelsfinanzierungen, Exportkrediten und Banklösungen."
-      }
-    },
-    "regulatory_updates_badge": "Aktualisierungen",
-    "regulatory_updates_title": "Aktualisierungen der Vorschriften",
-    "regulatory_updates_subtitle": "Bleiben Sie informiert über die neuesten Änderungen in den internationalen Handelsvorschriften für simbabwische Exporte.",
-    "regulatory_updates": {
-      "eu_sanctions_easing": {
-        "title": "EU-Sanktionslockerungen für Simbabwe",
-        "date": "März 2024",
-        "description": "Die Europäische Union hat Sanktionen gegen mehrere simbabwische Unternehmen gelockert, was neue Wege für Handel und Investitionen eröffnet."
-      },
-      "arms_embargo_expiration": {
-        "title": "Ablauf des Waffenembargos",
-        "date": "Februar 2024",
-        "description": "Das Waffenembargo der EU gegen Simbabwe ist offiziell ausgelaufen, was die Handelsbeziehungen weiter normalisiert."
-      },
-      "eu_esa_epa_benefits": {
-        "title": "Vorteile des EU-ESA EPA",
-        "description": "Simbabwe profitiert von zoll- und quotenfreiem Zugang zum EU-Markt im Rahmen des Interims-Wirtschaftspartnerschaftsabkommens (EPA)."
-      },
-      "sps_priority_date": "Ongoing compliance priority"
-    },
-    "cta_title": "Bereit für den Export in die EU?",
-    "cta_subtitle": "Unser Expertenteam begleitet Sie durch jeden Schritt des Prozesses. Kontaktieren Sie uns noch heute.",
-    "cta_button": "Jetzt starten",
-    "regulatory_updates_open_full_compliance_guide": "Vollständigen Compliance-Leitfaden öffnen",
-    "compliance_checklist": {
-      "title": "Export-Compliance-Checkliste",
-      "subtitle": "Eine praktische regulatorische Grundlage für diaspora-geführte Exportaktivitäten in EU-Märkte.",
-      "view_full_regulations": "Vollständige Vorschriften ansehen",
-      "points": [
-        "HS-Code-Klassifizierung und produktbezogene Kontrollen im Zielland.",
-        "Ursprungszeugnis und Qualitätsdokumentation.",
-        "Konforme Kennzeichnung und Verpackung je Zielmarkt.",
-        "Rückverfolgbarkeitsnachweise und zollfertige Unterlagen."
-      ],
-      "c1": "Confirm your product HS code and check EU duties/technical measures in Access2Markets.",
-      "c2": "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
-      "c3": "Issue a valid Statement on Origin for each shipment.",
-      "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
-      "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
-      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
-      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
-    },
-    "registration": {
-      "title": "Key Registration and Documentation",
-      "subtitle": "Core steps required to claim preferential access and clear EU import controls.",
-      "rex": {
-        "category": "REX and Preferential Tariffs",
-        "r1": "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
-        "r2": "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
-        "r3": "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX.",
-        "tag": "Tariff Access"
-      },
-      "origin": {
-        "category": "Statement on Origin Rules",
-        "r1": "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
-        "r2": "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
-        "r3": "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU.",
-        "tag": "Origin Compliance"
-      },
-      "zimra": {
-        "category": "ZIMRA and Export Documentation",
-        "r1": "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
-        "r2": "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
-        "r3": "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading/air waybill.",
-        "tag": "Pre-shipment"
-      },
-      "sps": {
-        "category": "EU Product and Safety Standards",
-        "r1": "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
-        "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
-        "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
-        "tag": "SPS Critical"
-      }
     }
   },
   "tourism": {
@@ -2272,7 +2020,6 @@
     "cta": {
       "back": "Zuruck",
       "investment_opportunities": "Investitionsmöglichkeiten",
-      "export_hub": "Exporte",
       "search_ntir": "NTIR durchsuchen"
     }
   },

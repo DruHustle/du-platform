@@ -7,7 +7,6 @@ import NotFound from "@/pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import Exports from "./pages/Exports";
 import Tourism from "./pages/Tourism";
 import Investment from "./pages/Investment";
 import Trade from "./pages/Trade";
@@ -35,6 +34,7 @@ import OnesaAITourismAugmentedExperience from "./pages/OnesaAITourismAugmentedEx
 import AdminDashboard from "./pages/AdminDashboard";
 import CookieConsent from "./components/CookieConsent";
 import CookieSettings from "./pages/CookieSettings";
+import Payments from "./pages/Payments";
 
 function Router() {
   const { t } = useTranslation();
@@ -44,7 +44,6 @@ function Router() {
     <ScrollToHash />
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/exports" component={Exports} />
       <Route path="/tourism" component={Tourism} />
       <Route path="/investment" component={Investment} />
       <Route path="/trade" component={Trade} />
@@ -53,6 +52,7 @@ function Router() {
       <Route path="/shop/products" component={ShopProducts} />
       <Route path="/data-visualization" component={DataVisualization} />
       <Route path="/success-stories" component={SuccessStories} />
+      <Route path="/payments" component={Payments} />
       <Route path="/login" component={LogIn} />
       <Route path="/register" component={Register} /> {/* Fixed typo: registar -> register */}
       <Route path="/forgot-password" component={ForgotPassword} />

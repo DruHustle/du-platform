@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { User, Mail, Lock, UserPlus, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import { api } from "@/lib/api";
+import { api, saveAuthToken } from "@/lib/api";
 
 export default function Register() {
   const { t } = useTranslation();
@@ -28,7 +28,9 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      await api.post("/auth/register", formData);
+      const response = await api.post("/auth/register", formData);
+      const accessToken = String(response?.data?.accessToken ?? "").trim();
+      if (accessToken) saveAuthToken(accessToken);
       setLocation("/");
     } catch (err: any) {
       setError(err?.response?.data?.message ?? "Registration failed.");

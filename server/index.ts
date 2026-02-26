@@ -26,6 +26,7 @@ import {
   searchNtirEntities,
   updateNtirEntity,
   updateUserPassword,
+  setUserKycVerified,
   listShopProducts,
   createShopOrder,
   getShopOrderByRef,
@@ -40,6 +41,8 @@ import {
   getShopRestockNotificationsBySlug,
 } from "./db";
 import { registerApiRoutes } from "./api";
+import { registerFinancialRoutes } from "./routes/financialRoutes";
+import { createJwtToken } from "./utils/jwt";
 
 process.on("unhandledRejection", (reason) => {
   console.error("[process] Unhandled promise rejection:", reason);
@@ -169,6 +172,23 @@ async function resolveAuthUser(req: express.Request) {
   const user = await findUserById(Number(session.user_id));
   if (!user) return null;
   return user;
+}
+
+function issueAccessTokenForUser(user: { id: number; email?: string | null; full_name?: string | null }) {
+  const ttl = Math.max(60, Number(process.env.JWT_EXPIRES_IN_SECONDS ?? "3600"));
+  return createJwtToken(
+    {
+      sub: Number(user.id),
+      email: user.email ? String(user.email) : undefined,
+      name: user.full_name ? String(user.full_name) : undefined,
+      scope: "user",
+    },
+    {
+      expiresInSeconds: ttl,
+      issuer: "zigd-platform",
+      audience: "zigd-web",
+    }
+  );
 }
 
 function isAdminEmail(email: string): boolean {
@@ -1980,10 +2000,16 @@ async function startServer() {
       const user = await createUser(String(fullName), String(email), hashPassword(String(password)));
       const session = await createSession(Number(user.id));
       setSessionCookie(res, session.token);
+      const accessToken = issueAccessTokenForUser({
+        id: Number(user.id),
+        email: String(user.email ?? ""),
+        full_name: String(user.full_name ?? ""),
+      });
 
       return res.status(201).json({
         message: "Account created successfully.",
         user: { id: user.id, fullName: user.full_name, email: user.email },
+        accessToken,
       });
     } catch (error: any) {
       const isDev = (process.env.NODE_ENV ?? "development") !== "production";
@@ -2008,10 +2034,16 @@ async function startServer() {
 
       const session = await createSession(Number(user.id));
       setSessionCookie(res, session.token);
+      const accessToken = issueAccessTokenForUser({
+        id: Number(user.id),
+        email: String(user.email ?? ""),
+        full_name: String(user.full_name ?? ""),
+      });
 
       return res.json({
         message: "Login successful.",
         user: { id: user.id, fullName: user.full_name, email: user.email },
+        accessToken,
       });
     } catch {
       return res.status(500).json({ message: "Login failed." });
@@ -2086,16 +2118,56 @@ async function startServer() {
     }
   });
 
+  app.post("/api/auth/token/refresh", async (req, res) => {
+    try {
+      const user = await resolveAuthUser(req);
+      if (!user) return res.status(401).json({ message: "Unauthorized." });
+      const accessToken = issueAccessTokenForUser({
+        id: Number(user.id),
+        email: String(user.email ?? ""),
+        full_name: String((user as any).full_name ?? ""),
+      });
+      return res.json({
+        message: "Token refreshed.",
+        accessToken,
+      });
+    } catch {
+      return res.status(500).json({ message: "Failed to refresh token." });
+    }
+  });
+
+  app.post("/api/auth/kyc/verify", async (req, res) => {
+    if ((process.env.NODE_ENV ?? "development").toLowerCase() === "production") {
+      return res.status(403).json({ message: "KYC self-verify is unavailable in production." });
+    }
+    try {
+      const user = await resolveAuthUser(req);
+      if (!user) return res.status(401).json({ message: "Unauthorized." });
+      const updated = await setUserKycVerified(Number(user.id), true);
+      if (!updated) return res.status(404).json({ message: "User not found." });
+      return res.json({
+        message: "KYC status updated.",
+        user: {
+          id: updated.id,
+          fullName: updated.full_name,
+          email: updated.email,
+          kycVerified: updated.kyc_verified,
+        },
+      });
+    } catch {
+      return res.status(500).json({ message: "Failed to update KYC status." });
+    }
+  });
+
   app.get("/api/search", async (req, res) => {
     const q = String(req.query.q ?? "").trim().toLowerCase();
     if (!q) return res.json({ query: "", count: 0, results: [] });
 
     try {
       const routeIndex = [
-        { title: "Exports", href: "/exports", category: "Trade", tags: ["export", "germany", "market", "trade"] },
+        { title: "Trade", href: "/trade", category: "Trade", tags: ["export", "germany", "market", "trade", "business", "commerce", "sectors"] },
         { title: "Tourism", href: "/tourism", category: "Tourism", tags: ["visit", "travel", "attractions", "victoria falls"] },
         { title: "Investment", href: "/investment", category: "Investment", tags: ["money", "capital", "projects", "masuwe", "sez"] },
-        { title: "Trade", href: "/trade", category: "Trade", tags: ["business", "commerce", "sectors"] },
         { title: "Technology", href: "/technology", category: "Technology", tags: ["ai", "onesa", "innovation", "tech"] },
         { title: "Success Stories", href: "/success-stories", category: "Impact", tags: ["stories", "impact", "cases"] },
         { title: "NTIR Database", href: "/ntir", category: "Trade", tags: ["register", "ntir", "verification"] },
@@ -2558,6 +2630,7 @@ async function startServer() {
       },
     },
   });
+  registerFinancialRoutes(app);
 
   const staticPath =
     process.env.NODE_ENV === "production"

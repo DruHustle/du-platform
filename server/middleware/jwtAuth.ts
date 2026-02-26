@@ -1,0 +1,117 @@
+import crypto from "crypto";
+import type express from "express";
+import { errorResponse } from "../utils/apiResponse";
+import { resolveJwtSecret } from "../utils/jwtSecret";
+
+type JwtClaims = {
+  sub?: string | number;
+  userId?: string | number;
+  email?: string;
+  exp?: number;
+  iat?: number;
+  nbf?: number;
+  [key: string]: unknown;
+};
+
+declare global {
+  namespace Express {
+    interface Request {
+      auth?: {
+        userId: number;
+        email?: string;
+        claims: JwtClaims;
+      };
+    }
+  }
+}
+
+function decodeBase64Url(value: string): string {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  return Buffer.from(padded, "base64").toString("utf8");
+}
+
+function toBase64Url(data: Buffer): string {
+  return data.toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+}
+
+function timingSafeEqualText(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+function verifyToken(token: string, secret: string): JwtClaims {
+  const [encodedHeader, encodedPayload, encodedSignature] = token.split(".");
+  if (!encodedHeader || !encodedPayload || !encodedSignature) {
+    throw new Error("Malformed token.");
+  }
+
+  const header = JSON.parse(decodeBase64Url(encodedHeader)) as { alg?: string; typ?: string };
+  if (header.alg !== "HS256") {
+    throw new Error("Unsupported JWT algorithm.");
+  }
+
+  const signaturePayload = `${encodedHeader}.${encodedPayload}`;
+  const expectedSignature = toBase64Url(
+    crypto.createHmac("sha256", secret).update(signaturePayload).digest()
+  );
+
+  if (!timingSafeEqualText(expectedSignature, encodedSignature)) {
+    throw new Error("Invalid JWT signature.");
+  }
+
+  const claims = JSON.parse(decodeBase64Url(encodedPayload)) as JwtClaims;
+  const now = Math.floor(Date.now() / 1000);
+
+  if (typeof claims.nbf === "number" && now < claims.nbf) {
+    throw new Error("JWT not active yet.");
+  }
+  if (typeof claims.exp === "number" && now >= claims.exp) {
+    throw new Error("JWT expired.");
+  }
+
+  return claims;
+}
+
+function resolveBearerToken(req: express.Request): string {
+  const authHeader = String(req.headers.authorization ?? "").trim();
+  if (!authHeader.startsWith("Bearer ")) {
+    throw new Error("Authorization header missing bearer token.");
+  }
+  const token = authHeader.slice("Bearer ".length).trim();
+  if (!token) throw new Error("Bearer token is empty.");
+  return token;
+}
+
+export function requireJwtAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+  try {
+    let secret = "";
+    try {
+      secret = resolveJwtSecret();
+    } catch {
+      return res.status(500).json(errorResponse("JWT_CONFIG_ERROR", "JWT secret is not configured."));
+    }
+
+    const token = resolveBearerToken(req);
+    const claims = verifyToken(token, secret);
+
+    const rawUserId = claims.sub ?? claims.userId;
+    const userId = Number(rawUserId);
+    if (!Number.isFinite(userId) || userId <= 0) {
+      return res.status(401).json(errorResponse("JWT_INVALID_SUBJECT", "Token subject is invalid."));
+    }
+
+    req.auth = {
+      userId: Math.floor(userId),
+      email: typeof claims.email === "string" ? claims.email : undefined,
+      claims,
+    };
+
+    return next();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Invalid token.";
+    return res.status(401).json(errorResponse("JWT_UNAUTHORIZED", message));
+  }
+}

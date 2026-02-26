@@ -42,7 +42,7 @@ export default function Home() {
 const navButtons = [
   { href: '/technology', label: 'home.technology' },
   { href: '/shop', label: 'nav.shop' },
-  { href: '/exports', label: 'home.export_hub' },
+  { href: '/payments', label: 'nav.payments' },
   { href: '/tourism', label: 'home.tourism' },
   { href: '/investment', label: 'home.investments' },
 ];
@@ -71,15 +71,6 @@ const navButtons = [
       stats: t('home.modules.technology.stats') || "Onesa AI"
     },
     {
-      
-      title: t('home.modules.export.title') || "Exports",
-      description: t('home.modules.export.desc') || "Access verified export partners, compliance guidance, and market-entry support for EU and global trade.",
-      href: "/exports",
-      color: " bg-green-600/5 hover:bg-green-600/10",
-      bgImage: "/images/pages/export/eu_symbol.png",
-      stats: t('home.modules.export.stats') || "Verified Partners"
-    },
-    {
       title: t('home.modules.tourism.title') || "Tourism",
       description: t('home.modules.tourism.desc') || "Discover Zimbabwe's world-class attractions and  plan your visit.",
       href: "/tourism",
@@ -97,7 +88,7 @@ const navButtons = [
     },
     {
       title: t('home.modules.trade.title') || "Trade",
-      description: t('home.modules.trade.desc') || "Access comprehensive trade resources and connect with Zimbabwe's export sectors.",
+      description: t('home.modules.trade.desc') || "Access comprehensive trade and export execution resources in one place.",
       href: "/trade",
       color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/pages/trade/export_port1.jpg",

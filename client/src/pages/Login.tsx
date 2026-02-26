@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Mail, Lock, LogIn as LoginIcon, X } from "lucide-react"; // Renamed icon to avoid conflict
 import { Link, useLocation } from "wouter";
-import { api } from "@/lib/api";
+import { api, hasLoggedInBefore, saveAuthToken } from "@/lib/api";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -18,6 +18,7 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const returningUser = hasLoggedInBefore();
 
   const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
 
@@ -26,7 +27,9 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      await api.post("/auth/login", formData);
+      const response = await api.post("/auth/login", formData);
+      const accessToken = String(response?.data?.accessToken ?? "").trim();
+      if (accessToken) saveAuthToken(accessToken);
       setLocation(nextPath);
     } catch (err: any) {
       setError(err?.response?.data?.message ?? "Login failed.");
@@ -59,8 +62,14 @@ export default function Login() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className="text-4xl font-black text-white tracking-tighter">{t('auth.welcome_back') || "Welcome Back"}</h1>
-              <p className="text-sm text-white/40 font-light">{t('auth.login_subtitle') || "Access your digital gateway to Zimbabwe."}</p>
+              <h1 className="text-4xl font-black text-white tracking-tighter">
+                {returningUser ? t('auth.welcome_back') || "Welcome Back" : t('auth.login') || "Login"}
+              </h1>
+              <p className="text-sm text-white/40 font-light">
+                {returningUser
+                  ? t('auth.login_subtitle') || "Access your digital gateway to Zimbabwe."
+                  : "Sign in to access your digital gateway to Zimbabwe."}
+              </p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>

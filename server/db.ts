@@ -9,6 +9,7 @@ const memoryUsers: Array<{
   full_name: string;
   email: string;
   password_hash: string;
+  kyc_verified: 0 | 1;
   created_at: string;
 }> = [];
 
@@ -511,6 +512,44 @@ const memoryShopProducts: ShopProduct[] = [
 const memoryShopOrders: ShopOrder[] = [];
 const memoryShopOrderItems: ShopOrderItem[] = [];
 
+type RemittanceTransactionStatus = "pending" | "processing" | "completed" | "failed";
+type AirtimeTransactionStatus = "pending" | "completed" | "failed";
+type RemittanceRecipientType = "mobile_money" | "cash_pickup" | "visa_card";
+
+type RemittanceTransactionRecord = {
+  id: number;
+  user_id: number;
+  recipient_name: string;
+  recipient_type: RemittanceRecipientType;
+  provider: string;
+  payout_channel: string | null;
+  amount_sent: number;
+  amount_received: number | null;
+  currency_from: string;
+  currency_to: string;
+  exchange_rate: number | null;
+  status: RemittanceTransactionStatus;
+  terrapay_reference: string | null;
+  idempotency_key: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type AirtimeTransactionRecord = {
+  id: number;
+  user_id: number;
+  phone_number: string;
+  operator_id: string | null;
+  amount: number;
+  currency: string | null;
+  reloadly_reference: string | null;
+  status: AirtimeTransactionStatus;
+  created_at: string;
+};
+
+const memoryRemittanceTransactions: RemittanceTransactionRecord[] = [];
+const memoryAirtimeTransactions: AirtimeTransactionRecord[] = [];
+
 async function syncShopProductsSeedData(): Promise<void> {
   if (!db) return;
   for (const product of memoryShopProducts) {
@@ -740,9 +779,16 @@ export async function initializeDatabase(): Promise<void> {
       full_name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
       password_hash VARCHAR(255) NOT NULL,
+      kyc_verified TINYINT(1) NOT NULL DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  try {
+    await db.execute("ALTER TABLE users ADD COLUMN kyc_verified TINYINT(1) NOT NULL DEFAULT 0");
+  } catch (error: any) {
+    if (String(error?.code ?? "") !== "ER_DUP_FIELDNAME") throw error;
+  }
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS ntir_entities (
@@ -856,6 +902,59 @@ export async function initializeDatabase(): Promise<void> {
   `);
 
   await db.execute(`
+    CREATE TABLE IF NOT EXISTS remittance_transactions (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      recipient_name VARCHAR(255) NOT NULL,
+      recipient_type ENUM('mobile_money', 'cash_pickup', 'visa_card') NOT NULL,
+      provider VARCHAR(100) NOT NULL,
+      payout_channel VARCHAR(100),
+      amount_sent DECIMAL(12,2) NOT NULL,
+      amount_received DECIMAL(12,2),
+      currency_from VARCHAR(10) NOT NULL,
+      currency_to VARCHAR(10) NOT NULL,
+      exchange_rate DECIMAL(12,6),
+      status ENUM('pending', 'processing', 'completed', 'failed') DEFAULT 'pending',
+      terrapay_reference VARCHAR(255),
+      idempotency_key VARCHAR(255),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_remittance_user (user_id),
+      INDEX idx_remittance_status (status)
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS airtime_transactions (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      phone_number VARCHAR(20) NOT NULL,
+      operator_id VARCHAR(100),
+      amount DECIMAL(10,2) NOT NULL,
+      currency VARCHAR(10),
+      reloadly_reference VARCHAR(255),
+      status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_airtime_user (user_id)
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS financial_failed_attempts (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      user_id BIGINT NULL,
+      flow ENUM('remittance', 'airtime') NOT NULL,
+      endpoint VARCHAR(255) NOT NULL,
+      reason VARCHAR(500) NOT NULL,
+      ip_address VARCHAR(80),
+      payload JSON NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_fin_failed_user (user_id),
+      INDEX idx_fin_failed_flow (flow)
+    )
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS shop_products (
       id INT AUTO_INCREMENT PRIMARY KEY,
       slug VARCHAR(160) NOT NULL UNIQUE,
@@ -943,6 +1042,7 @@ export async function createUser(fullName: string, email: string, passwordHash: 
       full_name: fullName,
       email,
       password_hash: passwordHash,
+      kyc_verified: 0 as const,
       created_at: new Date().toISOString(),
     };
     memoryUsers.push(newUser);
@@ -968,6 +1068,7 @@ export async function createUser(fullName: string, email: string, passwordHash: 
       full_name: fullName,
       email,
       password_hash: passwordHash,
+      kyc_verified: 0 as const,
       created_at: new Date().toISOString(),
     };
     memoryUsers.push(newUser);
@@ -987,6 +1088,55 @@ export async function updateUserPassword(userId: number, passwordHash: string) {
     if (!isDbConnectionError(error)) throw error;
     const user = memoryUsers.find((u) => u.id === userId);
     if (user) user.password_hash = passwordHash;
+  }
+}
+
+export async function setUserKycVerified(userId: number, verified: boolean) {
+  const normalizedUserId = Math.floor(Number(userId));
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
+
+  const value: 0 | 1 = verified ? 1 : 0;
+
+  if (!db) {
+    const user = memoryUsers.find((entry) => entry.id === normalizedUserId);
+    if (!user) return null;
+    user.kyc_verified = value;
+    return {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      kyc_verified: Boolean(user.kyc_verified),
+    };
+  }
+
+  try {
+    await db.execute("UPDATE users SET kyc_verified = ? WHERE id = ?", [value, normalizedUserId]);
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT id, full_name, email, COALESCE(kyc_verified, 0) AS kyc_verified FROM users WHERE id = ? LIMIT 1",
+      [normalizedUserId]
+    );
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: Number(row.id),
+      full_name: String(row.full_name ?? ""),
+      email: String(row.email ?? ""),
+      kyc_verified: Boolean(Number(row.kyc_verified ?? 0)),
+    };
+  } catch (error: any) {
+    if (String(error?.code ?? "") === "ER_BAD_FIELD_ERROR") {
+      return null;
+    }
+    if (!isDbConnectionError(error)) throw error;
+    const user = memoryUsers.find((entry) => entry.id === normalizedUserId);
+    if (!user) return null;
+    user.kyc_verified = value;
+    return {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      kyc_verified: Boolean(user.kyc_verified),
+    };
   }
 }
 
@@ -2171,4 +2321,257 @@ export async function deleteShopProductAdmin(id: number) {
     memoryShopProducts.splice(idx, 1);
     return true;
   }
+}
+
+export async function getUserFinancialProfile(userId: number): Promise<{
+  id: number;
+  full_name: string;
+  email: string;
+  kyc_verified: boolean;
+} | null> {
+  const normalizedUserId = Math.floor(Number(userId));
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
+
+  if (!db) {
+    const user = memoryUsers.find((row) => row.id === normalizedUserId);
+    if (!user) return null;
+    return {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      kyc_verified: Boolean(user.kyc_verified),
+    };
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, full_name, email, COALESCE(kyc_verified, 0) AS kyc_verified
+      FROM users
+      WHERE id = ?
+      LIMIT 1
+      `,
+      [normalizedUserId]
+    );
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: Number(row.id),
+      full_name: String(row.full_name ?? ""),
+      email: String(row.email ?? ""),
+      kyc_verified: Boolean(Number(row.kyc_verified ?? 0)),
+    };
+  } catch (error: any) {
+    if (String(error?.code ?? "") === "ER_BAD_FIELD_ERROR") {
+      const [rows] = await db.query<mysql.RowDataPacket[]>(
+        `
+        SELECT id, full_name, email
+        FROM users
+        WHERE id = ?
+        LIMIT 1
+        `,
+        [normalizedUserId]
+      );
+      const row = rows[0];
+      if (!row) return null;
+      return {
+        id: Number(row.id),
+        full_name: String(row.full_name ?? ""),
+        email: String(row.email ?? ""),
+        kyc_verified: false,
+      };
+    }
+    if (!isDbConnectionError(error)) throw error;
+    const user = memoryUsers.find((row) => row.id === normalizedUserId);
+    if (!user) return null;
+    return {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      kyc_verified: Boolean(user.kyc_verified),
+    };
+  }
+}
+
+export async function createRemittanceTransactionRecord(input: {
+  userId: number;
+  recipientName: string;
+  recipientType: RemittanceRecipientType;
+  provider: string;
+  payoutChannel: string | null;
+  amountSent: number;
+  amountReceived: number | null;
+  currencyFrom: string;
+  currencyTo: string;
+  exchangeRate: number | null;
+  status: RemittanceTransactionStatus;
+  terrapayReference: string | null;
+  idempotencyKey: string;
+}) {
+  if (!db) {
+    const now = new Date().toISOString();
+    const row: RemittanceTransactionRecord = {
+      id: memoryRemittanceTransactions.length + 1,
+      user_id: input.userId,
+      recipient_name: input.recipientName,
+      recipient_type: input.recipientType,
+      provider: input.provider,
+      payout_channel: input.payoutChannel,
+      amount_sent: input.amountSent,
+      amount_received: input.amountReceived,
+      currency_from: input.currencyFrom,
+      currency_to: input.currencyTo,
+      exchange_rate: input.exchangeRate,
+      status: input.status,
+      terrapay_reference: input.terrapayReference,
+      idempotency_key: input.idempotencyKey,
+      created_at: now,
+      updated_at: now,
+    };
+    memoryRemittanceTransactions.push(row);
+    return row;
+  }
+
+  const conn = await db.getConnection();
+  try {
+    await conn.query("START TRANSACTION");
+
+    const [inserted] = await conn.execute<mysql.ResultSetHeader>(
+      `
+      INSERT INTO remittance_transactions
+      (user_id, recipient_name, recipient_type, provider, payout_channel, amount_sent, amount_received, currency_from, currency_to, exchange_rate, status, terrapay_reference, idempotency_key)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+        input.userId,
+        input.recipientName,
+        input.recipientType,
+        input.provider,
+        input.payoutChannel,
+        input.amountSent,
+        input.amountReceived,
+        input.currencyFrom,
+        input.currencyTo,
+        input.exchangeRate,
+        input.status,
+        input.terrapayReference,
+        input.idempotencyKey,
+      ]
+    );
+
+    const [rows] = await conn.query<mysql.RowDataPacket[]>(
+      "SELECT * FROM remittance_transactions WHERE id = ? LIMIT 1",
+      [Number(inserted.insertId)]
+    );
+
+    await conn.query("COMMIT");
+    return rows[0] ?? null;
+  } catch (error) {
+    await conn.query("ROLLBACK");
+    throw error;
+  } finally {
+    conn.release();
+  }
+}
+
+export async function getRemittanceTransactionById(transactionId: number, userId: number) {
+  const normalizedId = Math.floor(Number(transactionId));
+  const normalizedUserId = Math.floor(Number(userId));
+  if (!Number.isFinite(normalizedId) || normalizedId <= 0) return null;
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
+
+  if (!db) {
+    return (
+      memoryRemittanceTransactions.find(
+        (entry) => entry.id === normalizedId && entry.user_id === normalizedUserId
+      ) ?? null
+    );
+  }
+
+  const [rows] = await db.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM remittance_transactions WHERE id = ? AND user_id = ? LIMIT 1",
+    [normalizedId, normalizedUserId]
+  );
+  return rows[0] ?? null;
+}
+
+export async function createAirtimeTransactionRecord(input: {
+  userId: number;
+  phoneNumber: string;
+  operatorId: string | null;
+  amount: number;
+  currency: string | null;
+  reloadlyReference: string | null;
+  status: AirtimeTransactionStatus;
+}) {
+  if (!db) {
+    const row: AirtimeTransactionRecord = {
+      id: memoryAirtimeTransactions.length + 1,
+      user_id: input.userId,
+      phone_number: input.phoneNumber,
+      operator_id: input.operatorId,
+      amount: input.amount,
+      currency: input.currency,
+      reloadly_reference: input.reloadlyReference,
+      status: input.status,
+      created_at: new Date().toISOString(),
+    };
+    memoryAirtimeTransactions.push(row);
+    return row;
+  }
+
+  const conn = await db.getConnection();
+  try {
+    await conn.query("START TRANSACTION");
+
+    const [inserted] = await conn.execute<mysql.ResultSetHeader>(
+      `
+      INSERT INTO airtime_transactions
+      (user_id, phone_number, operator_id, amount, currency, reloadly_reference, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+        input.userId,
+        input.phoneNumber,
+        input.operatorId,
+        input.amount,
+        input.currency,
+        input.reloadlyReference,
+        input.status,
+      ]
+    );
+
+    const [rows] = await conn.query<mysql.RowDataPacket[]>(
+      "SELECT * FROM airtime_transactions WHERE id = ? LIMIT 1",
+      [Number(inserted.insertId)]
+    );
+    await conn.query("COMMIT");
+    return rows[0] ?? null;
+  } catch (error) {
+    await conn.query("ROLLBACK");
+    throw error;
+  } finally {
+    conn.release();
+  }
+}
+
+export async function getAirtimeTransactionById(transactionId: number, userId: number) {
+  const normalizedId = Math.floor(Number(transactionId));
+  const normalizedUserId = Math.floor(Number(userId));
+  if (!Number.isFinite(normalizedId) || normalizedId <= 0) return null;
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
+
+  if (!db) {
+    return (
+      memoryAirtimeTransactions.find(
+        (entry) => entry.id === normalizedId && entry.user_id === normalizedUserId
+      ) ?? null
+    );
+  }
+
+  const [rows] = await db.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM airtime_transactions WHERE id = ? AND user_id = ? LIMIT 1",
+    [normalizedId, normalizedUserId]
+  );
+  return rows[0] ?? null;
 }

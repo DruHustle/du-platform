@@ -40,7 +40,6 @@
   "nav": {
     "home": "Ekhaya",
     "shop": "Shop",
-    "export": "OkuThunyelwa Ngaphandle",
     "tourism": "Ezokuvakasha",
     "investment": "Ukutshala Imali",
     "trade": "Ezohwebo",
@@ -72,13 +71,13 @@
     "technology_capabilities": "Amandla ezobuchwepheshe",
     "technology_capabilities_desc": "Isimo sezobuchwepheshe lokusungula eZimbabwe",
     "technology_industries": "Izimboni zezobuchwepheshe",
-    "technology_industries_desc": "Ingxenye zezobuchwepheshe eziyinhloko eZimbabwe"
+    "technology_industries_desc": "Ingxenye zezobuchwepheshe eziyinhloko eZimbabwe",
+    "payments": "Payments"
   },
   "home": {
     "made_in_zimbabwe_alt": "Kwenziwe eZimbabwe",
     "hero_title": "I-Diaspora Ivuliwe",
     "hero_subtitle": "Ezobuchwepheshe (ICT), Ezohwebo, Ezokuvakasha lokusheshisa ukutshala imali kwe-Vision 2030",
-    "export_hub": "OkuThunyelwa Ngaphandle",
     "tourism": "Ezokuvakasha",
     "technology": "Ezobuchwepheshe",
     "investments": "Ukutshala Imali",
@@ -92,11 +91,6 @@
     "view_data": "Buka Idatha yezomnotho",
     "success_stories": "Izindaba zempumelelo",
     "modules": {
-      "export": {
-        "title": "OkuThunyelwa Ngaphandle",
-        "desc": "Finyelela izidingo zemakethe ye-EU njalo uxhumane labahlanganyeli abaqinisekisiweyo.",
-        "stats": "Abahlanganyeli abaqinisekisiweyo"
-      },
       "tourism": {
         "title": "Ezokuvakasha",
         "desc": "Thola izindawo zokuvakasha zaseZimbabwe ezisezingeni lomhlaba njalo uhlele ukuvakasha kwakho.",
@@ -349,252 +343,6 @@
     "diaspora_ai": {
       "title": "Indlela iDiaspora Unlocked Esebenzisa Ngayo i-AI",
       "subtitle": "I-Onesa AI yakhelwe ukusekela uhambo lonke lwe-diaspora, kusukela ekuxhumaneni kabusha lokubuya kuze kufike ekuhloleni amathuba kanye lokuqhuba amabhizimusi."
-    }
-  },
-  "export": {
-    "hero": {
-      "badge1": "Ukungena emakethe ye-EU",
-      "title1": "Vula izimakethe zaseYurophu",
-      "desc1": "Hamba emithethweni lezitifiketi ze-EU kalula ukuze uthumele imikhiqizo yakho yaseZimbabwe.",
-      "highlight1": "Ukuhambisana okulula",
-      "badge2": "Ukugxila e-Germany",
-      "title2": "Khomba e-Germany",
-      "desc2": "Ulwazi oluthile labahlanganyeli bemanekethe yase-Germany, okuyisango eliqakathekileyo laseYurophu.",
-      "highlight2": "Ukungena emakethe ngqo",
-      "badge3": "Izivumelwano zezohwebo",
-      "title3": "Sebenzisa i-EPA le-ESA",
-      "desc3": "Zuza ezivumelwaneni ze-Economic Partnership Agreements zokungena ngaphandle kwemithetho yentela.",
-      "highlight3": "Ukungena okukhethekileyo",
-      "badge4": "Ukufika emhlabeni jikelele",
-      "title4": "Engeza imingcele yakho",
-      "desc4": "Xhumana lenethiwekhi yabathengi labasabalalisi bomhlaba wonke.",
-      "highlight4": "Amathuba omhlaba wonke",
-      "badge5": "Ingxenye ye-Horticulture",
-      "title5": "Ukuthumela i-Green Gold",
-      "desc5": "Usekelo olukhethekileyo lwemikhiqizo emitsha, amaluva, lemikhiqizo ye-organic.",
-      "highlight5": "Izilimo zenani eliphezulu",
-      "badge6": "Ukuphakamisa ezokukhiqiza",
-      "title6": "Ukuthunyelwa kwemikhiqizo yezimboni",
-      "desc6": "Ukuqondiswa kwempahla eyenziwe ezimbonini, izembatho, lokudla okulungisiweyo.",
-      "highlight6": "Imikhiqizo enenani elengeziweyo",
-      "badge7": "Market Intelligence",
-      "title7": "High-Demand Product Windows",
-      "desc7": "Track demand and standards for high-value crops and specialty products in target EU markets.",
-      "highlight7": "Buyer-Aligned Supply",
-      "badge8": "Compliance Advantage",
-      "title8": "Certification-Ready Exports",
-      "desc8": "Use traceability, quality controls, and food-safety systems to secure repeat EU buyer contracts.",
-      "highlight8": "Trust and Quality",
-      "badge9": "Niche Growth",
-      "title9": "Natural Oils and Botanicals",
-      "desc9": "Develop premium natural products for cosmetics and wellness categories with strong EU demand.",
-      "highlight9": "Emerging Segments"
-    },
-    "objective_title": "Ukuphakamisa ukuthumela phandle, ukukupha amandla",
-    "objective_subtitle": "Ukuxhuma imikhiqizo, abahlanganyeli, lolwazi lwemakethe ukuze abathumeli baphumelele e-EU.",
-    "explore_market_requirements": "Hlola izidingo zemakethe",
-    "contact_us": "Thintana lathi",
-    "contact_form_title": "Imibuzo yokuThunyelwa Ngaphandle",
-    "contact_form_subtitle": "Gcwalisa ifomu elingezansi ukuze ukhulume labachwepheshe bethu.",
-    "market_requirements_title": "Izidingo zemakethe ye-EU",
-    "market_requirements_subtitle": "Zwisisa imithetho ethile, izitifiketi, lamazinga okuthumela e-Germany.",
-    "german_requirements": {
-      "food_products": {
-        "category": "Imikhiqizo yokudla",
-        "requirements": [
-          "Imithetho ye-EU yokuphepha kokudla (isib. HACCP)",
-          "Imingcele yezinsalela zemithi yokulima (MRLs)",
-          "Izidingo zokulebhula (izithako, izinto ezingabangela ukungezwani, imvelaphi)",
-          "Izitifiketi zezempilo yezifuyo lezitshalo"
-        ],
-        "price": "Izindleko eziphezulu zokuhambisana"
-      },
-      "textiles_leather": {
-        "category": "Izembatho lesikhumba",
-        "requirements": [
-          "Umlando we-REACH (izithako zemithi)",
-          "Amazinga okungasha lula",
-          "Ukulebhula (izinto ezenziwe ngazo, imiyalelo yokunakekela)",
-          "Izitifiketi zokutholakala ngendlela efanele lokusimama"
-        ],
-        "price": "Izindleko eziphakathi zokuhambisana"
-      },
-      "arts_crafts": {
-        "category": "Ezobuciko lezandla",
-        "requirements": [
-          "I-CE Marking (uma ifanele, isib. amathoyizi)",
-          "Imininingwane yokuphepha kwezinto (MSDS)",
-          "Izimemezelo zamasiko (Customs) lentela",
-          "Amalungelo empahla yobuhlakani (IPR)"
-        ],
-        "price": "Izindleko eziphansi zokuhambisana"
-      },
-      "agricultural_products": {
-        "category": "Imikhiqizo ye-Agriculture",
-        "requirements": [
-          "Isitifiketi se-GlobalG.A.P.",
-          "Izitifiketi ze-Organic (EU Organic Logo)",
-          "Izinhlelo zokulandelela (Traceability)",
-          "Amazinga eqophelo lezinga (Quality and Grading)"
-        ],
-        "price": "Izindleko eziphezulu zokuhambisana"
-      }
-    },
-    "product_intelligence_badge": "Ulwazi",
-    "product_intelligence_title": "Ulwazi lwemakethe lwemikhiqizo ethile",
-    "product_intelligence_subtitle": "Hlala uphambili ngedatha yesikhathi sakhona mayelana lesidingo semikhiqizo, intengo, lalokho okukhethwa ngabathengi.",
-    "market_intelligence_requirements": "Izidingo eziyinhloko:",
-    "market_intelligence_buyers": "Abathengi abangaba khona:",
-    "market_intelligence": {
-      "blueberries": {
-        "product": "Matshungwa (Blueberries)",
-        "status": "Isidingo siphezulu",
-        "requirements": [
-          "Isitifiketi se-GlobalG.A.P. siqakathekile.",
-          "Ukulandela ngokuqinileyo imingcele ye-EU MRLs yemithi yokulima.",
-          "Ukupakishwa kumele kuhambisane lamazinga we-EU wemikhiqizo emitsha.",
-          "Ukuthutha okuqinileyo lendawo ezibandayo kuqakathekile."
-        ],
-        "buyers": [
-          "LIDL",
-          "EDEKA",
-          "REWE"
-        ]
-      },
-      "honey": {
-        "product": "Inyosi (Honey)",
-        "status": "Imakethe eyengeziweyo",
-        "requirements": [
-          "Ukuhambisana le-EU Honey Directive (uhlanzeko, imvelaphi).",
-          "Ukuhlola izinsalela zemithi yokwelapha izifuyo lensimbi eziyingozi.",
-          "Isitifiketi se-Organic sinika inzuzo enkulu.",
-          "Ukulandeleleka kusukela esidlekeni kusiya eshelufini kuyaqakathekiswa kakhulu."
-        ],
-        "buyers": "Izitolo zokudla okukhethekileyo, izimakethe ze-organic"
-      },
-      "natural_oils": {
-        "product": "Amafutha emvelo (Umganu/Marula)",
-        "status": "Imakethe esanda kuvela",
-        "requirements": [
-          "Isitifiketi se-COSMOS kumbe i-NaTrue sezimonyo.",
-          "Ukubhalwa phansi kwendlela zokuthola imikhiqizo ngendlela esimeme.",
-          "Ukuhlolwa kweqophelo lokuhlanzeka.",
-          "Ukulebhula okucacileyo kwebizo lesitshalo lemvelaphi."
-        ],
-        "buyers1": "Abakhiqizi bezimonyo",
-        "buyers2": "Amabhrendi ezempilo"
-      },
-      "demand_outlook": "Demand Outlook",
-      "demand_status": "Sustained EU Demand",
-      "compliance_requirements": "Compliance Requirements",
-      "buyer_channels": "Buyer Channels",
-      "contact_verified_buyers": "Contact Verified Buyers"
-    },
-    "partner_network_badge": "Inethiwekhi",
-    "partner_network_title": "Inethiwekhi yabahlanganyeli abaqinisekisiweyo",
-    "partner_network_subtitle": "Xhumana labathengisi base-Germany abathenjiweyo, abasabalalisi, labahlinzeki bezokuthutha.",
-    "view_examples": "Buka izibonelo",
-    "partner_examples": "Izibonelo zabahlanganyeli:",
-    "partners": {
-      "retailers": {
-        "type": "Abathengisi lezitolo ezinkulu",
-        "description": "Ukungena ngqo ezitolo ezinkulu zase-Germany lezitolo ezizimeleyo."
-      },
-      "educational_institutions": {
-        "type": "Izikhungo zemfundo",
-        "description": "Ukuhlanganyela ekuthuthukiseni amakhono, ucwaningo, lokushintshisana ngamasiko."
-      },
-      "business_partners": {
-        "type": "Abalingani bokuthuthukisa ibhizinisi",
-        "description": "Abachwepheshe ekungeneni emakethe, ukuxhumanisa amabhizinisi, lokuncedisa ekutshaleni imali."
-      },
-      "logistics_partners": {
-        "type": "Ezokuthutha labathumeli bempahla",
-        "description": "Izisombululo zezokuthutha ezithembekileyo zezokuthumela phandle."
-      },
-      "regulatory_partners": {
-        "type": "Imizimba elawulayo leqinisekisa izitifiketi",
-        "description": "Isikhokhelo losizo ekulandeleni imithetho enzima yase-Germany le-EU."
-      },
-      "financial_services": {
-        "type": "Izinsizakalo zemali lezezohwebo",
-        "description": "Ukuthola usizo lwemali lwezezohwebo, isikweletu sokuthumela phandle, lezinhlelo zamabhanga."
-      }
-    },
-    "regulatory_updates_badge": "Izindaba ezintsha",
-    "regulatory_updates_title": "Izindaba zemithetho",
-    "regulatory_updates_subtitle": "Hlala unolwazi ngezinguquko zakamuva emithethweni yezohwebo yamazwe ngamazwe ethinta ukuthunyelwa kwemikhiqizo yaseZimbabwe.",
-    "regulatory_updates": {
-      "eu_sanctions_easing": {
-        "title": "Ukuphululwa kwezijeziso ze-EU eZimbabwe",
-        "date": "March 2024",
-        "description": "Inhlangano ye-European Union isiphulule izijeziso kwezinye izinkampani zaseZimbabwe, okuvula amathuba amatsha ezohwebo lokutshala imali."
-      },
-      "arms_embargo_expiration": {
-        "title": "Ukuphela kwesijeziso sokuthengiselana ngezikhali",
-        "date": "February 2024",
-        "description": "Isijeziso se-EU sokuthengisela iZimbabwe izikhali sesiphelile ngokusemthethweni, okuqhubeka kuthuthukisa ubudlelwano bezohwebo."
-      },
-      "eu_esa_epa_benefits": {
-        "title": "Inzuzo ye-EU-ESA EPA",
-        "description": "IZimbabwe iyazuza ekungeneni emakethe ye-EU ngaphandle kwentela phansi kwesivumelwano se-interim Economic Partnership Agreement (EPA)."
-      },
-      "sps_priority_date": "Ongoing compliance priority"
-    },
-    "cta_title": "Usulungele ukuthumela e-EU?",
-    "cta_subtitle": "Ithimba lethu labachwepheshe selilungele ukukuqondisa kuzo zonke izinyathelo. Thintana lathi namuhla ukuze uqalise.",
-    "cta_button": "Qalisa Manje",
-    "regulatory_updates_open_full_compliance_guide": "Vula isikhokhelo esigcweleyo sokuhambisana",
-    "compliance_checklist": {
-      "title": "Uhlu lokuhlola ukuhambisana kokuthumela phandle",
-      "subtitle": "Isisekelo esisebenzayo semithetho yamabhizimusi okuthumela phandle akhokhelwa ngama-diaspora aya emakethe ye-EU.",
-      "view_full_regulations": "Bona imithetho yonke",
-      "points": [
-        "Ukuhlukaniswa kwe-HS code lokulawulwa kwemikhiqizo emakethe yendawo yokufikela.",
-        "Isitifiketi semvelaphi lemibhalo yekhwalithi.",
-        "Ukulebhula lokupakisha okuhambisana lomthetho wemakethe ngayinye.",
-        "Imibhalo yokulandela umkhondo lezincwadi ezilungele i-customs."
-      ],
-      "c1": "Confirm your product HS code and check EU duties/technical measures in Access2Markets.",
-      "c2": "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
-      "c3": "Issue a valid Statement on Origin for each shipment.",
-      "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
-      "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
-      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
-      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
-    },
-    "registration": {
-      "title": "Key Registration and Documentation",
-      "subtitle": "Core steps required to claim preferential access and clear EU import controls.",
-      "rex": {
-        "category": "REX and Preferential Tariffs",
-        "r1": "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
-        "r2": "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
-        "r3": "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX.",
-        "tag": "Tariff Access"
-      },
-      "origin": {
-        "category": "Statement on Origin Rules",
-        "r1": "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
-        "r2": "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
-        "r3": "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU.",
-        "tag": "Origin Compliance"
-      },
-      "zimra": {
-        "category": "ZIMRA and Export Documentation",
-        "r1": "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
-        "r2": "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
-        "r3": "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading/air waybill.",
-        "tag": "Pre-shipment"
-      },
-      "sps": {
-        "category": "EU Product and Safety Standards",
-        "r1": "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
-        "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
-        "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
-        "tag": "SPS Critical"
-      }
     }
   },
   "tourism": {
@@ -2272,7 +2020,6 @@
     "cta": {
       "back": "Buyela emuva",
       "investment_opportunities": "Amathuba okutshala imali",
-      "export_hub": "OkuThunyelwa Ngaphandle",
       "search_ntir": "Dingisisa i-NTIR"
     }
   },

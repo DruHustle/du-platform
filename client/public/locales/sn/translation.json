@@ -40,7 +40,6 @@
   "nav": {
     "home": "Pamba",
     "shop": "Shop",
-    "export": "Zvinotengeswa Kunze",
     "tourism": "Ushanyi",
     "investment": "Kudyara Mari",
     "trade": "Zvekutengeserana",
@@ -72,13 +71,13 @@
     "technology_capabilities": "Simba reTekinoroji",
     "technology_capabilities_desc": "Mamiriro erunhare nesainzi muZimbabwe",
     "technology_industries": "Maindasitiri eTekinoroji",
-    "technology_industries_desc": "Zvikamu zvikuru zveunhare nesainzi muZimbabwe"
+    "technology_industries_desc": "Zvikamu zvikuru zveunhare nesainzi muZimbabwe",
+    "payments": "Payments"
   },
   "home": {
     "made_in_zimbabwe_alt": "Chakagadzirwa muZimbabwe",
     "hero_title": "Diaspora Yakavhurwa",
     "hero_subtitle": "Kukasira kweICT, Kutengeserana, Ushanyi nekudyara mari kweVision 2030",
-    "export_hub": "Zvinotengeswa Kunze",
     "tourism": "Ushanyi",
     "technology": "Tekinoroji",
     "investments": "Mari dzinodyarwa",
@@ -92,11 +91,6 @@
     "view_data": "Tarisa Nhamba dzeUpfumi",
     "success_stories": "Nhoroondo dzeKubudirira",
     "modules": {
-      "export": {
-        "title": "Zvinotengeswa Kunze",
-        "desc": "Ziva zvinodiwa nemusika weEU uye batana nevatishandi vakasimbiswa.",
-        "stats": "Vatishandi vakasimbiswa"
-      },
       "tourism": {
         "title": "Ushanyi",
         "desc": "Tsvaga nzvimbo dzeZimbabwe dzinoyevedza pasi rose uye ronga kushanya kwako.",
@@ -349,252 +343,6 @@
     "diaspora_ai": {
       "title": "Mashandisirwo eAI neDiaspora Unlocked",
       "subtitle": "Onesa AI yakavakwa kutsigira rwendo rwese rwediaspora, kubva pakubatanazve nekudzoka kusvika pakuongorora mikana nekushanda mabhizimusi."
-    }
-  },
-  "export": {
-    "hero": {
-      "badge1": "Kupinda muMusika weEU",
-      "title1": "Vhurai Misika yeEurope",
-      "desc1": "Tevedzerai mitemo nezvitupa zveEU zviri nyore kuti mutengese zvigadzirwa zvenyu zvemuZimbabwe.",
-      "highlight1": "Kutevedzera Mitemo Kwakareruka",
-      "badge2": "Kutarira Germany",
-      "title2": "Tarisai Germany",
-      "desc2": "Ruzivo chaizvo nevatishandi vemusika weGermany, mukova mukuru wekupinda muEurope.",
-      "highlight2": "Kupinda muMusika Direct",
-      "badge3": "Zvibvumirano zvekutengeserana",
-      "title3": "Shandisai EPA neESA",
-      "desc3": "Batsirwai nezvibvumirano zveEconomic Partnership Agreements kuti mutengese pasina mitero.",
-      "highlight3": "Kupinda Kwakareruka",
-      "badge4": "Kusvika Pasi Rese",
-      "title4": "Kurisa Bhizimusi Rako",
-      "desc4": "Batana nevatengi nevagoveri zvinhu pasi rose.",
-      "highlight4": "Mikana yePasi Rese",
-      "badge5": "Zvekurima Horticulture",
-      "title5": "Kutengesa Goridhe Rakasvibira",
-      "desc5": "Rubatsiro rwakanyanya rwezvibereko zvitsva, maruva, nezvirimwa zveorganic.",
-      "highlight5": "Zvirimwa zveMutengo Wepamusoro",
-      "badge6": "Kusimudzira Maindasitiri",
-      "title6": "Kutengesa Zvigadzirwa zveMaindasitiri",
-      "desc6": "Mazano ezvigadzirwa, mbatya, nezvekudya zvakagadzirwa mufekitari.",
-      "highlight6": "Zvigadzirwa zvakawedzerwa Mutengo",
-      "badge7": "Market Intelligence",
-      "title7": "High-Demand Product Windows",
-      "desc7": "Track demand and standards for high-value crops and specialty products in target EU markets.",
-      "highlight7": "Buyer-Aligned Supply",
-      "badge8": "Compliance Advantage",
-      "title8": "Certification-Ready Exports",
-      "desc8": "Use traceability, quality controls, and food-safety systems to secure repeat EU buyer contracts.",
-      "highlight8": "Trust and Quality",
-      "badge9": "Niche Growth",
-      "title9": "Natural Oils and Botanicals",
-      "desc9": "Develop premium natural products for cosmetics and wellness categories with strong EU demand.",
-      "highlight9": "Emerging Segments"
-    },
-    "objective_title": "Kukurisa Kutengesa Kunze, Kukurutsai",
-    "objective_subtitle": "Kubatanidza zvigadzirwa, vatishandi, neruzivo rwemusika kupa vatengesi simba rekubudirira muEU.",
-    "explore_market_requirements": "Ongorora Zvinodiwa neMusika",
-    "contact_us": "Taura Nesu",
-    "contact_form_title": "Mubvunzo weZvinotengeswa Kunze",
-    "contact_form_subtitle": "Zadzisai fomu riri pasi apa kuti mutaure nenyanzvi dzedu dzekutengesa kunze.",
-    "market_requirements_title": "Zvinodiwa neMusika weEU",
-    "market_requirements_subtitle": "Nzwisisa mitemo, zvitupa, nematanho ekutengesa zvinhu kuGermany.",
-    "german_requirements": {
-      "food_products": {
-        "category": "Zvekudya",
-        "requirements": [
-          "Mitemo yeEU yeChengetedzo yeZvekudya (e.g., HACCP)",
-          "Zvibvumirano zvePesticide Residue (MRLs)",
-          "Mitemo yekunyora pamapaketi (zviri mukati, zvinokonzera allergies, kwachakabva)",
-          "Zvitupa zveVeterinary nePhytosanitary"
-        ],
-        "price": "Mutengo weKutevedzera Wakakwira"
-      },
-      "textiles_leather": {
-        "category": "Mbatya neMatehwe",
-        "requirements": [
-          "Mitemo yeREACH (chemikari)",
-          "Mitemo yekusatsva nekukasira",
-          "Kunyora pamapaketi (machira akashandiswa, kuchengetedza)",
-          "Zvitupa zvekusimudzira nekuchengetedza nharaunda"
-        ],
-        "price": "Mutengo weKutevedzera Uri Pakati"
-      },
-      "arts_crafts": {
-        "category": "Mabasa emaoko",
-        "requirements": [
-          "Mucherechedzo weCE (kana uchidiwa, soku matoyi)",
-          "Magwaro eMaterial Safety (MSDS)",
-          "Kuzivisa kumitero (Customs) nemitero yepasi",
-          "Kodzero dzeZvigadzirwa (IPR)"
-        ],
-        "price": "Mutengo weKutevedzera Wakaderera"
-      },
-      "agricultural_products": {
-        "category": "Zvirimwa zveKurima",
-        "requirements": [
-          "Chitupa cheGlobalG.A.P.",
-          "Zvitupa zveOrganic (EU Organic Logo)",
-          "Maitiro ekutevera kwazvakabva (Traceability)",
-          "Mitemo yeHunhu nematanho (Quality and Grading)"
-        ],
-        "price": "Mutengo weKutevedzera Wakakwira"
-      }
-    },
-    "product_intelligence_badge": "Ungwaru",
-    "product_intelligence_title": "Ruzivo rweZvigadzirwa neMusika",
-    "product_intelligence_subtitle": "Ziva zviri kudiwa nevatengi, mitengo, nezvido zvevatengi panguva chaiyo.",
-    "market_intelligence_requirements": "Zvinodiwa zvikuru:",
-    "market_intelligence_buyers": "Vatengi vangavepo:",
-    "market_intelligence": {
-      "blueberries": {
-        "product": "Mablueberry",
-        "status": "Inodiwa Kwazvo",
-        "requirements": [
-          "Chitupa cheGlobalG.A.P. chakakosha.",
-          "Kutevedzera nemazvo mitemo yeEU yechemikari (MRLs).",
-          "Kupaka kunofanira kutevera mitemo yeEU yezvibereko zvitsva.",
-          "Kuve nenzira dzakanaka dzekutakura nekuomesa (cold storage) kwakakosha."
-        ],
-        "buyers": [
-          "LIDL",
-          "EDEKA",
-          "REWE"
-        ]
-      },
-      "honey": {
-        "product": "Huchi",
-        "status": "Musika Uri Kukura",
-        "requirements": [
-          "Kutevedzera EU Honey Directive (kuchena, kwachakabva).",
-          "Kutarira masara emishonga nemaheavy metals.",
-          "Chitupa cheOrganic chinopa mutengo wakanaka kwazvo.",
-          "Kutevera nhoroondo kubva kusekwa kusvika pamasherufu kunokosheswa."
-        ],
-        "buyers": "Zvitoro zvekudya zvakakosha, misika yeorganic"
-      },
-      "natural_oils": {
-        "product": "Mafuta eSimbiri (Marula)",
-        "status": "Musika Mutsva",
-        "requirements": [
-          "Chitupa cheCOSMOS kana NaTrue kuitira zvekuzvizora.",
-          "Magwaro anoratidza kutorwa kwezvinhu nenzira inochengetedza nharaunda.",
-          "Kuongorora hunhu nemhando yemafuta (fatty acid profile).",
-          "Kunyora zita remuti nekwachakabva zvakajeka."
-        ],
-        "buyers1": "Vagadziri vezvekuzora",
-        "buyers2": "Mabhrendi ehutano"
-      },
-      "demand_outlook": "Demand Outlook",
-      "demand_status": "Sustained EU Demand",
-      "compliance_requirements": "Compliance Requirements",
-      "buyer_channels": "Buyer Channels",
-      "contact_verified_buyers": "Contact Verified Buyers"
-    },
-    "partner_network_badge": "Dandira",
-    "partner_network_title": "Dandira reVatishandi rakasimbiswa",
-    "partner_network_subtitle": "Batana nevatengesi, vagoveri, nevekutakura zvinhu vemuGermany vakavimbika.",
-    "view_examples": "Ona Mienzaniso",
-    "partner_examples": "Mienzaniso yeVatishandi:",
-    "partners": {
-      "retailers": {
-        "type": "Vatengesi nemaSupermarket",
-        "description": "Kupinda muzvitoro zvikuru zvemuGermany nezvitoro zvakazvimirira."
-      },
-      "educational_institutions": {
-        "type": "Zvikoro nemasangano edzidzo",
-        "description": "Kushanda pamwe pakuumbwa kwehunyanzvi, tsvakiridzo, nekuchinjana tsika."
-      },
-      "business_partners": {
-        "type": "Vatishandi vekusimudzira bhizimusi",
-        "description": "Nyanzvi mukupinda mumisika, kubatanidza mabhizimusi, nekufambisa kudyara mari."
-      },
-      "logistics_partners": {
-        "type": "Kutakura zvinhu nekuZivisa",
-        "description": "Nziradzakavimbika dzekutakura zvinhu kuitira kutengesera kunze."
-      },
-      "regulatory_partners": {
-        "type": "Masangano eMitemo nezvitupa",
-        "description": "Mazano nerubatsiro pakutevedzera mitemo yemuGermany neEU."
-      },
-      "financial_services": {
-        "type": "Zvemari nekutsigira kutengeserana",
-        "description": "Kuwaniswa mari yekutengesera kunze, zvikwereti, nemabhengi."
-      }
-    },
-    "regulatory_updates_badge": "Zvichangobuda",
-    "regulatory_updates_title": "Zvichangobuda pamutemo",
-    "regulatory_updates_subtitle": "Ziva nezvekuchinja kwemitemo yekutengeserana pasi rose kunobata Zimbabwe.",
-    "regulatory_updates": {
-      "eu_sanctions_easing": {
-        "title": "Kurerutswa kweZvirango zveEU kuZimbabwe",
-        "date": "Kurume 2024",
-        "description": "European Union yakarerutsa zvirango kumasangano akati wandei emuZimbabwe, ichivhura mikana mitsva yekutengeserana nekudyara mari."
-      },
-      "arms_embargo_expiration": {
-        "title": "Kupera kweArms Embargo",
-        "date": "Kukadzi 2024",
-        "description": "Kurambidzwa kwekutengeserana zvombo neEU kuZimbabwe kwakapera, zvichinatsa ukama hwezvekutengeserana."
-      },
-      "eu_esa_epa_benefits": {
-        "title": "Zvakanaka zveEU-ESA EPA",
-        "description": "Zimbabwe inobatsirwa nekutengesa kunze pasina mitero kumatunhu eEU pasi pechibvumirano cheEconomic Partnership Agreement (EPA)."
-      },
-      "sps_priority_date": "Ongoing compliance priority"
-    },
-    "cta_title": "Wagadzirira kutengesa kuEU here?",
-    "cta_subtitle": "Chikwata chedu chenyanzvi chakagadzirira kukutungamirira munhanho dzose. Taura nesu nhasi kuti utange.",
-    "cta_button": "Tanga Izvozvi",
-    "regulatory_updates_open_full_compliance_guide": "Vhura gwara rakazara rekutevedzera mitemo",
-    "compliance_checklist": {
-      "title": "Runyorwa rwekutevedzera mitemo yekutengesa kunze",
-      "subtitle": "Nheyo inoshanda yemitemo yemabasa ekutengesa kunze anotungamirirwa nediaspora kuenda kumisika yeEU.",
-      "view_full_regulations": "Ona mitemo yose",
-      "points": [
-        "Kupatsanura HS code uye zvidzoro zvechigadzirwa munyika yekuendesera.",
-        "Chitupa chemavambo uye magwaro ehunhu.",
-        "Kunyora pamapakeji nekupakata zvinoenderana nemusika wekuenda.",
-        "Magwaro ekutevera chigadzirwa uye mapepa akagadzirira customs."
-      ],
-      "c1": "Confirm your product HS code and check EU duties/technical measures in Access2Markets.",
-      "c2": "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
-      "c3": "Issue a valid Statement on Origin for each shipment.",
-      "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
-      "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
-      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
-      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
-    },
-    "registration": {
-      "title": "Key Registration and Documentation",
-      "subtitle": "Core steps required to claim preferential access and clear EU import controls.",
-      "rex": {
-        "category": "REX and Preferential Tariffs",
-        "r1": "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
-        "r2": "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
-        "r3": "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX.",
-        "tag": "Tariff Access"
-      },
-      "origin": {
-        "category": "Statement on Origin Rules",
-        "r1": "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
-        "r2": "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
-        "r3": "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU.",
-        "tag": "Origin Compliance"
-      },
-      "zimra": {
-        "category": "ZIMRA and Export Documentation",
-        "r1": "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
-        "r2": "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
-        "r3": "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading/air waybill.",
-        "tag": "Pre-shipment"
-      },
-      "sps": {
-        "category": "EU Product and Safety Standards",
-        "r1": "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
-        "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
-        "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
-        "tag": "SPS Critical"
-      }
     }
   },
   "tourism": {
@@ -2272,7 +2020,6 @@
     "cta": {
       "back": "Dzokera",
       "investment_opportunities": "Mikana yekudyara mari",
-      "export_hub": "Zvinotengeswa Kunze",
       "search_ntir": "Tsvaga NTIR"
     }
   },
