@@ -8,7 +8,7 @@ import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOu
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { api, type AuthUser } from "@/lib/api";
+import { api, clearAuthToken, refreshAuthTokenFromSession, type AuthUser } from "@/lib/api";
 import { Send } from "lucide-react";
 
 
@@ -183,7 +183,16 @@ export default function Layout({ children }: LayoutProps) {
       try {
         // Best-effort session bootstrap; UI remains usable when auth lookup fails.
         const { data } = await api.get("/auth/me");
-        if (mounted) setUser(data?.user ?? null);
+        if (mounted) {
+          setUser(data?.user ?? null);
+          if (data?.user) {
+            try {
+              await refreshAuthTokenFromSession();
+            } catch {
+              // Ignore refresh failure; session-backed navigation still works.
+            }
+          }
+        }
       } catch {
         if (mounted) setUser(null);
       } finally {
@@ -202,6 +211,7 @@ export default function Layout({ children }: LayoutProps) {
     } catch {
       // Intentionally ignore: UI should still clear local session state
     } finally {
+      clearAuthToken();
       setUser(null);
       window.location.href = "/";
     }
@@ -216,9 +226,9 @@ export default function Layout({ children }: LayoutProps) {
   const navigation = [
     { name: t('nav.home'), href: "/" },
     { name: t('nav.technology'), href: "/technology" },
+    { name: t("nav.payments", { defaultValue: "Payments" }), href: "/payments" },
     { name: t('nav.shop'), href: "/shop" },
     { name: t('nav.tourism'), href: "/tourism" },
-    { name: t('nav.export'), href: "/exports" },
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
     { name: t('nav.data'), href: "/data-visualization" },
@@ -231,8 +241,6 @@ export default function Layout({ children }: LayoutProps) {
     "/onesa-ai-chat",
     "/onesa-ai-tourism-virtual-experince",
     "/onesa-ai-tourism-augmented-experince",
-    "/onesa-ai-tourism-virtual-experience",
-    "/onesa-ai-tourism-augmented-experience",
   ];
   // Bubble is visible on all other routes by default.
   const showOnesaBubble = !hideOnesaBubbleRoutes.some((route) => location.startsWith(route));
@@ -580,7 +588,7 @@ export default function Layout({ children }: LayoutProps) {
             <div
               ref={navPillRef}
               className={`
-              relative flex items-center gap-1 p-1 px-10 rounded-full transition-all duration-700 overflow-hidden
+              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden
               ${scrolled 
                 ? 'bg-slate-900/90 backdrop-blur-md border border-white/10' 
                 : 'bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]' 

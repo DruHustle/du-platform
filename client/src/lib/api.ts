@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const HAS_LOGGED_IN_KEY = "zigd_has_logged_in";
+
 function resolveApiBaseUrl() {
   const raw = String(import.meta.env.VITE_API_URL ?? "").trim();
   if (!raw) return "/api";
@@ -30,4 +32,45 @@ export type AuthUser = {
   email: string;
 };
 
-export function loadAuthToken() {}
+export function saveAuthToken(token: string) {
+  if (typeof window === "undefined") return;
+  const normalized = String(token ?? "").trim();
+  if (!normalized) return;
+  window.localStorage.setItem("zigd_jwt", normalized);
+  window.localStorage.setItem(HAS_LOGGED_IN_KEY, "1");
+}
+
+export function clearAuthToken() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem("zigd_jwt");
+  window.sessionStorage.removeItem("zigd_jwt");
+}
+
+export function loadAuthToken(): string {
+  if (typeof window === "undefined") return "";
+  return (
+    String(window.localStorage.getItem("zigd_jwt") ?? "").trim() ||
+    String(window.sessionStorage.getItem("zigd_jwt") ?? "").trim()
+  );
+}
+
+export function hasLoggedInBefore(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(HAS_LOGGED_IN_KEY) === "1";
+}
+
+api.interceptors.request.use((config) => {
+  const token = loadAuthToken();
+  if (!token) return config;
+
+  config.headers = config.headers ?? {};
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export async function refreshAuthTokenFromSession(): Promise<string> {
+  const response = await api.post("/auth/token/refresh");
+  const token = String(response?.data?.accessToken ?? "").trim();
+  if (token) saveAuthToken(token);
+  return token;
+}

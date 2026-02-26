@@ -40,11 +40,11 @@
   "nav": {
     "home": "Home",
     "shop": "Shop",
-    "export": "Exports",
     "tourism": "Tourism",
-    "investment": "Investment",
+    "investment": "Investments",
     "trade": "Trade",
-    "data": "Economic Data",
+    "payments": "Payments",
+    "data": "Data",
     "success": "Success Stories",
     "market_requirements": "Market Requirements",
     "market_requirements_desc": "German market regulations and certifications",
@@ -78,7 +78,6 @@
     "made_in_zimbabwe_alt": "Made in Zimbabwe",
     "hero_title": "Diaspora Unlocked",
     "hero_subtitle": "ICT, Trade, Tourism and Investment Acceleration for Vision 2030",
-    "export_hub": "Exports",
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
@@ -92,11 +91,6 @@
     "view_data": "View Economic Data",
     "success_stories": "Success Stories",
     "modules": {
-      "export": {
-        "title": "Exports",
-        "desc": "Access EU market requirements and connect with verified partners for exports.",
-        "stats": "Verified Partners"
-      },
       "tourism": {
         "title": "Tourism",
         "desc": "Discover Zimbabwe's world-class attractions and  plan your visit.",
@@ -349,250 +343,6 @@
     "diaspora_ai": {
       "title": "How Diaspora Unlocked Uses AI",
       "subtitle": "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses."
-    }
-  },
-  "export": {
-    "hero": {
-      "badge1": "EU Market Access",
-      "title1": "Unlock European Markets",
-      "desc1": "Navigate EU regulations and certifications with ease to export your Zimbabwean products.",
-      "highlight1": "Simplified Compliance",
-      "badge2": "German Focus",
-      "title2": "Target Germany",
-      "desc2": "Specific insights and partners for the German market, a key entry point to Europe.",
-      "highlight2": "Direct Market Entry",
-      "badge3": "Trade Agreements",
-      "title3": "Leverage EPA & ESA",
-      "desc3": "Benefit from Economic Partnership Agreements for duty-free and quota-free access.",
-      "highlight3": "Preferential Access",
-      "badge4": "Global Reach",
-      "title4": "Expand Your Horizons",
-      "desc4": "Connect with a global network of buyers and distributors.",
-      "highlight4": "Worldwide Opportunities",
-      "badge5": "Horticulture Focus",
-      "title5": "Green Gold Exports",
-      "desc5": "Specialized support for fresh produce, flowers, and organic products.",
-      "highlight5": "High-Value Crops",
-      "badge6": "Manufacturing Boost",
-      "title6": "Industrial Exports",
-      "desc6": "Guidance for manufactured goods, textiles, and processed foods.",
-      "highlight6": "Value-Added Products",
-      "badge7": "Market Intelligence",
-      "title7": "High-Demand Product Windows",
-      "desc7": "Track demand and standards for high-value crops and specialty products in target EU markets.",
-      "highlight7": "Buyer-Aligned Supply",
-      "badge8": "Compliance Advantage",
-      "title8": "Certification-Ready Exports",
-      "desc8": "Use traceability, quality controls, and food-safety systems to secure repeat EU buyer contracts.",
-      "highlight8": "Trust and Quality",
-      "badge9": "Niche Growth",
-      "title9": "Natural Oils and Botanicals",
-      "desc9": "Develop premium natural products for cosmetics and wellness categories with strong EU demand.",
-      "highlight9": "Emerging Segments"
-    },
-    "objective_title": "Export to the EU with Confidence",
-    "objective_subtitle": "Zimbabwean exporters can access the EU under iEPA duty-free and quota-free terms. This guide outlines the essentials for compliant market entry, including REX registration, origin documentation, SPS readiness, and key EU regulatory updates.",
-    "explore_market_requirements": "Explore Market Requirements",
-    "contact_us": "Contact Us",
-    "contact_form_title": "Exports Inquiry",
-    "contact_form_subtitle": "Fill out the form below to get in touch with our export specialists.",
-    "market_requirements_title": "Key Registration and Documentation",
-    "market_requirements_subtitle": "Core steps required to claim preferential access and clear EU import controls.",
-    "german_requirements": {
-      "food_products": {
-        "category": "REX and Preferential Tariffs",
-        "requirements": [
-          "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
-          "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
-          "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX."
-        ],
-        "price": "Tariff Access"
-      },
-      "textiles_leather": {
-        "category": "Statement on Origin Rules",
-        "requirements": [
-          "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
-          "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
-          "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU."
-        ],
-        "price": "Origin Compliance"
-      },
-      "arts_crafts": {
-        "category": "ZIMRA and Export Documentation",
-        "requirements": [
-          "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
-          "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
-          "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading or air waybill."
-        ],
-        "price": "Pre-shipment"
-      },
-      "agricultural_products": {
-        "category": "EU Product and Safety Standards",
-        "requirements": [
-          "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
-          "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
-          "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements."
-        ],
-        "price": "SPS Critical"
-      }
-    },
-    "product_intelligence_badge": "Intelligence",
-    "product_intelligence_title": "Product-Specific Market Intelligence",
-    "product_intelligence_subtitle": "Stay ahead with real-time data on product demand, pricing, and buyer preferences.",
-    "market_intelligence_requirements": "Key Requirements:",
-    "market_intelligence_buyers": "Potential Buyers:",
-    "market_intelligence": {
-      "blueberries": {
-        "product": "Blueberries",
-        "status": "High Demand",
-        "requirements": [
-          "GlobalG.A.P. certification is essential.",
-          "Strict adherence to EU MRLs for pesticides.",
-          "Packaging must meet EU standards for fresh produce.",
-          "Consistent supply chain and cold storage are critical."
-        ],
-        "buyers": [
-          "LIDL",
-          "EDEKA",
-          "REWE"
-        ]
-      },
-      "honey": {
-        "product": "Honey",
-        "status": "Growing Niche",
-        "requirements": [
-          "EU Honey Directive compliance (purity, origin).",
-          "Residue monitoring for antibiotics and heavy metals.",
-          "Organic certification offers a significant premium.",
-          "Traceability from hive to shelf is highly valued."
-        ],
-        "buyers": "Specialty food stores, organic markets"
-      },
-      "natural_oils": {
-        "product": "Natural Oils (Marula)",
-        "status": "Emerging Market",
-        "requirements": [
-          "COSMOS or NaTrue certification for cosmetics.",
-          "Documentation of sustainable sourcing practices.",
-          "Quality control for purity and fatty acid profile.",
-          "Clear labeling of botanical name and origin."
-        ],
-        "buyers1": "Cosmetic manufacturers",
-        "buyers2": "Wellness brands"
-      },
-      "demand_outlook": "Demand Outlook",
-      "demand_status": "Sustained EU Demand",
-      "compliance_requirements": "Compliance Requirements",
-      "buyer_channels": "Buyer Channels",
-      "contact_verified_buyers": "Contact Verified Buyers"
-    },
-    "partner_network_badge": "Network",
-    "partner_network_title": "Verified Partner Network",
-    "partner_network_subtitle": "Connect with trusted German retailers, distributors, and logistics providers.",
-    "view_examples": "View Examples",
-    "partner_examples": "Examples of Partners:",
-    "partners": {
-      "retailers": {
-        "type": "Retailers & Supermarkets",
-        "description": "Direct access to major German retail chains and independent stores."
-      },
-      "educational_institutions": {
-        "type": "Educational Institutions",
-        "description": "Partnerships for skill development, research, and cultural exchange."
-      },
-      "business_partners": {
-        "type": "Business Development Partners",
-        "description": "Specialists in market entry, business matching, and investment facilitation."
-      },
-      "logistics_partners": {
-        "type": "Logistics & Freight Forwarders",
-        "description": "Reliable and efficient transport solutions for seamless export operations."
-      },
-      "regulatory_partners": {
-        "type": "Regulatory & Certification Bodies",
-        "description": "Guidance and support for navigating complex German and EU regulations."
-      },
-      "financial_services": {
-        "type": "Financial Services & Trade Finance",
-        "description": "Access to trade finance, export credit, and banking solutions."
-      }
-    },
-    "regulatory_updates_badge": "Updates",
-    "regulatory_updates_title": "Regulatory Updates",
-    "regulatory_updates_subtitle": "Track major EU policy shifts that affect origin compliance, sustainability checks, and carbon-linked reporting.",
-    "regulatory_updates_open_full_compliance_guide": "Open Full Compliance Guide",
-    "compliance_checklist": {
-      "title": "Critical Regulations and Compliance Checklist",
-      "subtitle": "A practical baseline for SPS, origin documentation, and incoming EU climate and deforestation controls.",
-      "view_full_regulations": "View Full Regulations",
-      "points": [
-        "Confirm your product HS code and check EU duties and technical measures in Access2Markets.",
-        "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
-        "Issue a valid Statement on Origin for each shipment.",
-        "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
-        "Complete SPS, labeling, and traceability controls required for your product class.",
-        "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026."
-      ],
-      "c1": "Confirm your product HS code and check EU duties/technical measures in Access2Markets.",
-      "c2": "Register for REX with ZIMRA if exporting consignments above EUR 6,000 under iEPA preferences.",
-      "c3": "Issue a valid Statement on Origin for each shipment.",
-      "c4": "Prepare invoice, packing list, transport document, and sector-specific export licenses.",
-      "c5": "Complete SPS, labeling, and traceability controls required for your product class.",
-      "c6": "For carbon-intensive goods, assess CBAM exposure and reporting obligations ahead of 2026.",
-      "c7": "Validate importer EORI details and customs broker instructions before goods dispatch.",
-      "c8": "Archive all shipment, origin, and compliance records for post-clearance audits."
-    },
-    "regulatory_updates": {
-      "eu_sanctions_easing": {
-        "title": "EU Deforestation Regulation (EUDR)",
-        "date": "Full application delayed to December 2026",
-        "description": "If you export covered products, you must prove supply chains are deforestation-free and traceable before full enforcement."
-      },
-      "arms_embargo_expiration": {
-        "title": "Carbon Border Adjustment Mechanism (CBAM)",
-        "date": "Permanent phase expected January 2026",
-        "description": "CBAM is in transition for carbon-intensive goods (iron, steel, cement, fertilizers, aluminum). Financial obligations are expected in the permanent phase."
-      },
-      "eu_esa_epa_benefits": {
-        "title": "SPS Readiness for Agro and Food Exports",
-        "description": "Food and plant exporters should treat SPS controls as a gate requirement. For sensitive products such as honey, maintain evidence of residue controls and competent authority oversight."
-      },
-      "sps_priority_date": "Ongoing compliance priority"
-    },
-    "cta_title": "Ready to Export to the EU?",
-    "cta_subtitle": "Our team of experts is ready to guide you through every step of the process. Contact us today to get started.",
-    "cta_button": "Get Started Now",
-    "registration": {
-      "title": "Key Registration and Documentation",
-      "subtitle": "Core steps required to claim preferential access and clear EU import controls.",
-      "rex": {
-        "category": "REX and Preferential Tariffs",
-        "r1": "Exports to the EU are governed by the interim EPA (iEPA), giving Zimbabwe duty-free and quota-free market access.",
-        "r2": "Since July 1, 2021, exporters must use the EU Registered Exporter (REX) self-certification system.",
-        "r3": "Register as an exporter through ZIMRA to issue valid Statements on Origin under REX.",
-        "tag": "Tariff Access"
-      },
-      "origin": {
-        "category": "Statement on Origin Rules",
-        "r1": "Consignments above EUR 6,000 require a Statement on Origin from a registered REX exporter.",
-        "r2": "Consignments at or below EUR 6,000 can be self-certified by any exporter (without REX registration).",
-        "r3": "Keep origin documentation audit-ready for customs checks in both Zimbabwe and the EU.",
-        "tag": "Origin Compliance"
-      },
-      "zimra": {
-        "category": "ZIMRA and Export Documentation",
-        "r1": "Typical ZIMRA registration pack includes application letter, certificate of incorporation, CR6/CR14, and valid ITF263 tax clearance.",
-        "r2": "Obtain an export license where required by sector ministries (for example Agriculture for plants).",
-        "r3": "Core shipping file must include commercial invoice (with HS code), packing list, and bill of lading/air waybill.",
-        "tag": "Pre-shipment"
-      },
-      "sps": {
-        "category": "EU Product and Safety Standards",
-        "r1": "Food and plant exports must meet strict SPS requirements, including traceability and health controls.",
-        "r2": "Market trust often depends on certifications such as GLOBALG.A.P. and HACCP.",
-        "r3": "For honey, compliance work includes a National Residue Monitoring Plan (NRMP) aligned to EU requirements.",
-        "tag": "SPS Critical"
-      }
     }
   },
   "tourism": {
@@ -2001,7 +1751,6 @@
     "cta": {
       "back": "Back",
       "investment_opportunities": "Investment Opportunities",
-      "export_hub": "Exports",
       "search_ntir": "Search NTIR"
     }
   },

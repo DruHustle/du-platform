@@ -3,9 +3,10 @@ import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight, Handshake } from "lucide-react";
+import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight, Handshake, FileText } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -227,6 +228,93 @@ export default function Trade() {
     },
   ];
 
+  const exportMarketIntelligence = [
+    {
+      product: "Blueberries",
+      status: "High Demand",
+      image: "/images/pages/export/blueberry_export.png",
+      requirements: [
+        "GLOBALG.A.P. farm assurance",
+        "Residue and pesticide controls",
+        "Cold-chain continuity",
+        "Traceability records by lot",
+      ],
+      buyers: ["Retail chains", "Fresh produce importers", "Wholesale distributors"],
+    },
+    {
+      product: "Honey",
+      status: "Growing Niche",
+      image: "/images/pages/wikimedia/small-honey-jar.jpg",
+      requirements: [
+        "Food safety controls (HACCP)",
+        "Residue monitoring evidence",
+        "Clear labeling and origin declarations",
+        "Batch-level traceability",
+      ],
+      buyers: ["Organic shops", "Specialty food stores", "Health and wellness retailers"],
+    },
+    {
+      product: "Natural Oils (Marula)",
+      status: "Emerging Segment",
+      image: "/images/pages/export/marula_export.png",
+      requirements: [
+        "Quality and purity specifications",
+        "Stable packaging for long transit",
+        "Safety documentation for cosmetics use",
+        "Consistent supplier traceability",
+      ],
+      buyers: ["Cosmetics manufacturers", "Wellness brands", "Natural products distributors"],
+    },
+  ];
+
+  const exportDocumentationBlocks = [
+    {
+      title: "REX and Preferential Tariffs",
+      tag: "Tariff Access",
+      items: [
+        "Use iEPA preferences where rules-of-origin are met.",
+        "For consignments above EUR 6,000, use REX-based statement on origin.",
+        "Maintain audit-ready origin evidence for customs checks.",
+      ],
+    },
+    {
+      title: "ZIMRA and Export Documentation",
+      tag: "Pre-shipment",
+      items: [
+        "Prepare commercial invoice, packing list, and transport documents.",
+        "Include accurate HS code and product descriptions.",
+        "Secure sector-specific permits where required.",
+      ],
+    },
+    {
+      title: "SPS and Product Safety",
+      tag: "SPS Critical",
+      items: [
+        "Apply food and plant SPS controls before dispatch.",
+        "Use certification pathways expected by buyers (for example GLOBALG.A.P. and HACCP).",
+        "Keep traceability records complete and accessible.",
+      ],
+    },
+    {
+      title: "Importer Readiness",
+      tag: "Border Clearance",
+      items: [
+        "Confirm importer EORI and customs instructions in advance.",
+        "Align contract terms with payment and logistics milestones.",
+        "Archive full shipment records for post-clearance audits.",
+      ],
+    },
+  ];
+
+  const exportComplianceChecklist = [
+    "Confirm product HS code and applicable market measures before quotation.",
+    "Validate REX and statement-on-origin requirements by consignment value.",
+    "Complete SPS and labeling checks before goods leave origin.",
+    "Ensure logistics documents are complete and internally consistent.",
+    "Track CBAM and EUDR implications where product scope applies.",
+    "Keep complete digital records for customs and buyer audits.",
+  ];
+
   return (
     <Layout>
 
@@ -269,6 +357,106 @@ export default function Trade() {
         </div>
       </section>
 
+      {/* Export intelligence moved from Exports into Trade */}
+      <section id="trade-export-intelligence" className="pt-2 pb-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <Tabs defaultValue={exportMarketIntelligence[0].product} className="w-full">
+            <TabsList className="flex justify-center bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-full h-12 p-1 mb-8 max-w-lg mx-auto shadow-xl relative">
+              <span className="absolute inset-0 rounded-full border border-white/5 pointer-events-none" />
+              {exportMarketIntelligence.map((item) => (
+                <TabsTrigger
+                  key={item.product}
+                  value={item.product}
+                  className="flex-1 rounded-full px-2 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-zim-gold data-[state=active]:text-zim-black data-[state=active]:shadow-[0_0_15px_rgba(212,175,55,0.3)] text-white/40"
+                >
+                  {item.product}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {exportMarketIntelligence.map((item) => (
+              <TabsContent key={item.product} value={item.product} className="mt-0 outline-none">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative p-8 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
+                >
+                  <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+                    <div className="md:col-span-3 flex flex-col space-y-4 border-r border-white/5 pr-6">
+                      <div className="space-y-1">
+                        <Badge className="bg-zim-gold/10 text-zim-gold border-none text-[9px] font-black px-2 py-0.5 uppercase tracking-tighter">
+                          {item.status}
+                        </Badge>
+                        <h3 className="text-lg font-black text-white tracking-tight leading-none">{item.product}</h3>
+                      </div>
+
+                      <div className="relative group/img overflow-hidden rounded-2xl border border-white/10 aspect-[4/3]">
+                        <div
+                          className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover/img:scale-110 saturate-[0.7] group-hover/img:saturate-100"
+                          style={{ backgroundImage: `url('${item.image}')` }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/40 via-transparent to-white/10 pointer-events-none" />
+                      </div>
+
+                      <div className="pt-2">
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">
+                          Demand Outlook
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="h-4 w-4 text-zim-gold" />
+                          <span className="text-xs font-bold text-white/90 tracking-tight">
+                            Sustained EU Demand
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="md:col-span-6 flex flex-col justify-center">
+                      <div className="flex items-center gap-3 mb-6">
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
+                          Compliance Requirements
+                        </span>
+                        <div className="h-px flex-1 bg-white/5" />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {item.requirements.map((req) => (
+                          <div key={req} className="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/10 hover:bg-slate-950/60 hover:border-white/10 transition-all duration-300">
+                            <div className="p-1.5 bg-white/5 rounded-lg">
+                              <FileText className="h-3.5 w-3.5 text-zim-gold/70" />
+                            </div>
+                            <span className="text-[11px] text-white/70 leading-snug font-light">{req}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="md:col-span-3 flex flex-col bg-white/[0.02] p-6 rounded-3xl border border-white/5 shadow-inner">
+                      <span className="text-[10px] font-black text-zim-gold uppercase tracking-[0.2em] block mb-4">
+                        Buyer Channels
+                      </span>
+                      <div className="flex flex-col gap-3 flex-grow">
+                        {item.buyers.map((buyer) => (
+                          <div key={buyer} className="flex items-center gap-3 text-[11px] py-2 border-b border-white/5 last:border-0 group/buyer cursor-default">
+                            <div className="h-1 w-1 rounded-full bg-zim-gold transition-transform group-hover/buyer:scale-150" />
+                            <span className="text-white/70 font-medium group-hover/buyer:text-white transition-colors">{buyer}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <Link href="/regulations#export-certification-and-labeling">
+                        <Button className="w-full mt-6 h-10 bg-white/5 hover:bg-zim-gold border border-white/10 hover:border-zim-gold text-white hover:text-zim-black text-[9px] font-black uppercase tracking-widest transition-all duration-500 rounded-xl">
+                          Contact Verified Buyers
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
+      </section>
 
       {/* Export Sectors Section - Cinematic Glass Grid */}
       <section id="export-sectors" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
@@ -376,7 +564,69 @@ export default function Trade() {
         </div>
       </section>
 
-     {/* Trade Market information */}
+
+     {/* Export Documentation and compliance */}
+      <section id="trade-export-documentation" className="py-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-8 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <FileCheck className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">Export Documentation and Compliance</h3>
+              </div>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
+                Core controls previously shown on Exports are now consolidated in Trade.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {exportDocumentationBlocks.map((block) => (
+                <div key={block.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6">
+                  <Badge className="mb-3 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
+                    {block.tag}
+                  </Badge>
+                  <h4 className="text-white text-lg font-black tracking-tight mb-3">{block.title}</h4>
+                  <ul className="space-y-2">
+                    {block.items.map((item) => (
+                      <li key={item} className="text-sm text-white/75 leading-relaxed">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Crirical Export Checklist*/}
+      <section id="trade-export-checklist" className="py-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="mb-8 text-center">
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <CheckCircle2 className="h-6 w-6 text-zim-gold" />
+                <h3 className="text-xl font-black text-white tracking-tight">Critical Export Checklist</h3>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {exportComplianceChecklist.map((point) => (
+                <div key={point} className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-white/75">
+                  {point}
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Link href="/regulations#export-controls">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                  Open Full Compliance Guide
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trade Market information */}
       <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
@@ -418,7 +668,6 @@ export default function Trade() {
           </div>
         </div>
       </section>
-
 
     </Layout>
   );
