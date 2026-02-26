@@ -143,7 +143,7 @@ def main() -> int:
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parent
-    locales_dir = root / "client" / "public" / "locales"
+    locales_dir = root / "frontend" / "public" / "locales"
     en_path = locales_dir / "en" / "translation.json"
     if not en_path.exists():
         raise FileNotFoundError(f"English source file not found: {en_path}")

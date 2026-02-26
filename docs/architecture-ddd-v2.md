@@ -20,7 +20,7 @@ The platform is organized as bounded domains with strict service-layer communica
 ## Backend Structure
 
 ```text
-server/
+backend/
   core/
     config.ts
     logger.ts
@@ -67,7 +67,7 @@ server/
 ## Frontend Structure
 
 ```text
-client/src/
+frontend/src/
   modules/
     tourism/
     trade/
