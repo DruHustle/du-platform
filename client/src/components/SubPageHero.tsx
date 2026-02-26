@@ -10,6 +10,7 @@ interface HeroButton {
   link?: string;
   variant?: "primary" | "outline" | string;
   showArrow?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 interface HeroSlide {
@@ -169,7 +170,7 @@ export default function SubPageHero({ heroSlides, intro }: SubPageHeroProps) {
                     `}
                     asChild
                   >
-                    <a href={btn.link}>
+                    <a href={btn.link} onClick={btn.onClick}>
                       <span className="relative z-10 flex items-center">
                         {btn.text}
                         {btn.showArrow && <ArrowRight className="ml-2 h-4 w-4" />}

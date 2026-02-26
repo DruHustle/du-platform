@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, Shield, Gem, Repeat, FileText, Target } from "lucide-react";
+import { TrendingUp, Users, DollarSign, CheckCircle, Award, Brain, ArrowRight, Globe, Building, Leaf, ExternalLink, Shield, Gem, Repeat, FileText, Target, Lightbulb, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
@@ -29,7 +29,7 @@ export default function Investment() {
       subtitle: t('investment.hero.subtitle1') || "Supporting national development through diaspora engagement.",
       buttons: [
         { text: t('investment.hero.rbz_policy') || "Explore policies", variant: "primary", link: "/regulations#investment-compliance" },
-        { text: t('investment.hero.rbz_currency') || "Invest in USD or ZiG", variant: "outline", link: "/regulations#currency-settlement" }
+        { text: t('investment.hero.rbz_currency') || "Choose USD or ZiG Investment Paths", variant: "outline", link: "/regulations#currency-settlement" }
       ]
     },
     {
@@ -248,6 +248,42 @@ const projects = [
       highlights: ["Energy Access", "Independent Power", "Sustainable Returns"],
     },
   };
+
+  const innovationOpportunityAreas = [
+    {
+      title: t("tech.opportunities.ai.title") || "Artificial Intelligence",
+      driver:
+        t("tech.opportunities.ai.driver") ||
+        "Deployment momentum in mining, healthcare, and governance under the national AI strategy.",
+    },
+    {
+      title: t("tech.opportunities.sme.title") || "SME Digitalization",
+      driver:
+        t("tech.opportunities.sme.driver") ||
+        "High demand for affordable inventory tools, payroll automation, and customer support chat systems.",
+    },
+    {
+      title: t("tech.opportunities.cybersecurity.title") || "Cybersecurity",
+      driver:
+        t("tech.opportunities.cybersecurity.driver") ||
+        "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills.",
+    },
+    {
+      title: t("tech.opportunities.ecommerce.title") || "E-commerce & Logistics",
+      driver:
+        t("tech.opportunities.ecommerce.driver") ||
+        "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure.",
+    },
+  ];
+
+  const innovationChallenges = [
+    t("tech.challenges.infrastructure") ||
+      "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
+    t("tech.challenges.human_capital") ||
+      "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
+    t("tech.challenges.regulation") ||
+      "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors.",
+  ];
 
   const filtered = projects.filter(p => (activeFilter === "all" || p.sector === activeFilter) && (riskFilter === "all" || p.risk === riskFilter));
   const hdcAssocRaw = t('investment.hdc_associations', { returnObjects: true });
@@ -679,7 +715,7 @@ const projects = [
       </section>
 
       {/* How it Works - Glass Dashboard */}
-      <section className="py-10 bg-slate-950">
+      <section className="p-5 bg-slate-950">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -716,7 +752,7 @@ const projects = [
       </section>
 
       {/* Collective Model */}
-      <section id="collective-model" className="pb-10 bg-slate-950 relative overflow-hidden">
+      <section id="collective-model" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-center justify-center gap-3 mb-5">
@@ -741,7 +777,7 @@ const projects = [
       </section>
 
       {/* Active Projects - Cinematic Glass Grid */}
-      <section id="active-projects" className="py-10 bg-slate-950 relative overflow-hidden">
+      <section id="active-projects" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -779,11 +815,23 @@ const projects = [
                   <div className="grid md:grid-cols-12 gap-6 p-7">
                     <div className="md:col-span-8 space-y-5">
                       <div className="flex flex-wrap gap-2">
-                        <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[9px] uppercase font-black px-3 py-1 rounded-full">{p.sector}</Badge>
                         <Badge className={`text-[9px] uppercase font-black px-3 py-1 rounded-full ${p.risk === "conservative" ? "bg-green-500/10 text-green-400" : p.risk === "moderate" ? "bg-yellow-500/10 text-yellow-400" : "bg-red-500/10 text-red-400"}`}>
                           {(t(`investment.project_filters.${p.risk}`) || projectFilterFallbacks[p.risk] || p.risk)} {t('investment.project_card.risk') || "Risk Level"}
                         </Badge>
-                        {p.ver && <Badge className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] uppercase font-black px-3 py-1 rounded-full flex items-center gap-1.5"><Award className="h-3 w-3" /> {t('investment.project_card.verified') || "Verified Asset"}</Badge>}
+                        {p.ver && (
+                          <div className="group/verified relative">
+                            <Badge
+                              title={t('investment.project_card.verified') || "Verified Asset"}
+                              aria-label={t('investment.project_card.verified') || "Verified Asset"}
+                              className="h-6 w-6 justify-center rounded-full border border-blue-500/20 bg-blue-500/10 p-0 text-blue-400"
+                            >
+                              <Award className="h-3 w-3" />
+                            </Badge>
+                            <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border border-blue-500/20 bg-slate-950/95 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-blue-300 opacity-0 transition-opacity duration-200 group-hover/verified:opacity-100">
+                              {t('investment.project_card.verified') || "Verified Asset"}
+                            </span>
+                          </div>
+                        )}
                       </div>
                       
                       <h3 className="text-lg font-black text-white tracking-tight">
@@ -835,7 +883,10 @@ const projects = [
                       </div>
                       
                       <Link href={`/investment/projects/${p.id}`}>
-                        <Button className="w-full mt-4 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                        <Button
+                          variant="outline"
+                          className="w-full mt-4 rounded-full border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-zim-black hover:border-white font-black uppercase tracking-widest text-[10px] transition-all duration-300"
+                        >
                           {t('investment.project_card.view_details') || "View Details"}
                         </Button>
                       </Link>
@@ -933,8 +984,72 @@ const projects = [
         </div>
       </section>
 
+      {/* Directories - Dual Glass Panels */}
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+              <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <FileText className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">{t('investment.database_title') || "Trade & Investment Databases and Registries"}</h3>
+            </div>
+             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-5 mb-6">
+                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🗂️</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
+                  <p className="text-xs text-zim-gold/60 font-black uppercase tracking-[0.2em]">
+                    {t("investment.ntir_label") || "National Directory"}
+                  </p>
+                </div>
+              </div>
+              <p className="text-white/50 text-sm font-light leading-relaxed mb-8">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
+              <Link href="/ntir">
+                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
+                  {t('investment.ntir_button') || "Search NTIR Database."}
+                </Button>
+              </Link>
+            </div>
+
+            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-5 mb-6">
+                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🌱</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
+                  <p className="text-xs text-zim-green/60 font-black uppercase tracking-[0.2em]">
+                    {t("investment.hdc_label") || "Horticulture Council"}
+                  </p>
+                </div>
+              </div>
+              <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
+              <div className="flex flex-wrap gap-2">
+                {hdcAssoc.slice(0, 5).map((a, i) => (
+                  <Badge key={i} className="bg-white/5 text-white/60 border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">
+                    {a}
+                  </Badge>
+                ))}
+                {hdcAssoc.length > 5 && (
+                  <Badge className="bg-white/5 text-white/40 border border-white/10 text-[9px] font-bold px-3 py-1 rounded-full">+{hdcAssoc.length - 5} more</Badge>
+                )}
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* Calculator Section */}
-      <section className="pt-10 pb-24 bg-slate-950 relative overflow-hidden">
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto relative z-10">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -949,8 +1064,52 @@ const projects = [
         </div>
       </section>
 
+     {/* Innovation opportunities */}
+      <section id="investment-innovation-opportunities" className="p-5 bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <Lightbulb className="h-6 w-6 text-zim-gold" />
+              <h3 className="text-xl font-black text-white tracking-tight">
+                {t("tech.opportunities.title") || "Top Opportunities for Investment and Innovation"}
+              </h3>
+            </div>
+            <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed text-center mb-8">
+              {t("investment.opportunities.subtitle") ||
+                "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise."}
+            </p>
+
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+              <div className="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {innovationOpportunityAreas.map((item) => (
+                  <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                    <p className="text-zim-gold text-xs uppercase font-black tracking-widest mb-2">{item.title}</p>
+                    <p className="text-white/75 text-sm leading-relaxed">{item.driver}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="xl:col-span-5 rounded-xl border border-white/10 bg-white/[0.02] p-5">
+                <h4 className="text-lg font-black text-white tracking-tight mb-4">
+                  {t("tech.challenges.title") || "Critical Challenges to Address"}
+                </h4>
+                <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-3">
+                  {innovationChallenges.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <AlertTriangle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
+                      <span className="text-white/75 text-sm leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* European Investment Partnerships */}
-      <section id="eu-partnerships" className="pb-10 bg-slate-950 relative overflow-hidden">
+      <section id="eu-partnerships" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
@@ -1018,71 +1177,9 @@ const projects = [
         </div>
       </section>
 
-      {/* Directories - Dual Glass Panels */}
-      <section className="py-10 bg-slate-950">
-        <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-              <div className="mb-10 text-center">
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <FileText className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">{t('investment.database_title') || "Trade & Investment Databases and Registries"}</h3>
-            </div>
-             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-5 mb-6">
-                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
-                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🗂️</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
-                  <p className="text-xs text-zim-gold/60 font-black uppercase tracking-[0.2em]">
-                    {t("investment.ntir_label") || "National Directory"}
-                  </p>
-                </div>
-              </div>
-              <p className="text-white/50 text-sm font-light leading-relaxed mb-8">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
-              <Link href="/ntir">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                  {t('investment.ntir_button') || "Search NTIR Database."}
-                </Button>
-              </Link>
-            </div>
-
-            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-5 mb-6">
-                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
-                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🌱</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
-                  <p className="text-xs text-zim-green/60 font-black uppercase tracking-[0.2em]">
-                    {t("investment.hdc_label") || "Horticulture Council"}
-                  </p>
-                </div>
-              </div>
-              <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
-              <div className="flex flex-wrap gap-2">
-                {hdcAssoc.slice(0, 5).map((a, i) => (
-                  <Badge key={i} className="bg-white/5 text-white/60 border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">
-                    {a}
-                  </Badge>
-                ))}
-                {hdcAssoc.length > 5 && (
-                  <Badge className="bg-white/5 text-white/40 border border-white/10 text-[9px] font-bold px-3 py-1 rounded-full">+{hdcAssoc.length - 5} more</Badge>
-                )}
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-      </section>
 
       {/* Regulatory Snapshot */}
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
@@ -1114,7 +1211,7 @@ const projects = [
       </section>
 
       {/* ZIDA Information Section */}
-      <section className="py-10 bg-slate-950 relative overflow-hidden">
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">

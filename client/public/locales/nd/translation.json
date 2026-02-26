@@ -101,6 +101,11 @@
         "desc": "Hlola amathuba okutshala imali amancane (micro-investment) lalawo okuhlanganyela (crowdfunding).",
         "stats": "$50M+ Yamathuba"
       },
+      "payments": {
+        "title": "Payments",
+        "desc": "Thumela imali kumbe ugcwalise i-airtime usebenzisa izindlela ezivikelekileyo ezibonisa izindleko ngokucacileyo.",
+        "stats": "Remittance + Airtime"
+      },
       "trade": {
         "title": "Ezohwebo",
         "desc": "Finyelela izinsiza zezohwebo ezibanzi njalo uxhumane lezingxenye zezokuthumela ngaphandle zaseZimbabwe.",
@@ -346,6 +351,7 @@
     }
   },
   "tourism": {
+    "back_to_tourism": "Buyela kuEzokuvakasha",
     "hero": {
       "badge1": "Vakashela iZimbabwe",
       "title1": "Thola ubuhle obumangalisayo",
@@ -721,6 +727,9 @@
   "investment": {
     "objective_title": "Ukutshala imali okuphephileyo, okuqhuba ukukhula",
     "objective_subtitle": "Ukuxhuma abatshali mali bama-diaspora lemisebenzi ehloliweyo, elamathuba amakhulu, isekelwa yimizamo kahulumende.",
+    "opportunities": {
+      "subtitle": "Lezi zindawo eziphambili zingaletha inzuzo engcono uma zihambisana lokulandela imithetho, ubudlelwano obusebenzayo, kanye lolwazi lwengxenye."
+    },
     "economic_snapshot": {
       "title": "Isifinyezo Somnotho Sabatshali Mali",
       "subtitle": "Hlola ukunyakaza kokukhula, imali, intela, lemigomo ngaphambi kokubeka imali.",
@@ -739,7 +748,7 @@
       "title1": "Ukutshala imali kwama-Diaspora",
       "subtitle1": "Ukusekela ukuthuthukiswa kwelizwe ngokuzibandakanya kwama-diaspora.",
       "rbz_policy": "Hlola izinqubomgomo",
-      "rbz_currency": "Tshala nge-USD kumbe i-ZiG",
+      "rbz_currency": "Khetha Izindlela Zokutshala nge-USD kumbe i-ZiG",
       "highlight1": "Ukukhula kwelizwe",
       "badge2": "Masuwe SEZ",
       "title2": "Tshala e-Masuwe SEZ",
@@ -1229,7 +1238,6 @@
       "subtitle1": "Ukuvula amathuba ezomnotho aseZimbabwe ngokuhlaziya idatha ebanzi.",
       "desc1": "Hlola izinkomba zezomnotho ezisemqoka, ukusebenza kwezingxenye zomnotho, lomphumela wama-diaspora.",
       "economic_data": "Hlola idatha yezomnotho",
-      "sector": "Idatha yokusebenza kwezingxenye",
       "badge2": "Amandla ama-Diaspora",
       "title2": "Ukuthunyelwa kwemali: Insika ye- ",
       "highlight2": "Khula",
@@ -1318,11 +1326,6 @@
     "gdp_growth_trajectory": "Indlela yokukhula kwe-GDP",
     "gdp_growth_history": "Ukukhula komnotho weZimbabwe kusukela ku-2021 kusiya ku-2025",
     "gdp_data_source": "Isisusa: World Bank, IMF, ZIMSTAT",
-    "sectoral_data_badge": "Ukusebenza kwengxenye",
-    "sectoral_data_title": "Ukukhula kwe-GDP ngengxenye",
-    "sectoral_data_breakdown": "Ukuhluzwa kokuthi insika ngayinye yomnotho iletha njani ukukhula kumnotho welizwe.",
-    "sectoral_data_projections": "Ukubikezela kokukhula",
-    "sectoral_data_gdp_by_sector": "GDP ngengxenye",
     "diaspora_remittance_impact_badge": "Umphumela wama-Diaspora",
     "diaspora_remittance_impact_title": "Umphumela we-Diaspora kumnotho",
     "diaspora_remittance_impact_subtitle": "Ukwisisa iqhaza elikhulu elilethwa ngama-diaspora kumnotho welizwe.",
@@ -1334,6 +1337,8 @@
     "diaspora_residence_country": "Isigaba/Ilizwe",
     "diaspora_population": "Inani labantu",
     "diaspora_percentage": "Amaphesenti (%)",
+    "diaspora_remittance_2024": "Imali ethunyelwayo 2024",
+    "diaspora_remittance_2025": "Imali ethunyelwayo 2025",
     "disclaimer": "* Idatha isekelwe ekulinganisweni kwe-RBZ, ZIMSTAT, World Bank, le-IMF. Idatha yesikhathi sakhona ivuselelwa ngezikhathi ezithile.",
     "regional_breakdown_title": "Ukuhluzwa kwama-Diaspora ngezifunda",
     "regional_breakdown_subtitle": "Ukusabalala kwama-diaspora aseZimbabwe ezingxenyeni zomhlaba eziqakathekileyo.",
@@ -1827,7 +1832,7 @@
     },
     "products": {
       "title": "Shop Products",
-      "subtitle": "End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay.",
+      "subtitle": "Checkout epheleleyo enezindlela zokukhokha ezivikelekileyo kanye lokukhetha indlela yokuthumela ecacileyo.",
       "back_to_shop": "Back to Shop",
       "default_country": "Germany",
       "filters": {
@@ -1897,6 +1902,17 @@
       "guest_checkout": {
         "title": "Guest Checkout"
       },
+      "checkout": {
+        "title": "Checkout",
+        "logged_in_as": "Ungene njengo"
+      },
+      "delivery_speed": {
+        "label": "Ijubane lokuthumela",
+        "normal": "Normal Send",
+        "normal_hint": "Isikhathi esijwayelekileyo sokuthumela",
+        "express": "Express Send",
+        "express_hint": "Ukubanjwa phambili"
+      },
       "fields": {
         "full_name": "Full Name",
         "email_address": "Email Address",
@@ -1923,6 +1939,7 @@
       },
       "notes": {
         "guest_checkout": "Guest checkout enabled: no login required.",
+        "logged_in_checkout": "Checkout yokungena ngemvumo iyasebenza.",
         "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
       },
       "errors": {

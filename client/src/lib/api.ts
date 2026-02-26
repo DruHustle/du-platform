@@ -63,6 +63,17 @@ api.interceptors.request.use((config) => {
   const token = loadAuthToken();
   if (!token) return config;
 
+  const requestUrl = String(config.url ?? "");
+  const isSessionAuthEndpoint =
+    requestUrl === "/auth/me" ||
+    requestUrl === "/auth/login" ||
+    requestUrl === "/auth/register" ||
+    requestUrl === "/auth/token/refresh" ||
+    requestUrl === "/auth/forgot-password" ||
+    requestUrl === "/auth/reset-password" ||
+    requestUrl === "/auth/kyc/verify";
+  if (isSessionAuthEndpoint) return config;
+
   config.headers = config.headers ?? {};
   config.headers.Authorization = `Bearer ${token}`;
   return config;
@@ -73,4 +84,18 @@ export async function refreshAuthTokenFromSession(): Promise<string> {
   const token = String(response?.data?.accessToken ?? "").trim();
   if (token) saveAuthToken(token);
   return token;
+}
+
+export function getApiErrorMessage(error: unknown, fallback = "Request failed."): string {
+  const err = error as any;
+  const payload = err?.response?.data;
+  const candidates = [payload?.error?.message, payload?.message, err?.message];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) {
+      return candidate.trim();
+    }
+  }
+
+  return fallback;
 }

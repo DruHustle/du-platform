@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { getApiErrorMessage } from "@/lib/api";
 import { checkOnesaHealth, OnesaChatMessage, sendOnesaChatMessage } from "./OnesaAI";
 import { Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -110,7 +111,7 @@ export default function OnesaAIChat() {
       setStatus("");
     } catch (err: any) {
       const status = Number(err?.response?.status ?? 0);
-      const responseMessage = err?.response?.data?.message;
+      const responseMessage = getApiErrorMessage(err, "");
       const retryAfterMs = Number(err?.response?.data?.retryAfterMs ?? 0);
       const retryAfterSeconds = retryAfterMs > 0 ? Math.max(1, Math.ceil(retryAfterMs / 1000)) : null;
       const isRateLimited =

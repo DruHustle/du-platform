@@ -679,23 +679,27 @@ export default function Tourism() {
               <p className="section-subtitle-compact">{t("tourism.planning.essential_desc") || "Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe."}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {planningInfo.map((info, index) => {
                 const Icon = info.icon;
                 return (
-                  <div key={index} className="outer-glass-panel relative p-8 rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] group">
-                    <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="p-3 bg-zim-gold/10 rounded-xl">
+                  <div
+                    key={index}
+                    className="h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-300 hover:bg-white/[0.04]"
+                  >
+                    <div className="mb-5 flex items-center gap-4">
+                      <div className="rounded-xl border border-zim-gold/25 bg-zim-gold/10 p-3">
                         <Icon className="h-5 w-5 text-zim-gold" />
                       </div>
                       <h3 className="text-lg font-black text-white tracking-tight">{info.title}</h3>
                     </div>
-                    <p className="text-sm text-white/50 mb-8 font-light leading-relaxed">{info.description}</p>
+
+                    <p className="mb-6 text-sm font-light leading-relaxed text-white/70">{info.description}</p>
+
                     <ul className="space-y-3">
                       {info.details.map((detail, idx) => (
-                        <li key={idx} className="flex items-center gap-3 text-[11px] font-black uppercase tracking-wider text-white/80">
-                          <CheckCircle2 className="h-4 w-4 text-zim-gold opacity-60" />
+                        <li key={idx} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                          <CheckCircle2 className="mt-[2px] h-4 w-4 shrink-0 text-zim-gold/80" />
                           <span>{detail}</span>
                         </li>
                       ))}

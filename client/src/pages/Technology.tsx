@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Sparkles, Globe, Shield, TrendingUp, Lightbulb, CheckCircle, Tractor, Pickaxe, Truck, GraduationCap, Network, BarChart3, Wallet, Cpu, Signal, AlertTriangle, Building2, MapPin } from "lucide-react";
+import { Brain, Sparkles, Globe, Shield, TrendingUp, Lightbulb, CheckCircle, Tractor, Pickaxe, Truck, GraduationCap, Network, BarChart3, Wallet, Cpu, Signal, Building2, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
@@ -212,43 +212,6 @@ export default function Technology() {
     },
   ];
 
-  const opportunityAreas = [
-    {
-      title: t("tech.opportunities.ai.title") || "Artificial Intelligence",
-      driver:
-        t("tech.opportunities.ai.driver") ||
-        "Deployment momentum in mining, healthcare, and governance under the national AI strategy.",
-    },
-    {
-      title: t("tech.opportunities.sme.title") || "SME Digitalization",
-      driver:
-        t("tech.opportunities.sme.driver") ||
-        "High demand for affordable inventory tools, payroll automation, and customer support chat systems.",
-    },
-    {
-      title: t("tech.opportunities.cybersecurity.title") || "Cybersecurity",
-      driver:
-        t("tech.opportunities.cybersecurity.driver") ||
-        "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills.",
-    },
-    {
-      title: t("tech.opportunities.ecommerce.title") || "E-commerce & Logistics",
-      driver:
-        t("tech.opportunities.ecommerce.driver") ||
-        "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure.",
-    },
-  ];
-
-
-  const criticalChallenges = [
-    t("tech.challenges.infrastructure") ||
-      "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
-    t("tech.challenges.human_capital") ||
-      "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
-    t("tech.challenges.regulation") ||
-      "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors.",
-  ];
-
   const fintechSandboxPhases = [
     t("tech.fintech.phases.pre_application") || "Pre-application",
     t("tech.fintech.phases.application") || "Application and evaluation",
@@ -420,12 +383,6 @@ export default function Technology() {
 
             {/* Bottom row: Why Onesa AI matters and value pillars */}
             <div id="technology-onesa-vision" className="relative z-10 mt-10 pt-8 border-t border-white/10">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
-                  {t("tech.onesa_matter.badge") || "Africa-Centric AI"}
-                </Badge>
-              </div>
-
               <div className="space-y-8">
                 <div>
                   <div className="flex flex-col items-center gap-3 mb-4 text-center">
@@ -673,46 +630,6 @@ export default function Technology() {
               >
                 {t("tech.hubs.open_button") || "Tech Hubs in Zimbabwe"}
               </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* Opportunities and Challenges */}
-    <section id="technology-opportunities" className="p-5 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="relative p-8 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-          <div className="flex items-center justify-center gap-3 mb-5">
-            <Lightbulb className="h-6 w-6 text-zim-gold" />
-            <h3 className="text-xl font-black text-white tracking-tight">
-              {t("tech.opportunities.title") || "Top Opportunities for Investment and Innovation"}
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            <div className="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
-              {opportunityAreas.map((item) => (
-                <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-                  <p className="text-zim-gold text-xs uppercase font-black tracking-widest mb-2">{item.title}</p>
-                  <p className="text-white/75 text-sm leading-relaxed">{item.driver}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="xl:col-span-5 rounded-xl border border-white/10 bg-white/[0.02] p-5">
-              <h4 className="text-lg font-black text-white tracking-tight mb-4">
-                {t("tech.challenges.title") || "Critical Challenges to Address"}
-              </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-3">
-                {criticalChallenges.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <AlertTriangle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                    <span className="text-white/75 text-sm leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>

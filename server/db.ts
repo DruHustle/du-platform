@@ -2407,8 +2407,15 @@ export async function createRemittanceTransactionRecord(input: {
   status: RemittanceTransactionStatus;
   terrapayReference: string | null;
   idempotencyKey: string;
-}) {
+}, connection?: mysql.PoolConnection) {
   if (!db) {
+    const duplicate = memoryRemittanceTransactions.find(
+      (entry) =>
+        entry.user_id === input.userId &&
+        String(entry.idempotency_key ?? "").trim() === String(input.idempotencyKey ?? "").trim()
+    );
+    if (duplicate) return duplicate;
+
     const now = new Date().toISOString();
     const row: RemittanceTransactionRecord = {
       id: memoryRemittanceTransactions.length + 1,
@@ -2432,9 +2439,28 @@ export async function createRemittanceTransactionRecord(input: {
     return row;
   }
 
-  const conn = await db.getConnection();
+  const conn = connection ?? (await db.getConnection());
+  const ownsConnection = !connection;
   try {
-    await conn.query("START TRANSACTION");
+    if (ownsConnection) {
+      await conn.query("START TRANSACTION");
+    }
+
+    const [existingRows] = await conn.query<mysql.RowDataPacket[]>(
+      `
+      SELECT *
+      FROM remittance_transactions
+      WHERE user_id = ? AND idempotency_key = ?
+      LIMIT 1
+      `,
+      [input.userId, input.idempotencyKey]
+    );
+    if (existingRows[0]) {
+      if (ownsConnection) {
+        await conn.query("COMMIT");
+      }
+      return existingRows[0];
+    }
 
     const [inserted] = await conn.execute<mysql.ResultSetHeader>(
       `
@@ -2464,13 +2490,19 @@ export async function createRemittanceTransactionRecord(input: {
       [Number(inserted.insertId)]
     );
 
-    await conn.query("COMMIT");
+    if (ownsConnection) {
+      await conn.query("COMMIT");
+    }
     return rows[0] ?? null;
   } catch (error) {
-    await conn.query("ROLLBACK");
+    if (ownsConnection) {
+      await conn.query("ROLLBACK");
+    }
     throw error;
   } finally {
-    conn.release();
+    if (ownsConnection) {
+      conn.release();
+    }
   }
 }
 
@@ -2495,6 +2527,35 @@ export async function getRemittanceTransactionById(transactionId: number, userId
   return rows[0] ?? null;
 }
 
+export async function getRemittanceTransactionByIdempotencyKey(userId: number, idempotencyKey: string) {
+  const normalizedUserId = Math.floor(Number(userId));
+  const normalizedKey = String(idempotencyKey ?? "").trim();
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
+  if (!normalizedKey) return null;
+
+  if (!db) {
+    return (
+      memoryRemittanceTransactions.find(
+        (entry) =>
+          entry.user_id === normalizedUserId &&
+          String(entry.idempotency_key ?? "").trim() === normalizedKey
+      ) ?? null
+    );
+  }
+
+  const [rows] = await db.query<mysql.RowDataPacket[]>(
+    `
+    SELECT *
+    FROM remittance_transactions
+    WHERE user_id = ? AND idempotency_key = ?
+    LIMIT 1
+    `,
+    [normalizedUserId, normalizedKey]
+  );
+
+  return rows[0] ?? null;
+}
+
 export async function createAirtimeTransactionRecord(input: {
   userId: number;
   phoneNumber: string;
@@ -2503,7 +2564,7 @@ export async function createAirtimeTransactionRecord(input: {
   currency: string | null;
   reloadlyReference: string | null;
   status: AirtimeTransactionStatus;
-}) {
+}, connection?: mysql.PoolConnection) {
   if (!db) {
     const row: AirtimeTransactionRecord = {
       id: memoryAirtimeTransactions.length + 1,
@@ -2520,9 +2581,12 @@ export async function createAirtimeTransactionRecord(input: {
     return row;
   }
 
-  const conn = await db.getConnection();
+  const conn = connection ?? (await db.getConnection());
+  const ownsConnection = !connection;
   try {
-    await conn.query("START TRANSACTION");
+    if (ownsConnection) {
+      await conn.query("START TRANSACTION");
+    }
 
     const [inserted] = await conn.execute<mysql.ResultSetHeader>(
       `
@@ -2545,13 +2609,19 @@ export async function createAirtimeTransactionRecord(input: {
       "SELECT * FROM airtime_transactions WHERE id = ? LIMIT 1",
       [Number(inserted.insertId)]
     );
-    await conn.query("COMMIT");
+    if (ownsConnection) {
+      await conn.query("COMMIT");
+    }
     return rows[0] ?? null;
   } catch (error) {
-    await conn.query("ROLLBACK");
+    if (ownsConnection) {
+      await conn.query("ROLLBACK");
+    }
     throw error;
   } finally {
-    conn.release();
+    if (ownsConnection) {
+      conn.release();
+    }
   }
 }
 

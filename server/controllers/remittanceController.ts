@@ -1,6 +1,7 @@
 import type express from "express";
 import {
   createRemittanceTransactionRecord,
+  getRemittanceTransactionByIdempotencyKey,
   getRemittanceTransactionById,
   getUserFinancialProfile,
 } from "../db";
@@ -8,6 +9,7 @@ import { TerraPayProvider } from "../providers/terrapayProvider";
 import { TerrapayService } from "../services/terrapayService";
 import { errorResponse, successResponse, SYSTEM_COMPLIANCE_NOTICE } from "../utils/apiResponse";
 import { logFailedFinancialAttempt } from "../utils/failedAttemptLogger";
+import { sanitizeText } from "../utils/sanitize";
 
 const terrapayService = new TerrapayService(new TerraPayProvider());
 
@@ -77,7 +79,28 @@ export async function sendMoney(req: express.Request, res: express.Response) {
       return res.status(403).json(errorResponse("KYC_REQUIRED", "KYC verification is required for remittance."));
     }
 
-    const result = await terrapayService.sendMoney(req.body);
+    const idempotencyHeaderKey = sanitizeText(req.headers["x-idempotency-key"], 64);
+    if (idempotencyHeaderKey) {
+      const existing = await getRemittanceTransactionByIdempotencyKey(userId, idempotencyHeaderKey);
+      if (existing) {
+        return res.status(200).json(
+          successResponse({
+            transaction: existing,
+            providerResponse: null,
+            idempotentReplay: true,
+            systemNotice: SYSTEM_COMPLIANCE_NOTICE,
+          })
+        );
+      }
+    }
+
+    const result = await terrapayService.sendMoney({
+      ...(req.body ?? {}),
+      idempotencyKey: sanitizeText(
+        (req.body as Record<string, unknown> | null)?.idempotencyKey ?? idempotencyHeaderKey,
+        64
+      ) || undefined,
+    });
     const status = normalizeRemittanceStatus(result.transfer?.status);
 
     const saved = await createRemittanceTransactionRecord({

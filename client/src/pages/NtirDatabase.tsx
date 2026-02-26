@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/api";
+import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft, Search } from "lucide-react";
 import { Link } from "wouter";
 
@@ -49,9 +49,9 @@ export default function NtirDatabase() {
       const { data } = await api.get("/ntir/search", { params: { q } });
       setResults(data.results ?? []);
     } catch (err: any) {
-      const apiMessage = err?.response?.data?.message;
+      const apiMessage = getApiErrorMessage(err, "");
       setResults(searchFallbackEntities(q));
-      setError(apiMessage ?? "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results.");
+      setError(apiMessage || "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results.");
     } finally {
       setLoading(false);
     }

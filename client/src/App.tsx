@@ -3,9 +3,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch } from "wouter";
 import { useTranslation } from "react-i18next"; // Ensure this is imported
-import NotFound from "@/pages/NotFound";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Tourism from "./pages/Tourism";
 import Investment from "./pages/Investment";
@@ -16,8 +13,6 @@ import Technology from "./pages/Technology";
 import Shop from "./pages/Shop";
 import ShopProducts from "./pages/ShopProducts";
 import SearchResults from "./pages/SearchResults";
-import ComingSoon from "./components/ComingSoon";
-import ScrollToHash from "./components/ScrollToHash";
 import LogIn from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -32,9 +27,14 @@ import OnesaAIBookTrip from "./pages/OnesaAIBookTrip";
 import OnesaAITourismVirtualExperience from "./pages/OnesaAITourismVirtualExperience";
 import OnesaAITourismAugmentedExperience from "./pages/OnesaAITourismAugmentedExperience";
 import AdminDashboard from "./pages/AdminDashboard";
-import CookieConsent from "./components/CookieConsent";
 import CookieSettings from "./pages/CookieSettings";
 import Payments from "./pages/Payments";
+import NotFound from "@/pages/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import ComingSoon from "./components/ComingSoon";
+import ScrollToHash from "./components/ScrollToHash";
+import CookieConsent from "./components/CookieConsent";
 
 function Router() {
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ function Router() {
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/payments" component={Payments} />
       <Route path="/login" component={LogIn} />
-      <Route path="/register" component={Register} /> {/* Fixed typo: registar -> register */}
+      <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/regulations" component={Regulations} />

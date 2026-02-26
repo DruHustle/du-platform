@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRightLeft,
   CheckCircle2,
+  Clock3,
   CreditCard,
   Landmark,
   Loader2,
@@ -9,6 +10,7 @@ import {
   Smartphone,
   Wallet,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { api } from "../lib/api";
 
 const CASH_PICKUP_CHANNELS = [
@@ -57,8 +59,18 @@ const SENDER_COUNTRIES = [
 const RECEIVER_COUNTRY = { code: "ZW", flag: "🇿🇼", name: "Zimbabwe", currency: "USD" };
 
 const TRANSFER_TYPES = [
-  { value: "send_money", label: "Send Money", icon: ArrowRightLeft },
-  { value: "airtime_topup", label: "Airtime Top-up", icon: Wallet },
+  {
+    value: "send_money",
+    label: "Send Money",
+    description: "Transfer to mobile money, cash pickup, or Visa card.",
+    icon: ArrowRightLeft,
+  },
+  {
+    value: "airtime_topup",
+    label: "Airtime Top-up",
+    description: "Top up a Zimbabwe mobile line with operator detection.",
+    icon: Wallet,
+  },
 ];
 
 const PAYOUT_TYPES = [
@@ -68,7 +80,7 @@ const PAYOUT_TYPES = [
 ];
 
 const FLOW_STEPS = [
-  { id: "route", label: "Route" },
+  { id: "route", label: "Start" },
   { id: "quote", label: "FX Rate" },
   { id: "recipient", label: "Recipient" },
   { id: "payout", label: "Payout" },
@@ -77,7 +89,7 @@ const FLOW_STEPS = [
 ];
 
 const INITIAL_FORM = {
-  transferType: "send_money",
+  transferType: "",
   senderCountryCode: "DE",
   receiverCountryCode: "ZW",
   amountSent: "",
@@ -202,14 +214,6 @@ function normalizeZimbabweNumber(phone) {
   return raw;
 }
 
-function getReflectWindow(payoutType) {
-  if (payoutType === "airtime_topup") return "Usually within minutes.";
-  if (payoutType === "mobile_money") return "Usually within minutes to 2 hours.";
-  if (payoutType === "cash_pickup") return "Usually within 1 hour after provider confirmation.";
-  if (payoutType === "visa_card") return "Can take minutes to up to 24 hours.";
-  return "Timings depend on provider processing windows.";
-}
-
 function formatAmount(value, currency) {
   const amount = Number(value || 0);
   if (!Number.isFinite(amount)) return `0.00 ${currency}`;
@@ -297,7 +301,9 @@ function extractProviderFee(payload, sendingAmount) {
   return null;
 }
 
-export default function SendMoneyForm() {
+export default function SendMoneyForm({ forcedTransferType = null } = {}) {
+  const { t } = useTranslation();
+  const tr = (key, fallback) => t(key, { defaultValue: fallback });
   const [form, setForm] = useState(() => {
     const defaultSenderCode = resolveDefaultSenderCountryCode();
     const defaultSender =
@@ -344,7 +350,7 @@ export default function SendMoneyForm() {
     const fee = extractProviderFee(quote, amount);
     if (fee !== null && fee >= 0) return Number(fee.toFixed(2));
     return 0;
-  }, [airtimeFeeQuote, form.transferType, quote, status]);
+  }, [airtimeFeeQuote, amount, form.transferType, quote, status]);
   const fee = useMemo(() => Number(providerCharge.toFixed(2)), [providerCharge]);
   const totalCharge = useMemo(() => Number((amount + fee).toFixed(2)), [amount, fee]);
   const fxRate = Number(quote?.fxRate || quote?.exchangeRate || 0);
@@ -361,7 +367,7 @@ export default function SendMoneyForm() {
       receivingCountry: String(form.receiverCountryCode).toUpperCase(),
     });
     if (!response?.data?.success) {
-      throw new Error(response?.data?.error?.message || "Quote preview failed");
+      throw new Error(response?.data?.error?.message || tr("payments.form.errors.quote_preview_failed", "Quote preview failed"));
     }
     return response.data.data?.fxQuote || null;
   };
@@ -377,6 +383,19 @@ export default function SendMoneyForm() {
       setForm((prev) => ({ ...prev, currencyTo: RECEIVER_COUNTRY.currency }));
     }
   }, [form.currencyTo]);
+
+  useEffect(() => {
+    if (forcedTransferType !== "send_money" && forcedTransferType !== "airtime_topup") return;
+    setForm((prev) => {
+      if (prev.transferType === forcedTransferType) return prev;
+      return {
+        ...prev,
+        transferType: forcedTransferType,
+      };
+    });
+    setError("");
+    setStep("route");
+  }, [forcedTransferType]);
 
   useEffect(() => {
     if (step !== "route" || form.transferType !== "send_money") return;
@@ -569,6 +588,14 @@ export default function SendMoneyForm() {
     return Number.isFinite(amount) && amount > 0 && amount <= 5000;
   }, [amount, amountMode, amountReceive, form.transferType]);
 
+  const showGetStartedButton = useMemo(() => {
+    const hasTransferSelection =
+      form.transferType === "send_money" || form.transferType === "airtime_topup";
+    if (!hasTransferSelection) return false;
+    const activeAmount = amountMode === "receive" ? amountReceive : amount;
+    return Number.isFinite(activeAmount) && activeAmount > 0;
+  }, [amount, amountMode, amountReceive, form.transferType]);
+
   const canContinueRecipient = useMemo(() => {
     if (form.transferType === "airtime_topup") {
       return looksLikeZimbabweNumber(form.recipientPhone);
@@ -625,11 +652,16 @@ export default function SendMoneyForm() {
     try {
       const response = await api.get("/auth/me");
       if (response?.data?.user) return true;
-      throw new Error("Authentication required.");
+      throw new Error(tr("payments.form.errors.auth_required", "Authentication required."));
     } catch (err) {
       const status = Number(err?.response?.status ?? 0);
       if (status === 401) {
-        setError("Please log in to continue with recipient, payout, payment, and receipt steps.");
+        setError(
+          tr(
+            "payments.form.errors.login_required_steps",
+            "Please log in to continue with recipient, payout, payment, and receipt steps."
+          )
+        );
         redirectToLogin();
         return false;
       }
@@ -641,6 +673,10 @@ export default function SendMoneyForm() {
     setLoading(true);
     setError("");
     try {
+      if (form.transferType !== "send_money" && form.transferType !== "airtime_topup") {
+        throw new Error(tr("payments.form.transfer.required_hint", "Select Send Money or Airtime Top-up to continue."));
+      }
+
       const sendInput = parseAmountInput(form.amountSent) ?? 0;
       const receiveInput = parseAmountInput(form.amountReceive) ?? 0;
 
@@ -651,7 +687,7 @@ export default function SendMoneyForm() {
             : sendInput || receiveInput;
 
         if (!Number.isFinite(airtimeAmount) || airtimeAmount <= 0) {
-          throw new Error("Enter a valid amount.");
+          throw new Error(tr("payments.form.errors.invalid_amount", "Enter a valid amount."));
         }
 
         const normalizedAirtimeAmount = Number(airtimeAmount.toFixed(2));
@@ -674,19 +710,19 @@ export default function SendMoneyForm() {
 
       if (amountMode === "receive" && Number.isFinite(receiveInput) && receiveInput > 0) {
         if (!isMultipleOfTen(receiveInput)) {
-          throw new Error("Receiver amount must be in 10 USD increments.");
+          throw new Error(tr("payments.form.errors.receive_multiple_ten", "Receiver amount must be in 10 USD increments."));
         }
         const initialGuess = Number.isFinite(sendInput) && sendInput > 0 ? sendInput : receiveInput;
         const firstQuote = await requestQuote(initialGuess);
         const quoteRate = Number(firstQuote?.fxRate || firstQuote?.exchangeRate || 0);
         normalizedSendAmount = quoteRate > 0 ? Number((receiveInput / quoteRate).toFixed(2)) : Number(initialGuess.toFixed(2));
         if (normalizedSendAmount > 5000) {
-          throw new Error("Amount exceeds permitted limit of 5000.");
+          throw new Error(tr("payments.form.errors.amount_limit", "Amount exceeds permitted limit of 5000."));
         }
         quoteResult = await requestQuote(normalizedSendAmount);
       } else {
         if (!Number.isFinite(normalizedSendAmount) || normalizedSendAmount <= 0) {
-          throw new Error("Enter a valid amount.");
+          throw new Error(tr("payments.form.errors.invalid_amount", "Enter a valid amount."));
         }
         normalizedSendAmount = Number(normalizedSendAmount.toFixed(2));
         quoteResult = await requestQuote(normalizedSendAmount);
@@ -708,7 +744,7 @@ export default function SendMoneyForm() {
       setQuote(quoteResult);
       setStep("quote");
     } catch (err) {
-      setError(extractErrorMessage(err, "Unable to fetch FX quote."));
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_fetch_quote", "Unable to fetch FX quote.")));
     } finally {
       setLoading(false);
     }
@@ -722,7 +758,7 @@ export default function SendMoneyForm() {
       if (!isAuthenticated) return;
       setStep("recipient");
     } catch (err) {
-      setError(extractErrorMessage(err, "Unable to verify your session."));
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_verify_session", "Unable to verify your session.")));
     } finally {
       setLoading(false);
     }
@@ -744,7 +780,7 @@ export default function SendMoneyForm() {
       }));
       setStep("payout");
     } catch (err) {
-      setError(extractErrorMessage(err, "Unable to verify your session."));
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_verify_session", "Unable to verify your session.")));
     } finally {
       setLoading(false);
     }
@@ -758,7 +794,7 @@ export default function SendMoneyForm() {
       if (!isAuthenticated) return;
       setStep("pay");
     } catch (err) {
-      setError(extractErrorMessage(err, "Unable to verify your session."));
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_verify_session", "Unable to verify your session.")));
     } finally {
       setLoading(false);
     }
@@ -778,7 +814,7 @@ export default function SendMoneyForm() {
           currency: "USD",
         });
         if (!response?.data?.success) {
-          throw new Error(response?.data?.error?.message || "Airtime top-up failed");
+          throw new Error(response?.data?.error?.message || tr("payments.form.errors.airtime_failed", "Airtime top-up failed"));
         }
         setStatus({
           kind: "airtime",
@@ -789,7 +825,7 @@ export default function SendMoneyForm() {
       } else {
         const response = await api.post("/remittance/send", buildRemittancePayload());
         if (!response?.data?.success) {
-          throw new Error(response?.data?.error?.message || "Remittance failed");
+          throw new Error(response?.data?.error?.message || tr("payments.form.errors.remittance_failed", "Remittance failed"));
         }
         setStatus({
           kind: "remittance",
@@ -800,7 +836,7 @@ export default function SendMoneyForm() {
       }
       setStep("status");
     } catch (err) {
-      setError(extractErrorMessage(err, "Unable to complete payment."));
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_complete_payment", "Unable to complete payment.")));
     } finally {
       setLoading(false);
     }
@@ -822,26 +858,26 @@ export default function SendMoneyForm() {
       "Pending";
 
     const lines = [
-      "Diaspora Unlocked - Payment Receipt",
+      tr("payments.form.receipt.title", "Diaspora Unlocked - Payment Receipt"),
       "==================================",
-      `Date: ${submittedAt.toISOString()}`,
-      `Sender Country: ${selectedSender.name} (${selectedSender.currency})`,
-      `Receiver Country: ${RECEIVER_COUNTRY.name}`,
-      `Recipient: ${form.recipientName}`,
-      `Address: ${form.recipientAddress}${form.recipientCity ? `, ${form.recipientCity}` : ""}`,
-      `Phone: ${normalizeZimbabweNumber(form.recipientPhone)}`,
-      `Payout Method: ${payoutLabel}`,
-      `Amount Sent: ${formatAmount(amount, form.currencyFrom)}`,
-      `Fee: ${formatAmount(fee, form.currencyFrom)}`,
-      `Total: ${formatAmount(totalCharge, form.currencyFrom)}`,
-      `FX Rate: ${fxRate > 0 ? fxRate.toFixed(6) : "N/A"}`,
-      `Estimated Receive: ${formatAmount(estimatedReceive, form.currencyTo)}`,
-      `Transaction ID: ${transaction.id || "Pending"}`,
-      `Reference: ${ref}`,
-      `Status: ${transaction.status || "pending"}`,
+      `${tr("payments.form.receipt.date", "Date")}: ${submittedAt.toISOString()}`,
+      `${tr("payments.form.receipt.sender_country", "Sender Country")}: ${selectedSender.name} (${selectedSender.currency})`,
+      `${tr("payments.form.receipt.receiver_country", "Receiver Country")}: ${RECEIVER_COUNTRY.name}`,
+      `${tr("payments.form.receipt.recipient", "Recipient")}: ${form.recipientName}`,
+      `${tr("payments.form.receipt.address", "Address")}: ${form.recipientAddress}${form.recipientCity ? `, ${form.recipientCity}` : ""}`,
+      `${tr("payments.form.receipt.phone", "Phone")}: ${normalizeZimbabweNumber(form.recipientPhone)}`,
+      `${tr("payments.form.receipt.payout_method", "Payout Method")}: ${payoutLabel}`,
+      `${tr("payments.form.receipt.amount_sent", "Amount Sent")}: ${formatAmount(amount, form.currencyFrom)}`,
+      `${tr("payments.form.fee", "Fee")}: ${formatAmount(fee, form.currencyFrom)}`,
+      `${tr("payments.form.total", "Total")}: ${formatAmount(totalCharge, form.currencyFrom)}`,
+      `${tr("payments.form.quote.fx_rate", "FX Rate")}: ${fxRate > 0 ? fxRate.toFixed(6) : tr("payments.form.quote.na", "N/A")}`,
+      `${tr("payments.form.quote.estimated_receive", "Estimated Receive")}: ${formatAmount(estimatedReceive, form.currencyTo)}`,
+      `${tr("payments.form.receipt.transaction_id", "Transaction ID")}: ${transaction.id || tr("payments.form.status.pending_title", "Pending")}`,
+      `${tr("payments.form.status.reference", "Reference")}: ${ref}`,
+      `${tr("payments.form.status.status", "Status")}: ${transaction.status || tr("payments.form.status.pending", "pending")}`,
       "",
-      "Payments are powered by licensed financial infrastructure providers.",
-      "Diaspora Unlocked does not hold customer funds.",
+      tr("payments.receipt.disclaimer_line_1", "Payments are powered by licensed financial infrastructure providers."),
+      tr("payments.receipt.disclaimer_line_2", "Diaspora Unlocked does not hold customer funds."),
     ];
 
     const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
@@ -872,17 +908,38 @@ export default function SendMoneyForm() {
   };
 
   const fieldClass =
-    "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-zim-gold/60";
+    "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-zim-gold/60";
+
+  const getLocalizedReflectWindow = (payoutType) => {
+    if (payoutType === "airtime_topup") {
+      return tr("payments.form.eta.airtime", "Usually within minutes.");
+    }
+    if (payoutType === "mobile_money") {
+      return tr("payments.form.eta.mobile_money", "Usually within minutes to 2 hours.");
+    }
+    if (payoutType === "cash_pickup") {
+      return tr("payments.form.eta.cash_pickup", "Usually within 1 hour after provider confirmation.");
+    }
+    if (payoutType === "visa_card") {
+      return tr("payments.form.eta.visa_card", "Can take minutes to up to 24 hours.");
+    }
+    return tr("payments.form.eta.default", "Timings depend on provider processing windows.");
+  };
 
   const currentStepIndex = FLOW_STEPS.findIndex((item) => item.id === step);
+  const selectedTransferType = TRANSFER_TYPES.find((item) => item.value === form.transferType) || null;
+  const payoutEta = getLocalizedReflectWindow(form.transferType === "airtime_topup" ? "airtime_topup" : form.recipientType);
 
   return (
-    <section className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 text-white">
+    <section className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 text-white shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
       <div className="mb-5 flex items-start justify-between gap-4">
-        <div>
-          <h3 className="text-xl font-black tracking-tight">Send Money</h3>
+        <div className="relative z-10">
+          <h3 className="text-xl font-black tracking-tight">{tr("payments.form.title", "Send Money")}</h3>
           <p className="mt-1 text-sm text-white/60">
-            UK and EU senders can transfer to Zimbabwe with secure provider-side processing.
+            {tr(
+              "payments.form.subtitle.",
+              "Send your money easy, fast and securely from the comfort of your home to Zimbabwe."
+            )}
           </p>
         </div>
         <div className="rounded-xl border border-zim-gold/30 bg-zim-gold/10 p-2">
@@ -890,7 +947,7 @@ export default function SendMoneyForm() {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-3 gap-2 md:grid-cols-6">
+      <div className="mb-12 grid grid-cols-3 gap-2 md:grid-cols-6">
         {FLOW_STEPS.map((item, index) => {
           const active = currentStepIndex >= index;
           return (
@@ -902,7 +959,7 @@ export default function SendMoneyForm() {
                   : "border-white/10 bg-white/[0.02] text-white/40"
               }`}
             >
-              {item.label}
+              {tr(`payments.form.steps.${item.id}`, item.label)}
             </div>
           );
         })}
@@ -913,7 +970,7 @@ export default function SendMoneyForm() {
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
-                Where are you sending from?
+                {tr("payments.form.fields.sender_country", "Where are you sending from?")}
               </label>
               <select
                 className={fieldClass}
@@ -929,7 +986,9 @@ export default function SendMoneyForm() {
             </div>
 
             <div>
-              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Receiver country</label>
+              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.fields.receiver_country", "Receiver country")}
+              </label>
               <select className={fieldClass} value={form.receiverCountryCode} disabled>
                 <option value={RECEIVER_COUNTRY.code}>
                   {RECEIVER_COUNTRY.flag} {RECEIVER_COUNTRY.name} ({RECEIVER_COUNTRY.currency})
@@ -941,7 +1000,7 @@ export default function SendMoneyForm() {
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
-                You send ({form.currencyFrom})
+                {tr("payments.form.fields.you_send", "You send")} ({form.currencyFrom})
               </label>
               <div className="relative">
                 <input
@@ -959,7 +1018,7 @@ export default function SendMoneyForm() {
             </div>
             <div>
               <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
-                They receive ({RECEIVER_COUNTRY.currency})
+                {tr("payments.form.fields.they_receive", "They receive")} ({RECEIVER_COUNTRY.currency})
               </label>
               <div className="relative">
                 <input
@@ -967,7 +1026,11 @@ export default function SendMoneyForm() {
                   type="number"
                   min={form.transferType === "send_money" ? "10" : "1"}
                   step={form.transferType === "send_money" ? "10" : "0.01"}
-                  placeholder={form.transferType === "send_money" ? "Payout can only be in multiples of 10USD." : ""}
+                  placeholder={
+                    form.transferType === "send_money"
+                      ? tr("payments.form.fields.receive_placeholder", "Payout can only be in multiples of 10USD.")
+                      : ""
+                  }
                   value={form.amountReceive}
                   onChange={(e) => updateAmountReceive(e.target.value)}
                   onBlur={onReceiveAmountBlur}
@@ -980,7 +1043,9 @@ export default function SendMoneyForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/40">What are you sending?</label>
+            <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/40">
+              {tr("payments.form.fields.transfer_type", "Select Send Money or Airtime Top-up to continue.")}
+            </label>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {TRANSFER_TYPES.map((type) => {
                 const Icon = type.icon;
@@ -990,6 +1055,7 @@ export default function SendMoneyForm() {
                     key={type.value}
                     type="button"
                     onClick={() => update("transferType", type.value)}
+                    data-testid={`transfer-type-${type.value}`}
                     className={`rounded-xl border px-3 py-3 text-left transition-colors ${
                       selected
                         ? "border-zim-gold/50 bg-zim-gold/15 text-zim-gold"
@@ -997,60 +1063,95 @@ export default function SendMoneyForm() {
                     }`}
                   >
                     <Icon className="mb-2 h-4 w-4" />
-                    <div className="text-xs font-bold uppercase tracking-wider">{type.label}</div>
+                    <div className="text-xs font-bold uppercase tracking-wider">
+                      {tr(`payments.form.transfer.${type.value}.label`, type.label)}
+                    </div>
+                    <p className="mt-1 text-[11px] leading-snug text-current/70">
+                      {tr(`payments.form.transfer.${type.value}.description`, type.description)}
+                    </p>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-3">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Fee</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.fee", "Fee")}
+              </p>
               <p className="mt-1 text-sm font-black text-white">{formatAmount(fee, form.currencyFrom)}</p>
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Total</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.total", "Total")}
+              </p>
               <p className="mt-1 text-sm font-black text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.eta", "Estimated reflect time")}
+              </p>
+              <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-white/85">
+                <Clock3 className="h-4 w-4 text-zim-gold" />
+                {payoutEta}
+              </p>
             </div>
           </div>
 
-          <button
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-zim-gold px-5 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={loading || !canStart}
-            onClick={onGetStarted}
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {loading ? "Loading Rate" : "Get Started"}
-          </button>
+          {showGetStartedButton ? (
+            <button
+              data-testid="payments-get-started"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-zim-gold px-5 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={loading || !canStart}
+              onClick={onGetStarted}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {loading
+                ? tr("payments.form.actions.loading_rate", "Loading Rate")
+                : tr("payments.form.actions.get_started", "Get Started")}
+            </button>
+          ) : null}
         </div>
       )}
 
       {step === "quote" && (
         <div className="space-y-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <h4 className="mb-3 text-sm font-black uppercase tracking-widest text-white/50">FX Rate Preview</h4>
+            <h4 className="mb-3 text-sm font-black uppercase tracking-widest text-white/50">
+              {tr("payments.form.quote.title", "FX Rate Preview")}
+            </h4>
             <div className="grid gap-2 text-sm text-white/80">
               <p>
-                Route:{" "}
+                {tr("payments.form.quote.route", "Route")}:{" "}
                 <span className="font-semibold text-white">
-                  {selectedSender.name} to Zimbabwe ({form.transferType === "airtime_topup" ? "Airtime Top-up" : "Send Money"})
+                  {selectedSender.name} {tr("payments.form.quote.to", "to")} {RECEIVER_COUNTRY.name} (
+                  {form.transferType === "airtime_topup"
+                    ? tr("payments.form.transfer.airtime_topup.label", "Airtime Top-up")
+                    : tr("payments.form.transfer.send_money.label", "Send Money")}
+                  )
                 </span>
               </p>
               <p>
-                Amount: <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
+                {tr("payments.form.quote.amount", "Amount")}:{" "}
+                <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
               </p>
               <p>
-                FX Rate: <span className="font-semibold text-white">{fxRate > 0 ? fxRate.toFixed(6) : "N/A"}</span>
+                {tr("payments.form.quote.fx_rate", "FX Rate")}:{" "}
+                <span className="font-semibold text-white">
+                  {fxRate > 0 ? fxRate.toFixed(6) : tr("payments.form.quote.na", "N/A")}
+                </span>
               </p>
               <p>
-                Fee: <span className="font-semibold text-white">{formatAmount(fee, form.currencyFrom)}</span>
+                {tr("payments.form.fee", "Fee")}:{" "}
+                <span className="font-semibold text-white">{formatAmount(fee, form.currencyFrom)}</span>
               </p>
               <p>
-                Total: <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
+                {tr("payments.form.total", "Total")}:{" "}
+                <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
               </p>
               <p>
-                Estimated receive:{" "}
+                {tr("payments.form.quote.estimated_receive", "Estimated receive")}:{" "}
                 <span className="font-semibold text-zim-gold">{formatAmount(estimatedReceive, form.currencyTo)}</span>
               </p>
             </div>
@@ -1059,11 +1160,17 @@ export default function SendMoneyForm() {
           <div className="rounded-2xl border border-zim-gold/30 bg-zim-gold/10 p-4 text-xs text-zim-gold/90">
             <div className="mb-1 flex items-center gap-2 font-black uppercase tracking-widest">
               <ShieldCheck className="h-4 w-4" />
-              Security notice
+              {tr("payments.form.quote.security_notice", "Security notice")}
             </div>
             {form.transferType === "airtime_topup"
-              ? "Reloadly fees are confirmed once the operator is detected from the airtime number."
-              : "Quote includes provider-side fees. Final payout timing depends on compliance checks and payout channel processing windows."}
+              ? tr(
+                  "payments.form.quote.airtime_notice",
+                  "Reloadly fees are confirmed once the operator is detected from the airtime number."
+                )
+              : tr(
+                  "payments.form.quote.remittance_notice",
+                  "Quote includes provider-side fees. Final payout timing depends on compliance checks and payout channel processing windows."
+                )}
           </div>
 
           <div className="flex gap-3">
@@ -1072,14 +1179,14 @@ export default function SendMoneyForm() {
               onClick={() => setStep("route")}
               disabled={loading}
             >
-              Back
+              {tr("payments.form.actions.back", "Back")}
             </button>
             <button
               className="w-1/2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:opacity-60"
               onClick={onAcceptRate}
               disabled={loading || !quote}
             >
-              Accept Rate
+              {tr("payments.form.actions.accept_rate", "Accept Rate")}
             </button>
           </div>
         </div>
@@ -1090,15 +1197,19 @@ export default function SendMoneyForm() {
           {form.transferType === "send_money" ? (
             <>
               <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Receiver full name</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.recipient.full_name", "Receiver full name")}
+                </label>
                 <input className={fieldClass} value={form.recipientName} onChange={(e) => update("recipientName", e.target.value)} />
               </div>
 
               <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Receiver address</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.recipient.address", "Receiver address")}
+                </label>
                 <input
                   className={fieldClass}
-                  placeholder="Street / Suburb"
+                  placeholder={tr("payments.form.recipient.address_placeholder", "Street / Suburb")}
                   value={form.recipientAddress}
                   onChange={(e) => update("recipientAddress", e.target.value)}
                 />
@@ -1106,11 +1217,15 @@ export default function SendMoneyForm() {
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">City</label>
+                  <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                    {tr("payments.form.recipient.city", "City")}
+                  </label>
                   <input className={fieldClass} value={form.recipientCity} onChange={(e) => update("recipientCity", e.target.value)} />
                 </div>
                 <div>
-                  <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Phone number</label>
+                  <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                    {tr("payments.form.recipient.phone", "Phone number")}
+                  </label>
                   <input
                     className={fieldClass}
                     placeholder="+2637XXXXXXXX"
@@ -1122,7 +1237,9 @@ export default function SendMoneyForm() {
             </>
           ) : (
             <div>
-              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Airtime number</label>
+              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.recipient.airtime_number", "Airtime number")}
+              </label>
               <input
                 className={fieldClass}
                 placeholder="+2637XXXXXXXX"
@@ -1137,14 +1254,14 @@ export default function SendMoneyForm() {
               className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/80 hover:bg-white/[0.08]"
               onClick={() => setStep("quote")}
             >
-              Back
+              {tr("payments.form.actions.back", "Back")}
             </button>
             <button
               className="w-1/2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:opacity-60"
               onClick={onContinueRecipient}
               disabled={loading || !canContinueRecipient}
             >
-              Continue
+              {tr("payments.form.actions.continue", "Continue")}
             </button>
           </div>
         </div>
@@ -1154,7 +1271,9 @@ export default function SendMoneyForm() {
         <div className="space-y-5">
           {form.transferType === "send_money" && (
             <div>
-              <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/40">Payout method</label>
+              <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.payout.method", "Payout method")}
+              </label>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                 {PAYOUT_TYPES.map((type) => {
                   const Icon = type.icon;
@@ -1171,7 +1290,9 @@ export default function SendMoneyForm() {
                       }`}
                     >
                       <Icon className="mb-2 h-4 w-4" />
-                      <div className="text-xs font-bold uppercase tracking-wider">{type.label}</div>
+                      <div className="text-xs font-bold uppercase tracking-wider">
+                        {tr(`payments.form.payout.types.${type.value}`, type.label)}
+                      </div>
                     </button>
                   );
                 })}
@@ -1181,7 +1302,9 @@ export default function SendMoneyForm() {
 
           {form.transferType === "send_money" && form.recipientType === "mobile_money" && (
             <div>
-              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">EcoCash Number</label>
+              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                {tr("payments.form.payout.ecocash_number", "EcoCash Number")}
+              </label>
               <input
                 className={fieldClass}
                 placeholder="+2637XXXXXXXX"
@@ -1194,9 +1317,11 @@ export default function SendMoneyForm() {
           {form.transferType === "send_money" && form.recipientType === "cash_pickup" && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Pickup Channel</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.payout.pickup_channel", "Pickup Channel")}
+                </label>
                 <select className={fieldClass} value={form.payoutChannel} onChange={(e) => update("payoutChannel", e.target.value)}>
-                  <option value="">Select channel</option>
+                  <option value="">{tr("payments.form.payout.select_channel", "Select channel")}</option>
                   {CASH_PICKUP_CHANNELS.map((channel) => (
                     <option key={channel} value={channel}>
                       {channel}
@@ -1205,7 +1330,9 @@ export default function SendMoneyForm() {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Pickup Location</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.payout.pickup_location", "Pickup Location")}
+                </label>
                 <input className={fieldClass} value={form.cashPickupLocation} onChange={(e) => update("cashPickupLocation", e.target.value)} />
               </div>
             </div>
@@ -1214,19 +1341,27 @@ export default function SendMoneyForm() {
           {form.transferType === "send_money" && form.recipientType === "visa_card" && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Card Number</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.payout.card_number", "Card Number")}
+                </label>
                 <input className={fieldClass} value={form.cardNumber} onChange={(e) => update("cardNumber", e.target.value)} />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Expiry (MM)</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.payout.expiry_month", "Expiry (MM)")}
+                </label>
                 <input className={fieldClass} value={form.cardExpiryMonth} onChange={(e) => update("cardExpiryMonth", e.target.value)} />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Expiry (YYYY)</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.payout.expiry_year", "Expiry (YYYY)")}
+                </label>
                 <input className={fieldClass} value={form.cardExpiryYear} onChange={(e) => update("cardExpiryYear", e.target.value)} />
               </div>
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">Card Holder Name</label>
+                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.payout.card_holder", "Card Holder Name")}
+                </label>
                 <input className={fieldClass} value={form.cardHolderName} onChange={(e) => update("cardHolderName", e.target.value)} />
               </div>
             </div>
@@ -1236,11 +1371,16 @@ export default function SendMoneyForm() {
             <div className="space-y-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-sm text-white/80">
                 <p>
-                  Operator: <span className="font-semibold text-zim-gold">{airtimeOperator?.name || "Auto-detecting..."}</span>
+                  {tr("payments.form.airtime.operator", "Operator")}:{" "}
+                  <span className="font-semibold text-zim-gold">
+                    {airtimeOperator?.name || tr("payments.form.airtime.detecting", "Auto-detecting...")}
+                  </span>
                 </p>
               </div>
               <div className="grid gap-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Top-up amount options</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                  {tr("payments.form.airtime.options", "Top-up amount options")}
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {airtimeOptions.length > 0 ? (
                     airtimeOptions.slice(0, 8).map((value) => (
@@ -1266,7 +1406,9 @@ export default function SendMoneyForm() {
                       </button>
                     ))
                   ) : (
-                    <span className="text-xs text-white/45">No suggested amounts yet.</span>
+                    <span className="text-xs text-white/45">
+                      {tr("payments.form.airtime.no_options", "No suggested amounts yet.")}
+                    </span>
                   )}
                 </div>
               </div>
@@ -1279,14 +1421,14 @@ export default function SendMoneyForm() {
               onClick={() => setStep("recipient")}
               disabled={loading}
             >
-              Back
+              {tr("payments.form.actions.back", "Back")}
             </button>
             <button
               className="w-1/2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:opacity-60"
               onClick={onContinuePayout}
               disabled={loading || !canContinuePayout}
             >
-              Continue to Pay
+              {tr("payments.form.actions.continue_to_pay", "Continue to Pay")}
             </button>
           </div>
         </div>
@@ -1295,36 +1437,50 @@ export default function SendMoneyForm() {
       {step === "pay" && (
         <div className="space-y-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <h4 className="mb-3 text-sm font-black uppercase tracking-widest text-white/50">Payment Summary</h4>
+            <h4 className="mb-3 text-sm font-black uppercase tracking-widest text-white/50">
+              {tr("payments.form.pay.summary", "Payment Summary")}
+            </h4>
             <div className="grid gap-2 text-sm text-white/80">
               <p>
-                Route: <span className="font-semibold text-white">{selectedSender.name} to Zimbabwe</span>
-              </p>
-              <p>
-                Recipient: <span className="font-semibold text-white">{form.recipientName}</span>
-              </p>
-              <p>
-                Phone: <span className="font-semibold text-white">{normalizeZimbabweNumber(form.recipientPhone)}</span>
-              </p>
-              <p>
-                Method:{" "}
+                {tr("payments.form.quote.route", "Route")}:{" "}
                 <span className="font-semibold text-white">
-                  {form.transferType === "airtime_topup"
-                    ? "Airtime Top-up"
-                    : PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.label || form.recipientType}
+                  {selectedSender.name} {tr("payments.form.quote.to", "to")} {RECEIVER_COUNTRY.name}
                 </span>
               </p>
               <p>
-                Amount: <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
+                {tr("payments.form.pay.recipient", "Recipient")}:{" "}
+                <span className="font-semibold text-white">{form.recipientName}</span>
               </p>
               <p>
-                Fee: <span className="font-semibold text-white">{formatAmount(fee, form.currencyFrom)}</span>
+                {tr("payments.form.pay.phone", "Phone")}:{" "}
+                <span className="font-semibold text-white">{normalizeZimbabweNumber(form.recipientPhone)}</span>
               </p>
               <p>
-                Total: <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
+                {tr("payments.form.pay.method", "Method")}:{" "}
+                <span className="font-semibold text-white">
+                  {form.transferType === "airtime_topup"
+                    ? tr("payments.form.transfer.airtime_topup.label", "Airtime Top-up")
+                    : tr(
+                        `payments.form.payout.types.${form.recipientType}`,
+                        PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.label || form.recipientType
+                      )}
+                </span>
               </p>
               <p>
-                Estimated receive: <span className="font-semibold text-zim-gold">{formatAmount(estimatedReceive, form.currencyTo)}</span>
+                {tr("payments.form.quote.amount", "Amount")}:{" "}
+                <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
+              </p>
+              <p>
+                {tr("payments.form.fee", "Fee")}:{" "}
+                <span className="font-semibold text-white">{formatAmount(fee, form.currencyFrom)}</span>
+              </p>
+              <p>
+                {tr("payments.form.total", "Total")}:{" "}
+                <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
+              </p>
+              <p>
+                {tr("payments.form.quote.estimated_receive", "Estimated receive")}:{" "}
+                <span className="font-semibold text-zim-gold">{formatAmount(estimatedReceive, form.currencyTo)}</span>
               </p>
             </div>
           </div>
@@ -1332,9 +1488,9 @@ export default function SendMoneyForm() {
           <div className="rounded-2xl border border-zim-gold/30 bg-zim-gold/10 p-4 text-xs text-zim-gold/90">
             <div className="mb-1 flex items-center gap-2 font-black uppercase tracking-widest">
               <ShieldCheck className="h-4 w-4" />
-              Settlement timing
+              {tr("payments.form.pay.settlement_timing", "Settlement timing")}
             </div>
-            {getReflectWindow(form.transferType === "airtime_topup" ? "airtime_topup" : form.recipientType)}
+            {payoutEta}
           </div>
 
           <div className="flex gap-3">
@@ -1343,7 +1499,7 @@ export default function SendMoneyForm() {
               onClick={() => setStep("payout")}
               disabled={loading}
             >
-              Edit
+              {tr("payments.form.actions.edit", "Edit")}
             </button>
             <button
               className="inline-flex w-1/2 items-center justify-center gap-2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white disabled:opacity-60"
@@ -1351,7 +1507,9 @@ export default function SendMoneyForm() {
               disabled={loading}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              {loading ? "Processing" : "Pay Now"}
+              {loading
+                ? tr("payments.form.actions.processing", "Processing")
+                : tr("payments.form.actions.pay_now", "Pay Now")}
             </button>
           </div>
         </div>
@@ -1361,16 +1519,22 @@ export default function SendMoneyForm() {
         <div className="space-y-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
           <div className="flex items-center gap-2 text-emerald-300">
             <CheckCircle2 className="h-5 w-5" />
-            <h4 className="text-sm font-black uppercase tracking-widest">Payment Submitted</h4>
+            <h4 className="text-sm font-black uppercase tracking-widest">
+              {tr("payments.form.status.submitted", "Payment Submitted")}
+            </h4>
           </div>
           <div className="text-sm text-emerald-100">
-            <p>Status: {status.transaction?.status || "pending"}</p>
             <p>
-              Reference:{" "}
-              {status.transaction?.terrapay_reference || status.transaction?.reloadly_reference || "Pending"}
+              {tr("payments.form.status.status", "Status")}: {status.transaction?.status || tr("payments.form.status.pending", "pending")}
+            </p>
+            <p>
+              {tr("payments.form.status.reference", "Reference")}:{" "}
+              {status.transaction?.terrapay_reference ||
+                status.transaction?.reloadly_reference ||
+                tr("payments.form.status.pending_title", "Pending")}
             </p>
             <p className="mt-1 text-emerald-200/85">
-              {getReflectWindow(form.transferType === "airtime_topup" ? "airtime_topup" : form.recipientType)}
+              {payoutEta}
             </p>
           </div>
           <div className="flex gap-3">
@@ -1378,13 +1542,13 @@ export default function SendMoneyForm() {
               className="w-1/2 rounded-full border border-emerald-300/40 bg-transparent px-4 py-2 text-[10px] font-black uppercase tracking-widest text-emerald-100 hover:bg-emerald-300/15"
               onClick={downloadReceipt}
             >
-              Download Receipt
+              {tr("payments.form.actions.download_receipt", "Download Receipt")}
             </button>
             <button
               className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/[0.08]"
               onClick={onNewTransfer}
             >
-              New Transfer
+              {tr("payments.form.actions.new_transfer", "New Transfer")}
             </button>
           </div>
         </div>
@@ -1393,7 +1557,10 @@ export default function SendMoneyForm() {
       {error && <div className="mt-4 rounded-xl border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>}
 
       <p className="mt-5 text-[11px] leading-relaxed text-white/50">
-        Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.
+        {tr(
+          "payments.disclaimer",
+          "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds."
+        )}
       </p>
     </section>
   );

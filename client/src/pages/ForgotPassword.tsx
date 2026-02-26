@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { api } from "@/lib/api";
+import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 
 export default function ForgotPassword() {
@@ -23,7 +23,7 @@ export default function ForgotPassword() {
       setStatus(data.message ?? "If this email exists, a reset link has been sent.");
       setEmail("");
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? "Unable to submit request.");
+      setError(getApiErrorMessage(err, "Unable to submit request."));
     } finally {
       setLoading(false);
     }

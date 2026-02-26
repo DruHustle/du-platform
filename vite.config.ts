@@ -12,17 +12,21 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(import.meta.dirname), "");
   const siteUrl = (env.VITE_SITE_URL || env.APP_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
   const useDevHttps = env.VITE_DEV_HTTPS !== "false";
+  const useJsxLoc = mode !== "production";
   const certDir = path.resolve(import.meta.dirname, ".cert");
   const keyPath = path.join(certDir, "localhost-key.pem");
   const certPath = path.join(certDir, "localhost-cert.pem");
   const hasTrustedLocalCert = fs.existsSync(keyPath) && fs.existsSync(certPath);
 
   return {
+    define: {
+      "process.env.NODE_ENV": JSON.stringify(mode === "production" ? "production" : "development"),
+    },
     plugins: [
       ...(useDevHttps && !hasTrustedLocalCert ? [basicSsl()] : []),
       react(),
       tailwindcss(),
-      jsxLocPlugin(),
+      ...(useJsxLoc ? [jsxLocPlugin()] : []),
       createHtmlPlugin({
         inject: {
           data: {

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Mail, Lock, LogIn as LoginIcon, X } from "lucide-react"; // Renamed icon to avoid conflict
 import { Link, useLocation } from "wouter";
-import { api, hasLoggedInBefore, saveAuthToken } from "@/lib/api";
+import { api, getApiErrorMessage, hasLoggedInBefore, saveAuthToken } from "@/lib/api";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export default function Login() {
       if (accessToken) saveAuthToken(accessToken);
       setLocation(nextPath);
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? "Login failed.");
+      setError(getApiErrorMessage(err, "Login failed."));
     } finally {
       setLoading(false);
     }

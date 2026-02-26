@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { api } from "@/lib/api";
+import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 
 function getTokenFromUrl() {
@@ -35,7 +35,7 @@ export default function ResetPassword() {
       setStatus(data.message ?? "Password reset successful.");
       setTimeout(() => setLocation("/login"), 900);
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? "Unable to reset password.");
+      setError(getApiErrorMessage(err, "Unable to reset password."));
     } finally {
       setLoading(false);
     }

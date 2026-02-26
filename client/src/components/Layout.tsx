@@ -8,7 +8,7 @@ import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOu
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { api, clearAuthToken, refreshAuthTokenFromSession, type AuthUser } from "@/lib/api";
+import { api, clearAuthToken, getApiErrorMessage, refreshAuthTokenFromSession, type AuthUser } from "@/lib/api";
 import { Send } from "lucide-react";
 
 
@@ -437,7 +437,7 @@ export default function Layout({ children }: LayoutProps) {
       setOnesaStatus("");
     } catch (err: any) {
       const statusCode = Number(err?.response?.status ?? 0);
-      const responseMessage = err?.response?.data?.message;
+      const responseMessage = getApiErrorMessage(err, "");
       const retryAfterMs = Number(err?.response?.data?.retryAfterMs ?? 0);
       const retryAfterSeconds = retryAfterMs > 0 ? Math.max(1, Math.ceil(retryAfterMs / 1000)) : null;
       const isRateLimited =
@@ -734,8 +734,8 @@ export default function Layout({ children }: LayoutProps) {
                 <DropdownMenuSeparator className="bg-white/10" />
 
                 {authLoading ? (
-                  <DropdownMenuItem className="rounded-xl py-2.5 px-3 text-sm text-white/60 cursor-default">
-                    Loading...
+                  <DropdownMenuItem className="rounded-xl py-2.5 px-3 cursor-default">
+                    <div aria-hidden="true" className="h-4 w-24 rounded bg-white/15 animate-pulse" />
                   </DropdownMenuItem>
                 ) : user ? (
                   <>

@@ -340,15 +340,15 @@ export default function Trade() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {diasporaRole.map((role, index) => {
                 return (
-                  <div key={index} className="text-center p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
-                    <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
-                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
+                  <div key={index} className="text-center p-5 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
+                    <div className="mx-auto h-14 w-14 p-2.5 bg-white/5 rounded-xl flex items-center justify-center mb-4">
+                      <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
                     </div>
-                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{role.title}</h3>
-                    <p className="text-xs text-white/40 leading-relaxed font-light">{role.description}</p>
+                    <h3 className="text-base font-black text-white tracking-tight mb-2">{role.title}</h3>
+                    <p className="text-[11px] text-white/45 leading-relaxed font-light">{role.description}</p>
                   </div>
                 );
               })}

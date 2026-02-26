@@ -12,6 +12,7 @@ const shouldIgnoreError = (text) =>
   /websocket connection to/i.test(text) ||
   /failed to connect to websocket/i.test(text) ||
   /websocket closed without opened/i.test(text) ||
+  /failed to load resource: the server responded with a status of 404/i.test(text) ||
   /500 \(Internal Server Error\)/i.test(text) ||
   /401 \(Unauthorized\)/i.test(text) ||
   /429 \(Too Many Requests\)/i.test(text) ||

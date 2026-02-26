@@ -5,6 +5,7 @@ type RateLimiterOptions = {
   windowMs: number;
   maxRequests: number;
   keyPrefix: string;
+  keyByUser?: boolean;
 };
 
 type Bucket = {
@@ -13,6 +14,7 @@ type Bucket = {
 };
 
 const buckets = new Map<string, Bucket>();
+let lastBucketSweepAt = 0;
 
 function resolveClientIp(req: express.Request): string {
   const forwarded = String(req.headers["x-forwarded-for"] ?? "");
@@ -23,14 +25,41 @@ function resolveClientIp(req: express.Request): string {
   return req.ip || "unknown";
 }
 
+function resolveBucketSubject(req: express.Request, options: RateLimiterOptions): string {
+  const keyByUser = options.keyByUser !== false;
+  const authUserId = Number((req as any)?.auth?.userId ?? 0);
+  if (keyByUser && Number.isFinite(authUserId) && authUserId > 0) {
+    return `user:${Math.floor(authUserId)}`;
+  }
+  return `ip:${resolveClientIp(req)}`;
+}
+
+function maybeSweepExpiredBuckets(now: number, windowMs: number) {
+  const minSweepIntervalMs = Math.max(1_000, Math.min(windowMs, 60_000));
+  if (now - lastBucketSweepAt < minSweepIntervalMs) return;
+  lastBucketSweepAt = now;
+
+  buckets.forEach((bucket, key) => {
+    if (now >= bucket.resetAt) {
+      buckets.delete(key);
+    }
+  });
+}
+
 export function createRateLimiter(options: RateLimiterOptions) {
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const now = Date.now();
-    const key = `${options.keyPrefix}:${resolveClientIp(req)}`;
+    maybeSweepExpiredBuckets(now, options.windowMs);
+
+    const key = `${options.keyPrefix}:${resolveBucketSubject(req, options)}`;
     const existing = buckets.get(key);
 
     if (!existing || now >= existing.resetAt) {
-      buckets.set(key, { count: 1, resetAt: now + options.windowMs });
+      const resetAt = now + options.windowMs;
+      buckets.set(key, { count: 1, resetAt });
+      res.setHeader("X-RateLimit-Limit", String(options.maxRequests));
+      res.setHeader("X-RateLimit-Remaining", String(Math.max(options.maxRequests - 1, 0)));
+      res.setHeader("X-RateLimit-Reset", String(Math.floor(resetAt / 1000)));
       return next();
     }
 
