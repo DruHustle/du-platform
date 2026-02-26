@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-EN_FILE="client/public/locales/en/translation.json"
+PUBLIC_DIR="frontend/public"
+
+EN_FILE="$PUBLIC_DIR/locales/en/translation.json"
 if git diff --cached --name-only | grep -qx "$EN_FILE"; then
   echo "[pre-commit] English translations changed. Syncing locale keys..."
   python3 sync_translations.py --mode sync
-  git add client/public/locales/*/translation.json
+  git add "$PUBLIC_DIR"/locales/*/translation.json
 else
   echo "[pre-commit] No English translation key changes detected. Skipping translation sync."
 fi
@@ -14,6 +16,6 @@ echo "[pre-commit] Generating sitemap..."
 node scripts/generate-sitemap.mjs
 
 echo "[pre-commit] Staging generated files..."
-git add client/public/sitemap.xml
+git add "$PUBLIC_DIR/sitemap.xml"
 
 echo "[pre-commit] Done."

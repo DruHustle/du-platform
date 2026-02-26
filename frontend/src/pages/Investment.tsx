@@ -996,11 +996,11 @@ const projects = [
              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-5 mb-6">
-                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
-                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🗂️</span>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                  <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🗂️</span>
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
@@ -1009,7 +1009,7 @@ const projects = [
                   </p>
                 </div>
               </div>
-              <p className="text-white/50 text-sm font-light leading-relaxed mb-8">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
+              <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
               <Link href="/ntir">
                 <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
                   {t('investment.ntir_button') || "Search NTIR Database."}
@@ -1017,11 +1017,11 @@ const projects = [
               </Link>
             </div>
 
-            <div className="outer-glass-panel relative p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-5 mb-6">
-                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
-                  <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🌱</span>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
+                  <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🌱</span>
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
@@ -1030,7 +1030,7 @@ const projects = [
                   </p>
                 </div>
               </div>
-              <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
+              <p className="text-white/50 text-sm font-light leading-relaxed mb-4">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
               <div className="flex flex-wrap gap-2">
                 {hdcAssoc.slice(0, 5).map((a, i) => (
                   <Badge key={i} className="bg-white/5 text-white/60 border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">

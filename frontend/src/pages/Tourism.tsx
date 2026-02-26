@@ -685,18 +685,18 @@ export default function Tourism() {
                 return (
                   <div
                     key={index}
-                    className="h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-300 hover:bg-white/[0.04]"
+                    className="h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 transition-all duration-300 hover:bg-white/[0.04]"
                   >
-                    <div className="mb-5 flex items-center gap-4">
-                      <div className="rounded-xl border border-zim-gold/25 bg-zim-gold/10 p-3">
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="rounded-xl border border-zim-gold/25 bg-zim-gold/10 p-2.5">
                         <Icon className="h-5 w-5 text-zim-gold" />
                       </div>
                       <h3 className="text-lg font-black text-white tracking-tight">{info.title}</h3>
                     </div>
 
-                    <p className="mb-6 text-sm font-light leading-relaxed text-white/70">{info.description}</p>
+                    <p className="mb-4 text-sm font-light leading-relaxed text-white/70">{info.description}</p>
 
-                    <ul className="space-y-3">
+                    <ul className="space-y-2">
                       {info.details.map((detail, idx) => (
                         <li key={idx} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
                           <CheckCircle2 className="mt-[2px] h-4 w-4 shrink-0 text-zim-gold/80" />

@@ -100,12 +100,16 @@ function getGeminiApiKey(): string {
   return "";
 }
 
-function getGeminiBaseUrl(): string {
+function getGeminiTtsBaseUrl(): string {
   return String(
-    process.env.ONESA_GEMINI_BASE_URL ??
+    process.env.ONESA_GEMINI_TTS_BASE_URL ??
+      process.env.GEMINI_TTS_BASE_URL ??
+      process.env.ONESA_GEMINI_BASE_URL ??
       process.env.ONESA_AI_BASE_URL ??
-      "https://generativelanguage.googleapis.com/v1beta/openai"
-  ).replace(/\/+$/, "");
+      "https://generativelanguage.googleapis.com/v1beta"
+  )
+    .replace(/\/+$/, "")
+    .replace(/\/openai$/i, "");
 }
 
 function getGeminiTtsModel(): string {
@@ -114,6 +118,16 @@ function getGeminiTtsModel(): string {
       process.env.GEMINI_TTS_MODEL ??
       DEFAULT_GEMINI_TTS_MODEL
   ).trim();
+}
+
+function getGeminiTtsResponseFormat(): string {
+  return String(
+    process.env.ONESA_GEMINI_TTS_RESPONSE_FORMAT ??
+      process.env.GEMINI_TTS_RESPONSE_FORMAT ??
+      "wav"
+  )
+    .trim()
+    .toLowerCase();
 }
 
 function getGroqApiKey(): string {
@@ -187,6 +201,42 @@ function getGeminiVoiceCandidates(language: "en" | "de" | "sn" | "nd"): string[]
         .filter(Boolean)
     )
   );
+}
+
+function parsePcmSampleRate(mimeType: string): number {
+  const match = /rate=(\d+)/i.exec(mimeType);
+  const rate = Number(match?.[1] ?? "");
+  return Number.isFinite(rate) && rate > 0 ? rate : 24000;
+}
+
+function convertPcm16BeToWav(bytes: Uint8Array, sampleRate: number): Uint8Array {
+  const littleEndianPcm = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i += 2) {
+    littleEndianPcm[i] = bytes[i + 1] ?? 0;
+    littleEndianPcm[i + 1] = bytes[i] ?? 0;
+  }
+
+  const headerSize = 44;
+  const wav = new Uint8Array(headerSize + littleEndianPcm.length);
+  const view = new DataView(wav.buffer);
+  const byteRate = sampleRate * 2;
+  const blockAlign = 2;
+
+  wav.set([0x52, 0x49, 0x46, 0x46], 0); // RIFF
+  view.setUint32(4, 36 + littleEndianPcm.length, true);
+  wav.set([0x57, 0x41, 0x56, 0x45], 8); // WAVE
+  wav.set([0x66, 0x6d, 0x74, 0x20], 12); // fmt
+  view.setUint32(16, 16, true); // PCM chunk size
+  view.setUint16(20, 1, true); // PCM
+  view.setUint16(22, 1, true); // channels
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, 16, true); // bits per sample
+  wav.set([0x64, 0x61, 0x74, 0x61], 36); // data
+  view.setUint32(40, littleEndianPcm.length, true);
+  wav.set(littleEndianPcm, 44);
+  return wav;
 }
 
 async function requestGroqStt(file: Blob): Promise<SttResult> {
@@ -289,9 +339,9 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
   const normalizedText = String(text ?? "").replace(/\s+/g, " ").trim();
   if (!normalizedText) return { ok: false, status: 400, error: "Text input is required.", provider: "gemini" };
 
-  const baseUrl = getGeminiBaseUrl();
+  const baseUrl = getGeminiTtsBaseUrl();
   const model = getGeminiTtsModel();
-  const responseFormat = String(process.env.GEMINI_TTS_RESPONSE_FORMAT ?? "mp3").trim();
+  const responseFormat = getGeminiTtsResponseFormat();
   const voiceCandidates = getGeminiVoiceCandidates(language);
   const attempts = voiceCandidates.length ? voiceCandidates : [""];
   let lastError = "";
@@ -300,16 +350,24 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
   for (const voice of attempts) {
     try {
       const payload: Record<string, unknown> = {
-        model,
-        input: normalizedText,
+        contents: [{ parts: [{ text: normalizedText }] }],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+        },
       };
-      if (responseFormat) payload.response_format = responseFormat;
-      if (voice) payload.voice = voice;
+      if (voice) {
+        (payload.generationConfig as { speechConfig?: unknown }).speechConfig = {
+          voiceConfig: {
+            prebuiltVoiceConfig: {
+              voiceName: voice,
+            },
+          },
+        };
+      }
 
-      const response = await fetch(`${baseUrl}/audio/speech`, {
+      const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
@@ -324,11 +382,47 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
         return { ok: false, status: response.status, error: lastError, provider: "gemini" };
       }
 
-      const arrayBuffer = await response.arrayBuffer();
-      const mimeType = String(response.headers.get("content-type") ?? "")
-        .split(";")[0]
-        .trim() || "audio/mpeg";
-      return { ok: true, bytes: new Uint8Array(arrayBuffer), mimeType, provider: "gemini" };
+      const payloadJson = (await response.json()) as {
+        candidates?: Array<{
+          content?: {
+            parts?: Array<{
+              inlineData?: {
+                mimeType?: string;
+                data?: string;
+              };
+            }>;
+          };
+        }>;
+      };
+      const inlineData = payloadJson.candidates
+        ?.flatMap((candidate) => candidate.content?.parts ?? [])
+        .map((part) => part.inlineData)
+        .find((data) => Boolean(data?.data));
+
+      if (!inlineData?.data) {
+        lastError = "Gemini TTS response did not include audio data.";
+        lastStatus = 502;
+        continue;
+      }
+
+      const rawBytes = new Uint8Array(Buffer.from(String(inlineData.data), "base64"));
+      const inlineMimeType = String(inlineData.mimeType ?? "").trim();
+      if (/audio\/l16|codec=pcm/i.test(inlineMimeType)) {
+        if (responseFormat === "pcm" || responseFormat === "l16") {
+          return {
+            ok: true,
+            bytes: rawBytes,
+            mimeType: inlineMimeType || "audio/L16;codec=pcm;rate=24000",
+            provider: "gemini",
+          };
+        }
+        const sampleRate = parsePcmSampleRate(inlineMimeType);
+        const wavBytes = convertPcm16BeToWav(rawBytes, sampleRate);
+        return { ok: true, bytes: wavBytes, mimeType: "audio/wav", provider: "gemini" };
+      }
+
+      const mimeType = inlineMimeType || "audio/mpeg";
+      return { ok: true, bytes: rawBytes, mimeType, provider: "gemini" };
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Gemini TTS network error.";
       lastStatus = 502;
