@@ -101,6 +101,11 @@
         "desc": "Explore diaspora-friendly micro-investment and crowdfunding opportunities.",
         "stats": "$50M+ Opportunities"
       },
+      "payments": {
+        "title": "Payments",
+        "desc": "Send money or top up airtime with secure provider-backed flows and clear fee visibility.",
+        "stats": "Remittance + Airtime"
+      },
       "trade": {
         "title": "Trade",
         "desc": "Access comprehensive trade resources and connect with Zimbabwe's export sectors.",
@@ -346,6 +351,7 @@
     }
   },
   "tourism": {
+    "back_to_tourism": "Back to Tourism",
     "hero": {
       "badge1": "Visit Zimbabwe",
       "title1": "Discover the Majesty",
@@ -721,6 +727,9 @@
   "investment": {
     "objective_title": "Diaspora Collective Investment Model",
     "objective_subtitle": "Diaspora Unlocked combines technology, skills, and network access so small investors can pool capital and participate in verified Zimbabwe opportunities.",
+    "opportunities": {
+      "subtitle": "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise."
+    },
     "economic_snapshot": {
       "title": "Investor Economic Snapshot",
       "subtitle": "Review growth momentum together with currency, tax, and compliance conditions before allocating capital.",
@@ -739,7 +748,7 @@
       "title1": "Diaspora Investment",
       "subtitle1": "Supporting national development through diaspora engagement.",
       "rbz_policy": "Explore policies",
-      "rbz_currency": "Invest in USD or ZiG",
+      "rbz_currency": "Choose USD or ZiG Investment Paths",
       "highlight1": "National Growth",
       "badge2": "Masuwe SEZ",
       "title2": "Invest in Masuwe SEZ",
@@ -1233,7 +1242,6 @@
       "subtitle1": "Unlocking Zimbabwe's economic potential with comprehensive data visualization and analysis.",
       "desc1": "Explore key economic indicators, sectoral performance, and the significant impact of the diaspora on national development.",
       "economic_data": "Explore Economic Data",
-      "sector": "Sector Performance Data",
       "badge2": "Diaspora Power",
       "title2": "Remittances: A Pillar of ",
       "highlight2": "Growth",
@@ -1322,11 +1330,6 @@
     "gdp_growth_trajectory": "GDP Growth Trajectory",
     "gdp_growth_history": "Zimbabwe's economic growth from 2021 to 2025 projection",
     "gdp_data_source": "Source: World Bank, IMF, ZIMSTAT",
-    "sectoral_data_badge": "Sector Performance",
-    "sectoral_data_title": "GDP Growth by Sector",
-    "sectoral_data_breakdown": "A breakdown of how each pillar of the economy is contributing to the national growth projection.",
-    "sectoral_data_projections": "Growth Projections",
-    "sectoral_data_gdp_by_sector": "GDP Breakdown",
     "diaspora_remittance_impact_badge": "Diaspora Impact",
     "diaspora_remittance_impact_title": "Diaspora Economic Impact",
     "diaspora_remittance_impact_subtitle": "Understanding the significant contribution of the Zimbabwean diaspora to the national economy.",
@@ -1338,6 +1341,8 @@
     "diaspora_residence_country": "Region/Country",
     "diaspora_population": "Population",
     "diaspora_percentage": "Percentage",
+    "diaspora_remittance_2024": "Remittances 2024",
+    "diaspora_remittance_2025": "Remittances 2025",
     "disclaimer": "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API.",
     "regional_breakdown_title": "Diaspora Regional Breakdown",
     "regional_breakdown_subtitle": "Distribution of Zimbabwean diaspora across key regions.",
@@ -1897,7 +1902,7 @@
     },
     "products": {
       "title": "Shop Products",
-      "subtitle": "End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay.",
+      "subtitle": "End-to-end checkout with secure payment options and clear delivery selection.",
       "back_to_shop": "Back to Shop",
       "default_country": "Germany",
       "filters": {
@@ -1967,6 +1972,17 @@
       "guest_checkout": {
         "title": "Guest Checkout"
       },
+      "checkout": {
+        "title": "Checkout",
+        "logged_in_as": "Signed in as"
+      },
+      "delivery_speed": {
+        "label": "Send speed",
+        "normal": "Normal Send",
+        "normal_hint": "Standard dispatch timeline",
+        "express": "Express Send",
+        "express_hint": "Priority handling"
+      },
       "fields": {
         "full_name": "Full Name",
         "email_address": "Email Address",
@@ -1993,6 +2009,7 @@
       },
       "notes": {
         "guest_checkout": "Guest checkout enabled: no login required.",
+        "logged_in_checkout": "Signed-in checkout active.",
         "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
       },
       "errors": {

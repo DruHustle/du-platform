@@ -1,18 +1,13 @@
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { FileText, BookOpen, Plane, TrendingUp, Package, ArrowRight, CheckCircle, Globe, Users, BarChart3, Award, Brain, Heart, Lightbulb, Globe2, Icon } from "lucide-react";
+import { Globe2 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import ContactForm from "@/components/ContactForm";
 import MainPageHero from "@/components/MainPageHero";
 
 export default function Home() {
   const { t } = useTranslation();
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = useMemo(() => [
     "/images/pages/tourism/victoria_falls.jpg",
@@ -66,7 +61,6 @@ const navButtons = [
       title: t('home.modules.technology.title') || "Technology & AI",
       description: t('home.modules.technology.desc') || "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context.",
       href: "/technology",
-      color: " bg-purple-600/5 hover:bg-purple-600/10",
       bgImage: "/images/pages/technology/ai_innovation.jpg",
       stats: t('home.modules.technology.stats') || "Onesa AI"
     },
@@ -74,7 +68,6 @@ const navButtons = [
       title: t('home.modules.tourism.title') || "Tourism",
       description: t('home.modules.tourism.desc') || "Discover Zimbabwe's world-class attractions and  plan your visit.",
       href: "/tourism",
-      color: " bg-yellow-500/5 hover:bg-yellow-500/10",
       bgImage: "/images/pages/tourism/victoria_falls.jpg",
       stats: t('home.modules.tourism.stats') || "Diaspora Travel Ready"
     },
@@ -82,15 +75,22 @@ const navButtons = [
       title: t('home.modules.investment.title') || "Investment",
       description: t('home.modules.investment.desc') || "Explore diaspora-friendly micro-investment and crowdfunding opportunities.",
       href: "/investment",
-      color: " bg-red-600/5 hover:bg-red-600/10",
       bgImage: "/images/pages/shared/minerals_mining.png",
       stats: t('home.modules.investment.stats') || "$50M+ Opportunities"
+    },
+    {
+      title: t("nav.payments", { defaultValue: "Payments" }),
+      description:
+        t("home.modules.payments.desc") ||
+        "Send money or top up airtime with secure provider-backed flows and clear fee visibility.",
+      href: "/payments",
+      bgImage: "/images/pages/payments/mobile-payment-terminal.jpg",
+      stats: t("home.modules.payments.stats") || "Remittance + Airtime",
     },
     {
       title: t('home.modules.trade.title') || "Trade",
       description: t('home.modules.trade.desc') || "Access comprehensive trade and export execution resources in one place.",
       href: "/trade",
-      color: " bg-slate-800/5 hover:bg-slate-800/10",
       bgImage: "/images/pages/trade/export_port1.jpg",
       stats: t('home.modules.trade.stats') || "8 Export Sectors"
     },
@@ -98,7 +98,6 @@ const navButtons = [
       title: t('home.modules.success.title') || "Impact",
       description: t('home.modules.success.desc') || "Explore real-world examples of projects thriving through diaspora engagement.",
       href: "/success-stories",
-      color: " bg-zim-gold/5 hover:bg-zim-gold/10",
       bgImage: "/images/pages/home/partnership_handshake.png",
       stats: t('home.modules.success.stats') || "Impact Stories"
     }
@@ -125,7 +124,6 @@ const navButtons = [
         <div className="container relative z-10 px-6 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {modules.map((module, index) => {
-             const Icon = (module as any).icon;
               return (
                 <motion.div
                   key={index}
@@ -137,51 +135,34 @@ const navButtons = [
                 >
                   <div className="block h-full focus:outline-none">
                     <div className="
-                      relative h-full py-8 px-6 rounded-[2rem] overflow-hidden 
-                      /* EXACT GLASS EDGES */
-                      border-t border-l border-white/25 
-                      border-b border-r border-white/10 
-                      bg-white/[0.02] 
-                      /* EXACT SHADOW & INSET */
-                      shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_2px_rgba(255,255,255,0.15)] 
+                      relative h-full py-6 px-5 rounded-[2rem] overflow-hidden
+                      border-t border-l border-white/25
+                      border-b border-r border-white/10
+                      bg-white/[0.02]
+                      shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_2px_rgba(255,255,255,0.15)]
                       transition-all duration-500 group hover:scale-[1.02] hover:border-white/30
                     ">
-                      {/* EXACT SHINE & TEXTURE */}
-                    <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+                      <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
 
                       <div className="relative z-10 flex flex-col items-center text-center h-full">
-                        
-                        {/* 1. Icon (Matching Intro Styling) */}
-                        {Icon && (
-                          <div className="relative mb-4">
-                            <Icon className="h-8 w-8 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)] transition-transform duration-500 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-zim-gold/10 blur-xl rounded-full" />
-                          </div>
-                        )}
-                        
-                        {/* 2. Image Preview (Integrated into the glass tile) */}
-                        <div className="w-full h-56 md:h-64 rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-inner">
-                          <div 
+                        <div className="w-full h-44 md:h-52 rounded-3xl overflow-hidden mb-4 border border-white/10 shadow-inner">
+                          <div
                             className="w-full h-full bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                             style={{ backgroundImage: `url('${module.bgImage}')` }}
                           >
-                            {/* Refined gradient overlay for better text legibility */}
                             <div className="w-full h-full bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent" />
                           </div>
                         </div>
 
-                        {/* 3. Title (Matching Intro Description Styling) */}
-                        <h3 className="text-lg md:text-xl font-black tracking-tight text-white/95 leading-snug mb-3">
+                        <h3 className="text-lg md:text-xl font-black tracking-tight text-white/95 leading-snug mb-2">
                           {module.title}
                         </h3>
-                        
-                        {/* 4. Description (Subtle) */}
-                        <p className="text-sm text-white/60 leading-relaxed mb-6 flex-grow px-2">
+
+                        <p className="text-sm text-white/60 leading-relaxed mb-4 flex-grow px-2">
                           {module.description}
                         </p>
 
-                        {/* 5. Stat/Label (Matching Intro Label Styling) */}
-                        <div className="flex items-center justify-center gap-4 mb-6">
+                        <div className="flex items-center justify-center gap-4 mb-4">
                           <div className="h-px w-6 bg-zim-gold/40" />
                           <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
                             {module.stats}
@@ -189,19 +170,17 @@ const navButtons = [
                           <div className="h-px w-6 bg-zim-gold/40" />
                         </div>
 
-                        {/* 6. Explore Button (kept as direct CTA link) */}
                         <Link href={module.href} className="w-full">
                           <button className="
-                            w-full py-3 rounded-full border-t border-l border-white/20 border-b border-r border-white/5 
-                            bg-white/5 text-white text-[10px] font-black uppercase tracking-[0.2em] 
-                            hover:bg-white hover:text-black transition-all duration-500
+                            w-full py-2.5 rounded-full border border-white/25
+                            bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.2em]
+                            hover:bg-white hover:text-black hover:border-white transition-all duration-500
                           ">
                             {t('home.explore_now') || "Explore Now"}
                           </button>
                         </Link>
                       </div>
 
-                      {/* Edge Polish Line */}
                       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                     </div>
                   </div>

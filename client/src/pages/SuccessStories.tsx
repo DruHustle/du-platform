@@ -422,7 +422,7 @@ export default function SuccessStories() {
       {/* CONTACT CTA */}
       <section id="contact-cta" className="pt-5 p-10 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel relative max-w-5xl mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
+          <div className="outer-glass-panel relative mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-zim-gold/10 blur-[120px] pointer-events-none" />
             <div className="relative z-10 space-y-10">
               <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-zim-gold/10 transition-colors">

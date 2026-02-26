@@ -6,7 +6,6 @@ import { useEffect, useState, useMemo } from "react";
 import { ECONOMIC_DATA, SECTOR_DATA } from "@shared/const";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import SubPageHero from "@/components/SubPageHero";
 
 interface EconomicData {
@@ -20,12 +19,6 @@ interface EconomicData {
   agriculturalExports: number;
   growthRate: number;
   year: number;
-}
-
-interface SectorGrowthData {
-  name: string;
-  growth: number;
-  share: number;
 }
 
 export default function DataVisualization() {
@@ -65,14 +58,6 @@ export default function DataVisualization() {
   });
 
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
-  const [activeSectorIndex, setActiveSectorIndex] = useState(0);
-  const [sectorGrowthData, setSectorGrowthData] = useState<SectorGrowthData[]>([
-    { name: "Services", growth: 6.4, share: 52.1 },
-    { name: "Manufacturing", growth: 4.2, share: 15.3 },
-    { name: "Mining", growth: 8.2, share: 12.0 },
-    { name: "Agriculture", growth: 4.5, share: 11.0 },
-    { name: "Tourism", growth: 6.1, share: 9.6 },
-  ]);
 
   // Fetch Live Data from Server API
   useEffect(() => {
@@ -94,17 +79,6 @@ export default function DataVisualization() {
           growthRate: liveData.growthRate,
         }));
 
-        if (Array.isArray(liveData.sectorData) && liveData.sectorData.length > 0) {
-          setSectorGrowthData((prev) =>
-            prev.map((item) => {
-              const liveMatch = liveData.sectorData.find(
-                (entry: { name: string; growth: number }) =>
-                  entry.name.toLowerCase() === item.name.toLowerCase()
-              );
-              return liveMatch ? { ...item, growth: liveMatch.growth } : item;
-            })
-          );
-        }
       } catch (error) {
         console.error("Failed to fetch live economic data:", error);
       }
@@ -175,8 +149,7 @@ const heroSlides = useMemo(() => [
       subtitle: t('data.hero.subtitle1') || "Unlocking Zimbabwe's economic potential with comprehensive data visualization and analysis.",
       description: t('data.hero.desc1') || "Explore key economic indicators, sectoral performance, and the significant impact of the diaspora on national development.",
       buttons: [
-        { text: t('data.hero.economic_data') || "Explore Economic Data", variant: "primary", link: "#indicators" },
-        { text: t('data.hero.sector') || "Sector Performance Data", variant: "outline", link: "#sectors-gdp" }
+        { text: t('data.hero.economic_data') || "Explore Economic Data", variant: "primary", link: "#indicators" }
       ]
     },
     {
@@ -347,19 +320,20 @@ const heroSlides = useMemo(() => [
     { sector: t('data.food') || "Food & Basic Needs", percentage: "13%", amount: "$234M", icon: "🛒" } //"Food & Basic Needs"
   ];
 
-  const pieData = sectorGrowthData.map((sector) => ({
-    name: sector.name,
-    value: sector.share,
-    growth: sector.growth,
-  }));
+  const remittance2025TotalBillions = Math.max((data.remittances || 0) / 1000, 0);
+  const remittance2024TotalBillions = remittance2025TotalBillions * 0.92;
 
-  // Pie chart colors
-  const COLORS = [
-    "#60A5FA", "#34D399", "#FBBF24", "#F97316", "#A78BFA"
-  ];
-  const activeSector = pieData[activeSectorIndex] ?? pieData[0];
-  const gdpBillions = data.gdp / 1000;
-  const formatSectorValue = (share: number) => `$${(gdpBillions * (share / 100)).toFixed(1)}B`;
+  const percentageToShare = (percentage: string) => {
+    const numeric = Number(String(percentage || "").replace(/[^\d.]/g, ""));
+    if (!Number.isFinite(numeric) || numeric <= 0) return 0;
+    return numeric / 100;
+  };
+
+  const formatRemittanceByShare = (share: number, totalBillions: number) => {
+    const valueBillions = share * totalBillions;
+    if (valueBillions >= 1) return `$${valueBillions.toFixed(2)}B`;
+    return `$${Math.round(valueBillions * 1000)}M`;
+  };
 
   return (
   <Layout>
@@ -384,7 +358,7 @@ const heroSlides = useMemo(() => [
               <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.overview_subtitle') || "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections"}</p>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 max-w-7xl mx-auto">
               {metrics.map((metric, index) => {
                 const Icon = metric.icon;
                 const isRemittancesTile = index === 2;
@@ -392,23 +366,23 @@ const heroSlides = useMemo(() => [
                   <motion.div 
                     key={index}
                     whileHover={{ y: -5 }}
-                    className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-500"
+                    className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-4 md:p-5 transition-all duration-500"
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`p-2 rounded-xl bg-white/5 ${metric.color}`}>
-                        <Icon className="h-4 w-4" />
+                    <div className="mb-3 flex items-center gap-2.5">
+                      <div className={`rounded-lg bg-white/5 p-1.5 ${metric.color}`}>
+                        <Icon className="h-3.5 w-3.5" />
                       </div>
                       <span
-                        className={`${isRemittancesTile ? "!tracking-tight !normal-case !text-white" : "text-[10px] tracking-widest uppercase text-white/40"} font-black ${isRemittancesTile ? "" : "truncate"}`}
-                        style={isRemittancesTile ? { fontSize: "0.75rem", lineHeight: "1.15" } : undefined}
+                        className={`${isRemittancesTile ? "!tracking-tight !normal-case !text-white" : "text-[9px] tracking-widest uppercase text-white/40"} font-black ${isRemittancesTile ? "" : "truncate"}`}
+                        style={isRemittancesTile ? { fontSize: "0.7rem", lineHeight: "1.1" } : undefined}
                       >
                         {metric.title}
                       </span>
                     </div>
                     <div className="relative">
-                      <p className="text-lg font-black text-white tracking-tighter">{metric.value}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`text-[10px] font-bold ${metric.color}`}>
+                      <p className="text-base font-black tracking-tighter text-white md:text-lg">{metric.value}</p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <span className={`text-[9px] font-bold ${metric.color}`}>
                           {metric.change}
                         </span>
                         {metric.isLive && (
@@ -431,169 +405,93 @@ const heroSlides = useMemo(() => [
         </div>
       </section>
 
-      {/* GDP Growth Trajectory - Animated Ice Bars */}
-      
+      {/* Global Diaspora Distribution - Animated Glass Table */}
       <section className="p-5 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="!text-xl font-black text-white tracking-tight">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
+        {/* Subtle bottom-right glow for table depth */}
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-zim-gold/[0.02] blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="container px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8">
+            <div className="mb-7 text-center">
+              <motion.h2 
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                className="!text-xl font-black text-white tracking-tight"
+              >
+                {t('data.diaspora_distribution') || "Global Diaspora Distribution"}
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mt-3 text-xs text-white/75 font-light leading-relaxed"
+              >
+                {t('data.diaspora_residence') || "Zimbabwean diaspora residence worldwide"}
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mt-2 max-w-3xl mx-auto text-[11px] text-white/60 font-light leading-relaxed"
+              >
+                {t('data.diaspora_residence_extra') ||
+                  "This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets."}
+              </motion.p>
             </div>
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative overflow-x-auto rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-2xl"
+            >
+              {/* Internal Crispy Edge */}
+              <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
 
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-              <div className="mb-8 flex justify-between items-end">
-                <div>
-                  <h3 className="!text-lg font-black text-white tracking-tight">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
-                  <p className="text-xs text-white/30 uppercase tracking-widest mt-1">{t('data.gdp_data_source') || "Source: World Bank, IMF, ZIMSTAT"}</p>
-                </div>
-                <TrendingUp className="text-zim-gold h-6 w-6 opacity-50" />
-              </div>
+              <table className="w-full min-w-[760px] text-left">
+                <thead>
+                  <tr className="bg-white/5">
+                    <th className="p-4 md:p-5 text-[9px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_residence_country') || "Region/Country"}</th>
+                    <th className="p-4 md:p-5 text-[9px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_population') || "Population"}</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_percentage') || "Percentage"}</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_remittance_2024') || "Remittances 2024"}</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_remittance_2025') || "Remittances 2025"}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {regionalBreakdown.map((item, index) => {
+                    const share = percentageToShare(item.percentage);
+                    return (
+                    <motion.tr 
+                      key={index} 
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ 
+                        delay: index * 0.05, 
+                        duration: 0.5,
+                        ease: [0.16, 1, 0.3, 1] // Custom "Out-Quart" ease
+                      }}
+                      className="transition-colors hover:bg-white/5 group cursor-default"
+                    >
+                      <td className="p-4 md:p-5 flex items-center gap-3">
+                        <span className="text-base drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110 duration-500">{item.flag}</span>
+                        <span className="text-xs md:text-sm font-bold text-white/80 group-hover:text-zim-gold transition-colors">{item.region}</span>
+                      </td>
+                      <td className="p-4 md:p-5 text-[11px] text-white/40 font-medium tracking-wide">{item.population}</td>
+                      <td className="p-4 md:p-5 text-right text-sm font-black text-zim-gold tabular-nums tracking-tight">{item.percentage}</td>
+                      <td className="p-4 md:p-5 text-right text-[11px] font-semibold text-white/75 tabular-nums">{formatRemittanceByShare(share, remittance2024TotalBillions)}</td>
+                      <td className="p-4 md:p-5 text-right text-[11px] font-black text-zim-gold tabular-nums">{formatRemittanceByShare(share, remittance2025TotalBillions)}</td>
+                    </motion.tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </motion.div>
 
-              <div className="space-y-6">
-                {SECTOR_DATA.gdpGrowth.map((item, index) => (
-                  <div key={index} className="flex items-center gap-6 group">
-                    <div className="w-16 text-[11px] font-black text-white/40 uppercase tracking-widest">{item.year}</div>
-                    <div className="flex-1">
-                      <div className="w-full bg-white/5 rounded-full h-10 overflow-hidden border border-white/5 relative">
-                        <motion.div 
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${(item.growth / 10) * 100}%` }}
-                          transition={{ duration: 1.5, ease: "circOut", delay: index * 0.1 }}
-                          className="h-full bg-gradient-to-r from-zim-gold/40 to-zim-gold rounded-full flex items-center justify-end pr-4 transition-all"
-                        >
-                          <span className="text-[11px] font-black text-zim-black">{item.growth}%</span>
-                        </motion.div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* GDP Composition - Glass Donut Terminal */}
-      
-      <section id="sectors-gdp" className="p-5 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="!text-xl font-black text-white tracking-tight">{t('data.sectoral_data_title') || "GDP Growth by Sector"}</h2> 
-              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.sectoral_data_breakdown') || "A breakdown of how each pillar of the economy is contributing to the national growth projection."}</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
-              {/* Projections List */}
-              <div className="space-y-8">
-                <h3 className="!text-[12px] font-black text-zim-gold uppercase tracking-[0.4em] mb-10 border-l-2 border-zim-gold/30 pl-4">
-                  {t('data.sectoral_data_projections') || "Growth Projections"} ({data.year})
-                </h3> 
-                {sectorGrowthData.map((sector, index) => (
-                  <button
-                    key={sector.name}
-                    onClick={() => setActiveSectorIndex(index)}
-                    className={`w-full text-left space-y-3 rounded-xl p-3 border transition-all ${
-                      activeSectorIndex === index
-                        ? "border-zim-gold/40 bg-zim-gold/10"
-                        : "border-transparent hover:border-white/20 hover:bg-white/[0.02]"
-                    }`}
-                  >
-                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
-                      <span className="text-white/80">{sector.name}</span>
-                      <span className="text-right">
-                        <span className="block text-zim-gold">{formatSectorValue(sector.share)}</span>
-                        <span className="block text-[10px] text-white/55">+{sector.growth}% growth</span>
-                      </span>
-                    </div>
-                    <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${(sector.growth / 10) * 100}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.5, ease: "circOut" }}
-                        className="bg-zim-gold h-full rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]"
-                      />
-                    </div>
-                    <p className="text-[10px] text-white/50 uppercase tracking-widest">
-                      GDP Share: {sector.share.toFixed(1)}%
-                    </p>
-                    <p className="text-[10px] text-white/70 uppercase tracking-widest">
-                      Est. Value: {formatSectorValue(sector.share)}
-                    </p>
-                  </button>
-                ))}
-              </div>
-
-              {/* Cinematic Donut Chart */}
-              <div className="relative p-1 rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent">
-                <div className="h-[500px] w-full bg-slate-950/40 backdrop-blur-3xl p-10 rounded-[2.9rem] relative overflow-visible">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={85}
-                        outerRadius={120}
-                        paddingAngle={8}
-                        dataKey="value"
-                        labelLine={false}
-                        label={({ name, value }) => `${name} ${formatSectorValue(Number(value ?? 0))}`}
-                        onMouseEnter={(_, index) => setActiveSectorIndex(index)}
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                            className="outline-none stroke-slate-900"
-                            strokeWidth={activeSectorIndex === index ? 4 : 2}
-                            opacity={activeSectorIndex === index ? 1 : 0.65}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        formatter={(value, _name, entry) => {
-                          const growth = (entry as { payload?: { growth?: number } })?.payload?.growth ?? 0;
-                          return [
-                            `${formatSectorValue(Number(value))} • ${Number(value).toFixed(1)}% share • +${growth.toFixed(1)}% growth`,
-                            "Sector Value"
-                          ];
-                        }}
-                        wrapperStyle={{
-                          zIndex: 60,
-                          outline: "none",
-                        }}
-                        contentStyle={{
-                          backgroundColor: "rgba(2, 6, 23, 0.92)",
-                          backdropFilter: "blur(12px)",
-                          borderRadius: "16px",
-                          border: "1px solid rgba(255,255,255,0.18)",
-                          color: "#fff",
-                          boxShadow: "0 12px 32px rgba(0, 0, 0, 0.45)",
-                        }}
-                        labelStyle={{ color: "#F8FAFC", fontWeight: 700 }}
-                        itemStyle={{ color: "#F8FAFC", fontWeight: 600 }}
-                      />
-                      <Legend 
-                        verticalAlign="bottom" 
-                        height={50} 
-                        iconType="circle"
-                        formatter={(value) => <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">{value}</span>}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  {/* Center Label */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                    <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">{activeSector?.name ?? "Sector"}</p>
-                    <p className="text-lg font-black text-white">{formatSectorValue(activeSector?.value ?? 0)}</p>
-                    <p className="text-[11px] font-bold text-zim-gold">+{activeSector?.growth?.toFixed(1) ?? "0"}% growth</p>
-                    <p className="text-[10px] font-bold text-white/70 mt-1">{activeSector?.value?.toFixed(1) ?? "0"}% share</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p className="mt-6 text-[11px] text-white/55 italic font-light leading-relaxed tracking-wide text-center">
+              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
+            </p>
           </div>
         </div>
       </section>
@@ -657,86 +555,44 @@ const heroSlides = useMemo(() => [
         </div>
       </section>
        
-      {/* Global Diaspora Distribution - Animated Glass Table */}
+      {/* GDP Growth Trajectory - Animated Ice Bars */}
       <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
-        {/* Subtle bottom-right glow for table depth */}
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-zim-gold/[0.02] blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <motion.h2 
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                className="!text-xl font-black text-white tracking-tight"
-              >
-                {t('data.diaspora_distribution') || "Global Diaspora Distribution"}
-              </motion.h2>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-sm text-white/75 font-light leading-relaxed mt-4"
-              >
-                {t('data.diaspora_residence') || "Zimbabwean diaspora residence worldwide"}
-              </motion.p>
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-xs text-white/60 font-light leading-relaxed max-w-3xl mx-auto mt-3"
-              >
-                {t('data.diaspora_residence_extra') ||
-                  "This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets."}
-              </motion.p>
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8">
+            <div className="mb-7 text-center">
+              <h2 className="!text-xl font-black text-white tracking-tight">{t('data.gdp_growth_trajectory') || "GDP Growth Trajectory"}</h2>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">{t('data.gdp_growth_history') || "Zimbabwe's economic growth from 2021 to 2025 projection"}</p>
             </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-2xl relative"
-            >
-              {/* Internal Crispy Edge */}
-              <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
 
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-white/5">
-                    <th className="p-6 text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_residence_country') || "Region/Country"}</th>
-                    <th className="p-6 text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_population') || "Population"}</th>
-                    <th className="p-6 text-right text-[10px] font-black text-white/40 uppercase tracking-widest">{t('data.diaspora_percentage') || "Percentage"}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {regionalBreakdown.map((item, index) => (
-                    <motion.tr 
-                      key={index} 
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ 
-                        delay: index * 0.05, 
-                        duration: 0.5,
-                        ease: [0.16, 1, 0.3, 1] // Custom "Out-Quart" ease
-                      }}
-                      className="transition-colors hover:bg-white/5 group cursor-default"
-                    >
-                      <td className="p-6 flex items-center gap-4">
-                        <span className="text-lg drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110 duration-500">{item.flag}</span>
-                        <span className="text-sm font-bold text-white/80 group-hover:text-zim-gold transition-colors">{item.region}</span>
-                      </td>
-                      <td className="p-6 text-xs text-white/40 font-medium tracking-wide">{item.population}</td>
-                      <td className="p-6 text-right font-black text-zim-gold tabular-nums tracking-tight">{item.percentage}</td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </motion.div>
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 md:p-6">
+              <div className="mb-5 flex items-end justify-between">
+                <div>
+                  <h3 className="!text-base font-black text-white tracking-tight">{t('data.gdp_growth_rate') || "GDP Growth Rate"}</h3>
+                  <p className="mt-1 text-[10px] text-white/35 uppercase tracking-widest">{t('data.gdp_data_source') || "Source: World Bank, IMF, ZIMSTAT"}</p>
+                </div>
+                <TrendingUp className="h-5 w-5 text-zim-gold opacity-50" />
+              </div>
 
-            <p className="mt-8 text-[11px] text-white/55 italic font-light leading-relaxed tracking-wide text-center">
-              {t('data.disclaimer') || "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API."}
-            </p>
+              <div className="space-y-4">
+                {SECTOR_DATA.gdpGrowth.map((item, index) => (
+                  <div key={index} className="group flex items-center gap-4">
+                    <div className="w-12 text-[10px] font-black uppercase tracking-widest text-white/45">{item.year}</div>
+                    <div className="flex-1">
+                      <div className="relative h-8 w-full overflow-hidden rounded-full border border-white/5 bg-white/5">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${(item.growth / 10) * 100}%` }}
+                          transition={{ duration: 1.5, ease: "circOut", delay: index * 0.1 }}
+                          className="flex h-full items-center justify-end rounded-full bg-gradient-to-r from-zim-gold/40 to-zim-gold pr-3 transition-all"
+                        >
+                          <span className="text-[10px] font-black text-zim-black">{item.growth}%</span>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>

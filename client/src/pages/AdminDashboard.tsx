@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/api";
+import { api, getApiErrorMessage } from "@/lib/api";
 
 type NotifyRow = {
   id: number;
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
         window.location.href = `/login?next=${encodeURIComponent("/admin")}`;
         return;
       }
-      setError(String(err?.response?.data?.message ?? "Unable to load admin data."));
+      setError(getApiErrorMessage(err, "Unable to load admin data."));
     } finally {
       setLoading(false);
     }
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
       resetShopForm();
       await loadAdminData();
     } catch (err: any) {
-      setError(String(err?.response?.data?.message ?? "Unable to save shop product."));
+      setError(getApiErrorMessage(err, "Unable to save shop product."));
     }
   };
 
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
       if (editingShopId === id) resetShopForm();
       await loadAdminData();
     } catch (err: any) {
-      setError(String(err?.response?.data?.message ?? "Unable to delete shop product."));
+      setError(getApiErrorMessage(err, "Unable to delete shop product."));
     }
   };
 
@@ -199,7 +199,7 @@ export default function AdminDashboard() {
       setNtirForm({ name: "", sector: "", location: "", verification_status: "Pending" });
       await loadAdminData();
     } catch (err: any) {
-      setError(String(err?.response?.data?.message ?? "Unable to create NTIR entity."));
+      setError(getApiErrorMessage(err, "Unable to create NTIR entity."));
     }
   };
 
@@ -210,7 +210,7 @@ export default function AdminDashboard() {
       await api.put(`/admin/ntir/${row.id}`, { verification_status: nextStatus });
       await loadAdminData();
     } catch (err: any) {
-      setError(String(err?.response?.data?.message ?? "Unable to update NTIR entity."));
+      setError(getApiErrorMessage(err, "Unable to update NTIR entity."));
     }
   };
 
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
       });
       await loadAdminData();
     } catch (err: any) {
-      setError(String(err?.response?.data?.message ?? "Unable to create success story."));
+      setError(getApiErrorMessage(err, "Unable to create success story."));
     }
   };
 

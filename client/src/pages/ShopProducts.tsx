@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle } from "lucide-react";
+import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { api, type AuthUser } from "@/lib/api";
 import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
 
 type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
 type PaymentMethod = "stripe" | "paypal" | "amazon_pay" | "dummy_gateway";
+type DeliverySpeed = "normal" | "express";
 
 type ShopProduct = {
   id: number;
@@ -404,11 +405,13 @@ export default function ShopProducts() {
   const [allProducts, setAllProducts] = useState<ShopProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [shippingCountry, setShippingCountry] = useState(t("shop.products.default_country") || "Germany");
   const [shippingCity, setShippingCity] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
+  const [deliverySpeed, setDeliverySpeed] = useState<DeliverySpeed>("normal");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("stripe");
   const [placingOrder, setPlacingOrder] = useState(false);
   const [confirmingPayment, setConfirmingPayment] = useState(false);
@@ -429,6 +432,29 @@ export default function ShopProducts() {
   useEffect(() => {
     writeCart(cart);
   }, [cart]);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadSessionUser = async () => {
+      try {
+        const { data } = await api.get("/auth/me");
+        if (!mounted) return;
+        const sessionUser = data?.user ?? null;
+        setAuthUser(sessionUser);
+        if (sessionUser) {
+          setCustomerName((prev) => prev || sessionUser.fullName || "");
+          setCustomerEmail((prev) => prev || sessionUser.email || "");
+        }
+      } catch {
+        if (mounted) setAuthUser(null);
+      }
+    };
+
+    loadSessionUser();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -492,9 +518,18 @@ export default function ShopProducts() {
     t(`shop.products.descriptions.${product.slug}`) || product.description;
 
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
-  const shippingCents = subtotalCents >= 7500 ? 0 : subtotalCents > 0 ? 1200 : 0;
+  const baseShippingCents = subtotalCents >= 7500 ? 0 : subtotalCents > 0 ? 1200 : 0;
+  const deliverySurchargeCents = subtotalCents > 0 && deliverySpeed === "express" ? 800 : 0;
+  const shippingCents = baseShippingCents + deliverySurchargeCents;
   const totalCents = subtotalCents + shippingCents;
   const whatsappNumber = normalizeWhatsAppPhone(String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? ""));
+  const isAuthenticated = Boolean(authUser);
+  const profileName = String(authUser?.fullName ?? "").trim();
+  const profileEmail = String(authUser?.email ?? "").trim();
+  const effectiveCustomerName = String(customerName || profileName).trim();
+  const effectiveCustomerEmail = String(customerEmail || profileEmail).trim();
+  const showCustomerIdentityInputs =
+    !isAuthenticated || !effectiveCustomerName || !effectiveCustomerEmail;
 
   const whatsappOrderHref = useMemo(() => {
     if (cartRows.length === 0) return "";
@@ -513,10 +548,15 @@ export default function ShopProducts() {
       `${t("shop.products.totals.subtotal") || "Subtotal"}: ${formatMoney(subtotalCents)}`,
       `${t("shop.products.totals.shipping") || "Shipping"}: ${formatMoney(shippingCents)}`,
       `${t("shop.products.totals.total") || "Total"}: ${formatMoney(totalCents)}`,
+      `${t("shop.products.delivery_speed.label") || "Send speed"}: ${
+        deliverySpeed === "express"
+          ? t("shop.products.delivery_speed.express") || "Express Send"
+          : t("shop.products.delivery_speed.normal") || "Normal Send"
+      }`,
       "",
       t("shop.products.whatsapp.customer_details") || "Customer Details:",
-      `${t("shop.products.fields.name") || "Name"}: ${customerName || "-"}`,
-      `${t("shop.products.fields.email") || "Email"}: ${customerEmail || "-"}`,
+      `${t("shop.products.fields.name") || "Name"}: ${effectiveCustomerName || "-"}`,
+      `${t("shop.products.fields.email") || "Email"}: ${effectiveCustomerEmail || "-"}`,
       `${t("shop.products.fields.country") || "Country"}: ${shippingCountry || "-"}`,
       `${t("shop.products.fields.city") || "City"}: ${shippingCity || "-"}`,
       `${t("shop.products.fields.address") || "Address"}: ${shippingAddress || "-"}`,
@@ -529,11 +569,12 @@ export default function ShopProducts() {
     subtotalCents,
     shippingCents,
     totalCents,
-    customerName,
-    customerEmail,
+    effectiveCustomerName,
+    effectiveCustomerEmail,
     shippingCountry,
     shippingCity,
     shippingAddress,
+    deliverySpeed,
     whatsappNumber,
   ]);
 
@@ -610,18 +651,19 @@ export default function ShopProducts() {
       setCheckoutError(t("shop.products.errors.empty_cart") || "Your cart is empty.");
       return;
     }
-    if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
+    if (!effectiveCustomerName || !effectiveCustomerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
       setCheckoutError(t("shop.products.errors.complete_fields") || "Please complete all checkout fields.");
       return;
     }
     setPlacingOrder(true);
     try {
       const payload = {
-        customerName,
-        customerEmail,
+        customerName: effectiveCustomerName,
+        customerEmail: effectiveCustomerEmail,
         shippingCountry,
         shippingCity,
         shippingAddress,
+        deliverySpeed,
         paymentMethod,
         items: cartRows.map((row) => ({
           productId: row.product.id,
@@ -674,12 +716,13 @@ export default function ShopProducts() {
                   <h1 className="section-title-compact text-left">{t("shop.products.title") || "Shop Products"}</h1>
                   <p className="text-sm text-white/75 mt-3 max-w-2xl">
                     {t("shop.products.subtitle") ||
-                      "End-to-end checkout with guest purchase enabled. Choose Stripe, PayPal, or Amazon Pay."}
+                      "End-to-end checkout with secure payment options and clear delivery selection."}
                   </p>
                 </div>
-                <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white hover:text-black rounded-full">
-                  <Link href="/shop">{t("shop.products.back_to_shop") || "Back to Shop"}</Link>
-                </Button>
+                <Link href="/shop" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  {t("shop.products.back_to_shop") || "Back to Shop"}
+                </Link>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -860,14 +903,60 @@ export default function ShopProducts() {
 
                     <div className="mt-3 border-t border-white/10 pt-2.5">
                       <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
-                        {t("shop.products.guest_checkout.title") || "Guest Checkout"}
+                        {isAuthenticated
+                          ? t("shop.products.checkout.title") || "Checkout"
+                          : t("shop.products.guest_checkout.title") || "Guest Checkout"}
                       </h3>
+
+                      {isAuthenticated ? (
+                        <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-[11px] text-white/75">
+                          {t("shop.products.checkout.logged_in_as") || "Signed in as"}{" "}
+                          <span className="font-semibold text-white">
+                            {profileName || "-"} ({profileEmail || "-"})
+                          </span>
+                        </div>
+                      ) : null}
+
                       <div className="space-y-1.5">
-                      <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={t("shop.products.fields.full_name") || "Full Name"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={t("shop.products.fields.email_address") || "Email Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      {showCustomerIdentityInputs ? (
+                        <>
+                          <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={t("shop.products.fields.full_name") || "Full Name"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                          <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={t("shop.products.fields.email_address") || "Email Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                        </>
+                      ) : null}
                       <input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} placeholder={t("shop.products.fields.country") || "Country"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
                       <input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} placeholder={t("shop.products.fields.city") || "City"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
                       <input value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      </div>
+
+                      <div className="mt-2.5 space-y-1">
+                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/60">
+                          {t("shop.products.delivery_speed.label") || "Send speed"}
+                        </p>
+                        {[
+                          {
+                            value: "normal" as DeliverySpeed,
+                            label: t("shop.products.delivery_speed.normal") || "Normal Send",
+                            hint: t("shop.products.delivery_speed.normal_hint") || "Standard dispatch timeline",
+                          },
+                          {
+                            value: "express" as DeliverySpeed,
+                            label: t("shop.products.delivery_speed.express") || "Express Send",
+                            hint: `${t("shop.products.delivery_speed.express_hint") || "Priority handling"} (+${formatMoney(800)})`,
+                          },
+                        ].map((option) => (
+                          <label key={option.value} className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/85">
+                            <span className="flex items-center gap-1">
+                              <input
+                                type="radio"
+                                checked={deliverySpeed === option.value}
+                                onChange={() => setDeliverySpeed(option.value)}
+                              />
+                              {option.label}
+                            </span>
+                            <span className="text-[10px] text-white/45">{option.hint}</span>
+                          </label>
+                        ))}
                       </div>
 
                       <div className="mt-2.5 space-y-1">
@@ -951,7 +1040,11 @@ export default function ShopProducts() {
 
                       <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-white/60">
                         <ShieldCheck className="h-3.5 w-3.5 text-zim-gold" />
-                        <span>{t("shop.products.notes.guest_checkout") || "Guest checkout enabled: no login required."}</span>
+                        <span>
+                          {isAuthenticated
+                            ? t("shop.products.notes.logged_in_checkout") || "Signed-in checkout active."
+                            : t("shop.products.notes.guest_checkout") || "Guest checkout enabled: no login required."}
+                        </span>
                       </div>
                       <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/60">
                         <CreditCard className="h-3.5 w-3.5 text-zim-gold" />

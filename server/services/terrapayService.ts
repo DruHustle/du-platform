@@ -23,6 +23,7 @@ const SUPPORTED_CASH_PICKUP_CHANNELS = [
 export type SupportedCashPickupChannel = (typeof SUPPORTED_CASH_PICKUP_CHANNELS)[number];
 
 const RemittanceSchema = z.object({
+  idempotencyKey: z.string().uuid().optional(),
   recipientName: z.string().min(2).max(255),
   recipientType: z.enum(["mobile_money", "cash_pickup", "visa_card"]),
   provider: z.string().min(2).max(100).optional(),
@@ -105,6 +106,35 @@ function extractTerraPayFee(quote: any): number {
   return 0;
 }
 
+function isValidLuhn(cardDigits: string): boolean {
+  let sum = 0;
+  let shouldDouble = false;
+
+  for (let index = cardDigits.length - 1; index >= 0; index -= 1) {
+    let digit = Number(cardDigits[index]);
+    if (!Number.isFinite(digit)) return false;
+
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+
+  return sum % 10 === 0;
+}
+
+function parseExpiryYear(rawYear: string): number | null {
+  const trimmed = String(rawYear ?? "").trim();
+  if (!/^\d{2,4}$/.test(trimmed)) return null;
+  if (trimmed.length === 2) {
+    return 2000 + Number(trimmed);
+  }
+  return Number(trimmed);
+}
+
 export class TerrapayService {
   constructor(private readonly provider: TerraPayProvider) {}
 
@@ -113,6 +143,7 @@ export class TerrapayService {
 
     const parsed = RemittanceSchema.parse({
       ...sanitized,
+      idempotencyKey: sanitizeText((sanitized as any)?.idempotencyKey, 64) || undefined,
       recipientName: sanitizeText((sanitized as any)?.recipientName, 255),
       provider: sanitizeText((sanitized as any)?.provider ?? "TerraPay", 100),
       payoutChannel: sanitizeText((sanitized as any)?.payoutChannel ?? "", 100) || undefined,
@@ -173,6 +204,34 @@ export class TerrapayService {
         throw new Error("Visa card expiry month and year are required.");
       }
       if (!payload.recipient.cardHolderName) throw new Error("Card holder name is required.");
+
+      const normalizedCard = String(payload.recipient.cardNumber).replace(/\D/g, "");
+      if (!/^4\d{12}(\d{3}){0,2}$/.test(normalizedCard)) {
+        throw new Error("Visa card number must be a valid Visa PAN.");
+      }
+      if (!isValidLuhn(normalizedCard)) {
+        throw new Error("Visa card number failed validation.");
+      }
+
+      const expiryMonth = Number(payload.recipient.cardExpiryMonth);
+      if (!Number.isInteger(expiryMonth) || expiryMonth < 1 || expiryMonth > 12) {
+        throw new Error("Card expiry month is invalid.");
+      }
+
+      const expiryYear = parseExpiryYear(payload.recipient.cardExpiryYear);
+      if (!Number.isInteger(expiryYear) || !expiryYear || expiryYear < 2000 || expiryYear > 2200) {
+        throw new Error("Card expiry year is invalid.");
+      }
+
+      const now = new Date();
+      const expiryBoundary = new Date(expiryYear, expiryMonth, 0, 23, 59, 59, 999);
+      if (expiryBoundary.getTime() < now.getTime()) {
+        throw new Error("Card is expired.");
+      }
+
+      payload.recipient.cardNumber = normalizedCard;
+      payload.recipient.cardExpiryMonth = String(expiryMonth).padStart(2, "0");
+      payload.recipient.cardExpiryYear = String(expiryYear);
     }
   }
 
@@ -223,7 +282,7 @@ export class TerrapayService {
     transfer: any;
   }> {
     const request = this.normalize(input);
-    const idempotencyKey = crypto.randomUUID();
+    const idempotencyKey = request.idempotencyKey ?? crypto.randomUUID();
 
     const quoteRequest: TerraPayQuoteRequest = {
       sendingCurrency: request.currencyFrom,

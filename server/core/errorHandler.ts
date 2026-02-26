@@ -1,0 +1,40 @@
+import type express from 'express';
+import { logger } from './logger';
+import { error } from '../shared/responseFormatter';
+
+export class AppError extends Error {
+  readonly statusCode: number;
+  readonly code: string;
+  readonly details?: unknown;
+
+  constructor(statusCode: number, code: string, message: string, details?: unknown) {
+    super(message);
+    this.statusCode = statusCode;
+    this.code = code;
+    this.details = details;
+  }
+}
+
+export function notFoundHandler(_req: express.Request, res: express.Response) {
+  return res.status(404).json(error('NOT_FOUND', 'Route not found.'));
+}
+
+export function errorHandler(
+  err: unknown,
+  req: express.Request,
+  res: express.Response,
+  _next: express.NextFunction
+) {
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json(error(err.code, err.message, err.details));
+  }
+
+  const message = err instanceof Error ? err.message : 'Unexpected server error';
+  logger.error('Unhandled request error', {
+    path: req.path,
+    method: req.method,
+    message,
+  });
+
+  return res.status(500).json(error('INTERNAL_ERROR', 'Unexpected server error.'));
+}

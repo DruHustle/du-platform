@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Camera, LocateFixed, MapPin, Mic } from "lucide-react";
+import { ArrowLeft, Camera, LocateFixed, MapPin, Mic } from "lucide-react";
 import { checkOnesaHealth, sendOnesaChatMessage } from "./OnesaAI";
 import { useTranslation } from "react-i18next";
-import ZimbabweInteractiveGlobe from "@/components/ZimbabweInteractiveGlobe";
+import { Link } from "wouter";
+const LazyZimbabweInteractiveGlobe = lazy(() => import("@/components/ZimbabweInteractiveGlobe"));
 
 type PlaceProfile = {
   id: string;
@@ -272,7 +273,7 @@ function formatNarrationLines(text: string): string[] {
 }
 
 export default function OnesaAITourismAugmentedExperience() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const uiLanguage = useMemo<UiLanguage>(
     () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
     [i18n.language, i18n.resolvedLanguage]
@@ -282,6 +283,9 @@ export default function OnesaAITourismAugmentedExperience() {
     [uiLanguage]
   );
   const selectedLanguageLabel = useMemo(() => getLanguageLabel(uiLanguage), [uiLanguage]);
+  const backToTourismLabel = t("tourism.back_to_tourism", {
+    defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Tourism" })}`,
+  });
   const speechLanguageCode = useMemo(() => {
     if (uiLanguage === "sn") return "sn-ZW";
     if (uiLanguage === "nd") return "nr-ZW";
@@ -1352,6 +1356,10 @@ export default function OnesaAITourismAugmentedExperience() {
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
+          <Link href="/tourism" className="mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            {backToTourismLabel}
+          </Link>
           {/* Main two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left rail: location controls + narration transcript */}
@@ -1444,7 +1452,9 @@ export default function OnesaAITourismAugmentedExperience() {
                           isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
                         }`}
                       >
-                        <ZimbabweInteractiveGlobe />
+                        <Suspense fallback={<div className="h-full w-full bg-black/70 animate-pulse" />}>
+                          <LazyZimbabweInteractiveGlobe />
+                        </Suspense>
                       </div>
                     ) : cameraEnabled ? (
                       <video

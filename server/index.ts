@@ -41,7 +41,10 @@ import {
   getShopRestockNotificationsBySlug,
 } from "./db";
 import { registerApiRoutes } from "./api";
+import { createRateLimiter } from "./middleware/rateLimiter";
 import { registerFinancialRoutes } from "./routes/financialRoutes";
+import { registerDomainModules } from "./modules";
+import { errorResponse, successResponse } from "./utils/apiResponse";
 import { createJwtToken } from "./utils/jwt";
 
 process.on("unhandledRejection", (reason) => {
@@ -1951,6 +1954,8 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
   const allowedOrigins = getAllowedCorsOrigins();
+  app.disable("x-powered-by");
+  app.set("trust proxy", true);
 
   app.use(
     cors({
@@ -1968,10 +1973,73 @@ async function startServer() {
       },
       credentials: true,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
+      allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token", "X-Idempotency-Key"],
     })
   );
-  app.use(express.json());
+  app.use(express.json({ limit: "1mb" }));
+  app.use((_req, res, next) => {
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    next();
+  });
+
+  const authRegisterLimiter = createRateLimiter({
+    keyPrefix: "auth:register",
+    windowMs: 5 * 60_000,
+    maxRequests: 10,
+    keyByUser: false,
+  });
+  const authLoginLimiter = createRateLimiter({
+    keyPrefix: "auth:login",
+    windowMs: 5 * 60_000,
+    maxRequests: 12,
+    keyByUser: false,
+  });
+  const authForgotLimiter = createRateLimiter({
+    keyPrefix: "auth:forgot-password",
+    windowMs: 5 * 60_000,
+    maxRequests: 8,
+    keyByUser: false,
+  });
+  const authResetLimiter = createRateLimiter({
+    keyPrefix: "auth:reset-password",
+    windowMs: 5 * 60_000,
+    maxRequests: 12,
+    keyByUser: false,
+  });
+  const authRefreshLimiter = createRateLimiter({
+    keyPrefix: "auth:token-refresh",
+    windowMs: 60_000,
+    maxRequests: 30,
+    keyByUser: true,
+  });
+
+  const sendLegacySuccess = <T extends Record<string, unknown>>(
+    res: express.Response,
+    statusCode: number,
+    data: T
+  ) => {
+    return res.status(statusCode).json({
+      ...successResponse(data),
+      ...data,
+    });
+  };
+
+  const sendLegacyError = (
+    res: express.Response,
+    statusCode: number,
+    code: string,
+    message: string,
+    extra: Record<string, unknown> = {}
+  ) => {
+    return res.status(statusCode).json({
+      ...errorResponse(code, message),
+      message,
+      ...extra,
+    });
+  };
   try {
     await initializeDatabase();
   } catch (error) {
@@ -1979,22 +2047,22 @@ async function startServer() {
     console.warn(error);
   }
 
-  app.post("/api/auth/register", async (req, res) => {
+  app.post("/api/auth/register", authRegisterLimiter, async (req, res) => {
     try {
       const { fullName, email, password, confirmPassword } = req.body ?? {};
       if (!fullName || !email || !password) {
-        return res.status(400).json({ message: "Full name, email, and password are required." });
+        return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Full name, email, and password are required.");
       }
       if (String(password).length < 8) {
-        return res.status(400).json({ message: "Password must be at least 8 characters." });
+        return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Password must be at least 8 characters.");
       }
       if (confirmPassword !== undefined && password !== confirmPassword) {
-        return res.status(400).json({ message: "Passwords do not match." });
+        return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Passwords do not match.");
       }
 
       const existingUser = await findUserByEmail(String(email));
       if (existingUser) {
-        return res.status(409).json({ message: "An account with this email already exists." });
+        return sendLegacyError(res, 409, "AUTH_EMAIL_EXISTS", "An account with this email already exists.");
       }
 
       const user = await createUser(String(fullName), String(email), hashPassword(String(password)));
@@ -2006,7 +2074,7 @@ async function startServer() {
         full_name: String(user.full_name ?? ""),
       });
 
-      return res.status(201).json({
+      return sendLegacySuccess(res, 201, {
         message: "Account created successfully.",
         user: { id: user.id, fullName: user.full_name, email: user.email },
         accessToken,
@@ -2014,22 +2082,25 @@ async function startServer() {
     } catch (error: any) {
       const isDev = (process.env.NODE_ENV ?? "development") !== "production";
       const detail = error?.message ? ` ${String(error.message)}` : "";
-      return res.status(500).json({
-        message: isDev ? `Registration failed.${detail}` : "Registration failed.",
-      });
+      return sendLegacyError(
+        res,
+        500,
+        "AUTH_REGISTER_FAILED",
+        isDev ? `Registration failed.${detail}` : "Registration failed."
+      );
     }
   });
 
-  app.post("/api/auth/login", async (req, res) => {
+  app.post("/api/auth/login", authLoginLimiter, async (req, res) => {
     try {
       const { email, password } = req.body ?? {};
       if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required." });
+        return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Email and password are required.");
       }
 
       const user = await findUserByEmail(String(email));
       if (!user || !verifyPassword(String(password), String(user.password_hash))) {
-        return res.status(401).json({ message: "Invalid email or password." });
+        return sendLegacyError(res, 401, "AUTH_INVALID_CREDENTIALS", "Invalid email or password.");
       }
 
       const session = await createSession(Number(user.id));
@@ -2040,13 +2111,13 @@ async function startServer() {
         full_name: String(user.full_name ?? ""),
       });
 
-      return res.json({
+      return sendLegacySuccess(res, 200, {
         message: "Login successful.",
         user: { id: user.id, fullName: user.full_name, email: user.email },
         accessToken,
       });
     } catch {
-      return res.status(500).json({ message: "Login failed." });
+      return sendLegacyError(res, 500, "AUTH_LOGIN_FAILED", "Login failed.");
     }
   });
 
@@ -2055,16 +2126,16 @@ async function startServer() {
       const token = await resolveAuthToken(req);
       if (token) await deleteSession(token);
       clearSessionCookie(res);
-      return res.json({ message: "Logged out." });
+      return sendLegacySuccess(res, 200, { message: "Logged out." });
     } catch {
-      return res.status(500).json({ message: "Logout failed." });
+      return sendLegacyError(res, 500, "AUTH_LOGOUT_FAILED", "Logout failed.");
     }
   });
 
-  app.post("/api/auth/forgot-password", async (req, res) => {
+  app.post("/api/auth/forgot-password", authForgotLimiter, async (req, res) => {
     try {
       const { email } = req.body ?? {};
-      if (!email) return res.status(400).json({ message: "Email is required." });
+      if (!email) return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Email is required.");
 
       const user = await findUserByEmail(String(email));
       if (user) {
@@ -2074,78 +2145,78 @@ async function startServer() {
         await sendResetEmail(String(user.email), resetUrl);
       }
 
-      return res.json({ message: "If this email exists, a reset link has been sent." });
+      return sendLegacySuccess(res, 200, { message: "If this email exists, a reset link has been sent." });
     } catch {
-      return res.status(500).json({ message: "Unable to process password reset request." });
+      return sendLegacyError(res, 500, "AUTH_FORGOT_PASSWORD_FAILED", "Unable to process password reset request.");
     }
   });
 
-  app.post("/api/auth/reset-password", async (req, res) => {
+  app.post("/api/auth/reset-password", authResetLimiter, async (req, res) => {
     try {
       const { token, password, confirmPassword } = req.body ?? {};
-      if (!token || !password) return res.status(400).json({ message: "Token and password are required." });
-      if (String(password).length < 8) return res.status(400).json({ message: "Password must be at least 8 characters." });
+      if (!token || !password) return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Token and password are required.");
+      if (String(password).length < 8) return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Password must be at least 8 characters.");
       if (confirmPassword !== undefined && password !== confirmPassword) {
-        return res.status(400).json({ message: "Passwords do not match." });
+        return sendLegacyError(res, 400, "AUTH_VALIDATION_FAILED", "Passwords do not match.");
       }
 
       const resetToken = await consumePasswordResetToken(String(token));
-      if (!resetToken) return res.status(400).json({ message: "Reset token is invalid or expired." });
+      if (!resetToken) return sendLegacyError(res, 400, "AUTH_INVALID_RESET_TOKEN", "Reset token is invalid or expired.");
 
       await updateUserPassword(Number(resetToken.user_id), hashPassword(String(password)));
-      return res.json({ message: "Password reset successful. Please sign in." });
+      return sendLegacySuccess(res, 200, { message: "Password reset successful. Please sign in." });
     } catch {
-      return res.status(500).json({ message: "Password reset failed." });
+      return sendLegacyError(res, 500, "AUTH_RESET_PASSWORD_FAILED", "Password reset failed.");
     }
   });
 
   app.get("/api/auth/me", async (req, res) => {
     try {
       const token = await resolveAuthToken(req);
-      if (!token) return res.status(401).json({ message: "Unauthorized." });
+      if (!token) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
 
       const session = await getSession(token);
-      if (!session) return res.status(401).json({ message: "Session expired." });
+      if (!session) return sendLegacyError(res, 401, "AUTH_SESSION_EXPIRED", "Session expired.");
 
       const user = await findUserById(Number(session.user_id));
-      if (!user) return res.status(401).json({ message: "User not found." });
+      if (!user) return sendLegacyError(res, 401, "AUTH_USER_NOT_FOUND", "User not found.");
 
-      return res.json({
+      return sendLegacySuccess(res, 200, {
         user: { id: user.id, fullName: user.full_name, email: user.email },
       });
     } catch {
-      return res.status(500).json({ message: "Failed to resolve current user." });
+      return sendLegacyError(res, 500, "AUTH_ME_FAILED", "Failed to resolve current user.");
     }
   });
 
-  app.post("/api/auth/token/refresh", async (req, res) => {
+  app.post("/api/auth/token/refresh", authRefreshLimiter, async (req, res) => {
     try {
       const user = await resolveAuthUser(req);
-      if (!user) return res.status(401).json({ message: "Unauthorized." });
+      if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
       const accessToken = issueAccessTokenForUser({
         id: Number(user.id),
         email: String(user.email ?? ""),
         full_name: String((user as any).full_name ?? ""),
       });
-      return res.json({
+      return sendLegacySuccess(res, 200, {
         message: "Token refreshed.",
         accessToken,
       });
     } catch {
-      return res.status(500).json({ message: "Failed to refresh token." });
+      return sendLegacyError(res, 500, "AUTH_REFRESH_FAILED", "Failed to refresh token.");
     }
   });
 
   app.post("/api/auth/kyc/verify", async (req, res) => {
     if ((process.env.NODE_ENV ?? "development").toLowerCase() === "production") {
-      return res.status(403).json({ message: "KYC self-verify is unavailable in production." });
+      return sendLegacyError(res, 403, "KYC_SELF_VERIFY_DISABLED", "KYC self-verify is unavailable in production.");
     }
     try {
       const user = await resolveAuthUser(req);
-      if (!user) return res.status(401).json({ message: "Unauthorized." });
+      if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
       const updated = await setUserKycVerified(Number(user.id), true);
-      if (!updated) return res.status(404).json({ message: "User not found." });
-      return res.json({
+      if (!updated) return sendLegacyError(res, 404, "AUTH_USER_NOT_FOUND", "User not found.");
+      return sendLegacySuccess(res, 200, {
         message: "KYC status updated.",
         user: {
           id: updated.id,
@@ -2155,13 +2226,13 @@ async function startServer() {
         },
       });
     } catch {
-      return res.status(500).json({ message: "Failed to update KYC status." });
+      return sendLegacyError(res, 500, "KYC_VERIFY_FAILED", "Failed to update KYC status.");
     }
   });
 
   app.get("/api/search", async (req, res) => {
     const q = String(req.query.q ?? "").trim().toLowerCase();
-    if (!q) return res.json({ query: "", count: 0, results: [] });
+    if (!q) return sendLegacySuccess(res, 200, { query: "", count: 0, results: [] });
 
     try {
       const routeIndex = [
@@ -2196,28 +2267,28 @@ async function startServer() {
         }));
 
       const results = [...routeMatches, ...ntirMatches, ...storyMatches];
-      return res.json({ query: q, count: results.length, results });
+      return sendLegacySuccess(res, 200, { query: q, count: results.length, results });
     } catch {
-      return res.status(500).json({ message: "Unable to run search right now." });
+      return sendLegacyError(res, 500, "SEARCH_FAILED", "Unable to run search right now.");
     }
   });
 
   app.post("/api/feature-notifications", async (req, res) => {
     try {
       const feature = String(req.body?.feature ?? "").trim();
-      if (!feature) return res.status(400).json({ message: "Feature is required." });
+      if (!feature) return sendLegacyError(res, 400, "VALIDATION_FAILED", "Feature is required.");
 
       const token = await resolveAuthToken(req);
-      if (!token) return res.status(401).json({ message: "Unauthorized." });
+      if (!token) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
 
       const session = await getSession(token);
-      if (!session) return res.status(401).json({ message: "Session expired." });
+      if (!session) return sendLegacyError(res, 401, "AUTH_SESSION_EXPIRED", "Session expired.");
 
       const user = await findUserById(Number(session.user_id));
-      if (!user) return res.status(401).json({ message: "User not found." });
+      if (!user) return sendLegacyError(res, 401, "AUTH_USER_NOT_FOUND", "User not found.");
 
       const result = await createFeatureNotification(Number(user.id), String(user.email), feature);
-      return res.status(200).json({
+      return sendLegacySuccess(res, 200, {
         message: result.created ? "Notify request saved." : "Notify request already exists.",
         created: result.created,
         feature,
@@ -2226,32 +2297,35 @@ async function startServer() {
     } catch (error: any) {
       const isDev = (process.env.NODE_ENV ?? "development") !== "production";
       const detail = error?.message ? ` ${String(error.message)}` : "";
-      return res.status(500).json({
-        message: isDev ? `Unable to save notify request.${detail}` : "Unable to save notify request.",
-      });
+      return sendLegacyError(
+        res,
+        500,
+        "FEATURE_NOTIFICATION_FAILED",
+        isDev ? `Unable to save notify request.${detail}` : "Unable to save notify request."
+      );
     }
   });
 
   app.get("/api/success-stories", async (_req, res) => {
     try {
       const stories = await getSuccessStories(false);
-      return res.json({ count: stories.length, stories });
+      return sendLegacySuccess(res, 200, { count: stories.length, stories });
     } catch {
-      return res.status(500).json({ message: "Unable to load success stories." });
+      return sendLegacyError(res, 500, "SUCCESS_STORIES_LOAD_FAILED", "Unable to load success stories.");
     }
   });
 
   app.get("/api/admin/overview", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
 
     const [notifyRows, ntirRows, storyRows] = await Promise.all([
       getFeatureNotifications(),
       getNtirEntities(),
       getSuccessStories(true),
     ]);
-    return res.json({
+    return sendLegacySuccess(res, 200, {
       ok: true,
       user: { id: user.id, fullName: user.full_name, email: user.email },
       counts: {
@@ -2264,8 +2338,8 @@ async function startServer() {
 
   app.get("/api/admin/notify-requests", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
     const [featureRows, shopRows] = await Promise.all([
       getFeatureNotifications(),
       getShopRestockNotifications(),
@@ -2288,39 +2362,39 @@ async function startServer() {
       const bTs = new Date(b.created_at ?? 0).getTime();
       return bTs - aTs;
     });
-    return res.json({ count: rows.length, rows });
+    return sendLegacySuccess(res, 200, { count: rows.length, rows });
   });
 
   app.get("/api/admin/ntir", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
     const rows = await getNtirEntities();
-    return res.json({ count: rows.length, rows });
+    return sendLegacySuccess(res, 200, { count: rows.length, rows });
   });
 
   app.post("/api/admin/ntir", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
 
     const name = String(req.body?.name ?? "").trim();
     const sector = String(req.body?.sector ?? "").trim();
     const location = String(req.body?.location ?? "").trim();
     const verificationStatus = String(req.body?.verification_status ?? "Pending").trim() === "Verified" ? "Verified" : "Pending";
-    if (!name || !sector || !location) return res.status(400).json({ message: "Name, sector, and location are required." });
+    if (!name || !sector || !location) return sendLegacyError(res, 400, "VALIDATION_FAILED", "Name, sector, and location are required.");
 
     const row = await createNtirEntity(name, sector, location, verificationStatus);
-    return res.status(201).json({ row });
+    return sendLegacySuccess(res, 201, { row });
   });
 
   app.put("/api/admin/ntir/:id", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
 
     const id = Number(req.params.id);
-    if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid entity id." });
+    if (!Number.isFinite(id)) return sendLegacyError(res, 400, "VALIDATION_FAILED", "Invalid entity id.");
     const payload = {
       name: req.body?.name !== undefined ? String(req.body.name).trim() : undefined,
       sector: req.body?.sector !== undefined ? String(req.body.sector).trim() : undefined,
@@ -2333,22 +2407,22 @@ async function startServer() {
           : undefined,
     };
     const row = await updateNtirEntity(id, payload);
-    if (!row) return res.status(404).json({ message: "NTIR entity not found." });
-    return res.json({ row });
+    if (!row) return sendLegacyError(res, 404, "NOT_FOUND", "NTIR entity not found.");
+    return sendLegacySuccess(res, 200, { row });
   });
 
   app.get("/api/admin/success-stories", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
     const stories = await getSuccessStories(true);
-    return res.json({ count: stories.length, stories });
+    return sendLegacySuccess(res, 200, { count: stories.length, stories });
   });
 
   app.post("/api/admin/success-stories", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
 
     const payload = {
       title: String(req.body?.title ?? "").trim(),
@@ -2364,25 +2438,25 @@ async function startServer() {
       is_published: req.body?.is_published === false ? (0 as const) : (1 as const),
     };
     if (!payload.title || !payload.category || !payload.story || !payload.author) {
-      return res.status(400).json({ message: "Title, category, story, and author are required." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Title, category, story, and author are required.");
     }
 
     const story = await createSuccessStory(payload);
-    return res.status(201).json({ story });
+    return sendLegacySuccess(res, 201, { story });
   });
 
   app.get("/api/admin/shop-products", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
     const rows = await getShopProductsAdmin();
-    return res.json({ count: rows.length, rows });
+    return sendLegacySuccess(res, 200, { count: rows.length, rows });
   });
 
   app.post("/api/admin/shop-products", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
 
     const slug = String(req.body?.slug ?? "").trim();
     const name = String(req.body?.name ?? "").trim();
@@ -2395,13 +2469,13 @@ async function startServer() {
     const is_active = req.body?.is_active === 0 || req.body?.is_active === false ? (0 as const) : (1 as const);
 
     if (!slug || !name || !description || !image_url) {
-      return res.status(400).json({ message: "Slug, name, description and image are required." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Slug, name, description and image are required.");
     }
     if (!["sports", "crafts", "food"].includes(category)) {
-      return res.status(400).json({ message: "Category must be sports, crafts, or food." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Category must be sports, crafts, or food.");
     }
     if (!Number.isFinite(price_cents) || price_cents <= 0) {
-      return res.status(400).json({ message: "Price must be greater than zero." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Price must be greater than zero.");
     }
 
     try {
@@ -2416,30 +2490,30 @@ async function startServer() {
         stock_qty,
         is_active,
       });
-      return res.status(201).json({ row });
+      return sendLegacySuccess(res, 201, { row });
     } catch (error: any) {
-      return res.status(400).json({ message: String(error?.message ?? "Unable to create product.") });
+      return sendLegacyError(res, 400, "SHOP_PRODUCT_CREATE_FAILED", String(error?.message ?? "Unable to create product."));
     }
   });
 
   app.put("/api/admin/shop-products/:id", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
     const id = Number(req.params.id);
-    if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid product id." });
+    if (!Number.isFinite(id)) return sendLegacyError(res, 400, "VALIDATION_FAILED", "Invalid product id.");
 
     const rawCategory = req.body?.category !== undefined ? String(req.body.category).trim().toLowerCase() : undefined;
     if (rawCategory !== undefined && !["sports", "crafts", "food"].includes(rawCategory)) {
-      return res.status(400).json({ message: "Category must be sports, crafts, or food." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Category must be sports, crafts, or food.");
     }
     const rawPrice = req.body?.price_cents !== undefined ? Number(req.body.price_cents) : undefined;
     if (rawPrice !== undefined && (!Number.isFinite(rawPrice) || rawPrice <= 0)) {
-      return res.status(400).json({ message: "Price must be greater than zero." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Price must be greater than zero.");
     }
     const rawStock = req.body?.stock_qty !== undefined ? Number(req.body.stock_qty) : undefined;
     if (rawStock !== undefined && (!Number.isFinite(rawStock) || rawStock < 0)) {
-      return res.status(400).json({ message: "Stock must be zero or greater." });
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "Stock must be zero or greater.");
     }
 
     const payload: any = {};
@@ -2455,7 +2529,7 @@ async function startServer() {
 
     const beforeRow = await getShopProductById(id);
     const row = await updateShopProductAdmin(id, payload);
-    if (!row) return res.status(404).json({ message: "Product not found." });
+    if (!row) return sendLegacyError(res, 404, "NOT_FOUND", "Product not found.");
 
     const prevStock = Number((beforeRow as any)?.stock_qty ?? 0);
     const nextStock = Number((row as any)?.stock_qty ?? 0);
@@ -2470,27 +2544,27 @@ async function startServer() {
       });
     }
 
-    return res.json({ row });
+    return sendLegacySuccess(res, 200, { row });
   });
 
   app.delete("/api/admin/shop-products/:id", async (req, res) => {
     const user = await resolveAuthUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized." });
-    if (!isAdminEmail(String(user.email))) return res.status(403).json({ message: "Admin access required." });
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
     const id = Number(req.params.id);
-    if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid product id." });
+    if (!Number.isFinite(id)) return sendLegacyError(res, 400, "VALIDATION_FAILED", "Invalid product id.");
     const deleted = await deleteShopProductAdmin(id);
-    if (!deleted) return res.status(404).json({ message: "Product not found." });
-    return res.json({ ok: true });
+    if (!deleted) return sendLegacyError(res, 404, "NOT_FOUND", "Product not found.");
+    return sendLegacySuccess(res, 200, { ok: true });
   });
 
   app.get("/api/ntir/search", async (req, res) => {
     const query = String(req.query.q ?? "");
     try {
       const results = await searchNtirEntities(query);
-      return res.json({ query, count: results.length, results });
+      return sendLegacySuccess(res, 200, { query, count: results.length, results });
     } catch {
-      return res.status(500).json({ message: "Unable to search NTIR database." });
+      return sendLegacyError(res, 500, "NTIR_SEARCH_FAILED", "Unable to search NTIR database.");
     }
   });
 
@@ -2498,9 +2572,14 @@ async function startServer() {
     try {
       const category = String(req.query.category ?? "").trim();
       const result = await listShopProducts(category);
-      return res.json({ count: result.products.length, products: result.products, source: result.source, cached: result.cached });
+      return sendLegacySuccess(res, 200, {
+        count: result.products.length,
+        products: result.products,
+        source: result.source,
+        cached: result.cached,
+      });
     } catch {
-      return res.status(500).json({ message: "Unable to load shop products." });
+      return sendLegacyError(res, 500, "SHOP_PRODUCTS_FAILED", "Unable to load shop products.");
     }
   });
 
@@ -2512,10 +2591,10 @@ async function startServer() {
       const email = String(req.body?.email ?? "").trim().toLowerCase();
 
       if (!productSlug || !productName) {
-        return res.status(400).json({ message: "Product details are required." });
+        return sendLegacyError(res, 400, "VALIDATION_FAILED", "Product details are required.");
       }
       if (!isValidEmail(email)) {
-        return res.status(400).json({ message: "A valid email address is required." });
+        return sendLegacyError(res, 400, "VALIDATION_FAILED", "A valid email address is required.");
       }
 
       const productId =
@@ -2530,7 +2609,7 @@ async function startServer() {
         email,
       });
 
-      return res.status(200).json({
+      return sendLegacySuccess(res, 200, {
         created: result.created,
         message: result.created
           ? "Notify request saved. We will email you when stock is available."
@@ -2538,7 +2617,7 @@ async function startServer() {
         record: result.record,
       });
     } catch {
-      return res.status(500).json({ message: "Unable to save notify request." });
+      return sendLegacyError(res, 500, "SHOP_NOTIFY_FAILED", "Unable to save notify request.");
     }
   });
 
@@ -2553,17 +2632,17 @@ async function startServer() {
       const items = Array.isArray(req.body?.items) ? req.body.items : [];
 
       if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
-        return res.status(400).json({ message: "Customer and shipping fields are required." });
+        return sendLegacyError(res, 400, "VALIDATION_FAILED", "Customer and shipping fields are required.");
       }
       const allowedPaymentMethods =
         process.env.NODE_ENV === "production"
           ? ["stripe", "paypal", "amazon_pay"]
           : ["stripe", "paypal", "amazon_pay", "dummy_gateway"];
       if (!allowedPaymentMethods.includes(paymentMethod)) {
-        return res.status(400).json({ message: "Invalid payment method." });
+        return sendLegacyError(res, 400, "VALIDATION_FAILED", "Invalid payment method.");
       }
       if (items.length === 0) {
-        return res.status(400).json({ message: "At least one cart item is required." });
+        return sendLegacyError(res, 400, "VALIDATION_FAILED", "At least one cart item is required.");
       }
 
       const order = await createShopOrder({
@@ -2578,10 +2657,10 @@ async function startServer() {
           quantity: Number(item?.quantity),
         })),
       });
-      return res.status(201).json({ order });
+      return sendLegacySuccess(res, 201, { order });
     } catch (error: any) {
       const message = String(error?.message ?? "Unable to create order.");
-      return res.status(400).json({ message });
+      return sendLegacyError(res, 400, "SHOP_ORDER_CREATE_FAILED", message);
     }
   });
 
@@ -2589,10 +2668,10 @@ async function startServer() {
     try {
       const orderRef = String(req.params.orderRef ?? "").trim();
       const order = await getShopOrderByRef(orderRef);
-      if (!order) return res.status(404).json({ message: "Order not found." });
-      return res.json({ order });
+      if (!order) return sendLegacyError(res, 404, "NOT_FOUND", "Order not found.");
+      return sendLegacySuccess(res, 200, { order });
     } catch {
-      return res.status(500).json({ message: "Unable to load order." });
+      return sendLegacyError(res, 500, "SHOP_ORDER_LOAD_FAILED", "Unable to load order.");
     }
   });
 
@@ -2601,10 +2680,10 @@ async function startServer() {
       const orderRef = String(req.params.orderRef ?? "").trim();
       const paymentReference = String(req.body?.paymentReference ?? "").trim();
       const updated = await confirmShopOrderPayment(orderRef, paymentReference);
-      if (!updated) return res.status(404).json({ message: "Order not found." });
-      return res.json({ order: updated });
+      if (!updated) return sendLegacyError(res, 404, "NOT_FOUND", "Order not found.");
+      return sendLegacySuccess(res, 200, { order: updated });
     } catch {
-      return res.status(500).json({ message: "Unable to confirm payment." });
+      return sendLegacyError(res, 500, "SHOP_ORDER_CONFIRM_FAILED", "Unable to confirm payment.");
     }
   });
 
@@ -2631,6 +2710,7 @@ async function startServer() {
     },
   });
   registerFinancialRoutes(app);
+  registerDomainModules(app);
 
   const staticPath =
     process.env.NODE_ENV === "production"

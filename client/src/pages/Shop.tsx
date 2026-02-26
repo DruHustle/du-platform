@@ -11,11 +11,24 @@ import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories"
 const OUTER_PANEL_CLASS =
   "relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group";
 
+const CAROUSEL_CADENCE_BY_SEGMENT: Partial<Record<ShopSegmentKey, number>> = {
+  apparel: 1,
+  crafts: 2,
+  beverages: 3,
+  cereals: 2,
+  sauces_spices: 3,
+  snacks: 2,
+  oils_spreads: 4,
+  proteins: 2,
+};
+
 export default function Shop() {
   const { t } = useTranslation();
   const tx = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [carouselIndex, setCarouselIndex] = useState<Record<ShopSegmentKey, number>>(() =>
-    Object.fromEntries(SHOP_CATEGORY_CONFIG.map((item) => [item.key, 0])) as Record<ShopSegmentKey, number>
+    Object.fromEntries(
+      SHOP_CATEGORY_CONFIG.map((item, idx) => [item.key, idx % Math.max(1, item.images.length)])
+    ) as Record<ShopSegmentKey, number>
   );
 
   const heroSlides = useMemo(
@@ -98,10 +111,14 @@ export default function Shop() {
   };
 
   useEffect(() => {
+    let tick = 0;
     const timer = setInterval(() => {
+      tick += 1;
       setCarouselIndex((prev) => {
         const next = { ...prev };
         for (const item of SHOP_CATEGORY_CONFIG) {
+          const cadence = CAROUSEL_CADENCE_BY_SEGMENT[item.key] ?? 1;
+          if (tick % cadence !== 0) continue;
           const current = prev[item.key] ?? 0;
           next[item.key] = (current + 1) % item.images.length;
         }
@@ -133,6 +150,12 @@ export default function Shop() {
         t("shop.process.payment.desc") ||
         "Support for modern payment flows and transparent pricing to reduce checkout friction.",
     },
+  ];
+
+  const trustChips = [
+    tx("shop.trust.quality", "Curated quality checks"),
+    tx("shop.trust.sourcing", "Zimbabwe-origin sourcing"),
+    tx("shop.trust.delivery", "Diaspora-ready delivery"),
   ];
 
   const getCategoryTitle = (key: ShopSegmentKey, fallback: string) =>
@@ -167,6 +190,16 @@ export default function Shop() {
                     {t("shop.collections_description") ||
                       "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience."}
                   </p>
+                  <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                    {trustChips.map((chip) => (
+                      <span
+                        key={chip}
+                        className="rounded-full border border-white/15 bg-white/[0.05] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-white/75"
+                      >
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
@@ -223,7 +256,7 @@ export default function Shop() {
                         <div className="flex justify-center">
                           <Button
                             asChild
-                            className="rounded-full px-5 py-1.5 h-auto border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:text-white font-black text-[9px] uppercase tracking-[0.16em]"
+                            className="rounded-full px-5 py-1.5 h-auto border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-black hover:border-white font-black text-[9px] uppercase tracking-[0.16em]"
                           >
                             <Link href={`/shop/products?category=${category.baseCategory}&segment=${category.key}`}>
                               {t("shop.explore") || "Explore"}
@@ -272,7 +305,7 @@ export default function Shop() {
                 {processItems.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.title} className="relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                    <div key={item.title} className="relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-0.5">
                       <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
                       <div className="relative z-10">
                         <div className="w-12 h-12 rounded-2xl bg-zim-gold/20 border border-zim-gold/30 flex items-center justify-center mb-4">
