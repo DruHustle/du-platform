@@ -682,35 +682,6 @@
       "best_time": "Best Time Guidance",
       "official_sources": "Official Sources"
     },
-    "zta_resources": {
-      "title": "ZTA Official Visitor Resources",
-      "subtitle": "Use Zimbabwe Tourism Authority resources for trusted planning information, destination references, and operator checks.",
-      "open_resource": "Open Resource",
-      "destinations": {
-        "title": "Destinations",
-        "description": "Browse official destination highlights and tourism circuits across Zimbabwe."
-      },
-      "plan_trip": {
-        "title": "Plan Your Trip",
-        "description": "Use official trip-planning information for logistics, timing, and travel readiness."
-      },
-      "flying": {
-        "title": "Flying to Zimbabwe",
-        "description": "Review air-travel guidance and useful links for planning flight entry into Zimbabwe."
-      },
-      "operators": {
-        "title": "Operator Database",
-        "description": "Check registered tourism operators to support safer bookings and basic due diligence."
-      },
-      "brochures": {
-        "title": "Zimbabwe Brochures and Media",
-        "description": "Download official destination brochures, media assets, and tourism reference materials."
-      },
-      "apps": {
-        "title": "Useful Apps",
-        "description": "Find recommended travel-support applications listed by Zimbabwe Tourism Authority."
-      }
-    },
     "intro": {
       "p1": "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality.",
       "p2_before_ar": "When you are onsite, use Onesa's",

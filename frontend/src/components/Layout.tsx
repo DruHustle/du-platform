@@ -560,8 +560,8 @@ export default function Layout({ children }: LayoutProps) {
       <header 
         className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 border-b ${
           (scrolled && !mobileMenuOpen) 
-            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-1 shadow-2xl' 
-            : 'bg-transparent border-transparent py-4'
+            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-2.5 shadow-2xl' 
+            : 'bg-transparent border-transparent py-2.5'
         }`}
       >
         <div className="container mx-auto px-6 h-14 flex items-center justify-between relative">
@@ -588,7 +588,7 @@ export default function Layout({ children }: LayoutProps) {
             <div
               ref={navPillRef}
               className={`
-              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden
+              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden h-12
               ${scrolled 
                 ? 'bg-slate-900/90 backdrop-blur-md border border-white/10' 
                 : 'bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]' 
@@ -605,7 +605,7 @@ export default function Layout({ children }: LayoutProps) {
                 return (
                   <Link key={item.href} href={item.href}>
                     <button className={`
-                      relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500
+                      relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
                       ${active 
                           ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]' 
                           : scrolled 
