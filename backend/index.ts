@@ -2244,7 +2244,7 @@ async function startServer() {
         { title: "Tourism", href: "/tourism", category: "Tourism", tags: ["visit", "travel", "attractions", "victoria falls"] },
         { title: "Investment", href: "/investment", category: "Investment", tags: ["money", "capital", "projects", "masuwe", "sez"] },
         { title: "Technology", href: "/technology", category: "Technology", tags: ["ai", "onesa", "innovation", "tech"] },
-        { title: "Success Stories", href: "/success-stories", category: "Impact", tags: ["stories", "impact", "cases"] },
+        { title: "Impact", href: "/impact", category: "Impact", tags: ["stories", "impact", "cases"] },
         { title: "NTIR Database", href: "/ntir", category: "Trade", tags: ["register", "ntir", "verification"] },
         { title: "Regulations", href: "/regulations", category: "Compliance", tags: ["regulation", "compliance", "zida"] },
       ];
@@ -2265,7 +2265,7 @@ async function startServer() {
         .slice(0, 10)
         .map((story: any) => ({
           title: story.title,
-          href: "/success-stories",
+          href: "/impact",
           category: story.category || "Impact",
           summary: String(story.story ?? "").slice(0, 140),
         }));
@@ -2310,12 +2310,12 @@ async function startServer() {
     }
   });
 
-  app.get("/api/success-stories", async (_req, res) => {
+  app.get("/api/impact", async (_req, res) => {
     try {
       const stories = await getSuccessStories(false);
       return sendLegacySuccess(res, 200, { count: stories.length, stories });
     } catch {
-      return sendLegacyError(res, 500, "SUCCESS_STORIES_LOAD_FAILED", "Unable to load success stories.");
+      return sendLegacyError(res, 500, "IMPACT_LOAD_FAILED", "Unable to load impact stories.");
     }
   });
 
@@ -2415,7 +2415,7 @@ async function startServer() {
     return sendLegacySuccess(res, 200, { row });
   });
 
-  app.get("/api/admin/success-stories", async (req, res) => {
+  app.get("/api/admin/impact", async (req, res) => {
     const user = await resolveAuthUser(req);
     if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
     if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
@@ -2423,7 +2423,7 @@ async function startServer() {
     return sendLegacySuccess(res, 200, { count: stories.length, stories });
   });
 
-  app.post("/api/admin/success-stories", async (req, res) => {
+  app.post("/api/admin/impact", async (req, res) => {
     const user = await resolveAuthUser(req);
     if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
     if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");

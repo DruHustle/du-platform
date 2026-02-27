@@ -232,7 +232,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
     { name: t('nav.data'), href: "/data-visualization" },
-    { name: t('nav.success'), href: "/success-stories" },
+    { name: t('nav.impact'), href: "/impact" },
   ];
 
   const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
@@ -560,8 +560,8 @@ export default function Layout({ children }: LayoutProps) {
       <header 
         className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 border-b ${
           (scrolled && !mobileMenuOpen) 
-            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-2.5 shadow-2xl' 
-            : 'bg-transparent border-transparent py-2.5'
+            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-1 shadow-2xl' 
+            : 'bg-transparent border-transparent py-4'
         }`}
       >
         <div className="container mx-auto px-6 h-14 flex items-center justify-between relative">
@@ -588,7 +588,7 @@ export default function Layout({ children }: LayoutProps) {
             <div
               ref={navPillRef}
               className={`
-              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden h-12
+              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden h-16
               ${scrolled 
                 ? 'bg-slate-900/90 backdrop-blur-md border border-white/10' 
                 : 'bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]' 
@@ -1104,7 +1104,7 @@ export default function Layout({ children }: LayoutProps) {
               <ul className="space-y-2 text-xs">
                 {navigation
                   .filter((link) => 
-                    !["/", "/success-stories", "/data-visualization"].includes(link.href)
+                    !["/", "/impact", "/data-visualization"].includes(link.href)
                   )
                   .map((link) => (
                    <li key={link.href} className="leading-tight">

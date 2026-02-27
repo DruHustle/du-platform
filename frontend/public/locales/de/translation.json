@@ -44,7 +44,7 @@
     "investment": "Investitionen",
     "trade": "Handel",
     "data": "Wirtschaftsdaten",
-    "success": "Erfolgsgeschichten",
+    "impact": "Wirkung",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
     "product_intelligence": "Produkt-Informationen",
@@ -89,7 +89,7 @@
     "ready_to_connect_title": "Bereit zur Vernetzung?",
     "ready_to_connect_subtitle": "Schließen Sie sich tausenden Diaspora-Mitgliedern an, die Brücken für die wirtschaftliche Entwicklung schlagen.",
     "view_data": "Wirtschaftsdaten ansehen",
-    "success_stories": "Erfolgsgeschichten",
+    "success_stories": "Wirkung",
     "modules": {
       "tourism": {
         "title": "Tourismus",
@@ -1494,7 +1494,7 @@
       }
     },
     "stories_badge": "Geschichten",
-    "stories_title": "Inspirierende Erfolgsgeschichten",
+    "stories_title": "Wirkung",
     "stories_subtitle": "Entdecken Sie die Beiträge der Diaspora in verschiedenen Sektoren.",
     "story_card": {
       "impact": "Wirkung:",
@@ -1508,7 +1508,7 @@
     "impact_metrics_badge": "Kennzahlen",
     "impact_metrics_title": "Gemeinsame Wirkung",
     "impact_metrics_subtitle": "Die kumulierte Wirkung des Engagements über alle Projekte.",
-    "cta_title": "Haben Sie eine Erfolgsgeschichte?",
+    "cta_title": "Möchten Sie Wirkung teilen?",
     "cta_subtitle": "Wir suchen immer nach Inspiration. Teilen Sie Ihre Geschichte mit uns!",
     "cta_button": "Geschichte teilen",
     "stories_list": [
@@ -1716,6 +1716,12 @@
     "year": "Jahr",
     "annual_return": "Jährliche Rendite",
     "disclaimer": "Hinweis: Dieser Rechner liefert Schätzungen. Die tatsächliche Performance kann abweichen."
+  },
+  "payments": {
+    "intro": {
+      "title": "Grenzüberschreitende Zahlungen",
+      "description": "Diaspora Unlocked integriert vertrauenswürdige Finanzpartner, um sichere Überweisungen, Familienunterstützung und Coverage-Services für im Ausland lebende Simbabwer bereitzustellen."
+    }
   },
   "shop": {
     "collections": "Kollektionen",

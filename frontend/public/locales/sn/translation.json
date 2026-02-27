@@ -44,7 +44,7 @@
     "investment": "Kudyara Mari",
     "trade": "Zvekutengeserana",
     "data": "Nhamba dzeUpfumi",
-    "success": "Nhoroondo dzeKubudirira",
+    "impact": "Mhedzisiro",
     "market_requirements": "Zvinodiwa neMisika",
     "market_requirements_desc": "Mitemo nezvitupa zvemusika weGermany",
     "product_intelligence": "Ruzivo rweZvigadzirwa",
@@ -89,7 +89,7 @@
     "ready_to_connect_title": "Wagadzirira kubatana nesu here?",
     "ready_to_connect_subtitle": "Joinha zviuru zvevana veZimbabwe vari kunze mukuvaka upfumi hwenyika.",
     "view_data": "Tarisa Nhamba dzeUpfumi",
-    "success_stories": "Nhoroondo dzeKubudirira",
+    "success_stories": "Mhedzisiro",
     "modules": {
       "tourism": {
         "title": "Ushanyi",
@@ -1494,7 +1494,7 @@
       }
     },
     "stories_badge": "Nhoroondo",
-    "stories_title": "Nhoroondo dzeKubudirira",
+    "stories_title": "Mhedzisiro",
     "stories_subtitle": "Ongorora kubudirira kwevana veZimbabwe vari kunze muzvikamu zvakasiyana.",
     "story_card": {
       "impact": "Mhedzisiro:",
@@ -1508,7 +1508,7 @@
     "impact_metrics_badge": "Nhamba",
     "impact_metrics_title": "Mhedzisiro yeKubatana",
     "impact_metrics_subtitle": "Mhedzisiro yese yekushanda pamwe kwevana vari kunze.",
-    "cta_title": "Une Nhoroondo yeKubudirira Here?",
+    "cta_title": "Une Mhedzisiro Yaungagovera Here?",
     "cta_subtitle": "Tiri kutsvaga nhoroondo dzinokurudzira dzevana vari kunze. Ipai yenyu nesu!",
     "cta_button": "Ipa Nhoroondo Yako",
     "stories_list": [
@@ -1716,6 +1716,12 @@
     "year": "Gore",
     "annual_return": "Mhindu yegore",
     "disclaimer": "Cherechedzo: Ichi chirongwa chinopa fungidziro."
+  },
+  "payments": {
+    "intro": {
+      "title": "Kubhadhara Kunoyambuka Miganhu",
+      "description": "Diaspora Unlocked inobatanidza vanopa masevhisi ezvemari vanovimbika kuti ipe kutumira mari kwakachengeteka, rubatsiro rwemhuri, uye masevhisi ecoverage kumaZimbabwean ari kunze kwenyika."
+    }
   },
   "shop": {
     "collections": "Zvirongwa",

@@ -44,7 +44,7 @@
     "investment": "Ukutshala Imali",
     "trade": "Ezohwebo",
     "data": "Idatha yezomnotho",
-    "success": "Izindaba zempumelelo",
+    "impact": "Umphumela",
     "market_requirements": "Izidingo zemakethe",
     "market_requirements_desc": "Imithetho lezitifiketi zemakethe yase-Germany",
     "product_intelligence": "Ulwazi lwemikhiqizo",
@@ -89,7 +89,7 @@
     "ready_to_connect_title": "Usulungele ukuxhumana?",
     "ready_to_connect_subtitle": "Hlanganyela lezinkulungwane zama-diaspora akha amabhuloho okuthuthukisa umnotho.",
     "view_data": "Buka Idatha yezomnotho",
-    "success_stories": "Izindaba zempumelelo",
+    "success_stories": "Umphumela",
     "modules": {
       "tourism": {
         "title": "Ezokuvakasha",
@@ -1494,7 +1494,7 @@
       }
     },
     "stories_badge": "Izindaba",
-    "stories_title": "Izindaba zempumelelo ezikhuthazayo",
+    "stories_title": "Umphumela",
     "stories_subtitle": "Hlola iqhaza elakhayo lama-diaspora aseZimbabwe ezingxenyeni ezitshiyeneyo.",
     "story_card": {
       "impact": "Umphumela:",
@@ -1508,7 +1508,7 @@
     "impact_metrics_badge": "Isilinganiso (Metrics)",
     "impact_metrics_title": "Umphumela ohlanganyelweyo",
     "impact_metrics_subtitle": "Umphumela wonke wokuzibandakanya kwama-diaspora kuzo zonke izindaba zempumelelo.",
-    "cta_title": "Ulendaba yempumelelo ofisa ukuyaba lathi?",
+    "cta_title": "Ulomphumela Ofisa Ukwabelana Lathi?",
     "cta_subtitle": "Sihlala sidinga izindaba ezikhuthazayo zomphumela wama-diaspora. Yabelana lathi ngetshe yakho!",
     "cta_button": "Yabelana ngendaba yakho",
     "stories_list": [
@@ -1716,6 +1716,12 @@
     "year": "Unyaka",
     "annual_return": "Inzuzo yonyaka",
     "disclaimer": "Qaphela: Lesi sibali sinika izilinganiso kuye ngenzuzo elindelekileyo."
+  },
+  "payments": {
+    "intro": {
+      "title": "Inkokhelo Ezinqamula Imingcele",
+      "description": "I-Diaspora Unlocked ihlanganisa abahlinzeki bezemali abathembekileyo ukuze inike ukuthunyelwa kwemali okuphephileyo, ukunakekelwa komndeni, kanye lamasevisi ecoverage kumaZimbabwean aphesheya."
+    }
   },
   "shop": {
     "collections": "Amaqoqo (Collections)",

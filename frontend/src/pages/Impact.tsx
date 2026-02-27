@@ -44,7 +44,7 @@ type ApiStory = {
   display?: boolean | string | number;
 };
 
-export default function SuccessStories() {
+export default function Impact() {
   const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [apiStories, setApiStories] = useState<ApiStory[]>([]);
@@ -257,7 +257,7 @@ export default function SuccessStories() {
 
   useEffect(() => {
     api
-      .get("/success-stories")
+      .get("/impact")
       .then(({ data }) => {
         setApiStories(Array.isArray(data?.stories) ? data.stories : []);
         setStoriesLoadFailed(false);
@@ -273,7 +273,7 @@ export default function SuccessStories() {
   // --- 3. IMPACT METRICS DATA WITH BOOLEAN SHIELD ---
   const impactData = useMemo(() => {
     return [
-      { display: false, emoji: "💰", value: "$11.3M+", label: t("success.impact_metrics.economic_impact.label") || "Total Economic Impact", description: t("success.impact_metrics.economic_impact.description") || "Revenue generated across all success stories" },
+      { display: false, emoji: "💰", value: "$11.3M+", label: t("success.impact_metrics.economic_impact.label") || "Total Economic Impact", description: t("success.impact_metrics.economic_impact.description") || "Revenue generated across all impact stories" },
       { display: false, emoji: "👥", value: "700+", label: t("success.impact_metrics.jobs_created.label") || "Jobs Created", description: t("success.impact_metrics.jobs_created.description") || "Direct employment opportunities" },
       { display: false, emoji: "📈", value: "1,000+", label: t("success.impact_metrics.diaspora_investors.label") || "Diaspora Investors", description: t("success.impact_metrics.diaspora_investors.description") || "Active participants in projects" },
       { display: false, emoji: "🌍", value: "15+", label: t("success.impact_metrics.markets_accessed.label") || "Markets Accessed", description: t("success.impact_metrics.markets_accessed.description") || "International markets reached" }
@@ -329,13 +329,13 @@ export default function SuccessStories() {
     <Layout>
       <SubPageHero heroSlides={heroSlides} intro={introData} />
 
-      {/* SUCCESS STORIES SECTION */}
+      {/* IMPACT STORIES SECTION */}
       {activeStories.length > 0 && (
         <section id="stories" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
             <div className="mb-10 text-center">
-              <h2 className="text-xl font-black text-white tracking-tight">{t("success.stories_title") || "Inspiring Success Stories"}</h2>
+              <h2 className="text-xl font-black text-white tracking-tight">{t("success.stories_title") || "Inspiring Impact"}</h2>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("success.stories_subtitle") || "Explore the impactful contributions of the Zimbabwean diaspora across various sectors."}</p>
             </div>
 
@@ -389,7 +389,7 @@ export default function SuccessStories() {
           <div className="container relative z-10 px-6 mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-xl font-black text-white tracking-tight">{t("success.impact_metrics_title") || "Collective Impact"}</h2>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("success.impact_metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured success stories."}</p>
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("success.impact_metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured impact stories."}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {activeMetrics.map((metric, index) => {
@@ -430,7 +430,7 @@ export default function SuccessStories() {
               </div>
 
               <div className="space-y-4 text-center">
-                <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have a Success Story to Share?"}</h2>
+                <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have Impact to Share?"}</h2>
                 <p className="text-sm text-white/75 font-light max-w-3xl mx-auto leading-relaxed">{t("success.cta_subtitle") || "We are always looking for inspiring stories of diaspora impact. Share yours with us!"}</p>
               </div>
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
@@ -440,7 +440,7 @@ export default function SuccessStories() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 bg-slate-950 border-white/10 overflow-hidden rounded-[2rem]">
-                  <ContactForm title={t("success.cta_title") || "Have a Success Story to Share?"} module="success" />
+                  <ContactForm title={t("success.cta_title") || "Have Impact to Share?"} module="success" />
                 </DialogContent>
               </Dialog>
 

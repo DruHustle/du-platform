@@ -97,7 +97,7 @@ const navButtons = [
     {
       title: t('home.modules.success.title') || "Impact",
       description: t('home.modules.success.desc') || "Explore real-world examples of projects thriving through diaspora engagement.",
-      href: "/success-stories",
+      href: "/impact",
       bgImage: "/images/pages/home/partnership_handshake.png",
       stats: t('home.modules.success.stats') || "Impact Stories"
     }

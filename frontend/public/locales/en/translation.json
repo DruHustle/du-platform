@@ -45,7 +45,7 @@
     "trade": "Trade",
     "payments": "Payments",
     "data": "Data",
-    "success": "Success Stories",
+    "impact": "Impact",
     "market_requirements": "Market Requirements",
     "market_requirements_desc": "German market regulations and certifications",
     "product_intelligence": "Product Intelligence",
@@ -77,7 +77,7 @@
   "home": {
     "made_in_zimbabwe_alt": "Made in Zimbabwe",
     "hero_title": "Diaspora Unlocked",
-    "hero_subtitle": "ICT, Trade, Tourism and Investment Acceleration for Vision 2030",
+    "hero_subtitle": "The trusted diaspora gateway",
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
@@ -89,7 +89,7 @@
     "ready_to_connect_title": "Ready to Connect?",
     "ready_to_connect_subtitle": "Join thousands of diaspora members building bridges for economic development.",
     "view_data": "View Economic Data",
-    "success_stories": "Success Stories",
+    "success_stories": "Impact",
     "modules": {
       "tourism": {
         "title": "Tourism",
@@ -1482,7 +1482,7 @@
     "impact_metrics": {
       "economic_impact": {
         "label": "Total Economic Impact",
-        "description": "Revenue generated across all success stories"
+        "description": "Revenue generated across all impact stories"
       },
       "jobs_created": {
         "label": "Jobs Created",
@@ -1498,7 +1498,7 @@
       }
     },
     "stories_badge": "Stories",
-    "stories_title": "Inspiring Success Stories",
+    "stories_title": "Inspiring Impact",
     "stories_subtitle": "Explore the impactful contributions of the Zimbabwean diaspora across various sectors.",
     "story_card": {
       "impact": "Impact:",
@@ -1511,8 +1511,8 @@
     },
     "impact_metrics_badge": "Metrics",
     "impact_metrics_title": "Collective Impact",
-    "impact_metrics_subtitle": "The aggregated impact of diaspora engagement across all featured success stories.",
-    "cta_title": "Have a Success Story to Share?",
+    "impact_metrics_subtitle": "The aggregated impact of diaspora engagement across all featured impact stories.",
+    "cta_title": "Have Impact to Share?",
     "cta_subtitle": "We are always looking for inspiring stories of diaspora impact. Share yours with us!",
     "cta_button": "Share Your Story",
     "stories_list": [
@@ -1642,7 +1642,7 @@
         "display": true,
         "value": "$11.3M+",
         "label": "Total Economic Impact",
-        "description": "Revenue generated across all success stories"
+        "description": "Revenue generated across all impact stories"
       },
       {
         "display": true,
@@ -1786,6 +1786,12 @@
     "year": "Year",
     "annual_return": "Annual return",
     "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
+  },
+  "payments": {
+    "intro": {
+      "title": "Cross-Border Payments",
+      "description": "Diaspora Unlocked integrates trusted financial partners to provide secure remittances, family care, and coverage services for Zimbabweans abroad."
+    }
   },
   "shop": {
     "collections": "Collections",
