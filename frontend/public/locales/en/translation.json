@@ -2,7 +2,7 @@
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
   "about": "About",
-  "about_us": "Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.",
+  "about_us": "Diaspora Unlocked is a unified digital gateway connecting Zimbabwe’s global diaspora to structured opportunities in tourism, trade, and investment — integrating trusted financial, remittance, and family assurance partners to enable secure economic participation and meaningful connection with home.",
   "select_lang": "Select Language",
   "account": "Account",
   "login": "Login",
@@ -44,7 +44,6 @@
     "investment": "Investments",
     "trade": "Trade",
     "payments": "Payments",
-    "data": "Data",
     "impact": "Impact",
     "market_requirements": "Market Requirements",
     "market_requirements_desc": "German market regulations and certifications",
@@ -81,8 +80,8 @@
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
-    "objective_title": "Platform Services",
-    "objective_desc": "A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.",
+    "objective_title": "Welcome",
+    "objective_desc": "Tourism. Trade. Investment. Remittance. Family Care — unified for Zimbabweans abroad.",
     "explore_now": "Explore Now",
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
@@ -556,6 +555,11 @@
         "desc": "AI-generated plans based on your interests and travel style."
       },
       "plan_trip_cta": "Plan trip with Onesa",
+      "cta": {
+        "chat": "Chat with Onesa",
+        "plan_trip": "Plan your trip",
+        "local_guide_ar": "Local guide AR"
+      },
       "trip_planner": {
         "badge": "Onesa AI Travel",
         "title": "Onesa Booking Information",
@@ -1204,189 +1208,6 @@
         "badge": "EU Business Support"
       }
     }
-  },
-  "data": {
-    "hero": {
-      "badge1": "Economic Insights",
-      "title1": "Driving Growth Through ",
-      "highlight1": "Data",
-      "subtitle1": "Unlocking Zimbabwe's economic potential with comprehensive data visualization and analysis.",
-      "desc1": "Explore key economic indicators, sectoral performance, and the significant impact of the diaspora on national development.",
-      "economic_data": "Explore Economic Data",
-      "badge2": "Diaspora Power",
-      "title2": "Remittances: A Pillar of ",
-      "highlight2": "Growth",
-      "subtitle2": "Diaspora remittances are a vital source of foreign currency and a key driver of economic stability and development.",
-      "desc2": "Discover how these funds are impacting various sectors, from education to housing, and fueling local economies.",
-      "badge3": "Investment Trends",
-      "title3": "Strategic Investment ",
-      "highlight3": "Opportunities",
-      "subtitle3": "Identify high-potential sectors and projects attracting significant investment, both local and from the diaspora.",
-      "badge4": "Export Performance",
-      "title4": "Boosting National ",
-      "highlight4": "Exports",
-      "subtitle4": "Track the growth of Zimbabwe's export sectors and understand market access dynamics.",
-      "badge5": "Policy Impact",
-      "title5": "Informed Policy ",
-      "highlight5": "Making",
-      "subtitle5": "Data-driven insights supporting effective economic planning and policy formulation."
-    },
-    "education": "Education",
-    "housing": "Housing & Construction",
-    "health_care": "Healthcare",
-    "business_investment": "Business Investment",
-    "food": "Food & Basic Needs",
-    "objective_title": "Data driven insights",
-    "objective_subtitle": "Providing comprehensive, actionable insights to support informed decision-making and strategic planning.",
-    "overview_title": "Key Economic Indicators",
-    "overview_subtitle": "Key macroeconomic indicators and performance highlights. 2025 Data and 2026 projections",
-    "overview": {
-      "gdp": {
-        "title": "GDP (2026 Projection)",
-        "subtitle": " % Growth",
-        "description": "Zimbabwe's Gross Domestic Product"
-      },
-      "gdp_growth": {
-        "title": "Live GDP Growth",
-        "subtitle": " Real-time Feed",
-        "description": "Real-time GDP growth rate based on current economic activity"
-      },
-      "remittances": {
-        "title": "Diaspora Remittances",
-        "subtitle": "Forex leader",
-        "description": "Annual remittances from Zimbabwean diaspora"
-      },
-      "exports": {
-        "title": "Total Exports",
-        "subtitle": "Global Trade",
-        "description": "Total value of Zimbabwean exports"
-      },
-      "mining_revenue": {
-        "title": "Mining Revenue",
-        "subtitle": "Strategic Ores",
-        "description": "Total mining sector revenue"
-      },
-      "manufacturing": {
-        "title": "Manufacturing",
-        "subtitle": "Industrial Output",
-        "description": "Total manufacturing sector GDP contribution"
-      },
-      "tourism_revenue": {
-        "title": "Tourism Revenue",
-        "subtitle": "Annual Revenue",
-        "description": "Annual tourism sector revenue"
-      },
-      "agriculture": {
-        "title": "Agricultural Exports",
-        "subtitle": "Export Value",
-        "description": "Total value of agricultural exports"
-      },
-      "total_exports": {
-        "title": "Total Exports",
-        "subtitle": "Global Trade",
-        "description": "Total value of Zimbabwean exports"
-      },
-      "mining": {
-        "title": "Mining Revenue",
-        "subtitle": "Strategic Ores",
-        "description": "Total mining sector revenue"
-      },
-      "tourism": {
-        "title": "Tourism Revenue",
-        "subtitle": "Annual Revenue",
-        "description": "Annual tourism sector revenue"
-      }
-    },
-    "gdp_growth_rate": "GDP Growth Rate",
-    "gdp_growth_trajectory": "GDP Growth Trajectory",
-    "gdp_growth_history": "Zimbabwe's economic growth from 2021 to 2025 projection",
-    "gdp_data_source": "Source: World Bank, IMF, ZIMSTAT",
-    "diaspora_remittance_impact_badge": "Diaspora Impact",
-    "diaspora_remittance_impact_title": "Diaspora Economic Impact",
-    "diaspora_remittance_impact_subtitle": "Understanding the significant contribution of the Zimbabwean diaspora to the national economy.",
-    "diaspora_remittance_value": "Annual Remittances",
-    "diaspora_number_value": "Global Diaspora",
-    "diaspora_investment_potential": "Investment Potential",
-    "diaspora_distribution": "Global Diaspora Distribution",
-    "diaspora_residence": "Zimbabwean diaspora residence worldwide",
-    "diaspora_residence_country": "Region/Country",
-    "diaspora_population": "Population",
-    "diaspora_percentage": "Percentage",
-    "diaspora_remittance_2024": "Remittances 2024",
-    "diaspora_remittance_2025": "Remittances 2025",
-    "disclaimer": "* Data based on estimates from RBZ, ZIMSTAT, World Bank, and IMF reports. Real-time metrics update periodically via API.",
-    "regional_breakdown_title": "Diaspora Regional Breakdown",
-    "regional_breakdown_subtitle": "Distribution of Zimbabwean diaspora across key regions.",
-    "regional_breakdown": {
-      "south_africa": {
-        "region": "South Africa",
-        "population": "1.5 - 2.0 Million"
-      },
-      "united_kingdom": {
-        "region": "United Kingdom",
-        "population": "500K - 1.0 Million"
-      },
-      "botswana": {
-        "region": "Botswana",
-        "population": "500K+"
-      },
-      "united_states": {
-        "region": "United States",
-        "population": "300K - 500K"
-      },
-      "australia": {
-        "region": "Australia",
-        "population": "50K - 100K"
-      },
-      "canada": {
-        "region": "Canada",
-        "population": "50K - 100K"
-      },
-      "germany": {
-        "region": "Germany",
-        "population": "30K - 50K"
-      },
-      "other_countries": {
-        "region": "Other Countries",
-        "population": "200K+"
-      }
-    },
-    "remittance_impact_title": "Remittance Impact by Sector",
-    "remittance_impact_subtitle": "How diaspora remittances are distributed across various sectors in Zimbabwe.",
-    "remittance_impact": {
-      "education": {
-        "sector": "Education"
-      },
-      "housing_construction": {
-        "sector": "Housing & Construction"
-      },
-      "healthcare": {
-        "sector": "Healthcare"
-      },
-      "business_investment": {
-        "sector": "Business Investment"
-      },
-      "food_basic_needs": {
-        "sector": "Food & Basic Needs"
-      }
-    },
-    "investment_calculator_proInvestmentModeler": "Pro Investment Modeler",
-    "investment_calculator_stressTest": "Stress Test",
-    "investment_calculator_principal": "Principal",
-    "investment_calculator_taxRate": "Tax Rate ",
-    "investment_calculator_insurance/Year": "Insurance/Year",
-    "investment_calculator_returns": "Returns",
-    "investment_calculator_netProfit": "Net Profit",
-    "investment_calculator_final": "Final",
-    "investment_calculator_fees": "Fees",
-    "investment_calculator_year": "Year",
-    "investment_calculator_shockIncluded": "Shock Included",
-    "investment_calculator_note": "Note",
-    "investment_calculator_disclaimer": "This calculator provides estimates based on assumed constant returns. Actual investment performance may vary. Past performance does not guarantee future results. Please consult with financial advisors and review project details before investing.",
-    "cta_title": "Need More In-depth Data?",
-    "cta_subtitle": "Access our comprehensive reports and custom data analytics services for your specific needs.",
-    "cta_button": "Request Custom Report",
-    "diaspora_residence_extra": "This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets."
   },
   "success": {
     "hero": {

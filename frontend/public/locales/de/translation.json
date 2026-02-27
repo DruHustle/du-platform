@@ -43,7 +43,6 @@
     "tourism": "Tourismus",
     "investment": "Investitionen",
     "trade": "Handel",
-    "data": "Wirtschaftsdaten",
     "impact": "Wirkung",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
@@ -556,6 +555,11 @@
         "desc": "KI-generierte Pläne basierend auf Ihren Interessen und Ihrem Reisestil."
       },
       "plan_trip_cta": "Reise mit Onesa planen",
+      "cta": {
+        "chat": "Mit Onesa chatten",
+        "plan_trip": "Reise planen",
+        "local_guide_ar": "Lokaler AR-Guide"
+      },
       "trip_planner": {
         "badge": "Onesa AI Reise",
         "title": "Onesa Buchungsinformationen",
@@ -1200,189 +1204,6 @@
         "badge": "EU Business Support"
       }
     }
-  },
-  "data": {
-    "hero": {
-      "badge1": "Wirtschaftliche Einblicke",
-      "title1": "Wachstum fördern durch ",
-      "highlight1": "Daten",
-      "subtitle1": "Erschließung des wirtschaftlichen Potenzials Simbabwes durch Datenvisualisierung.",
-      "desc1": "Erkunden Sie Wirtschaftsindikatoren, Sektorleistungen und den Einfluss der Diaspora.",
-      "economic_data": "Wirtschaftsdaten erkunden",
-      "badge2": "Diaspora-Power",
-      "title2": "Rücküberweisungen: Eine Säule des ",
-      "highlight2": "Wachstums",
-      "subtitle2": "Rücküberweisungen sind eine lebenswichtige Devisenquelle und Treiber der Stabilität.",
-      "desc2": "Erfahren Sie, wie diese Mittel Sektoren von Bildung bis Wohnungsbau beeinflussen.",
-      "badge3": "Investment-Trends",
-      "title3": "Strategische Investitions-",
-      "highlight3": "Möglichkeiten",
-      "subtitle3": "Identifizieren Sie Sektoren mit hohem Potenzial für lokale und Diaspora-Investoren.",
-      "badge4": "Exportleistung",
-      "title4": "Nationale ",
-      "highlight4": "Exporte steigern",
-      "subtitle4": "Verfolgen Sie das Wachstum der Exportsektoren und verstehen Sie die Marktdynamik.",
-      "badge5": "Einfluss auf die Politik",
-      "title5": "Informierte ",
-      "highlight5": "Entscheidungsfindung",
-      "subtitle5": "Datengestützte Erkenntnisse für effektive wirtschaftliche Planung."
-    },
-    "education": "Bildung",
-    "housing": "Wohnungsbau & Bauwesen",
-    "health_care": "Gesundheitswesen",
-    "business_investment": "Unternehmensinvestitionen",
-    "food": "Ernährung & Grundbedürfnisse",
-    "objective_title": "Datengestützte Einblicke",
-    "objective_subtitle": "Bereitstellung umfassender Informationen für strategische Entscheidungen.",
-    "overview_title": "Wirtschaftliche Kennzahlen",
-    "overview_subtitle": "Makroökonomische Indikatoren. Daten 2025 und Prognosen 2026.",
-    "overview": {
-      "gdp": {
-        "title": "BIP (Prognose 2026)",
-        "subtitle": " % Wachstum",
-        "description": "Simbabwes Bruttoinlandsprodukt"
-      },
-      "gdp_growth": {
-        "title": "Live-BIP-Wachstum",
-        "subtitle": " Echtzeit-Feed",
-        "description": "Echtzeit-Wachstumsrate basierend auf aktueller Aktivität"
-      },
-      "remittances": {
-        "title": "Rücküberweisungen",
-        "subtitle": "Devisen-Spitzenreiter",
-        "description": "Jährliche Überweisungen der Diaspora"
-      },
-      "exports": {
-        "title": "Gesamtexporte",
-        "subtitle": "Welthandel",
-        "description": "Gesamtwert der simbabwischen Exporte"
-      },
-      "mining_revenue": {
-        "title": "Bergbau-Einnahmen",
-        "subtitle": "Strategische Erze",
-        "description": "Gesamteinnahmen des Bergbausektors"
-      },
-      "manufacturing": {
-        "title": "Verarbeitendes Gewerbe",
-        "subtitle": "Industrieller Ausstoß",
-        "description": "BIP-Beitrag des Industriesektors"
-      },
-      "tourism_revenue": {
-        "title": "Tourismus-Einnahmen",
-        "subtitle": "Jahresumsatz",
-        "description": "Jährliche Einnahmen im Tourismussektor"
-      },
-      "agriculture": {
-        "title": "Agrar-Exporte",
-        "subtitle": "Exportwert",
-        "description": "Gesamtwert landwirtschaftlicher Exporte"
-      },
-      "total_exports": {
-        "title": "Gesamtexporte",
-        "subtitle": "Welthandel",
-        "description": "Gesamtwert der simbabwischen Exporte"
-      },
-      "mining": {
-        "title": "Bergbau-Einnahmen",
-        "subtitle": "Strategische Erze",
-        "description": "Gesamteinnahmen des Bergbausektors"
-      },
-      "tourism": {
-        "title": "Tourismus-Einnahmen",
-        "subtitle": "Jahresumsatz",
-        "description": "Jährliche Einnahmen im Tourismussektor"
-      }
-    },
-    "gdp_growth_rate": "BIP-Wachstumsrate",
-    "gdp_growth_trajectory": "BIP-Wachstumsverlauf",
-    "gdp_growth_history": "Wirtschaftswachstum 2021 bis Prognose 2025",
-    "gdp_data_source": "Quelle: Weltbank, IWF, ZIMSTAT",
-    "diaspora_remittance_impact_badge": "Diaspora-Einfluss",
-    "diaspora_remittance_impact_title": "Wirtschaftliche Wirkung der Diaspora",
-    "diaspora_remittance_impact_subtitle": "Beitrag der weltweiten Diaspora zur nationalen Wirtschaft.",
-    "diaspora_remittance_value": "Jährliche Überweisungen",
-    "diaspora_number_value": "Globale Diaspora",
-    "diaspora_investment_potential": "Investitionspotenzial",
-    "diaspora_distribution": "Verteilung der Diaspora weltweit",
-    "diaspora_residence": "Wohnort der simbabwischen Diaspora weltweit",
-    "diaspora_residence_country": "Region/Land",
-    "diaspora_population": "Bevölkerung",
-    "diaspora_percentage": "Prozentsatz",
-    "diaspora_remittance_2024": "Rücküberweisungen 2024",
-    "diaspora_remittance_2025": "Rücküberweisungen 2025",
-    "disclaimer": "* Daten basieren auf Schätzungen von RBZ, ZIMSTAT, Weltbank und IWF. Echtzeit-Metriken aktualisieren sich periodisch.",
-    "regional_breakdown_title": "Regionale Aufschlüsselung",
-    "regional_breakdown_subtitle": "Verteilung der Diaspora in Schlüsselregionen.",
-    "regional_breakdown": {
-      "south_africa": {
-        "region": "Südafrika",
-        "population": "1,5 - 2,0 Millionen"
-      },
-      "united_kingdom": {
-        "region": "Großbritannien",
-        "population": "500k - 1,0 Millionen"
-      },
-      "botswana": {
-        "region": "Botswana",
-        "population": "500k+"
-      },
-      "united_states": {
-        "region": "USA",
-        "population": "300k - 500k"
-      },
-      "australia": {
-        "region": "Australien",
-        "population": "50k - 100k"
-      },
-      "canada": {
-        "region": "Kanada",
-        "population": "50k - 100k"
-      },
-      "germany": {
-        "region": "Deutschland",
-        "population": "30k - 50k"
-      },
-      "other_countries": {
-        "region": "Andere Länder",
-        "population": "200k+"
-      }
-    },
-    "remittance_impact_title": "Wirkung nach Sektoren",
-    "remittance_impact_subtitle": "Verteilung der Überweisungen in Simbabwe.",
-    "remittance_impact": {
-      "education": {
-        "sector": "Bildung"
-      },
-      "housing_construction": {
-        "sector": "Wohnungsbau & Bau"
-      },
-      "healthcare": {
-        "sector": "Gesundheitswesen"
-      },
-      "business_investment": {
-        "sector": "Unternehmensinvestition"
-      },
-      "food_basic_needs": {
-        "sector": "Grundbedürfnisse"
-      }
-    },
-    "investment_calculator_proInvestmentModeler": "Pro Investment-Modellierer",
-    "investment_calculator_stressTest": "Stresstest",
-    "investment_calculator_principal": "Grundkapital",
-    "investment_calculator_taxRate": "Steuersatz",
-    "investment_calculator_insurance/Year": "Versicherung/Jahr",
-    "investment_calculator_returns": "Rendite",
-    "investment_calculator_netProfit": "Nettogewinn",
-    "investment_calculator_final": "Endbetrag",
-    "investment_calculator_fees": "Gebühren",
-    "investment_calculator_year": "Jahr",
-    "investment_calculator_shockIncluded": "Inklusive Marktschock",
-    "investment_calculator_note": "Hinweis",
-    "investment_calculator_disclaimer": "Dieser Rechner liefert Schätzungen basierend auf angenommenen konstanten Renditen. Die tatsächliche Anlageentwicklung kann variieren. Wertentwicklungen in der Vergangenheit garantieren keine zukünftigen Ergebnisse. Bitte konsultieren Sie Finanzberater und prüfen Sie die Projektdetails vor einer Investition.",
-    "cta_title": "Benötigen Sie tiefere Daten?",
-    "cta_subtitle": "Nutzen Sie unsere Berichte und Analysedienste.",
-    "cta_button": "Individuellen Bericht anfordern",
-    "diaspora_residence_extra": "Diese Verteilung zeigt priorisierte Diaspora-Korridore für Handel, Rücküberweisungsströme und Investitionsansprache in wichtigen Aufnahmemärkten."
   },
   "success": {
     "hero": {

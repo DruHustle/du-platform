@@ -1706,64 +1706,6 @@ export async function createSuccessStory(payload: {
   }
 }
 
-export async function getEconomicStats() {
-  if (!db) {
-    return {
-      ...memoryEconomicStats,
-      sectorData: memoryEconomicSectorData,
-      remittanceImpact: memoryRemittanceImpact,
-    };
-  }
-
-  try {
-    const [[statsRow]] = await db.query<mysql.RowDataPacket[]>(
-      `
-      SELECT remittances, gdp, diaspora_population, export_value, growth_rate
-      FROM economic_stats
-      WHERE id = 1
-      LIMIT 1
-      `
-    );
-    const [sectorRows] = await db.query<mysql.RowDataPacket[]>(
-      "SELECT name, growth FROM economic_sector_data ORDER BY id ASC"
-    );
-    const [impactRows] = await db.query<mysql.RowDataPacket[]>(
-      "SELECT sector, percentage FROM remittance_impact ORDER BY id ASC"
-    );
-
-    if (!statsRow) {
-      return {
-        ...memoryEconomicStats,
-        sectorData: memoryEconomicSectorData,
-        remittanceImpact: memoryRemittanceImpact,
-      };
-    }
-
-    return {
-      remittances: Number(statsRow.remittances),
-      gdp: Number(statsRow.gdp),
-      diasporaPopulation: Number(statsRow.diaspora_population),
-      exportValue: Number(statsRow.export_value),
-      growthRate: Number(statsRow.growth_rate),
-      sectorData: sectorRows.map((row) => ({
-        name: String(row.name),
-        growth: Number(row.growth),
-      })),
-      remittanceImpact: impactRows.map((row) => ({
-        sector: String(row.sector),
-        percentage: Number(row.percentage),
-      })),
-    };
-  } catch (error) {
-    if (!isDbConnectionError(error)) throw error;
-    return {
-      ...memoryEconomicStats,
-      sectorData: memoryEconomicSectorData,
-      remittanceImpact: memoryRemittanceImpact,
-    };
-  }
-}
-
 export async function listShopProducts(category?: string): Promise<ShopProductsResult> {
   const normalizedCategory = String(category ?? "").trim().toLowerCase();
   const categoryFilter = normalizedCategory && ["sports", "crafts", "food"].includes(normalizedCategory)

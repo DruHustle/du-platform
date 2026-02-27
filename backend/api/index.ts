@@ -7,7 +7,6 @@ import { registerSpeechRoutes, registerWhisperRoutes, registerTtsRoutes } from "
 type ApiDeps = {
   onesa: OnesaApiDeps;
   backend: {
-    getEconomicStats: () => Promise<any>;
     db: Parameters<typeof registerBackendApiRoutes>[1]["db"];
     serverStartedAt: number;
   };
@@ -15,7 +14,6 @@ type ApiDeps = {
 
 export function registerApiRoutes(app: express.Express, deps: ApiDeps) {
   // System routes:
-  // - GET /api/economic-stats
   // - GET /api/health/db
   // - GET /api/ping
   registerBackendApiRoutes(app, deps.backend);

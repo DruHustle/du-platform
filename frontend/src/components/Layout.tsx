@@ -231,7 +231,6 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.tourism'), href: "/tourism" },
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
-    { name: t('nav.data'), href: "/data-visualization" },
     { name: t('nav.impact'), href: "/impact" },
   ];
 
@@ -1097,14 +1096,14 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             {/* Quick Links Column */}
-            <div className="space-y-4">
+            <div className="space-y-4 lg:!pl-8">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
                 {t('quick_links')}
               </h3>
               <ul className="space-y-2 text-xs">
                 {navigation
                   .filter((link) => 
-                    !["/", "/impact", "/data-visualization"].includes(link.href)
+                    !["/", "/impact"].includes(link.href)
                   )
                   .map((link) => (
                    <li key={link.href} className="leading-tight">

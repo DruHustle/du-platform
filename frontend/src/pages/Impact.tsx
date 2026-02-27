@@ -280,6 +280,40 @@ export default function Impact() {
     ];
   }, [t]);
 
+  const regionalBreakdown = [
+    { region: "South Africa", population: "1.5 - 2.0 Million", percentage: "43%", flag: "🇿🇦" },
+    { region: "United Kingdom", population: "500K - 1.0 Million", percentage: "22%", flag: "🇬🇧" },
+    { region: "Botswana", population: "500K+", percentage: "14%", flag: "🇧🇼" },
+    { region: "United States", population: "300K - 500K", percentage: "9%", flag: "🇺🇸" },
+    { region: "Australia", population: "50K - 100K", percentage: "3%", flag: "🇦🇺" },
+    { region: "Canada", population: "50K - 100K", percentage: "2%", flag: "🇨🇦" },
+    { region: "Germany", population: "30K - 50K", percentage: "1%", flag: "🇩🇪" },
+    { region: "Other Countries", population: "200K+", percentage: "6%", flag: "🌍" },
+  ];
+
+  const remittanceImpact = [
+    { sector: "Education", percentage: "28%", amount: "$504M", icon: "📚" },
+    { sector: "Housing & Construction", percentage: "24%", amount: "$432M", icon: "🏠" },
+    { sector: "Healthcare", percentage: "18%", amount: "$324M", icon: "🏥" },
+    { sector: "Business Investment", percentage: "17%", amount: "$306M", icon: "💼" },
+    { sector: "Food & Basic Needs", percentage: "13%", amount: "$234M", icon: "🛒" },
+  ];
+
+  const remittance2025TotalBillions = 1.8;
+  const remittance2024TotalBillions = remittance2025TotalBillions * 0.92;
+
+  const percentageToShare = (percentage: string) => {
+    const numeric = Number(String(percentage || "").replace(/[^\d.]/g, ""));
+    if (!Number.isFinite(numeric) || numeric <= 0) return 0;
+    return numeric / 100;
+  };
+
+  const formatRemittanceByShare = (share: number, totalBillions: number) => {
+    const valueBillions = share * totalBillions;
+    if (valueBillions >= 1) return `$${valueBillions.toFixed(2)}B`;
+    return `$${Math.round(valueBillions * 1000)}M`;
+  };
+
   // Build a hide-list from localized content so display=false is honored
   // even when stories are loaded from the API.
   const hiddenStoryTitles = new Set(
@@ -329,7 +363,7 @@ export default function Impact() {
     <Layout>
       <SubPageHero heroSlides={heroSlides} intro={introData} />
 
-      {/* IMPACT STORIES SECTION */}
+      {/* IMPACT STORIES SECTION  - currently dissabled*/}
       {activeStories.length > 0 && (
         <section id="stories" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
@@ -382,7 +416,7 @@ export default function Impact() {
         </section>
       )}
 
-      {/* IMPACT METRICS SECTION */}
+      {/* IMPACT METRICS SECTION - currently disabled*/}
       {activeMetrics.length > 0 && (
         <section className="p-5 bg-slate-950 border-t border-white/5 relative overflow-hidden">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
@@ -419,7 +453,7 @@ export default function Impact() {
         </section>
       )}
 
-      {/* CONTACT CTA */}
+      {/* Contact CTA */}
       <section id="contact-cta" className="pt-5 p-10 bg-slate-950">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel relative mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
@@ -433,6 +467,7 @@ export default function Impact() {
                 <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("success.cta_title") || "Have Impact to Share?"}</h2>
                 <p className="text-sm text-white/75 font-light max-w-3xl mx-auto leading-relaxed">{t("success.cta_subtitle") || "We are always looking for inspiring stories of diaspora impact. Share yours with us!"}</p>
               </div>
+
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
@@ -454,6 +489,111 @@ export default function Impact() {
                   <a href="tel:+4915147416152" className="hover:text-white transition-colors">+49 151 474 16152</a>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Diaspora Economic Impact */}
+      <section className="px-5 pt-12 pb-5 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
+            <div className="text-center max-w-3xl mx-auto space-y-4 mb-8">
+              <h3 className="text-xl font-black text-white tracking-tight leading-tight">Diaspora Economic Impact</h3>
+              <p className="text-sm text-white/75 font-light leading-relaxed">
+                Understanding the significant contribution of the Zimbabwean diaspora to the national economy.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+              <div className="space-y-5 lg:col-span-7 lg:order-1">
+                {remittanceImpact.map((item, index) => (
+                  <div key={index} className="space-y-3 group">
+                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
+                      <span className="flex items-center gap-3 text-white/60">
+                        <span className="p-1.5 bg-white/5 rounded-lg group-hover:text-zim-gold transition-colors">{item.icon}</span> {item.sector}
+                      </span>
+                      <span className="text-white">{item.percentage} <span className="text-white/30 ml-2 font-light">({item.amount})</span></span>
+                    </div>
+                    <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: item.percentage }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.5, ease: "circOut" }}
+                        className="bg-zim-gold h-full rounded-full shadow-[0_0_8px_rgba(212,175,55,0.6)]"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-5 lg:col-span-5 lg:order-2">
+                {[
+                  { label: "Annual Remittances", val: "$1.8B" },
+                  { label: "Global Diaspora", val: "3.5M" },
+                  { label: "Investment Potential", val: "$500M", span: true },
+                ].map((stat, i) => (
+                  <div key={i} className={`p-6 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all hover:bg-slate-950/60 ${stat.span ? "col-span-2 lg:col-span-1" : ""}`}>
+                    <p className="text-base md:text-lg font-black text-zim-gold tracking-tighter mb-2">{stat.val}</p>
+                    <p className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-snug">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Global Diaspora Distribution */}
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
+        <div className="container px-6 mx-auto">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
+            <div className="mb-7 text-center">
+              <h3 className="text-xl font-black text-white tracking-tight">Global Diaspora Distribution</h3>
+              <p className="mt-3 text-xs text-white/75 font-light leading-relaxed">Zimbabwean diaspora residence worldwide</p>
+              <p className="mt-2 max-w-3xl mx-auto text-[11px] text-white/60 font-light leading-relaxed">
+                This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets.
+              </p>
+            </div>
+
+            <div className="relative overflow-x-auto rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-2xl">
+              <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
+              <table className="w-full min-w-[760px] text-left">
+                <thead>
+                  <tr className="bg-white/5">
+                    <th className="p-4 md:p-5 text-[9px] font-black text-white/40 uppercase tracking-widest">Region/Country</th>
+                    <th className="p-4 md:p-5 text-[9px] font-black text-white/40 uppercase tracking-widest">Population</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">Percentage</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">Remittances 2024</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">Remittances 2025</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {regionalBreakdown.map((item, index) => {
+                    const share = percentageToShare(item.percentage);
+                    return (
+                      <motion.tr
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="transition-colors hover:bg-white/5 group cursor-default"
+                      >
+                        <td className="p-4 md:p-5 flex items-center gap-3">
+                          <span className="text-base drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110 duration-500">{item.flag}</span>
+                          <span className="text-xs md:text-sm font-bold text-white/80 group-hover:text-zim-gold transition-colors">{item.region}</span>
+                        </td>
+                        <td className="p-4 md:p-5 text-[11px] text-white/40 font-medium tracking-wide">{item.population}</td>
+                        <td className="p-4 md:p-5 text-right text-sm font-black text-zim-gold tabular-nums tracking-tight">{item.percentage}</td>
+                        <td className="p-4 md:p-5 text-right text-[11px] font-semibold text-white/75 tabular-nums">{formatRemittanceByShare(share, remittance2024TotalBillions)}</td>
+                        <td className="p-4 md:p-5 text-right text-[11px] font-black text-zim-gold tabular-nums">{formatRemittanceByShare(share, remittance2025TotalBillions)}</td>
+                      </motion.tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

@@ -43,7 +43,6 @@
     "tourism": "Ushanyi",
     "investment": "Kudyara Mari",
     "trade": "Zvekutengeserana",
-    "data": "Nhamba dzeUpfumi",
     "impact": "Mhedzisiro",
     "market_requirements": "Zvinodiwa neMisika",
     "market_requirements_desc": "Mitemo nezvitupa zvemusika weGermany",
@@ -556,6 +555,11 @@
         "desc": "Zvirongwa zvinogadzirwa neAI zvichienderana nezvaunoda."
       },
       "plan_trip_cta": "Ronga rwendo naOnesa",
+      "cta": {
+        "chat": "Taura neOnesa",
+        "plan_trip": "Ronga rwendo rwako",
+        "local_guide_ar": "Gwara reAR remuno"
+      },
       "trip_planner": {
         "badge": "Onesa AI Rwendo",
         "title": "Ruzivo rweKubhuka naOnesa",
@@ -1200,189 +1204,6 @@
         "badge": "EU Business Support"
       }
     }
-  },
-  "data": {
-    "hero": {
-      "badge1": "Nhamba dzeUpfumi",
-      "title1": "Kufambisa Kukura kuburikidza ne ",
-      "highlight1": "Nhamba",
-      "subtitle1": "Kuvhura mikana yeupfumi hweZimbabwe kuburikidza nekuongorora nhamba.",
-      "desc1": "Ongorora nhamba dzeupfumi, mashandiro ezvikamu, uye basa revana vari kunze pakuvaka nyika.",
-      "economic_data": "Ongorora Nhamba dzeUpfumi",
-      "badge2": "Simba reVana vari Kunze",
-      "title2": "Mari dzinotumirwa: Musimboti we ",
-      "highlight2": "Kukura",
-      "subtitle2": "Mari dzinotumirwa nevavari kunze dzinopa mari yekunze inokosha pakusimudzira upfumi.",
-      "desc2": "Ziva kuti mari idzi dziri kubatsira sei mune dzedzidzo, kuvaka dzimba, nekusimudzira hupenyu hwevanhu.",
-      "badge3": "Kufamba kweMari dzinodyarwa",
-      "title3": "Mikana yeKudyara ",
-      "highlight3": "Mari",
-      "subtitle3": "Tsvaga zvikamu zvine mukana mukuru wekudyara mari kubva kuno nekunze.",
-      "badge4": "Kushanda kweKutengesa Kunze",
-      "title4": "Kusimudzira Kutengesa ",
-      "highlight4": "Kunze",
-      "subtitle4": "Tarira kukura kwezvikamu zvinotengesera kunze unzwisise misika.",
-      "badge5": "Mhedzisiro yeMitemo",
-      "title5": "Kuronga Mitemo ne ",
-      "highlight5": "Ungwaru",
-      "subtitle5": "Ruzivo rwenhamba runobatsira mukuronga upfumi nemitemo yenyika."
-    },
-    "education": "Dzidzo",
-    "housing": "Dzimba neKuvaka",
-    "health_care": "Utano",
-    "business_investment": "Kudyara mari muBhizimusi",
-    "food": "Chikafu neZvinokosha",
-    "objective_title": "Ruzivo rwunobva kuNhamba",
-    "objective_subtitle": "Kupa ruzivo rwakakwana runobatsira mukuita sarudzo dzine ungwaru.",
-    "overview_title": "Nhamba dzeUpfumi dzeZimbabwe",
-    "overview_subtitle": "Nhamba dzemamiriro eupfumi. Nhamba dze2025 nezvinotarisirwa muna 2026",
-    "overview": {
-      "gdp": {
-        "title": "GDP (2026 Inotarisirwa)",
-        "subtitle": " % Kukura",
-        "description": "Upfumi hweZimbabwe (Gross Domestic Product)"
-      },
-      "gdp_growth": {
-        "title": "Kukura kweGDP iye zvino",
-        "subtitle": " Nhamba dzeNguva Chaiyo",
-        "description": "Kukura kweupfumi zvichienderana nezviri kuitika iye zvino"
-      },
-      "remittances": {
-        "title": "Mari dzinotumirwa nevavari Kunze",
-        "subtitle": "Dziri mberi neForex",
-        "description": "Mari inotumirwa gore negore nevavari kunze"
-      },
-      "exports": {
-        "title": "Zvese zvinotengeswa Kunze",
-        "subtitle": "Kutengeserana kwePasi Rese",
-        "description": "Mutengo wezvese zvinotengeswa kunze neZimbabwe"
-      },
-      "mining_revenue": {
-        "title": "Mari yeMigodhi",
-        "subtitle": "Zvicherwa zvakakosha",
-        "description": "Mari yose inobva muchikamu chezvicherwa"
-      },
-      "manufacturing": {
-        "title": "Kugadzira (Manufacturing)",
-        "subtitle": "Maindasitiri",
-        "description": "Iqhaza remaindasitiri muGDP yenyika"
-      },
-      "tourism_revenue": {
-        "title": "Mari yeUshanyi",
-        "subtitle": "Mari yeGore",
-        "description": "Mari yose inobva muchikamu cheushanyi"
-      },
-      "agriculture": {
-        "title": "Kurima kunotengesa Kunze",
-        "subtitle": "Mutengo weKutengesa",
-        "description": "Mutengo wezvose zvinobva mukurima zvinotengeswa kunze"
-      },
-      "total_exports": {
-        "title": "Zvese zvinotengeswa Kunze",
-        "subtitle": "Kutengeserana kwePasi Rese",
-        "description": "Mutengo wezvese zvinotengeswa kunze neZimbabwe"
-      },
-      "mining": {
-        "title": "Mari yeMigodhi",
-        "subtitle": "Zvicherwa zvakakosha",
-        "description": "Mari yose inobva muchikamu chezvicherwa"
-      },
-      "tourism": {
-        "title": "Mari yeUshanyi",
-        "subtitle": "Mari yeGore",
-        "description": "Mari yose inobva muchikamu cheushanyi"
-      }
-    },
-    "gdp_growth_rate": "Izinga rekukura kweGDP",
-    "gdp_growth_trajectory": "Kufamba kweKukura kweGDP",
-    "gdp_growth_history": "Kukura kweupfumi hweZimbabwe kubva 2021 kusvika 2025",
-    "gdp_data_source": "Kwakabva: World Bank, IMF, ZIMSTAT",
-    "diaspora_remittance_impact_badge": "Basa reVari Kunze",
-    "diaspora_remittance_impact_title": "Mhedzisiro yeVavari Kunze kuUpfumi",
-    "diaspora_remittance_impact_subtitle": "Kunzwisisa iqhaza guru riri kuridzwa nevana veZimbabwe vari kunze munyaya dzeupfumi.",
-    "diaspora_remittance_value": "Mari dzinotumirwa paGore",
-    "diaspora_number_value": "Vavari Kunze pasi rese",
-    "diaspora_investment_potential": "Mikana yekudyara Mari",
-    "diaspora_distribution": "Kogoverwa kweVavari Kunze pasi rese",
-    "diaspora_residence": "Vana veZimbabwe mumatunhu akasiyana pasi rose",
-    "diaspora_residence_country": "Dunhu/Nyika",
-    "diaspora_population": "Huwandu",
-    "diaspora_percentage": "Phesenti",
-    "diaspora_remittance_2024": "Mari dzakatumirwa 2024",
-    "diaspora_remittance_2025": "Mari dzakatumirwa 2025",
-    "disclaimer": "* Nhamba idzi dzinobva pakuongorora kweRBZ, ZIMSTAT, World Bank neIMF. Nhamba dzeiye zvino dzinovandudzwa nenguva dzakatarwa.",
-    "regional_breakdown_title": "Huwandu hwevari Kunze nematunhu",
-    "regional_breakdown_subtitle": "Kogoverwa kwevana veZimbabwe vari kunze mumatunhu makuru.",
-    "regional_breakdown": {
-      "south_africa": {
-        "region": "Chamhembe Afrika",
-        "population": "1.5 - 2.0 Miriyoni"
-      },
-      "united_kingdom": {
-        "region": "Nyika dzakabatana",
-        "population": "500K - 1.0 Miriyoni"
-      },
-      "botswana": {
-        "region": "Botswana",
-        "population": "500K+"
-      },
-      "united_states": {
-        "region": "Nyika dzakabatana",
-        "population": "300K - 500K"
-      },
-      "australia": {
-        "region": "Ositireriya",
-        "population": "50K - 100K"
-      },
-      "canada": {
-        "region": "Kanadha",
-        "population": "50K - 100K"
-      },
-      "germany": {
-        "region": "Jerimani",
-        "population": "30K - 50K"
-      },
-      "other_countries": {
-        "region": "Dzimwe Nyika",
-        "population": "200K+"
-      }
-    },
-    "remittance_impact_title": "Mhedzisiro yeMari kune zvikamu zveUpfumi",
-    "remittance_impact_subtitle": "Mogoverwa kwemari dzinobva kunze mune zveupfumi muZimbabwe.",
-    "remittance_impact": {
-      "education": {
-        "sector": "Dzidzo"
-      },
-      "housing_construction": {
-        "sector": "Dzimba neKuvaka"
-      },
-      "healthcare": {
-        "sector": "Utano"
-      },
-      "business_investment": {
-        "sector": "Kudyara mari muBhizimusi"
-      },
-      "food_basic_needs": {
-        "sector": "Chikafu neZvinokosha"
-      }
-    },
-    "investment_calculator_proInvestmentModeler": "Mugadziri wePro Investment",
-    "investment_calculator_stressTest": "Bvunzo yekumanikidzwa",
-    "investment_calculator_principal": "Mari inodyarwa",
-    "investment_calculator_taxRate": "Izinga reMitero",
-    "investment_calculator_insurance/Year": "Insurance paGore",
-    "investment_calculator_returns": "Mhindu",
-    "investment_calculator_netProfit": "Mhindu chaiyo",
-    "investment_calculator_final": "Pakuguma",
-    "investment_calculator_fees": "Muripo",
-    "investment_calculator_year": "Gore",
-    "investment_calculator_shockIncluded": "Shock Inosanganisira",
-    "investment_calculator_note": "Cherechedzai",
-    "investment_calculator_disclaimer": "Ichi chirongwa chekuverenga chinopa fungidziro zvichienderana nenhamba dziripo. Mhindu chaiyo inogona kuchinja. Kumbirai mazano kunyanzvi dzezvemari musati madyara mari.",
-    "cta_title": "Munoda Nhamba dzakadzama here?",
-    "cta_button": "Kumbirai Umbiko Wakakosha",
-    "cta_subtitle": "Svika yedu yakazara mishumo uye tsika data analytics masevhisi kune zvaunoda chaizvo.",
-    "diaspora_residence_extra": "Kugoverwa uku kunoratidza nzira dzakakosha dzevavari kunze dzinobatsira pakuronga kutengeserana, kuyerera kwemari dzinotumirwa, uye kuwedzera mikana yekudyara mumisika mikuru."
   },
   "success": {
     "hero": {

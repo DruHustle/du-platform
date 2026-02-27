@@ -87,7 +87,7 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
             transition={{ duration: 1.2, delay: 0.8 }}
             className="mt-15 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
           >
-            {t('home.hero_subtitle')}
+            {t('home.hero_subtitle')}.
           </motion.p>  
                 
           {/* Nav Buttons */}

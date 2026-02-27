@@ -7,6 +7,7 @@ import { AlertTriangle, BarChart3, Info } from "lucide-react";
 import { t } from "i18next";
 
 export default function SophisticatedCalculator() {
+  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [principal, setPrincipal] = useState([10000]);
   const [monthlyContribution, setMonthlyContribution] = useState([300]);
   const [years, setYears] = useState([7]);
@@ -147,12 +148,12 @@ export default function SophisticatedCalculator() {
               <BarChart3 className="h-4 w-4 text-zim-gold" />
             </div>
             <h3 className="font-black text-white text-sm">
-              {t("data.investment_calculator_proInvestmentModeler")}
+              {tr("calculator.pro_modeler", "Pro Investment Modeler")}
             </h3>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-[11px] font-medium text-white/60">
-              {t("data.investment_calculator_stressTest")}
+              {tr("calculator.stress_test", "Stress Test")}
             </span>
             <Switch 
               checked={isRiskActive} 
@@ -166,7 +167,7 @@ export default function SophisticatedCalculator() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">{t("data.investment_calculator_principal") || "Principal"}</Label>
+              <Label className="text-[11px] font-medium text-white/60">{tr("calculator.principal", "Principal")}</Label>
               <p className="text-xs font-semibold text-white">{formatCurrency(principal[0])}</p>
             </div>
             <Slider value={principal} onValueChange={setPrincipal} min={1000} max={250000} step={500} className="py-4" />
@@ -182,7 +183,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">{t("data.investment_calculator_returns") || "Expected Return (p.a.)"}</Label>
+              <Label className="text-[11px] font-medium text-white/60">{tr("calculator.expected_return", "Expected Return (p.a.)")}</Label>
               <p className="text-xs font-semibold text-zim-gold">{annualReturn[0]}%</p>
             </div>
             <Slider value={annualReturn} onValueChange={setAnnualReturn} min={3} max={30} step={1} />
@@ -198,7 +199,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">{t("data.investment_calculator_taxRate") || "Tax on Gains"}</Label>
+              <Label className="text-[11px] font-medium text-white/60">{tr("calculator.tax_on_gains", "Tax on Gains")}</Label>
               <p className="text-xs font-semibold text-white">{taxRate[0]}%</p>
             </div>
             <Slider value={taxRate} onValueChange={setTaxRate} min={0} max={40} step={1} />
@@ -228,7 +229,7 @@ export default function SophisticatedCalculator() {
             <p className="text-2xl font-black tabular-nums text-white">{formatCurrency(base.totalProfit)}</p>
           </div>
           <div className="sm:text-right lg:text-left">
-            <p className="text-[11px] font-medium text-white/60">{t("data.investment_calculator_final") || "Final Value"} (Post-Tax/Fees)</p>
+            <p className="text-[11px] font-medium text-white/60">{tr("calculator.final_value_short", "Final Value")} (Post-Tax/Fees)</p>
             <p className="text-2xl font-black tabular-nums text-zim-gold">{formatCurrency(base.finalValue)}</p>
           </div>
           <div>
@@ -263,7 +264,7 @@ export default function SophisticatedCalculator() {
         {isRiskActive && (
           <div className="flex items-center gap-2 py-2 border-b border-red-500/20">
             <AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />
-            <span className="text-[11px] font-semibold text-red-500">{t("data.investment_calculator_shockIncluded")}</span>
+            <span className="text-[11px] font-semibold text-red-500">{tr("calculator.shock_included", "Shock Included")}</span>
           </div>
         )}
 
@@ -298,7 +299,7 @@ export default function SophisticatedCalculator() {
           <div className="border-y border-white/10 divide-y divide-white/10">
             {base.rows.map((d) => (
               <div key={d.year} className="py-3 px-1 sm:px-2 grid grid-cols-3 gap-2 items-center">
-                <p className="text-[11px] font-medium text-white/60">{t("data.investment_calculator_year") || "Year"} {d.year}</p>
+                <p className="text-[11px] font-medium text-white/60">{tr("calculator.year_short", "Year")} {d.year}</p>
                 <p className="text-sm font-black text-white tabular-nums">{formatCurrency(d.endBalance)}</p>
                 <p className="text-[11px] text-white/50 text-right">Real: {formatCurrency(d.realBalance)}</p>
               </div>
@@ -312,8 +313,8 @@ export default function SophisticatedCalculator() {
           <div className="flex gap-3 items-start">
           <Info className="h-5 w-5 text-zim-gold shrink-0 mt-0.5" />
           <p className="text-[11px] text-white/60 leading-relaxed">
-            <strong className="text-zim-gold mr-2">{t("data.investment_calculator_note")}:</strong> 
-            {t("data.investment_calculator_disclaimer") || "This is a planning tool for comparing scenarios. It is not financial advice and does not guarantee performance."}
+            <strong className="text-zim-gold mr-2">{tr("calculator.note", "Note")}:</strong> 
+            {tr("calculator.disclaimer", "This is a planning tool for comparing scenarios. It is not financial advice and does not guarantee performance.")}
           </p>
           </div>
         </div>
