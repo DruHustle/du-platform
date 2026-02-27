@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { User, Mail, Lock, UserPlus, X } from "lucide-react";
+import { User, Mail, Lock, UserPlus, X, Eye, EyeOff } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { api, getApiErrorMessage, saveAuthToken } from "@/lib/api";
 
@@ -20,6 +20,8 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
 
@@ -97,24 +99,44 @@ export default function Register() {
                 <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
                   <Lock className="h-3.5 w-3.5" /> {t('auth.password') || "Password"}
                 </Label>
-                <Input
-                  type="password"
-                  className={glassInputStyle}
-                  value={formData.password}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    className={`${glassInputStyle} pr-11`}
+                    value={formData.password}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
                   <Lock className="h-3.5 w-3.5" /> {t('auth.confirm_password') || "Confirm Password"}
                 </Label>
-                <Input
-                  type="password"
-                  className={glassInputStyle}
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
-                />
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className={`${glassInputStyle} pr-11`}
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-start gap-3 pt-2">

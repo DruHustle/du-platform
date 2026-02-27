@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { Mail, Lock, LogIn as LoginIcon, X } from "lucide-react"; // Renamed icon to avoid conflict
+import { Mail, Lock, LogIn as LoginIcon, X, Eye, EyeOff } from "lucide-react"; // Renamed icon to avoid conflict
 import { Link, useLocation } from "wouter";
 import { api, getApiErrorMessage, hasLoggedInBefore, saveAuthToken } from "@/lib/api";
 
@@ -18,6 +18,7 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const returningUser = hasLoggedInBefore();
 
   const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
@@ -94,11 +95,21 @@ export default function Login() {
                       {t('auth.forgot_password') || "Forgot Password?"}
                     </Link>
                 </div>
-                <Input 
-                  type="password" 
-                  className={glassInputStyle} 
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    className={`${glassInputStyle} pr-11`}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
               {error ? <p className="text-red-400 text-sm">{error}</p> : null}

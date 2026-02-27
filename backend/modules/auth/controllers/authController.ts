@@ -1,5 +1,5 @@
 import type express from 'express';
-import { AuthService } from '../services/authService';
+import { AuthRegistrationError, AuthService } from '../services/authService';
 import { ok, error } from '../../../shared/responseFormatter';
 
 export class AuthController {
@@ -10,7 +10,10 @@ export class AuthController {
       const result = await this.service.register(req.body);
       return res.status(201).json(ok(result));
     } catch (err) {
-      return res.status(400).json(error('AUTH_REGISTER_FAILED', err instanceof Error ? err.message : 'Register failed.'));
+      if (err instanceof AuthRegistrationError) {
+        return res.status(err.status).json(error(err.code, err.message));
+      }
+      return res.status(500).json(error('AUTH_REGISTER_FAILED', 'Register failed.'));
     }
   };
 }

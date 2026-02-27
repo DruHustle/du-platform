@@ -55,29 +55,41 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 
 ## Project Structure
 
-```
+```text
 zigd-platform/
+├── backend/                         # Express API backend
+│   ├── api/                         # API route registration
+│   ├── core/                        # Core middleware, RBAC, logging
+│   ├── modules/                     # Domain modules (ai, fintech, tourism, etc.)
+│   ├── prisma/
+│   │   └── schema.prisma            # Prisma schema
+│   ├── routes/                      # Financial and legacy route bindings
+│   ├── shared/                      # Backend shared helpers
+│   ├── services/                    # Provider-facing service layer
+│   └── index.ts                     # Backend entry point
 ├── frontend/
-│   ├── public/              # Static assets & localization files
-│   │   ├── images/          # High-quality visual assets
-│   │   └── locales/         # i18n translation JSONs (en, de, sn, nd)
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   │   ├── Layout.tsx   # Multi-language layout with nav/footer
-│   │   │   └── ...
-│   │   ├── pages/           # Fully translated page components
-│   │   │   ├── Home.tsx
-│   │   │   ├── Exports.tsx
-│   │   │   ├── Tourism.tsx
-│   │   │   ├── Investment.tsx
-│   │   │   ├── Trade.tsx
-│   │   │   ├── DataVisualization.tsx
-│   │   │   └── SuccessStories.tsx
-│   │   ├── i18n.ts          # i18n configuration
-│   │   ├── App.tsx          # Main app with routing
-│   │   └── ...
-│   └── index.html
-├── backend/                 # Express API backend
+│   ├── index.html
+│   ├── public/                      # Static assets + SEO files
+│   │   ├── images/
+│   │   ├── locales/                 # i18n translation JSONs (en, de, sn, nd)
+│   │   ├── sitemap.xml
+│   │   └── e5444f8401994dd898d81a68b1a0c23a.txt
+│   ├── shared/
+│   │   └── const.ts                 # Frontend-shared constants
+│   └── src/
+│       ├── components/              # Reusable UI components
+│       ├── modules/                 # Feature modules
+│       ├── pages/                   # Route-level pages
+│       ├── i18n.ts
+│       ├── App.tsx
+│       └── main.tsx
+├── scripts/
+│   ├── dev-all.sh
+│   ├── generate-sitemap.mjs
+│   ├── sync_translations.py
+│   └── tests/
+├── docs/
+├── patches/                         # pnpm dependency patches
 ├── package.json
 └── ...
 ```
