@@ -2,23 +2,11 @@ import type express from "express";
 import type { Pool } from "mysql2/promise";
 
 type SystemApiDeps = {
-  getEconomicStats: () => Promise<any>;
   db: Pool | null;
   serverStartedAt: number;
 };
 
 export function registerBackendApiRoutes(app: express.Express, deps: SystemApiDeps) {
-  // Route: GET /api/economic-stats
-  // Purpose: Return aggregated economic dashboard metrics for the frontend.
-  app.get("/api/economic-stats", async (_req, res) => {
-    try {
-      const stats = await deps.getEconomicStats();
-      res.json(stats);
-    } catch {
-      res.status(500).json({ message: "Failed to load economic stats." });
-    }
-  });
-
   // Route: GET /api/health/db
   // Purpose: Report database connectivity state (mysql or memory fallback mode).
   app.get("/api/health/db", async (_req, res) => {

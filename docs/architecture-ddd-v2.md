@@ -96,7 +96,6 @@ frontend/src/
 - `/ai/book-trip` -> ai.booking module
 - `/ai/ar` -> ai.ar module
 - `/ai/vr` -> ai.vr module
-- `/data-visualization` -> data module
 - `/search` -> search module
 - `/impact` -> legal/content-admin responsibility split
 - `/technology` -> core/product-marketing domain

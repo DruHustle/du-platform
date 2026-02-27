@@ -172,7 +172,6 @@ try {
     '/investment',
     '/shop',
     '/technology',
-    '/data-visualization',
     '/search',
     '/impact',
     '/onesa-ai-chat',

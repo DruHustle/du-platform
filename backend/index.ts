@@ -18,7 +18,6 @@ import {
   findUserByEmail,
   findUserById,
   getFeatureNotifications,
-  getEconomicStats,
   getNtirEntities,
   getSession,
   getSuccessStories,
@@ -2693,7 +2692,6 @@ async function startServer() {
 
   registerApiRoutes(app, {
     backend: {
-      getEconomicStats,
       db,
       serverStartedAt: SERVER_STARTED_AT,
     },
