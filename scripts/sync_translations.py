@@ -142,7 +142,8 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    root = Path(__file__).resolve().parent
+    # Script lives in scripts/, so project root is one level up.
+    root = Path(__file__).resolve().parent.parent
     locales_dir = root / "frontend" / "public" / "locales"
     en_path = locales_dir / "en" / "translation.json"
     if not en_path.exists():

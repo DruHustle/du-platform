@@ -19,10 +19,10 @@
     "test:modules": "vitest run --root . --dir backend/modules",
     "keepalive:ping": "bash scripts/keepalive-ping.sh",
     "format": "prettier --write .",
-    "translations:sync": "python3 sync_translations.py --mode sync",
-    "translations:sync:todo": "python3 sync_translations.py --mode sync --mark-missing",
-    "translations:check:keys": "python3 sync_translations.py --mode check",
-    "translations:check": "python3 sync_translations.py --mode check --require-translated --allow-same-keys-file scripts/translation_allow_same_keys.txt"
+    "translations:sync": "python3 scripts/sync_translations.py --mode sync",
+    "translations:sync:todo": "python3 scripts/sync_translations.py --mode sync --mark-missing",
+    "translations:check:keys": "python3 scripts/sync_translations.py --mode check",
+    "translations:check": "python3 scripts/sync_translations.py --mode check --require-translated --allow-same-keys-file scripts/translation_allow_same_keys.txt"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

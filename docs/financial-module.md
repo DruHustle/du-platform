@@ -24,7 +24,7 @@ backend/
     apiResponse.ts
     sanitize.ts
     failedAttemptLogger.ts
-prisma/
+backend/prisma/
   schema.prisma
 frontend/src/components/
   SendMoneyForm.jsx
