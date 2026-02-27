@@ -45,6 +45,7 @@ import { createRateLimiter } from "./middleware/rateLimiter";
 import { registerFinancialRoutes } from "./routes/financialRoutes";
 import { registerDomainModules } from "./modules";
 import { errorResponse, successResponse } from "./utils/apiResponse";
+import { isUserEmailConflictError } from "./utils/dbErrors";
 import { createJwtToken } from "./utils/jwt";
 
 process.on("unhandledRejection", (reason) => {
@@ -2080,6 +2081,9 @@ async function startServer() {
         accessToken,
       });
     } catch (error: any) {
+      if (isUserEmailConflictError(error)) {
+        return sendLegacyError(res, 409, "AUTH_EMAIL_EXISTS", "An account with this email already exists.");
+      }
       const isDev = (process.env.NODE_ENV ?? "development") !== "production";
       const detail = error?.message ? ` ${String(error.message)}` : "";
       return sendLegacyError(
