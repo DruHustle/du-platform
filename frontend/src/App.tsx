@@ -8,7 +8,7 @@ import Tourism from "./pages/Tourism";
 import Investment from "./pages/Investment";
 import Trade from "./pages/Trade";
 import DataVisualization from "./pages/DataVisualization";
-import SuccessStories from "./pages/SuccessStories";
+import Impact from "./pages/Impact";
 import Technology from "./pages/Technology";
 import Shop from "./pages/Shop";
 import ShopProducts from "./pages/ShopProducts";
@@ -51,7 +51,7 @@ function Router() {
       <Route path="/shop" component={Shop} />
       <Route path="/shop/products" component={ShopProducts} />
       <Route path="/data-visualization" component={DataVisualization} />
-      <Route path="/success-stories" component={SuccessStories} />
+      <Route path="/impact" component={Impact} />
       <Route path="/payments" component={Payments} />
       <Route path="/login" component={LogIn} />
       <Route path="/register" component={Register} />

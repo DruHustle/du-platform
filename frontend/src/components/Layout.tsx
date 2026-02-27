@@ -232,7 +232,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.investment'), href: "/investment" },
     { name: t('nav.trade'), href: "/trade" },
     { name: t('nav.data'), href: "/data-visualization" },
-    { name: t('nav.success'), href: "/success-stories" },
+    { name: t('nav.impact'), href: "/impact" },
   ];
 
   const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
@@ -588,7 +588,7 @@ export default function Layout({ children }: LayoutProps) {
             <div
               ref={navPillRef}
               className={`
-              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden
+              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden h-16
               ${scrolled 
                 ? 'bg-slate-900/90 backdrop-blur-md border border-white/10' 
                 : 'bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]' 
@@ -605,7 +605,7 @@ export default function Layout({ children }: LayoutProps) {
                 return (
                   <Link key={item.href} href={item.href}>
                     <button className={`
-                      relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500
+                      relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
                       ${active 
                           ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]' 
                           : scrolled 
@@ -1104,7 +1104,7 @@ export default function Layout({ children }: LayoutProps) {
               <ul className="space-y-2 text-xs">
                 {navigation
                   .filter((link) => 
-                    !["/", "/success-stories", "/data-visualization"].includes(link.href)
+                    !["/", "/impact", "/data-visualization"].includes(link.href)
                   )
                   .map((link) => (
                    <li key={link.href} className="leading-tight">

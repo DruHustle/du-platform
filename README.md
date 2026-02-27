@@ -10,7 +10,7 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 - **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
 - **Investment Marketplace**: Micro-investment and crowdfunding opportunities with government support.
 - **Trade Information**: Export development programs and diaspora trade networks.
-- **Data & Insights**: Real-time economic indicators and success stories of diaspora impact.
+- **Data & Insights**: Real-time economic indicators and impact stories of diaspora impact.
 
 ## Key Features
 

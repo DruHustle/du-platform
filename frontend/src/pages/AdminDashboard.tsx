@@ -91,7 +91,7 @@ export default function AdminDashboard() {
     () => [
       { key: "notify" as const, label: "Notify Me", count: notifyRows.length },
       { key: "ntir" as const, label: "NTIR", count: ntirRows.length },
-      { key: "stories" as const, label: "Success Stories", count: storyRows.length },
+      { key: "stories" as const, label: "Impact", count: storyRows.length },
       { key: "shop" as const, label: "Shop Products", count: shopRows.length },
     ],
     [notifyRows.length, ntirRows.length, storyRows.length, shopRows.length]
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
       const [notifyRes, ntirRes, storiesRes, shopRes] = await Promise.all([
         api.get("/admin/notify-requests"),
         api.get("/admin/ntir"),
-        api.get("/admin/success-stories"),
+        api.get("/admin/impact"),
         api.get("/admin/shop-products"),
       ]);
       setNotifyRows(notifyRes.data?.rows ?? []);
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
     event.preventDefault();
     setError("");
     try {
-      await api.post("/admin/success-stories", storyForm);
+      await api.post("/admin/impact", storyForm);
       setStoryForm({
         title: "",
         category: "",
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
       });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to create success story."));
+      setError(getApiErrorMessage(err, "Unable to create impact story."));
     }
   };
 
@@ -244,7 +244,7 @@ export default function AdminDashboard() {
         <div className="container mx-auto max-w-6xl space-y-8">
           <div className="text-white">
             <h1 className="text-4xl font-black tracking-tighter">Admin Dashboard</h1>
-            <p className="text-white/75 mt-2">Manage notify requests, NTIR records, and success stories.</p>
+            <p className="text-white/75 mt-2">Manage notify requests, NTIR records, and impact stories.</p>
           </div>
 
           {error ? <p className="text-red-400">{error}</p> : null}

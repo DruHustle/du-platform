@@ -98,7 +98,7 @@ frontend/src/
 - `/ai/vr` -> ai.vr module
 - `/data-visualization` -> data module
 - `/search` -> search module
-- `/success-stories` -> legal/content-admin responsibility split
+- `/impact` -> legal/content-admin responsibility split
 - `/technology` -> core/product-marketing domain
 - `/regulations` -> legal module
 - `/legal/privacy-policy`, `/legal/terms-of-service`, `/legal/cookie-settings` -> legal module

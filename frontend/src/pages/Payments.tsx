@@ -120,7 +120,7 @@ export default function Payments() {
     description:
       tr(
         "payments.intro.description",
-        "Send remittances and airtime securely through licensed financial infrastructure providers with transparent steps, controlled payout channels, and status-driven confirmations."
+        "Diaspora Unlocked integrates trusted financial partners to provide secure remittances, family care, and coverage services for Zimbabweans abroad."
       ),
   };
 

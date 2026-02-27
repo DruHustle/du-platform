@@ -236,122 +236,144 @@ export default function Tourism() {
     {
       name: t("tourism.other_attractions.hwange.name") || "Hwange National Park",
       image: "/images/pages/tourism/dest_hwange.png",
-      highlights: ["Big Five", "Elephant Herds", "Safari"],
+      highlights: getTranslatedList("tourism.other_attractions.hwange.highlights", ["Big Five", "Elephant Herds", "Safari"]),
       summary:
         t("tourism.other_attractions.hwange.desc") ||
         "Zimbabwe's largest park, famous for its massive elephant herds and diverse wildlife.",
-      quickFacts: [
+      quickFacts: getTranslatedList("tourism.other_attractions.hwange.quickFacts", [
         "Located in western Zimbabwe and linked to major safari circuits.",
         "Known for one of Africa's largest elephant populations.",
         "Strong dry-season game viewing around pumped waterholes.",
-      ],
-      experiences: [
+      ]),
+      experiences: getTranslatedList("tourism.other_attractions.hwange.experiences", [
         "Game drives and guided safari experiences.",
         "Birdwatching and photography-focused itineraries.",
         "Lodge and camp stays across multiple park zones.",
-      ],
-      bestTime: "Peak wildlife concentration is usually in the dry months when water sources are limited.",
-      sourceLinks: [{ label: "ZTA: Hwange", url: "https://zimbabwetourism.net/" }],
+      ]),
+      bestTime:
+        t("tourism.other_attractions.hwange.bestTime") ||
+        "Peak wildlife concentration is usually in the dry months when water sources are limited.",
+      sourceLinks: [{ label: t("tourism.other_attractions.hwange.source") || "ZTA: Hwange", url: "https://zimbabwetourism.net/" }],
     },
     {
       name: t("tourism.other_attractions.matobo.name") || "Matobo National Park",
       image: "/images/pages/tourism/dest_matobo.jpg",
-      highlights: ["UNESCO", "Rock Formations", "Heritage"],
+      highlights: getTranslatedList("tourism.other_attractions.matobo.highlights", ["UNESCO", "Rock Formations", "Heritage"]),
       summary:
         t("tourism.other_attractions.matobo.desc") ||
         "A UNESCO World Heritage site known for its balancing rocks and spiritual history.",
-      quickFacts: [
+      quickFacts: getTranslatedList("tourism.other_attractions.matobo.quickFacts", [
         "Recognized for cultural landscapes and granite outcrops.",
         "Home to major historical and spiritual heritage sites.",
         "Important rhino and bird habitat in Zimbabwe.",
-      ],
-      experiences: [
+      ]),
+      experiences: getTranslatedList("tourism.other_attractions.matobo.experiences", [
         "Rock-art and heritage tours.",
         "Scenic drives through granite formations.",
         "Wildlife tracking and cultural storytelling.",
+      ]),
+      bestTime:
+        t("tourism.other_attractions.matobo.bestTime") ||
+        "Accessible year-round; cooler dry months are ideal for walking and exploration.",
+      sourceLinks: [
+        {
+          label: t("tourism.other_attractions.matobo.source") || "ZTA: Matobo",
+          url: "https://zimbabwetourism.net/portfolios/matobo-hills/",
+        },
       ],
-      bestTime: "Accessible year-round; cooler dry months are ideal for walking and exploration.",
-      sourceLinks: [{ label: "ZTA: Matobo", url: "https://zimbabwetourism.net/portfolios/matobo-hills/" }],
     },
     {
       name: t("tourism.other_attractions.eastern_highlands.name") || "Eastern Highlands",
       image: "/images/pages/tourism/mutarazi_falls.jpg",
-      highlights: ["Mountains", "Waterfalls", "Cool Climate"],
+      highlights: getTranslatedList("tourism.other_attractions.eastern_highlands.highlights", ["Mountains", "Waterfalls", "Cool Climate"]),
       summary:
         t("tourism.other_attractions.eastern_highlands.desc") ||
         "A cool, mountainous region offering lush forests, waterfalls, and misty peaks.",
-      quickFacts: [
+      quickFacts: getTranslatedList("tourism.other_attractions.eastern_highlands.quickFacts", [
         "Stretches along Zimbabwe's eastern border.",
         "Includes Nyanga, Vumba, and Chimanimani landscapes.",
         "Known for hiking, scenic lodges, and highland weather.",
-      ],
-      experiences: [
+      ]),
+      experiences: getTranslatedList("tourism.other_attractions.eastern_highlands.experiences", [
         "Hiking and nature trails.",
         "Waterfall viewpoints and adventure activities.",
         "Mountain lodge retreats and weekend escapes.",
+      ]),
+      bestTime:
+        t("tourism.other_attractions.eastern_highlands.bestTime") ||
+        "Dry months generally offer clearer views and better trail conditions.",
+      sourceLinks: [
+        {
+          label: t("tourism.other_attractions.eastern_highlands.source") || "ZTA: Eastern Highlands",
+          url: "https://zimbabwetourism.net/",
+        },
       ],
-      bestTime: "Dry months generally offer clearer views and better trail conditions.",
-      sourceLinks: [{ label: "ZTA: Eastern Highlands", url: "https://zimbabwetourism.net/" }],
     },
     {
       name: t("tourism.other_attractions.mana_pools.name") || "Mana Pools",
       image: "/images/pages/tourism/dest_mana_pools.jpg",
-      highlights: ["UNESCO", "Walking Safari", "Wilderness"],
+      highlights: getTranslatedList("tourism.other_attractions.mana_pools.highlights", ["UNESCO", "Walking Safari", "Wilderness"]),
       summary:
         t("tourism.other_attractions.mana_pools.desc") ||
         "A remote UNESCO site famous for its river-fed pools and walking safaris.",
-      quickFacts: [
+      quickFacts: getTranslatedList("tourism.other_attractions.mana_pools.quickFacts", [
         "Set along the lower Zambezi floodplain.",
         "Recognized globally for wilderness value and biodiversity.",
         "Strong seasonal game concentration in dry months.",
-      ],
-      experiences: [
+      ]),
+      experiences: getTranslatedList("tourism.other_attractions.mana_pools.experiences", [
         "Guided walking safaris.",
         "Canoeing and river-based wildlife viewing.",
         "Premium low-impact safari camps.",
-      ],
-      bestTime: "Dry season is typically preferred for high-density wildlife viewing.",
-      sourceLinks: [{ label: "ZTA: Mana Pools", url: "https://zimbabwetourism.net/" }],
+      ]),
+      bestTime:
+        t("tourism.other_attractions.mana_pools.bestTime") ||
+        "Dry season is typically preferred for high-density wildlife viewing.",
+      sourceLinks: [{ label: t("tourism.other_attractions.mana_pools.source") || "ZTA: Mana Pools", url: "https://zimbabwetourism.net/" }],
     },
     {
       name: t("tourism.other_attractions.nyanga.name") || "Nyanga National Park",
       image: "/images/pages/tourism/dest_nyanga.jpg",
-      highlights: ["Highlands", "Falls", "Scenic Drives"],
+      highlights: getTranslatedList("tourism.other_attractions.nyanga.highlights", ["Highlands", "Falls", "Scenic Drives"]),
       summary:
         t("tourism.other_attractions.nyanga.desc") ||
         "The 'Little Scotland' of Africa, home to Zimbabwe's highest peak and deepest falls.",
-      quickFacts: [
+      quickFacts: getTranslatedList("tourism.other_attractions.nyanga.quickFacts", [
         "Includes Mount Nyangani and major highland attractions.",
         "Popular for cooler climate tourism and mountain scenery.",
         "Important domestic and regional leisure destination.",
-      ],
-      experiences: [
+      ]),
+      experiences: getTranslatedList("tourism.other_attractions.nyanga.experiences", [
         "Hiking and mountain viewpoints.",
         "Trout fishing and outdoor recreation.",
         "Road trips across highland circuits.",
-      ],
-      bestTime: "Year-round destination; clear weather periods are best for mountain views.",
-      sourceLinks: [{ label: "ZTA: Nyanga", url: "https://zimbabwetourism.net/" }],
+      ]),
+      bestTime:
+        t("tourism.other_attractions.nyanga.bestTime") ||
+        "Year-round destination; clear weather periods are best for mountain views.",
+      sourceLinks: [{ label: t("tourism.other_attractions.nyanga.source") || "ZTA: Nyanga", url: "https://zimbabwetourism.net/" }],
     },
     {
       name: t("tourism.other_attractions.gonarezhou.name") || "Gonarezhou",
       image: "/images/pages/tourism/dest_gonarezhou.jpg",
-      highlights: ["Chilojo Cliffs", "Elephants", "Wild Frontier"],
+      highlights: getTranslatedList("tourism.other_attractions.gonarezhou.highlights", ["Chilojo Cliffs", "Elephants", "Wild Frontier"]),
       summary:
         t("tourism.other_attractions.gonarezhou.desc") ||
         "The 'Place of Elephants,' characterized by the stunning red Chilojo Cliffs.",
-      quickFacts: [
+      quickFacts: getTranslatedList("tourism.other_attractions.gonarezhou.quickFacts", [
         "Major transfrontier conservation destination in southeastern Zimbabwe.",
         "Known for remote, low-traffic wilderness experiences.",
         "Home to significant elephant and predator populations.",
-      ],
-      experiences: [
+      ]),
+      experiences: getTranslatedList("tourism.other_attractions.gonarezhou.experiences", [
         "Remote game drives and wilderness camping.",
         "Photography around Chilojo Cliffs and river corridors.",
         "Cross-border circuit planning with nearby regional parks.",
-      ],
-      bestTime: "Dry months are usually best for access and concentrated wildlife viewing.",
-      sourceLinks: [{ label: "ZTA: Gonarezhou", url: "https://zimbabwetourism.net/" }],
+      ]),
+      bestTime:
+        t("tourism.other_attractions.gonarezhou.bestTime") ||
+        "Dry months are usually best for access and concentrated wildlife viewing.",
+      sourceLinks: [{ label: t("tourism.other_attractions.gonarezhou.source") || "ZTA: Gonarezhou", url: "https://zimbabwetourism.net/" }],
     },
   ];
 
@@ -366,39 +388,6 @@ export default function Tourism() {
     { icon: Brain, title: t('tourism.onesa.guide.title') || "Local Insights", description: t('tourism.onesa.guide.desc') || "Understand local etiquette, tipping culture, and social norms." },
     { icon: MapPin, title: t('tourism.onesa.navigate.title') || "Smart Navigation", description: t('tourism.onesa.navigate.desc') || "Find the best routes and hidden spots known only to locals." },
     { icon: Calendar, title: t('tourism.onesa.plan.title') || "Custom Itineraries", description: t('tourism.onesa.plan.desc') || "AI-generated plans based on your interests and travel style." }
-  ];
-
-  const ztaOfficialResources = [
-    {
-      title: t("tourism.zta_resources.destinations.title") || "Destinations",
-      description: t("tourism.zta_resources.destinations.description") || "Browse official destination highlights and tourism circuits across Zimbabwe.",
-      link: "https://zimbabwetourism.net/destinations/",
-    },
-    {
-      title: t("tourism.zta_resources.plan_trip.title") || "Plan Your Trip",
-      description: t("tourism.zta_resources.plan_trip.description") || "Use official trip-planning information for logistics, timing, and travel readiness.",
-      link: "https://zimbabwetourism.net/plan-your-trip/",
-    },
-    {
-      title: t("tourism.zta_resources.flying.title") || "Flying to Zimbabwe",
-      description: t("tourism.zta_resources.flying.description") || "Review air-travel guidance and useful links for planning flight entry into Zimbabwe.",
-      link: "https://zimbabwetourism.net/flying-to-zimbabwe/",
-    },
-    {
-      title: t("tourism.zta_resources.operators.title") || "Operator Database",
-      description: t("tourism.zta_resources.operators.description") || "Check registered tourism operators to support safer bookings and basic due diligence.",
-      link: "https://zimbabwetourism.net/registered-operators/",
-    },
-    {
-      title: t("tourism.zta_resources.brochures.title") || "Zimbabwe Brochures and Media",
-      description: t("tourism.zta_resources.brochures.description") || "Download official destination brochures, media assets, and tourism reference materials.",
-      link: "https://zimbabwetourism.net/zimbabwe-brochures/",
-    },
-    {
-      title: t("tourism.zta_resources.apps.title") || "Useful Apps",
-      description: t("tourism.zta_resources.apps.description") || "Find recommended travel-support applications listed by Zimbabwe Tourism Authority.",
-      link: "https://zimbabwetourism.net/useful-applications/",
-    },
   ];
 
   return (
@@ -563,19 +552,19 @@ export default function Tourism() {
                     asChild
                     className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2.5 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap min-h-10"
                   >
-                    <Link href="/onesa-ai-chat">Chat with Onesa</Link>
+                    <Link href="/onesa-ai-chat">{t("tourism.onesa.cta.chat") || "Chat with Onesa"}</Link>
                   </Button>
                   <Button
                     asChild
                     className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2.5 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap min-h-10"
                   >
-                    <Link href="/onesa-ai-book-trip">Plan your trip</Link>
+                    <Link href="/onesa-ai-book-trip">{t("tourism.onesa.cta.plan_trip") || "Plan your trip"}</Link>
                   </Button>
                   <Button
                     asChild
                     className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2.5 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap min-h-10"
                   >
-                    <Link href="/onesa-ai-tourism-augmented-experince">Local guide AR</Link>
+                    <Link href="/onesa-ai-tourism-augmented-experince">{t("tourism.onesa.cta.local_guide_ar") || "Local guide AR"}</Link>
                   </Button>
                 </div>
               </div>
@@ -707,40 +696,6 @@ export default function Tourism() {
                   </div>
                 );
               })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ZTA Official Resources */}
-      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="section-title-compact">
-                {t("tourism.zta_resources.title") || "ZTA Official Visitor Resources"}
-              </h2>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-                {t("tourism.zta_resources.subtitle") ||
-                  "Use Zimbabwe Tourism Authority resources for trusted planning information, destination references, and operator checks."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {ztaOfficialResources.map((resource) => (
-                <div key={resource.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                  <h3 className="text-lg font-black text-white tracking-tight mb-3">{resource.title}</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">{resource.description}</p>
-                  <a
-                    href={resource.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block mt-4 text-zim-gold font-black uppercase tracking-widest text-[10px] hover:text-white transition-colors"
-                  >
-                    {t("tourism.zta_resources.open_resource") || "Open Resource"}
-                  </a>
-                </div>
-              ))}
             </div>
           </div>
         </div>

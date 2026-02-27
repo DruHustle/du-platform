@@ -174,7 +174,7 @@ try {
     '/technology',
     '/data-visualization',
     '/search',
-    '/success-stories',
+    '/impact',
     '/onesa-ai-chat',
     '/onesa-ai-book-trip',
     '/onesa-ai-tourism-augmented-experince',
