@@ -1097,7 +1097,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             {/* Quick Links Column */}
-            <div className="space-y-4">
+            <div className="space-y-4 lg:!pl-8">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
                 {t('quick_links')}
               </h3>

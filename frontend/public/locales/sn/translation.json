@@ -556,6 +556,11 @@
         "desc": "Zvirongwa zvinogadzirwa neAI zvichienderana nezvaunoda."
       },
       "plan_trip_cta": "Ronga rwendo naOnesa",
+      "cta": {
+        "chat": "Taura neOnesa",
+        "plan_trip": "Ronga rwendo rwako",
+        "local_guide_ar": "Gwara reAR remuno"
+      },
       "trip_planner": {
         "badge": "Onesa AI Rwendo",
         "title": "Ruzivo rweKubhuka naOnesa",

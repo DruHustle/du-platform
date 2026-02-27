@@ -556,6 +556,11 @@
         "desc": "KI-generierte Pläne basierend auf Ihren Interessen und Ihrem Reisestil."
       },
       "plan_trip_cta": "Reise mit Onesa planen",
+      "cta": {
+        "chat": "Mit Onesa chatten",
+        "plan_trip": "Reise planen",
+        "local_guide_ar": "Lokaler AR-Guide"
+      },
       "trip_planner": {
         "badge": "Onesa AI Reise",
         "title": "Onesa Buchungsinformationen",

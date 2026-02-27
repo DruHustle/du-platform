@@ -2,7 +2,7 @@
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
   "about": "About",
-  "about_us": "Connecting Zimbabwe's global diaspora with opportunities in trade, tourism, and investment.",
+  "about_us": "Diaspora Unlocked is a unified digital gateway connecting Zimbabwe’s global diaspora to structured opportunities in tourism, trade, and investment — integrating trusted financial, remittance, and family assurance partners to enable secure economic participation and meaningful connection with home.",
   "select_lang": "Select Language",
   "account": "Account",
   "login": "Login",
@@ -81,8 +81,8 @@
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
-    "objective_title": "Platform Services",
-    "objective_desc": "A digital platform connecting Zimbabwe to the rest of the world through trade, tourism, and investments.",
+    "objective_title": "Welcome",
+    "objective_desc": "Tourism. Trade. Investment. Remittance. Family Care — unified for Zimbabweans abroad.",
     "explore_now": "Explore Now",
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
@@ -556,6 +556,11 @@
         "desc": "AI-generated plans based on your interests and travel style."
       },
       "plan_trip_cta": "Plan trip with Onesa",
+      "cta": {
+        "chat": "Chat with Onesa",
+        "plan_trip": "Plan your trip",
+        "local_guide_ar": "Local guide AR"
+      },
       "trip_planner": {
         "badge": "Onesa AI Travel",
         "title": "Onesa Booking Information",
