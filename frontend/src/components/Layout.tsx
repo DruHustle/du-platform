@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/pages/OnesaAI";
+import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/modules/ai/pages/OnesaAI";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
@@ -71,7 +71,7 @@ export default function Layout({ children }: LayoutProps) {
   const [desktopViewportWidth, setDesktopViewportWidth] = useState(1440);
   const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
   const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
-  const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
+  const [bubblePosition, setBubblePosition] = useState<{ x: number; y: number } | null>(null);
   const [showLanguageHint, setShowLanguageHint] = useState(false);
   const [isOnesaChatOpen, setIsOnesaChatOpen] = useState(false);
   const [onesaMessages, setOnesaMessages] = useState<OnesaChatMessage[]>([
@@ -227,6 +227,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.home'), href: "/" },
     { name: t('nav.technology'), href: "/technology" },
     { name: t("nav.payments", { defaultValue: "Payments" }), href: "/payments" },
+    { name: t("nav.care", { defaultValue: "Care" }), href: "/care" },
     { name: t('nav.shop'), href: "/shop" },
     { name: t('nav.tourism'), href: "/tourism" },
     { name: t('nav.investment'), href: "/investment" },
@@ -245,6 +246,7 @@ export default function Layout({ children }: LayoutProps) {
   const showOnesaBubble = !hideOnesaBubbleRoutes.some((route) => location.startsWith(route));
   const hasOnesaChatStarted = onesaMessages.some((message) => message.role === "user");
   const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
+  const DESKTOP_BUBBLE_STORAGE_KEY = "onesa-desktop-bubble-position-v1";
 
   const evaluateUtilityOverlap = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -282,7 +284,7 @@ export default function Layout({ children }: LayoutProps) {
     setBrowserLayoutProfile(getBrowserLayoutProfile(window.navigator.userAgent));
   }, []);
 
-  const clampMobileBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
+  const clampBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
     // Keep floating bubble fully visible inside the viewport.
     const minX = 8;
     const minY = 8;
@@ -320,19 +322,20 @@ export default function Layout({ children }: LayoutProps) {
   }, [evaluateUtilityOverlap]);
 
   useEffect(() => {
-    if (!showOnesaBubble || !isMobileViewport) return;
+    if (!showOnesaBubble) return;
 
     const initPosition = () => {
       const bubbleRect = bubbleRef.current?.getBoundingClientRect();
       const bubbleWidth = bubbleRect?.width ?? 180;
       const bubbleHeight = bubbleRect?.height ?? 64;
+      const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
 
-      let nextX = window.innerWidth - bubbleWidth - 16;
-      let nextY = window.innerHeight - bubbleHeight - 96;
+      let nextX = isMobileViewport ? window.innerWidth - bubbleWidth - 16 : window.innerWidth - bubbleWidth - 40;
+      let nextY = isMobileViewport ? window.innerHeight - bubbleHeight - 96 : window.innerHeight - bubbleHeight - 40;
 
       try {
-        // Restore last dragged mobile position if available.
-        const saved = window.localStorage.getItem(MOBILE_BUBBLE_STORAGE_KEY);
+        // Restore last dragged bubble position if available for this viewport mode.
+        const saved = window.localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved) as { x?: unknown; y?: unknown };
           if (typeof parsed?.x === "number" && typeof parsed?.y === "number") {
@@ -344,7 +347,7 @@ export default function Layout({ children }: LayoutProps) {
         // Ignore malformed localStorage values.
       }
 
-      setMobileBubblePosition(clampMobileBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight));
+      setBubblePosition(clampBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight));
     };
 
     const rafId = window.requestAnimationFrame(initPosition);
@@ -352,16 +355,16 @@ export default function Layout({ children }: LayoutProps) {
   }, [showOnesaBubble, isMobileViewport]);
 
   useEffect(() => {
-    if (!showOnesaBubble || !isMobileViewport || !mobileBubblePosition) return;
+    if (!showOnesaBubble || !bubblePosition) return;
     // Re-clamp after orientation/viewport shifts.
     const bubbleRect = bubbleRef.current?.getBoundingClientRect();
     const bubbleWidth = bubbleRect?.width ?? 180;
     const bubbleHeight = bubbleRect?.height ?? 64;
-    const clamped = clampMobileBubblePosition(mobileBubblePosition.x, mobileBubblePosition.y, bubbleWidth, bubbleHeight);
-    if (clamped.x !== mobileBubblePosition.x || clamped.y !== mobileBubblePosition.y) {
-      setMobileBubblePosition(clamped);
+    const clamped = clampBubblePosition(bubblePosition.x, bubblePosition.y, bubbleWidth, bubbleHeight);
+    if (clamped.x !== bubblePosition.x || clamped.y !== bubblePosition.y) {
+      setBubblePosition(clamped);
     }
-  }, [showOnesaBubble, isMobileViewport, mobileBubblePosition]);
+  }, [showOnesaBubble, isMobileViewport, bubblePosition]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -480,15 +483,15 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const handleBubblePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!isMobileViewport || !mobileBubblePosition) return;
+    if (!bubblePosition) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
     dragStateRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      originX: mobileBubblePosition.x,
-      originY: mobileBubblePosition.y,
+      originX: bubblePosition.x,
+      originY: bubblePosition.y,
       dragging: false,
     };
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -496,7 +499,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleBubblePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const dragState = dragStateRef.current;
-    if (!isMobileViewport || !dragState || dragState.pointerId !== event.pointerId) return;
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
 
     const deltaX = event.clientX - dragState.startX;
     const deltaY = event.clientY - dragState.startY;
@@ -510,8 +513,8 @@ export default function Layout({ children }: LayoutProps) {
     const bubbleRect = bubbleRef.current?.getBoundingClientRect();
     const bubbleWidth = bubbleRect?.width ?? 180;
     const bubbleHeight = bubbleRect?.height ?? 64;
-    const next = clampMobileBubblePosition(dragState.originX + deltaX, dragState.originY + deltaY, bubbleWidth, bubbleHeight);
-    setMobileBubblePosition(next);
+    const next = clampBubblePosition(dragState.originX + deltaX, dragState.originY + deltaY, bubbleWidth, bubbleHeight);
+    setBubblePosition(next);
   };
 
   const handleBubblePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -527,10 +530,11 @@ export default function Layout({ children }: LayoutProps) {
       window.setTimeout(() => {
         suppressBubbleClickRef.current = false;
       }, 250);
-      if (mobileBubblePosition) {
+      if (bubblePosition) {
+        const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
         try {
-          // Persist mobile bubble placement between sessions.
-          window.localStorage.setItem(MOBILE_BUBBLE_STORAGE_KEY, JSON.stringify(mobileBubblePosition));
+          // Persist bubble placement between sessions by viewport profile.
+          window.localStorage.setItem(storageKey, JSON.stringify(bubblePosition));
         } catch {
           // Ignore storage write failures.
         }
@@ -915,12 +919,12 @@ export default function Layout({ children }: LayoutProps) {
                 }
               : { duration: 0.35 }
           }
-          className={isMobileViewport ? "fixed z-[95] rounded-full" : "fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"}
+          className={`fixed z-[95] rounded-full ${bubblePosition ? "" : isMobileViewport ? "bottom-20 right-4" : "bottom-24 right-5 md:bottom-10 md:right-10"}`}
           style={
-            isMobileViewport && mobileBubblePosition
+            bubblePosition
               ? {
-                  left: `${mobileBubblePosition.x}px`,
-                  top: `${mobileBubblePosition.y}px`,
+                  left: `${bubblePosition.x}px`,
+                  top: `${bubblePosition.y}px`,
                   touchAction: "none",
                 }
               : undefined

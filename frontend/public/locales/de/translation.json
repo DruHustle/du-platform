@@ -44,6 +44,7 @@
     "investment": "Investitionen",
     "trade": "Handel",
     "impact": "Wirkung",
+    "care": "Vorsorge",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
     "product_intelligence": "Produkt-Informationen",
@@ -943,52 +944,6 @@
       "track": "Track Performance",
       "returns": "Receive Returns"
     },
-    "zida": {
-      "title": "ZIDA Investment Information",
-      "subtitle": "Official pathways and resources from the Zimbabwe Investment and Development Agency for licensing, sector discovery, and investment setup.",
-      "open_route": "Open Route",
-      "visit_resource": "Visit Resource",
-      "routes": {
-        "general_license": {
-          "title": "General Investment License",
-          "detail": "For private business setup in Zimbabwe, including options for full ownership based on applicable laws and sector rules."
-        },
-        "ppp": {
-          "title": "Public Private Partnership (PPP)",
-          "detail": "For projects structured with Government, local authorities, or state-owned enterprises."
-        },
-        "sez": {
-          "title": "Special Economic Zones (SEZ)",
-          "detail": "For developing, operating, or investing in designated SEZ activities under ZIDA administration."
-        }
-      },
-      "resources": {
-        "investor_services": {
-          "title": "ZIDA Investor Services",
-          "description": "Guidance for local and foreign investors, including support for setup, growth, and market-entry planning."
-        },
-        "diy_licensing": {
-          "title": "DIY Investor Licensing Portal",
-          "description": "Apply for investment licenses and related permit actions through ZIDA's online self-service process."
-        },
-        "portal_access": {
-          "title": "ZIDA DIY Portal Access",
-          "description": "Direct portal entry for investor licensing workflows and account-based submissions."
-        },
-        "invest_zim": {
-          "title": "Invest in Zimbabwe",
-          "description": "Central investment gateway with key sectors, PPP opportunities, and current project information."
-        },
-        "doing_business": {
-          "title": "Doing Business in Zimbabwe",
-          "description": "Practical guide covering investment routes, business establishment steps, and licensing pathways."
-        },
-        "investor_register": {
-          "title": "Licensed Investor Register",
-          "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
-        }
-      }
-    },
     "tourism": {
       "snapshot": {
         "title": "Simbabwe Tourismus-Schnappschuss (2026)",
@@ -1205,7 +1160,7 @@
       }
     }
   },
-  "success": {
+  "impact": {
     "hero": {
       "badge1": "Impact-Geschichten",
       "title1": "Diaspora treibt ",
@@ -1326,12 +1281,12 @@
       "testimonial_by": "— {{author}} ({{role}})",
       "view_story": "Geschichte lesen"
     },
-    "impact_metrics_badge": "Kennzahlen",
-    "impact_metrics_title": "Gemeinsame Wirkung",
-    "impact_metrics_subtitle": "Die kumulierte Wirkung des Engagements über alle Projekte.",
-    "cta_title": "Möchten Sie Wirkung teilen?",
-    "cta_subtitle": "Wir suchen immer nach Inspiration. Teilen Sie Ihre Geschichte mit uns!",
-    "cta_button": "Geschichte teilen",
+    "metrics_badge": "Kennzahlen",
+    "metrics_title": "Gemeinsame Wirkung",
+    "metrics_subtitle": "Die kumulierte Wirkung des Engagements über alle Projekte.",
+    "cta_title": "Arbeiten Sie mit uns zusammen",
+    "cta_subtitle": "Wir arbeiten mit Diaspora-Führungskräften, Institutionen und Unternehmen zusammen, um Wirkung zu skalieren. Lassen Sie uns gemeinsam aufbauen.",
+    "cta_button": "Partnerschaft starten",
     "stories_list": [
       {
         "display": true,
@@ -1454,7 +1409,7 @@
         "role": "Betriebsleiter, Zim Macadamia Processors"
       }
     ],
-    "impact_metrics_list": [
+    "metrics_list": [
       {
         "display": true,
         "value": "$11.3M+",
@@ -1853,5 +1808,84 @@
     "online_text": "Verbunden",
     "error_timeout": "Die Onesa-Anfrage ist nach 3 Minuten abgelaufen. Bitte versuchen Sie es erneut.",
     "offline_text": "Nicht verbunden"
+  },
+  "care": {
+    "hero": {
+      "badge": "Familienvorsorge-Partner",
+      "title": "Diaspora-Bestattungsschutz mit Nyaradzo",
+      "description": "Schützen Sie Ihre Angehörigen zu Hause mit vertrauenswürdigem Bestattungsschutz-Onboarding über Nyaradzo, integriert in The Diaspora Gateway.",
+      "cta": "Nyaradzo-Onboarding starten"
+    },
+    "why": {
+      "title": "Warum es wichtig ist",
+      "subtitle": "Familienvorsorge hat für die Diaspora höchste Priorität. Diese Integration macht den Zugang einfacher und transparenter.",
+      "cards": [
+        {
+          "title": "Würde für Familien",
+          "description": "Bestattungsschutz reduziert plötzlichen finanziellen Druck und unterstützt würdevolle Abschiede."
+        },
+        {
+          "title": "Für Diaspora-Familien entwickelt",
+          "description": "Verwalten Sie den Versicherungsschutz aus der Ferne und bleiben Sie mit den Pflichten zu Hause verbunden."
+        },
+        {
+          "title": "Vertrauenswürdige lokale Umsetzung",
+          "description": "Nyaradzo bietet etablierte lokale Leistungen und familiennahe Betreuung."
+        }
+      ]
+    },
+    "coverage": {
+      "title": "Leistungsoptionen",
+      "subtitle": "Wählen Sie eine Plan-Kategorie, die zu Ihren familiären Verpflichtungen und Ihrem Budget passt.",
+      "cards": [
+        {
+          "tag": "Einstieg",
+          "title": "Basis-Familiendeckung",
+          "summary": "Günstiger Einstiegsschutz für unmittelbare Unterstützung im Haushalt."
+        },
+        {
+          "tag": "Beliebt",
+          "title": "Erweiterter Familienplan",
+          "summary": "Umfassendere Absicherung für Eltern und Angehörige zu Hause."
+        },
+        {
+          "tag": "Umfassend",
+          "title": "Premium-Vorsorge",
+          "summary": "Erweiterte Leistungen und Serviceoptionen für größere Familienstrukturen."
+        }
+      ]
+    },
+    "how": {
+      "title": "So funktioniert es",
+      "subtitle": "Ein einfacher Onboarding-Ablauf vom Diaspora-Zugang bis zum aktiven Schutz.",
+      "steps": [
+        {
+          "title": "1. Antrag starten",
+          "description": "Starten Sie den Nyaradzo-Onboarding-Prozess über Diaspora Unlocked und geben Sie Ihre Daten ein."
+        },
+        {
+          "title": "2. Schutz wählen",
+          "description": "Wählen Sie die passende Deckungsstufe für Ihre Familiensituation und Ihren Beitrag."
+        },
+        {
+          "title": "3. Bestätigen & aktivieren",
+          "description": "Schließen Sie Verifizierung und Zahlungseinrichtung ab, um den Schutz zu aktivieren."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Bereit, Ihre Familie zu schützen?",
+      "subtitle": "Weiter zum Nyaradzo-Onboarding mit nachverfolgbaren Diaspora-Referral-Daten.",
+      "referral_label": "referral_id",
+      "user_label": "user_id",
+      "guest": "gast",
+      "button": "Weiter zu Nyaradzo"
+    },
+    "seo": {
+      "title": "Vorsorge | The Diaspora Gateway",
+      "description": "Diaspora-Onboarding für Bestattungsschutz mit Nyaradzo über The Diaspora Gateway.",
+      "og_description": "Sicheres Onboarding für Familien-Bestattungsschutz über Nyaradzo für Simbabwer im Ausland.",
+      "twitter_description": "Diaspora-Bestattungsschutz-Integration mit Nyaradzo."
+    }
   }
 }

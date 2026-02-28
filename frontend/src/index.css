@@ -459,6 +459,17 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     pointer-events: none;
   }
+
+  /* Mobile width normalization:
+     Match top-level outer glass panel width to container px-6 sections
+     across all pages (full-width section panels). */
+  @media (max-width: 767px) {
+    main section > .container > .outer-glass-panel {
+      width: calc(100% + 2.5rem);
+      margin-left: -1.25rem;
+      margin-right: -1.25rem;
+    }
+  }
   
   /* Gradient text */
   .gradient-text {

@@ -28,6 +28,7 @@ import OnesaAITourismAugmentedExperience from "./pages/OnesaAITourismAugmentedEx
 import AdminDashboard from "./pages/AdminDashboard";
 import CookieSettings from "./pages/CookieSettings";
 import Payments from "./pages/Payments";
+import Care from "./pages/Care";
 import NotFound from "@/pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -51,6 +52,7 @@ function Router() {
       <Route path="/shop/products" component={ShopProducts} />
       <Route path="/impact" component={Impact} />
       <Route path="/payments" component={Payments} />
+      <Route path="/care" component={Care} />
       <Route path="/login" component={LogIn} />
       <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />

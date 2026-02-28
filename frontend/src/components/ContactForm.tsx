@@ -34,7 +34,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
     tourism: ["Visa Information", "Accommodation", "Diaspora Homecoming"],
     investment: ["Opportunity Details", "NTIR Registration", "Due Diligence"],
     trade: ["Export Programs", "Market Access", "Trade Regulations"],
-    success: ["Share Your Story", "Project Showcase", "General Inquiry"],
+    success: ["Partnership Inquiry", "Project Collaboration", "General Inquiry"],
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

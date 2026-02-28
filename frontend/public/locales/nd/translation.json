@@ -44,6 +44,7 @@
     "investment": "Ukutshala Imali",
     "trade": "Ezohwebo",
     "impact": "Umphumela",
+    "care": "Ukunakekelwa Komndeni",
     "market_requirements": "Izidingo zemakethe",
     "market_requirements_desc": "Imithetho lezitifiketi zemakethe yase-Germany",
     "product_intelligence": "Ulwazi lwemikhiqizo",
@@ -943,52 +944,6 @@
       "track": "Track Performance",
       "returns": "Receive Returns"
     },
-    "zida": {
-      "title": "ZIDA Investment Information",
-      "subtitle": "Official pathways and resources from the Zimbabwe Investment and Development Agency for licensing, sector discovery, and investment setup.",
-      "open_route": "Open Route",
-      "visit_resource": "Visit Resource",
-      "routes": {
-        "general_license": {
-          "title": "General Investment License",
-          "detail": "For private business setup in Zimbabwe, including options for full ownership based on applicable laws and sector rules."
-        },
-        "ppp": {
-          "title": "Public Private Partnership (PPP)",
-          "detail": "For projects structured with Government, local authorities, or state-owned enterprises."
-        },
-        "sez": {
-          "title": "Special Economic Zones (SEZ)",
-          "detail": "For developing, operating, or investing in designated SEZ activities under ZIDA administration."
-        }
-      },
-      "resources": {
-        "investor_services": {
-          "title": "ZIDA Investor Services",
-          "description": "Guidance for local and foreign investors, including support for setup, growth, and market-entry planning."
-        },
-        "diy_licensing": {
-          "title": "DIY Investor Licensing Portal",
-          "description": "Apply for investment licenses and related permit actions through ZIDA's online self-service process."
-        },
-        "portal_access": {
-          "title": "ZIDA DIY Portal Access",
-          "description": "Direct portal entry for investor licensing workflows and account-based submissions."
-        },
-        "invest_zim": {
-          "title": "Invest in Zimbabwe",
-          "description": "Central investment gateway with key sectors, PPP opportunities, and current project information."
-        },
-        "doing_business": {
-          "title": "Doing Business in Zimbabwe",
-          "description": "Practical guide covering investment routes, business establishment steps, and licensing pathways."
-        },
-        "investor_register": {
-          "title": "Licensed Investor Register",
-          "description": "Reference register of licensed investors, useful for basic due-diligence checks and ecosystem visibility."
-        }
-      }
-    },
     "tourism": {
       "snapshot": {
         "title": "Isithombe se-Zimbabwe Tourism (2026)",
@@ -1205,7 +1160,7 @@
       }
     }
   },
-  "success": {
+  "impact": {
     "hero": {
       "badge1": "Izindaba zomphumela",
       "title1": "Ama-Diaspora aqhuba i- ",
@@ -1326,12 +1281,12 @@
       "testimonial_by": "— {{author}} ({{role}})",
       "view_story": "Buka indaba"
     },
-    "impact_metrics_badge": "Isilinganiso (Metrics)",
-    "impact_metrics_title": "Umphumela ohlanganyelweyo",
-    "impact_metrics_subtitle": "Umphumela wonke wokuzibandakanya kwama-diaspora kuzo zonke izindaba zempumelelo.",
-    "cta_title": "Ulomphumela Ofisa Ukwabelana Lathi?",
-    "cta_subtitle": "Sihlala sidinga izindaba ezikhuthazayo zomphumela wama-diaspora. Yabelana lathi ngetshe yakho!",
-    "cta_button": "Yabelana ngendaba yakho",
+    "metrics_badge": "Isilinganiso (Metrics)",
+    "metrics_title": "Umphumela ohlanganyelweyo",
+    "metrics_subtitle": "Umphumela wonke wokuzibandakanya kwama-diaspora kuzo zonke izindaba zempumelelo.",
+    "cta_title": "Sebenzisana lathi",
+    "cta_subtitle": "Sisebenzisana labaholi beDiaspora, izinhlanganiso, lamabhizimusi ukuze sandise umphumela. Kasakheni ndawonye.",
+    "cta_button": "Qalisa Ubambiswano",
     "stories_list": [
       {
         "display": true,
@@ -1454,7 +1409,7 @@
         "role": "Operations Manager, Zim Macadamia Processors"
       }
     ],
-    "impact_metrics_list": [
+    "metrics_list": [
       {
         "display": true,
         "value": "$11.3M+",
@@ -1853,5 +1808,84 @@
     "online_text": "Ku-inthanethi",
     "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi ngemva kwemizuzu emithathu. Zama njalo.",
     "offline_text": "Okungaxhunyiwe ku-inthanethi"
+  },
+  "care": {
+    "hero": {
+      "badge": "Umngane Wokunakekelwa Komndeni",
+      "title": "I-Funeral Cover yeDiaspora loNyaradzo",
+      "description": "Vikela abemuli ekhaya ngokubhalisa i-funeral policy ethembekileyo ngeNyaradzo, ehlanganiswe kuThe Diaspora Gateway.",
+      "cta": "Qalisa ukubhalisa kuNyaradzo"
+    },
+    "why": {
+      "title": "Kungani kubalulekile",
+      "subtitle": "Ukunakekela umndeni kuyinto eqakathekileyo kuDiaspora. Lokhu kubambisana kwenza ukuthola i-cover kube lula futhi kucace.",
+      "cards": [
+        {
+          "title": "Isithunzi semindeni",
+          "description": "I-funeral cover yehlisa ingcindezi yemali ephuthumayo futhi isekele ukuhamba kwesidumbu ngesithunzi."
+        },
+        {
+          "title": "Kwakhelwe imindeni yeDiaspora",
+          "description": "Phatha usekelo lwepolicy ukude kodwa ube usaxhumene lemisebenzi yasekhaya."
+        },
+        {
+          "title": "Ukusebenza kwendawo okuthembekileyo",
+          "description": "INyaradzo inikeza isevisi yasendaweni esiqinileyo lokunakekela okugxile emndenini."
+        }
+      ]
+    },
+    "coverage": {
+      "title": "Izinketho zeCoverage",
+      "subtitle": "Khetha isigaba seplan esihambelana lezibopho zomndeni wakho kanye lebhajethi yakho.",
+      "cards": [
+        {
+          "tag": "Ukuqala",
+          "title": "I-cover eyisisekelo yomndeni",
+          "summary": "I-cover yokuqala ethengekayo yokusekela umuzi ngokuphuthuma."
+        },
+        {
+          "tag": "Edumileyo",
+          "title": "I-plan yomndeni enwetshiweyo",
+          "summary": "Isekelo elibanzi kubazali labanakekelwayo ekhaya."
+        },
+        {
+          "tag": "Ephelele",
+          "title": "I-Premium Assurance",
+          "summary": "Izinzuzo ezengeziwe kanye lezinketho zesevisi zemindeni emikhulu."
+        }
+      ]
+    },
+    "how": {
+      "title": "Kusebenza njani",
+      "subtitle": "Indlela elula kusukela ekufinyeleleni i-akhawunti yeDiaspora kuze kube i-cover esebenzayo.",
+      "steps": [
+        {
+          "title": "1. Qalisa isicelo",
+          "description": "Vula iNyaradzo onboarding kuDiaspora Unlocked bese ufaka imininingwane yakho."
+        },
+        {
+          "title": "2. Khetha i-cover",
+          "description": "Khetha isigaba seplan esihambelana lomumo womndeni wakho lemali ofuna ukuyikhokha."
+        },
+        {
+          "title": "3. Qinisekisa & sebenzisa",
+          "description": "Qedisa i-verification lokuhlela inkokhelo ukuze i-cover iqale ukusebenza."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Usukulungele ukuvikela umndeni wakho?",
+      "subtitle": "Qhubekela kuNyaradzo onboarding elereferral metadata elandelwayo.",
+      "referral_label": "referral_id",
+      "user_label": "user_id",
+      "guest": "isivakashi",
+      "button": "Qhubekela kuNyaradzo"
+    },
+    "seo": {
+      "title": "Ukunakekelwa Komndeni | The Diaspora Gateway",
+      "description": "Ukubhalisa i-funeral policy yeDiaspora loNyaradzo kuThe Diaspora Gateway.",
+      "og_description": "Ukubhalisa okuphephileyo kwe-family funeral cover ngeNyaradzo kwabantu baseZimbabwe abangaphandle.",
+      "twitter_description": "Ukuhlanganiswa kwe-funeral policy yeDiaspora loNyaradzo."
+    }
   }
 }

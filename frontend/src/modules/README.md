@@ -7,7 +7,7 @@ This directory contains self-contained feature modules:
 - shop
 - ai
 - fintech
-- data
 - legal
+- care
 
 Each module can own its components, hooks, lib clients, route-level pages, and types.

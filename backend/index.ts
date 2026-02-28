@@ -2242,6 +2242,7 @@ async function startServer() {
         { title: "Trade", href: "/trade", category: "Trade", tags: ["export", "germany", "market", "trade", "business", "commerce", "sectors"] },
         { title: "Tourism", href: "/tourism", category: "Tourism", tags: ["visit", "travel", "attractions", "victoria falls"] },
         { title: "Investment", href: "/investment", category: "Investment", tags: ["money", "capital", "projects", "masuwe", "sez"] },
+        { title: "Care", href: "/care", category: "Care", tags: ["funeral", "policy", "nyaradzo", "family", "cover"] },
         { title: "Technology", href: "/technology", category: "Technology", tags: ["ai", "onesa", "innovation", "tech"] },
         { title: "Impact", href: "/impact", category: "Impact", tags: ["stories", "impact", "cases"] },
         { title: "NTIR Database", href: "/ntir", category: "Trade", tags: ["register", "ntir", "verification"] },
