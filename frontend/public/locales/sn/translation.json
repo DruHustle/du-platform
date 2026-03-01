@@ -757,57 +757,57 @@
     },
     "projects": {
       "masuwe": {
-        "title": "Masuwe SEZ",
-        "description": "Nharaunda yeushanyi eduze neVictoria Falls.",
+        "title": "Masuwe SEZ Construction of Villas Project",
+        "description": "Tourism-linked hospitality infrastructure opportunity in the Victoria Falls growth corridor.",
         "highlights": [
-          "Kurerutswa kweMitero",
-          "Nzvimbo yeUshanyi",
-          "Zvivakwa zvakagadzirwa"
+          "SEZ Corridor",
+          "Hospitality Assets",
+          "Tourism Demand"
         ]
       },
       "leather": {
-        "title": "Chikamu cheMatehwe",
-        "description": "Kugadzirwa kwematehwe kuitira kutengesa kunze.",
+        "title": "Linkdef Soap Manufacturing Project",
+        "description": "State-of-the-art soap and detergent manufacturing aligned to Zimbabwe's industrialization strategy.",
         "highlights": [
-          "Kuwedzera Mutengo",
-          "Vashandi vane unyanzvi",
-          "Kwakagadzirira kutengeswa kunze"
+          "Import Substitution",
+          "Consumer Goods",
+          "Manufacturing Jobs"
         ]
       },
       "apparel": {
-        "title": "ZimBrand Supply Chain",
-        "description": "Kugoverwa kwezvemitambo nembatya dzeZimbabwe.",
+        "title": "NRZ Concrete Manufacturing Plant Project",
+        "description": "Concrete sleeper manufacturing to support rail infrastructure renewal and industrial supply capacity.",
         "highlights": [
-          "Rezinesi rePasi Rese",
-          "Vatishandi veMitambo",
-          "Chirongwa chinokurika"
+          "Infrastructure Supply",
+          "Industrial Demand",
+          "Rail Modernization"
         ]
       },
       "horticulture": {
-        "title": "Purazi reBlueberry",
-        "description": "Kukura kwezvibereko zvekutengesa kunze kwenyika.",
+        "title": "CICADA Macadamia and Avocado Plantation",
+        "description": "High-value agriculture and value-addition platform for avocado and macadamia export markets.",
         "highlights": [
-          "Global Gap Cert",
-          "Kugona kwekushaya mamwe mazvirimwa",
-          "Kushandiswa kwemvura nengwaru"
+          "Export Agriculture",
+          "Value Addition",
+          "Regional Processing"
         ]
       },
       "fintech": {
-        "title": "ZimPay Core",
-        "description": "Zvishandiso zvemashoko zvekutambira mari kubva kunze.",
+        "title": "Powertel Fibre Internet (GPON)",
+        "description": "Fibre broadband infrastructure rollout to improve national digital access and enterprise connectivity.",
         "highlights": [
-          "SaaS Model",
-          "API yakachengeteka",
-          "Kushandiswa muMatunhu"
+          "Broadband Expansion",
+          "ICT Infrastructure",
+          "Digital Inclusion"
         ]
       },
       "solar": {
-        "title": "Mutare Solar Park",
-        "description": "Magetsi ezuva e5MW kuitira maindasitiri emuno.",
+        "title": "Solgas Energy 60MW Solar PV Plant + BESS",
+        "description": "Utility-scale renewable energy project combining solar generation with battery storage capacity.",
         "highlights": [
-          "Utility PPA",
-          "Carbon Credits",
-          "Mhindu yakagadzikana"
+          "60MW Solar",
+          "Battery Storage",
+          "Grid Support"
         ]
       }
     },
@@ -832,7 +832,8 @@
       "view_details": "Ona Zvizere",
       "verified": "Chinhu Chakasimbiswa",
       "risk": "Njodzi",
-      "timeline": "Nguva"
+      "timeline": "Nguva",
+      "owner": "Responsible Company"
     },
     "benefits": {
       "diaspora_network": {
@@ -873,8 +874,6 @@
     "crowdfunding_subtitle": "Kudyara mari shoma muzvirongwa zvakaongororwa uone budiriro.",
     "sectors_title": "Mikana yeKudyara Mari iripo",
     "sectors_subtitle": "Zvirongwa zvakaongororwa zvine rubatsiro rwehurumende.",
-    "calculator_title": "Chishandiso Chekuronga Mari (Smart Investment Calculator)",
-    "calculator_subtitle": "Fungidzirai mhindu muchishandisa ruzivo rwemisika nezvirongwa rwemakore ano",
     "cta_title": "Wagadzirira kudyara Mari here?",
     "cta_subtitle": "Chikwata chedu chinokubatsira kuwana mikana yakanaka.",
     "cta_button": "Taura neNyanzvi",

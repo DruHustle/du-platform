@@ -19,7 +19,7 @@ export default function Regulations() {
           "Investment Compliance",
         points: getPoints("regulations.sections.investment_compliance.points", [
           "Confirm project legal structure, ownership, and board controls before funding.",
-          "Verify licensing and approvals through ZIDA and relevant sector regulators.",
+          "Verify licensing and approvals through the official investment portal and relevant sector regulators.",
           "Use written shareholder and governance agreements for diaspora co-investment.",
           "Document source of funds and perform KYC/AML checks on counterparties.",
         ]),

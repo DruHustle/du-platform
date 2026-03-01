@@ -33,16 +33,22 @@ const memoryNtirEntities: Array<{
   location: string;
   verification_status: "Verified" | "Pending";
 }> = [
-  { id: 1, name: "Matseka Trade Pvt Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
-  { id: 2, name: "Berrymark Trading P/L", sector: "Fresh Produce Export", location: "Harare", verification_status: "Verified" },
-  { id: 3, name: "Fair Mark Enterprises P/L", sector: "Fresh Produce Export", location: "Harare", verification_status: "Pending" },
-  { id: 4, name: "Flitvick Exports Pvt Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
-  { id: 5, name: "Hortech (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Pending" },
-  { id: 6, name: "Matanuska (Pvt) Ltd", sector: "Fresh Produce Export", location: "Honde Valley", verification_status: "Verified" },
-  { id: 7, name: "Schmoozy Fresh (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Pending" },
-  { id: 8, name: "Jumbo Fresh (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
-  { id: 9, name: "Linkage Agencies (Pvt) Ltd", sector: "Horticulture Export", location: "Harare", verification_status: "Verified" },
-  { id: 10, name: "Chammy International (Pvt) Ltd", sector: "Fresh Produce Export", location: "Mutare", verification_status: "Pending" },
+  { id: 1, name: "Mosi Oa Tunya Development Company", sector: "Tourism & Infrastructure", location: "Matabeleland North", verification_status: "Verified" },
+  { id: 2, name: "Agro Strong (Pvt) Ltd", sector: "Agriculture", location: "Matabeleland South", verification_status: "Verified" },
+  { id: 3, name: "Goromonzi Agro Industrial Company (GAIC)", sector: "Agriculture", location: "Mashonaland East", verification_status: "Verified" },
+  { id: 4, name: "Cicada Group", sector: "Agriculture", location: "Midlands / Manicaland", verification_status: "Verified" },
+  { id: 5, name: "Misty Mountains Coffee Company", sector: "Agriculture", location: "Manicaland", verification_status: "Pending" },
+  { id: 6, name: "Fairway (Pvt) Ltd", sector: "Agriculture", location: "Manicaland", verification_status: "Pending" },
+  { id: 7, name: "Powertel Communications (Pvt) Ltd", sector: "ICT", location: "Harare", verification_status: "Verified" },
+  { id: 8, name: "TelOne (Pvt) Ltd", sector: "ICT", location: "Harare", verification_status: "Verified" },
+  { id: 9, name: "Linkdef Soap Manufacturing (Pvt) Ltd", sector: "Manufacturing", location: "Harare", verification_status: "Pending" },
+  { id: 10, name: "National Railways of Zimbabwe", sector: "Manufacturing", location: "Bulawayo", verification_status: "Verified" },
+  { id: 11, name: "Solgas Energy Pvt Ltd", sector: "Renewable Energy", location: "Matabeleland North", verification_status: "Verified" },
+  { id: 12, name: "RADCO Holdings", sector: "Renewable Energy", location: "Mashonaland Central", verification_status: "Pending" },
+  { id: 13, name: "SIRDC", sector: "Biotech Manufacturing", location: "Harare", verification_status: "Verified" },
+  { id: 14, name: "Orangerose Investments", sector: "Clean-Tech Manufacturing", location: "Harare", verification_status: "Pending" },
+  { id: 15, name: "Mining Promotion Corporation", sector: "Mining", location: "Matabeleland South", verification_status: "Pending" },
+  { id: 16, name: "Sunway City (Pvt) Ltd", sector: "Urban Infrastructure", location: "Harare", verification_status: "Pending" },
 ];
 
 async function syncNtirSeedData(): Promise<void> {

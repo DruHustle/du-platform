@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
-import InvestmentCalculator from "@/components/InvestmentCalculator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -112,6 +111,7 @@ export default function Investment() {
 const projects = [
   { 
     id: "masuwe", 
+    owner: "Mosi Oa Tunya Development Company",
     sector: "tourism", 
     target: "$25M", 
     raised: "$0", 
@@ -126,6 +126,7 @@ const projects = [
 
   { 
     id: "leather", 
+    owner: "Linkdef Soap Manufacturing (Pvt) Ltd",
     sector: "manufacturing", 
     target: "$180k", 
     raised: "$0", 
@@ -140,6 +141,7 @@ const projects = [
 
   { 
     id: "apparel", 
+    owner: "National Railways of Zimbabwe",
     sector: "manufacturing", 
     target: "$300k", 
     raised: "$0", 
@@ -154,6 +156,7 @@ const projects = [
 
   { 
     id: "horticulture", 
+    owner: "Cicada Group",
     sector: "agriculture", 
     target: "$120k", 
     raised: "$0", 
@@ -168,6 +171,7 @@ const projects = [
 
   { 
     id: "fintech", 
+    owner: "Powertel Communications (Pvt) Ltd",
     sector: "it", 
     target: "$850k", 
     raised: "$0", 
@@ -182,6 +186,7 @@ const projects = [
 
   { 
     id: "solar", 
+    owner: "Solgas Energy Pvt Ltd",
     sector: "energy", 
     target: "$2.5M", 
     raised: "$0", 
@@ -192,6 +197,96 @@ const projects = [
     time: "4-6y", 
     risk: "conservative", 
     ver: true 
+  },
+
+  {
+    id: "beef_dairy",
+    owner: "Agro Strong (Pvt) Ltd",
+    sector: "agriculture",
+    target: "$420k",
+    raised: "$0",
+    prog: 18,
+    inv: 0,
+    min: "$750",
+    ret: "13-18%",
+    time: "4-6y",
+    risk: "moderate",
+    ver: true
+  },
+
+  {
+    id: "agro_park",
+    owner: "Goromonzi Agro Industrial Company (GAIC)",
+    sector: "agriculture",
+    target: "$1.8M",
+    raised: "$0",
+    prog: 14,
+    inv: 0,
+    min: "$1,500",
+    ret: "15-22%",
+    time: "5-8y",
+    risk: "moderate",
+    ver: true
+  },
+
+  {
+    id: "data_centres",
+    owner: "TelOne (Pvt) Ltd",
+    sector: "it",
+    target: "$3.2M",
+    raised: "$0",
+    prog: 9,
+    inv: 0,
+    min: "$2,000",
+    ret: "18-26%",
+    time: "6-9y",
+    risk: "aggressive",
+    ver: true
+  },
+
+  {
+    id: "vaccine",
+    owner: "SIRDC",
+    sector: "manufacturing",
+    target: "$1.1M",
+    raised: "$0",
+    prog: 11,
+    inv: 0,
+    min: "$1,250",
+    ret: "12-17%",
+    time: "4-7y",
+    risk: "moderate",
+    ver: true
+  },
+
+  {
+    id: "roof_tiles",
+    owner: "Orangerose Investments",
+    sector: "manufacturing",
+    target: "$950k",
+    raised: "$0",
+    prog: 16,
+    inv: 0,
+    min: "$1,000",
+    ret: "14-19%",
+    time: "4-6y",
+    risk: "moderate",
+    ver: true
+  },
+
+  {
+    id: "radco_solar",
+    owner: "RADCO Holdings",
+    sector: "energy",
+    target: "$4.1M",
+    raised: "$0",
+    prog: 8,
+    inv: 0,
+    min: "$2,500",
+    ret: "13-18%",
+    time: "7-10y",
+    risk: "conservative",
+    ver: true
   }
 ];
 
@@ -212,40 +307,76 @@ const projects = [
     { title: string; description: string; highlights: string[] }
   > = {
     masuwe: {
-      title: "Masuwe Special Economic Zone",
+      title: "Masuwe SEZ Construction of Villas Project",
       description:
-        "Large-scale tourism and hospitality opportunity near Victoria Falls with long-term revenue potential.",
-      highlights: ["Tourism Infrastructure", "SEZ Incentives", "Long-Term Horizon"],
+        "Tourism-linked hospitality infrastructure opportunity in the Victoria Falls growth corridor.",
+      highlights: ["SEZ Corridor", "Hospitality Assets", "Tourism Demand"],
     },
     leather: {
-      title: "Leather Value-Addition Cluster",
+      title: "Linkdef Soap Manufacturing Project",
       description:
-        "Expand export-ready leather processing and finished goods production for regional and EU markets.",
-      highlights: ["Export-Oriented", "SME Supplier Network", "Manufacturing Jobs"],
+        "State-of-the-art soap and detergent manufacturing facility aligned to Zimbabwe's industrialization strategy.",
+      highlights: ["Import Substitution", "Consumer Goods", "Manufacturing Jobs"],
     },
     apparel: {
-      title: "Apparel Manufacturing Scale-Up",
+      title: "NRZ Concrete Manufacturing Plant Project",
       description:
-        "Increase local garment production capacity and improve quality compliance for international buyers.",
-      highlights: ["Factory Expansion", "Brand Partnerships", "Regional Trade Access"],
+        "Concrete sleeper manufacturing to support rail infrastructure renewal and domestic industrial supply.",
+      highlights: ["Infrastructure Supply", "Industrial Demand", "Rail Modernization"],
     },
     horticulture: {
-      title: "Horticulture Export Platform",
+      title: "CICADA Macadamia and Avocado Plantation",
       description:
-        "Invest in high-value crop production, cold-chain handling, and buyer-ready export operations.",
-      highlights: ["Fresh Produce", "Cold Chain", "EU Market Potential"],
+        "High-value agriculture and value-addition platform for avocado and macadamia export markets.",
+      highlights: ["Export Agriculture", "Value Addition", "Regional Processing"],
     },
     fintech: {
-      title: "Diaspora Fintech Platform",
+      title: "Powertel Fibre Internet (GPON)",
       description:
-        "Build digital financial tools for payments, savings, and diaspora-linked investment coordination.",
-      highlights: ["Digital Payments", "SME Services", "Scalable Model"],
+        "Fibre broadband infrastructure rollout to improve national digital access and enterprise connectivity.",
+      highlights: ["Broadband Expansion", "ICT Infrastructure", "Digital Inclusion"],
     },
     solar: {
-      title: "Solar Energy Development",
+      title: "Solgas Energy 60MW Solar PV Plant + BESS",
       description:
-        "Support power-generation projects addressing supply gaps and improving industrial productivity.",
-      highlights: ["Energy Access", "Independent Power", "Sustainable Returns"],
+        "Utility-scale renewable energy project combining solar generation with battery storage capacity.",
+      highlights: ["60MW Solar", "Battery Storage", "Grid Support"],
+    },
+    beef_dairy: {
+      title: "Agro Strong Beef and Dairy Farming Venture",
+      description:
+        "Integrated livestock project designed to strengthen domestic protein supply and value-added dairy processing.",
+      highlights: ["Livestock Scale-Up", "Dairy Value Addition", "Food Security"],
+    },
+    agro_park: {
+      title: "Goromonzi Agro Processing Industrial Park (SEZ)",
+      description:
+        "Specialized agro-processing cluster targeting export-ready outputs, storage logistics, and value-chain efficiency.",
+      highlights: ["Agro Processing", "SEZ Cluster", "Export Readiness"],
+    },
+    data_centres: {
+      title: "TelOne Data Centres Project",
+      description:
+        "Enterprise-grade data centre capacity expansion for cloud workloads, hosting, and digital public infrastructure.",
+      highlights: ["Data Hosting", "Cloud Capacity", "Digital Backbone"],
+    },
+    vaccine: {
+      title: "Foot and Mouth Disease Vaccine Manufacturing Project",
+      description:
+        "Strategic pharmaceutical manufacturing initiative to localize vaccine production and reduce import dependence.",
+      highlights: ["Biotech Production", "Import Substitution", "Veterinary Health"],
+    },
+    roof_tiles: {
+      title: "Orangerose Solar Roof Tile Manufacturing Project",
+      description:
+        "Local clean-tech manufacturing project for solar roof tiles aligned to distributed energy adoption.",
+      highlights: ["Solar Materials", "Local Manufacturing", "Clean Energy"],
+    },
+    radco_solar: {
+      title: "RADCO Solar and Smart City Project",
+      description:
+        "Large-scale clean energy and smart infrastructure platform supporting sustainable urban and industrial growth.",
+      highlights: ["Smart City", "Grid-Scale Solar", "Energy Transition"],
     },
   };
 
@@ -298,7 +429,7 @@ const projects = [
     : [
         "Check if your target activity is reserved under Statutory Instrument 215 of 2025 before committing capital.",
         "If operating in a reserved sector, plan compliant local equity restructuring timelines and legal documentation.",
-        "Apply for a ZIDA investment license through the DIY portal to secure statutory investment protections.",
+        "Apply for an investment license through the official DIY portal to secure statutory investment protections.",
         "Set up entity structure and appoint a local representative/proxy director for legal notices and operations.",
         "Register qualifying cross-border investments, royalties, and recurring technical fee agreements with RBZ.",
         "Model exchange-rate and settlement exposure across USD and ZiG under the multi-currency framework.",
@@ -639,6 +770,14 @@ const projects = [
     t("investment.eu_focus.eib_t3") ||
       "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
   ];
+  const getProjectText = (projectId: string, field: "title" | "description", fallback: string) => {
+    const key = `investment.projects.${projectId}.${field}`;
+    const translated = t(key);
+    if (typeof translated !== "string" || translated.trim().length === 0 || translated === key) {
+      return fallback;
+    }
+    return translated;
+  };
 
   return (
     <Layout>
@@ -718,115 +857,25 @@ const projects = [
                 <Target className="h-6 w-6 text-zim-gold" />
                 <h3 className="text-xl font-black text-white tracking-tight">{t('investment.sectors_title') || "Active Investment Opportunities"}</h3>
               </div>
-               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
-              <div className="flex flex-wrap justify-center gap-2 mt-8">
-                {['all', 'tourism', 'agriculture', 'manufacturing', 'it', 'energy'].map(s => (
-                  <button 
-                    key={s} 
-                    onClick={() => setActiveFilter(s)} 
-                    className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
-                      activeFilter === s 
-                      ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]" 
-                      : "bg-white/5 text-white/60 border-white/10 hover:border-white/30"
-                    }`}
+              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
+                {t("investment.sectors_subtitle") || "Carefully vetted projects with government support and transparent tracking."}
+              </p>
+              <p className="text-xs text-white/55 max-w-3xl mx-auto font-light leading-relaxed mt-3">
+                {t("investment.sectors_info", {
+                  defaultValue:
+                    "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile.",
+                })}
+              </p>
+              <div className="mt-8">
+                <Link href="/investment/opportunities">
+                  <Button
+                    type="button"
+                    className="rounded-full bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] px-7"
                   >
-                    {t(`investment.project_filters.${s}`) || projectFilterFallbacks[s] || s}
-                  </button>
-                ))}
+                    {t("investment.sectors_explore", { defaultValue: "Explore Opportunities" })}
+                  </Button>
+                </Link>
               </div>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-8">
-              {filtered.map(p => (
-                <motion.div 
-                  key={p.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="group rounded-[2rem] border border-white/10 bg-white/[0.02] transition-colors duration-300 hover:bg-white/[0.03]"
-                >
-                  <div className="grid md:grid-cols-12 gap-6 p-7">
-                    <div className="md:col-span-8 space-y-5">
-                      <div className="flex flex-wrap gap-2">
-                        <Badge className={`text-[9px] uppercase font-black px-3 py-1 rounded-full ${p.risk === "conservative" ? "bg-green-500/10 text-green-400" : p.risk === "moderate" ? "bg-yellow-500/10 text-yellow-400" : "bg-red-500/10 text-red-400"}`}>
-                          {(t(`investment.project_filters.${p.risk}`) || projectFilterFallbacks[p.risk] || p.risk)} {t('investment.project_card.risk') || "Risk Level"}
-                        </Badge>
-                        {p.ver && (
-                          <div className="group/verified relative">
-                            <Badge
-                              title={t('investment.project_card.verified') || "Verified Asset"}
-                              aria-label={t('investment.project_card.verified') || "Verified Asset"}
-                              className="h-6 w-6 justify-center rounded-full border border-blue-500/20 bg-blue-500/10 p-0 text-blue-400"
-                            >
-                              <Award className="h-3 w-3" />
-                            </Badge>
-                            <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border border-blue-500/20 bg-slate-950/95 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-blue-300 opacity-0 transition-opacity duration-200 group-hover/verified:opacity-100">
-                              {t('investment.project_card.verified') || "Verified Asset"}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <h3 className="text-lg font-black text-white tracking-tight">
-                        {t(`investment.projects.${p.id}.title`) || projectContentFallbacks[p.id]?.title || "Investment Opportunity"}
-                      </h3>
-                      <p className="text-sm text-white/50 font-light leading-relaxed line-clamp-2">
-                        {t(`investment.projects.${p.id}.description`) || projectContentFallbacks[p.id]?.description || "Verified opportunity for diaspora investors."}
-                      </p>
-                      
-                      <ul className="grid sm:grid-cols-2 gap-3">
-                        {((Array.isArray(t(`investment.projects.${p.id}.highlights`, { returnObjects: true }))
-                          ? (t(`investment.projects.${p.id}.highlights`, { returnObjects: true }) as string[])
-                          : projectContentFallbacks[p.id]?.highlights) || []).map((h, i) => (
-                          <li key={i} className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
-                            <CheckCircle className="h-4 w-4 text-zim-gold opacity-60" /> 
-                            {h}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="md:col-span-4 p-2 flex flex-col justify-between border-l border-white/10 md:pl-5">
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-white/40">
-                            <span>{t('investment.project_card.raised', { amount: p.raised }) || `Raised: ${p.raised}`}</span>
-                            <span className="text-zim-gold">{p.prog}%</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${p.prog}%` }}
-                              transition={{ duration: 1, ease: "easeOut" }}
-                              className="h-full bg-zim-gold" 
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 gap-3">
-                          <div className="py-2 border-b border-white/10">
-                            <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">{t('investment.project_filters.min_investment') || "Min. "}</p>
-                            <p className="text-sm font-black text-white">{p.min}</p>
-                          </div>
-                          <div className="py-2">
-                            <p className="text-[9px] font-black text-zim-gold/40 uppercase tracking-widest">{t('investment.project_filters.expected_return') || "Expected"}</p>
-                            <p className="text-sm font-black text-zim-gold">{p.ret}</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <Link href={`/investment/projects/${p.id}`}>
-                        <Button
-                          variant="outline"
-                          className="w-full mt-4 rounded-full border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-zim-black hover:border-white font-black uppercase tracking-widest text-[10px] transition-all duration-300"
-                        >
-                          {t('investment.project_card.view_details') || "View Details"}
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
             </div>
 
             {activeFilter === "tourism" && (
@@ -980,23 +1029,6 @@ const projects = [
         </div>
       </section>
 
-
-      {/* Calculator Section */}
-      <section className="p-5 bg-slate-950 relative overflow-hidden">
-        <div className="container px-6 mx-auto relative z-10">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Brain className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.calculator_title') || "Smart Investment Calculator"}</h3>
-              </div>
-               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.calculator_subtitle') || "Forecast returns using real market and project data"}</p>
-            </div>
-            <InvestmentCalculator />
-          </div>
-        </div>
-      </section>
-
      {/* Innovation opportunities */}
       <section id="investment-innovation-opportunities" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
@@ -1112,7 +1144,7 @@ const projects = [
 
 
       {/* Regulatory Snapshot */}
-      <section className="p-5 bg-slate-950 relative overflow-hidden">
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="flex items-start justify-between gap-6 flex-col md:flex-row">

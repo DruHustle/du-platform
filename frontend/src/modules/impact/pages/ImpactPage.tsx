@@ -562,7 +562,7 @@ export default function Impact() {
       </section>
 
       {/* Global Diaspora Distribution */}
-      <section className="p-5 bg-slate-950 relative overflow-hidden">
+      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
             <div className="mb-7 text-center">

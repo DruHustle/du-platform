@@ -40,8 +40,8 @@ export default function Tourism() {
       subtitle: t('tourism.hero.subtitle1') || "From Victoria Falls to Great Zimbabwe, experience the heart of Africa.",
       buttons: [
         { text: t('tourism.hero.book_trip') || "Book Trip", variant: "primary", link: "/onesa-ai-book-trip" },
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experince", showArrow: true },
-        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experince", showArrow: true }
+        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true },
+        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experience", showArrow: true }
       ]
     },
     {
@@ -61,7 +61,7 @@ export default function Tourism() {
       title: t('tourism.hero.title3') || "Wildlife & Safari",
       subtitle: t('tourism.hero.subtitle3') || "Unforgettable encounters in pristine national parks.",
       buttons: [
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experince", showArrow: true }
+        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
       ]
     },
     {
@@ -71,7 +71,7 @@ export default function Tourism() {
       title: t('tourism.hero.title4') || "Great Zimbabwe",
       subtitle: t('tourism.hero.subtitle4') || "Ancient stone ruins showcasing medieval African civilization.",
       buttons: [
-        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experince", showArrow: true }
+        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experience", showArrow: true }
       ]
     }
     ,
@@ -92,7 +92,7 @@ export default function Tourism() {
       title: t("tourism.hero.title6") || "Mana Pools Experience",
       subtitle: t("tourism.hero.subtitle6") || "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
       buttons: [
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experince", showArrow: true }
+        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
       ]
     },
     {
@@ -102,7 +102,7 @@ export default function Tourism() {
       title: t("tourism.hero.title7") || "Hwange Wildlife Corridor",
       subtitle: t("tourism.hero.subtitle7") || "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
       buttons: [
-        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experince", showArrow: true }
+        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experience", showArrow: true }
       ]
     },
     {
@@ -423,7 +423,7 @@ export default function Tourism() {
                   "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
               </p>
               <div className="mt-6 flex justify-center">
-                <Link href="/onesa-ai-tourism-virtual-experince">
+                <Link href="/onesa-ai-tourism-virtual-experience">
                   <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]">
                     {t("tourism.intro.virtual_experience_center_cta") || "Virtual Experience Center"}
                   </Button>
@@ -564,7 +564,7 @@ export default function Tourism() {
                     asChild
                     className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap"
                   >
-                    <Link href="/onesa-ai-tourism-augmented-experince">{t("tourism.onesa.cta.local_guide_ar") || "Local guide AR"}</Link>
+                    <Link href="/onesa-ai-tourism-augmented-experience">{t("tourism.onesa.cta.local_guide_ar") || "Local guide AR"}</Link>
                   </Button>
                 </div>
               </div>

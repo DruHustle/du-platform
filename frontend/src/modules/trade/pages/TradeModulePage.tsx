@@ -358,8 +358,8 @@ export default function Trade() {
       </section>
 
       {/* Export intelligence moved from Exports into Trade */}
-      <section id="trade-export-intelligence" className="pt-2 pb-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
-        <div className="container relative z-10 px-6 mx-auto">
+      <section id="trade-export-intelligence" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
+        <div className="container relative z-10 px-5 mx-auto">
           <Tabs defaultValue={exportMarketIntelligence[0].product} className="w-full">
             <TabsList className="flex justify-center bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-full h-12 p-1 mb-8 max-w-lg mx-auto shadow-xl relative">
               <span className="absolute inset-0 rounded-full border border-white/5 pointer-events-none" />

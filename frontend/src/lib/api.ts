@@ -79,6 +79,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use((response) => {
+  const payload = response?.data;
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "success" in payload &&
+    "data" in payload &&
+    (payload as any).success === true
+  ) {
+    return { ...response, data: (payload as any).data };
+  }
+  return response;
+});
+
 export async function refreshAuthTokenFromSession(): Promise<string> {
   const response = await api.post("/auth/token/refresh");
   const token = String(response?.data?.accessToken ?? "").trim();
