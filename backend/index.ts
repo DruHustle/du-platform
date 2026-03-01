@@ -2021,10 +2021,7 @@ async function startServer() {
     statusCode: number,
     data: T
   ) => {
-    return res.status(statusCode).json({
-      ...successResponse(data),
-      ...data,
-    });
+    return res.status(statusCode).json(successResponse(data));
   };
 
   const sendLegacyError = (
@@ -2034,11 +2031,17 @@ async function startServer() {
     message: string,
     extra: Record<string, unknown> = {}
   ) => {
-    return res.status(statusCode).json({
-      ...errorResponse(code, message),
-      message,
-      ...extra,
-    });
+    if (Object.keys(extra).length > 0) {
+      return res.status(statusCode).json({
+        ...errorResponse(code, message),
+        error: {
+          code,
+          message,
+          details: extra,
+        },
+      });
+    }
+    return res.status(statusCode).json(errorResponse(code, message));
   };
   try {
     await initializeDatabase();
@@ -2242,10 +2245,11 @@ async function startServer() {
         { title: "Trade", href: "/trade", category: "Trade", tags: ["export", "germany", "market", "trade", "business", "commerce", "sectors"] },
         { title: "Tourism", href: "/tourism", category: "Tourism", tags: ["visit", "travel", "attractions", "victoria falls"] },
         { title: "Investment", href: "/investment", category: "Investment", tags: ["money", "capital", "projects", "masuwe", "sez"] },
+        { title: "Care", href: "/care", category: "Care", tags: ["funeral", "policy", "nyaradzo", "family", "cover"] },
         { title: "Technology", href: "/technology", category: "Technology", tags: ["ai", "onesa", "innovation", "tech"] },
         { title: "Impact", href: "/impact", category: "Impact", tags: ["stories", "impact", "cases"] },
         { title: "NTIR Database", href: "/ntir", category: "Trade", tags: ["register", "ntir", "verification"] },
-        { title: "Regulations", href: "/regulations", category: "Compliance", tags: ["regulation", "compliance", "zida"] },
+        { title: "Regulations", href: "/regulations", category: "Compliance", tags: ["regulation", "compliance", "licensing"] },
       ];
 
       const routeMatches = routeIndex.filter((item) =>

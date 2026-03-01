@@ -1,2 +1,10 @@
-import { describe, it, expect } from "vitest";
-describe("investment module", () => { it("scaffold test", () => { expect(true).toBe(true); }); });
+import { describe, it, expect } from 'vitest';
+import { createInvestmentModuleRouter } from '../routes';
+import { findRoute, getRouteEntries } from '../../tests/routeContract';
+
+describe('investment module router', () => {
+  it('registers GET /health', () => {
+    const routes = getRouteEntries(createInvestmentModuleRouter());
+    expect(findRoute(routes, 'get', '/health')).toBeDefined();
+  });
+});

@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/pages/OnesaAI";
+import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/modules/ai/pages/OnesaAI";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, clearAuthToken, getApiErrorMessage, refreshAuthTokenFromSession, type AuthUser } from "@/lib/api";
@@ -57,6 +57,7 @@ export function getDesktopUtilityIconsClass(useEdgePosition: boolean): string {
 }
 
 export default function Layout({ children }: LayoutProps) {
+  type AboutSectionId = "vision" | "mission" | "values" | "who" | "what";
   const { t, i18n } = useTranslation();
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -67,11 +68,17 @@ export default function Layout({ children }: LayoutProps) {
   const [authLoading, setAuthLoading] = useState(true);
   const [phoneActionOpen, setPhoneActionOpen] = useState(false);
   const [showWhatsIcon, setShowWhatsIcon] = useState(false);
-  const [isMobileViewport, setIsMobileViewport] = useState(false);
-  const [desktopViewportWidth, setDesktopViewportWidth] = useState(1440);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 768;
+  });
+  const [desktopViewportWidth, setDesktopViewportWidth] = useState(() => {
+    if (typeof window === "undefined") return 1440;
+    return window.innerWidth;
+  });
   const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
   const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
-  const [mobileBubblePosition, setMobileBubblePosition] = useState<{ x: number; y: number } | null>(null);
+  const [bubblePosition, setBubblePosition] = useState<{ x: number; y: number } | null>(null);
   const [showLanguageHint, setShowLanguageHint] = useState(false);
   const [isOnesaChatOpen, setIsOnesaChatOpen] = useState(false);
   const [onesaMessages, setOnesaMessages] = useState<OnesaChatMessage[]>([
@@ -90,6 +97,7 @@ export default function Layout({ children }: LayoutProps) {
   const [onesaStatus, setOnesaStatus] = useState("");
   const [onesaIsOnline, setOnesaIsOnline] = useState(false);
   const [onesaRetryAfterSecondsRemaining, setOnesaRetryAfterSecondsRemaining] = useState<number | null>(null);
+  const [activeAboutSection, setActiveAboutSection] = useState<AboutSectionId | null>(null);
   const scrolledRef = useRef(false);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
   const onesaMessagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -227,6 +235,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: t('nav.home'), href: "/" },
     { name: t('nav.technology'), href: "/technology" },
     { name: t("nav.payments", { defaultValue: "Payments" }), href: "/payments" },
+    { name: t("nav.care", { defaultValue: "Care" }), href: "/care" },
     { name: t('nav.shop'), href: "/shop" },
     { name: t('nav.tourism'), href: "/tourism" },
     { name: t('nav.investment'), href: "/investment" },
@@ -238,6 +247,8 @@ export default function Layout({ children }: LayoutProps) {
   // Hide the floating chat bubble on dedicated chat/tourism-experience routes to avoid duplicate UX.
   const hideOnesaBubbleRoutes = [
     "/onesa-ai-chat",
+    "/onesa-ai-tourism-virtual-experience",
+    "/onesa-ai-tourism-augmented-experience",
     "/onesa-ai-tourism-virtual-experince",
     "/onesa-ai-tourism-augmented-experince",
   ];
@@ -245,6 +256,7 @@ export default function Layout({ children }: LayoutProps) {
   const showOnesaBubble = !hideOnesaBubbleRoutes.some((route) => location.startsWith(route));
   const hasOnesaChatStarted = onesaMessages.some((message) => message.role === "user");
   const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
+  const DESKTOP_BUBBLE_STORAGE_KEY = "onesa-desktop-bubble-position-v1";
 
   const evaluateUtilityOverlap = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -282,7 +294,7 @@ export default function Layout({ children }: LayoutProps) {
     setBrowserLayoutProfile(getBrowserLayoutProfile(window.navigator.userAgent));
   }, []);
 
-  const clampMobileBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
+  const clampBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
     // Keep floating bubble fully visible inside the viewport.
     const minX = 8;
     const minY = 8;
@@ -319,20 +331,21 @@ export default function Layout({ children }: LayoutProps) {
     return () => observer.disconnect();
   }, [evaluateUtilityOverlap]);
 
-  useEffect(() => {
-    if (!showOnesaBubble || !isMobileViewport) return;
+  useLayoutEffect(() => {
+    if (!showOnesaBubble) return;
 
     const initPosition = () => {
       const bubbleRect = bubbleRef.current?.getBoundingClientRect();
       const bubbleWidth = bubbleRect?.width ?? 180;
       const bubbleHeight = bubbleRect?.height ?? 64;
+      const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
 
-      let nextX = window.innerWidth - bubbleWidth - 16;
-      let nextY = window.innerHeight - bubbleHeight - 96;
+      let nextX = isMobileViewport ? window.innerWidth - bubbleWidth - 16 : window.innerWidth - bubbleWidth - 40;
+      let nextY = isMobileViewport ? window.innerHeight - bubbleHeight - 96 : window.innerHeight - bubbleHeight - 40;
 
       try {
-        // Restore last dragged mobile position if available.
-        const saved = window.localStorage.getItem(MOBILE_BUBBLE_STORAGE_KEY);
+        // Restore last dragged bubble position if available for this viewport mode.
+        const saved = window.localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved) as { x?: unknown; y?: unknown };
           if (typeof parsed?.x === "number" && typeof parsed?.y === "number") {
@@ -344,24 +357,23 @@ export default function Layout({ children }: LayoutProps) {
         // Ignore malformed localStorage values.
       }
 
-      setMobileBubblePosition(clampMobileBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight));
+      setBubblePosition(clampBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight));
     };
 
-    const rafId = window.requestAnimationFrame(initPosition);
-    return () => window.cancelAnimationFrame(rafId);
+    initPosition();
   }, [showOnesaBubble, isMobileViewport]);
 
   useEffect(() => {
-    if (!showOnesaBubble || !isMobileViewport || !mobileBubblePosition) return;
+    if (!showOnesaBubble || !bubblePosition) return;
     // Re-clamp after orientation/viewport shifts.
     const bubbleRect = bubbleRef.current?.getBoundingClientRect();
     const bubbleWidth = bubbleRect?.width ?? 180;
     const bubbleHeight = bubbleRect?.height ?? 64;
-    const clamped = clampMobileBubblePosition(mobileBubblePosition.x, mobileBubblePosition.y, bubbleWidth, bubbleHeight);
-    if (clamped.x !== mobileBubblePosition.x || clamped.y !== mobileBubblePosition.y) {
-      setMobileBubblePosition(clamped);
+    const clamped = clampBubblePosition(bubblePosition.x, bubblePosition.y, bubbleWidth, bubbleHeight);
+    if (clamped.x !== bubblePosition.x || clamped.y !== bubblePosition.y) {
+      setBubblePosition(clamped);
     }
-  }, [showOnesaBubble, isMobileViewport, mobileBubblePosition]);
+  }, [showOnesaBubble, isMobileViewport, bubblePosition]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -480,15 +492,15 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const handleBubblePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!isMobileViewport || !mobileBubblePosition) return;
+    if (!bubblePosition) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
     dragStateRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      originX: mobileBubblePosition.x,
-      originY: mobileBubblePosition.y,
+      originX: bubblePosition.x,
+      originY: bubblePosition.y,
       dragging: false,
     };
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -496,7 +508,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleBubblePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const dragState = dragStateRef.current;
-    if (!isMobileViewport || !dragState || dragState.pointerId !== event.pointerId) return;
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
 
     const deltaX = event.clientX - dragState.startX;
     const deltaY = event.clientY - dragState.startY;
@@ -510,8 +522,8 @@ export default function Layout({ children }: LayoutProps) {
     const bubbleRect = bubbleRef.current?.getBoundingClientRect();
     const bubbleWidth = bubbleRect?.width ?? 180;
     const bubbleHeight = bubbleRect?.height ?? 64;
-    const next = clampMobileBubblePosition(dragState.originX + deltaX, dragState.originY + deltaY, bubbleWidth, bubbleHeight);
-    setMobileBubblePosition(next);
+    const next = clampBubblePosition(dragState.originX + deltaX, dragState.originY + deltaY, bubbleWidth, bubbleHeight);
+    setBubblePosition(next);
   };
 
   const handleBubblePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -527,10 +539,11 @@ export default function Layout({ children }: LayoutProps) {
       window.setTimeout(() => {
         suppressBubbleClickRef.current = false;
       }, 250);
-      if (mobileBubblePosition) {
+      if (bubblePosition) {
+        const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
         try {
-          // Persist mobile bubble placement between sessions.
-          window.localStorage.setItem(MOBILE_BUBBLE_STORAGE_KEY, JSON.stringify(mobileBubblePosition));
+          // Persist bubble placement between sessions by viewport profile.
+          window.localStorage.setItem(storageKey, JSON.stringify(bubblePosition));
         } catch {
           // Ignore storage write failures.
         }
@@ -551,6 +564,46 @@ export default function Layout({ children }: LayoutProps) {
     if (event.defaultPrevented) return;
     setIsOnesaChatOpen(true);
   };
+
+  const aboutSections: Array<{ id: AboutSectionId; label: string; content: string }> = [
+    {
+      id: "vision",
+      label: t("footer.about.vision_label", { defaultValue: "Our Vision" }),
+      content: t("footer.about.vision_content", {
+        defaultValue: "To be the trusted diaspora gateway connecting Zimbabweans abroad to meaningful opportunities and services back home.",
+      }),
+    },
+    {
+      id: "mission",
+      label: t("footer.about.mission_label", { defaultValue: "Our Mission" }),
+      content: t("footer.about.mission_content", {
+        defaultValue: "To unify tourism, trade, investment, remittance, and family care pathways through one secure and accessible digital platform.",
+      }),
+    },
+    {
+      id: "values",
+      label: t("footer.about.values_label", { defaultValue: "Our Values" }),
+      content: t("footer.about.values_content", {
+        defaultValue: "Trust, service excellence, transparency, innovation, and lasting commitment to diaspora impact.",
+      }),
+    },
+    {
+      id: "who",
+      label: t("footer.about.who_label", { defaultValue: "Who we are" }),
+      content: t("footer.about.who_content", {
+        defaultValue: "We are a team comprised of Zimbabwe diaspora professionals building practical digital solutions that keep families, businesses, and communities connected to home.",
+      }),
+    },
+    {
+      id: "what",
+      label: t("footer.about.what_label", { defaultValue: "What we do" }),
+      content: t("footer.about.what_content", {
+        defaultValue:
+          "We build and operate a unified diaspora platform that connects users to tourism, trade, investment, payments, family care, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable.",
+      }),
+    },
+  ];
+  const activeAbout = activeAboutSection ? aboutSections.find((section) => section.id === activeAboutSection) ?? null : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-zim-gold/30 selection:text-slate-900 font-sans">
@@ -915,12 +968,12 @@ export default function Layout({ children }: LayoutProps) {
                 }
               : { duration: 0.35 }
           }
-          className={isMobileViewport ? "fixed z-[95] rounded-full" : "fixed bottom-24 right-5 md:bottom-10 md:right-10 z-[95]"}
+          className={`fixed z-[95] rounded-full ${bubblePosition ? "" : isMobileViewport ? "bottom-20 right-4" : "bottom-24 right-5 md:bottom-10 md:right-10"}`}
           style={
-            isMobileViewport && mobileBubblePosition
+            bubblePosition
               ? {
-                  left: `${mobileBubblePosition.x}px`,
-                  top: `${mobileBubblePosition.y}px`,
+                  left: `${bubblePosition.x}px`,
+                  top: `${bubblePosition.y}px`,
                   touchAction: "none",
                 }
               : undefined
@@ -1074,6 +1127,50 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {activeAbout && (
+          <>
+            <motion.button
+              type="button"
+              aria-label={t("close") || "Close"}
+              onClick={() => setActiveAboutSection(null)}
+              className="fixed inset-0 z-[240] bg-slate-950/60 backdrop-blur-[2px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.section
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 14, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed z-[250] left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 top-[6.2rem] sm:top-[7rem] w-auto sm:w-[min(620px,92vw)] rounded-[1.6rem] border border-white/15 bg-slate-950/95 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl overflow-hidden"
+            >
+              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.22em]">
+                    {t("footer.about.title", { defaultValue: "About us" })}
+                  </p>
+                  <h2 className="truncate !text-sm font-black text-white">{activeAbout.label}</h2>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setActiveAboutSection(null)}
+                  className="h-8 w-8 rounded-full text-white/70 hover:text-white hover:bg-white/10"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="max-h-[min(65vh,420px)] overflow-y-auto px-4 py-4">
+                <p className="text-sm leading-relaxed text-white/80 whitespace-pre-line">{activeAbout.content}</p>
+              </div>
+            </motion.section>
+          </>
+        )}
+      </AnimatePresence>
+
      {/* Footer */}
       <footer className="relative bg-slate-950 pt-20 pb-12 overflow-hidden">
         {/* Accents & Textures */}
@@ -1083,16 +1180,28 @@ export default function Layout({ children }: LayoutProps) {
 
         <div className="container mx-auto px-6">
           {/* Main Grid: flex-col on mobile, grid on larger screens */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
             
             {/* About Column */}
             <div className="space-y-4">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
-                {t('about')} {t('brand')}
+                {t("footer.about.title", { defaultValue: "About us" })}
               </h3>
-              <p className="text-slate-400 text-xs leading-relaxed max-w-xs">
-                {t('about_us')}
-              </p>
+              <ul className="text-slate-400 space-y-2 text-xs">
+                {aboutSections.map((section) => (
+                  <li key={section.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveAboutSection(section.id)}
+                      className={`text-left transition-colors ${
+                        activeAboutSection === section.id ? "text-white" : "hover:text-white"
+                      }`}
+                    >
+                      {section.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Quick Links Column */}
@@ -1108,7 +1217,7 @@ export default function Layout({ children }: LayoutProps) {
                   .map((link) => (
                    <li key={link.href} className="leading-tight">
                       <Link href={link.href}>
-                        <span className="text-slate-400 text-[10px] hover:text-yellow-400 transition-colors font-bold uppercase tracking-widest cursor-pointer">
+                        <span className="text-slate-400 hover:text-white transition-colors cursor-pointer">
                           {link.name}
                         </span>
                       </Link>
@@ -1117,10 +1226,10 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
 
-            {/* Partners Column */}
+            {/* Local Partners Column */}
             <div className="space-y-4">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
-                {t('partners')}
+                {t("local_partners", { defaultValue: "Local Partners" })}
               </h3>
               <ul className="text-slate-400 space-y-2 text-xs">
                 <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Zimbabwe Tourism</a></li>
@@ -1128,6 +1237,20 @@ export default function Layout({ children }: LayoutProps) {
                 <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZIDA Invest</a></li>
                 <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZimTrade</a></li>
                 <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZIMRA</a></li>
+              </ul>
+            </div>
+
+            {/* International Partners Column */}
+            <div className="space-y-4">
+              <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
+                {t("international_partners", { defaultValue: "International Partners" })}
+              </h3>
+              <ul className="text-slate-400 space-y-2 text-xs">
+                <li><a href="https://www.gtai.de/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Germany Trade & Invest</a></li>
+                <li><a href="https://international-partnerships.ec.europa.eu/policies/global-gateway_en" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">EU Global Gateway</a></li>
+                <li><a href="https://www.eib.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">European Investment Bank</a></li>
+                <li><a href="https://www.proparco.fr/en" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">PROPARCO</a></li>
+                <li><a href="https://www.intracen.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">International Trade Centre</a></li>
               </ul>
             </div>
 

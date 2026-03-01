@@ -156,30 +156,28 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
       {/* SECTION 2: GLASSY INTRO */}
       <section className="py-8 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
-            >
-               <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-               
-              <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center text-center space-y-3">
-                <Icon className="h-6 w-6 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)]" />
-                <p className="text-sm md:text-base text-white/90 leading-relaxed max-w-2xl mx-auto mb-4">
-                  {t(intro.description)}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="outer-glass-panel relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
+          >
+            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+
+            <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center text-center space-y-3">
+              <Icon className="h-6 w-6 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)]" />
+              <p className="text-sm md:text-base text-white/90 leading-relaxed max-w-2xl mx-auto mb-4">
+                {t(intro.description)}
+              </p>
+              <div className="flex items-center justify-center gap-4">
+                <div className="h-px w-8 bg-zim-gold/40" />
+                <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                  {t(intro.title)}
                 </p>
-                <div className="flex items-center justify-center gap-4">
-                  <div className="h-px w-8 bg-zim-gold/40" />
-                  <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                    {t(intro.title)}
-                  </p>
-                  <div className="h-px w-8 bg-zim-gold/40" />
-                </div>
+                <div className="h-px w-8 bg-zim-gold/40" />
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

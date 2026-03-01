@@ -2,10 +2,12 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch } from "wouter";
+import { lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next"; // Ensure this is imported
 import Home from "./pages/Home";
 import Tourism from "./pages/Tourism";
 import Investment from "./pages/Investment";
+import InvestmentOpportunities from "./pages/InvestmentOpportunities";
 import Trade from "./pages/Trade";
 import Impact from "./pages/Impact";
 import Technology from "./pages/Technology";
@@ -23,17 +25,35 @@ import ResetPassword from "./pages/ResetPassword";
 import Regulations from "./pages/Regulations";
 import OnesaAIChat from "./pages/OnesaAIChat";
 import OnesaAIBookTrip from "./pages/OnesaAIBookTrip";
-import OnesaAITourismVirtualExperience from "./pages/OnesaAITourismVirtualExperience";
-import OnesaAITourismAugmentedExperience from "./pages/OnesaAITourismAugmentedExperience";
 import AdminDashboard from "./pages/AdminDashboard";
 import CookieSettings from "./pages/CookieSettings";
 import Payments from "./pages/Payments";
+import Care from "./pages/Care";
 import NotFound from "@/pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ComingSoon from "./components/ComingSoon";
 import ScrollToHash from "./components/ScrollToHash";
 import CookieConsent from "./components/CookieConsent";
+
+const LazyOnesaAITourismVirtualExperience = lazy(() => import("./pages/OnesaAITourismVirtualExperience"));
+const LazyOnesaAITourismAugmentedExperience = lazy(() => import("./pages/OnesaAITourismAugmentedExperience"));
+
+function OnesaVirtualExperienceRoute() {
+  return (
+    <Suspense fallback={null}>
+      <LazyOnesaAITourismVirtualExperience />
+    </Suspense>
+  );
+}
+
+function OnesaAugmentedExperienceRoute() {
+  return (
+    <Suspense fallback={null}>
+      <LazyOnesaAITourismAugmentedExperience />
+    </Suspense>
+  );
+}
 
 function Router() {
   const { t } = useTranslation();
@@ -45,12 +65,14 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/tourism" component={Tourism} />
       <Route path="/investment" component={Investment} />
+      <Route path="/investment/opportunities" component={InvestmentOpportunities} />
       <Route path="/trade" component={Trade} />
       <Route path="/technology" component={Technology} />
       <Route path="/shop" component={Shop} />
       <Route path="/shop/products" component={ShopProducts} />
       <Route path="/impact" component={Impact} />
       <Route path="/payments" component={Payments} />
+      <Route path="/care" component={Care} />
       <Route path="/login" component={LogIn} />
       <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />
@@ -58,8 +80,11 @@ function Router() {
       <Route path="/regulations" component={Regulations} />
       <Route path="/onesa-ai-chat" component={OnesaAIChat} />
       <Route path="/onesa-ai-book-trip" component={OnesaAIBookTrip} />
-      <Route path="/onesa-ai-tourism-virtual-experince" component={OnesaAITourismVirtualExperience} />
-      <Route path="/onesa-ai-tourism-augmented-experince" component={OnesaAITourismAugmentedExperience} />
+      <Route path="/onesa-ai-tourism-virtual-experience" component={OnesaVirtualExperienceRoute} />
+      <Route path="/onesa-ai-tourism-augmented-experience" component={OnesaAugmentedExperienceRoute} />
+      {/* Backward-compatible aliases for old misspelled links */}
+      <Route path="/onesa-ai-tourism-virtual-experince" component={OnesaVirtualExperienceRoute} />
+      <Route path="/onesa-ai-tourism-augmented-experince" component={OnesaAugmentedExperienceRoute} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/cookie-settings" component={CookieSettings} />
       <Route path="/ntir" component={NtirDatabase} />

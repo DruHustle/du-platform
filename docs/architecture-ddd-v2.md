@@ -12,6 +12,7 @@ The platform is organized as bounded domains with strict service-layer communica
 - shop
 - ai
 - fintech
+- care
 - data
 - search
 - legal
@@ -54,6 +55,8 @@ backend/
     fintech/
       providers/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
+    care/
+      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
     data/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
     search/
@@ -75,6 +78,7 @@ frontend/src/
     shop/
     ai/
     fintech/
+    care/
     data/
     legal/
     shared/
@@ -92,6 +96,7 @@ frontend/src/
 - `/trade` -> trade module
 - `/investment` -> investment module
 - `/shop` -> shop module
+- `/care` -> care module
 - `/ai/chat` -> ai.chat module
 - `/ai/book-trip` -> ai.booking module
 - `/ai/ar` -> ai.ar module

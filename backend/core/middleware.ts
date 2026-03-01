@@ -51,9 +51,18 @@ export function registerCoreMiddleware(app: Express) {
 
   app.use((req, res, next) => {
     if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') return next();
+    const csrfEnabled = (process.env.CSRF_ENABLED ?? 'true').toLowerCase() === 'true';
+    if (!csrfEnabled) return next();
+
+    const hasBearerToken =
+      typeof req.headers.authorization === 'string' && req.headers.authorization.startsWith('Bearer ');
+    if (hasBearerToken) return next();
+
+    const cookieHeader = String(req.headers.cookie ?? '');
+    const hasSessionCookie = /(?:^|;\s*)zigd_session=/.test(cookieHeader);
+    if (!hasSessionCookie) return next();
+
     const token = String(req.headers['x-csrf-token'] ?? '').trim();
-    const csrfDisabled = (process.env.CSRF_ENABLED ?? 'false').toLowerCase() !== 'true';
-    if (csrfDisabled) return next();
     if (!token) return res.status(403).json({ success: false, data: null, error: { code: 'CSRF_REQUIRED', message: 'Missing CSRF token.' } });
     return next();
   });

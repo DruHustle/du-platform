@@ -7,6 +7,35 @@ import path from "node:path";
 import { defineConfig, loadEnv } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 
+const THREE_VENDOR_PACKAGES = new Set([
+  "three",
+  "@react-three/fiber",
+  "@react-three/drei",
+  "@react-three/xr",
+  "three-stdlib",
+]);
+
+const GLOBE_VENDOR_PACKAGES = new Set(["react-globe.gl", "three-globe"]);
+const I18N_VENDOR_PACKAGES = new Set(["i18next", "react-i18next", "i18next-browser-languagedetector", "i18next-http-backend"]);
+const REACT_VENDOR_PACKAGES = new Set(["react", "react-dom", "scheduler"]);
+
+function getPackageNameFromId(id: string): string | null {
+  const marker = "/node_modules/";
+  const markerIndex = id.lastIndexOf(marker);
+  if (markerIndex < 0) return null;
+
+  const packagePath = id.slice(markerIndex + marker.length);
+  if (!packagePath) return null;
+
+  const segments = packagePath.split("/");
+  if (segments.length === 0) return null;
+  if (segments[0].startsWith("@")) {
+    if (segments.length < 2) return null;
+    return `${segments[0]}/${segments[1]}`;
+  }
+  return segments[0];
+}
+
 export default defineConfig(({ mode }) => {
   // Load env vars. The third argument "" ensures all variables are loaded, not just those starting with VITE_
   const env = loadEnv(mode, path.resolve(import.meta.dirname), "");
@@ -51,6 +80,24 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const normalizedId = id.split(path.sep).join("/");
+            if (!normalizedId.includes("/node_modules/")) return undefined;
+
+            const packageName = getPackageNameFromId(normalizedId);
+            if (!packageName) return undefined;
+
+            if (THREE_VENDOR_PACKAGES.has(packageName)) return "vendor-three";
+            if (GLOBE_VENDOR_PACKAGES.has(packageName)) return "vendor-globe";
+            if (I18N_VENDOR_PACKAGES.has(packageName)) return "vendor-i18n";
+            if (REACT_VENDOR_PACKAGES.has(packageName)) return "vendor-react";
+
+            return undefined;
+          },
+        },
+      },
     },
     server: {
       port: 3000,

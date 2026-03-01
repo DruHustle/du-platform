@@ -1,6 +1,12 @@
 # Diaspora Unlocked Platform
 
-**Zimbabwe Global and Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with trade, tourism, and investment opportunities.
+**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with trade, tourism, investment, remittance, and family care opportunities.
+
+## Definitions
+
+- **The Diaspora Gateway**: The official product identity used across public-facing materials.
+- **Diaspora Unlocked Platform**: The technical platform/repository name used in development and operations contexts.
+- **NTIR**: National Trusted Investment Registry.
 
 ## Overview
 
@@ -10,7 +16,7 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 - **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
 - **Investment Marketplace**: Micro-investment and crowdfunding opportunities with government support.
 - **Trade Information**: Export development programs and diaspora trade networks.
-- **Data & Insights**: Real-time economic indicators and impact stories of diaspora impact.
+- **Impact & Insights**: Diaspora impact stories, remittance insights, and economic participation indicators.
 
 ## Key Features
 
