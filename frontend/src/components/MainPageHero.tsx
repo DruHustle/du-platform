@@ -137,7 +137,7 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
             <motion.div
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="flex flex-col items-center gap-2 text-white/60 cursor-pointer group hover:text-zim-gold transition-colors duration-300" 
+              className="flex flex-col items-center gap-2  cursor-pointer group hover:text-zim-gold transition-colors duration-300" 
               onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
             >
               <span className="text-[10px] uppercase tracking-[0.5em] font-black drop-shadow-md">

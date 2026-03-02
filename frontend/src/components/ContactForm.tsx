@@ -55,7 +55,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
     : ["General Inquiry"];
 
   // Reusable input style
-  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl";
+  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white  focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl";
 
   return (
     <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
@@ -76,7 +76,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
           <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter">
             {title || t('contact_form.get_started')}
           </h2>
-          <p className="text-sm text-white/40 font-light max-w-lg">
+          <p className="text-sm  font-light max-w-lg">
             {description || t('contact_form.description')}
           </p>
         </div>
@@ -85,7 +85,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
           <div className="grid md:grid-cols-2 gap-6">
             {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+              <Label htmlFor="name" className="text-[10px] uppercase font-black  tracking-widest flex items-center gap-2">
                 <User className="h-3 w-3" /> {t('contact_form.full_name')} *
               </Label>
               <Input
@@ -100,7 +100,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
 
             {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+              <Label htmlFor="email" className="text-[10px] uppercase font-black  tracking-widest flex items-center gap-2">
                 <Mail className="h-3 w-3" /> {t('contact_form.email')} *
               </Label>
               <Input
@@ -118,7 +118,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
           <div className="grid md:grid-cols-2 gap-6">
             {/* Phone */}
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+              <Label htmlFor="phone" className="text-[10px] uppercase font-black  tracking-widest flex items-center gap-2">
                 <Phone className="h-3 w-3" /> {t('contact_form.phone')}
               </Label>
               <Input
@@ -133,7 +133,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
 
             {/* Subject */}
             <div className="space-y-2">
-              <Label htmlFor="subject" className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+              <Label htmlFor="subject" className="text-[10px] uppercase font-black  tracking-widest flex items-center gap-2">
                 <MessageSquare className="h-3 w-3" /> {t('contact_form.subject')} *
               </Label>
               <Select
@@ -157,7 +157,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
 
           {/* Message */}
           <div className="space-y-2">
-            <Label htmlFor="message" className="text-[10px] uppercase font-black text-white/30 tracking-widest">
+            <Label htmlFor="message" className="text-[10px] uppercase font-black  tracking-widest">
               {t('contact_form.message')} *
             </Label>
             <Textarea

@@ -23,7 +23,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/70 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ export default function Register() {
             {/* --- CANCEL BUTTON --- */}
             <button 
               onClick={() => setLocation("/")}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
+              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
               aria-label="Cancel registration"
             >
               <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
@@ -64,13 +64,13 @@ export default function Register() {
 
             <div className="text-center space-y-2">
               <h1 className="text-4xl font-black text-white tracking-tighter">{t('auth.create_account') || "Join Diaspora Unlocked"}</h1>
-              <p className="text-sm text-white/40 font-light">{t('auth.register_subtitle') || "Start your journey toward impactful diaspora collaboration."}</p>
+              <p className="text-sm text-white/70 font-light">{t('auth.register_subtitle') || "Start your journey toward impactful diaspora collaboration."}</p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+                  <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
                     <User className="h-3.5 w-3.5" /> {t('auth.full_name') || "Full Name"}
                   </Label>
                   <Input
@@ -82,7 +82,7 @@ export default function Register() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+                  <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
                     <Mail className="h-3.5 w-3.5" /> {t('auth.email') || "Email Address"}
                   </Label>
                   <Input
@@ -96,7 +96,7 @@ export default function Register() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+                <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
                   <Lock className="h-3.5 w-3.5" /> {t('auth.password') || "Password"}
                 </Label>
                 <div className="relative">
@@ -110,7 +110,7 @@ export default function Register() {
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -118,7 +118,7 @@ export default function Register() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+                <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
                   <Lock className="h-3.5 w-3.5" /> {t('auth.confirm_password') || "Confirm Password"}
                 </Label>
                 <div className="relative">
@@ -132,7 +132,7 @@ export default function Register() {
                     type="button"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                     aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -141,7 +141,7 @@ export default function Register() {
 
               <div className="flex items-start gap-3 pt-2">
                 <input type="checkbox" className="mt-1 h-4 w-4 rounded border-white/10 bg-white/5 accent-zim-gold" id="terms" required />
-                <label htmlFor="terms" className="text-[11px] text-white/40 leading-tight cursor-pointer">
+                <label htmlFor="terms" className="text-[11px] text-white/70 leading-tight cursor-pointer">
                   {t('auth.terms_agreement') || "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance."}
                 </label>
               </div>
@@ -154,7 +154,7 @@ export default function Register() {
             </form>
 
             <div className="text-center pt-4 border-t border-white/10">
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-white/70">
                 {t('auth.have_account') || "Already have an account?"}{' '}
                 <Link href="/login" className="text-zim-gold font-bold hover:underline">
                   {t('auth.login_here') || "Login Here"}

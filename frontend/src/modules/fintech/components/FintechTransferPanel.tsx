@@ -26,7 +26,7 @@ export default function FintechTransferPanel() {
           onChange={(e) => setAmount(e.target.value)}
         />
       </div>
-      <p className="mt-3 text-xs text-white/60">
+      <p className="mt-3 text-xs text-white/70">
         {loading ? 'Loading quote...' : `FX: ${quote?.fxRate ?? quote?.exchangeRate ?? 0} | Fee: ${quote?.fee ?? 0}`}
       </p>
     </div>

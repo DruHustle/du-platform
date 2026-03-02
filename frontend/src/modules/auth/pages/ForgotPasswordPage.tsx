@@ -38,7 +38,7 @@ export default function ForgotPassword() {
 
           <form className="mt-6 space-y-4" onSubmit={onSubmit}>
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-white/50">Email</Label>
+              <Label className="text-xs uppercase tracking-widest text-white/70">Email</Label>
               <Input
                 type="email"
                 value={email}

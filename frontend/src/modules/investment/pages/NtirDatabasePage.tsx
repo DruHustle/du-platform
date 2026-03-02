@@ -77,7 +77,7 @@ export default function NtirDatabase() {
               Back to Investment
             </Link>
             <h1 className="!text-2xl md:!text-2xl font-black tracking-tighter">NTIR Database Search</h1>
-            <p className="!text-xs text-white/60 mt-2">Search the National Trade & Investment Register for verified entities and fallback exporter records.</p>
+            <p className="!text-xs text-white/70 mt-2">Search the National Trade & Investment Register for verified entities and fallback exporter records.</p>
           </div>
 
           <form
@@ -99,7 +99,7 @@ export default function NtirDatabase() {
           </form>
 
           {error ? <p className="text-red-400">{error}</p> : null}
-          {loading ? <p className="text-white/60">Loading...</p> : null}
+          {loading ? <p className="text-white/70">Loading...</p> : null}
 
           <div className="grid gap-4">
             {results.map((row) => (
@@ -116,7 +116,7 @@ export default function NtirDatabase() {
                 <p className="text-white/70 !text-[11px] mt-3">{row.sector}</p>
               </div>
             ))}
-            {!loading && results.length === 0 ? <p className="text-white/50">No entities found.</p> : null}
+            {!loading && results.length === 0 ? <p className="text-white/70">No entities found.</p> : null}
           </div>
         </div>
       </section>

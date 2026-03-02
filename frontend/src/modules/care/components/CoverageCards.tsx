@@ -39,7 +39,7 @@ export default function CoverageCards() {
         <h2 className="!text-xl font-black tracking-tight text-white">
           {t("care.coverage.title", { defaultValue: "Coverage Options 📋" })}
         </h2>
-        <p className="mx-auto max-w-2xl text-sm text-white/65">
+        <p className="mx-auto max-w-2xl text-sm text-white/70">
           {t("care.coverage.subtitle", {
             defaultValue: "Choose a plan category that matches your family care commitments and budget profile.",
           })}
@@ -69,7 +69,7 @@ export default function CoverageCards() {
             </div>
             <div className="p-5">
               <h3 className="text-base font-black text-white">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/60">{item.summary}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/70">{item.summary}</p>
             </div>
           </article>
         ))}

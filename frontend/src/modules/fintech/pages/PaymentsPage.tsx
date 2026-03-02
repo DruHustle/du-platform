@@ -163,12 +163,6 @@ export default function Payments() {
     },
   ];
 
-  const trustHighlights = [
-    tr("payments.highlights.secure", "Secure"),
-    tr("payments.highlights.transparent_fees", "Transparent fees"),
-    tr("payments.highlights.trackable_status", "Trackable status"),
-  ];
-
   return (
     <Layout>
       <SubPageHero heroSlides={heroSlides} intro={introData} />
@@ -188,16 +182,6 @@ export default function Payments() {
                     "Follow a clear four-step journey: add details, review, pay, and collect. Security is applied at every stage with server-side processing, compliance checks, and traceable transaction references. Airtime is often near-instant, while mobile money, card, and cash pickup can take longer depending on provider processing windows."
                   )}
                 </p>
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-                  {trustHighlights.map((highlight) => (
-                    <span
-                      key={highlight}
-                      className="rounded-full border border-white/15 bg-white/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/75"
-                    >
-                      {highlight}
-                    </span>
-                  ))}
-                </div>
               </div>
 
 
@@ -212,12 +196,12 @@ export default function Payments() {
                       <span className="text-2xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{tile.emoji}</span>
                     </div>
                     <h3 className="mb-1 text-[15px] font-black tracking-tight text-white">{tile.title}</h3>
-                    <p className="text-[11px] font-light leading-snug text-white/50">{tile.description}</p>
+                    <p className="text-[11px] font-light leading-snug text-white/70">{tile.description}</p>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-6 text-center text-[11px] leading-relaxed text-white/55">
+              <p className="mt-6 text-center text-[11px] leading-relaxed text-white/70">
                 {tr(
                   "payments.disclaimer",
                   "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds."

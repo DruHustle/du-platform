@@ -19,6 +19,21 @@
   "quick_links": "Quick-Links",
   "partners": "Partner",
   "contact": "Kontakt",
+  "footer": {
+    "about": {
+      "title": "Über uns",
+      "vision_label": "Unsere Vision",
+      "vision_content": "Das vertrauenswürdige Diaspora-Gateway zu sein, das Simbabwerinnen und Simbabwer im Ausland mit sinnvollen Chancen und Dienstleistungen in der Heimat verbindet.",
+      "mission_label": "Unsere Mission",
+      "mission_content": "Tourismus, Handel, Investitionen, Remittances und Familienvorsorge über eine sichere und zugängliche digitale Plattform zu vereinen.",
+      "values_label": "Unsere Werte",
+      "values_content": "Vertrauen, Servicequalität, Transparenz, Innovation und nachhaltiges Engagement für Diaspora-Wirkung.",
+      "who_label": "Wer wir sind",
+      "who_content": "Wir sind ein Team aus Fachkräften der simbabwischen Diaspora, das praxisnahe digitale Lösungen entwickelt, um Familien, Unternehmen und Gemeinschaften mit der Heimat verbunden zu halten.",
+      "what_label": "Was wir tun",
+      "what_content": "Wir entwickeln und betreiben eine einheitliche Diaspora-Plattform, die Nutzerinnen und Nutzer mit Tourismus, Handel, Investitionen, Zahlungen, Familienvorsorge und KI-gestützter Beratung verbindet. Außerdem arbeiten wir mit vertrauenswürdigen Institutionen und Dienstleistern zusammen, damit die Teilhabe sicher, praktikabel und messbar ist."
+    }
+  },
   "auth": {
     "create_account": "Treten Sie der Diaspora Unlocked-Plattform bei",
     "register_subtitle": "Beginnen Sie Ihre Reise zu einer wirkungsvollen Zusammenarbeit in der Diaspora.",

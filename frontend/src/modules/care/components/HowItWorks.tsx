@@ -32,7 +32,7 @@ export default function HowItWorks() {
         <h2 className="!text-xl font-black tracking-tight text-white">
           {t("care.how.title", { defaultValue: "How It Works 🚀" })}
         </h2>
-        <p className="mx-auto max-w-2xl text-sm text-white/65">
+        <p className="mx-auto max-w-2xl text-sm text-white/70">
           {t("care.how.subtitle", {
             defaultValue: "A simple onboarding path from diaspora account access to active family cover.",
           })}
@@ -52,7 +52,7 @@ export default function HowItWorks() {
               <span className="text-2xl leading-none">{step.emoji}</span>
             </div>
             <h3 className="text-base font-black text-white">{step.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/60">{step.description}</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/70">{step.description}</p>
             <div className="mt-4 h-px w-full bg-gradient-to-r from-zim-gold/40 to-transparent" />
           </li>
         ))}

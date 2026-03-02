@@ -396,7 +396,7 @@ export default function OnesaAIBookTrip() {
                 {t("tourism.onesa.trip_planner.subtitle") ||
                   "Build a season-aware trip optimized for cost and comfort across flights, hotels, experiences, and car hire."}
               </p>
-              <p className="text-xs text-white/65 mt-3">
+              <p className="text-xs text-white/70 mt-3">
                 {t("tourism.onesa.trip_planner.booking_focus") ||
                   "Use this page for booking information and recommendations before you confirm travel."}
               </p>
@@ -431,7 +431,7 @@ export default function OnesaAIBookTrip() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-2 text-xs text-white/60">
+                <p className="mt-2 text-xs text-white/70">
                   {t("tourism.onesa.trip_planner.nearest_airport_hint") || "Nearest airport (auto-selected by engine)"}:{" "}
                   <span className="text-white/80">{selectedArrival.nearestAirport}</span>
                 </p>
@@ -480,7 +480,7 @@ export default function OnesaAIBookTrip() {
                 {t("tourism.onesa.trip_planner.passengers") || "Passengers"}
                 <div className="mt-2 grid grid-cols-2 gap-3">
                   <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
-                    <span className={`text-xs transition-all duration-200 ${adultPassengers ? "text-white/60" : "text-white/40"}`}>
+                    <span className={`text-xs transition-all duration-200 ${adultPassengers ? "text-white/70" : "text-white/70"}`}>
                       {adultCount}{" "}
                       {adultCount === 1 ? (t("tourism.onesa.trip_planner.adult") || "Adult") : (t("tourism.onesa.trip_planner.adults") || "Adults")}
                     </span>
@@ -504,7 +504,7 @@ export default function OnesaAIBookTrip() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
-                    <span className={`text-xs transition-all duration-200 ${infantPassengers ? "text-white/60" : "text-white/40"}`}>
+                    <span className={`text-xs transition-all duration-200 ${infantPassengers ? "text-white/70" : "text-white/70"}`}>
                       {infantCount}{" "}
                       {infantCount === 1 ? (t("tourism.onesa.trip_planner.infant") || "Infant") : (t("tourism.onesa.trip_planner.infants") || "Infants")}
                     </span>
@@ -600,7 +600,7 @@ export default function OnesaAIBookTrip() {
                 <p className="text-sm text-white/80">{t("tourism.onesa.trip_planner.multi_city") || "Multi-city trip"}</p>
                 {tripType === "multi_trip" ? (
                   <div className="mt-3">
-                    <p className="text-xs text-white/65 mb-1">
+                    <p className="text-xs text-white/70 mb-1">
                       {t("tourism.onesa.trip_planner.multi_city_cities") || "Cities (comma separated)"}
                     </p>
                     <input
@@ -611,7 +611,7 @@ export default function OnesaAIBookTrip() {
                     />
                   </div>
                 ) : (
-                  <p className="mt-2 text-xs text-white/55">
+                  <p className="mt-2 text-xs text-white/70">
                     {t("tourism.onesa.trip_planner.multi_city_hint") || "Select Multi-trip to add additional cities."}
                   </p>
                 )}
@@ -671,7 +671,7 @@ export default function OnesaAIBookTrip() {
                     ? t("tourism.onesa.trip_planner.ai_optimized") || "AI Optimized"
                     : t("tourism.onesa.trip_planner.fallback_plan") || "Smart Fallback Plan"}
                 </Badge>
-                <span className="text-white/65 text-xs">{result.optimizedFor}</span>
+                <span className="text-white/70 text-xs">{result.optimizedFor}</span>
                 <Button
                   type="button"
                   onClick={handleDownloadPdf}
@@ -691,7 +691,7 @@ export default function OnesaAIBookTrip() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-black mb-2">
+                  <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                     <Plane className="h-4 w-4 inline mr-2" />
                     {t("tourism.onesa.trip_planner.flights") || "Flights"}
                   </p>
@@ -701,7 +701,7 @@ export default function OnesaAIBookTrip() {
                 </div>
 
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-black mb-2">
+                  <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                     <Hotel className="h-4 w-4 inline mr-2" />
                     {t("tourism.onesa.trip_planner.hotels") || "Hotels"}
                   </p>
@@ -711,7 +711,7 @@ export default function OnesaAIBookTrip() {
                 </div>
 
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-black mb-2">
+                  <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                     <Car className="h-4 w-4 inline mr-2" />
                     {t("tourism.onesa.trip_planner.car_hire") || "Car hire"}
                   </p>

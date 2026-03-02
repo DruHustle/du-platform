@@ -862,7 +862,7 @@ export default function ShopProducts() {
                     </div>
 
                     {cartRows.length === 0 ? (
-                      <p className="text-[11px] text-white/60">
+                      <p className="text-[11px] text-white/70">
                         {t("shop.products.cart.empty") || "No items yet. Add products to begin checkout."}
                       </p>
                     ) : (
@@ -920,17 +920,17 @@ export default function ShopProducts() {
                       <div className="space-y-1.5">
                       {showCustomerIdentityInputs ? (
                         <>
-                          <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={t("shop.products.fields.full_name") || "Full Name"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                          <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={t("shop.products.fields.email_address") || "Email Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                          <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={t("shop.products.fields.full_name") || "Full Name"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
+                          <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={t("shop.products.fields.email_address") || "Email Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
                         </>
                       ) : null}
-                      <input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} placeholder={t("shop.products.fields.country") || "Country"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} placeholder={t("shop.products.fields.city") || "City"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
-                      <input value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/40" />
+                      <input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} placeholder={t("shop.products.fields.country") || "Country"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
+                      <input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} placeholder={t("shop.products.fields.city") || "City"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
+                      <input value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
                       </div>
 
                       <div className="mt-2.5 space-y-1">
-                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/60">
+                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
                           {t("shop.products.delivery_speed.label") || "Send speed"}
                         </p>
                         {[
@@ -954,7 +954,7 @@ export default function ShopProducts() {
                               />
                               {option.label}
                             </span>
-                            <span className="text-[10px] text-white/45">{option.hint}</span>
+                            <span className="text-[10px] text-white/70">{option.hint}</span>
                           </label>
                         ))}
                       </div>
@@ -1038,7 +1038,7 @@ export default function ShopProducts() {
                         </div>
                       )}
 
-                      <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-white/60">
+                      <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-white/70">
                         <ShieldCheck className="h-3.5 w-3.5 text-zim-gold" />
                         <span>
                           {isAuthenticated
@@ -1046,7 +1046,7 @@ export default function ShopProducts() {
                             : t("shop.products.notes.guest_checkout") || "Guest checkout enabled: no login required."}
                         </span>
                       </div>
-                      <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/60">
+                      <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/70">
                         <CreditCard className="h-3.5 w-3.5 text-zim-gold" />
                         <span>{t("shop.products.notes.supported_methods") || "Supported methods: Stripe, PayPal, Amazon Pay."}</span>
                       </div>

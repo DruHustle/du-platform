@@ -36,7 +36,7 @@ export default function WhyItMatters() {
         <h2 className="!text-xl font-black tracking-tight text-white">
           {t("care.why.title", { defaultValue: "Why It Matters 💡" })}
         </h2>
-        <p className="mx-auto max-w-2xl text-sm text-white/65">
+        <p className="mx-auto max-w-2xl text-sm text-white/70">
           {t("care.why.subtitle", {
             defaultValue:
               "Family care is a core diaspora priority. This integration makes cover access easier and more transparent.",
@@ -57,7 +57,7 @@ export default function WhyItMatters() {
               <span className="text-2xl leading-none">{emoji}</span>
             </div>
             <h3 className="text-base font-black text-white">{title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/60">{description}</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/70">{description}</p>
             <div className="mt-4 h-1 w-12 rounded-full bg-zim-gold/50 transition-all duration-500 group-hover:w-20" />
           </article>
         ))}

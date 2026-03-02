@@ -55,7 +55,7 @@ export default function ResetPassword() {
           ) : (
             <form className="mt-6 space-y-4" onSubmit={onSubmit}>
               <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-widest text-white/50">New Password</Label>
+                <Label className="text-xs uppercase tracking-widest text-white/70">New Password</Label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -68,14 +68,14 @@ export default function ResetPassword() {
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-widest text-white/50">Confirm Password</Label>
+                <Label className="text-xs uppercase tracking-widest text-white/70">Confirm Password</Label>
                 <div className="relative">
                   <Input
                     type={showConfirmPassword ? "text" : "password"}
@@ -88,7 +88,7 @@ export default function ResetPassword() {
                     type="button"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                     aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>

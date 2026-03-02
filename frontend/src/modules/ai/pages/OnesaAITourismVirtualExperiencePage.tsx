@@ -1815,7 +1815,7 @@ export default function OnesaAITourismVirtualExperience() {
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <Link href="/tourism" className="mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+          <Link href="/tourism" className="mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold  hover:text-zim-gold">
             <ArrowLeft className="h-4 w-4 mr-2" />
             {backToTourismLabel}
           </Link>
@@ -1864,7 +1864,7 @@ export default function OnesaAITourismVirtualExperience() {
                   {!selectedDestinationId ? null : sidebarNarrationLines.length > 0 ? (
                     <div className="space-y-1.5">
                       {sidebarNarrationLines.map((line, index) => (
-                        <p key={`${line}-${index}`} className="text-sm text-white/75 leading-relaxed">
+                        <p key={`${line}-${index}`} className="text-sm  leading-relaxed">
                           {line.includes(":") ? (
                             <>
                               <span className="font-black">{line.split(":")[0]}:</span>{" "}
@@ -1877,12 +1877,12 @@ export default function OnesaAITourismVirtualExperience() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-white/70 leading-relaxed">
+                    <p className="text-sm  leading-relaxed">
                       {ui.narrationPending}
                     </p>
                   )}
                 </div>
-                <p className="m-0 text-[11px] text-white/60 leading-relaxed mt-auto">
+                <p className="m-0 text-[11px]  leading-relaxed mt-auto">
                   {ui.conversation} {isConversationMode ? ui.conversationEnabled : ui.conversationDisabled}. {ui.ambient} {isSoundEnabled ? ui.ambientOn : ui.ambientOff}.
                 </p>
               </div>
@@ -2064,7 +2064,7 @@ export default function OnesaAITourismVirtualExperience() {
                             <span />
                           </div>
                         </div>
-                        <p className="text-[9px] uppercase tracking-widest font-black text-white/75 pointer-events-none">
+                        <p className="text-[9px] uppercase tracking-widest font-black  pointer-events-none">
                           {ui.walkthrough} {walkStageIndex + 1}/{walkStages.length}
                         </p>
                       </div>
@@ -2086,14 +2086,14 @@ export default function OnesaAITourismVirtualExperience() {
                             {ui.close}
                           </Button>
                         </div>
-                        <p className="text-sm text-white/80 mt-3 leading-relaxed">{currentStage.caption}</p>
-                        <p className="text-sm text-white/70 mt-2 leading-relaxed">{currentDestination.summary}</p>
+                        <p className="text-sm  mt-3 leading-relaxed">{currentStage.caption}</p>
+                        <p className="text-sm  mt-2 leading-relaxed">{currentDestination.summary}</p>
                         {currentDestination.locationHighlights?.length ? (
                           <div className="mt-3">
                             <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">{ui.highlights}</p>
                             <div className="space-y-1">
                               {currentDestination.locationHighlights.map((item) => (
-                                <p key={item} className="text-xs text-white/70 leading-relaxed">
+                                <p key={item} className="text-xs  leading-relaxed">
                                   - {item}
                                 </p>
                               ))}
@@ -2121,9 +2121,9 @@ export default function OnesaAITourismVirtualExperience() {
                           </Button>
                         </div>
                         {poiInfoLoading ? (
-                          <p className="text-sm text-white/80 mt-3 leading-relaxed">{ui.loadingPoi}</p>
+                          <p className="text-sm  mt-3 leading-relaxed">{ui.loadingPoi}</p>
                         ) : (
-                          <p className="text-sm text-white/80 mt-3 leading-relaxed">{poiInfoText}</p>
+                          <p className="text-sm  mt-3 leading-relaxed">{poiInfoText}</p>
                         )}
                       </div>
                     </div>
@@ -2181,7 +2181,7 @@ export default function OnesaAITourismVirtualExperience() {
                     {selectedDestinationId ? (
                       <>
                         <h2 className="!text-lg font-black text-white leading-tight mt-2">{currentDestination.name}</h2>
-                        <p className="text-[11px] text-white/70 mt-1 leading-snug">{currentStage.caption}</p>
+                        <p className="text-[11px]  mt-1 leading-snug">{currentStage.caption}</p>
                       </>
                     ) : null}
                   </div>

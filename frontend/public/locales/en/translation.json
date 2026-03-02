@@ -19,6 +19,21 @@
   "quick_links": "Quick Links",
   "partners": "Partners",
   "contact": "Contact",
+  "footer": {
+    "about": {
+      "title": "About us",
+      "vision_label": "Our Vision",
+      "vision_content": "To be the trusted diaspora gateway connecting Zimbabweans abroad to meaningful opportunities and services back home.",
+      "mission_label": "Our Mission",
+      "mission_content": "To unify tourism, trade, investment, remittance, and family care pathways through one secure and accessible digital platform.",
+      "values_label": "Our Values",
+      "values_content": "Trust, service excellence, transparency, innovation, and lasting commitment to diaspora impact.",
+      "who_label": "Who we are",
+      "who_content": "We are a team comprised of Zimbabwe diaspora professionals building practical digital solutions that keep families, businesses, and communities connected to home.",
+      "what_label": "What we do",
+      "what_content": "We build and operate a unified diaspora platform that connects users to tourism, trade, investment, payments, family care, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable."
+    }
+  },
   "auth": {
     "create_account": "Join Diaspora Unlocked Platform",
     "register_subtitle": "Start your journey toward impactful diaspora collaboration.",

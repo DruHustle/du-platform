@@ -795,7 +795,7 @@ const projects = [
                 <Repeat className="h-6 w-6 text-zim-gold" />
                 <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
               </div>
-             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+             <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
             </div>
             
             <div className="grid md:grid-cols-4 gap-8">
@@ -814,7 +814,7 @@ const projects = [
                       <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
                     </div>
                     <h3 className="text-lg font-black text-white tracking-tight mb-3">{step.title}</h3>
-                    <p className="text-white/40 text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+                    <p className=" text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
                   </div>
                 </div>
               ))}
@@ -833,13 +833,13 @@ const projects = [
                 {t("investment.collective_model.title") || "How Diaspora Collective Investing Works"}
               </h3>
             </div>
-            <p className="text-white/75 text-sm leading-relaxed mb-8 max-w-3xl mx-auto">
+            <p className=" text-sm leading-relaxed mb-8 max-w-3xl mx-auto">
               {t("investment.collective_model.subtitle") ||
                 "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes."}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {collectiveModelSteps.map((item) => (
-                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-white/80 text-sm">
+                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4  text-sm">
                   {item}
                 </div>
               ))}
@@ -857,10 +857,10 @@ const projects = [
                 <Target className="h-6 w-6 text-zim-gold" />
                 <h3 className="text-xl font-black text-white tracking-tight">{t('investment.sectors_title') || "Active Investment Opportunities"}</h3>
               </div>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
+              <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") || "Carefully vetted projects with government support and transparent tracking."}
               </p>
-              <p className="text-xs text-white/55 max-w-3xl mx-auto font-light leading-relaxed mt-3">
+              <p className="text-xs  max-w-3xl mx-auto font-light leading-relaxed mt-3">
                 {t("investment.sectors_info", {
                   defaultValue:
                     "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile.",
@@ -885,7 +885,7 @@ const projects = [
                     <h2 className="section-title-compact">
                       {t("investment.tourism.snapshot.title") || "Zimbabwe Tourism Snapshot (2026)"}
                     </h2>
-                    <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                    <p className="text-sm  max-w-3xl mx-auto mt-4 font-light leading-relaxed">
                       {t("investment.tourism.snapshot.subtitle") ||
                         "Tourism is on a strong recovery path, supported by iconic assets, growing demand, and continued infrastructure upgrades."}
                     </p>
@@ -899,7 +899,7 @@ const projects = [
                           </div>
                           <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
                         </div>
-                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                        <p className=" text-sm leading-relaxed">{item.detail}</p>
                       </div>
                     ))}
                   </div>
@@ -915,7 +915,7 @@ const projects = [
                     {tourismGrowthOpportunities.map((item) => (
                       <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                         <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
-                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                        <p className=" text-sm leading-relaxed">{item.detail}</p>
                       </div>
                     ))}
                   </div>
@@ -928,7 +928,7 @@ const projects = [
                 <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
                   <div className="mb-10 text-center">
                     <h2 className="section-title-compact">{selectedSectorInfo.snapshotTitle}</h2>
-                    <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+                    <p className="text-sm  max-w-3xl mx-auto mt-4 font-light leading-relaxed">
                       {selectedSectorInfo.snapshotSubtitle}
                     </p>
                   </div>
@@ -941,7 +941,7 @@ const projects = [
                           </div>
                           <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
                         </div>
-                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                        <p className=" text-sm leading-relaxed">{item.detail}</p>
                       </div>
                     ))}
                   </div>
@@ -955,7 +955,7 @@ const projects = [
                     {selectedSectorInfo.opportunities.map((item) => (
                       <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                         <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
-                        <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                        <p className=" text-sm leading-relaxed">{item.detail}</p>
                       </div>
                     ))}
                   </div>
@@ -975,7 +975,7 @@ const projects = [
               <FileText className="h-6 w-6 text-zim-gold" />
               <h3 className="text-xl font-black text-white tracking-tight">{t('investment.database_title') || "Trade & Investment Databases and Registries"}</h3>
             </div>
-             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
+             <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
@@ -986,12 +986,12 @@ const projects = [
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
-                  <p className="text-xs text-zim-gold/60 font-black uppercase tracking-[0.2em]">
+                  <p className="text-xs  font-black uppercase tracking-[0.2em]">
                     {t("investment.ntir_label") || "National Directory"}
                   </p>
                 </div>
               </div>
-              <p className="text-white/50 text-sm font-light leading-relaxed mb-6">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
+              <p className=" text-sm font-light leading-relaxed mb-6">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
               <Link href="/ntir">
                 <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
                   {t('investment.ntir_button') || "Search NTIR Database."}
@@ -1007,20 +1007,20 @@ const projects = [
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
-                  <p className="text-xs text-zim-green/60 font-black uppercase tracking-[0.2em]">
+                  <p className="text-xs  font-black uppercase tracking-[0.2em]">
                     {t("investment.hdc_label") || "Horticulture Council"}
                   </p>
                 </div>
               </div>
-              <p className="text-white/50 text-sm font-light leading-relaxed mb-4">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
+              <p className=" text-sm font-light leading-relaxed mb-4">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
               <div className="flex flex-wrap gap-2">
                 {hdcAssoc.slice(0, 5).map((a, i) => (
-                  <Badge key={i} className="bg-white/5 text-white/60 border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">
+                  <Badge key={i} className="bg-white/5  border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">
                     {a}
                   </Badge>
                 ))}
                 {hdcAssoc.length > 5 && (
-                  <Badge className="bg-white/5 text-white/40 border border-white/10 text-[9px] font-bold px-3 py-1 rounded-full">+{hdcAssoc.length - 5} more</Badge>
+                  <Badge className="bg-white/5  border border-white/10 text-[9px] font-bold px-3 py-1 rounded-full">+{hdcAssoc.length - 5} more</Badge>
                 )}
               </div>
             </div>
@@ -1039,7 +1039,7 @@ const projects = [
                 {t("tech.opportunities.title") || "Top Opportunities for Investment and Innovation"}
               </h3>
             </div>
-            <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed text-center mb-8">
+            <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed text-center mb-8">
               {t("investment.opportunities.subtitle") ||
                 "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise."}
             </p>
@@ -1049,7 +1049,7 @@ const projects = [
                 {innovationOpportunityAreas.map((item) => (
                   <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
                     <p className="text-zim-gold text-xs uppercase font-black tracking-widest mb-2">{item.title}</p>
-                    <p className="text-white/75 text-sm leading-relaxed">{item.driver}</p>
+                    <p className=" text-sm leading-relaxed">{item.driver}</p>
                   </div>
                 ))}
               </div>
@@ -1062,7 +1062,7 @@ const projects = [
                   {innovationChallenges.map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <AlertTriangle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                      <span className="text-white/75 text-sm leading-relaxed">{item}</span>
+                      <span className=" text-sm leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -1084,7 +1084,7 @@ const projects = [
                   {t("investment.eu_focus.title") || "European Partnership Capital in Zimbabwe"}
                 </h3>
               </div>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
+              <p className="text-sm  max-w-3xl mx-auto mt-4 font-light leading-relaxed">
                 {t("investment.eu_focus.subtitle") ||
                   "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure."}
               </p>
@@ -1092,7 +1092,7 @@ const projects = [
 
             <div className="flex flex-wrap gap-2 justify-center mb-8">
               {europePartners.map((partner) => (
-                <Badge key={partner} className="bg-white/5 text-white/70 border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1">
+                <Badge key={partner} className="bg-white/5  border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1">
                   {partner}
                 </Badge>
               ))}
@@ -1102,7 +1102,7 @@ const projects = [
               {europeFocusAreas.map((item) => (
                 <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                   <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                  <p className=" text-sm leading-relaxed">{item.detail}</p>
                 </div>
               ))}
             </div>
@@ -1113,7 +1113,7 @@ const projects = [
               </h4>
               <ul className="space-y-3">
                 {eibTakeaways.map((point) => (
-                  <li key={point} className="flex items-start gap-3 text-white/75 text-sm">
+                  <li key={point} className="flex items-start gap-3  text-sm">
                     <CheckCircle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
                     <span>{point}</span>
                   </li>
@@ -1152,7 +1152,7 @@ const projects = [
                 <h3 className="text-xl font-black text-white tracking-tight">
                   {t("investment.regulatory_snapshot.title") || "Investment Regulation Snapshot"}
                 </h3>
-                <p className="text-white/75 text-sm leading-relaxed">
+                <p className=" text-sm leading-relaxed">
                   {t("investment.regulatory_snapshot.subtitle") ||
                     "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation."}
                 </p>
@@ -1166,7 +1166,7 @@ const projects = [
 
             <div className="grid md:grid-cols-2 gap-4 mt-8">
               {regulatoryChecklist.map((item) => (
-                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-white/75 text-sm">
+                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4  text-sm">
                   {item}
                 </div>
               ))}

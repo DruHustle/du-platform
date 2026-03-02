@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/modules/ai/pages/OnesaAI";
-import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
+import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,6 +76,14 @@ export default function Layout({ children }: LayoutProps) {
     if (typeof window === "undefined") return 1440;
     return window.innerWidth;
   });
+  const [viewportHeight, setViewportHeight] = useState(() => {
+    if (typeof window === "undefined") return 900;
+    return window.innerHeight;
+  });
+  const [bubbleDimensions, setBubbleDimensions] = useState<{ width: number; height: number }>({
+    width: 180,
+    height: 64,
+  });
   const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
   const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
   const [bubblePosition, setBubblePosition] = useState<{ x: number; y: number } | null>(null);
@@ -106,12 +114,15 @@ export default function Layout({ children }: LayoutProps) {
   const suppressBubbleClickRef = useRef(false);
   const dragStateRef = useRef<{
     pointerId: number;
+    pointerType: string;
+    dragEnabled: boolean;
     startX: number;
     startY: number;
     originX: number;
     originY: number;
     dragging: boolean;
   } | null>(null);
+  const touchDragArmTimeoutRef = useRef<number | null>(null);
 
   const markLanguageHintSeen = useCallback(() => {
     try {
@@ -295,11 +306,11 @@ export default function Layout({ children }: LayoutProps) {
   }, []);
 
   const clampBubblePosition = (x: number, y: number, bubbleWidth: number, bubbleHeight: number) => {
-    // Keep floating bubble fully visible inside the viewport.
-    const minX = 8;
-    const minY = 8;
-    const maxX = Math.max(minX, window.innerWidth - bubbleWidth - 8);
-    const maxY = Math.max(minY, window.innerHeight - bubbleHeight - 8);
+    // Allow users to drag the bubble fully out of the viewport.
+    const minX = -bubbleWidth;
+    const minY = -bubbleHeight;
+    const maxX = window.innerWidth;
+    const maxY = window.innerHeight;
     return { x: Math.min(Math.max(x, minX), maxX), y: Math.min(Math.max(y, minY), maxY) };
   };
 
@@ -307,6 +318,7 @@ export default function Layout({ children }: LayoutProps) {
     const onResize = () => {
       setIsMobileViewport(window.innerWidth < 768);
       setDesktopViewportWidth(window.innerWidth);
+      setViewportHeight(window.innerHeight);
       if (window.innerWidth >= 1024) {
         // Prevent stale mobile menu state from hiding utility icons after resizing to desktop.
         setMobileMenuOpen(false);
@@ -374,6 +386,26 @@ export default function Layout({ children }: LayoutProps) {
       setBubblePosition(clamped);
     }
   }, [showOnesaBubble, isMobileViewport, bubblePosition]);
+
+  useLayoutEffect(() => {
+    if (!showOnesaBubble) return;
+    const bubbleNode = bubbleRef.current;
+    if (!bubbleNode) return;
+
+    const updateDimensions = () => {
+      const bubbleRect = bubbleNode.getBoundingClientRect();
+      setBubbleDimensions({
+        width: bubbleRect.width || 180,
+        height: bubbleRect.height || 64,
+      });
+    };
+
+    updateDimensions();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(updateDimensions);
+    observer.observe(bubbleNode);
+    return () => observer.disconnect();
+  }, [showOnesaBubble]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -495,24 +527,43 @@ export default function Layout({ children }: LayoutProps) {
     if (!bubblePosition) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
+    if (touchDragArmTimeoutRef.current !== null) {
+      window.clearTimeout(touchDragArmTimeoutRef.current);
+      touchDragArmTimeoutRef.current = null;
+    }
+
     dragStateRef.current = {
       pointerId: event.pointerId,
+      pointerType: event.pointerType,
+      dragEnabled: event.pointerType !== "touch",
       startX: event.clientX,
       startY: event.clientY,
       originX: bubblePosition.x,
       originY: bubblePosition.y,
       dragging: false,
     };
+    if (event.pointerType === "touch") {
+      const activePointerId = event.pointerId;
+      touchDragArmTimeoutRef.current = window.setTimeout(() => {
+        const state = dragStateRef.current;
+        if (state && state.pointerId === activePointerId) {
+          state.dragEnabled = true;
+        }
+        touchDragArmTimeoutRef.current = null;
+      }, 180);
+    }
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handleBubblePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const dragState = dragStateRef.current;
     if (!dragState || dragState.pointerId !== event.pointerId) return;
+    if (!dragState.dragEnabled) return;
 
     const deltaX = event.clientX - dragState.startX;
     const deltaY = event.clientY - dragState.startY;
-    if (!dragState.dragging && Math.hypot(deltaX, deltaY) > 4) {
+    const dragThreshold = event.pointerType === "touch" ? 14 : 6;
+    if (!dragState.dragging && Math.hypot(deltaX, deltaY) > dragThreshold) {
       dragState.dragging = true;
     }
     if (!dragState.dragging) return;
@@ -529,11 +580,20 @@ export default function Layout({ children }: LayoutProps) {
   const handleBubblePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
     const dragState = dragStateRef.current;
     if (!dragState || dragState.pointerId !== event.pointerId) return;
+    if (touchDragArmTimeoutRef.current !== null) {
+      window.clearTimeout(touchDragArmTimeoutRef.current);
+      touchDragArmTimeoutRef.current = null;
+    }
+
+    const wasDragging = dragState.dragging;
+    const totalDelta = Math.hypot(event.clientX - dragState.startX, event.clientY - dragState.startY);
+    const activationThreshold = dragState.pointerType === "touch" ? 28 : 10;
+    const treatAsTap = totalDelta <= activationThreshold;
 
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
-    if (dragState.dragging) {
+    if (wasDragging && !treatAsTap) {
       // Suppress the click that follows a drag so users do not navigate accidentally.
       suppressBubbleClickRef.current = true;
       window.setTimeout(() => {
@@ -550,7 +610,21 @@ export default function Layout({ children }: LayoutProps) {
       }
     }
     dragStateRef.current = null;
+
+    // Some browsers retarget pointer events after capture and skip click.
+    // Fallback: treat true taps (or near-taps) as activation.
+    if (!wasDragging || treatAsTap) {
+      setIsOnesaChatOpen(true);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      if (touchDragArmTimeoutRef.current !== null) {
+        window.clearTimeout(touchDragArmTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleBubbleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!suppressBubbleClickRef.current) return;
@@ -564,6 +638,46 @@ export default function Layout({ children }: LayoutProps) {
     if (event.defaultPrevented) return;
     setIsOnesaChatOpen(true);
   };
+
+  const restoreBubbleIntoView = () => {
+    const bubbleWidth = bubbleDimensions.width || 180;
+    const bubbleHeight = bubbleDimensions.height || 64;
+    const restored = clampBubblePosition(
+      window.innerWidth - bubbleWidth - (isMobileViewport ? 16 : 40),
+      window.innerHeight - bubbleHeight - (isMobileViewport ? 96 : 40),
+      bubbleWidth,
+      bubbleHeight
+    );
+    setBubblePosition(restored);
+    const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(restored));
+    } catch {
+      // Ignore storage write failures.
+    }
+  };
+
+  let bubbleOffscreenSide: "left" | "right" | "top" | "bottom" | null = null;
+  if (showOnesaBubble && bubblePosition) {
+    // Engage restore handle as soon as any part of the bubble leaves viewport.
+    const leftOverflow = Math.max(0, -bubblePosition.x);
+    const rightOverflow = Math.max(0, bubblePosition.x + bubbleDimensions.width - desktopViewportWidth);
+    const topOverflow = Math.max(0, -bubblePosition.y);
+    const bottomOverflow = Math.max(0, bubblePosition.y + bubbleDimensions.height - viewportHeight);
+
+    const overflowEntries: Array<{ side: "left" | "right" | "top" | "bottom"; value: number }> = [
+      { side: "left", value: leftOverflow },
+      { side: "right", value: rightOverflow },
+      { side: "top", value: topOverflow },
+      { side: "bottom", value: bottomOverflow },
+    ];
+    const dominantOverflow = overflowEntries.reduce((best, current) =>
+      current.value > best.value ? current : best
+    );
+    if (dominantOverflow.value > 0) {
+      bubbleOffscreenSide = dominantOverflow.side;
+    }
+  }
 
   const aboutSections: Array<{ id: AboutSectionId; label: string; content: string }> = [
     {
@@ -662,7 +776,7 @@ export default function Layout({ children }: LayoutProps) {
                           ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]' 
                           : scrolled 
                             ? 'text-white/70 hover:text-yellow-400 hover:bg-yellow-400/5' 
-                            : 'text-white/60 hover:text-yellow-400 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)]'
+                            : 'text-white/70 hover:text-yellow-400 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)]'
                       }
                     `}>
                       {item.name}
@@ -718,7 +832,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Search Tool */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="hidden sm:flex text-white/60 hover:text-yellow-400 rounded-full transition-colors h-8 w-8">
+                <Button variant="ghost" size="icon" className="hidden sm:flex text-white/70 hover:text-yellow-400 rounded-full transition-colors h-8 w-8">
                   <Search className="h-4 w-4" />
                 </Button>
               </DialogTrigger>
@@ -752,7 +866,7 @@ export default function Layout({ children }: LayoutProps) {
                   aria-label={t("nav.language_hint", { defaultValue: "Use the globe icon to change language." })}
                   className={`
                     ${mobileMenuOpen ? 'hidden' : 'hidden md:flex'} 
-                    text-white/60 hover:text-yellow-400 rounded-full h-8 w-8
+                    text-white/70 hover:text-yellow-400 rounded-full h-8 w-8
                   `}
                 >
                   <Globe className="h-4 w-4" />
@@ -770,7 +884,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Account Icon (VISIBLE ON BOTH MOBILE & DESKTOP) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white/60 hover:text-yellow-400 rounded-full h-8 w-8 transition-colors">
+                <Button variant="ghost" size="icon" className="text-white/70 hover:text-yellow-400 rounded-full h-8 w-8 transition-colors">
                   <User className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -779,7 +893,7 @@ export default function Layout({ children }: LayoutProps) {
                 align="end" 
                 className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-2xl p-2 shadow-2xl min-w-[12rem] z-[100]"
               >
-                <DropdownMenuLabel className="text-white/40 font-black text-[10px] uppercase tracking-widest px-3 py-2">
+                <DropdownMenuLabel className="text-white/70 font-black text-[10px] uppercase tracking-widest px-3 py-2">
                   {user ? user.fullName : t('account')}
                 </DropdownMenuLabel>
                 
@@ -875,7 +989,7 @@ export default function Layout({ children }: LayoutProps) {
                 
                 <div className="p-4 space-y-4 overflow-y-auto">
                   {/* Header label with tiny font */}
-                  <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-3">
+                  <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest px-3">
                     Navigation
                   </p>
                   
@@ -906,7 +1020,7 @@ export default function Layout({ children }: LayoutProps) {
 
                   {/* Language Switcher - Flag Only Grid */}
                   <div className="border-t border-white/10 pt-4 pb-2">
-                    <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-3 px-3">
+                    <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mb-3 px-3">
                       {t('select_lang')}
                     </p>
                     <div className="grid grid-cols-4 gap-2 px-1">
@@ -918,7 +1032,7 @@ export default function Layout({ children }: LayoutProps) {
                           className={`h-10 flex items-center justify-center rounded-xl border transition-all ${
                             i18n.language === lang.code 
                               ? "bg-yellow-400/20 border-yellow-400/40" 
-                              : "bg-white/5 border-white/10 text-white/60"
+                              : "bg-white/5 border-white/10 text-white/70"
                           }`}
                           onClick={() => {
                             i18n.changeLanguage(lang.code);
@@ -941,10 +1055,39 @@ export default function Layout({ children }: LayoutProps) {
         {children}
       </main>
 
-      {showOnesaBubble && (
+      {showOnesaBubble && bubbleOffscreenSide && !isOnesaChatOpen && (
+        <button
+          type="button"
+          data-onesa-bubble-restore="true"
+          onClick={restoreBubbleIntoView}
+          aria-label={t("tech.restore_chat_bubble", { defaultValue: "Show chat bubble" })}
+          className={`fixed z-[96] border border-zim-gold/50 bg-slate-950/95 text-zim-gold backdrop-blur-md shadow-xl transition hover:bg-slate-900 ${
+            bubbleOffscreenSide === "left"
+              ? "left-0 top-1/2 -translate-y-1/2 rounded-r-full px-2 py-4"
+              : bubbleOffscreenSide === "right"
+                ? "right-0 top-1/2 -translate-y-1/2 rounded-l-full px-2 py-4"
+                : bubbleOffscreenSide === "top"
+                  ? "top-0 left-1/2 -translate-x-1/2 rounded-b-full px-4 py-2"
+                  : "bottom-0 left-1/2 -translate-x-1/2 rounded-t-full px-4 py-2"
+          }`}
+        >
+          {bubbleOffscreenSide === "left" ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : bubbleOffscreenSide === "right" ? (
+            <ChevronLeft className="h-4 w-4" />
+          ) : bubbleOffscreenSide === "top" ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronUp className="h-4 w-4" />
+          )}
+        </button>
+      )}
+
+      {showOnesaBubble && !bubbleOffscreenSide && (
         /* Onesa Floating Bubble */
         <motion.div
           ref={bubbleRef}
+          data-onesa-bubble-container="true"
           initial={{ opacity: 0, y: 12 }}
           animate={
             isMobileViewport
@@ -985,6 +1128,7 @@ export default function Layout({ children }: LayoutProps) {
         >
           <button
             type="button"
+            data-onesa-bubble-trigger="true"
             onClick={handleBubbleOpenChat}
             aria-label={t("tech.chat_with_onesa") || "Chat with Onesa"}
             className="group relative flex items-center gap-3 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 py-2 shadow-2xl hover:bg-slate-900 transition-colors will-change-transform"
@@ -1018,6 +1162,7 @@ export default function Layout({ children }: LayoutProps) {
               exit={{ opacity: 0 }}
             />
             <motion.section
+              data-onesa-chat-modal="true"
               initial={isMobileViewport ? { opacity: 0, y: 40 } : { opacity: 0, y: 24, scale: 0.98 }}
               animate={isMobileViewport ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, scale: 1 }}
               exit={isMobileViewport ? { opacity: 0, y: 40 } : { opacity: 0, y: 16, scale: 0.98 }}
@@ -1100,7 +1245,7 @@ export default function Layout({ children }: LayoutProps) {
                             defaultValue: "Start chat....",
                           })
                     }
-                    className="min-h-[96px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/30"
+                    className="min-h-[96px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/70"
                   />
                   {onesaError ? (
                     <p className="text-red-400 text-xs">
@@ -1307,7 +1452,7 @@ export default function Layout({ children }: LayoutProps) {
                         transition={{ duration: 0.18 }}
                         className="absolute left-0 mt-2 w-56 rounded-xl border border-white/15 bg-slate-900/95 backdrop-blur-xl p-3 shadow-2xl z-[120]"
                       >
-                        <p className="text-[10px] uppercase tracking-widest text-white/50 font-black mb-2">
+                        <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                           Contact Options
                         </p>
                         <div className="flex flex-col gap-2">

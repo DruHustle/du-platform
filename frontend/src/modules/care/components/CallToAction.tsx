@@ -20,7 +20,7 @@ export default function CallToAction({ onboardingUrl, onCtaClick }: CallToAction
           <h2 className="!text-xl font-black tracking-tight text-white">
             {t("care.cta.title", { defaultValue: "Ready to Protect Your Family?" })}
           </h2>
-          <p className="text-sm text-white/65">
+          <p className="text-sm text-white/70">
             {t("care.cta.subtitle", {
               defaultValue: "Continue to Nyaradzo onboarding with tracked diaspora referral metadata.",
             })}

@@ -19,6 +19,21 @@
   "quick_links": "Zvekuvhura nekukasira",
   "partners": "Vatishandi",
   "contact": "Taura Nesu",
+  "footer": {
+    "about": {
+      "title": "Nezvedu",
+      "vision_label": "Chiratidzo Chedu",
+      "vision_content": "Kuva gedhi rinovimbika re diaspora rinobatanidza maZimbabweans vari kunze kwenyika nemikana nemasevhisi ane zvazvinoreva kumusha.",
+      "mission_label": "Basa Redu",
+      "mission_content": "Kubatanidza nzira dzeushanyi, kutengeserana, kudyara, remitensi, nekuchengetwa kwemhuri kuburikidza nepuratifomu imwe yakachengeteka uye inowanikwa nyore.",
+      "values_label": "Hunhu Hwedu",
+      "values_content": "Kuvimbika, kunaka kwemasevhisi, pachena, hutsva, uye kuzvipira kwenguva refu kumhedzisiro yediaspora.",
+      "who_label": "Tiri Vanani",
+      "who_content": "Tiri chikwata chehunyanzvi hweZimbabwe diaspora chinovaka mhinduro dzedhijitari dzinoshanda dzinochengeta mhuri, mabhizinesi, nenharaunda zvakabatana kumusha.",
+      "what_label": "Zvatinoita",
+      "what_content": "Tinovaka nekushandisa puratifomu yakabatana yediaspora inobatanidza vashandisi kuushanyi, kutengeserana, kudyara, kubhadhara, kuchengetwa kwemhuri, uye kutungamirirwa neAI. Tinobatsiranawo nemasangano nevapi vemasevhisi vanovimbika kuti kutora chikamu kuve kwakachengeteka, kunoshanda, uye kunoyerwa."
+    }
+  },
   "auth": {
     "create_account": "Batana neZIGD Platform",
     "register_subtitle": "Tanga rwendo rwako rwekushandira pamwe nevari kunze kwenyika.",

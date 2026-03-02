@@ -448,7 +448,7 @@ export default function Tourism() {
                             </span>
                           ))}
                         </div>
-                        <p className="text-sm text-white/60 font-light leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{attraction.summary}</p>
+                        <p className="text-sm text-white/70 font-light leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{attraction.summary}</p>
                         <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
                           {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
                         </p>
@@ -475,7 +475,7 @@ export default function Tourism() {
                       </div>
                       <div className="p-5">
                         <h4 className="text-base font-bold text-white mb-2 group-hover:text-zim-gold transition-colors">{dest.name}</h4>
-                        <p className="text-xs text-white/40 leading-snug font-light">{dest.summary}</p>
+                        <p className="text-xs text-white/70 leading-snug font-light">{dest.summary}</p>
                         <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
                           {t("tourism.attraction_card.tap_for_details") || "Tap for more details"}
                         </p>
@@ -523,7 +523,7 @@ export default function Tourism() {
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-black text-white leading-tight">{t('tourism.onesa.companion_title') || "From booking flights,accurate weather information or discovering local gems, Onesa AI has you covered"}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed font-light">{t('tourism.onesa.companion_subtitle') || "Onesa AI helps you plan your trip and navigate the ins and outs once you're here. From understanding local etiquette to finding hidden gems, Onesa is your perfect travel companion."}</p>
+                  <p className="text-sm text-white/70 leading-relaxed font-light">{t('tourism.onesa.companion_subtitle') || "Onesa AI helps you plan your trip and navigate the ins and outs once you're here. From understanding local etiquette to finding hidden gems, Onesa is your perfect travel companion."}</p>
                   <p className="text-sm text-white/70 leading-relaxed font-light">
                     {t("tourism.onesa.personalized_experience") ||
                       "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable."}
@@ -602,7 +602,7 @@ export default function Tourism() {
             <>
               <DialogHeader>
                 <DialogTitle className="text-lg font-black tracking-tight">{selectedAttraction.name}</DialogTitle>
-                <DialogDescription className="text-white/60">
+                <DialogDescription className="text-white/70">
                   {selectedAttraction.summary}
                 </DialogDescription>
               </DialogHeader>

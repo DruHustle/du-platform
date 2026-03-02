@@ -18,12 +18,12 @@ export default function CookieSettings() {
             <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
               Cookie settings
             </h1>
-            <p className="text-white/80 leading-relaxed mb-6">
+            <p className=" leading-relaxed mb-6">
               Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.
             </p>
             <div className="rounded-xl border border-white/20 bg-slate-900/90 p-4 mb-6">
               <p className="text-white font-semibold">Anonymised analytics cookies</p>
-              <p className="text-white/70 text-sm mt-1">Enabled to help us improve performance and usability.</p>
+              <p className=" text-sm mt-1">Enabled to help us improve performance and usability.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button onClick={save} className="bg-zim-gold text-zim-black hover:bg-white">

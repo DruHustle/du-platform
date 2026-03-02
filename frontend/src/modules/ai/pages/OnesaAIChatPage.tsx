@@ -216,7 +216,7 @@ export default function OnesaAIChat() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder={hasChatStarted ? "" : starterPrompt}
-                className="min-h-[110px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/30"
+                className="min-h-[110px] bg-white/[0.02] border-white/20 text-white placeholder:text-white/70"
               />
               {error ? (
                 <p className="text-red-400 text-sm">

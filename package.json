@@ -20,6 +20,7 @@
     "guardrails": "pnpm guardrails:vite && pnpm guardrails:deploy && pnpm guardrails:locales",
     "sitemap:generate": "node scripts/generate-sitemap.mjs",
     "test:e2e:onesa": "bash scripts/tests/e2e-onesa.sh",
+    "test:e2e:onesa:bubble": "node scripts/tests/e2e-onesa-bubble-recover.mjs",
     "test:modules": "vitest run --root . --dir backend/modules",
     "keepalive:ping": "bash scripts/keepalive-ping.sh",
     "format": "prettier --write .",

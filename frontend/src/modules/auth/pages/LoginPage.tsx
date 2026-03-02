@@ -21,7 +21,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const returningUser = hasLoggedInBefore();
 
-  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/20 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/70 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ export default function Login() {
             {/* --- CANCEL BUTTON --- */}
             <button 
               onClick={() => setLocation(nextPath)}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
+              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
               aria-label="Cancel login"
             >
               <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
@@ -66,7 +66,7 @@ export default function Login() {
               <h1 className="text-4xl font-black text-white tracking-tighter">
                 {returningUser ? t('auth.welcome_back') || "Welcome Back" : t('auth.login') || "Login"}
               </h1>
-              <p className="text-sm text-white/40 font-light">
+              <p className="text-sm text-white/70 font-light">
                 {returningUser
                   ? t('auth.login_subtitle') || "Access your digital gateway to Zimbabwe."
                   : "Sign in to access your digital gateway to Zimbabwe."}
@@ -75,7 +75,7 @@ export default function Login() {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+                <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
                   <Mail className="h-3.5 w-3.5" /> {t('auth.email') || "Email Address"}
                 </Label>
                 <Input 
@@ -88,10 +88,10 @@ export default function Login() {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <Label className="text-[10px] uppercase font-black text-white/30 tracking-widest flex items-center gap-2">
+                  <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
                     <Lock className="h-3.5 w-3.5" /> {t('auth.password') || "Password"}
                   </Label>
-                    <Link href="/forgot-password" className="text-[10px] uppercase font-black text-zim-gold/60 hover:text-zim-gold transition-colors tracking-widest cursor-pointer">
+                    <Link href="/forgot-password" className="text-[10px] uppercase font-black text-zim-gold/70 hover:text-zim-gold transition-colors tracking-widest cursor-pointer">
                       {t('auth.forgot_password') || "Forgot Password?"}
                     </Link>
                 </div>
@@ -105,7 +105,7 @@ export default function Login() {
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -120,7 +120,7 @@ export default function Login() {
             </form>
 
             <div className="text-center pt-4 border-t border-white/10">
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-white/70">
                 {t('auth.no_account') || "Don't have an account?"}{' '}
                 <Link href="/register" className="text-zim-gold font-bold hover:underline">
                   {t('auth.register_now') || "Register Now"}
