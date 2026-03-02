@@ -1,10 +1,11 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { api, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 type NotifyRow = {
   id: number;
@@ -57,9 +58,14 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notifyRows, setNotifyRows] = useState<NotifyRow[]>([]);
+  const [newNotifyCount, setNewNotifyCount] = useState(0);
   const [ntirRows, setNtirRows] = useState<NtirRow[]>([]);
   const [storyRows, setStoryRows] = useState<SuccessStoryRow[]>([]);
   const [shopRows, setShopRows] = useState<ShopProductRow[]>([]);
+  const [notificationSettingsForm, setNotificationSettingsForm] = useState({
+    alert_emails: "",
+    from_email: "",
+  });
   const [ntirForm, setNtirForm] = useState({ name: "", sector: "", location: "", verification_status: "Pending" });
   const [storyForm, setStoryForm] = useState({
     title: "",
@@ -86,31 +92,57 @@ export default function AdminDashboard() {
     is_active: true,
   });
   const [editingShopId, setEditingShopId] = useState<number | null>(null);
+  const notifyIdsRef = useRef<Set<number>>(new Set());
 
   const tabs = useMemo(
     () => [
-      { key: "notify" as const, label: "Notify Me", count: notifyRows.length },
+      { key: "notify" as const, label: "Notify Me", count: notifyRows.length, newCount: newNotifyCount },
       { key: "ntir" as const, label: "NTIR", count: ntirRows.length },
       { key: "stories" as const, label: "Impact", count: storyRows.length },
       { key: "shop" as const, label: "Shop Products", count: shopRows.length },
     ],
-    [notifyRows.length, ntirRows.length, storyRows.length, shopRows.length]
+    [newNotifyCount, notifyRows.length, ntirRows.length, storyRows.length, shopRows.length]
   );
 
-  const loadAdminData = async () => {
-    setLoading(true);
+  const loadAdminData = async ({ silent = false, detectNewNotify = false }: { silent?: boolean; detectNewNotify?: boolean } = {}) => {
+    if (!silent) setLoading(true);
     setError("");
     try {
-      const [notifyRes, ntirRes, storiesRes, shopRes] = await Promise.all([
+      if (detectNewNotify) {
+        const notifyRes = await api.get("/admin/notify-requests");
+        const nextNotifyRows: NotifyRow[] = notifyRes.data?.rows ?? [];
+        let freshCount = 0;
+        for (const row of nextNotifyRows) {
+          if (!notifyIdsRef.current.has(Number(row.id))) freshCount += 1;
+        }
+        if (freshCount > 0) {
+          setNewNotifyCount((prev) => prev + freshCount);
+          toast.success(
+            freshCount === 1 ? "1 new notify request received." : `${freshCount} new notify requests received.`
+          );
+        }
+        notifyIdsRef.current = new Set(nextNotifyRows.map((row) => Number(row.id)));
+        setNotifyRows(nextNotifyRows);
+        return;
+      }
+
+      const [notifyRes, ntirRes, storiesRes, shopRes, settingsRes] = await Promise.all([
         api.get("/admin/notify-requests"),
         api.get("/admin/ntir"),
         api.get("/admin/impact"),
         api.get("/admin/shop-products"),
+        api.get("/admin/notification-settings"),
       ]);
-      setNotifyRows(notifyRes.data?.rows ?? []);
+      const nextNotifyRows: NotifyRow[] = notifyRes.data?.rows ?? [];
+      notifyIdsRef.current = new Set(nextNotifyRows.map((row) => Number(row.id)));
+      setNotifyRows(nextNotifyRows);
       setNtirRows(ntirRes.data?.rows ?? []);
       setStoryRows(storiesRes.data?.stories ?? []);
       setShopRows(shopRes.data?.rows ?? []);
+      setNotificationSettingsForm({
+        alert_emails: String(settingsRes.data?.alert_emails ?? ""),
+        from_email: String(settingsRes.data?.from_email ?? ""),
+      });
     } catch (err: any) {
       const status = Number(err?.response?.status ?? 0);
       if (status === 401) {
@@ -119,7 +151,7 @@ export default function AdminDashboard() {
       }
       setError(getApiErrorMessage(err, "Unable to load admin data."));
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -191,6 +223,13 @@ export default function AdminDashboard() {
     void loadAdminData();
   }, []);
 
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      void loadAdminData({ silent: true, detectNewNotify: true });
+    }, 30000);
+    return () => window.clearInterval(intervalId);
+  }, []);
+
   const submitNtir = async (event: FormEvent) => {
     event.preventDefault();
     setError("");
@@ -238,13 +277,50 @@ export default function AdminDashboard() {
     }
   };
 
+  const toggleStoryDisplay = async (row: SuccessStoryRow) => {
+    setError("");
+    try {
+      const nextDisplay = row.is_published === 1 ? 0 : 1;
+      await api.put(`/admin/impact/${row.id}`, { is_published: nextDisplay });
+      await loadAdminData({ silent: true });
+      toast.success(nextDisplay === 1 ? "Story set to Display." : "Story set to Don't display.");
+    } catch (err: any) {
+      setError(getApiErrorMessage(err, "Unable to update story visibility."));
+    }
+  };
+
+  const saveNotificationSettings = async (event: FormEvent) => {
+    event.preventDefault();
+    setError("");
+    try {
+      const payload = {
+        alert_emails: String(notificationSettingsForm.alert_emails ?? "").trim(),
+        from_email: String(notificationSettingsForm.from_email ?? "").trim(),
+      };
+      await api.put("/admin/notification-settings", payload);
+      toast.success("Notification email settings saved.");
+      await loadAdminData({ silent: true });
+    } catch (err: any) {
+      setError(getApiErrorMessage(err, "Unable to save notification settings."));
+    }
+  };
+
+  const formatNotifyFeature = (feature: string) => {
+    const value = String(feature ?? "");
+    if (value.startsWith("shop_restock_")) {
+      const slug = value.slice("shop_restock_".length).replaceAll("_", " ").trim();
+      return slug ? `Shop restock: ${slug}` : "Shop restock request";
+    }
+    return value;
+  };
+
   return (
     <Layout>
       <section className="min-h-screen bg-slate-950 px-6 py-28">
         <div className="container mx-auto max-w-6xl space-y-8">
           <div className="text-white">
             <h1 className="text-4xl font-black tracking-tighter">Admin Dashboard</h1>
-            <p className="text-white/75 mt-2">Manage notify requests, NTIR records, and impact stories.</p>
+            <p className="text-white/75 mt-2">Manage notifications, visibility (display / don't display), and pricing.</p>
           </div>
 
           {error ? <p className="text-red-400">{error}</p> : null}
@@ -254,28 +330,76 @@ export default function AdminDashboard() {
               <Button
                 key={tab.key}
                 variant={activeTab === tab.key ? "default" : "outline"}
-                onClick={() => setActiveTab(tab.key)}
                 className={
                   activeTab === tab.key
                     ? "bg-zim-gold text-zim-black hover:bg-white"
                     : "border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
                 }
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  if (tab.key === "notify") setNewNotifyCount(0);
+                }}
               >
                 {tab.label} <Badge className="ml-2 bg-white/20 text-white border-transparent">{tab.count}</Badge>
+                {"newCount" in tab && tab.newCount ? (
+                  <Badge className="ml-2 bg-zim-gold text-zim-black border-transparent">{tab.newCount} new</Badge>
+                ) : null}
               </Button>
             ))}
           </div>
+
+          {newNotifyCount > 0 && activeTab !== "notify" ? (
+            <div className="rounded-xl border border-zim-gold/30 bg-zim-gold/10 p-4 text-sm text-zim-gold">
+              {newNotifyCount === 1
+                ? "1 new notify request in Admin > Notify Me."
+                : `${newNotifyCount} new notify requests in Admin > Notify Me.`}
+            </div>
+          ) : null}
 
           {loading ? <p className="text-white/75">Loading...</p> : null}
 
           {!loading && activeTab === "notify" ? (
             <div className="grid gap-4">
+              <form
+                onSubmit={saveNotificationSettings}
+                className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 space-y-3"
+              >
+                <p className="text-white font-black">Notification Email Settings</p>
+                <p className="text-white/60 text-sm">
+                  Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <Input
+                    value={notificationSettingsForm.alert_emails}
+                    onChange={(e) =>
+                      setNotificationSettingsForm((prev) => ({ ...prev, alert_emails: e.target.value }))
+                    }
+                    placeholder="Alert emails (comma-separated)"
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                  <Input
+                    value={notificationSettingsForm.from_email}
+                    onChange={(e) =>
+                      setNotificationSettingsForm((prev) => ({ ...prev, from_email: e.target.value }))
+                    }
+                    placeholder="From email"
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest"
+                >
+                  Save Email Settings
+                </Button>
+              </form>
+
               {notifyRows.map((row) => (
                 <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-black">{row.email}</p>
-                      <p className="text-white/75 text-sm">{row.feature}</p>
+                      <p className="text-white/75 text-sm">{formatNotifyFeature(row.feature)}</p>
                     </div>
                     <p className="text-xs text-white/50">{new Date(row.created_at).toLocaleString()}</p>
                   </div>
@@ -404,8 +528,16 @@ export default function AdminDashboard() {
                   placeholder="Testimonial"
                   className="min-h-[90px] bg-white/[0.05] border-white/20 text-white"
                 />
+                <label className="text-white/80 text-sm flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={storyForm.is_published}
+                    onChange={(e) => setStoryForm((prev) => ({ ...prev, is_published: e.target.checked }))}
+                  />
+                  Display on impact page
+                </label>
                 <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
-                  Add Success Story
+                  Add Impact Story
                 </Button>
               </form>
 
@@ -420,8 +552,16 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                       <Badge className={story.is_published ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
-                        {story.is_published ? "Published" : "Draft"}
+                        {story.is_published ? "Display" : "Don't display"}
                       </Badge>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => toggleStoryDisplay(story)}
+                        className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
+                      >
+                        {story.is_published ? "Set Don't display" : "Set Display"}
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -447,7 +587,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-4">
                   <label className="text-white/80 text-sm flex items-center gap-2">
                     <input type="checkbox" checked={shopForm.is_active} onChange={(e) => setShopForm((p) => ({ ...p, is_active: e.target.checked }))} />
-                    Active
+                    Display product
                   </label>
                   <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
                     {editingShopId ? "Update Product" : "Add Product"}
@@ -472,7 +612,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge className={row.is_active ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
-                          {row.is_active ? "Active" : "Inactive"}
+                          {row.is_active ? "Display" : "Don't display"}
                         </Badge>
                         <Button type="button" variant="outline" onClick={() => editShopProduct(row)} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
                           Edit

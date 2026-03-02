@@ -9,6 +9,7 @@ import {
   createNtirEntity,
   createFeatureNotification,
   createSuccessStory,
+  updateSuccessStory,
   consumePasswordResetToken,
   createPasswordResetToken,
   createSession,
@@ -38,6 +39,8 @@ import {
   createShopRestockNotification,
   getShopRestockNotifications,
   getShopRestockNotificationsBySlug,
+  getAdminSetting,
+  upsertAdminSetting,
 } from "./db";
 import { registerApiRoutes } from "./api";
 import { createRateLimiter } from "./middleware/rateLimiter";
@@ -210,6 +213,9 @@ function getAdminEmails(): string[] {
     .filter(Boolean);
 }
 
+const ADMIN_SETTING_NOTIFY_ALERT_EMAILS = "notify_alert_emails";
+const ADMIN_SETTING_NOTIFY_FROM_EMAIL = "notify_from_email";
+
 function isValidEmail(email: string): boolean {
   const value = String(email ?? "").trim();
   if (!value) return false;
@@ -221,6 +227,7 @@ async function sendEmailMessage(payload: {
   subject: string;
   html?: string;
   text?: string;
+  from?: string;
 }) {
   const recipients = (Array.isArray(payload.to) ? payload.to : [payload.to])
     .map((value) => String(value ?? "").trim())
@@ -228,7 +235,7 @@ async function sendEmailMessage(payload: {
   if (recipients.length === 0) return;
 
   const provider = process.env.RESET_EMAIL_PROVIDER?.toLowerCase() ?? "resend";
-  const from = process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com";
+  const from = String(payload.from ?? process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com").trim();
 
   if (provider === "resend") {
     const apiKey = process.env.RESEND_API_KEY;
@@ -258,6 +265,48 @@ async function sendEmailMessage(payload: {
   }
 
   console.log(`[email:unsupported-provider:${provider}] to=${recipients.join(",")}`);
+}
+
+async function sendEmailMessageSafe(
+  payload: {
+    to: string | string[];
+    subject: string;
+    html?: string;
+    text?: string;
+    from?: string;
+  },
+  context: string
+) {
+  try {
+    await sendEmailMessage(payload);
+    return true;
+  } catch (error: any) {
+    console.error(`[email] failed in ${context}`, {
+      message: String(error?.message ?? error),
+      subject: payload.subject,
+    });
+    return false;
+  }
+}
+
+function parseCsvEmails(value: string | null | undefined): string[] {
+  return String(value ?? "")
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter((item) => isValidEmail(item));
+}
+
+async function getNotifyFromEmail(): Promise<string> {
+  const configured = await getAdminSetting(ADMIN_SETTING_NOTIFY_FROM_EMAIL);
+  if (configured && isValidEmail(configured)) return configured;
+  return String(process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com").trim();
+}
+
+async function getNotifyAlertEmails(): Promise<string[]> {
+  const configured = await getAdminSetting(ADMIN_SETTING_NOTIFY_ALERT_EMAILS);
+  const configuredEmails = parseCsvEmails(configured);
+  if (configuredEmails.length > 0) return configuredEmails;
+  return getAdminEmails();
 }
 
 async function sendResetEmail(to: string, resetUrl: string) {
@@ -305,6 +354,7 @@ async function notifyRestockSubscribersAndAdmins(input: {
   if (!productSlug) return;
 
   try {
+    const fromEmail = await getNotifyFromEmail();
     const rows = await getShopRestockNotificationsBySlug(productSlug);
     const uniqueEmails = Array.from(
       new Set(
@@ -322,10 +372,10 @@ async function notifyRestockSubscribersAndAdmins(input: {
 <p>Thank you.</p>`;
 
       const text = `${input.productName} is now back in stock on the Zimbabwe Shop. You can return to the shop and place your order.`;
-      await sendEmailMessage({ to: uniqueEmails, subject, html, text });
+      await sendEmailMessage({ to: uniqueEmails, subject, html, text, from: fromEmail });
     }
 
-    const adminEmails = getAdminEmails();
+    const adminEmails = await getNotifyAlertEmails();
     if (adminEmails.length > 0) {
       const subject = `Restock alert: ${input.productName}`;
       const html = `<p><strong>Restock detected.</strong></p>
@@ -336,7 +386,7 @@ async function notifyRestockSubscribersAndAdmins(input: {
 <p>Action: please review Admin > Notify Me and send any additional manual communication if needed.</p>
 <p>Updated by: ${input.updatedByEmail}</p>`;
       const text = `Restock detected for ${input.productName} (${productSlug}). Current stock: ${input.stockQty}. Subscribers notified automatically: ${uniqueEmails.length}. Action: review Admin > Notify Me and send any additional manual communication if needed. Updated by: ${input.updatedByEmail}`;
-      await sendEmailMessage({ to: adminEmails, subject, html, text });
+      await sendEmailMessage({ to: adminEmails, subject, html, text, from: fromEmail });
     }
   } catch (error: any) {
     console.error("[shop/restock-notify] failed", {
@@ -2295,6 +2345,45 @@ async function startServer() {
       if (!user) return sendLegacyError(res, 401, "AUTH_USER_NOT_FOUND", "User not found.");
 
       const result = await createFeatureNotification(Number(user.id), String(user.email), feature);
+
+      if (result.created) {
+        const fromEmail = await getNotifyFromEmail();
+        const safeFeature = feature.replace(/[_-]+/g, " ").trim();
+        const userSubject = `Notify request received: ${safeFeature}`;
+        const userHtml = `<p>Hello,</p>
+<p>Your notify request for <strong>${safeFeature}</strong> has been saved.</p>
+<p>We will email you when this feature becomes available.</p>`;
+        const userText = `Your notify request for ${safeFeature} has been saved. We will email you when this feature becomes available.`;
+        await sendEmailMessageSafe(
+          {
+            // User confirmation email must not block notify persistence.
+            to: String(user.email),
+            subject: userSubject,
+            html: userHtml,
+            text: userText,
+            from: fromEmail,
+          },
+          "feature-notifications:user-confirmation"
+        );
+
+        const alertEmails = await getNotifyAlertEmails();
+        if (alertEmails.length > 0) {
+          const adminSubject = `New feature notify request: ${safeFeature}`;
+          const adminHtml = `<p><strong>New notify request</strong></p>
+<p>Feature: ${safeFeature}</p>
+<p>User email: ${String(user.email)}</p>
+<p>User id: ${Number(user.id)}</p>`;
+          const adminText = `New notify request. Feature: ${safeFeature}. User email: ${String(user.email)}. User id: ${Number(user.id)}.`;
+          await sendEmailMessageSafe({
+            to: alertEmails,
+            subject: adminSubject,
+            html: adminHtml,
+            text: adminText,
+            from: fromEmail,
+          }, "feature-notifications:admin-alert");
+        }
+      }
+
       return sendLegacySuccess(res, 200, {
         message: result.created ? "Notify request saved." : "Notify request already exists.",
         created: result.created,
@@ -2340,6 +2429,61 @@ async function startServer() {
         ntirEntities: ntirRows.length,
         successStories: storyRows.length,
       },
+    });
+  });
+
+  app.get("/api/admin/notification-settings", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
+
+    const [alertEmailsRaw, fromEmailRaw] = await Promise.all([
+      getAdminSetting(ADMIN_SETTING_NOTIFY_ALERT_EMAILS),
+      getAdminSetting(ADMIN_SETTING_NOTIFY_FROM_EMAIL),
+    ]);
+
+    const alertEmails = parseCsvEmails(alertEmailsRaw);
+    const fromEmail = fromEmailRaw && isValidEmail(fromEmailRaw)
+      ? fromEmailRaw
+      : String(process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com").trim();
+
+    return sendLegacySuccess(res, 200, {
+      alert_emails: alertEmails.join(", "),
+      from_email: fromEmail,
+    });
+  });
+
+  app.put("/api/admin/notification-settings", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
+
+    const alertEmails = String(req.body?.alert_emails ?? "").trim();
+    const fromEmail = String(req.body?.from_email ?? "").trim();
+    const parsedAlertEmails = parseCsvEmails(alertEmails);
+    const hasInvalidAlertEmail =
+      alertEmails.length > 0 &&
+      parsedAlertEmails.length !==
+        alertEmails
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean).length;
+    if (hasInvalidAlertEmail) {
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "One or more alert emails are invalid.");
+    }
+    if (fromEmail.length > 0 && !isValidEmail(fromEmail)) {
+      return sendLegacyError(res, 400, "VALIDATION_FAILED", "From email is invalid.");
+    }
+
+    await Promise.all([
+      upsertAdminSetting(ADMIN_SETTING_NOTIFY_ALERT_EMAILS, parsedAlertEmails.join(", ")),
+      upsertAdminSetting(ADMIN_SETTING_NOTIFY_FROM_EMAIL, fromEmail),
+    ]);
+
+    return sendLegacySuccess(res, 200, {
+      alert_emails: parsedAlertEmails.join(", "),
+      from_email: fromEmail,
+      ok: true,
     });
   });
 
@@ -2450,6 +2594,47 @@ async function startServer() {
 
     const story = await createSuccessStory(payload);
     return sendLegacySuccess(res, 201, { story });
+  });
+
+  app.put("/api/admin/impact/:id", async (req, res) => {
+    const user = await resolveAuthUser(req);
+    if (!user) return sendLegacyError(res, 401, "AUTH_UNAUTHORIZED", "Unauthorized.");
+    if (!isAdminEmail(String(user.email))) return sendLegacyError(res, 403, "AUTH_FORBIDDEN", "Admin access required.");
+
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) return sendLegacyError(res, 400, "VALIDATION_FAILED", "Invalid story id.");
+
+    const payload: {
+      title?: string;
+      category?: string;
+      image?: string;
+      story?: string;
+      testimonial?: string;
+      author?: string;
+      role?: string;
+      revenue?: string;
+      jobs?: string;
+      markets?: string;
+      is_published?: 0 | 1;
+    } = {};
+
+    if (req.body?.title !== undefined) payload.title = String(req.body.title).trim();
+    if (req.body?.category !== undefined) payload.category = String(req.body.category).trim();
+    if (req.body?.image !== undefined) payload.image = String(req.body.image).trim();
+    if (req.body?.story !== undefined) payload.story = String(req.body.story).trim();
+    if (req.body?.testimonial !== undefined) payload.testimonial = String(req.body.testimonial).trim();
+    if (req.body?.author !== undefined) payload.author = String(req.body.author).trim();
+    if (req.body?.role !== undefined) payload.role = String(req.body.role).trim();
+    if (req.body?.revenue !== undefined) payload.revenue = String(req.body.revenue).trim();
+    if (req.body?.jobs !== undefined) payload.jobs = String(req.body.jobs).trim();
+    if (req.body?.markets !== undefined) payload.markets = String(req.body.markets).trim();
+    if (req.body?.is_published !== undefined) {
+      payload.is_published = req.body.is_published === 0 || req.body.is_published === false ? 0 : 1;
+    }
+
+    const story = await updateSuccessStory(id, payload);
+    if (!story) return sendLegacyError(res, 404, "NOT_FOUND", "Impact story not found.");
+    return sendLegacySuccess(res, 200, { story });
   });
 
   app.get("/api/admin/shop-products", async (req, res) => {
@@ -2615,6 +2800,33 @@ async function startServer() {
         productName,
         email,
       });
+
+      if (result.created) {
+        const fromEmail = await getNotifyFromEmail();
+        const userSubject = `Notify request received: ${productName}`;
+        const userHtml = `<p>Hello,</p>
+<p>Your notify request for <strong>${productName}</strong> has been saved.</p>
+<p>We will email you when stock is available.</p>`;
+        const userText = `Your notify request for ${productName} has been saved. We will email you when stock is available.`;
+        await sendEmailMessageSafe(
+          { to: email, subject: userSubject, html: userHtml, text: userText, from: fromEmail },
+          "shop-restock-notifications:user-confirmation"
+        );
+
+        const alertEmails = await getNotifyAlertEmails();
+        if (alertEmails.length > 0) {
+          const adminSubject = `New shop notify request: ${productName}`;
+          const adminHtml = `<p><strong>New shop restock notify request</strong></p>
+<p>Product: ${productName}</p>
+<p>Slug: ${productSlug}</p>
+<p>Subscriber email: ${email}</p>`;
+          const adminText = `New shop restock notify request. Product: ${productName}. Slug: ${productSlug}. Subscriber email: ${email}.`;
+          await sendEmailMessageSafe(
+            { to: alertEmails, subject: adminSubject, html: adminHtml, text: adminText, from: fromEmail },
+            "shop-restock-notifications:admin-alert"
+          );
+        }
+      }
 
       return sendLegacySuccess(res, 200, {
         created: result.created,
