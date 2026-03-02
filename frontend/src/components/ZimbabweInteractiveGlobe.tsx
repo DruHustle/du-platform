@@ -360,14 +360,22 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
               htmlElementsData={showZimbabweMarker ? [{ ...zimCoords, name: "ZIMBABWE" }] : []}
               htmlElement={(d: any) => {
                 const el = document.createElement("div");
-                el.innerHTML = `
-                  <div class="group flex flex-col items-center cursor-pointer">
-                    <div class="h-6 w-6 flex items-center justify-center">
-                      <div class="absolute h-6 w-6 animate-ping rounded-full bg-yellow-500/30"></div>
-                      <div class="h-3 w-3 rounded-full bg-yellow-500 border-2 border-white shadow-[0_0_15px_#facc15]"></div>
-                    </div>
-                  </div>
-                `;
+                const markerGroup = document.createElement("div");
+                markerGroup.className = "group flex flex-col items-center cursor-pointer";
+
+                const markerShell = document.createElement("div");
+                markerShell.className = "h-6 w-6 flex items-center justify-center";
+
+                const pingHalo = document.createElement("div");
+                pingHalo.className = "absolute h-6 w-6 animate-ping rounded-full bg-yellow-500/30";
+
+                const markerDot = document.createElement("div");
+                markerDot.className = "h-3 w-3 rounded-full bg-yellow-500 border-2 border-white shadow-[0_0_15px_#facc15]";
+
+                markerShell.appendChild(pingHalo);
+                markerShell.appendChild(markerDot);
+                markerGroup.appendChild(markerShell);
+                el.appendChild(markerGroup);
                 el.onclick = () => handleFlyTo(zimCoords, 1.8);
                 return el;
               }}

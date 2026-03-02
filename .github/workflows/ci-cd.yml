@@ -41,6 +41,9 @@ jobs:
       
       - name: Type check
         run: pnpm check
+
+      - name: Guardrails (Build Safety)
+        run: pnpm guardrails
       
       - name: Build project (CI Check)
         run: pnpm build

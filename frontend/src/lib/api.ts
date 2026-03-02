@@ -36,7 +36,9 @@ export function saveAuthToken(token: string) {
   if (typeof window === "undefined") return;
   const normalized = String(token ?? "").trim();
   if (!normalized) return;
-  window.localStorage.setItem("zigd_jwt", normalized);
+  // Store access tokens in sessionStorage (tab-scoped) to reduce persistence risk.
+  window.sessionStorage.setItem("zigd_jwt", normalized);
+  window.localStorage.removeItem("zigd_jwt");
   window.localStorage.setItem(HAS_LOGGED_IN_KEY, "1");
 }
 
@@ -48,10 +50,18 @@ export function clearAuthToken() {
 
 export function loadAuthToken(): string {
   if (typeof window === "undefined") return "";
-  return (
-    String(window.localStorage.getItem("zigd_jwt") ?? "").trim() ||
-    String(window.sessionStorage.getItem("zigd_jwt") ?? "").trim()
-  );
+  const sessionToken = String(window.sessionStorage.getItem("zigd_jwt") ?? "").trim();
+  if (sessionToken) return sessionToken;
+
+  // Backward compatibility: migrate legacy localStorage tokens once.
+  const legacyLocalToken = String(window.localStorage.getItem("zigd_jwt") ?? "").trim();
+  if (legacyLocalToken) {
+    window.sessionStorage.setItem("zigd_jwt", legacyLocalToken);
+    window.localStorage.removeItem("zigd_jwt");
+    return legacyLocalToken;
+  }
+
+  return "";
 }
 
 export function hasLoggedInBefore(): boolean {
