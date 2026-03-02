@@ -83,7 +83,7 @@ export default function AirtimeTopupForm() {
   };
 
   const fieldClass =
-    "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-zim-gold/60";
+    "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-white/70 focus:border-zim-gold/60";
 
   return (
     <section className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 text-white">
@@ -92,7 +92,7 @@ export default function AirtimeTopupForm() {
       {step === "form" && (
         <div className="mt-4 grid gap-3">
           <label className="grid gap-1">
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Phone Number</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/70">Phone Number</span>
             <input
               className={fieldClass}
               placeholder="+2637XXXXXXXX"
@@ -108,7 +108,7 @@ export default function AirtimeTopupForm() {
           </div>
 
           <div className="grid gap-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Amount Options</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/70">Amount Options</span>
             <div className="flex flex-wrap gap-2">
               {options.length > 0 ? (
                 options.slice(0, 8).map((value) => (
@@ -126,13 +126,13 @@ export default function AirtimeTopupForm() {
                   </button>
                 ))
               ) : (
-                <span className="text-xs text-white/45">No suggested amounts yet.</span>
+                <span className="text-xs text-white/70">No suggested amounts yet.</span>
               )}
             </div>
           </div>
 
           <label className="grid gap-1">
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Selected Amount (USD)</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/70">Selected Amount (USD)</span>
             <input
               className={fieldClass}
               type="number"
@@ -154,7 +154,7 @@ export default function AirtimeTopupForm() {
 
       {step === "confirm" && (
         <div className="mt-4 grid gap-3">
-          <h4 className="text-sm font-black uppercase tracking-widest text-white/60">Confirm Airtime Purchase</h4>
+          <h4 className="text-sm font-black uppercase tracking-widest text-white/70">Confirm Airtime Purchase</h4>
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/80">
             <p>Phone: <span className="font-semibold text-white">{phoneNumber}</span></p>
             <p>Operator: <span className="font-semibold text-white">{operator?.name || "Unknown"}</span></p>
@@ -195,7 +195,7 @@ export default function AirtimeTopupForm() {
       )}
 
       {error && <p className="mt-3 rounded-xl border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>}
-      <p className="mt-4 text-[11px] leading-relaxed text-white/50">
+      <p className="mt-4 text-[11px] leading-relaxed text-white/70">
         Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.
       </p>
     </section>

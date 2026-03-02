@@ -19,6 +19,21 @@
   "quick_links": "Izixhumanisi ezisheshayo",
   "partners": "Abahlanganyeli",
   "contact": "Thintana lathi",
+  "footer": {
+    "about": {
+      "title": "Mayelana Lathi",
+      "vision_label": "Umbono Wethu",
+      "vision_content": "Ukuba yisango elithembekileyo le-diaspora elixhumanisa amaZimbabwean akwamanye amazwe lamathuba kanye lamasevisi abalulekileyo ekhaya.",
+      "mission_label": "Inhloso Yethu",
+      "mission_content": "Ukuhlanganisa ezokuvakasha, ezohwebo, ukutshala imali, remitensi, lokunakekelwa kwemindeni ngepulatifomu eyodwa ephephileyo futhi etholakala lula.",
+      "values_label": "Amanani Ethu",
+      "values_content": "Ukuthembeka, ukusebenza ngemfanelo ephezulu, ukubonakala sobala, ukusungula izinto ezintsha, lokuzinikela okuqhubekayo kumphumela we-diaspora.",
+      "who_label": "Singobani",
+      "who_content": "Siyiqembu labachwepheshe beZimbabwe diaspora elakha izixazululo zedijithali ezisebenzayo ezigcina imindeni, amabhizinisi, lemiphakathi kuxhumene lekhaya.",
+      "what_label": "Esikwenzayo",
+      "what_content": "Sakha futhi siqhube ipulatifomu ehlanganisiweyo ye-diaspora exhumanisa abasebenzisi lezokuvakasha, ezohwebo, ukutshala imali, ukukhokha, ukunakekelwa kwemindeni, lokuqondiswa nge-AI. Siphinde sisebenze labalingani abathembekileyo labahlinzeki bamasevisi ukuze ukubamba iqhaza kube kuphephile, kusebenze, futhi kulinganiseke."
+    }
+  },
   "auth": {
     "create_account": "Hlanganyela le-Diaspora Unlocked Platform",
     "register_subtitle": "Qalisa uhambo lwakho lokusebenzisana okubalulekileyo labantu baphandle kwelizwe.",

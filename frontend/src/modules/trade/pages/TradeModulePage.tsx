@@ -348,7 +348,7 @@ export default function Trade() {
                       <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
                     </div>
                     <h3 className="text-base font-black text-white tracking-tight mb-2">{role.title}</h3>
-                    <p className="text-[11px] text-white/45 leading-relaxed font-light">{role.description}</p>
+                    <p className="text-[11px] text-white/70 leading-relaxed font-light">{role.description}</p>
                   </div>
                 );
               })}
@@ -367,7 +367,7 @@ export default function Trade() {
                 <TabsTrigger
                   key={item.product}
                   value={item.product}
-                  className="flex-1 rounded-full px-2 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-zim-gold data-[state=active]:text-zim-black data-[state=active]:shadow-[0_0_15px_rgba(212,175,55,0.3)] text-white/40"
+                  className="flex-1 rounded-full px-2 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-zim-gold data-[state=active]:text-zim-black data-[state=active]:shadow-[0_0_15px_rgba(212,175,55,0.3)] text-white/70"
                 >
                   {item.product}
                 </TabsTrigger>
@@ -400,7 +400,7 @@ export default function Trade() {
                       </div>
 
                       <div className="pt-2">
-                        <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">
+                        <p className="text-[9px] font-black text-white/70 uppercase tracking-widest mb-1">
                           Demand Outlook
                         </p>
                         <div className="flex items-center gap-2">
@@ -414,7 +414,7 @@ export default function Trade() {
 
                     <div className="md:col-span-6 flex flex-col justify-center">
                       <div className="flex items-center gap-3 mb-6">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
+                        <span className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em]">
                           Compliance Requirements
                         </span>
                         <div className="h-px flex-1 bg-white/5" />
@@ -486,7 +486,7 @@ export default function Trade() {
                     </div>
                     
                     <div className="p-8 space-y-6">
-                      <p className="text-xs text-white/50 leading-relaxed font-light line-clamp-2">{sector.description}</p>
+                      <p className="text-xs text-white/70 leading-relaxed font-light line-clamp-2">{sector.description}</p>
                       
                       <div className="space-y-3">
                         <h4 className="text-[10px] font-black text-zim-gold uppercase tracking-widest">{t('trade.export_sectors_badge') || "Sectors"}</h4>
@@ -541,11 +541,11 @@ export default function Trade() {
                         <div className="p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-zim-gold/10 transition-colors">
                           <Icon className="h-5 w-5 text-zim-gold" />
                         </div>
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-widest italic">Phase 0{index + 1}</span>
+                        <span className="text-[10px] font-black text-white/70 uppercase tracking-widest italic">Phase 0{index + 1}</span>
                       </div>
 
                       <h3 className="text-lg font-black text-white tracking-tight mb-3 group-hover:text-zim-gold transition-colors">{step.phase}</h3>
-                      <p className="text-xs text-white/50 mb-6 leading-relaxed font-light">{step.description}</p>
+                      <p className="text-xs text-white/70 mb-6 leading-relaxed font-light">{step.description}</p>
                       
                       <ul className="space-y-3">
                         {step.steps.map((detail, dIdx) => (

@@ -365,7 +365,7 @@ export default function AdminDashboard() {
                 className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 space-y-3"
               >
                 <p className="text-white font-black">Notification Email Settings</p>
-                <p className="text-white/60 text-sm">
+                <p className="text-white/70 text-sm">
                   Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.
                 </p>
                 <div className="grid md:grid-cols-2 gap-3">
@@ -401,11 +401,11 @@ export default function AdminDashboard() {
                       <p className="font-black">{row.email}</p>
                       <p className="text-white/75 text-sm">{formatNotifyFeature(row.feature)}</p>
                     </div>
-                    <p className="text-xs text-white/50">{new Date(row.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-white/70">{new Date(row.created_at).toLocaleString()}</p>
                   </div>
                 </div>
               ))}
-              {notifyRows.length === 0 ? <p className="text-white/50">No notify requests yet.</p> : null}
+              {notifyRows.length === 0 ? <p className="text-white/70">No notify requests yet.</p> : null}
             </div>
           ) : null}
 
@@ -624,7 +624,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
-                {shopRows.length === 0 ? <p className="text-white/50">No shop products yet.</p> : null}
+                {shopRows.length === 0 ? <p className="text-white/70">No shop products yet.</p> : null}
               </div>
             </div>
           ) : null}

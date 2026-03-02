@@ -1547,7 +1547,7 @@ export default function OnesaAITourismAugmentedExperience() {
                   </div>
 
                   <div className="space-y-0">
-                  <p className="m-0 text-[11px] text-white/60 leading-relaxed">
+                  <p className="m-0 text-[11px] text-white/70 leading-relaxed">
                     {ui.arOverlayVoice} {arOverlayEnabled && voiceNarrationEnabled ? ui.enabled : ui.disabled}.
                     {" "}{ui.cameraLabel} {cameraEnabled ? ui.cameraOnSummary : ui.cameraOffSummary}
                     {voiceStatus ? ` ${voiceStatus}` : ""}

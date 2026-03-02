@@ -419,7 +419,7 @@
   }
 
   .section-subtitle {
-    @apply text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4;
+    @apply text-sm  max-w-3xl mx-auto font-light leading-relaxed mt-4;
   }
 
   .section-title-compact {
@@ -784,7 +784,7 @@
   
   .testimonial-card::before {
     content: '"';
-    @apply absolute top-4 left-4 text-6xl text-primary/10 font-serif;
+    @apply absolute top-4 left-4 text-6xl  font-serif;
     line-height: 1;
   }
   

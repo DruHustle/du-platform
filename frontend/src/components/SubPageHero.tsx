@@ -150,7 +150,7 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
                   </p>
                 )}
                 {current.description && (
-                  <p className="text-base md:text-lg text-white/80 leading-relaxed font-light">
+                  <p className="text-base md:text-lg  leading-relaxed font-light">
                     {current.description}
                   </p>
                 )}

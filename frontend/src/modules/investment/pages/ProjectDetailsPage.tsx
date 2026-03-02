@@ -195,7 +195,7 @@ export default function ProjectDetails() {
                 </Badge>
                 <h1 className="!text-xl md:!text-2xl font-black tracking-tighter">{project.title}</h1>
                 <p className="mt-3 !text-sm text-white/75">{project.subtitle}</p>
-                <p className="mt-2 !text-xs text-white/60 uppercase tracking-widest font-black">
+                <p className="mt-2 !text-xs text-white/70 uppercase tracking-widest font-black">
                   Responsible Company: {project.owner}
                 </p>
                 <p className="mt-6 !text-sm text-white/80 leading-relaxed">{project.overview}</p>
@@ -232,19 +232,19 @@ export default function ProjectDetails() {
 
               <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white grid md:grid-cols-3 gap-4">
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/40 !text-[11px] uppercase tracking-widest">Location</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">Location</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-zim-gold" /> {project.location}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/40 !text-[11px] uppercase tracking-widest">Land Framework</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">Land Framework</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-zim-gold" /> {project.framework}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/40 !text-[11px] uppercase tracking-widest">Regulatory</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">Regulatory</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <Landmark className="h-4 w-4 text-zim-gold" /> {project.regulatory}
                   </p>

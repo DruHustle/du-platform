@@ -342,7 +342,7 @@ export default function Technology() {
                 </div>
 
                 <div className="bg-white/[0.02] p-5 rounded-2xl border border-white/10 space-y-3 relative">
-                  <p className="text-white/40 italic text-[11px] font-medium leading-relaxed">
+                  <p className="text-white/70 italic text-[11px] font-medium leading-relaxed">
                     "{t("tech.ai_demo_question") || "What are some high ROI investment opportunities in Zimbabwe's agriculture sector right now?"}"
                   </p>
                   <div className="flex items-start gap-3">
@@ -361,7 +361,7 @@ export default function Technology() {
                 <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
                   {t("tech.onesa_meaning_badge") || "Onesa = Illuminate"}
                 </Badge>
-                <p className="text-sm text-white/60 leading-relaxed font-light">
+                <p className="text-sm text-white/70 leading-relaxed font-light">
                   {t("tech.onesa_desc1") || "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model."}
                 </p>
 
@@ -519,7 +519,7 @@ export default function Technology() {
                       <h3 className="text-lg font-black text-white tracking-tight mb-2 group-hover:text-zim-gold transition-colors">
                         {sector.title}
                       </h3>
-                      <p className="text-[13px] text-white/60 mb-5 leading-relaxed font-light">
+                      <p className="text-[13px] text-white/70 mb-5 leading-relaxed font-light">
                         {sector.description}
                       </p>
                       
@@ -560,7 +560,7 @@ export default function Technology() {
                     <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
                   </div>
                   <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
-                  <div className="flex items-center justify-between gap-2 text-white/50 text-xs">
+                  <div className="flex items-center justify-between gap-2 text-white/70 text-xs">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-3.5 w-3.5" />
                       <span>{hub.city}{t("tech.hubs.location_suffix") || ", Zimbabwe"}</span>

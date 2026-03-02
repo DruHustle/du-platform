@@ -99,14 +99,14 @@ export default function Regulations() {
       <section className="min-h-screen bg-slate-950 px-6 py-28">
         <div className="container mx-auto max-w-6xl space-y-10">
           <div className="text-white space-y-4">
-            <Link href="/" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+            <Link href="/" className="inline-flex items-center text-xs uppercase tracking-widest font-bold  hover:text-zim-gold">
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
               {t("regulations.cta.back") || "Back"}
             </Link>
             <h1 className="!text-xl md:!text-3xl font-black tracking-tighter">
               {t("regulations.title") || "Regulations & Compliance Guide"}
             </h1>
-            <p className="!text-xs md:!text-sm text-white/75 max-w-3xl leading-relaxed">
+            <p className="!text-xs md:!text-sm  max-w-3xl leading-relaxed">
               {t("regulations.subtitle") ||
                 "Practical regulatory guidance for diaspora investors, exporters, and returnees. Use this as an execution checklist and align final decisions with qualified legal, tax, and sector advisors."}
             </p>
@@ -123,7 +123,7 @@ export default function Regulations() {
                 </div>
                 <ul className="space-y-3">
                   {section.points.map((point) => (
-                    <li key={point} className="!text-xs md:!text-sm text-white/75 leading-relaxed">
+                    <li key={point} className="!text-xs md:!text-sm  leading-relaxed">
                       {point}
                     </li>
                   ))}

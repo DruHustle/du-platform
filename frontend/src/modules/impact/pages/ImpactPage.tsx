@@ -390,7 +390,7 @@ export default function Impact() {
           <div className="container relative z-10 px-6 mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-xl font-black text-white tracking-tight">{t("impact.stories_title") || "Inspiring Impact"}</h2>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("impact.stories_subtitle") || "Explore the impactful contributions of the Zimbabwean diaspora across various sectors."}</p>
+              <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("impact.stories_subtitle") || "Explore the impactful contributions of the Zimbabwean diaspora across various sectors."}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -412,20 +412,20 @@ export default function Impact() {
                   </div>
                   <div className="p-8 flex-grow space-y-6 relative">
                     <h3 className="text-xl font-black text-white tracking-tight group-hover:text-zim-gold transition-colors leading-tight">{story?.title}</h3>
-                    <p className="text-[13px] text-white/50 leading-relaxed font-light line-clamp-3">{story?.story}</p>
+                    <p className="text-[13px]  leading-relaxed font-light line-clamp-3">{story?.story}</p>
                     <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
                       <div className="space-y-1">
-                        <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">Revenue</p>
+                        <p className="text-[9px] font-black  uppercase tracking-widest">Revenue</p>
                         <p className="text-sm font-black text-zim-gold">{story?.impact?.revenue}</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">Jobs</p>
+                        <p className="text-[9px] font-black  uppercase tracking-widest">Jobs</p>
                         <p className="text-sm font-black text-white">{story?.impact?.jobs}</p>
                       </div>
                     </div>
                     <div className="relative p-6 rounded-2xl bg-white/5 border border-white/10">
-                      <Quote className="absolute -top-3 -left-3 h-8 w-8 text-zim-gold/20" />
-                      <p className="italic text-white/70 text-xs leading-relaxed mb-4 font-light">"{story?.testimonial}"</p>
+                      <Quote className="absolute -top-3 -left-3 h-8 w-8" />
+                      <p className="italic  text-xs leading-relaxed mb-4 font-light">"{story?.testimonial}"</p>
                       <p className="text-right text-[10px] font-black text-zim-gold uppercase tracking-widest mt-4">— {story?.author}</p>
                     </div>
                   </div>
@@ -443,7 +443,7 @@ export default function Impact() {
           <div className="container relative z-10 px-6 mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-xl font-black text-white tracking-tight">{t("impact.metrics_title") || "Collective Impact"}</h2>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("impact.metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured impact stories."}</p>
+              <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("impact.metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured impact stories."}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {activeMetrics.map((metric, index) => {
@@ -460,7 +460,7 @@ export default function Impact() {
                     </div>
                     <h3 className="text-2xl font-black text-white tracking-tighter mb-2 tabular-nums">{metric.value}</h3>
                     <p className="text-[11px] font-black text-zim-gold uppercase tracking-[0.2em]">{metric.label}</p>
-                    <p className="text-[12px] text-white/40 font-light leading-relaxed pt-3">{metric.description}</p>
+                    <p className="text-[12px]  font-light leading-relaxed pt-3">{metric.description}</p>
                   </motion.div>
                 );
               })}
@@ -481,7 +481,7 @@ export default function Impact() {
 
               <div className="space-y-4 text-center">
                 <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("impact.cta_title") || "Partner with us"}</h2>
-                <p className="text-sm text-white/75 font-light max-w-3xl mx-auto leading-relaxed">{t("impact.cta_subtitle") || "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let's build together."}</p>
+                <p className="text-sm  font-light max-w-3xl mx-auto leading-relaxed">{t("impact.cta_subtitle") || "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let's build together."}</p>
               </div>
 
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
@@ -495,7 +495,7 @@ export default function Impact() {
                 </DialogContent>
               </Dialog>
 
-              <div className="pt-8 flex flex-wrap justify-center gap-8 ">
+              <div className="pt-8 flex flex-wrap justify-center gap-8">
                 <div className="flex items-center gap-2 text-xs font-bold text-white tracking-widest">
                   <Mail className="h-4 w-4" /> 
                   <a href="mailto:info@diasporaunlocked.com" className="hover:text-white transition-colors">info@diasporaunlocked.com</a>
@@ -516,7 +516,7 @@ export default function Impact() {
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
             <div className="text-center max-w-3xl mx-auto space-y-4 mb-8">
               <h3 className="text-xl font-black text-white tracking-tight leading-tight">Diaspora Economic Impact</h3>
-              <p className="text-sm text-white/75 font-light leading-relaxed">
+              <p className="text-sm  font-light leading-relaxed">
                 Understanding the significant contribution of the Zimbabwean diaspora to the national economy.
               </p>
             </div>
@@ -526,10 +526,10 @@ export default function Impact() {
                 {remittanceImpact.map((item, index) => (
                   <div key={index} className="space-y-3 group">
                     <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
-                      <span className="flex items-center gap-3 text-white/60">
+                      <span className="flex items-center gap-3">
                         <span className="p-1.5 bg-white/5 rounded-lg group-hover:text-zim-gold transition-colors">{item.icon}</span> {item.sector}
                       </span>
-                      <span className="text-white">{item.percentage} <span className="text-white/30 ml-2 font-light">({item.amount})</span></span>
+                      <span className="text-white">{item.percentage} <span className=" ml-2 font-light">({item.amount})</span></span>
                     </div>
                     <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
                       <motion.div
@@ -552,7 +552,7 @@ export default function Impact() {
                 ].map((stat, i) => (
                   <div key={i} className={`p-6 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all hover:bg-slate-950/60 ${stat.span ? "col-span-2 lg:col-span-1" : ""}`}>
                     <p className="text-base md:text-lg font-black text-zim-gold tracking-tighter mb-2">{stat.val}</p>
-                    <p className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-snug">{stat.label}</p>
+                    <p className="text-[10px] font-black  uppercase tracking-widest leading-snug">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -567,8 +567,8 @@ export default function Impact() {
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
             <div className="mb-7 text-center">
               <h3 className="text-xl font-black text-white tracking-tight">Global Diaspora Distribution</h3>
-              <p className="mt-3 text-xs text-white/75 font-light leading-relaxed">Zimbabwean diaspora residence worldwide</p>
-              <p className="mt-2 max-w-3xl mx-auto text-[11px] text-white/60 font-light leading-relaxed">
+              <p className="mt-3 text-xs  font-light leading-relaxed">Zimbabwean diaspora residence worldwide</p>
+              <p className="mt-2 max-w-3xl mx-auto text-[11px]  font-light leading-relaxed">
                 This distribution highlights priority diaspora corridors for trade, remittance flows, and investment outreach planning across major host markets.
               </p>
             </div>
@@ -578,11 +578,11 @@ export default function Impact() {
               <table className="w-full min-w-[760px] text-left">
                 <thead>
                   <tr className="bg-white/5">
-                    <th className="p-4 md:p-5 text-[9px] font-black text-white/40 uppercase tracking-widest">Region/Country</th>
-                    <th className="p-4 md:p-5 text-[9px] font-black text-white/40 uppercase tracking-widest">Population</th>
-                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">Percentage</th>
-                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">Remittances 2024</th>
-                    <th className="p-4 md:p-5 text-right text-[9px] font-black text-white/40 uppercase tracking-widest">Remittances 2025</th>
+                    <th className="p-4 md:p-5 text-[9px] font-black  uppercase tracking-widest">Region/Country</th>
+                    <th className="p-4 md:p-5 text-[9px] font-black  uppercase tracking-widest">Population</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black  uppercase tracking-widest">Percentage</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black  uppercase tracking-widest">Remittances 2024</th>
+                    <th className="p-4 md:p-5 text-right text-[9px] font-black  uppercase tracking-widest">Remittances 2025</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -599,11 +599,11 @@ export default function Impact() {
                       >
                         <td className="p-4 md:p-5 flex items-center gap-3">
                           <span className="text-base drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110 duration-500">{item.flag}</span>
-                          <span className="text-xs md:text-sm font-bold text-white/80 group-hover:text-zim-gold transition-colors">{item.region}</span>
+                          <span className="text-xs md:text-sm font-bold  group-hover:text-zim-gold transition-colors">{item.region}</span>
                         </td>
-                        <td className="p-4 md:p-5 text-[11px] text-white/40 font-medium tracking-wide">{item.population}</td>
+                        <td className="p-4 md:p-5 text-[11px]  font-medium tracking-wide">{item.population}</td>
                         <td className="p-4 md:p-5 text-right text-sm font-black text-zim-gold tabular-nums tracking-tight">{item.percentage}</td>
-                        <td className="p-4 md:p-5 text-right text-[11px] font-semibold text-white/75 tabular-nums">{formatRemittanceByShare(share, remittance2024TotalBillions)}</td>
+                        <td className="p-4 md:p-5 text-right text-[11px] font-semibold  tabular-nums">{formatRemittanceByShare(share, remittance2024TotalBillions)}</td>
                         <td className="p-4 md:p-5 text-right text-[11px] font-black text-zim-gold tabular-nums">{formatRemittanceByShare(share, remittance2025TotalBillions)}</td>
                       </motion.tr>
                     );

@@ -106,7 +106,7 @@ export default function InvestmentOpportunitiesPage() {
                     className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
                       activeFilter === s
                         ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]"
-                        : "bg-white/5 text-white/60 border-white/10 hover:border-white/30"
+                        : "bg-white/5 text-white/70 border-white/10 hover:border-white/30"
                     }`}
                   >
                     {t(`investment.project_filters.${s}`) || PROJECT_FILTER_FALLBACKS[s] || s}
@@ -119,7 +119,7 @@ export default function InvestmentOpportunitiesPage() {
                     className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
                       riskFilter === risk
                         ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]"
-                        : "bg-white/5 text-white/60 border-white/10 hover:border-white/30"
+                        : "bg-white/5 text-white/70 border-white/10 hover:border-white/30"
                     }`}
                   >
                     {t(`investment.project_filters.${risk}`) || PROJECT_FILTER_FALLBACKS[risk] || risk}
@@ -159,10 +159,10 @@ export default function InvestmentOpportunitiesPage() {
                       <h3 className="text-lg font-black text-white tracking-tight">
                         {getProjectText(p.id, "title", PROJECT_CONTENT_FALLBACKS[p.id]?.title || "Investment Opportunity")}
                       </h3>
-                      <p className="text-sm text-white/50 font-light leading-relaxed line-clamp-2">
+                      <p className="text-sm text-white/70 font-light leading-relaxed line-clamp-2">
                         {getProjectText(p.id, "description", PROJECT_CONTENT_FALLBACKS[p.id]?.description || "Verified opportunity for diaspora investors.")}
                       </p>
-                      <p className="text-[11px] text-white/60 font-semibold uppercase tracking-wider">
+                      <p className="text-[11px] text-white/70 font-semibold uppercase tracking-wider">
                         {t("investment.project_card.owner", { defaultValue: "Responsible Company" })}: {p.owner}
                       </p>
 
@@ -181,7 +181,7 @@ export default function InvestmentOpportunitiesPage() {
                     <div className="md:col-span-4 p-2 flex flex-col justify-between border-l border-white/10 md:pl-5">
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-white/40">
+                          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-white/70">
                             <span>{t("investment.project_card.raised", { amount: p.raised }) || `Raised: ${p.raised}`}</span>
                             <span className="text-zim-gold">{p.prog}%</span>
                           </div>
@@ -197,11 +197,11 @@ export default function InvestmentOpportunitiesPage() {
 
                         <div className="grid grid-cols-1 gap-3">
                           <div className="py-2 border-b border-white/10">
-                            <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">{t("investment.project_filters.min_investment") || "Min."}</p>
+                            <p className="text-[9px] font-black text-white/70 uppercase tracking-widest">{t("investment.project_filters.min_investment") || "Min."}</p>
                             <p className="text-sm font-black text-white">{p.min}</p>
                           </div>
                           <div className="py-2">
-                            <p className="text-[9px] font-black text-zim-gold/40 uppercase tracking-widest">{t("investment.project_filters.expected_return") || "Expected"}</p>
+                            <p className="text-[9px] font-black text-zim-gold/70 uppercase tracking-widest">{t("investment.project_filters.expected_return") || "Expected"}</p>
                             <p className="text-sm font-black text-zim-gold">{p.ret}</p>
                           </div>
                         </div>

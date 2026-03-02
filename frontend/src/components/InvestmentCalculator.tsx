@@ -152,7 +152,7 @@ export default function SophisticatedCalculator() {
             </h3>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] font-medium text-white/60">
+            <span className="text-[11px] font-medium text-white/70">
               {tr("calculator.stress_test", "Stress Test")}
             </span>
             <Switch 
@@ -167,7 +167,7 @@ export default function SophisticatedCalculator() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">{tr("calculator.principal", "Principal")}</Label>
+              <Label className="text-[11px] font-medium text-white/70">{tr("calculator.principal", "Principal")}</Label>
               <p className="text-xs font-semibold text-white">{formatCurrency(principal[0])}</p>
             </div>
             <Slider value={principal} onValueChange={setPrincipal} min={1000} max={250000} step={500} className="py-4" />
@@ -175,7 +175,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">Monthly Top-Up</Label>
+              <Label className="text-[11px] font-medium text-white/70">Monthly Top-Up</Label>
               <p className="text-xs font-semibold text-white">{formatCurrency(monthlyContribution[0])}</p>
             </div>
             <Slider value={monthlyContribution} onValueChange={setMonthlyContribution} min={0} max={5000} step={50} />
@@ -183,7 +183,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">{tr("calculator.expected_return", "Expected Return (p.a.)")}</Label>
+              <Label className="text-[11px] font-medium text-white/70">{tr("calculator.expected_return", "Expected Return (p.a.)")}</Label>
               <p className="text-xs font-semibold text-zim-gold">{annualReturn[0]}%</p>
             </div>
             <Slider value={annualReturn} onValueChange={setAnnualReturn} min={3} max={30} step={1} />
@@ -191,7 +191,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">Investment Horizon</Label>
+              <Label className="text-[11px] font-medium text-white/70">Investment Horizon</Label>
               <p className="text-xs font-semibold text-white">{years[0]} years</p>
             </div>
             <Slider value={years} onValueChange={setYears} min={1} max={20} step={1} />
@@ -199,7 +199,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">{tr("calculator.tax_on_gains", "Tax on Gains")}</Label>
+              <Label className="text-[11px] font-medium text-white/70">{tr("calculator.tax_on_gains", "Tax on Gains")}</Label>
               <p className="text-xs font-semibold text-white">{taxRate[0]}%</p>
             </div>
             <Slider value={taxRate} onValueChange={setTaxRate} min={0} max={40} step={1} />
@@ -207,7 +207,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">Inflation Assumption</Label>
+              <Label className="text-[11px] font-medium text-white/70">Inflation Assumption</Label>
               <p className="text-xs font-semibold text-white">{inflationRate[0]}%</p>
             </div>
             <Slider value={inflationRate} onValueChange={setInflationRate} min={0} max={20} step={0.5} />
@@ -215,7 +215,7 @@ export default function SophisticatedCalculator() {
 
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <Label className="text-[11px] font-medium text-white/60">Annual Platform/Management Fee</Label>
+              <Label className="text-[11px] font-medium text-white/70">Annual Platform/Management Fee</Label>
               <p className="text-xs font-semibold text-white">{annualPlatformFee[0].toFixed(1)}%</p>
             </div>
             <Slider value={annualPlatformFee} onValueChange={setAnnualPlatformFee} min={0} max={5} step={0.1} />
@@ -225,38 +225,38 @@ export default function SophisticatedCalculator() {
         {/* Result Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-3 border-b border-white/10">
           <div>
-            <p className="text-[11px] font-medium text-white/60">Projected Net Profit</p>
+            <p className="text-[11px] font-medium text-white/70">Projected Net Profit</p>
             <p className="text-2xl font-black tabular-nums text-white">{formatCurrency(base.totalProfit)}</p>
           </div>
           <div className="sm:text-right lg:text-left">
-            <p className="text-[11px] font-medium text-white/60">{tr("calculator.final_value_short", "Final Value")} (Post-Tax/Fees)</p>
+            <p className="text-[11px] font-medium text-white/70">{tr("calculator.final_value_short", "Final Value")} (Post-Tax/Fees)</p>
             <p className="text-2xl font-black tabular-nums text-zim-gold">{formatCurrency(base.finalValue)}</p>
           </div>
           <div>
-            <p className="text-[11px] font-medium text-white/60">Total Fees + Taxes</p>
+            <p className="text-[11px] font-medium text-white/70">Total Fees + Taxes</p>
             <p className="text-2xl font-black tabular-nums text-white">{formatCurrency(base.totalFees + base.totalTaxes)}</p>
           </div>
           <div>
-            <p className="text-[11px] font-medium text-white/60">Break-even Year</p>
+            <p className="text-[11px] font-medium text-white/70">Break-even Year</p>
             <p className="text-2xl font-black tabular-nums text-white">{base.breakEvenYear ? `Year ${base.breakEvenYear}` : "Not reached"}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
           <div className="py-3 md:px-4">
-            <p className="text-[11px] font-medium text-white/60">Total Contributions</p>
+            <p className="text-[11px] font-medium text-white/70">Total Contributions</p>
             <p className="text-lg font-black text-white">{formatCurrency(base.contributions)}</p>
           </div>
           <div className="py-3 md:px-4">
-            <p className="text-[11px] font-medium text-white/60">CAGR Estimate</p>
+            <p className="text-[11px] font-medium text-white/70">CAGR Estimate</p>
             <p className="text-lg font-black text-white">{base.cagr.toFixed(1)}%</p>
           </div>
           <div className="py-3 md:px-4">
-            <p className="text-[11px] font-medium text-white/60">Real Value (Today USD)</p>
+            <p className="text-[11px] font-medium text-white/70">Real Value (Today USD)</p>
             <p className="text-lg font-black text-white">{formatCurrency(base.realFinalValue)}</p>
           </div>
           <div className="py-3 md:px-4">
-            <p className="text-[11px] font-medium text-white/60">ROI</p>
+            <p className="text-[11px] font-medium text-white/70">ROI</p>
             <p className="text-lg font-black text-white">{base.roi.toFixed(1)}%</p>
           </div>
         </div>
@@ -270,10 +270,10 @@ export default function SophisticatedCalculator() {
 
         {/* Scenario Analysis */}
         <div className="space-y-2 pt-1">
-          <span className="text-[11px] font-medium text-white/60">Scenario Outcomes</span>
+          <span className="text-[11px] font-medium text-white/70">Scenario Outcomes</span>
           <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
             <div className="py-3 md:px-4">
-              <p className="text-[11px] font-medium text-white/60">Conservative ({Math.max(1, annualReturn[0] - 3)}%)</p>
+              <p className="text-[11px] font-medium text-white/70">Conservative ({Math.max(1, annualReturn[0] - 3)}%)</p>
               <p className="text-lg font-black text-white mt-1">{formatCurrency(conservative.finalValue)}</p>
             </div>
             <div className="py-3 md:px-4">
@@ -281,11 +281,11 @@ export default function SophisticatedCalculator() {
               <p className="text-lg font-black text-white mt-1">{formatCurrency(base.finalValue)}</p>
             </div>
             <div className="py-3 md:px-4">
-              <p className="text-[11px] font-medium text-white/60">Optimistic ({annualReturn[0] + 3}%)</p>
+              <p className="text-[11px] font-medium text-white/70">Optimistic ({annualReturn[0] + 3}%)</p>
               <p className="text-lg font-black text-white mt-1">{formatCurrency(optimistic.finalValue)}</p>
             </div>
             <div className="py-3 md:px-4">
-              <p className="text-[11px] font-medium text-white/60">Scenario Range</p>
+              <p className="text-[11px] font-medium text-white/70">Scenario Range</p>
               <p className="text-lg font-black text-white mt-1">
                 {formatCurrency(optimistic.finalValue - conservative.finalValue)}
               </p>
@@ -295,13 +295,13 @@ export default function SophisticatedCalculator() {
 
         {/* Year-by-Year Projection */}
         <div className="mt-2 pt-4 border-t border-white/10 space-y-2">
-          <span className="text-[11px] font-medium text-white/60 block">Year-by-Year Projection</span>
+          <span className="text-[11px] font-medium text-white/70 block">Year-by-Year Projection</span>
           <div className="border-y border-white/10 divide-y divide-white/10">
             {base.rows.map((d) => (
               <div key={d.year} className="py-3 px-1 sm:px-2 grid grid-cols-3 gap-2 items-center">
-                <p className="text-[11px] font-medium text-white/60">{tr("calculator.year_short", "Year")} {d.year}</p>
+                <p className="text-[11px] font-medium text-white/70">{tr("calculator.year_short", "Year")} {d.year}</p>
                 <p className="text-sm font-black text-white tabular-nums">{formatCurrency(d.endBalance)}</p>
-                <p className="text-[11px] text-white/50 text-right">Real: {formatCurrency(d.realBalance)}</p>
+                <p className="text-[11px] text-white/70 text-right">Real: {formatCurrency(d.realBalance)}</p>
               </div>
             ))}
           </div>
@@ -309,10 +309,10 @@ export default function SophisticatedCalculator() {
 
         {/* Disclaimer */}
         <div className="mt-2 pt-4 border-t border-white/10">
-          <p className="text-[11px] font-medium text-white/60 mb-2">Note</p>
+          <p className="text-[11px] font-medium text-white/70 mb-2">Note</p>
           <div className="flex gap-3 items-start">
           <Info className="h-5 w-5 text-zim-gold shrink-0 mt-0.5" />
-          <p className="text-[11px] text-white/60 leading-relaxed">
+          <p className="text-[11px] text-white/70 leading-relaxed">
             <strong className="text-zim-gold mr-2">{tr("calculator.note", "Note")}:</strong> 
             {tr("calculator.disclaimer", "This is a planning tool for comparing scenarios. It is not financial advice and does not guarantee performance.")}
           </p>

@@ -82,7 +82,7 @@ export default function SearchResults() {
                             </div>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-white/70 text-sm mb-4">{result.summary || `Explore ${result.title.toLowerCase()} and related opportunities on Diaspora Unlocked.`}</p>
+                            <p className=" text-sm mb-4">{result.summary || `Explore ${result.title.toLowerCase()} and related opportunities on Diaspora Unlocked.`}</p>
                             <div className="flex items-center text-zim-gold font-semibold text-sm group-hover:gap-2 transition-all">
                               View Details <ArrowRight className="h-4 w-4 ml-1" />
                             </div>
@@ -95,9 +95,9 @@ export default function SearchResults() {
               </div>
             ) : (
               <div className="text-center py-20 bg-white/[0.02] rounded-3xl border border-white/10">
-                <Search className="h-16 w-16 text-white/30 mx-auto mb-6 opacity-40" />
+                <Search className="h-16 w-16  mx-auto mb-6 opacity-40" />
                 <h2 className="text-2xl font-semibold mb-2 text-white">No results found</h2>
-                <p className="text-white/60 max-w-md mx-auto">
+                <p className=" max-w-md mx-auto">
                   We couldn't find anything matching "{query}". Try searching for broader terms like "Investment", "Trade", or "Onesa".
                 </p>
                 <Link href="/">

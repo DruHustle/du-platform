@@ -55,7 +55,7 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
       </DialogTrigger>
       
       <DialogContent className="max-w-md p-0 bg-slate-950 border-white/10 overflow-hidden rounded-[2rem] shadow-[0_0_50px_rgba(212,175,55,0.1)] outline-none">
-        <DialogClose className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group outline-none">
+        <DialogClose className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10  hover:text-zim-gold hover:bg-white/10 transition-all z-50 group outline-none">
           <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
         </DialogClose>
 
@@ -72,7 +72,7 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
               <span className="text-[10px] font-black text-zim-gold uppercase tracking-[0.3em]">Coming Soon</span>
             </div>
 
-            <p className="text-sm text-white/50 font-light leading-relaxed">
+            <p className="text-sm  font-light leading-relaxed">
               {isSubscribed
                 ? "Notify request saved. We will alert you via your account email."
                 : "Get notified as soon as this feature is available."}
