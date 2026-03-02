@@ -68,6 +68,43 @@ async function syncNtirSeedData(): Promise<void> {
   }
 }
 
+async function syncAdminSettingsSeedData(): Promise<void> {
+  if (!db) return;
+
+  const envFromEmail = String(process.env.FROM_EMAIL ?? "").trim();
+  const envAdminEmails = String(process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean)
+    .join(", ");
+
+  if (envFromEmail) {
+    await db.execute(
+      `
+      INSERT INTO admin_settings (key_name, value_text)
+      SELECT 'notify_from_email', ?
+      WHERE NOT EXISTS (
+        SELECT 1 FROM admin_settings WHERE key_name = 'notify_from_email'
+      )
+      `,
+      [envFromEmail]
+    );
+  }
+
+  if (envAdminEmails) {
+    await db.execute(
+      `
+      INSERT INTO admin_settings (key_name, value_text)
+      SELECT 'notify_alert_emails', ?
+      WHERE NOT EXISTS (
+        SELECT 1 FROM admin_settings WHERE key_name = 'notify_alert_emails'
+      )
+      `,
+      [envAdminEmails]
+    );
+  }
+}
+
 const memoryFeatureNotifications: Array<{
   id: number;
   user_id: number;
@@ -107,6 +144,8 @@ const memorySuccessStories: Array<{
   is_published: 0 | 1;
   created_at: string;
 }> = [];
+
+const memoryAdminSettings: Record<string, string> = {};
 
 const memoryEconomicStats = {
   remittances: 1500,
@@ -897,6 +936,14 @@ export async function initializeDatabase(): Promise<void> {
   `);
 
   await db.execute(`
+    CREATE TABLE IF NOT EXISTS admin_settings (
+      key_name VARCHAR(120) PRIMARY KEY,
+      value_text TEXT NULL,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS economic_stats (
       id INT PRIMARY KEY,
       remittances DOUBLE NOT NULL,
@@ -1034,6 +1081,7 @@ export async function initializeDatabase(): Promise<void> {
   `);
 
   await syncNtirSeedData();
+  await syncAdminSettingsSeedData();
   await syncEconomicStatsSeedData();
   await syncShopProductsSeedData();
 }
@@ -1400,6 +1448,59 @@ export async function createFeatureNotification(userId: number, email: string, f
     };
     memoryFeatureNotifications.push(record);
     return { created: true, record };
+  }
+}
+
+export async function getAdminSetting(key: string): Promise<string | null> {
+  const normalizedKey = String(key ?? "").trim().toLowerCase();
+  if (!normalizedKey) return null;
+
+  if (!db) {
+    const value = memoryAdminSettings[normalizedKey];
+    return value == null ? null : String(value);
+  }
+
+  try {
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT value_text FROM admin_settings WHERE key_name = ? LIMIT 1",
+      [normalizedKey]
+    );
+    const value = rows[0]?.value_text;
+    return value == null ? null : String(value);
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const value = memoryAdminSettings[normalizedKey];
+    return value == null ? null : String(value);
+  }
+}
+
+export async function upsertAdminSetting(key: string, value: string | null) {
+  const normalizedKey = String(key ?? "").trim().toLowerCase();
+  if (!normalizedKey) {
+    throw new Error("Setting key is required.");
+  }
+
+  const normalizedValue = value == null ? "" : String(value).trim();
+
+  if (!db) {
+    memoryAdminSettings[normalizedKey] = normalizedValue;
+    return { key_name: normalizedKey, value_text: normalizedValue };
+  }
+
+  try {
+    await db.execute(
+      `
+      INSERT INTO admin_settings (key_name, value_text)
+      VALUES (?, ?)
+      ON DUPLICATE KEY UPDATE value_text = VALUES(value_text)
+      `,
+      [normalizedKey, normalizedValue]
+    );
+    return { key_name: normalizedKey, value_text: normalizedValue };
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    memoryAdminSettings[normalizedKey] = normalizedValue;
+    return { key_name: normalizedKey, value_text: normalizedValue };
   }
 }
 
@@ -1772,6 +1873,65 @@ export async function createSuccessStory(payload: {
     };
     memorySuccessStories.unshift(record);
     return record;
+  }
+}
+
+export async function updateSuccessStory(
+  id: number,
+  payload: {
+    title?: string;
+    category?: string;
+    image?: string;
+    story?: string;
+    testimonial?: string;
+    author?: string;
+    role?: string;
+    revenue?: string;
+    jobs?: string;
+    markets?: string;
+    is_published?: 0 | 1;
+  }
+) {
+  if (!db) {
+    const idx = memorySuccessStories.findIndex((item) => item.id === id);
+    if (idx < 0) return null;
+    memorySuccessStories[idx] = { ...memorySuccessStories[idx], ...payload };
+    return memorySuccessStories[idx];
+  }
+
+  try {
+    const updates: string[] = [];
+    const params: any[] = [];
+    const pushIf = (key: keyof typeof payload) => {
+      if (payload[key] === undefined) return;
+      updates.push(`${String(key)} = ?`);
+      params.push(payload[key]);
+    };
+
+    pushIf("title");
+    pushIf("category");
+    pushIf("image");
+    pushIf("story");
+    pushIf("testimonial");
+    pushIf("author");
+    pushIf("role");
+    pushIf("revenue");
+    pushIf("jobs");
+    pushIf("markets");
+    pushIf("is_published");
+
+    if (updates.length === 0) return null;
+
+    params.push(id);
+    await db.execute(`UPDATE success_stories SET ${updates.join(", ")} WHERE id = ?`, params);
+    const [rows] = await db.query<mysql.RowDataPacket[]>("SELECT * FROM success_stories WHERE id = ? LIMIT 1", [id]);
+    return rows[0] ?? null;
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const idx = memorySuccessStories.findIndex((item) => item.id === id);
+    if (idx < 0) return null;
+    memorySuccessStories[idx] = { ...memorySuccessStories[idx], ...payload };
+    return memorySuccessStories[idx];
   }
 }
 
