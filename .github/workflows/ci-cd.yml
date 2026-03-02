@@ -66,13 +66,10 @@ jobs:
       - name: Pull Vercel Environment Information
         # This downloads the VITE_SITE_URL you set in Vercel
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      
-      - name: Build Project Artifacts
-        # This injects the pulled variables into your HTML
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      
+
       - name: Deploy to Vercel Production
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        # Build from source on Vercel to avoid stale local .vercel/output artifacts.
+        run: vercel deploy --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   # 3) Preview deploys are created for pull requests.
   deploy-vercel-preview:
@@ -94,12 +91,10 @@ jobs:
       
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      
+
       - name: Deploy to Vercel Preview
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        # Build from source on Vercel to avoid stale local .vercel/output artifacts.
+        run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }}
 
   # 4) Non-blocking formatting visibility; does not fail the pipeline.
   code-quality:
