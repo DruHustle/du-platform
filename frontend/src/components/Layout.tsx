@@ -726,8 +726,8 @@ export default function Layout({ children }: LayoutProps) {
       <header 
         className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 border-b ${
           (scrolled && !mobileMenuOpen) 
-            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-1 shadow-2xl' 
-            : 'bg-transparent border-transparent py-4'
+            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-4 lg:py-1 shadow-2xl' 
+            : 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-4 lg:bg-transparent lg:border-transparent'
         }`}
       >
         <div className="container mx-auto px-6 h-14 flex items-center justify-between relative">
@@ -1051,7 +1051,7 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
-      <main className="flex-1 w-full pt-0 relative z-0">
+      <main className="relative z-0 flex-1 w-full pt-[88px] lg:pt-0">
         {children}
       </main>
 

@@ -11,6 +11,8 @@ export default function Payments() {
   const { t } = useTranslation();
   const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [heroTransferType, setHeroTransferType] = useState<TransferType | null>(null);
+  const processTileTitleClass = "mb-2 text-base font-black tracking-tight text-white";
+  const processTileBodyClass = "text-[11px] font-light leading-relaxed text-white/70";
 
   const heroSlides = useMemo(
     () => [
@@ -176,15 +178,13 @@ export default function Payments() {
                   <ShieldCheck className="h-6 w-6 text-zim-gold" />
                   <h3 className="text-xl font-black text-white tracking-tight">{tr("nav.payments", "Payments")}</h3>
                 </div>
-                <p className="text-sm text-white/75 font-light leading-relaxed">
+                <p className="mx-auto max-w-3xl text-sm text-white/75 font-light leading-relaxed">
                   {tr(
                     "payments.process.intro",
                     "Follow a clear four-step journey: add details, review, pay, and collect. Security is applied at every stage with server-side processing, compliance checks, and traceable transaction references. Airtime is often near-instant, while mobile money, card, and cash pickup can take longer depending on provider processing windows."
                   )}
                 </p>
               </div>
-
-
 
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
                 {paymentProcessTiles.map((tile) => (
@@ -195,13 +195,13 @@ export default function Payments() {
                     <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 p-2">
                       <span className="text-2xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{tile.emoji}</span>
                     </div>
-                    <h3 className="mb-1 text-[15px] font-black tracking-tight text-white">{tile.title}</h3>
-                    <p className="text-[11px] font-light leading-snug text-white/70">{tile.description}</p>
+                    <h3 className={processTileTitleClass}>{tile.title}</h3>
+                    <p className={processTileBodyClass}>{tile.description}</p>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-6 text-center text-[11px] leading-relaxed text-white/70">
+              <p className="mx-auto mt-6 max-w-3xl text-center text-[11px] font-light leading-relaxed text-white/70">
                 {tr(
                   "payments.disclaimer",
                   "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds."
@@ -210,7 +210,7 @@ export default function Payments() {
             </div>
           </div>
 
-          <div id="send-money" className="pt-5 scroll-mt-32">
+          <div id="send-money" className="pt-5 scroll-mt-32 w-[calc(100%+2.5rem)] -mx-5 md:w-auto md:mx-0">
             <SendMoneyForm forcedTransferType={heroTransferType} />
           </div>
         </div>

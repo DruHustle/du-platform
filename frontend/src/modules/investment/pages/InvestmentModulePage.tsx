@@ -805,10 +805,7 @@ const projects = [
                 { title: t("investment.crowdfunding_steps.track") || "Track Performance", emoji: "📈" },
                 { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", emoji: "✅" }
               ].map((step, i) => (
-                <div key={i} className="relative pt-10 group">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-                    {i + 1}
-                  </div>
+                <div key={i} className="relative group">
                   <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
                     <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
                       <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
