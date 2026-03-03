@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Clock3,
   CreditCard,
+  HandCoins,
   Landmark,
   Loader2,
   ShieldCheck,
@@ -998,18 +999,18 @@ export default function SendMoneyForm({ forcedTransferType = null } = {}) {
 
   return (
     <section className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 text-white shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
-      <div className="mb-5 flex items-start justify-between gap-4">
-        <div className="relative z-10">
-          <h3 className="text-xl font-black tracking-tight">{tr("payments.form.title", "Send Money")}</h3>
-          <p className="mt-1 text-sm text-white/70">
+      <div className="relative mb-5">
+        <div className="relative z-10 text-center">
+          <div className="mb-5 flex items-center justify-center gap-3">
+            <HandCoins className="h-6 w-6 text-zim-gold" />
+            <h3 className="text-xl font-black tracking-tight">{tr("payments.form.title", "Send Money")}</h3>
+          </div>
+          <p className="text-sm text-white/70">
             {tr(
               "payments.form.subtitle.",
               "Send your money easy, fast and securely from the comfort of your home to Zimbabwe."
             )}
           </p>
-        </div>
-        <div className="rounded-xl border border-zim-gold/30 bg-zim-gold/10 p-2">
-          <ArrowRightLeft className="h-5 w-5 text-zim-gold" />
         </div>
       </div>
 
