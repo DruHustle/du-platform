@@ -97,7 +97,7 @@
     "technology": "Technology",
     "investments": "Investments",
     "objective_title": "Welcome",
-    "objective_desc": "Tourism. Trade. Investment. Remittance. Family Care — unified for Zimbabweans abroad.",
+    "objective_desc": "Tourism. Trade. Investment. Remittance. Family Care — unified for the Diaspora.",
     "explore_now": "Explore Now",
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
@@ -224,26 +224,6 @@
         "d2": "Technical skill development for the digital economy"
       }
     },
-    "momentum": {
-      "title": "Zimbabwe Technology Momentum (2026)",
-      "subtitle": "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption.",
-      "hubs": {
-        "title": "Innovation Hubs and Incubators",
-        "detail": "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."
-      },
-      "connectivity": {
-        "title": "Connectivity Expansion",
-        "detail": "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout."
-      },
-      "ai_strategy": {
-        "title": "National AI Strategy (2026-2030)",
-        "detail": "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery."
-      },
-      "digital_payments": {
-        "title": "Digital Payments at Scale",
-        "detail": "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations."
-      }
-    },
     "opportunities": {
       "title": "Top Opportunities for Investment and Innovation",
       "ai": {
@@ -269,23 +249,6 @@
       "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
       "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
     },
-    "fintech": {
-      "title": "Fintech Regulatory Requirements (RBZ)",
-      "subtitle": "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations.",
-      "sandbox_title": "Regulatory Sandbox",
-      "sandbox_detail": "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded.",
-      "phases": {
-        "pre_application": "Pre-application",
-        "application": "Application and evaluation",
-        "testing": "Testing in a controlled live environment",
-        "exit": "Exit and deployment decision"
-      },
-      "licensing_title": "Licensing and Operating Requirements",
-      "l1": "Register legal entity first (typically Private Limited) before regulated fintech operations.",
-      "l2": "Plan for PSP licensing costs and ongoing compliance obligations.",
-      "l3": "Some financial products require minimum capital thresholds and fit-and-proper controls.",
-      "l4": "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."
-    },
     "hubs": {
       "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
       "open_button": "Tech Hubs in Zimbabwe",
@@ -310,7 +273,6 @@
       "location_suffix": ", Zimbabwe"
     },
     "chat_with_onesa": "Chat with Onesa",
-    "more_compliance_information": "More Compliance Information",
     "onesa_matter": {
       "badge": "Africa-Centric AI",
       "title": "Why Onesa AI Matters",
@@ -1158,25 +1120,7 @@
     "contact_form_title": "Trade Inquiry",
     "explore_title": "Explore More Trade Information",
     "explore_subtitle": " For comprehensive trade information and official guidelines, visit the ZimTrade.",
-    "explore_site": "Visit ZimTrade",
-    "market_resources": {
-      "open_resource": "Open Resource",
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade trade information portal with exporter support, market information, and publication access.",
-        "badge": "Official Portal"
-      },
-      "cbi": {
-        "title": "CBI Market Information",
-        "description": "Access practical EU market intelligence, buyer requirements, and product compliance guidance curated by ZimTrade.",
-        "badge": "Market Intelligence"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
-        "badge": "EU Business Support"
-      }
-    }
+    "explore_site": "Visit ZimTrade"
   },
   "impact": {
     "hero": {
@@ -1588,8 +1532,7 @@
     "title": "Home Away From Home",
     "collections_title": "Curated Zimbabwean Excellence",
     "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
-    "collections_description": "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience.",
-    "explore": "Explore",
+    "collections_description": "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience. Every collection is selected to celebrate Zimbabwean makers, strengthen local value chains, and give families abroad dependable access to trusted products from home.",
     "explore_shop": "Explore Shop",
     "trade_support": "Explore Trade Support",
     "export_readiness": "Export Readiness Guide",

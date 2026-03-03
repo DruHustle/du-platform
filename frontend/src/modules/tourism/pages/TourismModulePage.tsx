@@ -25,10 +25,13 @@ export default function Tourism() {
   const { t } = useTranslation();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [selectedAttraction, setSelectedAttraction] = useState<Attraction | null>(null);
+  const [conversationIndex, setConversationIndex] = useState(0);
+  const [showConversationAnswer, setShowConversationAnswer] = useState(false);
   const getTranslatedList = (key: string, fallback: string[]) => {
     const value = t(key, { returnObjects: true });
     return Array.isArray(value) && value.length > 0 ? (value as string[]) : fallback;
   };
+  const tx = (key: string, fallback: string) => t(key, { defaultValue: fallback });
 
   const heroSlides = useMemo(() => [
     {
@@ -124,6 +127,69 @@ export default function Tourism() {
     }, 5000);
     return () => clearInterval(heroTimer);
   }, [heroSlides.length]);
+
+  const phoneConversation = useMemo(
+    () => [
+      {
+        question: tx(
+          "tourism.onesa.phone_conversation.q1",
+          "Onesa, what's the best local spot for traditional Sadza in Harare tonight?"
+        ),
+        answer: tx(
+          "tourism.onesa.phone_conversation.a1",
+          "For an authentic Sadza experience in Harare, head to Mbare Musika. The local vendors there serve up delicious, freshly made Sadza with a variety of tasty relishes. It's a favorite among locals and offers a true taste of Zimbabwean cuisine. Just ask for 'Sadza ne Nyama' (Sadza with meat) for a hearty meal!"
+        ),
+      },
+      {
+        question: tx(
+          "tourism.onesa.phone_conversation.q2",
+          "Great. Is it safe to go there at night, and what time should I arrive?"
+        ),
+        answer: tx(
+          "tourism.onesa.phone_conversation.a2",
+          "Aim for early evening, ideally before 8:00 PM, and use a trusted ride service. For first-time visitors, going with a local guide or friend is best for a smoother experience."
+        ),
+      },
+      {
+        question: tx(
+          "tourism.onesa.phone_conversation.q3",
+          "Can you suggest one backup restaurant near the city center if it's too crowded?"
+        ),
+        answer: tx(
+          "tourism.onesa.phone_conversation.a3",
+          "Yes. Try a traditional restaurant in Avondale or the CBD that serves Sadza, beef stew, and leafy greens. Ask for fresh-cooked meals and local relishes for the most authentic plate."
+        ),
+      },
+      {
+        question: tx(
+          "tourism.onesa.phone_conversation.q4",
+          "Perfect. Add transport advice and a rough dinner budget for two."
+        ),
+        answer: tx(
+          "tourism.onesa.phone_conversation.a4",
+          "Plan around USD 20 to USD 35 for two, depending on drinks and sides. For transport, use registered taxis or app rides, share your live location, and keep your return trip booked in advance."
+        ),
+      },
+    ],
+    [t]
+  );
+
+  useEffect(() => {
+    setShowConversationAnswer(false);
+
+    const answerTimer = window.setTimeout(() => {
+      setShowConversationAnswer(true);
+    }, 1200);
+
+    const nextConversationTimer = window.setTimeout(() => {
+      setConversationIndex((prev) => (prev + 1) % phoneConversation.length);
+    }, 7600);
+
+    return () => {
+      window.clearTimeout(answerTimer);
+      window.clearTimeout(nextConversationTimer);
+    };
+  }, [conversationIndex, phoneConversation.length]);
 
   const introData = {
     icon: Heart,
@@ -576,16 +642,43 @@ export default function Tourism() {
                     <img src="/images/pages/technology/zim_think.jpg" className="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-[3000ms]" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
                     <div className="absolute inset-x-4 bottom-8 space-y-4">
-                      <div className="bg-zim-gold p-4 rounded-2xl rounded-br-none shadow-xl w-[90%] ml-auto">
-                        <p className="text-zim-black text-[11px] font-bold leading-tight">{t("tourism.onesa.prompt_question") || "\"Onesa, what's the best local spot for traditional Sadza in Harare tonight?\""}</p>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-2xl p-4 rounded-2xl rounded-bl-none border border-white/20 shadow-2xl">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-zim-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,1)]" />
-                          <span className="text-[9px] font-black text-zim-gold uppercase tracking-[0.2em]">{t("tourism.onesa.name") || "Onesa AI"}</span>
-                        </div>
-                        <p className="text-white text-[11px] leading-relaxed font-light">{t("tourism.onesa.prompt_response") || "For an authentic Sadza experience in Harare, head to Mbare Musika. The local vendors there serve up delicious, freshly made Sadza with a variety of tasty relishes. It's a favorite among locals and offers a true taste of Zimbabwean cuisine. Just ask for 'Sadza ne Nyama' (Sadza with meat) for a hearty meal!"}</p>
-                      </div>
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={`question-${conversationIndex}`}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.35 }}
+                          className="bg-zim-gold p-4 rounded-2xl rounded-br-none shadow-xl w-[90%] ml-auto"
+                        >
+                          <p className="text-zim-black text-[11px] font-bold leading-tight">
+                            {phoneConversation[conversationIndex]?.question}
+                          </p>
+                        </motion.div>
+                      </AnimatePresence>
+
+                      <AnimatePresence>
+                        {showConversationAnswer && (
+                          <motion.div
+                            key={`answer-${conversationIndex}`}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.35 }}
+                            className="bg-white/10 backdrop-blur-2xl p-4 rounded-2xl rounded-bl-none border border-white/20 shadow-2xl"
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-zim-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,1)]" />
+                              <span className="text-[9px] font-black text-zim-gold uppercase tracking-[0.2em]">
+                                {t("tourism.onesa.name") || "Onesa AI"}
+                              </span>
+                            </div>
+                            <p className="text-white text-[11px] leading-relaxed font-light">
+                              {phoneConversation[conversationIndex]?.answer}
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   </div>
                 </div>
@@ -660,7 +753,7 @@ export default function Tourism() {
       </Dialog>
 
       {/* Planning Info - High-End Dashboard Style */}
-      <section id="plan-visit" className="p-5 bg-slate-950 relative overflow-hidden">
+      <section id="plan-visit" className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">

@@ -44,6 +44,17 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
   //Initialize the translation hook
   const { t } = useTranslation();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 768;
+  });
+
+  useEffect(() => {
+    const onResize = () => setIsMobileViewport(window.innerWidth < 768);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     if (!heroSlides || heroSlides.length <= 1) return;
@@ -72,6 +83,7 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
   // so React recognizes it as a component.
   const IntroIcon = intro?.icon;
 
+  if (isMobileViewport) return null;
   if (!current) return null;
 
   return (
@@ -163,7 +175,7 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
                     key={idx}
                     variant="outline"
                     className={`
-                      h-14 px-10 rounded-full transition-all duration-500 text-xs font-bold uppercase tracking-[0.2em]
+                      h-12 px-4 min-w-[160px] rounded-full transition-all duration-500 text-xs font-black uppercase tracking-[0.2em]
                       ${btn.variant === "primary" 
                         ? "bg-zim-gold border-zim-gold text-black hover:bg-white hover:border-white" 
                         : "bg-white/10 border-white/20 text-white hover:bg-white hover:text-black"}

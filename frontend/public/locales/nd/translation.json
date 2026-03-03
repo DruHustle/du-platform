@@ -224,28 +224,7 @@
         "d2": "Ukuthuthukisa amakhono ezobuchwepheshe emnothweni wedijithali"
       }
     },
-    "more_compliance_information": "Ulwazi olwengeziwe lokuhambisana",
     "chat_with_onesa": "Xoxa no-Onesa",
-    "momentum": {
-      "title": "I-Zimbabwe Technology Momentum (2026)",
-      "subtitle": "IZimbabwe isuka ekusetshenzisweni kwethekhnoloji iye ekusunguleni izisombululo zakuleli, okuholwa yi-fintech, i-agritech, kanye ne-AI adoption.",
-      "connectivity": {
-        "title": "Ukwandiswa Kokuxhumana",
-        "detail": "Ukungena kwe-inthanethi manje sekungaphezu kwama-80%, nokushintshwa kwemakethe kusuka kwabangenayo i-broadband entsha kanye nokukhishwa okusheshayo kwe-5G."
-      },
-      "ai_strategy": {
-        "title": "Isu Likazwelonke le-AI (2026-2030)",
-        "detail": "IZimbabwe manje isinesu elisemthethweni le-AI eligxile ekuhanjisweni okusebenzayo emikhakheni ebekwe eqhulwini kanye nokulethwa kwezidingo zomphakathi."
-      },
-      "digital_payments": {
-        "title": "Izinkokhelo Zedijithali Ngesikali",
-        "detail": "Imali yeselula isalokhu ingumzila wesitimela ohamba phambili ekuthengiseni, okwenza kube nesidingo esinamandla samathuluzi we-fintech nokuhlanganiswa."
-      },
-      "hubs": {
-        "title": "Innovation Hubs and Incubators",
-        "detail": "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."
-      }
-    },
     "opportunities": {
       "title": "Amathuba Aphezulu Otshalomali Nokusungula",
       "ai": {
@@ -270,23 +249,6 @@
       "infrastructure": "Izikhala zengqalasizinda: izindleko eziphezulu ze-inthanethi kanye nokuphakelwa kukagesi okungajwayelekile kusabambezela ukuqalisa.",
       "human_capital": "Ingcindezi yemali yabantu: ithalente eliqinile likhona, kodwa ukugcinwa kunzima ngenxa yokufudukela ngaphandle.",
       "regulation": "Ubunzima bokulawula: ukunikwa kwelayisensi, ukuthobela intela, nokugunyazwa kungabambezela ukwethulwa komkhiqizo emikhakheni elawulwayo."
-    },
-    "fintech": {
-      "title": "Izidingo Zokulawula ze-Fintech (RBZ)",
-      "subtitle": "Izixazululo ze-Fintech zilawulwa ngokugadwa kwe-RBZ, ukuhlolwa kwe-sandbox, kanye nezibopho zamalayisense okukhokha nokusebenza kwesevisi yezezimali.",
-      "sandbox_title": "Ibhokisi lesihlabathi esilawulayo",
-      "sandbox_detail": "Iziqalisi zingahlola izinto ezintsha endaweni egadiwe kuze kube yizinyanga ezingama-24. Ukuhlolwa kwe-Cryptocurrency nohlobo lwemali yedijithali akufakiwe.",
-      "phases": {
-        "pre_application": "Isicelo sangaphambili",
-        "application": "Isicelo nokuhlola",
-        "testing": "Ukuhlola endaweni ebukhoma elawulwayo",
-        "exit": "Isinqumo sokuphuma nokuthunyelwa"
-      },
-      "licensing_title": "Izidingo Zokuthola Ilayisensi Nokusebenza",
-      "l1": "Bhalisa ibhizinisi elisemthethweni kuqala (ngokujwayelekile i-Private Limited) ngaphambi kokusebenza kokulawulwa kwe-fintech.",
-      "l2": "Hlela izindleko zelayisensi ye-PSP kanye nezibopho eziqhubekayo zokuthobela.",
-      "l3": "Eminye imikhiqizo yezezimali idinga ubuncane bemali obuncane kanye nokulawula okufanele nokufanele.",
-      "l4": "Izinsiza ezixhumene nebhange le-wallet kanye nebhange ngokuvamile zidinga ubambiswano nebhange lasendaweni elinelayisensi."
     },
     "hubs": {
       "title": "Ama-Incubator okuqalisa kanye nama-Innovation Hubs (Zimbabwe)",
@@ -1154,25 +1116,7 @@
     "contact_form_title": "Imibuzo yezohwebo",
     "explore_title": "Hlola eminye imininingwane yezohwebo",
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi, vakashela i-ZimTrade.",
-    "explore_site": "Vakashela i-ZimTrade",
-    "market_resources": {
-      "open_resource": "Open Resource",
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade trade information portal with exporter support, market information, and publication access.",
-        "badge": "Official Portal"
-      },
-      "cbi": {
-        "title": "CBI Market Information",
-        "description": "Access practical EU market intelligence, buyer requirements, and product compliance guidance curated by ZimTrade.",
-        "badge": "Market Intelligence"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
-        "badge": "EU Business Support"
-      }
-    }
+    "explore_site": "Vakashela i-ZimTrade"
   },
   "impact": {
     "hero": {
@@ -1518,8 +1462,7 @@
     "title": "Ikhaya Likhona Lanxa Ukude",
     "collections_title": "Ubungcweti baseZimbabwe obukhethiweyo",
     "desc": "Kusukela kwimpahla esemthethweni kusiya emagugwini enziwe ngezandla, yonke impahla ilendaba yamasiko le-quality.",
-    "collections_description": "Ubungcweti baseZimbabwe obukhethiweyo buletha imikhiqizo yeZimbabwe eqotho emnyango wakho, kusukela kokudla leziselo kuye kwezobuciko lezimpahla zemidlalo, kukhethwe ngekhwalithi lokwanelisa i-diaspora.",
-    "explore": "Hlola",
+    "collections_description": "Ubungcweti baseZimbabwe obukhethiweyo buletha imikhiqizo yeZimbabwe eqotho emnyango wakho, kusukela kokudla leziselo kuye kwezobuciko lezimpahla zemidlalo, kukhethwe ngekhwalithi lokwanelisa i-diaspora. Iqoqo ngalinye likhethwa ukuze kusekelwe abakhiqizi beZimbabwe, kuqiniswa ama-value chain akuleli, kanye lokunika imindeni esemazweni angaphandle ukufinyelela okuthembekileyo emikhiqizweni yasekhaya ethembwayo.",
     "explore_shop": "Hlola iShop",
     "trade_support": "Hlola Ukusekelwa KweTrade",
     "export_readiness": "Isiqondiso Sokulungela i-Export",

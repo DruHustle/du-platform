@@ -1864,7 +1864,7 @@ export default function OnesaAITourismVirtualExperience() {
                   {!selectedDestinationId ? null : sidebarNarrationLines.length > 0 ? (
                     <div className="space-y-1.5">
                       {sidebarNarrationLines.map((line, index) => (
-                        <p key={`${line}-${index}`} className="text-sm  leading-relaxed">
+                        <p key={`${line}-${index}`} className="text-sm text-white/75 leading-relaxed">
                           {line.includes(":") ? (
                             <>
                               <span className="font-black">{line.split(":")[0]}:</span>{" "}
@@ -1877,12 +1877,12 @@ export default function OnesaAITourismVirtualExperience() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm  leading-relaxed">
+                    <p className="text-sm text-white/70 leading-relaxed">
                       {ui.narrationPending}
                     </p>
                   )}
                 </div>
-                <p className="m-0 text-[11px]  leading-relaxed mt-auto">
+                <p className="m-0 mt-auto text-[11px] text-white/70 leading-relaxed">
                   {ui.conversation} {isConversationMode ? ui.conversationEnabled : ui.conversationDisabled}. {ui.ambient} {isSoundEnabled ? ui.ambientOn : ui.ambientOff}.
                 </p>
               </div>
