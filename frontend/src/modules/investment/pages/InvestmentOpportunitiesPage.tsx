@@ -82,7 +82,7 @@ export default function InvestmentOpportunitiesPage() {
 
   return (
     <Layout>
-      <section className="min-h-screen p-5 bg-slate-950 relative overflow-hidden">
+      <section className="min-h-screen pt-28 pb-10 px-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto space-y-6">
           <Link href="/investment" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -93,7 +93,7 @@ export default function InvestmentOpportunitiesPage() {
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Target className="h-6 w-6 text-zim-gold" />
-                <h1 className="text-xl font-black text-white tracking-tight">{t("investment.sectors_title") || "Active Investment Opportunities"}</h1>
+                <h1 className="section-title-compact">{t("investment.sectors_title") || "Active Investment Opportunities"}</h1>
               </div>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") || "Carefully vetted projects with government support and transparent tracking."}
@@ -112,19 +112,23 @@ export default function InvestmentOpportunitiesPage() {
                     {t(`investment.project_filters.${s}`) || PROJECT_FILTER_FALLBACKS[s] || s}
                   </button>
                 ))}
-                {["all", "conservative", "moderate", "aggressive"].map((risk) => (
-                  <button
-                    key={risk}
-                    onClick={() => setRiskFilter(risk)}
-                    className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
-                      riskFilter === risk
-                        ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]"
-                        : "bg-white/5 text-white/70 border-white/10 hover:border-white/30"
-                    }`}
+                <div className="relative min-w-[210px]">
+                  <label htmlFor="risk-level-filter" className="sr-only">
+                    {t("investment.project_card.risk") || "Risk Level"}
+                  </label>
+                  <select
+                    id="risk-level-filter"
+                    value={riskFilter}
+                    onChange={(e) => setRiskFilter(e.target.value)}
+                    className="w-full rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white outline-none transition-all focus:border-zim-gold"
                   >
-                    {t(`investment.project_filters.${risk}`) || PROJECT_FILTER_FALLBACKS[risk] || risk}
-                  </button>
-                ))}
+                    {["all", "conservative", "moderate", "aggressive"].map((risk) => (
+                      <option key={risk} value={risk} className="text-black">
+                        {(t("investment.project_card.risk") || "Risk Level")}: {t(`investment.project_filters.${risk}`) || PROJECT_FILTER_FALLBACKS[risk] || risk}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 

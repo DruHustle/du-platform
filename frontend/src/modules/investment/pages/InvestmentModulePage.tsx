@@ -789,8 +789,8 @@ const projects = [
       {/* How it Works - Glass Dashboard */}
       <section className="p-5 bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
+            <div className="text-center mb-0">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Repeat className="h-6 w-6 text-zim-gold" />
                 <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
@@ -809,7 +809,7 @@ const projects = [
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-zim-gold text-zim-black rounded-full flex items-center justify-center font-black z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
                     {i + 1}
                   </div>
-                  <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
+                  <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
                     <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
                       <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
                     </div>
@@ -826,7 +826,7 @@ const projects = [
       {/* Collective Model */}
       <section id="collective-model" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
             <div className="flex items-center justify-center gap-3 mb-5">
               <Users className="h-6 w-6 text-zim-gold" />
               <h3 className="text-xl font-black text-white tracking-tight">
@@ -839,7 +839,7 @@ const projects = [
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {collectiveModelSteps.map((item) => (
-                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4  text-sm">
+                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-4  text-sm">
                   {item}
                 </div>
               ))}
@@ -851,11 +851,11 @@ const projects = [
       {/* Active Projects - Cinematic Glass Grid */}
       <section id="active-projects" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Target className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">{t('investment.sectors_title') || "Active Investment Opportunities"}</h3>
+                <h3 className="section-title-compact">{t('investment.sectors_title') || "Active Investment Opportunities"}</h3>
               </div>
               <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") || "Carefully vetted projects with government support and transparent tracking."}
@@ -880,7 +880,7 @@ const projects = [
 
             {activeFilter === "tourism" && (
               <div className="mt-10 space-y-10">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
                   <div className="mb-10 text-center">
                     <h2 className="section-title-compact">
                       {t("investment.tourism.snapshot.title") || "Zimbabwe Tourism Snapshot (2026)"}
@@ -892,7 +892,7 @@ const projects = [
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {tourismSectorSnapshot.map((item) => (
-                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
                             <item.icon className="h-5 w-5 text-zim-gold" />
@@ -905,7 +905,7 @@ const projects = [
                   </div>
                 </div>
 
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
                   <div className="mb-10 text-center">
                     <h2 className="section-title-compact">
                       {t("investment.tourism.opportunities.title") || "Tourism Investment and Growth Opportunities"}
@@ -913,7 +913,7 @@ const projects = [
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {tourismGrowthOpportunities.map((item) => (
-                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
                         <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
                         <p className=" text-sm leading-relaxed">{item.detail}</p>
                       </div>
@@ -925,7 +925,7 @@ const projects = [
 
             {selectedSectorInfo && (
               <div className="mt-10 space-y-10">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
                   <div className="mb-10 text-center">
                     <h2 className="section-title-compact">{selectedSectorInfo.snapshotTitle}</h2>
                     <p className="text-sm  max-w-3xl mx-auto mt-4 font-light leading-relaxed">
@@ -934,7 +934,7 @@ const projects = [
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {selectedSectorInfo.snapshotCards.map((item) => (
-                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
                             <item.icon className="h-5 w-5 text-zim-gold" />
@@ -947,13 +947,13 @@ const projects = [
                   </div>
                 </div>
 
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
                   <div className="mb-10 text-center">
                     <h2 className="section-title-compact">{selectedSectorInfo.opportunitiesTitle}</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {selectedSectorInfo.opportunities.map((item) => (
-                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                      <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
                         <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
                         <p className=" text-sm leading-relaxed">{item.detail}</p>
                       </div>
@@ -969,7 +969,7 @@ const projects = [
       {/* Directories - Dual Glass Panels */}
       <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
               <div className="mb-10 text-center">
             <div className="flex items-center justify-center gap-3 mb-5">
               <FileText className="h-6 w-6 text-zim-gold" />
@@ -978,7 +978,7 @@ const projects = [
              <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-4 mb-5">
                 <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
@@ -999,7 +999,7 @@ const projects = [
               </Link>
             </div>
 
-            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-4 mb-5">
                 <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
@@ -1032,7 +1032,7 @@ const projects = [
      {/* Innovation opportunities */}
       <section id="investment-innovation-opportunities" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
             <div className="flex items-center justify-center gap-3 mb-5">
               <Lightbulb className="h-6 w-6 text-zim-gold" />
               <h3 className="text-xl font-black text-white tracking-tight">
@@ -1047,14 +1047,14 @@ const projects = [
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
               <div className="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {innovationOpportunityAreas.map((item) => (
-                  <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                  <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-4">
                     <p className="text-zim-gold text-xs uppercase font-black tracking-widest mb-2">{item.title}</p>
                     <p className=" text-sm leading-relaxed">{item.driver}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="xl:col-span-5 rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="xl:col-span-5 rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-5">
                 <h4 className="text-lg font-black text-white tracking-tight mb-4">
                   {t("tech.challenges.title") || "Critical Challenges to Address"}
                 </h4>
@@ -1076,7 +1076,7 @@ const projects = [
       {/* European Investment Partnerships */}
       <section id="eu-partnerships" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
             <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Globe className="h-6 w-6 text-zim-gold" />
@@ -1100,14 +1100,14 @@ const projects = [
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {europeFocusAreas.map((item) => (
-                <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
                   <h3 className="text-lg font-black text-white tracking-tight mb-3">{item.title}</h3>
                   <p className=" text-sm leading-relaxed">{item.detail}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
               <h4 className="text-lg font-black text-white tracking-tight mb-4">
                 {t("investment.eu_focus.eib_takeaways_title") || "EIB Practical Takeaways for Diaspora Investors"}
               </h4>
@@ -1146,7 +1146,7 @@ const projects = [
       {/* Regulatory Snapshot */}
       <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
             <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
               <div className="space-y-3 max-w-3xl mx-auto">
                 <h3 className="text-xl font-black text-white tracking-tight">
@@ -1166,7 +1166,7 @@ const projects = [
 
             <div className="grid md:grid-cols-2 gap-4 mt-8">
               {regulatoryChecklist.map((item) => (
-                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-4  text-sm">
+                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-4  text-sm">
                   {item}
                 </div>
               ))}

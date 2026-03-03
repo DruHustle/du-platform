@@ -224,28 +224,7 @@
         "d2": "Kudzidza mabasa emaoko emuzana rino rine ruzivo"
       }
     },
-    "more_compliance_information": "Rumwe ruzivo rwekutevedzera mitemo",
     "chat_with_onesa": "Taura naOnesa",
-    "momentum": {
-      "title": "Simbaradzo yeTekinoroji yeZimbabwe (2026)",
-      "subtitle": "Zimbabwe iri kubva mukushandiswa kwemichina ichienda mukugadzira zvigadziriso zvemuno, ichitungamirwa nefintech, agritech, uye kutora AI.",
-      "connectivity": {
-        "title": "Kuwedzera kwekubatana",
-        "detail": "Kupinda kweInternet ikozvino kwave pamusoro pe80%, nemusika shanduko kubva kune vatsva vebroadband vanopinda uye nekukurumidza 5G kuburitswa."
-      },
-      "ai_strategy": {
-        "title": "Hurongwa hweNyika hweAI (2026-2030)",
-        "detail": "Zimbabwe pari zvino yave nehurongwa hweAI hwakanangana nekuisa mabasa munzvimbo dzinokosha nekupa mabasa everuzhinji."
-      },
-      "digital_payments": {
-        "title": "Digital Payments paChikero",
-        "detail": "Nharembozha mari inoramba iri njanji inotonga yekutengeserana, ichigadzira kudiwa kwakasimba kwefintech tooling uye kubatanidzwa."
-      },
-      "hubs": {
-        "title": "Innovation Hubs and Incubators",
-        "detail": "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."
-      }
-    },
     "opportunities": {
       "title": "Mikana Yepamusoro Yekudyara uye Innovation",
       "ai": {
@@ -270,23 +249,6 @@
       "infrastructure": "Infrastructure gap: mitengo yakakwira internet uye magetsi asina kujairika achiri kumanikidza kutanga kuita.",
       "human_capital": "Dzvinyiriro yehupfumi hwevanhu: tarenda rakasimba rehunyanzvi riripo, asi kuchengetedza kwakaoma nekuda kwekutama kwekunze.",
       "regulation": "Regulatory kuoma: kupihwa marezinesi, kutevedzera mutero, uye kubvumidzwa kunogona kunonoka kuburitswa kwechigadzirwa muzvikamu zvakadzorwa."
-    },
-    "fintech": {
-      "title": "Fintech Regulatory Zvinodiwa (RBZ)",
-      "subtitle": "Fintech mhinduro dzinodzorwa kuburikidza nekutarisa kweRBZ, kuyedza bhokisi rejecha, uye zvisungo zvekupa marezenisi ekubhadhara uye kuita basa remari.",
-      "sandbox_title": "Nzvimbo yekuyedza mitemo",
-      "sandbox_detail": "Kutanga kunogona kuyedza hunyanzvi munzvimbo inotariswa kusvika kumwedzi makumi maviri nemana. Cryptocurrency uye yedhijitari-mari yekuyedza haina kubatanidzwa.",
-      "phases": {
-        "pre_application": "Usati waendesa chikumbiro",
-        "application": "Kushandisa uye kuongorora",
-        "testing": "Kuedza munzvimbo inodzorwa mhenyu",
-        "exit": "Kubuda uye kuendesa sarudzo"
-      },
-      "licensing_title": "Rezinesi uye Zvinodiwa Zvekushandisa",
-      "l1": "Bhalisa sangano repamutemo kutanga (kazhinji Private Limited) usati wadzorwa fintech mashandiro.",
-      "l2": "Ronga mari yekupihwa rezenisi yePSP uye zvisungo zvinoenderera mberi zvekuteerera.",
-      "l3": "Zvimwe zvigadzirwa zvemari zvinoda mashoma capital thresholds uye akakodzera-uye-akakodzera kudzora.",
-      "l4": "Mobile-wallet uye bhanga-akabatana masevhisi anowanzoda kudyidzana nebhanga rine rezinesi renzvimbo."
     },
     "hubs": {
       "title": "MaIncubator eStartup neInnovation Hubs (Zimbabwe)",
@@ -1154,25 +1116,7 @@
     "contact_form_title": "Mubvunzo weKutengeserana",
     "explore_title": "Ongorora Rumwe Ruzivo rwezvekutengeserana",
     "explore_subtitle": "Kuti uwane ruzivo rwakazara nemitemo, shanyirai ZimTrade.",
-    "explore_site": "Shanyira ZimTrade",
-    "market_resources": {
-      "open_resource": "Open Resource",
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade trade information portal with exporter support, market information, and publication access.",
-        "badge": "Official Portal"
-      },
-      "cbi": {
-        "title": "CBI Market Information",
-        "description": "Access practical EU market intelligence, buyer requirements, and product compliance guidance curated by ZimTrade.",
-        "badge": "Market Intelligence"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
-        "badge": "EU Business Support"
-      }
-    }
+    "explore_site": "Shanyira ZimTrade"
   },
   "impact": {
     "hero": {
@@ -1518,8 +1462,7 @@
     "title": "Kumba Kuri Kure",
     "collections_title": "Zvigadzirwa zvemuZimbabwe Zvakanaka",
     "desc": "Kubva kuzvigadzirwa zvehurumende kusvika kumabasa emaoko, chimwe nechimwe chinotaura nhoroondo nenhaka yedu.",
-    "collections_description": "Curated Zimbabwean Excellence inounza zvigadzirwa zvechokwadi zveZimbabwe pamusuwo wako, kubva kune zvekudya nemichero kusvika kumabasa emaoko nezvipfeko zvemitambo, zvakasarudzwa nehunhu uye nyore kune diaspora.",
-    "explore": "Ongorora",
+    "collections_description": "Curated Zimbabwean Excellence inounza zvigadzirwa zvechokwadi zveZimbabwe pamusuwo wako, kubva kune zvekudya nemichero kusvika kumabasa emaoko nezvipfeko zvemitambo, zvakasarudzwa nehunhu uye nyore kune diaspora. Muunganidzwa wega wega unosarudzwa kusimudzira vagadziri veZimbabwe, kusimbisa value chains dzemuno, uye kupa mhuri dziri kunze kwenyika mukana wakavimbika wezvigadzirwa zvinovimbwa nazvo zvekumusha.",
     "explore_shop": "Ongorora Shop",
     "trade_support": "Ongorora Rutsigiro rweTrade",
     "export_readiness": "Gwaro reKugadzirira Export",

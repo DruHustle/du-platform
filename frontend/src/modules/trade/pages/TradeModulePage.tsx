@@ -2,11 +2,10 @@ import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Package, TrendingUp, Award, Globe, ExternalLink, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight, Handshake, FileText } from "lucide-react";
+import { Package, TrendingUp, Award, Globe, Users, FileCheck, Truck, AlertCircle, CheckCircle2, ArrowRight, Handshake, FileText } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -205,27 +204,6 @@ export default function Trade() {
       icon: Truck,
       color: "border-purple-500"
     }
-  ];
-
-  const marketIntelResources = [
-    {
-      title: t("trade.market_resources.trade_zimbabwe.title") || "Trade Zimbabwe Portal",
-      description: t("trade.market_resources.trade_zimbabwe.description") || "Official ZimTrade trade information portal with exporter support, market information, and publication access.",
-      href: "https://tradezimbabwe.com/",
-      badge: t("trade.market_resources.trade_zimbabwe.badge") || "Official Portal",
-    },
-    {
-      title: t("trade.market_resources.cbi.title") || "CBI Market Information",
-      description: t("trade.market_resources.cbi.description") || "Access practical EU market intelligence, buyer requirements, and product compliance guidance curated by ZimTrade.",
-      href: "https://tradezimbabwe.com/cbi-market-information/",
-      badge: t("trade.market_resources.cbi.badge") || "Market Intelligence",
-    },
-    {
-      title: t("trade.market_resources.zim_ebic.title") || "ZIM-EBIC",
-      description: t("trade.market_resources.zim_ebic.description") || "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
-      href: "https://tradezimbabwe.com/zim-ebic/",
-      badge: t("trade.market_resources.zim_ebic.badge") || "EU Business Support",
-    },
   ];
 
   const exportMarketIntelligence = [
@@ -621,49 +599,6 @@ export default function Trade() {
                   Open Full Compliance Guide
                 </Button>
               </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trade Market information */}
-      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Globe className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">Trade Zimbabwe Market Information</h3>
-              </div>
-              <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-                Use these official resources to validate market requirements and discover exporter business profiles.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {marketIntelResources.map((resource) => (
-                    <Card key={resource.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white">
-                  <CardHeader className="space-y-3">
-                    <Badge className="w-fit bg-zim-gold/10 text-zim-gold border border-zim-gold/20 text-[10px] font-black uppercase tracking-widest">
-                      {resource.badge}
-                    </Badge>
-                    <CardTitle className="text-xl font-black tracking-tight">{resource.title}</CardTitle>
-                    <CardDescription className="text-white/70 text-sm leading-relaxed">
-                      {resource.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <a
-                      href={resource.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-zim-gold font-black uppercase tracking-widest text-[11px] hover:text-white transition-colors"
-                    >
-                      {t("trade.market_resources.open_resource") || "Open Resource"} <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </div>
         </div>

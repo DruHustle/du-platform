@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Sparkles, Globe, Shield, TrendingUp, Lightbulb, CheckCircle, Tractor, Pickaxe, Truck, GraduationCap, Network, BarChart3, Wallet, Cpu, Signal, Building2, MapPin } from "lucide-react";
+import { Brain, Sparkles, Globe, Shield, TrendingUp, Lightbulb, CheckCircle, Tractor, Pickaxe, Truck, GraduationCap, Network, BarChart3, Building2, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
@@ -11,7 +11,6 @@ import SubPageHero from "@/components/SubPageHero";
 export default function Technology() {
   const { t } = useTranslation();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
-  const [showInnovationHubs, setShowInnovationHubs] = useState(false);
 
   const heroSlides = useMemo(() => [
     {
@@ -94,12 +93,6 @@ export default function Technology() {
     }, 5000);
     return () => clearInterval(heroTimer);
   }, [heroSlides.length]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash === "#technology-hubs") {
-      setShowInnovationHubs(true);
-    }
-  }, []);
 
  const introData = {
   icon: Brain,
@@ -186,37 +179,6 @@ export default function Technology() {
         t("tech.onesa_matter.tiles.growth.detail") ||
         "Onesa supports innovation, investment confidence, and stronger digital participation for future generations.",
     },
-  ];
-
-  const digitalMomentum = [
-    {
-      icon: Signal,
-      title: t("tech.momentum.connectivity.title") || "Connectivity Expansion",
-      detail:
-        t("tech.momentum.connectivity.detail") ||
-        "Internet penetration is now above 80%, with market shifts from new broadband entrants and rapid 5G rollout.",
-    },
-    {
-      icon: Cpu,
-      title: t("tech.momentum.ai_strategy.title") || "National AI Strategy (2026-2030)",
-      detail:
-        t("tech.momentum.ai_strategy.detail") ||
-        "Zimbabwe now has a formal AI strategy focused on practical deployment in priority sectors and public service delivery.",
-    },
-    {
-      icon: Wallet,
-      title: t("tech.momentum.digital_payments.title") || "Digital Payments at Scale",
-      detail:
-        t("tech.momentum.digital_payments.detail") ||
-        "Mobile money remains the dominant rail for transactions, creating strong demand for fintech tooling and integrations.",
-    },
-  ];
-
-  const fintechSandboxPhases = [
-    t("tech.fintech.phases.pre_application") || "Pre-application",
-    t("tech.fintech.phases.application") || "Application and evaluation",
-    t("tech.fintech.phases.testing") || "Testing in a controlled live environment",
-    t("tech.fintech.phases.exit") || "Exit and deployment decision",
   ];
 
   const innovationHubs = [
@@ -542,154 +504,38 @@ export default function Technology() {
     </section>
 
     {/* Innovation Hubs */}
-    {showInnovationHubs && (
-      <section id="technology-hubs" className="p-5 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="mb-10 text-center">
-              <h2 className="text-xl font-black text-white tracking-tight">
-                {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {innovationHubs.map((hub) => (
-                <div key={hub.name} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Building2 className="h-4 w-4 text-zim-gold" />
-                    <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
-                  </div>
-                  <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
-                  <div className="flex items-center justify-between gap-2 text-white/70 text-xs">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-3.5 w-3.5" />
-                      <span>{hub.city}{t("tech.hubs.location_suffix") || ", Zimbabwe"}</span>
-                    </div>
-                    <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
-                      {t("tech.hubs.visit_site") || "Visit site"}
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    )}
-
-    {/* Digital Transformation Snapshot */}
-    <section id="technology-momentum" className="p-5 bg-slate-950 relative overflow-hidden">
+    <section id="technology-hubs" className="p-5 bg-slate-950 relative overflow-hidden">
       <div className="container relative z-10 px-6 mx-auto">
         <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
           <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
           <div className="mb-10 text-center">
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <Signal className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">
-              {t("tech.momentum.title") || "Zimbabwe Technology Momentum (2026)"}
-              </h3>
-            </div>
-            <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-              {t("tech.momentum.subtitle") ||
-                "Zimbabwe is moving from technology consumption to local solution creation, led by fintech, agritech, and AI adoption."}
-            </p>
+            <h2 className="text-xl font-black text-white tracking-tight">
+              {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
+            </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {digitalMomentum.map((item) => (
-              <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                    <item.icon className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <h3 className="text-lg font-black text-white tracking-tight">{item.title}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {innovationHubs.map((hub) => (
+              <div key={hub.name} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+                <div className="flex items-center gap-2 mb-3">
+                  <Building2 className="h-4 w-4 text-zim-gold" />
+                  <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
                 </div>
-                <p className="text-white/70 text-sm leading-relaxed">{item.detail}</p>
+                <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
+                <div className="flex items-center justify-between gap-2 text-white/70 text-xs">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5" />
+                    <span>{hub.city}{t("tech.hubs.location_suffix") || ", Zimbabwe"}</span>
+                  </div>
+                  <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
+                    {t("tech.hubs.visit_site") || "Visit site"}
+                  </a>
+                </div>
               </div>
             ))}
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                  <Building2 className="h-5 w-5 text-zim-gold" />
-                </div>
-                <h3 className="text-lg font-black text-white tracking-tight">
-                  {t("tech.momentum.hubs.title") || "Innovation Hubs and Incubators"}
-                </h3>
-              </div>
-              <p className="text-white/70 text-sm leading-relaxed mb-5">
-                {t("tech.momentum.hubs.detail") || "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."}
-              </p>
-              <Button
-                className="bg-zim-gold text-zim-black hover:bg-white font-bold text-xs md:text-sm rounded-full px-5 h-10 whitespace-normal"
-                onClick={() => {
-                  setShowInnovationHubs(true);
-                  setTimeout(() => {
-                    const target = document.getElementById("technology-hubs");
-                    target?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }, 0);
-                }}
-              >
-                {t("tech.hubs.open_button") || "Tech Hubs in Zimbabwe"}
-              </Button>
-            </div>
           </div>
         </div>
       </div>
     </section>
-
-    {/* Fintech Regulatory Environment */}
-    <section id="technology-fintech-regulation" className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-          <div className="mb-10 text-center">
-            <div className="flex items-center justify-center gap-3">
-              <Shield className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">
-                {t("tech.fintech.title") || "Fintech Regulatory Requirements (RBZ)"}
-              </h3>
-            </div>
-            <p className="mt-4 text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-              {t("tech.fintech.subtitle") ||
-                "Fintech solutions are regulated through RBZ supervision, sandbox testing, and licensing obligations for payment and financial service operations."}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-              <h4 className="text-lg font-black text-white tracking-tight mb-4">{t("tech.fintech.sandbox_title") || "Regulatory Sandbox"}</h4>
-              <p className="text-white/70 text-sm mb-4">
-                {t("tech.fintech.sandbox_detail") ||
-                  "Startups can test innovations in a monitored environment for up to 24 months. Cryptocurrency and digital-currency testing is excluded."}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {fintechSandboxPhases.map((phase) => (
-                  <Badge key={phase} className="bg-white/5 text-white/70 border border-white/10">{phase}</Badge>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-              <h4 className="text-lg font-black text-white tracking-tight mb-4">{t("tech.fintech.licensing_title") || "Licensing and Operating Requirements"}</h4>
-              <ul className="space-y-3">
-                <li className="text-white/75 text-sm">{t("tech.fintech.l1") || "Register legal entity first (typically Private Limited) before regulated fintech operations."}</li>
-                <li className="text-white/75 text-sm">{t("tech.fintech.l2") || "Plan for PSP licensing costs and ongoing compliance obligations."}</li>
-                <li className="text-white/75 text-sm">{t("tech.fintech.l3") || "Some financial products require minimum capital thresholds and fit-and-proper controls."}</li>
-                <li className="text-white/75 text-sm">{t("tech.fintech.l4") || "Mobile-wallet and bank-connected services usually require partnership with a locally licensed bank."}</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Link href="/regulations#investment-compliance">
-              <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                {t("tech.more_compliance_information") || "More Compliance Information"}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
 
     </Layout>
   );

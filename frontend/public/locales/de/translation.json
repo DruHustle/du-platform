@@ -224,28 +224,7 @@
         "d2": "Entwicklung technischer Fähigkeiten für die digitale Wirtschaft"
       }
     },
-    "more_compliance_information": "Mehr Compliance-Informationen",
     "chat_with_onesa": "Chatten Sie mit Onesa",
-    "momentum": {
-      "title": "Technologiedynamik in Simbabwe (2026)",
-      "subtitle": "Simbabwe bewegt sich vom Technologieverbrauch zur lokalen Lösungsentwicklung, angeführt von Fintech, Agritech und der Einführung von KI.",
-      "connectivity": {
-        "title": "Konnektivitätserweiterung",
-        "detail": "Mittlerweile liegt die Internetdurchdringung bei über 80 %, wobei sich der Markt durch neue Breitbandanbieter und die schnelle Einführung von 5G verschiebt."
-      },
-      "ai_strategy": {
-        "title": "Nationale KI-Strategie (2026–2030)",
-        "detail": "Simbabwe verfügt nun über eine formelle KI-Strategie, die sich auf den praktischen Einsatz in vorrangigen Sektoren und die Erbringung öffentlicher Dienstleistungen konzentriert."
-      },
-      "digital_payments": {
-        "title": "Digitale Zahlungen im großen Maßstab",
-        "detail": "Mobiles Geld bleibt die dominierende Plattform für Transaktionen, was zu einer starken Nachfrage nach Fintech-Tools und -Integrationen führt."
-      },
-      "hubs": {
-        "title": "Innovation Hubs and Incubators",
-        "detail": "Explore startup incubators and innovation hubs across Zimbabwe and open the full hub directory."
-      }
-    },
     "opportunities": {
       "title": "Top-Möglichkeiten für Investitionen und Innovation",
       "ai": {
@@ -270,23 +249,6 @@
       "infrastructure": "Infrastrukturlücken: Hohe Internetkosten und unregelmäßige Stromversorgung behindern immer noch die Durchführung von Startups.",
       "human_capital": "Druck auf das Humankapital: Es gibt starke technische Talente, aber aufgrund der Abwanderung ist es schwierig, sie zu halten.",
       "regulation": "Regulatorische Komplexität: Lizenzierung, Steuerkonformität und Genehmigungen können die Produkteinführung in regulierten Sektoren verzögern."
-    },
-    "fintech": {
-      "title": "Fintech-Regulatorische Anforderungen (RBZ)",
-      "subtitle": "Fintech-Lösungen werden durch die RBZ-Aufsicht, Sandbox-Tests und Lizenzverpflichtungen für Zahlungs- und Finanzdienstleistungsbetriebe reguliert.",
-      "sandbox_title": "Regulatorische Sandbox",
-      "sandbox_detail": "Startups können Innovationen bis zu 24 Monate lang in einer überwachten Umgebung testen. Das Testen von Kryptowährungen und digitalen Währungen ist ausgeschlossen.",
-      "phases": {
-        "pre_application": "Voranmeldung",
-        "application": "Anwendung und Bewertung",
-        "testing": "Testen in einer kontrollierten Live-Umgebung",
-        "exit": "Ausstiegs- und Einsatzentscheidung"
-      },
-      "licensing_title": "Lizenz- und Betriebsanforderungen",
-      "l1": "Registrieren Sie zuerst eine juristische Person (in der Regel eine Private Limited), bevor Sie regulierte Fintech-Operationen durchführen.",
-      "l2": "Planen Sie PSP-Lizenzkosten und laufende Compliance-Verpflichtungen ein.",
-      "l3": "Für einige Finanzprodukte sind Mindestkapitalschwellen und angemessene Kontrollen erforderlich.",
-      "l4": "Mobile-Wallet- und bankverbundene Dienste erfordern in der Regel eine Partnerschaft mit einer lokal lizenzierten Bank."
     },
     "hubs": {
       "title": "Startup-Inkubatoren und Innovationszentren (Simbabwe)",
@@ -1154,25 +1116,7 @@
     "contact_form_title": "Handelsanfrage",
     "explore_title": "Mehr Informationen",
     "explore_subtitle": "Für umfassende Handelsrichtlinien besuchen Sie ZimTrade.",
-    "explore_site": "ZimTrade besuchen",
-    "market_resources": {
-      "open_resource": "Open Resource",
-      "trade_zimbabwe": {
-        "title": "Trade Zimbabwe Portal",
-        "description": "Official ZimTrade trade information portal with exporter support, market information, and publication access.",
-        "badge": "Official Portal"
-      },
-      "cbi": {
-        "title": "CBI Market Information",
-        "description": "Access practical EU market intelligence, buyer requirements, and product compliance guidance curated by ZimTrade.",
-        "badge": "Market Intelligence"
-      },
-      "zim_ebic": {
-        "title": "ZIM-EBIC",
-        "description": "Use the Zimbabwe-EU Business Information Centre for trade regulations, market briefs, and support tools for EU-facing exporters.",
-        "badge": "EU Business Support"
-      }
-    }
+    "explore_site": "ZimTrade besuchen"
   },
   "impact": {
     "hero": {
@@ -1518,8 +1462,7 @@
     "title": "Ein Zuhause fern von Zuhause",
     "collections_title": "Kuratierte simbabwische Exzellenz",
     "desc": "Von offiziellem Merchandise bis zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte.",
-    "collections_description": "Kuratierte simbabwische Exzellenz bringt authentische simbabwische Produkte direkt zu Ihnen nach Hause – von Vorratswaren und Getränken bis zu Kunsthandwerk und Sportbekleidung, mit Fokus auf Qualität und Diaspora-Komfort.",
-    "explore": "Entdecken",
+    "collections_description": "Kuratierte simbabwische Exzellenz bringt authentische simbabwische Produkte direkt zu Ihnen nach Hause – von Vorratswaren und Getränken bis zu Kunsthandwerk und Sportbekleidung, mit Fokus auf Qualität und Diaspora-Komfort. Jede Kollektion wird so ausgewählt, dass simbabwische Produzenten gestärkt, lokale Wertschöpfungsketten unterstützt und Familien im Ausland verlässlichen Zugang zu vertrauenswürdigen Produkten aus der Heimat erhalten.",
     "explore_shop": "Shop entdecken",
     "trade_support": "Handelsunterstützung entdecken",
     "export_readiness": "Export-Reifeleitfaden",
