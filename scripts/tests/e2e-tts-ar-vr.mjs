@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-const baseUrl = process.env.E2E_BASE_URL || "https://localhost:3002";
+const baseUrl = String(process.env.E2E_BASE_URL || "https://localhost:3000").replace(/\/+$/, "");
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
@@ -124,8 +124,8 @@ async function runScenario(path, kind) {
 }
 
 try {
-  const ar = await runScenario("/onesa-ai-tourism-augmented-experince", "ar");
-  const vr = await runScenario("/onesa-ai-tourism-virtual-experince", "vr");
+  const ar = await runScenario("/onesa-ai-tourism-augmented-experience", "ar");
+  const vr = await runScenario("/onesa-ai-tourism-virtual-experience", "vr");
   const result = { baseUrl, ar, vr, ok: ar.ok && vr.ok };
   console.log(JSON.stringify(result, null, 2));
   if (!result.ok) process.exitCode = 1;

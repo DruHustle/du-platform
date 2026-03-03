@@ -250,29 +250,6 @@
       "human_capital": "Ingcindezi yemali yabantu: ithalente eliqinile likhona, kodwa ukugcinwa kunzima ngenxa yokufudukela ngaphandle.",
       "regulation": "Ubunzima bokulawula: ukunikwa kwelayisensi, ukuthobela intela, nokugunyazwa kungabambezela ukwethulwa komkhiqizo emikhakheni elawulwayo."
     },
-    "hubs": {
-      "title": "Ama-Incubator okuqalisa kanye nama-Innovation Hubs (Zimbabwe)",
-      "location": "eZimbabwe",
-      "visit_site": "Vakashela isayithi",
-      "cities": {
-        "harare": "Harare",
-        "bulawayo": "Bulawayo",
-        "gweru": "eGweru",
-        "mutare": "Mutare"
-      },
-      "impact_hub": "Ukuthuthukiswa komphakathi, usomabhizinisi abasha, ukufundisa, kanye nezinhlelo zokufukamela.",
-      "eight2five": "Isikhungo sokusungula se-CBD esisekela ukusheshisa kokuqala kanye nezinhlelo zokwakha amabhizinisi.",
-      "stanbic": "Ukwesekwa kokwakha amandla, ukufinyelela endaweni yokusebenza, namathuba wobambiswano lwe-ecosystem.",
-      "hit": "Ukuthengiswa kwemboni engu-4.0 ngokugxila ku-IoT, AI, nezixazululo zedatha enkulu.",
-      "zchpc": "Ukusebenza okuphezulu kwekhompuyutha kanye nezimo zokusebenzisa i-AI kwezolimo, ezempilo, kanye nocwaningo.",
-      "b2c": "Ukusebenzisana kwasemadolobheni kanye nokusekelwa kwesitayela sokusheshisa kokuqalisa okusebenzayo kokuxazulula izinkinga kwasendaweni.",
-      "techvillage": "Umphakathi osungulwe koBulawayo kanye nesikhungo sokusungula esinemisebenzi yokusheshisa kanye nezinhlelo zokusekela abasunguli.",
-      "nust": "Amasu amasha aqhutshwa yinyuvesi kanye ne-ecosystem yokuhweba esekela amabhizinisi aholwa yintsha nezisombululo ezigxile embonini.",
-      "msu": "Inkundla yokufukamela esekwe e-Midlands kanye nenkundla yokuthengisa esekela osomabhizinisi, ama-SME, kanye nokusetshenziswa kocwaningo.",
-      "digital_village": "Indawo yokusungula egxile emphakathini eMutare ihlinzeka ngendawo yokusebenza ngokubambisana, ukuqeqeshwa, nokusekelwa kwebhizinisi ledijithali.",
-      "open_button": "Tech Hubs in Zimbabwe",
-      "location_suffix": ", Zimbabwe"
-    },
     "onesa_matter": {
       "badge": "I-Africa-Centric AI",
       "title": "Kungani I-Onesa AI Ibalulekile",
@@ -520,6 +497,16 @@
       "assistant_label": "Umsizi we-Onesa AI",
       "prompt_question": "\"Onesa, kuyiphi indawo engcono yokudla Isitshwala (Sadza) eHarare namuhla ebusuku?\"",
       "prompt_response": "Ukuze uthole isitshwala sangempela eHarare, yana eMbare Musika. Abathengisi bakhona baphakela isitshwala esimnandi esisanda kuphekwa lezitshebo ezitshiyeneyo. Kudume kakhulu ebantwini bakhona. Cela nje 'Isitshwala lenyama' ukuze uthole ukudla okusuthisayo!",
+      "phone_conversation": {
+        "q1": "Onesa, kuyiphi indawo engcono yokudla Isitshwala (Sadza) eHarare namuhla ebusuku?",
+        "a1": "Ukuze uthole isitshwala sangempela eHarare, yana eMbare Musika. Abathengisi bakhona baphakela isitshwala esimnandi esisanda kuphekwa lezitshebo ezitshiyeneyo. Kudume kakhulu ebantwini bakhona. Cela nje 'Isitshwala lenyama' ukuze uthole ukudla okusuthisayo!",
+        "q2": "Kuhle. Kuphephile yini ukuya khona ebusuku, njalo kufanele ngifike ngasiphi isikhathi?",
+        "a2": "Fika kusihlwa kusasekuseni, kungcono ngaphambi kuka-8:00 PM, usebenzise ride service ethembekileyo. Kubavakashi bokuqala, kungcono ukuhamba lomqondisi wendawo kumbe umngane.",
+        "q3": "Unganginika enye irestshurenti eduze le city center nxa kugcwele kakhulu?",
+        "a3": "Yebo. Zama irestshurenti yesintu eAvondale kumbe eCBD enikeza Isitshwala, inyama ebilisiweyo, lemifino. Cela ukudla okusanda kuphekwa lezitshebo zasendaweni.",
+        "q4": "Kulungile. Faka amacebo ezokuthutha lebhajethi ecishe ibe yedina yabantu ababili.",
+        "a4": "Hlela phakathi kwe-USD 20 le-USD 35 kubantu ababili, kuye ngezokunatha lezinye izitsha. Ezokuthutha, sebenzisa amatekisi abhalisiwe kumbe app rides, yabelana nge-live location yakho, njalo ubhuke uhambo lokubuyela kusenesikhathi."
+      },
       "guide": {
         "title": "Ulwazi lwendawo",
         "desc": "Zwisisa ukuziphatha kwendawo, isiko lokubonga (tipping), lezinqubo zomphakathi."

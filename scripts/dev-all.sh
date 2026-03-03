@@ -5,6 +5,10 @@ SERVER_CMD=(pnpm dev:server)
 FRONTEND_CMD=(pnpm dev:web)
 OLLAMA_CMD=(ollama serve)
 ONESA_PROVIDER_RUNTIME=""
+DEV_FAST_MODE="${DEV_FAST_MODE:-0}"
+DEV_SKIP_OLLAMA_SETUP="${DEV_SKIP_OLLAMA_SETUP:-0}"
+DEV_SKIP_MYSQL_SETUP="${DEV_SKIP_MYSQL_SETUP:-0}"
+DEV_ALL_AUTO_INSTALL_MYSQL="${DEV_ALL_AUTO_INSTALL_MYSQL:-0}"
 
 get_env_value() {
   local key="$1"
@@ -56,11 +60,33 @@ get_onesa_provider() {
   printf '%s\n' "ollama"
 }
 
+has_remote_db_config() {
+  local aiven_url aiven_host db_url
+  aiven_url="$(get_env_value "AIVEN_MYSQL_URL")"
+  aiven_host="$(get_env_value "AIVEN_MYSQL_HOST")"
+  db_url="$(get_env_value "DATABASE_URL")"
+
+  if [[ -n "${aiven_url}" || -n "${aiven_host}" ]]; then
+    return 0
+  fi
+
+  if [[ -n "${db_url}" ]] && [[ ! "${db_url}" =~ (127\.0\.0\.1|localhost) ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
 is_ollama_running() {
   curl -fsS "http://127.0.0.1:11434/api/tags" >/dev/null 2>&1
 }
 
 choose_onesa_provider_mode() {
+  if [[ "${DEV_FAST_MODE}" == "1" ]]; then
+    ONESA_PROVIDER_RUNTIME="openai_compatible"
+    return
+  fi
+
   # Prompt only in interactive terminals. Non-interactive runs keep env behavior.
   if [[ -t 0 && -t 1 ]]; then
     echo "[dev:all] AI mode:"
@@ -82,6 +108,11 @@ choose_onesa_provider_mode() {
 }
 
 ensure_ollama() {
+  if [[ "${DEV_FAST_MODE}" == "1" || "${DEV_SKIP_OLLAMA_SETUP}" == "1" ]]; then
+    echo "[dev:all] Skipping Ollama startup checks."
+    return 0
+  fi
+
   local provider
   provider="${ONESA_PROVIDER_RUNTIME:-$(get_onesa_provider)}"
   if [[ "${provider}" == "openai_compatible" ]]; then
@@ -185,6 +216,16 @@ ensure_ollama() {
 }
 
 ensure_mysql() {
+  if [[ "${DEV_FAST_MODE}" == "1" || "${DEV_SKIP_MYSQL_SETUP}" == "1" ]]; then
+    echo "[dev:all] Skipping MySQL startup checks."
+    return 0
+  fi
+
+  if has_remote_db_config; then
+    echo "[dev:all] Remote DB config detected. Skipping local MySQL startup."
+    return 0
+  fi
+
   if command -v mysql.server >/dev/null 2>&1; then
     if mysql.server status >/dev/null 2>&1; then
       echo "[dev:all] MySQL is already running."
@@ -200,7 +241,7 @@ ensure_mysql() {
   fi
 
   echo "[dev:all] mysql.server not found."
-  if command -v brew >/dev/null 2>&1; then
+  if [[ "${DEV_ALL_AUTO_INSTALL_MYSQL}" == "1" ]] && command -v brew >/dev/null 2>&1; then
     echo "[dev:all] Attempting to install MySQL with Homebrew..."
     if brew list mysql >/dev/null 2>&1 || brew install mysql; then
       echo "[dev:all] Attempting to start MySQL via Homebrew services..."
@@ -215,7 +256,8 @@ ensure_mysql() {
     return 0
   fi
 
-  echo "[dev:all] WARNING: Homebrew not found; cannot auto-install MySQL."
+  echo "[dev:all] Skipping auto-install for speed."
+  echo "[dev:all] To auto-install once: DEV_ALL_AUTO_INSTALL_MYSQL=1 pnpm dev"
   return 0
 }
 
@@ -236,6 +278,14 @@ cleanup() {
 }
 
 trap cleanup INT TERM EXIT
+
+for arg in "$@"; do
+  case "$arg" in
+    --fast)
+      DEV_FAST_MODE=1
+      ;;
+  esac
+done
 
 choose_onesa_provider_mode
 ensure_mysql

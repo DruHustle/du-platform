@@ -1,8 +1,12 @@
 import { chromium } from "playwright";
 
-const baseUrl = process.env.E2E_BASE_URL || "http://127.0.0.1:3002";
+const baseUrl = String(process.env.E2E_BASE_URL || "http://127.0.0.1:3000").replace(/\/+$/, "");
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const context = await browser.newContext({
+  ignoreHTTPSErrors: true,
+  viewport: { width: 1440, height: 900 },
+});
+const page = await context.newPage();
 
 const results = [];
 const pass = (name, detail = "") => results.push({ name, ok: true, detail });
@@ -57,6 +61,7 @@ try {
   fail("unexpected_error", err);
 } finally {
   await page.screenshot({ path: "/tmp/e2e-onesa-bubble-recover.png", fullPage: true });
+  await context.close();
   await browser.close();
 }
 

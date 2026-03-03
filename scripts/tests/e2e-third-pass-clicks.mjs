@@ -73,16 +73,17 @@ try {
     }
 
     await goto(`/login?next=${encodeURIComponent('/payments')}`);
-    await page.locator('input[type="email"]').first().fill(email);
-    await page.locator('input[type="password"]').first().fill(password);
-    await page.getByRole('button', { name: /login/i }).first().click();
-    await page.waitForURL(/\/payments|\/$/, { timeout: 30000 });
+    const emailInput = page.locator('input[type="email"]').first();
+    if (await emailInput.isVisible().catch(() => false)) {
+      await emailInput.fill(email);
+      await page.locator('input[type="password"]').first().fill(password);
+      await page.getByRole('button', { name: /login/i }).first().click();
+      await page.waitForURL(/\/payments|\/$/, { timeout: 30000 });
+    }
 
-    const loginRes = await context.request.post(`${baseUrl}/api/auth/token/refresh`, {
-      headers: {},
-    });
+    const loginRes = await context.request.post(`${baseUrl}/api/auth/token/refresh`, { headers: {} });
     const loginJson = await loginRes.json();
-    accessToken = String(loginJson?.accessToken ?? '').trim();
+    accessToken = String(loginJson?.data?.accessToken ?? loginJson?.accessToken ?? '').trim();
     if (!loginRes.ok() || !accessToken || loginRes.status() !== 200) {
       throw new Error(`token refresh failed ${loginRes.status()}: ${JSON.stringify(loginJson)}`);
     }
@@ -102,6 +103,7 @@ try {
       localStorage.setItem('zigd_jwt', token);
       localStorage.setItem('zigd_has_logged_in', '1');
     }, accessToken);
+    await goto('/payments');
   });
 
   await step('payments_send_money_flow_clicks', async () => {
@@ -176,8 +178,8 @@ try {
     '/impact',
     '/onesa-ai-chat',
     '/onesa-ai-book-trip',
-    '/onesa-ai-tourism-augmented-experince',
-    '/onesa-ai-tourism-virtual-experince',
+    '/onesa-ai-tourism-augmented-experience',
+    '/onesa-ai-tourism-virtual-experience',
     '/privacy-policy',
     '/terms-of-service',
     '/cookie-settings',
@@ -188,8 +190,11 @@ try {
       await goto(route);
 
       if (route === '/onesa-ai-book-trip') {
+        await page.waitForURL(/\/onesa-ai-book-trip/, { timeout: 30000 });
         const startDate = page.locator('input[type="date"]').nth(0);
         const endDate = page.locator('input[type="date"]').nth(1);
+        await startDate.waitFor({ timeout: 30000 });
+        await endDate.waitFor({ timeout: 30000 });
         await startDate.fill('2026-08-10');
         await endDate.fill('2026-08-18');
         await page.getByRole('button', { name: /generate trip plan/i }).click();
@@ -197,7 +202,8 @@ try {
         return;
       }
 
-      if (route === '/onesa-ai-tourism-augmented-experince') {
+      if (route === '/onesa-ai-tourism-augmented-experience') {
+        await page.waitForURL(/\/onesa-ai-tourism-augmented-exper(i)?ence/, { timeout: 30000 });
         await page.locator('#aug-place').waitFor({ timeout: 20000 });
         await page.selectOption('#aug-place', { index: 1 });
         const convoToggle = page.getByRole('button', { name: /conversation:\s*(off|on)/i }).first();
@@ -205,7 +211,8 @@ try {
         return;
       }
 
-      if (route === '/onesa-ai-tourism-virtual-experince') {
+      if (route === '/onesa-ai-tourism-virtual-experience') {
+        await page.waitForURL(/\/onesa-ai-tourism-virtual-exper(i)?ence/, { timeout: 30000 });
         await page.locator('#vr-destination').waitFor({ timeout: 30000 });
         await page.selectOption('#vr-destination', { index: 1 });
         const narrationToggle = page

@@ -388,7 +388,7 @@ export default function Impact() {
         <section id="stories" className="p-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
-            <div className="mb-10 text-center">
+          <div className="mb-10 text-center text-white/80">
               <h2 className="text-xl font-black text-white tracking-tight">{t("impact.stories_title") || "Inspiring Impact"}</h2>
               <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("impact.stories_subtitle") || "Explore the impactful contributions of the Zimbabwean diaspora across various sectors."}</p>
             </div>
@@ -410,7 +410,7 @@ export default function Impact() {
                       {story?.category}
                     </Badge>
                   </div>
-                  <div className="p-8 flex-grow space-y-6 relative">
+                  <div className="p-8 flex-grow space-y-6 relative text-white/80">
                     <h3 className="text-xl font-black text-white tracking-tight group-hover:text-zim-gold transition-colors leading-tight">{story?.title}</h3>
                     <p className="text-[13px]  leading-relaxed font-light line-clamp-3">{story?.story}</p>
                     <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
@@ -441,7 +441,7 @@ export default function Impact() {
         <section className="p-5 bg-slate-950 border-t border-white/5 relative overflow-hidden">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
           <div className="container relative z-10 px-6 mx-auto">
-            <div className="mb-10 text-center">
+            <div className="mb-10 text-center text-white/80">
               <h2 className="text-xl font-black text-white tracking-tight">{t("impact.metrics_title") || "Collective Impact"}</h2>
               <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed mt-4">{t("impact.metrics_subtitle") || "The aggregated impact of diaspora engagement across all featured impact stories."}</p>
             </div>
@@ -469,51 +469,10 @@ export default function Impact() {
         </section>
       )}
 
-      {/* Contact CTA */}
-      <section id="contact-cta" className="pt-5 p-10 bg-slate-950">
-        <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel relative mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
-            <div className="absolute -top-24 -left-24 w-96 h-96 bg-zim-gold/10 blur-[120px] pointer-events-none" />
-            <div className="relative z-10 space-y-10">
-              <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-zim-gold/10 transition-colors">
-                <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🏅</span>
-              </div>
-
-              <div className="space-y-4 text-center">
-                <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("impact.cta_title") || "Partner with us"}</h2>
-                <p className="text-sm  font-light max-w-3xl mx-auto leading-relaxed">{t("impact.cta_subtitle") || "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let's build together."}</p>
-              </div>
-
-              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                    {t("impact.cta_button") || "Start Partnership"}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl p-0 bg-slate-950 border-white/10 overflow-hidden rounded-[2rem]">
-                  <ContactForm title={t("impact.cta_title") || "Partner with us"} module="success" />
-                </DialogContent>
-              </Dialog>
-
-              <div className="pt-8 flex flex-wrap justify-center gap-8">
-                <div className="flex items-center gap-2 text-xs font-bold text-white tracking-widest">
-                  <Mail className="h-4 w-4" /> 
-                  <a href="mailto:info@diasporaunlocked.com" className="hover:text-white transition-colors">info@diasporaunlocked.com</a>
-                </div>
-                <div className="flex items-center gap-2 text-xs font-bold text-white tracking-widest">
-                  <Phone className="h-4 w-4" /> 
-                  <a href="tel:+4915147416152" className="hover:text-white transition-colors">+49 151 474 16152</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Diaspora Economic Impact */}
-      <section className="px-5 pt-12 pb-5 bg-slate-950 relative overflow-hidden">
+      <section className=" p-5 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left text-white/80">
             <div className="text-center max-w-3xl mx-auto space-y-4 mb-8">
               <h3 className="text-xl font-black text-white tracking-tight leading-tight">Diaspora Economic Impact</h3>
               <p className="text-sm  font-light leading-relaxed">
@@ -562,9 +521,9 @@ export default function Impact() {
       </section>
 
       {/* Global Diaspora Distribution */}
-      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
+      <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container px-6 mx-auto">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 text-left text-white/80">
             <div className="mb-7 text-center">
               <h3 className="text-xl font-black text-white tracking-tight">Global Diaspora Distribution</h3>
               <p className="mt-3 text-xs  font-light leading-relaxed">Zimbabwean diaspora residence worldwide</p>
@@ -610,6 +569,47 @@ export default function Impact() {
                   })}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section id="contact-cta" className="pt-5 p-10 bg-slate-950">
+        <div className="container px-6 mx-auto">
+          <div className="outer-glass-panel relative mx-auto p-12 md:p-24 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center overflow-hidden">
+            <div className="absolute -top-24 -left-24 w-96 h-96 bg-zim-gold/10 blur-[120px] pointer-events-none" />
+            <div className="relative z-10 space-y-10">
+              <div className="mx-auto h-20 w-20 p-4 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-zim-gold/10 transition-colors">
+                <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🏅</span>
+              </div>
+
+              <div className="space-y-4 text-center">
+                <h2 className="!text-lg md:!text-xl font-black text-white tracking-tight">{t("impact.cta_title") || "Partner with us"}</h2>
+                <p className="text-sm  font-light max-w-3xl mx-auto leading-relaxed">{t("impact.cta_subtitle") || "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let's build together."}</p>
+              </div>
+
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
+                    {t("impact.cta_button") || "Start Partnership"}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl p-0 bg-slate-950 border-white/10 overflow-hidden rounded-[2rem]">
+                  <ContactForm title={t("impact.cta_title") || "Partner with us"} module="success" />
+                </DialogContent>
+              </Dialog>
+
+              <div className="pt-8 flex flex-wrap justify-center gap-8">
+                <div className="flex items-center gap-2 text-xs font-bold text-white tracking-widest">
+                  <Mail className="h-4 w-4" /> 
+                  <a href="mailto:info@diasporaunlocked.com" className="hover:text-white transition-colors">info@diasporaunlocked.com</a>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-bold text-white tracking-widest">
+                  <Phone className="h-4 w-4" /> 
+                  <a href="tel:+4915147416152" className="hover:text-white transition-colors">+49 151 474 16152</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

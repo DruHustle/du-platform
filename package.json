@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "./scripts/dev-all.sh",
+    "dev:fast": "./scripts/dev-all.sh --fast",
     "dev:web": "vite --host",
     "dev:server": "node --env-file=.env --import tsx backend/index.ts",
     "dev:all": "./scripts/dev-all.sh",

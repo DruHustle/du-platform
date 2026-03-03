@@ -469,17 +469,17 @@ export default function Tourism() {
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-10 text-center">
               <h2 className="section-title-compact">{t("tourism.attractions_title") || "Must-Visit Destinations"}</h2>
-              <p className="text-sm text-white/75 max-w-4xl mx-auto mt-4 font-light leading-relaxed">
+              <p className="mt-4 text-left text-sm text-white/75 font-light leading-relaxed">
                 {t("tourism.intro.p1") ||
                   "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality."}
               </p>
-              <p className="text-sm text-white/70 max-w-4xl mx-auto mt-3 font-light leading-relaxed">
+              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
                 {t("tourism.intro.p2_before_ar") || "When you are onsite, use Onesa's"}{" "}
                 <span className="text-zim-gold font-semibold">{t("tourism.intro.local_guide_ar") || "Local guide AR"}</span>{" "}
                 {t("tourism.intro.p2_after_ar") ||
                   "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
               </p>
-              <p className="text-sm text-white/70 max-w-4xl mx-auto mt-3 font-light leading-relaxed">
+              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
                 {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
                 <span className="text-zim-gold font-semibold">{t("tourism.intro.gastronomy_tourism") || "gastronomy tourism"}</span>{" "}
                 {t("tourism.intro.p3_between") ||
@@ -613,22 +613,22 @@ export default function Tourism() {
                   })}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-3">
                   <Button
                     asChild
-                    className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap"
+                    className="w-full justify-center bg-zim-gold text-zim-black hover:bg-white transition-all px-3 py-2 h-auto min-h-[42px] rounded-full font-black text-[10px] uppercase tracking-[0.14em] md:tracking-[0.12em] gap-0.5 text-center whitespace-normal leading-tight"
                   >
                     <Link href="/onesa-ai-chat">{t("tourism.onesa.cta.chat") || "Chat with Onesa"}</Link>
                   </Button>
                   <Button
                     asChild
-                    className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap"
+                    className="w-full justify-center bg-zim-gold text-zim-black hover:bg-white transition-all px-3 py-2 h-auto min-h-[42px] rounded-full font-black text-[10px] uppercase tracking-[0.14em] md:tracking-[0.12em] gap-0.5 text-center whitespace-normal leading-tight"
                   >
                     <Link href="/onesa-ai-book-trip">{t("tourism.onesa.cta.plan_trip") || "Plan your trip"}</Link>
                   </Button>
                   <Button
                     asChild
-                    className="bg-zim-gold text-zim-black hover:bg-white transition-all px-5 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em] gap-0.5 whitespace-nowrap"
+                    className="w-full justify-center bg-zim-gold text-zim-black hover:bg-white transition-all px-3 py-2 h-auto min-h-[42px] rounded-full font-black text-[10px] uppercase tracking-[0.14em] md:tracking-[0.12em] gap-0.5 text-center whitespace-normal leading-tight"
                   >
                     <Link href="/onesa-ai-tourism-augmented-experience">{t("tourism.onesa.cta.local_guide_ar") || "Local guide AR"}</Link>
                   </Button>

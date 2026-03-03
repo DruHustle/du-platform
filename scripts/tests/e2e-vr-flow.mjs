@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.E2E_BASE_URL || 'https://localhost:3002';
+const baseUrl = String(process.env.E2E_BASE_URL || 'https://localhost:3000').replace(/\/+$/, '');
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ ignoreHTTPSErrors: true, viewport: { width: 1440, height: 900 } });
@@ -29,7 +29,7 @@ page.on('pageerror', (err) => {
 });
 
 try {
-  await page.goto(`${baseUrl}/onesa-ai-tourism-virtual-experince`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto(`${baseUrl}/onesa-ai-tourism-virtual-experience`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.locator('#vr-destination').waitFor({ timeout: 30000 });
   fallbackWebglMode = await page.getByText(/webgl not available/i).first().isVisible().catch(() => false);
 

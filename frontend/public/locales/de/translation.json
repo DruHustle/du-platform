@@ -179,17 +179,11 @@
     "onesa_badge": "Darf ich vorstellen: Onesa AI",
     "onesa_title": "Ihren Weg beleuchten",
     "onesa_meaning": "Onesa bedeutet „beleuchten“ auf Shona",
-    "onesa_desc1": "Onesa AI ist unser firmeneigenes Modell, das entwickelt wurde, um den Weg zum Leben, Investieren und Erfolg in Simbabwe aufzuzeigen. Während allgemeinen KI-Modellen oft lokale Nuancen fehlen, wurde Onesa von Grund auf darauf trainiert, den simbabwischen Kontext besser als jedes andere Modell zu verstehen.",
     "onesa_desc2": "Von der Navigation durch lokale Vorschriften bis hin zum Brainstorming von Geschäftsideen für spezifische simbabwische Herausforderungen – Onesa bietet die lokalisierte Intelligenz, die Sie für Ihren Erfolg benötigen.",
     "onesa_local_edge_title": "Jenseits westlich-zentrierter Modelle",
     "onesa_local_edge_desc": "Standardmodelle sind oft westlich geprägt; sie glänzen in formalen Wirtschaftssystemen, scheitern aber an der „Kukiya-kiya“-Wirtschaft (Hustle) von Mbare Musika oder den tiefen Nuancen von Shona-Slang gemischt mit ländlichem Ndebele.",
     "diaspora_unlocked_title": "Diaspora Unlocked Technologie",
     "diaspora_unlocked_desc": "Wir nutzen modernste Technologie, um nahtlosen Tourismus, Handel und Investitionen zu ermöglichen. Unsere Plattform schließt die Lücke zwischen der Diaspora und lokalen Möglichkeiten durch digitale Transparenz und KI-gestützte Erkenntnisse.",
-    "onesa_usp1": "Kontextuelles Verständnis",
-    "onesa_usp2": "Präzise Sprachübersetzung",
-    "ai_status": "Beta-Version",
-    "ai_demo_question": "Was sind derzeit einige Investitionsmöglichkeiten mit hohem ROI im simbabwischen Agrarsektor?",
-    "ai_demo_response": "Simbabwes Agrarsektor verzeichnet derzeit ein starkes Wachstum bei Gartenbau-Exporten. Aktuellen Trends zufolge bietet die Investition in Kühlkettenlogistik für den Blaubeerexport aus dem östlichen Hochland einen hohen ROI bei moderatem Risiko...",
     "features_title": "Onesa AI Fähigkeiten",
     "features_subtitle": "Spezialisierte Tools, um die Lücke zwischen der Diaspora und lokalen Chancen zu schließen.",
     "cta_title": "Bereit, Ihre Reise zu beleuchten?",
@@ -225,6 +219,35 @@
       }
     },
     "chat_with_onesa": "Chatten Sie mit Onesa",
+    "onesa_matter": {
+      "badge": "Africa-Centric AI",
+      "title": "Why Onesa AI Matters",
+      "headline": "Africa deserves AI that understands Africa.",
+      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
+      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
+      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
+      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
+      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "tiles": {
+        "illuminate": {
+          "title": "Onesa Means Illuminate",
+          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+        },
+        "africa_centric": {
+          "title": "Africa-Centric Intelligence",
+          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+        },
+        "sovereignty": {
+          "title": "AI Sovereignty",
+          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+        },
+        "growth": {
+          "title": "Future-Ready Growth",
+          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+        }
+      },
+      "combined": "Africa deserves AI that understands Africa. Onesa AI was built by Diaspora Unlocked to deliver practical, locally relevant intelligence for Zimbabwe and the wider continent, not generic advice detached from local realities. We see AI sovereignty as essential for long-term growth, resilience, and strategic independence, and this platform is our commitment to building that future with and for African communities."
+    },
     "opportunities": {
       "title": "Top-Möglichkeiten für Investitionen und Innovation",
       "ai": {
@@ -250,58 +273,6 @@
       "human_capital": "Druck auf das Humankapital: Es gibt starke technische Talente, aber aufgrund der Abwanderung ist es schwierig, sie zu halten.",
       "regulation": "Regulatorische Komplexität: Lizenzierung, Steuerkonformität und Genehmigungen können die Produkteinführung in regulierten Sektoren verzögern."
     },
-    "hubs": {
-      "title": "Startup-Inkubatoren und Innovationszentren (Simbabwe)",
-      "location": "Simbabwe",
-      "visit_site": "Besuchen Sie die Website",
-      "cities": {
-        "harare": "Harare",
-        "bulawayo": "Bulawayo",
-        "gweru": "Gweru",
-        "mutare": "Mutare"
-      },
-      "impact_hub": "Soziale Innovation, Jugendunternehmertum, Mentoring und Inkubationsprogramme.",
-      "eight2five": "CBD-Innovationszentrum zur Unterstützung von Startup-Beschleunigungs- und Venture-Building-Programmen.",
-      "stanbic": "Unterstützung beim Kapazitätsaufbau, Zugang zum Arbeitsplatz und Möglichkeiten für Ökosystempartnerschaften.",
-      "hit": "Industrie 4.0-Kommerzialisierung mit Fokus auf IoT-, KI- und Big-Data-Lösungen.",
-      "zchpc": "Anwendungsfälle für Hochleistungsrechnen und KI für Landwirtschaft, Gesundheit und Forschung.",
-      "b2c": "Städtisches Coworking und Accelerator-artige Unterstützung für praktische lokale Problemlösungs-Startups.",
-      "techvillage": "In Bulawayo ansässige Startup-Community und Innovationszentrum mit Accelerator-Aktivitäten und Gründerunterstützungsprogrammen.",
-      "nust": "Von der Universität betriebenes Innovations- und Kommerzialisierungsökosystem, das jugendgeführte unternehmens- und branchenorientierte Lösungen unterstützt.",
-      "msu": "In den Midlands ansässige Inkubations- und Kommerzialisierungsplattform zur Unterstützung von Unternehmern, KMU und Spin-outs aus der angewandten Forschung.",
-      "digital_village": "Community-orientierter Innovationsraum in Mutare, der kollaborativen Arbeitsbereich, Schulungen und Unterstützung für digitale Unternehmen bietet.",
-      "open_button": "Tech Hubs in Zimbabwe",
-      "location_suffix": ", Simbabwe"
-    },
-    "onesa_matter": {
-      "badge": "Afrikazentrierte KI",
-      "title": "Warum Onesa AI wichtig ist",
-      "headline": "Afrika verdient eine KI, die Afrika versteht.",
-      "p1": "Überall auf der Welt verändert KI mit unglaublicher Geschwindigkeit Volkswirtschaften, Industrien und Gesellschaften. Dennoch basieren die meisten Modelle auf Daten, Prioritäten und Kontexten, die häufig an der afrikanischen Realität vorbeigehen. Damit Afrika vollständig an der globalen digitalen Wirtschaft teilhaben kann, brauchen wir auf Afrika ausgerichtete Modelle, die unsere Sprachen, Kulturen, Geschäftsumgebungen und Entwicklungsprioritäten verstehen.",
-      "p2": "Wir bei Diaspora Unlocked glauben, dass Afrika nicht nur KI konsumieren sollte. Afrika muss beim Aufbau helfen. Genau aus dieser Überzeugung heraus haben wir mit der Entwicklung von Onesa AI begonnen: um intelligente Systeme zu schaffen, die für afrikanische Märkte, afrikanische Datenumgebungen und die Ziele der afrikanischen Wirtschaftstransformation wirklich relevant sind.",
-      "p3": "Wir wissen auch, dass dieser Weg nicht einfach ist. Das Training von KI-Modellen erfordert eine seriöse Infrastruktur, Rechenleistung, Datenaufbereitung und erstklassige Talente. Die Kosten sind hoch und die Hindernisse real. Wir haben uns trotzdem entschieden, voranzukommen, weil die langfristige Zukunft Afrikas von technologischer Eigenverantwortung, digitaler Unabhängigkeit und der Fähigkeit abhängt, unsere eigenen digitalen Ökosysteme zu gestalten.",
-      "p4": "Die KI-Souveränität wird zu einem der bestimmenden globalen Gespräche dieser Ära. Nationen, die ihre Daten, ihre Modelle und ihre digitale Infrastruktur kontrollieren, werden besser in der Lage sein, ihre Volkswirtschaften zu schützen, Innovationen zu beschleunigen und strategische Unabhängigkeit zu wahren. Afrika muss in dieser Zukunft nicht als Beobachter, sondern als Schöpfer und Führer agieren.",
-      "p5": "Onesa AI ist unser Engagement für diese Zukunft. Das ist größer als Technologie. Es geht um Chancen, Widerstandsfähigkeit und den Aufbau von Systemen, die künftigen Generationen auf dem gesamten Kontinent und in der Diaspora dienen.",
-      "tiles": {
-        "illuminate": {
-          "title": "Onesa bedeutet „erleuchten“.",
-          "detail": "Onesa wurde entwickelt, um praktische Klarheit darüber zu schaffen, wie Menschen und Unternehmen in Simbabwe und in ganz Afrika wachsen können."
-        },
-        "africa_centric": {
-          "title": "Afrikazentrierter Geheimdienst",
-          "detail": "Modelle, die auf afrikanischen Sprachen, Märkten und Realitäten basieren, führen zu relevanteren und nützlicheren Ergebnissen."
-        },
-        "sovereignty": {
-          "title": "KI-Souveränität",
-          "detail": "Der Besitz unserer Daten, Modelle und Infrastruktur schützt die langfristige strategische Unabhängigkeit und Widerstandsfähigkeit."
-        },
-        "growth": {
-          "title": "Zukunftsfähiges Wachstum",
-          "detail": "Onesa unterstützt Innovation, Investitionsvertrauen und eine stärkere digitale Teilhabe künftiger Generationen."
-        }
-      },
-      "combined": "Afrika verdient KI, die Afrika versteht. Onesa AI wurde von Diaspora Unlocked entwickelt, um praxisnahe, lokal relevante Intelligenz für Zimbabwe und den gesamten Kontinent bereitzustellen, statt generischer Empfehlungen ohne Bezug zur Realität vor Ort. Wir sehen KI-Souveränität als zentral für langfristiges Wachstum, Resilienz und strategische Unabhängigkeit, und diese Plattform ist unser klares Bekenntnis, diese Zukunft gemeinsam mit afrikanischen Gemeinschaften aufzubauen."
-    },
     "diaspora_use_cases": {
       "relocation": {
         "title": "Relocation & Reintegration",
@@ -320,8 +291,6 @@
         "detail": "Koordinieren Sie Mentoren, Co-Investoren und Betreiber über Länder hinweg mit gemeinsamem Projektkontext."
       }
     },
-    "onesa_name": "Onesa AI",
-    "onesa_meaning_badge": "Onesa = Erleuchten",
     "diaspora_ai": {
       "title": "Wie Diaspora Unlocked KI einsetzt",
       "subtitle": "Onesa AI unterstützt die gesamte Diaspora-Reise: von Wiederanbindung und Rückkehr bis zur Bewertung von Chancen und dem Betrieb von Unternehmen."
@@ -520,6 +489,16 @@
       "assistant_label": "Onesa AI Assistent",
       "prompt_question": "„Onesa, wo gibt es heute Abend in Harare das beste traditionelle Sadza?“",
       "prompt_response": "Für ein authentisches Sadza-Erlebnis in Harare sollten Sie zum Mbare Musika Markt gehen. Die lokalen Anbieter dort servieren frisch zubereitetes Sadza mit verschiedenen Beilagen. Fragen Sie einfach nach „Sadza ne Nyama“ (Sadza mit Fleisch)!",
+      "phone_conversation": {
+        "q1": "Onesa, wo gibt es heute Abend in Harare das beste traditionelle Sadza?",
+        "a1": "Für ein authentisches Sadza-Erlebnis in Harare gehen Sie zum Mbare Musika Markt. Die lokalen Anbieter servieren dort frisch zubereitetes Sadza mit verschiedenen Beilagen. Fragen Sie einfach nach „Sadza ne Nyama“ (Sadza mit Fleisch).",
+        "q2": "Super. Ist es abends sicher dorthin zu gehen, und wann sollte ich ankommen?",
+        "a2": "Kommen Sie am besten am frühen Abend, idealerweise vor 20:00 Uhr, und nutzen Sie einen vertrauenswürdigen Fahrdienst. Für Erstbesucher ist es besser, mit einem lokalen Guide oder Freund zu gehen.",
+        "q3": "Kannst du ein Ausweichrestaurant in der Nähe des Stadtzentrums empfehlen, falls es zu voll ist?",
+        "a3": "Ja. Probieren Sie ein traditionelles Restaurant in Avondale oder im CBD, das Sadza, Rinderschmorgericht und Blattgemüse serviert. Fragen Sie nach frisch gekochten Mahlzeiten und lokalen Beilagen.",
+        "q4": "Perfekt. Füge bitte Transporttipps und ein grobes Abendbudget für zwei Personen hinzu.",
+        "a4": "Planen Sie etwa 20 bis 35 USD für zwei Personen ein, je nach Getränken und Beilagen. Für den Transport nutzen Sie registrierte Taxis oder App-Fahrten, teilen Sie Ihren Live-Standort und buchen Sie die Rückfahrt im Voraus."
+      },
       "guide": {
         "title": "Lokale Einblicke",
         "desc": "Verstehen Sie lokale Etikette, Trinkgeldkultur und soziale Normen."

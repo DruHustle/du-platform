@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.E2E_BASE_URL || 'https://localhost:3002';
+const baseUrl = String(process.env.E2E_BASE_URL || 'https://localhost:3000').replace(/\/+$/, '');
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ ignoreHTTPSErrors: true, viewport: { width: 1280, height: 800 } });
 const page = await context.newPage();
@@ -20,7 +20,7 @@ const isIgnorable = (msg) =>
   msg.includes('429 (Too Many Requests)');
 
 try {
-  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experince`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experience`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(1500);
 
   const placeSelect = page.locator('#aug-place');
