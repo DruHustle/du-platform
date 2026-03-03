@@ -250,29 +250,6 @@
       "human_capital": "Dzvinyiriro yehupfumi hwevanhu: tarenda rakasimba rehunyanzvi riripo, asi kuchengetedza kwakaoma nekuda kwekutama kwekunze.",
       "regulation": "Regulatory kuoma: kupihwa marezinesi, kutevedzera mutero, uye kubvumidzwa kunogona kunonoka kuburitswa kwechigadzirwa muzvikamu zvakadzorwa."
     },
-    "hubs": {
-      "title": "MaIncubator eStartup neInnovation Hubs (Zimbabwe)",
-      "location": "MuZimbabwe",
-      "visit_site": "Shanyira saiti",
-      "cities": {
-        "harare": "Harare",
-        "bulawayo": "Bulawayo",
-        "gweru": "Gweru",
-        "mutare": "Mutare"
-      },
-      "impact_hub": "Social innovation, vechidiki bhizinesi, kudzidzisa, uye incubation zvirongwa.",
-      "eight2five": "CBD innovation centre inotsigira kutanga kukurumidza uye zvirongwa zvekuvaka.",
-      "stanbic": "Tsigiro yekuvaka-kugona, kuwana nzvimbo yebasa, uye mikana yekudyidzana ecosystem.",
-      "hit": "Indasitiri 4.0 yekushambadzira ine tarisiro paIoT, AI, uye hombe-data mhinduro.",
-      "zchpc": "Yepamusoro-inoshanda komputa uye AI inoshandisa makesi ekurima, hutano, uye tsvagiridzo.",
-      "b2c": "Urban coworking uye accelerator-style tsigiro yeanoshanda emunharaunda kugadzirisa matambudziko ekutanga.",
-      "techvillage": "Bulawayo-yakavakirwa nharaunda yekutanga uye innovation hub ine accelerator zviitiko uye muvambi rutsigiro zvirongwa.",
-      "nust": "Yunivhesiti-inotungamirwa hunyanzvi uye kutengeserana ecosystem inotsigira vechidiki-inotungamirwa bhizinesi uye indasitiri-yakatarisana nemhinduro.",
-      "msu": "Midlands-yakavakirwa incubation uye kushambadzira chikuva chinotsigira mabhizinesi, maSME, uye kushandisa tsvakiridzo spin-outs.",
-      "digital_village": "Nzvimbo yakatarisana nenharaunda yekuvandudza maMutare ichipa nzvimbo yekushandira pamwe, kudzidzisa, nerutsigiro rwebhizinesi redhijitari.",
-      "open_button": "Tech Hubs in Zimbabwe",
-      "location_suffix": ", Zimbabwe"
-    },
     "onesa_matter": {
       "badge": "AI yakatarisana neAfrica",
       "title": "Nei Onesa AI Inokosha",

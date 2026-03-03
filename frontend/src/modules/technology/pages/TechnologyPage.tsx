@@ -181,89 +181,6 @@ export default function Technology() {
     },
   ];
 
-  const innovationHubs = [
-    {
-      name: "Impact Hub Harare",
-      focus:
-        t("tech.hubs.impact_hub") ||
-        "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
-      city: t("tech.hubs.cities.harare") || "Harare",
-      url: "https://harare.impacthub.net/",
-    },
-    {
-      name: "Eight2Five Innovation Hub",
-      focus:
-        t("tech.hubs.eight2five") ||
-        "CBD innovation center supporting startup acceleration and venture-building programs.",
-      city: t("tech.hubs.cities.harare") || "Harare",
-      url: "https://www.oldmutual.co.zw/eight2five-innovation-hub/",
-    },
-    {
-      name: "Stanbic Incubator Hub",
-      focus:
-        t("tech.hubs.stanbic") ||
-        "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
-      city: t("tech.hubs.cities.harare") || "Harare",
-      url: "https://www.stanbicbank.co.zw/zimbabwe/personal/products-and-services/bank-with-us/our-innovative-hub",
-    },
-    {
-      name: "HIT Innovation Hub",
-      focus:
-        t("tech.hubs.hit") ||
-        "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
-      city: t("tech.hubs.cities.harare") || "Harare",
-      url: "https://www.hit-ttlcc.ac.zw/",
-    },
-    {
-      name: "ZCHPC Incubation Hub",
-      focus:
-        t("tech.hubs.zchpc") ||
-        "High-performance computing and AI use cases for agriculture, health, and research.",
-      city: t("tech.hubs.cities.harare") || "Harare",
-      url: "https://www.zchpc.ac.zw/",
-    },
-    {
-      name: "B2C Coworking",
-      focus:
-        t("tech.hubs.b2c") ||
-        "Urban coworking and accelerator-style support for practical local problem-solving startups.",
-      city: t("tech.hubs.cities.harare") || "Harare",
-      url: "https://b2c.co.zw/",
-    },
-    {
-      name: "The TechVillage",
-      focus:
-        t("tech.hubs.techvillage") ||
-        "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
-      city: t("tech.hubs.cities.bulawayo") || "Bulawayo",
-      url: "https://www.techvillage.org.zw/",
-    },
-    {
-      name: "NUST Innovation Hub & Technovation",
-      focus:
-        t("tech.hubs.nust") ||
-        "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
-      city: t("tech.hubs.cities.bulawayo") || "Bulawayo",
-      url: "https://www.nust.ac.zw/",
-    },
-    {
-      name: "MSU Innovation Hub",
-      focus:
-        t("tech.hubs.msu") ||
-        "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
-      city: t("tech.hubs.cities.gweru") || "Gweru",
-      url: "https://hub.msu.ac.zw/",
-    },
-    {
-      name: "The Digital Village",
-      focus:
-        t("tech.hubs.digital_village") ||
-        "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support.",
-      city: t("tech.hubs.cities.mutare") || "Mutare",
-      url: "https://www.digitalvillagezw.com/",
-    },
-  ];
-
   return (
     <Layout>
       
@@ -434,7 +351,7 @@ export default function Technology() {
     </section>
 
     {/* Sector Transformation - Cinematic Glass Grid */}
-    <section id="technology-industries" className="p-5 bg-slate-950 relative overflow-hidden">
+    <section id="technology-industries" className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
       {/* Background glow for depth */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
 
@@ -502,41 +419,6 @@ export default function Technology() {
         </div>
       </div>
     </section>
-
-    {/* Innovation Hubs */}
-    <section id="technology-hubs" className="p-5 bg-slate-950 relative overflow-hidden">
-      <div className="container relative z-10 px-6 mx-auto">
-        <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-          <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-          <div className="mb-10 text-center">
-            <h2 className="text-xl font-black text-white tracking-tight">
-              {t("tech.hubs.title") || "Startup Incubators and Innovation Hubs (Zimbabwe)"}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {innovationHubs.map((hub) => (
-              <div key={hub.name} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex items-center gap-2 mb-3">
-                  <Building2 className="h-4 w-4 text-zim-gold" />
-                  <h3 className="text-lg font-black text-white tracking-tight">{hub.name}</h3>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed mb-3">{hub.focus}</p>
-                <div className="flex items-center justify-between gap-2 text-white/70 text-xs">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-3.5 w-3.5" />
-                    <span>{hub.city}{t("tech.hubs.location_suffix") || ", Zimbabwe"}</span>
-                  </div>
-                  <a href={hub.url} target="_blank" rel="noopener noreferrer" className="text-zim-gold hover:text-white transition-colors font-semibold">
-                    {t("tech.hubs.visit_site") || "Visit site"}
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
     </Layout>
   );
 }

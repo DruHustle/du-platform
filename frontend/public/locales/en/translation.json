@@ -249,29 +249,6 @@
       "human_capital": "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
       "regulation": "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors."
     },
-    "hubs": {
-      "title": "Startup Incubators and Innovation Hubs (Zimbabwe)",
-      "open_button": "Tech Hubs in Zimbabwe",
-      "location": "Zimbabwe",
-      "visit_site": "Visit site",
-      "cities": {
-        "harare": "Harare",
-        "bulawayo": "Bulawayo",
-        "gweru": "Gweru",
-        "mutare": "Mutare"
-      },
-      "impact_hub": "Social innovation, youth entrepreneurship, mentorship, and incubation programs.",
-      "eight2five": "CBD innovation center supporting startup acceleration and venture-building programs.",
-      "stanbic": "Capacity-building support, workspace access, and ecosystem partnership opportunities.",
-      "hit": "Industry 4.0 commercialization with focus on IoT, AI, and big-data solutions.",
-      "zchpc": "High-performance computing and AI use cases for agriculture, health, and research.",
-      "b2c": "Urban coworking and accelerator-style support for practical local problem-solving startups.",
-      "techvillage": "Bulawayo-based startup community and innovation hub with accelerator activities and founder support programs.",
-      "nust": "University-driven innovation and commercialization ecosystem supporting youth-led enterprise and industry-focused solutions.",
-      "msu": "Midlands-based incubation and commercialization platform supporting entrepreneurs, SMEs, and applied research spin-outs.",
-      "digital_village": "Community-focused innovation space in Mutare providing collaborative workspace, training, and digital-business support.",
-      "location_suffix": ", Zimbabwe"
-    },
     "chat_with_onesa": "Chat with Onesa",
     "onesa_matter": {
       "badge": "Africa-Centric AI",

@@ -250,29 +250,6 @@
       "human_capital": "Druck auf das Humankapital: Es gibt starke technische Talente, aber aufgrund der Abwanderung ist es schwierig, sie zu halten.",
       "regulation": "Regulatorische Komplexität: Lizenzierung, Steuerkonformität und Genehmigungen können die Produkteinführung in regulierten Sektoren verzögern."
     },
-    "hubs": {
-      "title": "Startup-Inkubatoren und Innovationszentren (Simbabwe)",
-      "location": "Simbabwe",
-      "visit_site": "Besuchen Sie die Website",
-      "cities": {
-        "harare": "Harare",
-        "bulawayo": "Bulawayo",
-        "gweru": "Gweru",
-        "mutare": "Mutare"
-      },
-      "impact_hub": "Soziale Innovation, Jugendunternehmertum, Mentoring und Inkubationsprogramme.",
-      "eight2five": "CBD-Innovationszentrum zur Unterstützung von Startup-Beschleunigungs- und Venture-Building-Programmen.",
-      "stanbic": "Unterstützung beim Kapazitätsaufbau, Zugang zum Arbeitsplatz und Möglichkeiten für Ökosystempartnerschaften.",
-      "hit": "Industrie 4.0-Kommerzialisierung mit Fokus auf IoT-, KI- und Big-Data-Lösungen.",
-      "zchpc": "Anwendungsfälle für Hochleistungsrechnen und KI für Landwirtschaft, Gesundheit und Forschung.",
-      "b2c": "Städtisches Coworking und Accelerator-artige Unterstützung für praktische lokale Problemlösungs-Startups.",
-      "techvillage": "In Bulawayo ansässige Startup-Community und Innovationszentrum mit Accelerator-Aktivitäten und Gründerunterstützungsprogrammen.",
-      "nust": "Von der Universität betriebenes Innovations- und Kommerzialisierungsökosystem, das jugendgeführte unternehmens- und branchenorientierte Lösungen unterstützt.",
-      "msu": "In den Midlands ansässige Inkubations- und Kommerzialisierungsplattform zur Unterstützung von Unternehmern, KMU und Spin-outs aus der angewandten Forschung.",
-      "digital_village": "Community-orientierter Innovationsraum in Mutare, der kollaborativen Arbeitsbereich, Schulungen und Unterstützung für digitale Unternehmen bietet.",
-      "open_button": "Tech Hubs in Zimbabwe",
-      "location_suffix": ", Simbabwe"
-    },
     "onesa_matter": {
       "badge": "Afrikazentrierte KI",
       "title": "Warum Onesa AI wichtig ist",
