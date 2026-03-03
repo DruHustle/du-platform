@@ -11,7 +11,7 @@ export default function CallToAction({ onboardingUrl, onCtaClick }: CallToAction
   const { t } = useTranslation();
 
   return (
-    <section className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+    <section className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 sm:p-8">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:items-center">
         <div className="space-y-3 md:col-span-8">
           <div className="inline-flex items-center rounded-full border border-zim-gold/25 bg-zim-gold/10 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-zim-gold">

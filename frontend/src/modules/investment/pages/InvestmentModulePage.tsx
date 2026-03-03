@@ -790,7 +790,7 @@ const projects = [
       <section className="p-5 bg-slate-950">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="text-center mb-0">
+            <div className="text-center mb-8 md:mb-10">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Repeat className="h-6 w-6 text-zim-gold" />
                 <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
@@ -849,7 +849,7 @@ const projects = [
       <section id="active-projects" className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="mb-10 text-center">
+            <div className="text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Target className="h-6 w-6 text-zim-gold" />
                 <h3 className="section-title-compact">{t('investment.sectors_title') || "Active Investment Opportunities"}</h3>

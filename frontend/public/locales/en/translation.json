@@ -179,17 +179,11 @@
     "onesa_badge": "Meet Onesa AI",
     "onesa_title": "Illuminating your Way",
     "onesa_meaning": "Onesa means \"illuminate\" in Shona",
-    "onesa_desc1": "Onesa AI is our proprietary model designed to illuminate the way on how to live, invest, and thrive in Zimbabwe. While general AI models often lack local nuance, Onesa is built from the ground up to understand the Zimbabwean context better than any other model.",
     "onesa_desc2": "From navigating local regulations to brainstorming business ideas that solve specific Zimbabwean challenges, Onesa provides the localized intelligence you need to succeed.",
     "onesa_local_edge_title": "Beyond Western-Centric Models",
     "onesa_local_edge_desc": "Standard models are often Western-centric, excelling in formal economies but failing to navigate the \"kukiya-kiya\" (hustle) economy of Mbare Musika or the deep nuances of Shona slang mixed with rural Ndebele.",
     "diaspora_unlocked_title": "Diaspora Unlocked Technology",
     "diaspora_unlocked_desc": "We use cutting-edge technology to enable seamless tourism, trade, and investment. Our platform bridges the gap between the diaspora and local opportunities through digital transparency and AI-powered insights.",
-    "onesa_usp1": "Contextual Understanding",
-    "onesa_usp2": "Accurate Language Translation",
-    "ai_status": "Beta Version",
-    "ai_demo_question": "What are some high ROI investment opportunities in Zimbabwe's agriculture sector right now?",
-    "ai_demo_response": "Zimbabwe's agriculture sector is currently seeing high growth in horticulture exports. Based on current trends, investing in cold-chain logistics for blueberry exports from the Eastern Highlands offers a high ROI with moderate risk...",
     "features_title": "Onesa AI Capabilities",
     "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
     "cta_title": "Ready to Illuminate Your Journey?",
@@ -297,8 +291,6 @@
         "detail": "Coordinate mentors, co-investors, and operators across countries using shared project context."
       }
     },
-    "onesa_name": "Onesa AI",
-    "onesa_meaning_badge": "Onesa = Illuminate",
     "diaspora_ai": {
       "title": "How Diaspora Unlocked Uses AI",
       "subtitle": "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses."
@@ -497,6 +489,16 @@
       "assistant_label": "Onesa AI Assistant",
       "prompt_question": "\"Onesa, what's the best local spot for traditional Sadza in Harare tonight?\"",
       "prompt_response": "For an authentic Sadza experience in Harare, head to Mbare Musika. The local vendors there serve up delicious, freshly made Sadza with a variety of tasty relishes. It's a favorite among locals and offers a true taste of Zimbabwean cuisine. Just ask for 'Sadza ne Nyama' (Sadza with meat) for a hearty meal!",
+      "phone_conversation": {
+        "q1": "Onesa, what's the best local spot for traditional Sadza in Harare tonight?",
+        "a1": "For an authentic Sadza experience in Harare, head to Mbare Musika. The local vendors there serve up delicious, freshly made Sadza with a variety of tasty relishes. It's a favorite among locals and offers a true taste of Zimbabwean cuisine. Just ask for 'Sadza ne Nyama' (Sadza with meat) for a hearty meal!",
+        "q2": "Great. Is it safe to go there at night, and what time should I arrive?",
+        "a2": "Aim for early evening, ideally before 8:00 PM, and use a trusted ride service. For first-time visitors, going with a local guide or friend is best for a smoother experience.",
+        "q3": "Can you suggest one backup restaurant near the city center if it's too crowded?",
+        "a3": "Yes. Try a traditional restaurant in Avondale or the CBD that serves Sadza, beef stew, and leafy greens. Ask for fresh-cooked meals and local relishes for the most authentic plate.",
+        "q4": "Perfect. Add transport advice and a rough dinner budget for two.",
+        "a4": "Plan around USD 20 to USD 35 for two, depending on drinks and sides. For transport, use registered taxis or app rides, share your live location, and keep your return trip booked in advance."
+      },
       "guide": {
         "title": "Local Insights",
         "desc": "Understand local etiquette, tipping culture, and social norms."

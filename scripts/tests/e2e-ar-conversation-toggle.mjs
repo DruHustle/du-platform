@@ -40,7 +40,7 @@ await page.addInitScript(() => {
 });
 
 try {
-  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experince`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experience`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(1200);
 
   const placeSelect = page.locator('#aug-place');

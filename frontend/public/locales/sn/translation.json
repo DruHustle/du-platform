@@ -179,17 +179,11 @@
     "onesa_badge": "Sangana neOnesa AI",
     "onesa_title": "Kujekesa Gwara rako",
     "onesa_meaning": "Onesa zvinoreva 'kupa chiedza' muchiShona",
-    "onesa_desc1": "Onesa AI imuchina wedu wakagadzirwa kuti ujekese nzira yekurarama, kudyara mari, nekubudirira muZimbabwe. Kunyangwe AI dzinowanzoitika kune dzimwe nyika dzichishaya ruzivo rwemuno, Onesa yakavakirwa pakuonzwisisa mamiriro eZimbabwe kudarika chero upi zvake muchina.",
     "onesa_desc2": "Kubva pakuziva mitemo yemuno kusvika pakuronga mazano emabhizimusi anogadzirisa matambudziko eZimbabwe, Onesa inokupa ungwaru hwaunoda kuti ubudirire.",
     "onesa_local_edge_title": "Kudarika AI dzeMadokero",
     "onesa_local_edge_desc": "Dzimwe AI dzinogona kugona mune zveupfumi hune mitemo yakanyorwa, asi dzinokundikana munyaya dze 'kukiya-kiya' dzekuMbare Musika kana kunzwisisa chidhori chechiShona chakavhenganiswa nechiNdebele.",
     "diaspora_unlocked_title": "Tekinoroji yeDiaspora Unlocked",
     "diaspora_unlocked_desc": "Tinoshandisa ruzivo rwemazuva ano kuti ushanyi, kutengeserana, nekudyara mari kuve nyore. Dandira redu rinobatanidza vana vari kunze nemikana yemuno kuburikidza nekujekesa zvinhu neAI.",
-    "onesa_usp1": "Kunzwisisa Mamiriro eMuno",
-    "onesa_usp2": "Kushandura Mitauro Kwakanyatsonaka",
-    "ai_status": "Shanduro yeBeta",
-    "ai_demo_question": "Ndeipi mikana yekudyara mari mune zvekurima muZimbabwe ine mhindu yakakura iye zvino?",
-    "ai_demo_response": "Chikamu chekurima muZimbabwe chiri kuratidza kukura mune zvekutengesa kunze. Kudyara mari muzvokutakura zvinhu zvinoda kutonhorerwa (cold-chain) zveblueberries kubva kuEastern Highlands kune mhindu yakakura...",
     "features_title": "Zvinogona kuitwa neOnesa AI",
     "features_subtitle": "Zvishandiso zvakagadzirwa kuvhara gwanza pakati pevana vari kunze nemikana yemuno.",
     "cta_title": "Wagadzirira Kujekerwa neRwendo Rwako Here?",
@@ -225,6 +219,35 @@
       }
     },
     "chat_with_onesa": "Taura naOnesa",
+    "onesa_matter": {
+      "badge": "Africa-Centric AI",
+      "title": "Why Onesa AI Matters",
+      "headline": "Africa deserves AI that understands Africa.",
+      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
+      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
+      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
+      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
+      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "tiles": {
+        "illuminate": {
+          "title": "Onesa Means Illuminate",
+          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+        },
+        "africa_centric": {
+          "title": "Africa-Centric Intelligence",
+          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+        },
+        "sovereignty": {
+          "title": "AI Sovereignty",
+          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+        },
+        "growth": {
+          "title": "Future-Ready Growth",
+          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+        }
+      },
+      "combined": "Africa deserves AI that understands Africa. Onesa AI was built by Diaspora Unlocked to deliver practical, locally relevant intelligence for Zimbabwe and the wider continent, not generic advice detached from local realities. We see AI sovereignty as essential for long-term growth, resilience, and strategic independence, and this platform is our commitment to building that future with and for African communities."
+    },
     "opportunities": {
       "title": "Mikana Yepamusoro Yekudyara uye Innovation",
       "ai": {
@@ -250,35 +273,6 @@
       "human_capital": "Dzvinyiriro yehupfumi hwevanhu: tarenda rakasimba rehunyanzvi riripo, asi kuchengetedza kwakaoma nekuda kwekutama kwekunze.",
       "regulation": "Regulatory kuoma: kupihwa marezinesi, kutevedzera mutero, uye kubvumidzwa kunogona kunonoka kuburitswa kwechigadzirwa muzvikamu zvakadzorwa."
     },
-    "onesa_matter": {
-      "badge": "AI yakatarisana neAfrica",
-      "title": "Nei Onesa AI Inokosha",
-      "headline": "Africa inokodzera AI inonzwisisa Africa.",
-      "p1": "Pasi rese, AI iri kugadzirisa hupfumi, maindasitiri, uye nzanga nekumhanya kunoshamisa. Zvakadaro mamodheru mazhinji akavakirwa pane data, zvinonyanya kukosha, uye mamiriro anowanzo kupotsa chokwadi cheAfrica. Kuti Africa itore chikamu zvizere muupfumi hwepasi rose hwedhijitari, tinoda mhando dzeAfrica-centric dzinonzwisisa mitauro yedu, tsika, nharaunda dzebhizinesi, uye zvinotungamira mubudiriro.",
-      "p2": "KuDiaspora Yakavhurwa, tinotenda Africa haifanire kungodya AI. Africa inofanirwa kubatsira kuivaka. Kutenda ikoko ndicho chikonzero chakaita kuti titange kugadzira Onesa AI: kugadzira masisitimu ane hungwaru anonyatsoenderana nemisika yeAfrica, nzvimbo dze data dzeAfrica, uye zvinangwa zvekushandura hupfumi hweAfrica.",
-      "p3": "Tinoziva zvakare kuti rwendo urwu haruna nyore. Kudzidzisa AI modhi kunoda zvakakomba zvivakwa, simba rekombuta, kugadzirira data, uye tarenda repasi rose. Mari yacho yakakwirira, uye zvipingamupinyi ndezvechokwadi. Isu takasarudza kuenderera mberi zvakadaro nekuti ramangwana reAfrica renguva refu rinoenderana nehunyanzvi hwehunyanzvi, rusununguko rwedhijitari, uye kugona kuumba yedu yedhijitari ecosystem.",
-      "p4": "Hutongi hweAI huri kuita imwe yekutsanangura hurukuro dzepasi rose dzenguva ino. Nyika dzinodzora data radzo, mamodheru, uye zvivakwa zvedhijitari zvichange zvakamisikidzwa zvirinani kuchengetedza hupfumi hwavo, kusimudzira hunyanzvi, uye kuchengetedza rusununguko. Africa inofanirwa kunge iri mune ramangwana, kwete sevacherechedzi, asi sevasiki nevatungamiriri.",
-      "p5": "Onesa AI kuzvipira kwedu kune iro ramangwana. Izvi zvakakura kudarika tekinoroji. Zviri pamusoro pemukana, kusimba, uye kuvaka masisitimu anoshandira zvizvarwa zvinotevera mukondinendi yese nediaspora.",
-      "tiles": {
-        "illuminate": {
-          "title": "Onesa zvinoreva Kuvhenekera",
-          "detail": "Onesa yakavakirwa kuunza kujeka kunoshanda kwekuti vanhu nemabhizinesi vangakura sei muZimbabwe nemuAfrica yose."
-        },
-        "africa_centric": {
-          "title": "Hungwaru hwakanangana neAfrica",
-          "detail": "Mienzaniso yakadzikwa mumitauro yeAfrica, misika, uye zvinhu chaizvo zvinogadzira mhedzisiro yakakosha uye inobatsira."
-        },
-        "sovereignty": {
-          "title": "AI Changamire",
-          "detail": "Kuve nedata redu, mamodheru, uye zvivakwa zvinodzivirira kusununguka kwenguva refu kwehurongwa uye kusimba."
-        },
-        "growth": {
-          "title": "Kukura Kwenguva Yemberi",
-          "detail": "Onesa inotsigira hunyanzvi, kuvimba kwekudyara, uye kutora chikamu kwakasimba kwedhijitari kuzvizvarwa zvinotevera."
-        }
-      },
-      "combined": "Africa inoda AI inonzwisisa Africa. Onesa AI yakavakwa neDiaspora Unlocked kuti ipe ruzivo runobatsira, rwemuno uye rwakanyatsokodzera Zimbabwe pamwe neAfrica yose, kwete mazano akajairika asingabatani nemamiriro emuno. Tinoona AI sovereignty sechinhu chakakosha mukukura kwenguva refu, kusimba, uye kuzvimirira kwehurongwa, uye chikuva ichi chiratidzo chekuzvipira kwedu kuvaka ramangwana iri pamwe nenharaunda dzeAfrica."
-    },
     "diaspora_use_cases": {
       "relocation": {
         "title": "Kudzoka nekubatanidzwazve",
@@ -297,8 +291,6 @@
         "detail": "Ronga mentors, co-investors, uye operators munyika dzakasiyana uchishandisa project context yakagovaniswa."
       }
     },
-    "onesa_name": "Onesa AI",
-    "onesa_meaning_badge": "Onesa = Kujekesa",
     "diaspora_ai": {
       "title": "Mashandisirwo eAI neDiaspora Unlocked",
       "subtitle": "Onesa AI yakavakwa kutsigira rwendo rwese rwediaspora, kubva pakubatanazve nekudzoka kusvika pakuongorora mikana nekushanda mabhizimusi."
@@ -497,6 +489,16 @@
       "assistant_label": "Mubatsiri weOnesa AI",
       "prompt_question": "\"Onesa, ndeipi nzvimbo yakanaka yemuno yekudya Sadza chairo muHarare manheru ano?\"",
       "prompt_response": "Kuti uwane Sadza chairo muHarare, enda kuMbare Musika. Vatengesi vemo vanopa Sadza rinopisa nezvitshebo zvakasiyana-siyana. Inzvimbo inodiwa kwazvo nemuno uye inopa kuravira chaiko kwezvekudya zveZimbabwe. Ingokumbira 'Sadza neNyama' kuitira chikafu chinoguta!",
+      "phone_conversation": {
+        "q1": "Onesa, ndeipi nzvimbo yakanaka yemuno yekudya Sadza chairo muHarare manheru ano?",
+        "a1": "Kuti uwane Sadza chairo muHarare, enda kuMbare Musika. Vatengesi vemo vanopa Sadza rinopisa nezvitshebo zvakasiyana-siyana. Inzvimbo inodiwa kwazvo nemuno uye inopa kuravira chaiko kwezvekudya zveZimbabwe. Ingokumbira 'Sadza neNyama' kuitira chikafu chinoguta!",
+        "q2": "Zvakanaka. Kwakachengeteka here kuenda ikoko husiku, uye ndinosvika nguvai?",
+        "a2": "Svikai manheru achiri kutanga, zviri nani musati ma8:00 PM, uye shandisai ride service yakavimbika. Kana muri kekutanga, endai nemutungamiri wemuno kana shamwari.",
+        "q3": "Munogona kundiudza imwe restaurant iri pedyo necity center kana pakazara?",
+        "a3": "Hongu. Edzai restaurant yemuno iri muAvondale kana muCBD inopa Sadza, stew yemombe, nemuriwo. Kumbirai chikafu chichangobikwa nezvitshebo zvemuno.",
+        "q4": "Zvakanaka. Wedzerai mazano ekufamba uye bhajeti re dinner revanhu vaviri.",
+        "a4": "Rongai pakati peUSD 20 neUSD 35 yevanhu vaviri, zvichienderana nezvinwiwa nezvekudya zvekuwedzera. Pakufamba, shandisai taxi dzakanyoreswa kana app rides, govai live location yenyu, uye bhukai rwendo rwekudzoka pachine nguva."
+      },
       "guide": {
         "title": "Ruzivo rweMuno",
         "desc": "Nzwisisa magariro, mabongero (tipping), nemitemo yevanhu."

@@ -1,8 +1,12 @@
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.E2E_BASE_URL || 'http://127.0.0.1:3002';
+const baseUrl = String(process.env.E2E_BASE_URL || 'http://127.0.0.1:3000').replace(/\/+$/, '');
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const context = await browser.newContext({
+  ignoreHTTPSErrors: true,
+  viewport: { width: 1440, height: 900 },
+});
+const page = await context.newPage();
 
 const results = [];
 const pass = (name, detail = '') => results.push({ name, ok: true, detail });
@@ -19,7 +23,7 @@ try {
   pass('load_home');
 
   const startUrl = page.url();
-  const bubble = page.getByRole('button', { name: /chat with onesa/i });
+  const bubble = page.locator('[data-onesa-bubble-trigger="true"]').first();
   await bubble.waitFor({ timeout: 15000 });
   await bubble.click();
   await page.waitForTimeout(500);
@@ -98,14 +102,14 @@ try {
 
   await page.goto(`${baseUrl}/tourism`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(800);
-  await page.locator('a[href="/onesa-ai-tourism-virtual-experince"]').first().click();
-  await page.waitForURL(/\/onesa-ai-tourism-virtual-experince/, { timeout: 15000 });
+  await page.locator('a[href^="/onesa-ai-tourism-virtual-exper"]').first().click();
+  await page.waitForURL(/\/onesa-ai-tourism-virtual-exper(i)?ence/, { timeout: 15000 });
   await page.locator('#vr-destination').waitFor({ timeout: 30000 });
   await page.selectOption('#vr-destination', { index: 1 });
   await page.getByRole('button', { name: /conversation:\s*off/i }).first().waitFor({ timeout: 15000 });
   pass('vr_page_load_and_destination_select');
 
-  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experince`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto(`${baseUrl}/onesa-ai-tourism-augmented-experience`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.locator('#aug-place').waitFor({ timeout: 15000 });
   await page.selectOption('#aug-place', { index: 1 });
   const arConversation = page.getByRole('button', { name: /conversation:\s*off/i }).first();
@@ -117,6 +121,7 @@ try {
   fail('unexpected_error', err);
 } finally {
   await page.screenshot({ path: '/tmp/playwright-clickthrough-final.png', fullPage: true });
+  await context.close();
   await browser.close();
 }
 

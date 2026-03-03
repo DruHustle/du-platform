@@ -158,7 +158,7 @@ const navButtons = [
                           {module.title}
                         </h3>
 
-                        <p className="text-sm  leading-relaxed mb-4 flex-grow px-2">
+                        <p className="text-sm text-white/80 leading-relaxed mb-4 flex-grow px-2">
                           {module.description}
                         </p>
 

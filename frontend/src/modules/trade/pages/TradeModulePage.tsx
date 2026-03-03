@@ -577,7 +577,7 @@ export default function Trade() {
       </section>
 
       {/* Crirical Export Checklist*/}
-      <section id="trade-export-checklist" className="py-5 bg-slate-950 relative overflow-hidden scroll-mt-24">
+      <section id="trade-export-checklist" className="pt-5 pb-10 bg-slate-950 relative overflow-hidden scroll-mt-24">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="mb-8 text-center">

@@ -497,6 +497,16 @@
       "assistant_label": "Umsizi we-Onesa AI",
       "prompt_question": "\"Onesa, kuyiphi indawo engcono yokudla Isitshwala (Sadza) eHarare namuhla ebusuku?\"",
       "prompt_response": "Ukuze uthole isitshwala sangempela eHarare, yana eMbare Musika. Abathengisi bakhona baphakela isitshwala esimnandi esisanda kuphekwa lezitshebo ezitshiyeneyo. Kudume kakhulu ebantwini bakhona. Cela nje 'Isitshwala lenyama' ukuze uthole ukudla okusuthisayo!",
+      "phone_conversation": {
+        "q1": "Onesa, kuyiphi indawo engcono yokudla Isitshwala (Sadza) eHarare namuhla ebusuku?",
+        "a1": "Ukuze uthole isitshwala sangempela eHarare, yana eMbare Musika. Abathengisi bakhona baphakela isitshwala esimnandi esisanda kuphekwa lezitshebo ezitshiyeneyo. Kudume kakhulu ebantwini bakhona. Cela nje 'Isitshwala lenyama' ukuze uthole ukudla okusuthisayo!",
+        "q2": "Kuhle. Kuphephile yini ukuya khona ebusuku, njalo kufanele ngifike ngasiphi isikhathi?",
+        "a2": "Fika kusihlwa kusasekuseni, kungcono ngaphambi kuka-8:00 PM, usebenzise ride service ethembekileyo. Kubavakashi bokuqala, kungcono ukuhamba lomqondisi wendawo kumbe umngane.",
+        "q3": "Unganginika enye irestshurenti eduze le city center nxa kugcwele kakhulu?",
+        "a3": "Yebo. Zama irestshurenti yesintu eAvondale kumbe eCBD enikeza Isitshwala, inyama ebilisiweyo, lemifino. Cela ukudla okusanda kuphekwa lezitshebo zasendaweni.",
+        "q4": "Kulungile. Faka amacebo ezokuthutha lebhajethi ecishe ibe yedina yabantu ababili.",
+        "a4": "Hlela phakathi kwe-USD 20 le-USD 35 kubantu ababili, kuye ngezokunatha lezinye izitsha. Ezokuthutha, sebenzisa amatekisi abhalisiwe kumbe app rides, yabelana nge-live location yakho, njalo ubhuke uhambo lokubuyela kusenesikhathi."
+      },
       "guide": {
         "title": "Ulwazi lwendawo",
         "desc": "Zwisisa ukuziphatha kwendawo, isiko lokubonga (tipping), lezinqubo zomphakathi."

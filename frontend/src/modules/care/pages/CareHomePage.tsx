@@ -235,13 +235,13 @@ export default function CareHomePage() {
       <SubPageHero heroSlides={heroSlides} intro={introData} />
 
       <section id="care-content" className="p-5 pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container mx-auto px-6 space-y-6">
-          <div className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 lg:p-10 space-y-10 shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
+        <div className="container mx-auto px-6 space-y-11">
+          <div className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 md:p-8 lg:p-10 space-y-10 shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
             <WhyItMatters />
             <CoverageCards />
           </div>
 
-          <div className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 md:p-8 lg:p-10 shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
+          <div className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 md:p-8 lg:p-10 shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
             <HowItWorks />
           </div>
 

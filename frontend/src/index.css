@@ -419,7 +419,7 @@
   }
 
   .section-subtitle {
-    @apply text-sm  max-w-3xl mx-auto font-light leading-relaxed mt-4;
+    @apply text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4;
   }
 
   .section-title-compact {
@@ -445,10 +445,19 @@
   .outer-glass-panel {
     position: relative;
     overflow: hidden;
+    color: rgb(255 255 255 / 0.8);
     box-shadow:
       0 20px 50px rgba(0, 0, 0, 0.3),
       inset 0 1px 2px rgba(255, 255, 255, 0.1);
     transition: all 500ms;
+  }
+
+  /* Readability guardrails on dark surfaces:
+     provide default text color, while allowing explicit utility classes
+     (e.g. text-zim-gold, text-white) to override. */
+  :where(main section[class*="bg-slate-950"], main div[class*="bg-slate-950"], .outer-glass-panel)
+    :where(p, li, td, th, label, small) {
+    color: rgb(255 255 255 / 0.8);
   }
 
   .outer-glass-panel::after {
