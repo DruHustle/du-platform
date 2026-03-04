@@ -91,12 +91,7 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
           </motion.p>  
                 
           {/* Nav Buttons */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.8, delay: 1.2 }} 
-            className="mt-10 flex flex-col sm:flex-row gap-5 items-center"
-          >
+          <div className="mt-10 flex flex-col sm:flex-row gap-5 items-center">
             {hero.navButtons.map((item) => (
               <Link key={item.href} href={item.href}>
               <Button
@@ -125,7 +120,7 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
               </Button>
               </Link>
             ))}
-          </motion.div>
+          </div>
 
           {/* Scroll Indicator */}
           <motion.div 
@@ -137,13 +132,13 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
             <motion.div
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="flex flex-col items-center gap-2  cursor-pointer group hover:text-zim-gold transition-colors duration-300" 
+              className="flex flex-col items-center gap-2 cursor-pointer text-white"
               onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
             >
               <span className="text-[10px] uppercase tracking-[0.5em] font-black drop-shadow-md">
                 Explore
               </span>
-              <ChevronDown size={28} strokeWidth={1.5} className="group-hover:drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+              <ChevronDown size={28} strokeWidth={1.5} />
             </motion.div>
           </motion.div>
         </div>
