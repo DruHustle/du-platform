@@ -338,6 +338,7 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
               ref={globeRef}
               width={size.width}
               height={size.height}
+              backgroundColor="#000000"
               globeImageUrl="/globe/earth-blue-marble.jpg"
               bumpImageUrl="/globe/earth-topology.png"
               backgroundImageUrl="/globe/night-sky.png"

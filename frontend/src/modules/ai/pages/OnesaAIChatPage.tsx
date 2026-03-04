@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import FormattedChatMessage from "@/components/FormattedChatMessage";
 import { getApiErrorMessage } from "@/lib/api";
 import { checkOnesaHealth, OnesaChatMessage, sendOnesaChatMessage } from "./OnesaAI";
 import { Send } from "lucide-react";
@@ -203,7 +204,7 @@ export default function OnesaAIChat() {
                         : "bg-zim-gold/10 border border-zim-gold/45 text-white shadow-[0_0_24px_rgba(212,175,55,0.24)]"
                     }`}
                   >
-                    {message.content}
+                    <FormattedChatMessage content={message.content} className="text-sm leading-relaxed" />
                   </div>
                 </div>
               ))}

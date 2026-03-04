@@ -54,8 +54,8 @@ const UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
     currentContext: "Current Context",
     conversationOn: "Conversation: On",
     conversationOff: "Conversation: Off",
-    voiceNarrationOn: "Voice Narration: On",
-    voiceNarrationOff: "Voice Narration: Off",
+    voiceNarrationOn: "NARRATION: On",
+    voiceNarrationOff: "NARRATION: Off",
     voice: "Voice",
     male: "Male",
     female: "Female",
@@ -115,8 +115,8 @@ const UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
     currentContext: "Mamiro Azvino",
     conversationOn: "Hurukuro: Yabatidzwa",
     conversationOff: "Hurukuro: Yadzimwa",
-    voiceNarrationOn: "Rondedzero Yezwi: Yabatidzwa",
-    voiceNarrationOff: "Rondedzero Yezwi: Yadzimwa",
+    voiceNarrationOn: "RONDEDZERO: Yabatidzwa",
+    voiceNarrationOff: "RONDEDZERO: Yadzimwa",
     voice: "Izwi",
     male: "Murume",
     female: "Mukadzi",
@@ -463,7 +463,7 @@ export default function OnesaAITourismAugmentedExperience() {
   const [cameraStatus, setCameraStatus] = useState("");
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoiceGender, setSelectedVoiceGender] = useState<"male" | "female">("female");
-  const narrationVolume = 0.9;
+  const narrationVolume = 0.82;
   const [fallbackImageIndex, setFallbackImageIndex] = useState(0);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const ttsAudioUrlRef = useRef<string | null>(null);
@@ -874,8 +874,18 @@ export default function OnesaAITourismAugmentedExperience() {
           throw new Error(`ElevenLabs TTS failed (${res.status})`);
         }
       }
+      const headerMime = String(res.headers.get("content-type") ?? "")
+        .split(";")[0]
+        .trim()
+        .toLowerCase();
       const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
+      const effectiveMime = String(blob.type || headerMime).toLowerCase();
+      if (/audio\/l16|codec=pcm/.test(effectiveMime)) {
+        ttsFailureReason = `Unsupported cloud audio format: ${effectiveMime || "unknown"}`;
+        throw new Error("Unsupported cloud audio format");
+      }
+      const playableBlob = !blob.type && headerMime ? blob.slice(0, blob.size, headerMime) : blob;
+      const url = URL.createObjectURL(playableBlob);
       if (!ttsAudioRef.current) throw new Error("No audio element available");
       if (ttsAudioUrlRef.current) {
         URL.revokeObjectURL(ttsAudioUrlRef.current);

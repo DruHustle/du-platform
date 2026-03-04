@@ -172,7 +172,9 @@ function normalizeTtsLanguage(input?: string): "en" | "de" | "sn" | "nd" {
 }
 
 function shouldUseElevenLabs(language: "en" | "de" | "sn" | "nd"): boolean {
-  return language === "sn" || language === "nd";
+  const elevenKeyAvailable = Boolean(getElevenLabsApiKey());
+  if (!elevenKeyAvailable) return language === "sn" || language === "nd";
+  return language === "en" || language === "de" || language === "sn" || language === "nd";
 }
 
 function getGeminiVoiceCandidates(language: "en" | "de" | "sn" | "nd"): string[] {

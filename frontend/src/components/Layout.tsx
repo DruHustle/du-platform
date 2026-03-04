@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
+import FormattedChatMessage from "@/components/FormattedChatMessage";
 import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/modules/ai/pages/OnesaAI";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
@@ -1137,9 +1138,9 @@ export default function Layout({ children }: LayoutProps) {
             data-onesa-bubble-trigger="true"
             onClick={handleBubbleOpenChat}
             aria-label={t("tech.chat_with_onesa") || "Chat with Onesa"}
-            className="group relative flex items-center gap-3 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 py-2 shadow-2xl hover:bg-slate-900 transition-colors will-change-transform"
+            className="group relative flex h-12 min-w-[160px] items-center gap-2 rounded-full border border-zim-gold/35 bg-slate-950/90 backdrop-blur-md pl-2 pr-4 shadow-2xl transition-colors hover:bg-slate-900 will-change-transform"
           >
-            <span className="relative h-12 w-12 rounded-full overflow-hidden border border-zim-gold/40">
+            <span className="relative h-8 w-8 shrink-0 rounded-full overflow-hidden border border-zim-gold/40">
               <img
                 src="/images/pages/technology/zim_think.jpg"
                 alt="Onesa AI assistant"
@@ -1147,9 +1148,9 @@ export default function Layout({ children }: LayoutProps) {
               />
               <span className="absolute inset-0 bg-gradient-to-t from-slate-950/30 to-transparent" />
             </span>
-            <span className="text-left">
-              <span className="block text-zim-gold text-[10px] font-black uppercase tracking-widest">Onesa</span>
-              <span className="block text-white text-xs font-semibold">{t("tech.chat_with_onesa") || "Chat with Onesa"}</span>
+            <span className="text-left leading-tight">
+              <span className="block text-zim-gold text-[9px] font-black uppercase tracking-widest">Onesa</span>
+              <span className="block text-white text-[11px] font-semibold">{t("tech.chat_with_onesa") || "Chat with Onesa"}</span>
             </span>
           </button>
         </motion.div>
@@ -1231,7 +1232,7 @@ export default function Layout({ children }: LayoutProps) {
                               : "rounded-[1.25rem] rounded-bl-[0.45rem] bg-zim-gold/10 border border-zim-gold/45 text-white shadow-[0_0_24px_rgba(212,175,55,0.22)]"
                           }`}
                         >
-                          {message.content}
+                          <FormattedChatMessage content={message.content} className="text-sm leading-relaxed" />
                         </div>
                       </div>
                     ))}

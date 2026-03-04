@@ -172,6 +172,9 @@ const VR_UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
     ambientOffBadge: "Ambient: Off",
     narrationOn: "NARRATION: On",
     narrationOff: "NARRATION: Off",
+    voice: "Voice",
+    male: "Male",
+    female: "Female",
     minimize: "Minimize",
     fullscreen: "Fullscreen",
     autoOn: "Auto: On",
@@ -232,6 +235,9 @@ const VR_UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
     ambientOffBadge: "Ambient: Yadzimwa",
     narrationOn: "RONDEDZERO: Yabatidzwa",
     narrationOff: "RONDEDZERO: Yadzimwa",
+    voice: "Izwi",
+    male: "Murume",
+    female: "Mukadzi",
     minimize: "Deredza",
     fullscreen: "Sikirini Yakazara",
     autoOn: "Auto: Yabatidzwa",
@@ -264,8 +270,6 @@ const VR_UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
   de: {},
 };
 
-const SILENT_WAV_DATA_URI =
-  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
 const CONVERSATION_TURN_MS = 7000;
 
 // --- 3D SUB-COMPONENTS ---
@@ -292,6 +296,8 @@ function VRScene({
   ambientAudioEnabled: boolean;
 }) {
   const { scene } = useThree();
+  const ambientAudioRef = useRef<THREE.PositionalAudio>(null);
+
   const hotspotBuckets = useMemo(() => {
     const byId = new Map(stageOrder.map((id, idx) => [id, idx]));
     const all = stage.hotspots ?? [];
@@ -321,16 +327,45 @@ function VRScene({
     }
   }, [texture, scene]);
 
+  useEffect(() => {
+    const ambientAudio = ambientAudioRef.current;
+    if (!ambientAudio) return;
+
+    ambientAudio.setVolume(ambientAudioEnabled ? 1 : 0);
+    ambientAudio.autoplay = ambientAudioEnabled;
+
+    if (!ambientAudioEnabled) {
+      try {
+        if (ambientAudio.isPlaying) ambientAudio.pause();
+      } catch {
+        // Fallback for runtimes that do not support pause()
+        try {
+          if (ambientAudio.isPlaying) ambientAudio.stop();
+        } catch {
+          // no-op
+        }
+      }
+      return;
+    }
+
+    try {
+      if (ambientAudio.buffer && !ambientAudio.isPlaying) {
+        ambientAudio.play();
+      }
+    } catch {
+      // Playback can fail until browser audio is unlocked by user interaction.
+    }
+  }, [ambientAudioEnabled]);
+
   return (
     <group>
-      {ambientAudioEnabled ? (
-        <PositionalAudio
-          url="/sounds/nature_ambient.mp3"
-          loop
-          autoplay
-          distance={60}
-        />
-      ) : null}
+      <PositionalAudio
+        ref={ambientAudioRef as any}
+        url="/sounds/nature_ambient.mp3"
+        loop
+        autoplay={false}
+        distance={60}
+      />
       <AtmosphericParticles />
       {hotspotBuckets.forward.map((hs) => (
         <ForwardWalkRing key={`forward-${hs.targetId}`} position={hs.position} onClick={() => onNavigate(hs.targetId)} />
@@ -630,6 +665,14 @@ function AtmosphericParticles() {
   );
 }
 
+function SceneLoadingFallback() {
+  return (
+    <group>
+      <AtmosphericParticles />
+    </group>
+  );
+}
+
 // --- MAIN PAGE COMPONENT ---
 
 export default function OnesaAITourismVirtualExperience() {
@@ -661,8 +704,10 @@ export default function OnesaAITourismVirtualExperience() {
   const [walkStageIndex, setWalkStageIndex] = useState(0);
   const [isConversationMode, setIsConversationMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
-  const [isTtsEnabled, setIsTtsEnabled] = useState(true);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const [isTtsEnabled, setIsTtsEnabled] = useState(false);
+  const [selectedVoiceGender, setSelectedVoiceGender] = useState<"male" | "female">("female");
+  const [isNarrationPlaying, setIsNarrationPlaying] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
   const [aiStatus, setAiStatus] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -785,6 +830,16 @@ export default function OnesaAITourismVirtualExperience() {
     }));
   }, [destinations, uiLanguage]);
 
+  const stageImageUrls = useMemo(() => {
+    const urls = new Set<string>();
+    for (const destination of localizedDestinations) {
+      for (const stage of destination.walkStages) {
+        if (stage.image) urls.add(stage.image);
+      }
+    }
+    return Array.from(urls);
+  }, [localizedDestinations]);
+
   const currentDestination =
     localizedDestinations.find((destination) => destination.id === selectedDestinationId) ?? localizedDestinations[0];
   const walkStages = currentDestination.walkStages;
@@ -810,29 +865,20 @@ export default function OnesaAITourismVirtualExperience() {
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.resume();
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(" ");
-        utterance.volume = 0;
-        window.speechSynthesis.speak(utterance);
       }
       if (ttsAudioRef.current) {
-        ttsAudioRef.current.src = SILENT_WAV_DATA_URI;
-        ttsAudioRef.current.muted = false;
-        ttsAudioRef.current.volume = 0.01;
-        await ttsAudioRef.current.play();
-        ttsAudioRef.current.pause();
-        ttsAudioRef.current.currentTime = 0;
+        ttsAudioRef.current.load();
       }
       const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
       if (AudioCtx) {
         const ctx = new AudioCtx();
         if (ctx.state === "suspended") await ctx.resume();
-        const buffer = ctx.createBuffer(1, 1, 22050);
+        const buffer = ctx.createBuffer(1, 220, 22050);
         const source = ctx.createBufferSource();
         source.buffer = buffer;
         source.connect(ctx.destination);
         source.start(0);
-        source.disconnect();
-        await ctx.close();
+        setTimeout(() => { void ctx.close().catch(() => {}); }, 1000);
       }
       speechUnlockedRef.current = true;
       setAudioReady(true);
@@ -847,6 +893,15 @@ export default function OnesaAITourismVirtualExperience() {
   useEffect(() => {
     setAiStatus(ui.systemReady);
   }, [ui.systemReady]);
+
+  useEffect(() => {
+    stageImageUrls.forEach((imageUrl) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.loading = "eager";
+      img.src = imageUrl;
+    });
+  }, [stageImageUrls]);
 
   useEffect(() => {
     if (walkStageIndex >= walkStages.length) {
@@ -877,21 +932,6 @@ export default function OnesaAITourismVirtualExperience() {
     window.addEventListener("pointerdown", unlockSpeech, { once: true, passive: true, capture: true });
     return () => window.removeEventListener("pointerdown", unlockSpeech, true);
   }, [unlockAudio]);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    const timer = window.setInterval(() => {
-      try {
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.pause();
-          window.speechSynthesis.resume();
-        }
-      } catch {
-        // no-op
-      }
-    }, 10000);
-    return () => window.clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     if (!selectedDestinationId || isConversationMode) return;
@@ -1006,9 +1046,10 @@ export default function OnesaAITourismVirtualExperience() {
         const speakAttempt = async (useBestVoice: boolean) => {
           synth.resume();
           synth.cancel();
+          setIsNarrationPlaying(false);
 
           const utterance = new SpeechSynthesisUtterance(text);
-          utterance.volume = 0.9;
+          utterance.volume = 0.82;
           utterance.rate = 1;
           utterance.pitch = 1;
           const safeLang = speechLanguageCode;
@@ -1051,18 +1092,27 @@ export default function OnesaAITourismVirtualExperience() {
                 finish(true);
                 return;
               }
+              setIsNarrationPlaying(false);
               finish(false);
             }, timerMs);
             utterance.onstart = () => {
               started = true;
+              setIsNarrationPlaying(true);
               setAiStatus(ui.systemReady);
               if (!waitForCompletion) finish(true);
             };
-            utterance.onend = () => finish(true);
-            utterance.onerror = () => finish(false);
+            utterance.onend = () => {
+              setIsNarrationPlaying(false);
+              finish(true);
+            };
+            utterance.onerror = () => {
+              setIsNarrationPlaying(false);
+              finish(false);
+            };
             try {
               synth.speak(utterance);
             } catch {
+              setIsNarrationPlaying(false);
               finish(false);
             }
           });
@@ -1083,15 +1133,25 @@ export default function OnesaAITourismVirtualExperience() {
         return false;
       }
       if (!ttsAudioRef.current) return false;
-      const arrayBuffer = await response.arrayBuffer();
-      const blob = new Blob([arrayBuffer], { type: "audio/mpeg" });
-      const url = URL.createObjectURL(blob);
+      const headerMime = String(response.headers.get("content-type") ?? "")
+        .split(";")[0]
+        .trim()
+        .toLowerCase();
+      const blob = await response.blob();
+      const effectiveMime = String(blob.type || headerMime).toLowerCase();
+      if (/audio\/l16|codec=pcm/.test(effectiveMime)) {
+        cloudFailureReason = `Unsupported cloud audio format: ${effectiveMime || "unknown"}`;
+        return false;
+      }
+      const playableBlob = !blob.type && headerMime ? blob.slice(0, blob.size, headerMime) : blob;
+      const url = URL.createObjectURL(playableBlob);
       if (ttsAudioUrlRef.current) URL.revokeObjectURL(ttsAudioUrlRef.current);
       ttsAudioUrlRef.current = url;
       ttsAudioRef.current.pause();
       ttsAudioRef.current.src = url;
-      ttsAudioRef.current.volume = 0.9;
+      ttsAudioRef.current.volume = 0.82;
       await ttsAudioRef.current.play();
+      setIsNarrationPlaying(true);
       setAiStatus(ui.systemReady);
       if (waitForCompletion) {
         const timeoutMs = Math.min(90000, Math.max(6000, text.length * 90));
@@ -1121,6 +1181,9 @@ export default function OnesaAITourismVirtualExperience() {
     };
 
     const tryCloudTts = async (): Promise<boolean> => {
+      const femaleVoiceId = "EXAVITQu4vr4xnSDxMaL";
+      const maleVoiceId = "VR6AewLTigWG4xSOukaG";
+      const selectedVoiceId = selectedVoiceGender === "male" ? maleVoiceId : femaleVoiceId;
       try {
         setAiStatus(ui.requestingCloudNarration ?? ui.guideThinking);
         const speechRes = await fetch("/api/speech", {
@@ -1129,7 +1192,7 @@ export default function OnesaAITourismVirtualExperience() {
           body: JSON.stringify({
             action: "tts",
             text,
-            voiceId: "EXAVITQu4vr4xnSDxMaL",
+            voiceId: selectedVoiceId,
             language: uiLanguage,
           }),
         });
@@ -1143,7 +1206,7 @@ export default function OnesaAITourismVirtualExperience() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             text,
-            voiceId: "EXAVITQu4vr4xnSDxMaL",
+            voiceId: selectedVoiceId,
             language: uiLanguage,
           }),
         });
@@ -1191,6 +1254,12 @@ export default function OnesaAITourismVirtualExperience() {
   useEffect(() => {
     const audio = ttsAudioRef.current;
     if (!audio) return;
+    const handleNarrationStarted = () => {
+      setIsNarrationPlaying(true);
+    };
+    const handleNarrationStopped = () => {
+      setIsNarrationPlaying(false);
+    };
     const handleCloudNarrationEnd = () => {
       if (cloudTtsRequestInFlightRef.current) return;
       if (!isTtsEnabled || isConversationMode) return;
@@ -1199,12 +1268,26 @@ export default function OnesaAITourismVirtualExperience() {
       queuedCloudNarrationRef.current = null;
       void speakWithTts(queued, false);
     };
+    audio.addEventListener("play", handleNarrationStarted);
+    audio.addEventListener("playing", handleNarrationStarted);
+    audio.addEventListener("ended", handleNarrationStopped);
+    audio.addEventListener("error", handleNarrationStopped);
+    audio.addEventListener("pause", handleNarrationStopped);
+    audio.addEventListener("stalled", handleNarrationStopped);
+    audio.addEventListener("abort", handleNarrationStopped);
     audio.addEventListener("ended", handleCloudNarrationEnd);
     audio.addEventListener("error", handleCloudNarrationEnd);
     audio.addEventListener("pause", handleCloudNarrationEnd);
     audio.addEventListener("stalled", handleCloudNarrationEnd);
     audio.addEventListener("abort", handleCloudNarrationEnd);
     return () => {
+      audio.removeEventListener("play", handleNarrationStarted);
+      audio.removeEventListener("playing", handleNarrationStarted);
+      audio.removeEventListener("ended", handleNarrationStopped);
+      audio.removeEventListener("error", handleNarrationStopped);
+      audio.removeEventListener("pause", handleNarrationStopped);
+      audio.removeEventListener("stalled", handleNarrationStopped);
+      audio.removeEventListener("abort", handleNarrationStopped);
       audio.removeEventListener("ended", handleCloudNarrationEnd);
       audio.removeEventListener("error", handleCloudNarrationEnd);
       audio.removeEventListener("pause", handleCloudNarrationEnd);
@@ -1222,6 +1305,7 @@ export default function OnesaAITourismVirtualExperience() {
       if (ttsAudioRef.current) {
         ttsAudioRef.current.pause();
       }
+      setIsNarrationPlaying(false);
       return;
     }
 
@@ -1229,6 +1313,7 @@ export default function OnesaAITourismVirtualExperience() {
       setAiStatus(ui.selectDestination);
       return;
     }
+    setIsSoundEnabled(false);
 
     const currentText = String(virtualNarrative || currentStage.caption || currentDestination.summary || "").trim();
     if (!currentText) {
@@ -1241,6 +1326,7 @@ export default function OnesaAITourismVirtualExperience() {
     })();
   }, [
     isTtsEnabled,
+    setIsSoundEnabled,
     selectedDestinationId,
     virtualNarrative,
     currentStage.caption,
@@ -1260,6 +1346,7 @@ export default function OnesaAITourismVirtualExperience() {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
+    setIsNarrationPlaying(false);
     queuedCloudNarrationRef.current = null;
     cloudTtsRequestInFlightRef.current = false;
   }, [isTtsEnabled]);
@@ -1601,8 +1688,16 @@ export default function OnesaAITourismVirtualExperience() {
     setAutoRotateEnabled(true);
   }, [isFullscreen]);
 
+  useEffect(() => {
+    if (!isSoundEnabled) return;
+    if (isConversationMode || isTtsEnabled) {
+      setIsSoundEnabled(false);
+    }
+  }, [isConversationMode, isTtsEnabled, isSoundEnabled]);
+
   const handleConversationToggle = useCallback(async () => {
     if (!isConversationMode) {
+      setIsSoundEnabled(false);
       setIsConversationMode(true);
       await startRecording();
       return;
@@ -1844,6 +1939,8 @@ export default function OnesaAITourismVirtualExperience() {
                       }
                       setSelectedDestinationId(nextId);
                       setWalkStageIndex(0);
+                      // Keep ambient off on city load; user can enable it manually.
+                      setIsSoundEnabled(false);
                     }}
                   >
                     <option value="" disabled>
@@ -1907,31 +2004,36 @@ export default function OnesaAITourismVirtualExperience() {
                   ) : (
                     <Canvas
                       camera={{ position: [0, 0, 0.1], fov: 65 }}
-                      gl={{ antialias: true, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
+                      gl={{ antialias: true, alpha: false, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
+                      style={{ background: "#000000" }}
                       onPointerMissed={() => {
                         handleVrPointerMissed();
                       }}
-                      onCreated={({ camera }) => {
+                      onCreated={({ camera, gl, scene }) => {
+                        gl.setClearColor(0x000000, 1);
+                        scene.background = new THREE.Color(0x000000);
                         cameraRef.current = camera as THREE.PerspectiveCamera;
                       }}
                     >
                       <XR store={xrStore}>
-                        <VRScene
-                          stage={currentStage}
-                          currentStageIndex={walkStageIndex}
-                          stageOrder={walkStages.map((s) => s.id)}
-                          onNavigate={(id: string) => {
-                            const nextIndex = walkStages.findIndex((stage) => stage.id === id);
-                            if (nextIndex >= 0) setWalkStageIndex(nextIndex);
-                          }}
-                          onNavigatePrevious={() => {
-                            setWalkStageIndex((current) => Math.max(0, current - 1));
-                          }}
-                          onPointOfInterestClick={handlePointOfInterestClick}
-                          onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
-                          hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
-                          ambientAudioEnabled={!isConversationMode && isSoundEnabled}
-                        />
+                        <Suspense fallback={<SceneLoadingFallback />}>
+                          <VRScene
+                            stage={currentStage}
+                            currentStageIndex={walkStageIndex}
+                            stageOrder={walkStages.map((s) => s.id)}
+                            onNavigate={(id: string) => {
+                              const nextIndex = walkStages.findIndex((stage) => stage.id === id);
+                              if (nextIndex >= 0) setWalkStageIndex(nextIndex);
+                            }}
+                            onNavigatePrevious={() => {
+                              setWalkStageIndex((current) => Math.max(0, current - 1));
+                            }}
+                            onPointOfInterestClick={handlePointOfInterestClick}
+                            onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
+                            hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
+                            ambientAudioEnabled={!isConversationMode && isSoundEnabled && !isNarrationPlaying}
+                          />
+                        </Suspense>
                         <OrbitControls
                           ref={orbitControlsRef}
                           enableZoom
@@ -2154,10 +2256,18 @@ export default function OnesaAITourismVirtualExperience() {
                           {isConversationMode ? ui.conversationOn : ui.conversationOff}
                         </Button>
                         <Button
-                          onClick={() => setIsSoundEnabled((prev) => !prev)}
+                          onClick={() => {
+                            if (!selectedDestinationId) return;
+                            if (isConversationMode || isTtsEnabled || isNarrationPlaying) {
+                              setIsSoundEnabled(false);
+                              return;
+                            }
+                            setIsSoundEnabled((prev) => !prev);
+                          }}
                           variant="outline"
                           className="h-6 px-2.5 border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap"
                           aria-label={isSoundEnabled ? ui.muteAmbientSound : ui.enableAmbientSound}
+                          disabled={!selectedDestinationId}
                         >
                           {isSoundEnabled ? <Volume2 className="h-3 w-3 mr-1" /> : <VolumeX className="h-3 w-3 mr-1" />}
                           {isSoundEnabled ? ui.ambientOnBadge : ui.ambientOffBadge}
@@ -2175,6 +2285,20 @@ export default function OnesaAITourismVirtualExperience() {
                         >
                           {isTtsEnabled ? ui.narrationOn : ui.narrationOff}
                         </Button>
+                        {isTtsEnabled ? (
+                          <div className="h-6 px-2.5 border border-white/20 text-white rounded-full flex items-center gap-2">
+                            <span className="text-[8px] font-black uppercase tracking-widest text-white">{ui.voice}</span>
+                            <select
+                              id="vr-voice-gender-inline"
+                              value={selectedVoiceGender}
+                              onChange={(event) => setSelectedVoiceGender(event.target.value as "male" | "female")}
+                              className="bg-transparent text-[8px] font-black uppercase tracking-widest text-zim-gold focus:outline-none"
+                            >
+                              <option className="text-zim-gold bg-slate-950" value="male">{ui.male}</option>
+                              <option className="text-zim-gold bg-slate-950" value="female">{ui.female}</option>
+                            </select>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                     <div className="mt-2 border-t border-white/15" />

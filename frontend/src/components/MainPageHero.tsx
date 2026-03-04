@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, LucideIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 // Section 1: Hero Configuration
 interface HeroContent {
@@ -26,6 +27,23 @@ interface MainPageProps {
 export default function MainPageHero({ hero, intro }: MainPageProps) {
   const { t } = useTranslation();
   const { icon: Icon } = intro;
+  const [mobileGlowActive, setMobileGlowActive] = useState(true);
+  const mobileShimmerTimings = useMemo(
+    () =>
+      hero.navButtons.map(() => ({
+        delay: Math.random() * 0.35,
+        duration: 0.8 + Math.random() * 0.5,
+      })),
+    [hero.navButtons.length],
+  );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setMobileGlowActive(false);
+    }, 1100);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
@@ -91,36 +109,72 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
           </motion.p>  
                 
           {/* Nav Buttons */}
-          <div className="mt-10 flex flex-col sm:flex-row gap-5 items-center">
-            {hero.navButtons.map((item) => (
+          <div className="mt-10 flex flex-col gap-5 items-center sm:hidden">
+            {hero.navButtons.map((item, index) => (
               <Link key={item.href} href={item.href}>
-              <Button
-                variant="outline"
-                className="
-                  group relative h-12 px-4 rounded-full overflow-hidden border-none
-                  bg-white/[0.1] backdrop-blur-xl
-                  text-white text-xs font-black uppercase
-                  shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
-                  transition-all duration-500 
-                  hover:scale-105 active:scale-95 min-w-[160px]
-                  
-                  /* THE WHITE GLOW EFFECT */
-                  hover:bg-white/[0.2] 
-                  hover:shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]
-                  hover:text-white
-                "
-              >
-                {/* Animated White Border Glow Overlay */}
-                <span className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/60 transition-colors duration-500 pointer-events-none" />
-                
-                {/* Radial Gradient Glow for the shimmer */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                
-                <span className="relative z-10">{t(item.label)}</span>
-              </Button>
+                <Button
+                  variant="outline"
+                  className={`
+                    relative h-12 px-4 rounded-full overflow-hidden border-none min-w-[160px]
+                    backdrop-blur-xl text-white text-xs font-black uppercase
+                    transition-[background-color,box-shadow,border-color] duration-700
+                    ${mobileGlowActive
+                      ? "bg-white/[0.2] shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]"
+                      : "bg-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]"}
+                  `}
+                >
+                  <span
+                    className={`absolute inset-0 rounded-full pointer-events-none transition-colors duration-700 ${
+                      mobileGlowActive ? "border border-white/60" : "border border-white/20"
+                    }`}
+                  />
+                  <motion.span
+                    className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent ${
+                      mobileGlowActive ? "opacity-100" : "opacity-0"
+                    }`}
+                    initial={{ x: "-100%" }}
+                    animate={{ x: "100%" }}
+                    transition={{
+                      duration: mobileShimmerTimings[index]?.duration ?? 1,
+                      ease: "easeInOut",
+                      delay: mobileShimmerTimings[index]?.delay ?? 0,
+                    }}
+                  />
+                  <span className="relative z-10">{t(item.label)}</span>
+                </Button>
               </Link>
             ))}
           </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.8, delay: 1.2 }} 
+            className="mt-10 hidden sm:flex sm:flex-row gap-5 items-center"
+          >
+            {hero.navButtons.map((item) => (
+              <Link key={item.href} href={item.href}>
+                <Button
+                  variant="outline"
+                  className="
+                    group relative h-12 px-4 rounded-full overflow-hidden border-none min-w-[160px]
+                    bg-white/[0.1] backdrop-blur-xl
+                    text-white text-xs font-black uppercase
+                    shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
+                    transition-all duration-500
+                    hover:scale-105 active:scale-95
+                    hover:bg-white/[0.2]
+                    hover:shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]
+                    hover:text-white
+                  "
+                >
+                  <span className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/60 transition-colors duration-500 pointer-events-none" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <span className="relative z-10">{t(item.label)}</span>
+                </Button>
+              </Link>
+            ))}
+          </motion.div>
 
           {/* Scroll Indicator */}
           <motion.div 
@@ -135,10 +189,10 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
               className="flex flex-col items-center gap-2 cursor-pointer text-white"
               onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
             >
-              <span className="text-[10px] uppercase tracking-[0.5em] font-black drop-shadow-md">
+              <span className="text-[10px] uppercase tracking-[0.5em] font-black text-white drop-shadow-md">
                 Explore
               </span>
-              <ChevronDown size={28} strokeWidth={1.5} />
+              <ChevronDown size={28} strokeWidth={1.5} className="text-white" />
             </motion.div>
           </motion.div>
         </div>
