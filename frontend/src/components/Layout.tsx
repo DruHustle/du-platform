@@ -255,6 +255,10 @@ export default function Layout({ children }: LayoutProps) {
   ];
 
   const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
+  const isHomePage = location === "/";
+  const isCompactNavViewport = desktopViewportWidth < 1024;
+  const useHomeCompactTransparentNav = isCompactNavViewport && isHomePage && !mobileMenuOpen;
+  const mainTopPaddingClass = isCompactNavViewport ? (isHomePage ? "pt-0" : "pt-14") : "pt-0";
   // Hide the floating chat bubble on dedicated chat/tourism-experience routes to avoid duplicate UX.
   const hideOnesaBubbleRoutes = [
     "/onesa-ai-chat",
@@ -724,10 +728,12 @@ export default function Layout({ children }: LayoutProps) {
       
       {/* --- INTEGRATED GLASS CEILING --- */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 border-b ${
-          (scrolled && !mobileMenuOpen) 
-            ? 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-4 lg:py-1 shadow-2xl' 
-            : 'bg-slate-900/95 backdrop-blur-xl border-white/10 py-4 lg:bg-transparent lg:border-transparent'
+        className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 ${
+          useHomeCompactTransparentNav
+            ? "bg-transparent border-transparent py-0"
+            : (scrolled && !mobileMenuOpen)
+              ? "border-b bg-slate-900/95 backdrop-blur-xl border-white/10 py-0 lg:py-1 shadow-2xl"
+              : "border-b bg-slate-900/95 backdrop-blur-xl border-white/10 py-0 lg:py-4 lg:bg-transparent lg:border-transparent"
         }`}
       >
         <div className="container mx-auto px-6 h-14 flex items-center justify-between relative">
@@ -1051,7 +1057,7 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
-      <main className="relative z-0 flex-1 w-full pt-[88px] lg:pt-0">
+      <main className={`relative z-0 flex-1 w-full ${mainTopPaddingClass}`}>
         {children}
       </main>
 
