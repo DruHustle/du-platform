@@ -22,6 +22,11 @@ type LlmResult =
 
 const DEFAULT_ELEVENLABS_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
 const ELEVENLABS_TTS_MODEL_ID = "eleven_multilingual_v2";
+const ELEVENLABS_OUTPUT_FORMAT = String(
+  process.env.ONESA_ELEVENLABS_OUTPUT_FORMAT ??
+    process.env.ELEVENLABS_OUTPUT_FORMAT ??
+    "mp3_44100_128"
+).trim();
 const ELEVENLABS_MAX_CONCURRENT_REQUESTS = 1;
 const DEFAULT_GEMINI_TTS_MODEL = "gemini-2.5-flash-preview-tts";
 const DEFAULT_GROQ_STT_MODEL = "whisper-large-v3-turbo";
@@ -172,7 +177,9 @@ function normalizeTtsLanguage(input?: string): "en" | "de" | "sn" | "nd" {
 }
 
 function shouldUseElevenLabs(language: "en" | "de" | "sn" | "nd"): boolean {
-  return language === "sn" || language === "nd";
+  const elevenKeyAvailable = Boolean(getElevenLabsApiKey());
+  if (!elevenKeyAvailable) return language === "sn" || language === "nd";
+  return language === "en" || language === "de" || language === "sn" || language === "nd";
 }
 
 function getGeminiVoiceCandidates(language: "en" | "de" | "sn" | "nd"): string[] {
@@ -296,7 +303,13 @@ async function requestElevenLabsTts(text: string, voiceId?: string): Promise<Tts
           body: JSON.stringify({
             text: candidateText,
             model_id: ELEVENLABS_TTS_MODEL_ID,
-            voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+            output_format: ELEVENLABS_OUTPUT_FORMAT,
+            voice_settings: {
+              stability: 0.62,
+              similarity_boost: 0.88,
+              style: 0.08,
+              use_speaker_boost: true,
+            },
           }),
         });
 

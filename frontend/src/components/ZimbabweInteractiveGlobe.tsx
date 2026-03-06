@@ -12,6 +12,7 @@ type ArcDatum = {
 
 type ZimbabweInteractiveGlobeProps = {
   zoomToHarare?: boolean;
+  musicEnabled?: boolean;
 };
 
 class GlobeRenderBoundary extends Component<{ onError: () => void; children: ReactNode }, { hasError: boolean }> {
@@ -34,20 +35,33 @@ class GlobeRenderBoundary extends Component<{ onError: () => void; children: Rea
   }
 }
 
-export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: ZimbabweInteractiveGlobeProps) {
+export default function ZimbabweInteractiveGlobe({
+  zoomToHarare = false,
+  musicEnabled = true,
+}: ZimbabweInteractiveGlobeProps) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const zoomSequenceTimerRef = useRef<number | null>(null);
   const previousZoomToHarareRef = useRef(false);
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(musicEnabled);
   const [audioBlocked, setAudioBlocked] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [zimbabweBoundary, setZimbabweBoundary] = useState<any[]>([]);
   const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
   const [globeCrashed, setGlobeCrashed] = useState(false);
   const wasZimbabweVisibleRef = useRef(true);
+
+  const hardStopMusic = useCallback(() => {
+    if (!audioRef.current) return;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    audioRef.current.muted = true;
+    setAudioEnabled(false);
+    setAudioPlaying(false);
+    setAudioBlocked(false);
+  }, []);
 
   const locations = useMemo(
     () => [
@@ -189,6 +203,29 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
 
   useEffect(() => {
     if (!audioRef.current) return;
+    if (!musicEnabled) {
+      hardStopMusic();
+      return;
+    }
+    // Prop controls whether music is allowed in this view. Do not force-enable
+    // on local toggle changes while the prop itself is unchanged.
+    setAudioEnabled(true);
+    void attemptAutoPlay();
+    // Intentionally keyed only by prop-level enablement.
+  }, [attemptAutoPlay, hardStopMusic, musicEnabled]);
+
+  useEffect(() => {
+    const onStop = () => {
+      hardStopMusic();
+    };
+    window.addEventListener("onesa:stop-globe-music", onStop as EventListener);
+    return () => {
+      window.removeEventListener("onesa:stop-globe-music", onStop as EventListener);
+    };
+  }, [hardStopMusic]);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
     audioRef.current.muted = false;
     audioRef.current.volume = 0.5;
     void attemptAutoPlay();
@@ -286,8 +323,11 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
       if (zoomSequenceTimerRef.current !== null) {
         window.clearTimeout(zoomSequenceTimerRef.current);
       }
+      if (audioRef.current) {
+        hardStopMusic();
+      }
     },
-    []
+    [hardStopMusic]
   );
 
   useEffect(() => {
@@ -309,8 +349,9 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
 
       <audio
         ref={audioRef}
+        data-onesa-globe-music="true"
         src="/sounds/zimbabwe_a_world_of_wonders.mp3"
-        autoPlay
+        autoPlay={musicEnabled}
         loop
         preload="auto"
         onLoadedMetadata={(e) => {
@@ -338,6 +379,7 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
               ref={globeRef}
               width={size.width}
               height={size.height}
+              backgroundColor="#000000"
               globeImageUrl="/globe/earth-blue-marble.jpg"
               bumpImageUrl="/globe/earth-topology.png"
               backgroundImageUrl="/globe/night-sky.png"
@@ -384,6 +426,7 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
         )}
       </div>
 
+      {musicEnabled ? (
       <button
         type="button"
         onClick={() => {
@@ -391,6 +434,7 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
           if (audioPlaying) {
             audioRef.current.pause();
             setAudioEnabled(false);
+            setAudioPlaying(false);
             return;
           }
           setAudioEnabled(true);
@@ -405,10 +449,11 @@ export default function ZimbabweInteractiveGlobe({ zoomToHarare = false }: Zimba
               setAudioPlaying(false);
             });
         }}
-        className="absolute bottom-6 right-6 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
+        className="absolute z-20 bottom-6 right-6 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
       >
         {audioPlaying ? "Music: On" : "Music: Off"}
       </button>
+      ) : null}
       {audioBlocked ? null : null}
     </div>
   );
