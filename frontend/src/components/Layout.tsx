@@ -742,16 +742,19 @@ export default function Layout({ children }: LayoutProps) {
           {/* 1. Left Section: Logo & Brand (Flexible width to push menu center) */}
           <div className="flex-1 lg:flex-none lg:min-w-[200px] flex items-center">
             <Link href='/'>
-                <div className={`flex items-center space-x-3 cursor-pointer transition-all duration-500 ${
+                <div className={`flex lg:hidden items-center space-x-3 cursor-pointer transition-all duration-500 ${
                   (scrolled || mobileMenuOpen) 
                     ? 'opacity-100 translate-x-4' 
                     : 'opacity-0 -translate-x-4 pointer-events-none'
                 }`}>
-                <img
-                  src='/images/pages/shared/diaspora_unlocked.jpg'
-                  alt='Logo'
-                  className="h-9 w-9 object-contain"
-                />
+                <div className="relative inline-flex h-10 w-10 items-center justify-center">
+                  <span className="pointer-events-none absolute inset-0 rounded-full border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
+                  <img
+                    src='/images/pages/shared/diaspora_unlocked.png'
+                    alt='Logo'
+                    className="relative h-9 w-9 object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
+                  />
+                </div>
               </div>
             </Link>
           </div>
