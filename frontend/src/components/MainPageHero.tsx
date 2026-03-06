@@ -81,11 +81,14 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
             transition={{ duration: 1.2 }} 
             className="mb-8 md:mb-12"
           >
-            <img 
-              src="/images/pages/shared/made_in_zimbabwe.png" 
-              alt="Made in Zimbabwe" 
-              className="h-16 md:h-20 object-contain drop-shadow-2xl" 
-            />
+            <div className="relative inline-flex items-center justify-center">
+              <span className="pointer-events-none absolute inset-0 rounded-full border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
+              <img
+                src="/images/pages/shared/diaspora_unlocked.png"
+                alt="Diaspora Unlocked"
+                className="relative h-16 md:h-20 object-contain drop-shadow-2xl"
+              />
+            </div>
           </motion.div>
           
           {/* Headline - Added shadow for legibility against lighter background */}

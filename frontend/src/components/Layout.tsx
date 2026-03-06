@@ -748,7 +748,7 @@ export default function Layout({ children }: LayoutProps) {
                     : 'opacity-0 -translate-x-4 pointer-events-none'
                 }`}>
                 <img
-                  src='/images/pages/shared/made_in_zimbabwe.png'
+                  src='/images/pages/shared/diaspora_unlocked.jpg'
                   alt='Logo'
                   className="h-9 w-9 object-contain"
                 />
