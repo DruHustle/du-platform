@@ -1682,6 +1682,8 @@
         "address": "Address"
       },
       "payment_methods": {
+        "label": "Payment handling",
+        "manual_assisted": "Assisted checkout (email / WhatsApp follow-up)",
         "stripe": "Stripe (Credit Card)",
         "paypal": "PayPal",
         "amazon_pay": "Amazon Pay",
@@ -1689,16 +1691,18 @@
         "paypal_short": "PayPal",
         "amazon_pay_short": "Amazon Pay",
         "dummy_gateway": "Dummy Gateway (Dev/Test)",
-        "dummy_gateway_short": "Dummy Gateway"
+        "dummy_gateway_short": "Confirm Dummy Payment"
       },
       "order": {
         "reference": "Order reference",
-        "status": "Status"
+        "status": "Status",
+        "manual_follow_up": "Your order request is saved. Complete the assisted checkout by contacting us on WhatsApp or waiting for the follow-up email or invoice."
       },
       "notes": {
         "guest_checkout": "Guest checkout enabled: no login required.",
         "logged_in_checkout": "Signed-in checkout active.",
-        "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
+        "supported_methods": "Supported methods: assisted checkout with email or WhatsApp follow-up.",
+        "supported_methods_dev": "Supported methods: assisted checkout in production, plus dummy payment simulation in dev and test."
       },
       "errors": {
         "empty_cart": "Your cart is empty.",
@@ -1718,6 +1722,8 @@
         "saving": "Saving...",
         "saved": "We'll notify you when this product is available.",
         "saved_short": "Notify Saved",
+        "dialog_title": "Notify me when it is back in stock",
+        "dialog_description": "is currently unavailable. Enter your email address and we will let you know when stock returns.",
         "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",

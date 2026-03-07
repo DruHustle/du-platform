@@ -32,7 +32,15 @@ export function loadConfig(): AppConfig {
     port: Number.isFinite(port) && port > 0 ? Math.floor(port) : 5001,
     corsOrigins: splitCsv(process.env.CORS_ORIGINS ?? '').length
       ? splitCsv(process.env.CORS_ORIGINS ?? '')
-      : ['http://localhost:3000', 'https://localhost:3000'],
+      : [
+          'https://diasporaunlocked.com',
+          'https://www.diasporaunlocked.com',
+          'http://localhost:3000',
+          'http://127.0.0.1:3000',
+          'https://localhost:3000',
+          'http://localhost:5173',
+          'http://127.0.0.1:5173',
+        ],
     jwtSecret: String(process.env.JWT_SECRET ?? ''),
     fintech: {
       terrapayBaseUrl: String(process.env.TERRAPAY_BASE_URL ?? 'https://uat-connect.terrapay.com'),

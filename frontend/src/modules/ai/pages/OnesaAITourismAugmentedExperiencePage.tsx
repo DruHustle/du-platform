@@ -2,10 +2,10 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Camera, LocateFixed, MapPin, Mic } from "lucide-react";
-import { checkOnesaHealth, sendOnesaChatMessage } from "./OnesaAI";
+import { checkOnesaHealth, sendOnesaChatMessage } from "@/modules/ai/lib/aiApi";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
-const LazyZimbabweInteractiveGlobe = lazy(() => import("@/components/ZimbabweInteractiveGlobe"));
+const LazyZimbabweInteractiveGlobe = lazy(() => import("@/modules/ai/components/ZimbabweInteractiveGlobe"));
 
 type PlaceProfile = {
   id: string;

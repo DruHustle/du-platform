@@ -1,31 +1,47 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import enTranslations from '../public/locales/en/translation.json';
-import deTranslations from '../public/locales/de/translation.json';
-import snTranslations from '../public/locales/sn/translation.json';
-import ndTranslations from '../public/locales/nd/translation.json';
+import i18n from "i18next";
+import Backend from "i18next-http-backend";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources: {
-      en: { translation: enTranslations },
-      de: { translation: deTranslations },
-      sn: { translation: snTranslations },
-      nd: { translation: ndTranslations },
-    },
-    fallbackLng: 'en',
-    debug: false,
-    initImmediate: false,
-    interpolation: {
-      escapeValue: false,
-    },
-    react: {
-      // Prevent full-app blanking while translations are loading on slow mobile networks.
-      useSuspense: false,
-    },
-  });
+let initializationPromise: Promise<typeof i18n> | null = null;
+
+export function initializeI18n() {
+  if (i18n.isInitialized) {
+    return Promise.resolve(i18n);
+  }
+
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = i18n
+    .use(Backend)
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      supportedLngs: ["en", "de", "sn", "nd"],
+      nonExplicitSupportedLngs: true,
+      fallbackLng: "en",
+      load: "currentOnly",
+      debug: false,
+      returnEmptyString: false,
+      interpolation: {
+        escapeValue: false,
+      },
+      detection: {
+        order: ["querystring", "localStorage", "navigator", "htmlTag"],
+        caches: ["localStorage"],
+      },
+      backend: {
+        loadPath: "/locales/{{lng}}/translation.json",
+      },
+      react: {
+        useSuspense: false,
+      },
+    })
+    .then(() => i18n);
+
+  return initializationPromise;
+}
 
 export default i18n;

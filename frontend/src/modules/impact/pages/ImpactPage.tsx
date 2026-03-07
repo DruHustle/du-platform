@@ -264,7 +264,7 @@ export default function Impact() {
 
   useEffect(() => {
     api
-      .get("/impact")
+      .get("/impact/stories")
       .then(({ data }) => {
         setApiStories(Array.isArray(data?.stories) ? data.stories : []);
         setStoriesLoadFailed(false);

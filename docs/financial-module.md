@@ -4,31 +4,29 @@
 
 ```text
 backend/
-  controllers/
-    remittanceController.ts
-    airtimeController.ts
-  middleware/
-    jwtAuth.ts
-    rateLimiter.ts
-  providers/
-    terrapayProvider.ts
-    reloadlyProvider.ts
-  routes/
-    remittanceRoutes.ts
-    airtimeRoutes.ts
-    financialRoutes.ts
-  services/
-    terrapayService.ts
-    reloadlyService.ts
+  modules/
+    fintech/
+      controllers/
+        remittanceController.ts
+        airtimeController.ts
+      dto/
+      providers/
+        terrapayGatewayProvider.ts
+        reloadlyGatewayProvider.ts
+      repositories/
+        fintechRepository.ts
+      routes/
+        index.ts
+      services/
+        terrapayGatewayService.ts
+        reloadlyGatewayService.ts
+        remittanceService.ts
+        airtimeService.ts
   utils/
-    apiResponse.ts
     sanitize.ts
-    failedAttemptLogger.ts
-backend/prisma/
-  schema.prisma
 frontend/src/components/
-  SendMoneyForm.jsx
-  AirtimeTopupForm.jsx
+  SendMoneyForm.tsx
+  AirtimeTopupForm.tsx
 ```
 
 ## Example TerraPay API Call (backend-side)
@@ -82,7 +80,7 @@ try {
 
 - All TerraPay and Reloadly credentials are loaded from backend environment variables.
 - All provider calls are backend-side only.
-- JWT is required for `/api/remittance/*` and `/api/airtime/*`.
+- JWT is required for `/api/fintech/remittance/*` and `/api/fintech/airtime/*`.
 - Basic in-memory rate limiting is applied per requester IP.
 - Failed attempts are persisted to `financial_failed_attempts`.
 - Standard API response format is enforced via `successResponse` and `errorResponse`.

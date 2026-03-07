@@ -25,12 +25,12 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { sendOnesaChatMessage } from "./OnesaAI";
+import { sendOnesaChatMessage } from "@/modules/ai/lib/aiApi";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 
 const xrStore = createXRStore();
-const LazyZimbabweInteractiveGlobe = lazy(() => import("@/components/ZimbabweInteractiveGlobe"));
+const LazyZimbabweInteractiveGlobe = lazy(() => import("@/modules/ai/components/ZimbabweInteractiveGlobe"));
 
 type Hotspot = {
   targetId: string;

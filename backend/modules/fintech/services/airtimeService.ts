@@ -1,7 +1,7 @@
 import crypto from 'crypto';
-import { ReloadlyService } from '../../../services/reloadlyService';
+import { ReloadlyService } from './reloadlyGatewayService';
 import { FintechRepository } from '../repositories/fintechRepository';
-import { ReloadlyProviderAdapter } from '../providers/reloadlyProvider';
+import { ReloadlyProvider } from '../providers/reloadlyGatewayProvider';
 import type { AirtimeLookupDto, AirtimeTopupDto } from '../dto/airtime.dto';
 
 function normalizeStatus(input: unknown): 'pending' | 'completed' | 'failed' {
@@ -12,7 +12,7 @@ function normalizeStatus(input: unknown): 'pending' | 'completed' | 'failed' {
 }
 
 export class AirtimeService {
-  private readonly service = new ReloadlyService(new ReloadlyProviderAdapter() as any);
+  private readonly service = new ReloadlyService(new ReloadlyProvider());
 
   constructor(private readonly repository = new FintechRepository()) {}
 

@@ -3,7 +3,7 @@ import { ArrowRightLeft, CreditCard, Landmark, ShieldCheck, Smartphone, Wallet }
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import SubPageHero from "@/components/SubPageHero";
-import SendMoneyForm from "@/components/SendMoneyForm";
+import SendMoneyForm from "@/modules/fintech/components/SendMoneyForm";
 
 type TransferType = "send_money" | "airtime_topup";
 

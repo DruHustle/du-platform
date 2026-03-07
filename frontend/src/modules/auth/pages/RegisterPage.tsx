@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { User, Mail, Lock, UserPlus, X, Eye, EyeOff } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { api, getApiErrorMessage, saveAuthToken } from "@/lib/api";
+import { primeCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 
 export default function Register() {
   const { t } = useTranslation();
@@ -33,6 +34,7 @@ export default function Register() {
       const response = await api.post("/auth/register", formData);
       const accessToken = String(response?.data?.accessToken ?? "").trim();
       if (accessToken) saveAuthToken(accessToken);
+      primeCurrentUserBootstrap(response?.data?.user ?? null);
       setLocation("/");
     } catch (err: any) {
       setError(getApiErrorMessage(err, "Registration failed."));

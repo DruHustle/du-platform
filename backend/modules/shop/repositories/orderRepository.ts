@@ -1,11 +1,11 @@
-import { createShopOrder, getShopOrderByRef } from '../../../db';
+import { createShopOrder, getShopOrderByRef } from "../../../shared/persistence/shopStore";
 
 export class OrderRepository {
   create(payload: Parameters<typeof createShopOrder>[0]) {
     return createShopOrder(payload);
   }
 
-  findByRef(orderRef: string) {
-    return getShopOrderByRef(orderRef);
+  findByRef(orderRef: string, manageToken: string) {
+    return getShopOrderByRef(orderRef, manageToken);
   }
 }

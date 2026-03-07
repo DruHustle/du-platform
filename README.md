@@ -66,13 +66,11 @@ zigd-platform/
 ├── backend/                         # Express API backend
 │   ├── api/                         # API route registration
 │   ├── core/                        # Core middleware, RBAC, logging
+│   ├── db.ts                        # Database bootstrap + schema sync
 │   ├── modules/                     # Domain modules (ai, fintech, tourism, etc.)
-│   ├── prisma/
-│   │   └── schema.prisma            # Prisma schema
-│   ├── routes/                      # Financial and legacy route bindings
-│   ├── shared/                      # Backend shared helpers
-│   ├── services/                    # Provider-facing service layer
-│   └── index.ts                     # Backend entry point
+│   ├── shared/                      # Backend shared helpers + persistence stores
+│   ├── sql/                         # Database SQL artifacts
+│   └── server.ts                    # Backend entry point
 ├── frontend/
 │   ├── index.html
 │   ├── public/                      # Static assets + SEO files

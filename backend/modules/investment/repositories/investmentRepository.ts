@@ -1,3 +1,7 @@
+import { searchNtirEntities } from "../../../shared/persistence/investmentStore";
+
 export class InvestmentRepository {
-  async health() { return { domain: "investment", ok: true }; }
+  searchNtir(query: string) {
+    return searchNtirEntities(query);
+  }
 }

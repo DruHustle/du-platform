@@ -17,12 +17,7 @@ const buckets = new Map<string, Bucket>();
 let lastBucketSweepAt = 0;
 
 function resolveClientIp(req: express.Request): string {
-  const forwarded = String(req.headers["x-forwarded-for"] ?? "");
-  if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) return first;
-  }
-  return req.ip || "unknown";
+  return req.ip || req.socket.remoteAddress || "unknown";
 }
 
 function resolveBucketSubject(req: express.Request, options: RateLimiterOptions): string {

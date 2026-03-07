@@ -52,7 +52,7 @@ export default function NtirDatabase() {
     setLoading(true);
     setError("");
     try {
-      const { data } = await api.get("/ntir/search", { params: { q } });
+      const { data } = await api.get("/investment/ntir/search", { params: { q } });
       setResults(Array.isArray(data?.results) ? data.results : []);
     } catch (err: any) {
       const apiMessage = getApiErrorMessage(err, "");

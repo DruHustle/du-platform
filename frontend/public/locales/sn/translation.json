@@ -1612,6 +1612,8 @@
         "address": "Address"
       },
       "payment_methods": {
+        "label": "Maitiro ekubhadhara",
+        "manual_assisted": "Checkout inobatsirwa (email / WhatsApp yekutevera)",
         "stripe": "Stripe (Credit Card)",
         "paypal": "PayPal",
         "amazon_pay": "Amazon Pay",
@@ -1619,16 +1621,18 @@
         "paypal_short": "PayPal",
         "amazon_pay_short": "Amazon Pay",
         "dummy_gateway": "Dummy Gateway (Dev/Test)",
-        "dummy_gateway_short": "Dummy Gateway"
+        "dummy_gateway_short": "Simbisa Dummy Payment"
       },
       "order": {
         "reference": "Order reference",
-        "status": "Status"
+        "status": "Status",
+        "manual_follow_up": "Chikumbiro cheodha chachengetwa. Pedzisa assisted checkout nekubata isu paWhatsApp kana kumirira email kana invoice yekutevera."
       },
       "notes": {
         "guest_checkout": "Guest checkout enabled: no login required.",
         "logged_in_checkout": "Checkout yakasainwa yapinda irikushanda.",
-        "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
+        "supported_methods": "Nzira dziripo: assisted checkout ine email kana WhatsApp yekutevera.",
+        "supported_methods_dev": "Nzira dziripo: assisted checkout muproduction, pamwe ne dummy payment simulation mu dev ne test."
       },
       "errors": {
         "empty_cart": "Your cart is empty.",
@@ -1648,6 +1652,8 @@
         "saving": "Saving...",
         "saved": "We'll notify you when this product is available.",
         "saved_short": "Notify Saved",
+        "dialog_title": "Ndizivisei kana chadzoka mustock",
+        "dialog_description": "hachisi kuwanikwa parizvino. Isa email address yako uye tichakuzivisai kana stock yadzoka.",
         "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",

@@ -27,7 +27,7 @@ export function useFxQuotePreview(input: {
           currencyTo: input.currencyTo,
           receivingCountry: input.receivingCountry,
         });
-        if (result.success) setQuote(result.data.fxQuote ?? null);
+        setQuote(result ?? null);
       } finally {
         setLoading(false);
       }

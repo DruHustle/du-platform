@@ -33,7 +33,10 @@ try {
     .isVisible()
     .catch(() => false);
 
-  const narrationBtn = page.getByRole('button', { name: /Voice Narration:\s*(On|Off)/i }).first();
+  const narrationBtn = page
+    .locator('button')
+    .filter({ hasText: /Voice Narration:\s*(On|Off)|NARRATION:\s*(On|Off)/i })
+    .first();
   await narrationBtn.waitFor({ timeout: 15000 });
   await narrationBtn.click();
   await page.waitForTimeout(400);

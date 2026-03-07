@@ -34,7 +34,7 @@ try {
   fallbackWebglMode = await page.getByText(/webgl not available/i).first().isVisible().catch(() => false);
 
   const tourResponsePromise = page.waitForResponse(
-    (res) => res.url().includes('/api/onesa/chat') && res.request().method() === 'POST',
+    (res) => res.url().includes('/api/ai/chat') && res.request().method() === 'POST',
     { timeout: 45000 }
   );
   await page.selectOption('#vr-destination', { index: 1 });

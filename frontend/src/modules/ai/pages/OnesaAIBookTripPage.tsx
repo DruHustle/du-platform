@@ -2,7 +2,7 @@ import { FormEvent, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/api";
+import { requestOnesaTripPlan } from "@/modules/ai/lib/aiApi";
 import { useTranslation } from "react-i18next";
 import { Calendar, Car, Download, Hotel, Plane, Sparkles, Wallet } from "lucide-react";
 
@@ -291,8 +291,7 @@ export default function OnesaAIBookTrip() {
     const normalizedInfants = Math.max(0, Math.min(20, Number(infantPassengers) || 0));
     const totalTravelers = Math.max(1, Math.min(70, normalizedAdults + normalizedInfants));
     try {
-      const { data } = await api.post(
-        "/onesa/trip-plan",
+      const { data } = await requestOnesaTripPlan(
         {
           origin: selectedDeparture.city,
           departureAirportCity: selectedDeparture.city,

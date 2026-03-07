@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import FormattedChatMessage from "@/components/FormattedChatMessage";
 import { getApiErrorMessage } from "@/lib/api";
-import { checkOnesaHealth, OnesaChatMessage, sendOnesaChatMessage } from "./OnesaAI";
+import { checkOnesaHealth, OnesaChatMessage, sendOnesaChatMessage } from "@/modules/ai/lib/aiApi";
 import { Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

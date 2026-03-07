@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import './i18n'; // Import the i18n configuration
+import { initializeI18n } from "./i18n";
 
-createRoot(document.getElementById("root")!).render(<App />);
+initializeI18n().finally(() => {
+  createRoot(document.getElementById("root")!).render(<App />);
+});

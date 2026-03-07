@@ -1,41 +1,80 @@
 import type express from 'express';
-import { ShopService } from '../services/shopService';
+import { ShopService, ShopServiceError } from '../services/shopService';
 import { ok, error } from '../../../shared/responseFormatter';
 
 export class ShopController {
   constructor(private readonly service = new ShopService()) {}
+
+  private resolveOrderManageToken(req: express.Request): string {
+    const fromHeader = String(req.headers['x-order-access-token'] ?? '').trim();
+    if (fromHeader) return fromHeader;
+    if (typeof req.body?.manageToken === 'string' && req.body.manageToken.trim()) {
+      return req.body.manageToken.trim();
+    }
+    return String(req.query.manageToken ?? '').trim();
+  }
+
+  private sendError(
+    res: express.Response,
+    err: unknown,
+    fallbackCode: string,
+    fallbackMessage: string,
+    fallbackStatus = 500
+  ) {
+    if (err instanceof ShopServiceError) {
+      return res.status(err.status).json(error(err.code, err.message));
+    }
+    return res
+      .status(fallbackStatus)
+      .json(error(fallbackCode, err instanceof Error ? err.message : fallbackMessage));
+  }
 
   listProducts = async (req: express.Request, res: express.Response) => {
     try {
       const data = await this.service.listProducts(String(req.query.category ?? ''));
       return res.json(ok(data));
     } catch (err) {
-      return res.status(500).json(error('SHOP_PRODUCTS_FAILED', err instanceof Error ? err.message : 'Unable to load products.'));
+      return this.sendError(res, err, 'SHOP_PRODUCTS_FAILED', 'Unable to load products.');
+    }
+  };
+
+  createRestockNotification = async (req: express.Request, res: express.Response) => {
+    try {
+      const data = await this.service.createRestockNotification(req.body);
+      return res.json(ok(data));
+    } catch (err) {
+      return this.sendError(res, err, 'SHOP_NOTIFY_FAILED', 'Unable to save notify request.', 400);
     }
   };
 
   createOrder = async (req: express.Request, res: express.Response) => {
-    const userId = Number(req.auth?.userId ?? 0) || 1;
     try {
-      const data = await this.service.createOrder(userId, req.body);
+      const data = await this.service.createOrder(req.body);
       return res.status(201).json(ok(data));
     } catch (err) {
-      return res.status(400).json(error('SHOP_ORDER_FAILED', err instanceof Error ? err.message : 'Unable to create order.'));
+      return this.sendError(res, err, 'SHOP_ORDER_CREATE_FAILED', 'Unable to create order.', 400);
     }
   };
 
   getOrder = async (req: express.Request, res: express.Response) => {
-    const order = await this.service.getOrder(String(req.params.orderRef));
-    if (!order) return res.status(404).json(error('NOT_FOUND', 'Order not found.'));
-    return res.json(ok(order));
+    try {
+      const data = await this.service.getOrder(String(req.params.orderRef), this.resolveOrderManageToken(req));
+      return res.json(ok(data));
+    } catch (err) {
+      return this.sendError(res, err, 'SHOP_ORDER_LOAD_FAILED', 'Unable to load order.');
+    }
   };
 
   confirmPayment = async (req: express.Request, res: express.Response) => {
     try {
-      const order = await this.service.confirmPayment(String(req.params.orderRef), String(req.body.paymentReference ?? ''));
-      return res.json(ok(order));
+      const data = await this.service.confirmPayment(
+        String(req.params.orderRef),
+        String(req.body.paymentReference ?? ''),
+        this.resolveOrderManageToken(req)
+      );
+      return res.json(ok(data));
     } catch (err) {
-      return res.status(400).json(error('SHOP_PAYMENT_CONFIRM_FAILED', err instanceof Error ? err.message : 'Unable to confirm payment.'));
+      return this.sendError(res, err, 'SHOP_ORDER_CONFIRM_FAILED', 'Unable to confirm payment.', 400);
     }
   };
 }

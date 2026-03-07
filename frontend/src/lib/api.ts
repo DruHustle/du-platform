@@ -1,6 +1,18 @@
 import axios from "axios";
 
 const HAS_LOGGED_IN_KEY = "zigd_has_logged_in";
+const SESSION_AUTH_ENDPOINTS = new Set([
+  "/auth/me",
+  "/auth/login",
+  "/auth/register",
+  "/auth/token/refresh",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/auth/kyc/verify",
+  "/auth/logout",
+]);
+
+let refreshPromise: Promise<string> | null = null;
 
 function resolveApiBaseUrl() {
   const raw = String(import.meta.env.VITE_API_URL ?? "").trim();
@@ -25,6 +37,10 @@ export const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+function isSessionAuthEndpoint(requestUrl: string): boolean {
+  return SESSION_AUTH_ENDPOINTS.has(requestUrl);
+}
 
 export type AuthUser = {
   id: number;
@@ -74,34 +90,60 @@ api.interceptors.request.use((config) => {
   if (!token) return config;
 
   const requestUrl = String(config.url ?? "");
-  const isSessionAuthEndpoint =
-    requestUrl === "/auth/me" ||
-    requestUrl === "/auth/login" ||
-    requestUrl === "/auth/register" ||
-    requestUrl === "/auth/token/refresh" ||
-    requestUrl === "/auth/forgot-password" ||
-    requestUrl === "/auth/reset-password" ||
-    requestUrl === "/auth/kyc/verify";
-  if (isSessionAuthEndpoint) return config;
+  if (isSessionAuthEndpoint(requestUrl)) return config;
 
   config.headers = config.headers ?? {};
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-api.interceptors.response.use((response) => {
-  const payload = response?.data;
-  if (
-    payload &&
-    typeof payload === "object" &&
-    "success" in payload &&
-    "data" in payload &&
-    (payload as any).success === true
-  ) {
-    return { ...response, data: (payload as any).data };
+api.interceptors.response.use(
+  (response) => {
+    const payload = response?.data;
+    if (
+      payload &&
+      typeof payload === "object" &&
+      "success" in payload &&
+      "data" in payload &&
+      (payload as any).success === true
+    ) {
+      return { ...response, data: (payload as any).data };
+    }
+    return response;
+  },
+  async (error) => {
+    const status = Number(error?.response?.status ?? 0);
+    const config = error?.config as (typeof error.config & { _retryAfterRefresh?: boolean }) | undefined;
+    const requestUrl = String(config?.url ?? "");
+
+    if (
+      status !== 401 ||
+      !config ||
+      config._retryAfterRefresh ||
+      isSessionAuthEndpoint(requestUrl) ||
+      !hasLoggedInBefore()
+    ) {
+      return Promise.reject(error);
+    }
+
+    try {
+      refreshPromise ??= refreshAuthTokenFromSession().finally(() => {
+        refreshPromise = null;
+      });
+      const token = await refreshPromise;
+      if (!token) {
+        return Promise.reject(error);
+      }
+
+      config._retryAfterRefresh = true;
+      config.headers = config.headers ?? {};
+      config.headers.Authorization = `Bearer ${token}`;
+      return api(config);
+    } catch {
+      return Promise.reject(error);
+    }
   }
-  return response;
-});
+);
 
 export async function refreshAuthTokenFromSession(): Promise<string> {
   const response = await api.post("/auth/token/refresh");
