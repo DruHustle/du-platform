@@ -2,275 +2,33 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Camera, LocateFixed, MapPin, Mic } from "lucide-react";
+import { getArExperienceMetadata } from "@/modules/ai/ar/arExperienceApi";
+import { getLocalizedArPlaces, resolveArPreviewImages } from "@/modules/ai/ar/arExperienceContent";
+import { buildLocalGuidance, inferNearestPlace } from "@/modules/ai/ar/arExperienceGuidance";
+import {
+  AR_CONVERSATION_TURN_MS,
+  AR_GENDER_KEYWORD_MAP,
+  AR_SILENT_WAV_DATA_URI,
+  AR_UI_TEXT,
+  formatNarrationLines,
+  getLanguageLabel,
+  getSpeechLanguageCode,
+  normalizeUiLanguage,
+} from "@/modules/ai/ar/arExperienceText";
+import type { ArExperienceMetadata, ArPlaceId, UiLanguage } from "@/modules/ai/ar/arExperienceTypes";
+import { isArPlaceId } from "@/modules/ai/ar/arExperienceTypes";
 import { checkOnesaHealth, sendOnesaChatMessage } from "@/modules/ai/lib/aiApi";
 import ZimbabweInteractiveGlobeLoader from "@/modules/ai/components/ZimbabweInteractiveGlobeLoader";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 
-type PlaceProfile = {
-  id: string;
-  name: string;
-  heritage: string;
-  history: string;
-  historicalTimeline: string;
-  culture: string;
-  culturalHighlights: string;
-  pointsOfInterest: string[];
-  directionTips: string[];
-  nextStops: string[];
-  safetyNote: string;
+const DEFAULT_AR_FEATURES: ArExperienceMetadata["features"] = {
+  geolocation: true,
+  cameraGuide: true,
+  voiceNarration: true,
+  conversation: true,
+  audioTranscription: true,
 };
-
-type UiLanguage = "en" | "sn" | "nd" | "de";
-
-function normalizeUiLanguage(value: unknown): UiLanguage {
-  const raw = String(value ?? "").trim().toLowerCase();
-  if (!raw) return "en";
-  const base = raw.split("-")[0];
-  if (base === "en" || base === "sn" || base === "nd" || base === "de") return base;
-  if (raw === "shona") return "sn";
-  if (raw === "ndebele") return "nd";
-  if (raw === "german" || raw === "deutsch") return "de";
-  return "en";
-}
-
-function getLanguageLabel(language: UiLanguage): string {
-  if (language === "sn") return "Shona";
-  if (language === "nd") return "Ndebele";
-  if (language === "de") return "German";
-  return "English";
-}
-
-const UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
-  en: {
-    // labels
-    useMyLocation: "Use My Location",
-    selectDestination: "Select destination",
-    narration: "Narration",
-    selectLocation: "Select location",
-    narrationPending: "Narration will appear here once AI guidance is generated.",
-    turnCameraOn: "Turn Camera On",
-    turnCameraOff: "Turn Camera Off",
-    currentContext: "Current Context",
-    conversationOn: "Conversation: On",
-    conversationOff: "Conversation: Off",
-    voiceNarrationOn: "NARRATION: On",
-    voiceNarrationOff: "NARRATION: Off",
-    voice: "Voice",
-    male: "Male",
-    female: "Female",
-    voiceInputOn: "Voice Input: On",
-    voiceInput: "Voice Input",
-    preview: "Preview",
-    arOverlayVoice: "AR Overlay voice narration is",
-    cameraLabel: "Camera",
-    enabled: "enabled",
-    disabled: "disabled",
-    cameraOnSummary: "on: live directional AR guidance active.",
-    cameraOffSummary: "off: summary narration mode active.",
-    // statuses
-    geoNotSupported: "Geolocation is not supported on this device.",
-    detectingLocation: "Detecting your location...",
-    locationDetected: "Location detected. Onesa AI-powered Local Guide is now focused on your nearest destination.",
-    locationDetectFail: "Unable to detect location. Please select a destination manually.",
-    localGuidanceMode: "Using local guidance mode.",
-    transcribing: "Transcribing...",
-    listeningGroq: "Listening (Groq)...",
-    noSpeechDetected: "No speech detected.",
-    guideThinking: "Guide is thinking...",
-    groqUnavailable: "Groq STT unavailable. Using local guidance mode.",
-    requestingCloudNarration: "Requesting cloud narration...",
-    narrating: "Narrating...",
-    narratingBrowser: "Narrating (Browser Voice)...",
-    elevenQuotaExceeded: "Cloud TTS quota exceeded. Top up credits to keep cloud narration on.",
-    elevenUnavailable: "Cloud TTS unavailable. Using browser voice.",
-    cloudBlocked: "Cloud audio blocked locally. Using browser voice.",
-    tapToEnableNarration: "Tap anywhere to enable narration.",
-    voiceNarrationOffStatus: "Voice narration off.",
-    selectDestinationFirst: "Select destination first.",
-    waitingNarrationText: "Waiting for narration text...",
-    micNotSupported: "Microphone not supported in this browser.",
-    listening: "Listening...",
-    micAccessDenied: "Microphone access denied.",
-    cameraTurnOnHint: "Turn on camera for a full AR experience.",
-    cameraNotSupported: "Camera is not supported in this browser.",
-    cameraOnStatus: "Camera is on. AR live guidance is active.",
-    cameraAccessFail: "Unable to access camera. Check permissions and try again.",
-    arOverlayOff: "AR Overlay is off. Camera is not required.",
-    enableVoiceModeFirst: "Enable Voice Mode first to use Ask Mode.",
-    voiceRecognitionUnsupported: "Voice recognition is not supported in this browser.",
-    askModeListening: "Ask Mode is listening...",
-    askModeError: "Ask Mode: Voice capture error. Try toggling Ask Mode again.",
-    unableStartAskMode: "Unable to start Ask Mode.",
-    askModeOffBecauseVoiceOff: "Ask Mode is off because Voice Mode is off.",
-  },
-  sn: {
-    useMyLocation: "Shandisa Nzvimbo Yangu",
-    selectDestination: "Sarudza nzvimbo",
-    narration: "Rondedzero",
-    selectLocation: "Sarudza nzvimbo",
-    narrationPending: "Rondedzero ichaonekwa pano kana AI yapedza kugadzira gwara.",
-    turnCameraOn: "Batidza Kamera",
-    turnCameraOff: "Dzima Kamera",
-    currentContext: "Mamiro Azvino",
-    conversationOn: "Hurukuro: Yabatidzwa",
-    conversationOff: "Hurukuro: Yadzimwa",
-    voiceNarrationOn: "RONDEDZERO: Yabatidzwa",
-    voiceNarrationOff: "RONDEDZERO: Yadzimwa",
-    voice: "Izwi",
-    male: "Murume",
-    female: "Mukadzi",
-    voiceInputOn: "Kupinza Izwi: Yabatidzwa",
-    voiceInput: "Kupinza Izwi",
-    preview: "Muono",
-    arOverlayVoice: "Rondedzero yezwi yeAR Overlay iri",
-    cameraLabel: "Kamera",
-    enabled: "yabatidzwa",
-    disabled: "yadzimwa",
-    cameraOnSummary: "yabatidzwa: AR yekutungamira iri kushanda.",
-    cameraOffSummary: "yadzimwa: rondedzero pfupi iri kushanda.",
-    geoNotSupported: "Geolocation haisi kutsigirwa pachishandiso ichi.",
-    detectingLocation: "Tiri kutsvaga nzvimbo yako...",
-    locationDetected: "Nzvimbo yawanikwa. Onesa AI Local Guide yatarisa nzvimbo iri pedyo newe.",
-    locationDetectFail: "Tatadza kuona nzvimbo yako. Ndapota sarudza nzvimbo nemaoko.",
-    localGuidanceMode: "Kushandisa gwara remuno.",
-    transcribing: "Tiri kushandura izwi kuita chinyorwa...",
-    listeningGroq: "Tiri kuteerera (Groq)...",
-    noSpeechDetected: "Hapana izwi rawanikwa.",
-    guideThinking: "Gwara riri kufunga...",
-    groqUnavailable: "Groq STT haisi kuwanikwa. Kushandisa gwara remuno.",
-    requestingCloudNarration: "Kukumbira rondedzero yegore...",
-    narrating: "Kutaura kuri kuitika...",
-    narratingBrowser: "Kutaura kuri kuitika (Browser Voice)...",
-    elevenQuotaExceeded: "Makiredhiti eCloud TTS apera. Wedzera makiredhiti kuti cloud narration irambe iripo.",
-    elevenUnavailable: "Cloud TTS haisi kuwanikwa. Kushandisa izwi rebrowser.",
-    cloudBlocked: "Cloud audio yarambidzwa pano. Kushandisa izwi rebrowser.",
-    tapToEnableNarration: "Bata chero panzvimbo kuti rondedzero ishande.",
-    voiceNarrationOffStatus: "Rondedzero yezwi yadzimwa.",
-    selectDestinationFirst: "Tanga wasarudza nzvimbo.",
-    waitingNarrationText: "Mirira kuti chinyorwa cherondedzero chioneke...",
-    micNotSupported: "Maikorofoni haisi kutsigirwa mubrowser rino.",
-    listening: "Tiri kuteerera...",
-    micAccessDenied: "Kupinda kumaikorofoni kwarambwa.",
-    cameraTurnOnHint: "Batidza kamera kuti uwane AR yakazara.",
-    cameraNotSupported: "Kamera haisi kutsigirwa mubrowser rino.",
-    cameraOnStatus: "Kamera yabatidzwa. AR live guidance iri kushanda.",
-    cameraAccessFail: "Hatina kukwanisa kushandisa kamera. Tarisa mvumo woedza zvakare.",
-    arOverlayOff: "AR Overlay yadzimwa. Kamera haidiwi.",
-    enableVoiceModeFirst: "Tanga wabatidza Voice Mode kuti ushandise Ask Mode.",
-    voiceRecognitionUnsupported: "Kuziva izwi hakutsigirwi mubrowser rino.",
-    askModeListening: "Ask Mode iri kuteerera...",
-    askModeError: "Ask Mode: kukanganisa pakutora izwi. Edza kubatidza zvakare.",
-    unableStartAskMode: "Tatadza kutanga Ask Mode.",
-    askModeOffBecauseVoiceOff: "Ask Mode yadzimwa nekuti Voice Mode yadzimwa.",
-  },
-  nd: {},
-  de: {},
-};
-
-const SILENT_WAV_DATA_URI =
-  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
-const CONVERSATION_TURN_MS = 7000;
-
-const GENDER_KEYWORD_MAP: Record<"male" | "female", string[]> = {
-  male: ["male", "man", "david", "daniel", "george", "john", "paul", "tom", "michael", "alex"],
-  female: ["female", "woman", "samantha", "karen", "zira", "emma", "aria", "victoria", "linda", "anna", "zoe"],
-};
-
-// Rough geofencing used only to preselect a likely nearby destination on-device.
-function inferNearestPlace(latitude: number, longitude: number): string {
-  // Lightweight location heuristic based on rough city bounds to keep this fully client-side.
-  if (latitude > -18 && latitude < -16 && longitude > 25 && longitude < 27) return "victoria_falls";
-  if (latitude > -21 && latitude < -19 && longitude > 27 && longitude < 30) return "hwange";
-  if (latitude > -18 && latitude < -16 && longitude > 30 && longitude < 32) return "harare";
-  if (latitude > -21 && latitude < -19 && longitude > 28 && longitude < 30) return "bulawayo";
-  return "great_zimbabwe";
-}
-
-// Local fallback guidance keeps the UX responsive when AI/network is unavailable.
-function buildLocalGuidance(place: PlaceProfile, cameraEnabled: boolean, language: UiLanguage = "en"): string {
-  const isShona = language === "sn";
-  const labels = isShona
-    ? {
-        historicalTimeline: "Nguva yenhoroondo",
-        heritage: "Nhaka",
-        directionCue: "Zano rekufamba",
-        stopPoint: "Nzvimbo yekumira",
-        whatToNotice: "Zvaunofanira kuona",
-        culture: "Tsika",
-        culturalContext: "Mamiro etsika",
-        nextStop: "Nzvimbo inotevera",
-        localTip: "Zano remuno",
-        safety: "Chengetedzo",
-        history: "Nhoroondo",
-        topPois: "Nzvimbo huru dzekushanya",
-        suggestedNext: "Nzvimbo inotevera inokurudzirwa",
-      }
-    : {
-        historicalTimeline: "Historical timeline",
-        heritage: "Heritage",
-        directionCue: "Direction cue",
-        stopPoint: "Stop point",
-        whatToNotice: "What to notice",
-        culture: "Culture",
-        culturalContext: "Cultural context",
-        nextStop: "Next stop",
-        localTip: "Local tip",
-        safety: "Safety",
-        history: "History",
-        topPois: "Top points of interest",
-        suggestedNext: "Suggested next stop",
-      };
-  if (cameraEnabled) {
-    return [
-      `${place.name}: ${place.history}`,
-      `${labels.historicalTimeline}: ${place.historicalTimeline}`,
-      `${labels.heritage}: ${place.heritage}`,
-      `${labels.directionCue}: ${place.directionTips[0] ?? "Move slowly and keep your camera aligned with your path."}`,
-      `${labels.stopPoint}: ${place.pointsOfInterest[0] ?? "Main viewpoint area"} — pause and observe before continuing.`,
-      `${labels.whatToNotice}: ${place.pointsOfInterest[1] ?? "Watch for nearby interpretation markers and cultural details."}`,
-      `${labels.culture}: ${place.culture}`,
-      `${labels.culturalContext}: ${place.culturalHighlights}`,
-      `${labels.nextStop}: ${place.nextStops[0] ?? "Nearby heritage point"}.`,
-      `${labels.localTip}: ${place.directionTips[1] ?? "Take your time at each stop to hear full narration before moving."}`,
-      `${labels.safety}: ${place.safetyNote}`,
-    ].join(" ");
-  }
-
-  return [
-    `${place.name}: ${place.heritage}`,
-    `${labels.history}: ${place.history}`,
-    `${labels.historicalTimeline}: ${place.historicalTimeline}`,
-    `${labels.culture}: ${place.culture}`,
-    `${labels.culturalContext}: ${place.culturalHighlights}`,
-    `${labels.whatToNotice}: ${place.pointsOfInterest[0] ?? "Main destination highlights"}.`,
-    `${labels.topPois}: ${place.pointsOfInterest.slice(0, 2).join("; ")}.`,
-    `${labels.directionCue}: ${place.directionTips[0] ?? "Follow marked visitor routes and pause at key viewpoints."}`,
-    `${labels.suggestedNext}: ${place.nextStops[0] ?? "Local visitor center"}.`,
-    `${labels.localTip}: ${place.directionTips[1] ?? "Use official guides and interpretation signage for deeper context."}`,
-    `${labels.safety}: ${place.safetyNote}`,
-  ].join(" ");
-}
-
-// Split AI response into readable UI lines; prefers keyed sections when present.
-function formatNarrationLines(text: string): string[] {
-  const normalized = String(text ?? "").replace(/\s+/g, " ").trim();
-  if (!normalized) return [];
-
-  const keyPattern =
-    /(?=(?:Heritage|Direction cue|Stop point|What to notice|Narration|Next stop|Local tip|Safety|History|Historical timeline|Culture|Cultural context|Top points of interest|Suggested next stop)\s*:)/g;
-  const keyedLines = normalized
-    .split(keyPattern)
-    .map((item) => item.trim())
-    .filter(Boolean);
-
-  if (keyedLines.length > 1) return keyedLines;
-
-  return normalized
-    .split(/(?<=[.!?])\s+/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
 
 export default function TourismAugmentedExperiencePage() {
   const { i18n, t } = useTranslation();
@@ -279,173 +37,17 @@ export default function TourismAugmentedExperiencePage() {
     [i18n.language, i18n.resolvedLanguage]
   );
   const ui = useMemo(
-    () => ({ ...UI_COPY.en, ...(UI_COPY[uiLanguage] ?? {}) }) as Record<string, string>,
+    () => ({ ...AR_UI_TEXT.en, ...(AR_UI_TEXT[uiLanguage] ?? {}) }) as Record<string, string>,
     [uiLanguage]
   );
   const selectedLanguageLabel = useMemo(() => getLanguageLabel(uiLanguage), [uiLanguage]);
   const backToTourismLabel = t("tourism.back_to_tourism", {
     defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Tourism" })}`,
   });
-  const speechLanguageCode = useMemo(() => {
-    if (uiLanguage === "sn") return "sn-ZW";
-    if (uiLanguage === "nd") return "nr-ZW";
-    if (uiLanguage === "de") return "de-DE";
-    return "en-US";
-  }, [uiLanguage]);
-  // Static destination profiles used for both AI prompts and local fallback content.
-  const places: PlaceProfile[] = useMemo(
-    () => [
-      {
-        id: "victoria_falls",
-        name: "Victoria Falls",
-        heritage: "A UNESCO World Heritage destination and one of the world's most iconic waterfall landscapes.",
-        history: "Known as Mosi-oa-Tunya, this zone has long served as a cultural and trade corridor along the Zambezi.",
-        historicalTimeline: "Local communities have revered the falls for centuries, David Livingstone documented it to global audiences in 1855, and UNESCO listed the site in 1989.",
-        culture: "Local communities shape the destination through craft traditions, storytelling, and hospitality experiences.",
-        culturalHighlights: "Tonga and Lozi storytelling, river-linked ceremonies, and market craft traditions remain central to the destination identity.",
-        pointsOfInterest: [
-          "Main Falls viewpoints and rainforest trail",
-          "Devil's Cataract lookout",
-          "Zambezi riverfront interpretation points",
-        ],
-        directionTips: [
-          "Move forward along the marked viewpoint trail, then keep left for the main panorama deck",
-          "Pause at each spray-zone viewpoint for narration points",
-        ],
-        nextStops: ["Victoria Falls Bridge precinct", "Zambezi sunset cruise launch area"],
-        safetyNote: "Use marked paths, watch slippery sections, and follow local ranger guidance.",
-      },
-      {
-        id: "great_zimbabwe",
-        name: "Great Zimbabwe",
-        heritage: "The largest pre-colonial stone complex in southern Africa and a symbol of national identity.",
-        history: "Developed between the 11th and 15th centuries as a major political and economic center.",
-        historicalTimeline: "Construction and expansion are traced to roughly the 11th-15th centuries, with global recognition reinforced by UNESCO listing in 1986.",
-        culture: "The site reflects deep historical craftsmanship and living heritage links across Zimbabwe.",
-        culturalHighlights: "Dry-stone architecture, oral histories of statecraft, and enduring identity narratives make it a core symbol of Zimbabwean heritage.",
-        pointsOfInterest: [
-          "Great Enclosure stone walls",
-          "Hill Complex ritual and leadership zones",
-          "Valley Ruins interpretation routes",
-        ],
-        directionTips: [
-          "Start at the lower interpretive route and continue uphill to the Hill Complex",
-          "Stop at the enclosure walls for architectural narration markers",
-        ],
-        nextStops: ["Great Zimbabwe Museum", "Masvingo heritage circuit"],
-        safetyNote: "Respect protected structures and keep to designated heritage paths.",
-      },
-      {
-        id: "harare",
-        name: "Harare",
-        heritage: "Zimbabwe's capital and a central gateway for business, urban culture, and creative industries.",
-        history: "Harare has evolved into a key modern hub connecting national institutions and regional travelers.",
-        historicalTimeline: "The modern city was established as Salisbury in 1890 and officially renamed Harare in 1982 after independence.",
-        culture: "Explore local cuisine, contemporary art, music spaces, and cultural districts across the city.",
-        culturalHighlights: "Urban culture blends mbira and contemporary music scenes, gallery circuits, and neighborhood food culture rooted in local markets.",
-        pointsOfInterest: [
-          "National Gallery precinct",
-          "City center heritage avenues",
-          "Local food and market corridors",
-        ],
-        directionTips: [
-          "Proceed toward the central culture district and pause at major art landmarks",
-          "Use main pedestrian routes and stop at signed heritage markers",
-        ],
-        nextStops: ["National Gallery of Zimbabwe", "Mbare cultural market routes"],
-        safetyNote: "Use trusted transport options and remain aware in high-traffic zones.",
-      },
-      {
-        id: "bulawayo",
-        name: "Bulawayo",
-        heritage: "A heritage-rich city anchored by museums, colonial-era architecture, and nearby Matobo landscapes.",
-        history: "Historically central to rail and industrial growth, Bulawayo remains a major cultural anchor.",
-        historicalTimeline: "The Ndebele royal center developed in the 19th century, and the modern city footprint expanded significantly after 1894.",
-        culture: "Visitors can engage with strong performing arts, local cuisine, and regional craft communities.",
-        culturalHighlights: "Ndebele heritage, museum culture, and strong performing arts traditions shape the city's living cultural identity.",
-        pointsOfInterest: [
-          "Railway and city museums zone",
-          "Historic architecture corridors",
-          "Gateway route to Matobo landscapes",
-        ],
-        directionTips: [
-          "Begin in the central museum corridor, then continue along the heritage architecture route",
-          "Pause at museum forecourts for narration points before moving onward",
-        ],
-        nextStops: ["Natural History Museum", "Matobo day-route staging point"],
-        safetyNote: "Follow museum/site opening guidance and use official guide services for Matobo routes.",
-      },
-      {
-        id: "hwange",
-        name: "Hwange National Park",
-        heritage: "Zimbabwe's flagship wildlife landscape with major elephant corridors and protected ecosystems.",
-        history: "The park has become a cornerstone of conservation and safari tourism development in the region.",
-        historicalTimeline: "Gazetted in 1928 as Wankie Game Reserve and later renamed Hwange, it has grown into one of southern Africa's key conservation landscapes.",
-        culture: "Community-linked tourism and ranger-led interpretation add local context to wildlife experiences.",
-        culturalHighlights: "Community conservation partnerships, tracker knowledge, and ranger interpretation connect wildlife viewing to local livelihoods.",
-        pointsOfInterest: [
-          "Waterhole observation sectors",
-          "Primary safari game-view corridors",
-          "Ranger interpretation and conservation points",
-        ],
-        directionTips: [
-          "Move slowly along designated safari tracks and stop at marked observation points",
-          "Pause at waterhole viewpoints for wildlife narration and tracking guidance",
-        ],
-        nextStops: ["Main game drive loop", "Ranger briefing and visitor center point"],
-        safetyNote: "Remain in designated areas and follow all ranger safety instructions around wildlife.",
-      },
-    ],
-    []
-  );
-
-  const localizedPlaces = useMemo(() => {
-    if (uiLanguage !== "sn") return places;
-    const shonaOverrides: Record<string, Partial<PlaceProfile>> = {
-      victoria_falls: {
-        heritage: "Nzvimbo yeUNESCO World Heritage uye imwe yemapopoma ane mukurumbira pasi rose.",
-        history: "Inozivikanwa seMosi-oa-Tunya, nzvimbo iyi yakagara iri nzira yakakosha yekutengeserana netsika paZambezi.",
-        historicalTimeline: "Vanhu vemuno vakagara vachiremekedza mapopoma aya kwemazana emakore; David Livingstone akanyora nezvawo muna 1855, uye UNESCO yakazonyora nzvimbo iyi muna 1989.",
-        culture: "Nharaunda dzemuno dzinoramba dzichisimbisa nzvimbo iyi kuburikidza neunyanzvi, ngano, uye kugamuchira vaenzi.",
-        culturalHighlights: "Ngano dzeTonga neLozi, tsika dzine chekuita nerwizi, nemisika yezvigadzirwa zvemuno zvinoramba zvakakosha.",
-        pointsOfInterest: ["Nzvimbo dzekuona Main Falls", "Devil's Cataract", "Nzvimbo dzekutsanangura paZambezi"],
-        directionTips: ["Famba munzira yakatarwa wozoenda kuruboshwe padhikhi guru rekuona.", "Mira pane imwe neimwe spray-zone kuti unzwe rondedzero."],
-        nextStops: ["Victoria Falls Bridge", "Nzvimbo yekutangira sunset cruise paZambezi"],
-        safetyNote: "Shandisa nzira dzakatarwa, chenjerera panotsvedza, uye tevera mirayiridzo yeranger.",
-      },
-      great_zimbabwe: {
-        heritage: "Nzvimbo huru yematombo ekare muSouthern Africa uye mucherechedzo wechizvarwa cheZimbabwe.",
-        history: "Yakakura pakati pezana remakore rechi11 nerechi15 senzvimbo yezvematongerwo enyika nehupfumi.",
-        historicalTimeline: "Kuvakwa nekuwedzera kwakanyanya kwakaitika muzana remakore rechi11 kusvika rechi15; UNESCO yakanyora nzvimbo iyi muna 1986.",
-        culture: "Nzvimbo iyi inoratidza hunyanzvi hwekuvaka nematombo uye nhaka inorarama muZimbabwe.",
-        culturalHighlights: "Dry-stone architecture, ngano dzechinyakare dzehutungamiri, uye kuzivikanwa kwenyika.",
-      },
-      harare: {
-        heritage: "Guta guru reZimbabwe uye musuwo mukuru webhizimisi, tsika dzekumaguta, uye maindasitiri ekusika.",
-        history: "Harare yakava nzvimbo huru inobatanidza masangano enyika nevafambi vemudunhu.",
-        historicalTimeline: "Guta ranhasi rakatangwa seSalisbury muna 1890 uye rakatumidzwa zita rekuti Harare muna 1982 mushure merusununguko.",
-        culture: "Ongorora chikafu chemuno, art yemazuva ano, mimhanzi, nenzvimbo dzetsika dzeguta.",
-        culturalHighlights: "Mbira nemimhanzi yemazuva ano, ma gallery, uye tsika dzechikafu chemumarket.",
-      },
-      bulawayo: {
-        heritage: "Guta rine nhaka yakadzama rine mamuseum, zvivakwa zvekare, uye pedyo neMatobo.",
-        history: "Bulawayo yakava guta rakakosha muchitima nemaindasitiri uye richiri nzvimbo yakakosha yetsika.",
-        historicalTimeline: "Pakati pezana remakore rechi19 ndiyo yaive nzvimbo yakakosha yeNdebele; guta razvino rakakura zvikuru mushure ma1894.",
-        culture: "Vashanyi vanowana mitambo yetsika, chikafu chemuno, uye mabasa emaoko.",
-        culturalHighlights: "Nhaka yeNdebele, tsika dzemamuseum, uye performing arts zvinoramba zvichiita kuti guta ripenye.",
-      },
-      hwange: {
-        heritage: "Paki huru yewildlife yeZimbabwe ine nzira huru dzenzou nezvimwe zvipenyu zvakachengetedzwa.",
-        history: "Paki iyi yakava musimboti mukuru wekuchengetedza zvipenyu nesafari mudunhu.",
-        historicalTimeline: "Yakagadzwa muna 1928 seWankie Game Reserve, yozotumidzwa zita rekuti Hwange.",
-        culture: "Tourism yakabatana nenharaunda uye dudziro yeranger inowedzera ruzivo rwemuno.",
-        culturalHighlights: "Kubatana kwenharaunda mukuchengetedza, ruzivo rwevatsvakurudzi, uye kudzidzisa kwevaranger.",
-      },
-    };
-    return places.map((place) => ({ ...place, ...(shonaOverrides[place.id] ?? {}) }));
-  }, [places, uiLanguage]);
-
-  const [selectedPlaceId, setSelectedPlaceId] = useState("");
+  const speechLanguageCode = useMemo(() => getSpeechLanguageCode(uiLanguage), [uiLanguage]);
+  const localizedPlaces = useMemo(() => getLocalizedArPlaces(uiLanguage), [uiLanguage]);
+  const [arExperienceMetadata, setArExperienceMetadata] = useState<ArExperienceMetadata | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<ArPlaceId | "">("");
   const [isGlobeZoomTransitioning, setIsGlobeZoomTransitioning] = useState(false);
   const [answer, setAnswer] = useState("");
   const [locationStatus, setLocationStatus] = useState("");
@@ -488,20 +90,46 @@ export default function TourismAugmentedExperiencePage() {
   const pendingNarrationRetryRef = useRef<string | null>(null);
   const cloudTtsRequestInFlightRef = useRef(false);
   const queuedCloudNarrationRef = useRef<string | null>(null);
-  const previewImagesByPlace = useMemo<Record<string, string[]>>(
-    () => ({
-      victoria_falls: ["/images/pages/tourism/victoria_falls.jpg"],
-      great_zimbabwe: ["/images/pages/tourism/great_zimbabwe.jpeg"],
-      harare: ["/images/pages/tourism/balancing_rocks.jpg"],
-      bulawayo: ["/images/pages/tourism/dest_matobo.jpg"],
-      hwange: ["/images/pages/tourism/dest_hwange.png"],
-    }),
-    []
+  const availablePlaces = useMemo(() => {
+    const configuredDestinationIds = new Set(
+      arExperienceMetadata?.destinationIds ?? localizedPlaces.map((place) => place.id)
+    );
+    const filteredPlaces = localizedPlaces.filter((place) => configuredDestinationIds.has(place.id));
+    return filteredPlaces.length > 0 ? filteredPlaces : localizedPlaces;
+  }, [arExperienceMetadata, localizedPlaces]);
+  const arFeatures = arExperienceMetadata?.features ?? DEFAULT_AR_FEATURES;
+  const previewImagesByPlace = useMemo(
+    () => resolveArPreviewImages(arExperienceMetadata?.previewImages),
+    [arExperienceMetadata]
   );
 
-  const selectedPlace = localizedPlaces.find((place) => place.id === selectedPlaceId) ?? localizedPlaces[0];
-  const selectedPreviewImages = previewImagesByPlace[selectedPlaceId] ?? ["/images/pages/tourism/victoria_falls.jpg"];
+  const selectedPlace = (availablePlaces.find((place) => place.id === selectedPlaceId) ?? availablePlaces[0])!;
+  const selectedPreviewImages = previewImagesByPlace[selectedPlace.id];
   const narrationLines = useMemo(() => formatNarrationLines(answer), [answer]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void getArExperienceMetadata({ sessionId: "tourism-augmented-experience" })
+      .then((metadata) => {
+        if (cancelled) return;
+        setArExperienceMetadata(metadata);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setArExperienceMetadata(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedPlaceId) return;
+    if (availablePlaces.some((place) => place.id === selectedPlaceId)) return;
+    setSelectedPlaceId(availablePlaces[0]?.id ?? "");
+  }, [availablePlaces, selectedPlaceId]);
 
   const clearRecordingTurnTimer = useCallback(() => {
     if (recordingTurnTimerRef.current !== null) {
@@ -584,7 +212,7 @@ export default function TourismAugmentedExperiencePage() {
               const languageMatches = voicePool.filter((item) =>
                 targetPrefixes.some((prefix) => item.lang.toLowerCase().startsWith(prefix))
               );
-              const genderKeywords = GENDER_KEYWORD_MAP[selectedVoiceGender];
+              const genderKeywords = AR_GENDER_KEYWORD_MAP[selectedVoiceGender];
               const voiceByGender = languageMatches.find((item) => {
                 const name = `${item.name} ${item.voiceURI}`.toLowerCase();
                 return genderKeywords.some((keyword) => name.includes(keyword));
@@ -991,7 +619,7 @@ export default function TourismAugmentedExperiencePage() {
     }
 
     if (ttsAudioRef.current) {
-      ttsAudioRef.current.src = SILENT_WAV_DATA_URI;
+      ttsAudioRef.current.src = AR_SILENT_WAV_DATA_URI;
       ttsAudioRef.current.muted = false;
       ttsAudioRef.current.volume = 0.01;
       ttsAudioRef.current.play().then(() => {
@@ -1060,7 +688,7 @@ export default function TourismAugmentedExperiencePage() {
         } catch {
           // no-op
         }
-      }, CONVERSATION_TURN_MS);
+      }, AR_CONVERSATION_TURN_MS);
       isRecordingRef.current = true;
       setIsRecording(true);
       setVoiceStatus(ui.listening);
@@ -1376,6 +1004,7 @@ export default function TourismAugmentedExperiencePage() {
               <div className="lg:col-span-3 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 space-y-4">
                 <Button
                   onClick={handleUseMyLocation}
+                  disabled={!arFeatures.geolocation}
                   className="w-full bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full"
                 >
                   <LocateFixed className="h-4 w-4 mr-2" />
@@ -1388,6 +1017,7 @@ export default function TourismAugmentedExperiencePage() {
                     value={selectedPlaceId}
                     onChange={(event) => {
                       const nextId = event.target.value;
+                      if (!isArPlaceId(nextId)) return;
                       if (!selectedPlaceId && nextId) {
                         setIsGlobeZoomTransitioning(true);
                         if (globeTransitionTimerRef.current !== null) {
@@ -1404,7 +1034,7 @@ export default function TourismAugmentedExperiencePage() {
                     <option value="" disabled>
                       {ui.selectDestination}
                     </option>
-                    {localizedPlaces.map((place) => (
+                    {availablePlaces.map((place) => (
                       <option key={place.id} value={place.id}>
                         {place.name}
                       </option>
@@ -1446,7 +1076,7 @@ export default function TourismAugmentedExperiencePage() {
                   <div className="flex flex-wrap items-center gap-3">
                     <Button
                       onClick={() => void handleCameraToggle()}
-                      disabled={!arOverlayEnabled}
+                      disabled={!arOverlayEnabled || !arFeatures.cameraGuide}
                       className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full"
                     >
                       <Camera className="h-4 w-4 mr-2" />
@@ -1498,6 +1128,7 @@ export default function TourismAugmentedExperiencePage() {
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
                           onClick={() => void handleConversationToggle()}
+                          disabled={!arFeatures.conversation || !arFeatures.audioTranscription}
                           variant="outline"
                           aria-pressed={isConversationMode}
                           className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full ${
@@ -1510,6 +1141,7 @@ export default function TourismAugmentedExperiencePage() {
                         </Button>
                         <Button
                           onClick={handleVoiceNarrationToggle}
+                          disabled={!arFeatures.voiceNarration}
                           variant="outline"
                           className="h-6 px-2.5 border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full"
                         >
@@ -1532,6 +1164,7 @@ export default function TourismAugmentedExperiencePage() {
                         {isConversationMode ? (
                           <Button
                             onClick={toggleRecording}
+                            disabled={!arFeatures.audioTranscription}
                             aria-pressed={isRecording}
                             className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full border ${
                               isRecording
