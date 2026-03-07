@@ -4,8 +4,8 @@ import {
   getAirtimeTransactionById,
   getRemittanceTransactionById,
   getUserFinancialProfile,
-} from '../../../db';
-import { withTransaction } from '../../../shared/database';
+} from "../../../shared/persistence/fintechStore";
+import { withTransaction } from "../../../shared/database";
 
 export class FintechRepository {
   async getFinancialProfile(userId: number) {

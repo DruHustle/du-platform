@@ -489,11 +489,11 @@ export default function Tourism() {
                   "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
               </p>
               <div className="mt-6 flex justify-center">
-                <Link href="/onesa-ai-tourism-virtual-experience">
-                  <Button className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]">
+                <Button asChild className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]">
+                  <Link href="/onesa-ai-tourism-virtual-experience">
                     {t("tourism.intro.virtual_experience_center_cta") || "Virtual Experience Center"}
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
 

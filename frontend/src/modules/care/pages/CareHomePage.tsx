@@ -118,7 +118,7 @@ export default function CareHomePage() {
 
   const logReferralClick = useCallback(() => {
     if (!userId) return;
-    void api.post("/v2/care/referrals", { provider: CARE_PROVIDER, referral_id: referralId }).catch(() => {});
+    void api.post("/care/referrals", { provider: CARE_PROVIDER, referral_id: referralId }).catch(() => {});
   }, [referralId, userId]);
 
   const heroSlides = useMemo(

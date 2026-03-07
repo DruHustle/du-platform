@@ -1612,6 +1612,8 @@
         "address": "Address"
       },
       "payment_methods": {
+        "label": "Zahlungsabwicklung",
+        "manual_assisted": "Begleiteter Checkout (E-Mail / WhatsApp-Nachverfolgung)",
         "stripe": "Stripe (Credit Card)",
         "paypal": "PayPal",
         "amazon_pay": "Amazon Pay",
@@ -1619,16 +1621,18 @@
         "paypal_short": "PayPal",
         "amazon_pay_short": "Amazon Pay",
         "dummy_gateway": "Dummy Gateway (Dev/Test)",
-        "dummy_gateway_short": "Dummy Gateway"
+        "dummy_gateway_short": "Dummy-Zahlung bestaetigen"
       },
       "order": {
         "reference": "Order reference",
-        "status": "Status"
+        "status": "Status",
+        "manual_follow_up": "Ihre Bestellanfrage wurde gespeichert. Schliessen Sie den begleiteten Checkout ueber WhatsApp ab oder warten Sie auf die Folge-E-Mail bzw. Rechnung."
       },
       "notes": {
         "guest_checkout": "Guest checkout enabled: no login required.",
         "logged_in_checkout": "Checkout im angemeldeten Modus aktiv.",
-        "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
+        "supported_methods": "Unterstuetzte Methoden: begleiteter Checkout mit E-Mail- oder WhatsApp-Nachverfolgung.",
+        "supported_methods_dev": "Unterstuetzte Methoden: begleiteter Checkout in Produktion sowie Dummy-Zahlungssimulation in Entwicklung und Test."
       },
       "errors": {
         "empty_cart": "Your cart is empty.",
@@ -1648,6 +1652,8 @@
         "saving": "Saving...",
         "saved": "We'll notify you when this product is available.",
         "saved_short": "Notify Saved",
+        "dialog_title": "Benachrichtige mich, wenn es wieder auf Lager ist",
+        "dialog_description": "ist derzeit nicht verfuegbar. Geben Sie Ihre E-Mail-Adresse ein und wir informieren Sie, sobald der Bestand zurueck ist.",
         "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",

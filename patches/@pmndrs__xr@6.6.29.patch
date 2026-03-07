@@ -1,0 +1,78 @@
+diff --git a/dist/store.js b/dist/store.js
+index 8d271a37ef747f26d21df39b33f302bab7d867bf..569e9a78789134d3053f588aadcec2b8b30be6ad 100644
+--- a/dist/store.js
++++ b/dist/store.js
+@@ -39,32 +39,6 @@ const baseInitialState = {
+     detectedPlanes: [],
+     layerEntries: [],
+ };
+-async function injectEmulator(store, emulateOptions, alert) {
+-    if (typeof navigator === 'undefined') {
+-        return false;
+-    }
+-    const [vr, ar] = await Promise.all([
+-        navigator.xr?.isSessionSupported('immersive-vr').catch((e) => {
+-            console.error(e);
+-            return false;
+-        }),
+-        navigator.xr?.isSessionSupported('immersive-ar').catch((e) => {
+-            console.error(e);
+-            return false;
+-        }),
+-    ]);
+-    if (ar || vr) {
+-        return false;
+-    }
+-    const { emulate } = await import('./emulate.js');
+-    if (alert) {
+-        window.alert(`emulator started`);
+-    }
+-    store.setState({
+-        emulator: emulate(emulateOptions === true ? 'metaQuest3' : emulateOptions),
+-    });
+-    return true;
+-}
+ //helpers for layer sorting
+ const cameraWorldPosition = new Vector3();
+ const tempLayerWorldPosition = new Vector3();
+@@ -90,32 +64,6 @@ export function createXRStore(options) {
+             offerSession(xrManager, options, domOverlayRoot).catch(console.error);
+         }
+     });
+-    //emulation
+-    const emulate = options?.emulate ?? 'metaQuest3';
+-    let cleanupEmulate;
+-    if (typeof window !== 'undefined' && emulate != false) {
+-        const inject = (typeof emulate === 'object' ? emulate.inject : undefined) ?? { hostname: 'localhost' };
+-        if (inject === true || (typeof inject != 'boolean' && window.location.hostname === inject.hostname)) {
+-            injectEmulator(store, emulate, false).then((emulate) => {
+-                if (!emulate || xrManager == null) {
+-                    return;
+-                }
+-                offerSession(xrManager, options, domOverlayRoot);
+-            });
+-        }
+-        const keydownListener = (e) => {
+-            if (e.altKey && e.metaKey && e.code === 'KeyE') {
+-                injectEmulator(store, emulate, true).then((emulate) => {
+-                    if (!emulate || xrManager == null) {
+-                        return;
+-                    }
+-                    offerSession(xrManager, options, domOverlayRoot);
+-                });
+-            }
+-        };
+-        window.addEventListener('keydown', keydownListener);
+-        cleanupEmulate = () => window.removeEventListener('keydown', keydownListener);
+-    }
+     //dom overlay root setup
+     let cleanupDomOverlayRoot;
+     if (domOverlayRoot != null) {
+@@ -240,7 +188,6 @@ export function createXRStore(options) {
+         },
+         destroy() {
+             xrManager?.removeEventListener('sessionstart', onSessionStart);
+-            cleanupEmulate?.();
+             cleanupDomOverlayRoot?.();
+             cleanupSessionGrantedListener?.();
+             unsubscribeSessionOffer();

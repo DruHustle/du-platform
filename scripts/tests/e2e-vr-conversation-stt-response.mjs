@@ -153,7 +153,7 @@ await page.route('**/api/speech', async (route) => {
   return route.continue();
 });
 
-await page.route('**/api/onesa/chat', async (route) => {
+await page.route('**/api/ai/chat', async (route) => {
   const req = route.request();
   if (req.method() !== 'POST') return route.continue();
 

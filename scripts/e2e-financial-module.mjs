@@ -2,6 +2,13 @@ const baseUrl = String(process.env.E2E_BASE_URL || "http://127.0.0.1:5057").repl
 
 let cookieJar = "";
 
+function unwrapPayload(json) {
+  if (json && typeof json === "object" && json.success === true && "data" in json) {
+    return json.data;
+  }
+  return json;
+}
+
 function updateCookieJarFromResponse(response) {
   const cookies = typeof response.headers.getSetCookie === "function"
     ? response.headers.getSetCookie()
@@ -81,14 +88,14 @@ async function main() {
     expectedStatus: 201,
   });
 
-  let accessToken = String(registerResult.json?.accessToken || "").trim();
+  let accessToken = String(unwrapPayload(registerResult.json)?.accessToken || "").trim();
 
   if (!accessToken) {
     const tokenResult = await request("/api/auth/token/refresh", {
       method: "POST",
       expectedStatus: 200,
     });
-    accessToken = String(tokenResult.json?.accessToken || "").trim();
+    accessToken = String(unwrapPayload(tokenResult.json)?.accessToken || "").trim();
   }
 
   assert(accessToken.length > 20, "JWT access token was not issued.");
@@ -98,7 +105,7 @@ async function main() {
     method: "POST",
     expectedStatus: 200,
   });
-  assert(Boolean(kycResult.json?.user?.kycVerified), "KYC verification did not update user profile.");
+  assert(Boolean(unwrapPayload(kycResult.json)?.user?.kycVerified), "KYC verification did not update user profile.");
 
   console.log("[e2e] Requesting remittance FX quote");
   const remittancePayload = {
@@ -108,12 +115,13 @@ async function main() {
     amountSent: 125,
     currencyFrom: "EUR",
     currencyTo: "USD",
+    receivingCountry: "ZW",
     recipient: {
       mobileNumber: "+263771234567",
     },
   };
 
-  const quoteResult = await request("/api/remittance/quote", {
+  const quoteResult = await request("/api/fintech/remittance/quote", {
     method: "POST",
     headers: { Authorization: `Bearer ${accessToken}` },
     body: remittancePayload,
@@ -122,7 +130,7 @@ async function main() {
   assert(quoteResult.json?.success === true, "Remittance quote response format invalid.");
 
   console.log("[e2e] Sending remittance transfer");
-  const sendResult = await request("/api/remittance/send", {
+  const sendResult = await request("/api/fintech/remittance/send", {
     method: "POST",
     headers: { Authorization: `Bearer ${accessToken}` },
     body: remittancePayload,
@@ -134,7 +142,7 @@ async function main() {
   assert(Number.isFinite(remittanceId) && remittanceId > 0, "Remittance transaction id missing.");
 
   console.log("[e2e] Fetching remittance status");
-  const remittanceStatus = await request(`/api/remittance/${remittanceId}`, {
+  const remittanceStatus = await request(`/api/fintech/remittance/${remittanceId}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${accessToken}` },
     expectedStatus: 200,
@@ -142,7 +150,7 @@ async function main() {
   assert(remittanceStatus.json?.success === true, "Remittance status response format invalid.");
 
   console.log("[e2e] Fetching airtime options");
-  const airtimeOptions = await request("/api/airtime/options", {
+  const airtimeOptions = await request("/api/fintech/airtime/options", {
     method: "POST",
     headers: { Authorization: `Bearer ${accessToken}` },
     body: { phoneNumber: "+263771234567" },
@@ -151,7 +159,7 @@ async function main() {
   assert(airtimeOptions.json?.success === true, "Airtime options response format invalid.");
 
   console.log("[e2e] Creating airtime top-up");
-  const topupResult = await request("/api/airtime/topup", {
+  const topupResult = await request("/api/fintech/airtime/topup", {
     method: "POST",
     headers: { Authorization: `Bearer ${accessToken}` },
     body: {
@@ -167,7 +175,7 @@ async function main() {
   assert(Number.isFinite(airtimeId) && airtimeId > 0, "Airtime transaction id missing.");
 
   console.log("[e2e] Fetching airtime status");
-  const airtimeStatus = await request(`/api/airtime/${airtimeId}`, {
+  const airtimeStatus = await request(`/api/fintech/airtime/${airtimeId}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${accessToken}` },
     expectedStatus: 200,

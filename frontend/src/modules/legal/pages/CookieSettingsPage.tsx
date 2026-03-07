@@ -29,11 +29,9 @@ export default function CookieSettings() {
               <Button onClick={save} className="bg-zim-gold text-zim-black hover:bg-white">
                 Save and continue
               </Button>
-              <Link href="/privacy-policy">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
-                  Privacy policy
-                </Button>
-              </Link>
+              <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
+                <Link href="/privacy-policy">Privacy policy</Link>
+              </Button>
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ resolve_base_url() {
     "http://127.0.0.1:5002" \
     "http://127.0.0.1:5003" \
     "http://127.0.0.1:5000"; do
-    if curl -fsS --max-time 2 "${candidate}/api/onesa/ready" 2>/dev/null | node --input-type=module -e '
+    if curl -fsS --max-time 2 "${candidate}/api/ai/ready" 2>/dev/null | node --input-type=module -e '
       import fs from "node:fs";
       const data = JSON.parse(fs.readFileSync(0, "utf8"));
       if (data?.ready === true) process.exit(0);
@@ -29,7 +29,7 @@ resolve_base_url() {
       return
     fi
 
-    if [[ -z "${first_healthy}" ]] && curl -fsS --max-time 2 "${candidate}/api/onesa/health" >/dev/null 2>&1; then
+    if [[ -z "${first_healthy}" ]] && curl -fsS --max-time 2 "${candidate}/api/ai/health" >/dev/null 2>&1; then
       first_healthy="${candidate}"
     fi
   done
@@ -43,7 +43,7 @@ resolve_base_url() {
 }
 
 BASE_URL="$(resolve_base_url "${1:-}")"
-API_BASE="${BASE_URL%/}/api/onesa"
+API_BASE="${BASE_URL%/}/api/ai"
 
 tmp_body=""
 

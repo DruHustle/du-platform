@@ -4,7 +4,7 @@ export const fxQuoteSchema = z.object({
   amountSent: z.coerce.number().positive().max(5000),
   currencyFrom: z.string().trim().min(3).max(10),
   currencyTo: z.string().trim().min(3).max(10),
-  receivingCountry: z.string().trim().min(2).max(3),
+  receivingCountry: z.string().trim().min(2).max(3).default("ZW"),
 });
 
 export const remittanceSchema = z.object({
@@ -15,7 +15,7 @@ export const remittanceSchema = z.object({
   amountSent: z.coerce.number().positive().max(5000),
   currencyFrom: z.string().trim().min(3).max(10),
   currencyTo: z.string().trim().min(3).max(10),
-  receivingCountry: z.string().trim().min(2).max(3),
+  receivingCountry: z.string().trim().min(2).max(3).default("ZW"),
   recipient: z.object({
     mobileNumber: z.string().trim().max(20).optional(),
     cashPickupLocation: z.string().trim().max(255).optional(),

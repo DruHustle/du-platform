@@ -10,4 +10,4 @@ This directory contains self-contained feature modules:
 - legal
 - care
 
-Each module can own its components, hooks, lib clients, route-level pages, and types.
+Each module can own its components, hooks, lib clients, route-level pages, route manifests, preload policy, and types.

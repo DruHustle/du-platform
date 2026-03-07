@@ -864,14 +864,15 @@ const projects = [
                 })}
               </p>
               <div className="mt-8">
-                <Link href="/investment/opportunities">
-                  <Button
-                    type="button"
-                    className="rounded-full bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] px-7"
-                  >
+                <Button
+                  asChild
+                  type="button"
+                  className="rounded-full bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] px-7"
+                >
+                  <Link href="/investment/opportunities">
                     {t("investment.sectors_explore", { defaultValue: "Explore Opportunities" })}
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
 
@@ -989,11 +990,9 @@ const projects = [
                 </div>
               </div>
               <p className=" text-sm font-light leading-relaxed mb-6">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
-              <Link href="/ntir">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                  {t('investment.ntir_button') || "Search NTIR Database."}
-                </Button>
-              </Link>
+              <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
+                <Link href="/ntir">{t('investment.ntir_button') || "Search NTIR Database."}</Link>
+              </Button>
             </div>
 
             <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
@@ -1154,11 +1153,11 @@ const projects = [
                     "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation."}
                 </p>
               </div>
-              <Link href="/regulations#investment-compliance">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+              <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                <Link href="/regulations#investment-compliance">
                   {t("investment.regulatory_snapshot.open_full_guide") || "Open Full Guide"}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4 mt-8">

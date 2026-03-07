@@ -1,7 +1,7 @@
 export class AiModuleRepository {
   listCapabilities() {
     return {
-      domains: ['chat', 'booking', 'ar', 'vr'],
+      domains: ['chat', 'trip-plan', 'health', 'ready', 'generate-world', 'ar', 'vr'],
       integrationsReady: true,
     };
   }

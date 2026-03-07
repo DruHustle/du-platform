@@ -7,7 +7,7 @@ export class VrExperienceService {
     this.analytics.track({ type: 'vr', sessionId: input.sessionId, userId: input.userId });
     return {
       mode: 'vr',
-      scenes: ['living_room', 'music_room', 'office_small', 'office_large'],
+      scenes: [],
       preload: true,
     };
   }

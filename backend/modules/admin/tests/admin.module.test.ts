@@ -3,8 +3,8 @@ import { createAdminModuleRouter } from '../routes';
 import { findRoute, getRouteEntries } from '../../tests/routeContract';
 
 describe('admin module router', () => {
-  it('registers GET /health', () => {
+  it('registers GET /overview', () => {
     const routes = getRouteEntries(createAdminModuleRouter());
-    expect(findRoute(routes, 'get', '/health')).toBeDefined();
+    expect(findRoute(routes, 'get', '/overview')).toBeDefined();
   });
 });

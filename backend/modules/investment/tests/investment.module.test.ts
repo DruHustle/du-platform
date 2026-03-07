@@ -3,8 +3,8 @@ import { createInvestmentModuleRouter } from '../routes';
 import { findRoute, getRouteEntries } from '../../tests/routeContract';
 
 describe('investment module router', () => {
-  it('registers GET /health', () => {
+  it('registers GET /ntir/search', () => {
     const routes = getRouteEntries(createInvestmentModuleRouter());
-    expect(findRoute(routes, 'get', '/health')).toBeDefined();
+    expect(findRoute(routes, 'get', '/ntir/search')).toBeDefined();
   });
 });

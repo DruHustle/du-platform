@@ -10,8 +10,8 @@ export function useShopProducts(category?: string) {
     setLoading(true);
     fetchProducts(category)
       .then((result) => {
-        if (!mounted || !result.success) return;
-        setProducts(Array.isArray((result.data as any)?.items) ? (result.data as any).items : []);
+        if (!mounted) return;
+        setProducts(Array.isArray(result?.products) ? result.products : []);
       })
       .finally(() => {
         if (mounted) setLoading(false);

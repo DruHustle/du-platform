@@ -1,5 +1,5 @@
 import type mysql from 'mysql2/promise';
-import { db } from '../db';
+import { db } from './databaseRuntime';
 
 export async function withTransaction<T>(work: (connection: mysql.PoolConnection | null) => Promise<T>): Promise<T> {
   if (!db) return work(null);

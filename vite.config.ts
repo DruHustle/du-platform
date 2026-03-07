@@ -52,6 +52,11 @@ export default defineConfig(({ mode }) => {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
     },
+    esbuild: {
+      jsx: "automatic",
+      jsxDev: false,
+      jsxImportSource: "react",
+    },
     server: {
       port: 3000,
       strictPort: false,

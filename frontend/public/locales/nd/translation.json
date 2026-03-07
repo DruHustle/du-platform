@@ -1620,6 +1620,8 @@
         "address": "Address"
       },
       "payment_methods": {
+        "label": "Indlela yokukhokha",
+        "manual_assisted": "Checkout encediswayo (i-email / WhatsApp yokulandela)",
         "stripe": "Stripe (Credit Card)",
         "paypal": "PayPal",
         "amazon_pay": "Amazon Pay",
@@ -1627,16 +1629,18 @@
         "paypal_short": "PayPal",
         "amazon_pay_short": "Amazon Pay",
         "dummy_gateway": "Dummy Gateway (Dev/Test)",
-        "dummy_gateway_short": "Dummy Gateway"
+        "dummy_gateway_short": "Qinisa i-Dummy Payment"
       },
       "order": {
         "reference": "Order reference",
-        "status": "Status"
+        "status": "Status",
+        "manual_follow_up": "Isicelo se-oda sigciniwe. Qedisa assisted checkout ngokusithinta kuWhatsApp loba ulinde i-email noma i-invoice yokulandela."
       },
       "notes": {
         "guest_checkout": "Guest checkout enabled: no login required.",
         "logged_in_checkout": "Checkout yokungena ngemvumo iyasebenza.",
-        "supported_methods": "Supported methods: Stripe, PayPal, Amazon Pay."
+        "supported_methods": "Izindlela ezisekelwayo: assisted checkout nge-email noma i-WhatsApp yokulandela.",
+        "supported_methods_dev": "Izindlela ezisekelwayo: assisted checkout ku-production, kanye le-dummy payment simulation ku-dev lo-test."
       },
       "errors": {
         "empty_cart": "Your cart is empty.",
@@ -1656,6 +1660,8 @@
         "saving": "Saving...",
         "saved": "We'll notify you when this product is available.",
         "saved_short": "Notify Saved",
+        "dialog_title": "Ngazisa nxa sekubuye kwaba khona esitokweni",
+        "dialog_description": "akutholakali okwamanje. Faka i-email yakho bese sizakwazisa nxa isitokwe sesibuyile.",
         "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",

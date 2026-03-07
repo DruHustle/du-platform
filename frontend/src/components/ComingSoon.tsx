@@ -21,7 +21,7 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
     try {
       setIsLoading(true);
       await api.get("/auth/me");
-      const { data } = await api.post("/feature-notifications", { feature: featureName });
+      const { data } = await api.post("/notifications/features", { feature: featureName });
       setIsSubscribed(true);
       toast.success(t("common.notify_success") || "Notify request saved", {
         description:

@@ -1,3 +1,12 @@
+import { getSuccessStories } from "../../../shared/persistence/impactStore";
+import { searchNtirEntities } from "../../../shared/persistence/investmentStore";
+
 export class SearchRepository {
-  async health() { return { domain: "search", ok: true }; }
+  searchNtir(query: string) {
+    return searchNtirEntities(query);
+  }
+
+  listStories() {
+    return getSuccessStories(false);
+  }
 }

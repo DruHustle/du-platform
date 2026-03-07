@@ -92,8 +92,10 @@ try {
     const kycJson = await kycRes.json().catch(() => ({}));
     const meRes = await context.request.get(`${baseUrl}/api/auth/me`);
     const meJson = await meRes.json().catch(() => ({}));
+    const kycUser = kycJson?.data?.user ?? kycJson?.user;
+    const meUser = meJson?.data?.user ?? meJson?.user;
 
-    if (!kycRes.ok() || !Boolean(kycJson?.user?.kycVerified) || !Boolean(meJson?.user?.id)) {
+    if (!kycRes.ok() || !Boolean(kycUser?.kycVerified) || !Boolean(meUser?.id)) {
       throw new Error(
         `Auth bootstrap failed: ${JSON.stringify({ kycStatus: kycRes.status(), meStatus: meRes.status(), kycJson, meJson })}`
       );

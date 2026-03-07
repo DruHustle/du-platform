@@ -1,14 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle } from "lucide-react";
+import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { api, type AuthUser } from "@/lib/api";
 import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
 
 type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
-type PaymentMethod = "stripe" | "paypal" | "amazon_pay" | "dummy_gateway";
+type PaymentMethod = "manual_assisted" | "dummy_gateway";
 type DeliverySpeed = "normal" | "express";
 
 type ShopProduct = {
@@ -21,6 +31,19 @@ type ShopProduct = {
   price_cents: number;
   currency: string;
   stock_qty: number;
+};
+
+type PlacedOrder = {
+  orderRef: string;
+  status: string;
+  paymentMethod: PaymentMethod;
+  paymentReference: string | null;
+  currency: string;
+  subtotalCents: number;
+  shippingCents: number;
+  totalCents: number;
+  deliverySpeed: DeliverySpeed;
+  manageToken: string;
 };
 
 type CartItem = {
@@ -70,7 +93,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     name: "Shona Stone Sculpture",
     category: "crafts",
     description: "Hand-carved premium stone sculpture.",
-    image_url: "/images/pages/shop/crafts_stone_sculptures1.png",
+    image_url: "/images/pages/shop/crafts_stone_sculptures_01.png",
     price_cents: 1490,
     currency: "EUR",
     stock_qty: 0,
@@ -81,7 +104,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     name: "Binga Basket",
     category: "crafts",
     description: "Handwoven basket made by local artisans.",
-    image_url: "/images/pages/shop/crafts_binga_baskets1.jpg",
+    image_url: "/images/pages/shop/crafts_binga_baskets_01.jpg",
     price_cents: 390,
     currency: "EUR",
     stock_qty: 0,
@@ -92,7 +115,7 @@ const FALLBACK_PRODUCTS: ShopProduct[] = [
     name: "Beaded Jewelry Set",
     category: "crafts",
     description: "Traditional beaded necklace and bracelet set.",
-    image_url: "/images/pages/shop/crafts_beaded_jewelry1.jpg",
+    image_url: "/images/pages/shop/crafts_beaded_jewelry_01.jpg",
     price_cents: 290,
     currency: "EUR",
     stock_qty: 0,
@@ -412,13 +435,17 @@ export default function ShopProducts() {
   const [shippingCity, setShippingCity] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [deliverySpeed, setDeliverySpeed] = useState<DeliverySpeed>("normal");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("stripe");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("manual_assisted");
   const [placingOrder, setPlacingOrder] = useState(false);
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
-  const [order, setOrder] = useState<any | null>(null);
+  const [order, setOrder] = useState<PlacedOrder | null>(null);
   const [notifyState, setNotifyState] = useState<Record<number, "idle" | "saving" | "saved">>({});
   const [notifyMessage, setNotifyMessage] = useState("");
+  const [notifyDialogProduct, setNotifyDialogProduct] = useState<ShopProduct | null>(null);
+  const [notifyEmailInput, setNotifyEmailInput] = useState("");
+  const [notifyEmailError, setNotifyEmailError] = useState("");
+  const supportsDummyGateway = import.meta.env.DEV || import.meta.env.MODE === "test";
 
   useEffect(() => {
     setCategory(queryCategory);
@@ -479,6 +506,12 @@ export default function ShopProducts() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!supportsDummyGateway && paymentMethod === "dummy_gateway") {
+      setPaymentMethod("manual_assisted");
+    }
+  }, [paymentMethod, supportsDummyGateway]);
 
   const matchesSegment = (product: ShopProduct, activeSegment: string) => {
     if (!activeSegment) return true;
@@ -599,32 +632,33 @@ export default function ShopProducts() {
     });
   };
 
-  const notifyWhenAvailable = async (product: ShopProduct) => {
+  const openNotifyDialog = (product: ShopProduct) => {
     if (notifyState[product.id] === "saving") return;
+    setNotifyDialogProduct(product);
+    setNotifyEmailInput(String(customerEmail ?? "").trim());
+    setNotifyEmailError("");
+  };
 
-    const fromCheckout = String(customerEmail ?? "").trim();
-    const promptLabel =
-      t("shop.products.notify.enter_email_prompt") ||
-      "Enter your email address to be notified when this product is back in stock:";
-    const entered = window.prompt(promptLabel, fromCheckout);
-    const email = String(entered ?? "").trim().toLowerCase();
-    if (!email) return;
+  const submitNotifyRequest = async () => {
+    if (!notifyDialogProduct) return;
 
+    const email = String(notifyEmailInput ?? "").trim().toLowerCase();
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!validEmail) {
-      setNotifyMessage(
+      setNotifyEmailError(
         t("shop.products.notify.invalid_email") || "Please enter a valid email address."
       );
       return;
     }
 
-    setNotifyState((prev) => ({ ...prev, [product.id]: "saving" }));
+    setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "saving" }));
+    setNotifyEmailError("");
     setNotifyMessage("");
     try {
       const { data } = await api.post("/shop/restock-notifications", {
-        productId: product.id,
-        productSlug: product.slug,
-        productName: product.name,
+        productId: notifyDialogProduct.id,
+        productSlug: notifyDialogProduct.slug,
+        productName: notifyDialogProduct.name,
         email,
       });
       const message = String(
@@ -633,15 +667,16 @@ export default function ShopProducts() {
       );
       setNotifyMessage(message);
       setCustomerEmail(email);
-      setNotifyState((prev) => ({ ...prev, [product.id]: "saved" }));
+      setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "saved" }));
+      setNotifyDialogProduct(null);
     } catch (error: any) {
-      setNotifyMessage(
+      setNotifyEmailError(
         String(
           error?.response?.data?.message ??
             (t("shop.products.notify.failed") || "Unable to save notify request right now.")
         )
       );
-      setNotifyState((prev) => ({ ...prev, [product.id]: "idle" }));
+      setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "idle" }));
     }
   };
 
@@ -671,7 +706,7 @@ export default function ShopProducts() {
         })),
       };
       const { data } = await api.post("/shop/orders", payload);
-      setOrder(data?.order ?? null);
+      setOrder((data?.order ?? null) as PlacedOrder | null);
       setCart([]);
     } catch (error: any) {
       setCheckoutError(
@@ -683,17 +718,17 @@ export default function ShopProducts() {
   };
 
   const confirmPayment = async () => {
-    if (!order?.orderRef) return;
+    if (!order?.orderRef || order.paymentMethod !== "dummy_gateway") return;
     setConfirmingPayment(true);
     setCheckoutError("");
     try {
       const { data } = await api.post(`/shop/orders/${order.orderRef}/confirm-payment`, {
+        manageToken: order.manageToken,
         paymentReference: `${paymentMethod.toUpperCase()}-${Date.now()}`,
       });
-      setOrder((prev: any) => ({
-        ...(prev ?? {}),
-        ...(data?.order ?? {}),
-        status: data?.order?.status ?? "paid",
+      setOrder((prev) => ({
+        ...(prev ?? ({} as PlacedOrder)),
+        ...((data?.order ?? {}) as Partial<PlacedOrder>),
       }));
     } catch (error: any) {
       setCheckoutError(
@@ -793,12 +828,19 @@ export default function ShopProducts() {
                         </div>
                       ) : null}
                       {products.map((product) => (
-                        <div key={product.id} className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]">
+                        <div
+                          key={product.id}
+                          data-shop-product-card={product.slug}
+                          data-stock-state={product.stock_qty <= 0 ? "out" : "in"}
+                          className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]"
+                        >
                           <div className="h-48 overflow-hidden relative bg-slate-900">
                             <img
                               src={product.image_url}
                               alt={product.name}
                               className="w-full h-full object-cover"
+                              loading="lazy"
+                              decoding="async"
                               onError={(event) => {
                                 event.currentTarget.onerror = null;
                                 event.currentTarget.src = "/images/pages/shop/zimbabwe_shop_hero.jpg";
@@ -828,7 +870,7 @@ export default function ShopProducts() {
                                 <Button
                                   type="button"
                                   disabled={notifyState[product.id] === "saving"}
-                                  onClick={() => notifyWhenAvailable(product)}
+                                  onClick={() => openNotifyDialog(product)}
                                   className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 disabled:opacity-40 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
                                 >
                                   {notifyState[product.id] === "saving"
@@ -877,6 +919,7 @@ export default function ShopProducts() {
                                 max={Math.max(1, row.product.stock_qty)}
                                 value={row.item.quantity}
                                 onChange={(event) => updateQty(row.product.id, Number(event.target.value))}
+                                aria-label={`${row.product.name} quantity`}
                                 className="w-12 rounded-md bg-white/[0.04] border border-white/20 px-1.5 py-0.5 text-white text-[10px]"
                               />
                               <p className="text-[11px] text-zim-gold font-black">{formatMoney(row.lineTotal, row.product.currency)}</p>
@@ -918,15 +961,71 @@ export default function ShopProducts() {
                       ) : null}
 
                       <div className="space-y-1.5">
-                      {showCustomerIdentityInputs ? (
-                        <>
-                          <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={t("shop.products.fields.full_name") || "Full Name"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
-                          <input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={t("shop.products.fields.email_address") || "Email Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
-                        </>
-                      ) : null}
-                      <input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)} placeholder={t("shop.products.fields.country") || "Country"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
-                      <input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)} placeholder={t("shop.products.fields.city") || "City"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
-                      <input value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"} className="w-full rounded-xl bg-white/[0.04] border border-white/20 px-3 py-1.5 text-xs text-white placeholder:text-white/70" />
+                        {showCustomerIdentityInputs ? (
+                          <>
+                            <div className="space-y-1">
+                              <Label htmlFor="shop-customer-name" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                                {t("shop.products.fields.full_name") || "Full Name"}
+                              </Label>
+                              <Input
+                                id="shop-customer-name"
+                                value={customerName}
+                                onChange={(e) => setCustomerName(e.target.value)}
+                                placeholder={t("shop.products.fields.full_name") || "Full Name"}
+                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label htmlFor="shop-customer-email" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                                {t("shop.products.fields.email_address") || "Email Address"}
+                              </Label>
+                              <Input
+                                id="shop-customer-email"
+                                type="email"
+                                value={customerEmail}
+                                onChange={(e) => setCustomerEmail(e.target.value)}
+                                placeholder={t("shop.products.fields.email_address") || "Email Address"}
+                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                              />
+                            </div>
+                          </>
+                        ) : null}
+                        <div className="space-y-1">
+                          <Label htmlFor="shop-shipping-country" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                            {t("shop.products.fields.country") || "Country"}
+                          </Label>
+                          <Input
+                            id="shop-shipping-country"
+                            value={shippingCountry}
+                            onChange={(e) => setShippingCountry(e.target.value)}
+                            placeholder={t("shop.products.fields.country") || "Country"}
+                            className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="shop-shipping-city" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                            {t("shop.products.fields.city") || "City"}
+                          </Label>
+                          <Input
+                            id="shop-shipping-city"
+                            value={shippingCity}
+                            onChange={(e) => setShippingCity(e.target.value)}
+                            placeholder={t("shop.products.fields.city") || "City"}
+                            className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="shop-shipping-address" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                            {t("shop.products.fields.shipping_address") || "Shipping Address"}
+                          </Label>
+                          <Input
+                            id="shop-shipping-address"
+                            value={shippingAddress}
+                            onChange={(e) => setShippingAddress(e.target.value)}
+                            placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"}
+                            className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                          />
+                        </div>
                       </div>
 
                       <div className="mt-2.5 space-y-1">
@@ -945,9 +1044,14 @@ export default function ShopProducts() {
                             hint: `${t("shop.products.delivery_speed.express_hint") || "Priority handling"} (+${formatMoney(800)})`,
                           },
                         ].map((option) => (
-                          <label key={option.value} className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/85">
+                          <label
+                            key={option.value}
+                            htmlFor={`shop-delivery-${option.value}`}
+                            className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/85"
+                          >
                             <span className="flex items-center gap-1">
                               <input
+                                id={`shop-delivery-${option.value}`}
                                 type="radio"
                                 checked={deliverySpeed === option.value}
                                 onChange={() => setDeliverySpeed(option.value)}
@@ -960,23 +1064,41 @@ export default function ShopProducts() {
                       </div>
 
                       <div className="mt-2.5 space-y-1">
-                      {[
-                        { value: "stripe", label: t("shop.products.payment_methods.stripe") || "Stripe (Credit Card)" },
-                        { value: "paypal", label: t("shop.products.payment_methods.paypal") || "PayPal" },
-                        { value: "amazon_pay", label: t("shop.products.payment_methods.amazon_pay") || "Amazon Pay" },
-                        ...((import.meta.env.DEV || import.meta.env.MODE === "test")
-                          ? [{ value: "dummy_gateway", label: t("shop.products.payment_methods.dummy_gateway") || "Dummy Gateway (Dev/Test)" }]
-                          : []),
-                      ].map((option) => (
-                        <label key={option.value} className="flex items-center gap-1 text-[11px] text-white/80">
-                          <input
-                            type="radio"
-                            checked={paymentMethod === option.value}
-                            onChange={() => setPaymentMethod(option.value as PaymentMethod)}
-                          />
-                          {option.label}
-                        </label>
-                      ))}
+                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
+                          {t("shop.products.payment_methods.label") || "Payment handling"}
+                        </p>
+                        {[
+                          {
+                            value: "manual_assisted" as PaymentMethod,
+                            label:
+                              t("shop.products.payment_methods.manual_assisted") ||
+                              "Assisted checkout (email / WhatsApp follow-up)",
+                          },
+                          ...(supportsDummyGateway
+                            ? [
+                                {
+                                  value: "dummy_gateway" as PaymentMethod,
+                                  label:
+                                    t("shop.products.payment_methods.dummy_gateway") ||
+                                    "Dummy Gateway (Dev/Test)",
+                                },
+                              ]
+                            : []),
+                        ].map((option) => (
+                          <label
+                            key={option.value}
+                            htmlFor={`shop-payment-${option.value}`}
+                            className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/80"
+                          >
+                            <input
+                              id={`shop-payment-${option.value}`}
+                              type="radio"
+                              checked={paymentMethod === option.value}
+                              onChange={() => setPaymentMethod(option.value)}
+                            />
+                            {option.label}
+                          </label>
+                        ))}
                       </div>
 
                       {checkoutError ? <p className="mt-2 text-[11px] text-rose-300">{checkoutError}</p> : null}
@@ -1010,31 +1132,30 @@ export default function ShopProducts() {
                       ) : (
                         <div className="mt-3 rounded-xl border border-emerald-300/30 bg-emerald-500/10 p-3">
                           <p className="text-xs text-white">
-                            {t("shop.products.order.reference") || "Order reference"}: <span className="font-black">{order.orderRef ?? order.order_ref}</span>
+                            {t("shop.products.order.reference") || "Order reference"}: <span className="font-black">{order.orderRef}</span>
                           </p>
                           <p className="text-[11px] text-white/70 mt-1">
                             {t("shop.products.order.status") || "Status"}: {String(order.status ?? "").toUpperCase()}
                           </p>
-                          <Button
-                            type="button"
-                            onClick={confirmPayment}
-                            disabled={confirmingPayment || String(order.status) === "paid"}
-                            className="mt-2.5 w-full rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-50 font-black text-[9px] uppercase tracking-[0.14em]"
-                          >
-                            {String(order.status) === "paid"
-                              ? t("shop.products.actions.payment_confirmed") || "Payment Confirmed"
-                              : confirmingPayment
-                                ? t("shop.products.actions.processing") || "Processing..."
-                                : `${t("shop.products.actions.pay_with") || "Pay with"} ${
-                                    paymentMethod === "amazon_pay"
-                                      ? t("shop.products.payment_methods.amazon_pay_short") || "Amazon Pay"
-                                      : paymentMethod === "paypal"
-                                        ? t("shop.products.payment_methods.paypal_short") || "PayPal"
-                                        : paymentMethod === "dummy_gateway"
-                                          ? t("shop.products.payment_methods.dummy_gateway_short") || "Dummy Gateway"
-                                          : t("shop.products.payment_methods.stripe_short") || "Stripe"
-                                  }`}
-                          </Button>
+                          {order.paymentMethod === "dummy_gateway" ? (
+                            <Button
+                              type="button"
+                              onClick={confirmPayment}
+                              disabled={confirmingPayment || String(order.status) === "paid"}
+                              className="mt-2.5 w-full rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-50 font-black text-[9px] uppercase tracking-[0.14em]"
+                            >
+                              {String(order.status) === "paid"
+                                ? t("shop.products.actions.payment_confirmed") || "Payment Confirmed"
+                                : confirmingPayment
+                                  ? t("shop.products.actions.processing") || "Processing..."
+                                  : t("shop.products.payment_methods.dummy_gateway_short") || "Confirm Dummy Payment"}
+                            </Button>
+                          ) : (
+                            <p className="mt-2.5 text-[11px] text-white/80">
+                              {t("shop.products.order.manual_follow_up") ||
+                                "Your order request is saved. Complete the assisted checkout by contacting us on WhatsApp or waiting for the follow-up email/invoice."}
+                            </p>
+                          )}
                         </div>
                       )}
 
@@ -1048,7 +1169,13 @@ export default function ShopProducts() {
                       </div>
                       <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/70">
                         <CreditCard className="h-3.5 w-3.5 text-zim-gold" />
-                        <span>{t("shop.products.notes.supported_methods") || "Supported methods: Stripe, PayPal, Amazon Pay."}</span>
+                        <span>
+                          {supportsDummyGateway
+                            ? t("shop.products.notes.supported_methods_dev") ||
+                              "Supported methods: assisted checkout in production, plus dummy payment simulation in dev/test."
+                            : t("shop.products.notes.supported_methods") ||
+                              "Supported methods: assisted checkout with email or WhatsApp follow-up."}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -1058,6 +1185,66 @@ export default function ShopProducts() {
           </div>
         </div>
       </section>
+      <Dialog open={Boolean(notifyDialogProduct)} onOpenChange={(open) => {
+        if (!open) {
+          setNotifyDialogProduct(null);
+          setNotifyEmailError("");
+        }
+      }}>
+        <DialogContent className="border-white/10 bg-slate-950 text-white sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              {t("shop.products.notify.dialog_title") || "Notify me when it is back in stock"}
+            </DialogTitle>
+            <DialogDescription className="text-white/70">
+              {notifyDialogProduct
+                ? `${notifyDialogProduct.name} ${t("shop.products.notify.dialog_description") || "is currently unavailable. Enter your email address and we will let you know when stock returns."}`
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="restock-email" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+              {t("shop.products.fields.email_address") || "Email Address"}
+            </Label>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
+              <Input
+                id="restock-email"
+                type="email"
+                value={notifyEmailInput}
+                onChange={(event) => setNotifyEmailInput(event.target.value)}
+                placeholder={t("shop.products.fields.email_address") || "Email Address"}
+                className="border-white/20 bg-white/[0.04] pl-9 text-white placeholder:text-white/60"
+              />
+            </div>
+            {notifyEmailError ? (
+              <p className="text-[11px] text-rose-300" role="alert">
+                {notifyEmailError}
+              </p>
+            ) : null}
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setNotifyDialogProduct(null)}
+              className="border-white/20 bg-transparent text-white hover:bg-white hover:text-black"
+            >
+              {t("cancel") || "Cancel"}
+            </Button>
+            <Button
+              type="button"
+              onClick={submitNotifyRequest}
+              disabled={!notifyDialogProduct || notifyState[notifyDialogProduct.id] === "saving"}
+              className="bg-zim-gold text-black hover:bg-white"
+            >
+              {notifyDialogProduct && notifyState[notifyDialogProduct.id] === "saving"
+                ? t("shop.products.notify.saving") || "Saving..."
+                : t("shop.products.notify.cta") || "Notify Me"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }

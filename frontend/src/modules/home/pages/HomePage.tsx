@@ -2,36 +2,24 @@ import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { Globe2 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import MainPageHero from "@/components/MainPageHero";
+import MainPageHero from "@/modules/home/components/MainPageHero";
 
 export default function Home() {
   const { t } = useTranslation();
+  const prefersReducedMotion = useReducedMotion();
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const heroBackgrounds = useMemo(() => [
     "/images/pages/tourism/victoria_falls.jpg",
     "/images/pages/wikimedia/african-elephant.jpg",
-    "/images/pages/tourism/balancing_rocks.jpg",
     "/images/pages/tourism/great_zimbabwe.jpeg",
-    "/images/pages/tourism/eastern_highlands.jpg",
-    "/images/pages/home/zimbabwe_lion.png",
-    "/images/pages/home/zimbabwe_baobab.png",
     "/images/pages/home/harare_cbd.png",
-    "/images/pages/tourism/mana_pools.jpg",
-    "/images/pages/tourism/kariba_sunset.jpg",
     "/images/pages/home/partnership_handshake.png",
-    "/images/pages/trade/export_port1.jpg",
-    "/images/pages/home/harare_cbd.png",
-    "/images/pages/export/eu_symbol.png",
-    "/images/pages/shop/zimbabwe_shop_hero.jpg",
-    "/images/pages/tourism/dest_mana_pools.jpg",
-    "/images/pages/tourism/dest_gonarezhou.jpg",
-    "/images/pages/tourism/dest_matobo.jpg",
+    "/images/pages/trade/export_port_01.jpg",
     "/images/pages/shared/minerals_mining.png",
     "/images/pages/trade/manufacturing_factory.jpg",
     "/images/pages/technology/ai_innovation.jpg",
-    "/images/pages/home/partnership_handshake.png"
   ], []);
 
 const navButtons = [
@@ -43,11 +31,12 @@ const navButtons = [
 ];
 
   useEffect(() => {
+    if (prefersReducedMotion || heroBackgrounds.length <= 1) return;
     const bgTimer = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
-    }, 5000);
+    }, 9000);
     return () => clearInterval(bgTimer);
-  }, [heroBackgrounds.length]);
+  }, [heroBackgrounds.length, prefersReducedMotion]);
 
 //Hero Intro Section
   const introData = {
@@ -91,7 +80,7 @@ const navButtons = [
       title: t('home.modules.trade.title') || "Trade",
       description: t('home.modules.trade.desc') || "Access comprehensive trade and export execution resources in one place.",
       href: "/trade",
-      bgImage: "/images/pages/trade/export_port1.jpg",
+      bgImage: "/images/pages/trade/export_port_01.jpg",
       stats: t('home.modules.trade.stats') || "8 Export Sectors"
     },
     {
@@ -146,15 +135,19 @@ const navButtons = [
 
                       <div className="relative z-10 flex flex-col items-center text-center h-full">
                         <div className="w-full h-44 md:h-52 rounded-3xl overflow-hidden mb-4 border border-white/10 shadow-inner">
-                          <div
-                            className="w-full h-full bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
-                            style={{ backgroundImage: `url('${module.bgImage}')` }}
-                          >
-                            <div className="w-full h-full bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent" />
+                          <div className="relative w-full h-full">
+                            <img
+                              src={module.bgImage}
+                              alt={module.title}
+                              loading="lazy"
+                              decoding="async"
+                              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent" />
                           </div>
                         </div>
 
-                        <h3 className="text-lg md:text-xl font-black tracking-tight text-white/95 leading-snug mb-2">
+                        <h3 className="section-title-compact mb-2">
                           {module.title}
                         </h3>
 
@@ -170,14 +163,15 @@ const navButtons = [
                           <div className="h-px w-6 bg-zim-gold/40" />
                         </div>
 
-                        <Link href={module.href} className="w-full">
-                          <button className="
-                            w-full py-2.5 rounded-full border border-white/25
+                        <Link
+                          href={module.href}
+                          className="
+                            w-full inline-flex items-center justify-center py-2.5 rounded-full border border-white/25
                             bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.2em]
                             hover:bg-white hover:text-black hover:border-white transition-all duration-500
-                          ">
-                            {t('home.explore_now') || "Explore Now"}
-                          </button>
+                          "
+                        >
+                          {t('home.explore_now') || "Explore Now"}
                         </Link>
                       </div>
 

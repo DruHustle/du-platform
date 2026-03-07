@@ -124,7 +124,7 @@ Controllers -> Services -> Providers + Repositories
 - ai/vr
 
 Module-level discovery endpoint:
-- `GET /api/v2/ai/capabilities`
+- `GET /api/ai/capabilities`
 
 Shared AI utilities:
 - prompt templates
@@ -143,11 +143,10 @@ Shared AI utilities:
 
 ## Migration Plan
 
-1. Keep legacy routes operational.
-2. Enable `/api/v2/*` modular routes.
-3. Move one domain at a time from legacy handlers to module services.
-4. Attach module-level unit + integration tests in CI.
-5. Retire legacy route code once feature parity is validated.
+1. Keep the module registry mounted under `/api/*`.
+2. Move one domain at a time from legacy handlers to module services.
+3. Attach module-level unit + integration tests in CI.
+4. Retire legacy route code once feature parity is validated.
 
 ## Test Commands
 

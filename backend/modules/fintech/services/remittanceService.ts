@@ -1,7 +1,7 @@
 import crypto from 'crypto';
-import { TerrapayService } from '../../../services/terrapayService';
+import { TerrapayService } from './terrapayGatewayService';
 import { FintechRepository } from '../repositories/fintechRepository';
-import { TerraPayProviderAdapter } from '../providers/terrapayProvider';
+import { TerraPayProvider } from '../providers/terrapayGatewayProvider';
 import type { FxQuoteDto, RemittanceDto } from '../dto/remittance.dto';
 import { TtlCache } from '../../../shared/cache';
 
@@ -14,7 +14,7 @@ function normalizeStatus(input: unknown): 'pending' | 'processing' | 'completed'
 }
 
 export class RemittanceService {
-  private readonly service = new TerrapayService(new TerraPayProviderAdapter() as any);
+  private readonly service = new TerrapayService(new TerraPayProvider());
   private readonly quoteCache = new TtlCache<any>(30_000);
 
   constructor(private readonly repository = new FintechRepository()) {}

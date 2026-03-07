@@ -8,12 +8,27 @@ type LimiterOptions = {
 };
 
 const buckets = new Map<string, { count: number; resetAt: number }>();
+let lastBucketSweepAt = 0;
+
+function maybeSweepExpiredBuckets(now: number, windowMs: number) {
+  const minSweepIntervalMs = Math.max(1_000, Math.min(windowMs, 60_000));
+  if (now - lastBucketSweepAt < minSweepIntervalMs) return;
+
+  lastBucketSweepAt = now;
+  buckets.forEach((bucket, key) => {
+    if (now >= bucket.resetAt) {
+      buckets.delete(key);
+    }
+  });
+}
 
 export function rateLimiter(options: LimiterOptions) {
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const ip = String(req.headers['x-forwarded-for'] ?? req.ip ?? 'unknown').split(',')[0].trim();
-    const key = `${options.keyPrefix}:${ip}`;
     const now = Date.now();
+    maybeSweepExpiredBuckets(now, options.windowMs);
+
+    const ip = String(req.ip ?? req.socket.remoteAddress ?? 'unknown').trim();
+    const key = `${options.keyPrefix}:${ip}`;
     const bucket = buckets.get(key);
 
     if (!bucket || bucket.resetAt <= now) {

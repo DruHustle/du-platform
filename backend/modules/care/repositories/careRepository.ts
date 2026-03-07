@@ -1,4 +1,4 @@
-import { createCareReferral } from "../../../db";
+import { createCareReferral } from "../../../shared/persistence/careStore";
 import type { CareProvider } from "../types/care.types";
 
 export class CareRepository {

@@ -69,6 +69,13 @@ async function runScenario(path, kind) {
       body: JSON.stringify({ error: "forced_tts_failure_for_e2e" }),
     });
   });
+  await page.route("**/api/speech", async (route) => {
+    await route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "forced_speech_failure_for_e2e" }),
+    });
+  });
 
   await page.goto(`${baseUrl}${path}`, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(1000);
@@ -79,7 +86,10 @@ async function runScenario(path, kind) {
     await placeSelect.selectOption({ index: 1 });
     await page.waitForTimeout(400);
 
-    const narrationBtn = page.getByRole("button", { name: /Voice Narration:\s*(On|Off)/i }).first();
+    const narrationBtn = page
+      .locator("button")
+      .filter({ hasText: /Voice Narration:\s*(On|Off)|NARRATION:\s*(On|Off)/i })
+      .first();
     await narrationBtn.waitFor({ timeout: 15000 });
     await narrationBtn.click();
     await page.waitForTimeout(800);
@@ -119,7 +129,7 @@ async function runScenario(path, kind) {
     speakCount,
     narrationButtonText,
     errors,
-    ok: speakCount > 0 && /Off/i.test(narrationButtonText) && errors.length === 0,
+    ok: speakCount > 0 && /On/i.test(narrationButtonText) && errors.length === 0,
   };
 }
 

@@ -4,6 +4,6 @@ import { validateInvestmentQuery } from "../validators";
 export function createInvestmentModuleRouter() {
   const router = Router();
   const controller = new InvestmentController();
-  router.get("/health", validateInvestmentQuery, controller.health);
+  router.get("/ntir/search", validateInvestmentQuery, controller.searchNtir);
   return router;
 }

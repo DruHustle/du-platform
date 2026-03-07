@@ -12,7 +12,7 @@ export function createCareModuleRouter() {
   router.post(
     "/referrals",
     requireJwtAuth,
-    rateLimiter({ keyPrefix: "v2:care:referrals", windowMs: 60_000, maxRequests: 20 }),
+    rateLimiter({ keyPrefix: "api:care:referrals", windowMs: 60_000, maxRequests: 20 }),
     validateCareReferral,
     controller.logReferral
   );

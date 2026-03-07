@@ -1,10 +1,12 @@
+import type express from "express";
 import { Router } from 'express';
-import { createAiChatRouter } from '../chat/routes';
-import { createAiBookingRouter } from '../booking/routes';
 import { createAiArRouter } from '../ar/routes';
 import { createAiVrRouter } from '../vr/routes';
 import { AiModuleService } from '../services/aiModuleService';
 import { ok } from '../../../shared/responseFormatter';
+import { registerOnesaAIRoutes } from '../runtime/onesaRoutes';
+import { getOnesaRouteDeps } from '../runtime/onesaRuntime';
+import { registerSpeechRoutes, registerTtsRoutes, registerWhisperRoutes } from "../runtime/speechRoutes";
 
 export function createAiModuleRouter() {
   const router = Router();
@@ -14,10 +16,19 @@ export function createAiModuleRouter() {
     return res.json(ok(moduleService.getCapabilities()));
   });
 
-  router.use('/chat', createAiChatRouter());
-  router.use('/book-trip', createAiBookingRouter());
+  registerOnesaAIRoutes(router, getOnesaRouteDeps(), {
+    prefix: "",
+    worldPath: "/generate-world",
+  });
   router.use('/ar', createAiArRouter());
   router.use('/vr', createAiVrRouter());
 
   return router;
+}
+
+export function registerAiModule(app: express.Express) {
+  app.use("/api/ai", createAiModuleRouter());
+  registerWhisperRoutes(app);
+  registerTtsRoutes(app);
+  registerSpeechRoutes(app);
 }

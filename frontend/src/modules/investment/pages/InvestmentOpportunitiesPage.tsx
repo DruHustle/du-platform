@@ -211,14 +211,15 @@ export default function InvestmentOpportunitiesPage() {
                         </div>
                       </div>
 
-                      <Link href={`/investment/projects/${p.id}`}>
-                        <Button
-                          variant="outline"
-                          className="w-full mt-4 rounded-full border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-zim-black hover:border-white font-black uppercase tracking-widest text-[10px] transition-all duration-300"
-                        >
+                      <Button
+                        asChild
+                        variant="outline"
+                        className="w-full mt-4 rounded-full border border-white/25 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-zim-black hover:border-white font-black uppercase tracking-widest text-[10px] transition-all duration-300"
+                      >
+                        <Link href={`/investment/projects/${p.id}`}>
                           {t("investment.project_card.view_details") || "View Details"}
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>

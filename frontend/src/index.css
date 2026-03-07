@@ -470,13 +470,12 @@
   }
 
   /* Mobile width normalization:
-     Match top-level outer glass panel width to container px-6 sections
-     across all pages (full-width section panels). */
+     Keep outer glass panels aligned to container width on compact view. */
   @media (max-width: 767px) {
     main section > .container > .outer-glass-panel {
-      width: calc(100% + 2.5rem);
-      margin-left: -1.25rem;
-      margin-right: -1.25rem;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
     }
   }
   

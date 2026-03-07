@@ -1,4 +1,4 @@
-import { db } from "../db";
+import { db } from "../shared/databaseRuntime";
 import { sanitizeText } from "./sanitize";
 
 type FailedAttemptInput = {
