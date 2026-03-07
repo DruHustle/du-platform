@@ -52,11 +52,9 @@ export default function CookieConsent() {
           Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Link href="/cookie-settings">
-            <Button variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
-              Cookie settings
-            </Button>
-          </Link>
+          <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
+            <Link href="/cookie-settings">Cookie settings</Link>
+          </Button>
           <Button onClick={accept} className="bg-zim-gold text-zim-black hover:bg-white">
             Accept cookies
           </Button>

@@ -124,18 +124,20 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
           {/* Nav Buttons */}
           <div className="mt-10 flex flex-col gap-5 items-center sm:hidden">
             {hero.navButtons.map((item, index) => (
-              <Link key={item.href} href={item.href}>
-                <Button
-                  variant="outline"
-                  className={`
-                    relative h-12 px-4 rounded-full overflow-hidden border-none min-w-[160px]
-                    backdrop-blur-xl text-white text-xs font-black uppercase
-                    transition-[background-color,box-shadow,border-color] duration-700
-                    ${mobileGlowActive
-                      ? "bg-white/[0.2] shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]"
-                      : "bg-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]"}
-                  `}
-                >
+              <Button
+                key={item.href}
+                asChild
+                variant="outline"
+                className={`
+                  relative h-12 px-4 rounded-full overflow-hidden border-none min-w-[160px]
+                  backdrop-blur-xl text-white text-xs font-black uppercase
+                  transition-[background-color,box-shadow,border-color] duration-700
+                  ${mobileGlowActive
+                    ? "bg-white/[0.2] shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]"
+                    : "bg-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]"}
+                `}
+              >
+                <Link href={item.href}>
                   <span
                     className={`absolute inset-0 rounded-full pointer-events-none transition-colors duration-700 ${
                       mobileGlowActive ? "border border-white/60" : "border border-white/20"
@@ -154,8 +156,8 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
                     }}
                   />
                   <span className="relative z-10">{t(item.label)}</span>
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
           </div>
 
@@ -166,26 +168,28 @@ export default function MainPageHero({ hero, intro }: MainPageProps) {
             className="mt-10 hidden sm:flex sm:flex-row gap-5 items-center"
           >
             {hero.navButtons.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <Button
-                  variant="outline"
-                  className="
-                    group relative h-12 px-4 rounded-full overflow-hidden border-none min-w-[160px]
-                    bg-white/[0.1] backdrop-blur-xl
-                    text-white text-xs font-black uppercase
-                    shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
-                    transition-all duration-500
-                    hover:scale-105 active:scale-95
-                    hover:bg-white/[0.2]
-                    hover:shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]
-                    hover:text-white
-                  "
-                >
+              <Button
+                key={item.href}
+                asChild
+                variant="outline"
+                className="
+                  group relative h-12 px-4 rounded-full overflow-hidden border-none min-w-[160px]
+                  bg-white/[0.1] backdrop-blur-xl
+                  text-white text-xs font-black uppercase
+                  shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
+                  transition-all duration-500
+                  hover:scale-105 active:scale-95
+                  hover:bg-white/[0.2]
+                  hover:shadow-[0_0_30px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.2)]
+                  hover:text-white
+                "
+              >
+                <Link href={item.href}>
                   <span className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/60 transition-colors duration-500 pointer-events-none" />
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">{t(item.label)}</span>
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
           </motion.div>
 

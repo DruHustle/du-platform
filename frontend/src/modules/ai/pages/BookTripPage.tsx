@@ -160,7 +160,7 @@ function buildClientFallbackPlan(params: {
   };
 }
 
-export default function OnesaAIBookTrip() {
+export default function BookTripPage() {
   const { t, i18n } = useTranslation();
   const departureOptions: DepartureOption[] = [
     { value: "berlin", city: "Berlin", airport: "Berlin Brandenburg Airport", iata: "BER" },

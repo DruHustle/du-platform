@@ -7,7 +7,7 @@ import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft, Search } from "lucide-react";
 import { Link } from "wouter";
 
-type NtirEntity = {
+type NTIREntity = {
   id: number;
   name: string;
   sector: string;
@@ -15,7 +15,7 @@ type NtirEntity = {
   verification_status: "Verified" | "Pending";
 };
 
-const fallbackEntities: NtirEntity[] = [
+const fallbackEntities: NTIREntity[] = [
   { id: 1, name: "Mosi Oa Tunya Development Company", sector: "Tourism & Infrastructure", location: "Matabeleland North", verification_status: "Verified" },
   { id: 2, name: "Agro Strong (Pvt) Ltd", sector: "Agriculture", location: "Matabeleland South", verification_status: "Verified" },
   { id: 3, name: "Goromonzi Agro Industrial Company (GAIC)", sector: "Agriculture", location: "Mashonaland East", verification_status: "Verified" },
@@ -34,7 +34,7 @@ const fallbackEntities: NtirEntity[] = [
   { id: 16, name: "Sunway City (Pvt) Ltd", sector: "Urban Infrastructure", location: "Harare", verification_status: "Pending" },
 ];
 
-function searchFallbackEntities(query: string): NtirEntity[] {
+function searchFallbackEntities(query: string): NTIREntity[] {
   const q = query.trim().toLowerCase();
   if (!q) return fallbackEntities;
   return fallbackEntities.filter((entity) =>
@@ -42,9 +42,9 @@ function searchFallbackEntities(query: string): NtirEntity[] {
   );
 }
 
-export default function NtirDatabase() {
+export default function NTIRSearchPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<NtirEntity[]>([]);
+  const [results, setResults] = useState<NTIREntity[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

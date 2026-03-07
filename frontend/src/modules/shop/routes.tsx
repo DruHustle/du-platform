@@ -1,8 +1,8 @@
-import { createLazyRoute } from "../core/routing";
+import ShopHomePage from "./pages/ShopHomePage";
+import ShopProductsPage from "./pages/ShopProductsPage";
+import { createStaticRoute } from "../core/routing";
 
 export const shopRoutes = [
-  createLazyRoute("/shop", () => import("./pages/ShopHomePage")),
-  createLazyRoute("/shop/products", () => import("./pages/ShopProductsPage"), {
-    prefetchOnIdle: true,
-  }),
+  createStaticRoute("/shop", ShopHomePage),
+  createStaticRoute("/shop/products", ShopProductsPage),
 ];

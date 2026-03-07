@@ -16,7 +16,7 @@ export default function Home() {
     "/images/pages/tourism/great_zimbabwe.jpeg",
     "/images/pages/home/harare_cbd.png",
     "/images/pages/home/partnership_handshake.png",
-    "/images/pages/trade/export_port1.jpg",
+    "/images/pages/trade/export_port_01.jpg",
     "/images/pages/shared/minerals_mining.png",
     "/images/pages/trade/manufacturing_factory.jpg",
     "/images/pages/technology/ai_innovation.jpg",
@@ -80,7 +80,7 @@ const navButtons = [
       title: t('home.modules.trade.title') || "Trade",
       description: t('home.modules.trade.desc') || "Access comprehensive trade and export execution resources in one place.",
       href: "/trade",
-      bgImage: "/images/pages/trade/export_port1.jpg",
+      bgImage: "/images/pages/trade/export_port_01.jpg",
       stats: t('home.modules.trade.stats') || "8 Export Sectors"
     },
     {
@@ -163,14 +163,15 @@ const navButtons = [
                           <div className="h-px w-6 bg-zim-gold/40" />
                         </div>
 
-                        <Link href={module.href} className="w-full">
-                          <button className="
-                            w-full py-2.5 rounded-full border border-white/25
+                        <Link
+                          href={module.href}
+                          className="
+                            w-full inline-flex items-center justify-center py-2.5 rounded-full border border-white/25
                             bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.2em]
                             hover:bg-white hover:text-black hover:border-white transition-all duration-500
-                          ">
-                            {t('home.explore_now') || "Explore Now"}
-                          </button>
+                          "
+                        >
+                          {t('home.explore_now') || "Explore Now"}
                         </Link>
                       </div>
 

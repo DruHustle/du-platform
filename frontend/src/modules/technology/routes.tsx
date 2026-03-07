@@ -1,3 +1,4 @@
-import { createLazyRoute } from "../core/routing";
+import TechnologyPage from "./pages/TechnologyPage";
+import { createStaticRoute } from "../core/routing";
 
-export const technologyRoutes = [createLazyRoute("/technology", () => import("./pages/TechnologyPage"))];
+export const technologyRoutes = [createStaticRoute("/technology", TechnologyPage)];

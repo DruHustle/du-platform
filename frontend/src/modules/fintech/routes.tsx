@@ -1,3 +1,4 @@
-import { createLazyRoute } from "../core/routing";
+import PaymentsPage from "./pages/PaymentsPage";
+import { createStaticRoute } from "../core/routing";
 
-export const fintechRoutes = [createLazyRoute("/payments", () => import("./pages/PaymentsPage"))];
+export const fintechRoutes = [createStaticRoute("/payments", PaymentsPage)];

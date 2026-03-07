@@ -1,3 +1,4 @@
-import { createLazyRoute } from "../core/routing";
+import ImpactPage from "./pages/ImpactPage";
+import { createStaticRoute } from "../core/routing";
 
-export const impactRoutes = [createLazyRoute("/impact", () => import("./pages/ImpactPage"))];
+export const impactRoutes = [createStaticRoute("/impact", ImpactPage)];

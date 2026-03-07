@@ -34,8 +34,34 @@ export function createModularServer(options: ModularServerOptions) {
   app.use("/api", notFoundHandler);
 
   if (options.staticPath) {
-    app.use(express.static(options.staticPath));
+    app.use(
+      express.static(options.staticPath, {
+        etag: true,
+        lastModified: true,
+        setHeaders: (res, filePath) => {
+          const relativePath = path.relative(options.staticPath as string, filePath).replace(/\\/g, "/");
+
+          if (relativePath.endsWith(".html")) {
+            res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
+            return;
+          }
+
+          if (/^assets\/.+-[A-Za-z0-9_-]{8,}\.[^/]+$/i.test(relativePath)) {
+            res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+            return;
+          }
+
+          if (/\.(?:css|js|mjs|png|jpe?g|gif|svg|webp|avif|ico|woff2?|mp3|wav)$/i.test(relativePath)) {
+            res.setHeader("Cache-Control", "public, max-age=86400");
+            return;
+          }
+
+          res.setHeader("Cache-Control", "public, max-age=3600");
+        },
+      })
+    );
     app.get("*", (_req, res) => {
+      res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
       res.sendFile(path.join(options.staticPath as string, "index.html"));
     });
   }

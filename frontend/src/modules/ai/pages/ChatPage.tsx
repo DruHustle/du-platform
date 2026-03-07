@@ -9,7 +9,7 @@ import { checkOnesaHealth, OnesaChatMessage, sendOnesaChatMessage } from "@/modu
 import { Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-export default function OnesaAIChat() {
+export default function ChatPage() {
   const { t, i18n } = useTranslation();
   const starterPrompt = t("onesa.starter_prompt", {
     defaultValue: "Start chat....",

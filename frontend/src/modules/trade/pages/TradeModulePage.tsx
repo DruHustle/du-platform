@@ -19,7 +19,7 @@ export default function Trade() {
 
   const heroSlides = useMemo(() => [
     {
-      image: "/images/pages/trade/export_port1.jpg",
+      image: "/images/pages/trade/export_port_01.jpg",
       badge: t("trade.hero.badge1") || "ZimTrade Export Support",
       badgeIcon: Users,
       title: t("trade.hero.title1") || "Export from Zimbabwe with Confidence",
@@ -43,7 +43,7 @@ export default function Trade() {
       highlight: t("trade.hero.highlight3") || "Standards Compliance"
     },
     {
-      image: "/images/pages/trade/export_port1.jpg",
+      image: "/images/pages/trade/export_port_01.jpg",
       badge: t("trade.hero.badge4") || "REX Origin System",
       badgeIcon: FileCheck,
       title: t("trade.hero.title4") || "Self-Certify Origin Correctly",
@@ -115,7 +115,7 @@ export default function Trade() {
     {
       name: t("trade.sectors.arts_crafts.name") || "Arts & Crafts",
       description: t("trade.sectors.arts_crafts.description") || "Authentic artisan exports that perform well in niche retail and diaspora-curated marketplaces",
-      image: "/images/pages/shop/crafts_stone_sculptures1.png",
+      image: "/images/pages/shop/crafts_stone_sculptures_01.png",
       opportunities: t("trade.sectors.arts_crafts.opportunities", { returnObjects: true }) as string[],
       icon: Globe
     },
@@ -422,11 +422,9 @@ export default function Trade() {
                           </div>
                         ))}
                       </div>
-                      <Link href="/regulations#export-certification-and-labeling">
-                        <Button className="w-full mt-6 h-10 bg-white/5 hover:bg-zim-gold border border-white/10 hover:border-zim-gold text-white hover:text-zim-black text-[9px] font-black uppercase tracking-widest transition-all duration-500 rounded-xl">
-                          Contact Verified Buyers
-                        </Button>
-                      </Link>
+                      <Button asChild className="w-full mt-6 h-10 bg-white/5 hover:bg-zim-gold border border-white/10 hover:border-zim-gold text-white hover:text-zim-black text-[9px] font-black uppercase tracking-widest transition-all duration-500 rounded-xl">
+                        <Link href="/regulations#export-certification-and-labeling">Contact Verified Buyers</Link>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
@@ -594,11 +592,9 @@ export default function Trade() {
               ))}
             </div>
             <div className="mt-8 text-center">
-              <Link href="/regulations#export-controls">
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  Open Full Compliance Guide
-                </Button>
-              </Link>
+              <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                <Link href="/regulations#export-controls">Open Full Compliance Guide</Link>
+              </Button>
             </div>
           </div>
         </div>

@@ -252,11 +252,9 @@ export default function ProjectDetails() {
               </div>
 
               <div>
-                <Link href="/ntir">
-                  <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                    Search NTIR Database.
-                  </Button>
-                </Link>
+                <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
+                  <Link href="/ntir">Search NTIR Database.</Link>
+                </Button>
               </div>
             </>
           )}

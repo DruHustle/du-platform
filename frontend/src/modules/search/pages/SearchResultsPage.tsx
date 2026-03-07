@@ -100,9 +100,9 @@ export default function SearchResults() {
                 <p className=" max-w-md mx-auto">
                   We couldn't find anything matching "{query}". Try searching for broader terms like "Investment", "Trade", or "Onesa".
                 </p>
-                <Link href="/">
-                  <Button className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black" variant="outline">Return Home</Button>
-                </Link>
+                <Button asChild className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black" variant="outline">
+                  <Link href="/">Return Home</Link>
+                </Button>
               </div>
             )}
           </motion.div>

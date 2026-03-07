@@ -1,3 +1,4 @@
-import { createLazyRoute } from "../core/routing";
+import HomePage from "./pages/HomePage";
+import { createStaticRoute } from "../core/routing";
 
-export const homeRoutes = [createLazyRoute("/", () => import("./pages/HomePage"))];
+export const homeRoutes = [createStaticRoute("/", HomePage)];

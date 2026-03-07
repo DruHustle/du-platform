@@ -32,7 +32,3 @@ export const appRoutes: AppRouteDefinition[] = [
   ...searchRoutes,
   ...coreRoutes,
 ];
-
-export const prefetchableRoutes = appRoutes.filter(
-  (route) => route.prefetchOnIdle === true && typeof route.preload === "function"
-);

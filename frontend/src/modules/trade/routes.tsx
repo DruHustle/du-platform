@@ -1,3 +1,4 @@
-import { createLazyRoute } from "../core/routing";
+import TradeModulePage from "./pages/TradeModulePage";
+import { createStaticRoute } from "../core/routing";
 
-export const tradeRoutes = [createLazyRoute("/trade", () => import("./pages/TradeModulePage"))];
+export const tradeRoutes = [createStaticRoute("/trade", TradeModulePage)];

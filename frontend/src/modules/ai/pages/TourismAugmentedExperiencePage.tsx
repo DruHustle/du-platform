@@ -1,11 +1,11 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Camera, LocateFixed, MapPin, Mic } from "lucide-react";
 import { checkOnesaHealth, sendOnesaChatMessage } from "@/modules/ai/lib/aiApi";
+import ZimbabweInteractiveGlobeLoader from "@/modules/ai/components/ZimbabweInteractiveGlobeLoader";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
-const LazyZimbabweInteractiveGlobe = lazy(() => import("@/modules/ai/components/ZimbabweInteractiveGlobe"));
 
 type PlaceProfile = {
   id: string;
@@ -272,7 +272,7 @@ function formatNarrationLines(text: string): string[] {
     .filter(Boolean);
 }
 
-export default function OnesaAITourismAugmentedExperience() {
+export default function TourismAugmentedExperiencePage() {
   const { i18n, t } = useTranslation();
   const uiLanguage = useMemo<UiLanguage>(
     () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
@@ -1462,9 +1462,7 @@ export default function OnesaAITourismAugmentedExperience() {
                           isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
                         }`}
                       >
-                        <Suspense fallback={<div className="h-full w-full bg-black/70 animate-pulse" />}>
-                          <LazyZimbabweInteractiveGlobe />
-                        </Suspense>
+                        <ZimbabweInteractiveGlobeLoader />
                       </div>
                     ) : cameraEnabled ? (
                       <video

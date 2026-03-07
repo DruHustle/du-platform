@@ -46,7 +46,7 @@ export default function Shop() {
         buttons: [{ text: tx("shop.hero.button1", "Browse Collections"), link: "/shop#collections", variant: "primary", showArrow: true }],
       },
       {
-        image: "/images/pages/shop/crafts_stone_sculptures1.png",
+        image: "/images/pages/shop/crafts_stone_sculptures_01.png",
         badge: tx("shop.hero.badge2", "Craft Heritage"),
         badgeIcon: Globe2,
         title: tx("shop.hero.title2", "Handcrafted Excellence"),
@@ -90,7 +90,7 @@ export default function Shop() {
           ),
       },
       {
-        image: "/images/pages/shop/crafts_binga_baskets1.jpg",
+        image: "/images/pages/shop/crafts_binga_baskets_01.jpg",
         badge: tx("shop.hero.badge6", "Artisan Economy"),
         badgeIcon: Package,
         title: tx("shop.hero.title6", "Crafts with a Story"),

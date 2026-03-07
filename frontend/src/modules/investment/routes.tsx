@@ -1,10 +1,12 @@
-import { createLazyRoute } from "../core/routing";
+import InvestmentModulePage from "./pages/InvestmentModulePage";
+import InvestmentOpportunitiesPage from "./pages/InvestmentOpportunitiesPage";
+import NTIRSearchPage from "./pages/NTIRSearchPage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import { createStaticRoute } from "../core/routing";
 
 export const investmentRoutes = [
-  createLazyRoute("/investment", () => import("./pages/InvestmentModulePage")),
-  createLazyRoute("/investment/opportunities", () => import("./pages/InvestmentOpportunitiesPage"), {
-    prefetchOnIdle: true,
-  }),
-  createLazyRoute("/investment/projects/:id", () => import("./pages/ProjectDetailsPage")),
-  createLazyRoute("/ntir", () => import("./pages/NtirDatabasePage")),
+  createStaticRoute("/investment", InvestmentModulePage),
+  createStaticRoute("/investment/opportunities", InvestmentOpportunitiesPage),
+  createStaticRoute("/investment/projects/:id", ProjectDetailsPage),
+  createStaticRoute("/ntir", NTIRSearchPage),
 ];

@@ -10,7 +10,7 @@ type ArcDatum = {
   name: string;
 };
 
-type ZimbabweInteractiveGlobeProps = {
+export type ZimbabweInteractiveGlobeProps = {
   zoomToHarare?: boolean;
   musicEnabled?: boolean;
 };
@@ -353,7 +353,7 @@ export default function ZimbabweInteractiveGlobe({
         src="/sounds/zimbabwe_a_world_of_wonders.mp3"
         autoPlay={musicEnabled}
         loop
-        preload="auto"
+        preload={musicEnabled ? "metadata" : "none"}
         onLoadedMetadata={(e) => {
           e.currentTarget.muted = false;
           e.currentTarget.volume = 0.5;

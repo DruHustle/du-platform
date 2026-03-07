@@ -1,14 +1,9 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, useTexture, Points, PointMaterial, PositionalAudio } from "@react-three/drei";
-import { XR, createXRStore, useXR } from "@react-three/xr";
-import { VRFloatingControls } from "@/modules/ai/vr/VRFloatingControls";
 import { animateCameraFocus } from "@/modules/ai/vr/interactionManager";
-import { PoiBillboard } from "@/modules/ai/vr/poiSystem";
+import VirtualExperienceCanvas from "@/modules/ai/vr/VirtualExperienceCanvas";
 import * as THREE from "three";
-import { ACESFilmicToneMapping, Vector3 } from "three";
 import {
   ArrowDown,
   ArrowLeft,
@@ -26,1059 +21,37 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { sendOnesaChatMessage } from "@/modules/ai/lib/aiApi";
+import {
+  VR_UI_TEXT,
+  buildNarrationButtonIntro,
+  buildPostIntroStartGuidance,
+  formatNarrationLines,
+  getLanguageLabel,
+  normalizeUiLanguage,
+  type UiLanguage,
+} from "@/modules/ai/vr/virtualExperienceText";
+import { getLocalizedVirtualDestinations } from "@/modules/ai/vr/virtualExperienceContent";
+import type { Point3D } from "@/modules/ai/vr/virtualExperienceTypes";
+import ZimbabweInteractiveGlobeLoader from "@/modules/ai/components/ZimbabweInteractiveGlobeLoader";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
-
-const xrStore = createXRStore();
-const LazyZimbabweInteractiveGlobe = lazy(() => import("@/modules/ai/components/ZimbabweInteractiveGlobe"));
-
-type Hotspot = {
-  targetId: string;
-  label: string;
-  position: [number, number, number];
-};
-
-type PointOfInterest = {
-  id: string;
-  label: string;
-  position: [number, number, number];
-};
-
-type VirtualWalkStage = {
-  id: string;
-  title: string;
-  image: string;
-  caption: string;
-  hotspots?: Hotspot[];
-  pointsOfInterest?: PointOfInterest[];
-};
-
-type VirtualDestination = {
-  id: string;
-  name: string;
-  image: string;
-  vibe?: string;
-  summary: string;
-  experiences?: string[];
-  coordinates: string;
-  locationHighlights?: string[];
-  walkStages: VirtualWalkStage[];
-};
-
-function formatNarrationLines(text: string): string[] {
-  const normalized = String(text ?? "").replace(/\s+/g, " ").trim();
-  if (!normalized) return [];
-  return normalized
-    .split(/(?<=[.!?])\s+/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
-type UiLanguage = "en" | "sn" | "nd" | "de";
-
-function normalizeUiLanguage(value: unknown): UiLanguage {
-  const raw = String(value ?? "").trim().toLowerCase();
-  if (!raw) return "en";
-  const base = raw.split("-")[0];
-  if (base === "en" || base === "sn" || base === "nd" || base === "de") return base;
-  if (raw === "shona") return "sn";
-  if (raw === "ndebele") return "nd";
-  if (raw === "german" || raw === "deutsch") return "de";
-  return "en";
-}
-
-function getLanguageLabel(language: UiLanguage): string {
-  if (language === "sn") return "Shona";
-  if (language === "nd") return "Ndebele";
-  if (language === "de") return "German";
-  return "English";
-}
-
-function buildPostIntroStartGuidance(language: UiLanguage, stage: VirtualWalkStage): string {
-  const hotspotLabel = stage.hotspots?.[0]?.label;
-  const poiLabel = stage.pointsOfInterest?.[0]?.label;
-  if (language === "sn") {
-    return [
-      "Nhanganyaya yapera. Tangai demo zvino.",
-      hotspotLabel
-        ? `Dzvanya mhete yegoridhe ine zita rekuti ${hotspotLabel} kuti mufambe kuenda kune inotevera stage.`
-        : "Dzvanya mhete dzegoridhe kuti mufambe kuenda kune inotevera stage.",
-      poiLabel
-        ? `Wobva wadzvanya point rekuti ${poiLabel} uye chiratidzo chefaira kuti muwane ruzivo rwenzvimbo.`
-        : "Wobva wadzvanya point yebhuruu nechiratidzo chefaira kuti muwane ruzivo rwenzvimbo.",
-    ].join(" ");
-  }
-  if (language === "de") {
-    return [
-      "Die Einfuehrung ist beendet. Starten Sie jetzt die Demo.",
-      hotspotLabel
-        ? `Klicken Sie auf den goldenen Ring ${hotspotLabel}, um zur naechsten Szene zu wechseln.`
-        : "Klicken Sie auf die goldenen Ringe, um zur naechsten Szene zu wechseln.",
-      poiLabel
-        ? `Klicken Sie danach auf den Punkt ${poiLabel} und auf das Dokument-Symbol fuer Ortsinformationen.`
-        : "Klicken Sie danach auf einen blauen Punkt und auf das Dokument-Symbol fuer Ortsinformationen.",
-    ].join(" ");
-  }
-  if (language === "nd") {
-    return [
-      "Isingeniso sesiphelile. Qalisa idemo khathesi.",
-      hotspotLabel
-        ? `Chofoza iringi yegolide ethi ${hotspotLabel} ukuze uye esigabeni esilandelayo.`
-        : "Chofoza amaringi egolide ukuze uye esigabeni esilandelayo.",
-      poiLabel
-        ? `Bese uchofoza iphoyinti ethi ${poiLabel} kanye lesithonjana sedokhumenti ukuze uthole ulwazi lwendawo.`
-        : "Bese uchofoza iphoyinti eliluhlaza kanye lesithonjana sedokhumenti ukuze uthole ulwazi lwendawo.",
-    ].join(" ");
-  }
-  return [
-    "The intro is complete. Start the demo now.",
-    hotspotLabel
-      ? `Click the gold movement ring labeled ${hotspotLabel} to go to the next scene.`
-      : "Click the gold movement rings to go to the next scene.",
-    poiLabel
-      ? `Then click the point named ${poiLabel} and use the document icon for place information.`
-      : "Then click a blue point and use the document icon for place information.",
-  ].join(" ");
-}
-
-function buildNarrationButtonIntro(language: UiLanguage, destinationName: string, destinationSummary: string): string {
-  const summaryLines = formatNarrationLines(destinationSummary);
-  const summarySnippet = summaryLines.slice(0, 2).join(" ").trim();
-  const fallbackSummary =
-    summarySnippet || `${destinationName} is ready for an immersive virtual walkthrough experience.`;
-
-  if (language === "sn") {
-    return [
-      "Mhoro, ndiri Onesa, gwara renyu reVR.",
-      `Mauya ku ${destinationName}.`,
-      fallbackSummary,
-      "Kana magadzirira, dzvanyai mubatise bhatani re Push To Talk kuti mutange hurukuro neni.",
-    ].join(" ");
-  }
-
-  if (language === "de") {
-    return [
-      "Hallo, ich bin Onesa, Ihr virtueller Reisefuehrer.",
-      `Willkommen in ${destinationName}.`,
-      fallbackSummary,
-      "Wenn Sie bereit sind, halten Sie die Push-To-Talk-Taste gedrueckt, um ein Gespraech mit mir zu starten.",
-    ].join(" ");
-  }
-
-  if (language === "nd") {
-    return [
-      "Sawubona, ngingu Onesa, umhlahlandlela wakho we VR.",
-      `Wamukelekile e ${destinationName}.`,
-      fallbackSummary,
-      "Nxa usulungile, bamba ibhathini le Push To Talk ukuze uqale ingxoxo lami.",
-    ].join(" ");
-  }
-
-  return [
-    "Hello, I am Onesa, your virtual guide.",
-    `Welcome to ${destinationName}.`,
-    fallbackSummary,
-    "When you are ready, press and hold the Push To Talk button to start a conversation with me.",
-  ].join(" ");
-}
-
-const VR_UI_COPY: Record<UiLanguage, Partial<Record<string, string>>> = {
-  en: {
-    systemReady: "System Ready",
-    guideThinking: "Guide is thinking...",
-    requestingCloudNarration: "Requesting cloud narration...",
-    transcribing: "Transcribing...",
-    whisperFallback: "Speech transcription unavailable. Falling back to Onesa AI...",
-    onesaFallback: "Using Onesa AI fallback.",
-    localGuidance: "Using local guidance mode.",
-    listening: "Listening...",
-    micNotSupported: "Microphone not supported",
-    micDenied: "Microphone access denied",
-    noAudio: "Audio unavailable. Using browser voice.",
-    cloudQuotaExceeded: "Cloud TTS quota exceeded. Top up credits to keep cloud narration on.",
-    cloudFailed: "Cloud TTS unavailable. Using browser voice.",
-    browserBlocked: "Browser voice blocked. Tap Narration again.",
-    selectDestination: "Select destination",
-    narration: "Narration",
-    selectLocation: "Select location",
-    narrationPending: "Narration will appear here once AI guidance is generated.",
-    conversationEnabled: "enabled",
-    conversationDisabled: "disabled",
-    ambientOn: "on",
-    ambientOff: "off",
-    conversation: "Conversation",
-    sttText: "You",
-    response: "Response",
-    sttUnavailable: "Could not transcribe audio.",
-    pushToTalk: "Push To Talk",
-    releaseToSend: "Release To Send",
-    holdToSpeakHint: "Hold the talk button to speak.",
-    ambient: "Ambient sound",
-    currentContext: "Current Context",
-    conversationOn: "Conversation: On",
-    conversationOff: "Conversation: Off",
-    ambientOnBadge: "Ambient: On",
-    ambientOffBadge: "Ambient: Off",
-    narrationOn: "NARRATION: On",
-    narrationOff: "NARRATION: Off",
-    vrStartNarration: "Start Narration",
-    vrStartConversation: "Start Conversation",
-    voice: "Voice",
-    male: "Male",
-    female: "Female",
-    minimize: "Minimize",
-    fullscreen: "Fullscreen",
-    autoOn: "Auto: On",
-    autoOff: "Auto: Off",
-    walkthrough: "Walkthrough",
-    close: "Close",
-    highlights: "Highlights",
-    loadingPoi: "Loading POI information...",
-    stageLabel: "Stage",
-    pointOfInterest: "Point of interest",
-    nearbyHighlights: "Nearby highlights",
-    relatedHighlights: "Related highlights",
-    enterFullscreen: "Enter fullscreen",
-    exitFullscreen: "Exit fullscreen",
-    zoomIn: "Zoom in",
-    zoomOut: "Zoom out",
-    resetView: "Reset view",
-    toggleAutoRotate: "Toggle auto rotate",
-    showPlaceInformation: "Show place information",
-    lookUp: "Look up",
-    lookLeft: "Look left",
-    lookRight: "Look right",
-    lookDown: "Look down",
-    muteAmbientSound: "Mute ambient sound",
-    enableAmbientSound: "Enable ambient sound",
-    disableTts: "Disable text-to-speech",
-    enableTts: "Enable text-to-speech",
-  },
-  sn: {
-    systemReady: "System yagadzirira",
-    guideThinking: "Gwara riri kufunga...",
-    requestingCloudNarration: "Kukumbira rondedzero yegore...",
-    transcribing: "Tiri kushandura izwi kuita chinyorwa...",
-    whisperFallback: "Kushandura izwi hakusi kuwanikwa. Tiri kushandisa Onesa AI...",
-    onesaFallback: "Kushandisa Onesa AI fallback.",
-    localGuidance: "Kushandisa gwara remuno.",
-    listening: "Tiri kuteerera...",
-    micNotSupported: "Maikorofoni haisi kutsigirwa",
-    micDenied: "Kupinda kumaikorofoni kwarambwa",
-    noAudio: "Audio haisi kuwanikwa. Kushandisa izwi rebrowser.",
-    cloudQuotaExceeded: "Makiredhiti eCloud TTS apera. Wedzera makiredhiti kuti cloud narration irambe iripo.",
-    cloudFailed: "Cloud TTS haisi kuwanikwa. Kushandisa izwi rebrowser.",
-    browserBlocked: "Izwi rebrowser rarambidzwa. Bata Narration zvakare.",
-    selectDestination: "Sarudza nzvimbo",
-    narration: "Rondedzero",
-    selectLocation: "Sarudza nzvimbo",
-    narrationPending: "Rondedzero ichaonekwa pano kana AI yapedza kugadzira gwara.",
-    conversationEnabled: "yabatidzwa",
-    conversationDisabled: "yadzimwa",
-    ambientOn: "yabatidzwa",
-    ambientOff: "yadzimwa",
-    conversation: "Hurukuro",
-    sttText: "Iwe",
-    response: "Mhinduro",
-    sttUnavailable: "Hatina kukwanisa kushandura izwi kuita chinyorwa.",
-    pushToTalk: "Bata Utaure",
-    releaseToSend: "Sunungura Kutumira",
-    holdToSpeakHint: "Bata bhatani kuti utaure.",
-    ambient: "Ruzha rwenzvimbo",
-    currentContext: "Mamiro Azvino",
-    conversationOn: "Hurukuro: Yabatidzwa",
-    conversationOff: "Hurukuro: Yadzimwa",
-    ambientOnBadge: "Ambient: Yabatidzwa",
-    ambientOffBadge: "Ambient: Yadzimwa",
-    narrationOn: "RONDEDZERO: Yabatidzwa",
-    narrationOff: "RONDEDZERO: Yadzimwa",
-    vrStartNarration: "Tanga Rondedzero",
-    vrStartConversation: "Tanga Hurukuro",
-    voice: "Izwi",
-    male: "Murume",
-    female: "Mukadzi",
-    minimize: "Deredza",
-    fullscreen: "Sikirini Yakazara",
-    autoOn: "Auto: Yabatidzwa",
-    autoOff: "Auto: Yadzimwa",
-    walkthrough: "Rwendo",
-    close: "Vhara",
-    highlights: "Zvinoshamisa",
-    loadingPoi: "Tiri kurodha ruzivo rwePOI...",
-    stageLabel: "Chikamu",
-    pointOfInterest: "Nzvimbo inokosha",
-    nearbyHighlights: "Zvimwe zviri pedyo",
-    relatedHighlights: "Zvimwe zvinoenderana",
-    enterFullscreen: "Pinda fullscreen",
-    exitFullscreen: "Buda fullscreen",
-    zoomIn: "Swedera pedyo",
-    zoomOut: "Svedera kure",
-    resetView: "Dzoreredza muono",
-    toggleAutoRotate: "Batidza/dzima auto rotate",
-    showPlaceInformation: "Ratidza ruzivo rwenzvimbo",
-    lookUp: "Tarisa kumusoro",
-    lookLeft: "Tarisa kuruboshwe",
-    lookRight: "Tarisa kurudyi",
-    lookDown: "Tarisa pasi",
-    muteAmbientSound: "Dzima ambient sound",
-    enableAmbientSound: "Batidza ambient sound",
-    disableTts: "Dzima text-to-speech",
-    enableTts: "Batidza text-to-speech",
-  },
-  nd: {},
-  de: {},
-};
-
 const CONVERSATION_TURN_MS = 7000;
 
-// --- 3D SUB-COMPONENTS ---
-
-function VRScene({
-  stage,
-  currentStageIndex,
-  stageOrder,
-  onNavigate,
-  onNavigatePrevious,
-  onPointOfInterestClick,
-  onPointOfInterestInfoClick,
-  hiddenPoiInfoIconIds,
-  ambientAudioEnabled,
-  narrationButtonLabel,
-  conversationButtonLabel,
-  narrationActive,
-  conversationActive,
-  onToggleNarration,
-  onToggleConversation,
-  onLandmarkClick,
-}: {
-  stage: VirtualWalkStage;
-  currentStageIndex: number;
-  stageOrder: string[];
-  onNavigate: (targetId: string) => void;
-  onNavigatePrevious: () => void;
-  onPointOfInterestClick: (poiLabel: string, poiPosition: [number, number, number]) => void;
-  onPointOfInterestInfoClick: (poiId: string, poiLabel: string) => void;
-  hiddenPoiInfoIconIds: ReadonlySet<string>;
-  ambientAudioEnabled: boolean;
-  narrationButtonLabel: string;
-  conversationButtonLabel: string;
-  narrationActive: boolean;
-  conversationActive: boolean;
-  onToggleNarration: () => void;
-  onToggleConversation: () => void;
-  onLandmarkClick: (position: [number, number, number]) => void;
-}) {
-  const { scene } = useThree();
-  const ambientAudioRef = useRef<THREE.PositionalAudio>(null);
-  const isInVrSession = useXR((state) => state.mode === "immersive-vr");
-  const [showVrHint, setShowVrHint] = useState(false);
-  const [interactionCount, setInteractionCount] = useState(0);
-  const guideOrbCooldownRef = useRef(0);
-
-  const registerVrInteraction = useCallback(() => {
-    setInteractionCount((count) => count + 1);
-    setShowVrHint(false);
-  }, []);
-
-  const hotspotBuckets = useMemo(() => {
-    const byId = new Map(stageOrder.map((id, idx) => [id, idx]));
-    const all = stage.hotspots ?? [];
-    const forward = all.filter((hs) => {
-      const targetIdx = byId.get(hs.targetId);
-      return typeof targetIdx === "number" ? targetIdx > currentStageIndex : !/back/i.test(hs.label);
-    });
-    const backward = all.filter((hs) => {
-      const targetIdx = byId.get(hs.targetId);
-      return typeof targetIdx === "number" ? targetIdx < currentStageIndex : /back/i.test(hs.label);
-    });
-    return { forward, backward };
-  }, [stage.hotspots, stageOrder, currentStageIndex]);
-  
-  // FIX: Type assertion to handle the TypeScript 'MappedTextureType' error
-  const texture = useTexture(stage.image) as THREE.Texture;
-  
-  useEffect(() => {
-    if (texture && texture instanceof THREE.Texture) {
-      // Correct mapping for 360 images
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.anisotropy = 16;
-      
-      scene.background = texture;
-      scene.environment = texture;
-    }
-  }, [texture, scene]);
-
-  useEffect(() => {
-    if (!isInVrSession) {
-      setShowVrHint(false);
-      return;
-    }
-    setShowVrHint(true);
-    const timer = window.setTimeout(() => {
-      setShowVrHint(false);
-    }, 11000);
-    return () => window.clearTimeout(timer);
-  }, [isInVrSession, stage.id]);
-
-  useEffect(() => {
-    const audioNode = ambientAudioRef.current;
-    if (!audioNode) return;
-    if (ambientAudioEnabled) {
-      if (!audioNode.isPlaying) {
-        audioNode.play();
-      }
-      audioNode.setVolume(1);
-    } else if (audioNode.isPlaying) {
-      audioNode.pause();
-    }
-  }, [ambientAudioEnabled]);
-
-  return (
-    <group>
-      <PositionalAudio
-        ref={ambientAudioRef as any}
-        url="/sounds/nature_ambient.mp3"
-        loop
-        autoplay={false}
-        distance={60}
-      />
-      <AtmosphericParticles />
-      {hotspotBuckets.forward.map((hs) => (
-        <ForwardWalkRing
-          key={`forward-${hs.targetId}`}
-          position={hs.position}
-          onClick={() => {
-            registerVrInteraction();
-            onNavigate(hs.targetId);
-          }}
-        />
-      ))}
-      {hotspotBuckets.backward.map((hs) => (
-        <BackwardWalkRing
-          key={`back-${hs.targetId}`}
-          position={hs.position}
-          onClick={() => {
-            registerVrInteraction();
-            onNavigatePrevious();
-          }}
-        />
-      ))}
-      {stage.pointsOfInterest?.map((poi) => (
-        <InterestRing
-          key={poi.id}
-          position={poi.position}
-          label={poi.label}
-          onClick={() => {
-            registerVrInteraction();
-            onPointOfInterestClick(poi.label, poi.position);
-          }}
-          onInfoClick={() => {
-            registerVrInteraction();
-            onPointOfInterestInfoClick(poi.id, poi.label);
-          }}
-          infoHidden={hiddenPoiInfoIconIds.has(poi.id)}
-        />
-      ))}
-      <InteractiveLandmark
-        position={[0, -0.95, -4.25]}
-        onClick={(position) => {
-          registerVrInteraction();
-          onLandmarkClick(position);
-        }}
-      />
-      <VRGuideOrb
-        visible={isInVrSession}
-        onActivate={() => {
-          const now = performance.now();
-          if (now - guideOrbCooldownRef.current < 1400) return;
-          guideOrbCooldownRef.current = now;
-          registerVrInteraction();
-          const primaryPoi = stage.pointsOfInterest?.[0];
-          if (primaryPoi) {
-            onPointOfInterestClick(primaryPoi.label, primaryPoi.position);
-            return;
-          }
-          onLandmarkClick([0, -0.95, -4.25]);
-        }}
-      />
-      <VRSessionHintPanel
-        visible={isInVrSession && showVrHint}
-        stageTitle={stage.title}
-        interactionCount={interactionCount}
-      />
-      <VRFloatingControls
-        visible={isInVrSession}
-        narrationLabel={narrationButtonLabel}
-        conversationLabel={conversationButtonLabel}
-        narrationActive={narrationActive}
-        conversationActive={conversationActive}
-        onToggleNarration={() => {
-          registerVrInteraction();
-          onToggleNarration();
-        }}
-        onToggleConversation={() => {
-          registerVrInteraction();
-          onToggleConversation();
-        }}
-      />
-    </group>
-  );
-}
-
-function createVrHintTexture(stageTitle: string, interactionCount: number): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 320;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    const fallback = new THREE.CanvasTexture(canvas);
-    fallback.colorSpace = THREE.SRGBColorSpace;
-    return fallback;
-  }
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const bg = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  bg.addColorStop(0, "rgba(8,14,30,0.92)");
-  bg.addColorStop(1, "rgba(23,37,60,0.9)");
-  ctx.fillStyle = bg;
-  ctx.strokeStyle = "rgba(255,255,255,0.35)";
-  ctx.lineWidth = 6;
-  const radius = 42;
-  ctx.beginPath();
-  ctx.moveTo(radius, 0);
-  ctx.lineTo(canvas.width - radius, 0);
-  ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
-  ctx.lineTo(canvas.width, canvas.height - radius);
-  ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - radius, canvas.height);
-  ctx.lineTo(radius, canvas.height);
-  ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
-  ctx.lineTo(0, radius);
-  ctx.quadraticCurveTo(0, 0, radius, 0);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = "rgba(250,204,21,0.98)";
-  ctx.font = "900 42px system-ui, -apple-system, Segoe UI, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("VR GUIDE", canvas.width * 0.5, 72);
-
-  ctx.fillStyle = "rgba(255,255,255,0.95)";
-  ctx.font = "700 34px system-ui, -apple-system, Segoe UI, sans-serif";
-  ctx.fillText(`Stage: ${stageTitle}`, canvas.width * 0.5, 142);
-
-  ctx.font = "600 30px system-ui, -apple-system, Segoe UI, sans-serif";
-  ctx.fillText("Tap hotspots, POI rings, or the guide orb to explore.", canvas.width * 0.5, 198);
-
-  ctx.fillStyle = "rgba(148,163,184,0.95)";
-  ctx.font = "700 28px system-ui, -apple-system, Segoe UI, sans-serif";
-  ctx.fillText(`Interactions this stage: ${interactionCount}`, canvas.width * 0.5, 252);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
-  return texture;
-}
-
-function VRSessionHintPanel({
-  visible,
-  stageTitle,
-  interactionCount,
-}: {
-  visible: boolean;
-  stageTitle: string;
-  interactionCount: number;
-}) {
-  const { camera } = useThree();
-  const panelRef = useRef<THREE.Mesh>(null);
-  const forwardRef = useRef(new THREE.Vector3());
-  const targetPositionRef = useRef(new THREE.Vector3());
-  const texture = useMemo(() => createVrHintTexture(stageTitle, interactionCount), [stageTitle, interactionCount]);
-
-  useEffect(() => {
-    return () => {
-      texture.dispose();
-    };
-  }, [texture]);
-
-  useFrame((_, delta) => {
-    if (!panelRef.current || !visible) return;
-    forwardRef.current.set(0, 0.2, -1.55).applyQuaternion(camera.quaternion);
-    targetPositionRef.current.copy(camera.position).add(forwardRef.current);
-    panelRef.current.position.lerp(targetPositionRef.current, Math.min(1, delta * 8));
-    panelRef.current.quaternion.slerp(camera.quaternion, Math.min(1, delta * 10));
-  });
-
-  if (!visible) return null;
-
-  return (
-    <mesh ref={panelRef} renderOrder={130}>
-      <planeGeometry args={[1.18, 0.37]} />
-      <meshBasicMaterial map={texture} transparent depthTest={false} depthWrite={false} />
-    </mesh>
-  );
-}
-
-function VRGuideOrb({
-  visible,
-  onActivate,
-}: {
-  visible: boolean;
-  onActivate: () => void;
-}) {
-  const { camera } = useThree();
-  const orbRef = useRef<THREE.Mesh>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
-  const groupRef = useRef<THREE.Group>(null);
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const forwardRef = useRef(new THREE.Vector3());
-  const targetPositionRef = useRef(new THREE.Vector3());
-
-  useFrame((state, delta) => {
-    if (!groupRef.current || !visible) return;
-    const t = state.clock.elapsedTime;
-    forwardRef.current.set(0.72, -0.34, -1.42).applyQuaternion(camera.quaternion);
-    targetPositionRef.current.copy(camera.position).add(forwardRef.current);
-    targetPositionRef.current.y += Math.sin(t * 2.1) * 0.025;
-    groupRef.current.position.lerp(targetPositionRef.current, Math.min(1, delta * 10));
-    groupRef.current.quaternion.slerp(camera.quaternion, Math.min(1, delta * 10));
-
-    if (orbRef.current) {
-      const targetScale = pressed ? 0.92 : hovered ? 1.12 : 1;
-      const s = THREE.MathUtils.lerp(orbRef.current.scale.x, targetScale, Math.min(1, delta * 12));
-      orbRef.current.scale.setScalar(s);
-    }
-    if (ringRef.current) {
-      ringRef.current.rotation.z += delta * 1.4;
-      const pulse = hovered ? 1.22 : 1.08 + Math.sin(t * 3.5) * 0.08;
-      ringRef.current.scale.set(pulse, pulse, pulse);
-    }
-  });
-
-  if (!visible) return null;
-
-  return (
-    <group ref={groupRef}>
-      <mesh ref={ringRef}>
-        <torusGeometry args={[0.085, 0.008, 18, 44]} />
-        <meshBasicMaterial color={hovered ? "#facc15" : "#93c5fd"} transparent opacity={0.9} />
-      </mesh>
-      <mesh
-        ref={orbRef}
-        onClick={onActivate}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => {
-          setHovered(false);
-          setPressed(false);
-        }}
-        onPointerDown={() => setPressed(true)}
-        onPointerUp={() => setPressed(false)}
-      >
-        <sphereGeometry args={[0.052, 28, 28]} />
-        <meshStandardMaterial
-          color={hovered ? "#fef3c7" : "#f8fafc"}
-          emissive={hovered ? "#7c5a00" : "#1d4ed8"}
-          emissiveIntensity={hovered ? 0.95 : 0.45}
-          metalness={0.25}
-          roughness={0.2}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-function ForwardWalkRing({
-  position,
-  onClick,
-}: {
-  position: [number, number, number];
-  onClick: () => void;
-}) {
-  const { camera } = useThree();
-  const ringRef = useRef<THREE.Mesh>(null);
-  const haloRef = useRef<THREE.Mesh>(null);
-  const hitRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState(false);
-  const clickPulseRef = useRef(0);
-
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
-    clickPulseRef.current = Math.max(0, clickPulseRef.current - delta * 3.5);
-    const hoverBoost = hovered ? 0.1 : 0;
-    const clickBoost = clickPulseRef.current * 0.25;
-    if (ringRef.current) {
-      ringRef.current.lookAt(camera.position);
-      const s = 1 + Math.sin(t * 2.4) * 0.08 + hoverBoost + clickBoost;
-      ringRef.current.scale.set(s, s, s);
-    }
-    if (haloRef.current) {
-      haloRef.current.lookAt(camera.position);
-      const s = 1.08 + Math.sin(t * 1.6) * 0.1 + hoverBoost * 0.6 + clickBoost * 0.8;
-      haloRef.current.scale.set(s, s, s);
-    }
-    if (hitRef.current) {
-      hitRef.current.lookAt(camera.position);
-    }
-  });
-
-  return (
-    <group position={position}>
-      <mesh ref={haloRef}>
-        <ringGeometry args={[0.28, 0.4, 48]} />
-        <meshBasicMaterial color={hovered ? "#facc15" : "#d4af37"} transparent opacity={hovered ? 0.45 : 0.3} />
-      </mesh>
-      <mesh ref={ringRef}>
-        <ringGeometry args={[0.2, 0.26, 48]} />
-        <meshBasicMaterial color={hovered ? "#fde047" : "#facc15"} transparent opacity={hovered ? 1 : 0.92} />
-      </mesh>
-
-      {/* Fused control: ring + up-arrow as one in-scene marker */}
-      <group>
-        <mesh position={[0, 0.055, 0]}>
-          <coneGeometry args={[0.05, 0.095, 22]} />
-          <meshBasicMaterial color="#fff6c2" transparent opacity={0.98} />
-        </mesh>
-        <mesh position={[0, -0.005, 0]}>
-          <cylinderGeometry args={[0.012, 0.012, 0.07, 16]} />
-          <meshBasicMaterial color="#fff6c2" transparent opacity={0.95} />
-        </mesh>
-      </group>
-
-      <mesh
-        ref={hitRef}
-        onClick={() => {
-          clickPulseRef.current = 0.24;
-          onClick();
-        }}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-      >
-        <circleGeometry args={[0.17, 40]} />
-        <meshBasicMaterial transparent opacity={0} side={THREE.DoubleSide} />
-      </mesh>
-    </group>
-  );
-}
-
-function BackwardWalkRing({
-  position,
-  onClick,
-}: {
-  position: [number, number, number];
-  onClick: () => void;
-}) {
-  const { camera } = useThree();
-  const ringRef = useRef<THREE.Mesh>(null);
-  const haloRef = useRef<THREE.Mesh>(null);
-  const hitRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState(false);
-  const clickPulseRef = useRef(0);
-
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
-    clickPulseRef.current = Math.max(0, clickPulseRef.current - delta * 3.5);
-    const hoverBoost = hovered ? 0.1 : 0;
-    const clickBoost = clickPulseRef.current * 0.25;
-    if (ringRef.current) {
-      ringRef.current.lookAt(camera.position);
-      const s = 1 + Math.sin(t * 2.2) * 0.08 + hoverBoost + clickBoost;
-      ringRef.current.scale.set(s, s, s);
-    }
-    if (haloRef.current) {
-      haloRef.current.lookAt(camera.position);
-      const s = 1.08 + Math.sin(t * 1.5) * 0.1 + hoverBoost * 0.6 + clickBoost * 0.8;
-      haloRef.current.scale.set(s, s, s);
-    }
-    if (hitRef.current) {
-      hitRef.current.lookAt(camera.position);
-    }
-  });
-
-  return (
-    <group position={position}>
-      <mesh ref={haloRef}>
-        <ringGeometry args={[0.28, 0.4, 48]} />
-        <meshBasicMaterial color={hovered ? "#93c5fd" : "#60a5fa"} transparent opacity={hovered ? 0.45 : 0.28} />
-      </mesh>
-      <mesh ref={ringRef}>
-        <ringGeometry args={[0.2, 0.26, 48]} />
-        <meshBasicMaterial color={hovered ? "#dbeafe" : "#93c5fd"} transparent opacity={hovered ? 1 : 0.9} />
-      </mesh>
-
-      <group>
-        <mesh position={[0, -0.055, 0]} rotation={[Math.PI, 0, 0]}>
-          <coneGeometry args={[0.05, 0.095, 22]} />
-          <meshBasicMaterial color="#e0f2fe" transparent opacity={0.98} />
-        </mesh>
-        <mesh position={[0, 0.005, 0]}>
-          <cylinderGeometry args={[0.012, 0.012, 0.07, 16]} />
-          <meshBasicMaterial color="#e0f2fe" transparent opacity={0.95} />
-        </mesh>
-      </group>
-
-      <mesh
-        ref={hitRef}
-        onClick={() => {
-          clickPulseRef.current = 0.24;
-          onClick();
-        }}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-      >
-        <circleGeometry args={[0.17, 40]} />
-        <meshBasicMaterial transparent opacity={0} side={THREE.DoubleSide} />
-      </mesh>
-    </group>
-  );
-}
-
-function InteractiveLandmark({
-  position,
-  onClick,
-}: {
-  position: [number, number, number];
-  onClick: (position: [number, number, number]) => void;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  const [hovered, setHovered] = useState(false);
-  const clickPulseRef = useRef(0);
-
-  useFrame((state, delta) => {
-    if (!groupRef.current) return;
-    clickPulseRef.current = Math.max(0, clickPulseRef.current - delta * 3);
-    const t = state.clock.elapsedTime;
-    const floatOffset = Math.sin(t * 1.2) * 0.03;
-    const hoverScale = hovered ? 1.08 : 1;
-    const clickScale = 1 + clickPulseRef.current * 0.22;
-    const scale = hoverScale * clickScale;
-
-    groupRef.current.position.set(position[0], position[1] + floatOffset, position[2]);
-    groupRef.current.rotation.y = Math.sin(t * 0.3) * 0.08;
-    groupRef.current.scale.set(scale, scale, scale);
-  });
-
-  return (
-    <group
-      ref={groupRef}
-      position={position}
-      onClick={() => {
-        clickPulseRef.current = 0.28;
-        onClick(position);
-      }}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <mesh position={[0, 0.18, 0]}>
-        <boxGeometry args={[0.36, 0.36, 0.36]} />
-        <meshStandardMaterial
-          color={hovered ? "#facc15" : "#94a3b8"}
-          emissive={hovered ? "#7c5a00" : "#111827"}
-          emissiveIntensity={hovered ? 0.75 : 0.28}
-          metalness={0.25}
-          roughness={0.35}
-        />
-      </mesh>
-      <mesh position={[0, 0.42, 0]}>
-        <coneGeometry args={[0.24, 0.2, 4]} />
-        <meshStandardMaterial
-          color={hovered ? "#fde68a" : "#e2e8f0"}
-          emissive={hovered ? "#8a6500" : "#0f172a"}
-          emissiveIntensity={hovered ? 0.55 : 0.18}
-          metalness={0.1}
-          roughness={0.55}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-function GazeHotspot({
-  position,
-  onClick,
-}: {
-  position: [number, number, number];
-  onClick: () => void;
-}) {
-  const { camera } = useThree();
-  const [hovered, setHovered] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const timer = useRef(0);
-  const arrowGroupRef = useRef<THREE.Group>(null);
-  const pulseRingRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state, delta) => {
-    const worldPos = new Vector3(...position);
-    const camDir = new Vector3();
-    camera.getWorldDirection(camDir);
-    const toPoint = worldPos.sub(camera.position).normalize();
-    const hit = camDir.dot(toPoint) > 0.994;
-    const t = state.clock.elapsedTime;
-
-    if (hit) {
-      setHovered(true);
-      timer.current += delta;
-      setProgress(Math.min(timer.current / 1.5, 1));
-      if (timer.current >= 1.5) { 
-        timer.current = 0; 
-        onClick(); 
-      }
-    } else {
-      setHovered(false);
-      timer.current = Math.max(0, timer.current - delta * 2);
-      setProgress(timer.current / 1.5);
-    }
-
-    if (arrowGroupRef.current) {
-      arrowGroupRef.current.lookAt(camera.position);
-      arrowGroupRef.current.position.y = 0.28 + Math.sin(t * 2.4) * 0.04;
-      const hoverScale = hovered ? 1.16 : 1;
-      arrowGroupRef.current.scale.setScalar(hoverScale + Math.sin(t * 3.2) * 0.04);
-    }
-    if (pulseRingRef.current) {
-      const ringScale = 1 + Math.sin(t * 3.8) * 0.18;
-      pulseRingRef.current.scale.set(ringScale, ringScale, 1);
-    }
-  });
-
-  return (
-    <group position={position}>
-      <mesh>
-        <ringGeometry args={[0.18, 0.2, 32]} />
-        <meshBasicMaterial color={hovered ? "#d4af37" : "#fff"} transparent opacity={0.35} />
-      </mesh>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.26, 0.29, 40]} />
-        <meshBasicMaterial color="#d4af37" transparent opacity={hovered ? 0.45 : 0.18} />
-      </mesh>
-      {progress > 0 && (
-        <mesh rotation={[0, 0, Math.PI / 2]}>
-          <ringGeometry args={[0.21, 0.24, 32, 1, 0, progress * Math.PI * 2]} />
-          <meshBasicMaterial color="#d4af37" />
-        </mesh>
-      )}
-      <mesh>
-        <sphereGeometry args={[0.04, 16, 16]} />
-        <meshBasicMaterial color="#fff" />
-      </mesh>
-      <group ref={arrowGroupRef} position={[0, 0.28, 0]}>
-        <mesh position={[0, 0.08, 0]}>
-          <coneGeometry args={[0.08, 0.18, 24]} />
-          <meshBasicMaterial color={hovered ? "#facc15" : "#f8fafc"} />
-        </mesh>
-        <mesh position={[0, -0.04, 0]}>
-          <cylinderGeometry args={[0.014, 0.014, 0.1, 18]} />
-          <meshBasicMaterial color={hovered ? "#facc15" : "#f8fafc"} />
-        </mesh>
-        <mesh ref={pulseRingRef} rotation={[Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
-          <ringGeometry args={[0.11, 0.13, 28]} />
-          <meshBasicMaterial color="#facc15" transparent opacity={hovered ? 0.85 : 0.55} />
-        </mesh>
-      </group>
-    </group>
-  );
-}
-
-function InterestRing({
-  position,
-  label,
-  onClick,
-  onInfoClick,
-  infoHidden,
-}: {
-  position: [number, number, number];
-  label: string;
-  onClick: () => void;
-  onInfoClick: () => void;
-  infoHidden?: boolean;
-}) {
-  const { camera } = useThree();
-  const ringRef = useRef<THREE.Mesh>(null);
-  const haloRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState(false);
-  const clickPulseRef = useRef(0);
-
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
-    clickPulseRef.current = Math.max(0, clickPulseRef.current - delta * 3.2);
-    const hoverBoost = hovered ? 0.12 : 0;
-    const clickBoost = clickPulseRef.current * 0.35;
-    if (ringRef.current) {
-      ringRef.current.lookAt(camera.position);
-      const s = 1 + Math.sin(t * 2.2) * 0.06 + hoverBoost + clickBoost;
-      ringRef.current.scale.set(s, s, s);
-    }
-    if (haloRef.current) {
-      haloRef.current.lookAt(camera.position);
-      const s = 1.06 + Math.sin(t * 1.7) * 0.08 + hoverBoost * 0.55 + clickBoost * 0.75;
-      haloRef.current.scale.set(s, s, s);
-    }
-  });
-
-  return (
-    <group position={position}>
-      <mesh ref={haloRef}>
-        <ringGeometry args={[0.22, 0.3, 40]} />
-        <meshBasicMaterial color={hovered ? "#60a5fa" : "#3b82f6"} transparent opacity={hovered ? 0.34 : 0.22} />
-      </mesh>
-      <mesh ref={ringRef}>
-        <ringGeometry args={[0.17, 0.2, 40]} />
-        <meshBasicMaterial color={hovered ? "#dbeafe" : "#93c5fd"} transparent opacity={hovered ? 0.95 : 0.8} />
-      </mesh>
-      <mesh
-        onClick={() => {
-          clickPulseRef.current = 0.25;
-          onClick();
-        }}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-      >
-        <circleGeometry args={[0.03, 20]} />
-        <meshBasicMaterial color={hovered ? "#ffffff" : "#dbeafe"} transparent opacity={hovered ? 1 : 0.95} />
-      </mesh>
-      <PoiBillboard label={label} onInfoClick={onInfoClick} infoHidden={infoHidden} />
-    </group>
-  );
-}
-
-function AtmosphericParticles() {
-  const pointsRef = useRef<THREE.Points>(null);
-  const points = useMemo(() => new Float32Array(300).map(() => (Math.random() - 0.5) * 12), []);
-
-  useFrame((state) => {
-    if (!pointsRef.current) return;
-    const t = state.clock.elapsedTime;
-    pointsRef.current.rotation.y = t * 0.015;
-    pointsRef.current.rotation.x = Math.sin(t * 0.25) * 0.05;
-  });
-
-  return (
-    <Points ref={pointsRef as any} positions={points} stride={3}>
-      <PointMaterial transparent color="#fff" size={0.012} sizeAttenuation depthWrite={false} opacity={0.2} />
-    </Points>
-  );
-}
-
-function SceneLoadingFallback() {
-  return (
-    <group>
-      <AtmosphericParticles />
-    </group>
-  );
+function cancelBrowserSpeech() {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
 }
 
 // --- MAIN PAGE COMPONENT ---
 
-export default function OnesaAITourismVirtualExperience() {
+export default function TourismVirtualExperiencePage() {
   const { i18n, t } = useTranslation();
   const uiLanguage = useMemo<UiLanguage>(
     () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
     [i18n.language, i18n.resolvedLanguage]
   );
   const ui = useMemo(
-    () => ({ ...VR_UI_COPY.en, ...(VR_UI_COPY[uiLanguage] ?? {}) }) as Record<string, string>,
+    () => ({ ...VR_UI_TEXT.en, ...(VR_UI_TEXT[uiLanguage] ?? {}) }) as Record<string, string>,
     [uiLanguage]
   );
   const selectedLanguageLabel = useMemo(() => getLanguageLabel(uiLanguage), [uiLanguage]);
@@ -1140,107 +113,7 @@ export default function OnesaAITourismVirtualExperience() {
   const isRecordingRef = useRef(false);
   const globeTransitionTimerRef = useRef<number | null>(null);
 
-  const destinations: VirtualDestination[] = useMemo(
-    () => [
-      {
-        id: "cape_town",
-        name: "Sample City",
-        image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
-        vibe: "Clifftop + Coastal View",
-        summary:
-          "Sample City is a VR demo scene showing how the experience works: pick a destination, move between 360 stages using hotspots, and listen through Narration or Conversation mode. Once Zimbabwe destination image data is uploaded, the same flow will run on those real locations.",
-        experiences: [],
-        coordinates: "-33.9249, 18.4241",
-        locationHighlights: [
-          "360 stage-to-stage hotspot navigation",
-          "Point-of-interest click and info overlay flow",
-          "Narration and live conversation guidance modes",
-        ],
-        walkStages: [
-          {
-            id: "vf360_1",
-            title: "Clifftop Vista",
-            image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
-            caption:
-              "Orientation stage for testing the core controls: look around, zoom, and inspect points of interest.",
-            hotspots: [{ targetId: "vf360_2", label: "To Rock Arch View", position: [5, -1, -4] }],
-            pointsOfInterest: [
-              { id: "vf360_1_poi_1", label: "Ridge Edge", position: [2.1, -0.8, -5.4] },
-              { id: "vf360_1_poi_2", label: "Skyline Frame", position: [-2.4, -0.6, -5.1] },
-            ],
-          },
-          {
-            id: "vf360_2",
-            title: "Rock Arch View",
-            image: "/images/pages/tourism/vr-walk/vf_360_02.jpg",
-            caption: "Interaction stage for moving between scenes with hotspots while testing guided narration behavior.",
-            hotspots: [
-              { targetId: "vf360_3", label: "To Summit Panorama", position: [4.8, -1, -3.7] },
-              { targetId: "vf360_1", label: "Back to Clifftop Vista", position: [-5, -1, 4] },
-            ],
-            pointsOfInterest: [
-              { id: "vf360_2_poi_1", label: "Rock Arch", position: [0.8, -0.7, -5.7] },
-              { id: "vf360_2_poi_2", label: "Valley Opening", position: [-1.8, -0.9, -5.4] },
-            ],
-          },
-          {
-            id: "vf360_3",
-            title: "Summit Panorama",
-            image: "/images/pages/tourism/vr-walk/vf_360_03.jpg",
-            caption:
-              "Final stage showing the complete VR tour loop before production Zimbabwe destination media is connected.",
-            hotspots: [{ targetId: "vf360_1", label: "Back to Clifftop Vista", position: [-4.8, -1, 3.8] }],
-            pointsOfInterest: [
-              { id: "vf360_3_poi_1", label: "Panorama Crest", position: [1.3, -0.8, -5.8] },
-              { id: "vf360_3_poi_2", label: "Horizon Point", position: [-2.2, -0.7, -5.3] },
-            ],
-          },
-        ],
-      },
-    ],
-    []
-  );
-
-  const localizedDestinations = useMemo(() => {
-    if (uiLanguage !== "sn") return destinations;
-    return destinations.map((destination) => ({
-      ...destination,
-      name: "Guta Rekuyedza",
-      vibe: "Pamusoro pegomo + Muono wemahombekombe",
-      summary:
-        "Guta Rekuyedza inzvimbo yekuratidza mashandiro eVR: sarudza nzvimbo, famba pakati pema360 stages uchishandisa hotspots, uye shandisa Narration kana Conversation mode. Kana mifananidzo yenzvimbo dzekushanya dzeZimbabwe yaiswa, mashandiro aya achashanda panzvimbo chaidzo.",
-      locationHighlights: [
-        "Hotspot navigation pakati pema360 stages",
-        "Point-of-interest kubaya nekuona ruzivo",
-        "Narration neConversation guidance modes",
-      ],
-      walkStages: destination.walkStages.map((stage, idx) => ({
-        ...stage,
-        title:
-          idx === 0
-            ? "Muono wePamusoro"
-            : idx === 1
-              ? "Muono weRock Arch"
-              : "Muono Wakafara",
-        caption:
-          idx === 0
-            ? "Stage yekutanga yekuyedza ma-control: tarisa-tarisa, zoom, uye bvunza point of interest."
-            : idx === 1
-              ? "Stage yekudyidzana yekufamba pakati pezviitiko uchishandisa hotspots uye kuyedza narration."
-              : "Stage yekupedzisira inoratidza kutenderera kwakazara kweVR tisati tabatanidza media yeZimbabwe.",
-      })),
-    }));
-  }, [destinations, uiLanguage]);
-
-  const stageImageUrls = useMemo(() => {
-    const urls = new Set<string>();
-    for (const destination of localizedDestinations) {
-      for (const stage of destination.walkStages) {
-        if (stage.image) urls.add(stage.image);
-      }
-    }
-    return Array.from(urls);
-  }, [localizedDestinations]);
+  const localizedDestinations = useMemo(() => getLocalizedVirtualDestinations(uiLanguage), [uiLanguage]);
 
   const stopViewportMusic = useCallback(() => {
     const allAudioNodes = new Set<HTMLAudioElement>();
@@ -1275,6 +148,7 @@ export default function OnesaAITourismVirtualExperience() {
     localizedDestinations.find((destination) => destination.id === selectedDestinationId) ?? localizedDestinations[0];
   const walkStages = currentDestination.walkStages;
   const currentStage = walkStages[walkStageIndex];
+  const stageOrder = useMemo(() => walkStages.map((stage) => stage.id), [walkStages]);
   const sidebarNarration = useMemo(() => {
     if (!isConversationMode) {
       return [currentDestination.summary, `${ui.stageLabel}: ${currentStage.title}`, currentStage.caption].join(" ");
@@ -1361,13 +235,17 @@ export default function OnesaAITourismVirtualExperience() {
   }, [ui.systemReady]);
 
   useEffect(() => {
-    stageImageUrls.forEach((imageUrl) => {
+    if (!selectedDestinationId || walkStages.length === 0) return;
+
+    const stageIndexesToPreload = new Set([walkStageIndex, walkStageIndex + 1, walkStageIndex - 1]);
+    stageIndexesToPreload.forEach((index) => {
+      const imageUrl = walkStages[index]?.image;
+      if (!imageUrl) return;
       const img = new Image();
       img.decoding = "async";
-      img.loading = "eager";
       img.src = imageUrl;
     });
-  }, [stageImageUrls]);
+  }, [selectedDestinationId, walkStageIndex, walkStages]);
 
   useEffect(() => {
     if (walkStageIndex >= walkStages.length) {
@@ -1629,9 +507,7 @@ export default function OnesaAITourismVirtualExperience() {
       const url = URL.createObjectURL(playableBlob);
       if (ttsAudioUrlRef.current) URL.revokeObjectURL(ttsAudioUrlRef.current);
       ttsAudioUrlRef.current = url;
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
+      cancelBrowserSpeech();
       ttsAudioRef.current.pause();
       ttsAudioRef.current.currentTime = 0;
       ttsAudioRef.current.src = url;
@@ -1838,7 +714,7 @@ export default function OnesaAITourismVirtualExperience() {
     setIsTtsEnabled(nextEnabled);
 
     if (!nextEnabled) {
-      window.speechSynthesis.cancel();
+      cancelBrowserSpeech();
       if (ttsAudioRef.current) {
         ttsAudioRef.current.pause();
       }
@@ -1888,9 +764,7 @@ export default function OnesaAITourismVirtualExperience() {
       ttsAudioRef.current.pause();
       ttsAudioRef.current.currentTime = 0;
     }
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
+    cancelBrowserSpeech();
     setIsNarrationPlaying(false);
     queuedCloudNarrationRef.current = null;
     cloudTtsRequestInFlightRef.current = false;
@@ -2205,11 +1079,6 @@ export default function OnesaAITourismVirtualExperience() {
     }
   }, [clearRecordingTurnTimer, processConversation, ui.listening, ui.micDenied, ui.micNotSupported]);
 
-  const goToNextStage = useCallback(() => {
-    if (!walkStages.length) return;
-    setWalkStageIndex((current) => (current + 1) % walkStages.length);
-  }, [walkStages.length]);
-
   const rotateView = useCallback((direction: "left" | "right" | "up" | "down") => {
     setAutoRotateEnabled(false);
     const controls = orbitControlsRef.current;
@@ -2285,14 +1154,6 @@ export default function OnesaAITourismVirtualExperience() {
   }, []);
 
   useEffect(() => {
-    const controls = orbitControlsRef.current;
-    if (!controls) return;
-    controls.autoRotate = autoRotateEnabled;
-    controls.autoRotateSpeed = -0.4;
-    controls.update?.();
-  }, [autoRotateEnabled]);
-
-  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
@@ -2362,9 +1223,7 @@ export default function OnesaAITourismVirtualExperience() {
       ttsAudioRef.current.pause();
       ttsAudioRef.current.currentTime = 0;
     }
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
+    cancelBrowserSpeech();
   }, [isConversationMode, isTtsEnabled]);
 
   const handleConversationToggle = useCallback(async () => {
@@ -2379,9 +1238,7 @@ export default function OnesaAITourismVirtualExperience() {
         ttsAudioRef.current.pause();
         ttsAudioRef.current.currentTime = 0;
       }
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
+      cancelBrowserSpeech();
       await unlockAudio();
       setIsConversationMode(true);
       setAiStatus(ui.holdToSpeakHint ?? ui.systemReady);
@@ -2407,7 +1264,7 @@ export default function OnesaAITourismVirtualExperience() {
   }, [isConversationMode, stopRecording]);
 
   const handlePointOfInterestClick = useCallback(
-    async (poiLabel: string, poiPosition: [number, number, number]) => {
+    async (poiLabel: string, poiPosition: Point3D) => {
       setAutoRotateEnabled(false);
       const camera = cameraRef.current;
       const controls = orbitControlsRef.current;
@@ -2488,7 +1345,7 @@ export default function OnesaAITourismVirtualExperience() {
   );
 
   const handleLandmarkClick = useCallback(
-    async (landmarkPosition: [number, number, number]) => {
+    async (landmarkPosition: Point3D) => {
       const camera = cameraRef.current;
       const controls = orbitControlsRef.current;
       if (camera) {
@@ -2676,9 +1533,7 @@ export default function OnesaAITourismVirtualExperience() {
                           ttsAudioRef.current.pause();
                           ttsAudioRef.current.currentTime = 0;
                         }
-                        if (typeof window !== "undefined" && window.speechSynthesis) {
-                          window.speechSynthesis.cancel();
-                        }
+                        cancelBrowserSpeech();
                       }
                       if (!selectedDestinationId && nextId) {
                         setIsGlobeZoomTransitioning(true);
@@ -2763,70 +1618,44 @@ export default function OnesaAITourismVirtualExperience() {
                         isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
                       }`}
                     >
-                      <Suspense fallback={<div className="h-full w-full bg-black/70 animate-pulse" />}>
-                        <LazyZimbabweInteractiveGlobe
-                          zoomToHarare={isGlobeZoomTransitioning}
-                          musicEnabled={!selectedDestinationId}
-                        />
-                      </Suspense>
+                      <ZimbabweInteractiveGlobeLoader
+                        zoomToHarare={isGlobeZoomTransitioning}
+                        musicEnabled={!selectedDestinationId}
+                      />
                     </div>
                   ) : (
-                    <Canvas
-                      camera={{ position: [0, 0, 0.1], fov: 65 }}
-                      gl={{ antialias: true, alpha: false, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
-                      style={{ background: "#000000" }}
-                      onPointerMissed={() => {
-                        handleVrPointerMissed();
+                    <VirtualExperienceCanvas
+                      uiLanguage={uiLanguage}
+                      stage={currentStage}
+                      currentStageIndex={walkStageIndex}
+                      stageOrder={stageOrder}
+                      hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
+                      ambientAudioEnabled={!isConversationMode && isSoundEnabled && !isNarrationPlaying}
+                      narrationButtonLabel={ui.vrStartNarration}
+                      conversationButtonLabel={ui.vrStartConversation}
+                      narrationActive={isTtsEnabled}
+                      conversationActive={isConversationMode}
+                      autoRotateEnabled={autoRotateEnabled}
+                      cameraRef={cameraRef}
+                      orbitControlsRef={orbitControlsRef}
+                      onNavigate={(id: string) => {
+                        const nextIndex = walkStages.findIndex((stage) => stage.id === id);
+                        if (nextIndex >= 0) setWalkStageIndex(nextIndex);
                       }}
-                      onCreated={({ camera, gl, scene }) => {
-                        gl.xr.enabled = true;
-                        gl.setClearColor(0x000000, 1);
-                        scene.background = new THREE.Color(0x000000);
-                        cameraRef.current = camera as THREE.PerspectiveCamera;
+                      onNavigatePrevious={() => {
+                        setWalkStageIndex((current) => Math.max(0, current - 1));
                       }}
-                    >
-                      <XR store={xrStore}>
-                        <Suspense fallback={<SceneLoadingFallback />}>
-                          <VRScene
-                            stage={currentStage}
-                            currentStageIndex={walkStageIndex}
-                            stageOrder={walkStages.map((s) => s.id)}
-                            onNavigate={(id: string) => {
-                              const nextIndex = walkStages.findIndex((stage) => stage.id === id);
-                              if (nextIndex >= 0) setWalkStageIndex(nextIndex);
-                            }}
-                            onNavigatePrevious={() => {
-                              setWalkStageIndex((current) => Math.max(0, current - 1));
-                            }}
-                            onPointOfInterestClick={handlePointOfInterestClick}
-                            onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
-                            hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
-                            ambientAudioEnabled={!isConversationMode && isSoundEnabled && !isNarrationPlaying}
-                            narrationButtonLabel={ui.vrStartNarration}
-                            conversationButtonLabel={ui.vrStartConversation}
-                            narrationActive={isTtsEnabled}
-                            conversationActive={isConversationMode}
-                            onToggleNarration={handleNarrationToggle}
-                            onToggleConversation={() => {
-                              void handleConversationToggle();
-                            }}
-                            onLandmarkClick={(position) => {
-                              void handleLandmarkClick(position);
-                            }}
-                          />
-                        </Suspense>
-                        <OrbitControls
-                          ref={orbitControlsRef}
-                          enableZoom
-                          enablePan
-                          rotateSpeed={-0.3}
-                          dampingFactor={0.05}
-                          enableDamping
-                          autoRotate={autoRotateEnabled}
-                          autoRotateSpeed={-0.4}
-                        />
-                      </XR>
-                    </Canvas>
+                      onPointOfInterestClick={handlePointOfInterestClick}
+                      onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
+                      onToggleNarration={handleNarrationToggle}
+                      onToggleConversation={() => {
+                        void handleConversationToggle();
+                      }}
+                      onLandmarkClick={(position) => {
+                        void handleLandmarkClick(position);
+                      }}
+                      onPointerMissed={handleVrPointerMissed}
+                    />
                   )}
 
                   {/* Fullscreen Toggle */}

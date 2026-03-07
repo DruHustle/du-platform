@@ -1,3 +1,4 @@
-import { createLazyRoute } from "../core/routing";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import { createStaticRoute } from "../core/routing";
 
-export const adminRoutes = [createLazyRoute("/admin", () => import("./pages/AdminDashboardPage"))];
+export const adminRoutes = [createStaticRoute("/admin", AdminDashboardPage)];

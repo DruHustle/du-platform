@@ -52,7 +52,7 @@ export default function Technology() {
       highlight: t("tech.hero.highlight4") || "Future Skills"
     },
     {
-      image: "/images/pages/trade/export_port1.jpg",
+      image: "/images/pages/trade/export_port_01.jpg",
       badge: t("tech.hero.badge5") || "Digital Trade",
       badgeIcon: Network,
       title: t("tech.hero.title5") || "Technology for Logistics",
@@ -106,7 +106,7 @@ export default function Technology() {
     },
     {
       title: t('tech.sectors.logistics.title') || "Smart Logistics",
-      image: "/images/pages/trade/export_port1.jpg",
+      image: "/images/pages/trade/export_port_01.jpg",
       description: t('tech.sectors.logistics.desc') || "Optimizing supply chains and cross-border trade routes through the Zimbabwean corridor.",
       details: [t('tech.sectors.logistics.d1') || "Route optimization for regional distribution", t('tech.sectors.logistics.d2') || "Real-time tracking and border clearance assistance"]
     },
@@ -203,11 +203,9 @@ export default function Technology() {
                       {t("tech.onesa_matter.title") || "Why Onesa AI Matters"}
                     </h3>
                   </div>
-                  <Link href="/onesa-ai-chat">
-                    <Button className="shrink-0 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                      {t('tech.chat_with_onesa') || "Chat with Onesa"}
-                    </Button>
-                  </Link>
+                  <Button asChild className="shrink-0 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+                    <Link href="/onesa-ai-chat">{t('tech.chat_with_onesa') || "Chat with Onesa"}</Link>
+                  </Button>
                 </div>
                 <p className="max-w-3xl mx-auto text-center text-white/75 text-sm leading-relaxed mb-4">
                   {t("tech.onesa_matter.headline") || "Africa deserves AI that understands Africa."}

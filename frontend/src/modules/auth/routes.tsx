@@ -1,8 +1,12 @@
-import { createLazyRoute } from "../core/routing";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { createStaticRoute } from "../core/routing";
 
 export const authRoutes = [
-  createLazyRoute("/login", () => import("./pages/LoginPage"), { prefetchOnIdle: true }),
-  createLazyRoute("/register", () => import("./pages/RegisterPage"), { prefetchOnIdle: true }),
-  createLazyRoute("/forgot-password", () => import("./pages/ForgotPasswordPage"), { prefetchOnIdle: true }),
-  createLazyRoute("/reset-password", () => import("./pages/ResetPasswordPage"), { prefetchOnIdle: true }),
+  createStaticRoute("/login", LoginPage),
+  createStaticRoute("/register", RegisterPage),
+  createStaticRoute("/forgot-password", ForgotPasswordPage),
+  createStaticRoute("/reset-password", ResetPasswordPage),
 ];

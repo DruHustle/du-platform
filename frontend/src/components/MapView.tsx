@@ -116,7 +116,7 @@ interface MapViewProps {
   onMapReady?: (map: google.maps.Map) => void;
 }
 
-export function MapView({
+export default function MapView({
   className,
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,

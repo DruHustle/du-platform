@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, clearAuthToken, type AuthUser } from "@/lib/api";
 import { clearCurrentUserBootstrap, resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
+import { setAppLanguage } from "@/i18n";
 
 
 interface LayoutProps {
@@ -57,7 +58,7 @@ export function getDesktopUtilityIconsClass(useEdgePosition: boolean): string {
 export default function Layout({ children }: LayoutProps) {
   type AboutSectionId = "vision" | "mission" | "values" | "who" | "what";
   const { t, i18n } = useTranslation();
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -181,7 +182,7 @@ export default function Layout({ children }: LayoutProps) {
       clearCurrentUserBootstrap();
       clearAuthToken();
       setUser(null);
-      window.location.href = "/";
+      setLocation("/", { replace: true });
     }
   };
 
@@ -276,7 +277,7 @@ export default function Layout({ children }: LayoutProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+      setLocation(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
     setSearchOpen(false);
     setSearchQuery("");
@@ -377,8 +378,10 @@ export default function Layout({ children }: LayoutProps) {
               {navigation.map((item) => {
                 const active = isActive(item.href);
                 return (
-                  <Link key={item.href} href={item.href}>
-                    <button className={`
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`
                       relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
                       ${active 
                           ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]' 
@@ -386,9 +389,9 @@ export default function Layout({ children }: LayoutProps) {
                             ? 'text-white/70 hover:text-yellow-400 hover:bg-yellow-400/5' 
                             : 'text-white/70 hover:text-yellow-400 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)]'
                       }
-                    `}>
-                      {item.name}
-                    </button>
+                    `}
+                  >
+                    {item.name}
                   </Link>
                 );
               })}
@@ -482,7 +485,7 @@ export default function Layout({ children }: LayoutProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-2xl p-2 shadow-2xl min-w-[12rem]">
                 {languages.map((lang) => (
-                  <DropdownMenuItem key={lang.code} onClick={() => i18n.changeLanguage(lang.code)} className="cursor-pointer hover:bg-white/10 py-2 font-bold text-[10px] uppercase tracking-widest rounded-xl">
+                  <DropdownMenuItem key={lang.code} onClick={() => void setAppLanguage(lang.code)} className="cursor-pointer hover:bg-white/10 py-2 font-bold text-[10px] uppercase tracking-widest rounded-xl">
                     <span className="mr-3 text-base">{lang.flag}</span> {lang.name}
                   </DropdownMenuItem>
                 ))}
@@ -513,11 +516,9 @@ export default function Layout({ children }: LayoutProps) {
                   </DropdownMenuItem>
                 ) : user ? (
                   <>
-                    <Link href="/admin">
-                      <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
-                        <div className="flex items-center gap-2 w-full">Admin</div>
-                      </DropdownMenuItem>
-                    </Link>
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
+                      <Link href="/admin">Admin</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
                       <div className="flex items-center gap-2 w-full">
                         <LogOut className="h-4 w-4" />
@@ -527,21 +528,13 @@ export default function Layout({ children }: LayoutProps) {
                   </>
                 ) : (
                   <>
-                    <Link href="/login">
-                      <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
-                        <div className="flex items-center gap-2 w-full">
-                          {t('login')}
-                        </div>
-                      </DropdownMenuItem>
-                    </Link>
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
+                      <Link href="/login">{t('login')}</Link>
+                    </DropdownMenuItem>
 
-                    <Link href="/register">
-                      <DropdownMenuItem className="cursor-pointer rounded-xl hover:bg-zim-gold hover:text-zim-black py-2.5 px-3 text-sm font-bold transition-all duration-300 outline-none">
-                        <div className="flex items-center gap-2 w-full">
-                          {t('register')}
-                        </div>
-                      </DropdownMenuItem>
-                    </Link>
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl hover:bg-zim-gold hover:text-zim-black py-2.5 px-3 text-sm font-bold transition-all duration-300 outline-none">
+                      <Link href="/register">{t('register')}</Link>
+                    </DropdownMenuItem>
                   </>
                 )}
               </DropdownMenuContent>
@@ -551,6 +544,8 @@ export default function Layout({ children }: LayoutProps) {
             <Button
               variant="ghost"
               size="icon"
+              type="button"
+              aria-label={mobileMenuOpen ? t("nav.close_menu", { defaultValue: "Close menu" }) : t("nav.open_menu", { defaultValue: "Open menu" })}
               className={`lg:hidden rounded-full h-10 w-10 transition-all duration-300 z-[220] ${
                 mobileMenuOpen 
                   ? 'bg-yellow-400 text-slate-950 scale-105 shadow-lg' 
@@ -609,19 +604,19 @@ export default function Layout({ children }: LayoutProps) {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.03 }}
                       >
-                        <Link href={item.href}>
-                          <Button
-                            variant="ghost"
-                            className={`w-full justify-start text-sm font-medium h-11 rounded-xl transition-all ${
-                              isActive(item.href) 
-                                ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20" 
-                                : "text-white/70 hover:bg-white/5"
-                            }`}
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
+                        <Button
+                          asChild
+                          variant="ghost"
+                          className={`w-full justify-start text-sm font-medium h-11 rounded-xl transition-all ${
+                            isActive(item.href) 
+                              ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20" 
+                              : "text-white/70 hover:bg-white/5"
+                          }`}
+                        >
+                          <Link href={item.href} onClick={() => setMobileMenuOpen(false)}>
                             {item.name}
-                          </Button>
-                        </Link>
+                          </Link>
+                        </Button>
                       </motion.div>
                     ))}
                   </nav>
@@ -643,7 +638,7 @@ export default function Layout({ children }: LayoutProps) {
                               : "bg-white/5 border-white/10 text-white/70"
                           }`}
                           onClick={() => {
-                            i18n.changeLanguage(lang.code);
+                            void setAppLanguage(lang.code);
                             setMobileMenuOpen(false);
                           }}
                         >
