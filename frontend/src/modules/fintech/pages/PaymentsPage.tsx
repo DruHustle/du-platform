@@ -116,16 +116,6 @@ export default function Payments() {
     [t]
   );
 
-  const introData = {
-    icon: Wallet,
-    title: tr("payments.intro.title", "Cross-Border Payments"),
-    description:
-      tr(
-        "payments.intro.description",
-        "Diaspora Unlocked integrates trusted financial partners to provide secure remittances, family care, and coverage services for Zimbabweans abroad."
-      ),
-  };
-
   const paymentProcessTiles = [
     {
       emoji: "🔐",
@@ -167,11 +157,11 @@ export default function Payments() {
 
   return (
     <Layout>
-      <SubPageHero heroSlides={heroSlides} intro={introData} />
+      <SubPageHero heroSlides={heroSlides} />
 
       <section className="p-5 pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container mx-auto px-6 space-y-6">
-          <div className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
+        <div className="container relative z-10 mx-auto px-6 space-y-6">
+          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
             <div className="relative z-10">
               <div className="mb-10 text-center">
                 <div className="flex items-center justify-center gap-3 mb-5">
@@ -184,33 +174,32 @@ export default function Payments() {
                     "Follow a clear four-step journey: add details, review, pay, and collect. Security is applied at every stage with server-side processing, compliance checks, and traceable transaction references. Airtime is often near-instant, while mobile money, card, and cash pickup can take longer depending on provider processing windows."
                   )}
                 </p>
+                <p className="mx-auto mt-3 max-w-3xl text-[11px] font-light leading-relaxed text-white/60">
+                  {tr(
+                    "payments.disclaimer",
+                    "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds."
+                  )}
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {paymentProcessTiles.map((tile) => (
                   <div
                     key={tile.title}
-                    className="group rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-4 text-center transition-all duration-500 hover:bg-slate-950/60"
+                    className="group flex h-full flex-col rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 text-center transition-all duration-500 hover:bg-slate-950/60"
                   >
-                    <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 p-2">
-                      <span className="text-2xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{tile.emoji}</span>
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 p-2.5">
+                      <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{tile.emoji}</span>
                     </div>
                     <h3 className={processTileTitleClass}>{tile.title}</h3>
                     <p className={processTileBodyClass}>{tile.description}</p>
                   </div>
                 ))}
               </div>
-
-              <p className="mx-auto mt-6 max-w-3xl text-center text-[11px] font-light leading-relaxed text-white/70">
-                {tr(
-                  "payments.disclaimer",
-                  "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds."
-                )}
-              </p>
             </div>
           </div>
 
-          <div id="send-money" className="pt-5 scroll-mt-32 w-[calc(100%+2.5rem)] -mx-5 md:w-auto md:mx-0">
+          <div id="send-money" className="pt-5 scroll-mt-32">
             <SendMoneyForm forcedTransferType={heroTransferType} />
           </div>
         </div>

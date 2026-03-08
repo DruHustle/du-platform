@@ -9,8 +9,8 @@ import FormattedChatMessage from "@/components/FormattedChatMessage";
 import { getApiErrorMessage } from "@/lib/api";
 import { checkOnesaHealth, sendOnesaChatMessage, type OnesaChatMessage } from "@/modules/ai/lib/aiApi";
 
-const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v1";
-const DESKTOP_BUBBLE_STORAGE_KEY = "onesa-desktop-bubble-position-v1";
+const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v3";
+const DESKTOP_BUBBLE_STORAGE_KEY = "onesa-desktop-bubble-position-v2";
 const HIDE_ONESA_BUBBLE_ROUTES = [
   "/onesa-ai-chat",
   "/onesa-ai-tourism-virtual-experience",
@@ -71,6 +71,7 @@ export default function OnesaFloatingAssistant() {
   const [onesaIsOnline, setOnesaIsOnline] = useState(false);
   const [onesaRetryAfterSecondsRemaining, setOnesaRetryAfterSecondsRemaining] = useState<number | null>(null);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const bubblePositionRef = useRef<{ x: number; y: number } | null>(null);
   const onesaMessagesEndRef = useRef<HTMLDivElement | null>(null);
   const suppressBubbleClickRef = useRef(false);
   const dragStateRef = useRef<DragState | null>(null);
@@ -85,6 +86,28 @@ export default function OnesaFloatingAssistant() {
     const maxX = window.innerWidth;
     const maxY = window.innerHeight;
     return { x: Math.min(Math.max(x, minX), maxX), y: Math.min(Math.max(y, minY), maxY) };
+  }, []);
+
+  const getBubbleStorageKey = useCallback(
+    () => (isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY),
+    [isMobileViewport],
+  );
+
+  const persistBubblePosition = useCallback(
+    (position: { x: number; y: number } | null) => {
+      if (!position) return;
+      try {
+        window.localStorage.setItem(getBubbleStorageKey(), JSON.stringify(position));
+      } catch {
+        // Ignore storage write failures.
+      }
+    },
+    [getBubbleStorageKey],
+  );
+
+  const updateBubblePosition = useCallback((position: { x: number; y: number }) => {
+    bubblePositionRef.current = position;
+    setBubblePosition(position);
   }, []);
 
   useEffect(() => {
@@ -120,29 +143,34 @@ export default function OnesaFloatingAssistant() {
       const bubbleRect = bubbleRef.current?.getBoundingClientRect();
       const bubbleWidth = bubbleRect?.width ?? 180;
       const bubbleHeight = bubbleRect?.height ?? 64;
-      const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
 
-      let nextX = isMobileViewport ? window.innerWidth - bubbleWidth - 16 : window.innerWidth - bubbleWidth - 40;
+      let nextX = window.innerWidth - bubbleWidth / 2;
       let nextY = isMobileViewport ? window.innerHeight - bubbleHeight - 96 : window.innerHeight - bubbleHeight - 40;
+      let loadedFromStorage = false;
 
       try {
-        const saved = window.localStorage.getItem(storageKey);
+        const saved = window.localStorage.getItem(getBubbleStorageKey());
         if (saved) {
           const parsed = JSON.parse(saved) as { x?: unknown; y?: unknown };
           if (typeof parsed?.x === "number" && typeof parsed?.y === "number") {
             nextX = parsed.x;
             nextY = parsed.y;
+            loadedFromStorage = true;
           }
         }
       } catch {
         // Ignore malformed local storage values.
       }
 
-      setBubblePosition(clampBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight));
+      const initialPosition = clampBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight);
+      updateBubblePosition(initialPosition);
+      if (!loadedFromStorage) {
+        persistBubblePosition(initialPosition);
+      }
     };
 
     initPosition();
-  }, [clampBubblePosition, showOnesaBubble, isMobileViewport]);
+  }, [clampBubblePosition, getBubbleStorageKey, persistBubblePosition, showOnesaBubble, isMobileViewport, updateBubblePosition]);
 
   useEffect(() => {
     if (!showOnesaBubble || !bubblePosition) return;
@@ -151,9 +179,15 @@ export default function OnesaFloatingAssistant() {
     const bubbleHeight = bubbleRect?.height ?? 64;
     const clamped = clampBubblePosition(bubblePosition.x, bubblePosition.y, bubbleWidth, bubbleHeight);
     if (clamped.x !== bubblePosition.x || clamped.y !== bubblePosition.y) {
-      setBubblePosition(clamped);
+      updateBubblePosition(clamped);
+      persistBubblePosition(clamped);
     }
-  }, [clampBubblePosition, showOnesaBubble, isMobileViewport, bubblePosition]);
+  }, [clampBubblePosition, persistBubblePosition, showOnesaBubble, isMobileViewport, bubblePosition, updateBubblePosition]);
+
+  useEffect(() => {
+    if (!showOnesaBubble || !bubblePosition) return;
+    persistBubblePosition(bubblePosition);
+  }, [bubblePosition, persistBubblePosition, showOnesaBubble]);
 
   useLayoutEffect(() => {
     if (!showOnesaBubble) return;
@@ -332,7 +366,7 @@ export default function OnesaFloatingAssistant() {
     const bubbleWidth = bubbleRect?.width ?? 180;
     const bubbleHeight = bubbleRect?.height ?? 64;
     const next = clampBubblePosition(dragState.originX + deltaX, dragState.originY + deltaY, bubbleWidth, bubbleHeight);
-    setBubblePosition(next);
+    updateBubblePosition(next);
   };
 
   const handleBubblePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -359,14 +393,7 @@ export default function OnesaFloatingAssistant() {
         suppressBubbleClickRef.current = false;
       }, 250);
 
-      if (bubblePosition) {
-        const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
-        try {
-          window.localStorage.setItem(storageKey, JSON.stringify(bubblePosition));
-        } catch {
-          // Ignore storage write failures.
-        }
-      }
+      persistBubblePosition(bubblePositionRef.current);
     }
 
     dragStateRef.current = null;
@@ -401,18 +428,13 @@ export default function OnesaFloatingAssistant() {
     const bubbleWidth = bubbleDimensions.width || 180;
     const bubbleHeight = bubbleDimensions.height || 64;
     const restored = clampBubblePosition(
-      window.innerWidth - bubbleWidth - (isMobileViewport ? 16 : 40),
+      window.innerWidth - bubbleWidth - (isMobileViewport ? 0 : 40),
       window.innerHeight - bubbleHeight - (isMobileViewport ? 96 : 40),
       bubbleWidth,
       bubbleHeight
     );
-    setBubblePosition(restored);
-    const storageKey = isMobileViewport ? MOBILE_BUBBLE_STORAGE_KEY : DESKTOP_BUBBLE_STORAGE_KEY;
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify(restored));
-    } catch {
-      // Ignore storage write failures.
-    }
+    updateBubblePosition(restored);
+    persistBubblePosition(restored);
   };
 
   let bubbleOffscreenSide: "left" | "right" | "top" | "bottom" | null = null;
@@ -438,9 +460,13 @@ export default function OnesaFloatingAssistant() {
     return null;
   }
 
+  const bubbleStateReady = bubblePosition !== null;
+  const showRestoreTrigger = showOnesaBubble && bubbleStateReady && bubbleOffscreenSide && !isOnesaChatOpen;
+  const showBubbleTrigger = showOnesaBubble && bubbleStateReady && !bubbleOffscreenSide;
+
   return (
     <>
-      {showOnesaBubble && bubbleOffscreenSide && !isOnesaChatOpen ? (
+      {showRestoreTrigger ? (
         <button
           type="button"
           data-onesa-bubble-restore="true"
@@ -468,11 +494,11 @@ export default function OnesaFloatingAssistant() {
         </button>
       ) : null}
 
-      {showOnesaBubble && !bubbleOffscreenSide ? (
+      {showBubbleTrigger ? (
         <motion.div
           ref={bubbleRef}
           data-onesa-bubble-container="true"
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={
             isMobileViewport
               ? {
@@ -495,7 +521,7 @@ export default function OnesaFloatingAssistant() {
                 }
               : { duration: 0.35 }
           }
-          className={`fixed z-[95] rounded-full ${bubblePosition ? "" : isMobileViewport ? "bottom-20 right-4" : "bottom-24 right-5 md:bottom-10 md:right-10"}`}
+          className={`fixed z-[95] rounded-full ${bubblePosition ? "" : isMobileViewport ? "bottom-20 right-0" : "bottom-24 right-5 md:bottom-10 md:right-10"}`}
           style={
             bubblePosition
               ? {

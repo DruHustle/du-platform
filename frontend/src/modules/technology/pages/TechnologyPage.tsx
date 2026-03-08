@@ -85,12 +85,6 @@ export default function Technology() {
     }
   ], [t]);
 
- const introData = {
-  icon: Brain,
-  title: "tech.objective_title",
-  description: "tech.objective_subtitle"
- };
-
   const sectors = [
     {
       title: t('tech.sectors.mining.title') || "Mining & Resources",
@@ -179,7 +173,6 @@ export default function Technology() {
       <section id="hero" >
         <SubPageHero 
           heroSlides={heroSlides} 
-          intro={introData} 
           />
       </section>
 

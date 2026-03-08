@@ -17,6 +17,12 @@ export default function Investment() {
   const [riskFilter, setRiskFilter] = useState("all");
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const crowdfundingSubtitle =
+    t("investment.crowdfunding_subtitle") ||
+    "Micro-investment in vetted projects with smaller amounts, transparent participation, and visible real-world impact.";
+  const crowdfundingStepSubtitle =
+    t("investment.crowdfunding_steps_subtitle") ||
+    "Micro-investment in vetted projects with smaller amounts and see real impact.";
 
   const heroSlides = useMemo(() => [
     {
@@ -100,13 +106,6 @@ export default function Investment() {
     const timer = setInterval(() => setCurrentHeroIndex(p => (p + 1) % heroSlides.length), 5000);
     return () => clearInterval(timer);
   }, [heroSlides.length]);
-
-
-  const introData = {
-    icon: TrendingUp,
-    title: t('investment.objective_title') || "Diaspora Collective Investment Model",
-    description: t('investment.objective_subtitle') || "Diaspora Unlocked combines technology, skills, and network access so small investors can pool capital and participate in verified Zimbabwe opportunities."
-  };
 
 const projects = [
   { 
@@ -421,21 +420,6 @@ const projects = [
   const hdcAssoc = Array.isArray(hdcAssocRaw) && hdcAssocRaw.length > 0
     ? (hdcAssocRaw as string[])
     : ["Horticultural Development Council", "ZimTrade", "ZIMRA", "Export Growers", "Cold Chain Partners"];
-  const regulatoryChecklistValue = t("investment.regulatory_snapshot.checklist", {
-    returnObjects: true,
-  });
-  const regulatoryChecklist = Array.isArray(regulatoryChecklistValue)
-    ? (regulatoryChecklistValue as string[])
-    : [
-        "Check if your target activity is reserved under Statutory Instrument 215 of 2025 before committing capital.",
-        "If operating in a reserved sector, plan compliant local equity restructuring timelines and legal documentation.",
-        "Apply for an investment license through the official DIY portal to secure statutory investment protections.",
-        "Set up entity structure and appoint a local representative/proxy director for legal notices and operations.",
-        "Register qualifying cross-border investments, royalties, and recurring technical fee agreements with RBZ.",
-        "Model exchange-rate and settlement exposure across USD and ZiG under the multi-currency framework.",
-        "For listed exposure, account for ZSE foreign shareholding limits and assess VFEX USD-based alternatives.",
-        "In financial models, include applicable non-resident withholding taxes and export-incentive tax treatment.",
-      ];
   const collectiveModelSteps = [
     t("investment.collective_model.s1") || "Create an investor profile and complete verification checks.",
     t("investment.collective_model.s2") || "Join vetted opportunities with clear minimum-ticket participation.",
@@ -783,36 +767,34 @@ const projects = [
     <Layout>
       {/* Hero Section */}
       <section id="hero">
-        <SubPageHero heroSlides={heroSlides} intro={introData} />
+        <SubPageHero heroSlides={heroSlides} />
       </section>
 
       {/* How it Works - Glass Dashboard */}
       <section className="p-5 bg-slate-950">
         <div className="container px-6 mx-auto">
           <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="text-center mb-8 md:mb-10">
+            <div className="mb-10 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <Repeat className="h-6 w-6 text-zim-gold" />
                 <h3 className="text-xl font-black text-white tracking-tight">{t('investment.crowdfunding_title') || "Crowdfunding Opportunities"}</h3>
               </div>
-             <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
+             <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{crowdfundingSubtitle}</p>
             </div>
             
-            <div className="grid md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {[
                 { title: t("investment.crowdfunding_steps.browse") || "Browse Projects", emoji: "🧭" },
                 { title: t("investment.crowdfunding_steps.invest") || "Invest Your Share", emoji: "💵" },
                 { title: t("investment.crowdfunding_steps.track") || "Track Performance", emoji: "📈" },
                 { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", emoji: "✅" }
               ].map((step, i) => (
-                <div key={i} className="relative group">
-                  <div className="outer-glass-panel h-full rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 text-center transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-2">
-                    <div className="p-4 bg-white/5 rounded-2xl w-fit mx-auto mb-6 group-hover:bg-zim-gold/10 transition-colors">
-                      <span className="text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
+                <div key={i} className="text-center p-5 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 p-2.5">
+                      <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
                     </div>
-                    <h3 className="text-lg font-black text-white tracking-tight mb-3">{step.title}</h3>
-                    <p className=" text-[12px] leading-relaxed font-light">{t('investment.crowdfunding_subtitle') || "Micro-investment in vetted projects with smaller amounts and see real impact."}</p>
-                  </div>
+                    <h3 className="mb-2 text-base font-black text-white tracking-tight">{step.title}</h3>
+                    <p className="text-[11px] text-white/70 leading-relaxed font-light">{crowdfundingStepSubtitle}</p>
                 </div>
               ))}
             </div>
@@ -1133,39 +1115,6 @@ const projects = [
                   {t("investment.eu_focus.source_eib") || "Source: EIB Zimbabwe Essay"}
                 </Button>
               </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* Regulatory Snapshot */}
-      <section className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
-        <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
-              <div className="space-y-3 max-w-3xl mx-auto">
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  {t("investment.regulatory_snapshot.title") || "Investment Regulation Snapshot"}
-                </h3>
-                <p className=" text-sm leading-relaxed">
-                  {t("investment.regulatory_snapshot.subtitle") ||
-                    "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation."}
-                </p>
-              </div>
-              <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                <Link href="/regulations#investment-compliance">
-                  {t("investment.regulatory_snapshot.open_full_guide") || "Open Full Guide"}
-                </Link>
-              </Button>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 mt-8">
-              {regulatoryChecklist.map((item) => (
-                <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-4  text-sm">
-                  {item}
-                </div>
-              ))}
             </div>
           </div>
         </div>

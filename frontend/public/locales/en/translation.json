@@ -59,7 +59,6 @@
     "investment": "Investments",
     "trade": "Trade",
     "payments": "Payments",
-    "impact": "Impact",
     "care": "Care",
     "market_requirements": "Market Requirements",
     "market_requirements_desc": "German market regulations and certifications",
@@ -95,19 +94,16 @@
     "tourism": "Tourism",
     "technology": "Technology",
     "investments": "Investments",
-    "objective_title": "Welcome",
-    "objective_desc": "Tourism. Trade. Investment. Remittance. Family Care — unified for the Diaspora.",
     "explore_now": "Explore Now",
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
     "ready_to_connect_title": "Ready to Connect?",
     "ready_to_connect_subtitle": "Join thousands of diaspora members building bridges for economic development.",
     "view_data": "View Economic Data",
-    "success_stories": "Impact",
     "modules": {
       "tourism": {
         "title": "Tourism",
-        "desc": "Discover Zimbabwe's world-class attractions and  plan your visit.",
+        "desc": "Explore Zimbabwe's world-class attractions and plan your visit.",
         "stats": "Forbes #1 2025"
       },
       "investment": {
@@ -124,16 +120,6 @@
         "title": "Trade",
         "desc": "Access comprehensive trade resources and connect with Zimbabwe's export sectors.",
         "stats": "8 Export Sectors"
-      },
-      "technology": {
-        "title": "Technology & AI",
-        "desc": "Meet Onesa AI, our specialized model built to illuminate the Zimbabwean context.",
-        "stats": "Onesa AI"
-      },
-      "success": {
-        "title": "Impact",
-        "desc": "Explore real-world examples of projects thriving through diaspora engagement.",
-        "stats": "Impact Stories"
       }
     }
   },
@@ -172,8 +158,6 @@
       "subtitle8": "Diaspora professionals contribute capital, mentorship, and practical execution support for local startups.",
       "highlight8": "Global Collaboration"
     },
-    "objective_title": " Tech Enabled",
-    "objective_subtitle": "Leveraging AI and digital solutions to seamlessly connect Zimbabwe and the diaspora, driving collaboration, sustainable development, and long-term economic growth.",
     "explore_onesa": "Explore Onesa AI",
     "onesa_badge": "Meet Onesa AI",
     "onesa_title": "Illuminating your Way",
@@ -319,8 +303,8 @@
       "plan_journey": "Plan Your Journey",
       "watch_exp": "Watch Experience",
       "book_trip": "Book Trip",
-      "virtual_center": "Virtual Reality Center",
-      "local_guide_ar": "Local AR Experience",
+      "virtual_center": "Virtual Reality",
+      "local_guide_ar": "Local guide",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -624,8 +608,6 @@
         "d3": "Pleasant year-round temperate climate"
       }
     },
-    "objective_title": "Our Vision",
-    "objective_subtitle": "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities.",
     "cta_title": "Ready to Start Your Adventure?",
     "cta_button": "Connect with an Expert",
     "cta_subtitle": "Our travel team can help you identify the right opportunities and guide you through the process.",
@@ -656,8 +638,6 @@
     }
   },
   "investment": {
-    "objective_title": "Diaspora Collective Investment Model",
-    "objective_subtitle": "Diaspora Unlocked combines technology, skills, and network access so small investors can pool capital and participate in verified Zimbabwe opportunities.",
     "opportunities": {
       "subtitle": "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise."
     },
@@ -826,24 +806,10 @@
     "ntir_subtitle": "Official registry of verified trade and investment entities in Zimbabwe.",
     "ntir_button": "Search NTIR Database.",
     "crowdfunding_title": "Crowdfunding Opportunities",
-    "crowdfunding_subtitle": " Micro-investment in vetted projects with smaller amounts and see real impact.",
+    "crowdfunding_subtitle": "Micro-investment in vetted projects with smaller amounts, transparent participation, and visible real-world impact.",
+    "crowdfunding_steps_subtitle": "Micro-investment in vetted projects with smaller amounts and see real impact.",
     "sectors_title": "Active Investment Opportunities",
     "sectors_subtitle": "Carefully vetted projects with government support and transparent tracking.",
-    "regulatory_snapshot": {
-      "title": "Investment Regulation Snapshot",
-      "subtitle": "Before investing, verify ownership eligibility, licensing, exchange-control registration, and market-specific limits for foreign participation.",
-      "open_full_guide": "Open Full Guide",
-      "checklist": [
-        "Check if your target activity is reserved under Statutory Instrument 215 of 2025 before committing capital.",
-        "If operating in a reserved sector, plan compliant local equity restructuring timelines and legal documentation.",
-        "Apply for a ZIDA investment license through the DIY portal to secure statutory investment protections.",
-        "Set up entity structure and appoint a local representative/proxy director for legal notices and operations.",
-        "Register qualifying cross-border investments, royalties, and recurring technical fee agreements with RBZ.",
-        "Model exchange-rate and settlement exposure across USD and ZiG under the multi-currency framework.",
-        "For listed exposure, account for ZSE foreign shareholding limits and assess VFEX USD-based alternatives.",
-        "In financial models, include applicable non-resident withholding taxes and export-incentive tax treatment."
-      ]
-    },
     "collective_model": {
       "title": "How Diaspora Collective Investing Works",
       "subtitle": "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
@@ -983,8 +949,6 @@
       "subtitle8": "Balance commodity exports with processed goods and sector-specific compliance planning.",
       "highlight8": "Risk Balanced Growth"
     },
-    "objective_title": "Zimbabwe Trade Execution",
-    "objective_subtitle": "Execute export growth with a practical playbook for market access, regulatory compliance, shipping controls, and diaspora-enabled buyer connections.",
     "export_roadmap_badge": "Export Roadmap",
     "export_roadmap_title": "Zimbabwe Export Roadmap (2026)",
     "export_roadmap_subtitle": "A practical path for exporters using ZimTrade support, ZIMRA/REX processes, and EU compliance requirements.",
@@ -1099,282 +1063,6 @@
     "explore_title": "Explore More Trade Information",
     "explore_subtitle": " For comprehensive trade information and official guidelines, visit the ZimTrade.",
     "explore_site": "Visit ZimTrade"
-  },
-  "impact": {
-    "hero": {
-      "badge1": "Impact Stories",
-      "title1": "Diaspora Driving ",
-      "highlight1": "Change",
-      "subtitle1": "Real-world examples of how the Zimbabwean diaspora is making a tangible difference.",
-      "badge2": "Innovation",
-      "title2": "Tech & Entrepreneurship ",
-      "highlight2": "Success",
-      "subtitle2": "Showcasing groundbreaking ventures fueled by diaspora expertise and investment.",
-      "badge3": "Cultural Exchange",
-      "title3": "Preserving Heritage Through ",
-      "highlight3": "Trade",
-      "subtitle3": "Highlighting initiatives that bring Zimbabwean culture to the global stage.",
-      "badge4": "Sustainable Development",
-      "title4": "Green Initiatives & ",
-      "highlight4": "Community Growth",
-      "subtitle4": "Stories of environmental stewardship and upliftment in rural communities.",
-      "badge5": "Resource Mobilization",
-      "title5": "Unlocking Potential Through ",
-      "highlight5": "Investment",
-      "subtitle5": "How diaspora capital is transforming key sectors and creating opportunities."
-    },
-    "objective_title": "Impact",
-    "objective_subtitle": "Showcasing the tangible impact of diaspora engagement across various sectors and communities in Zimbabwe.",
-    "stories": {
-      "leather_goods": {
-        "title": "Leather Goods Export Success",
-        "category": "Export",
-        "story": "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
-        "testimonial": "The Diaspora Unlocked platform connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
-        "author": "Tendai Moyo",
-        "role": "Managing Director, Zimbabwe Leather Collective"
-      },
-      "horticulture_breakthrough": {
-        "title": "Organic Horticulture Breakthrough",
-        "category": "Export",
-        "story": "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
-        "testimonial": "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
-        "author": "Grace Ncube",
-        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
-      },
-      "tourism_lodge": {
-        "title": "Tourism Lodge Investment",
-        "category": "Investment",
-        "story": "Through Diaspora Unlocked's crowdfunding platform, 280 diaspora investors pooled $500K to develop an eco-lodge near Victoria Falls. The lodge now generates steady returns while providing employment and supporting local communities. Diaspora investors receive quarterly dividends and enjoy preferential booking rates.",
-        "testimonial": "I invested $2,000 from the UK and now I'm part-owner of a beautiful lodge in my homeland. The transparency through NTIR gave me confidence, and the returns have exceeded expectations.",
-        "author": "Simba Chikwanha",
-        "role": "Diaspora Investor, London"
-      },
-      "stone_sculpture": {
-        "title": "Stone Sculpture Export Network",
-        "category": "Trade",
-        "story": "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
-        "testimonial": "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
-        "author": "Patrick Mavros",
-        "role": "Master Sculptor, Harare"
-      },
-      "tech_startup": {
-        "title": "Tech Startup Diaspora Funding",
-        "category": "Investment",
-        "story": "A Harare-based fintech startup raised $750K from diaspora investors through Diaspora Unlocked's investment platform. The company developed a mobile payment solution for rural areas, now serving 500K+ users. Diaspora investors provided both capital and technical mentorship.",
-        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
-        "author": "Tafadzwa Chidavaenzi",
-        "role": "CEO, PayMoyo Technologies"
-      },
-      "honey_export": {
-        "title": "Honey Export Cooperative",
-        "category": "Export",
-        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
-        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
-        "author": "Rudo Makoni",
-        "role": "Secretary, Masvingo Honey Cooperative"
-      },
-      "heritage_tourism": {
-        "title": "Heritage Tourism Package Success",
-        "category": "Tourism",
-        "story": "A tourism operator developed specialized diaspora homecoming packages through Diaspora Unlocked's platform. The packages combine family visits with cultural tourism, attracting over 1,200 diaspora tourists annually. The business employs local guides, drivers, and hospitality staff.",
-        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. Diaspora Unlocked's platform gave us visibility to our target market.",
-        "author": "Chipo Mutasa",
-        "role": "Director, Heritage Trails Zimbabwe"
-      },
-      "macadamia_nut": {
-        "title": "Macadamia Nut Processing Plant",
-        "category": "Investment",
-        "story": "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
-        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",
-        "author": "Ngoni Sibanda",
-        "role": "Operations Manager, Zim Macadamia Processors"
-      }
-    },
-    "impact_metrics": {
-      "economic_impact": {
-        "label": "Total Economic Impact",
-        "description": "Revenue generated across all impact stories"
-      },
-      "jobs_created": {
-        "label": "Jobs Created",
-        "description": "Direct employment opportunities"
-      },
-      "diaspora_investors": {
-        "label": "Diaspora Investors",
-        "description": "Active participants in projects"
-      },
-      "markets_accessed": {
-        "label": "Markets Accessed",
-        "description": "International markets reached"
-      }
-    },
-    "stories_badge": "Stories",
-    "stories_title": "Inspiring Impact",
-    "stories_subtitle": "Explore the impactful contributions of the Zimbabwean diaspora across various sectors.",
-    "story_card": {
-      "impact": "Impact:",
-      "revenue": "Revenue:",
-      "jobs": "Jobs:",
-      "markets": "Markets:",
-      "investors": "Investors:",
-      "testimonial_by": "— {{author}}, {{role}}",
-      "view_story": "View Story"
-    },
-    "metrics_badge": "Metrics",
-    "metrics_title": "Collective Impact",
-    "metrics_subtitle": "The aggregated impact of diaspora engagement across all featured impact stories.",
-    "cta_title": "Partner with us",
-    "cta_subtitle": "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let's build together.",
-    "cta_button": "Start Partnership",
-    "stories_list": [
-      {
-        "display": true,
-        "title": "Leather Goods Export Success",
-        "category": "Export",
-        "image": "/images/pages/shared/leather_products.jpg",
-        "impact": {
-          "revenue": "$2.5M",
-          "jobs": "150+",
-          "markets": "3 countries"
-        },
-        "story": "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
-        "testimonial": "The Diaspora Unlocked platform connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
-        "author": "Tendai Moyo",
-        "role": "Managing Director, Zimbabwe Leather Collective"
-      },
-      {
-        "display": true,
-        "title": "Organic Horticulture Breakthrough",
-        "category": "Export",
-        "image": "/images/pages/shared/horticulture.jpg",
-        "impact": {
-          "revenue": "$850K",
-          "jobs": "85",
-          "markets": "Germany, Netherlands"
-        },
-        "story": "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
-        "testimonial": "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
-        "author": "Grace Ncube",
-        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
-      },
-      {
-        "display": true,
-        "title": "Tourism Lodge Investment",
-        "category": "Investment",
-        "image": "/images/pages/tourism/victoria_falls.jpg",
-        "impact": {
-          "revenue": "$1.2M annually",
-          "jobs": "45",
-          "investors": "280 diaspora"
-        },
-        "story": "Through Diaspora Unlocked's crowdfunding platform, 280 diaspora investors pooled $500K to develop an eco-lodge near Victoria Falls. The lodge now generates steady returns while providing employment and supporting local communities. Diaspora investors receive quarterly dividends and enjoy preferential booking rates.",
-        "testimonial": "I invested $2,000 from the UK and now I'm part-owner of a beautiful lodge in my homeland. The transparency through NTIR gave me confidence, and the returns have exceeded expectations.",
-        "author": "Simba Chikwanha",
-        "role": "Diaspora Investor, London"
-      },
-      {
-        "display": true,
-        "title": "Stone Sculpture Export Network",
-        "category": "Trade",
-        "image": "/images/pages/wikimedia/faces-4.jpg",
-        "impact": {
-          "revenue": "$450K",
-          "jobs": "60 artisans",
-          "markets": "USA, CAN, UK"
-        },
-        "story": "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
-        "testimonial": "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
-        "author": "Patrick Mavros",
-        "role": "Master Sculptor, Harare"
-      },
-      {
-        "display": true,
-        "title": "Tech Startup Diaspora Funding",
-        "category": "Investment",
-        "image": "/images/pages/home/partnership_handshake.png",
-        "impact": {
-          "revenue": "$3.5M valuation",
-          "jobs": "35",
-          "investors": "120 diaspora"
-        },
-        "story": "A Harare-based fintech startup raised $750K from diaspora investors through Diaspora Unlocked's investment platform. The company developed a mobile payment solution for rural areas, now serving 500K+ users. Diaspora investors provided both capital and technical mentorship.",
-        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
-        "author": "Tafadzwa Chidavaenzi",
-        "role": "CEO, PayMoyo Technologies"
-      },
-      {
-        "display": true,
-        "title": "Honey Export Cooperative",
-        "category": "Export",
-        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
-        "impact": {
-          "revenue": "$320K",
-          "jobs": "120 beekeepers",
-          "markets": "EU markets"
-        },
-        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
-        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
-        "author": "Rudo Makoni",
-        "role": "Secretary, Masvingo Honey Cooperative"
-      },
-      {
-        "display": true,
-        "title": "Heritage Tourism Package Success",
-        "category": "Tourism",
-        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
-        "impact": {
-          "revenue": "$680K",
-          "tourists": "1,200+ diaspora",
-          "jobs": "28"
-        },
-        "story": "A tourism operator developed specialized diaspora homecoming packages through Diaspora Unlocked's platform. The packages combine family visits with cultural tourism, attracting over 1,200 diaspora tourists annually. The business employs local guides, drivers, and hospitality staff.",
-        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. Diaspora Unlocked's platform gave us visibility to our target market.",
-        "author": "Chipo Mutasa",
-        "role": "Director, Heritage Trails Zimbabwe"
-      },
-      {
-        "display": true,
-        "title": "Macadamia Nut Processing Plant",
-        "category": "Investment",
-        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
-        "impact": {
-          "revenue": "$1.8M",
-          "jobs": "95",
-          "investors": "340 diaspora"
-        },
-        "story": "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
-        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",
-        "author": "Ngoni Sibanda",
-        "role": "Operations Manager, Zim Macadamia Processors"
-      }
-    ],
-    "metrics_list": [
-      {
-        "display": false,
-        "value": "$11.3M+",
-        "label": "Total Economic Impact",
-        "description": "Revenue generated across all impact stories"
-      },
-      {
-        "display": false,
-        "value": "700+",
-        "label": "Jobs Created",
-        "description": "Direct employment opportunities"
-      },
-      {
-        "display": false,
-        "value": "1,000+",
-        "label": "Diaspora Investors",
-        "description": "Active participants in projects"
-      },
-      {
-        "display": false,
-        "value": "15+",
-        "label": "Markets Accessed",
-        "description": "International markets reached"
-      }
-    ]
   },
   "regulations": {
     "badge": "Compliance Hub",
@@ -1499,17 +1187,9 @@
     "annual_return": "Annual return",
     "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
   },
-  "payments": {
-    "intro": {
-      "title": "Cross-Border Payments",
-      "description": "Diaspora Unlocked integrates trusted financial partners to provide secure remittances, family care, and coverage services for Zimbabweans abroad."
-    }
-  },
   "shop": {
     "collections": "Collections",
-    "title": "Home Away From Home",
     "collections_title": "Curated Zimbabwean Excellence",
-    "desc": "From official merchandise to handcrafted treasures, every item tells a story of heritage and quality.",
     "collections_description": "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience. Every collection is selected to celebrate Zimbabwean makers, strengthen local value chains, and give families abroad dependable access to trusted products from home.",
     "explore_shop": "Explore Shop",
     "trade_support": "Explore Trade Support",
@@ -1557,35 +1237,43 @@
     "categories": {
       "beverages": {
         "title": "Beverages",
-        "description": "Mazoe, Maheu, and other homegrown drink favorites."
+        "description": "Mazoe, Maheu, and other homegrown drink favorites.",
+        "detail": "Classic Zimbabwean drinks curated for family tables, gifting, and easy restocking when you want familiar favourites close at hand."
       },
       "cereals": {
         "title": "Cereals & Breakfast",
-        "description": "Cerevita blends and everyday breakfast staples."
+        "description": "Cerevita blends and everyday breakfast staples.",
+        "detail": "Trusted breakfast staples and pantry basics selected for repeat household orders, family bundles, and familiar routines from home."
       },
       "sauces_spices": {
         "title": "Sauces & Spices",
-        "description": "Madras curry, peri-peri sauces, and flavor essentials."
+        "description": "Madras curry, peri-peri sauces, and flavor essentials.",
+        "detail": "Flavor-led cooking essentials that help rebuild familiar meals, pantry bundles, and gift boxes with recognizable Zimbabwean taste."
       },
       "snacks": {
         "title": "Snacks & Treats",
-        "description": "Maputi, biscuits, and nostalgic grab-and-go bites."
+        "description": "Maputi, biscuits, and nostalgic grab-and-go bites.",
+        "detail": "Comfort snacks and quick treats chosen for sharing, care packages, and nostalgia-driven orders that travel well across households."
       },
       "oils_spreads": {
         "title": "Cooking Oils & Spreads",
-        "description": "Everyday cooking oils and pantry spread essentials."
+        "description": "Everyday cooking oils and pantry spread essentials.",
+        "detail": "Practical pantry essentials that support repeat cooking needs, top-up orders, and easy basket building for everyday meals."
       },
       "proteins": {
         "title": "Protein & Pantry",
-        "description": "Kapenta and protein-rich staples for family meals."
+        "description": "Kapenta and protein-rich staples for family meals.",
+        "detail": "Protein-rich staples for traditional dishes, family cooking, and pantry planning where convenience and home taste both matter."
       },
       "crafts": {
         "title": "Arts & Crafts",
-        "description": "Authentic artisan pieces rooted in Zimbabwean heritage."
+        "description": "Authentic artisan pieces rooted in Zimbabwean heritage.",
+        "detail": "Handmade heritage pieces with artisan story, gift appeal, and display value for homes, offices, and diaspora collections."
       },
       "apparel": {
         "title": "Sports Apparel",
-        "description": "Rugby, cricket, and football fan kits."
+        "description": "Rugby, cricket, and football fan kits.",
+        "detail": "Wear Zimbabwean pride through supporter gear and team-inspired apparel suited to gifting, match days, and community events."
       }
     },
     "products": {

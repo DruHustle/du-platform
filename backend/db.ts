@@ -436,6 +436,14 @@ export async function initializeDatabase(): Promise<void> {
     )
   `);
 
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   await syncNtirSeedData();
   await syncAdminSettingsSeedData();
   await syncEconomicStatsSeedData();

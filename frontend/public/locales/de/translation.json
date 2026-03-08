@@ -58,7 +58,6 @@
     "tourism": "Tourismus",
     "investment": "Investitionen",
     "trade": "Handel",
-    "impact": "Wirkung",
     "care": "Vorsorge",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
@@ -95,15 +94,12 @@
     "tourism": "Tourismus",
     "technology": "Technologie",
     "investments": "Investitionen",
-    "objective_title": "Plattform-Dienste",
-    "objective_desc": "Eine digitale Plattform, die Simbabwe durch Handel, Tourismus und Investitionen mit dem Rest der Welt verbindet.",
     "explore_now": "Jetzt entdecken",
     "inquiry_btn": "Kontaktieren Sie uns",
     "inquiry_title": "Allgemeine Anfrage",
     "ready_to_connect_title": "Bereit zur Vernetzung?",
     "ready_to_connect_subtitle": "Schließen Sie sich tausenden Diaspora-Mitgliedern an, die Brücken für die wirtschaftliche Entwicklung schlagen.",
     "view_data": "Wirtschaftsdaten ansehen",
-    "success_stories": "Wirkung",
     "modules": {
       "tourism": {
         "title": "Tourismus",
@@ -124,16 +120,6 @@
         "title": "Handel",
         "desc": "Nutzen Sie umfassende Handelsressourcen und verbinden Sie sich mit simbabwischen Exportsektoren.",
         "stats": "8 Exportsektoren"
-      },
-      "technology": {
-        "title": "Technologie & KI",
-        "desc": "Lernen Sie Onesa AI kennen, unser spezialisiertes Modell für den simbabwischen Kontext.",
-        "stats": "Onesa KI"
-      },
-      "success": {
-        "title": "Wirkung",
-        "desc": "Erkunden Sie Praxisbeispiele von Projekten, die durch Diaspora-Engagement florieren.",
-        "stats": "Impact-Geschichten"
       }
     }
   },
@@ -172,8 +158,6 @@
       "subtitle8": "Diaspora-Fachkräfte bringen Kapital, Mentoring und praktische Umsetzungshilfe für lokale Startups ein.",
       "highlight8": "Globale Zusammenarbeit"
     },
-    "objective_title": "Technologiegestützt",
-    "objective_subtitle": "Nutzung von KI und digitalen Lösungen zur nahtlosen Verbindung von Simbabwe und der Diaspora, um Zusammenarbeit, nachhaltige Entwicklung und langfristiges Wirtschaftswachstum voranzutreiben.",
     "explore_onesa": "Onesa AI entdecken",
     "onesa_badge": "Darf ich vorstellen: Onesa AI",
     "onesa_title": "Ihren Weg beleuchten",
@@ -319,8 +303,8 @@
       "plan_journey": "Reise planen",
       "watch_exp": "Erlebnis ansehen",
       "book_trip": "Reise buchen",
-      "virtual_center": "Virtual-Reality-Zentrum besuchen",
-      "local_guide_ar": "Lokaler AR-Guide",
+      "virtual_center": "Virtual Reality",
+      "local_guide_ar": "Local guide",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -624,8 +608,6 @@
         "d3": "Ganzjährig angenehmes gemäßigtes Klima"
       }
     },
-    "objective_title": "Unsere Vision",
-    "objective_subtitle": "Ein globales Tor für Simbabwes Kultur, Produkte, Tourismus und Investitionen.",
     "cta_title": "Bereit für Ihr Abenteuer?",
     "cta_button": "Mit einem Experten sprechen",
     "cta_subtitle": "Unser Reiseteam hilft Ihnen, die richtigen Möglichkeiten zu finden und führt Sie durch den Prozess.",
@@ -656,8 +638,6 @@
     }
   },
   "investment": {
-    "objective_title": "Sicher investieren, Wachstum fördern",
-    "objective_subtitle": "Verbindung von Diaspora-Investoren mit geprüften, hochpotenzialen Projekten, unterstützt durch staatliche Initiativen.",
     "opportunities": {
       "subtitle": "Diese Schwerpunktbereiche koennen staerkere Renditen ermoeglichen, wenn sie mit Compliance, praktischen Partnerschaften und Branchenkompetenz kombiniert werden."
     },
@@ -826,7 +806,8 @@
     "ntir_subtitle": "Offizielles Register verifizierter Handels- und Investitionseinheiten in Simbabwe.",
     "ntir_button": "NTIR-Datenbank durchsuchen",
     "crowdfunding_title": "Crowdfunding-Möglichkeiten",
-    "crowdfunding_subtitle": "Mikro-Investitionen in geprüfte Projekte und reale Wirkung sehen.",
+    "crowdfunding_subtitle": "Mikro-Investitionen in geprüfte Projekte mit kleineren Beträgen, transparenter Beteiligung und sichtbar realer Wirkung.",
+    "crowdfunding_steps_subtitle": "Mikro-Investitionen in geprüfte Projekte und reale Wirkung sehen.",
     "sectors_title": "Aktive Investitionsmöglichkeiten",
     "sectors_subtitle": "Sorgfältig geprüfte Projekte mit staatlicher Unterstützung und Transparenz.",
     "cta_title": "Bereit zum Investieren?",
@@ -836,17 +817,6 @@
     "explore_title": "Weitere Investitionsinfos",
     "explore_subtitle": "Für offizielle Richtlinien besuchen Sie die Zimbabwe Investment and Development Agency.",
     "explore_site": "ZIDA besuchen",
-    "regulatory_snapshot": {
-      "title": "Überblick zu Investitionsvorschriften",
-      "subtitle": "Vor einer Kapitalzusage sollten Projekte auf regulatorische, Governance- und Abwicklungsanforderungen für Diaspora-Investoren ausgerichtet werden.",
-      "open_full_guide": "Vollständigen Leitfaden öffnen",
-      "checklist": [
-        "Rechtsform des Unternehmens und sektorale Genehmigungen bestätigen.",
-        "Eigentümerstruktur und Schutzrechte der Anteilseigner prüfen.",
-        "Währungsabwicklung und Bedingungen zur Gewinnrepatriierung festlegen.",
-        "Prüfbare Berichtstakte vor Auszahlung verbindlich vereinbaren."
-      ]
-    },
     "collective_model": {
       "title": "Wie kollektives Investieren in der Diaspora funktioniert",
       "subtitle": "Diaspora Unlocked ist für gebündelte Investitionen konzipiert, sodass kleine und mittlere Anleger Zugang zu Möglichkeiten erhalten, für die normalerweise größere Ticketgrößen erforderlich sind.",
@@ -979,8 +949,6 @@
       "subtitle8": "Balance commodity exports with processed goods and sector-specific compliance planning.",
       "highlight8": "Risk Balanced Growth"
     },
-    "objective_title": "Wertschöpfungsketten",
-    "objective_subtitle": "Aufbau nachhaltiger und effizienter Wertschöpfungsketten für langfristiges Wachstum.",
     "export_roadmap_badge": "Export-Roadmap",
     "export_roadmap_title": "Exportprozess Simbabwe nach Deutschland",
     "export_roadmap_subtitle": "Eine Schritt-für-Schritt-Anleitung für Ihre Exportreise.",
@@ -1096,282 +1064,6 @@
     "explore_subtitle": "Für umfassende Handelsrichtlinien besuchen Sie ZimTrade.",
     "explore_site": "ZimTrade besuchen"
   },
-  "impact": {
-    "hero": {
-      "badge1": "Impact-Geschichten",
-      "title1": "Diaspora treibt ",
-      "highlight1": "Wandel",
-      "subtitle1": "Beispiele, wie die Diaspora einen spürbaren Unterschied macht.",
-      "badge2": "Innovationen",
-      "title2": "Erfolg in Technik & ",
-      "highlight2": "Unternehmertum",
-      "subtitle2": "Bahnbrechende Unternehmen, unterstützt durch Diaspora-Expertise.",
-      "badge3": "Kulturaustausch",
-      "title3": "Erbe bewahren durch ",
-      "highlight3": "Handel",
-      "subtitle3": "Initiativen, die simbabwische Kultur weltweit bekannt machen.",
-      "badge4": "Nachhaltigkeit",
-      "title4": "Grüne Initiativen & ",
-      "highlight4": "Gemeinschaft",
-      "subtitle4": "Umweltschutz und Förderung ländlicher Gemeinden.",
-      "badge5": "Ressourcen",
-      "title5": "Potenziale nutzen durch ",
-      "highlight5": "Investitionen",
-      "subtitle5": "Wie Diaspora-Kapital Sektoren transformiert."
-    },
-    "objective_title": "Wirkung",
-    "objective_subtitle": "Präsentation des spürbaren Einflusses der Diaspora in Simbabwe.",
-    "stories": {
-      "leather_goods": {
-        "title": "Erfolg im Lederwaren-Export",
-        "category": "Ausfuhr",
-        "story": "Fachkräfte in Deutschland vernetzten Lederhersteller mit europäischen Händlern. Das Netzwerk lieferte Analysen zu Konsumvorlieben und direkte Kontakte zu Einkäufern.",
-        "testimonial": "Die Plattform verband uns mit Diaspora-Mitgliedern, die unser Handwerk und den EU-Markt verstehen.",
-        "author": "Tendai Moyo",
-        "role": "Geschäftsführer, Zimbabwe Leather Collective"
-      },
-      "horticulture_breakthrough": {
-        "title": "Durchbruch im Bio-Gartenbau",
-        "category": "Ausfuhr",
-        "story": "Eine Kooperative erhielt EU-Bio-Zertifizierung mit Hilfe von Diaspora-Agronomen. Heute exportieren sie hochwertiges Gemüse in EU-Supermärkte.",
-        "testimonial": "Wir hätten nie gedacht, dass unsere kleine Farm EU-Standards erfüllen kann.",
-        "author": "Grace Ncube",
-        "role": "Vorsitzende, Mazowe Organic Farmers Cooperative"
-      },
-      "tourism_lodge": {
-        "title": "Investition in Tourismus-Lodge",
-        "category": "Investition",
-        "story": "Über Crowdfunding sammelten 280 Investoren 500.000 $ für eine Eco-Lodge bei den Victoriafällen. Sie erwirtschaftet heute stabile Renditen.",
-        "testimonial": "Ich habe 2.000 $ investiert und bin nun Miteigentümer einer Lodge in meiner Heimat.",
-        "author": "Simba Chikwanha",
-        "role": "Diaspora-Investor, London"
-      },
-      "stone_sculpture": {
-        "title": "Exportnetzwerk für Steinskulpturen",
-        "category": "Handel",
-        "story": "Bildhauer erhielten Zugang zum US-Kunstmarkt durch Galeriebesitzer aus der Diaspora. Der Umsatz verdreifachte sich in zwei Jahren.",
-        "testimonial": "Unsere Skulpturen stehen nun in Galerien auf drei Kontinenten.",
-        "author": "Patrick Mavros",
-        "role": "Meisterbildhauer, Harare"
-      },
-      "tech_startup": {
-        "title": "Finanzierung für Tech-Startup",
-        "category": "Investition",
-        "story": "Ein Fintech aus Harare sammelte 750.000 $ ein. Die mobile Bezahllösung dient heute über 500.000 Nutzern.",
-        "testimonial": "Das Diaspora-Kapital brachte Mentoren mit, die Silicon-Valley-Standards verstehen.",
-        "author": "Tafadzwa Chidavaenzi",
-        "role": "CEO, PayMoyo Technologies"
-      },
-      "honey_export": {
-        "title": "Honig-Export-Kooperative",
-        "category": "Ausfuhr",
-        "story": "Ländliche Imker exportieren nun Bio-Honig nach Europa. Diaspora-Wissenschaftler halfen bei der EU-Zertifizierung.",
-        "testimonial": "Vom Straßenverkauf zum EU-Supermarkt – die Diaspora machte es möglich.",
-        "author": "Rudo Makoni",
-        "role": "Sekretärin, Masvingo Honey Cooperative"
-      },
-      "heritage_tourism": {
-        "title": "Heimkehr-Tourismus-Pakete",
-        "category": "Tourismus",
-        "story": "Ein Reiseveranstalter entwickelte Pakete, die Familienbesuche mit Kultur verbinden und jährlich 1.200 Touristen anziehen.",
-        "testimonial": "Wir schufen Erlebnisse, die helfen, Wurzeln wiederzuentdecken.",
-        "author": "Chipo Mutasa",
-        "role": "Direktorin, Heritage Trails Zimbabwe"
-      },
-      "macadamia_nut": {
-        "title": "Macadamia-Verarbeitungsanlage",
-        "category": "Investition",
-        "story": "Crowdfunding ermöglichte den Bau von Simbabwes erster Macadamia-Fabrik, die Nüsse von über 200 Kleinbauern verarbeitet.",
-        "testimonial": "Wir haben 1,2 Mio. $ gesammelt. Jetzt schaffen wir Jobs und exportieren nach Asien.",
-        "author": "Ngoni Sibanda",
-        "role": "Betriebsleiter, Zim Macadamia Processors"
-      }
-    },
-    "impact_metrics": {
-      "economic_impact": {
-        "label": "Wirtschaftliche Gesamtwirkung",
-        "description": "Generierter Umsatz über alle Erfolgsgeschichten"
-      },
-      "jobs_created": {
-        "label": "Geschaffene Arbeitsplätze",
-        "description": "Direkte Beschäftigungsverhältnisse"
-      },
-      "diaspora_investors": {
-        "label": "Diaspora-Investoren",
-        "description": "Aktive Projektteilnehmer"
-      },
-      "markets_accessed": {
-        "label": "Erschlossene Märkte",
-        "description": "Erreichte internationale Märkte"
-      }
-    },
-    "stories_badge": "Geschichten",
-    "stories_title": "Wirkung",
-    "stories_subtitle": "Entdecken Sie die Beiträge der Diaspora in verschiedenen Sektoren.",
-    "story_card": {
-      "impact": "Wirkung:",
-      "revenue": "Umsatz:",
-      "jobs": "Arbeitsplätze:",
-      "markets": "Märkte:",
-      "investors": "Investoren:",
-      "testimonial_by": "— {{author}} ({{role}})",
-      "view_story": "Geschichte lesen"
-    },
-    "metrics_badge": "Kennzahlen",
-    "metrics_title": "Gemeinsame Wirkung",
-    "metrics_subtitle": "Die kumulierte Wirkung des Engagements über alle Projekte.",
-    "cta_title": "Arbeiten Sie mit uns zusammen",
-    "cta_subtitle": "Wir arbeiten mit Diaspora-Führungskräften, Institutionen und Unternehmen zusammen, um Wirkung zu skalieren. Lassen Sie uns gemeinsam aufbauen.",
-    "cta_button": "Partnerschaft starten",
-    "stories_list": [
-      {
-        "display": true,
-        "title": "Erfolg im Lederwaren-Export",
-        "category": "Export",
-        "image": "/images/pages/shared/leather_products.jpg",
-        "impact": {
-          "revenue": "$2.5M",
-          "jobs": "150+",
-          "markets": "3 countries"
-        },
-        "story": "Fachkräfte in Deutschland vernetzten Lederhersteller mit europäischen Händlern. Das Netzwerk lieferte Analysen zu Konsumvorlieben und direkte Kontakte zu Einkäufern.",
-        "testimonial": "Die Plattform verband uns mit Diaspora-Mitgliedern, die unser Handwerk und den EU-Markt verstehen.",
-        "author": "Tendai Moyo",
-        "role": "Geschäftsführer, Zimbabwe Leather Collective"
-      },
-      {
-        "display": true,
-        "title": "Durchbruch im Bio-Gartenbau",
-        "category": "Export",
-        "image": "/images/pages/shared/horticulture.jpg",
-        "impact": {
-          "revenue": "$850K",
-          "jobs": "85",
-          "markets": "Germany, Netherlands"
-        },
-        "story": "Eine Kooperative erhielt EU-Bio-Zertifizierung mit Hilfe von Diaspora-Agronomen. Heute exportieren sie hochwertiges Gemüse in EU-Supermärkte.",
-        "testimonial": "Wir hätten nie gedacht, dass unsere kleine Farm EU-Standards erfüllen kann.",
-        "author": "Grace Ncube",
-        "role": "Vorsitzende, Mazowe Organic Farmers Cooperative"
-      },
-      {
-        "display": true,
-        "title": "Investition in Tourismus-Lodge",
-        "category": "Investition",
-        "image": "/images/pages/tourism/victoria_falls.jpg",
-        "impact": {
-          "revenue": "$1.2M annually",
-          "jobs": "45",
-          "investors": "280 diaspora"
-        },
-        "story": "Über Crowdfunding sammelten 280 Investoren 500.000 $ für eine Eco-Lodge bei den Victoriafällen. Sie erwirtschaftet heute stabile Renditen.",
-        "testimonial": "Ich habe 2.000 $ investiert und bin nun Miteigentümer einer Lodge in meiner Heimat.",
-        "author": "Simba Chikwanha",
-        "role": "Diaspora-Investor, London"
-      },
-      {
-        "display": true,
-        "title": "Exportnetzwerk für Steinskulpturen",
-        "category": "Handel",
-        "image": "/images/pages/wikimedia/faces-4.jpg",
-        "impact": {
-          "revenue": "$450K",
-          "jobs": "60 artisans",
-          "markets": "USA, CAN, UK"
-        },
-        "story": "Bildhauer erhielten Zugang zum US-Kunstmarkt durch Galeriebesitzer aus der Diaspora. Der Umsatz verdreifachte sich in zwei Jahren.",
-        "testimonial": "Unsere Skulpturen stehen nun in Galerien auf drei Kontinenten.",
-        "author": "Patrick Mavros",
-        "role": "Meisterbildhauer, Harare"
-      },
-      {
-        "display": true,
-        "title": "Finanzierung für Tech-Startup",
-        "category": "Investition",
-        "image": "/images/pages/home/partnership_handshake.png",
-        "impact": {
-          "revenue": "$3.5M valuation",
-          "jobs": "35",
-          "investors": "120 diaspora"
-        },
-        "story": "Ein Fintech aus Harare sammelte 750.000 $ ein. Die mobile Bezahllösung dient heute über 500.000 Nutzern.",
-        "testimonial": "Das Diaspora-Kapital brachte Mentoren mit, die Silicon-Valley-Standards verstehen.",
-        "author": "Tafadzwa Chidavaenzi",
-        "role": "CEO, PayMoyo Technologies"
-      },
-      {
-        "display": true,
-        "title": "Honig-Export-Kooperative",
-        "category": "Export",
-        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
-        "impact": {
-          "revenue": "$320K",
-          "jobs": "120 beekeepers",
-          "markets": "EU markets"
-        },
-        "story": "Ländliche Imker exportieren nun Bio-Honig nach Europa. Diaspora-Wissenschaftler halfen bei der EU-Zertifizierung.",
-        "testimonial": "Vom Straßenverkauf zum EU-Supermarkt – die Diaspora machte es möglich.",
-        "author": "Rudo Makoni",
-        "role": "Sekretärin, Masvingo Honey Cooperative"
-      },
-      {
-        "display": true,
-        "title": "Heimkehr-Tourismus-Pakete",
-        "category": "Tourismus",
-        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
-        "impact": {
-          "revenue": "$680K",
-          "tourists": "1,200+ diaspora",
-          "jobs": "28"
-        },
-        "story": "Ein Reiseveranstalter entwickelte Pakete, die Familienbesuche mit Kultur verbinden und jährlich 1.200 Touristen anziehen.",
-        "testimonial": "Wir schufen Erlebnisse, die helfen, Wurzeln wiederzuentdecken.",
-        "author": "Chipo Mutasa",
-        "role": "Direktorin, Heritage Trails Zimbabwe"
-      },
-      {
-        "display": true,
-        "title": "Macadamia-Verarbeitungsanlage",
-        "category": "Investition",
-        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
-        "impact": {
-          "revenue": "$1.8M",
-          "jobs": "95",
-          "investors": "340 diaspora"
-        },
-        "story": "Crowdfunding ermöglichte den Bau von Simbabwes erster Macadamia-Fabrik, die Nüsse von über 200 Kleinbauern verarbeitet.",
-        "testimonial": "Wir haben 1,2 Mio. $ gesammelt. Jetzt schaffen wir Jobs und exportieren nach Asien.",
-        "author": "Ngoni Sibanda",
-        "role": "Betriebsleiter, Zim Macadamia Processors"
-      }
-    ],
-    "metrics_list": [
-      {
-        "display": true,
-        "value": "$11.3M+",
-        "label": "Wirtschaftliche Gesamtwirkung",
-        "description": "Generierter Umsatz über alle Erfolgsgeschichten"
-      },
-      {
-        "display": true,
-        "value": "700+",
-        "label": "Geschaffene Arbeitsplätze",
-        "description": "Direkte Beschäftigungsverhältnisse"
-      },
-      {
-        "display": true,
-        "value": "1,000+",
-        "label": "Diaspora-Investoren",
-        "description": "Aktive Projektteilnehmer"
-      },
-      {
-        "display": true,
-        "value": "15+",
-        "label": "Erschlossene Märkte",
-        "description": "Erreichte internationale Märkte"
-      }
-    ]
-  },
   "common": {
     "coming_soon": "Wir entwickeln intelligente Lösungen, die mithilfe fortschrittlicher KI-Technologie die Art und Weise verändern, wie Sie sich vernetzen, arbeiten und wachsen.",
     "explore_now": "Jetzt entdecken",
@@ -1429,17 +1121,9 @@
     "annual_return": "Jährliche Rendite",
     "disclaimer": "Hinweis: Dieser Rechner liefert Schätzungen. Die tatsächliche Performance kann abweichen."
   },
-  "payments": {
-    "intro": {
-      "title": "Grenzüberschreitende Zahlungen",
-      "description": "Diaspora Unlocked integriert vertrauenswürdige Finanzpartner, um sichere Überweisungen, Familienunterstützung und Coverage-Services für im Ausland lebende Simbabwer bereitzustellen."
-    }
-  },
   "shop": {
     "collections": "Kollektionen",
-    "title": "Ein Zuhause fern von Zuhause",
     "collections_title": "Kuratierte simbabwische Exzellenz",
-    "desc": "Von offiziellem Merchandise bis zu handgefertigten Schätzen – jedes Stück erzählt eine Geschichte.",
     "collections_description": "Kuratierte simbabwische Exzellenz bringt authentische simbabwische Produkte direkt zu Ihnen nach Hause – von Vorratswaren und Getränken bis zu Kunsthandwerk und Sportbekleidung, mit Fokus auf Qualität und Diaspora-Komfort. Jede Kollektion wird so ausgewählt, dass simbabwische Produzenten gestärkt, lokale Wertschöpfungsketten unterstützt und Familien im Ausland verlässlichen Zugang zu vertrauenswürdigen Produkten aus der Heimat erhalten.",
     "explore_shop": "Shop entdecken",
     "trade_support": "Handelsunterstützung entdecken",
@@ -1487,35 +1171,43 @@
     "categories": {
       "beverages": {
         "title": "Beverages",
-        "description": "Mazoe, Maheu, and other homegrown drink favorites."
+        "description": "Mazoe, Maheu, and other homegrown drink favorites.",
+        "detail": "Classic Zimbabwean drinks curated for family tables, gifting, and easy restocking when you want familiar favourites close at hand."
       },
       "cereals": {
         "title": "Cereals & Breakfast",
-        "description": "Cerevita blends and everyday breakfast staples."
+        "description": "Cerevita blends and everyday breakfast staples.",
+        "detail": "Trusted breakfast staples and pantry basics selected for repeat household orders, family bundles, and familiar routines from home."
       },
       "sauces_spices": {
         "title": "Sauces & Spices",
-        "description": "Madras curry, peri-peri sauces, and flavor essentials."
+        "description": "Madras curry, peri-peri sauces, and flavor essentials.",
+        "detail": "Flavor-led cooking essentials that help rebuild familiar meals, pantry bundles, and gift boxes with recognizable Zimbabwean taste."
       },
       "snacks": {
         "title": "Snacks & Treats",
-        "description": "Maputi, biscuits, and nostalgic grab-and-go bites."
+        "description": "Maputi, biscuits, and nostalgic grab-and-go bites.",
+        "detail": "Comfort snacks and quick treats chosen for sharing, care packages, and nostalgia-driven orders that travel well across households."
       },
       "oils_spreads": {
         "title": "Cooking Oils & Spreads",
-        "description": "Everyday cooking oils and pantry spread essentials."
+        "description": "Everyday cooking oils and pantry spread essentials.",
+        "detail": "Practical pantry essentials that support repeat cooking needs, top-up orders, and easy basket building for everyday meals."
       },
       "proteins": {
         "title": "Protein & Pantry",
-        "description": "Kapenta and protein-rich staples for family meals."
+        "description": "Kapenta and protein-rich staples for family meals.",
+        "detail": "Protein-rich staples for traditional dishes, family cooking, and pantry planning where convenience and home taste both matter."
       },
       "crafts": {
         "title": "Arts & Crafts",
-        "description": "Authentic artisan pieces rooted in Zimbabwean heritage."
+        "description": "Authentic artisan pieces rooted in Zimbabwean heritage.",
+        "detail": "Handmade heritage pieces with artisan story, gift appeal, and display value for homes, offices, and diaspora collections."
       },
       "apparel": {
         "title": "Sports Apparel",
-        "description": "Rugby, cricket, and football fan kits."
+        "description": "Rugby, cricket, and football fan kits.",
+        "detail": "Wear Zimbabwean pride through supporter gear and team-inspired apparel suited to gifting, match days, and community events."
       }
     },
     "products": {

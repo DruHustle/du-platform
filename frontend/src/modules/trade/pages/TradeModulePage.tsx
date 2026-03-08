@@ -91,12 +91,6 @@ export default function Trade() {
     return () => clearInterval(heroTimer);
   }, [heroSlides.length]);
 
-  const introData = {
-  icon: Handshake, // 
-  title: t('trade.objective_title') || "Zimbabwe Trade Execution",
-  description:  t('trade.objective_subtitle') || "Execute export growth with a practical playbook for market access, regulatory compliance, shipping controls, and diaspora-enabled buyer connections."
- };
-
   const exportSectors = [
     {
       name: t("trade.sectors.horticulture.name") || "Horticulture",
@@ -300,7 +294,6 @@ export default function Trade() {
       <section id="hero" >
         <SubPageHero 
           heroSlides={heroSlides} 
-          intro={introData} 
           />
       </section>
 

@@ -58,7 +58,6 @@
     "tourism": "Ezokuvakasha",
     "investment": "Ukutshala Imali",
     "trade": "Ezohwebo",
-    "impact": "Umphumela",
     "care": "Ukunakekelwa Komndeni",
     "market_requirements": "Izidingo zemakethe",
     "market_requirements_desc": "Imithetho lezitifiketi zemakethe yase-Germany",
@@ -95,15 +94,12 @@
     "tourism": "Ezokuvakasha",
     "technology": "Ezobuchwepheshe",
     "investments": "Ukutshala Imali",
-    "objective_title": "Izinsizakalo ze-Ipulatifomu",
-    "objective_desc": "Ipulatifomu yedijithali exhuma iZimbabwe lomhlaba wonke ngezohwebo, ezokuvakasha, lokutshala imali.",
     "explore_now": "Hlola Manje",
     "inquiry_btn": "Thintana lathi",
     "inquiry_title": "Imibuzo ejwayelekileyo",
     "ready_to_connect_title": "Usulungele ukuxhumana?",
     "ready_to_connect_subtitle": "Hlanganyela lezinkulungwane zama-diaspora akha amabhuloho okuthuthukisa umnotho.",
     "view_data": "Buka Idatha yezomnotho",
-    "success_stories": "Umphumela",
     "modules": {
       "tourism": {
         "title": "Ezokuvakasha",
@@ -124,16 +120,6 @@
         "title": "Ezohwebo",
         "desc": "Finyelela izinsiza zezohwebo ezibanzi njalo uxhumane lezingxenye zezokuthumela ngaphandle zaseZimbabwe.",
         "stats": "Ingxenye ezingu-8 zokuthumela ngaphandle"
-      },
-      "technology": {
-        "title": "Ezobuchwepheshe le-AI",
-        "desc": "Hlangana le-Onesa AI, uhlobo lwethu olukhethekileyo olwakhelwe ukukhanyisa isimo seZimbabwe.",
-        "stats": "Onesa AI imodeli"
-      },
-      "success": {
-        "title": "Umphumela",
-        "desc": "Hlola izibonelo zangempela zemisebenzi ephumelelayo ngokuzibandakanya kwama-diaspora.",
-        "stats": "Izindaba zomphumela"
       }
     }
   },
@@ -172,8 +158,6 @@
       "subtitle8": "Ochwepheshe be-diaspora baletha imali, mentorship, losizo olusebenzayo kuma-startup akuleli.",
       "highlight8": "Ukubambisana Komhlaba"
     },
-    "objective_title": "Kuvuselelwa kweThekhinoloji",
-    "objective_subtitle": "Ukusebenzisa i-Artificial Intelligence (AI) lezinye indlela zedijithali ukuxhumanisa iZimbabwe labantu bayo abasuka kwamanye amazwe, ngenjongo yokukhuthaza ukubambisana, intuthuko eqhubekayo, lokukhula komnotho kwesikhathi eside.",
     "explore_onesa": "Hlola i-Onesa AI",
     "onesa_badge": "Hlangana le-Onesa AI",
     "onesa_title": "Ukukhanyisa indlela yakho",
@@ -327,8 +311,8 @@
       "plan_journey": "Hlela uhambo lwakho",
       "watch_exp": "Bukela okwenzakalayo",
       "book_trip": "Bhuka Uhambo",
-      "virtual_center": "Vakashela i-Virtual Reality Center",
-      "local_guide_ar": "Local guide AR Experience",
+      "virtual_center": "Virtual Reality",
+      "local_guide_ar": "Local guide",
       "badge6": "UNESCO Wilderness",
       "title6": "Mana Pools Experience",
       "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
@@ -632,8 +616,6 @@
         "d3": "Isimo sezulu esihle unyaka wonke"
       }
     },
-    "objective_title": "Umbono wethu",
-    "objective_subtitle": "Ukwakha isango lomhlaba elixhumanisa amasiko, imikhiqizo, ezokuvakasha, lamathuba okutshala imali eZimbabwe.",
     "cta_title": "Usulungele ukuqalisa uhambo lwakho?",
     "cta_button": "Xhumana lochwepheshe",
     "cta_subtitle": "Ithimba lethu lezokuvakasha lingakusiza ekutholeni amathuba afaneleyo likuqondise ohlelweni lonke.",
@@ -664,8 +646,6 @@
     }
   },
   "investment": {
-    "objective_title": "Ukutshala imali okuphephileyo, okuqhuba ukukhula",
-    "objective_subtitle": "Ukuxhuma abatshali mali bama-diaspora lemisebenzi ehloliweyo, elamathuba amakhulu, isekelwa yimizamo kahulumende.",
     "opportunities": {
       "subtitle": "Lezi zindawo eziphambili zingaletha inzuzo engcono uma zihambisana lokulandela imithetho, ubudlelwano obusebenzayo, kanye lolwazi lwengxenye."
     },
@@ -834,7 +814,8 @@
     "ntir_subtitle": "Irejista esemthethweni yezinkampani zezohwebo lokutshala imali eziqinisekisiweyo eZimbabwe.",
     "ntir_button": "Dingisisa ku-Database ye-NTIR.",
     "crowdfunding_title": "Amathuba e-Crowdfunding",
-    "crowdfunding_subtitle": "Ukutshala imali okuncane emisebenzini ehloliweyo ngemali ephansi ube ubona umphumela wangempela.",
+    "crowdfunding_subtitle": "Ukutshala imali encane emisebenzini ehloliweyo, ngokungena okucacileyo lokubona umphumela wangempela.",
+    "crowdfunding_steps_subtitle": "Ukutshala imali okuncane emisebenzini ehloliweyo ngemali ephansi ube ubona umphumela wangempela.",
     "sectors_title": "Amathuba okutshala imali akhona",
     "sectors_subtitle": "Imisebenzi ehloliweyo ngokucophelela isekelwa nguhulumende.",
     "cta_title": "Usulungele ukutshala imali?",
@@ -844,17 +825,6 @@
     "explore_title": "Hlola eminye imininingwane yokutshala imali",
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi, vakashela i-Zimbabwe Investment and Development Agency (ZIDA).",
     "explore_site": "Vakashela i-ZIDA",
-    "regulatory_snapshot": {
-      "title": "Isifinyezo semithetho yokutshala imali",
-      "subtitle": "Ngaphambi kokubeka imali, qondanisa iphrojekthi ngayinye lezimfuneko zemithetho, ukuphathwa lokuhlela ukukhokha kubatshali bama-diaspora.",
-      "open_full_guide": "Vula isikhokhelo esigcweleyo",
-      "checklist": [
-        "Qinisekisa ukubhaliswa ngokusemthethweni kwenkampani lezimvumo zengxenye.",
-        "Hlola uhlaka lobunini lamalungelo okuvikela abanikazi bamasheya.",
-        "Chaza ngokucacileyo uhlobo lwemali yokukhokha lokubuyiselwa kwenzuzo.",
-        "Beka isheduli yemibiko ehlolwayo ngaphambi kokukhululwa kwemali."
-      ]
-    },
     "collective_model": {
       "title": "Isebenza kanjani iDiaspora Collective Investing",
       "subtitle": "I-Diaspora Unlocked iklanyelwe ukutshala izimali ezihlanganisiwe ukuze abatshalizimali abancane nabaphakathi bakwazi ukufinyelela amathuba ngokuvamile adinga osayizi abakhulu bamathikithi.",
@@ -987,8 +957,6 @@
       "subtitle8": "Balance commodity exports with processed goods and sector-specific compliance planning.",
       "highlight8": "Risk Balanced Growth"
     },
-    "objective_title": "Imigudu yenani",
-    "objective_subtitle": "Ukwakha imigudu yenani esimeme ledingayo esekela ukukhula komnotho kwesikhathi eside.",
     "export_roadmap_badge": "Indlela yokuthumela phandle",
     "export_roadmap_title": "Uhlelo lokuthumela kusuka eZimbabwe kusiya e-Germany",
     "export_roadmap_subtitle": "Isikhokhelo sesinyathelo ngesinyathelo sokuhamba ohambweni lokuthumela phandle.",
@@ -1104,282 +1072,6 @@
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi, vakashela i-ZimTrade.",
     "explore_site": "Vakashela i-ZimTrade"
   },
-  "impact": {
-    "hero": {
-      "badge1": "Izindaba zomphumela",
-      "title1": "Ama-Diaspora aqhuba i- ",
-      "highlight1": "Nguquko",
-      "subtitle1": "Izibonelo zangempela zendlela ama-diaspora aseZimbabwe enza ngayo umahluko obonakalayo.",
-      "badge2": "Ukusungula",
-      "title2": "Ezobuchwepheshe lobusontshanti ",
-      "highlight2": "Impumelelo",
-      "subtitle2": "Ukubonisa amabhizinisi amakhulu aqhutshwa lulwazi lokutshala imali kwama-diaspora.",
-      "badge3": "Ukushintshisana ngamasiko",
-      "title3": "Ukulondoloza amagugu nge- ",
-      "highlight3": "Zohwebo",
-      "subtitle3": "Ukugqamisa imizamo eletha amasiko aseZimbabwe emhlabeni jikelele.",
-      "badge4": "Intuthuko esimeme",
-      "title4": "Imizamo ye-Green le- ",
-      "highlight4": "Khula komphakathi",
-      "subtitle4": "Izindaba zokulondoloza imvelo lokuphakamisa imiphakathi yezigabeni.",
-      "badge5": "Ukuhlanganisa izinsiza",
-      "title5": "Ukuvula amathuba nge- ",
-      "highlight5": "Kutshala imali",
-      "subtitle5": "Indlela imali yama-diaspora eguqula ngayo izingxenye zomnotho eziqakathekileyo."
-    },
-    "objective_title": "Umphumela",
-    "objective_subtitle": "Ukubonisa umphumela obonakalayo wokuzibandakanya kwama-diaspora eZimbabwe.",
-    "stories": {
-      "leather_goods": {
-        "title": "Impumelelo yokuthunyelwa kwempahla yesikhumba",
-        "category": "Thekelisa",
-        "story": "Iqembu labachwepheshe baseZimbabwe abahlala e-Germany baxhumanise abakhiqizi besikhumba basekhaya labathengisi baseYurophu.",
-        "testimonial": "Ipulatifomu ye-Diaspora Unlocked isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
-        "author": "Tendai Moyo",
-        "role": "Umphathintambo weZimbabwe Leather Collective"
-      },
-      "horticulture_breakthrough": {
-        "title": "Ukuphumelela kwe-Organic Horticulture",
-        "category": "Thekelisa",
-        "story": "Inhlanganiso yabalimi abancane ithole isitifiketi se-EU organic ngokusekelwa ngama-agronomists angama-diaspora.",
-        "testimonial": "Sasingakaze sicabange ukuthi ipula lethu elincane lingafinyelela amazinga aseYurophu.",
-        "author": "Grace Ncube",
-        "role": "USihlalo, iMazowe Organic Farmers Cooperative"
-      },
-      "tourism_lodge": {
-        "title": "Ukutshala imali ku-Tourism Lodge",
-        "category": "Ukutshala imali",
-        "story": "Ngepulatifomu ye-crowdfunding ye-Diaspora Unlocked, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
-        "testimonial": "Ngaletshala u-$2,000 ngivela e-UK njalo manje sengiyingxenye yabanikazi be-lodge enhle ekhaya.",
-        "author": "Simba Chikwanha",
-        "role": "I-Diaspora Investor, eLondon"
-      },
-      "stone_sculpture": {
-        "title": "Inethiwekhi yokuthumela izithombe zamatshe",
-        "category": "Uhwebo",
-        "story": "Ababazi baseZimbabwe bathole ithuba lokungena ezimakethe zobuciko zase-North America ngezithombe zamatshe.",
-        "testimonial": "Izithombe zethu manje sezikhonjiswa ezigalari emazweni amaningi.",
-        "author": "UPatrick Mavros",
-        "role": "UMqophi Omkhulu, eHarare"
-      },
-      "tech_startup": {
-        "title": "Ukuxhaswa kwe-Tech Startup ngama-Diaspora",
-        "category": "Ukutshala imali",
-        "story": "Inkampani ye-fintech eseHarare ihlanganise u-$750K kubatshali mali abangama-diaspora.",
-        "testimonial": "Uxhaso lwama-diaspora lweze lolunye ulwazi—sathola abacebisi abazwisisa amazinga we-Silicon Valley lesimo sase-Africa.",
-        "author": "Tafadzwa Chidavaenzi",
-        "role": "Isikhulu esiphezulu sePayMoyo Technologies"
-      },
-      "honey_export": {
-        "title": "Inhlanganiso yokuthumela inyosi",
-        "category": "Thekelisa",
-        "story": "Abalimi benyosi ezindaweni zasemaphandleni babumbe inhlanganiso yokuthumela inyosi e-organic eYurophu.",
-        "testimonial": "Kusukela ekuthengiseni inyosi eceleni komgwaqo kusiya ekuthumeleni eYurophu—inethiwekhi yama-diaspora yenze lokhu kwenzeka.",
-        "author": "Rudo Makoni",
-        "role": "Unobhala weMasvingo Honey Cooperative"
-      },
-      "heritage_tourism": {
-        "title": "Impumelelo ye-Heritage Tourism Package",
-        "category": "Ezokuvakasha",
-        "story": "Umhlinzeki wezokuvakasha usungule amaphakheji akhethekileyo wama-diaspora abuyela ekhaya.",
-        "testimonial": "Siveze amathuba anceda ama-diaspora ukuxhumana lezimpande zawo bebesekela imiphakathi yakhona.",
-        "author": "Chipo Mutasa",
-        "role": "Umqondisi, Heritage Trails Zimbabwe"
-      },
-      "macadamia_nut": {
-        "title": "Indawo yokucubungula ama-Macadamia Nut",
-        "category": "Ukutshala imali",
-        "story": "I-Crowdfunding yama-diaspora yenze kwaba lula ukwakhiwa kwendawo yokuqala eZimbabwe yokucubungula amantongomane e-macadamia.",
-        "testimonial": "Sahlanganisa u-$1.2M kubatshali mali abangama-diaspora abakholelwa ekwenzeni inani elengeziweyo (value-addition).",
-        "author": "Ngoni Sibanda",
-        "role": "Umphathi Wokusebenza, iZim Macadamia Processors"
-      }
-    },
-    "impact_metrics": {
-      "economic_impact": {
-        "label": "Umphumela wonke kumnotho",
-        "description": "Imali engenileyo kuzo zonke izindaba zempumelelo"
-      },
-      "jobs_created": {
-        "label": "Imisebenzi eyakhiweyo",
-        "description": "Amathuba emisebenzi ngqo"
-      },
-      "diaspora_investors": {
-        "label": "Abatshali mali abangama-Diaspora",
-        "description": "Abantu abazibandakanya emisebenzini"
-      },
-      "markets_accessed": {
-        "label": "Izimakethe ezingenweyo",
-        "description": "Izimakethe zomhlaba eziye zafinyelelwa"
-      }
-    },
-    "stories_badge": "Izindaba",
-    "stories_title": "Umphumela",
-    "stories_subtitle": "Hlola iqhaza elakhayo lama-diaspora aseZimbabwe ezingxenyeni ezitshiyeneyo.",
-    "story_card": {
-      "impact": "Umphumela:",
-      "revenue": "Imali:",
-      "jobs": "Imisebenzi:",
-      "markets": "Izimakethe:",
-      "investors": "Abatshali mali:",
-      "testimonial_by": "— {{author}} ({{role}})",
-      "view_story": "Buka indaba"
-    },
-    "metrics_badge": "Isilinganiso (Metrics)",
-    "metrics_title": "Umphumela ohlanganyelweyo",
-    "metrics_subtitle": "Umphumela wonke wokuzibandakanya kwama-diaspora kuzo zonke izindaba zempumelelo.",
-    "cta_title": "Sebenzisana lathi",
-    "cta_subtitle": "Sisebenzisana labaholi beDiaspora, izinhlanganiso, lamabhizimusi ukuze sandise umphumela. Kasakheni ndawonye.",
-    "cta_button": "Qalisa Ubambiswano",
-    "stories_list": [
-      {
-        "display": true,
-        "title": "Impumelelo yokuthunyelwa kwempahla yesikhumba",
-        "category": "Export",
-        "image": "/images/pages/shared/leather_products.jpg",
-        "impact": {
-          "revenue": "$2.5M",
-          "jobs": "150+",
-          "markets": "3 countries"
-        },
-        "story": "Iqembu labachwepheshe baseZimbabwe abahlala e-Germany baxhumanise abakhiqizi besikhumba basekhaya labathengisi baseYurophu.",
-        "testimonial": "Ipulatifomu ye-Diaspora Unlocked isixhumanise lama-diaspora azwisisa ubuciko bethu lezidingo zemakethe yaseYurophu.",
-        "author": "Tendai Moyo",
-        "role": "Managing Director, Zimbabwe Leather Collective"
-      },
-      {
-        "display": true,
-        "title": "Ukuphumelela kwe-Organic Horticulture",
-        "category": "Export",
-        "image": "/images/pages/shared/horticulture.jpg",
-        "impact": {
-          "revenue": "$850K",
-          "jobs": "85",
-          "markets": "Germany, Netherlands"
-        },
-        "story": "Inhlanganiso yabalimi abancane ithole isitifiketi se-EU organic ngokusekelwa ngama-agronomists angama-diaspora.",
-        "testimonial": "Sasingakaze sicabange ukuthi ipula lethu elincane lingafinyelela amazinga aseYurophu.",
-        "author": "Grace Ncube",
-        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
-      },
-      {
-        "display": true,
-        "title": "Ukutshala imali ku-Tourism Lodge",
-        "category": "Investment",
-        "image": "/images/pages/tourism/victoria_falls.jpg",
-        "impact": {
-          "revenue": "$1.2M annually",
-          "jobs": "45",
-          "investors": "280 diaspora"
-        },
-        "story": "Ngepulatifomu ye-crowdfunding ye-Diaspora Unlocked, abatshali mali abangama-diaspora abangu-280 bahlanganise u-$500K ukwakha i-eco-lodge eduze laseVictoria Falls.",
-        "testimonial": "Ngaletshala u-$2,000 ngivela e-UK njalo manje sengiyingxenye yabanikazi be-lodge enhle ekhaya.",
-        "author": "Simba Chikwanha",
-        "role": "Diaspora Investor, London"
-      },
-      {
-        "display": true,
-        "title": "Inethiwekhi yokuthumela izithombe zamatshe",
-        "category": "Trade",
-        "image": "/images/pages/wikimedia/faces-4.jpg",
-        "impact": {
-          "revenue": "$450K",
-          "jobs": "60 artisans",
-          "markets": "USA, CAN, UK"
-        },
-        "story": "Ababazi baseZimbabwe bathole ithuba lokungena ezimakethe zobuciko zase-North America ngezithombe zamatshe.",
-        "testimonial": "Izithombe zethu manje sezikhonjiswa ezigalari emazweni amaningi.",
-        "author": "Patrick Mavros",
-        "role": "Master Sculptor, Harare"
-      },
-      {
-        "display": true,
-        "title": "Ukuxhaswa kwe-Tech Startup ngama-Diaspora",
-        "category": "Investment",
-        "image": "/images/pages/home/partnership_handshake.png",
-        "impact": {
-          "revenue": "$3.5M valuation",
-          "jobs": "35",
-          "investors": "120 diaspora"
-        },
-        "story": "Inkampani ye-fintech eseHarare ihlanganise u-$750K kubatshali mali abangama-diaspora.",
-        "testimonial": "Uxhaso lwama-diaspora lweze lolunye ulwazi—sathola abacebisi abazwisisa amazinga we-Silicon Valley lesimo sase-Africa.",
-        "author": "Tafadzwa Chidavaenzi",
-        "role": "CEO, PayMoyo Technologies"
-      },
-      {
-        "display": true,
-        "title": "Inhlanganiso yokuthumela inyosi",
-        "category": "Export",
-        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
-        "impact": {
-          "revenue": "$320K",
-          "jobs": "120 beekeepers",
-          "markets": "EU markets"
-        },
-        "story": "Abalimi benyosi ezindaweni zasemaphandleni babumbe inhlanganiso yokuthumela inyosi e-organic eYurophu.",
-        "testimonial": "Kusukela ekuthengiseni inyosi eceleni komgwaqo kusiya ekuthumeleni eYurophu—inethiwekhi yama-diaspora yenze lokhu kwenzeka.",
-        "author": "Rudo Makoni",
-        "role": "Secretary, Masvingo Honey Cooperative"
-      },
-      {
-        "display": true,
-        "title": "Impumelelo ye-Heritage Tourism Package",
-        "category": "Tourism",
-        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
-        "impact": {
-          "revenue": "$680K",
-          "tourists": "1,200+ diaspora",
-          "jobs": "28"
-        },
-        "story": "Umhlinzeki wezokuvakasha usungule amaphakheji akhethekileyo wama-diaspora abuyela ekhaya.",
-        "testimonial": "Siveze amathuba anceda ama-diaspora ukuxhumana lezimpande zawo bebesekela imiphakathi yakhona.",
-        "author": "Chipo Mutasa",
-        "role": "Director, Heritage Trails Zimbabwe"
-      },
-      {
-        "display": true,
-        "title": "Indawo yokucubungula ama-Macadamia Nut",
-        "category": "Investment",
-        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
-        "impact": {
-          "revenue": "$1.8M",
-          "jobs": "95",
-          "investors": "340 diaspora"
-        },
-        "story": "I-Crowdfunding yama-diaspora yenze kwaba lula ukwakhiwa kwendawo yokuqala eZimbabwe yokucubungula amantongomane e-macadamia.",
-        "testimonial": "Sahlanganisa u-$1.2M kubatshali mali abangama-diaspora abakholelwa ekwenzeni inani elengeziweyo (value-addition).",
-        "author": "Ngoni Sibanda",
-        "role": "Operations Manager, Zim Macadamia Processors"
-      }
-    ],
-    "metrics_list": [
-      {
-        "display": true,
-        "value": "$11.3M+",
-        "label": "Umphumela wonke kumnotho",
-        "description": "Imali engenileyo kuzo zonke izindaba zempumelelo"
-      },
-      {
-        "display": true,
-        "value": "700+",
-        "label": "Imisebenzi eyakhiweyo",
-        "description": "Amathuba emisebenzi ngqo"
-      },
-      {
-        "display": true,
-        "value": "1,000+",
-        "label": "Abatshali mali abangama-Diaspora",
-        "description": "Abantu abazibandakanya emisebenzini"
-      },
-      {
-        "display": true,
-        "value": "15+",
-        "label": "Izimakethe ezingenweyo",
-        "description": "Izimakethe zomhlaba eziye zafinyelelwa"
-      }
-    ]
-  },
   "common": {
     "coming_soon": "Sidingida amacebo akhaliphileyo ahloselwe ukuntshintsha indlela elixhumana ngayo, elisebenza ngayo, lelokukhula kwenu sisebenzisa ithekinoji ye-AI ethuthukileyo.",
     "explore_now": "Hlola Manje",
@@ -1437,17 +1129,9 @@
     "annual_return": "Inzuzo yonyaka",
     "disclaimer": "Qaphela: Lesi sibali sinika izilinganiso kuye ngenzuzo elindelekileyo."
   },
-  "payments": {
-    "intro": {
-      "title": "Inkokhelo Ezinqamula Imingcele",
-      "description": "I-Diaspora Unlocked ihlanganisa abahlinzeki bezemali abathembekileyo ukuze inike ukuthunyelwa kwemali okuphephileyo, ukunakekelwa komndeni, kanye lamasevisi ecoverage kumaZimbabwean aphesheya."
-    }
-  },
   "shop": {
     "collections": "Amaqoqo (Collections)",
-    "title": "Ikhaya Likhona Lanxa Ukude",
     "collections_title": "Ubungcweti baseZimbabwe obukhethiweyo",
-    "desc": "Kusukela kwimpahla esemthethweni kusiya emagugwini enziwe ngezandla, yonke impahla ilendaba yamasiko le-quality.",
     "collections_description": "Ubungcweti baseZimbabwe obukhethiweyo buletha imikhiqizo yeZimbabwe eqotho emnyango wakho, kusukela kokudla leziselo kuye kwezobuciko lezimpahla zemidlalo, kukhethwe ngekhwalithi lokwanelisa i-diaspora. Iqoqo ngalinye likhethwa ukuze kusekelwe abakhiqizi beZimbabwe, kuqiniswa ama-value chain akuleli, kanye lokunika imindeni esemazweni angaphandle ukufinyelela okuthembekileyo emikhiqizweni yasekhaya ethembwayo.",
     "explore_shop": "Hlola iShop",
     "trade_support": "Hlola Ukusekelwa KweTrade",
@@ -1495,35 +1179,43 @@
     "categories": {
       "beverages": {
         "title": "Beverages",
-        "description": "Mazoe, Maheu, and other homegrown drink favorites."
+        "description": "Mazoe, Maheu, and other homegrown drink favorites.",
+        "detail": "Classic Zimbabwean drinks curated for family tables, gifting, and easy restocking when you want familiar favourites close at hand."
       },
       "cereals": {
         "title": "Cereals & Breakfast",
-        "description": "Cerevita blends and everyday breakfast staples."
+        "description": "Cerevita blends and everyday breakfast staples.",
+        "detail": "Trusted breakfast staples and pantry basics selected for repeat household orders, family bundles, and familiar routines from home."
       },
       "sauces_spices": {
         "title": "Sauces & Spices",
-        "description": "Madras curry, peri-peri sauces, and flavor essentials."
+        "description": "Madras curry, peri-peri sauces, and flavor essentials.",
+        "detail": "Flavor-led cooking essentials that help rebuild familiar meals, pantry bundles, and gift boxes with recognizable Zimbabwean taste."
       },
       "snacks": {
         "title": "Snacks & Treats",
-        "description": "Maputi, biscuits, and nostalgic grab-and-go bites."
+        "description": "Maputi, biscuits, and nostalgic grab-and-go bites.",
+        "detail": "Comfort snacks and quick treats chosen for sharing, care packages, and nostalgia-driven orders that travel well across households."
       },
       "oils_spreads": {
         "title": "Cooking Oils & Spreads",
-        "description": "Everyday cooking oils and pantry spread essentials."
+        "description": "Everyday cooking oils and pantry spread essentials.",
+        "detail": "Practical pantry essentials that support repeat cooking needs, top-up orders, and easy basket building for everyday meals."
       },
       "proteins": {
         "title": "Protein & Pantry",
-        "description": "Kapenta and protein-rich staples for family meals."
+        "description": "Kapenta and protein-rich staples for family meals.",
+        "detail": "Protein-rich staples for traditional dishes, family cooking, and pantry planning where convenience and home taste both matter."
       },
       "crafts": {
         "title": "Arts & Crafts",
-        "description": "Authentic artisan pieces rooted in Zimbabwean heritage."
+        "description": "Authentic artisan pieces rooted in Zimbabwean heritage.",
+        "detail": "Handmade heritage pieces with artisan story, gift appeal, and display value for homes, offices, and diaspora collections."
       },
       "apparel": {
         "title": "Sports Apparel",
-        "description": "Rugby, cricket, and football fan kits."
+        "description": "Rugby, cricket, and football fan kits.",
+        "detail": "Wear Zimbabwean pride through supporter gear and team-inspired apparel suited to gifting, match days, and community events."
       }
     },
     "products": {

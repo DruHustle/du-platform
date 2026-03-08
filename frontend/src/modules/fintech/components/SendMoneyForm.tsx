@@ -1008,6 +1008,18 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
 
   const fieldClass =
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-white/70 focus:border-zim-gold/60";
+  const stepPillClass =
+    "flex h-10 items-center justify-center rounded-full border px-2.5 text-center text-[9px] font-black uppercase leading-none tracking-[0.18em] md:px-3 md:text-[10px] md:tracking-widest";
+  const pillActionBaseClass =
+    "inline-flex min-h-11 w-full items-center justify-center rounded-full px-4 py-3 text-center text-[11px] font-black uppercase tracking-widest leading-tight transition";
+  const pillSecondaryClass =
+    `${pillActionBaseClass} border border-white/20 bg-white/[0.04] text-white/80 hover:bg-white/[0.08]`;
+  const pillPrimaryClass =
+    `${pillActionBaseClass} bg-zim-gold text-zim-black hover:bg-white disabled:opacity-60`;
+  const pillSuccessClass =
+    `${pillActionBaseClass} border border-emerald-300/40 bg-transparent text-emerald-100 hover:bg-emerald-300/15`;
+  const optionPillClass =
+    "inline-flex min-h-9 items-center justify-center rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors";
 
   const getLocalizedReflectWindow = (payoutType: PayoutEtaTarget) => {
     if (payoutType === "airtime_topup") {
@@ -1052,7 +1064,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           return (
             <div
               key={item.id}
-              className={`rounded-full border px-3 py-1 text-center text-[10px] font-black uppercase tracking-widest ${
+              className={`${stepPillClass} ${
                 active
                   ? "border-zim-gold/50 bg-zim-gold/20 text-zim-gold"
                   : "border-white/10 bg-white/[0.02] text-white/70"
@@ -1203,7 +1215,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           {showGetStartedButton ? (
             <button
               data-testid="payments-get-started"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-zim-gold px-5 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              className={`${pillPrimaryClass} gap-2 px-5 disabled:cursor-not-allowed`}
               disabled={loading || !canStart}
               onClick={onGetStarted}
             >
@@ -1274,16 +1286,16 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
-              className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/80 hover:bg-white/[0.08]"
+              className={pillSecondaryClass}
               onClick={() => setStep("route")}
               disabled={loading}
             >
               {tr("payments.form.actions.back", "Back")}
             </button>
             <button
-              className="w-1/2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:opacity-60"
+              className={pillPrimaryClass}
               onClick={onAcceptRate}
               disabled={loading || !quote}
             >
@@ -1350,15 +1362,15 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </div>
           )}
 
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
-              className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/80 hover:bg-white/[0.08]"
+              className={pillSecondaryClass}
               onClick={() => setStep("quote")}
             >
               {tr("payments.form.actions.back", "Back")}
             </button>
             <button
-              className="w-1/2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:opacity-60"
+              className={pillPrimaryClass}
               onClick={onContinueRecipient}
               disabled={loading || !canContinueRecipient}
             >
@@ -1487,7 +1499,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                     airtimeOptions.slice(0, 8).map((value) => (
                       <button
                         key={String(value)}
-                        className={`rounded-full border px-3 py-1 text-sm transition-colors ${
+                        className={`${optionPillClass} ${
                           (parseAmountInput(form.amountSent) ?? 0) === Number(value)
                             ? "border-zim-gold/50 bg-zim-gold/15 text-zim-gold"
                             : "border-white/20 bg-white/[0.03] text-white/80 hover:bg-white/[0.07]"
@@ -1516,16 +1528,16 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </div>
           )}
 
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
-              className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/80 hover:bg-white/[0.08]"
+              className={pillSecondaryClass}
               onClick={() => setStep("recipient")}
               disabled={loading}
             >
               {tr("payments.form.actions.back", "Back")}
             </button>
             <button
-              className="w-1/2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black transition hover:bg-white disabled:opacity-60"
+              className={pillPrimaryClass}
               onClick={onContinuePayout}
               disabled={loading || !canContinuePayout}
             >
@@ -1594,16 +1606,16 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             {payoutEta}
           </div>
 
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
-              className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/80 hover:bg-white/[0.08]"
+              className={pillSecondaryClass}
               onClick={() => setStep("payout")}
               disabled={loading}
             >
               {tr("payments.form.actions.edit", "Edit")}
             </button>
             <button
-              className="inline-flex w-1/2 items-center justify-center gap-2 rounded-full bg-zim-gold px-4 py-3 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white disabled:opacity-60"
+              className={`${pillPrimaryClass} gap-2`}
               onClick={onPay}
               disabled={loading}
             >
@@ -1638,15 +1650,15 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               {payoutEta}
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
-              className="w-1/2 rounded-full border border-emerald-300/40 bg-transparent px-4 py-2 text-[10px] font-black uppercase tracking-widest text-emerald-100 hover:bg-emerald-300/15"
+              className={pillSuccessClass}
               onClick={downloadReceipt}
             >
               {tr("payments.form.actions.download_receipt", "Download Receipt")}
             </button>
             <button
-              className="w-1/2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/[0.08]"
+              className={pillSecondaryClass}
               onClick={onNewTransfer}
             >
               {tr("payments.form.actions.new_transfer", "New Transfer")}
