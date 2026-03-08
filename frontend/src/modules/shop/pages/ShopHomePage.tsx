@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 import { Package, ShoppingBag, Truck, CreditCard, ShieldCheck, Globe2 } from "lucide-react";
@@ -22,9 +22,46 @@ const CAROUSEL_CADENCE_BY_SEGMENT: Partial<Record<ShopSegmentKey, number>> = {
   proteins: 2,
 };
 
+const FEATURED_PRODUCT_BY_SEGMENT: Record<ShopSegmentKey, string> = {
+  beverages: "mazoe-orange-2l-case-6",
+  cereals: "cerevita-corn-banana-500g",
+  sauces_spices: "cheeky-chilli-peri-peri-sauce-100ml",
+  snacks: "colcom-pork-pie-100g",
+  oils_spreads: "mama-dovi_750ml",
+  proteins: "kariba-kapenta-matemba-100g",
+  crafts: "shona-stone-sculpture",
+  apparel: "sables-rugby-home-kit",
+};
+
+const CATEGORY_DETAIL_FILLERS: Record<ShopSegmentKey, string> = {
+  beverages:
+    "Choose pantry-friendly singles and family cases that make gifting, restocking, and nostalgia-led orders feel effortless.",
+  cereals:
+    "Ideal for breakfast staples, family bundles, and everyday shelf restocking with products many buyers already know well.",
+  sauces_spices:
+    "Useful for home cooking, export baskets, and flavour-led bundles that bring familiar Zimbabwean taste back to the table.",
+  snacks:
+    "A strong fit for quick treats, care packages, and casual sharing orders built around recognizable favourites from home.",
+  oils_spreads:
+    "Simple pantry essentials that work well for repeat household orders, easy pairings, and convenient top-up purchases.",
+  proteins:
+    "Built around practical family cooking staples that support traditional meals, protein-rich baskets, and repeat purchase demand.",
+  crafts:
+    "Every piece carries a stronger heritage story, artisan detail, and gift-ready value for homes, offices, and collectors abroad.",
+  apparel:
+    "Support teams and identity through wearable Zimbabwe pride designed for match day, gifting, and diaspora community events.",
+};
+
 export default function Shop() {
   const { t } = useTranslation();
   const tx = (key: string, fallback: string) => t(key, { defaultValue: fallback });
+  const collectionsRailRef = useRef<HTMLDivElement | null>(null);
+  const collectionsDragStateRef = useRef<{ pointerId: number | null; startX: number; startScrollLeft: number }>({
+    pointerId: null,
+    startX: 0,
+    startScrollLeft: 0,
+  });
+  const collectionsSuppressClickUntilRef = useRef(0);
   const [carouselIndex, setCarouselIndex] = useState<Record<ShopSegmentKey, number>>(() =>
     Object.fromEntries(
       SHOP_CATEGORY_CONFIG.map((item, idx) => [item.key, idx % Math.max(1, item.images.length)])
@@ -104,12 +141,6 @@ export default function Shop() {
     [t],
   );
 
-  const introData = {
-    icon: ShoppingBag,
-    title: t("shop.title") || "Home Away From Home",
-    description: "shop.desc",
-  };
-
   useEffect(() => {
     let tick = 0;
     const timer = setInterval(() => {
@@ -128,91 +159,138 @@ export default function Shop() {
     return () => clearInterval(timer);
   }, []);
 
+  const handleCollectionsRailPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "touch" || !collectionsRailRef.current) return;
+
+    collectionsDragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: collectionsRailRef.current.scrollLeft,
+    };
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleCollectionsRailPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!collectionsRailRef.current || collectionsDragStateRef.current.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - collectionsDragStateRef.current.startX;
+    if (Math.abs(deltaX) > 6) {
+      collectionsSuppressClickUntilRef.current = Date.now() + 250;
+    }
+    collectionsRailRef.current.scrollLeft = collectionsDragStateRef.current.startScrollLeft - deltaX;
+  };
+
+  const handleCollectionsRailPointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (collectionsDragStateRef.current.pointerId !== event.pointerId) return;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    collectionsDragStateRef.current = {
+      pointerId: null,
+      startX: 0,
+      startScrollLeft: 0,
+    };
+  };
+
   const processItems = [
     {
       icon: ShieldCheck,
-      title: t("shop.process.verified.title") || "Verified Sourcing",
+      title: tx("shop.process.verified.title", "Verified Sourcing"),
       description:
-        t("shop.process.verified.desc") ||
+        tx(
+          "shop.process.verified.desc",
         "Goods are curated from trusted Zimbabwean producers, artisans, and compliant suppliers.",
+        ),
     },
     {
       icon: Truck,
-      title: t("shop.process.delivery.title") || "Diaspora Delivery Support",
+      title: tx("shop.process.delivery.title", "Diaspora Delivery Support"),
       description:
-        t("shop.process.delivery.desc") ||
+        tx(
+          "shop.process.delivery.desc",
         "We prioritize practical fulfillment routes for local, regional, and international buyers.",
+        ),
     },
     {
       icon: CreditCard,
-      title: t("shop.process.payment.title") || "Flexible Payment Pathways",
+      title: tx("shop.process.payment.title", "Flexible Payment Pathways"),
       description:
-        t("shop.process.payment.desc") ||
+        tx(
+          "shop.process.payment.desc",
         "Support for modern payment flows and transparent pricing to reduce checkout friction.",
+        ),
     },
   ];
 
   const getCategoryTitle = (key: ShopSegmentKey, fallback: string) =>
-    t(`shop.categories.${key}.title`) || fallback;
+    tx(`shop.categories.${key}.title`, fallback);
   const getCategoryDescription = (key: ShopSegmentKey, fallback: string) =>
-    t(`shop.categories.${key}.description`) || fallback;
+    tx(`shop.categories.${key}.description`, fallback);
+  const getCategoryDetail = (key: ShopSegmentKey) =>
+    tx(`shop.categories.${key}.detail`, CATEGORY_DETAIL_FILLERS[key]);
+  const getCategoryHref = (key: ShopSegmentKey, baseCategory: string) => {
+    const normalizedCategory = baseCategory === "sports" || baseCategory === "crafts" ? baseCategory : "food";
+    const params = new URLSearchParams({
+      category: normalizedCategory,
+      segment: key,
+      add: FEATURED_PRODUCT_BY_SEGMENT[key],
+    });
+    return `/shop/products?${params.toString()}`;
+  };
+  const handleCollectionClick = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (Date.now() >= collectionsSuppressClickUntilRef.current) return;
+    event.preventDefault();
+  };
 
   return (
     <Layout>
       <section id="hero">
-        <SubPageHero heroSlides={heroSlides} intro={introData} />
+        <SubPageHero heroSlides={heroSlides} />
       </section>
 
       {/* How shop works*/}
-      <section className="p-5 bg-slate-950 relative overflow-hidden">
+      <section className="pt-5 pb-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className={OUTER_PANEL_CLASS}>
+          <div className={`${OUTER_PANEL_CLASS} overflow-visible !p-5 md:!p-10`}>
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="relative z-10">
               <div className="text-center mb-10">
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <Package className="h-6 w-6 text-zim-gold" />
-                  <h3 className="text-xl font-black text-white tracking-tight">{t("shop.how_it_works.title") || "How The Shop Works"}</h3>
+                  <h3 className="text-xl font-black text-white tracking-tight">{tx("shop.how_it_works.title", "How The Shop Works")}</h3>
                 </div>
                 <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
-                  {t("shop.how_it_works.subtitle") ||
-                    "Practical commerce flow for Zimbabwe-made goods, designed for trust, convenience, and diaspora impact."}
+                  {tx(
+                    "shop.how_it_works.subtitle",
+                    "Practical commerce flow for Zimbabwe-made goods, designed for trust, convenience, and diaspora impact.",
+                  )}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 {processItems.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.title} className="relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-0.5">
-                      <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-                      <div className="relative z-10">
-                        <div className="w-12 h-12 rounded-2xl bg-zim-gold/20 border border-zim-gold/30 flex items-center justify-center mb-4">
-                          <Icon className="w-5 h-5 text-zim-gold" />
+                    <article
+                      key={item.title}
+                      className="group rounded-3xl border border-white/10 bg-white/[0.02] p-5 transition-all duration-500 hover:bg-slate-950/60"
+                    >
+                      <div className="mb-4 flex items-center justify-between">
+                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-zim-gold">
+                          <Icon className="h-5 w-5" />
                         </div>
-                        <h4 className="text-lg font-black text-white tracking-tight mb-2">{item.title}</h4>
-                        <p className="text-sm text-white/75 leading-relaxed">{item.description}</p>
                       </div>
-                    </div>
+                      <h3 className="text-base font-black text-white">{item.title}</h3>
+                        <p className="mt-2 text-sm leading-relaxed text-white/70">{item.description}</p>
+                        <div className="mt-4 h-1 w-12 rounded-full bg-zim-gold/50 transition-all duration-500 group-hover:w-20" />
+                    </article>
                   );
                 })}
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <Button
-                  asChild
-                  className="rounded-full px-7 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[10px] uppercase tracking-[0.2em]"
-                >
-                  <Link href="/trade">{t("shop.trade_support") || "Explore Trade Support"}</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-full px-7 py-2 h-auto bg-white/10 border-white/20 text-white hover:bg-white hover:text-black font-black text-[10px] uppercase tracking-[0.2em]"
-                >
-                  <Link href="/trade">{t("shop.export_readiness") || "Trade Readiness Guide"}</Link>
-                </Button>
-              </div>
             </div>
           </div>
         </div>
@@ -221,7 +299,7 @@ export default function Shop() {
       {/* Online shop */}
       <section id="collections" className="pt-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className={OUTER_PANEL_CLASS}>
+          <div className={`${OUTER_PANEL_CLASS} overflow-visible`}>
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
             <div className="relative z-10">
               <motion.div
@@ -229,74 +307,104 @@ export default function Shop() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-100px" }}
-                className="max-w-7xl mx-auto px-6 space-y-8 py-6 scroll-mt-24 relative overflow-hidden"
+                className="space-y-8 py-6 scroll-mt-24 relative"
               >
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)] pointer-events-none" />
 
                 <div className="space-y-4 text-center">
-                  <h2 className="section-title-compact">{t("shop.collections_title") || "Curated Zimbabwean Excellence"}</h2>
+                  <h2 className="section-title-compact">{tx("shop.collections_title", "Curated Zimbabwean Excellence")}</h2>
                   <p className="text-sm text-white/75 max-w-4xl mx-auto font-light leading-relaxed">
-                    {t("shop.collections_description") ||
-                      "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience."}
+                    {tx(
+                      "shop.collections_description",
+                      "Curated Zimbabwean Excellence brings authentic Zimbabwe products to your doorstep, from pantry staples and beverages to crafts and sports apparel, sourced for quality and diaspora convenience.",
+                    )}
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
-                  {SHOP_CATEGORY_CONFIG.map((category, catIdx) => (
-                    <motion.div
-                      key={catIdx}
-                      initial={{ y: 20, opacity: 0 }}
-                      whileInView={{ y: 0, opacity: 1 }}
-                      viewport={{ once: true }}
-                      className="group relative flex flex-col h-full rounded-[1.5rem] overflow-hidden border border-white/10 bg-slate-950/45 shadow-[0_16px_30px_rgba(0,0,0,0.28)] transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-1"
-                    >
-                      <span className="absolute inset-0 rounded-[1.5rem] border border-white/5 pointer-events-none z-20" />
+                <div
+                  ref={collectionsRailRef}
+                  className="tile-scroll-rail relative z-10 -mx-8 -mt-3 overflow-x-auto pb-7 pt-3 scroll-smooth overscroll-x-contain snap-x snap-mandatory md:-mx-10 md:-mt-4 md:pb-8 md:pt-4 md:cursor-grab active:cursor-grabbing"
+                  onPointerCancel={handleCollectionsRailPointerEnd}
+                  onPointerDown={handleCollectionsRailPointerDown}
+                  onPointerMove={handleCollectionsRailPointerMove}
+                  onPointerUp={handleCollectionsRailPointerEnd}
+                >
+                  <div className="flex w-max items-stretch gap-4 pr-8 md:pr-10">
+                    {SHOP_CATEGORY_CONFIG.map((category) => {
+                      const categoryHref = getCategoryHref(category.key, category.baseCategory);
+                      const categoryTitle = getCategoryTitle(category.key, category.title);
+                      const categoryBody = getCategoryDetail(category.key);
 
-                      <div className="relative h-36 overflow-hidden bg-slate-900">
-                        <img
-                          src={category.images[carouselIndex[category.key] ?? 0]}
-                          alt={getCategoryTitle(category.key, category.title)}
-                          className="w-full h-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10" />
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
-                          {category.images.map((_, imageIdx) => {
-                            const isActive = (carouselIndex[category.key] ?? 0) === imageIdx;
-                            return (
-                              <button
-                                key={`${category.key}-${imageIdx}`}
-                                type="button"
-                                aria-label={`${getCategoryTitle(category.key, category.title)} ${(t("shop.image") || "image")} ${imageIdx + 1}`}
-                                aria-current={isActive ? "true" : "false"}
-                                onClick={() =>
-                                  setCarouselIndex((prev) => ({
-                                    ...prev,
-                                    [category.key]: imageIdx,
-                                  }))
-                                }
-                                className={`h-1.5 rounded-full transition-all duration-300 ${
-                                  isActive
-                                    ? "w-5 bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]"
-                                    : "w-1.5 bg-white/60 hover:bg-white/85"
-                                }`}
-                              />
-                            );
-                          })}
+                      return (
+                      <motion.div
+                        key={category.key}
+                        initial={{ y: 20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="h-full w-[74vw] max-w-[19.5rem] flex-none self-stretch snap-start sm:w-[20.5rem] lg:w-[22.5rem] xl:w-[23.5rem]"
+                      >
+                        <div className="group relative flex !h-[26.5rem] cursor-pointer flex-col overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-950/45 shadow-[0_16px_30px_rgba(0,0,0,0.28)] transition-all duration-500 hover:bg-slate-950/60 hover:-translate-y-1 sm:!h-[28rem] lg:!h-[30rem] xl:!h-[31.5rem]">
+                          <span className="absolute inset-0 rounded-[1.5rem] border border-white/5 pointer-events-none z-20" />
+                          <Link
+                            href={categoryHref}
+                            onClick={handleCollectionClick}
+                            aria-label={categoryTitle}
+                            className="block h-full rounded-[1.5rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-zim-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                          >
+                            <div className="flex h-full flex-col">
+                              <div className="relative !h-[18.25rem] overflow-hidden bg-slate-900 sm:!h-[18.75rem] lg:!h-[20.5rem] xl:!h-[21rem]">
+                                <img
+                                  src={category.images[carouselIndex[category.key] ?? 0]}
+                                  alt={categoryTitle}
+                                  className="w-full h-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
+                                  draggable={false}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10" />
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+                                  {category.images.map((_, imageIdx) => {
+                                    const isActive = (carouselIndex[category.key] ?? 0) === imageIdx;
+                                    return (
+                                      <button
+                                        key={`${category.key}-${imageIdx}`}
+                                        type="button"
+                                        aria-label={`${categoryTitle} ${tx("shop.image", "image")} ${imageIdx + 1}`}
+                                        aria-current={isActive ? "true" : "false"}
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          event.preventDefault();
+                                          setCarouselIndex((prev) => ({
+                                            ...prev,
+                                            [category.key]: imageIdx,
+                                          }));
+                                        }}
+                                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                                          isActive
+                                            ? "w-5 bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                                            : "w-1.5 bg-white/60 hover:bg-white/85"
+                                        }`}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              </div>
+
+                              <div className="relative z-10 flex flex-1 flex-col !px-4 !pb-3 !pt-2 lg:!px-5 lg:!pb-4 lg:!pt-3">
+                                <h4 className="mb-1 text-base font-black tracking-tight text-white text-center group-hover:text-zim-gold transition-colors duration-300">
+                                  {categoryTitle}
+                                </h4>
+                                <p className="text-sm font-light leading-relaxed text-white/75 text-left line-clamp-4">
+                                  {categoryBody}
+                                </p>
+                              </div>
+
+                              <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-zim-gold/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                            </div>
+                          </Link>
                         </div>
-                      </div>
-
-                      <div className="p-4 flex flex-col flex-grow relative z-10">
-                        <h4 className="text-sm font-black text-white tracking-tight mb-2 text-center group-hover:text-zim-gold transition-colors duration-300">
-                          {getCategoryTitle(category.key, category.title)}
-                        </h4>
-                        <p className="text-xs text-white/70 flex-grow leading-relaxed font-light text-justify">
-                          {getCategoryDescription(category.key, category.description)}
-                        </p>
-                      </div>
-
-                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zim-gold/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="pt-2 flex justify-center">
@@ -304,7 +412,7 @@ export default function Shop() {
                     asChild
                     className="rounded-full px-7 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[10px] uppercase tracking-[0.2em]"
                   >
-                    <Link href="/shop/products?category=all">{t("shop.explore_shop") || "Explore Shop"}</Link>
+                    <Link href="/shop/products?category=all">{tx("shop.explore_shop", "Explore Shop")}</Link>
                   </Button>
                 </div>
               </motion.div>

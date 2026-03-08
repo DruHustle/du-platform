@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -49,6 +49,12 @@ type PlacedOrder = {
 type CartItem = {
   productId: number;
   quantity: number;
+};
+
+type QueryState = {
+  queryCategory: ProductCategory;
+  querySegment: string;
+  queryAddProductSlug: string;
 };
 
 const CART_STORAGE_KEY = "shop_cart_v1";
@@ -414,12 +420,19 @@ function normalizeProductCategory(raw: unknown): ProductCategory {
 export default function ShopProducts() {
   const { t } = useTranslation();
   const [location, setLocation] = useLocation();
-  const { queryCategory, querySegment } = useMemo(() => {
+  const processedAddToCartQueryRef = useRef<string | null>(null);
+  const cartSectionRef = useRef<HTMLDivElement | null>(null);
+  const { queryCategory, querySegment, queryAddProductSlug } = useMemo<QueryState>(() => {
     const params = new URLSearchParams(location.split("?")[1] ?? "");
     const category = params.get("category") ?? "";
     const segment = String(params.get("segment") ?? "").trim().toLowerCase();
+    const add = String(params.get("add") ?? "").trim().toLowerCase();
     const normalizedCategory = ["all", "sports", "crafts", "food"].includes(category) ? (category as ProductCategory) : "all";
-    return { queryCategory: normalizedCategory, querySegment: segment };
+    return {
+      queryCategory: normalizedCategory,
+      querySegment: segment,
+      queryAddProductSlug: add,
+    };
   }, [location]);
 
   const [category, setCategory] = useState<ProductCategory>(queryCategory);
@@ -459,6 +472,38 @@ export default function ShopProducts() {
   useEffect(() => {
     writeCart(cart);
   }, [cart]);
+
+  useEffect(() => {
+    if (!queryAddProductSlug || allProducts.length === 0) return;
+    if (processedAddToCartQueryRef.current === location) return;
+
+    const targetProduct = allProducts.find(
+      (product) => String(product.slug ?? "").trim().toLowerCase() === queryAddProductSlug
+    );
+    if (!targetProduct) return;
+
+    processedAddToCartQueryRef.current = location;
+    setCart((prev) => {
+      const existing = prev.find((item) => item.productId === targetProduct.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.productId === targetProduct.id
+            ? {
+                ...item,
+                quantity: Math.min(item.quantity + 1, Math.max(1, targetProduct.stock_qty)),
+              }
+            : item
+        );
+      }
+      return [...prev, { productId: targetProduct.id, quantity: 1 }];
+    });
+
+    const nextParams = new URLSearchParams();
+    if (queryCategory) nextParams.set("category", queryCategory);
+    if (querySegment) nextParams.set("segment", querySegment);
+    const nextHref = nextParams.toString() ? `/shop/products?${nextParams.toString()}` : "/shop/products";
+    setLocation(nextHref, { replace: true });
+  }, [allProducts, location, queryAddProductSlug, queryCategory, querySegment, setLocation]);
 
   useEffect(() => {
     let mounted = true;
@@ -622,6 +667,16 @@ export default function ShopProducts() {
         );
       }
       return [...prev, { productId: product.id, quantity: 1 }];
+    });
+  };
+
+  const addToCartAndGoToCart = (product: ShopProduct) => {
+    addToCart(product);
+
+    if (typeof window === "undefined") return;
+
+    window.requestAnimationFrame(() => {
+      cartSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
 
@@ -882,10 +937,12 @@ export default function ShopProducts() {
                               ) : (
                                 <Button
                                   type="button"
-                                  onClick={() => addToCart(product)}
-                                  className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
+                                  onClick={() => addToCartAndGoToCart(product)}
+                                  aria-label={`${t("shop.products.actions.add_to_cart") || "Add to Cart"}: ${product.name}`}
+                                  title={t("shop.products.actions.add_to_cart") || "Add to Cart"}
+                                  className="h-10 w-10 rounded-full bg-zim-gold p-0 text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 transition-all duration-200"
                                 >
-                                  {t("shop.products.actions.add_to_cart") || "Add to Cart"}
+                                  <ShoppingCart className="h-4 w-4" />
                                 </Button>
                               )}
                             </div>
@@ -896,7 +953,11 @@ export default function ShopProducts() {
                   )}
                 </div>
 
-                <div className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start lg:h-fit">
+                <div
+                  ref={cartSectionRef}
+                  id="shop-cart-checkout"
+                  className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start lg:h-fit scroll-mt-28"
+                >
                   <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-3.5 md:p-4">
                     <div className="flex items-center gap-1.5 mb-2">
                       <ShoppingCart className="h-3.5 w-3.5 text-zim-gold" />

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Badge } from "@/components/ui/badge";
+import React from 'react';
+import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
-import { ArrowRight, Globe, Icon, LucideIcon, ChevronDown } from 'lucide-react';
+import { ArrowRight, LucideIcon } from 'lucide-react';
 
 interface HeroButton {
   text: string;
@@ -26,52 +24,13 @@ interface HeroSlide {
   buttons?: HeroButton[];
 }
 
-// Section 2: Intro/Objective Configuration
-interface IntroContent {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-}
-
 interface SubPageHeroProps {
   heroSlides: HeroSlide[];
-  intro: IntroContent;
   heroHeightClassName?: string;
 }
 
-export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: SubPageHeroProps) {
-
-  //Initialize the translation hook
-  const { t } = useTranslation();
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
-  const [isMobileViewport, setIsMobileViewport] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 768;
-  });
-
-  useEffect(() => {
-    const onResize = () => setIsMobileViewport(window.innerWidth < 768);
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    if (!heroSlides || heroSlides.length <= 1) return;
-    const timer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 8000);
-    return () => clearInterval(timer);
-  }, [heroSlides]);
-
-  const current = heroSlides[currentHeroIndex];
-
-  const resolveText = (value?: string) => {
-    if (!value) return "";
-    const translated = t(value);
-    if (!translated || translated === value) return value;
-    return translated;
-  };
+export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPageHeroProps) {
+  const current = heroSlides[0];
 
   // Helper to render icons from the heroSlides array
   const renderIcon = (IconInput: any, className: string) => {
@@ -79,11 +38,6 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
     return <IconInput className={className} />;
   };
 
-  // Extract the intro icon into a capitalized variable 
-  // so React recognizes it as a component.
-  const IntroIcon = intro?.icon;
-
-  if (isMobileViewport) return null;
   if (!current) return null;
 
   return (
@@ -91,42 +45,29 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
     <div id="sub-page-hero-wrapper" className="flex flex-col w-full">
       
       {/* SECTION 1: CINEMATIC HERO */}
-      <section className={`relative ${heroHeightClassName ?? "h-[80vh] min-h-[650px]"} w-full flex items-center justify-center overflow-hidden bg-slate-950`}>
-        {/* BACKGROUND LAYER - Cinematic Scale & Reduced Tint */}
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={`bg-${currentHeroIndex}`}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1.02 }} // Tighter final scale for crisper look
-            exit={{ opacity: 0, filter: "blur(15px)" }}
-            transition={{ 
-              opacity: { duration: 1.5, ease: "easeInOut" },
-              scale: { duration: 20, ease: "linear" } 
-            }}
-            className="absolute inset-0 z-0 saturate-[1.1] brightness-[1.05]"
-          >
-            <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url('${current.image}')` }}
-            />
-            
-            {/* OPTIMIZED GRADIENTS - Cleared center for Image Pop */}
-            {/* Left vignette for text legibility, but reduced via-opacity */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/60 via-slate-950/20 to-transparent" />
-            
-            {/* Subtle top/bottom grounding */}
-            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-transparent to-slate-950/90" />
-          </motion.div>
-        </AnimatePresence>
+      <section className={`relative ${heroHeightClassName ?? "h-[40vh] min-h-[340px]"} w-full flex items-center justify-center overflow-hidden bg-slate-950`}>
+        {/* BACKGROUND LAYER */}
+        <motion.div
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1.02 }}
+          transition={{
+            opacity: { duration: 1.1, ease: "easeInOut" },
+            scale: { duration: 10, ease: "easeOut" }
+          }}
+          className="absolute inset-0 z-0 saturate-[1.1] brightness-[1.05]"
+        >
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url('${current.image}')` }}
+          />
+        </motion.div>
         
         {/* CONTENT LAYER */}
-        <div className="relative z-20 container mx-auto px-6 md:px-12 h-full flex flex-col justify-center">
-          <AnimatePresence mode="wait">
+        <div className="relative z-20 container mx-auto h-full px-6 md:px-12">
+          <div className="flex h-full flex-col justify-end pb-8 pt-20 md:pb-10 md:pt-24">
             <motion.div
-              key={`content-${currentHeroIndex}`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="max-w-5xl"
             >
@@ -135,7 +76,7 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-3 mb-6 drop-shadow-md"
+                  className="mb-4 flex items-center gap-3 drop-shadow-md"
                 >
                   {renderIcon(current.badgeIcon, "h-5 w-5 text-zim-gold")}
                   <span className="text-zim-gold text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] border-l border-zim-gold/50 pl-4">
@@ -145,7 +86,7 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
               )}
               
               {/* 2. TITLE - Added Drop Shadow for legibility on vibrant images */}
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
+              <h1 className="mb-4 text-4xl font-black leading-[0.96] tracking-tighter text-white drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] md:text-5xl lg:text-6xl">
                 {current.title}
                 {current.titleHighlight && (
                   <span className="text-zim-gold opacity-95 italic font-serif capitalize tracking-normal ml-3">
@@ -154,99 +95,54 @@ export default function SubPageHero({ heroSlides, intro, heroHeightClassName }: 
                 )}
               </h1>
               
-              {/* 3. SUBTITLE & DESCRIPTION */}
-              <div className="max-w-3xl space-y-4 mb-10 drop-shadow-lg">
+              {/* 3. SUBTITLE */}
+              <div className="mb-5 max-w-4xl drop-shadow-[0_8px_12px_rgba(0,0,0,0.45)]">
                 {current.subtitle && (
-                  <p className="text-xl md:text-2xl text-white font-medium tracking-tight">
+                  <p className="text-lg font-medium tracking-tight text-white md:text-xl">
                     {current.subtitle}
-                  </p>
-                )}
-                {current.description && (
-                  <p className="text-base md:text-lg  leading-relaxed font-light">
-                    {current.description}
                   </p>
                 )}
               </div>
 
               {/* 4. BUTTONS */}
-              <div className="flex flex-wrap gap-4">
-                {current.buttons?.filter((btn) => Boolean(btn.link)).map((btn, idx) => (
+              <div className="flex flex-wrap gap-3">
+                {current.buttons?.filter((btn) => Boolean(btn.link)).map((btn, idx) => {
+                  const isPrimary = btn.variant === "primary";
+                  const buttonToneClassName = isPrimary
+                    ? "bg-zim-gold border-zim-gold !text-black hover:bg-white hover:border-white hover:!text-black"
+                    : "border-white bg-white !text-slate-950 hover:bg-white/90 hover:border-white/90 hover:!text-slate-950";
+
+                  return (
                   <Button 
                     key={idx}
                     variant="outline"
                     className={`
-                      h-12 px-4 min-w-[160px] rounded-full transition-all duration-500 text-xs font-black uppercase tracking-[0.2em]
-                      ${btn.variant === "primary" 
-                        ? "bg-zim-gold border-zim-gold text-black hover:bg-white hover:border-white" 
-                        : "bg-white/10 border-white/20 text-white hover:bg-white hover:text-black"}
+                      h-10 min-w-[148px] rounded-full px-4 text-xs font-black uppercase tracking-[0.18em] transition-all duration-500
+                      ${buttonToneClassName}
                       hover:scale-105 active:scale-95 backdrop-blur-md shadow-2xl
                     `}
                     asChild
                   >
-                    <a href={btn.link} onClick={btn.onClick}>
-                      <span className="relative z-10 flex items-center">
+                    <a
+                      href={btn.link}
+                      onClick={btn.onClick}
+                      className={isPrimary ? "!text-black hover:!text-black" : "!text-slate-950 hover:!text-slate-950"}
+                    >
+                      <span className="relative z-10 flex items-center leading-none text-inherit">
                         {btn.text}
                         {btn.showArrow && <ArrowRight className="ml-2 h-4 w-4" />}
                       </span>
                     </a>
                   </Button>
-                ))}
+                  );
+                })}
               </div>
             </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* REFINED INDICATORS */}
-        {heroSlides.length > 1 && (
-          <div className="absolute bottom-12 left-6 md:left-12 flex items-center gap-4 z-30">
-            {heroSlides.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentHeroIndex(idx)}
-                className="group py-4"
-              >
-                <div className={`h-[2px] transition-all duration-700 rounded-full ${
-                  idx === currentHeroIndex 
-                    ? 'bg-zim-gold w-12 shadow-[0_0_8px_rgba(212,175,55,0.8)]' 
-                    : 'bg-white/20 w-6 group-hover:bg-white/40'
-                }`} />
-              </button>
-            ))}
           </div>
-        )}
+        </div>
 
         {/* Global Polish - Reduced Vignette for Clarity */}
         <div className="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_0_15vw_rgba(0,0,0,0.4)]" />
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-950 to-transparent z-10" />
-      </section>
-
-
-      {/* SECTION 2: GLASSY INTRO */}
-      <section className="py-5 bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative py-6 px-8 md:px-16 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
-          >
-             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-             
-            <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center text-center space-y-3">
-             {IntroIcon && <IntroIcon className="h-6 w-6 text-zim-gold drop-shadow-[0_0_12px_rgba(212,175,55,0.5)]" />}
-              <p className="text-sm md:text-base text-white/90 leading-relaxed max-w-2xl mx-auto mb-4">
-                {resolveText(intro.description)}
-              </p>
-              <div className="flex items-center justify-center gap-4">
-                <div className="h-px w-8 bg-zim-gold/40" />
-                <p className="text-zim-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                  {resolveText(intro.title)}
-                </p>
-                <div className="h-px w-8 bg-zim-gold/40" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
       </section>
 
     </div>

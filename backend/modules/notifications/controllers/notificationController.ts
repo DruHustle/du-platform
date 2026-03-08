@@ -8,6 +8,20 @@ import {
 export class NotificationController {
   constructor(private readonly service = new NotificationService()) {}
 
+  createNewsletterSubscription = async (req: express.Request, res: express.Response) => {
+    try {
+      const data = await this.service.createNewsletterSubscription(req.body?.email);
+      return res.status(data.created ? 201 : 200).json(ok(data));
+    } catch (err) {
+      if (err instanceof NotificationServiceError) {
+        return res.status(err.status).json(error(err.code, err.message));
+      }
+      return res
+        .status(500)
+        .json(error("NEWSLETTER_SUBSCRIPTION_FAILED", "Unable to save newsletter subscription."));
+    }
+  };
+
   createFeatureNotification = async (req: express.Request, res: express.Response) => {
     const userId = Number(req.auth?.userId ?? 0);
     if (!Number.isFinite(userId) || userId <= 0) {

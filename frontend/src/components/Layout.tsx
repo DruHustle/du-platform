@@ -2,11 +2,11 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, House, ArrowRightLeft, ShoppingBag, HeartHandshake, Package, Landmark, Compass, Brain, ChevronRight, Twitter, Linkedin, Instagram } from "lucide-react";
+import { useState, useEffect, useRef, useCallback, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { api, clearAuthToken, type AuthUser } from "@/lib/api";
+import { api, clearAuthToken, getApiErrorMessage, type AuthUser } from "@/lib/api";
 import { clearCurrentUserBootstrap, resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { setAppLanguage } from "@/i18n";
 
@@ -26,9 +26,8 @@ const DEFAULT_BROWSER_LAYOUT_PROFILE: BrowserLayoutProfile = {
   enterBuffer: 8,
   exitBuffer: 2,
   edgeRightPx: 8,
-  horizontalReservedPx: 88,
+  horizontalReservedPx: 128,
 };
-const LANGUAGE_HINT_SEEN_KEY = "du_language_hint_v1";
 
 function getBrowserLayoutProfile(userAgent: string): BrowserLayoutProfile {
   const ua = userAgent.toLowerCase();
@@ -37,13 +36,13 @@ function getBrowserLayoutProfile(userAgent: string): BrowserLayoutProfile {
   const isSafari = ua.includes("safari/") && !ua.includes("chrome/") && !isEdge;
 
   if (isEdge) {
-    return { enterBuffer: 12, exitBuffer: 2, edgeRightPx: 8, horizontalReservedPx: 92 };
+    return { enterBuffer: 12, exitBuffer: 2, edgeRightPx: 8, horizontalReservedPx: 132 };
   }
   if (isFirefox) {
-    return { enterBuffer: 11, exitBuffer: 3, edgeRightPx: 6, horizontalReservedPx: 92 };
+    return { enterBuffer: 11, exitBuffer: 3, edgeRightPx: 6, horizontalReservedPx: 132 };
   }
   if (isSafari) {
-    return { enterBuffer: 12, exitBuffer: 3, edgeRightPx: 8, horizontalReservedPx: 92 };
+    return { enterBuffer: 12, exitBuffer: 3, edgeRightPx: 8, horizontalReservedPx: 132 };
   }
   return DEFAULT_BROWSER_LAYOUT_PROFILE;
 }
@@ -63,33 +62,29 @@ export default function Layout({ children }: LayoutProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [phoneActionOpen, setPhoneActionOpen] = useState(false);
   const [showWhatsIcon, setShowWhatsIcon] = useState(false);
-  const [isMobileViewport, setIsMobileViewport] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 768;
-  });
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
+  const [newsletterFeedback, setNewsletterFeedback] = useState<{
+    kind: "success" | "error";
+    message: string;
+  } | null>(null);
   const [desktopViewportWidth, setDesktopViewportWidth] = useState(() => {
     if (typeof window === "undefined") return 1440;
     return window.innerWidth;
   });
   const [useEdgeIconColumn, setUseEdgeIconColumn] = useState(false);
   const [browserLayoutProfile, setBrowserLayoutProfile] = useState<BrowserLayoutProfile>(DEFAULT_BROWSER_LAYOUT_PROFILE);
-  const [showLanguageHint, setShowLanguageHint] = useState(false);
   const [activeAboutSection, setActiveAboutSection] = useState<AboutSectionId | null>(null);
+  const [homeHeroLogoVisible, setHomeHeroLogoVisible] = useState(true);
   const scrolledRef = useRef(false);
   const navPillRef = useRef<HTMLDivElement | null>(null);
   const utilitySlotRef = useRef<HTMLDivElement | null>(null);
-
-  const markLanguageHintSeen = useCallback(() => {
-    try {
-      window.localStorage.setItem(LANGUAGE_HINT_SEEN_KEY, "seen");
-    } catch {
-      // Ignore storage failures.
-    }
-  }, []);
 
   useEffect(() => {
     // Throttle scroll-driven header state updates via RAF to avoid excessive re-renders.
@@ -120,29 +115,6 @@ export default function Layout({ children }: LayoutProps) {
   }, []);
 
   useEffect(() => {
-    if (isMobileViewport || mobileMenuOpen) return;
-    try {
-      const seen = window.localStorage.getItem(LANGUAGE_HINT_SEEN_KEY);
-      if (seen) return;
-    } catch {
-      // Ignore storage read failures.
-    }
-
-    const showTimer = window.setTimeout(() => {
-      setShowLanguageHint(true);
-      markLanguageHintSeen();
-    }, 900);
-    const hideTimer = window.setTimeout(() => {
-      setShowLanguageHint(false);
-    }, 9000);
-
-    return () => {
-      window.clearTimeout(showTimer);
-      window.clearTimeout(hideTimer);
-    };
-  }, [isMobileViewport, mobileMenuOpen, markLanguageHintSeen]);
-
-  useEffect(() => {
     // Footer contact icon alternates between call/WhatsApp affordances.
     const timer = setInterval(() => {
       setShowWhatsIcon((prev) => !prev);
@@ -153,6 +125,8 @@ export default function Layout({ children }: LayoutProps) {
   // Sync mobile menu close with route changes
   useEffect(() => {
     setMobileMenuOpen(false);
+    setLanguageMenuOpen(false);
+    setAccountMenuOpen(false);
   }, [location]);
 
   useEffect(() => {
@@ -186,29 +160,83 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
+  const navigation = [
+    { name: "Home", href: "/", icon: House },
+    { name: "Remittances", href: "/payments", icon: ArrowRightLeft },
+    { name: "Shop", href: "/shop", icon: ShoppingBag },
+    { name: "Care", href: "/care", icon: HeartHandshake },
+    { name: "Technology", href: "/technology", icon: Brain },
+    { name: "Trade", href: "/trade", matchPaths: ["/trade"], icon: Package },
+    { name: "Investment", href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
+    { name: "Tourism", href: "/tourism", icon: MapPin },
+  ];
+  const mobileBottomNavigation = [
+    { name: "Home", href: "/", icon: House },
+    { name: "Remittances", href: "/payments", icon: ArrowRightLeft },
+    { name: "Care", href: "/care", icon: HeartHandshake },
+    { name: "Shop", href: "/shop", icon: ShoppingBag },
+    { name: "Discover", href: "/tourism", matchPaths: ["/tourism"], icon: Compass },
+  ];
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
     { name: "chiShona", flag: "🇿🇼", code: "sn" },
     { name: "isiNdebele", flag: "🇿🇼", code: "nd" },
-    { name: "Deutsch", flag: "🇩🇪", code: "de" }
-  ];
-  const navigation = [
-    { name: t('nav.home'), href: "/" },
-    { name: t('nav.technology'), href: "/technology" },
-    { name: t("nav.payments", { defaultValue: "Payments" }), href: "/payments" },
-    { name: t("nav.care", { defaultValue: "Care" }), href: "/care" },
-    { name: t('nav.shop'), href: "/shop" },
-    { name: t('nav.tourism'), href: "/tourism" },
-    { name: t('nav.investment'), href: "/investment" },
-    { name: t('nav.trade'), href: "/trade" },
-    { name: t('nav.impact'), href: "/impact" },
+    { name: "Deutsch", flag: "🇩🇪", code: "de" },
   ];
 
-  const isActive = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
+  const isActive = (item: { href: string; matchPaths?: string[] }) => {
+    const paths = item.matchPaths ?? [item.href];
+    return paths.some((path) => (path === "/" ? location === "/" : location.startsWith(path)));
+  };
   const isHomePage = location === "/";
   const isCompactNavViewport = desktopViewportWidth < 1024;
+  const shouldShowNavbarLogo = !isHomePage || !homeHeroLogoVisible;
   const useHomeCompactTransparentNav = isCompactNavViewport && isHomePage && !mobileMenuOpen;
+  const hasHeroSection =
+    isHomePage ||
+    location === "/payments" ||
+    location === "/care" ||
+    location === "/trade" ||
+    location === "/investment" ||
+    location === "/tourism" ||
+    location === "/shop" ||
+    location === "/technology";
+  const useDesktopTransparentNav = !isCompactNavViewport && hasHeroSection;
   const mainTopPaddingClass = isCompactNavViewport ? (isHomePage ? "pt-0" : "pt-14") : "pt-0";
+  const mainBottomPaddingClass = isCompactNavViewport ? (isHomePage ? "" : "pb-24") : "";
+
+  const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (newsletterSubmitting) return;
+
+    try {
+      setNewsletterSubmitting(true);
+      setNewsletterFeedback(null);
+
+      const { data } = await api.post("/notifications/newsletter", {
+        email: newsletterEmail.trim(),
+      });
+
+      setNewsletterFeedback({
+        kind: "success",
+        message:
+          data?.created === false
+            ? "This email is already subscribed to the newsletter."
+            : "Subscribed. Watch your inbox for updates.",
+      });
+
+      if (data?.created !== false) {
+        setNewsletterEmail("");
+      }
+    } catch (error) {
+      setNewsletterFeedback({
+        kind: "error",
+        message: getApiErrorMessage(error, "Unable to subscribe right now."),
+      });
+    } finally {
+      setNewsletterSubmitting(false);
+    }
+  };
 
   const evaluateUtilityOverlap = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -248,7 +276,6 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     const onResize = () => {
-      setIsMobileViewport(window.innerWidth < 768);
       setDesktopViewportWidth(window.innerWidth);
       if (window.innerWidth >= 1024) {
         // Prevent stale mobile menu state from hiding utility icons after resizing to desktop.
@@ -264,7 +291,7 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     const rafId = window.requestAnimationFrame(evaluateUtilityOverlap);
     return () => window.cancelAnimationFrame(rafId);
-  }, [i18n.language, i18n.resolvedLanguage, location, desktopViewportWidth, evaluateUtilityOverlap]);
+  }, [location, desktopViewportWidth, evaluateUtilityOverlap]);
 
   useEffect(() => {
     if (typeof ResizeObserver === "undefined") return;
@@ -273,6 +300,30 @@ export default function Layout({ children }: LayoutProps) {
     if (utilitySlotRef.current) observer.observe(utilitySlotRef.current);
     return () => observer.disconnect();
   }, [evaluateUtilityOverlap]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isHomePage) {
+      setHomeHeroLogoVisible(false);
+      return;
+    }
+
+    const heroLogo = document.getElementById("home-hero-logo");
+    if (!heroLogo || typeof IntersectionObserver === "undefined") {
+      setHomeHeroLogoVisible(window.scrollY <= 10);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHomeHeroLogoVisible(entry?.isIntersecting ?? false);
+      },
+      { threshold: 0.01 },
+    );
+
+    observer.observe(heroLogo);
+    return () => observer.disconnect();
+  }, [isHomePage, location]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -331,9 +382,9 @@ export default function Layout({ children }: LayoutProps) {
         className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 ${
           useHomeCompactTransparentNav
             ? "bg-transparent border-transparent py-0"
-            : (scrolled && !mobileMenuOpen)
-              ? "border-b bg-slate-900/95 backdrop-blur-xl border-white/10 py-0 lg:py-1 shadow-2xl"
-              : "border-b bg-slate-900/95 backdrop-blur-xl border-white/10 py-0 lg:py-4 lg:bg-transparent lg:border-transparent"
+            : useDesktopTransparentNav
+              ? "border-b bg-slate-900/95 backdrop-blur-xl border-white/10 py-0 lg:py-4 lg:bg-transparent lg:border-transparent"
+              : "border-b bg-slate-900/95 backdrop-blur-xl border-white/10 py-0 lg:py-4"
         }`}
       >
         <div className="container mx-auto px-6 h-14 flex items-center justify-between relative">
@@ -341,17 +392,17 @@ export default function Layout({ children }: LayoutProps) {
           {/* 1. Left Section: Logo & Brand (Flexible width to push menu center) */}
           <div className="flex-1 lg:flex-none lg:min-w-[200px] flex items-center">
             <Link href='/'>
-                <div className={`flex lg:hidden items-center space-x-3 cursor-pointer transition-all duration-500 ${
-                  (scrolled || mobileMenuOpen) 
-                    ? 'opacity-100 translate-x-4' 
-                    : 'opacity-0 -translate-x-4 pointer-events-none'
+                <div className={`flex items-center space-x-3 cursor-pointer transition-all duration-500 ${
+                  shouldShowNavbarLogo
+                    ? 'opacity-100 translate-x-4 lg:translate-x-0 lg:pointer-events-auto'
+                    : 'opacity-0 -translate-x-4 pointer-events-none lg:opacity-0 lg:-translate-x-4 lg:pointer-events-none'
                 }`}>
                 <div className="relative inline-flex h-10 w-10 items-center justify-center">
-                  <span className="pointer-events-none absolute inset-0 rounded-full border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
+                  <span className="pointer-events-none absolute inset-0 rounded-[0.95rem] lg:rounded-full border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
                   <img
                     src='/images/pages/shared/diaspora_unlocked.png'
                     alt='Logo'
-                    className="relative h-9 w-9 object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
+                    className="relative h-[2.35rem] w-[2.35rem] scale-[1.12] object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:h-9 lg:w-9 lg:scale-100 lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
                   />
                 </div>
               </div>
@@ -364,19 +415,13 @@ export default function Layout({ children }: LayoutProps) {
               ref={navPillRef}
               className={`
               relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden h-16
-              ${scrolled 
-                ? 'bg-slate-900/90 backdrop-blur-md border border-white/10' 
-                : 'bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]' 
-              }
+              bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
             `}
             >
-              {/* The Crispy Edge Finish (Only visible when not scrolled) */}
-              {!scrolled && (
-                <span className="absolute inset-0 rounded-full border border-white/20 pointer-events-none" />
-              )}
+              <span className="absolute inset-0 rounded-full border border-white/20 pointer-events-none" />
 
               {navigation.map((item) => {
-                const active = isActive(item.href);
+                const active = isActive(item);
                 return (
                   <Link
                     key={item.href}
@@ -385,9 +430,7 @@ export default function Layout({ children }: LayoutProps) {
                       relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
                       ${active 
                           ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]' 
-                          : scrolled 
-                            ? 'text-white/70 hover:text-yellow-400 hover:bg-yellow-400/5' 
-                            : 'text-white/70 hover:text-yellow-400 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)]'
+                          : 'text-white/70 hover:text-yellow-400 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)]'
                       }
                     `}
                   >
@@ -407,43 +450,10 @@ export default function Layout({ children }: LayoutProps) {
               className={`${getDesktopUtilityIconsClass(useEdgeIconColumn)} pointer-events-auto`}
               style={useEdgeIconColumn ? { right: `${browserLayoutProfile.edgeRightPx}px` } : undefined}
             >
-            <AnimatePresence>
-              {showLanguageHint && !mobileMenuOpen && !isMobileViewport && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                  transition={{ duration: 0.22, ease: "easeOut" }}
-                  className="hidden md:block absolute top-10 right-10 z-[260]"
-                >
-                  <div className="relative max-w-[220px] rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.35)] px-3 py-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowLanguageHint(false);
-                        markLanguageHintSeen();
-                      }}
-                      className="absolute -top-2 -right-2 h-5 w-5 rounded-full border border-white/30 bg-slate-900/80 text-white/80 text-[10px] leading-none hover:bg-white hover:text-zim-black"
-                      aria-label={t("nav.language_hint_dismiss", { defaultValue: "Dismiss language hint" })}
-                    >
-                      ×
-                    </button>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-zim-gold">
-                      {t("nav.language_hint_title", { defaultValue: "Language options" })}
-                    </p>
-                    <p className="mt-1 text-[11px] leading-relaxed text-white/90">
-                      {t("nav.language_hint", { defaultValue: "Use the globe icon to change language." })}
-                    </p>
-                    <span className="absolute -bottom-1 right-6 h-2.5 w-2.5 rotate-45 border-r border-b border-white/20 bg-white/10" />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             {/* Search Tool */}
             <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="hidden sm:flex text-white/70 hover:text-yellow-400 rounded-full transition-colors h-8 w-8">
+                <Button variant="ghost" size="icon" className="flex text-white/70 hover:text-yellow-400 rounded-full transition-colors h-8 w-8">
                   <Search className="h-4 w-4" />
                 </Button>
               </DialogTrigger>
@@ -460,32 +470,41 @@ export default function Layout({ children }: LayoutProps) {
               </DialogContent>
             </Dialog>
 
-            {/* Desktop Language Switcher */}
             <DropdownMenu
+              open={languageMenuOpen}
               onOpenChange={(open) => {
+                setLanguageMenuOpen(open);
                 if (open) {
-                  setShowLanguageHint(false);
-                  markLanguageHintSeen();
+                  setAccountMenuOpen(false);
                 }
               }}
             >
               <DropdownMenuTrigger asChild>
-                {/* Hidden on mobile while menu is open to avoid duplicate controls. */}
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   aria-label={t("nav.language_hint", { defaultValue: "Use the globe icon to change language." })}
                   className={`
-                    ${mobileMenuOpen ? 'hidden' : 'hidden md:flex'} 
+                    ${mobileMenuOpen ? "hidden" : "hidden md:flex"}
                     text-white/70 hover:text-yellow-400 rounded-full h-8 w-8
                   `}
                 >
                   <Globe className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-2xl p-2 shadow-2xl min-w-[12rem]">
+              <DropdownMenuContent
+                align="end"
+                className="z-[260] min-w-[12rem] rounded-2xl border-white/10 bg-slate-900/95 p-2 text-white shadow-2xl backdrop-blur-3xl"
+              >
                 {languages.map((lang) => (
-                  <DropdownMenuItem key={lang.code} onClick={() => void setAppLanguage(lang.code)} className="cursor-pointer hover:bg-white/10 py-2 font-bold text-[10px] uppercase tracking-widest rounded-xl">
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => {
+                      void setAppLanguage(lang.code);
+                      setLanguageMenuOpen(false);
+                    }}
+                    className="cursor-pointer rounded-xl py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-white/10"
+                  >
                     <span className="mr-3 text-base">{lang.flag}</span> {lang.name}
                   </DropdownMenuItem>
                 ))}
@@ -493,7 +512,15 @@ export default function Layout({ children }: LayoutProps) {
             </DropdownMenu>
 
             {/* Account Icon (VISIBLE ON BOTH MOBILE & DESKTOP) */}
-            <DropdownMenu>
+            <DropdownMenu
+              open={accountMenuOpen}
+              onOpenChange={(open) => {
+                setAccountMenuOpen(open);
+                if (open) {
+                  setLanguageMenuOpen(false);
+                }
+              }}
+            >
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-white/70 hover:text-yellow-400 rounded-full h-8 w-8 transition-colors">
                   <User className="h-4 w-4 md:h-5 md:w-5" />
@@ -502,7 +529,7 @@ export default function Layout({ children }: LayoutProps) {
               
               <DropdownMenuContent 
                 align="end" 
-                className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-2xl p-2 shadow-2xl min-w-[12rem] z-[100]"
+                className="z-[260] min-w-[12rem] rounded-2xl border-white/10 bg-slate-900/95 p-2 text-white shadow-2xl backdrop-blur-3xl"
               >
                 <DropdownMenuLabel className="text-white/70 font-black text-[10px] uppercase tracking-widest px-3 py-2">
                   {user ? user.fullName : t('account')}
@@ -586,67 +613,38 @@ export default function Layout({ children }: LayoutProps) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -10, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed top-14 right-0 w-72 z-[200] pointer-events-none"
+              className="lg:hidden fixed top-14 right-3 w-60 z-[200] pointer-events-none"
             >
               <div className="pointer-events-auto bg-slate-900/98 backdrop-blur-md border-l border-b border-white/10 rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col">
                 
                 <div className="p-4 space-y-4 overflow-y-auto">
-                  {/* Header label with tiny font */}
-                  <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest px-3">
-                    Navigation
-                  </p>
-                  
-                  <nav className="flex flex-col space-y-1">
-                    {navigation.map((item, index) => (
-                      <motion.div
-                        key={item.href}
-                        initial={{ opacity: 0, x: 5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                      >
-                        <Button
-                          asChild
-                          variant="ghost"
-                          className={`w-full justify-start text-sm font-medium h-11 rounded-xl transition-all ${
-                            isActive(item.href) 
-                              ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20" 
-                              : "text-white/70 hover:bg-white/5"
-                          }`}
-                        >
-                          <Link href={item.href} onClick={() => setMobileMenuOpen(false)}>
-                            {item.name}
-                          </Link>
-                        </Button>
-                      </motion.div>
-                    ))}
-                  </nav>
-
-                  {/* Language Switcher - Flag Only Grid */}
-                  <div className="border-t border-white/10 pt-4 pb-2">
+                  <div className="pt-1 pb-2">
                     <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mb-3 px-3">
-                      {t('select_lang')}
+                      {t("select_lang")}
                     </p>
-                    <div className="grid grid-cols-4 gap-2 px-1">
+                    <div className="space-y-2 px-1">
                       {languages.map((lang) => (
                         <Button
                           key={lang.code}
                           variant="ghost"
                           title={lang.name}
-                          className={`h-10 flex items-center justify-center rounded-xl border transition-all ${
-                            i18n.language === lang.code 
-                              ? "bg-yellow-400/20 border-yellow-400/40" 
-                              : "bg-white/5 border-white/10 text-white/70"
+                          className={`h-11 w-full justify-start rounded-xl border px-4 text-sm font-semibold transition-all ${
+                            i18n.language === lang.code
+                              ? "border-yellow-400/40 bg-yellow-400/20 text-yellow-300"
+                              : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
                           }`}
                           onClick={() => {
                             void setAppLanguage(lang.code);
                             setMobileMenuOpen(false);
                           }}
                         >
-                          <span className="text-xl">{lang.flag}</span>
+                          <span className="mr-3 text-base">{lang.flag}</span>
+                          {lang.name}
                         </Button>
                       ))}
                     </div>
                   </div>
+
                 </div>
               </div>
             </motion.div>
@@ -654,7 +652,36 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
-      <main className={`relative z-0 flex-1 w-full ${mainTopPaddingClass}`}>
+      {!mobileMenuOpen && (
+        <div className="fixed bottom-0 left-0 right-0 z-[205] lg:hidden">
+          <div className="border-t border-white/10 bg-white/[0.08] px-4 pb-6 pt-3 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
+            <nav className="flex items-center justify-between gap-2">
+              {mobileBottomNavigation.map((item) => {
+                const active = isActive(item);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-label={item.name}
+                    title={item.name}
+                    className={`flex flex-1 items-center justify-center rounded-2xl px-3 py-2 transition-colors ${
+                      active
+                        ? "text-yellow-400"
+                        : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={2} />
+                    <span className="sr-only">{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      )}
+
+      <main className={`relative z-0 flex-1 w-full ${mainTopPaddingClass} ${mainBottomPaddingClass}`}>
         {children}
       </main>
 
@@ -703,15 +730,10 @@ export default function Layout({ children }: LayoutProps) {
       </AnimatePresence>
 
      {/* Footer */}
-      <footer className="relative bg-slate-950 pt-20 pb-12 overflow-hidden">
-        {/* Accents & Textures */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-[url('/images/carbon-fibre.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
-
+      <footer className="bg-slate-950 pt-20 pb-28 lg:pb-12">
         <div className="container mx-auto px-6">
           {/* Main Grid: flex-col on mobile, grid on larger screens */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+          <div className="grid grid-cols-1 gap-10 mb-12 sm:grid-cols-2 lg:grid-cols-[0.8fr_0.8fr_0.85fr_1.15fr_1.25fr_1.15fr]">
             
             {/* About Column */}
             <div className="space-y-4">
@@ -736,7 +758,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             {/* Quick Links Column */}
-            <div className="space-y-4 lg:!pl-8">
+            <div className="space-y-4">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
                 {t('quick_links')}
               </h3>
@@ -785,22 +807,61 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
 
+            {/* Newsletter Column */}
+            <div className="min-w-0 space-y-4">
+              <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
+                Newsletter
+              </h3>
+              <div className="space-y-4">
+                <p className="text-sm text-slate-500">Stay updated.</p>
+                <form className="flex min-w-0 flex-col gap-2 xl:flex-row" onSubmit={handleNewsletterSubmit}>
+                  <input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(event) => setNewsletterEmail(event.target.value)}
+                    placeholder="Email address"
+                    required
+                    autoComplete="email"
+                    className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    disabled={newsletterSubmitting}
+                    aria-label="Subscribe to newsletter"
+                    className="shrink-0 self-start rounded-lg bg-white p-2 text-slate-900 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 xl:self-auto"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </form>
+                {newsletterFeedback ? (
+                  <p
+                    className={`text-xs ${
+                      newsletterFeedback.kind === "success" ? "text-emerald-300" : "text-rose-300"
+                    }`}
+                    role="status"
+                  >
+                    {newsletterFeedback.message}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
             {/* Contact Column */}
-            <div className="space-y-4">
+            <div className="min-w-0 space-y-4">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
                 {t('contact')}
               </h3>
               <ul className="text-slate-400 space-y-3 text-xs">
-                <li className="flex items-center gap-3">
-                  <Mail className="h-4 w-4 text-yellow-400" />
-                  <a href="mailto:info@diasporaunlocked.com" className="hover:text-white transition-colors">info@diasporaunlocked.com</a>
+                <li className="flex items-start gap-3">
+                  <Mail className="h-4 w-4 shrink-0 text-yellow-400" />
+                  <a href="mailto:info@diasporaunlocked.com" className="min-w-0 break-all hover:text-white transition-colors">info@diasporaunlocked.com</a>
                 </li>
                 <li className="relative">
                   <button
                     onClick={() => setPhoneActionOpen((prev) => !prev)}
-                    className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors"
+                    className="flex items-start gap-3 text-left text-slate-400 hover:text-white transition-colors"
                   >
-                    <span className="relative h-4 w-4">
+                    <span className="relative h-4 w-4 shrink-0">
                       <AnimatePresence mode="wait" initial={false}>
                         {showWhatsIcon ? (
                           <motion.span
@@ -827,7 +888,7 @@ export default function Layout({ children }: LayoutProps) {
                         )}
                       </AnimatePresence>
                     </span>
-                    <span>+49 151 474 16152</span>
+                    <span className="break-all">+49 151 474 16152</span>
                   </button>
                   <AnimatePresence>
                     {phoneActionOpen && (
@@ -836,7 +897,7 @@ export default function Layout({ children }: LayoutProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.98 }}
                         transition={{ duration: 0.18 }}
-                        className="absolute left-0 mt-2 w-56 rounded-xl border border-white/15 bg-slate-900/95 backdrop-blur-xl p-3 shadow-2xl z-[120]"
+                        className="absolute right-0 mt-2 w-[min(14rem,calc(100vw-2rem))] rounded-xl border border-white/15 bg-slate-900/95 backdrop-blur-xl p-3 shadow-2xl z-[120]"
                       >
                         <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                           Contact Options
@@ -846,7 +907,7 @@ export default function Layout({ children }: LayoutProps) {
                             href="tel:+4915147416152"
                             className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs text-white hover:bg-white hover:text-slate-900 transition-colors"
                           >
-                            <Phone className="h-3.5 w-3.5" />
+                            <Phone className="h-3.5 w-3.5 shrink-0" />
                             Call
                           </a>
                           <a
@@ -855,7 +916,7 @@ export default function Layout({ children }: LayoutProps) {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 rounded-lg border border-green-400/30 bg-green-500/15 px-3 py-2 text-xs text-green-300 hover:bg-green-500 hover:text-white transition-colors"
                           >
-                            <MessageCircle className="h-3.5 w-3.5" />
+                            <MessageCircle className="h-3.5 w-3.5 shrink-0" />
                             WhatsApp
                           </a>
                         </div>
@@ -863,9 +924,24 @@ export default function Layout({ children }: LayoutProps) {
                     )}
                   </AnimatePresence>
                 </li>
-                <li className="flex items-center gap-3 opacity-90">
-                  <MapPin className="h-4 w-4 text-yellow-400" />
+                <li className="flex items-start gap-3 opacity-90">
+                  <MapPin className="h-4 w-4 shrink-0 text-yellow-400" />
                   <span>Berlin, Germany</span>
+                </li>
+                <li className="pt-2 text-white text-[10px] font-black uppercase tracking-widest">
+                  Social
+                </li>
+                <li className="flex items-start gap-3">
+                  <Twitter className="h-4 w-4 shrink-0 text-yellow-400" />
+                  <span>Twitter</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Linkedin className="h-4 w-4 shrink-0 text-yellow-400" />
+                  <span>LinkedIn</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Instagram className="h-4 w-4 shrink-0 text-yellow-400" />
+                  <span>Instagram</span>
                 </li>
               </ul>
             </div>

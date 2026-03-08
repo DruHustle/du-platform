@@ -44,6 +44,8 @@ export default function TourismAugmentedExperiencePage() {
   const backToTourismLabel = t("tourism.back_to_tourism", {
     defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Tourism" })}`,
   });
+  const backToTourismButtonClass =
+    "mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 transition-colors hover:text-zim-gold";
   const speechLanguageCode = useMemo(() => getSpeechLanguageCode(uiLanguage), [uiLanguage]);
   const localizedPlaces = useMemo(() => getLocalizedArPlaces(uiLanguage), [uiLanguage]);
   const [arExperienceMetadata, setArExperienceMetadata] = useState<ArExperienceMetadata | null>(null);
@@ -994,7 +996,7 @@ export default function TourismAugmentedExperiencePage() {
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <Link href="/tourism" className="mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+          <Link href="/tourism" className={backToTourismButtonClass}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             {backToTourismLabel}
           </Link>

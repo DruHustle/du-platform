@@ -6,7 +6,6 @@ import { careRoutes } from "./care/routes";
 import { coreRoutes } from "./core/routes";
 import { fintechRoutes } from "./fintech/routes";
 import { homeRoutes } from "./home/routes";
-import { impactRoutes } from "./impact/routes";
 import { investmentRoutes } from "./investment/routes";
 import { legalRoutes } from "./legal/routes";
 import { searchRoutes } from "./search/routes";
@@ -22,7 +21,6 @@ export const appRoutes: AppRouteDefinition[] = [
   ...tradeRoutes,
   ...technologyRoutes,
   ...shopRoutes,
-  ...impactRoutes,
   ...fintechRoutes,
   ...careRoutes,
   ...authRoutes,

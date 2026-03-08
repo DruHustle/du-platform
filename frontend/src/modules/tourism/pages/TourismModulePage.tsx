@@ -4,7 +4,7 @@ import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Heart, Dog, TrendingUp } from "lucide-react";
+import { MapPin, Calendar, Shield, CreditCard, Award, CheckCircle2, Brain, Sparkles, Globe, Building2, Car, Globe2, Dog, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
@@ -43,8 +43,7 @@ export default function Tourism() {
       subtitle: t('tourism.hero.subtitle1') || "From Victoria Falls to Great Zimbabwe, experience the heart of Africa.",
       buttons: [
         { text: t('tourism.hero.book_trip') || "Book Trip", variant: "primary", link: "/onesa-ai-book-trip" },
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true },
-        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experience", showArrow: true }
+        { text: t('tourism.hero.virtual_center') || "Virtual Reality", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
       ]
     },
     {
@@ -64,7 +63,7 @@ export default function Tourism() {
       title: t('tourism.hero.title3') || "Wildlife & Safari",
       subtitle: t('tourism.hero.subtitle3') || "Unforgettable encounters in pristine national parks.",
       buttons: [
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
+        { text: t('tourism.hero.virtual_center') || "Virtual Reality", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
       ]
     },
     {
@@ -73,9 +72,7 @@ export default function Tourism() {
       badgeIcon: Building2,
       title: t('tourism.hero.title4') || "Great Zimbabwe",
       subtitle: t('tourism.hero.subtitle4') || "Ancient stone ruins showcasing medieval African civilization.",
-      buttons: [
-        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experience", showArrow: true }
-      ]
+      buttons: []
     }
     ,
     {
@@ -95,7 +92,7 @@ export default function Tourism() {
       title: t("tourism.hero.title6") || "Mana Pools Experience",
       subtitle: t("tourism.hero.subtitle6") || "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
       buttons: [
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality Center", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
+        { text: t('tourism.hero.virtual_center') || "Virtual Reality", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
       ]
     },
     {
@@ -104,9 +101,7 @@ export default function Tourism() {
       badgeIcon: Shield,
       title: t("tourism.hero.title7") || "Hwange Wildlife Corridor",
       subtitle: t("tourism.hero.subtitle7") || "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
-      buttons: [
-        { text: t('tourism.hero.local_guide_ar') || "Local AR Experience", variant: "outline", link: "/onesa-ai-tourism-augmented-experience", showArrow: true }
-      ]
+      buttons: []
     },
     {
       image: "/images/pages/tourism/kariba_sunset.jpg",
@@ -190,12 +185,6 @@ export default function Tourism() {
       window.clearTimeout(nextConversationTimer);
     };
   }, [conversationIndex, phoneConversation.length]);
-
-  const introData = {
-    icon: Heart,
-    title: t('tourism.objective_title') || "Our Vision",
-    description: t('tourism.objective_subtitle') || "To build a global gateway connecting Zimbabwe’s culture, products, tourism, and investment opportunities."
-  };
 
   const attractions: Attraction[] = [
     {
@@ -460,7 +449,7 @@ export default function Tourism() {
     <Layout>
       {/* Hero Section */}
       <section id="hero">
-        <SubPageHero heroSlides={heroSlides} intro={introData} />
+        <SubPageHero heroSlides={heroSlides} />
       </section>
 
       {/* Key Attractions - Cinematic Glass Grid */}
@@ -531,9 +520,9 @@ export default function Tourism() {
                 <h2 className="section-title-compact mb-3">{t("tourism.other_attractions_title") || "Other Incredible Destinations"}</h2>
                 <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">{t("tourism.other_attractions_subtitle") || "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country."}</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {otherAttractions.map((dest, i) => (
-                  <motion.div key={i} whileHover={{ y: -5 }} className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
+                  <motion.div key={i} whileHover={{ y: -5 }} className="w-full rounded-[1.5rem] border border-white/10 bg-white/[0.02] overflow-hidden group">
                     <button type="button" className="block cursor-pointer w-full text-left" onClick={() => setSelectedAttraction(dest)}>
                       <div className="h-44 overflow-hidden relative">
                         <img src={dest.image} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-700" />
@@ -558,19 +547,13 @@ export default function Tourism() {
       {/* Onesa AI Tourist Companion Section - Glassy UI Upgrade */}
       <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="section-title-compact">{t('tourism.onesa.title') || "Your Local Guide in Your Pocket"}</h2>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-                {t('tourism.onesa.subtitle') || "Navigating Zimbabwe can be complex. Onesa AI understands local travel dynamics and practical on-the-ground context to keep your trip seamless."}
-              </p>
-            </div>
+         
 
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/5 bg-white/[0.01] group"
+              className="outer-glass-panel p-8 md:p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] group"
             >
              {/* The Crispy Edge Finish */}
              <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
@@ -596,19 +579,19 @@ export default function Tourism() {
                   </p>
                 </div>
 
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-4">
                   {onesaTouristFeatures.map((feature, idx) => {
-                    const Icon = feature.icon;
                     return (
-                      <div key={idx} className="flex items-center gap-4 rounded-[2rem] border border-white/5 bg-white/[0.01] p-7">
-                        <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                          <Icon className="h-5 w-5 text-zim-gold" />
-                        </div>
+                      <article
+                        key={idx}
+                        className="group rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-4 transition-all duration-500 hover:bg-slate-950/60"
+                      >
                         <div>
-                          <h4 className="text-lg font-black text-white tracking-tight">{feature.title}</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">{feature.description}</p>
+                          <h4 className="text-sm font-black text-white">{feature.title}</h4>
+                          <p className="mt-1.5 text-[13px] leading-relaxed text-white/70">{feature.description}</p>
+                          <div className="mt-3 h-0.5 w-10 rounded-full bg-zim-gold/50 transition-all duration-500 group-hover:w-16" />
                         </div>
-                      </div>
+                      </article>
                     );
                   })}
                 </div>
@@ -686,7 +669,7 @@ export default function Tourism() {
             </div>
             </motion.div>
           </div>
-        </div>
+       
       </section>
 
       <Dialog open={Boolean(selectedAttraction)} onOpenChange={(open) => !open && setSelectedAttraction(null)}>

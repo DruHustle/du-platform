@@ -377,11 +377,9 @@ export default function Impact() {
         }));
   const activeMetrics = impactData.filter((m: any) => isVisible(m?.display));
 
-  const introData = { icon: Trophy, title: t('impact.objective_title') || "Impact", description: t('impact.objective_subtitle') || "Showcasing the tangible impact of diaspora engagement across various sectors and communities in Zimbabwe." };
-
   return (
     <Layout>
-      <SubPageHero heroSlides={heroSlides} intro={introData} />
+      <SubPageHero heroSlides={heroSlides} />
 
       {/* IMPACT STORIES SECTION  - currently dissabled*/}
       {activeStories.length > 0 && (

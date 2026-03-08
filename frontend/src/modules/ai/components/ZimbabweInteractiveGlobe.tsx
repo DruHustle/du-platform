@@ -63,6 +63,35 @@ export default function ZimbabweInteractiveGlobe({
     setAudioBlocked(false);
   }, []);
 
+  const handleMusicToggle = useCallback(async () => {
+    const audio = audioRef.current;
+    if (!audio || !musicEnabled) return;
+
+    if (audioEnabled) {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.muted = true;
+      setAudioEnabled(false);
+      setAudioPlaying(false);
+      setAudioBlocked(false);
+      return;
+    }
+
+    audio.muted = false;
+    audio.volume = 0.5;
+    setAudioEnabled(true);
+
+    try {
+      await audio.play();
+      setAudioBlocked(false);
+      setAudioPlaying(true);
+    } catch {
+      setAudioEnabled(false);
+      setAudioBlocked(true);
+      setAudioPlaying(false);
+    }
+  }, [audioEnabled, musicEnabled]);
+
   const locations = useMemo(
     () => [
       { id: "vic_falls", name: "Victoria Falls", lat: -17.9243, lng: 25.856, label: "VFA" },
@@ -430,28 +459,11 @@ export default function ZimbabweInteractiveGlobe({
       <button
         type="button"
         onClick={() => {
-          if (!audioRef.current) return;
-          if (audioPlaying) {
-            audioRef.current.pause();
-            setAudioEnabled(false);
-            setAudioPlaying(false);
-            return;
-          }
-          setAudioEnabled(true);
-          void audioRef.current
-            .play()
-            .then(() => {
-              setAudioBlocked(false);
-              setAudioPlaying(true);
-            })
-            .catch(() => {
-              setAudioBlocked(true);
-              setAudioPlaying(false);
-            });
+          void handleMusicToggle();
         }}
         className="absolute z-20 bottom-6 right-6 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
       >
-        {audioPlaying ? "Music: On" : "Music: Off"}
+        {audioEnabled ? "Music: On" : "Music: Off"}
       </button>
       ) : null}
       {audioBlocked ? null : null}

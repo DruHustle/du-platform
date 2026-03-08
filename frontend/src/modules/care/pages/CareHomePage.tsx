@@ -218,21 +218,9 @@ export default function CareHomePage() {
     [t]
   );
 
-  const introData = useMemo(
-    () => ({
-      icon: HeartHandshake,
-      title: t("care.intro.title", { defaultValue: "Diaspora Family Care" }),
-      description: t("care.intro.description", {
-        defaultValue:
-          "Diaspora Unlocked integrates trusted family assurance support with Nyaradzo, helping Zimbabweans abroad protect loved ones through clear, secure onboarding.",
-      }),
-    }),
-    [t]
-  );
-
   return (
     <Layout>
-      <SubPageHero heroSlides={heroSlides} intro={introData} />
+      <SubPageHero heroSlides={heroSlides} />
 
       <section id="care-content" className="p-5 pb-10 bg-slate-950 relative overflow-hidden">
         <div className="container mx-auto px-6 space-y-11">
