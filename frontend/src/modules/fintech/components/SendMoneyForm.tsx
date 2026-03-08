@@ -128,7 +128,7 @@ const PAYOUT_TYPES = [
 const FLOW_STEPS: Array<{ id: FormStep; label: string }> = [
   { id: "route", label: "Start" },
   { id: "recipient", label: "Recipient" },
-  { id: "payout", label: "Payout" },
+  { id: "payout", label: "Payment Method" },
   { id: "pay", label: "Pay" },
   { id: "status", label: "Receipt" },
 ];
