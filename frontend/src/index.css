@@ -50,6 +50,7 @@
 }
 
 :root {
+  --mobile-full-viewport: 100svh;
   --home-primary: #ffffff;
   --home-background-light: #f8f6f6;
   --home-background-dark: #0f172a;
@@ -93,6 +94,12 @@
   --sidebar-accent-foreground: oklch(0.20 0.01 280);
   --sidebar-border: oklch(0.90 0.004 286);
   --sidebar-ring: oklch(0.35 0.08 150);
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --mobile-full-viewport: 100dvh;
+  }
 }
 
 .dark {
@@ -203,6 +210,44 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .min-h-screen {
+      min-height: var(--mobile-full-viewport) !important;
+    }
+
+    .h-screen {
+      height: var(--mobile-full-viewport) !important;
+    }
+
+    main .min-h-screen {
+      min-height: calc(
+        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) - var(--mobile-shell-offset-bottom, 0px)
+      ) !important;
+    }
+
+    main .h-screen {
+      height: calc(
+        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) - var(--mobile-shell-offset-bottom, 0px)
+      ) !important;
+    }
+
+    [class*="min-h-[60vh]"],
+    [class*="min-h-[70vh]"],
+    [class*="min-h-[80vh]"],
+    [class*="min-h-[90vh]"] {
+      min-height: var(--mobile-full-viewport) !important;
+    }
+
+    main [class*="min-h-[60vh]"],
+    main [class*="min-h-[70vh]"],
+    main [class*="min-h-[80vh]"],
+    main [class*="min-h-[90vh]"] {
+      min-height: calc(
+        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) - var(--mobile-shell-offset-bottom, 0px)
+      ) !important;
     }
   }
 }

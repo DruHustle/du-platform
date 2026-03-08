@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, House, ArrowRightLeft, ShoppingBag, HeartHandshake, Package, Landmark, Compass, Brain, ChevronRight, Twitter, Linkedin, Instagram } from "lucide-react";
-import { useState, useEffect, useRef, useCallback, type FormEvent } from "react";
+import { useState, useEffect, useRef, useCallback, type CSSProperties, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, clearAuthToken, getApiErrorMessage, type AuthUser } from "@/lib/api";
@@ -202,8 +202,18 @@ export default function Layout({ children }: LayoutProps) {
     location === "/shop" ||
     location === "/technology";
   const useDesktopTransparentNav = !isCompactNavViewport && hasHeroSection;
-  const mainTopPaddingClass = isCompactNavViewport ? (isHomePage ? "pt-0" : "pt-14") : "pt-0";
-  const mainBottomPaddingClass = isCompactNavViewport ? (isHomePage ? "" : "pb-24") : "";
+  const mainTopPaddingClass = isCompactNavViewport
+    ? (isHomePage ? "pt-0" : "pt-[calc(3.5rem+env(safe-area-inset-top))]")
+    : "pt-0";
+  const mainBottomPaddingClass = isCompactNavViewport
+    ? (isHomePage ? "" : "pb-[calc(5.75rem+env(safe-area-inset-bottom))]")
+    : "";
+  const mainViewportOffsetsStyle: CSSProperties | undefined = isCompactNavViewport
+    ? {
+        "--mobile-shell-offset-top": isHomePage ? "0px" : "calc(3.5rem + env(safe-area-inset-top))",
+        "--mobile-shell-offset-bottom": isHomePage ? "0px" : "calc(5.75rem + env(safe-area-inset-bottom))",
+      } as CSSProperties
+    : undefined;
 
   const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -379,7 +389,7 @@ export default function Layout({ children }: LayoutProps) {
       
       {/* --- INTEGRATED GLASS CEILING --- */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-[210] transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[210] pt-[env(safe-area-inset-top)] transition-all duration-500 ${
           useHomeCompactTransparentNav
             ? "bg-transparent border-transparent py-0"
             : useDesktopTransparentNav
@@ -613,7 +623,7 @@ export default function Layout({ children }: LayoutProps) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -10, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed top-14 right-3 w-60 z-[200] pointer-events-none"
+              className="lg:hidden fixed top-[calc(3.5rem+env(safe-area-inset-top))] right-3 w-60 z-[200] pointer-events-none"
             >
               <div className="pointer-events-auto bg-slate-900/98 backdrop-blur-md border-l border-b border-white/10 rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col">
                 
@@ -654,7 +664,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {!mobileMenuOpen && (
         <div className="fixed bottom-0 left-0 right-0 z-[205] lg:hidden">
-          <div className="border-t border-white/10 bg-white/[0.08] px-4 pb-6 pt-3 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
+          <div className="border-t border-white/10 bg-white/[0.08] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
             <nav className="flex items-center justify-between gap-2">
               {mobileBottomNavigation.map((item) => {
                 const active = isActive(item);
@@ -681,7 +691,10 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       )}
 
-      <main className={`relative z-0 flex-1 w-full ${mainTopPaddingClass} ${mainBottomPaddingClass}`}>
+      <main
+        className={`relative z-0 flex-1 w-full ${mainTopPaddingClass} ${mainBottomPaddingClass}`}
+        style={mainViewportOffsetsStyle}
+      >
         {children}
       </main>
 

@@ -20,7 +20,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
       
       {/* SECTION 1: CINEMATIC HERO */}
-      <section className="relative h-screen min-h-[700px] w-full flex items-center justify-center overflow-hidden bg-slate-950">
+      <section className="relative h-screen min-h-[var(--mobile-full-viewport)] md:min-h-[700px] w-full flex items-center justify-center overflow-hidden bg-slate-950">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={hero.currentBgIndex}
