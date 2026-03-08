@@ -76,6 +76,8 @@ export default function OnesaFloatingAssistant() {
   const suppressBubbleClickRef = useRef(false);
   const dragStateRef = useRef<DragState | null>(null);
   const touchDragArmTimeoutRef = useRef<number | null>(null);
+  const loadedBubblePositionFromStorageRef = useRef(false);
+  const alignedDesktopDefaultPositionRef = useRef(false);
 
   const showOnesaBubble = !HIDE_ONESA_BUBBLE_ROUTES.some((route) => location.startsWith(route));
   const hasOnesaChatStarted = onesaMessages.some((message) => message.role === "user");
@@ -144,7 +146,9 @@ export default function OnesaFloatingAssistant() {
       const bubbleWidth = bubbleRect?.width ?? 180;
       const bubbleHeight = bubbleRect?.height ?? 64;
 
-      let nextX = window.innerWidth - bubbleWidth / 2;
+      let nextX = isMobileViewport
+        ? window.innerWidth - bubbleWidth / 2
+        : window.innerWidth - bubbleWidth - 40;
       let nextY = isMobileViewport ? window.innerHeight - bubbleHeight - 96 : window.innerHeight - bubbleHeight - 40;
       let loadedFromStorage = false;
 
@@ -161,6 +165,9 @@ export default function OnesaFloatingAssistant() {
       } catch {
         // Ignore malformed local storage values.
       }
+
+      loadedBubblePositionFromStorageRef.current = loadedFromStorage;
+      alignedDesktopDefaultPositionRef.current = loadedFromStorage || isMobileViewport;
 
       const initialPosition = clampBubblePosition(nextX, nextY, bubbleWidth, bubbleHeight);
       updateBubblePosition(initialPosition);
@@ -208,6 +215,35 @@ export default function OnesaFloatingAssistant() {
     observer.observe(bubbleNode);
     return () => observer.disconnect();
   }, [showOnesaBubble]);
+
+  useLayoutEffect(() => {
+    if (!showOnesaBubble || isMobileViewport || !bubblePosition) return;
+    if (loadedBubblePositionFromStorageRef.current || alignedDesktopDefaultPositionRef.current) return;
+
+    const measuredBubbleRect = bubbleRef.current?.getBoundingClientRect();
+    const bubbleWidth = measuredBubbleRect?.width ?? bubbleDimensions.width;
+    const bubbleHeight = measuredBubbleRect?.height ?? bubbleDimensions.height;
+
+    const desiredPosition = clampBubblePosition(
+      window.innerWidth - bubbleWidth - 40,
+      window.innerHeight - bubbleHeight - 40,
+      bubbleWidth,
+      bubbleHeight,
+    );
+
+    alignedDesktopDefaultPositionRef.current = true;
+    updateBubblePosition(desiredPosition);
+    persistBubblePosition(desiredPosition);
+  }, [
+    bubbleDimensions.height,
+    bubbleDimensions.width,
+    bubblePosition,
+    clampBubblePosition,
+    isMobileViewport,
+    persistBubblePosition,
+    showOnesaBubble,
+    updateBubblePosition,
+  ]);
 
   const checkOnesaPopupHealth = useCallback(async (): Promise<boolean> => {
     const backendUnreachableStatus =
