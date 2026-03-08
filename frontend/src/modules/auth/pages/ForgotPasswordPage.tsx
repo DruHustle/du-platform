@@ -12,6 +12,8 @@ export default function ForgotPassword() {
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const authHeadingClass = "text-xl font-black tracking-tight text-white";
+  const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,32 +33,34 @@ export default function ForgotPassword() {
 
   return (
     <Layout>
-      <section className="min-h-[80vh] bg-slate-950 px-6 py-28">
-        <div className="outer-glass-panel max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
-          <h1 className="text-3xl font-black tracking-tighter">Reset Password</h1>
-          <p className="text-white/75 text-sm mt-2">Enter your account email and we will send reset instructions.</p>
+      <section className="min-h-[80vh] bg-slate-950 px-6 py-20 flex items-center justify-center">
+        <div className="outer-glass-panel w-full max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 text-white md:p-12">
+          <div className="space-y-2 text-center">
+            <h1 className={authHeadingClass}>Reset Password</h1>
+            <p className={authSubtitleClass}>Enter your account email and we will send reset instructions.</p>
+          </div>
 
-          <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+          <form className="mt-8 space-y-6" onSubmit={onSubmit}>
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-white/70">Email</Label>
+              <Label className="text-[10px] uppercase tracking-widest font-black text-white/70">Email</Label>
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-white/[0.05] border-white/20 text-white"
+                className="h-12 rounded-xl border-white/20 bg-white/[0.05] text-white"
               />
             </div>
 
             {status ? <p className="text-green-400 text-sm">{status}</p> : null}
             {error ? <p className="text-red-400 text-sm">{error}</p> : null}
 
-            <Button type="submit" disabled={loading} className="w-full bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
+            <Button type="submit" disabled={loading} className="h-14 w-full rounded-full bg-zim-gold text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white">
               {loading ? "Submitting..." : "Send Reset Link"}
             </Button>
           </form>
 
-          <div className="mt-6 text-sm text-white/75">
+          <div className="mt-6 border-t border-white/10 pt-4 text-center text-sm text-white/75">
             <Link href="/login" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
               Back to Login
