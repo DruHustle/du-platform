@@ -194,6 +194,7 @@ export default function Layout({ children }: LayoutProps) {
     location === "/register" ||
     location === "/forgot-password" ||
     location === "/reset-password";
+  const isBottomNavHiddenPage = isAuthPage || location === "/onesa-ai-chat";
   const isCompactNavViewport = desktopViewportWidth < 1024;
   const shouldShowNavbarLogo = !isHomePage || !homeHeroLogoVisible;
   const useHomeCompactTransparentNav = isCompactNavViewport && isHomePage && !mobileMenuOpen;
@@ -211,12 +212,12 @@ export default function Layout({ children }: LayoutProps) {
     ? (isHomePage ? "pt-0" : "pt-[calc(3.5rem+env(safe-area-inset-top))]")
     : "pt-0";
   const mainBottomPaddingClass = isCompactNavViewport
-    ? (isHomePage || isAuthPage ? "" : "pb-[calc(3.5rem+1px+env(safe-area-inset-bottom))]")
+    ? (isHomePage || isBottomNavHiddenPage ? "" : "pb-[calc(3.5rem+1px+env(safe-area-inset-bottom))]")
     : "";
   const mainViewportOffsetsStyle: CSSProperties | undefined = isCompactNavViewport
     ? {
         "--mobile-shell-offset-top": isHomePage ? "0px" : "calc(3.5rem + env(safe-area-inset-top))",
-        "--mobile-shell-offset-bottom": isHomePage || isAuthPage ? "0px" : "calc(3.5rem + 1px + env(safe-area-inset-bottom))",
+        "--mobile-shell-offset-bottom": isHomePage || isBottomNavHiddenPage ? "0px" : "calc(3.5rem + 1px + env(safe-area-inset-bottom))",
       } as CSSProperties
     : undefined;
 
@@ -413,11 +414,11 @@ export default function Layout({ children }: LayoutProps) {
                     : 'opacity-0 -translate-x-4 pointer-events-none lg:opacity-0 lg:-translate-x-4 lg:pointer-events-none'
                 }`}>
                 <div className="relative inline-flex h-10 w-10 items-center justify-center">
-                  <span className="pointer-events-none absolute inset-0 rounded-[0.95rem] lg:rounded-full border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
+                  <span className="pointer-events-none absolute inset-0 rounded-[0.95rem] border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
                   <img
                     src='/images/pages/shared/diaspora_unlocked.png'
                     alt='Logo'
-                    className="relative h-[2.35rem] w-[2.35rem] scale-[1.12] object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:h-9 lg:w-9 lg:scale-100 lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
+                    className="relative h-[2.35rem] w-[2.35rem] scale-[1.12] object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:h-[2.35rem] lg:w-[2.35rem] lg:scale-[1.12] lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
                   />
                 </div>
               </div>
@@ -667,7 +668,7 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
-      {!mobileMenuOpen && !isAuthPage && (
+      {!mobileMenuOpen && !isBottomNavHiddenPage && (
         <div className="fixed bottom-0 left-0 right-0 z-[205] lg:hidden">
           <div className="flex h-[calc(3.5rem+1px+env(safe-area-inset-bottom))] items-start border-t border-white/10 bg-white/[0.08] px-4 pt-0 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
             <nav className="flex h-14 w-full items-center justify-between gap-2">

@@ -67,6 +67,7 @@ const CASH_PICKUP_CHANNELS: string[] = [
   "Steward Bank",
   "Mukuru",
 ];
+const FX_RATE_PREVIEW_AMOUNT = 100;
 
 const SENDER_COUNTRIES: Country[] = [
   { code: "GB", flag: "🇬🇧", name: "United Kingdom", currency: "GBP" },
@@ -126,7 +127,6 @@ const PAYOUT_TYPES = [
 
 const FLOW_STEPS: Array<{ id: FormStep; label: string }> = [
   { id: "route", label: "Start" },
-  { id: "quote", label: "FX Rate" },
   { id: "recipient", label: "Recipient" },
   { id: "payout", label: "Payout" },
   { id: "pay", label: "Pay" },
@@ -383,6 +383,29 @@ function extractProviderFee(payload: JsonRecord | null | undefined, sendingAmoun
   return null;
 }
 
+function extractFxRate(payload: JsonRecord | null | undefined, sendingAmount?: number): number | null {
+  if (!payload || typeof payload !== "object") return null;
+
+  const directRate = toFinancialNumber(payload.fxRate ?? payload.exchangeRate);
+  if (directRate !== null && directRate > 0) return directRate;
+
+  const normalizedSendingAmount = typeof sendingAmount === "number" && Number.isFinite(sendingAmount) ? sendingAmount : null;
+  const receivingAmount = toFinancialNumber(
+    payload.receivingAmount ?? payload.recipientAmount ?? payload.amountReceived ?? payload.payoutAmount
+  );
+
+  if (
+    normalizedSendingAmount !== null &&
+    normalizedSendingAmount > 0 &&
+    receivingAmount !== null &&
+    receivingAmount > 0
+  ) {
+    return receivingAmount / normalizedSendingAmount;
+  }
+
+  return null;
+}
+
 export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFormProps) {
   const { t } = useTranslation();
   const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
@@ -405,6 +428,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const [quote, setQuote] = useState<JsonRecord | null>(null);
   const [status, setStatus] = useState<SendMoneyStatus | null>(null);
   const [error, setError] = useState("");
+  const [baselineFxRate, setBaselineFxRate] = useState<number | null>(null);
   const [airtimeOperator, setAirtimeOperator] = useState<AirtimeOperator>(null);
   const [airtimeOptions, setAirtimeOptions] = useState<Array<number | string>>([]);
   const [airtimeFeeQuote, setAirtimeFeeQuote] = useState(0);
@@ -462,10 +486,23 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   }, [airtimeFeeQuote, amount, form.transferType, quote, status]);
   const fee = useMemo(() => Number(providerCharge.toFixed(2)), [providerCharge]);
   const totalCharge = useMemo(() => Number((amount + fee).toFixed(2)), [amount, fee]);
-  const fxRate = Number(quote?.fxRate || quote?.exchangeRate || 0);
+  const quotedReceiveAmount = Number(quote?.receivingAmount || 0);
+  const quoteFxRate = extractFxRate(quote, amount) ?? 0;
+  const inputDerivedFxRate =
+    amount > 0 && Number.isFinite(amountReceive) && amountReceive > 0
+      ? Number((amountReceive / amount).toFixed(6))
+      : 0;
+  const fxRate = useMemo(() => {
+    if (form.transferType === "airtime_topup") return 1;
+    if (Number.isFinite(quoteFxRate) && quoteFxRate > 0) return Number(quoteFxRate.toFixed(6));
+    if (Number.isFinite(inputDerivedFxRate) && inputDerivedFxRate > 0) return inputDerivedFxRate;
+    if (Number.isFinite(baselineFxRate) && (baselineFxRate ?? 0) > 0) return Number((baselineFxRate ?? 0).toFixed(6));
+    return 0;
+  }, [baselineFxRate, form.transferType, inputDerivedFxRate, quoteFxRate]);
   const estimatedReceive = Number(
-    quote?.receivingAmount || (amountReceive > 0 ? amountReceive : amount * (fxRate || 1))
+    quotedReceiveAmount || (amountReceive > 0 ? amountReceive : amount * (fxRate || 1))
   );
+  const displayedReceiveAmount = Number((amountReceive > 0 ? amountReceive : estimatedReceive).toFixed(2));
   const liveAmountInput = amountMode === "send" ? form.amountSent : form.amountReceive;
 
   const requestQuote = async (sendingAmount: number): Promise<JsonRecord | null> => {
@@ -478,6 +515,49 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     const payload = response?.data as JsonRecord | undefined;
     return (payload?.fxQuote as JsonRecord | undefined) ?? (payload?.quote as JsonRecord | undefined) ?? payload ?? null;
   };
+
+  useEffect(() => {
+    let active = true;
+
+    if (form.transferType !== "send_money") {
+      setBaselineFxRate(form.transferType === "airtime_topup" ? 1 : null);
+      return () => {
+        active = false;
+      };
+    }
+
+    if (quoteFxRate > 0 || inputDerivedFxRate > 0) {
+      setBaselineFxRate(null);
+      return () => {
+        active = false;
+      };
+    }
+
+    void (async () => {
+      try {
+        const previewQuote = await requestQuote(FX_RATE_PREVIEW_AMOUNT);
+        if (!active || !previewQuote) return;
+
+        const previewFxRate = extractFxRate(previewQuote, FX_RATE_PREVIEW_AMOUNT);
+        if (active) {
+          setBaselineFxRate(previewFxRate && previewFxRate > 0 ? Number(previewFxRate.toFixed(6)) : null);
+        }
+      } catch {
+        if (active) setBaselineFxRate(null);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [
+    form.currencyFrom,
+    form.currencyTo,
+    form.receiverCountryCode,
+    form.transferType,
+    inputDerivedFxRate,
+    quoteFxRate,
+  ]);
 
   useEffect(() => {
     if (form.currencyFrom !== selectedSender.currency) {
@@ -529,7 +609,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           const firstQuote = await requestQuote(Number(sendingAmount.toFixed(2)));
           if (!firstQuote || liveQuoteRequestRef.current !== requestId) return;
 
-          const firstRate = Number(firstQuote?.fxRate || firstQuote?.exchangeRate || 0);
+          const firstRate = extractFxRate(firstQuote, Number(sendingAmount.toFixed(2))) ?? 0;
           if (!Number.isFinite(firstRate) || firstRate <= 0) return;
 
           const derivedSendAmount = Number((receiveInput / firstRate).toFixed(2));
@@ -539,7 +619,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           if (!finalQuote || liveQuoteRequestRef.current !== requestId) return;
           setQuote(finalQuote);
 
-          const finalRate = Number(finalQuote?.fxRate || finalQuote?.exchangeRate || 0);
+          const finalRate = extractFxRate(finalQuote, derivedSendAmount) ?? 0;
           if (!Number.isFinite(finalRate) || finalRate <= 0) return;
 
           setForm((prev) => {
@@ -557,7 +637,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         if (!liveQuote || liveQuoteRequestRef.current !== requestId) return;
         setQuote(liveQuote);
 
-        const liveRate = Number(liveQuote?.fxRate || liveQuote?.exchangeRate || 0);
+        const liveRate = extractFxRate(liveQuote, Number(sendingAmount.toFixed(2))) ?? 0;
         setForm((prev) => {
           if (prev.transferType !== "send_money") return prev;
           const rawReceive = Number(liveQuote?.receivingAmount ?? Number(prev.amountSent || 0) * (liveRate || 1));
@@ -806,7 +886,9 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           exchangeRate: 1,
           receivingAmount: normalizedAirtimeAmount,
         });
-        setStep("quote");
+        const isAuthenticated = await ensureAuthenticated();
+        if (!isAuthenticated) return;
+        setStep("recipient");
         return;
       }
 
@@ -819,7 +901,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         }
         const initialGuess = Number.isFinite(sendInput) && sendInput > 0 ? sendInput : receiveInput;
         const firstQuote = await requestQuote(initialGuess);
-        const quoteRate = Number(firstQuote?.fxRate || firstQuote?.exchangeRate || 0);
+        const quoteRate = extractFxRate(firstQuote, initialGuess) ?? 0;
         normalizedSendAmount = quoteRate > 0 ? Number((receiveInput / quoteRate).toFixed(2)) : Number(initialGuess.toFixed(2));
         if (normalizedSendAmount > 5000) {
           throw new Error(tr("payments.form.errors.amount_limit", "Amount exceeds permitted limit of 5000."));
@@ -847,23 +929,11 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         amountReceive: normalizedReceiveDisplay,
       }));
       setQuote(quoteResult);
-      setStep("quote");
-    } catch (err) {
-      setError(extractErrorMessage(err, tr("payments.form.errors.unable_fetch_quote", "Unable to fetch FX quote.")));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onAcceptRate = async () => {
-    setLoading(true);
-    setError("");
-    try {
       const isAuthenticated = await ensureAuthenticated();
       if (!isAuthenticated) return;
       setStep("recipient");
     } catch (err) {
-      setError(extractErrorMessage(err, tr("payments.form.errors.unable_verify_session", "Unable to verify your session.")));
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_fetch_quote", "Unable to fetch FX quote.")));
     } finally {
       setLoading(false);
     }
@@ -1009,7 +1079,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const fieldClass =
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-white/70 focus:border-zim-gold/60";
   const stepPillClass =
-    "flex h-10 items-center justify-center rounded-full border px-2.5 text-center text-[9px] font-black uppercase leading-none tracking-[0.18em] md:px-3 md:text-[10px] md:tracking-widest";
+    "flex min-w-0 h-10 items-center justify-center rounded-full border px-2 text-center text-[8px] font-black uppercase leading-tight tracking-[0.08em] md:px-3 md:text-[10px] md:leading-none md:tracking-widest";
   const pillActionBaseClass =
     "inline-flex min-h-11 w-full items-center justify-center rounded-full px-4 py-3 text-center text-[11px] font-black uppercase tracking-widest leading-tight transition";
   const pillSecondaryClass =
@@ -1058,7 +1128,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         </div>
       </div>
 
-      <div className="mb-12 grid grid-cols-3 gap-2 md:grid-cols-6">
+      <div className="mb-12 grid grid-cols-5 gap-2">
         {FLOW_STEPS.map((item, index) => {
           const active = currentStepIndex >= index;
           return (
@@ -1188,7 +1258,17 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
+                {tr("payments.form.quote.fx_rate", "FX Rate")}
+              </p>
+              <p className="mt-1 text-sm font-semibold text-white/85">
+                {fxRate > 0
+                  ? `1 ${form.currencyFrom} = ${fxRate.toFixed(6)} ${form.currencyTo}`
+                  : tr("payments.form.quote.na", "N/A")}
+              </p>
+            </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
                 {tr("payments.form.fee", "Fee")}
@@ -1225,83 +1305,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 : tr("payments.form.actions.get_started", "Get Started")}
             </button>
           ) : null}
-        </div>
-      )}
-
-      {step === "quote" && (
-        <div className="space-y-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <h4 className="mb-3 text-sm font-black uppercase tracking-widest text-white/70">
-              {tr("payments.form.quote.title", "FX Rate Preview")}
-            </h4>
-            <div className="grid gap-2 text-sm text-white/80">
-              <p>
-                {tr("payments.form.quote.route", "Route")}:{" "}
-                <span className="font-semibold text-white">
-                  {selectedSender.name} {tr("payments.form.quote.to", "to")} {RECEIVER_COUNTRY.name} (
-                  {form.transferType === "airtime_topup"
-                    ? tr("payments.form.transfer.airtime_topup.label", "Airtime Top-up")
-                    : tr("payments.form.transfer.send_money.label", "Send Money")}
-                  )
-                </span>
-              </p>
-              <p>
-                {tr("payments.form.quote.amount", "Amount")}:{" "}
-                <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
-              </p>
-              <p>
-                {tr("payments.form.quote.fx_rate", "FX Rate")}:{" "}
-                <span className="font-semibold text-white">
-                  {fxRate > 0 ? fxRate.toFixed(6) : tr("payments.form.quote.na", "N/A")}
-                </span>
-              </p>
-              <p>
-                {tr("payments.form.fee", "Fee")}:{" "}
-                <span className="font-semibold text-white">{formatAmount(fee, form.currencyFrom)}</span>
-              </p>
-              <p>
-                {tr("payments.form.total", "Total")}:{" "}
-                <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
-              </p>
-              <p>
-                {tr("payments.form.quote.estimated_receive", "Estimated receive")}:{" "}
-                <span className="font-semibold text-zim-gold">{formatAmount(estimatedReceive, form.currencyTo)}</span>
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-zim-gold/30 bg-zim-gold/10 p-4 text-xs text-zim-gold/90">
-            <div className="mb-1 flex items-center gap-2 font-black uppercase tracking-widest">
-              <ShieldCheck className="h-4 w-4" />
-              {tr("payments.form.quote.security_notice", "Security notice")}
-            </div>
-            {form.transferType === "airtime_topup"
-              ? tr(
-                  "payments.form.quote.airtime_notice",
-                  "Reloadly fees are confirmed once the operator is detected from the airtime number."
-                )
-              : tr(
-                  "payments.form.quote.remittance_notice",
-                  "Quote includes provider-side fees. Final payout timing depends on compliance checks and payout channel processing windows."
-                )}
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              className={pillSecondaryClass}
-              onClick={() => setStep("route")}
-              disabled={loading}
-            >
-              {tr("payments.form.actions.back", "Back")}
-            </button>
-            <button
-              className={pillPrimaryClass}
-              onClick={onAcceptRate}
-              disabled={loading || !quote}
-            >
-              {tr("payments.form.actions.accept_rate", "Accept Rate")}
-            </button>
-          </div>
         </div>
       )}
 
@@ -1365,7 +1368,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           <div className="grid grid-cols-2 gap-3">
             <button
               className={pillSecondaryClass}
-              onClick={() => setStep("quote")}
+              onClick={() => setStep("route")}
             >
               {tr("payments.form.actions.back", "Back")}
             </button>
@@ -1580,7 +1583,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 </span>
               </p>
               <p>
-                {tr("payments.form.quote.amount", "Amount")}:{" "}
+                {tr("payments.form.fields.you_send", "You send")}:{" "}
                 <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
               </p>
               <p>
@@ -1592,8 +1595,10 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
               </p>
               <p>
-                {tr("payments.form.quote.estimated_receive", "Estimated receive")}:{" "}
-                <span className="font-semibold text-zim-gold">{formatAmount(estimatedReceive, form.currencyTo)}</span>
+                {tr("payments.form.fields.they_receive", "They receive")}:{" "}
+                <span className="font-semibold text-zim-gold">
+                  {formatAmount(displayedReceiveAmount, form.currencyTo)}
+                </span>
               </p>
             </div>
           </div>
@@ -1645,6 +1650,13 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               {status.transaction?.terrapay_reference ||
                 status.transaction?.reloadly_reference ||
                 tr("payments.form.status.pending_title", "Pending")}
+            </p>
+            <p>
+              {tr("payments.form.fields.you_send", "You send")}: {formatAmount(amount, form.currencyFrom)}
+            </p>
+            <p>
+              {tr("payments.form.fields.they_receive", "They receive")}:{" "}
+              {formatAmount(displayedReceiveAmount, form.currencyTo)}
             </p>
             <p className="mt-1 text-emerald-200/85">
               {payoutEta}

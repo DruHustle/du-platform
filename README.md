@@ -199,20 +199,31 @@ You should see:
 [E2E] Onesa smoke test passed.
 ```
 
-## Render Keepalive (Free Tier)
+## Render Health Check And Keepalive
 
-To reduce cold starts on Render free instances, this repo includes a scheduled GitHub Action:
+To reduce cold starts and detect production outages, this repo includes a scheduled GitHub Action:
 
-- Workflow: `.github/workflows/render-keepalive.yml`
-- Frequency: every 4 hours
-- Ping script: `scripts/keepalive-ping.sh`
+- Workflow: `.github/workflows/infra-health-check.yml`
+- Frequency: every 15 minutes
+- Probe scripts:
+  - `scripts/keepalive-ping.sh`
+  - `scripts/healthcheck-json.sh`
 
 ### Setup
 
-1. In GitHub repo settings, add a secret:
-   - `RENDER_KEEPALIVE_URL` = your backend keepalive URL (recommended: `https://<your-backend>/api/ping`)
-2. Ensure GitHub Actions are enabled for the repository.
-3. Optionally run it manually via Actions tab (`Render Keepalive` -> `Run workflow`).
+1. In GitHub repo settings, add repository variables:
+   - `RENDER_KEEPALIVE_URL` = your backend app health URL (recommended: `https://<your-backend>/api/ping`)
+   - `RENDER_DB_KEEPALIVE_URL` = your backend DB health URL (recommended: `https://<your-backend>/api/health/db`)
+   - `RENDER_ONESA_READY_URL` = your Onesa readiness URL (recommended: `https://<your-backend>/api/ai/ready`)
+   - `HEALTHCHECK_ALERT_TO` = destination alert email
+   - `HEALTHCHECK_ALERT_FROM` = sender email identity
+2. Add repository secrets for SMTP:
+   - `HEALTHCHECK_SMTP_SERVER`
+   - `HEALTHCHECK_SMTP_PORT`
+   - `HEALTHCHECK_SMTP_USERNAME`
+   - `HEALTHCHECK_SMTP_PASSWORD`
+3. Ensure GitHub Actions are enabled for the repository.
+4. Optionally run it manually via Actions tab (`Infra Health Check` -> `Run workflow`).
 
 ### Local manual ping
 

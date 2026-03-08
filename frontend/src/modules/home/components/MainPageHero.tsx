@@ -52,11 +52,11 @@ export default function MainPageHero({ hero }: MainPageProps) {
             className="mb-8 md:mb-12"
           >
             <div className="relative inline-flex h-20 w-20 items-center justify-center md:h-28 md:w-28">
-              <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] md:rounded-full border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
+              <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
               <img
                 src="/images/pages/shared/diaspora_unlocked.png"
                 alt="Diaspora Unlocked"
-                className="relative h-16 scale-[1.12] md:h-20 md:scale-100 object-contain drop-shadow-2xl"
+                className="relative h-16 scale-[1.12] md:h-24 md:scale-[1.05] object-contain drop-shadow-2xl"
               />
             </div>
           </motion.div>

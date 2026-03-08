@@ -38,14 +38,17 @@ Triggers Render deployment via webhook.
 
 ### 3. `infra-health-check.yml` - Scheduled Health Check
 
-Runs scheduled health checks against the Render app endpoint and DB health endpoint.
+Runs scheduled health checks against the Render app endpoint, DB endpoint, and Onesa readiness endpoint, then emails on failure.
 
 **Triggers:**
-- Schedule: every 4 hours (`0 */4 * * *`)
+- Schedule: every 15 minutes (`*/15 * * * *`)
 - Manual workflow dispatch
 
 **Jobs:**
-- `health-check`: pings app endpoint and DB endpoint using `scripts/keepalive-ping.sh`
+- `app-health`: validates `/api/ping` JSON
+- `db-health`: validates `/api/health/db` JSON and requires `mode=mysql`
+- `onesa-health`: validates `/api/ai/ready` JSON and requires `ready=true`
+- `notify-failure`: sends an email alert if any health job fails
 
 ## Required GitHub Secrets
 
@@ -85,6 +88,30 @@ The infra health-check workflow uses repository **variables** (not secrets):
 2. **RENDER_DB_KEEPALIVE_URL** (optional)
    - Recommended: `https://<your-service>.onrender.com/api/health/db`
    - If omitted, workflow derives it from `RENDER_KEEPALIVE_URL` + `/api/health/db`
+3. **RENDER_ONESA_READY_URL** (optional)
+   - Recommended: `https://<your-service>.onrender.com/api/ai/ready`
+   - If omitted, workflow derives it from `RENDER_KEEPALIVE_URL` or `RENDER_DB_KEEPALIVE_URL`
+4. **HEALTHCHECK_ALERT_TO** (required for email alerts)
+   - Example: `ops@diasporaunlocked.com`
+5. **HEALTHCHECK_ALERT_FROM** (required for email alerts)
+   - Example: `Diaspora Unlocked Alerts <alerts@diasporaunlocked.com>`
+
+## Additional GitHub Secrets For Health Alert Email
+
+The failure email step uses SMTP credentials stored as repository secrets:
+
+1. **HEALTHCHECK_SMTP_SERVER**
+   - Example: `smtp.gmail.com` or your transactional mail host
+2. **HEALTHCHECK_SMTP_PORT**
+   - Example: `587`
+3. **HEALTHCHECK_SMTP_USERNAME**
+4. **HEALTHCHECK_SMTP_PASSWORD**
+
+Optional variable:
+
+5. **HEALTHCHECK_SMTP_SECURE**
+   - Set to `true` for implicit TLS if your SMTP provider requires it
+   - Default: `false`
 
 ## Adding Secrets and Variables to GitHub
 
@@ -178,10 +205,12 @@ Render can also auto-deploy directly from GitHub:
 2. Runs code quality checks
 3. Deploys Vercel preview
 
-### On Schedule (every 4 hours):
+### On Schedule (every 15 minutes):
 1. Runs infra health check workflow
-2. Pings app endpoint (`RENDER_KEEPALIVE_URL`)
-3. Pings DB health endpoint (`RENDER_DB_KEEPALIVE_URL` or derived URL)
+2. Validates app endpoint (`RENDER_KEEPALIVE_URL`)
+3. Validates DB health endpoint (`RENDER_DB_KEEPALIVE_URL` or derived URL)
+4. Validates Onesa readiness (`RENDER_ONESA_READY_URL` or derived URL)
+5. Sends an email alert if any check fails
 
 ## Monitoring Deployments
 
@@ -234,6 +263,8 @@ Render can also auto-deploy directly from GitHub:
 **Solution**:
 - Set `RENDER_KEEPALIVE_URL` in GitHub repository variables
 - Optionally set `RENDER_DB_KEEPALIVE_URL` explicitly
+- Optionally set `RENDER_ONESA_READY_URL` explicitly
+- Configure `HEALTHCHECK_ALERT_TO`, `HEALTHCHECK_ALERT_FROM`, and SMTP secrets
 - Re-run `infra-health-check.yml` manually from Actions tab
 
 ### Secret Issues
