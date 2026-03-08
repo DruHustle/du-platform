@@ -24,14 +24,27 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/70 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+  const authHeadingClass = "text-xl font-black tracking-tight text-white";
+  const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const response = await api.post("/auth/register", formData);
+      const response = await api.post("/auth/register", {
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      });
       const accessToken = String(response?.data?.accessToken ?? "").trim();
       if (accessToken) saveAuthToken(accessToken);
       primeCurrentUserBootstrap(response?.data?.user ?? null);
@@ -65,8 +78,8 @@ export default function Register() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className="text-4xl font-black text-white tracking-tighter">{t('auth.create_account') || "Join Diaspora Unlocked"}</h1>
-              <p className="text-sm text-white/70 font-light">{t('auth.register_subtitle') || "Start your journey toward impactful diaspora collaboration."}</p>
+              <h1 className={authHeadingClass}>{t('auth.register', { defaultValue: "Register" })}</h1>
+              <p className={authSubtitleClass}>{t('auth.register_subtitle') || "Start your journey toward impactful diaspora collaboration."}</p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -78,7 +91,6 @@ export default function Register() {
                   <Input
                     type="text"
                     className={glassInputStyle}
-                    placeholder="Jane Doe"
                     value={formData.fullName}
                     onChange={(e) => setFormData((prev) => ({ ...prev, fullName: e.target.value }))}
                   />
@@ -90,7 +102,6 @@ export default function Register() {
                   <Input
                     type="email"
                     className={glassInputStyle}
-                    placeholder="jane@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                   />
@@ -151,7 +162,7 @@ export default function Register() {
               {error ? <p className="text-red-400 text-sm">{error}</p> : null}
 
               <Button type="submit" disabled={loading} className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20">
-                <UserPlus className="mr-2 h-4 w-4" /> {t('auth.create_account') || "Join Diaspora Unlocked"}
+                <UserPlus className="mr-2 h-4 w-4" /> {t('auth.register', { defaultValue: "Register" })}
               </Button>
             </form>
 

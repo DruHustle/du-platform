@@ -22,7 +22,9 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const returningUser = hasLoggedInBefore();
 
-  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white placeholder:text-white/70 focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+  const authHeadingClass = "text-xl font-black tracking-tight text-white";
+  const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,13 +67,11 @@ export default function Login() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className="text-4xl font-black text-white tracking-tighter">
+              <h1 className={authHeadingClass}>
                 {returningUser ? t('auth.welcome_back') || "Welcome Back" : t('auth.login') || "Login"}
               </h1>
-              <p className="text-sm text-white/70 font-light">
-                {returningUser
-                  ? t('auth.login_subtitle') || "Access your digital gateway to Zimbabwe."
-                  : "Sign in to access your digital gateway to Zimbabwe."}
+              <p className={authSubtitleClass}>
+                Sign in to access Diaspora Unlocked services.
               </p>
             </div>
 
@@ -83,7 +83,7 @@ export default function Login() {
                 <Input 
                   type="email" 
                   className={glassInputStyle} 
-                  placeholder="name@example.com" 
+                  value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
               </div>

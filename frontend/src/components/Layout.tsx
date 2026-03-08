@@ -189,6 +189,11 @@ export default function Layout({ children }: LayoutProps) {
     return paths.some((path) => (path === "/" ? location === "/" : location.startsWith(path)));
   };
   const isHomePage = location === "/";
+  const isAuthPage =
+    location === "/login" ||
+    location === "/register" ||
+    location === "/forgot-password" ||
+    location === "/reset-password";
   const isCompactNavViewport = desktopViewportWidth < 1024;
   const shouldShowNavbarLogo = !isHomePage || !homeHeroLogoVisible;
   const useHomeCompactTransparentNav = isCompactNavViewport && isHomePage && !mobileMenuOpen;
@@ -206,12 +211,12 @@ export default function Layout({ children }: LayoutProps) {
     ? (isHomePage ? "pt-0" : "pt-[calc(3.5rem+env(safe-area-inset-top))]")
     : "pt-0";
   const mainBottomPaddingClass = isCompactNavViewport
-    ? (isHomePage ? "" : "pb-[calc(5.75rem+env(safe-area-inset-bottom))]")
+    ? (isHomePage || isAuthPage ? "" : "pb-[calc(3.5rem+1px+env(safe-area-inset-bottom))]")
     : "";
   const mainViewportOffsetsStyle: CSSProperties | undefined = isCompactNavViewport
     ? {
         "--mobile-shell-offset-top": isHomePage ? "0px" : "calc(3.5rem + env(safe-area-inset-top))",
-        "--mobile-shell-offset-bottom": isHomePage ? "0px" : "calc(5.75rem + env(safe-area-inset-bottom))",
+        "--mobile-shell-offset-bottom": isHomePage || isAuthPage ? "0px" : "calc(3.5rem + 1px + env(safe-area-inset-bottom))",
       } as CSSProperties
     : undefined;
 
@@ -662,10 +667,10 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
-      {!mobileMenuOpen && (
+      {!mobileMenuOpen && !isAuthPage && (
         <div className="fixed bottom-0 left-0 right-0 z-[205] lg:hidden">
-          <div className="border-t border-white/10 bg-white/[0.08] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
-            <nav className="flex items-center justify-between gap-2">
+          <div className="flex h-[calc(3.5rem+1px+env(safe-area-inset-bottom))] items-start border-t border-white/10 bg-white/[0.08] px-4 pt-0 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
+            <nav className="flex h-14 w-full items-center justify-between gap-2">
               {mobileBottomNavigation.map((item) => {
                 const active = isActive(item);
                 const Icon = item.icon;
