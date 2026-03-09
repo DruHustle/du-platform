@@ -62,7 +62,7 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 ## Project Structure
 
 ```text
-zigd-platform/
+du-platform/
 ├── backend/                         # Express API backend
 │   ├── api/                         # API route registration
 │   ├── core/                        # Core middleware, RBAC, logging
@@ -122,6 +122,86 @@ The frontend app will start at `http://localhost:3000`
 ## Payment Provider Setup
 
 The shop supports Stripe, PayPal, and Amazon Pay in production, plus a Dummy Gateway in development/testing.
+
+## Reloadly Setup
+
+Reloadly powers:
+- airtime top-up
+- prepaid electricity
+
+These credentials are **backend-only secrets**.
+
+### Where to set Reloadly env vars
+
+- **Local development**: root `.env`
+- **Render**: backend service environment variables
+- **Vercel**: do **not** set these unless you are intentionally running backend code there
+- **GitHub Actions**: not required for normal app runtime
+
+In this repo, the Reloadly integration runs from the Express backend on Render, so the production values belong on **Render**, not Vercel.
+
+### Required variables
+
+Enter these on the **Render backend service** and in your local `.env` when testing locally:
+
+```env
+RELOADLY_CLIENT_ID=your_reloadly_client_id
+RELOADLY_CLIENT_SECRET=your_reloadly_client_secret
+RELOADLY_BASE_URL=https://topups-sandbox.reloadly.com
+RELOADLY_UTILITIES_BASE_URL=https://utilities-sandbox.reloadly.com
+```
+
+Optional:
+
+```env
+RELOADLY_AUTH_URL=https://auth.reloadly.com
+```
+
+### Sandbox vs live
+
+For **sandbox**:
+
+```env
+RELOADLY_BASE_URL=https://topups-sandbox.reloadly.com
+RELOADLY_UTILITIES_BASE_URL=https://utilities-sandbox.reloadly.com
+```
+
+For **live/production**:
+
+```env
+RELOADLY_BASE_URL=https://topups.reloadly.com
+RELOADLY_UTILITIES_BASE_URL=https://utilities.reloadly.com
+```
+
+### Audience variables
+
+You normally do **not** need to set these:
+
+```env
+RELOADLY_AUDIENCE=
+RELOADLY_UTILITIES_AUDIENCE=
+```
+
+The backend now derives the correct OAuth audience from the configured Reloadly base URLs.
+
+Only set them if Reloadly support explicitly tells you to override the default audience.
+
+### Important note about credentials
+
+Reloadly uses **OAuth Client ID + Client Secret**.
+
+If your dashboard labels them as:
+- `Client ID`
+- `Client Secret`
+
+map them directly to:
+
+```env
+RELOADLY_CLIENT_ID=...
+RELOADLY_CLIENT_SECRET=...
+```
+
+Do not expose these values in frontend env vars such as `VITE_*`.
 
 ### Register with Stripe
 

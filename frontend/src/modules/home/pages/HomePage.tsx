@@ -2,11 +2,15 @@ import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { useState, useEffect, useMemo, useRef, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { ArrowRightLeft, Brain, HeartHandshake, Landmark, MapPin, Package, Plus, ShoppingBag } from "lucide-react";
 import MainPageHero from "@/modules/home/components/MainPageHero";
+import InstantImage, { preloadImages } from "@/components/InstantImage";
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
+  const { t } = useTranslation();
+  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const scrollRailRef = useRef<HTMLDivElement | null>(null);
   const dragStateRef = useRef<{ pointerId: number | null; startX: number; startScrollLeft: number }>({
@@ -17,12 +21,11 @@ export default function Home() {
   const suppressClickUntilRef = useRef(0);
   const heroBackgrounds = useMemo(() => [
     "/images/pages/tourism/victoria_falls.jpg",
-    "/images/pages/wikimedia/african-elephant.jpg",
-    "/images/pages/tourism/great_zimbabwe.jpeg",
-    "/images/pages/home/harare_cbd.png",
+    "/images/pages/home/eu_symbol.png",
     "/images/pages/home/partnership_handshake.png",
     "/images/pages/trade/export_port_01.jpg",
-    "/images/pages/shared/minerals_mining.png",
+    "/images/pages/home/zimbabwe_lion.png",
+    "/images/pages/home/minerals_mining.png",
     "/images/pages/trade/manufacturing_factory.jpg",
     "/images/pages/technology/ai_innovation.jpg",
   ], []);
@@ -78,71 +81,75 @@ export default function Home() {
     event.preventDefault();
   };
 
-  const modules = [
+  const modules = useMemo(() => [
     {
-      title: "Remittances",
-      description: "Send money, pay essential support costs, or top up airtime with secure provider-backed flows and clear fee visibility built for diaspora households.",
-      detail: "Track value clearly before you send and keep everyday family support fast, predictable, and simple.",
+      title: tr("home.tiles.remittances.title", "Remittances"),
+      description: tr("home.tiles.remittances.description", "Send money, pay essential support costs, or top up airtime with secure provider-backed flows and clear fee visibility built for diaspora households."),
+      detail: tr("home.tiles.remittances.detail", "Track value clearly before you send and keep everyday family support fast, predictable, and simple."),
       href: "/payments",
       bgImage: "/images/pages/payments/mobile-payment-terminal.jpg",
-      stats: "Remittance + Airtime",
+      stats: tr("home.tiles.remittances.stats", "Remittance + Airtime"),
       icon: ArrowRightLeft,
     },
     {
-      title: "Shop",
-      description: "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout.",
-      detail: "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable.",
+      title: tr("home.tiles.shop.title", "Shop"),
+      description: tr("home.tiles.shop.description", "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout."),
+      detail: tr("home.tiles.shop.detail", "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable."),
       href: "/shop",
       bgImage: "/images/pages/shop/zimbabwe_shop_hero.jpg",
-      stats: "Marketplace Ready",
+      stats: tr("home.tiles.shop.stats", "Marketplace Ready"),
       icon: ShoppingBag,
     },
     {
-      title: "Care",
-      description: "Coordinate trusted family support and cross-border care services from one place, with clearer pathways for urgent needs and ongoing help.",
-      detail: "The goal is to reduce friction when supporting relatives at home and make care decisions easier to manage from abroad.",
+      title: tr("home.tiles.care.title", "Care"),
+      description: tr("home.tiles.care.description", "Coordinate trusted family support and cross-border care services from one place, with clearer pathways for urgent needs and ongoing help."),
+      detail: tr("home.tiles.care.detail", "The goal is to reduce friction when supporting relatives at home and make care decisions easier to manage from abroad."),
       href: "/care",
       bgImage: "/images/pages/care/family-gathering-zimbabwe.jpg",
-      stats: "Family Support",
+      stats: tr("home.tiles.care.stats", "Family Support"),
       icon: HeartHandshake,
     },
     {
-      title: "Technology",
-      description: "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity.",
-      detail: "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults.",
+      title: tr("home.tiles.technology.title", "Technology"),
+      description: tr("home.tiles.technology.description", "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity."),
+      detail: tr("home.tiles.technology.detail", "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults."),
       href: "/technology",
       bgImage: "/images/pages/technology/ai_innovation.jpg",
-      stats: "Onesa AI",
+      stats: tr("home.tiles.technology.stats", "Onesa AI"),
       icon: Brain,
     },
     {
-      title: "Trade",
-      description: "Access export pathways, market-entry support, and practical trade execution guidance for businesses looking to move from interest to delivery.",
-      detail: "Use the platform to understand corridors, requirements, and partner readiness before entering new markets.",
+      title: tr("home.tiles.trade.title", "Trade"),
+      description: tr("home.tiles.trade.description", "Access export pathways, market-entry support, and practical trade execution guidance for businesses looking to move from interest to delivery."),
+      detail: tr("home.tiles.trade.detail", "Use the platform to understand corridors, requirements, and partner readiness before entering new markets."),
       href: "/trade",
       bgImage: "/images/pages/trade/export_port_01.jpg",
-      stats: "Export Growth",
+      stats: tr("home.tiles.trade.stats", "Export Growth"),
       icon: Package,
     },
     {
-      title: "Investment",
-      description: "Explore vetted opportunities, diaspora-friendly projects, and structured investment access across sectors with clearer context and better visibility.",
-      detail: "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story.",
+      title: tr("home.tiles.investment.title", "Investment"),
+      description: tr("home.tiles.investment.description", "Explore vetted opportunities, diaspora-friendly projects, and structured investment access across sectors with clearer context and better visibility."),
+      detail: tr("home.tiles.investment.detail", "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story."),
       href: "/investment",
       bgImage: "/images/pages/investment/rbz_building.png",
-      stats: "$50M+ Opportunities",
+      stats: tr("home.tiles.investment.stats", "$50M+ Opportunities"),
       icon: Landmark,
     },
     {
-      title: "Tourism",
-      description: "Explore Zimbabwe's world-class attractions and plan your visit with confidence, from iconic landmarks to deeper cultural and heritage experiences.",
-      detail: "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context.",
+      title: tr("home.tiles.tourism.title", "Tourism"),
+      description: tr("home.tiles.tourism.description", "Explore Zimbabwe's world-class attractions and plan your visit with confidence, from iconic landmarks to deeper cultural and heritage experiences."),
+      detail: tr("home.tiles.tourism.detail", "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context."),
       href: "/tourism",
       bgImage: "/images/pages/tourism/victoria_falls.jpg",
-      stats: "Diaspora Travel Ready",
+      stats: tr("home.tiles.tourism.stats", "Diaspora Travel Ready"),
       icon: MapPin,
     },
-  ];
+  ], [t]);
+
+  useEffect(() => {
+    preloadImages([...heroBackgrounds.slice(0, 2), ...modules.slice(0, 3).map((module) => module.bgImage)], 3);
+  }, [heroBackgrounds, modules]);
 
 
 
@@ -190,12 +197,14 @@ export default function Home() {
                         <div className="flex h-full flex-col">
                           <div className="relative mb-6 h-72 overflow-hidden rounded-2xl md:h-80">
                             <div className="relative h-full w-full">
-                              <img
+                              <InstantImage
                                 src={module.bgImage}
                                 alt={module.title}
-                                loading="lazy"
-                                decoding="async"
+                                priority={index < 2}
+                                loading={index < 2 ? "eager" : "lazy"}
+                                fetchPriority={index === 0 ? "high" : "auto"}
                                 draggable={false}
+                                wrapperClassName="h-full w-full bg-slate-900"
                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                               />
                               <div className="absolute inset-0 bg-[#f8f6f6]/10 mix-blend-overlay" />

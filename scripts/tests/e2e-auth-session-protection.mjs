@@ -6,7 +6,7 @@ const password = "Str0ngPass!123";
 function getSessionCookie(response) {
   if (typeof response.headers.getSetCookie === "function") {
     const cookies = response.headers.getSetCookie();
-    const match = cookies.find((value) => value.startsWith("zigd_session="));
+    const match = cookies.find((value) => value.startsWith("du_session="));
     if (match) {
       return match.split(";")[0];
     }

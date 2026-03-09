@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Component, ReactNode } from "react";
+import i18n from "@/i18n";
 
 const SHOW_ERROR_DETAILS = import.meta.env.DEV;
 
@@ -33,7 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
               className="text-destructive mb-6 flex-shrink-0"
             />
 
-            <h2 className="text-xl mb-4">An unexpected error occurred.</h2>
+            <h2 className="text-xl mb-4">{i18n.t("error_boundary.unexpected", { defaultValue: "An unexpected error occurred." })}</h2>
 
             {SHOW_ERROR_DETAILS ? (
               <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">
@@ -52,7 +53,7 @@ class ErrorBoundary extends Component<Props, State> {
               )}
             >
               <RotateCcw size={16} />
-              Reload Page
+              {i18n.t("error_boundary.reload", { defaultValue: "Reload Page" })}
             </button>
           </div>
         </div>

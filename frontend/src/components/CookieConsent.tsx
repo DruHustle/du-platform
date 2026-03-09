@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const CONSENT_KEY = "du_cookie_consent_v1";
+const CONSENT_SHOWN_KEY = "du_cookie_consent_seen_v1";
 
 const EUROPE_COUNTRY_CODES = new Set([
   "AL", "AD", "AM", "AT", "AZ", "BY", "BE", "BA", "BG", "HR", "CY", "CZ",
@@ -29,13 +31,19 @@ function isLikelyInEurope(): boolean {
 }
 
 export default function CookieConsent() {
+  const { t } = useTranslation();
+  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [open, setOpen] = useState(false);
   const inEurope = useMemo(() => isLikelyInEurope(), []);
 
   useEffect(() => {
     if (!inEurope) return;
     const accepted = localStorage.getItem(CONSENT_KEY);
-    if (!accepted) setOpen(true);
+    const alreadyShown = localStorage.getItem(CONSENT_SHOWN_KEY);
+    if (!accepted && !alreadyShown) {
+      localStorage.setItem(CONSENT_SHOWN_KEY, "shown");
+      setOpen(true);
+    }
   }, [inEurope]);
 
   if (!open) return null;
@@ -49,14 +57,14 @@ export default function CookieConsent() {
     <div className="fixed inset-x-0 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-[210] px-4 pb-4 lg:bottom-0 lg:z-[100]">
       <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/20 bg-slate-900/95 backdrop-blur-xl p-5 shadow-2xl">
         <p className="text-white/90 text-sm leading-relaxed">
-          Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.
+          {tr("cookies.consent.description", "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.")}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
-            <Link href="/cookie-settings">Cookie settings</Link>
+            <Link href="/cookie-settings">{tr("cookies.consent.settings", "Cookie settings")}</Link>
           </Button>
           <Button onClick={accept} className="bg-zim-gold text-zim-black hover:bg-white">
-            Accept cookies
+            {tr("cookies.consent.accept", "Accept cookies")}
           </Button>
         </div>
       </div>

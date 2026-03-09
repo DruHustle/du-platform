@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
-import { Package, ShoppingBag, Truck, CreditCard, ShieldCheck, Globe2 } from "lucide-react";
+import { Package, ShoppingBag, Globe2, ShieldCheck, Truck, CreditCard } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubPageHero from "@/components/SubPageHero";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
+import InstantImage, { preloadImages } from "@/components/InstantImage";
 
 const OUTER_PANEL_CLASS =
   "relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group";
@@ -67,6 +68,13 @@ export default function Shop() {
       SHOP_CATEGORY_CONFIG.map((item, idx) => [item.key, idx % Math.max(1, item.images.length)])
     ) as Record<ShopSegmentKey, number>
   );
+
+  useEffect(() => {
+    preloadImages(
+      SHOP_CATEGORY_CONFIG.slice(0, 3).map((category) => category.images[carouselIndex[category.key] ?? 0]),
+      2,
+    );
+  }, [carouselIndex]);
 
   const heroSlides = useMemo(
     () => [
@@ -271,24 +279,18 @@ export default function Shop() {
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {processItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <article
-                      key={item.title}
-                      className="group rounded-3xl border border-white/10 bg-white/[0.02] p-5 transition-all duration-500 hover:bg-slate-950/60"
-                    >
-                      <div className="mb-4 flex items-center justify-between">
-                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-zim-gold">
-                          <Icon className="h-5 w-5" />
-                        </div>
-                      </div>
-                      <h3 className="text-base font-black text-white">{item.title}</h3>
-                        <p className="mt-2 text-sm leading-relaxed text-white/70">{item.description}</p>
-                        <div className="mt-4 h-1 w-12 rounded-full bg-zim-gold/50 transition-all duration-500 group-hover:w-20" />
-                    </article>
-                  );
-                })}
+                {processItems.map((item) => (
+                  <article
+                    key={item.title}
+                    className="group rounded-3xl border border-white/10 bg-white/[0.02] p-5 transition-all duration-500 hover:bg-slate-950/60"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <item.icon className="h-4 w-4 text-zim-gold" />
+                      <h3 className="text-sm font-black tracking-tight text-white">{item.title}</h3>
+                    </div>
+                    <p className="text-xs leading-relaxed text-white/70">{item.description}</p>
+                  </article>
+                ))}
               </div>
 
             </div>
@@ -353,9 +355,12 @@ export default function Shop() {
                           >
                             <div className="flex h-full flex-col">
                               <div className="relative !h-[18.25rem] overflow-hidden bg-slate-900 sm:!h-[18.75rem] lg:!h-[20.5rem] xl:!h-[21rem]">
-                                <img
+                                <InstantImage
                                   src={category.images[carouselIndex[category.key] ?? 0]}
                                   alt={categoryTitle}
+                                  priority={SHOP_CATEGORY_CONFIG.findIndex((item) => item.key === category.key) < 2}
+                                  loading={SHOP_CATEGORY_CONFIG.findIndex((item) => item.key === category.key) < 2 ? "eager" : "lazy"}
+                                  wrapperClassName="h-full w-full bg-slate-900"
                                   className="w-full h-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
                                   draggable={false}
                                 />

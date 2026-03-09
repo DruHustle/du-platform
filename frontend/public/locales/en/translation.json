@@ -4,7 +4,9 @@
   "about": "About",
   "about_us": "Diaspora Unlocked is a unified digital gateway connecting Zimbabwe’s global diaspora to structured opportunities in tourism, trade, and investment — integrating trusted financial, remittance, and family assurance partners to enable secure economic participation and meaningful connection with home.",
   "select_lang": "Select Language",
-  "account": "Account",
+  "account": {
+    "logout": "Logout"
+  },
   "login": "Login",
   "register": "Register",
   "my_investments": "My Investments",
@@ -32,6 +34,43 @@
       "who_content": "We are a team comprised of Zimbabwe diaspora professionals building practical digital solutions that keep families, businesses, and communities connected to home.",
       "what_label": "What we do",
       "what_content": "We build and operate a unified diaspora platform that connects users to tourism, trade, investment, payments, family care, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable."
+    },
+    "local_partners": {
+      "items": {
+        "zimbabwe_tourism": "Zimbabwe Tourism",
+        "zimparks": "ZimParks",
+        "zida": "ZIDA Invest",
+        "zimtrade": "ZimTrade",
+        "zimra": "ZIMRA"
+      }
+    },
+    "international_partners": {
+      "items": {
+        "gtai": "Germany Trade & Invest",
+        "eu_global_gateway": "EU Global Gateway",
+        "eib": "European Investment Bank",
+        "proparco": "PROPARCO",
+        "itc": "International Trade Centre"
+      }
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Stay updated.",
+      "email_placeholder": "Email address",
+      "subscribe_aria": "Subscribe to newsletter",
+      "already_subscribed": "This email is already subscribed to the newsletter.",
+      "subscribed": "Subscribed. Watch your inbox for updates.",
+      "error": "Unable to subscribe right now."
+    },
+    "contact": {
+      "options_title": "Contact Options",
+      "call": "Call",
+      "whatsapp": "WhatsApp",
+      "location_berlin": "Berlin, Germany",
+      "social": "Social",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram"
     }
   },
   "auth": {
@@ -50,7 +89,30 @@
     "login": "Login",
     "no_account": "Don't have an account?",
     "register_now": "Register Now",
-    "close": "Close"
+    "close": "Close",
+    "forgot": {
+      "title": "Reset Password",
+      "subtitle": "Enter your account email and we will send reset instructions.",
+      "request_sent": "If this email exists, a reset link has been sent.",
+      "request_error": "Unable to submit request.",
+      "send_reset_link": "Send Reset Link",
+      "submitting": "Submitting...",
+      "back_to_login": "Back to Login"
+    },
+    "reset": {
+      "title": "Set New Password",
+      "subtitle": "Choose a strong password for your account.",
+      "missing_token": "Missing reset token. Please use the link sent to your email.",
+      "new_password": "New Password",
+      "show_password": "Show password",
+      "hide_password": "Hide password",
+      "saving": "Saving...",
+      "reset_password": "Reset Password",
+      "success": "Password reset successful.",
+      "error": "Unable to reset password.",
+      "back_to_login": "Back to Login"
+    },
+    "register": "Register"
   },
   "nav": {
     "home": "Home",
@@ -86,7 +148,13 @@
     "technology_capabilities": "Technology Capabilities",
     "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
     "technology_industries": "Technology Industries",
-    "technology_industries_desc": "Key technology sectors in Zimbabwe"
+    "technology_industries_desc": "Key technology sectors in Zimbabwe",
+    "remittances": "Remittances",
+    "discover": "Discover",
+    "admin": "Admin",
+    "close_menu": "Close menu",
+    "language_hint": "Use the globe icon to change language.",
+    "open_menu": "Open menu"
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
@@ -120,6 +188,50 @@
         "title": "Trade",
         "desc": "Access comprehensive trade resources and connect with Zimbabwe's export sectors.",
         "stats": "8 Export Sectors"
+      }
+    },
+    "tiles": {
+      "remittances": {
+        "title": "Remittances",
+        "description": "Send money, pay essential support costs, or top up airtime with secure provider-backed flows and clear fee visibility built for diaspora households.",
+        "detail": "Track value clearly before you send and keep everyday family support fast, predictable, and simple.",
+        "stats": "Remittance + Airtime"
+      },
+      "shop": {
+        "title": "Shop",
+        "description": "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout.",
+        "detail": "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable.",
+        "stats": "Marketplace Ready"
+      },
+      "care": {
+        "title": "Care",
+        "description": "Coordinate trusted family support and cross-border care services from one place, with clearer pathways for urgent needs and ongoing help.",
+        "detail": "The goal is to reduce friction when supporting relatives at home and make care decisions easier to manage from abroad.",
+        "stats": "Family Support"
+      },
+      "technology": {
+        "title": "Technology",
+        "description": "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity.",
+        "detail": "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults.",
+        "stats": "Onesa AI"
+      },
+      "trade": {
+        "title": "Trade",
+        "description": "Access export pathways, market-entry support, and practical trade execution guidance for businesses looking to move from interest to delivery.",
+        "detail": "Use the platform to understand corridors, requirements, and partner readiness before entering new markets.",
+        "stats": "Export Growth"
+      },
+      "investment": {
+        "title": "Investment",
+        "description": "Explore vetted opportunities, diaspora-friendly projects, and structured investment access across sectors with clearer context and better visibility.",
+        "detail": "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story.",
+        "stats": "$50M+ Opportunities"
+      },
+      "tourism": {
+        "title": "Tourism",
+        "description": "Explore Zimbabwe's world-class attractions and plan your visit with confidence, from iconic landmarks to deeper cultural and heritage experiences.",
+        "detail": "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context.",
+        "stats": "Diaspora Travel Ready"
       }
     }
   },
@@ -277,7 +389,8 @@
     "diaspora_ai": {
       "title": "How Diaspora Unlocked Uses AI",
       "subtitle": "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses."
-    }
+    },
+    "restore_chat_bubble": "Show chat bubble"
   },
   "tourism": {
     "back_to_tourism": "Back to Tourism",
@@ -417,7 +530,9 @@
         "h1": "Big Five Safari",
         "h2": "Massive Elephant Herds",
         "h3": "Conservation Efforts",
-        "summary": "Covering over 14,000 square kilometers, Hwange is a premier safari destination. It hosts over 100 mammal species and 400 bird species. The park is world-renowned for its elephant population, numbering in the tens of thousands, and offers some of the best game viewing in Africa."
+        "summary": "Covering over 14,000 square kilometers, Hwange is a premier safari destination. It hosts over 100 mammal species and 400 bird species. The park is world-renowned for its elephant population, numbering in the tens of thousands, and offers some of the best game viewing in Africa.",
+        "bestTime": "Peak wildlife concentration is usually in the dry months when water sources are limited.",
+        "source": "ZTA: Hwange"
       },
       "matobo": {
         "name": "Matobo National Park",
@@ -425,7 +540,9 @@
         "h1": "Balancing Rocks",
         "h2": "Ancient Rock Art",
         "h3": "Rhino Sanctuary",
-        "summary": "Matobo Hills features a unique landscape of granite whaleback dwalas and broken kopjes. It is a significant archaeological site with one of the highest concentrations of San rock art in Southern Africa and is the burial place of Cecil John Rhodes at 'World's View'."
+        "summary": "Matobo Hills features a unique landscape of granite whaleback dwalas and broken kopjes. It is a significant archaeological site with one of the highest concentrations of San rock art in Southern Africa and is the burial place of Cecil John Rhodes at 'World's View'.",
+        "bestTime": "Accessible year-round; cooler dry months are ideal for walking and exploration.",
+        "source": "ZTA: Matobo"
       },
       "eastern_highlands": {
         "name": "Eastern Highlands",
@@ -433,7 +550,9 @@
         "h1": "Mountain Treks",
         "h2": "Breathtaking Waterfalls",
         "h3": "Cool Climate",
-        "summary": "Stretching along the border with Mozambique, this region includes the Nyanga, Vumba, and Chimanimani mountains. It offers a stark contrast to the rest of the country with its alpine scenery, trout fishing, and the highest point in Zimbabwe, Mount Nyangani."
+        "summary": "Stretching along the border with Mozambique, this region includes the Nyanga, Vumba, and Chimanimani mountains. It offers a stark contrast to the rest of the country with its alpine scenery, trout fishing, and the highest point in Zimbabwe, Mount Nyangani.",
+        "bestTime": "Dry months generally offer clearer views and better trail conditions.",
+        "source": "ZTA: Eastern Highlands"
       },
       "mana_pools": {
         "name": "Mana Pools National Park",
@@ -441,7 +560,9 @@
         "h1": "Walking Safaris",
         "h2": "Zambezi River Views",
         "h3": "Untamed Wilderness",
-        "summary": "Located in the Zambezi Valley, Mana Pools is known for its incredible beauty and the four large pools formed by the river. It offers a unique opportunity for unguided walking safaris among elephants, lions, and African wild dogs in a raw, prehistoric landscape."
+        "summary": "Located in the Zambezi Valley, Mana Pools is known for its incredible beauty and the four large pools formed by the river. It offers a unique opportunity for unguided walking safaris among elephants, lions, and African wild dogs in a raw, prehistoric landscape.",
+        "bestTime": "Dry season is typically preferred for high-density wildlife viewing.",
+        "source": "ZTA: Mana Pools"
       },
       "nyanga": {
         "name": "Nyanga National Park",
@@ -449,7 +570,9 @@
         "h1": "Mount Nyangani",
         "h2": "Mutarazi Falls",
         "h3": "Outdoor Adventure",
-        "summary": "Nyanga is a highland paradise featuring Mount Nyangani and Mutarazi Falls (Africa's second highest). Visitors enjoy fly-fishing, golfing, and the adrenaline-pumping skywalk and zipline over the deep Pungwe Gorge."
+        "summary": "Nyanga is a highland paradise featuring Mount Nyangani and Mutarazi Falls (Africa's second highest). Visitors enjoy fly-fishing, golfing, and the adrenaline-pumping skywalk and zipline over the deep Pungwe Gorge.",
+        "bestTime": "Year-round destination; clear weather periods are best for mountain views.",
+        "source": "ZTA: Nyanga"
       },
       "gonarezhou": {
         "name": "Gonarezhou National Park",
@@ -457,7 +580,9 @@
         "h1": "Chilojo Cliffs",
         "h2": "Pristine Wilderness",
         "h3": "The Place of Elephants",
-        "summary": "As Zimbabwe’s second-largest park and part of the Great Limpopo Transfrontier Park, Gonarezhou is famed for its rugged scenery and iconic red sandstone cliffs. It offers a truly wild experience for those looking to get off the beaten track."
+        "summary": "As Zimbabwe’s second-largest park and part of the Great Limpopo Transfrontier Park, Gonarezhou is famed for its rugged scenery and iconic red sandstone cliffs. It offers a truly wild experience for those looking to get off the beaten track.",
+        "bestTime": "Dry months are usually best for access and concentrated wildlife viewing.",
+        "source": "ZTA: Gonarezhou"
       }
     },
     "onesa": {
@@ -571,7 +696,12 @@
         "open_end_date_picker": "Open return date calendar",
         "multi_city": "Multi-city trip",
         "multi_city_cities": "Cities (comma separated)",
-        "multi_city_hint": "Select Multi-trip to add additional cities."
+        "multi_city_hint": "Select Multi-trip to add additional cities.",
+        "decrease_adults": "Decrease adults",
+        "decrease_infants": "Decrease infants",
+        "increase_adults": "Increase adults",
+        "increase_infants": "Increase infants",
+        "nearest_airport_hint": "Nearest airport (auto-selected by engine)"
       },
       "personalized_experience": "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable."
     },
@@ -912,7 +1042,155 @@
           "detail": "Position Harare and Bulawayo as gateway hubs for multi-country itineraries including KAZA and cross-border circuits."
         }
       }
-    }
+    },
+    "project_details": {
+      "back": "Back to Investment",
+      "not_found_title": "Project not found",
+      "not_found_desc": "The selected project ID does not exist.",
+      "badge": "Project Details",
+      "responsible_company": "Responsible Company",
+      "highlights": "Highlights",
+      "key_metrics": "Key Metrics",
+      "location": "Location",
+      "land_framework": "Land Framework",
+      "regulatory": "Regulatory",
+      "search_ntir": "Search NTIR Database"
+    },
+    "agriculture": {
+      "opportunities": {
+        "cold_chain": {
+          "detail": "Invest in packhouses, refrigerated transport, and aggregation hubs to raise export quality and margins.",
+          "title": "Cold Chain and Logistics"
+        },
+        "irrigation": {
+          "detail": "Scale climate-resilient irrigation, storage, and smart-farm systems for more stable yields.",
+          "title": "Irrigation and Water Efficiency"
+        },
+        "processing": {
+          "detail": "Build local value addition for fruit, grains, and oils to increase retained earnings before export.",
+          "title": "Agro-Processing"
+        },
+        "title": "Agriculture Investment and Growth Opportunities"
+      },
+      "snapshot": {
+        "compliance": {
+          "detail": "Export competitiveness increasingly depends on SPS controls, traceability, and certification pathways.",
+          "title": "Standards and Compliance Readiness"
+        },
+        "horticulture": {
+          "detail": "Blueberries, citrus, and premium produce continue to attract regional and EU buyer interest, especially where quality standards are met.",
+          "title": "Horticulture Export Momentum"
+        },
+        "subtitle": "Agriculture remains a core export growth pillar, supported by horticulture demand, irrigation upgrades, and value-chain financing.",
+        "title": "Agriculture Snapshot (2026)",
+        "value_chain": {
+          "detail": "Cold-chain, grading, and logistics investments are improving market access and reducing post-harvest losses.",
+          "title": "Value-Chain Expansion"
+        }
+      }
+    },
+    "back_to_investment": "Back to Investment",
+    "energy": {
+      "opportunities": {
+        "mini_grids": {
+          "detail": "Distributed systems can unlock economic activity in underserved zones with industrial and agri demand.",
+          "title": "Mini-Grids and Productive Use"
+        },
+        "solar": {
+          "detail": "Utility-scale and embedded solar assets can deliver stable medium-term cash flows with strong demand.",
+          "title": "Solar Generation Projects"
+        },
+        "storage": {
+          "detail": "Storage investments improve uptime, smooth intermittency, and support productive-use energy customers.",
+          "title": "Battery Storage and Reliability"
+        },
+        "title": "Energy Investment and Growth Opportunities"
+      },
+      "snapshot": {
+        "bankability": {
+          "detail": "Clear offtake structures, permitting readiness, and grid integration planning are key to execution success.",
+          "title": "Project Bankability Focus"
+        },
+        "demand": {
+          "detail": "Industrial and commercial growth continues to increase demand for stable, predictable electricity supply.",
+          "title": "Rising Power Demand"
+        },
+        "renewables": {
+          "detail": "Solar and hybrid projects are expanding as viable options for both grid support and private offtake.",
+          "title": "Renewables Expansion"
+        },
+        "subtitle": "Power reliability remains a strategic priority, creating strong demand for generation, storage, and distributed energy.",
+        "title": "Energy Snapshot (2026)"
+      }
+    },
+    "it": {
+      "opportunities": {
+        "ai": {
+          "detail": "Develop local-context AI services for support, compliance guidance, and decision intelligence.",
+          "title": "Localized AI and Data Products"
+        },
+        "payments": {
+          "detail": "Integrate compliant payment rails into commerce and marketplace products for diaspora and local users.",
+          "title": "Embedded Payments and Wallets"
+        },
+        "saas": {
+          "detail": "Build practical software products for inventory, trade documentation, and operations digitization.",
+          "title": "SME SaaS and Workflow Tools"
+        },
+        "title": "IT & Fintech Investment and Growth Opportunities"
+      },
+      "snapshot": {
+        "adoption": {
+          "detail": "SMEs and consumers increasingly rely on digital channels for payments, commerce, and service access.",
+          "title": "Digital Adoption Growth"
+        },
+        "payments": {
+          "detail": "Cross-border remittance and digital payments infrastructure remains a strong fintech demand driver.",
+          "title": "Payments and Remittance Rails"
+        },
+        "regulatory": {
+          "detail": "Compliance-first models aligned to licensing and AML controls can scale faster and sustain trust.",
+          "title": "Regulatory Maturity"
+        },
+        "subtitle": "Digital adoption, mobile usage, and fintech demand continue to expand opportunities for scalable platforms and services.",
+        "title": "IT & Fintech Snapshot (2026)"
+      }
+    },
+    "manufacturing": {
+      "opportunities": {
+        "leather": {
+          "detail": "Upgrade tanning and finishing to capture more value in footwear, accessories, and industrial products.",
+          "title": "Leather and Finished Goods"
+        },
+        "packaging": {
+          "detail": "Local packaging, components, and light engineering can reduce import dependence across sectors.",
+          "title": "Packaging and Inputs"
+        },
+        "textiles": {
+          "detail": "Expand garment and branded manufacturing with stronger quality-control and buyer-linked contracts.",
+          "title": "Textiles and Apparel Scale-Up"
+        },
+        "title": "Manufacturing Investment and Growth Opportunities"
+      },
+      "snapshot": {
+        "capacity": {
+          "detail": "Factory upgrades and SME supplier integration are improving domestic output and reliability.",
+          "title": "Industrial Capacity Rebuild"
+        },
+        "fx": {
+          "detail": "Export-ready manufacturing can generate recurring FX flows where quality and delivery standards are consistent.",
+          "title": "Foreign-Currency Upside"
+        },
+        "regional": {
+          "detail": "SADC and COMESA linkages provide growing routes for manufactured exports and contract production.",
+          "title": "Regional Market Access"
+        },
+        "subtitle": "Manufacturing is gaining traction through import substitution, regional trade demand, and value-added production.",
+        "title": "Manufacturing Snapshot (2026)"
+      }
+    },
+    "sectors_explore": "Explore Opportunities",
+    "sectors_info": "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile."
   },
   "trade": {
     "hero": {
@@ -1156,7 +1434,8 @@
     "save": "Save",
     "notify_success": "Priority Access Locked",
     "get_notified": "Request Access",
-    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}"
+    "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}",
+    "back": "Back"
   },
   "contact_form": {
     "get_started": "Get in Touch",
@@ -1171,7 +1450,8 @@
     "sending": "Sending...",
     "success_msg": "Message sent successfully!",
     "description": "Have questions or want to learn more? Fill out the form below and we'll get back to you.",
-    "required_field": "Required *"
+    "required_field": "Required *",
+    "success_desc": "We will get back to you soon."
   },
   "calculator": {
     "title": "Investment Calculator",
@@ -1417,7 +1697,10 @@
         "login_required": "Please login to enable stock notifications.",
         "failed": "Unable to save notify request right now."
       }
-    }
+    },
+    "product": "Product",
+    "no_description": "No description",
+    "loading": "Loading products..."
   },
   "notfound": {
     "title": "404",
@@ -1440,71 +1723,116 @@
     "online_indicator_aria": "Onesa online",
     "online_text": "Online",
     "error_timeout": "Onesa request timed out after 3 minutes. Please try again.",
-    "offline_text": "Offline"
+    "offline_text": "Offline",
+    "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds."
   },
   "care": {
     "hero": {
       "badge": "Family Care Partner",
       "title": "Diaspora Funeral Cover With Nyaradzo",
       "description": "Protect your loved ones at home with trusted funeral policy onboarding through Nyaradzo, integrated into The Diaspora Gateway.",
-      "cta": "Start Nyaradzo Onboarding"
+      "cta": "Start Nyaradzo Onboarding",
+      "actions": {
+        "explore": "Explore Cover",
+        "next_step": "Start Onboarding"
+      },
+      "slide_1": {
+        "badge": "Family Care Partner",
+        "description": "Support loved ones at home with reliable onboarding and transparent care pathways.",
+        "highlight": "With Confidence",
+        "subtitle": "Diaspora-linked funeral cover powered by trusted local delivery with Nyaradzo.",
+        "title": "Protect Family"
+      },
+      "slide_2": {
+        "badge": "Respect and Dignity",
+        "description": "Designed for diaspora families who need practical, trusted and culturally grounded cover.",
+        "highlight": "Feels Human",
+        "subtitle": "Give elders and dependants dependable support from wherever you live.",
+        "title": "Care That"
+      },
+      "slide_3": {
+        "badge": "Diaspora Connected",
+        "description": "The Care module keeps support clear and coordinated across borders.",
+        "highlight": "One Care Path",
+        "subtitle": "Manage cover remotely while staying present in family decisions at home.",
+        "title": "Global Families"
+      },
+      "slide_4": {
+        "badge": "Peace of Mind",
+        "description": "Built for monthly diaspora commitments and long-term household resilience.",
+        "highlight": "From Abroad",
+        "subtitle": "Keep family care stable through structured and transparent cover options.",
+        "title": "Protect Home"
+      },
+      "slide_5": {
+        "badge": "Trusted Execution",
+        "description": "Integrated onboarding gives one clear path from selection to activation.",
+        "highlight": "Reliable Service",
+        "subtitle": "Nyaradzo delivers local service operations for dependable family support.",
+        "title": "Local Partner"
+      },
+      "slide_6": {
+        "badge": "Designed for Diaspora",
+        "description": "Move from account access to active cover with minimal friction.",
+        "highlight": "Made Simple",
+        "subtitle": "Access family cover through a secure, familiar Diaspora Gateway experience.",
+        "title": "Family Assurance"
+      }
     },
     "why": {
       "title": "Why It Matters",
       "subtitle": "Family care is a core diaspora priority. This integration makes cover access easier and more transparent.",
-      "cards": [
-        {
-          "title": "Dignity for Families",
-          "description": "Funeral cover reduces sudden financial pressure and supports dignified send-offs."
+      "cards": {
+        "0": {
+          "description": "Funeral cover reduces sudden financial pressure and supports dignified send-offs.",
+          "title": "Dignity for Families"
         },
-        {
-          "title": "Built for Diaspora Families",
-          "description": "Manage policy support remotely while staying connected to home responsibilities."
+        "1": {
+          "description": "Manage policy support remotely while staying connected to home responsibilities.",
+          "title": "Built for Diaspora Families"
         },
-        {
-          "title": "Trusted Local Execution",
-          "description": "Nyaradzo provides established local service delivery and family-facing care."
+        "2": {
+          "description": "Nyaradzo provides established local service delivery and family-facing care.",
+          "title": "Trusted Local Execution"
         }
-      ]
+      }
     },
     "coverage": {
       "title": "Coverage Options",
       "subtitle": "Choose a plan category that matches your family care commitments and budget profile.",
-      "cards": [
-        {
-          "tag": "Starter",
-          "title": "Essential Family Cover",
-          "summary": "Affordable entry-level cover for immediate household support."
+      "cards": {
+        "0": {
+          "summary": "Affordable entry-level cover for immediate household support.",
+          "title": "Essential Family Cover"
         },
-        {
-          "tag": "Popular",
-          "title": "Extended Family Plan",
-          "summary": "Wider beneficiary support for parents and dependants back home."
+        "1": {
+          "summary": "Wider beneficiary support for parents and dependants back home.",
+          "title": "Extended Family Plan"
         },
-        {
-          "tag": "Comprehensive",
-          "title": "Premium Assurance",
-          "summary": "Enhanced benefits and service options for larger family structures."
+        "2": {
+          "summary": "Enhanced benefits and service options for larger family structures.",
+          "title": "Premium Assurance"
         }
-      ]
+      }
     },
     "how": {
       "title": "How It Works",
       "subtitle": "A simple onboarding path from diaspora account access to active family cover.",
-      "steps": [
-        {
-          "title": "1. Start Application",
-          "description": "Open the Nyaradzo onboarding flow from Diaspora Unlocked and provide your details."
+      "steps": {
+        "0": {
+          "description": "Open the Nyaradzo onboarding flow from Diaspora Unlocked and provide your details.",
+          "title": "1. Start Application"
         },
-        {
-          "title": "2. Select Cover",
-          "description": "Choose the plan band aligned to your family setup and preferred contribution level."
+        "1": {
+          "description": "Choose the plan band aligned to your family setup and preferred contribution level.",
+          "title": "2. Select Cover"
         },
-        {
-          "title": "3. Confirm & Activate",
-          "description": "Complete verification and payment setup to activate policy coverage."
+        "2": {
+          "description": "Complete verification and payment setup to activate policy coverage.",
+          "title": "3. Confirm & Activate"
         }
-      ]
+      },
+      "step_label": "Step"
     },
     "cta": {
       "title": "Ready to Protect Your Family?",
@@ -1512,7 +1840,8 @@
       "referral_label": "referral_id",
       "user_label": "user_id",
       "guest": "guest",
-      "button": "Continue To Nyaradzo"
+      "button": "Continue To Nyaradzo",
+      "badge": "Next Step 💛"
     },
     "seo": {
       "title": "Care | The Diaspora Gateway",
@@ -1520,5 +1849,537 @@
       "og_description": "Secure family funeral cover onboarding via Nyaradzo for Zimbabweans abroad.",
       "twitter_description": "Diaspora funeral policy integration with Nyaradzo."
     }
-  }
+  },
+  "logout": "Logout",
+  "legal": {
+    "terms": {
+      "title": "Terms of Service",
+      "p1": "By using this platform, you agree to provide accurate information and comply with applicable financial and trade laws.",
+      "p2": "All investment content is informational and does not constitute personal financial advice.",
+      "p3": "Platform access may be suspended for abuse, fraud, or policy violations."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "p1": "We collect account and usage data only for operating the platform, fraud prevention, and user support.",
+      "p2": "Your data is processed under applicable data-protection rules and is not sold to third parties.",
+      "p3": "For deletion or correction requests, contact the support team listed in the footer."
+    }
+  },
+  "cookies": {
+    "settings": {
+      "title": "Cookie settings",
+      "description": "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.",
+      "analytics_title": "Anonymised analytics cookies",
+      "analytics_description": "Enabled to help us improve performance and usability.",
+      "save": "Save and continue",
+      "privacy_policy": "Privacy policy"
+    },
+    "consent": {
+      "description": "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.",
+      "settings": "Cookie settings",
+      "accept": "Accept cookies"
+    }
+  },
+  "search": {
+    "categories": {
+      "trade": "Trade",
+      "tourism": "Tourism",
+      "investment": "Investment",
+      "technology": "Technology",
+      "impact": "Impact",
+      "ntir": "NTIR",
+      "compliance": "Compliance"
+    },
+    "results": {
+      "title_with_query": "Search Results for \"{{query}}\"",
+      "title_default": "Search Diaspora Unlocked",
+      "summary_fallback": "Explore related opportunities on Diaspora Unlocked.",
+      "view_details": "View Details"
+    },
+    "no_results": {
+      "title": "No results found",
+      "message": "We couldn't find anything matching \"{{query}}\". Try searching for broader terms like \"Investment\", \"Trade\", or \"Onesa\".",
+      "return_home": "Return Home"
+    }
+  },
+  "error_boundary": {
+    "unexpected": "An unexpected error occurred.",
+    "reload": "Reload Page"
+  },
+  "routing": {
+    "loading_page": "Loading Page",
+    "loading_page_content": "Loading page content"
+  },
+  "payments": {
+    "form": {
+      "transfer_types": {
+        "send_money": {
+          "label": "Send Money",
+          "description": "Transfer to mobile money, cash pickup, or Visa card."
+        },
+        "airtime_topup": {
+          "label": "Airtime Top-up",
+          "description": "Top up a Zimbabwe mobile line with operator detection."
+        },
+        "prepaid_electricity": {
+          "label": "Prepaid Electricity",
+          "description": "Buy Zimbabwe prepaid electricity tokens using licensed utility rails."
+        }
+      },
+      "payout_types": {
+        "mobile_money": "Mobile Money",
+        "cash_pickup": "Cash Pickup",
+        "visa_card": "Visa Card"
+      },
+      "steps": {
+        "start": "Start",
+        "recipient": "Recipient",
+        "payment_method": "Payment Method",
+        "pay": "Pay",
+        "receipt": "Receipt"
+      },
+      "actions": {
+        "back": "Back",
+        "continue": "Continue",
+        "continue_to_pay": "Continue to Pay",
+        "download_receipt": "Download Receipt",
+        "edit": "Edit",
+        "get_started": "Get Started",
+        "loading_rate": "Loading Rate",
+        "new_transfer": "New Transfer",
+        "pay_now": "Pay Now",
+        "processing": "Processing"
+      },
+      "airtime": {
+        "detecting": "Auto-detecting...",
+        "no_options": "No suggested amounts yet.",
+        "operator": "Operator",
+        "options": "Top-up amount options"
+      },
+      "errors": {
+        "amount_limit": "Amount exceeds permitted limit of 5000.",
+        "auth_required": "Authentication required.",
+        "invalid_amount": "Enter a valid amount.",
+        "login_required_steps": "Please log in to continue with recipient, payout, payment, and receipt steps.",
+        "receive_multiple_ten": "Receiver amount must be in 10 USD increments.",
+        "reloadly_pricing_pending": "Provider pricing becomes available after recipient details. Enter the amount you want to send to continue.",
+        "unable_complete_payment": "Unable to complete payment.",
+        "unable_fetch_quote": "Unable to fetch FX quote.",
+        "unable_verify_session": "Unable to verify your session."
+      },
+      "eta": {
+        "airtime": "Usually within minutes.",
+        "cash_pickup": "Usually within 1 hour after provider confirmation.",
+        "default": "Timings depend on provider processing windows.",
+        "mobile_money": "Usually within minutes to 2 hours.",
+        "prepaid_electricity": "Usually within minutes after provider confirmation.",
+        "visa_card": "Can take minutes to up to 24 hours."
+      },
+      "fee": "Fee",
+      "fields": {
+        "receive_placeholder": "Payout can only be in multiples of 10USD.",
+        "receiver_country": "Receiver country",
+        "reloadly_receive_pending": "Pricing appears after provider details are confirmed.",
+        "sender_country": "Where are you sending from?",
+        "they_receive": "They receive",
+        "transfer_type": "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue.",
+        "utility_value": "Meter value",
+        "you_send": "You send"
+      },
+      "pay": {
+        "method": "Method",
+        "phone": "Phone",
+        "recipient": "Recipient",
+        "settlement_timing": "Settlement timing",
+        "summary": "Payment Summary"
+      },
+      "payout": {
+        "card_holder": "Card Holder Name",
+        "card_number": "Card Number",
+        "ecocash_number": "EcoCash Number",
+        "expiry_month": "Expiry (MM)",
+        "expiry_year": "Expiry (YYYY)",
+        "method": "Payout method",
+        "pickup_channel": "Pickup Channel",
+        "pickup_location": "Pickup Location",
+        "select_channel": "Select channel"
+      },
+      "quote": {
+        "estimated_receive": "Estimated Receive",
+        "fx_rate": "FX Rate",
+        "na": "N/A",
+        "route": "Route",
+        "to": "to"
+      },
+      "receipt": {
+        "address": "Address",
+        "amount_sent": "Amount Sent",
+        "date": "Date",
+        "payout_method": "Payout Method",
+        "phone": "Phone",
+        "receiver_country": "Receiver Country",
+        "recipient": "Recipient",
+        "sender_country": "Sender Country",
+        "title": "Diaspora Unlocked - Payment Receipt",
+        "transaction_id": "Transaction ID"
+      },
+      "recipient": {
+        "address": "Receiver address",
+        "address_placeholder": "Street / Suburb",
+        "airtime_number": "Airtime number",
+        "city": "City",
+        "full_name": "Receiver full name",
+        "phone": "Phone number"
+      },
+      "status": {
+        "pending": "pending",
+        "pending_title": "Pending",
+        "reference": "Reference",
+        "status": "Status",
+        "submitted": "Payment Submitted"
+      },
+      "subtitle": {
+        "": "Send your money easy, fast and securely from the comfort of your home to Zimbabwe."
+      },
+      "title": "Send Money",
+      "total": "Total",
+      "transfer": {
+        "required_hint": "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue."
+      },
+      "utility": {
+        "customer_name": "Customer name",
+        "default_biller": "Electricity Provider",
+        "loading_billers": "Loading electricity providers...",
+        "meter_holder": "Meter holder",
+        "meter_number": "Meter number",
+        "provider": "Electricity provider",
+        "token_code": "Token code"
+      }
+    },
+    "disclaimer": "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.",
+    "hero": {
+      "actions": {
+        "airtime": "Top Up Airtime",
+        "send_money": "Start Send Money"
+      },
+      "slide_1": {
+        "badge": "Secure Checkout",
+        "description": "Move money confidently with protected server-side processing and clear transaction tracking.",
+        "highlight": "Built Right",
+        "subtitle": "Bank-grade remittance and airtime flows for diaspora families.",
+        "title": "Global Payments"
+      },
+      "slide_2": {
+        "badge": "Cash Pickup Network",
+        "description": "Designed for fast diaspora support with operational controls and payout channel flexibility.",
+        "highlight": "Corridors",
+        "subtitle": "Support beneficiaries through mobile money, cash pickup, and card payout rails.",
+        "title": "Remittance"
+      },
+      "slide_3": {
+        "badge": "Mobile First",
+        "description": "Reliable operator lookup and amount options reduce failed transactions and improve speed.",
+        "highlight": "Top-Ups",
+        "subtitle": "Detect operators and complete mobile top-ups with a simple, guided flow.",
+        "title": "Airtime"
+      },
+      "slide_4": {
+        "badge": "Card Deposits",
+        "description": "Structured payment experiences with clear status visibility from initiation to completion.",
+        "highlight": "Payouts",
+        "subtitle": "Route eligible transfers directly to supported Visa debit cards.",
+        "title": "Visa Debit"
+      },
+      "slide_5": {
+        "badge": "Digital Wallets",
+        "description": "From monthly support to urgent needs, payments stay traceable and easy to confirm.",
+        "highlight": "Liquidity",
+        "subtitle": "Keep households connected with on-demand digital value transfer.",
+        "title": "Everyday"
+      },
+      "slide_6": {
+        "badge": "Consistent UX",
+        "description": "Unified visual flow across remittance and airtime modules improves clarity and confidence.",
+        "highlight": "Execution",
+        "subtitle": "Professional payment tools aligned with the Diaspora Unlocked platform design system.",
+        "title": "Trusted"
+      }
+    },
+    "process": {
+      "collect": {
+        "description": "Recipient collects funds or receives airtime. Reflect times vary by channel and provider checks.",
+        "title": "Collect"
+      },
+      "details": {
+        "description": "Enter recipient and payout details. Inputs are validated and financial calls are protected server-side.",
+        "title": "Add Details"
+      },
+      "intro": "Follow a clear four-step journey: add details, review, pay, and collect. Security is applied at every stage with server-side processing, compliance checks, and traceable transaction references. Airtime is often near-instant, while mobile money, card, and cash pickup can take longer depending on provider processing windows.",
+      "pay": {
+        "description": "Approve the transfer to initiate provider processing. Status updates track progress from pending to completion.",
+        "title": "Pay"
+      },
+      "review": {
+        "description": "Confirm amount, fees, and FX preview. KYC and transaction controls are checked before submission.",
+        "title": "Review and Protect"
+      }
+    },
+    "receipt": {
+      "disclaimer_line_1": "Payments are powered by licensed financial infrastructure providers.",
+      "disclaimer_line_2": "Diaspora Unlocked does not hold customer funds."
+    }
+  },
+  "cancel": "Cancel",
+  "close": "Close",
+  "impact": {
+    "cta_button": "Start Partnership",
+    "cta_subtitle": "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let",
+    "cta_title": "Partner with us",
+    "hero": {
+      "badge1": "Impact Stories",
+      "badge2": "Innovation",
+      "badge3": "Cultural Exchange",
+      "badge4": "Sustainable Development",
+      "badge5": "Resource Mobilization",
+      "highlight1": "Change",
+      "highlight2": "Success",
+      "highlight3": "Trade",
+      "highlight4": "Community Growth",
+      "highlight5": "Investment",
+      "subtitle1": "Real-world examples of how the Zimbabwean diaspora is making a tangible difference.",
+      "subtitle2": "Showcasing groundbreaking ventures fueled by diaspora expertise and investment.",
+      "subtitle3": "Highlighting initiatives that bring Zimbabwean culture to the global stage.",
+      "subtitle4": "Stories of environmental stewardship and upliftment in rural communities.",
+      "subtitle5": "How diaspora capital is transforming key sectors and creating opportunities.",
+      "title1": "Diaspora Driving ",
+      "title2": "Tech & Entrepreneurship ",
+      "title3": "Preserving Heritage Through ",
+      "title4": "Green Initiatives & ",
+      "title5": "Unlocking Potential Through "
+    },
+    "metrics_subtitle": "The aggregated impact of diaspora engagement across all featured impact stories.",
+    "metrics_title": "Collective Impact",
+    "stories": {
+      "heritage_tourism": {
+        "author": "Chipo Mutasa",
+        "category": "Tourism",
+        "role": "Director, Heritage Trails Zimbabwe",
+        "story": "A tourism operator developed specialized diaspora homecoming packages through Diaspora Unlocked",
+        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. Diaspora Unlocked gave us visibility to our target market.",
+        "title": "Heritage Tourism Package Success"
+      },
+      "honey_export": {
+        "author": "Rudo Makoni",
+        "category": "Export",
+        "role": "Secretary, Masvingo Honey Cooperative",
+        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
+        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
+        "title": "Honey Export Cooperative"
+      },
+      "horticulture_breakthrough": {
+        "author": "Grace Ncube",
+        "category": "Export",
+        "role": "Chairperson, Mazowe Organic Farmers Cooperative",
+        "story": "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
+        "testimonial": "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
+        "title": "Organic Horticulture Breakthrough"
+      },
+      "leather_goods": {
+        "author": "Tendai Moyo",
+        "category": "Export",
+        "role": "Managing Director, Zimbabwe Leather Collective",
+        "story": "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
+        "testimonial": "Diaspora Unlocked connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
+        "title": "Leather Goods Export Success"
+      },
+      "macadamia_nut": {
+        "author": "Ngoni Sibanda",
+        "category": "Investment",
+        "role": "Operations Manager, Zim Macadamia Processors",
+        "story": "Diaspora crowdfunding enabled construction of Zimbabwe",
+        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we",
+        "title": "Macadamia Nut Processing Plant"
+      },
+      "stone_sculpture": {
+        "author": "Patrick Mavros",
+        "category": "Trade",
+        "role": "Master Sculptor, Harare",
+        "story": "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
+        "testimonial": "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
+        "title": "Stone Sculpture Export Network"
+      },
+      "tech_startup": {
+        "author": "Tafadzwa Chidavaenzi",
+        "category": "Investment",
+        "role": "CEO, PayMoyo Technologies",
+        "story": "A Harare-based fintech startup raised $750K from diaspora investors through Diaspora Unlocked",
+        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
+        "title": "Tech Startup Diaspora Funding"
+      },
+      "tourism_lodge": {
+        "author": "Simba Chikwanha",
+        "category": "Investment",
+        "role": "Diaspora Investor, London",
+        "story": "Through Diaspora Unlocked",
+        "testimonial": "I invested $2,000 from the UK and now I",
+        "title": "Tourism Lodge Investment"
+      }
+    },
+    "stories_subtitle": "Explore the impactful contributions of the Zimbabwean diaspora across various sectors.",
+    "stories_title": "Inspiring Impact",
+    "metrics_list": [
+      {
+        "display": false,
+        "emoji": "💰",
+        "value": "$11.3M+",
+        "label": "Total Economic Impact",
+        "description": "Revenue generated across all impact stories"
+      },
+      {
+        "display": false,
+        "emoji": "👥",
+        "value": "700+",
+        "label": "Jobs Created",
+        "description": "Direct employment opportunities"
+      },
+      {
+        "display": false,
+        "emoji": "📈",
+        "value": "1,000+",
+        "label": "Diaspora Investors",
+        "description": "Active participants in projects"
+      },
+      {
+        "display": false,
+        "emoji": "🌍",
+        "value": "15+",
+        "label": "Markets Accessed",
+        "description": "International markets reached"
+      }
+    ],
+    "stories_list": [
+      {
+        "display": false,
+        "title": "Leather Goods Export Success",
+        "category": "Export",
+        "image": "/images/pages/shared/leather_products.jpg",
+        "impact": {
+          "revenue": "$2.5M",
+          "jobs": "150+",
+          "markets": "3 countries"
+        },
+        "story": "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
+        "testimonial": "Diaspora Unlocked connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
+        "author": "Tendai Moyo",
+        "role": "Managing Director, Zimbabwe Leather Collective"
+      },
+      {
+        "display": false,
+        "title": "Organic Horticulture Breakthrough",
+        "category": "Export",
+        "image": "/images/pages/shared/horticulture.jpg",
+        "impact": {
+          "revenue": "$850K",
+          "jobs": "85",
+          "markets": "Germany, Netherlands"
+        },
+        "story": "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
+        "testimonial": "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
+        "author": "Grace Ncube",
+        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
+      },
+      {
+        "display": false,
+        "title": "Tourism Lodge Investment",
+        "category": "Investment",
+        "image": "/images/pages/tourism/victoria_falls.jpg",
+        "impact": {
+          "revenue": "$1.2M annually",
+          "jobs": "45",
+          "investors": "280 diaspora"
+        },
+        "story": "Through Diaspora Unlocked's crowdfunding platform, 280 diaspora investors pooled $500K to develop an eco-lodge near Victoria Falls. The lodge now generates steady returns while providing employment and supporting local communities. Diaspora investors receive quarterly dividends and enjoy preferential booking rates.",
+        "testimonial": "I invested $2,000 from the UK and now I'm part-owner of a beautiful lodge in my homeland. The transparency through NTIR gave me confidence, and the returns have exceeded expectations.",
+        "author": "Simba Chikwanha",
+        "role": "Diaspora Investor, London"
+      },
+      {
+        "display": false,
+        "title": "Stone Sculpture Export Network",
+        "category": "Trade",
+        "image": "/images/pages/wikimedia/faces-4.jpg",
+        "impact": {
+          "revenue": "$450K",
+          "jobs": "60 artisans",
+          "markets": "USA, CAN, UK"
+        },
+        "story": "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
+        "testimonial": "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
+        "author": "Patrick Mavros",
+        "role": "Master Sculptor, Harare"
+      },
+      {
+        "display": false,
+        "title": "Tech Startup Diaspora Funding",
+        "category": "Investment",
+        "image": "/images/pages/homepage/potrait-2.jpg",
+        "impact": {
+          "revenue": "$3.5M valuation",
+          "jobs": "35",
+          "investors": "120 diaspora"
+        },
+        "story": "A Harare-based fintech startup raised $750K from diaspora investors through Diaspora Unlocked's investment platform. The company developed a mobile payment solution for rural areas, now serving 500K+ users. Diaspora investors provided both capital and technical mentorship.",
+        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
+        "author": "Tafadzwa Chidavaenzi",
+        "role": "CEO, PayMoyo Technologies"
+      },
+      {
+        "display": false,
+        "title": "Honey Export Cooperative",
+        "category": "Export",
+        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
+        "impact": {
+          "revenue": "$320K",
+          "jobs": "120 beekeepers",
+          "markets": "EU markets"
+        },
+        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
+        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
+        "author": "Rudo Makoni",
+        "role": "Secretary, Masvingo Honey Cooperative"
+      },
+      {
+        "display": false,
+        "title": "Heritage Tourism Package Success",
+        "category": "Tourism",
+        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
+        "impact": {
+          "revenue": "$680K",
+          "tourists": "1,200+ diaspora",
+          "jobs": "28"
+        },
+        "story": "A tourism operator developed specialized diaspora homecoming packages through Diaspora Unlocked's platform. The packages combine family visits with cultural tourism, attracting over 1,200 diaspora tourists annually. The business employs local guides, drivers, and hospitality staff.",
+        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. Diaspora Unlocked gave us visibility to our target market.",
+        "author": "Chipo Mutasa",
+        "role": "Director, Heritage Trails Zimbabwe"
+      },
+      {
+        "display": false,
+        "title": "Macadamia Nut Processing Plant",
+        "category": "Investment",
+        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
+        "impact": {
+          "revenue": "$1.8M",
+          "jobs": "95",
+          "investors": "340 diaspora"
+        },
+        "story": "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
+        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",
+        "author": "Ngoni Sibanda",
+        "role": "Operations Manager, Zim Macadamia Processors"
+      }
+    ]
+  },
+  "international_partners": "International Partners",
+  "local_partners": "Local Partners"
 }

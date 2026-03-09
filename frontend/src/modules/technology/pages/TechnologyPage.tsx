@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 import SubPageHero from "@/components/SubPageHero";
+import InstantImage from "@/components/InstantImage";
 
 export default function Technology() {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ export default function Technology() {
       ]
     },
     {
-      image: "/images/pages/home/partnership_handshake.png",
+      image: "/images/pages/technology/partnership_handshake.png",
       badge: t('tech.hero.badge2') || "Contextual Intelligence",
       badgeIcon: Lightbulb,
       title: t('tech.hero.title2') || "Deep Contextual Understanding",
@@ -60,7 +61,7 @@ export default function Technology() {
       highlight: t("tech.hero.highlight5") || "Connected Trade"
     },
     {
-      image: "/images/pages/shared/minerals_mining.png",
+      image: "/images/pages/technology/minerals_mining.png",
       badge: t("tech.hero.badge6") || "Industrial AI",
       badgeIcon: BarChart3,
       title: t("tech.hero.title6") || "Tech in Mining Operations",
@@ -68,7 +69,7 @@ export default function Technology() {
       highlight: t("tech.hero.highlight6") || "Operational Efficiency"
     },
     {
-      image: "/images/pages/shared/horticulture.jpg",
+      image: "/images/pages/technology/horticulture.jpg",
       badge: t("tech.hero.badge7") || "Agritech Growth",
       badgeIcon: MapPin,
       title: t("tech.hero.title7") || "Smarter Farming Systems",
@@ -76,7 +77,7 @@ export default function Technology() {
       highlight: t("tech.hero.highlight7") || "Climate-Smart Agriculture"
     },
     {
-      image: "/images/pages/home/partnership_handshake.png",
+      image: "/images/pages/technology/partnership_handshake.png",
       badge: t("tech.hero.badge8") || "Diaspora Builders",
       badgeIcon: Building2,
       title: t("tech.hero.title8") || "Tech Talent Across Borders",
@@ -88,13 +89,13 @@ export default function Technology() {
   const sectors = [
     {
       title: t('tech.sectors.mining.title') || "Mining & Resources",
-      image: "/images/pages/shared/minerals_mining.png",
+      image: "/images/pages/technology/minerals_mining.png",
       description: t('tech.sectors.mining.desc') || "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
       details: [t('tech.sectors.mining.d1') || "Real-time mineral pricing and market trends", t('tech.sectors.mining.d2') || "Environmental and safety compliance monitoring"]
     },
     {
       title: t('tech.sectors.farming.title') || "Precision Farming",
-      image: "/images/pages/shared/horticulture.jpg",
+      image: "/images/pages/technology/horticulture.jpg",
       description: t('tech.sectors.farming.desc') || "Transforming agriculture through data-driven crop management and weather pattern prediction.",
       details: [t('tech.sectors.farming.d1') || "Soil health analysis and crop yield optimization", t('tech.sectors.farming.d2') || "Localized weather alerts and pest control advice"]
     },
@@ -106,7 +107,7 @@ export default function Technology() {
     },
     {
       title: t('tech.sectors.education.title') || "Future Education",
-      image: "/images/pages/wikimedia/digital-classroom.jpg",
+      image: "/images/pages/technology/digital-classroom.jpg",
       description: t('tech.sectors.education.desc') || "Bridging the digital divide through AI-powered personalized learning and vocational training.",
       details: [t('tech.sectors.education.d1') || "Adaptive learning platforms for local schools", t('tech.sectors.education.d2') || "Technical skill development for the digital economy"]
     }
@@ -305,9 +306,11 @@ export default function Technology() {
                   <div className="flex flex-col sm:flex-row h-full">
                     {/* Image Section */}
                     <div className="sm:w-2/5 h-44 sm:h-auto relative overflow-hidden rounded-l-[2rem]">
-                      <img
+                      <InstantImage
                         src={sector.image}
                         alt={sector.title}
+                        priority={index < 2}
+                        wrapperClassName="h-full w-full bg-slate-900"
                         className="h-full w-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />

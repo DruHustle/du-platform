@@ -27,7 +27,7 @@ export default function Trade() {
       highlight: t("trade.hero.highlight1") || "Market Readiness"
     },
     {
-      image: "/images/pages/shared/horticulture.jpg",
+      image: "/images/pages/trade/horticulture.jpg",
       badge: t("trade.hero.badge2") || "EU Market Access",
       badgeIcon: Package,
       title: t("trade.hero.title2") || "iEPA Duty-Free Entry",
@@ -51,7 +51,7 @@ export default function Trade() {
       highlight: t("trade.hero.highlight4") || "Correct Documentation"
     },
     {
-      image: "/images/pages/export/eu_flags.png",
+      image: "/images/pages/trade/eu_flags.png",
       badge: t("trade.hero.badge5") || "Strategic Export Planning",
       badgeIcon: Globe,
       title: t("trade.hero.title5") || "Use Access2Markets + ZimTrade",
@@ -59,7 +59,7 @@ export default function Trade() {
       highlight: t("trade.hero.highlight5") || "Data-Driven Exports"
     },
     {
-      image: "/images/pages/export/eu_symbol.png",
+      image: "/images/pages/trade/eu_symbol.png",
       badge: t("trade.hero.badge6") || "Regulatory Readiness",
       badgeIcon: FileCheck,
       title: t("trade.hero.title6") || "Meet Documentation Standards",
@@ -67,7 +67,7 @@ export default function Trade() {
       highlight: t("trade.hero.highlight6") || "Clean Documentation"
     },
     {
-      image: "/images/pages/shared/leather_products.jpg",
+      image: "/images/pages/trade/leather_products.jpg",
       badge: t("trade.hero.badge7") || "Value Addition",
       badgeIcon: Award,
       title: t("trade.hero.title7") || "Scale Higher-Value Products",
@@ -75,7 +75,7 @@ export default function Trade() {
       highlight: t("trade.hero.highlight7") || "Better Margins"
     },
     {
-      image: "/images/pages/shared/minerals_mining.png",
+      image: "/images/pages/trade/minerals_mining.png",
       badge: t("trade.hero.badge8") || "Sector Expansion",
       badgeIcon: Truck,
       title: t("trade.hero.title8") || "Diversify Export Portfolio",
@@ -95,14 +95,14 @@ export default function Trade() {
     {
       name: t("trade.sectors.horticulture.name") || "Horticulture",
       description: t("trade.sectors.horticulture.description") || "Fresh produce and processed foods with strong EU and regional demand when SPS standards are met",
-      image: "/images/pages/shared/horticulture.jpg",
+      image: "/images/pages/trade/horticulture.jpg",
       opportunities: t("trade.sectors.horticulture.opportunities", { returnObjects: true }) as string[],
       icon: Package
     },
     {
       name: t("trade.sectors.leather_products.name") || "Leather Products",
       description: t("trade.sectors.leather_products.description") || "Value-added manufacturing exports including footwear and lifestyle products for diaspora and EU channels",
-      image: "/images/pages/shared/leather_products.jpg",
+      image: "/images/pages/trade/leather_products.jpg",
       opportunities: t("trade.sectors.leather_products.opportunities", { returnObjects: true }) as string[],
       icon: Award
     },
@@ -116,7 +116,7 @@ export default function Trade() {
     {
       name: t("trade.sectors.minerals_mining.name") || "Minerals & Mining",
       description: t("trade.sectors.minerals_mining.description") || "Strategic minerals and value-added products with increasing demand in industrial and energy value chains",
-      image: "/images/pages/shared/minerals_mining.png",
+      image: "/images/pages/trade/minerals_mining.png",
       opportunities: t("trade.sectors.minerals_mining.opportunities", { returnObjects: true }) as string[],
       icon: TrendingUp
     }
@@ -204,7 +204,7 @@ export default function Trade() {
     {
       product: "Blueberries",
       status: "High Demand",
-      image: "/images/pages/export/blueberry_export.png",
+      image: "/images/pages/trade/blueberry_export.png",
       requirements: [
         "GLOBALG.A.P. farm assurance",
         "Residue and pesticide controls",
@@ -216,7 +216,7 @@ export default function Trade() {
     {
       product: "Honey",
       status: "Growing Niche",
-      image: "/images/pages/wikimedia/small-honey-jar.jpg",
+      image: "/images/pages/trade/small-honey-jar.jpg",
       requirements: [
         "Food safety controls (HACCP)",
         "Residue monitoring evidence",
@@ -228,7 +228,7 @@ export default function Trade() {
     {
       product: "Natural Oils (Marula)",
       status: "Emerging Segment",
-      image: "/images/pages/export/marula_export.png",
+      image: "/images/pages/trade/marula_export.png",
       requirements: [
         "Quality and purity specifications",
         "Stable packaging for long transit",
@@ -313,13 +313,14 @@ export default function Trade() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {diasporaRole.map((role, index) => {
+                const Icon = role.icon;
                 return (
-                  <div key={index} className="text-center p-5 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
-                    <div className="mx-auto h-14 w-14 p-2.5 bg-white/5 rounded-xl flex items-center justify-center mb-4">
-                      <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{role.emoji}</span>
+                  <div key={index} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 shadow-none transition-all duration-500 hover:bg-slate-950/60 hover:shadow-none group">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Icon className="h-4 w-4 text-zim-gold" />
+                      <h3 className="text-sm font-black tracking-tight text-white">{role.title}</h3>
                     </div>
-                    <h3 className="text-base font-black text-white tracking-tight mb-2">{role.title}</h3>
-                    <p className="text-[11px] text-white/70 leading-relaxed font-light">{role.description}</p>
+                    <p className="text-xs leading-relaxed text-white/70">{role.description}</p>
                   </div>
                 );
               })}

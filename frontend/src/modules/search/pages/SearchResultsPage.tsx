@@ -12,6 +12,7 @@ import { api } from "@/lib/api";
 
 export default function SearchResults() {
   const { t } = useTranslation();
+  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [location] = useLocation();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
@@ -23,6 +24,15 @@ export default function SearchResults() {
     Impact: Award,
     NTIR: Globe,
     Compliance: FileText,
+  };
+  const categoryLabels: Record<string, string> = {
+    Trade: tr("search.categories.trade", "Trade"),
+    Tourism: tr("search.categories.tourism", "Tourism"),
+    Investment: tr("search.categories.investment", "Investment"),
+    Technology: tr("search.categories.technology", "Technology"),
+    Impact: tr("search.categories.impact", "Impact"),
+    NTIR: tr("search.categories.ntir", "NTIR"),
+    Compliance: tr("search.categories.compliance", "Compliance"),
   };
 
   useEffect(() => {
@@ -55,7 +65,7 @@ export default function SearchResults() {
             <div className="flex items-center gap-3 mb-8">
               <Search className="h-8 w-8 text-zim-gold" />
               <h1 className="text-4xl font-bold text-white">
-                {query ? `Search Results for "${query}"` : "Search Diaspora Unlocked"}
+                {query ? tr("search.results.title_with_query", `Search Results for "{{query}}"`).replace("{{query}}", query) : tr("search.results.title_default", "Search Diaspora Unlocked")}
               </h1>
             </div>
 
@@ -77,14 +87,14 @@ export default function SearchResults() {
                               <Icon className="h-6 w-6" />
                             </div>
                             <div>
-                              <Badge variant="secondary" className="mb-1 bg-white/10 text-white border border-white/20">{result.category}</Badge>
+                              <Badge variant="secondary" className="mb-1 bg-white/10 text-white border border-white/20">{categoryLabels[result.category] ?? result.category}</Badge>
                               <CardTitle className="text-xl">{result.title}</CardTitle>
                             </div>
                           </CardHeader>
                           <CardContent>
-                            <p className=" text-sm mb-4">{result.summary || `Explore ${result.title.toLowerCase()} and related opportunities on Diaspora Unlocked.`}</p>
+                            <p className=" text-sm mb-4">{result.summary || tr("search.results.summary_fallback", `Explore ${result.title.toLowerCase()} and related opportunities on Diaspora Unlocked.`)}</p>
                             <div className="flex items-center text-zim-gold font-semibold text-sm group-hover:gap-2 transition-all">
-                              View Details <ArrowRight className="h-4 w-4 ml-1" />
+                              {tr("search.results.view_details", "View Details")} <ArrowRight className="h-4 w-4 ml-1" />
                             </div>
                           </CardContent>
                         </Card>
@@ -96,12 +106,12 @@ export default function SearchResults() {
             ) : (
               <div className="text-center py-20 bg-white/[0.02] rounded-3xl border border-white/10">
                 <Search className="h-16 w-16  mx-auto mb-6 opacity-40" />
-                <h2 className="text-2xl font-semibold mb-2 text-white">No results found</h2>
+                <h2 className="text-2xl font-semibold mb-2 text-white">{tr("search.no_results.title", "No results found")}</h2>
                 <p className=" max-w-md mx-auto">
-                  We couldn't find anything matching "{query}". Try searching for broader terms like "Investment", "Trade", or "Onesa".
+                  {tr("search.no_results.message", `We couldn't find anything matching "{{query}}". Try searching for broader terms like "Investment", "Trade", or "Onesa".`).replace("{{query}}", query)}
                 </p>
                 <Button asChild className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black" variant="outline">
-                  <Link href="/">Return Home</Link>
+                  <Link href="/">{tr("search.no_results.return_home", "Return Home")}</Link>
                 </Button>
               </div>
             )}

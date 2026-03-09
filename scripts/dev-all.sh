@@ -199,7 +199,7 @@ ensure_ollama() {
   fi
 
   echo "[dev:all] Starting Ollama..."
-  "${OLLAMA_CMD[@]}" >/tmp/zigd-ollama.log 2>&1 &
+  "${OLLAMA_CMD[@]}" >/tmp/du-ollama.log 2>&1 &
   OLLAMA_PID=$!
 
   for _ in {1..20}; do
@@ -210,7 +210,7 @@ ensure_ollama() {
     sleep 1
   done
 
-  echo "[dev:all] ERROR: Failed to start Ollama. Check /tmp/zigd-ollama.log for details."
+  echo "[dev:all] ERROR: Failed to start Ollama. Check /tmp/du-ollama.log for details."
   echo "[dev:all] Continuing without Ollama. Onesa chat will be offline."
   return 0
 }

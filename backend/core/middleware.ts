@@ -121,7 +121,7 @@ export function registerCoreMiddleware(app: Express) {
     if (hasBearerToken) return next();
 
     const cookieHeader = String(req.headers.cookie ?? '');
-    const hasSessionCookie = /(?:^|;\s*)zigd_session=/.test(cookieHeader);
+    const hasSessionCookie = /(?:^|;\s*)du_session=/.test(cookieHeader);
     if (!hasSessionCookie) return next();
 
     if (!isAllowedRequestOrigin(req, config.corsOrigins)) {

@@ -49,7 +49,7 @@ export class AdminService {
     const fromEmail =
       fromEmailRaw && isValidEmail(fromEmailRaw)
         ? fromEmailRaw
-        : String(process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com").trim();
+        : String(process.env.FROM_EMAIL ?? "no-reply@du-platform.com").trim();
 
     return {
       alert_emails: alertEmails.join(", "),

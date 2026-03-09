@@ -1,4 +1,5 @@
 import { useEffect, type ComponentType, type ReactElement } from "react";
+import i18n from "@/i18n";
 import { useLocation } from "wouter";
 
 export type AppRouteDefinition = {
@@ -16,7 +17,7 @@ export function RouteFallback() {
               <span className="text-sm font-black tracking-[0.22em]">DU</span>
             </div>
             <div className="space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.34em] text-slate-500">Diaspora Unlocked</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.34em] text-slate-500">{i18n.t("brand", { defaultValue: "Diaspora Unlocked" })}</p>
               <div className="h-3 w-40 animate-pulse rounded-full bg-slate-900/10" />
             </div>
           </div>
@@ -26,7 +27,7 @@ export function RouteFallback() {
         <div className="my-auto grid gap-8 py-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-center">
           <div className="space-y-5">
             <div className="w-fit rounded-full border border-zim-green/15 bg-white/85 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-zim-green shadow-sm">
-              Loading Page
+              {i18n.t("routing.loading_page", { defaultValue: "Loading Page" })}
             </div>
             <div className="space-y-4">
               <div className="h-5 w-36 animate-pulse rounded-full bg-zim-gold/40" />
@@ -53,7 +54,7 @@ export function RouteFallback() {
         </div>
 
         <p role="status" aria-live="polite" className="sr-only">
-          Loading page content
+          {i18n.t("routing.loading_page_content", { defaultValue: "Loading page content" })}
         </p>
       </div>
     </div>

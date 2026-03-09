@@ -132,7 +132,7 @@ Optional variable:
 
 2. **Link your project**:
    ```bash
-   cd /path/to/zigd-platform
+   cd /path/to/du-platform
    vercel link
    ```
    - Select your Vercel account

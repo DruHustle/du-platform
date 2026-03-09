@@ -4,7 +4,9 @@
   "about": "Über uns",
   "about_us": "Verbindung der weltweiten simbabwischen Diaspora mit Möglichkeiten in Handel, Tourismus und Investitionen.",
   "select_lang": "Sprache wählen",
-  "account": "Konto",
+  "account": {
+    "logout": "Abmelden"
+  },
   "login": "Anmelden",
   "register": "Registrieren",
   "my_investments": "Meine Investitionen",
@@ -32,6 +34,43 @@
       "who_content": "Wir sind ein Team aus Fachkräften der simbabwischen Diaspora, das praxisnahe digitale Lösungen entwickelt, um Familien, Unternehmen und Gemeinschaften mit der Heimat verbunden zu halten.",
       "what_label": "Was wir tun",
       "what_content": "Wir entwickeln und betreiben eine einheitliche Diaspora-Plattform, die Nutzerinnen und Nutzer mit Tourismus, Handel, Investitionen, Zahlungen, Familienvorsorge und KI-gestützter Beratung verbindet. Außerdem arbeiten wir mit vertrauenswürdigen Institutionen und Dienstleistern zusammen, damit die Teilhabe sicher, praktikabel und messbar ist."
+    },
+    "local_partners": {
+      "items": {
+        "zimbabwe_tourism": "Simbabwe Tourismus",
+        "zimparks": "ZimParks",
+        "zida": "ZIDA Invest",
+        "zimtrade": "ZimTrade",
+        "zimra": "ZIMRA"
+      }
+    },
+    "international_partners": {
+      "items": {
+        "gtai": "Deutschland Handel & Invest",
+        "eu_global_gateway": "Globales EU-Gateway",
+        "eib": "Europäische Investitionsbank",
+        "proparco": "PROPARCO",
+        "itc": "Internationales Handelszentrum"
+      }
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Bleiben Sie auf dem Laufenden.",
+      "email_placeholder": "E-Mail-Adresse",
+      "subscribe_aria": "Newsletter abonnieren",
+      "already_subscribed": "Diese E-Mail ist bereits für den Newsletter abonniert.",
+      "subscribed": "Gezeichnet. Achten Sie auf Aktualisierungen in Ihrem Posteingang.",
+      "error": "Das Abonnieren ist derzeit nicht möglich."
+    },
+    "contact": {
+      "options_title": "Kontaktoptionen",
+      "call": "Anruf",
+      "whatsapp": "WhatsApp",
+      "location_berlin": "Berlin, Deutschland",
+      "social": "Sozial",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram"
     }
   },
   "auth": {
@@ -50,11 +89,34 @@
     "login": "Anmelden",
     "no_account": "Haben Sie noch kein Konto?",
     "register_now": "Jetzt registrieren",
-    "close": "Schließen"
+    "close": "Schließen",
+    "forgot": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Geben Sie die E-Mail-Adresse Ihres Kontos ein und wir senden Ihnen Anweisungen zum Zurücksetzen.",
+      "request_sent": "Wenn diese E-Mail vorhanden ist, wurde ein Link zum Zurücksetzen gesendet.",
+      "request_error": "Anfrage kann nicht gesendet werden.",
+      "send_reset_link": "Link zum Zurücksetzen senden",
+      "submitting": "Einreichen...",
+      "back_to_login": "Zurück zum Anmelden"
+    },
+    "reset": {
+      "title": "Neues Passwort festlegen",
+      "subtitle": "Wählen Sie ein sicheres Passwort für Ihr Konto.",
+      "missing_token": "Fehlendes Reset-Token. Bitte verwenden Sie den Link, der Ihnen per E-Mail zugesandt wurde.",
+      "new_password": "Neues Passwort",
+      "show_password": "Passwort anzeigen",
+      "hide_password": "Passwort verbergen",
+      "saving": "Sparen...",
+      "reset_password": "Passwort zurücksetzen",
+      "success": "Passwort-Reset erfolgreich.",
+      "error": "Passwort kann nicht zurückgesetzt werden.",
+      "back_to_login": "Zurück zum Anmelden"
+    },
+    "register": "Registrieren"
   },
   "nav": {
     "home": "Startseite",
-    "shop": "Shop",
+    "shop": "Geschäft",
     "tourism": "Tourismus",
     "investment": "Investitionen",
     "trade": "Handel",
@@ -86,7 +148,13 @@
     "technology_capabilities_desc": "Simbabwes Technologie- und Innovationslandschaft",
     "technology_industries": "Technologiebranchen",
     "technology_industries_desc": "Wichtige Technologiesektoren in Simbabwe",
-    "payments": "Payments"
+    "payments": "Zahlungen",
+    "remittances": "Überweisungen",
+    "discover": "Entdecken",
+    "admin": "Admin",
+    "close_menu": "Menü schließen",
+    "language_hint": "Verwenden Sie das Globussymbol, um die Sprache zu ändern.",
+    "open_menu": "Menü öffnen"
   },
   "home": {
     "hero_title": "Diaspora erschliesen",
@@ -114,12 +182,56 @@
       "payments": {
         "title": "Zahlungen",
         "desc": "Senden Sie Geld oder laden Sie Airtime mit sicheren providergestuetzten Ablaeufen und klarer Gebuehrenanzeige auf.",
-        "stats": "Remittance + Airtime"
+        "stats": "Überweisung + Sendezeit"
       },
       "trade": {
         "title": "Handel",
         "desc": "Nutzen Sie umfassende Handelsressourcen und verbinden Sie sich mit simbabwischen Exportsektoren.",
         "stats": "8 Exportsektoren"
+      }
+    },
+    "tiles": {
+      "remittances": {
+        "title": "Überweisungen",
+        "description": "Senden Sie Geld, zahlen Sie wesentliche Supportkosten oder laden Sie Sendezeit mit sicheren, vom Anbieter unterstützten Flows und klarer Gebührentransparenz auf, die für Diaspora-Haushalte entwickelt wurden.",
+        "detail": "Verfolgen Sie den Wert deutlich, bevor Sie senden, und sorgen Sie dafür, dass die alltägliche Familienunterstützung schnell, vorhersehbar und einfach ist.",
+        "stats": "Überweisung + Sendezeit"
+      },
+      "shop": {
+        "title": "Geschäft",
+        "description": "Kaufen Sie simbabwische Produkte über einen kuratierten Marktplatz mit diasporafreundlichen Lieferabläufen, vertrauenswürdiger Produktbeschaffung und einfacherer Kaufabwicklung.",
+        "detail": "Von Lebensmitteln und Geschenken bis hin zu erstklassigen lokalen Waren – das Erlebnis soll dafür sorgen, dass sich grenzüberschreitende Einkäufe direkt und zuverlässig anfühlen.",
+        "stats": "Bereit für den Marktplatz"
+      },
+      "care": {
+        "title": "Pflege",
+        "description": "Koordinieren Sie vertrauenswürdige Familienunterstützung und grenzüberschreitende Pflegedienste von einem Ort aus, mit klareren Wegen für dringende Bedürfnisse und fortlaufende Hilfe.",
+        "detail": "Ziel ist es, Reibungsverluste bei der Betreuung der Angehörigen im Inland zu reduzieren und Pflegeentscheidungen leichter aus dem Ausland zu treffen.",
+        "stats": "Familienunterstützung"
+      },
+      "technology": {
+        "title": "Technologie",
+        "description": "Entdecken Sie Onesa AI, die auf Simbabwe ausgerichtete digitale Infrastruktur und die Tools, die einen intelligenteren Zugang für Diaspora-Reisen und lokale Möglichkeiten ermöglichen.",
+        "detail": "Das Technologiemodul verbindet Produktvision, angewandte KI und praktische Innovation, die auf dem simbabwischen Kontext und nicht auf generischen globalen Standards basiert.",
+        "stats": "Onesa KI"
+      },
+      "trade": {
+        "title": "Handel",
+        "description": "Greifen Sie auf Exportwege, Markteintrittsunterstützung und praktische Anleitungen zur Handelsabwicklung für Unternehmen zu, die den Übergang vom Interesse zur Lieferung anstreben.",
+        "detail": "Nutzen Sie die Plattform, um Korridore, Anforderungen und Partnerbereitschaft zu verstehen, bevor Sie neue Märkte erschließen.",
+        "stats": "Exportwachstum"
+      },
+      "investment": {
+        "title": "Investition",
+        "description": "Entdecken Sie geprüfte Möglichkeiten, diasporafreundliche Projekte und strukturierten Investitionszugang in allen Sektoren mit klarerem Kontext und besserer Sichtbarkeit.",
+        "detail": "Entdecken Sie Projekte, die auf langfristige Beteiligung, Kapitaleinsatz und praktisches Engagement in der Wachstumsgeschichte Simbabwes ausgerichtet sind.",
+        "stats": "Chancen im Wert von über 50 Millionen US-Dollar"
+      },
+      "tourism": {
+        "title": "Tourismus",
+        "description": "Entdecken Sie Simbabwes Weltklasse-Attraktionen und planen Sie Ihren Besuch mit Zuversicht, von berühmten Sehenswürdigkeiten bis hin zu tieferen Kultur- und Kulturerlebnissen.",
+        "detail": "Die Reiseplanung richtet sich sowohl an Erstbesucher als auch an Rückkehrer aus der Diaspora, die einen stärkeren lokalen Kontext benötigen.",
+        "stats": "Bereit für Diaspora-Reisen"
       }
     }
   },
@@ -203,33 +315,33 @@
     },
     "chat_with_onesa": "Chatten Sie mit Onesa",
     "onesa_matter": {
-      "badge": "Africa-Centric AI",
-      "title": "Why Onesa AI Matters",
-      "headline": "Africa deserves AI that understands Africa.",
-      "p1": "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities.",
-      "p2": "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals.",
-      "p3": "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems.",
-      "p4": "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders.",
-      "p5": "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora.",
+      "badge": "Afrikazentrierte KI",
+      "title": "Warum Onesa AI wichtig ist",
+      "headline": "Afrika verdient eine KI, die Afrika versteht.",
+      "p1": "Überall auf der Welt verändert KI mit unglaublicher Geschwindigkeit Volkswirtschaften, Industrien und Gesellschaften. Dennoch basieren die meisten Modelle auf Daten, Prioritäten und Kontexten, die häufig an der afrikanischen Realität vorbeigehen. Damit Afrika vollständig an der globalen digitalen Wirtschaft teilhaben kann, brauchen wir auf Afrika ausgerichtete Modelle, die unsere Sprachen, Kulturen, Geschäftsumgebungen und Entwicklungsprioritäten verstehen.",
+      "p2": "Wir bei Diaspora Unlocked glauben, dass Afrika nicht nur KI konsumieren sollte. Afrika muss beim Aufbau helfen. Genau aus dieser Überzeugung heraus haben wir mit der Entwicklung von Onesa AI begonnen: um intelligente Systeme zu schaffen, die für afrikanische Märkte, afrikanische Datenumgebungen und die Ziele der afrikanischen Wirtschaftstransformation wirklich relevant sind.",
+      "p3": "Wir wissen auch, dass dieser Weg nicht einfach ist. Das Training von KI-Modellen erfordert eine seriöse Infrastruktur, Rechenleistung, Datenaufbereitung und erstklassige Talente. Die Kosten sind hoch und die Hindernisse real. Wir haben uns trotzdem entschieden, voranzukommen, weil die langfristige Zukunft Afrikas von technologischer Eigenverantwortung, digitaler Unabhängigkeit und der Fähigkeit abhängt, unsere eigenen digitalen Ökosysteme zu gestalten.",
+      "p4": "Die KI-Souveränität wird zu einem der bestimmenden globalen Gespräche dieser Ära. Nationen, die ihre Daten, ihre Modelle und ihre digitale Infrastruktur kontrollieren, werden besser in der Lage sein, ihre Volkswirtschaften zu schützen, Innovationen zu beschleunigen und strategische Unabhängigkeit zu wahren. Afrika muss in dieser Zukunft nicht als Beobachter, sondern als Schöpfer und Führer agieren.",
+      "p5": "Onesa AI ist unser Engagement für diese Zukunft. Das ist größer als Technologie. Es geht um Chancen, Widerstandsfähigkeit und den Aufbau von Systemen, die künftigen Generationen auf dem gesamten Kontinent und in der Diaspora dienen.",
       "tiles": {
         "illuminate": {
-          "title": "Onesa Means Illuminate",
-          "detail": "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa."
+          "title": "Onesa bedeutet „erleuchten“.",
+          "detail": "Onesa wurde entwickelt, um praktische Klarheit darüber zu schaffen, wie Menschen und Unternehmen in Simbabwe und in ganz Afrika wachsen können."
         },
         "africa_centric": {
-          "title": "Africa-Centric Intelligence",
-          "detail": "Models grounded in African languages, markets, and realities create more relevant and useful outcomes."
+          "title": "Afrikazentrierter Geheimdienst",
+          "detail": "Modelle, die auf afrikanischen Sprachen, Märkten und Realitäten basieren, führen zu relevanteren und nützlicheren Ergebnissen."
         },
         "sovereignty": {
-          "title": "AI Sovereignty",
-          "detail": "Owning our data, models, and infrastructure protects long-term strategic independence and resilience."
+          "title": "KI-Souveränität",
+          "detail": "Der Besitz unserer Daten, Modelle und Infrastruktur schützt die langfristige strategische Unabhängigkeit und Widerstandsfähigkeit."
         },
         "growth": {
-          "title": "Future-Ready Growth",
-          "detail": "Onesa supports innovation, investment confidence, and stronger digital participation for future generations."
+          "title": "Zukunftsfähiges Wachstum",
+          "detail": "Onesa unterstützt Innovation, Investitionsvertrauen und eine stärkere digitale Teilhabe künftiger Generationen."
         }
       },
-      "combined": "Africa deserves AI that understands Africa. Onesa AI was built by Diaspora Unlocked to deliver practical, locally relevant intelligence for Zimbabwe and the wider continent, not generic advice detached from local realities. We see AI sovereignty as essential for long-term growth, resilience, and strategic independence, and this platform is our commitment to building that future with and for African communities."
+      "combined": "Afrika verdient eine KI, die Afrika versteht. Onesa AI wurde von Diaspora Unlocked entwickelt, um praktische, lokal relevante Informationen für Simbabwe und den gesamten Kontinent bereitzustellen, und keine allgemeinen, von der lokalen Realität losgelösten Ratschläge. Wir betrachten die KI-Souveränität als wesentlich für langfristiges Wachstum, Widerstandsfähigkeit und strategische Unabhängigkeit, und diese Plattform ist unser Engagement, diese Zukunft mit und für afrikanische Gemeinschaften aufzubauen."
     },
     "opportunities": {
       "title": "Top-Möglichkeiten für Investitionen und Innovation",
@@ -258,11 +370,11 @@
     },
     "diaspora_use_cases": {
       "relocation": {
-        "title": "Relocation & Reintegration",
+        "title": "Umzug & Reintegration",
         "detail": "Erhalten Sie praxisnahe Hinweise zu Wohnen, rechtlicher Einrichtung, Schuloptionen und Dienstleistern vor der Ankunft."
       },
       "investment": {
-        "title": "Investment Screening",
+        "title": "Investitionsscreening",
         "detail": "Vergleichen Sie Chancen nach Sektor, erwarteter Rendite, regulatorischer Reife und Marktnachfragesignalen."
       },
       "business_intelligence": {
@@ -277,7 +389,8 @@
     "diaspora_ai": {
       "title": "Wie Diaspora Unlocked KI einsetzt",
       "subtitle": "Onesa AI unterstützt die gesamte Diaspora-Reise: von Wiederanbindung und Rückkehr bis zur Bewertung von Chancen und dem Betrieb von Unternehmen."
-    }
+    },
+    "restore_chat_bubble": "Chat-Blase anzeigen"
   },
   "tourism": {
     "back_to_tourism": "Zurueck zum Tourismus",
@@ -303,17 +416,17 @@
       "plan_journey": "Reise planen",
       "watch_exp": "Erlebnis ansehen",
       "book_trip": "Reise buchen",
-      "virtual_center": "Virtual Reality",
-      "local_guide_ar": "Local guide",
-      "badge6": "UNESCO Wilderness",
-      "title6": "Mana Pools Experience",
-      "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
-      "badge7": "National Parks",
+      "virtual_center": "Virtuelle Realität",
+      "local_guide_ar": "Lokaler Führer",
+      "badge6": "UNESCO-Wildnis",
+      "title6": "Mana-Pools-Erlebnis",
+      "subtitle6": "Von Flüssen gespeiste Ebenen, Wandersafaris und erstklassige Tierbeobachtungen in einer der symbolträchtigsten Landschaften Afrikas.",
+      "badge7": "Nationalparks",
       "title7": "Hwange Wildlife Corridor",
-      "subtitle7": "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
-      "badge8": "Lake & Leisure",
-      "title8": "Kariba Adventure Tourism",
-      "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
+      "subtitle7": "Simbabwes größter Nationalpark, bekannt für Elefantenherden und großes Safari-Potenzial.",
+      "badge8": "See & Freizeit",
+      "title8": "Kariba-Abenteuertourismus",
+      "subtitle8": "Hausboote, Sportfischen und malerische Kreuzfahrten ziehen weiterhin regionale und internationale Besucher an."
     },
     "attractions_title": "Top-Reiseziele",
     "attractions": {
@@ -334,10 +447,10 @@
           "Adventure options such as rafting, bungee jumping, and helicopter flights.",
           "Nearby safari and river experiences in surrounding protected areas."
         ],
-        "bestTime": "High-water spectacle is usually strongest from late rainy season into early dry season; lower-water months are often preferred for some adventure activities.",
+        "bestTime": "Das Hochwasserschauspiel ist in der Regel von der späten Regenzeit bis zur frühen Trockenzeit am stärksten; Für einige Abenteueraktivitäten werden oft Monate mit niedrigerem Wasserstand bevorzugt.",
         "sources": {
-          "vf": "ZTA: Victoria Falls",
-          "vfnp": "ZTA: Victoria Falls National Park"
+          "vf": "ZTA: Victoriafälle",
+          "vfnp": "ZTA: Victoria Falls Nationalpark"
         }
       },
       "greatzim": {
@@ -357,9 +470,9 @@
           "Interpretive historical tours and local cultural storytelling.",
           "Panoramic viewpoints over the wider Masvingo landscape."
         ],
-        "bestTime": "Accessible year-round; dry season months are generally better for walking and site exploration.",
+        "bestTime": "Ganzjährig zugänglich; Die Monate der Trockenzeit eignen sich im Allgemeinen besser zum Wandern und zur Erkundung von Sehenswürdigkeiten.",
         "sources": {
-          "gz": "ZTA: Great Zimbabwe Ruins"
+          "gz": "ZTA: Große Ruinen von Simbabwe"
         }
       },
       "kariba": {
@@ -379,9 +492,9 @@
           "Tiger fishing and birdwatching itineraries.",
           "Game-viewing combinations with lake and park circuits."
         ],
-        "bestTime": "Dry season is typically preferred for wildlife viewing; lake activities operate across most of the year.",
+        "bestTime": "Normalerweise wird die Trockenzeit für Tierbeobachtungen bevorzugt; Die Aktivitäten am See finden fast das ganze Jahr über statt.",
         "sources": {
-          "kariba": "ZTA: Lake Kariba Recreational Park"
+          "kariba": "ZTA: Freizeitpark Lake Kariba"
         }
       },
       "rocks": {
@@ -401,7 +514,7 @@
           "Rock-art and heritage combinations in Matobo areas.",
           "Scenic drives linking Harare and Matobo viewpoints."
         ],
-        "bestTime": "Year-round attraction; clear dry-season weather often gives the best visibility for photos.",
+        "bestTime": "Ganzjährige Attraktion; Klares Wetter in der Trockenzeit bietet oft die beste Sicht für Fotos.",
         "sources": {
           "chiremba": "ZTA: Chiremba Balancing Rocks",
           "matobo": "ZTA: Matobo Hills"
@@ -417,7 +530,9 @@
         "h1": "Big-Five-Safari",
         "h2": "Massive Elefantenherden",
         "h3": "Naturschutz",
-        "summary": "Mit über 14.000 Quadratkilometern ist Hwange ein erstklassiges Safari-Ziel. Er beheimatet über 100 Säugetierarten und ist weltberühmt für seine zehntausenden Elefanten."
+        "summary": "Mit über 14.000 Quadratkilometern ist Hwange ein erstklassiges Safari-Ziel. Er beheimatet über 100 Säugetierarten und ist weltberühmt für seine zehntausenden Elefanten.",
+        "bestTime": "Die höchste Wildtierkonzentration ist normalerweise in den trockenen Monaten zu verzeichnen, wenn die Wasserquellen begrenzt sind.",
+        "source": "ZTA: Hwange"
       },
       "matobo": {
         "name": "Matobo-Nationalpark",
@@ -425,7 +540,9 @@
         "h1": "Balancierende Steine",
         "h2": "Antike Felsmalerei",
         "h3": "Nashorn-Schutzgebiet",
-        "summary": "Die Matobo-Berge bieten eine einzigartige Landschaft aus Granitkuppen. Es ist eine bedeutende archäologische Stätte mit San-Felskunst und dem Grab von Cecil Rhodes."
+        "summary": "Die Matobo-Berge bieten eine einzigartige Landschaft aus Granitkuppen. Es ist eine bedeutende archäologische Stätte mit San-Felskunst und dem Grab von Cecil Rhodes.",
+        "bestTime": "Ganzjährig zugänglich; Die kühleren, trockenen Monate eignen sich ideal zum Wandern und Erkunden.",
+        "source": "ZTA: Matobo"
       },
       "eastern_highlands": {
         "name": "Östliches Hochland",
@@ -433,7 +550,9 @@
         "h1": "Bergwandern",
         "h2": "Atemberaubende Wasserfälle",
         "h3": "Kühles Klima",
-        "summary": "Diese Region umfasst die Nyanga-, Vumba- und Chimanimani-Berge. Sie bietet einen starken Kontrast zum Rest des Landes mit ihrer alpinen Szenerie."
+        "summary": "Diese Region umfasst die Nyanga-, Vumba- und Chimanimani-Berge. Sie bietet einen starken Kontrast zum Rest des Landes mit ihrer alpinen Szenerie.",
+        "bestTime": "Trockene Monate bieten im Allgemeinen klarere Ausblicke und bessere Wegbedingungen.",
+        "source": "ZTA: Östliches Hochland"
       },
       "mana_pools": {
         "name": "Mana-Pools-Nationalpark",
@@ -441,7 +560,9 @@
         "h1": "Wander-Safaris",
         "h2": "Blick auf den Sambesi",
         "h3": "Ungezähmte Wildnis",
-        "summary": "Mana Pools ist bekannt für seine unglaubliche Schönheit. Es bietet die einzigartige Gelegenheit für unbegleitete Wander-Safaris inmitten von Elefanten und Löwen."
+        "summary": "Mana Pools ist bekannt für seine unglaubliche Schönheit. Es bietet die einzigartige Gelegenheit für unbegleitete Wander-Safaris inmitten von Elefanten und Löwen.",
+        "bestTime": "Die Trockenzeit wird in der Regel für Tierbeobachtungen mit hoher Dichte bevorzugt.",
+        "source": "ZTA: Manavorräte"
       },
       "nyanga": {
         "name": "Nyanga-Nationalpark",
@@ -449,7 +570,9 @@
         "h1": "Berg Nyangani",
         "h2": "Mutarazi-Fälle",
         "h3": "Outdoor-Abenteuer",
-        "summary": "Ein Hochlandparadies mit den Mutarazi-Fällen (den zweithöchsten Afrikas). Besucher genießen Skywalks und Ziplines über die Pungwe-Schlucht."
+        "summary": "Ein Hochlandparadies mit den Mutarazi-Fällen (den zweithöchsten Afrikas). Besucher genießen Skywalks und Ziplines über die Pungwe-Schlucht.",
+        "bestTime": "Ganzjähriges Reiseziel; Klare Wetterperioden eignen sich am besten für Bergblicke.",
+        "source": "ZTA: Nyanga"
       },
       "gonarezhou": {
         "name": "Gonarezhou-Nationalpark",
@@ -457,7 +580,9 @@
         "h1": "Chilojo-Klippen",
         "h2": "Unberührte Wildnis",
         "h3": "Ort der Elefanten",
-        "summary": "Simbabwes zweitgrößter Park ist berühmt für seine raue Landschaft und die ikonischen roten Sandsteinklippen. Ein echtes Abenteuer abseits der Pfade."
+        "summary": "Simbabwes zweitgrößter Park ist berühmt für seine raue Landschaft und die ikonischen roten Sandsteinklippen. Ein echtes Abenteuer abseits der Pfade.",
+        "bestTime": "Trockene Monate eignen sich normalerweise am besten für den Zugang und die konzentrierte Tierbeobachtung.",
+        "source": "ZTA: Gonarezhou"
       }
     },
     "onesa": {
@@ -542,7 +667,7 @@
         "comfort_options": {
           "budget": "Einfach",
           "standard": "Standard",
-          "premium": "Premium"
+          "premium": "Prämie"
         },
         "interests_options": {
           "wildlife": "Tierwelt",
@@ -571,7 +696,12 @@
         "open_end_date_picker": "Kalender für Rückreisedatum öffnen",
         "multi_city": "Mehrstadt-Reise",
         "multi_city_cities": "Städte (durch Komma getrennt)",
-        "multi_city_hint": "Wähle Mehrfachreise, um zusätzliche Städte hinzuzufügen."
+        "multi_city_hint": "Wähle Mehrfachreise, um zusätzliche Städte hinzuzufügen.",
+        "decrease_adults": "Erwachsene reduzieren",
+        "decrease_infants": "Säuglinge reduzieren",
+        "increase_adults": "Erhöhen Sie die Anzahl der Erwachsenen",
+        "increase_infants": "Säuglinge erhöhen",
+        "nearest_airport_hint": "Nächstgelegener Flughafen (automatisch vom Triebwerk ausgewählt)"
       },
       "personalized_experience": "Personalisierte Erlebnisse. - leistungsstarke Empfehlungstechnologie, die Informationen liefert, um Ihre Reise einzigartig und unvergesslich zu machen."
     },
@@ -616,25 +746,25 @@
     "explore_subtitle": "Für umfassende offizielle Richtlinien besuchen Sie die Website der Zimbabwe Tourism Authority.",
     "explore_site": "Zimbabwe Tourism Authority besuchen",
     "attraction_card": {
-      "tap_for_details": "Tap for more details"
+      "tap_for_details": "Für weitere Details tippen"
     },
     "attraction_dialog": {
-      "quick_facts": "Quick Facts",
-      "what_to_do": "What To Do",
-      "best_time": "Best Time Guidance",
-      "official_sources": "Official Sources"
+      "quick_facts": "Kurze Fakten",
+      "what_to_do": "Was zu tun",
+      "best_time": "Beste Zeitberatung",
+      "official_sources": "Offizielle Quellen"
     },
     "intro": {
       "p1": "Simbabwe ist für Entdeckungen gemacht: von weltberühmten Wasserfällen und alten Steinruinen bis zu Safari-Grenzregionen und Abenteuern am See. Geleitet von der ZimBho-Tourismusvision und dem nationalen Markenversprechen Zimbabwe: A World of Wonders kann jede Route Landschaft, Geschichte, Kultur und unvergessliche Gastfreundschaft verbinden.",
       "p2_before_ar": "Wenn Sie vor Ort sind, nutzen Sie Onesas",
-      "local_guide_ar": "Local guide AR",
+      "local_guide_ar": "Lokaler Reiseführer AR",
       "p2_after_ar": "für ein vollständiges KI-gestütztes AR-Erlebnis. Sie können auch unser KI-gestütztes Virtual Experience Center besuchen, um Reiseziele vor Ihrer Reise vorzuerkunden.",
       "p3_before_gastro": "Simbabwes",
       "gastronomy_tourism": "Gastronomie-Tourismus",
       "p3_between": "ist ebenfalls ein zentraler Teil der Reise: von traditionellen Gerichten wie Sadza mit Nyama und Muriwo über Süßwasserfisch aus Kariba und lokale Kaffeerouten in den Eastern Highlands bis hin zu Market-to-Table-Erlebnissen in den großen Städten.",
       "cultural_tourism": "Kulturtourismus",
       "p3_after_cultural": "fügt eine weitere Ebene hinzu: lebendige Traditionen, Community-Storytelling, Mbira- und Tanzaufführungen, zeitgenössische Steinskulpturen und historische Stätten, die Besucher mit der Identität des Landes über Generationen verbinden. Wildtiertourismus vervollständigt das Erlebnis mit Big-Five- und Birding-Routen, geführten Safarifahrten in Hwange und Mana Pools sowie naturschutzorientierten Begegnungen in Simbabwes Nationalparks und Schutzlandschaften.",
-      "virtual_experience_center_cta": "Virtual Experience Center"
+      "virtual_experience_center_cta": "Virtuelles Erlebniszentrum"
     }
   },
   "investment": {
@@ -677,23 +807,23 @@
       "title5": "Mineralreichtum",
       "subtitle5": "Gold-, Platin- und Lithium-Chancen.",
       "highlight5": "Strategische Assets",
-      "badge6": "Manufacturing Upside",
-      "title6": "Value-Added Manufacturing",
-      "highlight6": "Export-Ready Capacity",
-      "subtitle6": "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
-      "badge7": "Tourism Capital",
-      "title7": "Hospitality Growth Corridors",
-      "highlight7": "Visitor Economy",
-      "subtitle7": "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
-      "badge8": "Diaspora Flows",
-      "title8": "Channel Remittances to Assets",
-      "highlight8": "Structured Investment",
-      "subtitle8": "Convert household remittance strength into pooled, trackable, and productive investment pathways."
+      "badge6": "Vorteile im verarbeitenden Gewerbe",
+      "title6": "Wertschöpfende Fertigung",
+      "highlight6": "Exportfähige Kapazität",
+      "subtitle6": "Leichte Fertigungs- und Verarbeitungsprojekte schaffen Arbeitsplätze und stärken die regionale Wettbewerbsfähigkeit.",
+      "badge7": "Tourismushauptstadt",
+      "title7": "Wachstumskorridore im Gastgewerbe",
+      "highlight7": "Besucherwirtschaft",
+      "subtitle7": "Tourismusbezogene Projekte in der Nähe wichtiger Sehenswürdigkeiten können die wiederkehrende Nachfrage nach Fremdwährungen ankurbeln.",
+      "badge8": "Diasporaströme",
+      "title8": "Kanalüberweisungen an Vermögenswerte weiterleiten",
+      "highlight8": "Strukturierte Investition",
+      "subtitle8": "Wandeln Sie die Überweisungsstärke der Haushalte in gebündelte, nachverfolgbare und produktive Investitionswege um."
     },
     "projects": {
       "masuwe": {
-        "title": "Masuwe SEZ Construction of Villas Project",
-        "description": "Tourism-linked hospitality infrastructure opportunity in the Victoria Falls growth corridor.",
+        "title": "Masuwe SEZ Bau eines Villenprojekts",
+        "description": "Chance für eine mit dem Tourismus verbundene Hotelinfrastruktur im Wachstumskorridor von Victoria Falls.",
         "highlights": [
           "SEZ Corridor",
           "Hospitality Assets",
@@ -701,8 +831,8 @@
         ]
       },
       "leather": {
-        "title": "Linkdef Soap Manufacturing Project",
-        "description": "State-of-the-art soap and detergent manufacturing aligned to Zimbabwe's industrialization strategy.",
+        "title": "Linkdef Seifenherstellungsprojekt",
+        "description": "Hochmoderne Seifen- und Waschmittelherstellung im Einklang mit der Industrialisierungsstrategie Simbabwes.",
         "highlights": [
           "Import Substitution",
           "Consumer Goods",
@@ -710,8 +840,8 @@
         ]
       },
       "apparel": {
-        "title": "NRZ Concrete Manufacturing Plant Project",
-        "description": "Concrete sleeper manufacturing to support rail infrastructure renewal and industrial supply capacity.",
+        "title": "NRZ-Betonproduktionsanlagenprojekt",
+        "description": "Herstellung von Betonschwellen zur Unterstützung der Erneuerung der Schieneninfrastruktur und der industriellen Versorgungskapazität.",
         "highlights": [
           "Infrastructure Supply",
           "Industrial Demand",
@@ -719,8 +849,8 @@
         ]
       },
       "horticulture": {
-        "title": "CICADA Macadamia and Avocado Plantation",
-        "description": "High-value agriculture and value-addition platform for avocado and macadamia export markets.",
+        "title": "CICADA Macadamia- und Avocado-Plantage",
+        "description": "Hochwertige Landwirtschafts- und Wertschöpfungsplattform für Avocado- und Macadamia-Exportmärkte.",
         "highlights": [
           "Export Agriculture",
           "Value Addition",
@@ -728,8 +858,8 @@
         ]
       },
       "fintech": {
-        "title": "Powertel Fibre Internet (GPON)",
-        "description": "Fibre broadband infrastructure rollout to improve national digital access and enterprise connectivity.",
+        "title": "Powertel Glasfaser-Internet (GPON)",
+        "description": "Ausbau der Glasfaser-Breitband-Infrastruktur zur Verbesserung des nationalen digitalen Zugangs und der Unternehmenskonnektivität.",
         "highlights": [
           "Broadband Expansion",
           "ICT Infrastructure",
@@ -737,8 +867,8 @@
         ]
       },
       "solar": {
-        "title": "Solgas Energy 60MW Solar PV Plant + BESS",
-        "description": "Utility-scale renewable energy project combining solar generation with battery storage capacity.",
+        "title": "Solgas Energy 60 MW Solar-PV-Anlage + BESS",
+        "description": "Großprojekt für erneuerbare Energien, das Solarenergie mit Batteriespeicherkapazität kombiniert.",
         "highlights": [
           "60MW Solar",
           "Battery Storage",
@@ -768,7 +898,7 @@
       "verified": "Verifiziertes Asset",
       "risk": "Risikostufe",
       "timeline": "Zeitraum",
-      "owner": "Responsible Company"
+      "owner": "Verantwortungsbewusstes Unternehmen"
     },
     "benefits": {
       "diaspora_network": {
@@ -860,13 +990,13 @@
       "source_eu": "Quelle: Internationale Partnerschaften der EU",
       "source_eib": "Quelle: Essay der EIB zu Simbabwe"
     },
-    "ntir_label": "National Directory",
-    "hdc_label": "Horticulture Council",
+    "ntir_label": "Nationales Verzeichnis",
+    "hdc_label": "Gartenbaurat",
     "crowdfunding_steps": {
-      "browse": "Browse Projects",
-      "invest": "Invest Your Share",
-      "track": "Track Performance",
-      "returns": "Receive Returns"
+      "browse": "Durchsuchen Sie Projekte",
+      "invest": "Investieren Sie Ihren Anteil",
+      "track": "Verfolgen Sie die Leistung",
+      "returns": "Retouren erhalten"
     },
     "tourism": {
       "snapshot": {
@@ -912,7 +1042,155 @@
           "detail": "Positionieren Sie Harare und Bulawayo als Gateway-Hubs für länderübergreifende Reiserouten, einschließlich KAZA und grenzüberschreitende Strecken."
         }
       }
-    }
+    },
+    "project_details": {
+      "back": "Zurück zur Investition",
+      "not_found_title": "Projekt nicht gefunden",
+      "not_found_desc": "Die ausgewählte Projekt-ID existiert nicht.",
+      "badge": "Projektdetails",
+      "responsible_company": "Verantwortungsbewusstes Unternehmen",
+      "highlights": "Höhepunkte",
+      "key_metrics": "Schlüsselkennzahlen",
+      "location": "Standort",
+      "land_framework": "Landrahmen",
+      "regulatory": "Regulatorisch",
+      "search_ntir": "Durchsuchen Sie die NTIR-Datenbank"
+    },
+    "agriculture": {
+      "opportunities": {
+        "cold_chain": {
+          "detail": "Investieren Sie in Packhäuser, Kühltransporte und Aggregationszentren, um die Exportqualität und Margen zu steigern.",
+          "title": "Kühlkette und Logistik"
+        },
+        "irrigation": {
+          "detail": "Skalieren Sie klimaresistente Bewässerungs-, Speicher- und Smart-Farm-Systeme für stabilere Erträge.",
+          "title": "Bewässerung und Wassereffizienz"
+        },
+        "processing": {
+          "detail": "Schaffen Sie eine lokale Wertschöpfung für Obst, Getreide und Öle, um die Gewinnrücklagen vor dem Export zu erhöhen.",
+          "title": "Agrarverarbeitung"
+        },
+        "title": "Investitions- und Wachstumschancen in der Landwirtschaft"
+      },
+      "snapshot": {
+        "compliance": {
+          "detail": "Die Wettbewerbsfähigkeit im Export hängt zunehmend von SPS-Kontrollen, Rückverfolgbarkeit und Zertifizierungswegen ab.",
+          "title": "Standards und Compliance-Bereitschaft"
+        },
+        "horticulture": {
+          "detail": "Blaubeeren, Zitrusfrüchte und Premiumprodukte wecken weiterhin das Interesse regionaler und EU-Käufer, insbesondere wenn Qualitätsstandards eingehalten werden.",
+          "title": "Exportdynamik im Gartenbau"
+        },
+        "subtitle": "Die Landwirtschaft bleibt eine wichtige Säule des Exportwachstums, unterstützt durch die Nachfrage im Gartenbau, die Modernisierung der Bewässerung und die Finanzierung der Wertschöpfungskette.",
+        "title": "Landwirtschafts-Schnappschuss (2026)",
+        "value_chain": {
+          "detail": "Investitionen in Kühlkette, Sortierung und Logistik verbessern den Marktzugang und verringern Nachernteverluste.",
+          "title": "Erweiterung der Wertschöpfungskette"
+        }
+      }
+    },
+    "back_to_investment": "Zurück zur Investition",
+    "energy": {
+      "opportunities": {
+        "mini_grids": {
+          "detail": "Verteilte Systeme können wirtschaftliche Aktivitäten in unterversorgten Gebieten mit industrieller und landwirtschaftlicher Nachfrage ankurbeln.",
+          "title": "Mini-Grids und produktive Nutzung"
+        },
+        "solar": {
+          "detail": "Groß angelegte und eingebettete Solaranlagen können bei starker Nachfrage mittelfristig stabile Cashflows liefern.",
+          "title": "Projekte zur Solarenergieerzeugung"
+        },
+        "storage": {
+          "detail": "Speicherinvestitionen verbessern die Betriebszeit, sorgen für reibungslose Unterbrechungen und unterstützen produktiv nutzende Energiekunden.",
+          "title": "Batteriespeicherung und Zuverlässigkeit"
+        },
+        "title": "Energieinvestitionen und Wachstumschancen"
+      },
+      "snapshot": {
+        "bankability": {
+          "detail": "Klare Abnahmestrukturen, Genehmigungsbereitschaft und Netzintegrationsplanung sind der Schlüssel zum Erfolg der Umsetzung.",
+          "title": "Fokus auf Projektbankfähigkeit"
+        },
+        "demand": {
+          "detail": "Das industrielle und kommerzielle Wachstum erhöht weiterhin die Nachfrage nach einer stabilen, vorhersehbaren Stromversorgung.",
+          "title": "Steigender Strombedarf"
+        },
+        "renewables": {
+          "detail": "Solar- und Hybridprojekte werden zunehmend zu gangbaren Optionen sowohl für die Netzunterstützung als auch für die private Abnahme.",
+          "title": "Ausbau der erneuerbaren Energien"
+        },
+        "subtitle": "Die Zuverlässigkeit der Stromversorgung bleibt eine strategische Priorität und schafft eine starke Nachfrage nach Erzeugung, Speicherung und dezentraler Energie.",
+        "title": "Energie-Schnappschuss (2026)"
+      }
+    },
+    "it": {
+      "opportunities": {
+        "ai": {
+          "detail": "Entwickeln Sie KI-Dienste für den lokalen Kontext zur Unterstützung, Compliance-Anleitung und Entscheidungsintelligenz.",
+          "title": "Lokalisierte KI- und Datenprodukte"
+        },
+        "payments": {
+          "detail": "Integrieren Sie konforme Zahlungsschienen in Handels- und Marktplatzprodukte für Diaspora- und lokale Benutzer.",
+          "title": "Eingebettete Zahlungen und Geldbörsen"
+        },
+        "saas": {
+          "detail": "Erstellen Sie praktische Softwareprodukte für Inventar, Handelsdokumentation und Betriebsdigitalisierung.",
+          "title": "SaaS- und Workflow-Tools für KMU"
+        },
+        "title": "IT- und Fintech-Investitions- und Wachstumschancen"
+      },
+      "snapshot": {
+        "adoption": {
+          "detail": "KMU und Verbraucher verlassen sich zunehmend auf digitale Kanäle für Zahlungen, Handel und Servicezugang.",
+          "title": "Wachstum der digitalen Akzeptanz"
+        },
+        "payments": {
+          "detail": "Die Infrastruktur für grenzüberschreitende Überweisungen und digitale Zahlungen bleibt ein starker Nachfragetreiber im Fintech-Bereich.",
+          "title": "Zahlungs- und Überweisungsschienen"
+        },
+        "regulatory": {
+          "detail": "Compliance-First-Modelle, die auf Lizenzierung und AML-Kontrollen ausgerichtet sind, können schneller skaliert werden und das Vertrauen aufrechterhalten.",
+          "title": "Regulatorische Reife"
+        },
+        "subtitle": "Die digitale Akzeptanz, die mobile Nutzung und die Fintech-Nachfrage erweitern weiterhin die Möglichkeiten für skalierbare Plattformen und Dienste.",
+        "title": "IT- und Fintech-Schnappschuss (2026)"
+      }
+    },
+    "manufacturing": {
+      "opportunities": {
+        "leather": {
+          "detail": "Verbessern Sie die Gerberei und Veredelung, um den Wert von Schuhen, Accessoires und Industrieprodukten zu steigern.",
+          "title": "Leder und Fertigwaren"
+        },
+        "packaging": {
+          "detail": "Lokale Verpackungen, Komponenten und Lichttechnik können die Importabhängigkeit branchenübergreifend verringern.",
+          "title": "Verpackung und Inputs"
+        },
+        "textiles": {
+          "detail": "Erweitern Sie die Bekleidungs- und Markenproduktion durch stärkere Qualitätskontrolle und käufergebundene Verträge.",
+          "title": "Textil- und Bekleidungsskalierung"
+        },
+        "title": "Investitions- und Wachstumschancen im verarbeitenden Gewerbe"
+      },
+      "snapshot": {
+        "capacity": {
+          "detail": "Fabrikmodernisierungen und die Integration von KMU-Lieferanten verbessern die inländische Produktion und Zuverlässigkeit.",
+          "title": "Wiederaufbau der Industriekapazität"
+        },
+        "fx": {
+          "detail": "Eine exportfähige Fertigung kann wiederkehrende Devisenströme erzeugen, wenn Qualitäts- und Lieferstandards konsistent sind.",
+          "title": "Aufwärtspotenzial bei Fremdwährungen"
+        },
+        "regional": {
+          "detail": "SADC- und COMESA-Verbindungen bieten wachsende Wege für Industrieexporte und Vertragsproduktion.",
+          "title": "Regionaler Marktzugang"
+        },
+        "subtitle": "Das verarbeitende Gewerbe gewinnt durch Importsubstitution, regionale Handelsnachfrage und Mehrwertproduktion an Bedeutung.",
+        "title": "Fertigungsschnappschuss (2026)"
+      }
+    },
+    "sectors_explore": "Entdecken Sie Möglichkeiten",
+    "sectors_info": "Entdecken Sie strukturierte Möglichkeiten in den Bereichen Tourismus, Landwirtschaft, Fertigung, digitale Infrastruktur und erneuerbare Energien. Jede Kachel enthält den Eigentumskontext, die Mindestticketgröße, die erwartete Renditespanne und das Risikoprofil."
   },
   "trade": {
     "hero": {
@@ -936,18 +1214,18 @@
       "title5": "Zugang zum europäischen Markt",
       "subtitle5": "Erleichterung des Markteintritts für simbabwische Produkte in die EU.",
       "highlight5": "Zollfreier Zugang",
-      "badge6": "Regulatory Readiness",
-      "title6": "Meet Documentation Standards",
-      "subtitle6": "Build complete shipment files with invoices, packing lists, transport documents, and origin statements.",
-      "highlight6": "Clean Documentation",
-      "badge7": "Value Addition",
-      "title7": "Scale Higher-Value Products",
-      "subtitle7": "Move beyond raw exports by improving packaging, branding, and product finishing for premium buyers.",
-      "highlight7": "Better Margins",
-      "badge8": "Sector Expansion",
-      "title8": "Diversify Export Portfolio",
-      "subtitle8": "Balance commodity exports with processed goods and sector-specific compliance planning.",
-      "highlight8": "Risk Balanced Growth"
+      "badge6": "Regulatorische Bereitschaft",
+      "title6": "Erfüllen Sie Dokumentationsstandards",
+      "subtitle6": "Erstellen Sie vollständige Sendungsdateien mit Rechnungen, Packlisten, Transportdokumenten und Ursprungserklärungen.",
+      "highlight6": "Saubere Dokumentation",
+      "badge7": "Mehrwert",
+      "title7": "Skalieren Sie höherwertige Produkte",
+      "subtitle7": "Gehen Sie über den Rohexport hinaus, indem Sie die Verpackung, das Branding und die Produktveredelung für Premiumkäufer verbessern.",
+      "highlight7": "Bessere Margen",
+      "badge8": "Sektorerweiterung",
+      "title8": "Diversifizieren Sie das Exportportfolio",
+      "subtitle8": "Bringen Sie Rohstoffexporte mit verarbeiteten Gütern und sektorspezifischer Compliance-Planung in Einklang.",
+      "highlight8": "Risikobalanciertes Wachstum"
     },
     "export_roadmap_badge": "Export-Roadmap",
     "export_roadmap_title": "Exportprozess Simbabwe nach Deutschland",
@@ -1090,7 +1368,8 @@
     "save": "Speichern",
     "notify_success": "Vorrangiger Zugriff gesperrt",
     "get_notified": "Zugriff anfordern",
-    "form_subtitle": "Geben Sie Ihre Daten ein, um sich in die Warteliste für {{featureName}} einzutragen."
+    "form_subtitle": "Geben Sie Ihre Daten ein, um sich in die Warteliste für {{featureName}} einzutragen.",
+    "back": "Zurück"
   },
   "contact_form": {
     "get_started": "Kontakt aufnehmen",
@@ -1105,7 +1384,8 @@
     "sending": "Wird gesendet...",
     "success_msg": "Nachricht erfolgreich gesendet!",
     "description": "Haben Sie Fragen? Füllen Sie das Formular aus und wir melden uns bei Ihnen.",
-    "required_field": "Erforderlich *"
+    "required_field": "Erforderlich *",
+    "success_desc": "Wir werden uns bald bei Ihnen melden."
   },
   "calculator": {
     "title": "Investitionsrechner",
@@ -1167,123 +1447,123 @@
     "crafts_desc": "Unterstützung für ländliche Kunsthandwerker und Frauenkooperativen.",
     "food_title": "Kulinarik & Heimweh",
     "food_desc": "Der Geschmack der Heimat, voll EU-konform.",
-    "image": "image",
+    "image": "Bild",
     "categories": {
       "beverages": {
-        "title": "Beverages",
-        "description": "Mazoe, Maheu, and other homegrown drink favorites.",
-        "detail": "Classic Zimbabwean drinks curated for family tables, gifting, and easy restocking when you want familiar favourites close at hand."
+        "title": "Getränke",
+        "description": "Mazoe, Maheu und andere hausgemachte Lieblingsgetränke.",
+        "detail": "Klassische simbabwische Getränke, zusammengestellt für Familientische, zum Verschenken und zum einfachen Auffüllen, wenn Sie bekannte Favoriten in der Nähe haben möchten."
       },
       "cereals": {
-        "title": "Cereals & Breakfast",
-        "description": "Cerevita blends and everyday breakfast staples.",
-        "detail": "Trusted breakfast staples and pantry basics selected for repeat household orders, family bundles, and familiar routines from home."
+        "title": "Müsli und Frühstück",
+        "description": "Cerevita-Mischungen und Grundnahrungsmittel für das tägliche Frühstück.",
+        "detail": "Bewährte Frühstücks- und Vorratsgrundnahrungsmittel, ausgewählt für wiederholte Haushaltsbestellungen, Familienpakete und vertraute Routinen von zu Hause."
       },
       "sauces_spices": {
-        "title": "Sauces & Spices",
-        "description": "Madras curry, peri-peri sauces, and flavor essentials.",
-        "detail": "Flavor-led cooking essentials that help rebuild familiar meals, pantry bundles, and gift boxes with recognizable Zimbabwean taste."
+        "title": "Saucen und Gewürze",
+        "description": "Madras-Curry, Peri-Peri-Saucen und wichtige Geschmackszutaten.",
+        "detail": "Geschmacksorientierte Kochutensilien, die dabei helfen, bekannte Gerichte, Vorratspakete und Geschenkboxen mit erkennbarem simbabwischem Geschmack neu zuzubereiten."
       },
       "snacks": {
-        "title": "Snacks & Treats",
-        "description": "Maputi, biscuits, and nostalgic grab-and-go bites.",
-        "detail": "Comfort snacks and quick treats chosen for sharing, care packages, and nostalgia-driven orders that travel well across households."
+        "title": "Snacks und Leckereien",
+        "description": "Maputi, Kekse und nostalgische Häppchen zum Mitnehmen.",
+        "detail": "Wohlfühlsnacks und schnelle Leckereien zum Teilen, Care-Pakete und nostalgische Bestellungen, die sich gut in den Haushalten verbreiten."
       },
       "oils_spreads": {
-        "title": "Cooking Oils & Spreads",
-        "description": "Everyday cooking oils and pantry spread essentials.",
-        "detail": "Practical pantry essentials that support repeat cooking needs, top-up orders, and easy basket building for everyday meals."
+        "title": "Speiseöle und Aufstriche",
+        "description": "Alltägliche Speiseöle und das Nötigste für die Vorratskammer.",
+        "detail": "Praktische Utensilien für die Vorratskammer, die wiederholtes Kochen, Auffüllen von Bestellungen und einfaches Zusammenstellen von Körben für alltägliche Mahlzeiten unterstützen."
       },
       "proteins": {
-        "title": "Protein & Pantry",
-        "description": "Kapenta and protein-rich staples for family meals.",
-        "detail": "Protein-rich staples for traditional dishes, family cooking, and pantry planning where convenience and home taste both matter."
+        "title": "Protein & Speisekammer",
+        "description": "Kapenta und proteinreiche Grundnahrungsmittel für Familienessen.",
+        "detail": "Proteinreiche Grundnahrungsmittel für traditionelle Gerichte, Familienküche und Vorratsplanung, bei denen Bequemlichkeit und heimischer Geschmack gleichermaßen wichtig sind."
       },
       "crafts": {
-        "title": "Arts & Crafts",
-        "description": "Authentic artisan pieces rooted in Zimbabwean heritage.",
-        "detail": "Handmade heritage pieces with artisan story, gift appeal, and display value for homes, offices, and diaspora collections."
+        "title": "Kunst und Handwerk",
+        "description": "Authentische Kunsthandwerksstücke, die im simbabwischen Erbe verwurzelt sind.",
+        "detail": "Handgefertigte historische Stücke mit handwerklicher Geschichte, Geschenkattraktivität und Ausstellungswert für Zuhause, Büros und Diaspora-Sammlungen."
       },
       "apparel": {
-        "title": "Sports Apparel",
-        "description": "Rugby, cricket, and football fan kits.",
-        "detail": "Wear Zimbabwean pride through supporter gear and team-inspired apparel suited to gifting, match days, and community events."
+        "title": "Sportbekleidung",
+        "description": "Rugby-, Cricket- und Fußball-Fan-Ausrüstungen.",
+        "detail": "Zeigen Sie den Stolz Simbabwes durch Fanausrüstung und von der Mannschaft inspirierte Kleidung, die sich für Geschenke, Spieltage und Gemeinschaftsveranstaltungen eignet."
       }
     },
     "products": {
-      "title": "Shop Products",
+      "title": "Shop-Produkte",
       "subtitle": "End-to-end-Checkout mit sicheren Zahlungsoptionen und klarer Versandauswahl.",
-      "back_to_shop": "Back to Shop",
-      "default_country": "Germany",
+      "back_to_shop": "Zurück zum Shop",
+      "default_country": "Deutschland",
       "filters": {
-        "all": "All",
-        "sports": "Sports",
-        "crafts": "Arts & Crafts",
-        "food": "Food & Nostalgia",
-        "all_segments": "All Segments",
+        "all": "Alle",
+        "sports": "Sport",
+        "crafts": "Kunst und Handwerk",
+        "food": "Essen & Nostalgie",
+        "all_segments": "Alle Segmente",
         "select_segment": "Segment auswählen"
       },
-      "loading": "Loading products...",
-      "empty_state": "No products available in this category yet.",
+      "loading": "Produkte werden geladen...",
+      "empty_state": "In dieser Kategorie sind noch keine Produkte verfügbar.",
       "descriptions": {
-        "sables-rugby-home-kit": "Official Zimbabwe rugby jersey kit.",
-        "chevrons-world-cup-jersey": "National cricket fan jersey.",
-        "warriors-football-kit": "Zimbabwe football supporters kit.",
-        "shona-stone-sculpture": "Hand-carved premium stone sculpture.",
-        "binga-basket": "Handwoven basket made by local artisans.",
-        "beaded-jewelry-set": "Traditional beaded necklace and bracelet set.",
-        "mazoe-variety-pack": "Classic Zimbabwe cordial selection.",
-        "cerevita-corn-banana-500g": "Nutritious instant cereal favorite.",
-        "mazoe-raspberry-2l-case-6": "Bulk case pack for family and gifting.",
-        "mazoe-orange-2l-case-6": "Best-selling orange crush case pack.",
-        "mazoe-orange-2l": "Single bottle orange cordial.",
-        "pfuko-maheu-traditional-500ml-case-12": "Traditional maheu in a value case pack.",
-        "pfuko-maheu-traditional-500ml-1": "Traditional maheu in a value case pack.",
-        "cascade-orange-400ml-case-6": "Cascade Orange is the perfect adventure for a Dairy Fruit Mix drink.",
-        "kariba-kapenta-matemba-100g": "Classic kapenta staple, premium packed.",
-        "royco-usavi-beef-75g": "Flavor blend for local stews and gravies.",
-        "colcom-pork-pie-100g": "Ready-to-eat savory pie.",
-        "cheeky-chilli-peri-peri-sauce-100ml": "Hot peri-peri kick for grills and chips.",
-        "mazoe-blackberry-2l": "Blackberry cordial favorite.",
-        "mazoe-cream-soda-2l": "Cream soda cordial flavor.",
-        "maputi-40g": "Traditional puffed-maize snack.",
-        "lobels-lemon-creams-150g": "Classic lemon cream biscuits.",
-        "sun-jam-500g": "Fruit jam made from Eastern Highlands produce.",
-        "madras-hot-curry-powder-100g": "Spice blend for hot curry dishes.",
-        "madras-mild-curry-powder-100g": "Mild curry spice blend.",
-        "cerevita-corn-cocoa-malt-500g": "Chocolate malt flavored Cerevita breakfast cereal.",
-        "cerevita-corn-wheat-500g": "Corn and wheat Cerevita breakfast cereal.",
+        "sables-rugby-home-kit": "Offizielles Simbabwe-Rugby-Trikot-Set.",
+        "chevrons-world-cup-jersey": "Nationales Cricket-Fantrikot.",
+        "warriors-football-kit": "Ausrüstung für simbabwische Fußballfans.",
+        "shona-stone-sculpture": "Handgeschnitzte Premium-Steinskulptur.",
+        "binga-basket": "Handgeflochtener Korb, hergestellt von lokalen Kunsthandwerkern.",
+        "beaded-jewelry-set": "Traditionelles Set aus Halskette und Armband aus Perlen.",
+        "mazoe-variety-pack": "Klassische simbabwische Auswahl an herzlichen Getränken.",
+        "cerevita-corn-banana-500g": "Nahrhafter Instant-Müsli-Favorit.",
+        "mazoe-raspberry-2l-case-6": "Großpackung für die Familie und zum Verschenken.",
+        "mazoe-orange-2l-case-6": "Die meistverkaufte Orange-Crush-Hülle.",
+        "mazoe-orange-2l": "Eine Flasche Orangenlikör.",
+        "pfuko-maheu-traditional-500ml-case-12": "Traditionelles Maheu in einer günstigen Verpackung.",
+        "pfuko-maheu-traditional-500ml-1": "Traditionelles Maheu in einer günstigen Verpackung.",
+        "cascade-orange-400ml-case-6": "Cascade Orange ist das perfekte Abenteuer für ein Dairy Fruit Mix-Getränk.",
+        "kariba-kapenta-matemba-100g": "Klassisches Kapenta-Grundnahrungsmittel, hochwertig verpackt.",
+        "royco-usavi-beef-75g": "Geschmacksmischung für lokale Eintöpfe und Soßen.",
+        "colcom-pork-pie-100g": "Verzehrfertiger herzhafter Kuchen.",
+        "cheeky-chilli-peri-peri-sauce-100ml": "Scharfer Peri-Peri-Kick für Gegrilltes und Pommes.",
+        "mazoe-blackberry-2l": "Brombeerlikör-Favorit.",
+        "mazoe-cream-soda-2l": "Sahne-Soda-Herzgeschmack.",
+        "maputi-40g": "Traditioneller Puffmais-Snack.",
+        "lobels-lemon-creams-150g": "Klassische Zitronencremekekse.",
+        "sun-jam-500g": "Fruchtmarmelade aus Produkten aus den östlichen Highlands.",
+        "madras-hot-curry-powder-100g": "Gewürzmischung für scharfe Currygerichte.",
+        "madras-mild-curry-powder-100g": "Milde Curry-Gewürzmischung.",
+        "cerevita-corn-cocoa-malt-500g": "Cerevita-Frühstücksflocken mit Schokoladenmalzgeschmack.",
+        "cerevita-corn-wheat-500g": "Cerevita-Frühstücksflocken aus Mais und Weizen.",
         "mama-dovi_750ml": "Mama Dovi 750ml."
       },
       "stock": {
-        "in": "In Stock",
-        "out": "Out of Stock",
-        "out_message": "We are sorry. The item is currently out of stock"
+        "in": "Auf Lager",
+        "out": "Ausverkauft",
+        "out_message": "Es tut uns leid. Der Artikel ist derzeit nicht vorrätig"
       },
       "actions": {
-        "buy": "Buy",
-        "add_to_cart": "Add to Cart",
-        "creating_order": "Creating Order...",
-        "place_order": "Place Order",
-        "order_whatsapp": "Order on WhatsApp",
-        "payment_confirmed": "Payment Confirmed",
-        "processing": "Processing...",
-        "pay_with": "Pay with"
+        "buy": "Kaufen",
+        "add_to_cart": "in den Warenkorb legen",
+        "creating_order": "Ordnung schaffen...",
+        "place_order": "Bestellung aufgeben",
+        "order_whatsapp": "Bestellen Sie auf WhatsApp",
+        "payment_confirmed": "Zahlung bestätigt",
+        "processing": "Verarbeitung...",
+        "pay_with": "Bezahlen Sie mit"
       },
       "cart": {
-        "title": "Cart & Checkout",
-        "empty": "No items yet. Add products to begin checkout."
+        "title": "Warenkorb und Kasse",
+        "empty": "Noch keine Artikel. Fügen Sie Produkte hinzu, um mit dem Bezahlen zu beginnen."
       },
       "totals": {
-        "subtotal": "Subtotal",
-        "shipping": "Shipping",
-        "total": "Total"
+        "subtotal": "Zwischensumme",
+        "shipping": "Versand",
+        "total": "Gesamt"
       },
       "guest_checkout": {
-        "title": "Guest Checkout"
+        "title": "Gastkasse"
       },
       "checkout": {
-        "title": "Checkout",
+        "title": "Kasse",
         "logged_in_as": "Angemeldet als"
       },
       "delivery_speed": {
@@ -1294,64 +1574,67 @@
         "express_hint": "Priorisierte Bearbeitung"
       },
       "fields": {
-        "full_name": "Full Name",
-        "email_address": "Email Address",
-        "country": "Country",
-        "city": "City",
-        "shipping_address": "Shipping Address",
+        "full_name": "Vollständiger Name",
+        "email_address": "E-Mail-Adresse",
+        "country": "Land",
+        "city": "Stadt",
+        "shipping_address": "Lieferadresse",
         "name": "Name",
-        "email": "Email",
-        "address": "Address"
+        "email": "E-Mail",
+        "address": "Adresse"
       },
       "payment_methods": {
         "label": "Zahlungsabwicklung",
         "manual_assisted": "Begleiteter Checkout (E-Mail / WhatsApp-Nachverfolgung)",
-        "stripe": "Stripe (Credit Card)",
+        "stripe": "Streifen (Kreditkarte)",
         "paypal": "PayPal",
         "amazon_pay": "Amazon Pay",
-        "stripe_short": "Stripe",
+        "stripe_short": "Streifen",
         "paypal_short": "PayPal",
         "amazon_pay_short": "Amazon Pay",
-        "dummy_gateway": "Dummy Gateway (Dev/Test)",
+        "dummy_gateway": "Dummy-Gateway (Entwicklung/Test)",
         "dummy_gateway_short": "Dummy-Zahlung bestaetigen"
       },
       "order": {
-        "reference": "Order reference",
+        "reference": "Bestellreferenz",
         "status": "Status",
         "manual_follow_up": "Ihre Bestellanfrage wurde gespeichert. Schliessen Sie den begleiteten Checkout ueber WhatsApp ab oder warten Sie auf die Folge-E-Mail bzw. Rechnung."
       },
       "notes": {
-        "guest_checkout": "Guest checkout enabled: no login required.",
+        "guest_checkout": "Gast-Checkout aktiviert: keine Anmeldung erforderlich.",
         "logged_in_checkout": "Checkout im angemeldeten Modus aktiv.",
         "supported_methods": "Unterstuetzte Methoden: begleiteter Checkout mit E-Mail- oder WhatsApp-Nachverfolgung.",
         "supported_methods_dev": "Unterstuetzte Methoden: begleiteter Checkout in Produktion sowie Dummy-Zahlungssimulation in Entwicklung und Test."
       },
       "errors": {
-        "empty_cart": "Your cart is empty.",
-        "complete_fields": "Please complete all checkout fields.",
-        "unable_place_order": "Unable to place order.",
-        "unable_confirm_payment": "Unable to confirm payment."
+        "empty_cart": "Ihr Warenkorb ist leer.",
+        "complete_fields": "Bitte füllen Sie alle Checkout-Felder aus.",
+        "unable_place_order": "Bestellung kann nicht aufgegeben werden.",
+        "unable_confirm_payment": "Die Zahlung kann nicht bestätigt werden."
       },
       "whatsapp": {
-        "intro": "Hello, I want to place an order from the Zimbabwe Shop.",
-        "order_items": "Order Items:",
-        "customer_details": "Customer Details:",
-        "outro": "Please confirm availability and payment instructions.",
-        "each": "each"
+        "intro": "Hallo, ich möchte eine Bestellung im Zimbabwe Shop aufgeben.",
+        "order_items": "Bestellartikel:",
+        "customer_details": "Kundendaten:",
+        "outro": "Bitte bestätigen Sie die Verfügbarkeit und Zahlungsanweisungen.",
+        "each": "jede"
       },
       "notify": {
-        "cta": "Notify Me",
-        "saving": "Saving...",
-        "saved": "We'll notify you when this product is available.",
-        "saved_short": "Notify Saved",
+        "cta": "Benachrichtigen Sie mich",
+        "saving": "Sparen...",
+        "saved": "Wir benachrichtigen Sie, sobald dieses Produkt verfügbar ist.",
+        "saved_short": "Gespeichert benachrichtigen",
         "dialog_title": "Benachrichtige mich, wenn es wieder auf Lager ist",
         "dialog_description": "ist derzeit nicht verfuegbar. Geben Sie Ihre E-Mail-Adresse ein und wir informieren Sie, sobald der Bestand zurueck ist.",
-        "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
-        "invalid_email": "Please enter a valid email address.",
-        "login_required": "Please login to enable stock notifications.",
-        "failed": "Unable to save notify request right now."
+        "enter_email_prompt": "Geben Sie Ihre E-Mail-Adresse ein, um benachrichtigt zu werden, wenn dieses Produkt wieder auf Lager ist:",
+        "invalid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "login_required": "Bitte melden Sie sich an, um Bestandsbenachrichtigungen zu aktivieren.",
+        "failed": "Die Benachrichtigungsanfrage kann derzeit nicht gespeichert werden."
       }
-    }
+    },
+    "product": "Produkt",
+    "no_description": "Keine Beschreibung",
+    "loading": "Produkte werden geladen..."
   },
   "notfound": {
     "title": "404 - Seite nicht gefunden",
@@ -1440,79 +1723,125 @@
     "online_indicator_aria": "Onesa ist online",
     "online_text": "Verbunden",
     "error_timeout": "Die Onesa-Anfrage ist nach 3 Minuten abgelaufen. Bitte versuchen Sie es erneut.",
-    "offline_text": "Nicht verbunden"
+    "offline_text": "Nicht verbunden",
+    "error_rate_limited": "Onesa ist gerade beschäftigt. Bitte versuchen Sie es in ein paar Sekunden noch einmal."
   },
   "care": {
     "hero": {
       "badge": "Familienvorsorge-Partner",
       "title": "Diaspora-Bestattungsschutz mit Nyaradzo",
       "description": "Schützen Sie Ihre Angehörigen zu Hause mit vertrauenswürdigem Bestattungsschutz-Onboarding über Nyaradzo, integriert in The Diaspora Gateway.",
-      "cta": "Nyaradzo-Onboarding starten"
+      "cta": "Nyaradzo-Onboarding starten",
+      "actions": {
+        "explore": "Entdecken Sie Cover",
+        "next_step": "Beginnen Sie mit dem Onboarding"
+      },
+      "slide_1": {
+        "badge": "Familienpflegepartner",
+        "description": "Unterstützen Sie Ihre Lieben zu Hause mit zuverlässiger Einarbeitung und transparenten Pflegewegen.",
+        "highlight": "Mit Zuversicht",
+        "subtitle": "Diaspora-bezogener Bestattungsschutz durch vertrauenswürdige lokale Zustellung mit Nyaradzo.",
+        "title": "Familie schützen"
+      },
+      "slide_2": {
+        "badge": "Respekt und Würde",
+        "description": "Konzipiert für Diasporafamilien, die einen praktischen, vertrauenswürdigen und kulturell fundierten Schutz benötigen.",
+        "highlight": "Fühlt sich menschlich an",
+        "subtitle": "Bieten Sie Ältesten und Angehörigen zuverlässige Unterstützung, egal wo Sie leben.",
+        "title": "Kümmere dich darum"
+      },
+      "slide_3": {
+        "badge": "Diaspora vernetzt",
+        "description": "Das Care-Modul sorgt für eine klare und grenzüberschreitende Koordination der Betreuung.",
+        "highlight": "Ein Pflegepfad",
+        "subtitle": "Verwalten Sie den Versicherungsschutz aus der Ferne und bleiben Sie gleichzeitig bei Familienentscheidungen zu Hause anwesend.",
+        "title": "Globale Familien"
+      },
+      "slide_4": {
+        "badge": "Seelenfrieden",
+        "description": "Entwickelt für monatliche Diaspora-Verpflichtungen und langfristige Widerstandsfähigkeit von Haushalten.",
+        "highlight": "Aus dem Ausland",
+        "subtitle": "Halten Sie die familiäre Betreuung durch strukturierte und transparente Deckungsoptionen stabil.",
+        "title": "Schützen Sie Ihr Zuhause"
+      },
+      "slide_5": {
+        "badge": "Vertrauenswürdige Ausführung",
+        "description": "Integriertes Onboarding bietet einen klaren Weg von der Auswahl bis zur Aktivierung.",
+        "highlight": "Zuverlässiger Service",
+        "subtitle": "Nyaradzo bietet lokale Servicebetriebe für zuverlässige Familienunterstützung.",
+        "title": "Lokaler Partner"
+      },
+      "slide_6": {
+        "badge": "Entwickelt für die Diaspora",
+        "description": "Wechseln Sie mit minimaler Reibung vom Kontozugriff zum aktiven Schutz.",
+        "highlight": "Einfach gemacht",
+        "subtitle": "Greifen Sie über ein sicheres, vertrautes Diaspora Gateway-Erlebnis auf Familienschutz zu.",
+        "title": "Familienversicherung"
+      }
     },
     "why": {
       "title": "Warum es wichtig ist",
       "subtitle": "Familienvorsorge hat für die Diaspora höchste Priorität. Diese Integration macht den Zugang einfacher und transparenter.",
-      "cards": [
-        {
-          "title": "Würde für Familien",
-          "description": "Bestattungsschutz reduziert plötzlichen finanziellen Druck und unterstützt würdevolle Abschiede."
+      "cards": {
+        "0": {
+          "description": "Eine Bestattungsversicherung reduziert plötzlichen finanziellen Druck und unterstützt einen würdevollen Abschied.",
+          "title": "Würde für Familien"
         },
-        {
-          "title": "Für Diaspora-Familien entwickelt",
-          "description": "Verwalten Sie den Versicherungsschutz aus der Ferne und bleiben Sie mit den Pflichten zu Hause verbunden."
+        "1": {
+          "description": "Verwalten Sie die Richtlinienunterstützung aus der Ferne und bleiben Sie gleichzeitig mit Ihren häuslichen Pflichten in Verbindung.",
+          "title": "Gebaut für Diaspora-Familien"
         },
-        {
-          "title": "Vertrauenswürdige lokale Umsetzung",
-          "description": "Nyaradzo bietet etablierte lokale Leistungen und familiennahe Betreuung."
+        "2": {
+          "description": "Nyaradzo bietet etablierte lokale Dienstleistungen und familienorientierte Pflege.",
+          "title": "Vertrauenswürdige lokale Ausführung"
         }
-      ]
+      }
     },
     "coverage": {
       "title": "Leistungsoptionen",
       "subtitle": "Wählen Sie eine Plan-Kategorie, die zu Ihren familiären Verpflichtungen und Ihrem Budget passt.",
-      "cards": [
-        {
-          "tag": "Einstieg",
-          "title": "Basis-Familiendeckung",
-          "summary": "Günstiger Einstiegsschutz für unmittelbare Unterstützung im Haushalt."
+      "cards": {
+        "0": {
+          "summary": "Erschwinglicher Einstiegsschutz für die sofortige Unterstützung im Haushalt.",
+          "title": "Unverzichtbarer Familienschutz"
         },
-        {
-          "tag": "Beliebt",
-          "title": "Erweiterter Familienplan",
-          "summary": "Umfassendere Absicherung für Eltern und Angehörige zu Hause."
+        "1": {
+          "summary": "Umfangreichere Unterstützung für Eltern und Angehörige zu Hause.",
+          "title": "Erweiterter Familienplan"
         },
-        {
-          "tag": "Umfassend",
-          "title": "Premium-Vorsorge",
-          "summary": "Erweiterte Leistungen und Serviceoptionen für größere Familienstrukturen."
+        "2": {
+          "summary": "Erweiterte Leistungen und Serviceoptionen für größere Familienstrukturen.",
+          "title": "Premium-Versicherung"
         }
-      ]
+      }
     },
     "how": {
       "title": "So funktioniert es",
       "subtitle": "Ein einfacher Onboarding-Ablauf vom Diaspora-Zugang bis zum aktiven Schutz.",
-      "steps": [
-        {
-          "title": "1. Antrag starten",
-          "description": "Starten Sie den Nyaradzo-Onboarding-Prozess über Diaspora Unlocked und geben Sie Ihre Daten ein."
+      "steps": {
+        "0": {
+          "description": "Öffnen Sie den Nyaradzo-Onboarding-Flow von Diaspora Unlocked und geben Sie Ihre Daten ein.",
+          "title": "1. Anwendung starten"
         },
-        {
-          "title": "2. Schutz wählen",
-          "description": "Wählen Sie die passende Deckungsstufe für Ihre Familiensituation und Ihren Beitrag."
+        "1": {
+          "description": "Wählen Sie den Planbereich, der auf Ihre Familienstruktur und die bevorzugte Beitragshöhe abgestimmt ist.",
+          "title": "2. Wählen Sie Cover"
         },
-        {
-          "title": "3. Bestätigen & aktivieren",
-          "description": "Schließen Sie Verifizierung und Zahlungseinrichtung ab, um den Schutz zu aktivieren."
+        "2": {
+          "description": "Schließen Sie die Verifizierung und Zahlungseinrichtung ab, um den Versicherungsschutz zu aktivieren.",
+          "title": "3. Bestätigen und aktivieren"
         }
-      ]
+      },
+      "step_label": "Schritt"
     },
     "cta": {
       "title": "Bereit, Ihre Familie zu schützen?",
       "subtitle": "Weiter zum Nyaradzo-Onboarding mit nachverfolgbaren Diaspora-Referral-Daten.",
       "referral_label": "referral_id",
-      "user_label": "user_id",
+      "user_label": "Benutzer-ID",
       "guest": "gast",
-      "button": "Weiter zu Nyaradzo"
+      "button": "Weiter zu Nyaradzo",
+      "badge": "Nächster Schritt 💛"
     },
     "seo": {
       "title": "Vorsorge | The Diaspora Gateway",
@@ -1520,5 +1849,537 @@
       "og_description": "Sicheres Onboarding für Familien-Bestattungsschutz über Nyaradzo für Simbabwer im Ausland.",
       "twitter_description": "Diaspora-Bestattungsschutz-Integration mit Nyaradzo."
     }
-  }
+  },
+  "logout": "Abmelden",
+  "legal": {
+    "terms": {
+      "title": "Nutzungsbedingungen",
+      "p1": "Durch die Nutzung dieser Plattform erklären Sie sich damit einverstanden, korrekte Informationen bereitzustellen und die geltenden Finanz- und Handelsgesetze einzuhalten.",
+      "p2": "Alle Anlageinhalte dienen der Information und stellen keine persönliche Finanzberatung dar.",
+      "p3": "Der Plattformzugriff kann aufgrund von Missbrauch, Betrug oder Richtlinienverstößen gesperrt werden."
+    },
+    "privacy": {
+      "title": "Datenschutzrichtlinie",
+      "p1": "Wir erfassen Konto- und Nutzungsdaten nur zum Zweck des Betriebs der Plattform, der Betrugsprävention und des Benutzersupports.",
+      "p2": "Ihre Daten werden im Rahmen der geltenden Datenschutzbestimmungen verarbeitet und nicht an Dritte verkauft.",
+      "p3": "Für Lösch- oder Korrekturanfragen wenden Sie sich an das in der Fußzeile aufgeführte Support-Team."
+    }
+  },
+  "cookies": {
+    "settings": {
+      "title": "Cookie-Einstellungen",
+      "description": "Unsere Website verwendet anonymisierte Cookies, um Ihnen das beste Browser-Erlebnis zu bieten und aggregierte Statistiken zu sammeln. Hiervon ausgenommen sind Online-Werbe-Cookies.",
+      "analytics_title": "Anonymisierte Analyse-Cookies",
+      "analytics_description": "Aktiviert, um uns dabei zu helfen, Leistung und Benutzerfreundlichkeit zu verbessern.",
+      "save": "Speichern und fortfahren",
+      "privacy_policy": "Datenschutzrichtlinie"
+    },
+    "consent": {
+      "description": "Unsere Website verwendet anonymisierte Cookies, um Ihnen das beste Browser-Erlebnis zu bieten und aggregierte Statistiken zu sammeln. Hiervon ausgenommen sind Online-Werbe-Cookies.",
+      "settings": "Cookie-Einstellungen",
+      "accept": "Akzeptieren Sie Cookies"
+    }
+  },
+  "search": {
+    "categories": {
+      "trade": "Handel",
+      "tourism": "Tourismus",
+      "investment": "Investition",
+      "technology": "Technologie",
+      "impact": "Auswirkungen",
+      "ntir": "NTIR",
+      "compliance": "Einhaltung"
+    },
+    "results": {
+      "title_with_query": "Suchergebnisse für „{{query}}“",
+      "title_default": "Suche nach Diaspora freigeschaltet",
+      "summary_fallback": "Entdecken Sie verwandte Möglichkeiten auf Diaspora Unlocked.",
+      "view_details": "Details anzeigen"
+    },
+    "no_results": {
+      "title": "Keine Ergebnisse gefunden",
+      "message": "Wir konnten nichts finden, was mit „{{query}}“ übereinstimmt. Versuchen Sie, nach umfassenderen Begriffen wie „Investment“, „Handel“ oder „Onesa“ zu suchen.",
+      "return_home": "Heimkehr"
+    }
+  },
+  "error_boundary": {
+    "unexpected": "Es ist ein unerwarteter Fehler aufgetreten.",
+    "reload": "Seite neu laden"
+  },
+  "routing": {
+    "loading_page": "Seite wird geladen",
+    "loading_page_content": "Seiteninhalt wird geladen"
+  },
+  "payments": {
+    "form": {
+      "transfer_types": {
+        "send_money": {
+          "label": "Geld senden",
+          "description": "Überweisung auf Mobile Money, Bargeldabholung oder Visa-Karte."
+        },
+        "airtime_topup": {
+          "label": "Aufladung der Sendezeit",
+          "description": "Laden Sie einen Mobilfunkanschluss in Simbabwe mit Betreibererkennung auf."
+        },
+        "prepaid_electricity": {
+          "label": "Prepaid-Strom",
+          "description": "Kaufen Sie Simbabwe-Prepaid-Strommarken über lizenzierte Stromschienen."
+        }
+      },
+      "payout_types": {
+        "mobile_money": "Mobiles Geld",
+        "cash_pickup": "Bargeldabholung",
+        "visa_card": "Visa-Karte"
+      },
+      "steps": {
+        "start": "Start",
+        "recipient": "Empfänger",
+        "payment_method": "Zahlungsmethode",
+        "pay": "Zahlen",
+        "receipt": "Quittung"
+      },
+      "actions": {
+        "back": "Zurück",
+        "continue": "Weitermachen",
+        "continue_to_pay": "Bezahlen Sie weiter",
+        "download_receipt": "Laden Sie die Quittung herunter",
+        "edit": "Bearbeiten",
+        "get_started": "Legen Sie los",
+        "loading_rate": "Laderate",
+        "new_transfer": "Neue Übertragung",
+        "pay_now": "Jetzt bezahlen",
+        "processing": "Verarbeitung"
+      },
+      "airtime": {
+        "detecting": "Automatische Erkennung...",
+        "no_options": "Noch keine empfohlenen Beträge.",
+        "operator": "Operator",
+        "options": "Optionen für den Aufladebetrag"
+      },
+      "errors": {
+        "amount_limit": "Der Betrag überschreitet den zulässigen Grenzwert von 5.000.",
+        "auth_required": "Authentifizierung erforderlich.",
+        "invalid_amount": "Geben Sie einen gültigen Betrag ein.",
+        "login_required_steps": "Bitte melden Sie sich an, um mit den Schritten Empfänger, Auszahlung, Zahlung und Erhalt fortzufahren.",
+        "receive_multiple_ten": "Der Empfängerbetrag muss in 10-USD-Schritten angegeben werden.",
+        "reloadly_pricing_pending": "Die Preise des Anbieters werden nach Angaben des Empfängers verfügbar. Geben Sie den Betrag ein, den Sie senden möchten, um fortzufahren.",
+        "unable_complete_payment": "Die Zahlung konnte nicht abgeschlossen werden.",
+        "unable_fetch_quote": "Devisenkurs kann nicht abgerufen werden.",
+        "unable_verify_session": "Ihre Sitzung konnte nicht bestätigt werden."
+      },
+      "eta": {
+        "airtime": "Normalerweise innerhalb von Minuten.",
+        "cash_pickup": "Normalerweise innerhalb einer Stunde nach Bestätigung des Anbieters.",
+        "default": "Die Zeiten hängen von den Verarbeitungsfenstern des Anbieters ab.",
+        "mobile_money": "Normalerweise innerhalb von Minuten bis 2 Stunden.",
+        "prepaid_electricity": "Normalerweise innerhalb von Minuten nach Bestätigung des Anbieters.",
+        "visa_card": "Kann Minuten bis zu 24 Stunden dauern."
+      },
+      "fee": "Gebühr",
+      "fields": {
+        "receive_placeholder": "Die Auszahlung kann nur in Vielfachen von 10 USD erfolgen.",
+        "receiver_country": "Empfängerland",
+        "reloadly_receive_pending": "Die Preise werden angezeigt, nachdem die Anbieterdetails bestätigt wurden.",
+        "sender_country": "Von wo aus senden Sie?",
+        "they_receive": "Sie erhalten",
+        "transfer_type": "Wählen Sie „Geld senden“, „Guthaben aufladen“ oder „Prepaid-Strom“, um fortzufahren.",
+        "utility_value": "Zählerwert",
+        "you_send": "Du sendest"
+      },
+      "pay": {
+        "method": "Verfahren",
+        "phone": "Telefon",
+        "recipient": "Empfänger",
+        "settlement_timing": "Abwicklungszeitpunkt",
+        "summary": "Zahlungsübersicht"
+      },
+      "payout": {
+        "card_holder": "Name des Karteninhabers",
+        "card_number": "Kartennummer",
+        "ecocash_number": "EcoCash-Nummer",
+        "expiry_month": "Ablauf (MM)",
+        "expiry_year": "Ablauf (JJJJ)",
+        "method": "Auszahlungsmethode",
+        "pickup_channel": "Pickup-Kanal",
+        "pickup_location": "Abholort",
+        "select_channel": "Kanal auswählen"
+      },
+      "quote": {
+        "estimated_receive": "Voraussichtlicher Empfang",
+        "fx_rate": "Wechselkurs",
+        "na": "N / A",
+        "route": "Route",
+        "to": "Zu"
+      },
+      "receipt": {
+        "address": "Adresse",
+        "amount_sent": "Gesendeter Betrag",
+        "date": "Datum",
+        "payout_method": "Auszahlungsmethode",
+        "phone": "Telefon",
+        "receiver_country": "Empfängerland",
+        "recipient": "Empfänger",
+        "sender_country": "Absenderland",
+        "title": "Diaspora freigeschaltet – Zahlungsbeleg",
+        "transaction_id": "Transaktions-ID"
+      },
+      "recipient": {
+        "address": "Empfängeradresse",
+        "address_placeholder": "Straße / Vorort",
+        "airtime_number": "Sendezeitnummer",
+        "city": "Stadt",
+        "full_name": "Vollständiger Name des Empfängers",
+        "phone": "Telefonnummer"
+      },
+      "status": {
+        "pending": "ausstehend",
+        "pending_title": "Ausstehend",
+        "reference": "Referenz",
+        "status": "Status",
+        "submitted": "Zahlung übermittelt"
+      },
+      "subtitle": {
+        "": "Senden Sie Ihr Geld einfach, schnell und sicher bequem von zu Hause nach Simbabwe."
+      },
+      "title": "Geld senden",
+      "total": "Gesamt",
+      "transfer": {
+        "required_hint": "Wählen Sie „Geld senden“, „Guthaben aufladen“ oder „Prepaid-Strom“, um fortzufahren."
+      },
+      "utility": {
+        "customer_name": "Kundenname",
+        "default_biller": "Stromanbieter",
+        "loading_billers": "Stromanbieter werden geladen...",
+        "meter_holder": "Zählerhalter",
+        "meter_number": "Zählernummer",
+        "provider": "Stromanbieter",
+        "token_code": "Token-Code"
+      }
+    },
+    "disclaimer": "Zahlungen werden von lizenzierten Finanzinfrastrukturanbietern durchgeführt. Diaspora Unlocked verfügt über keine Kundengelder.",
+    "hero": {
+      "actions": {
+        "airtime": "Sendezeit aufladen",
+        "send_money": "Beginnen Sie mit dem Senden von Geld"
+      },
+      "slide_1": {
+        "badge": "Sicherer Checkout",
+        "description": "Bewegen Sie Geld sicher mit geschützter serverseitiger Verarbeitung und klarer Transaktionsverfolgung.",
+        "highlight": "Richtig gebaut",
+        "subtitle": "Banküberweisungen und Airtime-Flows für Diaspora-Familien.",
+        "title": "Globale Zahlungen"
+      },
+      "slide_2": {
+        "badge": "Netzwerk zur Bargeldabholung",
+        "description": "Konzipiert für schnelle Diaspora-Unterstützung mit betrieblichen Kontrollen und flexiblen Auszahlungskanälen.",
+        "highlight": "Korridore",
+        "subtitle": "Unterstützen Sie Begünstigte durch mobiles Geld, Bargeldabholung und Kartenauszahlungsschienen.",
+        "title": "Überweisung"
+      },
+      "slide_3": {
+        "badge": "Mobil zuerst",
+        "description": "Zuverlässige Operator-Such- und Betragsoptionen reduzieren fehlgeschlagene Transaktionen und verbessern die Geschwindigkeit.",
+        "highlight": "Aufladungen",
+        "subtitle": "Erkennen Sie Betreiber und führen Sie mobile Aufladungen mit einem einfachen, geführten Ablauf durch.",
+        "title": "Sendezeit"
+      },
+      "slide_4": {
+        "badge": "Karteneinzahlungen",
+        "description": "Strukturierte Zahlungserlebnisse mit klarer Statustransparenz von der Einleitung bis zum Abschluss.",
+        "highlight": "Auszahlungen",
+        "subtitle": "Leiten Sie berechtigte Überweisungen direkt an unterstützte Visa-Debitkarten weiter.",
+        "title": "Visa-Lastschrift"
+      },
+      "slide_5": {
+        "badge": "Digitale Geldbörsen",
+        "description": "Von der monatlichen Unterstützung bis hin zu dringenden Bedürfnissen bleiben Zahlungen nachvollziehbar und leicht zu bestätigen.",
+        "highlight": "Liquidität",
+        "subtitle": "Halten Sie Haushalte mit der digitalen Wertübertragung auf Abruf in Verbindung.",
+        "title": "Täglich"
+      },
+      "slide_6": {
+        "badge": "Konsistente UX",
+        "description": "Der einheitliche visuelle Fluss über Überweisungs- und Sendezeitmodule hinweg verbessert die Klarheit und das Vertrauen.",
+        "highlight": "Ausführung",
+        "subtitle": "Professionelle Zahlungstools, die auf das Designsystem der Diaspora Unlocked-Plattform abgestimmt sind.",
+        "title": "Vertrauenswürdig"
+      }
+    },
+    "process": {
+      "collect": {
+        "description": "Der Empfänger sammelt Geld oder erhält Sendezeit. Die Reflexionszeiten variieren je nach Kanal und Anbieterprüfung.",
+        "title": "Sammeln"
+      },
+      "details": {
+        "description": "Geben Sie Empfänger- und Auszahlungsdaten ein. Eingaben werden validiert und Finanzanrufe werden serverseitig geschützt.",
+        "title": "Details hinzufügen"
+      },
+      "intro": "Folgen Sie einem klaren Weg in vier Schritten: Details hinzufügen, überprüfen, bezahlen und abholen. Sicherheit wird in jeder Phase durch serverseitige Verarbeitung, Compliance-Prüfungen und nachvollziehbare Transaktionsreferenzen gewährleistet. Die Sendezeit erfolgt oft nahezu augenblicklich, während die Abholung von mobilem Geld, Karte und Bargeld je nach Verarbeitungsfenster des Anbieters länger dauern kann.",
+      "pay": {
+        "description": "Genehmigen Sie die Übertragung, um die Verarbeitung durch den Anbieter einzuleiten. Statusaktualisierungen verfolgen den Fortschritt von „Ausstehend“ bis „Abschluss“.",
+        "title": "Zahlen"
+      },
+      "review": {
+        "description": "Bestätigen Sie Betrag, Gebühren und FX-Vorschau. KYC- und Transaktionskontrollen werden vor der Einreichung überprüft.",
+        "title": "Überprüfen und schützen"
+      }
+    },
+    "receipt": {
+      "disclaimer_line_1": "Zahlungen werden von lizenzierten Finanzinfrastrukturanbietern durchgeführt.",
+      "disclaimer_line_2": "Diaspora Unlocked verfügt über keine Kundengelder."
+    }
+  },
+  "cancel": "Stornieren",
+  "close": "Schließen",
+  "impact": {
+    "cta_button": "Partnerschaft starten",
+    "cta_subtitle": "Wir arbeiten mit Diaspora-Führungskräften, Institutionen und Unternehmen zusammen, um die Wirkung zu steigern. Lassen",
+    "cta_title": "Arbeiten Sie mit uns zusammen",
+    "hero": {
+      "badge1": "Wirkungsgeschichten",
+      "badge2": "Innovation",
+      "badge3": "Kultureller Austausch",
+      "badge4": "Nachhaltige Entwicklung",
+      "badge5": "Ressourcenmobilisierung",
+      "highlight1": "Ändern",
+      "highlight2": "Erfolg",
+      "highlight3": "Handel",
+      "highlight4": "Gemeinschaftswachstum",
+      "highlight5": "Investition",
+      "subtitle1": "Beispiele aus der Praxis, wie die simbabwische Diaspora einen spürbaren Unterschied macht.",
+      "subtitle2": "Präsentation bahnbrechender Unternehmungen, die auf der Expertise und den Investitionen der Diaspora basieren.",
+      "subtitle3": "Hervorhebung von Initiativen, die die simbabwische Kultur auf die globale Bühne bringen.",
+      "subtitle4": "Geschichten über Umweltschutz und Umweltschutz in ländlichen Gemeinden.",
+      "subtitle5": "Wie Diaspora-Kapital Schlüsselsektoren verändert und Chancen schafft.",
+      "title1": "Diaspora-Fahren",
+      "title2": "Technologie und Unternehmertum",
+      "title3": "Bewahrung des Erbes durch",
+      "title4": "Grüne Initiativen &",
+      "title5": "Potenziale freisetzen durch"
+    },
+    "metrics_subtitle": "Die aggregierte Wirkung des Diaspora-Engagements in allen vorgestellten Wirkungsgeschichten.",
+    "metrics_title": "Kollektive Wirkung",
+    "stories": {
+      "heritage_tourism": {
+        "author": "Chipo Mutasa",
+        "category": "Tourismus",
+        "role": "Direktor, Heritage Trails Simbabwe",
+        "story": "Ein Tourismusunternehmen hat über Diaspora Unlocked spezielle Diaspora-Heimkehrpakete entwickelt",
+        "testimonial": "Wir haben Erfahrungen geschaffen, die der Diaspora helfen, sich wieder mit ihren Wurzeln zu verbinden und gleichzeitig lokale Gemeinschaften zu unterstützen. Diaspora Unlocked verschaffte uns Sichtbarkeit für unseren Zielmarkt.",
+        "title": "Erfolgreiches Kulturerbe-Tourismuspaket"
+      },
+      "honey_export": {
+        "author": "Rudo Makoni",
+        "category": "Export",
+        "role": "Sekretär, Masvingo Honey Cooperative",
+        "story": "Ländliche Imker gründeten eine Genossenschaft, um Bio-Honig nach Europa zu exportieren. Lebensmittelwissenschaftler aus der Diaspora halfen bei der EU-Zertifizierung, während Geschäftsleute aus der Diaspora Verträge mit Lebensmitteleinzelhändlern abschlossen. Mittlerweile unterstützt die Genossenschaft 120 Familien.",
+        "testimonial": "Vom Verkauf von Honig am Straßenrand bis zum Export in europäische Supermärkte – das Diaspora-Netzwerk ermöglichte diesen Wandel durch technische Unterstützung und Marktverbindungen.",
+        "title": "Honigexportgenossenschaft"
+      },
+      "horticulture_breakthrough": {
+        "author": "Grace Ncube",
+        "category": "Export",
+        "role": "Vorsitzender der Mazowe Organic Farmers Cooperative",
+        "story": "Eine kleine landwirtschaftliche Genossenschaft erlangte mit Unterstützung von Agronomen aus der Diaspora die EU-Bio-Zertifizierung. Das Projekt exportiert nun hochwertiges Gemüse an europäische Supermärkte, wobei Diaspora-Mitglieder technisches Fachwissen, Zertifizierungsberatung und Käuferkontakte bereitstellen.",
+        "testimonial": "Wir hätten nie gedacht, dass unser kleiner Bauernhof den europäischen Standards entsprechen könnte. Die Diaspora-Experten führten uns durch jeden Schritt der Bio-Zertifizierung und stellten den direkten Kontakt zu den Käufern her.",
+        "title": "Durchbruch im ökologischen Gartenbau"
+      },
+      "leather_goods": {
+        "author": "Tendai Moyo",
+        "category": "Export",
+        "role": "Geschäftsführer, Zimbabwe Leather Collective",
+        "story": "Eine Gruppe simbabwischer Diaspora-Experten in Deutschland verband lokale Lederhersteller mit europäischen Einzelhändlern. Das Diaspora-Netzwerk lieferte Marktinformationen zu deutschen Verbraucherpräferenzen, direkte Einführung in Einzelhandelskäufer, Anleitung zur Qualitätssicherung und fortlaufende Unterstützung bei der Produktentwicklung.",
+        "testimonial": "Diaspora Unlocked brachte uns mit Diaspora-Mitgliedern zusammen, die sowohl unser Handwerk als auch die Anforderungen des europäischen Marktes verstanden. Innerhalb von 18 Monaten sind wir vom lokalen Vertrieb zum Export in drei europäische Länder übergegangen.",
+        "title": "Erfolgreicher Export von Lederwaren"
+      },
+      "macadamia_nut": {
+        "author": "Ngoni Sibanda",
+        "category": "Investition",
+        "role": "Betriebsleiter, Zim Macadamia Processors",
+        "story": "Diaspora-Crowdfunding ermöglichte den Aufbau Simbabwes",
+        "testimonial": "Wir haben 1,2 Millionen US-Dollar von Diaspora-Investoren gesammelt, die an Wertschöpfung glaubten. Jetzt wir",
+        "title": "Verarbeitungsanlage für Macadamianüsse"
+      },
+      "stone_sculpture": {
+        "author": "Patrick Mavros",
+        "category": "Handel",
+        "role": "Meisterbildhauer, Harare",
+        "story": "Simbabwische Bildhauer erhielten über Diaspora-Galeristen und Kunsthändler Zugang zu nordamerikanischen Kunstmärkten. Das Netzwerk bietet Markteinblicke, kümmert sich um die Logistik und fördert simbabwische Kunst auf internationalen Ausstellungen. Der Umsatz hat sich in zwei Jahren verdreifacht.",
+        "testimonial": "Unsere Skulpturen werden mittlerweile in Galerien auf drei Kontinenten ausgestellt. Das Diaspora-Netzwerk verstand sowohl unsere künstlerische Vision als auch die internationale Marktdynamik.",
+        "title": "Exportnetzwerk für Steinskulpturen"
+      },
+      "tech_startup": {
+        "author": "Tafadzwa Chidavaenzi",
+        "category": "Investition",
+        "role": "CEO, PayMoyo Technologies",
+        "story": "Ein in Harare ansässiges Fintech-Startup sammelte über Diaspora Unlocked 750.000 US-Dollar von Diaspora-Investoren",
+        "testimonial": "Die Finanzierung der Diaspora ging mit mehr als nur Geld einher – wir gewannen Berater, die die Standards des Silicon Valley und die Realitäten des afrikanischen Marktes verstanden. Ihre Anleitung war von unschätzbarem Wert.",
+        "title": "Finanzierung von Tech-Startups in der Diaspora"
+      },
+      "tourism_lodge": {
+        "author": "Simba Chikwanha",
+        "category": "Investition",
+        "role": "Diaspora-Investor, London",
+        "story": "Durch die Diaspora freigeschaltet",
+        "testimonial": "Ich habe 2.000 US-Dollar aus Großbritannien investiert und jetzt",
+        "title": "Investition in Tourismus-Lodges"
+      }
+    },
+    "stories_subtitle": "Entdecken Sie die wirkungsvollen Beiträge der simbabwischen Diaspora in verschiedenen Sektoren.",
+    "stories_title": "Inspirierende Wirkung",
+    "metrics_list": [
+      {
+        "display": false,
+        "emoji": "💰",
+        "value": "$11.3M+",
+        "label": "Total Economic Impact",
+        "description": "Revenue generated across all impact stories"
+      },
+      {
+        "display": false,
+        "emoji": "👥",
+        "value": "700+",
+        "label": "Jobs Created",
+        "description": "Direct employment opportunities"
+      },
+      {
+        "display": false,
+        "emoji": "📈",
+        "value": "1,000+",
+        "label": "Diaspora Investors",
+        "description": "Active participants in projects"
+      },
+      {
+        "display": false,
+        "emoji": "🌍",
+        "value": "15+",
+        "label": "Markets Accessed",
+        "description": "International markets reached"
+      }
+    ],
+    "stories_list": [
+      {
+        "display": false,
+        "title": "Leather Goods Export Success",
+        "category": "Export",
+        "image": "/images/pages/shared/leather_products.jpg",
+        "impact": {
+          "revenue": "$2.5M",
+          "jobs": "150+",
+          "markets": "3 countries"
+        },
+        "story": "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
+        "testimonial": "Diaspora Unlocked connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
+        "author": "Tendai Moyo",
+        "role": "Managing Director, Zimbabwe Leather Collective"
+      },
+      {
+        "display": false,
+        "title": "Organic Horticulture Breakthrough",
+        "category": "Export",
+        "image": "/images/pages/shared/horticulture.jpg",
+        "impact": {
+          "revenue": "$850K",
+          "jobs": "85",
+          "markets": "Germany, Netherlands"
+        },
+        "story": "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
+        "testimonial": "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
+        "author": "Grace Ncube",
+        "role": "Chairperson, Mazowe Organic Farmers Cooperative"
+      },
+      {
+        "display": false,
+        "title": "Tourism Lodge Investment",
+        "category": "Investment",
+        "image": "/images/pages/tourism/victoria_falls.jpg",
+        "impact": {
+          "revenue": "$1.2M annually",
+          "jobs": "45",
+          "investors": "280 diaspora"
+        },
+        "story": "Through Diaspora Unlocked's crowdfunding platform, 280 diaspora investors pooled $500K to develop an eco-lodge near Victoria Falls. The lodge now generates steady returns while providing employment and supporting local communities. Diaspora investors receive quarterly dividends and enjoy preferential booking rates.",
+        "testimonial": "I invested $2,000 from the UK and now I'm part-owner of a beautiful lodge in my homeland. The transparency through NTIR gave me confidence, and the returns have exceeded expectations.",
+        "author": "Simba Chikwanha",
+        "role": "Diaspora Investor, London"
+      },
+      {
+        "display": false,
+        "title": "Stone Sculpture Export Network",
+        "category": "Trade",
+        "image": "/images/pages/wikimedia/faces-4.jpg",
+        "impact": {
+          "revenue": "$450K",
+          "jobs": "60 artisans",
+          "markets": "USA, CAN, UK"
+        },
+        "story": "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
+        "testimonial": "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
+        "author": "Patrick Mavros",
+        "role": "Master Sculptor, Harare"
+      },
+      {
+        "display": false,
+        "title": "Tech Startup Diaspora Funding",
+        "category": "Investment",
+        "image": "/images/pages/homepage/potrait-2.jpg",
+        "impact": {
+          "revenue": "$3.5M valuation",
+          "jobs": "35",
+          "investors": "120 diaspora"
+        },
+        "story": "A Harare-based fintech startup raised $750K from diaspora investors through Diaspora Unlocked's investment platform. The company developed a mobile payment solution for rural areas, now serving 500K+ users. Diaspora investors provided both capital and technical mentorship.",
+        "testimonial": "Diaspora funding came with more than money—we gained advisors who understood Silicon Valley standards and African market realities. Their guidance was invaluable.",
+        "author": "Tafadzwa Chidavaenzi",
+        "role": "CEO, PayMoyo Technologies"
+      },
+      {
+        "display": false,
+        "title": "Honey Export Cooperative",
+        "category": "Export",
+        "image": "/images/pages/wikimedia/small-honey-jar.jpg",
+        "impact": {
+          "revenue": "$320K",
+          "jobs": "120 beekeepers",
+          "markets": "EU markets"
+        },
+        "story": "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
+        "testimonial": "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
+        "author": "Rudo Makoni",
+        "role": "Secretary, Masvingo Honey Cooperative"
+      },
+      {
+        "display": false,
+        "title": "Heritage Tourism Package Success",
+        "category": "Tourism",
+        "image": "/images/pages/tourism/great_zimbabwe.jpeg",
+        "impact": {
+          "revenue": "$680K",
+          "tourists": "1,200+ diaspora",
+          "jobs": "28"
+        },
+        "story": "A tourism operator developed specialized diaspora homecoming packages through Diaspora Unlocked's platform. The packages combine family visits with cultural tourism, attracting over 1,200 diaspora tourists annually. The business employs local guides, drivers, and hospitality staff.",
+        "testimonial": "We created experiences that help diaspora reconnect with their roots while supporting local communities. Diaspora Unlocked gave us visibility to our target market.",
+        "author": "Chipo Mutasa",
+        "role": "Director, Heritage Trails Zimbabwe"
+      },
+      {
+        "display": false,
+        "title": "Macadamia Nut Processing Plant",
+        "category": "Investment",
+        "image": "/images/pages/wikimedia/macadamia-nuts.jpg",
+        "impact": {
+          "revenue": "$1.8M",
+          "jobs": "95",
+          "investors": "340 diaspora"
+        },
+        "story": "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
+        "testimonial": "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",
+        "author": "Ngoni Sibanda",
+        "role": "Operations Manager, Zim Macadamia Processors"
+      }
+    ]
+  },
+  "international_partners": "Internationale Partner",
+  "local_partners": "Lokale Partner"
 }

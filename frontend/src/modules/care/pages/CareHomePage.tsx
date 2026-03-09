@@ -176,7 +176,7 @@ export default function CareHomePage() {
         }),
       },
       {
-        image: "/images/pages/wikimedia/handshake-men.jpg",
+        image: "/images/pages/care/handshake-men.jpg",
         badge: t("care.hero.slide_4.badge", { defaultValue: "Peace of Mind" }),
         badgeIcon: Home,
         title: t("care.hero.slide_4.title", { defaultValue: "Protect Home" }),
@@ -189,7 +189,7 @@ export default function CareHomePage() {
         }),
       },
       {
-        image: "/images/pages/wikimedia/woman-smiling-laptop.jpg",
+        image: "/images/pages/care/woman-smiling-laptop.jpg",
         badge: t("care.hero.slide_5.badge", { defaultValue: "Trusted Execution" }),
         badgeIcon: Users,
         title: t("care.hero.slide_5.title", { defaultValue: "Local Partner" }),
@@ -202,7 +202,7 @@ export default function CareHomePage() {
         }),
       },
       {
-        image: "/images/pages/wikimedia/team-meeting.jpg",
+        image: "/images/pages/care/team-meeting.jpg",
         badge: t("care.hero.slide_6.badge", { defaultValue: "Designed for Diaspora" }),
         badgeIcon: ShieldCheck,
         title: t("care.hero.slide_6.title", { defaultValue: "Family Assurance" }),

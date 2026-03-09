@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, MapPin, Ruler, Landmark, Building2 } from "lucide-react";
 import { Link, useRoute } from "wouter";
+import { useTranslation } from "react-i18next";
 
 type ProjectDetails = {
   title: string;
@@ -171,6 +172,8 @@ const PROJECTS: Record<string, ProjectDetails> = {
 };
 
 export default function ProjectDetails() {
+  const { t } = useTranslation();
+  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [matched, params] = useRoute<{ id: string }>("/investment/projects/:id");
   const project = matched && params?.id ? PROJECTS[params.id] : null;
 
@@ -179,24 +182,24 @@ export default function ProjectDetails() {
       <section className="min-h-screen bg-slate-950 px-6 py-28">
         <div className="container mx-auto max-w-5xl space-y-8">
           <Link href="/investment" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Investment
+            <ArrowLeft className="h-4 w-4 mr-2" /> {tr("investment.project_details.back", "Back to Investment")}
           </Link>
 
           {!project ? (
             <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
-              <h1 className="text-3xl font-black">Project not found</h1>
-              <p className="text-white/75 mt-2">The selected project ID does not exist.</p>
+              <h1 className="text-3xl font-black">{tr("investment.project_details.not_found_title", "Project not found")}</h1>
+              <p className="text-white/75 mt-2">{tr("investment.project_details.not_found_desc", "The selected project ID does not exist.")}</p>
             </div>
           ) : (
             <>
               <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 text-white">
                 <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase text-[10px] tracking-widest font-black">
-                  Project Details
+                  {tr("investment.project_details.badge", "Project Details")}
                 </Badge>
                 <h1 className="!text-xl md:!text-2xl font-black tracking-tighter">{project.title}</h1>
                 <p className="mt-3 !text-sm text-white/75">{project.subtitle}</p>
                 <p className="mt-2 !text-xs text-white/70 uppercase tracking-widest font-black">
-                  Responsible Company: {project.owner}
+                  {tr("investment.project_details.responsible_company", "Responsible Company")}: {project.owner}
                 </p>
                 <p className="mt-6 !text-sm text-white/80 leading-relaxed">{project.overview}</p>
               </div>
@@ -204,7 +207,7 @@ export default function ProjectDetails() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-zim-gold" /> Highlights
+                    <CheckCircle2 className="h-5 w-5 text-zim-gold" /> {tr("investment.project_details.highlights", "Highlights")}
                   </h2>
                   <ul className="space-y-3">
                     {project.highlights.map((item) => (
@@ -217,7 +220,7 @@ export default function ProjectDetails() {
 
                 <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-zim-gold" /> Key Metrics
+                    <Building2 className="h-5 w-5 text-zim-gold" /> {tr("investment.project_details.key_metrics", "Key Metrics")}
                   </h2>
                   <div className="space-y-3">
                     {project.stats.map((stat) => (
@@ -232,19 +235,19 @@ export default function ProjectDetails() {
 
               <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white grid md:grid-cols-3 gap-4">
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">Location</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.location", "Location")}</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-zim-gold" /> {project.location}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">Land Framework</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.land_framework", "Land Framework")}</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-zim-gold" /> {project.framework}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">Regulatory</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.regulatory", "Regulatory")}</p>
                   <p className="font-bold !text-sm mt-2 flex items-center gap-2">
                     <Landmark className="h-4 w-4 text-zim-gold" /> {project.regulatory}
                   </p>
@@ -253,7 +256,7 @@ export default function ProjectDetails() {
 
               <div>
                 <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                  <Link href="/ntir">Search NTIR Database.</Link>
+                  <Link href="/ntir">{tr("investment.project_details.search_ntir", "Search NTIR Database")}.</Link>
                 </Button>
               </div>
             </>

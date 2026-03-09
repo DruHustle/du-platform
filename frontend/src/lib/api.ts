@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const HAS_LOGGED_IN_KEY = "zigd_has_logged_in";
+const ACCESS_TOKEN_STORAGE_KEY = "du_jwt";
+const HAS_LOGGED_IN_KEY = "du_has_logged_in";
 const SESSION_AUTH_ENDPOINTS = new Set([
   "/auth/me",
   "/auth/login",
@@ -53,28 +54,27 @@ export function saveAuthToken(token: string) {
   const normalized = String(token ?? "").trim();
   if (!normalized) return;
   // Store access tokens in sessionStorage (tab-scoped) to reduce persistence risk.
-  window.sessionStorage.setItem("zigd_jwt", normalized);
-  window.localStorage.removeItem("zigd_jwt");
+  window.sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, normalized);
+  window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   window.localStorage.setItem(HAS_LOGGED_IN_KEY, "1");
 }
 
 export function clearAuthToken() {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem("zigd_jwt");
-  window.sessionStorage.removeItem("zigd_jwt");
+  window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
 }
 
 export function loadAuthToken(): string {
   if (typeof window === "undefined") return "";
-  const sessionToken = String(window.sessionStorage.getItem("zigd_jwt") ?? "").trim();
+  const sessionToken = String(window.sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
   if (sessionToken) return sessionToken;
 
-  // Backward compatibility: migrate legacy localStorage tokens once.
-  const legacyLocalToken = String(window.localStorage.getItem("zigd_jwt") ?? "").trim();
-  if (legacyLocalToken) {
-    window.sessionStorage.setItem("zigd_jwt", legacyLocalToken);
-    window.localStorage.removeItem("zigd_jwt");
-    return legacyLocalToken;
+  const localToken = String(window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
+  if (localToken) {
+    window.sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, localToken);
+    window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    return localToken;
   }
 
   return "";

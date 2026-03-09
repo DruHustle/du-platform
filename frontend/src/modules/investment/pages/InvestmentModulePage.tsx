@@ -56,7 +56,7 @@ export default function Investment() {
       buttons: []
     },
     {
-      image: "/images/pages/shared/horticulture.jpg",
+      image: "/images/pages/investment/horticulture.jpg",
       badge: t('investment.hero.badge4') || "Horticulture",
       badgeIcon: Leaf,
       title: t('investment.hero.title4') || "Green Gold",
@@ -65,7 +65,7 @@ export default function Investment() {
       buttons: []
     },
     {
-      image: "/images/pages/shared/minerals_mining.png",
+      image: "/images/pages/investment/minerals_mining.png",
       badge: t('investment.hero.badge5') || "Mining",
       badgeIcon: Gem,
       title: t('investment.hero.title5') || "Mineral Wealth",
@@ -92,7 +92,7 @@ export default function Investment() {
       buttons: []
     },
     {
-      image: "/images/pages/data/remittances_impact.png",
+      image: "/images/pages/investment/partnership_handshake.png",
       badge: t("investment.hero.badge8") || "Diaspora Flows",
       badgeIcon: DollarSign,
       title: t("investment.hero.title8") || "Channel Remittances to Assets",
@@ -784,17 +784,17 @@ const projects = [
             
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {[
-                { title: t("investment.crowdfunding_steps.browse") || "Browse Projects", emoji: "🧭" },
-                { title: t("investment.crowdfunding_steps.invest") || "Invest Your Share", emoji: "💵" },
-                { title: t("investment.crowdfunding_steps.track") || "Track Performance", emoji: "📈" },
-                { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", emoji: "✅" }
+                { title: t("investment.crowdfunding_steps.browse") || "Browse Projects", icon: FileText },
+                { title: t("investment.crowdfunding_steps.invest") || "Invest Your Share", icon: DollarSign },
+                { title: t("investment.crowdfunding_steps.track") || "Track Performance", icon: TrendingUp },
+                { title: t("investment.crowdfunding_steps.returns") || "Receive Returns", icon: CheckCircle }
               ].map((step, i) => (
-                <div key={i} className="text-center p-5 rounded-[2rem] border border-white/10 bg-white/[0.02] transition-all duration-500 hover:bg-slate-950/60 group">
-                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 p-2.5">
-                      <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">{step.emoji}</span>
+                <div key={i} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 shadow-none transition-all duration-500 hover:bg-slate-950/60 hover:shadow-none group">
+                    <div className="flex items-center gap-2 mb-3">
+                      <step.icon className="h-4 w-4 text-zim-gold" />
+                      <h3 className="text-sm font-black tracking-tight text-white">{step.title}</h3>
                     </div>
-                    <h3 className="mb-2 text-base font-black text-white tracking-tight">{step.title}</h3>
-                    <p className="text-[11px] text-white/70 leading-relaxed font-light">{crowdfundingStepSubtitle}</p>
+                    <p className="text-xs leading-relaxed text-white/70">{crowdfundingStepSubtitle}</p>
                 </div>
               ))}
             </div>

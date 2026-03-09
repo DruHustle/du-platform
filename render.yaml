@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: zigd-platform
+    name: du-platform
     env: static
     buildCommand: pnpm install && pnpm build
     staticPublishPath: ./dist/public
