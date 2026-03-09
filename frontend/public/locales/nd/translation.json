@@ -1973,7 +1973,8 @@
         "reloadly_pricing_pending": "Izintengo zabahlinzeki zitholakala ngemva kwemininingwane yomamukeli. Faka inani ofuna ukulithumela ukuze uqhubeke.",
         "unable_complete_payment": "Ayikwazi ukuqedela inkokhelo.",
         "unable_fetch_quote": "Ayikwazi ukulanda isilinganiso se-FX.",
-        "unable_verify_session": "Ayikwazi ukuqinisekisa isikhathi sakho."
+        "unable_verify_session": "Ayikwazi ukuqinisekisa isikhathi sakho.",
+        "unable_download_receipt": "Unable to download receipt."
       },
       "eta": {
         "airtime": "Ngokuvamile kungakapheli imizuzu.",
@@ -2029,7 +2030,10 @@
         "recipient": "Umamukeli",
         "sender_country": "Izwe Lomthumeli",
         "title": "I-Diaspora Ivuliwe - Irisidi Yenkokhelo",
-        "transaction_id": "I-ID yokwenziwe"
+        "transaction_id": "I-ID yokwenziwe",
+        "transaction_details": "Transaction Details",
+        "recipient_section": "Recipient Details",
+        "type": "Transaction Type"
       },
       "recipient": {
         "address": "Ikheli lomamukeli",
@@ -2044,7 +2048,8 @@
         "pending_title": "Kusalindile",
         "reference": "Ireferensi",
         "status": "Isimo",
-        "submitted": "Inkokhelo Ithunyelwe"
+        "submitted": "Inkokhelo Ithunyelwe",
+        "receipt_auto_download": "Your PDF receipt should download automatically."
       },
       "subtitle": {
         "": "Thumela imali yakho kalula, ngokushesha nangokuvikelekile ukusuka ekunethezekeni kwekhaya lakho ukuya eZimbabwe."
@@ -2061,7 +2066,8 @@
         "meter_holder": "Umnikazi wamamitha",
         "meter_number": "Inombolo yemitha",
         "provider": "Umhlinzeki kagesi",
-        "token_code": "Ikhodi yethokheni"
+        "token_code": "Ikhodi yethokheni",
+        "token_title": "Electricity Token"
       }
     },
     "disclaimer": "Izinkokhelo zinikwa amandla abahlinzeki bengqalasizinda yezezimali abanelayisensi. I-Diaspora Unlocked ayizibambi izimali zekhasimende.",

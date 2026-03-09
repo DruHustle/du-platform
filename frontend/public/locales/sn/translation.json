@@ -1965,7 +1965,8 @@
         "reloadly_pricing_pending": "Mutengo wevanopa vanopihwa unozowanikwa mushure meruzivo rwemugamuchiri. Isa mari yaunoda kutumira kuti uenderere mberi.",
         "unable_complete_payment": "Hatina kukwanisa kubhadhara.",
         "unable_fetch_quote": "Hatina kukwanisa kutora FX quote.",
-        "unable_verify_session": "Hatina kukwanisa kuona chikamu chako."
+        "unable_verify_session": "Hatina kukwanisa kuona chikamu chako.",
+        "unable_download_receipt": "Unable to download receipt."
       },
       "eta": {
         "airtime": "Kazhinji mukati memaminitsi.",
@@ -2021,7 +2022,10 @@
         "recipient": "Mugamuchiri",
         "sender_country": "Sender Country",
         "title": "Diaspora Yakavhurwa - Mari yekubhadhara",
-        "transaction_id": "Transaction ID"
+        "transaction_id": "Transaction ID",
+        "transaction_details": "Transaction Details",
+        "recipient_section": "Recipient Details",
+        "type": "Transaction Type"
       },
       "recipient": {
         "address": "Receiver address",
@@ -2036,7 +2040,8 @@
         "pending_title": "Pending",
         "reference": "Reference",
         "status": "Status",
-        "submitted": "Kubhadhara Kwatumirwa"
+        "submitted": "Kubhadhara Kwatumirwa",
+        "receipt_auto_download": "Your PDF receipt should download automatically."
       },
       "subtitle": {
         "": "Tumira mari yako zviri nyore, nekukurumidza uye zvakachengeteka kubva murunyararo rweimba yako kuenda kuZimbabwe."
@@ -2053,7 +2058,8 @@
         "meter_holder": "Meter holder",
         "meter_number": "Meter nhamba",
         "provider": "Mupi wemagetsi",
-        "token_code": "Token code"
+        "token_code": "Token code",
+        "token_title": "Electricity Token"
       }
     },
     "disclaimer": "Kubhadhara kunofambiswa nevanopa marezinesi ehupfumi hwemari. Diaspora Yakavhurwa haibati mari dzevatengi.",

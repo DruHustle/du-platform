@@ -1965,7 +1965,8 @@
         "reloadly_pricing_pending": "Die Preise des Anbieters werden nach Angaben des Empfängers verfügbar. Geben Sie den Betrag ein, den Sie senden möchten, um fortzufahren.",
         "unable_complete_payment": "Die Zahlung konnte nicht abgeschlossen werden.",
         "unable_fetch_quote": "Devisenkurs kann nicht abgerufen werden.",
-        "unable_verify_session": "Ihre Sitzung konnte nicht bestätigt werden."
+        "unable_verify_session": "Ihre Sitzung konnte nicht bestätigt werden.",
+        "unable_download_receipt": "Beleg kann nicht heruntergeladen werden."
       },
       "eta": {
         "airtime": "Normalerweise innerhalb von Minuten.",
@@ -2021,7 +2022,10 @@
         "recipient": "Empfänger",
         "sender_country": "Absenderland",
         "title": "Diaspora freigeschaltet – Zahlungsbeleg",
-        "transaction_id": "Transaktions-ID"
+        "transaction_id": "Transaktions-ID",
+        "transaction_details": "Transaktionsdetails",
+        "recipient_section": "Empfaengerdetails",
+        "type": "Transaktionstyp"
       },
       "recipient": {
         "address": "Empfängeradresse",
@@ -2036,7 +2040,8 @@
         "pending_title": "Ausstehend",
         "reference": "Referenz",
         "status": "Status",
-        "submitted": "Zahlung übermittelt"
+        "submitted": "Zahlung übermittelt",
+        "receipt_auto_download": "Ihr PDF-Beleg sollte automatisch heruntergeladen werden."
       },
       "subtitle": {
         "": "Senden Sie Ihr Geld einfach, schnell und sicher bequem von zu Hause nach Simbabwe."
@@ -2053,7 +2058,8 @@
         "meter_holder": "Zählerhalter",
         "meter_number": "Zählernummer",
         "provider": "Stromanbieter",
-        "token_code": "Token-Code"
+        "token_code": "Token-Code",
+        "token_title": "Strom-Token"
       }
     },
     "disclaimer": "Zahlungen werden von lizenzierten Finanzinfrastrukturanbietern durchgeführt. Diaspora Unlocked verfügt über keine Kundengelder.",

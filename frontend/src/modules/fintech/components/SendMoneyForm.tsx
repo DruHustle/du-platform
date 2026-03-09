@@ -486,6 +486,294 @@ function buildReloadlyUtilityPricing(biller: JsonRecord | null | undefined): Rel
   };
 }
 
+type ReceiptPdfSection = {
+  title: string;
+  rows: Array<[string, string]>;
+  accent?: boolean;
+};
+
+type ReceiptPdfOptions = {
+  brandingText: string;
+  title: string;
+  generatedAt: string;
+  transactionKindLabel: string;
+  transactionKindValue: string;
+  statusLabel: string;
+  statusValue: string;
+  referenceLabel: string;
+  referenceValue: string;
+  transactionIdLabel: string;
+  transactionIdValue: string;
+  sections: ReceiptPdfSection[];
+  footerLines: string[];
+};
+
+function drawRoundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+  fillStyle: string,
+  strokeStyle?: string,
+  strokeWidth = 1
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  ctx.fillStyle = fillStyle;
+  ctx.fill();
+  if (strokeStyle) {
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = strokeWidth;
+    ctx.stroke();
+  }
+}
+
+function wrapCanvasText(ctx: CanvasRenderingContext2D, value: string, maxWidth: number): string[] {
+  const normalized = String(value || "").replace(/\s+/g, " ").trim();
+  if (!normalized) return ["-"];
+  const words = normalized.split(" ");
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if (!current || ctx.measureText(next).width <= maxWidth) {
+      current = next;
+    } else {
+      lines.push(current);
+      current = word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+function measureSectionHeight(ctx: CanvasRenderingContext2D, width: number, rows: Array<[string, string]>) {
+  const innerWidth = width - 56;
+  const labelWidth = Math.min(220, innerWidth * 0.36);
+  const valueWidth = innerWidth - labelWidth - 28;
+  let height = 78;
+  ctx.font = "600 24px Inter, Arial, sans-serif";
+  for (const [, value] of rows) {
+    const lineCount = wrapCanvasText(ctx, value, valueWidth).length;
+    height += Math.max(34, lineCount * 26 + 8);
+  }
+  return height + 12;
+}
+
+function drawSectionCard(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  section: ReceiptPdfSection
+) {
+  const height = measureSectionHeight(ctx, width, section.rows);
+  drawRoundedRect(
+    ctx,
+    x,
+    y,
+    width,
+    height,
+    28,
+    section.accent ? "#FFF8E1" : "#F8FAFC",
+    section.accent ? "#E0B74C" : "#D7DEE8",
+    section.accent ? 2 : 1
+  );
+
+  ctx.fillStyle = "#0F172A";
+  ctx.font = "700 28px Inter, Arial, sans-serif";
+  ctx.fillText(section.title, x + 28, y + 44);
+
+  const innerWidth = width - 56;
+  const labelWidth = Math.min(220, innerWidth * 0.36);
+  const valueWidth = innerWidth - labelWidth - 28;
+  let cursorY = y + 84;
+
+  for (const [label, value] of section.rows) {
+    ctx.fillStyle = "#64748B";
+    ctx.font = "700 18px Inter, Arial, sans-serif";
+    ctx.fillText(label, x + 28, cursorY);
+
+    ctx.fillStyle = "#111827";
+    ctx.font = "600 24px Inter, Arial, sans-serif";
+    const lines = wrapCanvasText(ctx, value, valueWidth);
+    lines.forEach((line, index) => {
+      ctx.fillText(line, x + 28 + labelWidth + 28, cursorY + index * 26);
+    });
+
+    const rowHeight = Math.max(34, lines.length * 26 + 8);
+    cursorY += rowHeight;
+  }
+
+  return y + height + 24;
+}
+
+function buildSingleImagePdf(jpegBytes: Uint8Array, imageWidth: number, imageHeight: number) {
+  const encoder = new TextEncoder();
+  const chunks: Uint8Array[] = [];
+  const offsets: number[] = [0];
+  let cursor = 0;
+
+  const push = (value: string | Uint8Array) => {
+    const bytes = typeof value === "string" ? encoder.encode(value) : value;
+    chunks.push(bytes);
+    cursor += bytes.length;
+  };
+
+  const content = `q
+595 0 0 842 0 0 cm
+/Im0 Do
+Q
+`;
+  const contentBytes = encoder.encode(content);
+
+  push(`%PDF-1.4
+`);
+  offsets[1] = cursor;
+  push(`1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+`);
+  offsets[2] = cursor;
+  push(`2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+`);
+  offsets[3] = cursor;
+  push(`3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>
+endobj
+`);
+  offsets[4] = cursor;
+  push(`4 0 obj
+<< /Type /XObject /Subtype /Image /Width ${imageWidth} /Height ${imageHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>
+stream
+`);
+  push(jpegBytes);
+  push(`
+endstream
+endobj
+`);
+  offsets[5] = cursor;
+  push(`5 0 obj
+<< /Length ${contentBytes.length} >>
+stream
+${content}endstream
+endobj
+`);
+
+  const xrefStart = cursor;
+  push(`xref
+0 6
+0000000000 65535 f 
+`);
+  for (let i = 1; i <= 5; i += 1) {
+    push(`${String(offsets[i]).padStart(10, "0")} 00000 n 
+`);
+  }
+  push(`trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+${xrefStart}
+%%EOF`);
+
+  const output = new Uint8Array(chunks.reduce((sum, chunk) => sum + chunk.length, 0));
+  let offset = 0;
+  for (const chunk of chunks) {
+    output.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return output;
+}
+
+async function canvasToJpegBytes(canvas: HTMLCanvasElement) {
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((nextBlob) => {
+      if (!nextBlob) {
+        reject(new Error("Unable to generate receipt image."));
+        return;
+      }
+      resolve(nextBlob);
+    }, "image/jpeg", 0.94);
+  });
+  return new Uint8Array(await blob.arrayBuffer());
+}
+
+async function createReceiptPdfBlob(options: ReceiptPdfOptions) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1240;
+  canvas.height = 1754;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Unable to create receipt canvas.");
+
+  ctx.fillStyle = "#F1F5F9";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawRoundedRect(ctx, 72, 72, canvas.width - 144, 220, 34, "#0F172A");
+  ctx.fillStyle = "#F8FAFC";
+  ctx.font = "700 24px Inter, Arial, sans-serif";
+  ctx.fillText(options.brandingText, 112, 128);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "800 52px Inter, Arial, sans-serif";
+  ctx.fillText(options.title, 112, 196);
+  ctx.fillStyle = "#CBD5E1";
+  ctx.font = "500 24px Inter, Arial, sans-serif";
+  ctx.fillText(options.generatedAt, 112, 238);
+
+  drawRoundedRect(ctx, 72, 326, canvas.width - 144, 170, 28, "#FFFFFF", "#D7DEE8");
+  const topRows: Array<[string, string, number]> = [
+    [options.transactionKindLabel, options.transactionKindValue, 112],
+    [options.statusLabel, options.statusValue, 392],
+    [options.referenceLabel, options.referenceValue, 672],
+  ];
+  topRows.forEach(([label, value, x]) => {
+    ctx.fillStyle = "#64748B";
+    ctx.font = "700 18px Inter, Arial, sans-serif";
+    ctx.fillText(label, x, 382);
+    ctx.fillStyle = "#0F172A";
+    ctx.font = "700 28px Inter, Arial, sans-serif";
+    wrapCanvasText(ctx, value, 220).slice(0, 2).forEach((line, index) => {
+      ctx.fillText(line, x, 420 + index * 28);
+    });
+  });
+  ctx.fillStyle = "#64748B";
+  ctx.font = "700 18px Inter, Arial, sans-serif";
+  ctx.fillText(options.transactionIdLabel, 952, 382);
+  ctx.fillStyle = "#0F172A";
+  ctx.font = "700 28px Inter, Arial, sans-serif";
+  wrapCanvasText(ctx, options.transactionIdValue, 180).slice(0, 2).forEach((line, index) => {
+    ctx.fillText(line, 952, 420 + index * 28);
+  });
+
+  let y = 536;
+  for (const section of options.sections) {
+    y = drawSectionCard(ctx, 72, y, canvas.width - 144, section);
+  }
+
+  ctx.fillStyle = "#64748B";
+  ctx.font = "500 20px Inter, Arial, sans-serif";
+  let footerY = canvas.height - 110;
+  for (const line of options.footerLines) {
+    ctx.fillText(line, 72, footerY);
+    footerY += 28;
+  }
+
+  const jpegBytes = await canvasToJpegBytes(canvas);
+  const pdfBytes = buildSingleImagePdf(jpegBytes, canvas.width, canvas.height);
+  return new Blob([pdfBytes], { type: "application/pdf" });
+}
+
 export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFormProps) {
   const { t, i18n } = useTranslation();
   const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
@@ -1058,7 +1346,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       String(form.recipientAddress).trim().length >= 4 &&
       looksLikeZimbabweNumber(form.recipientPhone)
     );
-  }, [form.recipientAddress, form.recipientName, form.recipientPhone, form.transferType]);
+  }, [form.meterNumber, form.recipientAddress, form.recipientName, form.recipientPhone, form.transferType]);
 
   const canContinuePayout = useMemo(() => {
     if (form.transferType === "airtime_topup") {
@@ -1282,18 +1570,20 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       const isAuthenticated = await ensureAuthenticated();
       if (!isAuthenticated) return;
 
+      let nextStatus: SendMoneyStatus | null = null;
+
       if (form.transferType === "airtime_topup") {
         const response = await api.post("/fintech/airtime/topup", {
           phoneNumber: normalizeZimbabweNumber(form.recipientPhone),
           amount: parseAmountInput(form.amountSent) ?? 0,
           currency: displaySendCurrency,
         });
-        setStatus({
+        nextStatus = {
           kind: "airtime",
           transaction: response.data?.transaction ?? null,
           providerResponse: response.data?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
-        });
+        };
       } else if (form.transferType === "prepaid_electricity") {
         const response = await api.post("/fintech/utility/electricity/pay", {
           meterNumber: String(form.meterNumber).trim(),
@@ -1302,20 +1592,25 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           customerName: String(form.utilityCustomerName).trim() || undefined,
           billerId: Number(form.utilityBillerId),
         });
-        setStatus({
+        nextStatus = {
           kind: "utility",
           transaction: response.data?.transaction ?? null,
           providerResponse: response.data?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
-        });
+        };
       } else {
         const response = await api.post("/fintech/remittance/send", buildRemittancePayload());
-        setStatus({
+        nextStatus = {
           kind: "remittance",
           transaction: response.data?.transaction ?? null,
           providerResponse: response.data?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
-        });
+        };
+      }
+
+      if (nextStatus) {
+        setStatus(nextStatus);
+        await downloadReceiptForStatus(nextStatus);
       }
       setStep("status");
     } catch (err) {
@@ -1325,55 +1620,136 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     }
   };
 
-  const downloadReceipt = () => {
+  const downloadReceiptForStatus = async (receiptStatus: SendMoneyStatus) => {
+    try {
+      const submittedAt = new Date(receiptStatus.submittedAt || Date.now());
+      const payoutLabel =
+        form.transferType === "airtime_topup"
+          ? tr("payments.form.transfer_types.airtime_topup.label", "Airtime Top-up")
+          : form.transferType === "prepaid_electricity"
+            ? tr("payments.form.transfer_types.prepaid_electricity.label", "Prepaid Electricity")
+            : tr(
+                PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelKey || "payments.form.payout_types.mobile_money",
+                PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelFallback || form.recipientType
+              ) || form.recipientType;
+      const transaction = receiptStatus.transaction || {};
+      const ref =
+        transaction.terrapay_reference ||
+        transaction.reloadly_reference ||
+        receiptStatus.providerResponse?.transfer?.reference ||
+        tr("payments.form.status.pending_title", "Pending");
+      const transactionKindValue =
+        receiptStatus.kind === "utility"
+          ? tr("payments.form.transfer_types.prepaid_electricity.label", "Prepaid Electricity")
+          : receiptStatus.kind === "airtime"
+            ? tr("payments.form.transfer_types.airtime_topup.label", "Airtime Top-up")
+            : tr("payments.form.transfer_types.send_money.label", "Send Money");
+      const routeValue = `${selectedSender.name} ${tr("payments.form.quote.to", "to")} ${receiverCountry.name}`;
+      const recipientValue =
+        form.transferType === "prepaid_electricity"
+          ? form.utilityCustomerName || tr("payments.form.utility.meter_holder", "Meter holder")
+          : form.recipientName || tr("payments.form.pay.recipient", "Recipient");
+      const destinationValue =
+        form.transferType === "prepaid_electricity"
+          ? String(form.meterNumber).trim() || "-"
+          : normalizeZimbabweNumber(form.recipientPhone) || "-";
+      const addressValue =
+        form.transferType === "send_money"
+          ? `${form.recipientAddress}${form.recipientCity ? `, ${form.recipientCity}` : ""}`.trim() || "-"
+          : payoutLabel;
+      const receiveLabel =
+        form.transferType === "prepaid_electricity"
+          ? tr("payments.form.utility.meter_value", "Meter value")
+          : tr("payments.form.fields.they_receive", "They receive");
+      const sections: ReceiptPdfSection[] = [
+        {
+          title: tr("payments.form.receipt.transaction_details", "Transaction Details"),
+          rows: [
+            [tr("payments.form.quote.route", "Route"), routeValue],
+            [tr("payments.form.pay.method", "Method"), payoutLabel],
+            [tr("payments.form.receipt.date", "Date"), submittedAt.toLocaleString(i18n.language || undefined)],
+          ],
+        },
+        {
+          title: tr("payments.form.receipt.recipient_section", "Recipient Details"),
+          rows: [
+            [tr("payments.form.receipt.recipient", "Recipient"), recipientValue],
+            [
+              form.transferType === "prepaid_electricity"
+                ? tr("payments.form.utility.meter_number", "Meter number")
+                : tr("payments.form.receipt.phone", "Phone"),
+              destinationValue,
+            ],
+            [
+              form.transferType === "send_money"
+                ? tr("payments.form.receipt.address", "Address")
+                : tr("payments.form.receipt.payout_method", "Payout Method"),
+              addressValue,
+            ],
+          ],
+        },
+        {
+          title: tr("payments.form.pay.summary", "Payment Summary"),
+          accent: true,
+          rows: [
+            [tr("payments.form.fields.you_send", "You send"), formatAmount(amount, displaySendCurrency)],
+            [tr("payments.form.fee", "Fee"), formatAmount(fee, displaySendCurrency)],
+            [tr("payments.form.total", "Total"), formatAmount(totalCharge, displaySendCurrency)],
+            [
+              tr("payments.form.quote.fx_rate", "FX Rate"),
+              fxRate > 0
+                ? `1 ${displaySendCurrency} = ${fxRate.toFixed(6)} ${displayReceiveCurrency}`
+                : tr("payments.form.quote.na", "N/A"),
+            ],
+            [receiveLabel, formatAmount(displayedReceiveAmount, displayReceiveCurrency)],
+            [tr("payments.form.pay.settlement_timing", "Settlement timing"), payoutEta],
+          ],
+        },
+      ];
+      if (receiptStatus.transaction?.token_code) {
+        sections.push({
+          title: tr("payments.form.utility.token_title", "Electricity Token"),
+          accent: true,
+          rows: [[tr("payments.form.utility.token_code", "Token code"), String(receiptStatus.transaction?.token_code)]],
+        });
+      }
+
+      const pdfBlob = await createReceiptPdfBlob({
+        brandingText: "Diaspora Unlocked",
+        title: tr("payments.form.receipt.title", "Payment Receipt"),
+        generatedAt: `${tr("payments.form.receipt.date", "Date")}: ${submittedAt.toLocaleString(i18n.language || undefined)}`,
+        transactionKindLabel: tr("payments.form.receipt.type", "Transaction Type"),
+        transactionKindValue,
+        statusLabel: tr("payments.form.status.status", "Status"),
+        statusValue: String(transaction.status || tr("payments.form.status.pending", "pending")),
+        referenceLabel: tr("payments.form.status.reference", "Reference"),
+        referenceValue: String(ref),
+        transactionIdLabel: tr("payments.form.receipt.transaction_id", "Transaction ID"),
+        transactionIdValue: String(transaction.id || tr("payments.form.status.pending_title", "Pending")),
+        sections,
+        footerLines: [
+          tr("payments.receipt.disclaimer_line_1", "Payments are powered by licensed financial infrastructure providers."),
+          tr("payments.receipt.disclaimer_line_2", "Diaspora Unlocked does not hold customer funds."),
+        ],
+      });
+
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      const fileId = String(transaction.id || ref || Date.now()).replace(/[^a-zA-Z0-9_-]+/g, "-");
+      link.href = url;
+      link.download = `payment-receipt-${fileId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+    } catch (err) {
+      setError(extractErrorMessage(err, tr("payments.form.errors.unable_download_receipt", "Unable to download receipt.")));
+    }
+  };
+
+  const downloadReceipt = async () => {
     if (!status) return;
-
-    const submittedAt = new Date(status.submittedAt || Date.now());
-    const payoutLabel =
-      form.transferType === "airtime_topup"
-        ? "Airtime Top-up"
-        : form.transferType === "prepaid_electricity"
-          ? "Prepaid Electricity"
-        : tr(PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelKey || "payments.form.payout_types.mobile_money", PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelFallback || form.recipientType) || form.recipientType;
-    const transaction = status.transaction || {};
-    const ref =
-      transaction.terrapay_reference ||
-      transaction.reloadly_reference ||
-      status.providerResponse?.transfer?.reference ||
-      "Pending";
-
-    const lines = [
-      tr("payments.form.receipt.title", "Diaspora Unlocked - Payment Receipt"),
-      "==================================",
-      `${tr("payments.form.receipt.date", "Date")}: ${submittedAt.toISOString()}`,
-      `${tr("payments.form.receipt.sender_country", "Sender Country")}: ${selectedSender.name} (${selectedSender.currency})`,
-      `${tr("payments.form.receipt.receiver_country", "Receiver Country")}: ${receiverCountry.name}`,
-      `${tr("payments.form.receipt.recipient", "Recipient")}: ${form.transferType === "prepaid_electricity" ? form.utilityCustomerName || "Meter Holder" : form.recipientName}`,
-      `${tr("payments.form.receipt.address", "Address")}: ${form.transferType === "prepaid_electricity" ? String(form.meterNumber).trim() : `${form.recipientAddress}${form.recipientCity ? `, ${form.recipientCity}` : ""}`}`,
-      `${tr("payments.form.receipt.phone", "Phone")}: ${form.transferType === "prepaid_electricity" ? "-" : normalizeZimbabweNumber(form.recipientPhone)}`,
-      `${tr("payments.form.receipt.payout_method", "Payout Method")}: ${payoutLabel}`,
-      `${tr("payments.form.receipt.amount_sent", "Amount Sent")}: ${formatAmount(amount, displaySendCurrency)}`,
-      `${tr("payments.form.fee", "Fee")}: ${formatAmount(fee, displaySendCurrency)}`,
-      `${tr("payments.form.total", "Total")}: ${formatAmount(totalCharge, displaySendCurrency)}`,
-      `${tr("payments.form.quote.fx_rate", "FX Rate")}: ${fxRate > 0 ? `1 ${displaySendCurrency} = ${fxRate.toFixed(6)} ${displayReceiveCurrency}` : tr("payments.form.quote.na", "N/A")}`,
-      `${tr("payments.form.quote.estimated_receive", "Estimated Receive")}: ${formatAmount(estimatedReceive, displayReceiveCurrency)}`,
-      `${tr("payments.form.receipt.transaction_id", "Transaction ID")}: ${transaction.id || tr("payments.form.status.pending_title", "Pending")}`,
-      `${tr("payments.form.status.reference", "Reference")}: ${ref}`,
-      `${tr("payments.form.status.status", "Status")}: ${transaction.status || tr("payments.form.status.pending", "pending")}`,
-      "",
-      tr("payments.receipt.disclaimer_line_1", "Payments are powered by licensed financial infrastructure providers."),
-      tr("payments.receipt.disclaimer_line_2", "Diaspora Unlocked does not hold customer funds."),
-    ];
-
-    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `payment-receipt-${Date.now()}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    await downloadReceiptForStatus(status);
   };
 
   const onNewTransfer = () => {
@@ -2084,6 +2460,9 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </p>
             <p className="mt-1 text-emerald-200/85">
               {payoutEta}
+            </p>
+            <p className="mt-1 text-emerald-200/85">
+              {tr("payments.form.status.receipt_auto_download", "Your PDF receipt should download automatically.")}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3">
