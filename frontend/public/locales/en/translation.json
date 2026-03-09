@@ -1965,7 +1965,8 @@
         "reloadly_pricing_pending": "Provider pricing becomes available after recipient details. Enter the amount you want to send to continue.",
         "unable_complete_payment": "Unable to complete payment.",
         "unable_fetch_quote": "Unable to fetch FX quote.",
-        "unable_verify_session": "Unable to verify your session."
+        "unable_verify_session": "Unable to verify your session.",
+        "unable_download_receipt": "Unable to download receipt."
       },
       "eta": {
         "airtime": "Usually within minutes.",
@@ -2021,7 +2022,10 @@
         "recipient": "Recipient",
         "sender_country": "Sender Country",
         "title": "Diaspora Unlocked - Payment Receipt",
-        "transaction_id": "Transaction ID"
+        "transaction_id": "Transaction ID",
+        "transaction_details": "Transaction Details",
+        "recipient_section": "Recipient Details",
+        "type": "Transaction Type"
       },
       "recipient": {
         "address": "Receiver address",
@@ -2036,7 +2040,8 @@
         "pending_title": "Pending",
         "reference": "Reference",
         "status": "Status",
-        "submitted": "Payment Submitted"
+        "submitted": "Payment Submitted",
+        "receipt_auto_download": "Your PDF receipt should download automatically."
       },
       "subtitle": {
         "": "Send your money easy, fast and securely from the comfort of your home to Zimbabwe."
@@ -2053,7 +2058,8 @@
         "meter_holder": "Meter holder",
         "meter_number": "Meter number",
         "provider": "Electricity provider",
-        "token_code": "Token code"
+        "token_code": "Token code",
+        "token_title": "Electricity Token"
       }
     },
     "disclaimer": "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.",
