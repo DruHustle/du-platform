@@ -26,7 +26,7 @@ export function registerBackendApiRoutes(app: express.Express, deps: SystemApiDe
   app.get("/api/ping", (_req, res) => {
     return res.json({
       ok: true,
-      service: "zigd-platform",
+      service: "du-platform",
       uptimeSeconds: Math.floor(process.uptime()),
       startedAt: new Date(deps.serverStartedAt).toISOString(),
       now: new Date().toISOString(),

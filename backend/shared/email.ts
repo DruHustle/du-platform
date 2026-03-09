@@ -39,7 +39,7 @@ export async function sendEmailMessage(payload: {
   if (recipients.length === 0) return;
 
   const provider = String(process.env.RESET_EMAIL_PROVIDER ?? "resend").trim().toLowerCase();
-  const from = String(payload.from ?? process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com").trim();
+  const from = String(payload.from ?? process.env.FROM_EMAIL ?? "no-reply@du-platform.com").trim();
 
   if (provider === "resend") {
     const apiKey = process.env.RESEND_API_KEY;
@@ -95,7 +95,7 @@ export async function sendEmailMessageSafe(
 export async function getNotifyFromEmail(): Promise<string> {
   const configured = await getAdminSetting(ADMIN_SETTING_NOTIFY_FROM_EMAIL);
   if (configured && isValidEmail(configured)) return configured;
-  return String(process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com").trim();
+  return String(process.env.FROM_EMAIL ?? "no-reply@du-platform.com").trim();
 }
 
 export async function getNotifyAlertEmails(): Promise<string[]> {
@@ -106,7 +106,7 @@ export async function getNotifyAlertEmails(): Promise<string[]> {
 }
 
 export async function sendResetEmail(to: string, resetUrl: string) {
-  const from = process.env.FROM_EMAIL ?? "no-reply@zigd-platform.com";
+  const from = process.env.FROM_EMAIL ?? "no-reply@du-platform.com";
   await sendEmailMessage({
     from,
     to: [to],

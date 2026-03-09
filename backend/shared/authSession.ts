@@ -2,8 +2,7 @@ import type express from "express";
 import { deleteSession, findUserById, getSession } from "./persistence/authStore";
 import { createJwtToken } from "../utils/jwt";
 
-export const SESSION_COOKIE = "zigd_session";
-
+export const SESSION_COOKIE = "du_session";
 function getCookie(req: express.Request, key: string): string | null {
   const raw = req.headers.cookie;
   if (!raw) return null;
@@ -78,8 +77,8 @@ export function issueAccessTokenForUser(user: {
     },
     {
       expiresInSeconds: ttl,
-      issuer: "zigd-platform",
-      audience: "zigd-web",
+      issuer: "du-platform",
+      audience: "du-web",
     }
   );
 }

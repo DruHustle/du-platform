@@ -57,7 +57,7 @@ export default function Tourism() {
       ]
     },
     {
-      image: "/images/pages/wikimedia/african-elephant.jpg",
+      image: "/images/pages/tourism/african-elephant.jpg",
       badge: t('tourism.hero.badge3') || "Adventure",
       badgeIcon: Car,
       title: t('tourism.hero.title3') || "Wildlife & Safari",

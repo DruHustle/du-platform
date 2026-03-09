@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, LucideIcon } from 'lucide-react';
+import InstantImage, { preloadImages } from '@/components/InstantImage';
 
 interface HeroButton {
   text: string;
@@ -38,6 +39,11 @@ export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPage
     return <IconInput className={className} />;
   };
 
+  useEffect(() => {
+    if (!current?.image) return;
+    preloadImages([current.image], 1);
+  }, [current?.image]);
+
   if (!current) return null;
 
   return (
@@ -56,9 +62,13 @@ export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPage
           }}
           className="absolute inset-0 z-0 saturate-[1.1] brightness-[1.05]"
         >
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url('${current.image}')` }}
+          <InstantImage
+            src={current.image}
+            alt=""
+            aria-hidden="true"
+            priority
+            wrapperClassName="absolute inset-0 h-full w-full bg-slate-900"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </motion.div>
         

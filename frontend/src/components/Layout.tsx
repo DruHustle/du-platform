@@ -57,6 +57,7 @@ export function getDesktopUtilityIconsClass(useEdgePosition: boolean): string {
 export default function Layout({ children }: LayoutProps) {
   type AboutSectionId = "vision" | "mission" | "values" | "who" | "what";
   const { t, i18n } = useTranslation();
+  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -161,21 +162,21 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigation = [
-    { name: "Home", href: "/", icon: House },
-    { name: "Remittances", href: "/payments", icon: ArrowRightLeft },
-    { name: "Shop", href: "/shop", icon: ShoppingBag },
-    { name: "Care", href: "/care", icon: HeartHandshake },
-    { name: "Technology", href: "/technology", icon: Brain },
-    { name: "Trade", href: "/trade", matchPaths: ["/trade"], icon: Package },
-    { name: "Investment", href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
-    { name: "Tourism", href: "/tourism", icon: MapPin },
+    { name: tr("nav.home", "Home"), href: "/", icon: House },
+    { name: tr("nav.remittances", "Remittances"), href: "/payments", icon: ArrowRightLeft },
+    { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
+    { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
+    { name: tr("nav.technology", "Technology"), href: "/technology", icon: Brain },
+    { name: tr("nav.trade", "Trade"), href: "/trade", matchPaths: ["/trade"], icon: Package },
+    { name: tr("nav.investment", "Investment"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
+    { name: tr("nav.tourism", "Tourism"), href: "/tourism", icon: MapPin },
   ];
   const mobileBottomNavigation = [
-    { name: "Home", href: "/", icon: House },
-    { name: "Remittances", href: "/payments", icon: ArrowRightLeft },
-    { name: "Care", href: "/care", icon: HeartHandshake },
-    { name: "Shop", href: "/shop", icon: ShoppingBag },
-    { name: "Discover", href: "/tourism", matchPaths: ["/tourism"], icon: Compass },
+    { name: tr("nav.home", "Home"), href: "/", icon: House },
+    { name: tr("nav.remittances", "Remittances"), href: "/payments", icon: ArrowRightLeft },
+    { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
+    { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
+    { name: tr("nav.discover", "Discover"), href: "/tourism", matchPaths: ["/tourism"], icon: Compass },
   ];
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
@@ -237,8 +238,8 @@ export default function Layout({ children }: LayoutProps) {
         kind: "success",
         message:
           data?.created === false
-            ? "This email is already subscribed to the newsletter."
-            : "Subscribed. Watch your inbox for updates.",
+            ? tr("footer.newsletter.already_subscribed", "This email is already subscribed to the newsletter.")
+            : tr("footer.newsletter.subscribed", "Subscribed. Watch your inbox for updates."),
       });
 
       if (data?.created !== false) {
@@ -247,7 +248,7 @@ export default function Layout({ children }: LayoutProps) {
     } catch (error) {
       setNewsletterFeedback({
         kind: "error",
-        message: getApiErrorMessage(error, "Unable to subscribe right now."),
+        message: getApiErrorMessage(error, tr("footer.newsletter.error", "Unable to subscribe right now.")),
       });
     } finally {
       setNewsletterSubmitting(false);
@@ -416,7 +417,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="relative inline-flex h-10 w-10 items-center justify-center">
                   <span className="pointer-events-none absolute inset-0 rounded-[0.95rem] border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
                   <img
-                    src='/images/pages/shared/diaspora_unlocked.png'
+                    src='/images/brand/diaspora_unlocked.png'
                     alt='Logo'
                     className="relative h-[2.35rem] w-[2.35rem] scale-[1.12] object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:h-[2.35rem] lg:w-[2.35rem] lg:scale-[1.12] lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
                   />
@@ -560,12 +561,12 @@ export default function Layout({ children }: LayoutProps) {
                 ) : user ? (
                   <>
                     <DropdownMenuItem asChild className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
-                      <Link href="/admin">Admin</Link>
+                      <Link href="/admin">{tr("nav.admin", "Admin")}</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer rounded-xl hover:bg-white/10 py-2.5 px-3 text-sm transition-colors duration-200 outline-none">
                       <div className="flex items-center gap-2 w-full">
                         <LogOut className="h-4 w-4" />
-                        Logout
+                        {tr("account.logout", "Logout")}
                       </div>
                     </DropdownMenuItem>
                   </>
@@ -804,11 +805,11 @@ export default function Layout({ children }: LayoutProps) {
                 {t("local_partners", { defaultValue: "Local Partners" })}
               </h3>
               <ul className="text-slate-400 space-y-2 text-xs">
-                <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Zimbabwe Tourism</a></li>
-                <li><a href="https://zimparks.org.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZimParks</a></li>
-                <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZIDA Invest</a></li>
-                <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZimTrade</a></li>
-                <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ZIMRA</a></li>
+                <li><a href="https://zimbabwetourism.net/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.local_partners.items.zimbabwe_tourism", "Zimbabwe Tourism")}</a></li>
+                <li><a href="https://zimparks.org.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.local_partners.items.zimparks", "ZimParks")}</a></li>
+                <li><a href="https://zidainvest.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.local_partners.items.zida", "ZIDA Invest")}</a></li>
+                <li><a href="https://tradezimbabwe.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.local_partners.items.zimtrade", "ZimTrade")}</a></li>
+                <li><a href="https://www.zimra.co.zw/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.local_partners.items.zimra", "ZIMRA")}</a></li>
               </ul>
             </div>
 
@@ -818,27 +819,27 @@ export default function Layout({ children }: LayoutProps) {
                 {t("international_partners", { defaultValue: "International Partners" })}
               </h3>
               <ul className="text-slate-400 space-y-2 text-xs">
-                <li><a href="https://www.gtai.de/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Germany Trade & Invest</a></li>
-                <li><a href="https://international-partnerships.ec.europa.eu/policies/global-gateway_en" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">EU Global Gateway</a></li>
-                <li><a href="https://www.eib.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">European Investment Bank</a></li>
-                <li><a href="https://www.proparco.fr/en" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">PROPARCO</a></li>
-                <li><a href="https://www.intracen.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">International Trade Centre</a></li>
+                <li><a href="https://www.gtai.de/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.international_partners.items.gtai", "Germany Trade & Invest")}</a></li>
+                <li><a href="https://international-partnerships.ec.europa.eu/policies/global-gateway_en" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.international_partners.items.eu_global_gateway", "EU Global Gateway")}</a></li>
+                <li><a href="https://www.eib.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.international_partners.items.eib", "European Investment Bank")}</a></li>
+                <li><a href="https://www.proparco.fr/en" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.international_partners.items.proparco", "PROPARCO")}</a></li>
+                <li><a href="https://www.intracen.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{tr("footer.international_partners.items.itc", "International Trade Centre")}</a></li>
               </ul>
             </div>
 
             {/* Newsletter Column */}
             <div className="min-w-0 space-y-4">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
-                Newsletter
+                {tr("footer.newsletter.title", "Newsletter")}
               </h3>
               <div className="space-y-4">
-                <p className="text-sm text-slate-500">Stay updated.</p>
+                <p className="text-sm text-slate-500">{tr("footer.newsletter.description", "Stay updated.")}</p>
                 <form className="flex min-w-0 flex-col gap-2 xl:flex-row" onSubmit={handleNewsletterSubmit}>
                   <input
                     type="email"
                     value={newsletterEmail}
                     onChange={(event) => setNewsletterEmail(event.target.value)}
-                    placeholder="Email address"
+                    placeholder={tr("footer.newsletter.email_placeholder", "Email address")}
                     required
                     autoComplete="email"
                     className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
@@ -846,7 +847,7 @@ export default function Layout({ children }: LayoutProps) {
                   <button
                     type="submit"
                     disabled={newsletterSubmitting}
-                    aria-label="Subscribe to newsletter"
+                    aria-label={tr("footer.newsletter.subscribe_aria", "Subscribe to newsletter")}
                     className="shrink-0 self-start rounded-lg bg-white p-2 text-slate-900 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 xl:self-auto"
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -919,7 +920,7 @@ export default function Layout({ children }: LayoutProps) {
                         className="absolute right-0 mt-2 w-[min(14rem,calc(100vw-2rem))] rounded-xl border border-white/15 bg-slate-900/95 backdrop-blur-xl p-3 shadow-2xl z-[120]"
                       >
                         <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
-                          Contact Options
+                          {tr("footer.contact.options_title", "Contact Options")}
                         </p>
                         <div className="flex flex-col gap-2">
                           <a
@@ -927,7 +928,7 @@ export default function Layout({ children }: LayoutProps) {
                             className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs text-white hover:bg-white hover:text-slate-900 transition-colors"
                           >
                             <Phone className="h-3.5 w-3.5 shrink-0" />
-                            Call
+                            {tr("footer.contact.call", "Call")}
                           </a>
                           <a
                             href="https://wa.me/+4915147416152"
@@ -936,7 +937,7 @@ export default function Layout({ children }: LayoutProps) {
                             className="inline-flex items-center gap-2 rounded-lg border border-green-400/30 bg-green-500/15 px-3 py-2 text-xs text-green-300 hover:bg-green-500 hover:text-white transition-colors"
                           >
                             <MessageCircle className="h-3.5 w-3.5 shrink-0" />
-                            WhatsApp
+                            {tr("footer.contact.whatsapp", "WhatsApp")}
                           </a>
                         </div>
                       </motion.div>
@@ -945,22 +946,22 @@ export default function Layout({ children }: LayoutProps) {
                 </li>
                 <li className="flex items-start gap-3 opacity-90">
                   <MapPin className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>Berlin, Germany</span>
+                  <span>{tr("footer.contact.location_berlin", "Berlin, Germany")}</span>
                 </li>
                 <li className="pt-2 text-white text-[10px] font-black uppercase tracking-widest">
-                  Social
+                  {tr("footer.contact.social", "Social")}
                 </li>
                 <li className="flex items-start gap-3">
                   <Twitter className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>Twitter</span>
+                  <span>{tr("footer.contact.twitter", "Twitter")}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Linkedin className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>LinkedIn</span>
+                  <span>{tr("footer.contact.linkedin", "LinkedIn")}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Instagram className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>Instagram</span>
+                  <span>{tr("footer.contact.instagram", "Instagram")}</span>
                 </li>
               </ul>
             </div>

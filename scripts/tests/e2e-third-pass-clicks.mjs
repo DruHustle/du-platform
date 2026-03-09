@@ -102,8 +102,8 @@ try {
     }
 
     await page.evaluate((token) => {
-      localStorage.setItem('zigd_jwt', token);
-      localStorage.setItem('zigd_has_logged_in', '1');
+      localStorage.setItem('du_jwt', token);
+      localStorage.setItem('du_has_logged_in', '1');
     }, accessToken);
     await goto('/payments');
   });

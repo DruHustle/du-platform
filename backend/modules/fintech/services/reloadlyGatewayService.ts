@@ -7,9 +7,21 @@ const AirtimeTopupSchema = z.object({
   phoneNumber: z.string().min(8).max(20),
   amount: z.number().positive(),
   currency: z.string().min(3).max(10).optional(),
+  idempotencyKey: z.string().uuid().optional(),
 });
 
 export type AirtimeTopupRequest = z.infer<typeof AirtimeTopupSchema>;
+
+const ElectricityPaymentSchema = z.object({
+  meterNumber: z.string().min(5).max(40),
+  amount: z.number().positive(),
+  currency: z.string().min(3).max(10).optional(),
+  customerName: z.string().min(2).max(255).optional(),
+  billerId: z.number().int().positive().optional(),
+  idempotencyKey: z.string().uuid().optional(),
+});
+
+export type ElectricityPaymentRequest = z.infer<typeof ElectricityPaymentSchema>;
 
 function toFiniteNumber(input: unknown): number | null {
   const value = Number(input);
@@ -59,6 +71,19 @@ export class ReloadlyService {
       phoneNumber: sanitizeText((sanitized as any)?.phoneNumber, 20),
       amount: Number((sanitized as any)?.amount),
       currency: sanitizeText((sanitized as any)?.currency ?? "USD", 10).toUpperCase(),
+      idempotencyKey: sanitizeText((sanitized as any)?.idempotencyKey ?? "", 64) || undefined,
+    });
+  }
+
+  private normalizeElectricityPayload(input: unknown): ElectricityPaymentRequest {
+    const sanitized = sanitizeObject((input ?? {}) as Record<string, unknown>);
+    return ElectricityPaymentSchema.parse({
+      meterNumber: sanitizeText((sanitized as any)?.meterNumber, 40),
+      amount: Number((sanitized as any)?.amount),
+      currency: sanitizeText((sanitized as any)?.currency ?? "USD", 10).toUpperCase(),
+      customerName: sanitizeText((sanitized as any)?.customerName ?? "", 255) || undefined,
+      billerId: (sanitized as any)?.billerId ? Number((sanitized as any)?.billerId) : undefined,
+      idempotencyKey: sanitizeText((sanitized as any)?.idempotencyKey ?? "", 64) || undefined,
     });
   }
 
@@ -86,10 +111,16 @@ export class ReloadlyService {
         operatorId: Math.floor(operatorId),
         name: String(operatorDetail?.name ?? operator?.name ?? "Unknown Operator"),
         countryCode: "ZW",
-        localAmountSupported: Boolean(operatorDetail?.localAmountSupported),
+        localAmountSupported: Boolean(operatorDetail?.localAmountSupported ?? operatorDetail?.supportsLocalAmounts),
         minAmount: operatorDetail?.minAmount ?? null,
         maxAmount: operatorDetail?.maxAmount ?? null,
+        localMinAmount: operatorDetail?.localMinAmount ?? null,
+        localMaxAmount: operatorDetail?.localMaxAmount ?? null,
         fee: extractReloadlyFee([operatorDetail, operator]),
+        senderCurrencyCode: String(operatorDetail?.senderCurrencyCode ?? operator?.senderCurrencyCode ?? "").trim() || null,
+        destinationCurrencyCode: String(operatorDetail?.destinationCurrencyCode ?? operator?.destinationCurrencyCode ?? "").trim() || null,
+        fx: operatorDetail?.fx ?? operator?.fx ?? null,
+        fxRate: toFiniteNumber(operatorDetail?.fx?.rate ?? operator?.fx?.rate),
         suggestedAmounts,
       },
     };
@@ -115,6 +146,7 @@ export class ReloadlyService {
     const topup = await this.provider.createTopup({
       operatorId: Math.floor(operatorId),
       amount: request.amount,
+      useLocalAmount: false,
       recipientPhone: {
         countryCode: "ZW",
         number: normalizedPhone,
@@ -127,6 +159,58 @@ export class ReloadlyService {
       normalizedPhone,
       operator,
       topup,
+      reference,
+    };
+  }
+
+  async fetchElectricityBillers(countryISOCode = "ZW"): Promise<any> {
+    await this.provider.getAccessToken();
+    const normalizedCountryCode = sanitizeText(countryISOCode, 3).toUpperCase() || "ZW";
+    const billers = await this.provider.listUtilityBillers({
+      countryISOCode: normalizedCountryCode,
+      serviceType: "PREPAID",
+      type: "ELECTRICITY_BILL_PAYMENT",
+    });
+
+    return {
+      billers,
+    };
+  }
+
+  async createElectricityPayment(input: unknown): Promise<{
+    request: ElectricityPaymentRequest;
+    biller: any;
+    payment: any;
+    reference: string;
+  }> {
+    const request = this.normalizeElectricityPayload(input);
+    const available = await this.fetchElectricityBillers("ZW");
+    const billers = Array.isArray(available?.billers) ? available.billers : [];
+    const selectedBiller =
+      billers.find((biller: any) => Number(biller?.id) === Number(request.billerId)) ??
+      billers[0] ??
+      null;
+
+    if (!selectedBiller) {
+      throw new Error("No prepaid electricity biller is available right now.");
+    }
+
+    const reference = request.idempotencyKey ?? crypto.randomUUID();
+    const payment = await this.provider.payUtility({
+      amount: request.amount,
+      billerId: Number(selectedBiller.id),
+      subscriberAccountNumber: request.meterNumber,
+      referenceId: reference,
+      useLocalAmount: false,
+    });
+
+    return {
+      request: {
+        ...request,
+        billerId: Number(selectedBiller.id),
+      },
+      biller: selectedBiller,
+      payment,
       reference,
     };
   }

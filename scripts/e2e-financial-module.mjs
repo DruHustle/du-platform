@@ -182,7 +182,46 @@ async function main() {
   });
   assert(airtimeStatus.json?.success === true, "Airtime status response format invalid.");
 
-  console.log("[e2e] SUCCESS: financial remittance + airtime end-to-end flow passed.");
+  console.log("[e2e] Fetching prepaid electricity options");
+  const utilityOptions = await request("/api/fintech/utility/electricity/options", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: { countryISOCode: "ZW" },
+    expectedStatus: 200,
+  });
+  assert(utilityOptions.json?.success === true, "Utility options response format invalid.");
+  const firstBillerId = Number(utilityOptions.json?.data?.billers?.[0]?.id);
+  assert(Number.isFinite(firstBillerId) && firstBillerId > 0, "Utility biller id missing.");
+
+  console.log("[e2e] Creating prepaid electricity payment");
+  const utilityPayment = await request("/api/fintech/utility/electricity/pay", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: {
+      meterNumber: "12345678901",
+      amount: 10.7,
+      currency: "USD",
+      customerName: "Power Customer",
+      billerId: firstBillerId,
+    },
+    expectedStatus: 201,
+  });
+
+  assert(utilityPayment.json?.success === true, "Utility payment response format invalid.");
+  const utilityId = Number(utilityPayment.json?.data?.transaction?.id);
+  const token = String(utilityPayment.json?.data?.providerResponse?.payment?.token ?? "").trim();
+  assert(Number.isFinite(utilityId) && utilityId > 0, "Utility transaction id missing.");
+  assert(token.length > 0, "Utility token missing.");
+
+  console.log("[e2e] Fetching prepaid electricity status");
+  const utilityStatus = await request(`/api/fintech/utility/${utilityId}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    expectedStatus: 200,
+  });
+  assert(utilityStatus.json?.success === true, "Utility status response format invalid.");
+
+  console.log("[e2e] SUCCESS: financial remittance + airtime + prepaid electricity end-to-end flow passed.");
 }
 
 main().catch((error) => {

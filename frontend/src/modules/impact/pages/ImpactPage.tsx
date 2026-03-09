@@ -11,13 +11,13 @@ import SubPageHero from "@/components/SubPageHero";
 import { api } from "@/lib/api";
 
 const PROFILE_IMAGE_A =
-  "/images/pages/home/partnership_handshake.png";
+  "/images/pages/impact/partnership_handshake.png";
 const PROFILE_IMAGE_B =
-  "/images/pages/home/partnership_handshake.png";
+  "/images/pages/impact/partnership_handshake.png";
 const PROFILE_IMAGE_C =
-  "/images/pages/home/partnership_handshake.png";
+  "/images/pages/impact/partnership_handshake.png";
 const PROFILE_IMAGE_D =
-  "/images/pages/home/partnership_handshake.png";
+  "/images/pages/impact/partnership_handshake.png";
 
 const DIVERSE_PEOPLE_IMAGES = [
   PROFILE_IMAGE_A,
@@ -129,7 +129,7 @@ export default function Impact() {
       highlight: t("impact.hero.highlight4") || "Community Growth"
     },
     {
-      image: "/images/pages/shared/minerals_mining.png",
+      image: "/images/pages/impact/minerals_mining.png",
       badge: t("impact.hero.badge5") || "Resource Mobilization",
       badgeIcon: TrendingUp,
       title: t("impact.hero.title5") || "Unlocking Potential Through ",
@@ -137,7 +137,7 @@ export default function Impact() {
       highlight: t("impact.hero.highlight5") || "Investment"
     },
     {
-      image: "/images/pages/wikimedia/small-honey-jar.jpg",
+      image: "/images/pages/impact/small-honey-jar.jpg",
       badge: "Agri Success",
       badgeIcon: Award,
       title: "Value Chain Transformation",
@@ -153,7 +153,7 @@ export default function Impact() {
       highlight: "Local Enterprise"
     },
     {
-      image: "/images/pages/shared/leather_products.jpg",
+      image: "/images/pages/impact/leather_products.jpg",
       badge: "Manufacturing Stories",
       badgeIcon: TrendingUp,
       title: "Export-Ready Production",
@@ -173,7 +173,7 @@ export default function Impact() {
           display: false,
           title: t("impact.stories.leather_goods.title") || "Leather Goods Export Success",
           category: t("impact.stories.leather_goods.category") || "Export",
-          image: "/images/pages/shared/leather_products.jpg",
+          image: "/images/pages/impact/leather_products.jpg",
           impact: { revenue: "$2.5M", jobs: "150+", markets: "3 countries" },
           story: t("impact.stories.leather_goods.story") || "A group of Zimbabwean diaspora professionals in Germany connected local leather manufacturers with European retailers. The diaspora network provided market intelligence on German consumer preferences, direct introductions to retail buyers, quality assurance guidance, and ongoing product development support.",
           testimonial: t("impact.stories.leather_goods.testimonial") || "Diaspora Unlocked connected us with diaspora members who understood both our craftsmanship and European market demands. Within 18 months, we went from local sales to exporting to three European countries.",
@@ -184,7 +184,7 @@ export default function Impact() {
           display: false,
           title: t("impact.stories.horticulture_breakthrough.title") || "Organic Horticulture Breakthrough",
           category: t("impact.stories.horticulture_breakthrough.category") || "Export",
-          image: "/images/pages/shared/horticulture.jpg",
+          image: "/images/pages/impact/horticulture.jpg",
           impact: { revenue: "$850K", jobs: "85", markets: "Germany, Netherlands" },
           story: t("impact.stories.horticulture_breakthrough.story") || "A small-scale farming cooperative achieved EU organic certification with support from diaspora agronomists. The project now exports high-value vegetables to European supermarkets, with diaspora members providing technical expertise, certification guidance, and buyer connections.",
           testimonial: t("impact.stories.horticulture_breakthrough.testimonial") || "We never imagined our small farm could meet European standards. The diaspora experts walked us through every step of organic certification and connected us directly with buyers.",
@@ -206,7 +206,7 @@ export default function Impact() {
           display: false,
           title: t("impact.stories.stone_sculpture.title") || "Stone Sculpture Export Network",
           category: t("impact.stories.stone_sculpture.category") || "Trade",
-          image: "/images/pages/wikimedia/faces-4.jpg",
+          image: "/images/pages/impact/faces-4.jpg",
           impact: { revenue: "$450K", jobs: "60 artisans", markets: "USA, CAN, UK" },
           story: t("impact.stories.stone_sculpture.story") || "Zimbabwean sculptors gained access to North American art markets through diaspora gallery owners and art dealers. The network provides market insights, handles logistics, and promotes Zimbabwean art at international exhibitions. Sales have tripled in two years.",
           testimonial: t("impact.stories.stone_sculpture.testimonial") || "Our sculptures are now displayed in galleries across three continents. The diaspora network understood both our artistic vision and international market dynamics.",
@@ -228,7 +228,7 @@ export default function Impact() {
           display: false,
           title: t("impact.stories.honey_export.title") || "Honey Export Cooperative",
           category: t("impact.stories.honey_export.category") || "Export",
-          image: "/images/pages/wikimedia/small-honey-jar.jpg",
+          image: "/images/pages/impact/small-honey-jar.jpg",
           impact: { revenue: "$320K", jobs: "120 beekeepers", markets: "EU markets" },
           story: t("impact.stories.honey_export.story") || "Rural beekeepers formed a cooperative to export organic honey to Europe. Diaspora food scientists helped achieve EU certification, while diaspora business professionals secured contracts with specialty food retailers. The cooperative now supports 120 families.",
           testimonial: t("impact.stories.honey_export.testimonial") || "From selling honey by the roadside to exporting to European supermarkets—the diaspora network made this transformation possible through technical support and market connections.",
@@ -250,7 +250,7 @@ export default function Impact() {
           display: false,
           title: t("impact.stories.macadamia_nut.title") || "Macadamia Nut Processing Plant",
           category: t("impact.stories.macadamia_nut.category") || "Investment",
-          image: "/images/pages/wikimedia/macadamia-nuts.jpg",
+          image: "/images/pages/impact/macadamia-nuts.jpg",
           impact: { revenue: "$1.8M", jobs: "95", investors: "340 diaspora" },
           story: t("impact.stories.macadamia_nut.story") || "Diaspora crowdfunding enabled construction of Zimbabwe's first macadamia processing plant. The facility processes nuts from 200+ small-scale farmers, adding value before export. Government procurement contracts provide stable demand while export markets drive growth.",
           testimonial: t("impact.stories.macadamia_nut.testimonial") || "We raised $1.2M from diaspora investors who believed in value-addition. Now we're creating jobs, supporting farmers, and exporting premium products to Asia and Europe.",

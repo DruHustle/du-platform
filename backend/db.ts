@@ -354,6 +354,24 @@ export async function initializeDatabase(): Promise<void> {
   `);
 
   await db.execute(`
+    CREATE TABLE IF NOT EXISTS utility_transactions (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      meter_number VARCHAR(40) NOT NULL,
+      customer_name VARCHAR(255),
+      biller_id VARCHAR(100),
+      biller_name VARCHAR(255),
+      amount DECIMAL(10,2) NOT NULL,
+      currency VARCHAR(10),
+      reloadly_reference VARCHAR(255),
+      token_code VARCHAR(255),
+      status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_utility_user (user_id)
+    )
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS financial_failed_attempts (
       id BIGINT AUTO_INCREMENT PRIMARY KEY,
       user_id BIGINT NULL,

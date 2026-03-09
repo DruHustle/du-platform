@@ -2,8 +2,6 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-const POI_ICON_URL = "/images/pages/tourism/vr-walk/poi-info-icon.png";
-
 function makeCanvasTexture(draw: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
@@ -89,42 +87,8 @@ function createFallbackInfoIconTexture(): THREE.CanvasTexture {
   });
 }
 
-function usePoiIconTexture(url: string = POI_ICON_URL) {
-  const [texture, setTexture] = useState<THREE.Texture>(() => createFallbackInfoIconTexture());
-
-  useEffect(() => {
-    let cancelled = false;
-    const loader = new THREE.TextureLoader();
-
-    loader.load(
-      url,
-      (loaded) => {
-        if (cancelled) {
-          loaded.dispose();
-          return;
-        }
-        loaded.colorSpace = THREE.SRGBColorSpace;
-        loaded.needsUpdate = true;
-        setTexture((prev) => {
-          if (prev !== loaded && prev instanceof THREE.Texture) {
-            prev.dispose();
-          }
-          return loaded;
-        });
-      },
-      undefined,
-      () => {
-        if (cancelled) return;
-        setTexture((prev) => prev ?? createFallbackInfoIconTexture());
-      }
-    );
-
-    return () => {
-      cancelled = true;
-    };
-  }, [url]);
-
-  return texture;
+function usePoiIconTexture() {
+  return useMemo(() => createFallbackInfoIconTexture(), []);
 }
 
 export function PoiBillboard({

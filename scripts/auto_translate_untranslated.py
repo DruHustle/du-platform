@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import time
 import urllib.parse
 from pathlib import Path
 from typing import Any
@@ -81,7 +82,7 @@ def restore_placeholders(text: str, replacements: dict[str, str]) -> str:
     return output
 
 
-def translate_text(text: str, target_lang: str, cache: dict[str, str]) -> str:
+def translate_text(text: str, target_lang: str, cache: dict[str, str], *, max_attempts: int = 3) -> str:
     source = text.strip()
     if not source:
         return text
@@ -106,14 +107,28 @@ def translate_text(text: str, target_lang: str, cache: dict[str, str]) -> str:
         "curl",
         "-sS",
         "--max-time",
-        "20",
+        "40",
         "-H",
         "User-Agent: Mozilla/5.0",
         url,
     ]
-    raw = subprocess.check_output(command, text=True)
-    payload = json.loads(raw)
 
+    raw = None
+    payload = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            raw = subprocess.check_output(command, text=True)
+            payload = json.loads(raw)
+            break
+        except (subprocess.CalledProcessError, json.JSONDecodeError):
+            if attempt == max_attempts:
+                cache[source] = source
+                return source
+            time.sleep(min(2 * attempt, 6))
+
+    if payload is None:
+        cache[source] = source
+        return source
     translated = "".join(part[0] for part in payload[0] if part and part[0])
     translated = restore_placeholders(translated, replacements).strip()
     cache[source] = translated if translated else source
@@ -156,6 +171,7 @@ def main() -> int:
             else:
                 unchanged_after += 1
             if idx % 25 == 0 or idx == total:
+                save_json(locale_path, locale_data)
                 print(f"{locale}: progress {idx}/{total}", flush=True)
 
         save_json(locale_path, locale_data)

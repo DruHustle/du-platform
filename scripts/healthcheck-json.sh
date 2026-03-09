@@ -62,8 +62,8 @@ try {
 
 const checks = {
   "app-ping": {
-    pass: payload?.ok === true && payload?.service === "zigd-platform",
-    expected: 'expected {"ok": true, "service": "zigd-platform"}',
+    pass: payload?.ok === true && payload?.service === "du-platform",
+    expected: 'expected {"ok": true, "service": "du-platform"}',
   },
   "db-health": {
     pass: payload?.ok === true && payload?.mode === "mysql",
