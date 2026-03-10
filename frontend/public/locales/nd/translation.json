@@ -1976,6 +1976,7 @@
         "unable_verify_session": "Ayikwazi ukuqinisekisa isikhathi sakho.",
         "unable_download_receipt": "Unable to download receipt."
       },
+      "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Ngokuvamile kungakapheli imizuzu.",
         "cash_pickup": "Ngokuvamile lingakapheli ihora elingu-1 ngemva kokuqinisekiswa komhlinzeki.",

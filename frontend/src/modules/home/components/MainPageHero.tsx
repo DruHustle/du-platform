@@ -51,10 +51,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
           </motion.div>
         </AnimatePresence>
 
-        <div className="relative z-20 container mx-auto px-6 flex flex-col items-center justify-center md:pt-20 lg:pt-24">
-          <div className="mb-12 md:hidden" aria-hidden="true">
-            <div className="h-28 w-28" />
-          </div>
+        <div className="relative z-20 container mx-auto px-6 flex flex-col items-center justify-start pt-[calc(50vh-7rem)] lg:pt-[calc(50vh-14rem)]">
           {/* Logo */}
           <motion.div 
             initial={{ opacity: 0, y: 15 }} 

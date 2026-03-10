@@ -1968,6 +1968,7 @@
         "unable_verify_session": "Hatina kukwanisa kuona chikamu chako.",
         "unable_download_receipt": "Unable to download receipt."
       },
+      "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Kazhinji mukati memaminitsi.",
         "cash_pickup": "Kazhinji mukati meawa 1 mushure mekusimbiswa kweanopa.",
