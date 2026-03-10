@@ -171,7 +171,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: tr("nav.investment", "Investment"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
     { name: tr("nav.tourism", "Tourism"), href: "/tourism", icon: MapPin },
   ];
-  const mobileBottomNavigation = [
+  const mobileTopNavigation = [
     { name: tr("nav.home", "Home"), href: "/", icon: House },
     { name: tr("nav.remittances", "Remittances"), href: "/payments", icon: ArrowRightLeft },
     { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
@@ -195,9 +195,9 @@ export default function Layout({ children }: LayoutProps) {
     location === "/register" ||
     location === "/forgot-password" ||
     location === "/reset-password";
-  const isBottomNavHiddenPage = isAuthPage || location === "/onesa-ai-chat";
+  const isMobileNavHiddenPage = isAuthPage || location === "/onesa-ai-chat";
   const isCompactNavViewport = desktopViewportWidth < 1024;
-  const shouldShowNavbarLogo = !isHomePage || !homeHeroLogoVisible;
+  const shouldShowNavbarLogo = !isCompactNavViewport && (!isHomePage || !homeHeroLogoVisible);
   const useHomeCompactTransparentNav = isCompactNavViewport && isHomePage && !mobileMenuOpen;
   const hasHeroSection =
     isHomePage ||
@@ -210,15 +210,21 @@ export default function Layout({ children }: LayoutProps) {
     location === "/technology";
   const useDesktopTransparentNav = !isCompactNavViewport && hasHeroSection;
   const mainTopPaddingClass = isCompactNavViewport
-    ? (isHomePage ? "pt-0" : "pt-[calc(3.5rem+env(safe-area-inset-top))]")
+    ? (isHomePage
+        ? "pt-0"
+        : isMobileNavHiddenPage
+          ? "pt-[env(safe-area-inset-top)]"
+          : "pt-[calc(3.5rem+env(safe-area-inset-top))]")
     : "pt-0";
-  const mainBottomPaddingClass = isCompactNavViewport
-    ? (isHomePage || isBottomNavHiddenPage ? "" : "pb-[calc(3.5rem+1px+env(safe-area-inset-bottom))]")
-    : "";
+  const mainBottomPaddingClass = "";
   const mainViewportOffsetsStyle: CSSProperties | undefined = isCompactNavViewport
     ? {
-        "--mobile-shell-offset-top": isHomePage ? "0px" : "calc(3.5rem + env(safe-area-inset-top))",
-        "--mobile-shell-offset-bottom": isHomePage || isBottomNavHiddenPage ? "0px" : "calc(3.5rem + 1px + env(safe-area-inset-bottom))",
+        "--mobile-shell-offset-top": isHomePage
+          ? "0px"
+          : isMobileNavHiddenPage
+            ? "env(safe-area-inset-top)"
+            : "calc(3.5rem + env(safe-area-inset-top))",
+        "--mobile-shell-offset-bottom": "0px",
       } as CSSProperties
     : undefined;
 
@@ -396,7 +402,7 @@ export default function Layout({ children }: LayoutProps) {
       
       {/* --- INTEGRATED GLASS CEILING --- */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-[210] pt-[env(safe-area-inset-top)] transition-all duration-500 ${
+        className={`hidden lg:block fixed top-0 left-0 right-0 z-[210] pt-[env(safe-area-inset-top)] transition-all duration-500 ${
           useHomeCompactTransparentNav
             ? "bg-transparent border-transparent py-0"
             : useDesktopTransparentNav
@@ -409,7 +415,7 @@ export default function Layout({ children }: LayoutProps) {
           {/* 1. Left Section: Logo & Brand (Flexible width to push menu center) */}
           <div className="flex-1 lg:flex-none lg:min-w-[200px] flex items-center">
             <Link href='/'>
-                <div className={`flex items-center space-x-3 cursor-pointer transition-all duration-500 ${
+                <div className={`hidden lg:flex items-center space-x-3 cursor-pointer transition-all duration-500 ${
                   shouldShowNavbarLogo
                     ? 'opacity-100 translate-x-4 lg:translate-x-0 lg:pointer-events-auto'
                     : 'opacity-0 -translate-x-4 pointer-events-none lg:opacity-0 lg:-translate-x-4 lg:pointer-events-none'
@@ -467,25 +473,15 @@ export default function Layout({ children }: LayoutProps) {
               className={`${getDesktopUtilityIconsClass(useEdgeIconColumn)} pointer-events-auto`}
               style={useEdgeIconColumn ? { right: `${browserLayoutProfile.edgeRightPx}px` } : undefined}
             >
-            {/* Search Tool */}
-            <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="flex text-white/70 hover:text-yellow-400 rounded-full transition-colors h-8 w-8">
-                  <Search className="h-4 w-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-3xl p-6 shadow-2xl">
-                <form onSubmit={handleSearch} className="relative group mt-4">
-                  <input
-                    placeholder={t('search_placeholder')}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-yellow-400 outline-none transition-all"
-                    autoFocus
-                  />
-                </form>
-              </DialogContent>
-            </Dialog>
+            {/* Search Tool (Desktop only trigger; dialog rendered below) */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden lg:flex text-white/70 hover:text-yellow-400 rounded-full transition-colors h-8 w-8"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search className="h-4 w-4" />
+            </Button>
 
             <DropdownMenu
               open={languageMenuOpen}
@@ -539,7 +535,11 @@ export default function Layout({ children }: LayoutProps) {
               }}
             >
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white/70 hover:text-yellow-400 rounded-full h-8 w-8 transition-colors">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hidden lg:flex text-white/70 hover:text-yellow-400 rounded-full h-8 w-8 transition-colors"
+                >
                   <User className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -549,7 +549,7 @@ export default function Layout({ children }: LayoutProps) {
                 className="z-[260] min-w-[12rem] rounded-2xl border-white/10 bg-slate-900/95 p-2 text-white shadow-2xl backdrop-blur-3xl"
               >
                 <DropdownMenuLabel className="text-white/70 font-black text-[10px] uppercase tracking-widest px-3 py-2">
-                  {user ? user.fullName : t('account')}
+                  {user ? user.fullName : tr("account.title", "Account")}
                 </DropdownMenuLabel>
                 
                 <DropdownMenuSeparator className="bg-white/10" />
@@ -584,32 +584,24 @@ export default function Layout({ children }: LayoutProps) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Mobile Menu Toggle (Burger turns to X) */}
-            <Button
-              variant="ghost"
-              size="icon"
-              type="button"
-              aria-label={mobileMenuOpen ? t("nav.close_menu", { defaultValue: "Close menu" }) : t("nav.open_menu", { defaultValue: "Open menu" })}
-              className={`lg:hidden rounded-full h-10 w-10 transition-all duration-300 z-[220] ${
-                mobileMenuOpen 
-                  ? 'bg-yellow-400 text-slate-950 scale-105 shadow-lg' 
-                  : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <motion.div
-                key={mobileMenuOpen ? "open" : "closed"}
-                initial={{ opacity: 0, rotate: -45 }}
-                animate={{ opacity: 1, rotate: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </motion.div>
-            </Button>
             </div>
           </div>
         </div>
       </header>
+
+      {/* --- Search Dialog --- */}
+      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+        <DialogContent className="bg-slate-900/95 backdrop-blur-3xl border-white/10 text-white rounded-3xl p-6 shadow-2xl">
+          <form onSubmit={handleSearch} className="relative group mt-4">
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-yellow-400 outline-none transition-all"
+              autoFocus
+            />
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* --- MOBILE FLASH PANEL (Aligned with Menu Bar) --- */}
       <AnimatePresence>
@@ -637,6 +629,80 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="p-4 space-y-4 overflow-y-auto">
                   <div className="pt-1 pb-2">
                     <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mb-3 px-3">
+                      {t("search_title", { defaultValue: "Search" })}
+                    </p>
+                    <form
+                      onSubmit={(e) => {
+                        handleSearch(e);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="px-1"
+                    >
+                      <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <Search className="h-4 w-4 text-white/60" />
+                        <input
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full bg-transparent text-sm text-white/90 placeholder:text-white/50 outline-none"
+                        />
+                      </div>
+                    </form>
+                  </div>
+
+                  <div className="pt-2 pb-2">
+                    <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mb-3 px-3">
+                      {tr("account.title", "Account")}
+                    </p>
+                    <div className="space-y-2 px-1">
+                      {authLoading ? (
+                        <div className="h-9 w-full rounded-xl border border-white/10 bg-white/10 animate-pulse" />
+                      ) : user ? (
+                        <>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            className="h-9 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <Link href="/admin">{tr("nav.admin", "Admin")}</Link>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="h-9 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white"
+                            onClick={() => {
+                              void handleLogout();
+                              setMobileMenuOpen(false);
+                            }}
+                          >
+                            <LogOut className="h-4 w-4" />
+                            {tr("account.logout", "Logout")}
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            className="h-9 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <Link href="/login">{t("login")}</Link>
+                          </Button>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            className="h-9 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <Link href="/register">{t("register")}</Link>
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 pb-2">
+                    <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mb-3 px-3">
                       {t("select_lang")}
                     </p>
                     <div className="space-y-2 px-1">
@@ -645,7 +711,7 @@ export default function Layout({ children }: LayoutProps) {
                           key={lang.code}
                           variant="ghost"
                           title={lang.name}
-                          className={`h-11 w-full justify-start rounded-xl border px-4 text-sm font-semibold transition-all ${
+                          className={`h-9 w-full justify-start rounded-xl border px-3 text-sm font-semibold transition-all ${
                             i18n.language === lang.code
                               ? "border-yellow-400/40 bg-yellow-400/20 text-yellow-300"
                               : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
@@ -669,11 +735,15 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </AnimatePresence>
 
-      {!mobileMenuOpen && !isBottomNavHiddenPage && (
-        <div className="fixed bottom-0 left-0 right-0 z-[205] lg:hidden">
-          <div className="flex h-[calc(3.5rem+1px+env(safe-area-inset-bottom))] items-start border-t border-white/10 bg-white/[0.08] px-4 pt-0 backdrop-blur-xl shadow-[0_-20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
-            <nav className="flex h-14 w-full items-center justify-between gap-2">
-              {mobileBottomNavigation.map((item) => {
+      {!isMobileNavHiddenPage && (
+        <div className="fixed left-0 right-0 z-[205] lg:hidden top-0">
+          <div
+            className={`flex h-[calc(3.5rem+env(safe-area-inset-top))] items-end border-b border-white/10 px-4 pt-[env(safe-area-inset-top)] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] ${
+              useHomeCompactTransparentNav ? "bg-white/[0.08]" : "bg-slate-900/95"
+            }`}
+          >
+            <nav className="grid h-14 w-full grid-cols-6 items-center gap-2">
+              {mobileTopNavigation.map((item) => {
                 const active = isActive(item);
                 const Icon = item.icon;
                 return (
@@ -682,17 +752,42 @@ export default function Layout({ children }: LayoutProps) {
                     href={item.href}
                     aria-label={item.name}
                     title={item.name}
-                    className={`flex flex-1 items-center justify-center rounded-2xl px-3 py-2 transition-colors ${
-                      active
-                        ? "text-yellow-400"
-                        : "text-white/60 hover:text-white"
+                    className={`flex items-center justify-center rounded-2xl px-2 py-2 transition-colors ${
+                      active ? "text-yellow-400" : "text-white/70 hover:text-white"
                     }`}
                   >
-                    <Icon className="h-5 w-5" strokeWidth={2} />
+                    {item.href === "/" ? (
+                      <img
+                        src="/images/brand/diaspora_unlocked.png"
+                        alt={item.name}
+                        className="h-5 w-5 object-contain"
+                      />
+                    ) : (
+                      <Icon className="h-5 w-5" strokeWidth={2} />
+                    )}
                     <span className="sr-only">{item.name}</span>
                   </Link>
                 );
               })}
+              <button
+                type="button"
+                aria-label={mobileMenuOpen ? t("nav.close_menu", { defaultValue: "Close menu" }) : t("nav.open_menu", { defaultValue: "Open menu" })}
+                className={`flex items-center justify-center rounded-2xl px-2 py-2 transition-all duration-300 ${
+                  mobileMenuOpen
+                    ? "bg-yellow-400 text-slate-950 shadow-lg"
+                    : "text-white/70 hover:text-white"
+                }`}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                <motion.div
+                  key={mobileMenuOpen ? "open" : "closed"}
+                  initial={{ opacity: 0, rotate: -45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </motion.div>
+              </button>
             </nav>
           </div>
         </div>
