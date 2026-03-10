@@ -1968,6 +1968,7 @@
         "unable_verify_session": "Unable to verify your session.",
         "unable_download_receipt": "Unable to download receipt."
       },
+      "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Usually within minutes.",
         "cash_pickup": "Usually within 1 hour after provider confirmation.",

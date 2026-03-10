@@ -921,7 +921,8 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       : tr("payments.form.fields.they_receive", "They receive");
   const showRouteSummary =
     form.transferType === "send_money" ||
-    ((form.transferType === "airtime_topup" || form.transferType === "prepaid_electricity") && fxRate > 0);
+    form.transferType === "airtime_topup" ||
+    form.transferType === "prepaid_electricity";
   const reloadlyReceiveInputDisabled = isReloadlyTransfer && !(fxRate > 0);
 
   const requestQuote = async (sendingAmount: number): Promise<JsonRecord | null> => {
@@ -1994,7 +1995,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.eta", "Estimated reflect time")}
+                  {tr("payments.form.eta_label", "Estimated reflect time")}
                 </p>
                 <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-white/85">
                   <Clock3 className="h-4 w-4 text-zim-gold" />

@@ -1968,6 +1968,7 @@
         "unable_verify_session": "Ihre Sitzung konnte nicht bestätigt werden.",
         "unable_download_receipt": "Beleg kann nicht heruntergeladen werden."
       },
+      "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Normalerweise innerhalb von Minuten.",
         "cash_pickup": "Normalerweise innerhalb einer Stunde nach Bestätigung des Anbieters.",

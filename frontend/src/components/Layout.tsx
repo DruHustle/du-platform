@@ -929,7 +929,7 @@ export default function Layout({ children }: LayoutProps) {
               </h3>
               <div className="space-y-4">
                 <p className="text-sm text-slate-500">{tr("footer.newsletter.description", "Stay updated.")}</p>
-                <form className="flex min-w-0 flex-col gap-2 xl:flex-row" onSubmit={handleNewsletterSubmit}>
+                <form className="flex min-w-0 flex-row items-center gap-2" onSubmit={handleNewsletterSubmit}>
                   <input
                     type="email"
                     value={newsletterEmail}
@@ -937,13 +937,13 @@ export default function Layout({ children }: LayoutProps) {
                     placeholder={tr("footer.newsletter.email_placeholder", "Email address")}
                     required
                     autoComplete="email"
-                    className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                    className="min-w-0 flex-1 h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={newsletterSubmitting}
                     aria-label={tr("footer.newsletter.subscribe_aria", "Subscribe to newsletter")}
-                    className="shrink-0 self-start rounded-lg bg-white p-2 text-slate-900 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 xl:self-auto"
+                    className="shrink-0 h-9 rounded-lg bg-white px-3 text-slate-900 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
