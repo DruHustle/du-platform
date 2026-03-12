@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import type express from "express";
-import { errorResponse } from "../utils/apiResponse";
+import { error } from "../shared/responseFormatter";
 import { resolveJwtSecret } from "../utils/jwtSecret";
 
 type JwtClaims = {
@@ -91,7 +91,7 @@ export function requireJwtAuth(req: express.Request, res: express.Response, next
     try {
       secret = resolveJwtSecret();
     } catch {
-      return res.status(500).json(errorResponse("JWT_CONFIG_ERROR", "JWT secret is not configured."));
+      return res.status(500).json(error("JWT_CONFIG_ERROR", "JWT secret is not configured."));
     }
 
     const token = resolveBearerToken(req);
@@ -100,7 +100,7 @@ export function requireJwtAuth(req: express.Request, res: express.Response, next
     const rawUserId = claims.sub ?? claims.userId;
     const userId = Number(rawUserId);
     if (!Number.isFinite(userId) || userId <= 0) {
-      return res.status(401).json(errorResponse("JWT_INVALID_SUBJECT", "Token subject is invalid."));
+      return res.status(401).json(error("JWT_INVALID_SUBJECT", "Token subject is invalid."));
     }
 
     req.auth = {
@@ -110,8 +110,8 @@ export function requireJwtAuth(req: express.Request, res: express.Response, next
     };
 
     return next();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Invalid token.";
-    return res.status(401).json(errorResponse("JWT_UNAUTHORIZED", message));
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Invalid token.";
+    return res.status(401).json(error("JWT_UNAUTHORIZED", message));
   }
 }

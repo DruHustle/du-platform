@@ -11,14 +11,14 @@ backend/
         airtimeController.ts
       dto/
       providers/
-        terrapayGatewayProvider.ts
+        thunesGatewayProvider.ts
         reloadlyGatewayProvider.ts
       repositories/
         fintechRepository.ts
       routes/
         index.ts
       services/
-        terrapayGatewayService.ts
+        thunesGatewayService.ts
         reloadlyGatewayService.ts
         remittanceService.ts
         airtimeService.ts
@@ -29,19 +29,20 @@ frontend/src/components/
   AirtimeTopupForm.tsx
 ```
 
-## Example TerraPay API Call (backend-side)
+## Example Thunes API Call (backend-side)
 
 ```ts
-const provider = new TerraPayProvider();
+const provider = new ThunesProvider();
 
-const quote = await provider.getFxQuote(
+const quote = await provider.createQuotation(
   {
-    sendingCurrency: "EUR",
-    receivingCurrency: "USD",
-    sendingAmount: 250,
-    receivingCountry: "ZW",
+    external_id: "2b9f7b8f-a5cf-47d8-baa6-6de5ce5750d3",
+    payer_id: 123,
+    mode: "SOURCE_AMOUNT",
+    transaction_type: "C2C",
+    source: { amount: "250.00", currency: "EUR", country_iso_code: "DEU" },
+    destination: { currency: "USD", country_iso_code: "ZWE" },
   },
-  "2b9f7b8f-a5cf-47d8-baa6-6de5ce5750d3"
 );
 ```
 
@@ -78,7 +79,7 @@ try {
 
 ## Security Notes
 
-- All TerraPay and Reloadly credentials are loaded from backend environment variables.
+- All Thunes and Reloadly credentials are loaded from backend environment variables.
 - All provider calls are backend-side only.
 - JWT is required for `/api/fintech/remittance/*` and `/api/fintech/airtime/*`.
 - Basic in-memory rate limiting is applied per requester IP.

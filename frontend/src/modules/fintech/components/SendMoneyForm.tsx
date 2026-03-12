@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRightLeft,
   Bolt,
+  Building2,
   CheckCircle2,
   Clock3,
   CreditCard,
@@ -16,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 
 type TransferType = "send_money" | "airtime_topup" | "prepaid_electricity";
-type RecipientType = "mobile_money" | "cash_pickup" | "visa_card";
+type RecipientType = "mobile_money" | "cash_pickup" | "bank_transfer" | "visa_card";
 type FormStep = "route" | "quote" | "recipient" | "payout" | "pay" | "status";
 type AmountMode = "send" | "receive";
 type PayoutEtaTarget = RecipientType | "airtime_topup" | "prepaid_electricity";
@@ -51,6 +52,7 @@ type SendMoneyFormState = {
   amountReceive: string;
   currencyFrom: string;
   currencyTo: string;
+  senderMsisdn: string;
   recipientName: string;
   recipientAddress: string;
   recipientCity: string;
@@ -66,21 +68,16 @@ type SendMoneyFormState = {
   cardExpiryMonth: string;
   cardExpiryYear: string;
   cardHolderName: string;
+  bankName: string;
+  bankAccountNumber: string;
 };
 type SendMoneyFormProps = {
   forcedTransferType?: TransferType | null;
 };
 
-const CASH_PICKUP_CHANNELS: string[] = [
-  "HelloPaisa",
-  "Quest Financial Services",
-  "ZB Bank",
-  "CBZ",
-  "BancABC",
-  "Steward Bank",
-  "Mukuru",
-];
+const SUPPORTED_BANKS: string[] = ["ZB Bank", "CBZ", "BancABC", "Steward Bank"];
 const FX_RATE_PREVIEW_AMOUNT = 100;
+const DEFAULT_AIRTIME_LOOKUP_PHONE = "+263771234567";
 
 const SENDER_COUNTRIES: Country[] = [
   { code: "GB", flag: "🇬🇧", name: "United Kingdom", currency: "GBP" },
@@ -159,6 +156,7 @@ const TRANSFER_TYPES = [
 const PAYOUT_TYPES = [
   { value: "mobile_money", labelKey: "payments.form.payout_types.mobile_money", labelFallback: "Mobile Money", icon: Smartphone },
   { value: "cash_pickup", labelKey: "payments.form.payout_types.cash_pickup", labelFallback: "Cash Pickup", icon: Landmark },
+  { value: "bank_transfer", labelKey: "payments.form.payout_types.bank_transfer", labelFallback: "Bank Transfer", icon: Building2 },
   { value: "visa_card", labelKey: "payments.form.payout_types.visa_card", labelFallback: "Visa Card", icon: CreditCard },
 ] as const;
 
@@ -178,6 +176,7 @@ const INITIAL_FORM: SendMoneyFormState = {
   amountReceive: "",
   currencyFrom: "EUR",
   currencyTo: "USD",
+  senderMsisdn: "",
   recipientName: "",
   recipientAddress: "",
   recipientCity: "",
@@ -193,6 +192,8 @@ const INITIAL_FORM: SendMoneyFormState = {
   cardExpiryMonth: "",
   cardExpiryYear: "",
   cardHolderName: "",
+  bankName: "",
+  bankAccountNumber: "",
 };
 
 function resolveDefaultSenderCountryCode(): string {
@@ -275,33 +276,28 @@ async function resolveSenderCountryCodeFromIp(): Promise<string | null> {
   if (typeof window === "undefined") return null;
 
   const supportedCodes = new Set(SENDER_COUNTRIES.map((country) => country.code));
-  const fetchWithTimeout = async (url: string, timeoutMs = 2500): Promise<JsonRecord | null> => {
+  try {
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+    const timeoutId = window.setTimeout(() => controller.abort(), 3000);
     try {
-      const response = await fetch(url, {
+      const response = await fetch("/api/geo/country", {
         method: "GET",
         headers: { Accept: "application/json" },
         signal: controller.signal,
       });
-      if (!response.ok) return null;
-      return await response.json();
-    } catch {
-      return null;
+      if (response.ok) {
+        const json = await response.json() as JsonRecord;
+        // Handle both raw envelope and pre-unwrapped shapes.
+        const inner = (json?.data as JsonRecord | undefined) ?? json;
+        const country = String(inner?.country ?? "").toUpperCase();
+        if (country && supportedCodes.has(country)) return country;
+      }
     } finally {
       window.clearTimeout(timeoutId);
     }
-  };
-
-  // Primary provider.
-  const ipApiData = await fetchWithTimeout("https://ipapi.co/json/");
-  const ipApiCode = String(ipApiData?.country_code ?? "").toUpperCase();
-  if (ipApiCode && supportedCodes.has(ipApiCode)) return ipApiCode;
-
-  // Secondary fallback provider.
-  const ipWhoData = await fetchWithTimeout("https://ipwho.is/");
-  const ipWhoCode = String(ipWhoData?.country_code ?? "").toUpperCase();
-  if (ipWhoCode && supportedCodes.has(ipWhoCode)) return ipWhoCode;
+  } catch {
+    // Fall through to timezone-based detection in resolveDefaultSenderCountryCode.
+  }
 
   return null;
 }
@@ -450,10 +446,37 @@ function extractFxRate(payload: JsonRecord | null | undefined, sendingAmount?: n
   return null;
 }
 
-function buildReloadlyAirtimePricing(operator: JsonRecord | null | undefined, options: JsonRecord | null | undefined): ReloadlyPricing | null {
-  const senderCurrencyCode = String(options?.senderCurrencyCode ?? operator?.senderCurrencyCode ?? "").trim().toUpperCase();
-  const destinationCurrencyCode = String(options?.destinationCurrencyCode ?? operator?.destinationCurrencyCode ?? "").trim().toUpperCase();
-  const fxRate = toFinancialNumber(options?.fxRate ?? options?.fx?.rate ?? operator?.fxRate ?? operator?.fx?.rate);
+function buildReloadlyAirtimePricing(
+  operator: JsonRecord | null | undefined,
+  options: JsonRecord | null | undefined,
+  fallbackSenderCurrency = "",
+  fallbackDestinationCurrency = ""
+): ReloadlyPricing | null {
+  // Use the user's selected sender currency as the source of truth.
+  // The Reloadly operator's senderCurrencyCode is their internal billing currency (often EUR),
+  // not the user's actual currency — so we prioritise fallbackSenderCurrency (form.currencyFrom).
+  const senderCurrencyCode = String(
+    fallbackSenderCurrency || options?.senderCurrencyCode || operator?.senderCurrencyCode || ""
+  )
+    .trim()
+    .toUpperCase();
+  const destinationCurrencyCode = String(
+    options?.destinationCurrencyCode ?? operator?.destinationCurrencyCode ?? fallbackDestinationCurrency ?? ""
+  )
+    .trim()
+    .toUpperCase();
+  const rawFxRate = toFinancialNumber(
+    options?.fxRate ??
+      options?.fx?.rate ??
+      options?.fx?.fxRate ??
+      operator?.fxRate ??
+      operator?.fx?.rate ??
+      operator?.fx?.fxRate
+  );
+  // When sender and destination currencies are the same there is no conversion.
+  const fxRate = senderCurrencyCode && destinationCurrencyCode && senderCurrencyCode === destinationCurrencyCode
+    ? 1
+    : rawFxRate;
   const fee = toFinancialNumber(options?.fee);
 
   if (!senderCurrencyCode || !destinationCurrencyCode || fxRate === null || fxRate <= 0) return null;
@@ -468,10 +491,45 @@ function buildReloadlyAirtimePricing(operator: JsonRecord | null | undefined, op
   };
 }
 
-function buildReloadlyUtilityPricing(biller: JsonRecord | null | undefined): ReloadlyPricing | null {
-  const senderCurrencyCode = String(biller?.internationalTransactionCurrencyCode ?? biller?.fx?.currencyCode ?? "").trim().toUpperCase();
-  const destinationCurrencyCode = String(biller?.localTransactionCurrencyCode ?? "").trim().toUpperCase() || "VALUE";
-  const fxRate = toFinancialNumber(biller?.fx?.rate);
+function buildReloadlyUtilityPricing(
+  biller: JsonRecord | null | undefined,
+  fallbackSenderCurrency = "",
+  fallbackDestinationCurrency = ""
+): ReloadlyPricing | null {
+  const senderCurrencyCode = String(
+    biller?.internationalTransactionCurrencyCode ?? fallbackSenderCurrency ?? biller?.fx?.currencyCode ?? ""
+  )
+    .trim()
+    .toUpperCase();
+  const rawDestinationCurrency =
+    String(
+      biller?.localTransactionCurrencyCode ??
+        biller?.localCurrencyCode ??
+        biller?.destinationCurrencyCode ??
+        biller?.localTransactionFeeCurrencyCode ??
+        biller?.internationalTransactionFeeCurrencyCode ??
+        biller?.fx?.currencyCode ??
+        biller?.internationalTransactionCurrencyCode ??
+        fallbackDestinationCurrency ??
+        ""
+    )
+      .trim()
+      .toUpperCase() || "VALUE";
+  const fallbackDestination = String(fallbackDestinationCurrency || "").trim().toUpperCase();
+  const destinationCurrencyCode =
+    fallbackDestination &&
+    senderCurrencyCode &&
+    rawDestinationCurrency === senderCurrencyCode &&
+    fallbackDestination !== senderCurrencyCode
+      ? fallbackDestination
+      : rawDestinationCurrency;
+  const rawFxRate = toFinancialNumber(
+    biller?.fx?.rate ?? biller?.fxRate ?? biller?.exchangeRate ?? biller?.rate ?? biller?.fx?.fxRate
+  );
+  // When sender and destination currencies are the same there is no conversion.
+  const fxRate = senderCurrencyCode && destinationCurrencyCode && senderCurrencyCode === destinationCurrencyCode
+    ? 1
+    : rawFxRate;
   const fee = toFinancialNumber(biller?.internationalTransactionFee ?? biller?.localTransactionFee);
 
   if (!senderCurrencyCode || fxRate === null || fxRate <= 0) return null;
@@ -797,12 +855,21 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const [status, setStatus] = useState<SendMoneyStatus | null>(null);
   const [error, setError] = useState("");
   const [baselineFxRate, setBaselineFxRate] = useState<number | null>(null);
+  const [cachedBaselineFxRate, setCachedBaselineFxRate] = useState<number | null>(null);
+  const [cachedSendMoneyFee, setCachedSendMoneyFee] = useState<number | null>(null);
+  const [cachedReloadlyPricing, setCachedReloadlyPricing] = useState<{
+    airtime_topup?: ReloadlyPricing;
+    prepaid_electricity?: ReloadlyPricing;
+  }>({});
   const [airtimeOperator, setAirtimeOperator] = useState<AirtimeOperator>(null);
   const [airtimeOptions, setAirtimeOptions] = useState<Array<number | string>>([]);
   const [airtimeFeeQuote, setAirtimeFeeQuote] = useState(0);
   const [utilityBillers, setUtilityBillers] = useState<UtilityBiller[]>([]);
   const [reloadlyPricing, setReloadlyPricing] = useState<ReloadlyPricing | null>(null);
   const liveQuoteRequestRef = useRef<number>(0);
+  const utilityRequestRef = useRef<number>(0);
+  const airtimeRequestRef = useRef<number>(0);
+  const latestAmountRef = useRef({ amount: 0, amountMode: "send" as AmountMode, amountReceive: 0 });
 
   useEffect(() => {
     let active = true;
@@ -853,11 +920,59 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     [form.senderCountryCode, senderCountries]
   );
 
+  const baselineCacheKey = useMemo(
+    () =>
+      `du.fxrate.baseline.${form.currencyFrom}.${form.currencyTo}.${form.senderCountryCode}.${form.receiverCountryCode}`,
+    [form.currencyFrom, form.currencyTo, form.senderCountryCode, form.receiverCountryCode]
+  );
+
+  const reloadlyAirtimeCacheKey = useMemo(
+    () => `du.reloadly.airtime.${form.currencyFrom}.ZW`,
+    [form.currencyFrom]
+  );
+  const reloadlyElectricityCacheKey = "du.reloadly.electricity.ZW";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.localStorage.getItem(baselineCacheKey);
+    const parsed = Number(raw);
+    const nextRate = Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+    setCachedBaselineFxRate(nextRate);
+    setBaselineFxRate(nextRate);
+  }, [baselineCacheKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const parseStoredPricing = (raw: string | null, source: "airtime_topup" | "prepaid_electricity"): ReloadlyPricing | undefined => {
+      if (!raw) return undefined;
+      try {
+        const parsed = JSON.parse(raw) as ReloadlyPricing;
+        if (typeof parsed?.fxRate === "number" && parsed.fxRate > 0) return { ...parsed, source };
+      } catch { /* ignore */ }
+      return undefined;
+    };
+    const airtime = parseStoredPricing(window.localStorage.getItem(reloadlyAirtimeCacheKey), "airtime_topup");
+    const electricity = parseStoredPricing(window.localStorage.getItem(reloadlyElectricityCacheKey), "prepaid_electricity");
+    if (airtime || electricity) {
+      setCachedReloadlyPricing((prev) => ({
+        ...prev,
+        ...(airtime ? { airtime_topup: airtime } : {}),
+        ...(electricity ? { prepaid_electricity: electricity } : {}),
+      }));
+    }
+  }, [reloadlyAirtimeCacheKey, reloadlyElectricityCacheKey]);
+
   const amount = parseAmountInput(form.amountSent) ?? 0;
   const amountReceive = parseAmountInput(form.amountReceive) ?? 0;
+  const airtimeHasValidPhone = form.transferType === "airtime_topup" && looksLikeZimbabweNumber(form.recipientPhone);
+  const airtimeLookupPhone = airtimeHasValidPhone
+    ? normalizeZimbabweNumber(form.recipientPhone)
+    : DEFAULT_AIRTIME_LOOKUP_PHONE;
+  const airtimeLookupKey =
+    form.transferType === "airtime_topup" ? `${airtimeLookupPhone}|${form.currencyFrom}|${form.currencyTo}` : "";
   const isReloadlyTransfer = isImmediateValueTransfer(form.transferType);
   const providerCharge = useMemo(() => {
-    const quotedFee = extractProviderFee(quote, amount);
+    const quotedFee = form.transferType === "send_money" ? extractProviderFee(quote, amount) : null;
     if (quotedFee !== null && quotedFee >= 0) return Number(quotedFee.toFixed(2));
 
     if (form.transferType === "airtime_topup") {
@@ -885,8 +1000,26 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   }, [airtimeFeeQuote, amount, form.transferType, quote, reloadlyPricing, status]);
   const fee = useMemo(() => Number(providerCharge.toFixed(2)), [providerCharge]);
   const totalCharge = useMemo(() => Number((amount + fee).toFixed(2)), [amount, fee]);
-  const quotedReceiveAmount = Number(quote?.receivingAmount || 0);
-  const quoteFxRate = extractFxRate(quote, amount) ?? 0;
+  const displayFee = useMemo(() => {
+    if (fee > 0) return fee;
+    if (form.transferType === "send_money" && cachedSendMoneyFee !== null && cachedSendMoneyFee >= 0) {
+      return Number(cachedSendMoneyFee.toFixed(2));
+    }
+    if (isReloadlyTransfer) {
+      const cached =
+        form.transferType === "airtime_topup"
+          ? cachedReloadlyPricing.airtime_topup
+          : cachedReloadlyPricing.prepaid_electricity;
+      if (cached?.fee !== null && cached?.fee !== undefined && cached.fee >= 0) {
+        return Number(cached.fee.toFixed(2));
+      }
+    }
+    return fee;
+  }, [cachedReloadlyPricing, cachedSendMoneyFee, fee, form.transferType, isReloadlyTransfer]);
+  const displayTotalCharge = useMemo(() => Number((amount + displayFee).toFixed(2)), [amount, displayFee]);
+  const effectiveQuote = form.transferType === "send_money" ? quote : null;
+  const quotedReceiveAmount = Number(effectiveQuote?.receivingAmount || 0);
+  const quoteFxRate = extractFxRate(effectiveQuote, amount) ?? 0;
   const inputDerivedFxRate =
     amount > 0 && Number.isFinite(amountReceive) && amountReceive > 0
       ? Number((amountReceive / amount).toFixed(6))
@@ -902,19 +1035,60 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (Number.isFinite(baselineFxRate) && (baselineFxRate ?? 0) > 0) return Number((baselineFxRate ?? 0).toFixed(6));
     return 0;
   }, [baselineFxRate, inputDerivedFxRate, isReloadlyTransfer, quoteFxRate, reloadlyFxRate]);
+
+  useEffect(() => {
+    if (!Number.isFinite(quoteFxRate) || quoteFxRate <= 0) return;
+    setBaselineFxRate(Number(quoteFxRate.toFixed(6)));
+  }, [quoteFxRate]);
+  const displayFxRate = useMemo(() => {
+    if (fxRate > 0) return Number(fxRate.toFixed(6));
+    if (isReloadlyTransfer) {
+      const cached =
+        form.transferType === "airtime_topup"
+          ? cachedReloadlyPricing.airtime_topup
+          : cachedReloadlyPricing.prepaid_electricity;
+      const candidate = Number(reloadlyPricing?.fxRate ?? cached?.fxRate ?? 0);
+      return candidate > 0 ? Number(candidate.toFixed(6)) : 0;
+    }
+    const candidate = Number(baselineFxRate ?? cachedBaselineFxRate ?? 0);
+    return candidate > 0 ? Number(candidate.toFixed(6)) : 0;
+  }, [
+    baselineFxRate,
+    cachedBaselineFxRate,
+    cachedReloadlyPricing,
+    fxRate,
+    form.transferType,
+    isReloadlyTransfer,
+    reloadlyPricing,
+  ]);
+  const resolvedReceiveInput = isReloadlyTransfer && !(fxRate > 0) ? 0 : amountReceive;
   const estimatedReceive = Number(
-    quotedReceiveAmount || (amountReceive > 0 ? amountReceive : amount * (fxRate || 1))
+    quotedReceiveAmount ||
+      (resolvedReceiveInput > 0
+        ? resolvedReceiveInput
+        : isReloadlyTransfer
+          ? fxRate > 0
+            ? amount * fxRate
+            : 0
+          : amount * (fxRate || 1))
   );
-  const displayedReceiveAmount = Number((amountReceive > 0 ? amountReceive : estimatedReceive).toFixed(2));
+  const displayedReceiveAmount = Number((resolvedReceiveInput > 0 ? resolvedReceiveInput : estimatedReceive).toFixed(2));
   const liveAmountInput = amountMode === "send" ? form.amountSent : form.amountReceive;
+  const cachedReloadlyPricingForType = isReloadlyTransfer
+    ? (form.transferType === "airtime_topup" ? cachedReloadlyPricing.airtime_topup : cachedReloadlyPricing.prepaid_electricity)
+    : undefined;
   const displaySendCurrency = isReloadlyTransfer
-    ? reloadlyPricing?.senderCurrencyCode || form.currencyFrom
+    ? reloadlyPricing?.senderCurrencyCode || cachedReloadlyPricingForType?.senderCurrencyCode || form.currencyFrom
     : form.currencyFrom;
   const displayReceiveCurrency = form.transferType === "prepaid_electricity"
-    ? reloadlyPricing?.destinationCurrencyCode || "VALUE"
+    ? reloadlyPricing?.destinationCurrencyCode || cachedReloadlyPricingForType?.destinationCurrencyCode || "VALUE"
     : isReloadlyTransfer
-      ? reloadlyPricing?.destinationCurrencyCode || form.currencyTo
+      ? reloadlyPricing?.destinationCurrencyCode || cachedReloadlyPricingForType?.destinationCurrencyCode || form.currencyTo
       : form.currencyTo;
+  const fxRateDisplayText =
+    displayFxRate > 0
+      ? `1 ${displaySendCurrency} = ${displayFxRate.toFixed(6)} ${displayReceiveCurrency}`
+      : tr("payments.form.quote.fetching", "Fetching rate...");
   const receiveAmountLabel =
     form.transferType === "prepaid_electricity"
       ? tr("payments.form.fields.utility_value", "Meter value")
@@ -931,23 +1105,29 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       currencyFrom: String(form.currencyFrom).toUpperCase(),
       currencyTo: String(form.currencyTo).toUpperCase(),
       receivingCountry: String(form.receiverCountryCode).toUpperCase(),
+      originCountry: String(form.senderCountryCode).toUpperCase(),
+      senderMsisdn: String(form.senderMsisdn || "").trim() || undefined,
+      recipientType: form.recipientType || undefined,
+      payoutChannel: form.recipientType === "bank_transfer" ? form.bankName : undefined,
+      recipientMsisdn: String(form.mobileNumber || form.recipientPhone || "").trim() || undefined,
+      recipientPan: String(form.cardNumber || "").trim() || undefined,
     });
-    const payload = response?.data as JsonRecord | undefined;
-    return (payload?.fxQuote as JsonRecord | undefined) ?? (payload?.quote as JsonRecord | undefined) ?? payload ?? null;
+    // Unwrap the API envelope { success, data: { idempotencyKey, quote, ... }, error }
+    const envelope = response?.data as JsonRecord | undefined;
+    const inner = (envelope?.data as JsonRecord | undefined) ?? envelope;
+    return (inner?.fxQuote as JsonRecord | undefined) ?? (inner?.quote as JsonRecord | undefined) ?? inner ?? null;
   };
 
   useEffect(() => {
     let active = true;
 
-    if (form.transferType !== "send_money") {
-      setBaselineFxRate(null);
+    if (form.transferType === "airtime_topup" || form.transferType === "prepaid_electricity") {
       return () => {
         active = false;
       };
     }
 
     if (quoteFxRate > 0 || inputDerivedFxRate > 0) {
-      setBaselineFxRate(null);
       return () => {
         active = false;
       };
@@ -959,11 +1139,15 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         if (!active || !previewQuote) return;
 
         const previewFxRate = extractFxRate(previewQuote, FX_RATE_PREVIEW_AMOUNT);
-        if (active) {
-          setBaselineFxRate(previewFxRate && previewFxRate > 0 ? Number(previewFxRate.toFixed(6)) : null);
+        if (previewFxRate && previewFxRate > 0) {
+          setBaselineFxRate(Number(previewFxRate.toFixed(6)));
+        }
+        const previewFee = extractProviderFee(previewQuote, FX_RATE_PREVIEW_AMOUNT);
+        if (previewFee !== null && previewFee >= 0) {
+          setCachedSendMoneyFee(Number(previewFee.toFixed(2)));
         }
       } catch {
-        if (active) setBaselineFxRate(null);
+        // Keep cached preview values if the background request fails.
       }
     })();
 
@@ -978,6 +1162,14 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     inputDerivedFxRate,
     quoteFxRate,
   ]);
+
+  useEffect(() => {
+    if (!baselineFxRate || baselineFxRate <= 0) return;
+    setCachedBaselineFxRate(baselineFxRate);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(baselineCacheKey, String(baselineFxRate));
+    }
+  }, [baselineCacheKey, baselineFxRate]);
 
   useEffect(() => {
     if (form.currencyFrom !== selectedSender.currency) {
@@ -1009,6 +1201,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       if (reloadlyPricing !== null) setReloadlyPricing(null);
       return;
     }
+    if (quote !== null) setQuote(null);
     if (form.transferType === "airtime_topup" && reloadlyPricing?.source === "prepaid_electricity") {
       setReloadlyPricing(null);
       return;
@@ -1016,7 +1209,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (form.transferType === "prepaid_electricity" && reloadlyPricing?.source === "airtime_topup") {
       setReloadlyPricing(null);
     }
-  }, [form.transferType, reloadlyPricing]);
+  }, [form.transferType, quote, reloadlyPricing]);
 
   useEffect(() => {
     if (step !== "route" || form.transferType !== "send_money") {
@@ -1112,13 +1305,135 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     form.currencyFrom,
     form.currencyTo,
     form.receiverCountryCode,
+    form.senderCountryCode,
+    form.senderMsisdn,
+    form.recipientType,
+    form.mobileNumber,
+    form.recipientPhone,
+    form.cardNumber,
     form.transferType,
     liveAmountInput,
     step,
   ]);
 
   useEffect(() => {
-    if (step !== "payout" || form.transferType !== "airtime_topup" || !looksLikeZimbabweNumber(form.recipientPhone)) {
+    if (form.transferType !== "send_money" || (step !== "recipient" && step !== "payout")) {
+      return;
+    }
+
+    const sendInput = parseAmountInput(form.amountSent) ?? 0;
+    const receiveInput = parseAmountInput(form.amountReceive) ?? 0;
+    const rawInput = parseAmountInput(liveAmountInput) ?? 0;
+    if (rawInput <= 0) {
+      return;
+    }
+
+    if (amountMode === "receive" && !isMultipleOfTen(receiveInput)) return;
+
+    const sendingAmount = amountMode === "send" ? sendInput : receiveInput;
+    if (!Number.isFinite(sendingAmount) || sendingAmount <= 0 || sendingAmount > 5000) return;
+
+    const recipientMsisdn = String(form.mobileNumber || form.recipientPhone || "").trim();
+    const recipientPan = String(form.cardNumber || "").replace(/\D/g, "");
+    if ((form.recipientType === "mobile_money" || form.recipientType === "cash_pickup") && !recipientMsisdn) {
+      return;
+    }
+    if (form.recipientType === "visa_card" && recipientPan.length < 12) {
+      return;
+    }
+
+    const requestId = liveQuoteRequestRef.current + 1;
+    liveQuoteRequestRef.current = requestId;
+
+    const timer = setTimeout(async () => {
+      try {
+        if (amountMode === "receive") {
+          const firstQuote = await requestQuote(Number(sendingAmount.toFixed(2)));
+          if (!firstQuote || liveQuoteRequestRef.current !== requestId) return;
+
+          const firstRate = extractFxRate(firstQuote, Number(sendingAmount.toFixed(2))) ?? 0;
+          if (!Number.isFinite(firstRate) || firstRate <= 0) return;
+
+          const derivedSendAmount = Number((receiveInput / firstRate).toFixed(2));
+          if (!Number.isFinite(derivedSendAmount) || derivedSendAmount <= 0 || derivedSendAmount > 5000) return;
+
+          const finalQuote = await requestQuote(derivedSendAmount);
+          if (!finalQuote || liveQuoteRequestRef.current !== requestId) return;
+          setQuote(finalQuote);
+
+          const finalRate = extractFxRate(finalQuote, derivedSendAmount) ?? 0;
+          if (!Number.isFinite(finalRate) || finalRate <= 0) return;
+
+          setForm((prev) => {
+            if (prev.transferType !== "send_money") {
+              return prev;
+            }
+            const normalizedReceive = normalizeToTenStep(receiveInput);
+            const nextSend = toAmountInputString(Number(normalizedReceive || 0) / finalRate);
+            const nextReceive = normalizedReceive || prev.amountReceive;
+            if (nextSend && nextSend !== prev.amountSent) {
+              return { ...prev, amountSent: nextSend, amountReceive: nextReceive };
+            }
+            return prev;
+          });
+          return;
+        }
+
+        const liveQuote = await requestQuote(Number(sendingAmount.toFixed(2)));
+        if (!liveQuote || liveQuoteRequestRef.current !== requestId) return;
+        setQuote(liveQuote);
+
+        const liveRate = extractFxRate(liveQuote, Number(sendingAmount.toFixed(2))) ?? 0;
+        setForm((prev) => {
+          if (prev.transferType !== "send_money") {
+            return prev;
+          }
+          const rawReceive = Number(liveQuote?.receivingAmount ?? Number(prev.amountSent || 0) * (liveRate || 1));
+          const nextReceive = normalizeToTenStep(rawReceive);
+          if (nextReceive && nextReceive !== prev.amountReceive) {
+            return { ...prev, amountReceive: nextReceive };
+          }
+          return prev;
+        });
+      } catch {
+        // Keep typing UX smooth; explicit quote action still surfaces errors.
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [
+    amountMode,
+    form.amountReceive,
+    form.amountSent,
+    form.cardNumber,
+    form.currencyFrom,
+    form.currencyTo,
+    form.mobileNumber,
+    form.recipientPhone,
+    form.recipientType,
+    form.receiverCountryCode,
+    form.senderCountryCode,
+    form.senderMsisdn,
+    form.transferType,
+    liveAmountInput,
+    step,
+  ]);
+
+  useEffect(() => {
+    latestAmountRef.current = { amount, amountMode, amountReceive };
+  }, [amount, amountMode, amountReceive]);
+
+  useEffect(() => {
+    if (!reloadlyPricing || !Number.isFinite(reloadlyPricing.fxRate) || reloadlyPricing.fxRate <= 0) return;
+    setCachedReloadlyPricing((prev) => ({ ...prev, [reloadlyPricing.source]: reloadlyPricing }));
+    try {
+      const key = reloadlyPricing.source === "airtime_topup" ? reloadlyAirtimeCacheKey : reloadlyElectricityCacheKey;
+      window.localStorage.setItem(key, JSON.stringify(reloadlyPricing));
+    } catch { /* ignore storage errors */ }
+  }, [reloadlyPricing, reloadlyAirtimeCacheKey, reloadlyElectricityCacheKey]);
+
+  useEffect(() => {
+    if (form.transferType !== "airtime_topup") {
       setAirtimeOperator(null);
       setAirtimeOptions([]);
       setAirtimeFeeQuote(0);
@@ -1126,31 +1441,38 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return;
     }
 
+    const requestId = airtimeRequestRef.current + 1;
+    airtimeRequestRef.current = requestId;
+
     const timer = setTimeout(async () => {
       try {
-        const normalized = normalizeZimbabweNumber(form.recipientPhone);
-        const detectResponse = await api.post("/fintech/airtime/operator/detect", { phoneNumber: normalized });
-        const detectPayload = detectResponse?.data as { operator?: AirtimeOperator } | undefined;
-        setAirtimeOperator(detectPayload?.operator ?? null);
-
-        const optionsResponse = await api.post("/fintech/airtime/options", { phoneNumber: normalized });
-        const optionsPayload = optionsResponse?.data as { options?: JsonRecord } | undefined;
+        const previewAmount =
+          latestAmountRef.current.amount > 0 ? latestAmountRef.current.amount : FX_RATE_PREVIEW_AMOUNT;
+        const optionsResponse = await api.post("/fintech/airtime/options", {
+          phoneNumber: airtimeLookupPhone,
+          amount: previewAmount,
+        });
+        if (airtimeRequestRef.current !== requestId) return;
+        const optionsPayload = optionsResponse?.data as { options?: JsonRecord; operator?: AirtimeOperator } | undefined;
+        const operator = optionsPayload?.operator ?? null;
+        setAirtimeOperator(airtimeHasValidPhone ? operator : null);
         const options = optionsPayload?.options ?? {};
         const suggested = options?.suggestedAmounts || [];
-        setAirtimeOptions(Array.isArray(suggested) ? suggested : []);
+        setAirtimeOptions(airtimeHasValidPhone && Array.isArray(suggested) ? suggested : []);
         const parsedFee = extractProviderFee(options);
         setAirtimeFeeQuote(parsedFee !== null && parsedFee >= 0 ? Number(parsedFee.toFixed(2)) : 0);
-        const pricing = buildReloadlyAirtimePricing(detectPayload?.operator ?? null, options);
+        const pricing = buildReloadlyAirtimePricing(operator, options, form.currencyFrom, form.currencyTo);
         setReloadlyPricing(pricing);
-        if (pricing?.fxRate && amount > 0) {
+        const latestAmount = latestAmountRef.current;
+        if (pricing?.fxRate && latestAmount.amount > 0) {
           setForm((prev) => {
             if (prev.transferType !== "airtime_topup") return prev;
-            if (amountMode === "send") {
-              const nextReceive = toAmountInputString(amount * pricing.fxRate);
+            if (latestAmount.amountMode === "send") {
+              const nextReceive = toAmountInputString(latestAmount.amount * pricing.fxRate);
               return nextReceive !== prev.amountReceive ? { ...prev, amountReceive: nextReceive } : prev;
             }
-            if (amountMode === "receive" && amountReceive > 0) {
-              const nextSend = toAmountInputString(amountReceive / pricing.fxRate);
+            if (latestAmount.amountMode === "receive" && latestAmount.amountReceive > 0) {
+              const nextSend = toAmountInputString(latestAmount.amountReceive / pricing.fxRate);
               return nextSend !== prev.amountSent ? { ...prev, amountSent: nextSend } : prev;
             }
             return prev;
@@ -1162,18 +1484,20 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         setAirtimeFeeQuote(0);
         if (reloadlyPricing?.source === "airtime_topup") setReloadlyPricing(null);
       }
-    }, 450);
+    }, airtimeHasValidPhone ? 450 : 0);
 
     return () => clearTimeout(timer);
-  }, [amount, amountMode, amountReceive, form.recipientPhone, form.transferType, reloadlyPricing?.source, step]);
+  }, [airtimeHasValidPhone, airtimeLookupKey, airtimeLookupPhone, form.currencyFrom, form.currencyTo, form.transferType]);
 
   useEffect(() => {
-    if (step !== "payout" || form.transferType !== "prepaid_electricity") {
+    if (form.transferType !== "prepaid_electricity") {
       setUtilityBillers([]);
       if (reloadlyPricing?.source === "prepaid_electricity") setReloadlyPricing(null);
       return;
     }
 
+    const requestId = utilityRequestRef.current + 1;
+    utilityRequestRef.current = requestId;
     let active = true;
 
     void (async () => {
@@ -1181,8 +1505,8 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         const response = await api.post("/fintech/utility/electricity/options", {
           countryISOCode: "ZW",
         });
-        if (!active) return;
-        const billers = Array.isArray(response?.data?.billers) ? response.data.billers : [];
+        if (!active || utilityRequestRef.current !== requestId) return;
+        const billers = Array.isArray((response?.data as JsonRecord | undefined)?.billers) ? ((response.data as JsonRecord).billers as JsonRecord[]) : [];
         setUtilityBillers(billers);
         setForm((prev) => {
           if (prev.transferType !== "prepaid_electricity") return prev;
@@ -1204,13 +1528,13 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     return () => {
       active = false;
     };
-  }, [form.transferType, reloadlyPricing?.source, step]);
+  }, [form.transferType]);
 
   useEffect(() => {
     if (form.transferType !== "prepaid_electricity") return;
     const selectedBiller =
       utilityBillers.find((biller) => String(biller?.id ?? "").trim() === form.utilityBillerId) ?? utilityBillers[0] ?? null;
-    const pricing = buildReloadlyUtilityPricing(selectedBiller);
+    const pricing = buildReloadlyUtilityPricing(selectedBiller, form.currencyFrom, form.currencyTo);
     setReloadlyPricing(pricing);
 
     if (pricing?.fxRate && amount > 0) {
@@ -1227,7 +1551,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         return prev;
       });
     }
-  }, [amount, amountMode, amountReceive, form.transferType, form.utilityBillerId, utilityBillers]);
+  }, [amount, amountMode, amountReceive, form.currencyFrom, form.transferType, form.utilityBillerId, utilityBillers]);
 
   const update = (key: keyof SendMoneyFormState, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value } as SendMoneyFormState));
@@ -1361,7 +1685,10 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return looksLikeZimbabweNumber(form.mobileNumber || form.recipientPhone);
     }
     if (form.recipientType === "cash_pickup") {
-      return Boolean(String(form.payoutChannel).trim() && String(form.cashPickupLocation).trim());
+      return looksLikeZimbabweNumber(form.mobileNumber || form.recipientPhone);
+    }
+    if (form.recipientType === "bank_transfer") {
+      return Boolean(String(form.bankName).trim() && String(form.bankAccountNumber).trim());
     }
     if (form.recipientType === "visa_card") {
       return Boolean(
@@ -1377,15 +1704,19 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const buildRemittancePayload = () => ({
     recipientName: form.recipientName,
     recipientType: form.recipientType,
-    provider: form.recipientType === "mobile_money" ? "EcoCash" : "TerraPay",
-    payoutChannel: form.recipientType === "cash_pickup" ? form.payoutChannel : undefined,
+    provider: form.recipientType === "mobile_money" ? "EcoCash" : "Thunes",
+    payoutChannel: form.recipientType === "bank_transfer" ? form.bankName : undefined,
     amountSent: parseAmountInput(form.amountSent) ?? 0,
     currencyFrom: String(form.currencyFrom).toUpperCase(),
     currencyTo: String(form.currencyTo).toUpperCase(),
     receivingCountry: String(form.receiverCountryCode).toUpperCase(),
+    originCountry: String(form.senderCountryCode).toUpperCase(),
+    senderMsisdn: String(form.senderMsisdn || "").trim() || undefined,
     recipient: {
       mobileNumber: normalizeZimbabweNumber(form.mobileNumber || form.recipientPhone),
       cashPickupLocation: form.cashPickupLocation,
+      bankName: form.bankName || undefined,
+      bankAccountNumber: form.bankAccountNumber || undefined,
       cardNumber: form.cardNumber,
       cardExpiryMonth: form.cardExpiryMonth,
       cardExpiryYear: form.cardExpiryYear,
@@ -1468,8 +1799,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           amountReceive: normalizedReceiveAmount > 0 ? toAmountInputString(normalizedReceiveAmount) : prev.amountReceive,
         }));
         setQuote(null);
-        const isAuthenticated = await ensureAuthenticated();
-        if (!isAuthenticated) return;
         setStep("recipient");
         return;
       }
@@ -1511,8 +1840,10 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         amountReceive: normalizedReceiveDisplay,
       }));
       setQuote(quoteResult);
-      const isAuthenticated = await ensureAuthenticated();
-      if (!isAuthenticated) return;
+      if (form.transferType === "send_money") {
+        const isAuthenticated = await ensureAuthenticated();
+        if (!isAuthenticated) return;
+      }
       setStep("recipient");
     } catch (err) {
       setError(extractErrorMessage(err, tr("payments.form.errors.unable_fetch_quote", "Unable to fetch FX quote.")));
@@ -1581,8 +1912,8 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         });
         nextStatus = {
           kind: "airtime",
-          transaction: response.data?.transaction ?? null,
-          providerResponse: response.data?.providerResponse ?? null,
+          transaction: (response.data as JsonRecord | undefined)?.transaction ?? null,
+          providerResponse: (response.data as JsonRecord | undefined)?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
         };
       } else if (form.transferType === "prepaid_electricity") {
@@ -1595,16 +1926,16 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         });
         nextStatus = {
           kind: "utility",
-          transaction: response.data?.transaction ?? null,
-          providerResponse: response.data?.providerResponse ?? null,
+          transaction: (response.data as JsonRecord | undefined)?.transaction ?? null,
+          providerResponse: (response.data as JsonRecord | undefined)?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
         };
       } else {
         const response = await api.post("/fintech/remittance/send", buildRemittancePayload());
         nextStatus = {
           kind: "remittance",
-          transaction: response.data?.transaction ?? null,
-          providerResponse: response.data?.providerResponse ?? null,
+          transaction: (response.data as JsonRecord | undefined)?.transaction ?? null,
+          providerResponse: (response.data as JsonRecord | undefined)?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
         };
       }
@@ -1635,7 +1966,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               ) || form.recipientType;
       const transaction = receiptStatus.transaction || {};
       const ref =
-        transaction.terrapay_reference ||
+        transaction.provider_reference ||
         transaction.reloadly_reference ||
         receiptStatus.providerResponse?.transfer?.reference ||
         tr("payments.form.status.pending_title", "Pending");
@@ -1696,12 +2027,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             [tr("payments.form.fields.you_send", "You send"), formatAmount(amount, displaySendCurrency)],
             [tr("payments.form.fee", "Fee"), formatAmount(fee, displaySendCurrency)],
             [tr("payments.form.total", "Total"), formatAmount(totalCharge, displaySendCurrency)],
-            [
-              tr("payments.form.quote.fx_rate", "FX Rate"),
-              fxRate > 0
-                ? `1 ${displaySendCurrency} = ${fxRate.toFixed(6)} ${displayReceiveCurrency}`
-                : tr("payments.form.quote.na", "N/A"),
-            ],
+            [tr("payments.form.quote.fx_rate", "FX Rate"), fxRateDisplayText],
             [receiveLabel, formatAmount(displayedReceiveAmount, displayReceiveCurrency)],
             [tr("payments.form.pay.settlement_timing", "Settlement timing"), payoutEta],
           ],
@@ -1799,6 +2125,9 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (payoutType === "cash_pickup") {
       return tr("payments.form.eta.cash_pickup", "Usually within 1 hour after provider confirmation.");
     }
+    if (payoutType === "bank_transfer") {
+      return tr("payments.form.eta.bank_transfer", "Usually 1–3 business days.");
+    }
     if (payoutType === "visa_card") {
       return tr("payments.form.eta.visa_card", "Can take minutes to up to 24 hours.");
     }
@@ -1813,6 +2142,41 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         ? "prepaid_electricity"
         : form.recipientType
   );
+  const routeSummary = showRouteSummary ? (
+    <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
+          {tr("payments.form.quote.fx_rate", "FX Rate")}
+        </p>
+        <p className="mt-1 text-sm font-semibold text-white/85">
+          {fxRateDisplayText}
+        </p>
+      </div>
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
+          {tr("payments.form.fee", "Fee")}
+        </p>
+        <p className="mt-1 text-sm font-black text-white">{formatAmount(displayFee, displaySendCurrency)}</p>
+      </div>
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
+          {tr("payments.form.total", "Total")}
+        </p>
+        <p className="mt-1 text-sm font-black text-zim-gold">
+          {formatAmount(displayTotalCharge, displaySendCurrency)}
+        </p>
+      </div>
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
+          {tr("payments.form.eta_label", "Estimated reflect time")}
+        </p>
+        <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-white/85">
+          <Clock3 className="h-4 w-4 text-zim-gold" />
+          {payoutEta}
+        </p>
+      </div>
+    </div>
+  ) : null;
 
   return (
     <section className="outer-glass-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 text-white shadow-[0_20px_40px_rgba(2,6,23,0.45)]">
@@ -1969,41 +2333,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </div>
           )}
 
-          {showRouteSummary && (
-            <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.quote.fx_rate", "FX Rate")}
-                </p>
-                <p className="mt-1 text-sm font-semibold text-white/85">
-                  {fxRate > 0
-                    ? `1 ${displaySendCurrency} = ${fxRate.toFixed(6)} ${displayReceiveCurrency}`
-                    : tr("payments.form.quote.na", "N/A")}
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.fee", "Fee")}
-                </p>
-                <p className="mt-1 text-sm font-black text-white">{formatAmount(fee, displaySendCurrency)}</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.total", "Total")}
-                </p>
-                <p className="mt-1 text-sm font-black text-zim-gold">{formatAmount(totalCharge, displaySendCurrency)}</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.eta_label", "Estimated reflect time")}
-                </p>
-                <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-white/85">
-                  <Clock3 className="h-4 w-4 text-zim-gold" />
-                  {payoutEta}
-                </p>
-              </div>
-            </div>
-          )}
+          {routeSummary}
 
           {showGetStartedButton ? (
             <button
@@ -2101,6 +2431,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </div>
           )}
 
+          {routeSummary}
           <div className="grid grid-cols-2 gap-3">
             <button
               className={pillSecondaryClass}
@@ -2121,6 +2452,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
 
       {step === "payout" && (
         <div className="space-y-5">
+          {routeSummary}
           {form.transferType === "send_money" && (
             <div>
               <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/70">
@@ -2167,25 +2499,45 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           )}
 
           {form.transferType === "send_money" && form.recipientType === "cash_pickup" && (
+            <div>
+              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
+                {tr("payments.form.payout.recipient_mobile", "Recipient Mobile Number")}
+              </label>
+              <input
+                className={fieldClass}
+                placeholder="+2637XXXXXXXX"
+                value={form.mobileNumber}
+                onChange={(e) => update("mobileNumber", e.target.value)}
+              />
+              <p className="mt-1 text-xs text-white/40">
+                {tr("payments.form.payout.cash_pickup_note", "The recipient can collect at any Thunes cash pickup location.")}
+              </p>
+            </div>
+          )}
+
+          {form.transferType === "send_money" && form.recipientType === "bank_transfer" && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.payout.pickup_channel", "Pickup Channel")}
+                  {tr("payments.form.payout.bank_name", "Bank")}
                 </label>
-                <select className={fieldClass} value={form.payoutChannel} onChange={(e) => update("payoutChannel", e.target.value)}>
-                  <option value="">{tr("payments.form.payout.select_channel", "Select channel")}</option>
-                  {CASH_PICKUP_CHANNELS.map((channel) => (
-                    <option key={channel} value={channel}>
-                      {channel}
-                    </option>
+                <select className={fieldClass} value={form.bankName} onChange={(e) => update("bankName", e.target.value)}>
+                  <option value="">{tr("payments.form.payout.select_bank", "Select bank")}</option>
+                  {SUPPORTED_BANKS.map((bank) => (
+                    <option key={bank} value={bank}>{bank}</option>
                   ))}
                 </select>
               </div>
               <div>
                 <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.payout.pickup_location", "Pickup Location")}
+                  {tr("payments.form.payout.bank_account_number", "Account Number")}
                 </label>
-                <input className={fieldClass} value={form.cashPickupLocation} onChange={(e) => update("cashPickupLocation", e.target.value)} />
+                <input
+                  className={fieldClass}
+                  placeholder="Account number"
+                  value={form.bankAccountNumber}
+                  onChange={(e) => update("bankAccountNumber", e.target.value)}
+                />
               </div>
             </div>
           )}
@@ -2371,15 +2723,15 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </p>
               <p>
                 {tr("payments.form.fields.you_send", "You send")}:{" "}
-                <span className="font-semibold text-white">{formatAmount(amount, form.currencyFrom)}</span>
+                <span className="font-semibold text-white">{formatAmount(amount, displaySendCurrency)}</span>
               </p>
               <p>
                 {tr("payments.form.fee", "Fee")}:{" "}
-                <span className="font-semibold text-white">{formatAmount(fee, form.currencyFrom)}</span>
+                <span className="font-semibold text-white">{formatAmount(fee, displaySendCurrency)}</span>
               </p>
               <p>
                 {tr("payments.form.total", "Total")}:{" "}
-                <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, form.currencyFrom)}</span>
+                <span className="font-semibold text-zim-gold">{formatAmount(totalCharge, displaySendCurrency)}</span>
               </p>
               <p>
                 {tr("payments.form.fields.they_receive", "They receive")}:{" "}
@@ -2443,7 +2795,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </p>
             <p>
               {tr("payments.form.status.reference", "Reference")}:{" "}
-              {status.transaction?.terrapay_reference ||
+              {status.transaction?.provider_reference ||
                 status.transaction?.reloadly_reference ||
                 tr("payments.form.status.pending_title", "Pending")}
             </p>
@@ -2453,11 +2805,11 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </p>
             ) : null}
             <p>
-              {tr("payments.form.fields.you_send", "You send")}: {formatAmount(amount, form.currencyFrom)}
+              {tr("payments.form.fields.you_send", "You send")}: {formatAmount(amount, displaySendCurrency)}
             </p>
             <p>
               {tr("payments.form.fields.they_receive", "They receive")}:{" "}
-              {formatAmount(displayedReceiveAmount, form.currencyTo)}
+              {formatAmount(displayedReceiveAmount, displayReceiveCurrency)}
             </p>
             <p className="mt-1 text-emerald-200/85">
               {payoutEta}

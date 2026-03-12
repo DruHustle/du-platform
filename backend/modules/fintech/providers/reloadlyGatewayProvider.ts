@@ -1,5 +1,13 @@
 import axios, { type AxiosInstance } from "axios";
+import { logger } from "../../../core/logger";
 import type { FinancialFeature, FinancialProvider } from "./providerTypes";
+
+/** Mask phone numbers and card-like digit strings in URLs before logging to prevent PII leakage. */
+function sanitizeUrlForLog(url: string): string {
+  return url
+    .replace(/\/phone\/(\+?\d{3,4})\d+/g, "/phone/$1****")
+    .replace(/\/(\d{4})\d{8,}(\d{4})/g, "/$1****$2");
+}
 
 type OAuthCache = {
   accessToken: string;
@@ -7,6 +15,8 @@ type OAuthCache = {
 };
 
 const oauthCacheByAudience = new Map<string, OAuthCache>();
+/** Tracks in-flight token requests — prevents concurrent duplicate OAuth calls for the same audience. */
+const oauthInflightByAudience = new Map<string, Promise<string>>();
 
 export function resolveReloadlyAudience(
   explicitAudience: string | undefined,
@@ -51,6 +61,12 @@ export class ReloadlyProvider implements FinancialProvider {
   private readonly utilitiesAudience: string;
 
   constructor() {
+    // Validate credentials at construction time in non-mock mode so misconfiguration
+    // is caught at startup rather than on the first real transaction.
+    if (String(process.env.FINANCIAL_SANDBOX_MOCK ?? "").trim().toLowerCase() !== "true") {
+      this.assertConfigured();
+    }
+
     const baseURL = String(process.env.RELOADLY_BASE_URL ?? "https://topups-sandbox.reloadly.com").replace(/\/+$/, "");
     const utilitiesBaseURL = String(process.env.RELOADLY_UTILITIES_BASE_URL ?? "https://utilities-sandbox.reloadly.com").replace(
       /\/+$/,
@@ -94,7 +110,7 @@ export class ReloadlyProvider implements FinancialProvider {
       (config as any).metadata = { startedAt: Date.now() };
       config.headers = config.headers ?? {};
       (config.headers as any).Authorization = `Bearer ${token}`;
-      console.info(`[reloadly:req] ${String(config.method ?? "GET").toUpperCase()} ${config.baseURL}${config.url}`);
+      logger.info("reloadly_request", { method: String(config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(`${config.baseURL}${config.url}`) });
       return config;
     });
 
@@ -102,17 +118,15 @@ export class ReloadlyProvider implements FinancialProvider {
       (response) => {
         const startedAt = Number((response.config as any)?.metadata?.startedAt ?? Date.now());
         const latencyMs = Date.now() - startedAt;
-        console.info(
-          `[reloadly:res] ${String(response.config.method ?? "GET").toUpperCase()} ${response.config.url} -> ${response.status} (${latencyMs}ms)`
-        );
+        logger.info("reloadly_response", { method: String(response.config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(String(response.config.url ?? "")), status: response.status, latencyMs });
         return response;
       },
       (error) => {
         const method = String(error?.config?.method ?? "GET").toUpperCase();
-        const url = String(error?.config?.url ?? "");
+        const url = sanitizeUrlForLog(String(error?.config?.url ?? ""));
         const status = Number(error?.response?.status ?? 0);
         const detail = String(error?.response?.data?.message ?? error?.message ?? "Reloadly request failed");
-        console.error(`[reloadly:err] ${method} ${url} -> ${status || "NO_STATUS"} ${detail}`);
+        logger.error("reloadly_error", { method, url, status: status || "NO_STATUS", detail });
         return Promise.reject(error);
       }
     );
@@ -122,7 +136,7 @@ export class ReloadlyProvider implements FinancialProvider {
       (config as any).metadata = { startedAt: Date.now() };
       config.headers = config.headers ?? {};
       (config.headers as any).Authorization = `Bearer ${token}`;
-      console.info(`[reloadly-utilities:req] ${String(config.method ?? "GET").toUpperCase()} ${config.baseURL}${config.url}`);
+      logger.info("reloadly_utilities_request", { method: String(config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(`${config.baseURL}${config.url}`) });
       return config;
     });
 
@@ -130,17 +144,15 @@ export class ReloadlyProvider implements FinancialProvider {
       (response) => {
         const startedAt = Number((response.config as any)?.metadata?.startedAt ?? Date.now());
         const latencyMs = Date.now() - startedAt;
-        console.info(
-          `[reloadly-utilities:res] ${String(response.config.method ?? "GET").toUpperCase()} ${response.config.url} -> ${response.status} (${latencyMs}ms)`
-        );
+        logger.info("reloadly_utilities_response", { method: String(response.config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(String(response.config.url ?? "")), status: response.status, latencyMs });
         return response;
       },
       (error) => {
         const method = String(error?.config?.method ?? "GET").toUpperCase();
-        const url = String(error?.config?.url ?? "");
+        const url = sanitizeUrlForLog(String(error?.config?.url ?? ""));
         const status = Number(error?.response?.status ?? 0);
         const detail = String(error?.response?.data?.message ?? error?.message ?? "Reloadly utility request failed");
-        console.error(`[reloadly-utilities:err] ${method} ${url} -> ${status || "NO_STATUS"} ${detail}`);
+        logger.error("reloadly_utilities_error", { method, url, status: status || "NO_STATUS", detail });
         return Promise.reject(error);
       }
     );
@@ -185,25 +197,36 @@ export class ReloadlyProvider implements FinancialProvider {
       return cachedToken.accessToken;
     }
 
-    const response = await this.authClient.post("/oauth/token", {
-      client_id: String(process.env.RELOADLY_CLIENT_ID ?? "").trim(),
-      client_secret: String(process.env.RELOADLY_CLIENT_SECRET ?? "").trim(),
-      grant_type: "client_credentials",
-      audience,
-    });
+    // Deduplicate concurrent token requests for the same audience.
+    const inflight = oauthInflightByAudience.get(audience);
+    if (inflight) return inflight;
 
-    const accessToken = String(response.data?.access_token ?? "").trim();
-    const expiresIn = Number(response.data?.expires_in ?? 60);
+    const tokenRequest = this.authClient
+      .post("/oauth/token", {
+        client_id: String(process.env.RELOADLY_CLIENT_ID ?? "").trim(),
+        client_secret: String(process.env.RELOADLY_CLIENT_SECRET ?? "").trim(),
+        grant_type: "client_credentials",
+        audience,
+      })
+      .then((response) => {
+        const accessToken = String(response.data?.access_token ?? "").trim();
+        const expiresIn = Number(response.data?.expires_in ?? 0);
 
-    if (!accessToken) throw new Error("Reloadly OAuth token was empty.");
+        if (!accessToken) throw new Error("Reloadly OAuth token was empty.");
+        if (!Number.isFinite(expiresIn) || expiresIn < 60) {
+          throw new Error(`Reloadly OAuth returned invalid expires_in: ${expiresIn}`);
+        }
 
-    const nextCacheValue = {
-      accessToken,
-      expiresAt: Date.now() + expiresIn * 1000,
-    };
-    oauthCacheByAudience.set(audience, nextCacheValue);
+        const cached = { accessToken, expiresAt: Date.now() + expiresIn * 1000 };
+        oauthCacheByAudience.set(audience, cached);
+        return accessToken;
+      })
+      .finally(() => {
+        oauthInflightByAudience.delete(audience);
+      });
 
-    return nextCacheValue.accessToken;
+    oauthInflightByAudience.set(audience, tokenRequest);
+    return tokenRequest;
   }
 
   async detectOperator(phoneNumber: string, countryCode = "ZW"): Promise<any> {
@@ -221,14 +244,65 @@ export class ReloadlyProvider implements FinancialProvider {
         },
       };
     }
-    const response = await this.apiClient.get(
-      `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/country-code/${encodeURIComponent(countryCode)}`,
-      {
-        params: {
-          includeBundles: true,
-        },
+    const params = { includeBundles: true };
+    try {
+      const response = await this.apiClient.get(
+        `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/countries/${encodeURIComponent(countryCode)}`,
+        { params }
+      );
+      return response.data;
+    } catch (error: any) {
+      if (Number(error?.response?.status ?? 0) !== 404) {
+        throw error;
       }
-    );
+      const fallbackResponse = await this.apiClient.get(
+        `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/country-code/${encodeURIComponent(countryCode)}`,
+        { params }
+      );
+      return fallbackResponse.data;
+    }
+  }
+
+  async listOperatorsByCountry(countryCode = "ZW"): Promise<any[]> {
+    if (this.isMockMode()) {
+      return [
+        {
+          operatorId: 2714,
+          id: 2714,
+          name: "Econet Zimbabwe",
+          countryCode,
+          senderCurrencyCode: "EUR",
+          destinationCurrencyCode: "USD",
+          fx: {
+            rate: 1.16820928703,
+            currencyCode: "USD",
+          },
+          suggestedAmounts: [1, 2, 5, 10, 20, 50],
+        },
+      ];
+    }
+
+    const response = await this.apiClient.get(`/operators/countries/${encodeURIComponent(countryCode)}`);
+    const payload = response.data;
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.content)) return payload.content;
+    if (Array.isArray(payload?.operators)) return payload.operators;
+    return [];
+  }
+
+  async fetchOperatorFxRate(operatorId: number, amount: number): Promise<any> {
+    if (this.isMockMode()) {
+      return {
+        operatorId,
+        fxRate: Number((amount * 1.16820928703).toFixed(6)),
+        currencyCode: "USD",
+        amount,
+      };
+    }
+    const response = await this.apiClient.post("/operators/fx-rate", {
+      operatorId,
+      amount,
+    });
     return response.data;
   }
 
@@ -283,13 +357,14 @@ export class ReloadlyProvider implements FinancialProvider {
           type: filters.type ?? "ELECTRICITY_BILL_PAYMENT",
           serviceType: filters.serviceType ?? "PREPAID",
           internationalAmountSupported: true,
-          internationalTransactionCurrencyCode: "EUR",
-          internationalTransactionFee: 0,
+          // No internationalTransactionCurrencyCode — sender currency resolves
+          // from form.currencyFrom (e.g. EUR) in buildReloadlyUtilityPricing.
+          internationalTransactionFee: 0.5,
           fx: {
-            rate: 5180.532259792,
-            currencyCode: "EUR",
+            rate: 1.12,      // approximate EUR → USD rate
+            currencyCode: "USD", // ZETDC issues USD-denominated electricity tokens
           },
-          localTransactionCurrencyCode: null,
+          localTransactionCurrencyCode: "USD",
         },
       ];
     }

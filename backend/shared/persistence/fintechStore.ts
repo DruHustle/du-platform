@@ -20,7 +20,7 @@ type RemittanceTransactionRecord = {
   currency_to: string;
   exchange_rate: number | null;
   status: RemittanceTransactionStatus;
-  terrapay_reference: string | null;
+  provider_reference: string | null;
   idempotency_key: string | null;
   created_at: string;
   updated_at: string;
@@ -49,6 +49,7 @@ type UtilityTransactionRecord = {
   currency: string | null;
   reloadly_reference: string | null;
   token_code: string | null;
+  idempotency_key: string | null;
   status: UtilityTransactionStatus;
   created_at: string;
 };
@@ -133,7 +134,7 @@ export async function createRemittanceTransactionRecord(
     currencyTo: string;
     exchangeRate: number | null;
     status: RemittanceTransactionStatus;
-    terrapayReference: string | null;
+    providerReference: string | null;
     idempotencyKey: string;
   },
   connection?: mysql.PoolConnection
@@ -160,7 +161,7 @@ export async function createRemittanceTransactionRecord(
       currency_to: input.currencyTo,
       exchange_rate: input.exchangeRate,
       status: input.status,
-      terrapay_reference: input.terrapayReference,
+      provider_reference: input.providerReference,
       idempotency_key: input.idempotencyKey,
       created_at: now,
       updated_at: now,
@@ -194,8 +195,8 @@ export async function createRemittanceTransactionRecord(
 
     const [inserted] = await activeConnection.execute<mysql.ResultSetHeader>(
       `
-      INSERT INTO remittance_transactions
-      (user_id, recipient_name, recipient_type, provider, payout_channel, amount_sent, amount_received, currency_from, currency_to, exchange_rate, status, terrapay_reference, idempotency_key)
+      INSERT IGNORE INTO remittance_transactions
+      (user_id, recipient_name, recipient_type, provider, payout_channel, amount_sent, amount_received, currency_from, currency_to, exchange_rate, status, provider_reference, idempotency_key)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
@@ -210,10 +211,20 @@ export async function createRemittanceTransactionRecord(
         input.currencyTo,
         input.exchangeRate,
         input.status,
-        input.terrapayReference,
+        input.providerReference,
         input.idempotencyKey,
       ]
     );
+
+    // If INSERT IGNORE skipped the row (duplicate idempotency_key), return existing record
+    if (inserted.affectedRows === 0) {
+      const [conflict] = await activeConnection.query<mysql.RowDataPacket[]>(
+        "SELECT * FROM remittance_transactions WHERE idempotency_key = ? LIMIT 1",
+        [input.idempotencyKey]
+      );
+      if (ownsConnection) await activeConnection.query("COMMIT");
+      return conflict[0] ?? null;
+    }
 
     const [rows] = await activeConnection.query<mysql.RowDataPacket[]>(
       "SELECT * FROM remittance_transactions WHERE id = ? LIMIT 1",
@@ -285,6 +296,24 @@ export async function getRemittanceTransactionByIdempotencyKey(userId: number, i
   return rows[0] ?? null;
 }
 
+export async function getAirtimeTransactionByIdempotencyKey(userId: number, idempotencyKey: string) {
+  const normalizedUserId = Math.floor(Number(userId));
+  const normalizedKey = String(idempotencyKey ?? "").trim();
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0 || !normalizedKey) return null;
+
+  if (!db) {
+    return memoryAirtimeTransactions.find(
+      (entry) => entry.user_id === normalizedUserId && (entry as any).idempotency_key === normalizedKey
+    ) ?? null;
+  }
+
+  const [rows] = await db.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM airtime_transactions WHERE user_id = ? AND idempotency_key = ? LIMIT 1",
+    [normalizedUserId, normalizedKey]
+  );
+  return rows[0] ?? null;
+}
+
 export async function createAirtimeTransactionRecord(
   input: {
     userId: number;
@@ -293,6 +322,7 @@ export async function createAirtimeTransactionRecord(
     amount: number;
     currency: string | null;
     reloadlyReference: string | null;
+    idempotencyKey?: string | null;
     status: AirtimeTransactionStatus;
   },
   connection?: mysql.PoolConnection
@@ -322,9 +352,9 @@ export async function createAirtimeTransactionRecord(
 
     const [inserted] = await activeConnection.execute<mysql.ResultSetHeader>(
       `
-      INSERT INTO airtime_transactions
-      (user_id, phone_number, operator_id, amount, currency, reloadly_reference, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT IGNORE INTO airtime_transactions
+      (user_id, phone_number, operator_id, amount, currency, reloadly_reference, idempotency_key, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         input.userId,
@@ -333,9 +363,19 @@ export async function createAirtimeTransactionRecord(
         input.amount,
         input.currency,
         input.reloadlyReference,
+        input.idempotencyKey ?? null,
         input.status,
       ]
     );
+
+    if (inserted.affectedRows === 0 && input.idempotencyKey) {
+      const [conflict] = await activeConnection.query<mysql.RowDataPacket[]>(
+        "SELECT * FROM airtime_transactions WHERE idempotency_key = ? LIMIT 1",
+        [input.idempotencyKey]
+      );
+      if (ownsConnection) await activeConnection.query("COMMIT");
+      return conflict[0] ?? null;
+    }
 
     const [rows] = await activeConnection.query<mysql.RowDataPacket[]>(
       "SELECT * FROM airtime_transactions WHERE id = ? LIMIT 1",
@@ -378,6 +418,24 @@ export async function getAirtimeTransactionById(transactionId: number, userId: n
   return rows[0] ?? null;
 }
 
+export async function getUtilityTransactionByIdempotencyKey(userId: number, idempotencyKey: string) {
+  const normalizedUserId = Math.floor(Number(userId));
+  const normalizedKey = String(idempotencyKey ?? "").trim();
+  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0 || !normalizedKey) return null;
+
+  if (!db) {
+    return memoryUtilityTransactions.find(
+      (entry) => entry.user_id === normalizedUserId && entry.idempotency_key === normalizedKey
+    ) ?? null;
+  }
+
+  const [rows] = await db.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM utility_transactions WHERE user_id = ? AND idempotency_key = ? LIMIT 1",
+    [normalizedUserId, normalizedKey]
+  );
+  return rows[0] ?? null;
+}
+
 export async function createUtilityTransactionRecord(
   input: {
     userId: number;
@@ -389,11 +447,18 @@ export async function createUtilityTransactionRecord(
     currency: string | null;
     reloadlyReference: string | null;
     tokenCode: string | null;
+    idempotencyKey?: string | null;
     status: UtilityTransactionStatus;
   },
   connection?: mysql.PoolConnection
 ) {
   if (!db) {
+    if (input.idempotencyKey) {
+      const duplicate = memoryUtilityTransactions.find(
+        (entry) => entry.user_id === input.userId && entry.idempotency_key === input.idempotencyKey
+      );
+      if (duplicate) return duplicate;
+    }
     const row: UtilityTransactionRecord = {
       id: memoryUtilityTransactions.length + 1,
       user_id: input.userId,
@@ -405,6 +470,7 @@ export async function createUtilityTransactionRecord(
       currency: input.currency,
       reloadly_reference: input.reloadlyReference,
       token_code: input.tokenCode,
+      idempotency_key: input.idempotencyKey ?? null,
       status: input.status,
       created_at: new Date().toISOString(),
     };
@@ -421,9 +487,9 @@ export async function createUtilityTransactionRecord(
 
     const [inserted] = await activeConnection.execute<mysql.ResultSetHeader>(
       `
-      INSERT INTO utility_transactions
-      (user_id, meter_number, customer_name, biller_id, biller_name, amount, currency, reloadly_reference, token_code, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT IGNORE INTO utility_transactions
+      (user_id, meter_number, customer_name, biller_id, biller_name, amount, currency, reloadly_reference, token_code, idempotency_key, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         input.userId,
@@ -435,9 +501,19 @@ export async function createUtilityTransactionRecord(
         input.currency,
         input.reloadlyReference,
         input.tokenCode,
+        input.idempotencyKey ?? null,
         input.status,
       ]
     );
+
+    if (inserted.affectedRows === 0 && input.idempotencyKey) {
+      const [conflict] = await activeConnection.query<mysql.RowDataPacket[]>(
+        "SELECT * FROM utility_transactions WHERE idempotency_key = ? LIMIT 1",
+        [input.idempotencyKey]
+      );
+      if (ownsConnection) await activeConnection.query("COMMIT");
+      return conflict[0] ?? null;
+    }
 
     const [rows] = await activeConnection.query<mysql.RowDataPacket[]>(
       "SELECT * FROM utility_transactions WHERE id = ? LIMIT 1",

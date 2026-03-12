@@ -28,31 +28,21 @@ function normalizeOrigin(raw: string): string | null {
   }
 }
 
-function buildAllowedOrigins(req: express.Request, configuredOrigins: string[]) {
+function buildAllowedOriginSet(configuredOrigins: string[]): Set<string> {
   const allowed = new Set<string>();
-
   for (const origin of configuredOrigins) {
     const normalized = normalizeOrigin(origin);
     if (normalized) allowed.add(normalized);
   }
-
-  const forwardedProto = String(req.headers['x-forwarded-proto'] ?? '').trim().toLowerCase();
-  const host = String(req.headers.host ?? '').trim().toLowerCase();
-  if (host) {
-    allowed.add(`http://${host}`);
-    allowed.add(`https://${host}`);
-    if (forwardedProto === 'http' || forwardedProto === 'https') {
-      allowed.add(`${forwardedProto}://${host}`);
-    }
-  }
-
   return allowed;
 }
 
 function isAllowedRequestOrigin(req: express.Request, configuredOrigins: string[]) {
+  // Only check against explicitly configured origins — never trust Host or X-Forwarded-Proto
+  // headers here, as those can be spoofed by a malicious request.
+  const allowedOrigins = buildAllowedOriginSet(configuredOrigins);
   const originHeader = String(req.headers.origin ?? '').trim();
   const refererHeader = String(req.headers.referer ?? '').trim();
-  const allowedOrigins = buildAllowedOrigins(req, configuredOrigins);
 
   if (originHeader) {
     const normalizedOrigin = normalizeOrigin(originHeader);
@@ -108,6 +98,20 @@ export function registerCoreMiddleware(app: Express) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('Permissions-Policy', 'geolocation=(self), microphone=(self), camera=(self)');
+    res.setHeader(
+      'Content-Security-Policy',
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // SPA needs eval/inline; tighten post-CSP-hash rollout
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: blob: https:",
+        "font-src 'self' data:",
+        "connect-src 'self' https:",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ].join('; ')
+    );
     if ((process.env.NODE_ENV ?? 'development').toLowerCase() === 'production') {
       res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     }
@@ -132,7 +136,11 @@ export function registerCoreMiddleware(app: Express) {
       });
     }
 
-    const csrfEnabled = (process.env.CSRF_ENABLED ?? 'false').toLowerCase() === 'true';
+    // Default CSRF token enforcement to enabled in production; set CSRF_ENABLED=false to disable.
+    const isProduction = (process.env.NODE_ENV ?? 'development').toLowerCase() === 'production';
+    const csrfEnabled = process.env.CSRF_ENABLED !== undefined
+      ? process.env.CSRF_ENABLED.toLowerCase() === 'true'
+      : isProduction;
     if (!csrfEnabled) return next();
 
     const token = String(req.headers['x-csrf-token'] ?? '').trim();

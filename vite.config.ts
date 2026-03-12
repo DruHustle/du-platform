@@ -51,6 +51,52 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // React core — loaded on every page, cached aggressively
+            if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/") || id.includes("node_modules/scheduler/")) {
+              return "vendor-react";
+            }
+            // 3D / XR — large, rarely changes, only needed on globe/VR pages
+            if (
+              id.includes("node_modules/three/") ||
+              id.includes("node_modules/three-globe/") ||
+              id.includes("node_modules/@react-three/") ||
+              id.includes("node_modules/@pmndrs/")
+            ) {
+              return "vendor-3d";
+            }
+            // Charts
+            if (id.includes("node_modules/recharts/") || id.includes("node_modules/d3-") || id.includes("node_modules/victory-")) {
+              return "vendor-charts";
+            }
+            // Internationalisation
+            if (
+              id.includes("node_modules/i18next") ||
+              id.includes("node_modules/react-i18next/")
+            ) {
+              return "vendor-i18n";
+            }
+            // UI primitives — Radix, lucide, animation, misc components
+            if (
+              id.includes("node_modules/@radix-ui/") ||
+              id.includes("node_modules/lucide-react/") ||
+              id.includes("node_modules/framer-motion/") ||
+              id.includes("node_modules/cmdk/") ||
+              id.includes("node_modules/vaul/") ||
+              id.includes("node_modules/sonner/") ||
+              id.includes("node_modules/embla-carousel") ||
+              id.includes("node_modules/react-day-picker/") ||
+              id.includes("node_modules/input-otp/") ||
+              id.includes("node_modules/next-themes/") ||
+              id.includes("node_modules/react-resizable-panels/")
+            ) {
+              return "vendor-ui";
+            }
+          },
+        },
+      },
     },
     esbuild: {
       jsx: "automatic",

@@ -1,6 +1,14 @@
 import type express from 'express';
+import { UserFacingError } from '../../../core/errorHandler';
+import { logger } from '../../../core/logger';
 import { RemittanceService } from '../services/remittanceService';
 import { ok, error } from '../../../shared/responseFormatter';
+
+function toClientMessage(err: unknown, fallback: string): string {
+  if (err instanceof UserFacingError) return err.message;
+  logger.error('remittance_controller_error', { message: err instanceof Error ? err.message : String(err), stack: err instanceof Error ? err.stack : undefined });
+  return fallback;
+}
 
 const SYSTEM_NOTICE = 'Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.';
 
@@ -12,7 +20,7 @@ export class RemittanceController {
       const quote = await this.service.previewQuote(req.body);
       return res.json(ok({ ...quote, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('FX_QUOTE_FAILED', err instanceof Error ? err.message : 'Quote failed.'));
+      return res.status(400).json(error('FX_QUOTE_FAILED', toClientMessage(err, 'Unable to retrieve FX quote.')));
     }
   };
 
@@ -24,7 +32,7 @@ export class RemittanceController {
       const result = await this.service.send(userId, req.body);
       return res.status(201).json(ok({ ...result, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('REMITTANCE_FAILED', err instanceof Error ? err.message : 'Send failed.'));
+      return res.status(400).json(error('REMITTANCE_FAILED', toClientMessage(err, 'Remittance could not be processed.')));
     }
   };
 

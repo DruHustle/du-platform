@@ -23,6 +23,12 @@ function buildSslConfig() {
 
   if (caFromEnv) return { rejectUnauthorized: true, ca: caFromEnv };
   if (caPath && fs.existsSync(caPath)) return { rejectUnauthorized: true, ca: fs.readFileSync(caPath, "utf8") };
+
+  if (NODE_ENV === "production") {
+    // In production without a CA cert, connections are encrypted but the server certificate is not verified.
+    // Set AIVEN_CA_CERT or AIVEN_CA_CERT_PATH to enable full certificate validation.
+    console.warn("[databaseRuntime] WARNING: SSL certificate verification is disabled (rejectUnauthorized=false). Set AIVEN_CA_CERT or AIVEN_CA_CERT_PATH to enable full TLS validation.");
+  }
   return { rejectUnauthorized: false };
 }
 
