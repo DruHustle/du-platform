@@ -45,9 +45,12 @@ export class UtilityController {
       return res.status(400).json(error("INVALID_ID", "Invalid transaction id."));
     }
 
-    const transaction = await this.service.getElectricityStatus(userId, Math.floor(transactionId));
-    if (!transaction) return res.status(404).json(error("NOT_FOUND", "Transaction not found."));
-
-    return res.json(ok({ transaction, systemNotice: SYSTEM_NOTICE }));
+    try {
+      const transaction = await this.service.getElectricityStatus(userId, Math.floor(transactionId));
+      if (!transaction) return res.status(404).json(error("NOT_FOUND", "Transaction not found."));
+      return res.json(ok({ transaction, systemNotice: SYSTEM_NOTICE }));
+    } catch (err) {
+      return res.status(500).json(error("UTILITY_STATUS_FAILED", toClientMessage(err, "Unable to retrieve transaction status.")));
+    }
   };
 }

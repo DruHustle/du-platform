@@ -10,6 +10,7 @@ import { errorHandler, notFoundHandler } from "./core/errorHandler";
 import { registerDomainModules } from "./modules";
 import { registerApiRoutes } from "./api";
 import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
+import { resolveJwtSecret } from "./utils/jwtSecret";
 
 type ModularServerOptions = {
   backend: {
@@ -90,6 +91,20 @@ export async function startServer() {
   process.on("uncaughtException", (error) => {
     console.error("[process] Uncaught exception:", error);
   });
+
+  // Validate JWT_SECRET eagerly so a misconfigured production deployment fails
+  // immediately at startup rather than surfacing a 500 on the first authenticated request.
+  try {
+    resolveJwtSecret();
+  } catch (jwtError) {
+    const nodeEnv = String(process.env.NODE_ENV ?? "development").toLowerCase();
+    if (nodeEnv === "production") {
+      console.error("[startup] JWT_SECRET validation failed:", jwtError instanceof Error ? jwtError.message : jwtError);
+      process.exit(1);
+    }
+    // In dev/test the fallback secret is acceptable — log a reminder only.
+    console.warn("[startup] JWT_SECRET is not set; using insecure dev fallback. Set JWT_SECRET before deploying.");
+  }
 
   try {
     await initializeDatabase();

@@ -1,8 +1,8 @@
+import { createStaticRoute } from "../core/routing";
+import RegulationsPage from "./pages/RegulationsPage";
 import CookieSettingsPage from "./pages/CookieSettingsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
-import RegulationsPage from "./pages/RegulationsPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
-import { createStaticRoute } from "../core/routing";
 
 export const legalRoutes = [
   createStaticRoute("/regulations", RegulationsPage),

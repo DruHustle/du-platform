@@ -51,6 +51,14 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
+      // Terser produces ~15-20% smaller bundles than esbuild minifier
+      minify: "terser",
+      terserOptions: {
+        compress: { drop_console: true, passes: 2 },
+        format: { comments: false },
+      },
+      // Raise the chunk size warning threshold — 3D vendor chunk intentionally large
+      chunkSizeWarningLimit: 2000,
       rollupOptions: {
         output: {
           manualChunks(id) {
