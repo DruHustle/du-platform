@@ -23,12 +23,14 @@ fi
 echo "[healthcheck] Probing ${PROFILE} via ${URL}"
 
 if ! http_code="$(curl -sS --max-time "${TIMEOUT_SECONDS}" -D "${HEADER_FILE}" -o "${BODY_FILE}" -w "%{http_code}" "${URL}")"; then
-  echo "[healthcheck] Request failed (network, DNS, TLS, or timeout)."
+  echo "[healthcheck] FAIL — Network error (DNS, TLS, timeout, or connection refused)."
+  echo "[healthcheck] URL: ${URL}"
+  echo "[healthcheck] Timeout: ${TIMEOUT_SECONDS}s"
   exit 1
 fi
 
 if [[ "${http_code}" -lt 200 || "${http_code}" -ge 400 ]]; then
-  echo "[healthcheck] Failed (HTTP ${http_code})"
+  echo "[healthcheck] FAIL — HTTP ${http_code} from ${URL}"
   echo "[healthcheck] Response body:"
   cat "${BODY_FILE}" || true
   exit 1
@@ -39,7 +41,8 @@ content_type="$(
 )"
 
 if [[ "${content_type}" != application/json* ]]; then
-  echo "[healthcheck] Expected JSON but received content-type: ${content_type:-<missing>}"
+  echo "[healthcheck] FAIL — Expected Content-Type: application/json but got: ${content_type:-<missing>}"
+  echo "[healthcheck] This usually means a proxy, CDN, or auth wall is intercepting the request."
   echo "[healthcheck] Response body:"
   cat "${BODY_FILE}" || true
   exit 1
@@ -54,37 +57,51 @@ const rawBody = fs.readFileSync(bodyPath, "utf8");
 let payload;
 try {
   payload = JSON.parse(rawBody);
-} catch (error) {
-  console.error("[healthcheck] Response body is not valid JSON.");
-  console.error(rawBody);
+} catch (err) {
+  console.error("[healthcheck] FAIL — Response is not valid JSON.");
+  console.error(`[healthcheck] Parse error: ${err.message}`);
+  console.error(`[healthcheck] Raw response:\n${rawBody}`);
   process.exit(1);
 }
 
-const checks = {
-  "app-ping": {
-    pass: payload?.ok === true && payload?.service === "du-platform",
-    expected: 'expected {"ok": true, "service": "du-platform"}',
-  },
-  "db-health": {
-    pass: payload?.ok === true && payload?.mode === "mysql",
-    expected: 'expected {"ok": true, "mode": "mysql"}',
-  },
-  "onesa-ready": {
-    pass: payload?.ready === true,
-    expected: 'expected {"ready": true}',
-  },
-};
+// Field-level diagnostics: describe exactly what is wrong, not just what was expected.
+function diagnose(profile, payload) {
+  switch (profile) {
+    case "app-ping": {
+      const issues = [];
+      if (payload?.ok !== true)
+        issues.push(`"ok" is ${JSON.stringify(payload?.ok)} — expected true`);
+      if (payload?.service !== "du-platform")
+        issues.push(`"service" is ${JSON.stringify(payload?.service)} — expected "du-platform"`);
+      return issues;
+    }
+    case "db-health": {
+      const issues = [];
+      if (payload?.ok !== true)
+        issues.push(`"ok" is ${JSON.stringify(payload?.ok)} — expected true. ${payload?.error ? `Server error: "${payload.error}"` : ""}`);
+      if (payload?.mode !== "mysql")
+        issues.push(`"mode" is ${JSON.stringify(payload?.mode)} — expected "mysql". Database may be down or misconfigured.`);
+      return issues;
+    }
+    case "onesa-ready": {
+      const issues = [];
+      if (payload?.ready !== true)
+        issues.push(`"ready" is ${JSON.stringify(payload?.ready)} — expected true. ${payload?.reason ? `Reason: "${payload.reason}"` : "AI service may still be initialising."}`);
+      return issues;
+    }
+    default:
+      return [`Unknown profile: "${profile}"`];
+  }
+}
 
-if (!checks[profile]) {
-  console.error(`[healthcheck] Unknown profile: ${profile}`);
+const issues = diagnose(profile, payload);
+
+if (issues.length > 0) {
+  console.error(`[healthcheck] FAIL — ${profile}`);
+  issues.forEach((msg) => console.error(`  ✗ ${msg}`));
+  console.error(`[healthcheck] Full response: ${rawBody}`);
   process.exit(1);
 }
 
-if (!checks[profile].pass) {
-  console.error(`[healthcheck] ${profile} validation failed: ${checks[profile].expected}`);
-  console.error(`[healthcheck] Response body: ${rawBody}`);
-  process.exit(1);
-}
-
-console.log(`[healthcheck] ${profile} passed.`);
+console.log(`[healthcheck] PASS — ${profile}`);
 NODE

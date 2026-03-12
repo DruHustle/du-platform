@@ -16,7 +16,7 @@ export function registerBackendApiRoutes(app: express.Express, deps: SystemApiDe
     }
     try {
       await deps.db.query("SELECT 1");
-      return res.json({ ok: true });
+      return res.json({ ok: true, mode: "mysql" });
     } catch {
       return res.status(500).json({ ok: false, error: "Database connection failed." });
     }
