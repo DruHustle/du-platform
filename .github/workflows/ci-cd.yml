@@ -14,7 +14,7 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  # 1) Baseline quality gate used by deployment jobs.
+  # 1) Baseline quality gate — ALL deployment jobs are blocked until this passes.
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -43,14 +43,15 @@ jobs:
       - name: Guardrails (Build Safety)
         run: pnpm guardrails
 
-      - name: Build project (CI Check)
+      - name: Build project
         run: pnpm build
 
-  # 2) Production deploy is gated on CI and only runs for direct main pushes.
+  # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
+  #    On failure, rolls back to the last successful Vercel production deployment.
   deploy-vercel-production:
     name: Deploy to Vercel (Production)
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -63,18 +64,24 @@ jobs:
         run: pnpm add -g vercel@latest
 
       - name: Pull Vercel Environment Information
-        # This downloads the VITE_SITE_URL you set in Vercel
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel Production
-        # Build from source on Vercel to avoid stale local .vercel/output artifacts.
+        id: vercel_deploy
         run: vercel deploy --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-  # 3) Preview deploys are created for pull requests.
+      - name: Rollback on deployment failure
+        if: failure() && steps.vercel_deploy.conclusion == 'failure'
+        run: |
+          echo "Deployment failed — rolling back to last successful production deployment."
+          vercel rollback --token=${{ secrets.VERCEL_TOKEN }} --yes
+          echo "Rollback complete."
+
+  # 3) Preview deploys for pull requests — only if build-and-test passed.
   deploy-vercel-preview:
     name: Deploy to Vercel (Preview)
     needs: build-and-test
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && needs.build-and-test.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -90,10 +97,9 @@ jobs:
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel Preview
-        # Build from source on Vercel to avoid stale local .vercel/output artifacts.
         run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }}
 
-  # 4) Non-blocking formatting visibility; does not fail the pipeline.
+  # 4) Non-blocking formatting visibility; does not gate deployment.
   code-quality:
     name: Code Quality
     runs-on: ubuntu-latest
