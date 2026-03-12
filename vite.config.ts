@@ -8,11 +8,11 @@ import { defineConfig, loadEnv } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 
 export default defineConfig(({ mode }) => {
-  // Load env vars. The third argument "" ensures all variables are loaded, not just those starting with VITE_
   const env = loadEnv(mode, path.resolve(import.meta.dirname), "");
   const siteUrl = (env.VITE_SITE_URL || env.APP_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
   const useDevHttps = env.VITE_DEV_HTTPS !== "false";
   const useJsxLoc = mode !== "production";
+  
   const certDir = path.resolve(import.meta.dirname, ".cert");
   const keyPath = path.join(certDir, "localhost-key.pem");
   const certPath = path.join(certDir, "localhost-cert.pem");
@@ -20,21 +20,21 @@ export default defineConfig(({ mode }) => {
 
   return {
     define: {
-      "process.env.NODE_ENV": JSON.stringify(mode === "production" ? "production" : "development"),
+      // Using 'mode' directly is cleaner than manual stringification
+      "process.env.NODE_ENV": JSON.stringify(mode),
     },
     plugins: [
       ...(useDevHttps && !hasTrustedLocalCert ? [basicSsl()] : []),
       react(),
       tailwindcss(),
-      ...(useJsxLoc ? [jsxLocPlugin()] : []),
+...(useJsxLoc ? [jsxLocPlugin()] : []),
       createHtmlPlugin({
         inject: {
           data: {
-            // Mapping variables for EJS replacement in index.html
             VITE_SITE_URL: siteUrl,
             VITE_SITE_NAME: env.VITE_SITE_NAME || "Diaspora Unlocked Platform",
-            VITE_ANALYTICS_ENDPOINT: env.VITE_ANALYTICS_ENDPOINT,
-            VITE_ANALYTICS_WEBSITE_ID: env.VITE_ANALYTICS_WEBSITE_ID,
+            VITE_ANALYTICS_ENDPOINT: env.VITE_ANALYTICS_ENDPOINT || "",
+            VITE_ANALYTICS_WEBSITE_ID: env.VITE_ANALYTICS_WEBSITE_ID || "",
           },
         },
       }),
@@ -51,64 +51,29 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
-      // Terser produces ~15-20% smaller bundles than esbuild minifier
       minify: "terser",
       terserOptions: {
-        compress: { drop_console: true, passes: 2 },
+        compress: { 
+          // Only drop consoles in production to allow dev debugging
+          drop_console: mode === "production", 
+          passes: 2 
+        },
         format: { comments: false },
       },
-      // Raise the chunk size warning threshold — 3D vendor chunk intentionally large
-      chunkSizeWarningLimit: 2000,
+      // Higher limit is fine for 3D apps, but we aim for better splitting via React.lazy
+      chunkSizeWarningLimit: 1500,
       rollupOptions: {
         output: {
-          manualChunks(id) {
-            // React core — loaded on every page, cached aggressively
-            if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/") || id.includes("node_modules/scheduler/")) {
-              return "vendor-react";
-            }
-            // 3D / XR — large, rarely changes, only needed on globe/VR pages
-            if (
-              id.includes("node_modules/three/") ||
-              id.includes("node_modules/three-globe/") ||
-              id.includes("node_modules/@react-three/") ||
-              id.includes("node_modules/@pmndrs/")
-            ) {
-              return "vendor-3d";
-            }
-            // Charts
-            if (id.includes("node_modules/recharts/") || id.includes("node_modules/d3-") || id.includes("node_modules/victory-")) {
-              return "vendor-charts";
-            }
-            // Internationalisation
-            if (
-              id.includes("node_modules/i18next") ||
-              id.includes("node_modules/react-i18next/")
-            ) {
-              return "vendor-i18n";
-            }
-            // UI primitives — Radix, lucide, animation, misc components
-            if (
-              id.includes("node_modules/@radix-ui/") ||
-              id.includes("node_modules/lucide-react/") ||
-              id.includes("node_modules/framer-motion/") ||
-              id.includes("node_modules/cmdk/") ||
-              id.includes("node_modules/vaul/") ||
-              id.includes("node_modules/sonner/") ||
-              id.includes("node_modules/embla-carousel") ||
-              id.includes("node_modules/react-day-picker/") ||
-              id.includes("node_modules/input-otp/") ||
-              id.includes("node_modules/next-themes/") ||
-              id.includes("node_modules/react-resizable-panels/")
-            ) {
-              return "vendor-ui";
-            }
-          },
+          // Standardized naming convention for better caching
+          assetFileNames: "assets/[name]-[hash][extname]",
+          chunkFileNames: "assets/[name]-[hash].js",
+          entryFileNames: "assets/[name]-[hash].js",
         },
       },
     },
     esbuild: {
       jsx: "automatic",
-      jsxDev: false,
+      jsxDev: mode !== "production",
       jsxImportSource: "react",
     },
     server: {
@@ -124,7 +89,6 @@ export default defineConfig(({ mode }) => {
           : true
         : false,
       proxy: {
-        // This is the magic bridge!
         '/api': {
           target: env.BACKEND_URL || 'http://localhost:5001',
           changeOrigin: true,
