@@ -14,14 +14,14 @@ export const fxQuoteSchema = z.object({
   receivingCountry: z.string().trim().min(2).max(3).default("ZW"),
   originCountry: z.string().trim().min(2).max(2).optional(),
   senderMsisdn: z.string().trim().min(7).max(20).optional(),
-  recipientType: z.enum(['mobile_money', 'cash_pickup', 'visa_card']).optional(),
+  recipientType: z.enum(['mobile_money', 'cash_pickup', 'bank_transfer', 'visa_card']).optional(),
   recipientMsisdn: z.string().trim().min(7).max(20).optional(),
   recipientPan: z.string().trim().min(12).max(40).optional(),
 });
 
 export const remittanceSchema = z.object({
   recipientName: z.string().trim().min(2).max(255),
-  recipientType: z.enum(['mobile_money', 'cash_pickup', 'visa_card']),
+  recipientType: z.enum(['mobile_money', 'cash_pickup', 'bank_transfer', 'visa_card']),
   provider: z.string().trim().min(2).max(100),
   payoutChannel: z.string().trim().max(100).optional(),
   amountSent: preciseAmount(),
@@ -37,6 +37,8 @@ export const remittanceSchema = z.object({
     cardExpiryMonth: z.string().trim().max(2).optional(),
     cardExpiryYear: z.string().trim().max(4).optional(),
     cardHolderName: z.string().trim().max(255).optional(),
+    bankName: z.string().trim().max(100).optional(),
+    bankAccountNumber: z.string().trim().max(50).optional(),
   }),
   idempotencyKey: z.string().uuid().optional(),
 });

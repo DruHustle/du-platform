@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRightLeft,
   Bolt,
+  Building2,
   CheckCircle2,
   Clock3,
   CreditCard,
@@ -16,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 
 type TransferType = "send_money" | "airtime_topup" | "prepaid_electricity";
-type RecipientType = "mobile_money" | "cash_pickup" | "visa_card";
+type RecipientType = "mobile_money" | "cash_pickup" | "bank_transfer" | "visa_card";
 type FormStep = "route" | "quote" | "recipient" | "payout" | "pay" | "status";
 type AmountMode = "send" | "receive";
 type PayoutEtaTarget = RecipientType | "airtime_topup" | "prepaid_electricity";
@@ -67,20 +68,14 @@ type SendMoneyFormState = {
   cardExpiryMonth: string;
   cardExpiryYear: string;
   cardHolderName: string;
+  bankName: string;
+  bankAccountNumber: string;
 };
 type SendMoneyFormProps = {
   forcedTransferType?: TransferType | null;
 };
 
-const CASH_PICKUP_CHANNELS: string[] = [
-  "HelloPaisa",
-  "Quest Financial Services",
-  "ZB Bank",
-  "CBZ",
-  "BancABC",
-  "Steward Bank",
-  "Mukuru",
-];
+const SUPPORTED_BANKS: string[] = ["ZB Bank", "CBZ", "BancABC", "Steward Bank"];
 const FX_RATE_PREVIEW_AMOUNT = 100;
 const DEFAULT_AIRTIME_LOOKUP_PHONE = "+263771234567";
 
@@ -161,6 +156,7 @@ const TRANSFER_TYPES = [
 const PAYOUT_TYPES = [
   { value: "mobile_money", labelKey: "payments.form.payout_types.mobile_money", labelFallback: "Mobile Money", icon: Smartphone },
   { value: "cash_pickup", labelKey: "payments.form.payout_types.cash_pickup", labelFallback: "Cash Pickup", icon: Landmark },
+  { value: "bank_transfer", labelKey: "payments.form.payout_types.bank_transfer", labelFallback: "Bank Transfer", icon: Building2 },
   { value: "visa_card", labelKey: "payments.form.payout_types.visa_card", labelFallback: "Visa Card", icon: CreditCard },
 ] as const;
 
@@ -196,6 +192,8 @@ const INITIAL_FORM: SendMoneyFormState = {
   cardExpiryMonth: "",
   cardExpiryYear: "",
   cardHolderName: "",
+  bankName: "",
+  bankAccountNumber: "",
 };
 
 function resolveDefaultSenderCountryCode(): string {
@@ -454,8 +452,11 @@ function buildReloadlyAirtimePricing(
   fallbackSenderCurrency = "",
   fallbackDestinationCurrency = ""
 ): ReloadlyPricing | null {
+  // Use the user's selected sender currency as the source of truth.
+  // The Reloadly operator's senderCurrencyCode is their internal billing currency (often EUR),
+  // not the user's actual currency — so we prioritise fallbackSenderCurrency (form.currencyFrom).
   const senderCurrencyCode = String(
-    options?.senderCurrencyCode ?? operator?.senderCurrencyCode ?? fallbackSenderCurrency ?? ""
+    fallbackSenderCurrency || options?.senderCurrencyCode || operator?.senderCurrencyCode || ""
   )
     .trim()
     .toUpperCase();
@@ -1107,6 +1108,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       originCountry: String(form.senderCountryCode).toUpperCase(),
       senderMsisdn: String(form.senderMsisdn || "").trim() || undefined,
       recipientType: form.recipientType || undefined,
+      payoutChannel: form.recipientType === "bank_transfer" ? form.bankName : undefined,
       recipientMsisdn: String(form.mobileNumber || form.recipientPhone || "").trim() || undefined,
       recipientPan: String(form.cardNumber || "").trim() || undefined,
     });
@@ -1683,7 +1685,10 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return looksLikeZimbabweNumber(form.mobileNumber || form.recipientPhone);
     }
     if (form.recipientType === "cash_pickup") {
-      return Boolean(String(form.payoutChannel).trim() && String(form.cashPickupLocation).trim());
+      return looksLikeZimbabweNumber(form.mobileNumber || form.recipientPhone);
+    }
+    if (form.recipientType === "bank_transfer") {
+      return Boolean(String(form.bankName).trim() && String(form.bankAccountNumber).trim());
     }
     if (form.recipientType === "visa_card") {
       return Boolean(
@@ -1700,7 +1705,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     recipientName: form.recipientName,
     recipientType: form.recipientType,
     provider: form.recipientType === "mobile_money" ? "EcoCash" : "Thunes",
-    payoutChannel: form.recipientType === "cash_pickup" ? form.payoutChannel : undefined,
+    payoutChannel: form.recipientType === "bank_transfer" ? form.bankName : undefined,
     amountSent: parseAmountInput(form.amountSent) ?? 0,
     currencyFrom: String(form.currencyFrom).toUpperCase(),
     currencyTo: String(form.currencyTo).toUpperCase(),
@@ -1710,6 +1715,8 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     recipient: {
       mobileNumber: normalizeZimbabweNumber(form.mobileNumber || form.recipientPhone),
       cashPickupLocation: form.cashPickupLocation,
+      bankName: form.bankName || undefined,
+      bankAccountNumber: form.bankAccountNumber || undefined,
       cardNumber: form.cardNumber,
       cardExpiryMonth: form.cardExpiryMonth,
       cardExpiryYear: form.cardExpiryYear,
@@ -2118,6 +2125,9 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (payoutType === "cash_pickup") {
       return tr("payments.form.eta.cash_pickup", "Usually within 1 hour after provider confirmation.");
     }
+    if (payoutType === "bank_transfer") {
+      return tr("payments.form.eta.bank_transfer", "Usually 1–3 business days.");
+    }
     if (payoutType === "visa_card") {
       return tr("payments.form.eta.visa_card", "Can take minutes to up to 24 hours.");
     }
@@ -2489,25 +2499,45 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           )}
 
           {form.transferType === "send_money" && form.recipientType === "cash_pickup" && (
+            <div>
+              <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
+                {tr("payments.form.payout.recipient_mobile", "Recipient Mobile Number")}
+              </label>
+              <input
+                className={fieldClass}
+                placeholder="+2637XXXXXXXX"
+                value={form.mobileNumber}
+                onChange={(e) => update("mobileNumber", e.target.value)}
+              />
+              <p className="mt-1 text-xs text-white/40">
+                {tr("payments.form.payout.cash_pickup_note", "The recipient can collect at any Thunes cash pickup location.")}
+              </p>
+            </div>
+          )}
+
+          {form.transferType === "send_money" && form.recipientType === "bank_transfer" && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.payout.pickup_channel", "Pickup Channel")}
+                  {tr("payments.form.payout.bank_name", "Bank")}
                 </label>
-                <select className={fieldClass} value={form.payoutChannel} onChange={(e) => update("payoutChannel", e.target.value)}>
-                  <option value="">{tr("payments.form.payout.select_channel", "Select channel")}</option>
-                  {CASH_PICKUP_CHANNELS.map((channel) => (
-                    <option key={channel} value={channel}>
-                      {channel}
-                    </option>
+                <select className={fieldClass} value={form.bankName} onChange={(e) => update("bankName", e.target.value)}>
+                  <option value="">{tr("payments.form.payout.select_bank", "Select bank")}</option>
+                  {SUPPORTED_BANKS.map((bank) => (
+                    <option key={bank} value={bank}>{bank}</option>
                   ))}
                 </select>
               </div>
               <div>
                 <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.payout.pickup_location", "Pickup Location")}
+                  {tr("payments.form.payout.bank_account_number", "Account Number")}
                 </label>
-                <input className={fieldClass} value={form.cashPickupLocation} onChange={(e) => update("cashPickupLocation", e.target.value)} />
+                <input
+                  className={fieldClass}
+                  placeholder="Account number"
+                  value={form.bankAccountNumber}
+                  onChange={(e) => update("bankAccountNumber", e.target.value)}
+                />
               </div>
             </div>
           )}

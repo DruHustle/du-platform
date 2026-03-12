@@ -10,17 +10,12 @@ import { sanitizeObject, sanitizePhoneNumber, sanitizeText } from "../../../util
 
 const MAX_EUR_AMOUNT = 5000;
 
-const SUPPORTED_CASH_PICKUP_CHANNELS = [
-  "HelloPaisa",
-  "Quest Financial Services",
-  "ZB Bank",
-  "CBZ",
-  "BancABC",
-  "Steward Bank",
-  "Mukuru",
-] as const;
+const SUPPORTED_CASH_PICKUP_CHANNELS = ["HelloPaisa", "Quest Financial Services", "Mukuru"] as const;
 
 export type SupportedCashPickupChannel = (typeof SUPPORTED_CASH_PICKUP_CHANNELS)[number];
+
+const SUPPORTED_BANKS = ["ZB Bank", "CBZ", "BancABC", "Steward Bank"] as const;
+export type SupportedBank = (typeof SUPPORTED_BANKS)[number];
 
 const ISO2_TO_ISO3: Record<string, string> = {
   AT: "AUT",
@@ -59,7 +54,7 @@ const ISO2_TO_ISO3: Record<string, string> = {
 const RemittanceSchema = z.object({
   idempotencyKey: z.string().uuid().optional(),
   recipientName: z.string().min(2).max(255),
-  recipientType: z.enum(["mobile_money", "cash_pickup", "visa_card"]),
+  recipientType: z.enum(["mobile_money", "cash_pickup", "bank_transfer", "visa_card"]),
   provider: z.string().min(2).max(100).optional(),
   payoutChannel: z.string().min(2).max(100).optional(),
   amountSent: z.number().positive(),
@@ -75,6 +70,8 @@ const RemittanceSchema = z.object({
       cardExpiryMonth: z.string().min(2).max(2).optional(),
       cardExpiryYear: z.string().min(2).max(4).optional(),
       cardHolderName: z.string().min(2).max(255).optional(),
+      bankName: z.string().min(2).max(100).optional(),
+      bankAccountNumber: z.string().min(5).max(50).optional(),
     })
     .default({}),
   receivingCountry: z.string().min(2).max(2).default("ZW"),
@@ -95,7 +92,8 @@ const QuotePreviewSchema = z.object({
   receivingCountry: z.string().min(2).max(2).default("ZW"),
   originCountry: z.string().min(2).max(2).optional(),
   senderMsisdn: z.string().min(7).max(20).optional(),
-  recipientType: z.enum(["mobile_money", "cash_pickup", "visa_card"]).optional(),
+  recipientType: z.enum(["mobile_money", "cash_pickup", "bank_transfer", "visa_card"]).optional(),
+  payoutChannel: z.string().min(2).max(100).optional(),
   recipientMsisdn: z.string().min(7).max(20).optional(),
   recipientPan: z.string().min(12).max(40).optional(),
 });
@@ -252,6 +250,8 @@ export class ThunesService {
           sanitizeText((sanitized as any)?.recipient?.cardExpiryYear, 4) || undefined,
         cardHolderName:
           sanitizeText((sanitized as any)?.recipient?.cardHolderName, 255) || undefined,
+        bankName: sanitizeText((sanitized as any)?.recipient?.bankName, 100) || undefined,
+        bankAccountNumber: sanitizeText((sanitized as any)?.recipient?.bankAccountNumber, 50) || undefined,
       },
     });
 
@@ -276,6 +276,7 @@ export class ThunesService {
       originCountry: sanitizeText((sanitized as any)?.originCountry ?? "", 2).toUpperCase() || undefined,
       senderMsisdn: sanitizePhoneNumber((sanitized as any)?.senderMsisdn) || undefined,
       recipientType: sanitizeText((sanitized as any)?.recipientType ?? "", 32) || undefined,
+      payoutChannel: sanitizeText((sanitized as any)?.payoutChannel ?? "", 100) || undefined,
       recipientMsisdn: sanitizePhoneNumber((sanitized as any)?.recipientMsisdn) || undefined,
       recipientPan: sanitizeText((sanitized as any)?.recipientPan ?? "", 40).replace(/\D/g, "") || undefined,
     });
@@ -305,12 +306,19 @@ export class ThunesService {
     }
 
     if (payload.recipientType === "cash_pickup") {
-      const payoutChannel = payload.payoutChannel as SupportedCashPickupChannel | undefined;
-      if (!payoutChannel || !SUPPORTED_CASH_PICKUP_CHANNELS.includes(payoutChannel)) {
-        throw new Error(`Unsupported cash pickup channel. Allowed: ${SUPPORTED_CASH_PICKUP_CHANNELS.join(", ")}`);
+      if (!payload.recipient.mobileNumber) {
+        throw new Error("Recipient mobile number is required for cash pickup.");
       }
-      if (!payload.recipient.cashPickupLocation) {
-        throw new Error("Cash pickup location is required.");
+      return;
+    }
+
+    if (payload.recipientType === "bank_transfer") {
+      const bank = payload.payoutChannel as SupportedBank | undefined;
+      if (!bank || !SUPPORTED_BANKS.includes(bank as SupportedBank)) {
+        throw new Error(`Unsupported bank. Allowed: ${SUPPORTED_BANKS.join(", ")}`);
+      }
+      if (!payload.recipient.bankAccountNumber) {
+        throw new Error("Bank account number is required for bank transfers.");
       }
       return;
     }
@@ -368,12 +376,41 @@ export class ThunesService {
     return fallback || undefined;
   }
 
-  private resolvePayerId(recipientType: RemittanceRequest["recipientType"]): string {
+  /**
+   * Maps bank display names to their env var suffix.
+   * Add a new entry here whenever a new bank payer is onboarded.
+   * Env var: THUNES_PAYER_ID_BANK_<KEY>  (e.g. THUNES_PAYER_ID_BANK_ZB_BANK)
+   */
+  private static readonly BANK_PAYER_ENV_KEY: Record<string, string> = {
+    "zb bank":      "ZB_BANK",
+    "cbz":          "CBZ",
+    "bancabc":      "BANCABC",
+    "steward bank": "STEWARD_BANK",
+  };
+
+  private resolvePayerId(
+    recipientType: RemittanceRequest["recipientType"],
+    payoutChannel?: string,
+  ): string {
     const keyByType: Record<RemittanceRequest["recipientType"], string> = {
-      mobile_money: "THUNES_PAYER_ID_MOBILE_MONEY",
-      cash_pickup: "THUNES_PAYER_ID_CASH_PICKUP",
-      visa_card: "THUNES_PAYER_ID_VISA_CARD",
+      mobile_money:  "THUNES_PAYER_ID_MOBILE_MONEY",
+      cash_pickup:   "THUNES_PAYER_ID_CASH_PICKUP",
+      bank_transfer: "THUNES_PAYER_ID_BANK",
+      visa_card:     "THUNES_PAYER_ID_VISA_CARD",
     };
+
+    // For bank transfer, check for a bank-specific payer ID first.
+    if (recipientType === "bank_transfer" && payoutChannel) {
+      const normalizedBank = payoutChannel.trim().toLowerCase();
+      const envKeySuffix = ThunesService.BANK_PAYER_ENV_KEY[normalizedBank];
+      if (envKeySuffix) {
+        const bankSpecific = String(
+          process.env[`THUNES_PAYER_ID_BANK_${envKeySuffix}`] ?? ""
+        ).trim();
+        if (bankSpecific) return bankSpecific;
+      }
+    }
+
     const direct = String(process.env[keyByType[recipientType]] ?? "").trim();
     const fallback = String(process.env.THUNES_PAYER_ID ?? "").trim();
     const resolved = direct || fallback;
@@ -411,6 +448,7 @@ export class ThunesService {
 
   private buildQuotePayload(input: {
     recipientType: RemittanceRequest["recipientType"];
+    payoutChannel?: string;
     sendingCurrency: string;
     receivingCurrency: string;
     amount: number;
@@ -426,7 +464,7 @@ export class ThunesService {
       input.receivingCountry ?? process.env.THUNES_RECEIVING_COUNTRY ?? process.env.THUNES_RECEIVING_COUNTRY_ISO3,
       "Destination"
     );
-    const payerIdRaw = this.resolvePayerId(input.recipientType);
+    const payerIdRaw = this.resolvePayerId(input.recipientType, input.payoutChannel);
     const payerId = /^\d+$/.test(payerIdRaw) ? Number(payerIdRaw) : payerIdRaw;
     return {
       external_id: input.idempotencyKey,
@@ -448,12 +486,17 @@ export class ThunesService {
   private buildCreditPartyIdentifier(request: RemittanceRequest): Record<string, string> {
     if (request.recipientType === "visa_card") {
       const cardNumber = String(request.recipient.cardNumber ?? "").replace(/\s+/g, "");
-      if (!cardNumber) {
-        throw new Error("Card number is required for Thunes card payouts.");
-      }
+      if (!cardNumber) throw new Error("Card number is required for Thunes card payouts.");
       return { card_number: cardNumber };
     }
 
+    if (request.recipientType === "bank_transfer") {
+      const accountNumber = String(request.recipient.bankAccountNumber ?? "").trim();
+      if (!accountNumber) throw new Error("Bank account number is required for bank transfers.");
+      return { account_number: accountNumber };
+    }
+
+    // mobile_money and cash_pickup both use MSISDN
     const msisdn = sanitizePhoneNumber(request.recipient.mobileNumber ?? "");
     if (!msisdn) {
       throw new Error("Recipient mobile number is required for Thunes payouts.");
@@ -537,12 +580,13 @@ export class ThunesService {
     const payload = this.normalizeQuotePreview(input);
     const idempotencyKey = crypto.randomUUID();
     const resolvedRecipientType =
-      payload.recipientType && ["mobile_money", "cash_pickup", "visa_card"].includes(payload.recipientType)
+      payload.recipientType && ["mobile_money", "cash_pickup", "bank_transfer", "visa_card"].includes(payload.recipientType)
         ? (payload.recipientType as RemittanceRequest["recipientType"])
         : "mobile_money";
 
     const quoteRequest = this.buildQuotePayload({
       recipientType: resolvedRecipientType,
+      payoutChannel: payload.payoutChannel,
       sendingCurrency: payload.currencyFrom,
       receivingCurrency: payload.currencyTo,
       amount: payload.amountSent,
@@ -579,6 +623,7 @@ export class ThunesService {
 
     const quoteRequest = this.buildQuotePayload({
       recipientType: request.recipientType,
+      payoutChannel: request.payoutChannel,
       sendingCurrency: request.currencyFrom,
       receivingCurrency: request.currencyTo,
       amount: request.amountSent,
@@ -658,5 +703,9 @@ export class ThunesService {
 
   getSupportedCashPickupChannels(): readonly SupportedCashPickupChannel[] {
     return SUPPORTED_CASH_PICKUP_CHANNELS;
+  }
+
+  getSupportedBanks(): readonly SupportedBank[] {
+    return SUPPORTED_BANKS;
   }
 }
