@@ -5,7 +5,7 @@ import { findUserById } from "./authStore";
 type RemittanceTransactionStatus = "pending" | "processing" | "completed" | "failed";
 type AirtimeTransactionStatus = "pending" | "completed" | "failed";
 type UtilityTransactionStatus = "pending" | "completed" | "failed";
-type RemittanceRecipientType = "mobile_money" | "cash_pickup" | "visa_card";
+type RemittanceRecipientType = "mobile_money" | "cash_pickup" | "bank_transfer" | "visa_card";
 
 type RemittanceTransactionRecord = {
   id: number;

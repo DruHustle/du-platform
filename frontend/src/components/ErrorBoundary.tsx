@@ -24,6 +24,12 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error: Error, info: { componentStack: string }) {
+    // Log caught errors so they surface in browser devtools and any error monitoring.
+    // In production this is the only way to observe what crashed.
+    console.error("[ErrorBoundary] Caught unhandled React error:", error, info.componentStack);
+  }
+
   render() {
     if (this.state.hasError) {
       return (

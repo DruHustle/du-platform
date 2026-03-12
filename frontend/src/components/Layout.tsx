@@ -879,9 +879,7 @@ export default function Layout({ children }: LayoutProps) {
               </h3>
               <ul className="space-y-2 text-xs">
                 {navigation
-                  .filter((link) => 
-                    !["/", "/impact"].includes(link.href)
-                  )
+                  .filter((link) => link.href !== "/")
                   .map((link) => (
                    <li key={link.href} className="leading-tight">
                       <Link href={link.href}>

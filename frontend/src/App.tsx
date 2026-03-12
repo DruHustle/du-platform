@@ -19,8 +19,30 @@ const VercelAnalytics = shouldEnableVercelAnalytics
   ? lazy(() => import("@vercel/analytics/react").then((module) => ({ default: module.Analytics })))
   : null;
 
+// Prefetch remaining lazy route chunks after the first frame so they're cached for navigation/refresh.
+// Static-import pages (home, auth, payments, tourism, care, trade, shop, investment-main,
+// technology, legal, search) don't need prefetching — they're already in the main bundle.
+function usePrefetchRouteChunks() {
+  useEffect(() => {
+    let rafId: number;
+    rafId = requestAnimationFrame(() => {
+      void import("./modules/investment/pages/InvestmentOpportunitiesPage");
+      void import("./modules/investment/pages/ProjectDetailsPage");
+      void import("./modules/investment/pages/NTIRSearchPage");
+      void import("./modules/shop/pages/ShopProductsPage");
+      void import("./modules/ai/pages/ChatPage");
+      void import("./modules/ai/pages/BookTripPage");
+      void import("./modules/ai/pages/TourismVirtualExperiencePage");
+      void import("./modules/ai/pages/TourismAugmentedExperiencePage");
+      void import("./modules/admin/pages/AdminDashboardPage");
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+}
+
 function Router() {
   const { t } = useTranslation();
+  usePrefetchRouteChunks();
 
   return (
     <>

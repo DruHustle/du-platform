@@ -1,4 +1,4 @@
-import { useEffect, type ComponentType, type ReactElement } from "react";
+import { lazy, Suspense, useEffect, type ComponentType, type ReactElement } from "react";
 import i18n from "@/i18n";
 import { useLocation } from "wouter";
 
@@ -65,6 +65,26 @@ export function createStaticRoute(path: string, Component: ComponentType) {
   return {
     path,
     render: () => <Component />,
+  } satisfies AppRouteDefinition;
+}
+
+/**
+ * Creates a route whose page component is code-split and lazy-loaded on first navigation.
+ * The factory must be a dynamic import: () => import("./pages/MyPage")
+ * The imported module must have a default export that is a React component.
+ */
+export function createLazyRoute(
+  path: string,
+  factory: () => Promise<{ default: ComponentType }>
+) {
+  const LazyComponent = lazy(factory);
+  return {
+    path,
+    render: () => (
+      <Suspense fallback={<RouteFallback />}>
+        <LazyComponent />
+      </Suspense>
+    ),
   } satisfies AppRouteDefinition;
 }
 
