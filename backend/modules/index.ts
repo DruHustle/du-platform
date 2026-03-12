@@ -12,8 +12,10 @@ import { createSearchModuleRouter } from './search/routes';
 import { createLegalModuleRouter } from './legal/routes';
 import { createAdminModuleRouter } from './admin/routes';
 import { createNotificationsModuleRouter } from './notifications/routes';
+import { createGeoModuleRouter } from './geo/routes';
 
 export function registerDomainModules(app: express.Express) {
+  app.use('/api/geo', createGeoModuleRouter());
   app.use('/api/auth', createAuthModuleRouter());
   app.use('/api/tourism', createTourismModuleRouter());
   app.use('/api/trade', createTradeModuleRouter());

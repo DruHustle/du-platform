@@ -113,7 +113,7 @@ Controllers -> Services -> Providers + Repositories
 
 - Controllers: orchestration only
 - Services: business rules, idempotency, compliance checks
-- Providers: TerraPay/Reloadly integration
+- Providers: Thunes/Reloadly integration
 - Repositories: transaction persistence (shared DB connection via `withTransaction`)
 
 ## AI Design

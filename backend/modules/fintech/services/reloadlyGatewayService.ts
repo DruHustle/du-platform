@@ -23,6 +23,8 @@ const ElectricityPaymentSchema = z.object({
 
 export type ElectricityPaymentRequest = z.infer<typeof ElectricityPaymentSchema>;
 
+const FX_RATE_PREVIEW_AMOUNT = 100;
+
 function toFiniteNumber(input: unknown): number | null {
   const value = Number(input);
   if (!Number.isFinite(value) || value < 0) return null;
@@ -93,34 +95,72 @@ export class ReloadlyService {
     return this.provider.detectOperator(phoneNumber, "ZW");
   }
 
-  async fetchTopupOptions(phoneNumberInput: string): Promise<any> {
-    const operator = await this.detectOperator(phoneNumberInput);
-    const operatorId = Number(operator?.operatorId ?? operator?.id);
+  async fetchTopupOptions(phoneNumberInput: string, amount?: number): Promise<any> {
+    let operator: any = null;
+    try {
+      operator = await this.detectOperator(phoneNumberInput);
+    } catch {
+      operator = null;
+    }
+
+    let operatorId = Number(operator?.operatorId ?? operator?.id);
+    if (!Number.isFinite(operatorId) || operatorId <= 0) {
+      const fallbackOperators = await this.provider.listOperatorsByCountry("ZW");
+      const fallback =
+        fallbackOperators.find((item: any) => Number(item?.operatorId ?? item?.id) > 0) ?? fallbackOperators[0] ?? null;
+      operator = fallback ?? operator;
+      operatorId = Number(fallback?.operatorId ?? fallback?.id);
+    }
+
     if (!Number.isFinite(operatorId) || operatorId <= 0) {
       throw new Error("Unable to detect an airtime operator for this number.");
     }
 
     const operatorDetail = await this.provider.getOperatorById(Math.floor(operatorId));
+    const resolvedOperator = operator ?? operatorDetail;
+    const resolvedAmount =
+      typeof amount === "number" && Number.isFinite(amount) && amount > 0 ? amount : FX_RATE_PREVIEW_AMOUNT;
+    let fxRateResponse: any = null;
+    try {
+      fxRateResponse = await this.provider.fetchOperatorFxRate(Math.floor(operatorId), resolvedAmount);
+    } catch {
+      fxRateResponse = null;
+    }
+    const fxRatePayload = toFiniteNumber(
+      fxRateResponse?.fxRate ?? fxRateResponse?.rate ?? fxRateResponse?.exchangeRate
+    );
+    const normalizedFxRate =
+      fxRatePayload !== null && resolvedAmount > 0 ? Number((fxRatePayload / resolvedAmount).toFixed(6)) : fxRatePayload;
+    const fxRate = normalizedFxRate ?? toFiniteNumber(operatorDetail?.fx?.rate ?? operator?.fx?.rate);
+    const fxCurrency = String(
+      fxRateResponse?.currencyCode ?? fxRateResponse?.currency ?? operatorDetail?.destinationCurrencyCode ?? operator?.destinationCurrencyCode ?? ""
+    )
+      .trim();
     const suggestedAmounts = Array.isArray(operatorDetail?.suggestedAmounts)
       ? operatorDetail.suggestedAmounts
       : [];
 
     return {
-      operator,
+      operator: resolvedOperator,
       options: {
         operatorId: Math.floor(operatorId),
-        name: String(operatorDetail?.name ?? operator?.name ?? "Unknown Operator"),
+        name: String(operatorDetail?.name ?? resolvedOperator?.name ?? "Unknown Operator"),
         countryCode: "ZW",
         localAmountSupported: Boolean(operatorDetail?.localAmountSupported ?? operatorDetail?.supportsLocalAmounts),
         minAmount: operatorDetail?.minAmount ?? null,
         maxAmount: operatorDetail?.maxAmount ?? null,
         localMinAmount: operatorDetail?.localMinAmount ?? null,
         localMaxAmount: operatorDetail?.localMaxAmount ?? null,
-        fee: extractReloadlyFee([operatorDetail, operator]),
-        senderCurrencyCode: String(operatorDetail?.senderCurrencyCode ?? operator?.senderCurrencyCode ?? "").trim() || null,
-        destinationCurrencyCode: String(operatorDetail?.destinationCurrencyCode ?? operator?.destinationCurrencyCode ?? "").trim() || null,
-        fx: operatorDetail?.fx ?? operator?.fx ?? null,
-        fxRate: toFiniteNumber(operatorDetail?.fx?.rate ?? operator?.fx?.rate),
+        fee: extractReloadlyFee([operatorDetail, resolvedOperator]),
+        senderCurrencyCode: String(operatorDetail?.senderCurrencyCode ?? resolvedOperator?.senderCurrencyCode ?? "").trim() || null,
+        destinationCurrencyCode:
+          fxCurrency ||
+          String(operatorDetail?.destinationCurrencyCode ?? resolvedOperator?.destinationCurrencyCode ?? "").trim() ||
+          null,
+        fx: fxRate
+          ? { rate: fxRate, currencyCode: fxCurrency || null }
+          : operatorDetail?.fx ?? resolvedOperator?.fx ?? null,
+        fxRate: fxRate ?? null,
         suggestedAmounts,
       },
     };

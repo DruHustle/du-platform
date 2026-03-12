@@ -329,7 +329,7 @@ export async function initializeDatabase(): Promise<void> {
       currency_to VARCHAR(10) NOT NULL,
       exchange_rate DECIMAL(12,6),
       status ENUM('pending', 'processing', 'completed', 'failed') DEFAULT 'pending',
-      terrapay_reference VARCHAR(255),
+      provider_reference VARCHAR(255),
       idempotency_key VARCHAR(255),
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -337,6 +337,29 @@ export async function initializeDatabase(): Promise<void> {
       INDEX idx_remittance_status (status)
     )
   `);
+
+  try {
+    await db.execute(
+      "ALTER TABLE remittance_transactions CHANGE COLUMN terrapay_reference provider_reference VARCHAR(255)"
+    );
+  } catch (error: any) {
+    const code = String(error?.code ?? "");
+    if (!["ER_DUP_FIELDNAME", "ER_BAD_FIELD_ERROR", "ER_NO_SUCH_TABLE"].includes(code)) {
+      throw error;
+    }
+  }
+
+  // Add UNIQUE constraint on idempotency_key to prevent duplicate remittance transactions
+  try {
+    await db.execute(
+      "ALTER TABLE remittance_transactions ADD UNIQUE INDEX uniq_remittance_idempotency_key (idempotency_key)"
+    );
+  } catch (error: any) {
+    const code = String(error?.code ?? "");
+    if (!["ER_DUP_KEYNAME", "ER_DUP_ENTRY", "ER_NO_SUCH_TABLE"].includes(code)) {
+      throw error;
+    }
+  }
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS airtime_transactions (
@@ -347,11 +370,35 @@ export async function initializeDatabase(): Promise<void> {
       amount DECIMAL(10,2) NOT NULL,
       currency VARCHAR(10),
       reloadly_reference VARCHAR(255),
+      idempotency_key VARCHAR(255),
       status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       INDEX idx_airtime_user (user_id)
     )
   `);
+
+  // Add idempotency_key and updated_at to existing airtime_transactions tables
+  try {
+    await db.execute("ALTER TABLE airtime_transactions ADD COLUMN idempotency_key VARCHAR(255) NULL");
+  } catch (error: any) {
+    if (String(error?.code ?? "") !== "ER_DUP_FIELDNAME") throw error;
+  }
+  try {
+    await db.execute("ALTER TABLE airtime_transactions ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+  } catch (error: any) {
+    if (String(error?.code ?? "") !== "ER_DUP_FIELDNAME") throw error;
+  }
+  try {
+    await db.execute(
+      "ALTER TABLE airtime_transactions ADD UNIQUE INDEX uniq_airtime_idempotency_key (idempotency_key)"
+    );
+  } catch (error: any) {
+    const code = String(error?.code ?? "");
+    if (!["ER_DUP_KEYNAME", "ER_DUP_ENTRY", "ER_NO_SUCH_TABLE"].includes(code)) {
+      throw error;
+    }
+  }
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS utility_transactions (
@@ -365,11 +412,35 @@ export async function initializeDatabase(): Promise<void> {
       currency VARCHAR(10),
       reloadly_reference VARCHAR(255),
       token_code VARCHAR(255),
+      idempotency_key VARCHAR(255),
       status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       INDEX idx_utility_user (user_id)
     )
   `);
+
+  // Add idempotency_key and updated_at to existing utility_transactions tables
+  try {
+    await db.execute("ALTER TABLE utility_transactions ADD COLUMN idempotency_key VARCHAR(255) NULL");
+  } catch (error: any) {
+    if (String(error?.code ?? "") !== "ER_DUP_FIELDNAME") throw error;
+  }
+  try {
+    await db.execute("ALTER TABLE utility_transactions ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+  } catch (error: any) {
+    if (String(error?.code ?? "") !== "ER_DUP_FIELDNAME") throw error;
+  }
+  try {
+    await db.execute(
+      "ALTER TABLE utility_transactions ADD UNIQUE INDEX uniq_utility_idempotency_key (idempotency_key)"
+    );
+  } catch (error: any) {
+    const code = String(error?.code ?? "");
+    if (!["ER_DUP_KEYNAME", "ER_DUP_ENTRY", "ER_NO_SUCH_TABLE"].includes(code)) {
+      throw error;
+    }
+  }
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS financial_failed_attempts (
@@ -450,9 +521,23 @@ export async function initializeDatabase(): Promise<void> {
       line_total_cents INT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       INDEX idx_shop_order_items_order_id (order_id),
-      CONSTRAINT fk_shop_order_items_order FOREIGN KEY (order_id) REFERENCES shop_orders(id) ON DELETE CASCADE
+      INDEX idx_shop_order_items_product_id (product_id),
+      CONSTRAINT fk_shop_order_items_order FOREIGN KEY (order_id) REFERENCES shop_orders(id) ON DELETE CASCADE,
+      CONSTRAINT fk_shop_order_items_product FOREIGN KEY (product_id) REFERENCES shop_products(id) ON DELETE RESTRICT
     )
   `);
+
+  // Add FK constraint on product_id to existing shop_order_items tables
+  try {
+    await db.execute(
+      "ALTER TABLE shop_order_items ADD CONSTRAINT fk_shop_order_items_product FOREIGN KEY (product_id) REFERENCES shop_products(id) ON DELETE RESTRICT"
+    );
+  } catch (error: any) {
+    const code = String(error?.code ?? "");
+    if (!["ER_DUP_KEY", "ER_DUP_KEYNAME", "ER_CANT_CREATE_TABLE", "ER_NO_SUCH_TABLE"].includes(code)) {
+      // Ignore if constraint already exists
+    }
+  }
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS newsletter_subscriptions (

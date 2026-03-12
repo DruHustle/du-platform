@@ -292,16 +292,19 @@ export async function consumePasswordResetToken(rawToken: string) {
   }
 
   try {
+    // Atomic single-statement consumption: only succeeds if token exists, is unused, and not expired.
+    // This prevents race conditions where two concurrent requests consume the same token.
+    const [result] = await db.execute<mysql.ResultSetHeader>(
+      "UPDATE password_reset_tokens SET used_at = NOW() WHERE token_hash = ? AND used_at IS NULL AND expires_at > NOW()",
+      [tokenHash]
+    );
+    if (result.affectedRows === 0) return null;
+
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       "SELECT token_hash, user_id, expires_at, used_at FROM password_reset_tokens WHERE token_hash = ? LIMIT 1",
       [tokenHash]
     );
-    const row = rows[0];
-    if (!row || row.used_at) return null;
-    if (new Date(row.expires_at).getTime() < Date.now()) return null;
-
-    await db.execute("UPDATE password_reset_tokens SET used_at = NOW() WHERE token_hash = ?", [tokenHash]);
-    return row;
+    return rows[0] ?? null;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     const row = memoryPasswordResetTokens.find((entry) => entry.token_hash === tokenHash);

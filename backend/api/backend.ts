@@ -11,13 +11,14 @@ export function registerBackendApiRoutes(app: express.Express, deps: SystemApiDe
   // Purpose: Report database connectivity state (mysql or memory fallback mode).
   app.get("/api/health/db", async (_req, res) => {
     if (!deps.db) {
-      return res.json({ ok: true, mode: "memory-fallback", message: "No MySQL env vars set. Using in-memory fallback." });
+      // Avoid exposing mode details (memory-fallback vs mysql) to prevent information disclosure
+      return res.status(503).json({ ok: false, error: "Database unavailable." });
     }
     try {
       await deps.db.query("SELECT 1");
-      return res.json({ ok: true, mode: "mysql" });
+      return res.json({ ok: true });
     } catch {
-      return res.status(500).json({ ok: false, mode: "mysql", error: "Database connection failed." });
+      return res.status(500).json({ ok: false, error: "Database connection failed." });
     }
   });
 

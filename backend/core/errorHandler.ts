@@ -15,6 +15,17 @@ export class AppError extends Error {
   }
 }
 
+/**
+ * Throw this for errors whose message is safe to return verbatim to the client.
+ * Any other Error type is caught by controllers and replaced with a generic message.
+ */
+export class UserFacingError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UserFacingError";
+  }
+}
+
 export function notFoundHandler(_req: express.Request, res: express.Response) {
   return res.status(404).json(error('NOT_FOUND', 'Route not found.'));
 }
@@ -34,6 +45,7 @@ export function errorHandler(
     path: req.path,
     method: req.method,
     message,
+    stack: err instanceof Error ? err.stack : undefined,
   });
 
   return res.status(500).json(error('INTERNAL_ERROR', 'Unexpected server error.'));

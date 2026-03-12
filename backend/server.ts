@@ -1,3 +1,4 @@
+import compression from "compression";
 import express from "express";
 import { createServer } from "http";
 import path from "path";
@@ -24,6 +25,7 @@ const __dirname = path.dirname(__filename);
 export function createModularServer(options: ModularServerOptions) {
   const app = express();
 
+  app.use(compression());
   registerCoreMiddleware(app);
   registerApiRoutes(app, {
     backend: options.backend,

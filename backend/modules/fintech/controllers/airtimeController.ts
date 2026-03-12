@@ -1,6 +1,14 @@
 import type express from 'express';
+import { UserFacingError } from '../../../core/errorHandler';
 import { AirtimeService } from '../services/airtimeService';
 import { ok, error } from '../../../shared/responseFormatter';
+import { logger } from '../../../core/logger';
+
+function toClientMessage(err: unknown, fallback: string): string {
+  if (err instanceof UserFacingError) return err.message;
+  logger.error('airtime_controller_error', { message: err instanceof Error ? err.message : String(err), stack: err instanceof Error ? err.stack : undefined });
+  return fallback;
+}
 
 const SYSTEM_NOTICE = 'Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.';
 
@@ -8,26 +16,20 @@ export class AirtimeController {
   constructor(private readonly service = new AirtimeService()) {}
 
   detectOperator = async (req: express.Request, res: express.Response) => {
-    const userId = Number(req.auth?.userId ?? 0);
-    if (!userId) return res.status(401).json(error('UNAUTHORIZED', 'Authentication required.'));
-
     try {
-      const operator = await this.service.detectOperator(userId, req.body);
+      const operator = await this.service.detectOperator(Number(req.auth?.userId ?? 0), req.body);
       return res.json(ok({ operator, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('OPERATOR_DETECTION_FAILED', err instanceof Error ? err.message : 'Operator detection failed.'));
+      return res.status(400).json(error('OPERATOR_DETECTION_FAILED', toClientMessage(err, 'Operator detection failed.')));
     }
   };
 
   options = async (req: express.Request, res: express.Response) => {
-    const userId = Number(req.auth?.userId ?? 0);
-    if (!userId) return res.status(401).json(error('UNAUTHORIZED', 'Authentication required.'));
-
     try {
-      const result = await this.service.getOptions(userId, req.body);
+      const result = await this.service.getOptions(Number(req.auth?.userId ?? 0), req.body);
       return res.json(ok({ ...result, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('TOPUP_OPTIONS_FAILED', err instanceof Error ? err.message : 'Options failed.'));
+      return res.status(400).json(error('TOPUP_OPTIONS_FAILED', toClientMessage(err, 'Failed to retrieve top-up options.')));
     }
   };
 
@@ -39,7 +41,7 @@ export class AirtimeController {
       const result = await this.service.topup(userId, req.body);
       return res.status(201).json(ok({ ...result, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('AIRTIME_TOPUP_FAILED', err instanceof Error ? err.message : 'Topup failed.'));
+      return res.status(400).json(error('AIRTIME_TOPUP_FAILED', toClientMessage(err, 'Top-up could not be processed.')));
     }
   };
 

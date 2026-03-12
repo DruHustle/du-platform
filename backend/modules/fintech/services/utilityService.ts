@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { UserFacingError } from '../../../core/errorHandler';
+import { logger } from '../../../core/logger';
 import { FintechRepository } from '../repositories/fintechRepository';
 import { ReloadlyProvider } from '../providers/reloadlyGatewayProvider';
 import { ReloadlyService } from './reloadlyGatewayService';
@@ -22,11 +24,24 @@ export class UtilityService {
 
   async payElectricity(userId: number, payload: ElectricityPaymentDto) {
     const profile = await this.repository.getFinancialProfile(userId);
-    if (!profile) throw new Error('User account does not exist.');
+    if (!profile) throw new UserFacingError('User account does not exist.');
+
+    const idempotencyKey = payload.idempotencyKey ?? crypto.randomUUID();
+
+    // Return the existing transaction on retry — prevents double-charging.
+    if (payload.idempotencyKey) {
+      const existing = await this.repository.findUtilityByIdempotencyKey(userId, payload.idempotencyKey);
+      if (existing) {
+        logger.info("utility_payment_idempotent_return", { userId, idempotencyKey });
+        return { transaction: existing, providerResponse: null };
+      }
+    }
+
+    logger.info("utility_payment_initiated", { userId, amount: payload.amount, idempotencyKey });
 
     const result = await this.service.createElectricityPayment({
       ...payload,
-      idempotencyKey: payload.idempotencyKey ?? crypto.randomUUID(),
+      idempotencyKey,
     });
 
     const saved = await this.repository.saveUtility({
@@ -39,8 +54,11 @@ export class UtilityService {
       currency: result.request.currency ?? 'USD',
       reloadlyReference: String(result.payment?.transactionId ?? result.payment?.referenceId ?? result.reference).trim() || null,
       tokenCode: String(result.payment?.token ?? result.payment?.tokenCode ?? '').trim() || null,
+      idempotencyKey,
       status: normalizeStatus(result.payment?.status),
     });
+
+    logger.info("utility_payment_saved", { userId, transactionId: (saved as any)?.id, idempotencyKey });
 
     return {
       transaction: saved,
