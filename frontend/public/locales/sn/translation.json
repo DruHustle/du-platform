@@ -2108,10 +2108,6 @@
         "airtime_topup": {
           "label": "Airtime Top-up",
           "description": "Wedzera mutsara wenhare weZimbabwe nekuona maota."
-        },
-        "prepaid_electricity": {
-          "label": "Prepaid Magetsi",
-          "description": "Tenga ma tokens emagetsi eprepaid emuZimbabwe uchishandisa marezinesi enjanji."
         }
       },
       "payout_types": {
@@ -2165,7 +2161,6 @@
         "cash_pickup": "Kazhinji mukati meawa 1 mushure mekusimbiswa kweanopa.",
         "default": "Nguva dzinoenderana nemupi wekugadzirisa mahwindo.",
         "mobile_money": "Kazhinji mukati memaminitsi kusvika kumaawa maviri.",
-        "prepaid_electricity": "Kazhinji mukati memaminitsi mushure mekusimbiswa kwemupi.",
         "visa_card": "Inogona kutora maminetsi kusvika kumaawa makumi maviri nemana."
       },
       "fee": "Fee",
@@ -2176,7 +2171,6 @@
         "sender_country": "Uri kutumira kubva kupi?",
         "they_receive": "Vanogamuchira",
         "transfer_type": "Sarudza Tumira Mari, Airtime Yekuwedzera, kana Magetsi Anobhadharwa Kuti uenderere mberi.",
-        "utility_value": "Kukosha kwemamita",
         "you_send": "Unotumira"
       },
       "pay": {
@@ -2244,16 +2238,6 @@
       "total": "Total",
       "transfer": {
         "required_hint": "Sarudza Tumira Mari, Airtime Yekuwedzera, kana Magetsi Anobhadharwa Kuti uenderere mberi."
-      },
-      "utility": {
-        "customer_name": "Zita remutengi",
-        "default_biller": "Electricity Provider",
-        "loading_billers": "Kurodha vanopa magetsi...",
-        "meter_holder": "Meter holder",
-        "meter_number": "Meter nhamba",
-        "provider": "Mupi wemagetsi",
-        "token_code": "Token code",
-        "token_title": "Electricity Token"
       }
     },
     "disclaimer": "Kubhadhara kunofambiswa nevanopa marezinesi ehupfumi hwemari. Diaspora Yakavhurwa haibati mari dzevatengi.",

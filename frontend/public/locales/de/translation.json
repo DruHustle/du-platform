@@ -2108,10 +2108,6 @@
         "airtime_topup": {
           "label": "Aufladung der Sendezeit",
           "description": "Laden Sie einen Mobilfunkanschluss in Simbabwe mit Betreibererkennung auf."
-        },
-        "prepaid_electricity": {
-          "label": "Prepaid-Strom",
-          "description": "Kaufen Sie Simbabwe-Prepaid-Strommarken über lizenzierte Stromschienen."
         }
       },
       "payout_types": {
@@ -2165,7 +2161,6 @@
         "cash_pickup": "Normalerweise innerhalb einer Stunde nach Bestätigung des Anbieters.",
         "default": "Die Zeiten hängen von den Verarbeitungsfenstern des Anbieters ab.",
         "mobile_money": "Normalerweise innerhalb von Minuten bis 2 Stunden.",
-        "prepaid_electricity": "Normalerweise innerhalb von Minuten nach Bestätigung des Anbieters.",
         "visa_card": "Kann Minuten bis zu 24 Stunden dauern."
       },
       "fee": "Gebühr",
@@ -2176,7 +2171,6 @@
         "sender_country": "Von wo aus senden Sie?",
         "they_receive": "Sie erhalten",
         "transfer_type": "Wählen Sie „Geld senden“, „Guthaben aufladen“ oder „Prepaid-Strom“, um fortzufahren.",
-        "utility_value": "Zählerwert",
         "you_send": "Du sendest"
       },
       "pay": {
@@ -2244,16 +2238,6 @@
       "total": "Gesamt",
       "transfer": {
         "required_hint": "Wählen Sie „Geld senden“, „Guthaben aufladen“ oder „Prepaid-Strom“, um fortzufahren."
-      },
-      "utility": {
-        "customer_name": "Kundenname",
-        "default_biller": "Stromanbieter",
-        "loading_billers": "Stromanbieter werden geladen...",
-        "meter_holder": "Zählerhalter",
-        "meter_number": "Zählernummer",
-        "provider": "Stromanbieter",
-        "token_code": "Token-Code",
-        "token_title": "Strom-Token"
       }
     },
     "disclaimer": "Zahlungen werden von lizenzierten Finanzinfrastrukturanbietern durchgeführt. Diaspora Unlocked verfügt über keine Kundengelder.",

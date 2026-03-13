@@ -2116,10 +2116,6 @@
         "airtime_topup": {
           "label": "I-Airtime Top-up",
           "description": "Gcwalisa ulayini weselula waseZimbabwe ngokutholwa kwama-opharetha."
-        },
-        "prepaid_electricity": {
-          "label": "Ugesi Okhokhelwa Ngaphambili",
-          "description": "Thenga amathokheni kagesi we-prepaid eZimbabwe usebenzisa ama-rails asemthethweni."
         }
       },
       "payout_types": {
@@ -2173,7 +2169,6 @@
         "cash_pickup": "Ngokuvamile lingakapheli ihora elingu-1 ngemva kokuqinisekiswa komhlinzeki.",
         "default": "Izikhathi zincike kumawindi okucubungula abahlinzeki.",
         "mobile_money": "Ngokuvamile phakathi kwemizuzu kuya emahoreni angu-2.",
-        "prepaid_electricity": "Ngokuvamile emizuzwini embalwa ngemva kokuqinisekiswa komhlinzeki.",
         "visa_card": "Kungathatha amaminithi kufika emahoreni angama-24."
       },
       "fee": "Imali",
@@ -2184,7 +2179,6 @@
         "sender_country": "Uthumela kuphi?",
         "they_receive": "Bemukela",
         "transfer_type": "Khetha Thumela Imali, I-Airtime Top-up, noma Ugesi Okhokhelwa Ngaphambili ukuze uqhubeke.",
-        "utility_value": "Inani lemitha",
         "you_send": "Uyathumela"
       },
       "pay": {
@@ -2252,16 +2246,6 @@
       "total": "Ingqikithi",
       "transfer": {
         "required_hint": "Khetha Thumela Imali, I-Airtime Top-up, noma Ugesi Okhokhelwa Ngaphambili ukuze uqhubeke."
-      },
-      "utility": {
-        "customer_name": "Igama lekhasimende",
-        "default_biller": "Umhlinzeki kagesi",
-        "loading_billers": "Ilayisha abahlinzeki bakagesi...",
-        "meter_holder": "Umnikazi wamamitha",
-        "meter_number": "Inombolo yemitha",
-        "provider": "Umhlinzeki kagesi",
-        "token_code": "Ikhodi yethokheni",
-        "token_title": "Electricity Token"
       }
     },
     "disclaimer": "Izinkokhelo zinikwa amandla abahlinzeki bengqalasizinda yezezimali abanelayisensi. I-Diaspora Unlocked ayizibambi izimali zekhasimende.",

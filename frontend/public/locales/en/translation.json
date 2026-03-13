@@ -2107,10 +2107,6 @@
         "airtime_topup": {
           "label": "Airtime Top-up",
           "description": "Top up a Zimbabwe mobile line with operator detection."
-        },
-        "prepaid_electricity": {
-          "label": "Prepaid Electricity",
-          "description": "Buy Zimbabwe prepaid electricity tokens using licensed utility rails."
         }
       },
       "payout_types": {
@@ -2164,7 +2160,6 @@
         "cash_pickup": "Usually within 1 hour after provider confirmation.",
         "default": "Timings depend on provider processing windows.",
         "mobile_money": "Usually within minutes to 2 hours.",
-        "prepaid_electricity": "Usually within minutes after provider confirmation.",
         "visa_card": "Can take minutes to up to 24 hours."
       },
       "fee": "Fee",
@@ -2175,7 +2170,6 @@
         "sender_country": "Where are you sending from?",
         "they_receive": "They receive",
         "transfer_type": "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue.",
-        "utility_value": "Meter value",
         "you_send": "You send"
       },
       "pay": {
@@ -2243,16 +2237,6 @@
       "total": "Total",
       "transfer": {
         "required_hint": "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue."
-      },
-      "utility": {
-        "customer_name": "Customer name",
-        "default_biller": "Electricity Provider",
-        "loading_billers": "Loading electricity providers...",
-        "meter_holder": "Meter holder",
-        "meter_number": "Meter number",
-        "provider": "Electricity provider",
-        "token_code": "Token code",
-        "token_title": "Electricity Token"
       }
     },
     "disclaimer": "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.",
