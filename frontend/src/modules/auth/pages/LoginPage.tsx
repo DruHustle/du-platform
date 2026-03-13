@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { Mail, Lock, LogIn as LoginIcon, X, Eye, EyeOff } from "lucide-react"; // Renamed icon to avoid conflict
+import { Mail, Lock, LogIn as LoginIcon, X, Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { api, getApiErrorMessage, hasLoggedInBefore, saveAuthToken } from "@/lib/api";
 import { primeCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
@@ -20,14 +20,24 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [touched, setTouched] = useState({ email: false, password: false });
   const returningUser = hasLoggedInBefore();
 
-  const glassInputStyle = "bg-white/[0.05] border-white/10 text-white focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
-  const authHeadingClass = "text-xl font-black tracking-tight text-white";
-  const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
+  const glassInputStyle =
+    "bg-white/[0.05] border-white/10 text-white focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+
+  const emailError =
+    touched.email && !formData.email
+      ? "Email is required."
+      : touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+        ? "Please enter a valid email address."
+        : "";
+  const passwordError = touched.password && !formData.password ? "Password is required." : "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ email: true, password: true });
+    if (!formData.email || !formData.password) return;
     setError("");
     setLoading(true);
     try {
@@ -37,7 +47,7 @@ export default function Login() {
       primeCurrentUserBootstrap(response?.data?.user ?? null);
       setLocation(nextPath);
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Login failed."));
+      setError(getApiErrorMessage(err, "Login failed. Please check your credentials."));
     } finally {
       setLoading(false);
     }
@@ -46,19 +56,17 @@ export default function Login() {
   return (
     <Layout>
       <section className="min-h-[90vh] flex items-center justify-center bg-slate-950 relative overflow-hidden px-6 py-20">
-        {/* Background Depth Glows */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="relative w-full max-w-md p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent shadow-2xl"
         >
           <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-12 space-y-8">
-            
-            {/* --- CANCEL BUTTON --- */}
-            <button 
+            <button
               onClick={() => setLocation(nextPath)}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
               aria-label="Cancel login"
@@ -67,41 +75,57 @@ export default function Login() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className={authHeadingClass}>
-                {returningUser ? t('auth.welcome_back') || "Welcome Back" : t('auth.login') || "Login"}
+              <h1 className="text-xl font-black tracking-tight text-white">
+                {returningUser ? t("auth.welcome_back") || "Welcome Back" : t("auth.login") || "Sign In"}
               </h1>
-              <p className={authSubtitleClass}>
-                Sign in to access Diaspora Unlocked services.
+              <p className="text-sm font-light leading-relaxed text-white/75">
+                {returningUser
+                  ? "Good to see you again. Sign in to continue."
+                  : "Sign in to access Diaspora Unlocked services."}
               </p>
             </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="space-y-2">
+            <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+              <div className="space-y-1.5">
                 <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5" /> {t('auth.email') || "Email Address"}
+                  <Mail className="h-3.5 w-3.5" /> {t("auth.email") || "Email Address"}
                 </Label>
-                <Input 
-                  type="email" 
-                  className={glassInputStyle} 
+                <Input
+                  type="email"
+                  autoComplete="email"
+                  className={`${glassInputStyle} ${emailError ? "border-rose-400/60 focus:border-rose-400/80" : ""}`}
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
                 />
+                {emailError ? (
+                  <p className="flex items-center gap-1.5 text-[11px] text-rose-300">
+                    <AlertCircle className="h-3 w-3 shrink-0" />
+                    {emailError}
+                  </p>
+                ) : null}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
-                    <Lock className="h-3.5 w-3.5" /> {t('auth.password') || "Password"}
+                    <Lock className="h-3.5 w-3.5" /> {t("auth.password") || "Password"}
                   </Label>
-                    <Link href="/forgot-password" className="text-[10px] uppercase font-black text-zim-gold/70 hover:text-zim-gold transition-colors tracking-widest cursor-pointer">
-                      {t('auth.forgot_password') || "Forgot Password?"}
-                    </Link>
+                  <Link
+                    href="/forgot-password"
+                    className="text-[10px] uppercase font-black text-zim-gold/70 hover:text-zim-gold transition-colors tracking-widest cursor-pointer"
+                  >
+                    {t("auth.forgot_password") || "Forgot Password?"}
+                  </Link>
                 </div>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
-                    className={`${glassInputStyle} pr-11`}
+                    autoComplete="current-password"
+                    className={`${glassInputStyle} pr-11 ${passwordError ? "border-rose-400/60 focus:border-rose-400/80" : ""}`}
+                    value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
                   />
                   <button
                     type="button"
@@ -112,20 +136,49 @@ export default function Login() {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+                {passwordError ? (
+                  <p className="flex items-center gap-1.5 text-[11px] text-rose-300">
+                    <AlertCircle className="h-3 w-3 shrink-0" />
+                    {passwordError}
+                  </p>
+                ) : null}
               </div>
 
-              {error ? <p className="text-red-400 text-sm">{error}</p> : null}
+              {error ? (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start gap-2.5 rounded-xl border border-rose-400/20 bg-rose-500/10 px-4 py-3"
+                >
+                  <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+                  <p className="text-sm text-rose-300 leading-snug">{error}</p>
+                </motion.div>
+              ) : null}
 
-              <Button type="submit" disabled={loading} className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20">
-                <LoginIcon className="mr-2 h-4 w-4" /> {t('auth.login') || "Login"}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20 disabled:opacity-70"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  <>
+                    <LoginIcon className="mr-2 h-4 w-4" />
+                    {t("auth.login") || "Sign In"}
+                  </>
+                )}
               </Button>
             </form>
 
             <div className="text-center pt-4 border-t border-white/10">
               <p className="text-xs text-white/70">
-                {t('auth.no_account') || "Don't have an account?"}{' '}
+                {t("auth.no_account") || "Don't have an account?"}{" "}
                 <Link href="/register" className="text-zim-gold font-bold hover:underline">
-                  {t('auth.register_now') || "Register Now"}
+                  {t("auth.register_now") || "Create Account"}
                 </Link>
               </p>
             </div>

@@ -3,6 +3,7 @@ import {
   ArrowRightLeft,
   Bolt,
   Building2,
+  Check,
   CheckCircle2,
   Clock3,
   CreditCard,
@@ -862,6 +863,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     prepaid_electricity?: ReloadlyPricing;
   }>({});
   const [airtimeOperator, setAirtimeOperator] = useState<AirtimeOperator>(null);
+  const [airtimeLookupLoading, setAirtimeLookupLoading] = useState(false);
   const [airtimeOptions, setAirtimeOptions] = useState<Array<number | string>>([]);
   const [airtimeFeeQuote, setAirtimeFeeQuote] = useState(0);
   const [utilityBillers, setUtilityBillers] = useState<UtilityBiller[]>([]);
@@ -1435,6 +1437,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   useEffect(() => {
     if (form.transferType !== "airtime_topup") {
       setAirtimeOperator(null);
+      setAirtimeLookupLoading(false);
       setAirtimeOptions([]);
       setAirtimeFeeQuote(0);
       if (reloadlyPricing?.source === "airtime_topup") setReloadlyPricing(null);
@@ -1443,6 +1446,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
 
     const requestId = airtimeRequestRef.current + 1;
     airtimeRequestRef.current = requestId;
+    if (airtimeHasValidPhone) setAirtimeLookupLoading(true);
 
     const timer = setTimeout(async () => {
       try {
@@ -1456,6 +1460,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         const optionsPayload = optionsResponse?.data as { options?: JsonRecord; operator?: AirtimeOperator } | undefined;
         const operator = optionsPayload?.operator ?? null;
         setAirtimeOperator(airtimeHasValidPhone ? operator : null);
+        setAirtimeLookupLoading(false);
         const options = optionsPayload?.options ?? {};
         const suggested = options?.suggestedAmounts || [];
         setAirtimeOptions(airtimeHasValidPhone && Array.isArray(suggested) ? suggested : []);
@@ -1480,6 +1485,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         }
       } catch {
         setAirtimeOperator(null);
+        setAirtimeLookupLoading(false);
         setAirtimeOptions([]);
         setAirtimeFeeQuote(0);
         if (reloadlyPricing?.source === "airtime_topup") setReloadlyPricing(null);
@@ -2195,19 +2201,45 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         </div>
       </div>
 
-      <div className="mb-12 grid grid-cols-5 gap-2">
+      <div className="mb-10 flex items-start">
         {FLOW_STEPS.map((item, index) => {
-          const active = currentStepIndex >= index;
+          const completed = currentStepIndex > index;
+          const current = currentStepIndex === index;
+          const isLast = index === FLOW_STEPS.length - 1;
+          const isClickable = completed && item.id !== "status";
           return (
-            <div
-              key={item.id}
-              className={`${stepPillClass} ${
-                active
-                  ? "border-zim-gold/50 bg-zim-gold/20 text-zim-gold"
-                  : "border-white/10 bg-white/[0.02] text-white/70"
-              }`}
-            >
-              {tr(item.labelKey, item.labelFallback)}
+            <div key={item.id} className={`flex items-start ${isLast ? "flex-none" : "flex-1"}`}>
+              <div className="flex flex-col items-center gap-1.5">
+                <button
+                  type="button"
+                  disabled={!isClickable}
+                  onClick={() => isClickable && setStep(item.id)}
+                  title={isClickable ? `Go back to ${item.labelFallback}` : undefined}
+                  className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-black border-2 transition-all duration-300 ${
+                    completed
+                      ? "border-zim-gold bg-zim-gold text-black"
+                      : current
+                        ? "border-zim-gold bg-zim-gold/15 text-zim-gold shadow-[0_0_12px_rgba(212,175,55,0.3)]"
+                        : "border-white/15 bg-white/[0.03] text-white/30"
+                  } ${isClickable ? "cursor-pointer hover:opacity-80 hover:scale-110" : "cursor-default"}`}
+                >
+                  {completed ? <Check className="h-3.5 w-3.5" /> : <span>{index + 1}</span>}
+                </button>
+                <span
+                  className={`text-[8px] font-black uppercase tracking-[0.08em] text-center leading-tight max-w-[52px] md:text-[9px] md:tracking-widest ${
+                    completed || current ? "text-zim-gold" : "text-white/30"
+                  }`}
+                >
+                  {tr(item.labelKey, item.labelFallback)}
+                </span>
+              </div>
+              {!isLast && (
+                <div
+                  className={`flex-1 h-0.5 mx-1.5 mt-4 rounded-full transition-all duration-500 ${
+                    completed ? "bg-zim-gold" : "bg-white/10"
+                  }`}
+                />
+              )}
             </div>
           );
         })}
@@ -2399,12 +2431,31 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
                 {tr("payments.form.recipient.airtime_number", "Airtime number")}
               </label>
-              <input
-                className={fieldClass}
-                placeholder="+2637XXXXXXXX"
-                value={form.recipientPhone}
-                onChange={(e) => update("recipientPhone", e.target.value)}
-              />
+              <div className="relative">
+                <input
+                  className={`${fieldClass} ${airtimeLookupLoading ? "pr-10" : ""}`}
+                  placeholder="+2637XXXXXXXX"
+                  value={form.recipientPhone}
+                  onChange={(e) => update("recipientPhone", e.target.value)}
+                />
+                {airtimeLookupLoading && (
+                  <span className="absolute inset-y-0 right-3 flex items-center">
+                    <Loader2 className="h-4 w-4 animate-spin text-zim-gold/70" />
+                  </span>
+                )}
+              </div>
+              {airtimeLookupLoading && (
+                <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-white/50">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Detecting operator...
+                </p>
+              )}
+              {!airtimeLookupLoading && airtimeOperator && (
+                <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-400">
+                  <CheckCircle2 className="h-3 w-3" />
+                  {String(airtimeOperator?.name ?? "Operator")} detected
+                </p>
+              )}
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
@@ -2835,7 +2886,20 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         </div>
       )}
 
-      {error && <div className="mt-4 rounded-xl border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>}
+      {error && (
+        <div className="mt-4 rounded-xl border border-rose-400/25 bg-rose-500/10 px-4 py-3 flex items-start gap-2.5">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+          <p className="flex-1 text-sm text-rose-200 leading-snug">{error}</p>
+          <button
+            type="button"
+            onClick={() => setError("")}
+            className="shrink-0 text-rose-400/60 hover:text-rose-300 transition-colors"
+            aria-label="Dismiss error"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <p className="mt-5 text-[11px] leading-relaxed text-white/70">
         {tr(

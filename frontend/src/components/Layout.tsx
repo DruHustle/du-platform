@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, House, ArrowRightLeft, ShoppingBag, HeartHandshake, Package, Landmark, Compass, Brain, ChevronRight, Twitter, Linkedin, Instagram } from "lucide-react";
-import { useState, useEffect, useRef, useCallback, type CSSProperties, type FormEvent } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, type CSSProperties, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, clearAuthToken, getApiErrorMessage, type AuthUser } from "@/lib/api";
@@ -130,6 +130,7 @@ export default function Layout({ children }: LayoutProps) {
     setAccountMenuOpen(false);
   }, [location]);
 
+
   useEffect(() => {
     let mounted = true;
     const fetchMe = async () => {
@@ -163,7 +164,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const navigation = [
     { name: tr("nav.home", "Home"), href: "/", icon: House },
-    { name: tr("nav.remittances", "Remittances"), href: "/payments", icon: ArrowRightLeft },
+    { name: tr("nav.remittances", "Remittances"), href: "/remittances", icon: ArrowRightLeft },
     { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
     { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
     { name: tr("nav.technology", "Technology"), href: "/technology", icon: Brain },
@@ -171,12 +172,26 @@ export default function Layout({ children }: LayoutProps) {
     { name: tr("nav.investment", "Investment"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
     { name: tr("nav.tourism", "Tourism"), href: "/tourism", icon: MapPin },
   ];
+  const isInZimbabwe = useMemo(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (tz === "Africa/Harare") return true;
+      const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
+      return langs.some((l) => l.toLowerCase().endsWith("-zw"));
+    } catch {
+      return false;
+    }
+  }, []);
+
   const mobileTopNavigation = [
     { name: tr("nav.home", "Home"), href: "/", icon: House },
-    { name: tr("nav.remittances", "Remittances"), href: "/payments", icon: ArrowRightLeft },
+    { name: tr("nav.remittances", "Remittances"), href: "/remittances", icon: ArrowRightLeft },
     { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
     { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
     { name: tr("nav.discover", "Discover"), href: "/tourism", matchPaths: ["/tourism"], icon: Compass },
+    isInZimbabwe
+      ? { name: tr("nav.trade", "Trade"), href: "/trade", matchPaths: ["/trade"], icon: Package }
+      : { name: tr("nav.investment", "Invest"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
   ];
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
@@ -201,7 +216,7 @@ export default function Layout({ children }: LayoutProps) {
   const useHomeCompactTransparentNav = isCompactNavViewport && isHomePage && !mobileMenuOpen;
   const hasHeroSection =
     isHomePage ||
-    location === "/payments" ||
+    location === "/remittances" ||
     location === "/care" ||
     location === "/trade" ||
     location === "/investment" ||
@@ -331,21 +346,24 @@ export default function Layout({ children }: LayoutProps) {
       return;
     }
 
-    const heroLogo = document.getElementById("home-hero-logo");
-    if (!heroLogo || typeof IntersectionObserver === "undefined") {
-      setHomeHeroLogoVisible(window.scrollY <= 10);
-      return;
-    }
+    const checkVisibility = () => {
+      const el = document.getElementById("home-hero-logo");
+      // Element missing or hidden (display:none) — fall back to scroll position
+      if (!el || el.offsetParent === null) {
+        setHomeHeroLogoVisible(window.scrollY < 80);
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      setHomeHeroLogoVisible(rect.bottom > 0 && rect.top < window.innerHeight);
+    };
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setHomeHeroLogoVisible(entry?.isIntersecting ?? false);
-      },
-      { threshold: 0.01 },
-    );
-
-    observer.observe(heroLogo);
-    return () => observer.disconnect();
+    // Delay slightly so framer-motion has time to mount the element
+    const timer = setTimeout(checkVisibility, 150);
+    window.addEventListener("scroll", checkVisibility, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", checkVisibility);
+    };
   }, [isHomePage, location]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -738,11 +756,11 @@ export default function Layout({ children }: LayoutProps) {
       {!isMobileNavHiddenPage && (
         <div className="fixed left-0 right-0 z-[205] lg:hidden top-0">
           <div
-            className={`flex h-[calc(3.5rem+env(safe-area-inset-top))] items-end border-b border-white/10 px-4 pt-[env(safe-area-inset-top)] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] ${
+            className={`flex h-[calc(3.5rem+env(safe-area-inset-top))] items-end border-b border-white/10 px-1 pt-[env(safe-area-inset-top)] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] ${
               useHomeCompactTransparentNav ? "bg-white/[0.08]" : "bg-slate-900/95"
             }`}
           >
-            <nav className="grid h-14 w-full grid-cols-6 items-center gap-2">
+            <nav className="flex h-14 w-full items-center justify-around">
               {mobileTopNavigation.map((item) => {
                 const active = isActive(item);
                 const Icon = item.icon;
@@ -752,16 +770,20 @@ export default function Layout({ children }: LayoutProps) {
                     href={item.href}
                     aria-label={item.name}
                     title={item.name}
-                    className={`flex items-center justify-center rounded-2xl px-2 py-2 transition-colors ${
-                      active ? "text-yellow-400" : "text-white/70 hover:text-white"
+                    className={`flex flex-1 items-center justify-center transition-colors ${
+                      active ? "text-yellow-400" : "text-white/60 hover:text-white"
                     }`}
                   >
                     {item.href === "/" ? (
-                      <img
-                        src="/images/brand/diaspora_unlocked.png"
-                        alt={item.name}
-                        className="h-5 w-5 object-contain"
-                      />
+                      isHomePage && homeHeroLogoVisible ? (
+                        <House className="h-5 w-5" strokeWidth={2} />
+                      ) : (
+                        <img
+                          src="/images/brand/diaspora_unlocked.png"
+                          alt={item.name}
+                          className="h-5 w-5 object-contain"
+                        />
+                      )
                     ) : (
                       <Icon className="h-5 w-5" strokeWidth={2} />
                     )}
@@ -772,10 +794,8 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 type="button"
                 aria-label={mobileMenuOpen ? t("nav.close_menu", { defaultValue: "Close menu" }) : t("nav.open_menu", { defaultValue: "Open menu" })}
-                className={`flex items-center justify-center rounded-2xl px-2 py-2 transition-all duration-300 ${
-                  mobileMenuOpen
-                    ? "bg-yellow-400 text-slate-950 shadow-lg"
-                    : "text-white/70 hover:text-white"
+                className={`flex flex-1 items-center justify-center transition-all duration-300 ${
+                  mobileMenuOpen ? "text-yellow-400" : "text-white/60 hover:text-white"
                 }`}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >

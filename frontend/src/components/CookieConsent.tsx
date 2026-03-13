@@ -55,17 +55,19 @@ export default function CookieConsent() {
 
   return (
     <div className="fixed inset-x-0 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-[210] px-4 pb-4 lg:bottom-0 lg:z-[100]">
-      <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/20 bg-slate-900/95 backdrop-blur-xl p-5 shadow-2xl">
-        <p className="text-white/90 text-sm leading-relaxed">
-          {tr("cookies.consent.description", "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.")}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white hover:text-zim-black">
-            <Link href="/cookie-settings">{tr("cookies.consent.settings", "Cookie settings")}</Link>
-          </Button>
-          <Button onClick={accept} className="bg-zim-gold text-zim-black hover:bg-white">
-            {tr("cookies.consent.accept", "Accept cookies")}
-          </Button>
+      <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/20 bg-slate-900/95 backdrop-blur-xl px-6 py-5 shadow-2xl">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-white/90 text-sm leading-relaxed sm:flex-1">
+            {tr("cookies.consent.description", "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.")}
+          </p>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button asChild variant="outline" className="h-9 border-white/20 text-white hover:bg-white hover:text-zim-black text-xs">
+              <Link href="/cookie-settings">{tr("cookies.consent.settings", "Cookie settings")}</Link>
+            </Button>
+            <Button onClick={accept} className="h-9 bg-zim-gold text-zim-black hover:bg-white text-xs font-black">
+              {tr("cookies.consent.accept", "Accept cookies")}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
