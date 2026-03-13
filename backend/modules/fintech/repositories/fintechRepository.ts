@@ -1,13 +1,10 @@
 import {
   createAirtimeTransactionRecord,
   createRemittanceTransactionRecord,
-  createUtilityTransactionRecord,
   getAirtimeTransactionById,
   getAirtimeTransactionByIdempotencyKey,
   getRemittanceTransactionById,
   getRemittanceTransactionByIdempotencyKey,
-  getUtilityTransactionById,
-  getUtilityTransactionByIdempotencyKey,
   getUserFinancialProfile,
 } from "../../../shared/persistence/fintechStore";
 import { withTransaction } from "../../../shared/database";
@@ -29,12 +26,6 @@ export class FintechRepository {
     );
   }
 
-  async saveUtility(input: Parameters<typeof createUtilityTransactionRecord>[0]) {
-    return withTransaction(async (connection) =>
-      createUtilityTransactionRecord(input, connection ?? undefined)
-    );
-  }
-
   async findRemittance(transactionId: number, userId: number) {
     return getRemittanceTransactionById(transactionId, userId);
   }
@@ -47,15 +38,7 @@ export class FintechRepository {
     return getAirtimeTransactionByIdempotencyKey(userId, idempotencyKey);
   }
 
-  async findUtility(transactionId: number, userId: number) {
-    return getUtilityTransactionById(transactionId, userId);
-  }
-
   async findRemittanceByIdempotencyKey(userId: number, idempotencyKey: string) {
     return getRemittanceTransactionByIdempotencyKey(userId, idempotencyKey);
-  }
-
-  async findUtilityByIdempotencyKey(userId: number, idempotencyKey: string) {
-    return getUtilityTransactionByIdempotencyKey(userId, idempotencyKey);
   }
 }
