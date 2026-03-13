@@ -2139,8 +2139,8 @@
         "detecting_operator": "Detecting operator...",
         "no_options": "No suggested amounts yet.",
         "operator": "Operator",
-        "operator_detected": "{{operator}} detected",
-        "options": "Top-up amount options"
+        "options": "Top-up amount options",
+        "detected": "detected"
       },
       "errors": {
         "amount_limit": "Amount exceeds permitted limit of 5000.",

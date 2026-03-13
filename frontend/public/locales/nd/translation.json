@@ -2148,8 +2148,8 @@
         "detecting_operator": "Detecting operator...",
         "no_options": "Awekho amanani aphakanyisiwe okwamanje.",
         "operator": "Opharetha",
-        "operator_detected": "{{operator}} detected",
-        "options": "Izinketho zenani eliphezulu"
+        "options": "Izinketho zenani eliphezulu",
+        "detected": "detected"
       },
       "errors": {
         "amount_limit": "Inani leqa umkhawulo ovunyelwe wezi-5000.",
