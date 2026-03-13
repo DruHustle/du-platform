@@ -4,7 +4,6 @@ import { findUserById } from "./authStore";
 
 type RemittanceTransactionStatus = "pending" | "processing" | "completed" | "failed";
 type AirtimeTransactionStatus = "pending" | "completed" | "failed";
-type UtilityTransactionStatus = "pending" | "completed" | "failed";
 type RemittanceRecipientType = "mobile_money" | "cash_pickup" | "bank_transfer" | "visa_card";
 
 type RemittanceTransactionRecord = {
@@ -38,25 +37,8 @@ type AirtimeTransactionRecord = {
   created_at: string;
 };
 
-type UtilityTransactionRecord = {
-  id: number;
-  user_id: number;
-  meter_number: string;
-  customer_name: string | null;
-  biller_id: string | null;
-  biller_name: string | null;
-  amount: number;
-  currency: string | null;
-  reloadly_reference: string | null;
-  token_code: string | null;
-  idempotency_key: string | null;
-  status: UtilityTransactionStatus;
-  created_at: string;
-};
-
 const memoryRemittanceTransactions: RemittanceTransactionRecord[] = [];
 const memoryAirtimeTransactions: AirtimeTransactionRecord[] = [];
-const memoryUtilityTransactions: UtilityTransactionRecord[] = [];
 
 export async function getUserFinancialProfile(userId: number): Promise<{
   id: number;
@@ -418,140 +400,3 @@ export async function getAirtimeTransactionById(transactionId: number, userId: n
   return rows[0] ?? null;
 }
 
-export async function getUtilityTransactionByIdempotencyKey(userId: number, idempotencyKey: string) {
-  const normalizedUserId = Math.floor(Number(userId));
-  const normalizedKey = String(idempotencyKey ?? "").trim();
-  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0 || !normalizedKey) return null;
-
-  if (!db) {
-    return memoryUtilityTransactions.find(
-      (entry) => entry.user_id === normalizedUserId && entry.idempotency_key === normalizedKey
-    ) ?? null;
-  }
-
-  const [rows] = await db.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM utility_transactions WHERE user_id = ? AND idempotency_key = ? LIMIT 1",
-    [normalizedUserId, normalizedKey]
-  );
-  return rows[0] ?? null;
-}
-
-export async function createUtilityTransactionRecord(
-  input: {
-    userId: number;
-    meterNumber: string;
-    customerName: string | null;
-    billerId: string | null;
-    billerName: string | null;
-    amount: number;
-    currency: string | null;
-    reloadlyReference: string | null;
-    tokenCode: string | null;
-    idempotencyKey?: string | null;
-    status: UtilityTransactionStatus;
-  },
-  connection?: mysql.PoolConnection
-) {
-  if (!db) {
-    if (input.idempotencyKey) {
-      const duplicate = memoryUtilityTransactions.find(
-        (entry) => entry.user_id === input.userId && entry.idempotency_key === input.idempotencyKey
-      );
-      if (duplicate) return duplicate;
-    }
-    const row: UtilityTransactionRecord = {
-      id: memoryUtilityTransactions.length + 1,
-      user_id: input.userId,
-      meter_number: input.meterNumber,
-      customer_name: input.customerName,
-      biller_id: input.billerId,
-      biller_name: input.billerName,
-      amount: input.amount,
-      currency: input.currency,
-      reloadly_reference: input.reloadlyReference,
-      token_code: input.tokenCode,
-      idempotency_key: input.idempotencyKey ?? null,
-      status: input.status,
-      created_at: new Date().toISOString(),
-    };
-    memoryUtilityTransactions.push(row);
-    return row;
-  }
-
-  const activeConnection = connection ?? (await db.getConnection());
-  const ownsConnection = !connection;
-  try {
-    if (ownsConnection) {
-      await activeConnection.query("START TRANSACTION");
-    }
-
-    const [inserted] = await activeConnection.execute<mysql.ResultSetHeader>(
-      `
-      INSERT IGNORE INTO utility_transactions
-      (user_id, meter_number, customer_name, biller_id, biller_name, amount, currency, reloadly_reference, token_code, idempotency_key, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `,
-      [
-        input.userId,
-        input.meterNumber,
-        input.customerName,
-        input.billerId,
-        input.billerName,
-        input.amount,
-        input.currency,
-        input.reloadlyReference,
-        input.tokenCode,
-        input.idempotencyKey ?? null,
-        input.status,
-      ]
-    );
-
-    if (inserted.affectedRows === 0 && input.idempotencyKey) {
-      const [conflict] = await activeConnection.query<mysql.RowDataPacket[]>(
-        "SELECT * FROM utility_transactions WHERE idempotency_key = ? LIMIT 1",
-        [input.idempotencyKey]
-      );
-      if (ownsConnection) await activeConnection.query("COMMIT");
-      return conflict[0] ?? null;
-    }
-
-    const [rows] = await activeConnection.query<mysql.RowDataPacket[]>(
-      "SELECT * FROM utility_transactions WHERE id = ? LIMIT 1",
-      [Number(inserted.insertId)]
-    );
-    if (ownsConnection) {
-      await activeConnection.query("COMMIT");
-    }
-    return rows[0] ?? null;
-  } catch (error) {
-    if (ownsConnection) {
-      await activeConnection.query("ROLLBACK");
-    }
-    throw error;
-  } finally {
-    if (ownsConnection) {
-      activeConnection.release();
-    }
-  }
-}
-
-export async function getUtilityTransactionById(transactionId: number, userId: number) {
-  const normalizedId = Math.floor(Number(transactionId));
-  const normalizedUserId = Math.floor(Number(userId));
-  if (!Number.isFinite(normalizedId) || normalizedId <= 0) return null;
-  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
-
-  if (!db) {
-    return (
-      memoryUtilityTransactions.find(
-        (entry) => entry.id === normalizedId && entry.user_id === normalizedUserId
-      ) ?? null
-    );
-  }
-
-  const [rows] = await db.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM utility_transactions WHERE id = ? AND user_id = ? LIMIT 1",
-    [normalizedId, normalizedUserId]
-  );
-  return rows[0] ?? null;
-}

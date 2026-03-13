@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRightLeft,
-  Bolt,
   Building2,
   Check,
   CheckCircle2,
@@ -17,11 +16,11 @@ import {
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 
-type TransferType = "send_money" | "airtime_topup" | "prepaid_electricity";
+type TransferType = "send_money" | "airtime_topup";
 type RecipientType = "mobile_money" | "cash_pickup" | "bank_transfer" | "visa_card";
 type FormStep = "route" | "quote" | "recipient" | "payout" | "pay" | "status";
 type AmountMode = "send" | "receive";
-type PayoutEtaTarget = RecipientType | "airtime_topup" | "prepaid_electricity";
+type PayoutEtaTarget = RecipientType | "airtime_topup";
 type Country = {
   code: string;
   flag: string;
@@ -30,9 +29,8 @@ type Country = {
 };
 type JsonRecord = Record<string, any>;
 type AirtimeOperator = JsonRecord | null;
-type UtilityBiller = JsonRecord | null;
 type ReloadlyPricing = {
-  source: "airtime_topup" | "prepaid_electricity";
+  source: "airtime_topup";
   senderCurrencyCode: string;
   destinationCurrencyCode: string;
   destinationLabel: string;
@@ -40,7 +38,7 @@ type ReloadlyPricing = {
   fee: number | null;
 };
 type SendMoneyStatus = {
-  kind: "airtime" | "remittance" | "utility";
+  kind: "airtime" | "remittance";
   transaction: JsonRecord | null;
   providerResponse: JsonRecord | null;
   submittedAt: string;
@@ -58,9 +56,6 @@ type SendMoneyFormState = {
   recipientAddress: string;
   recipientCity: string;
   recipientPhone: string;
-  meterNumber: string;
-  utilityCustomerName: string;
-  utilityBillerId: string;
   recipientType: RecipientType;
   payoutChannel: string;
   mobileNumber: string;
@@ -144,14 +139,6 @@ const TRANSFER_TYPES = [
     descriptionFallback: "Top up a Zimbabwe mobile line with operator detection.",
     icon: Wallet,
   },
-  {
-    value: "prepaid_electricity",
-    labelKey: "payments.form.transfer_types.prepaid_electricity.label",
-    labelFallback: "Prepaid Electricity",
-    descriptionKey: "payments.form.transfer_types.prepaid_electricity.description",
-    descriptionFallback: "Buy Zimbabwe prepaid electricity tokens using licensed utility rails.",
-    icon: Bolt,
-  },
 ] as const;
 
 const PAYOUT_TYPES = [
@@ -182,9 +169,6 @@ const INITIAL_FORM: SendMoneyFormState = {
   recipientAddress: "",
   recipientCity: "",
   recipientPhone: "",
-  meterNumber: "",
-  utilityCustomerName: "",
-  utilityBillerId: "",
   recipientType: "mobile_money",
   payoutChannel: "",
   mobileNumber: "",
@@ -327,8 +311,8 @@ function normalizeZimbabweNumber(phone: string): string {
   return raw;
 }
 
-function isImmediateValueTransfer(type: TransferType | ""): type is "airtime_topup" | "prepaid_electricity" {
-  return type === "airtime_topup" || type === "prepaid_electricity";
+function isImmediateValueTransfer(type: TransferType | ""): type is "airtime_topup" {
+  return type === "airtime_topup";
 }
 
 function formatAmount(value: number | string | null | undefined, currency: string): string {
@@ -487,59 +471,6 @@ function buildReloadlyAirtimePricing(
     senderCurrencyCode,
     destinationCurrencyCode,
     destinationLabel: "They receive",
-    fxRate: Number(fxRate.toFixed(6)),
-    fee,
-  };
-}
-
-function buildReloadlyUtilityPricing(
-  biller: JsonRecord | null | undefined,
-  fallbackSenderCurrency = "",
-  fallbackDestinationCurrency = ""
-): ReloadlyPricing | null {
-  const senderCurrencyCode = String(
-    biller?.internationalTransactionCurrencyCode ?? fallbackSenderCurrency ?? biller?.fx?.currencyCode ?? ""
-  )
-    .trim()
-    .toUpperCase();
-  const rawDestinationCurrency =
-    String(
-      biller?.localTransactionCurrencyCode ??
-        biller?.localCurrencyCode ??
-        biller?.destinationCurrencyCode ??
-        biller?.localTransactionFeeCurrencyCode ??
-        biller?.internationalTransactionFeeCurrencyCode ??
-        biller?.fx?.currencyCode ??
-        biller?.internationalTransactionCurrencyCode ??
-        fallbackDestinationCurrency ??
-        ""
-    )
-      .trim()
-      .toUpperCase() || "VALUE";
-  const fallbackDestination = String(fallbackDestinationCurrency || "").trim().toUpperCase();
-  const destinationCurrencyCode =
-    fallbackDestination &&
-    senderCurrencyCode &&
-    rawDestinationCurrency === senderCurrencyCode &&
-    fallbackDestination !== senderCurrencyCode
-      ? fallbackDestination
-      : rawDestinationCurrency;
-  const rawFxRate = toFinancialNumber(
-    biller?.fx?.rate ?? biller?.fxRate ?? biller?.exchangeRate ?? biller?.rate ?? biller?.fx?.fxRate
-  );
-  // When sender and destination currencies are the same there is no conversion.
-  const fxRate = senderCurrencyCode && destinationCurrencyCode && senderCurrencyCode === destinationCurrencyCode
-    ? 1
-    : rawFxRate;
-  const fee = toFinancialNumber(biller?.internationalTransactionFee ?? biller?.localTransactionFee);
-
-  if (!senderCurrencyCode || fxRate === null || fxRate <= 0) return null;
-
-  return {
-    source: "prepaid_electricity",
-    senderCurrencyCode,
-    destinationCurrencyCode,
-    destinationLabel: "Meter value",
     fxRate: Number(fxRate.toFixed(6)),
     fee,
   };
@@ -860,16 +791,13 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const [cachedSendMoneyFee, setCachedSendMoneyFee] = useState<number | null>(null);
   const [cachedReloadlyPricing, setCachedReloadlyPricing] = useState<{
     airtime_topup?: ReloadlyPricing;
-    prepaid_electricity?: ReloadlyPricing;
   }>({});
   const [airtimeOperator, setAirtimeOperator] = useState<AirtimeOperator>(null);
   const [airtimeLookupLoading, setAirtimeLookupLoading] = useState(false);
   const [airtimeOptions, setAirtimeOptions] = useState<Array<number | string>>([]);
   const [airtimeFeeQuote, setAirtimeFeeQuote] = useState(0);
-  const [utilityBillers, setUtilityBillers] = useState<UtilityBiller[]>([]);
   const [reloadlyPricing, setReloadlyPricing] = useState<ReloadlyPricing | null>(null);
   const liveQuoteRequestRef = useRef<number>(0);
-  const utilityRequestRef = useRef<number>(0);
   const airtimeRequestRef = useRef<number>(0);
   const latestAmountRef = useRef({ amount: 0, amountMode: "send" as AmountMode, amountReceive: 0 });
 
@@ -932,7 +860,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     () => `du.reloadly.airtime.${form.currencyFrom}.ZW`,
     [form.currencyFrom]
   );
-  const reloadlyElectricityCacheKey = "du.reloadly.electricity.ZW";
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -945,7 +872,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const parseStoredPricing = (raw: string | null, source: "airtime_topup" | "prepaid_electricity"): ReloadlyPricing | undefined => {
+    const parseStoredPricing = (raw: string | null, source: "airtime_topup"): ReloadlyPricing | undefined => {
       if (!raw) return undefined;
       try {
         const parsed = JSON.parse(raw) as ReloadlyPricing;
@@ -954,15 +881,13 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return undefined;
     };
     const airtime = parseStoredPricing(window.localStorage.getItem(reloadlyAirtimeCacheKey), "airtime_topup");
-    const electricity = parseStoredPricing(window.localStorage.getItem(reloadlyElectricityCacheKey), "prepaid_electricity");
-    if (airtime || electricity) {
+    if (airtime) {
       setCachedReloadlyPricing((prev) => ({
         ...prev,
-        ...(airtime ? { airtime_topup: airtime } : {}),
-        ...(electricity ? { prepaid_electricity: electricity } : {}),
+        airtime_topup: airtime,
       }));
     }
-  }, [reloadlyAirtimeCacheKey, reloadlyElectricityCacheKey]);
+  }, [reloadlyAirtimeCacheKey]);
 
   const amount = parseAmountInput(form.amountSent) ?? 0;
   const amountReceive = parseAmountInput(form.amountReceive) ?? 0;
@@ -990,14 +915,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return 0;
     }
 
-    if (form.transferType === "prepaid_electricity") {
-      const utilityFee = extractProviderFee(status?.providerResponse?.payment, amount);
-      if (utilityFee !== null && utilityFee >= 0) return Number(utilityFee.toFixed(2));
-      if (reloadlyPricing?.source === "prepaid_electricity" && reloadlyPricing.fee !== null && reloadlyPricing.fee >= 0) {
-        return Number(reloadlyPricing.fee.toFixed(2));
-      }
-      return 0;
-    }
     return 0;
   }, [airtimeFeeQuote, amount, form.transferType, quote, reloadlyPricing, status]);
   const fee = useMemo(() => Number(providerCharge.toFixed(2)), [providerCharge]);
@@ -1008,10 +925,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return Number(cachedSendMoneyFee.toFixed(2));
     }
     if (isReloadlyTransfer) {
-      const cached =
-        form.transferType === "airtime_topup"
-          ? cachedReloadlyPricing.airtime_topup
-          : cachedReloadlyPricing.prepaid_electricity;
+      const cached = cachedReloadlyPricing.airtime_topup;
       if (cached?.fee !== null && cached?.fee !== undefined && cached.fee >= 0) {
         return Number(cached.fee.toFixed(2));
       }
@@ -1045,10 +959,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const displayFxRate = useMemo(() => {
     if (fxRate > 0) return Number(fxRate.toFixed(6));
     if (isReloadlyTransfer) {
-      const cached =
-        form.transferType === "airtime_topup"
-          ? cachedReloadlyPricing.airtime_topup
-          : cachedReloadlyPricing.prepaid_electricity;
+      const cached = cachedReloadlyPricing.airtime_topup;
       const candidate = Number(reloadlyPricing?.fxRate ?? cached?.fxRate ?? 0);
       return candidate > 0 ? Number(candidate.toFixed(6)) : 0;
     }
@@ -1077,28 +988,22 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const displayedReceiveAmount = Number((resolvedReceiveInput > 0 ? resolvedReceiveInput : estimatedReceive).toFixed(2));
   const liveAmountInput = amountMode === "send" ? form.amountSent : form.amountReceive;
   const cachedReloadlyPricingForType = isReloadlyTransfer
-    ? (form.transferType === "airtime_topup" ? cachedReloadlyPricing.airtime_topup : cachedReloadlyPricing.prepaid_electricity)
+    ? cachedReloadlyPricing.airtime_topup
     : undefined;
   const displaySendCurrency = isReloadlyTransfer
     ? reloadlyPricing?.senderCurrencyCode || cachedReloadlyPricingForType?.senderCurrencyCode || form.currencyFrom
     : form.currencyFrom;
-  const displayReceiveCurrency = form.transferType === "prepaid_electricity"
-    ? reloadlyPricing?.destinationCurrencyCode || cachedReloadlyPricingForType?.destinationCurrencyCode || "VALUE"
-    : isReloadlyTransfer
-      ? reloadlyPricing?.destinationCurrencyCode || cachedReloadlyPricingForType?.destinationCurrencyCode || form.currencyTo
-      : form.currencyTo;
+  const displayReceiveCurrency = isReloadlyTransfer
+    ? reloadlyPricing?.destinationCurrencyCode || cachedReloadlyPricingForType?.destinationCurrencyCode || form.currencyTo
+    : form.currencyTo;
   const fxRateDisplayText =
     displayFxRate > 0
       ? `1 ${displaySendCurrency} = ${displayFxRate.toFixed(6)} ${displayReceiveCurrency}`
       : tr("payments.form.quote.fetching", "Fetching rate...");
-  const receiveAmountLabel =
-    form.transferType === "prepaid_electricity"
-      ? tr("payments.form.fields.utility_value", "Meter value")
-      : tr("payments.form.fields.they_receive", "They receive");
+  const receiveAmountLabel = tr("payments.form.fields.they_receive", "They receive");
   const showRouteSummary =
     form.transferType === "send_money" ||
-    form.transferType === "airtime_topup" ||
-    form.transferType === "prepaid_electricity";
+    form.transferType === "airtime_topup";
   const reloadlyReceiveInputDisabled = isReloadlyTransfer && !(fxRate > 0);
 
   const requestQuote = async (sendingAmount: number): Promise<JsonRecord | null> => {
@@ -1123,7 +1028,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   useEffect(() => {
     let active = true;
 
-    if (form.transferType === "airtime_topup" || form.transferType === "prepaid_electricity") {
+    if (form.transferType === "airtime_topup") {
       return () => {
         active = false;
       };
@@ -1186,7 +1091,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   }, [form.currencyTo]);
 
   useEffect(() => {
-    if (forcedTransferType !== "send_money" && forcedTransferType !== "airtime_topup" && forcedTransferType !== "prepaid_electricity") return;
+    if (forcedTransferType !== "send_money" && forcedTransferType !== "airtime_topup") return;
     setForm((prev) => {
       if (prev.transferType === forcedTransferType) return prev;
       return {
@@ -1204,13 +1109,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       return;
     }
     if (quote !== null) setQuote(null);
-    if (form.transferType === "airtime_topup" && reloadlyPricing?.source === "prepaid_electricity") {
-      setReloadlyPricing(null);
-      return;
-    }
-    if (form.transferType === "prepaid_electricity" && reloadlyPricing?.source === "airtime_topup") {
-      setReloadlyPricing(null);
-    }
   }, [form.transferType, quote, reloadlyPricing]);
 
   useEffect(() => {
@@ -1256,8 +1154,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           setForm((prev) => {
             if (
               prev.transferType !== "send_money" &&
-              prev.transferType !== "airtime_topup" &&
-              prev.transferType !== "prepaid_electricity"
+              prev.transferType !== "airtime_topup"
             ) {
               return prev;
             }
@@ -1283,8 +1180,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         setForm((prev) => {
           if (
             prev.transferType !== "send_money" &&
-            prev.transferType !== "airtime_topup" &&
-            prev.transferType !== "prepaid_electricity"
+            prev.transferType !== "airtime_topup"
           ) {
             return prev;
           }
@@ -1429,10 +1325,9 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (!reloadlyPricing || !Number.isFinite(reloadlyPricing.fxRate) || reloadlyPricing.fxRate <= 0) return;
     setCachedReloadlyPricing((prev) => ({ ...prev, [reloadlyPricing.source]: reloadlyPricing }));
     try {
-      const key = reloadlyPricing.source === "airtime_topup" ? reloadlyAirtimeCacheKey : reloadlyElectricityCacheKey;
-      window.localStorage.setItem(key, JSON.stringify(reloadlyPricing));
+      window.localStorage.setItem(reloadlyAirtimeCacheKey, JSON.stringify(reloadlyPricing));
     } catch { /* ignore storage errors */ }
-  }, [reloadlyPricing, reloadlyAirtimeCacheKey, reloadlyElectricityCacheKey]);
+  }, [reloadlyPricing, reloadlyAirtimeCacheKey]);
 
   useEffect(() => {
     if (form.transferType !== "airtime_topup") {
@@ -1494,70 +1389,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
 
     return () => clearTimeout(timer);
   }, [airtimeHasValidPhone, airtimeLookupKey, airtimeLookupPhone, form.currencyFrom, form.currencyTo, form.transferType]);
-
-  useEffect(() => {
-    if (form.transferType !== "prepaid_electricity") {
-      setUtilityBillers([]);
-      if (reloadlyPricing?.source === "prepaid_electricity") setReloadlyPricing(null);
-      return;
-    }
-
-    const requestId = utilityRequestRef.current + 1;
-    utilityRequestRef.current = requestId;
-    let active = true;
-
-    void (async () => {
-      try {
-        const response = await api.post("/fintech/utility/electricity/options", {
-          countryISOCode: "ZW",
-        });
-        if (!active || utilityRequestRef.current !== requestId) return;
-        const billers = Array.isArray((response?.data as JsonRecord | undefined)?.billers) ? ((response.data as JsonRecord).billers as JsonRecord[]) : [];
-        setUtilityBillers(billers);
-        setForm((prev) => {
-          if (prev.transferType !== "prepaid_electricity") return prev;
-          const firstBillerId = String(billers[0]?.id ?? "").trim();
-          if (prev.utilityBillerId || !firstBillerId) return prev;
-          return {
-            ...prev,
-            utilityBillerId: firstBillerId,
-          };
-        });
-      } catch {
-        if (active) {
-          setUtilityBillers([]);
-          if (reloadlyPricing?.source === "prepaid_electricity") setReloadlyPricing(null);
-        }
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [form.transferType]);
-
-  useEffect(() => {
-    if (form.transferType !== "prepaid_electricity") return;
-    const selectedBiller =
-      utilityBillers.find((biller) => String(biller?.id ?? "").trim() === form.utilityBillerId) ?? utilityBillers[0] ?? null;
-    const pricing = buildReloadlyUtilityPricing(selectedBiller, form.currencyFrom, form.currencyTo);
-    setReloadlyPricing(pricing);
-
-    if (pricing?.fxRate && amount > 0) {
-      setForm((prev) => {
-        if (prev.transferType !== "prepaid_electricity") return prev;
-        if (amountMode === "send") {
-          const nextReceive = toAmountInputString(amount * pricing.fxRate);
-          return nextReceive !== prev.amountReceive ? { ...prev, amountReceive: nextReceive } : prev;
-        }
-        if (amountMode === "receive" && amountReceive > 0) {
-          const nextSend = toAmountInputString(amountReceive / pricing.fxRate);
-          return nextSend !== prev.amountSent ? { ...prev, amountSent: nextSend } : prev;
-        }
-        return prev;
-      });
-    }
-  }, [amount, amountMode, amountReceive, form.currencyFrom, form.transferType, form.utilityBillerId, utilityBillers]);
 
   const update = (key: keyof SendMoneyFormState, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value } as SendMoneyFormState));
@@ -1658,8 +1489,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
   const showGetStartedButton = useMemo(() => {
     const hasTransferSelection =
       form.transferType === "send_money" ||
-      form.transferType === "airtime_topup" ||
-      form.transferType === "prepaid_electricity";
+      form.transferType === "airtime_topup";
     if (!hasTransferSelection) return false;
     const activeAmount = amountMode === "receive" ? amountReceive : amount;
     return Number.isFinite(activeAmount) && activeAmount > 0;
@@ -1669,22 +1499,16 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (form.transferType === "airtime_topup") {
       return looksLikeZimbabweNumber(form.recipientPhone);
     }
-    if (form.transferType === "prepaid_electricity") {
-      return String(form.meterNumber).trim().length >= 5;
-    }
     return (
       String(form.recipientName).trim().length >= 2 &&
       String(form.recipientAddress).trim().length >= 4 &&
       looksLikeZimbabweNumber(form.recipientPhone)
     );
-  }, [form.meterNumber, form.recipientAddress, form.recipientName, form.recipientPhone, form.transferType]);
+  }, [form.recipientAddress, form.recipientName, form.recipientPhone, form.transferType]);
 
   const canContinuePayout = useMemo(() => {
     if (form.transferType === "airtime_topup") {
       return looksLikeZimbabweNumber(form.recipientPhone) && amount > 0 && fxRate > 0;
-    }
-    if (form.transferType === "prepaid_electricity") {
-      return Boolean(String(form.utilityBillerId).trim()) && amount > 0 && fxRate > 0;
     }
 
     if (form.recipientType === "mobile_money") {
@@ -1705,7 +1529,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       );
     }
     return false;
-  }, [amount, form]);
+  }, [amount, fxRate, form]);
 
   const buildRemittancePayload = () => ({
     recipientName: form.recipientName,
@@ -1758,13 +1582,12 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     try {
       if (
         form.transferType !== "send_money" &&
-        form.transferType !== "airtime_topup" &&
-        form.transferType !== "prepaid_electricity"
+        form.transferType !== "airtime_topup"
       ) {
         throw new Error(
           tr(
             "payments.form.transfer.required_hint",
-            "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue."
+            "Select Send Money or Airtime Top-up to continue."
           )
         );
       }
@@ -1865,20 +1688,13 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       const isAuthenticated = await ensureAuthenticated();
       if (!isAuthenticated) return;
 
-      if (form.transferType === "prepaid_electricity") {
-        setForm((prev) => ({
-          ...prev,
-          recipientName: prev.utilityCustomerName || prev.recipientName,
-        }));
-      } else {
-        const normalizedPhone = normalizeZimbabweNumber(form.recipientPhone);
-        setForm((prev) => ({
-          ...prev,
-          recipientPhone: normalizedPhone,
-          mobileNumber: prev.mobileNumber || normalizedPhone,
-          cashPickupLocation: prev.cashPickupLocation || `${prev.recipientCity} ${prev.recipientAddress}`.trim(),
-        }));
-      }
+      const normalizedPhone = normalizeZimbabweNumber(form.recipientPhone);
+      setForm((prev) => ({
+        ...prev,
+        recipientPhone: normalizedPhone,
+        mobileNumber: prev.mobileNumber || normalizedPhone,
+        cashPickupLocation: prev.cashPickupLocation || `${prev.recipientCity} ${prev.recipientAddress}`.trim(),
+      }));
       setStep("payout");
     } catch (err) {
       setError(extractErrorMessage(err, tr("payments.form.errors.unable_verify_session", "Unable to verify your session.")));
@@ -1922,20 +1738,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           providerResponse: (response.data as JsonRecord | undefined)?.providerResponse ?? null,
           submittedAt: new Date().toISOString(),
         };
-      } else if (form.transferType === "prepaid_electricity") {
-        const response = await api.post("/fintech/utility/electricity/pay", {
-          meterNumber: String(form.meterNumber).trim(),
-          amount: parseAmountInput(form.amountSent) ?? 0,
-          currency: displaySendCurrency,
-          customerName: String(form.utilityCustomerName).trim() || undefined,
-          billerId: Number(form.utilityBillerId),
-        });
-        nextStatus = {
-          kind: "utility",
-          transaction: (response.data as JsonRecord | undefined)?.transaction ?? null,
-          providerResponse: (response.data as JsonRecord | undefined)?.providerResponse ?? null,
-          submittedAt: new Date().toISOString(),
-        };
       } else {
         const response = await api.post("/fintech/remittance/send", buildRemittancePayload());
         nextStatus = {
@@ -1964,12 +1766,10 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
       const payoutLabel =
         form.transferType === "airtime_topup"
           ? tr("payments.form.transfer_types.airtime_topup.label", "Airtime Top-up")
-          : form.transferType === "prepaid_electricity"
-            ? tr("payments.form.transfer_types.prepaid_electricity.label", "Prepaid Electricity")
-            : tr(
-                PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelKey || "payments.form.payout_types.mobile_money",
-                PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelFallback || form.recipientType
-              ) || form.recipientType;
+          : tr(
+              PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelKey || "payments.form.payout_types.mobile_money",
+              PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelFallback || form.recipientType
+            ) || form.recipientType;
       const transaction = receiptStatus.transaction || {};
       const ref =
         transaction.provider_reference ||
@@ -1977,28 +1777,17 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
         receiptStatus.providerResponse?.transfer?.reference ||
         tr("payments.form.status.pending_title", "Pending");
       const transactionKindValue =
-        receiptStatus.kind === "utility"
-          ? tr("payments.form.transfer_types.prepaid_electricity.label", "Prepaid Electricity")
-          : receiptStatus.kind === "airtime"
-            ? tr("payments.form.transfer_types.airtime_topup.label", "Airtime Top-up")
-            : tr("payments.form.transfer_types.send_money.label", "Send Money");
+        receiptStatus.kind === "airtime"
+          ? tr("payments.form.transfer_types.airtime_topup.label", "Airtime Top-up")
+          : tr("payments.form.transfer_types.send_money.label", "Send Money");
       const routeValue = `${selectedSender.name} ${tr("payments.form.quote.to", "to")} ${receiverCountry.name}`;
-      const recipientValue =
-        form.transferType === "prepaid_electricity"
-          ? form.utilityCustomerName || tr("payments.form.utility.meter_holder", "Meter holder")
-          : form.recipientName || tr("payments.form.pay.recipient", "Recipient");
-      const destinationValue =
-        form.transferType === "prepaid_electricity"
-          ? String(form.meterNumber).trim() || "-"
-          : normalizeZimbabweNumber(form.recipientPhone) || "-";
+      const recipientValue = form.recipientName || tr("payments.form.pay.recipient", "Recipient");
+      const destinationValue = normalizeZimbabweNumber(form.recipientPhone) || "-";
       const addressValue =
         form.transferType === "send_money"
           ? `${form.recipientAddress}${form.recipientCity ? `, ${form.recipientCity}` : ""}`.trim() || "-"
           : payoutLabel;
-      const receiveLabel =
-        form.transferType === "prepaid_electricity"
-          ? tr("payments.form.utility.meter_value", "Meter value")
-          : tr("payments.form.fields.they_receive", "They receive");
+      const receiveLabel = tr("payments.form.fields.they_receive", "They receive");
       const sections: ReceiptPdfSection[] = [
         {
           title: tr("payments.form.receipt.transaction_details", "Transaction Details"),
@@ -2012,12 +1801,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           title: tr("payments.form.receipt.recipient_section", "Recipient Details"),
           rows: [
             [tr("payments.form.receipt.recipient", "Recipient"), recipientValue],
-            [
-              form.transferType === "prepaid_electricity"
-                ? tr("payments.form.utility.meter_number", "Meter number")
-                : tr("payments.form.receipt.phone", "Phone"),
-              destinationValue,
-            ],
+            [tr("payments.form.receipt.phone", "Phone"), destinationValue],
             [
               form.transferType === "send_money"
                 ? tr("payments.form.receipt.address", "Address")
@@ -2039,14 +1823,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           ],
         },
       ];
-      if (receiptStatus.transaction?.token_code) {
-        sections.push({
-          title: tr("payments.form.utility.token_title", "Electricity Token"),
-          accent: true,
-          rows: [[tr("payments.form.utility.token_code", "Token code"), String(receiptStatus.transaction?.token_code)]],
-        });
-      }
-
       const pdfBlob = await createReceiptPdfBlob({
         brandingText: "Diaspora Unlocked",
         title: tr("payments.form.receipt.title", "Payment Receipt"),
@@ -2092,7 +1868,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     setAirtimeOperator(null);
     setAirtimeOptions([]);
     setAirtimeFeeQuote(0);
-    setUtilityBillers([]);
     setReloadlyPricing(null);
     setAmountMode("send");
     setForm((prev) => ({
@@ -2122,9 +1897,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
     if (payoutType === "airtime_topup") {
       return tr("payments.form.eta.airtime", "Usually within minutes.");
     }
-    if (payoutType === "prepaid_electricity") {
-      return tr("payments.form.eta.prepaid_electricity", "Usually within minutes after provider confirmation.");
-    }
     if (payoutType === "mobile_money") {
       return tr("payments.form.eta.mobile_money", "Usually within minutes to 2 hours.");
     }
@@ -2142,11 +1914,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
 
   const currentStepIndex = FLOW_STEPS.findIndex((item) => item.id === step);
   const payoutEta = getLocalizedReflectWindow(
-    form.transferType === "airtime_topup"
-      ? "airtime_topup"
-      : form.transferType === "prepaid_electricity"
-        ? "prepaid_electricity"
-        : form.recipientType
+    form.transferType === "airtime_topup" ? "airtime_topup" : form.recipientType
   );
   const routeSummary = showRouteSummary ? (
     <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -2281,7 +2049,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/70">
                 {tr(
                   "payments.form.fields.transfer_type",
-                  "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue."
+                  "Select Send Money or Airtime Top-up to continue."
                 )}
               </label>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -2314,8 +2082,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
           </div>
 
           {(form.transferType === "send_money" ||
-            form.transferType === "airtime_topup" ||
-            form.transferType === "prepaid_electricity") && (
+            form.transferType === "airtime_topup") && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
@@ -2419,14 +2186,14 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                   </label>
                   <input
                     className={fieldClass}
-                    placeholder="+2637XXXXXXXX"
+                    placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                     value={form.recipientPhone}
                     onChange={(e) => update("recipientPhone", e.target.value)}
                   />
                 </div>
               </div>
             </>
-          ) : form.transferType === "airtime_topup" ? (
+          ) : (
             <div>
               <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
                 {tr("payments.form.recipient.airtime_number", "Airtime number")}
@@ -2434,7 +2201,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               <div className="relative">
                 <input
                   className={`${fieldClass} ${airtimeLookupLoading ? "pr-10" : ""}`}
-                  placeholder="+2637XXXXXXXX"
+                  placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                   value={form.recipientPhone}
                   onChange={(e) => update("recipientPhone", e.target.value)}
                 />
@@ -2447,38 +2214,17 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               {airtimeLookupLoading && (
                 <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-white/50">
                   <Loader2 className="h-3 w-3 animate-spin" />
-                  Detecting operator...
+                  {tr("payments.form.airtime.detecting_operator", "Detecting operator...")}
                 </p>
               )}
               {!airtimeLookupLoading && airtimeOperator && (
                 <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-400">
                   <CheckCircle2 className="h-3 w-3" />
-                  {String(airtimeOperator?.name ?? "Operator")} detected
+                  {tr("payments.form.airtime.operator_detected", "{{operator}} detected", {
+                    operator: String(airtimeOperator?.name ?? tr("payments.form.airtime.operator", "Operator")),
+                  })}
                 </p>
               )}
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.utility.meter_number", "Meter number")}
-                </label>
-                <input
-                  className={fieldClass}
-                  value={form.meterNumber}
-                  onChange={(e) => update("meterNumber", e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.utility.customer_name", "Customer name")}
-                </label>
-                <input
-                  className={fieldClass}
-                  value={form.utilityCustomerName}
-                  onChange={(e) => update("utilityCustomerName", e.target.value)}
-                />
-              </div>
             </div>
           )}
 
@@ -2542,7 +2288,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </label>
               <input
                 className={fieldClass}
-                placeholder="+2637XXXXXXXX"
+                placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                 value={form.mobileNumber}
                 onChange={(e) => update("mobileNumber", e.target.value)}
               />
@@ -2556,7 +2302,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </label>
               <input
                 className={fieldClass}
-                placeholder="+2637XXXXXXXX"
+                placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                 value={form.mobileNumber}
                 onChange={(e) => update("mobileNumber", e.target.value)}
               />
@@ -2585,7 +2331,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 </label>
                 <input
                   className={fieldClass}
-                  placeholder="Account number"
+                  placeholder={tr("payments.form.payout.account_number_placeholder", "Account number")}
                   value={form.bankAccountNumber}
                   onChange={(e) => update("bankAccountNumber", e.target.value)}
                 />
@@ -2670,44 +2416,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             </div>
           )}
 
-          {form.transferType === "prepaid_electricity" && (
-            <div className="space-y-3">
-              <div>
-                <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/70">
-                  {tr("payments.form.utility.provider", "Electricity provider")}
-                </label>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {utilityBillers.length > 0 ? (
-                    utilityBillers.map((biller) => {
-                      const billerId = String(biller?.id ?? "").trim();
-                      const selected = form.utilityBillerId === billerId;
-                      return (
-                        <button
-                          key={billerId || String(biller?.name ?? "utility-biller")}
-                          type="button"
-                          onClick={() => update("utilityBillerId", billerId)}
-                          className={`rounded-xl border px-3 py-3 text-left transition-colors ${
-                            selected
-                              ? "border-zim-gold/50 bg-zim-gold/15 text-zim-gold"
-                              : "border-white/10 bg-white/[0.03] text-white/70 hover:bg-white/[0.05]"
-                          }`}
-                        >
-                          <div className="text-xs font-bold uppercase tracking-wider">
-                            {String(biller?.name ?? tr("payments.form.utility.default_biller", "Electricity Provider"))}
-                          </div>
-                        </button>
-                      );
-                    })
-                  ) : (
-                    <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-3 text-sm text-white/70">
-                      {tr("payments.form.utility.loading_billers", "Loading electricity providers...")}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
           <div className="grid grid-cols-2 gap-3">
             <button
               className={pillSecondaryClass}
@@ -2742,21 +2450,12 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </p>
               <p>
                 {tr("payments.form.pay.recipient", "Recipient")}:{" "}
-                <span className="font-semibold text-white">
-                  {form.transferType === "prepaid_electricity"
-                    ? form.utilityCustomerName || tr("payments.form.utility.meter_holder", "Meter holder")
-                    : form.recipientName}
-                </span>
+                <span className="font-semibold text-white">{form.recipientName}</span>
               </p>
               <p>
-                {form.transferType === "prepaid_electricity"
-                  ? tr("payments.form.utility.meter_number", "Meter number")
-                  : tr("payments.form.pay.phone", "Phone")}
-                :{" "}
+                {tr("payments.form.pay.phone", "Phone")}:{" "}
                 <span className="font-semibold text-white">
-                  {form.transferType === "prepaid_electricity"
-                    ? form.meterNumber
-                    : normalizeZimbabweNumber(form.recipientPhone)}
+                  {normalizeZimbabweNumber(form.recipientPhone)}
                 </span>
               </p>
               <p>
@@ -2764,8 +2463,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 <span className="font-semibold text-white">
                   {form.transferType === "airtime_topup"
                     ? tr("payments.form.transfer_types.airtime_topup.label", "Airtime Top-up")
-                    : form.transferType === "prepaid_electricity"
-                      ? tr("payments.form.transfer_types.prepaid_electricity.label", "Prepaid Electricity")
                     : tr(
                         PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelKey || "payments.form.payout_types.mobile_money",
                         PAYOUT_TYPES.find((item) => item.value === form.recipientType)?.labelFallback || form.recipientType
@@ -2790,15 +2487,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                   {formatAmount(displayedReceiveAmount, displayReceiveCurrency)}
                 </span>
               </p>
-              {form.transferType === "prepaid_electricity" ? (
-                <p>
-                  {tr("payments.form.utility.provider", "Electricity provider")}:{" "}
-                  <span className="font-semibold text-white">
-                    {utilityBillers.find((biller) => String(biller?.id ?? "").trim() === form.utilityBillerId)?.name ||
-                      tr("payments.form.utility.default_biller", "Electricity Provider")}
-                  </span>
-                </p>
-              ) : null}
             </div>
           </div>
 
@@ -2850,11 +2538,6 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 status.transaction?.reloadly_reference ||
                 tr("payments.form.status.pending_title", "Pending")}
             </p>
-            {status.transaction?.token_code ? (
-              <p>
-                {tr("payments.form.utility.token_code", "Token code")}: {status.transaction.token_code}
-              </p>
-            ) : null}
             <p>
               {tr("payments.form.fields.you_send", "You send")}: {formatAmount(amount, displaySendCurrency)}
             </p>
@@ -2894,7 +2577,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             type="button"
             onClick={() => setError("")}
             className="shrink-0 text-rose-400/60 hover:text-rose-300 transition-colors"
-            aria-label="Dismiss error"
+            aria-label={tr("payments.form.dismiss_error", "Dismiss error")}
           >
             ✕
           </button>

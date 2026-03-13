@@ -3,6 +3,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -175,6 +176,7 @@ function CarouselPrevious({
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const { t } = useTranslation();
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
@@ -194,7 +196,9 @@ function CarouselPrevious({
       {...props}
     >
       <ArrowLeft />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">
+        {t("carousel.previous_slide", { defaultValue: "Previous slide" })}
+      </span>
     </Button>
   );
 }
@@ -205,6 +209,7 @@ function CarouselNext({
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const { t } = useTranslation();
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
@@ -224,7 +229,9 @@ function CarouselNext({
       {...props}
     >
       <ArrowRight />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">
+        {t("carousel.next_slide", { defaultValue: "Next slide" })}
+      </span>
     </Button>
   );
 }

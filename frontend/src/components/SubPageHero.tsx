@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, ChevronRight, LucideIcon } from 'lucide-react';
 import InstantImage, { preloadImages } from '@/components/InstantImage';
+import { useTranslation } from "react-i18next";
 
 interface HeroButton {
   text: string;
@@ -33,6 +34,7 @@ interface SubPageHeroProps {
 const SLIDE_INTERVAL_MS = 5000;
 
 export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPageHeroProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -232,7 +234,7 @@ export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPage
             {/* Prev / Next arrows */}
             <button
               type="button"
-              aria-label="Previous slide"
+              aria-label={t("carousel.previous_slide", { defaultValue: "Previous slide" })}
               onClick={() => { resetInterval(); goPrev(); }}
               className="absolute left-3 top-1/2 -translate-y-1/2 z-30 h-8 w-8 rounded-full bg-black/30 border border-white/20 text-white/80 hover:bg-black/50 hover:text-white transition-all flex items-center justify-center backdrop-blur-sm"
             >
@@ -240,7 +242,7 @@ export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPage
             </button>
             <button
               type="button"
-              aria-label="Next slide"
+              aria-label={t("carousel.next_slide", { defaultValue: "Next slide" })}
               onClick={() => { resetInterval(); goNext(); }}
               className="absolute right-3 top-1/2 -translate-y-1/2 z-30 h-8 w-8 rounded-full bg-black/30 border border-white/20 text-white/80 hover:bg-black/50 hover:text-white transition-all flex items-center justify-center backdrop-blur-sm"
             >
@@ -253,7 +255,7 @@ export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPage
                 <button
                   key={i}
                   type="button"
-                  aria-label={`Go to slide ${i + 1}`}
+                  aria-label={t("carousel.go_to_slide", { index: i + 1, defaultValue: "Go to slide {{index}}" })}
                   onClick={() => { resetInterval(); goTo(i); }}
                   className={`rounded-full transition-all duration-300 ${
                     i === currentIndex

@@ -12,17 +12,6 @@ const AirtimeTopupSchema = z.object({
 
 export type AirtimeTopupRequest = z.infer<typeof AirtimeTopupSchema>;
 
-const ElectricityPaymentSchema = z.object({
-  meterNumber: z.string().min(5).max(40),
-  amount: z.number().positive(),
-  currency: z.string().min(3).max(10).optional(),
-  customerName: z.string().min(2).max(255).optional(),
-  billerId: z.number().int().positive().optional(),
-  idempotencyKey: z.string().uuid().optional(),
-});
-
-export type ElectricityPaymentRequest = z.infer<typeof ElectricityPaymentSchema>;
-
 const FX_RATE_PREVIEW_AMOUNT = 100;
 
 function toFiniteNumber(input: unknown): number | null {
@@ -73,18 +62,6 @@ export class ReloadlyService {
       phoneNumber: sanitizeText((sanitized as any)?.phoneNumber, 20),
       amount: Number((sanitized as any)?.amount),
       currency: sanitizeText((sanitized as any)?.currency ?? "USD", 10).toUpperCase(),
-      idempotencyKey: sanitizeText((sanitized as any)?.idempotencyKey ?? "", 64) || undefined,
-    });
-  }
-
-  private normalizeElectricityPayload(input: unknown): ElectricityPaymentRequest {
-    const sanitized = sanitizeObject((input ?? {}) as Record<string, unknown>);
-    return ElectricityPaymentSchema.parse({
-      meterNumber: sanitizeText((sanitized as any)?.meterNumber, 40),
-      amount: Number((sanitized as any)?.amount),
-      currency: sanitizeText((sanitized as any)?.currency ?? "USD", 10).toUpperCase(),
-      customerName: sanitizeText((sanitized as any)?.customerName ?? "", 255) || undefined,
-      billerId: (sanitized as any)?.billerId ? Number((sanitized as any)?.billerId) : undefined,
       idempotencyKey: sanitizeText((sanitized as any)?.idempotencyKey ?? "", 64) || undefined,
     });
   }
@@ -203,55 +180,4 @@ export class ReloadlyService {
     };
   }
 
-  async fetchElectricityBillers(countryISOCode = "ZW"): Promise<any> {
-    await this.provider.getAccessToken();
-    const normalizedCountryCode = sanitizeText(countryISOCode, 3).toUpperCase() || "ZW";
-    const billers = await this.provider.listUtilityBillers({
-      countryISOCode: normalizedCountryCode,
-      serviceType: "PREPAID",
-      type: "ELECTRICITY_BILL_PAYMENT",
-    });
-
-    return {
-      billers,
-    };
-  }
-
-  async createElectricityPayment(input: unknown): Promise<{
-    request: ElectricityPaymentRequest;
-    biller: any;
-    payment: any;
-    reference: string;
-  }> {
-    const request = this.normalizeElectricityPayload(input);
-    const available = await this.fetchElectricityBillers("ZW");
-    const billers = Array.isArray(available?.billers) ? available.billers : [];
-    const selectedBiller =
-      billers.find((biller: any) => Number(biller?.id) === Number(request.billerId)) ??
-      billers[0] ??
-      null;
-
-    if (!selectedBiller) {
-      throw new Error("No prepaid electricity biller is available right now.");
-    }
-
-    const reference = request.idempotencyKey ?? crypto.randomUUID();
-    const payment = await this.provider.payUtility({
-      amount: request.amount,
-      billerId: Number(selectedBiller.id),
-      subscriberAccountNumber: request.meterNumber,
-      referenceId: reference,
-      useLocalAmount: false,
-    });
-
-    return {
-      request: {
-        ...request,
-        billerId: Number(selectedBiller.id),
-      },
-      biller: selectedBiller,
-      payment,
-      reference,
-    };
-  }
 }

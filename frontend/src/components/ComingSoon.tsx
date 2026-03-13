@@ -16,6 +16,8 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
   const { t } = useTranslation();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const tr = (key: string, fallback: string, options?: Record<string, unknown>) =>
+    t(key, { defaultValue: fallback, ...options });
 
   const handleNotifyMe = async () => {
     try {
@@ -23,11 +25,15 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
       await api.get("/auth/me");
       const { data } = await api.post("/notifications/features", { feature: featureName });
       setIsSubscribed(true);
-      toast.success(t("common.notify_success") || "Notify request saved", {
+      toast.success(tr("coming_soon.toast_success_title", "Notify request saved"), {
         description:
           data?.created === false
-            ? `You are already on the notify list for ${featureName}.`
-            : `You will be notified when ${featureName} is ready.`,
+            ? tr("coming_soon.toast_already_on_list", "You are already on the notify list for {{feature}}.", {
+                feature: featureName,
+              })
+            : tr("coming_soon.toast_ready", "You will be notified when {{feature}} is ready.", {
+                feature: featureName,
+              }),
       });
     } catch (error: any) {
       const status = Number(error?.response?.status ?? 0);
@@ -36,8 +42,11 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
         window.location.href = `/login?next=${encodeURIComponent(nextPath)}`;
         return;
       }
-      toast.error("Unable to save notify request", {
-        description: String(error?.response?.data?.message ?? "Please try again."),
+      toast.error(tr("coming_soon.toast_error_title", "Unable to save notify request"), {
+        description: String(
+          error?.response?.data?.message ??
+            tr("coming_soon.toast_error_description", "Please try again.")
+        ),
       });
     } finally {
       setIsLoading(false);
@@ -69,13 +78,18 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
 
             <div className="space-y-2">
               <h2 className="text-3xl font-black text-white tracking-tighter uppercase leading-none">{featureName}</h2>
-              <span className="text-[10px] font-black text-zim-gold uppercase tracking-[0.3em]">Coming Soon</span>
+              <span className="text-[10px] font-black text-zim-gold uppercase tracking-[0.3em]">
+                {tr("coming_soon.badge", "Coming Soon")}
+              </span>
             </div>
 
             <p className="text-sm  font-light leading-relaxed">
               {isSubscribed
-                ? "Notify request saved. We will alert you via your account email."
-                : "Get notified as soon as this feature is available."}
+                ? tr(
+                    "coming_soon.description_saved",
+                    "Notify request saved. We will alert you via your account email."
+                  )
+                : tr("coming_soon.description_prompt", "Get notified as soon as this feature is available.")}
             </p>
 
             <div className="pt-4">
@@ -85,11 +99,13 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
                   disabled={isLoading}
                   className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full"
                 >
-                  {isLoading ? "Processing..." : "Notify me"}
+                  {isLoading
+                    ? tr("coming_soon.processing", "Processing...")
+                    : tr("coming_soon.notify_me", "Notify me")}
                 </Button>
               ) : (
                 <div className="h-14 rounded-full border border-zim-gold/30 bg-zim-gold/5 flex items-center justify-center text-zim-gold font-black text-[11px] uppercase tracking-[0.2em]">
-                  <Sparkles className="h-4 w-4 mr-2" /> Notified
+                  <Sparkles className="h-4 w-4 mr-2" /> {tr("coming_soon.notified", "Notified")}
                 </div>
               )}
             </div>

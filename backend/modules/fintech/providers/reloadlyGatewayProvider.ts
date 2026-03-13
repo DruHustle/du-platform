@@ -44,21 +44,11 @@ export type ReloadlyTopupRequest = {
   customIdentifier: string;
 };
 
-export type ReloadlyUtilityPaymentRequest = {
-  amount: number;
-  billerId: number;
-  subscriberAccountNumber: string;
-  referenceId: string;
-  useLocalAmount?: boolean;
-};
-
 export class ReloadlyProvider implements FinancialProvider {
   readonly providerName = "reloadly";
   private readonly apiClient: AxiosInstance;
-  private readonly utilitiesClient: AxiosInstance;
   private readonly authClient: AxiosInstance;
   private readonly topupsAudience: string;
-  private readonly utilitiesAudience: string;
 
   constructor() {
     // Validate credentials at construction time in non-mock mode so misconfiguration
@@ -68,17 +58,8 @@ export class ReloadlyProvider implements FinancialProvider {
     }
 
     const baseURL = String(process.env.RELOADLY_BASE_URL ?? "https://topups-sandbox.reloadly.com").replace(/\/+$/, "");
-    const utilitiesBaseURL = String(process.env.RELOADLY_UTILITIES_BASE_URL ?? "https://utilities-sandbox.reloadly.com").replace(
-      /\/+$/,
-      ""
-    );
     const authURL = String(process.env.RELOADLY_AUTH_URL ?? "https://auth.reloadly.com").replace(/\/+$/, "");
     this.topupsAudience = resolveReloadlyAudience(process.env.RELOADLY_AUDIENCE, baseURL, "https://topups.reloadly.com");
-    this.utilitiesAudience = resolveReloadlyAudience(
-      process.env.RELOADLY_UTILITIES_AUDIENCE,
-      utilitiesBaseURL,
-      "https://utilities.reloadly.com"
-    );
 
     this.apiClient = axios.create({
       baseURL,
@@ -86,14 +67,6 @@ export class ReloadlyProvider implements FinancialProvider {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/com.reloadly.topups-v1+json",
-      },
-    });
-
-    this.utilitiesClient = axios.create({
-      baseURL: utilitiesBaseURL,
-      timeout: 20_000,
-      headers: {
-        "Content-Type": "application/json",
       },
     });
 
@@ -130,36 +103,10 @@ export class ReloadlyProvider implements FinancialProvider {
         return Promise.reject(error);
       }
     );
-
-    this.utilitiesClient.interceptors.request.use(async (config) => {
-      const token = await this.getAccessToken(this.utilitiesAudience);
-      (config as any).metadata = { startedAt: Date.now() };
-      config.headers = config.headers ?? {};
-      (config.headers as any).Authorization = `Bearer ${token}`;
-      logger.info("reloadly_utilities_request", { method: String(config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(`${config.baseURL}${config.url}`) });
-      return config;
-    });
-
-    this.utilitiesClient.interceptors.response.use(
-      (response) => {
-        const startedAt = Number((response.config as any)?.metadata?.startedAt ?? Date.now());
-        const latencyMs = Date.now() - startedAt;
-        logger.info("reloadly_utilities_response", { method: String(response.config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(String(response.config.url ?? "")), status: response.status, latencyMs });
-        return response;
-      },
-      (error) => {
-        const method = String(error?.config?.method ?? "GET").toUpperCase();
-        const url = sanitizeUrlForLog(String(error?.config?.url ?? ""));
-        const status = Number(error?.response?.status ?? 0);
-        const detail = String(error?.response?.data?.message ?? error?.message ?? "Reloadly utility request failed");
-        logger.error("reloadly_utilities_error", { method, url, status: status || "NO_STATUS", detail });
-        return Promise.reject(error);
-      }
-    );
   }
 
   supports(feature: FinancialFeature): boolean {
-    return feature === "airtime" || feature === "utility";
+    return feature === "airtime";
   }
 
   private isMockMode(): boolean {
@@ -347,63 +294,4 @@ export class ReloadlyProvider implements FinancialProvider {
     return response.data;
   }
 
-  async listUtilityBillers(filters: { countryISOCode?: string; serviceType?: string; type?: string }): Promise<any[]> {
-    if (this.isMockMode()) {
-      return [
-        {
-          id: 1001,
-          name: "ZETDC Prepaid Electricity",
-          countryISOCode: filters.countryISOCode ?? "ZW",
-          type: filters.type ?? "ELECTRICITY_BILL_PAYMENT",
-          serviceType: filters.serviceType ?? "PREPAID",
-          internationalAmountSupported: true,
-          // No internationalTransactionCurrencyCode — sender currency resolves
-          // from form.currencyFrom (e.g. EUR) in buildReloadlyUtilityPricing.
-          internationalTransactionFee: 0.5,
-          fx: {
-            rate: 1.12,      // approximate EUR → USD rate
-            currencyCode: "USD", // ZETDC issues USD-denominated electricity tokens
-          },
-          localTransactionCurrencyCode: "USD",
-        },
-      ];
-    }
-
-    const response = await this.utilitiesClient.get("/billers", {
-      params: {
-        countryISOCode: filters.countryISOCode,
-        serviceType: filters.serviceType,
-        type: filters.type,
-      },
-    });
-
-    const payload = response.data;
-    if (Array.isArray(payload)) return payload;
-    if (Array.isArray(payload?.content)) return payload.content;
-    if (Array.isArray(payload?.billers)) return payload.billers;
-    return [];
-  }
-
-  async payUtility(payload: ReloadlyUtilityPaymentRequest): Promise<any> {
-    if (this.isMockMode()) {
-      return {
-        transactionId: `UT-${payload.referenceId.slice(0, 8)}`,
-        status: "COMPLETED",
-        amount: payload.amount,
-        billerId: payload.billerId,
-        subscriberAccountNumber: payload.subscriberAccountNumber,
-        token: "1234-5678-9012",
-        referenceId: payload.referenceId,
-      };
-    }
-
-    const response = await this.utilitiesClient.post("/pay", {
-      amount: payload.amount,
-      billerId: payload.billerId,
-      subscriberAccountNumber: payload.subscriberAccountNumber,
-      referenceId: payload.referenceId,
-      useLocalAmount: payload.useLocalAmount ?? false,
-    });
-    return response.data;
-  }
 }

@@ -33,8 +33,7 @@ export default function Investment() {
       titleHighlight: t('investment.hero.highlight1') || "National Growth",
       subtitle: t('investment.hero.subtitle1') || "Supporting national development through diaspora engagement.",
       buttons: [
-        { text: t('investment.hero.rbz_policy') || "Explore policies", variant: "primary", link: "/regulations#investment-compliance" },
-        { text: t('investment.hero.rbz_currency') || "Choose USD or ZiG Investment Paths", variant: "outline", link: "/regulations#currency-settlement" }
+        { text: t('investment.hero.rbz_policy') || "Explore policies", variant: "primary", link: "/regulations#investment-compliance" }
       ]
     },
     {
@@ -416,10 +415,6 @@ const projects = [
   ];
 
   const filtered = projects.filter(p => (activeFilter === "all" || p.sector === activeFilter) && (riskFilter === "all" || p.risk === riskFilter));
-  const hdcAssocRaw = t('investment.hdc_associations', { returnObjects: true });
-  const hdcAssoc = Array.isArray(hdcAssocRaw) && hdcAssocRaw.length > 0
-    ? (hdcAssocRaw as string[])
-    : ["Horticultural Development Council", "ZimTrade", "ZIMRA", "Export Growers", "Cold Chain Partners"];
   const collectiveModelSteps = [
     t("investment.collective_model.s1") || "Create an investor profile and complete verification checks.",
     t("investment.collective_model.s2") || "Join vetted opportunities with clear minimum-ticket participation.",
@@ -958,7 +953,7 @@ const projects = [
              <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
+            <div className="relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
               <div className="flex items-center gap-4 mb-5">
                 <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
@@ -977,31 +972,6 @@ const projects = [
               </Button>
             </div>
 
-            <div className="outer-glass-panel relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-green/5 blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-4 mb-5">
-                <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
-                  <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🌱</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.hdc_title') || "Horticultural Development Council"}</h3>
-                  <p className="text-xs  font-black uppercase tracking-[0.2em]">
-                    {t("investment.hdc_label") || "Horticulture Council"}
-                  </p>
-                </div>
-              </div>
-              <p className=" text-sm font-light leading-relaxed mb-4">{t('investment.hdc_subtitle') || "Overseeing quality and standards for horticultural exports."}</p>
-              <div className="flex flex-wrap gap-2">
-                {hdcAssoc.slice(0, 5).map((a, i) => (
-                  <Badge key={i} className="bg-white/5  border border-white/10 text-[9px] font-bold uppercase px-3 py-1 rounded-full">
-                    {a}
-                  </Badge>
-                ))}
-                {hdcAssoc.length > 5 && (
-                  <Badge className="bg-white/5  border border-white/10 text-[9px] font-bold px-3 py-1 rounded-full">+{hdcAssoc.length - 5} more</Badge>
-                )}
-              </div>
-            </div>
           </div>
           </div>
         </div>

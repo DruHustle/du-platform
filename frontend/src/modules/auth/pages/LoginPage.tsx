@@ -69,7 +69,7 @@ export default function Login() {
             <button
               onClick={() => setLocation(nextPath)}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
-              aria-label="Cancel login"
+              aria-label={t("auth.cancel_login", { defaultValue: "Cancel login" })}
             >
               <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
             </button>
