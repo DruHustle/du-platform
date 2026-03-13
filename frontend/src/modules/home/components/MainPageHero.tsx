@@ -30,13 +30,13 @@ export default function MainPageHero({ hero }: MainPageProps) {
       
       {/* SECTION 1: CINEMATIC HERO */}
       <section className="relative h-screen min-h-[var(--mobile-full-viewport)] md:min-h-[700px] w-full flex items-center justify-center overflow-hidden bg-slate-950">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="sync">
           <motion.div
             key={hero.currentBgIndex}
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(8px)" }}
-            transition={prefersReducedMotion ? { duration: 0.15 } : { opacity: { duration: 0.9 }, scale: { duration: 10, ease: "linear" } }}
+            transition={prefersReducedMotion ? { duration: 0.15 } : { opacity: { duration: 0.9 } }}
             className="absolute inset-0 z-0"
           >
             <InstantImage
@@ -95,9 +95,9 @@ export default function MainPageHero({ hero }: MainPageProps) {
 
           {/* Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
             className="text-[12vw] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] xl:text-[26rem] font-black text-white leading-[0.75] text-center uppercase tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
           >
             {t('home.hero_title')}
@@ -107,7 +107,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.8 }}
+            transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}
             className="mt-15 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
           >
             {t('home.hero_subtitle')}.
