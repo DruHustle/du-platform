@@ -2140,8 +2140,8 @@
         "detecting_operator": "Detecting operator...",
         "no_options": "Hapasati pave nemari inokurudzirwa.",
         "operator": "Operator",
-        "operator_detected": "{{operator}} detected",
-        "options": "Kuwedzera-up mari sarudzo"
+        "options": "Kuwedzera-up mari sarudzo",
+        "detected": "detected"
       },
       "errors": {
         "amount_limit": "Mari inodarika muganhu unobvumirwa we5000.",

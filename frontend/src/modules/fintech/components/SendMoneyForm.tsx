@@ -2220,9 +2220,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               {!airtimeLookupLoading && airtimeOperator && (
                 <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-400">
                   <CheckCircle2 className="h-3 w-3" />
-                  {tr("payments.form.airtime.operator_detected", "{{operator}} detected", {
-                    operator: String(airtimeOperator?.name ?? tr("payments.form.airtime.operator", "Operator")),
-                  })}
+                  {`${String(airtimeOperator?.name ?? tr("payments.form.airtime.operator", "Operator"))} ${tr("payments.form.airtime.detected", "detected")}`}
                 </p>
               )}
             </div>

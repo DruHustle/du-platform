@@ -2140,8 +2140,8 @@
         "detecting_operator": "Detecting operator...",
         "no_options": "Noch keine empfohlenen Beträge.",
         "operator": "Operator",
-        "operator_detected": "{{operator}} detected",
-        "options": "Optionen für den Aufladebetrag"
+        "options": "Optionen für den Aufladebetrag",
+        "detected": "detected"
       },
       "errors": {
         "amount_limit": "Der Betrag überschreitet den zulässigen Grenzwert von 5.000.",
