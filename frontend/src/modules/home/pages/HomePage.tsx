@@ -86,7 +86,7 @@ export default function Home() {
       title: tr("home.tiles.remittances.title", "Remittances"),
       description: tr("home.tiles.remittances.description", "Send money, pay essential support costs, or top up airtime with secure provider-backed flows and clear fee visibility built for diaspora households."),
       detail: tr("home.tiles.remittances.detail", "Track value clearly before you send and keep everyday family support fast, predictable, and simple."),
-      href: "/payments",
+      href: "/remittances",
       bgImage: "/images/pages/payments/mobile-payment-terminal.jpg",
       stats: tr("home.tiles.remittances.stats", "Remittance + Airtime"),
       icon: ArrowRightLeft,

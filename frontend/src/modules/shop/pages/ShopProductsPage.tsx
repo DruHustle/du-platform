@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle, Mail } from "lucide-react";
+import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle, Mail, Package, CheckCircle2, Clock } from "lucide-react";
+import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -458,6 +459,7 @@ export default function ShopProducts() {
   const [notifyDialogProduct, setNotifyDialogProduct] = useState<ShopProduct | null>(null);
   const [notifyEmailInput, setNotifyEmailInput] = useState("");
   const [notifyEmailError, setNotifyEmailError] = useState("");
+  const [mobileView, setMobileView] = useState<"products" | "checkout">("products");
   const supportsDummyGateway = import.meta.env.DEV || import.meta.env.MODE === "test";
 
   useEffect(() => {
@@ -600,6 +602,7 @@ export default function ShopProducts() {
   const deliverySurchargeCents = subtotalCents > 0 && deliverySpeed === "express" ? 800 : 0;
   const shippingCents = baseShippingCents + deliverySurchargeCents;
   const totalCents = subtotalCents + shippingCents;
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const whatsappNumber = normalizeWhatsAppPhone(String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? ""));
   const isAuthenticated = Boolean(authUser);
   const profileName = String(authUser?.fullName ?? "").trim();
@@ -672,6 +675,7 @@ export default function ShopProducts() {
 
   const addToCartAndGoToCart = (product: ShopProduct) => {
     addToCart(product);
+    toast.success(`${product.name} added to cart`, { duration: 2000 });
 
     if (typeof window === "undefined") return;
 
@@ -681,10 +685,15 @@ export default function ShopProducts() {
   };
 
   const updateQty = (productId: number, qty: number) => {
-    setCart((prev) => {
-      if (qty <= 0) return prev.filter((item) => item.productId !== productId);
-      return prev.map((item) => (item.productId === productId ? { ...item, quantity: qty } : item));
-    });
+    if (qty <= 0) {
+      const removedProduct = productsById.get(productId);
+      setCart((prev) => prev.filter((item) => item.productId !== productId));
+      if (removedProduct) {
+        toast(`${removedProduct.name} removed from cart`, { duration: 2000 });
+      }
+      return;
+    }
+    setCart((prev) => prev.map((item) => (item.productId === productId ? { ...item, quantity: qty } : item)));
   };
 
   const openNotifyDialog = (product: ShopProduct) => {
@@ -724,6 +733,7 @@ export default function ShopProducts() {
       setCustomerEmail(email);
       setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "saved" }));
       setNotifyDialogProduct(null);
+      toast.success("Notification saved", { description: `We'll email you when ${notifyDialogProduct.name} is back in stock.`, duration: 4000 });
     } catch (error: any) {
       setNotifyEmailError(
         String(
@@ -796,7 +806,7 @@ export default function ShopProducts() {
 
   return (
     <Layout>
-      <section className="pt-28 pb-10 bg-slate-950 min-h-screen">
+      <section className="pt-28 pb-24 lg:pb-10 bg-slate-950 min-h-screen">
         <div className="container px-6 mx-auto">
           <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden lg:overflow-visible border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]">
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
@@ -816,7 +826,7 @@ export default function ShopProducts() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div className="lg:col-span-8 space-y-6">
+                <div className={`lg:col-span-8 space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}>
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="hidden sm:flex flex-wrap gap-2">
                       {[
@@ -870,16 +880,52 @@ export default function ShopProducts() {
                   </div>
 
                   {loading ? (
-                    <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 flex items-center gap-3 text-white/80">
-                      <Loader2 className="h-4 w-4 animate-spin" /> {t("shop.products.loading") || "Loading products..."}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] animate-pulse">
+                          <div className="h-48 bg-white/[0.05]" />
+                          <div className="p-6 space-y-3">
+                            <div className="h-4 bg-white/[0.05] rounded-full w-3/4" />
+                            <div className="h-3 bg-white/[0.05] rounded-full w-full" />
+                            <div className="h-3 bg-white/[0.05] rounded-full w-2/3" />
+                            <div className="flex justify-between items-center mt-4">
+                              <div className="h-5 bg-white/[0.05] rounded-full w-20" />
+                              <div className="h-10 w-10 bg-white/[0.05] rounded-full" />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {products.length === 0 ? (
-                        <div className="md:col-span-2 rounded-[2rem] border border-white/10 bg-white/[0.02] p-8">
-                          <p className="text-white/70 text-sm">
-                            {t("shop.products.empty_state") || "No products available in this category yet."}
-                          </p>
+                        <div className="md:col-span-2 rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 text-center space-y-4">
+                          <div className="w-16 h-16 mx-auto rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center">
+                            <Package className="h-7 w-7 text-white/25" />
+                          </div>
+                          <div>
+                            <p className="text-white font-bold text-sm">
+                              {t("shop.products.empty_state") || "No products found"}
+                            </p>
+                            <p className="text-white/45 text-xs mt-1">
+                              {category !== "all" || segment
+                                ? "Try adjusting your filters to find what you're looking for."
+                                : "No products available in this category yet."}
+                            </p>
+                          </div>
+                          {(category !== "all" || segment) && (
+                            <Button
+                              type="button"
+                              onClick={() => {
+                                setCategory("all");
+                                setSegment("");
+                                setLocation("/shop/products?category=all");
+                              }}
+                              className="rounded-full px-5 py-2 h-auto bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black font-black text-[10px] uppercase tracking-[0.2em] transition-all"
+                            >
+                              Clear Filters
+                            </Button>
+                          )}
                         </div>
                       ) : null}
                       {products.map((product) => (
@@ -956,8 +1002,16 @@ export default function ShopProducts() {
                 <div
                   ref={cartSectionRef}
                   id="shop-cart-checkout"
-                  className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start lg:h-fit scroll-mt-28"
+                  className={`lg:col-span-4 lg:sticky lg:top-24 lg:self-start lg:h-fit scroll-mt-28${mobileView === "products" ? " hidden lg:block" : ""}`}
                 >
+                  <button
+                    type="button"
+                    onClick={() => setMobileView("products")}
+                    className="lg:hidden mb-3 flex items-center gap-1.5 text-xs text-white/70 hover:text-white transition-colors"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    {t("shop.products.actions.back_to_products") || "Back to Products"}
+                  </button>
                   <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-3.5 md:p-4">
                     <div className="flex items-center gap-1.5 mb-2">
                       <ShoppingCart className="h-3.5 w-3.5 text-zim-gold" />
@@ -1171,11 +1225,13 @@ export default function ShopProducts() {
                             type="button"
                             onClick={placeOrder}
                             disabled={placingOrder}
-                            className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.14em]"
+                            className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.14em] disabled:opacity-70"
                           >
-                            {placingOrder
-                              ? t("shop.products.actions.creating_order") || "Creating Order..."
-                              : t("shop.products.actions.place_order") || "Place Order"}
+                            {placingOrder ? (
+                              <><Loader2 className="mr-1.5 h-3 w-3 animate-spin" />{t("shop.products.actions.creating_order") || "Placing Order..."}</>
+                            ) : (
+                              t("shop.products.actions.place_order") || "Place Order"
+                            )}
                           </Button>
                           <Button
                             asChild
@@ -1217,6 +1273,26 @@ export default function ShopProducts() {
                                 "Your order request is saved. Complete the assisted checkout by contacting us on WhatsApp or waiting for the follow-up email/invoice."}
                             </p>
                           )}
+                          {/* What happens next */}
+                          <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2">
+                            <p className="text-[9px] font-black uppercase tracking-[0.14em] text-white/40 flex items-center gap-1.5">
+                              <Clock className="h-3 w-3" /> What happens next
+                            </p>
+                            <div className="space-y-2">
+                              {[
+                                "You'll receive an order confirmation via email.",
+                                "Our team will review and contact you via WhatsApp or email.",
+                                "Once payment is confirmed, we'll arrange delivery to your address.",
+                              ].map((text, i) => (
+                                <div key={i} className="flex items-start gap-2">
+                                  <span className="shrink-0 h-4 w-4 rounded-full bg-zim-gold/15 border border-zim-gold/30 text-zim-gold text-[9px] font-black flex items-center justify-center mt-0.5">
+                                    {i + 1}
+                                  </span>
+                                  <p className="text-[10px] text-white/55 leading-relaxed">{text}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       )}
 
@@ -1306,6 +1382,27 @@ export default function ShopProducts() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {mobileView === "products" && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+          <div className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />
+              <span className="text-xs text-white/80 truncate">
+                {cartItemCount > 0
+                  ? `${cartItemCount} item${cartItemCount !== 1 ? "s" : ""} · ${formatMoney(totalCents)}`
+                  : t("shop.products.cart.empty_short") || "Your cart is empty"}
+              </span>
+            </div>
+            <Button
+              type="button"
+              onClick={() => setMobileView("checkout")}
+              className="shrink-0 rounded-full px-5 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[10px] uppercase tracking-[0.14em]"
+            >
+              {t("shop.products.actions.checkout") || "Checkout"}
+            </Button>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
