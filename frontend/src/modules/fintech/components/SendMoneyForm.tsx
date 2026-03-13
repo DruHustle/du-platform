@@ -2419,7 +2419,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                   </label>
                   <input
                     className={fieldClass}
-                    placeholder="+2637XXXXXXXX"
+                    placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                     value={form.recipientPhone}
                     onChange={(e) => update("recipientPhone", e.target.value)}
                   />
@@ -2434,7 +2434,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               <div className="relative">
                 <input
                   className={`${fieldClass} ${airtimeLookupLoading ? "pr-10" : ""}`}
-                  placeholder="+2637XXXXXXXX"
+                  placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                   value={form.recipientPhone}
                   onChange={(e) => update("recipientPhone", e.target.value)}
                 />
@@ -2447,13 +2447,15 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               {airtimeLookupLoading && (
                 <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-white/50">
                   <Loader2 className="h-3 w-3 animate-spin" />
-                  Detecting operator...
+                  {tr("payments.form.airtime.detecting_operator", "Detecting operator...")}
                 </p>
               )}
               {!airtimeLookupLoading && airtimeOperator && (
                 <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-400">
                   <CheckCircle2 className="h-3 w-3" />
-                  {String(airtimeOperator?.name ?? "Operator")} detected
+                  {tr("payments.form.airtime.operator_detected", "{{operator}} detected", {
+                    operator: String(airtimeOperator?.name ?? tr("payments.form.airtime.operator", "Operator")),
+                  })}
                 </p>
               )}
             </div>
@@ -2542,7 +2544,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </label>
               <input
                 className={fieldClass}
-                placeholder="+2637XXXXXXXX"
+                placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                 value={form.mobileNumber}
                 onChange={(e) => update("mobileNumber", e.target.value)}
               />
@@ -2556,7 +2558,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
               </label>
               <input
                 className={fieldClass}
-                placeholder="+2637XXXXXXXX"
+                placeholder={tr("payments.form.recipient.phone_placeholder", "+2637XXXXXXXX")}
                 value={form.mobileNumber}
                 onChange={(e) => update("mobileNumber", e.target.value)}
               />
@@ -2585,7 +2587,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
                 </label>
                 <input
                   className={fieldClass}
-                  placeholder="Account number"
+                  placeholder={tr("payments.form.payout.account_number_placeholder", "Account number")}
                   value={form.bankAccountNumber}
                   onChange={(e) => update("bankAccountNumber", e.target.value)}
                 />
@@ -2894,7 +2896,7 @@ export default function SendMoneyForm({ forcedTransferType = null }: SendMoneyFo
             type="button"
             onClick={() => setError("")}
             className="shrink-0 text-rose-400/60 hover:text-rose-300 transition-colors"
-            aria-label="Dismiss error"
+            aria-label={tr("payments.form.dismiss_error", "Dismiss error")}
           >
             ✕
           </button>

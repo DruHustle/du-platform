@@ -63,7 +63,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
             <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
             <InstantImage
               src="/images/brand/diaspora_unlocked.png"
-              alt="Diaspora Unlocked"
+              alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
               priority
               wrapperClassName="relative overflow-visible bg-transparent"
               placeholderClassName="bg-transparent animate-none"
@@ -82,12 +82,12 @@ export default function MainPageHero({ hero }: MainPageProps) {
           >
             <div className="relative inline-flex h-20 w-20 items-center justify-center md:h-28 md:w-28">
               <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
-              <InstantImage
-                src="/images/brand/diaspora_unlocked.png"
-                alt="Diaspora Unlocked"
-                priority
-                wrapperClassName="relative overflow-visible bg-transparent"
-                placeholderClassName="bg-transparent animate-none"
+            <InstantImage
+              src="/images/brand/diaspora_unlocked.png"
+              alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
+              priority
+              wrapperClassName="relative overflow-visible bg-transparent"
+              placeholderClassName="bg-transparent animate-none"
                 className="relative md:h-24 md:scale-[1.05] object-contain drop-shadow-2xl"
               />
             </div>

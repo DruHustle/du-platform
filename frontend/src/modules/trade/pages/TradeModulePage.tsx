@@ -406,7 +406,7 @@ export default function Trade() {
 
                     <div className="md:col-span-3 flex flex-col bg-white/[0.02] p-6 rounded-3xl border border-white/5 shadow-inner">
                       <span className="text-[10px] font-black text-zim-gold uppercase tracking-[0.2em] block mb-4">
-                        Buyer Channels
+                        {t("trade.buyer_channels", { defaultValue: "Buyer Channels" })}
                       </span>
                       <div className="flex flex-col gap-3 flex-grow">
                         {item.buyers.map((buyer) => (
@@ -417,7 +417,9 @@ export default function Trade() {
                         ))}
                       </div>
                       <Button asChild className="w-full mt-6 h-10 bg-white/5 hover:bg-zim-gold border border-white/10 hover:border-zim-gold text-white hover:text-zim-black text-[9px] font-black uppercase tracking-widest transition-all duration-500 rounded-xl">
-                        <Link href="/regulations#export-certification-and-labeling">Contact Verified Buyers</Link>
+                        <Link href="/regulations#export-certification-and-labeling">
+                          {t("trade.contact_verified_buyers", { defaultValue: "Contact Verified Buyers" })}
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -511,7 +513,12 @@ export default function Trade() {
                         <div className="p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-zim-gold/10 transition-colors">
                           <Icon className="h-5 w-5 text-zim-gold" />
                         </div>
-                        <span className="text-[10px] font-black text-white/70 uppercase tracking-widest italic">Phase 0{index + 1}</span>
+                        <span className="text-[10px] font-black text-white/70 uppercase tracking-widest italic">
+                          {t("trade.export_roadmap.phase_label", {
+                            phase: index + 1,
+                            defaultValue: "Phase 0{{phase}}",
+                          })}
+                        </span>
                       </div>
 
                       <h3 className="text-lg font-black text-white tracking-tight mb-3 group-hover:text-zim-gold transition-colors">{step.phase}</h3>
@@ -542,10 +549,14 @@ export default function Trade() {
             <div className="mb-8 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <FileCheck className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">Export Documentation and Compliance</h3>
+                <h3 className="text-xl font-black text-white tracking-tight">
+                  {t("trade.export_documentation_title", { defaultValue: "Export Documentation and Compliance" })}
+                </h3>
               </div>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
-                Core controls previously shown on Exports are now consolidated in Trade.
+                {t("trade.export_documentation_subtitle", {
+                  defaultValue: "Core controls previously shown on Exports are now consolidated in Trade.",
+                })}
               </p>
             </div>
 
@@ -575,7 +586,9 @@ export default function Trade() {
             <div className="mb-8 text-center">
               <div className="flex items-center justify-center gap-3 mb-5">
                 <CheckCircle2 className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">Critical Export Checklist</h3>
+                <h3 className="text-xl font-black text-white tracking-tight">
+                  {t("trade.export_checklist_title", { defaultValue: "Critical Export Checklist" })}
+                </h3>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -587,7 +600,9 @@ export default function Trade() {
             </div>
             <div className="mt-8 text-center">
               <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                <Link href="/regulations#export-controls">Open Full Compliance Guide</Link>
+                <Link href="/regulations#export-controls">
+                  {t("trade.export_checklist_cta", { defaultValue: "Open Full Compliance Guide" })}
+                </Link>
               </Button>
             </div>
           </div>

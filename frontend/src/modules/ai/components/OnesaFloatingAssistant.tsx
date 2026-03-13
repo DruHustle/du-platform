@@ -582,13 +582,15 @@ export default function OnesaFloatingAssistant() {
             <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-zim-gold/40">
               <img
                 src="/images/pages/technology/zim_think.jpg"
-                alt="Onesa AI assistant"
+                alt={t("onesa.assistant_alt", { defaultValue: "Onesa AI assistant" })}
                 className="h-full w-full object-cover"
               />
               <span className="absolute inset-0 bg-gradient-to-t from-slate-950/30 to-transparent" />
             </span>
             <span className="text-left leading-tight">
-              <span className="block text-[9px] font-black uppercase tracking-widest text-zim-gold">Onesa</span>
+              <span className="block text-[9px] font-black uppercase tracking-widest text-zim-gold">
+                {t("onesa.brand", { defaultValue: "Onesa" })}
+              </span>
               <span className="block text-[11px] font-semibold text-white">
                 {t("tech.chat_with_onesa") || "Chat with Onesa"}
               </span>
@@ -621,10 +623,12 @@ export default function OnesaFloatingAssistant() {
                   : "bottom-24 right-5 h-[min(72vh,640px)] w-[min(440px,calc(100vw-2rem))] rounded-[1.8rem] md:right-10"
               }`}
             >
-              <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold">Onesa</p>
+                <div className="flex h-full flex-col">
+                  <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                    <div className="min-w-0">
+                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold">
+                      {t("onesa.brand", { defaultValue: "Onesa" })}
+                    </p>
                     <h2 className="truncate !text-sm font-black text-white">
                       {t("onesa.title", { defaultValue: "Chat with Onesa AI" })}
                     </h2>

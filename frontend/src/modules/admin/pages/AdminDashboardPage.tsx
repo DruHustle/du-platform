@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 type NotifyRow = {
   id: number;
@@ -54,6 +55,9 @@ type ShopProductRow = {
 type TabKey = "notify" | "ntir" | "stories" | "shop";
 
 export default function AdminDashboard() {
+  const { t } = useTranslation();
+  const tr = (key: string, fallback: string, options?: Record<string, unknown>) =>
+    t(key, { defaultValue: fallback, ...options });
   const [activeTab, setActiveTab] = useState<TabKey>("notify");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -96,12 +100,17 @@ export default function AdminDashboard() {
 
   const tabs = useMemo(
     () => [
-      { key: "notify" as const, label: "Notify Me", count: notifyRows.length, newCount: newNotifyCount },
-      { key: "ntir" as const, label: "NTIR", count: ntirRows.length },
-      { key: "stories" as const, label: "Impact", count: storyRows.length },
-      { key: "shop" as const, label: "Shop Products", count: shopRows.length },
+      {
+        key: "notify" as const,
+        label: tr("admin.tabs.notify", "Notify Me"),
+        count: notifyRows.length,
+        newCount: newNotifyCount,
+      },
+      { key: "ntir" as const, label: tr("admin.tabs.ntir", "NTIR"), count: ntirRows.length },
+      { key: "stories" as const, label: tr("admin.tabs.stories", "Impact"), count: storyRows.length },
+      { key: "shop" as const, label: tr("admin.tabs.shop", "Shop Products"), count: shopRows.length },
     ],
-    [newNotifyCount, notifyRows.length, ntirRows.length, storyRows.length, shopRows.length]
+    [newNotifyCount, notifyRows.length, ntirRows.length, storyRows.length, shopRows.length, t]
   );
 
   const loadAdminData = async ({ silent = false, detectNewNotify = false }: { silent?: boolean; detectNewNotify?: boolean } = {}) => {
@@ -118,7 +127,9 @@ export default function AdminDashboard() {
         if (freshCount > 0) {
           setNewNotifyCount((prev) => prev + freshCount);
           toast.success(
-            freshCount === 1 ? "1 new notify request received." : `${freshCount} new notify requests received.`
+            freshCount === 1
+              ? tr("admin.notify.new_received_single", "1 new notify request received.")
+              : tr("admin.notify.new_received_multi", "{{count}} new notify requests received.", { count: freshCount })
           );
         }
         notifyIdsRef.current = new Set(nextNotifyRows.map((row) => Number(row.id)));
@@ -149,7 +160,7 @@ export default function AdminDashboard() {
         window.location.href = `/login?next=${encodeURIComponent("/admin")}`;
         return;
       }
-      setError(getApiErrorMessage(err, "Unable to load admin data."));
+      setError(getApiErrorMessage(err, tr("admin.errors.load", "Unable to load admin data.")));
     } finally {
       if (!silent) setLoading(false);
     }
@@ -188,7 +199,7 @@ export default function AdminDashboard() {
       resetShopForm();
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to save shop product."));
+      setError(getApiErrorMessage(err, tr("admin.errors.save_shop", "Unable to save shop product.")));
     }
   };
 
@@ -215,7 +226,7 @@ export default function AdminDashboard() {
       if (editingShopId === id) resetShopForm();
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to delete shop product."));
+      setError(getApiErrorMessage(err, tr("admin.errors.delete_shop", "Unable to delete shop product.")));
     }
   };
 
@@ -238,7 +249,7 @@ export default function AdminDashboard() {
       setNtirForm({ name: "", sector: "", location: "", verification_status: "Pending" });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to create NTIR entity."));
+      setError(getApiErrorMessage(err, tr("admin.errors.create_ntir", "Unable to create NTIR entity.")));
     }
   };
 
@@ -249,7 +260,7 @@ export default function AdminDashboard() {
       await api.put(`/admin/ntir/${row.id}`, { verification_status: nextStatus });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to update NTIR entity."));
+      setError(getApiErrorMessage(err, tr("admin.errors.update_ntir", "Unable to update NTIR entity.")));
     }
   };
 
@@ -273,7 +284,7 @@ export default function AdminDashboard() {
       });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to create impact story."));
+      setError(getApiErrorMessage(err, tr("admin.errors.create_story", "Unable to create impact story.")));
     }
   };
 
@@ -283,9 +294,13 @@ export default function AdminDashboard() {
       const nextDisplay = row.is_published === 1 ? 0 : 1;
       await api.put(`/admin/impact/${row.id}`, { is_published: nextDisplay });
       await loadAdminData({ silent: true });
-      toast.success(nextDisplay === 1 ? "Story set to Display." : "Story set to Don't display.");
+      toast.success(
+        nextDisplay === 1
+          ? tr("admin.stories.toast_display", "Story set to Display.")
+          : tr("admin.stories.toast_hide", "Story set to Don't display.")
+      );
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to update story visibility."));
+      setError(getApiErrorMessage(err, tr("admin.errors.update_story", "Unable to update story visibility.")));
     }
   };
 
@@ -298,10 +313,10 @@ export default function AdminDashboard() {
         from_email: String(notificationSettingsForm.from_email ?? "").trim(),
       };
       await api.put("/admin/notification-settings", payload);
-      toast.success("Notification email settings saved.");
+      toast.success(tr("admin.notify.settings_saved", "Notification email settings saved."));
       await loadAdminData({ silent: true });
     } catch (err: any) {
-      setError(getApiErrorMessage(err, "Unable to save notification settings."));
+      setError(getApiErrorMessage(err, tr("admin.errors.save_notification_settings", "Unable to save notification settings.")));
     }
   };
 
@@ -309,7 +324,9 @@ export default function AdminDashboard() {
     const value = String(feature ?? "");
     if (value.startsWith("shop_restock_")) {
       const slug = value.slice("shop_restock_".length).replaceAll("_", " ").trim();
-      return slug ? `Shop restock: ${slug}` : "Shop restock request";
+      return slug
+        ? tr("admin.notify.feature_restock", "Shop restock: {{slug}}", { slug })
+        : tr("admin.notify.feature_restock_fallback", "Shop restock request");
     }
     return value;
   };
@@ -319,8 +336,15 @@ export default function AdminDashboard() {
       <section className="min-h-screen bg-slate-950 px-6 py-28">
         <div className="container mx-auto max-w-6xl space-y-8">
           <div className="text-white">
-            <h1 className="text-4xl font-black tracking-tighter">Admin Dashboard</h1>
-            <p className="text-white/75 mt-2">Manage notifications, visibility (display / don't display), and pricing.</p>
+            <h1 className="text-4xl font-black tracking-tighter">
+              {tr("admin.title", "Admin Dashboard")}
+            </h1>
+            <p className="text-white/75 mt-2">
+              {tr(
+                "admin.subtitle",
+                "Manage notifications, visibility (display / don't display), and pricing."
+              )}
+            </p>
           </div>
 
           {error ? <p className="text-red-400">{error}</p> : null}
@@ -342,7 +366,9 @@ export default function AdminDashboard() {
               >
                 {tab.label} <Badge className="ml-2 bg-white/20 text-white border-transparent">{tab.count}</Badge>
                 {"newCount" in tab && tab.newCount ? (
-                  <Badge className="ml-2 bg-zim-gold text-zim-black border-transparent">{tab.newCount} new</Badge>
+                  <Badge className="ml-2 bg-zim-gold text-zim-black border-transparent">
+                    {tab.newCount} {tr("admin.badges.new", "new")}
+                  </Badge>
                 ) : null}
               </Button>
             ))}
@@ -351,12 +377,14 @@ export default function AdminDashboard() {
           {newNotifyCount > 0 && activeTab !== "notify" ? (
             <div className="rounded-xl border border-zim-gold/30 bg-zim-gold/10 p-4 text-sm text-zim-gold">
               {newNotifyCount === 1
-                ? "1 new notify request in Admin > Notify Me."
-                : `${newNotifyCount} new notify requests in Admin > Notify Me.`}
+                ? tr("admin.notify.new_request_single", "1 new notify request in Admin > Notify Me.")
+                : tr("admin.notify.new_request_multi", "{{count}} new notify requests in Admin > Notify Me.", {
+                    count: newNotifyCount,
+                  })}
             </div>
           ) : null}
 
-          {loading ? <p className="text-white/75">Loading...</p> : null}
+          {loading ? <p className="text-white/75">{t("common.loading", { defaultValue: "Loading..." })}</p> : null}
 
           {!loading && activeTab === "notify" ? (
             <div className="grid gap-4">
@@ -364,9 +392,14 @@ export default function AdminDashboard() {
                 onSubmit={saveNotificationSettings}
                 className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 space-y-3"
               >
-                <p className="text-white font-black">Notification Email Settings</p>
+                <p className="text-white font-black">
+                  {tr("admin.notify.settings_title", "Notification Email Settings")}
+                </p>
                 <p className="text-white/70 text-sm">
-                  Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.
+                  {tr(
+                    "admin.notify.settings_description",
+                    "Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications."
+                  )}
                 </p>
                 <div className="grid md:grid-cols-2 gap-3">
                   <Input
@@ -374,7 +407,7 @@ export default function AdminDashboard() {
                     onChange={(e) =>
                       setNotificationSettingsForm((prev) => ({ ...prev, alert_emails: e.target.value }))
                     }
-                    placeholder="Alert emails (comma-separated)"
+                    placeholder={tr("admin.notify.alert_emails_placeholder", "Alert emails (comma-separated)")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
@@ -382,7 +415,7 @@ export default function AdminDashboard() {
                     onChange={(e) =>
                       setNotificationSettingsForm((prev) => ({ ...prev, from_email: e.target.value }))
                     }
-                    placeholder="From email"
+                    placeholder={tr("admin.notify.from_email_placeholder", "From email")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
@@ -390,7 +423,7 @@ export default function AdminDashboard() {
                   type="submit"
                   className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest"
                 >
-                  Save Email Settings
+                  {tr("admin.notify.save_settings", "Save Email Settings")}
                 </Button>
               </form>
 
@@ -405,7 +438,9 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               ))}
-              {notifyRows.length === 0 ? <p className="text-white/70">No notify requests yet.</p> : null}
+              {notifyRows.length === 0 ? (
+                <p className="text-white/70">{tr("admin.notify.empty", "No notify requests yet.")}</p>
+              ) : null}
             </div>
           ) : null}
 
@@ -415,23 +450,23 @@ export default function AdminDashboard() {
                 <Input
                   value={ntirForm.name}
                   onChange={(e) => setNtirForm((prev) => ({ ...prev, name: e.target.value }))}
-                  placeholder="Entity name"
+                  placeholder={tr("admin.ntir.entity_placeholder", "Entity name")}
                   className="bg-white/[0.05] border-white/20 text-white"
                 />
                 <Input
                   value={ntirForm.sector}
                   onChange={(e) => setNtirForm((prev) => ({ ...prev, sector: e.target.value }))}
-                  placeholder="Sector"
+                  placeholder={tr("admin.ntir.sector_placeholder", "Sector")}
                   className="bg-white/[0.05] border-white/20 text-white"
                 />
                 <Input
                   value={ntirForm.location}
                   onChange={(e) => setNtirForm((prev) => ({ ...prev, location: e.target.value }))}
-                  placeholder="Location"
+                  placeholder={tr("admin.ntir.location_placeholder", "Location")}
                   className="bg-white/[0.05] border-white/20 text-white"
                 />
                 <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
-                  Add NTIR Row
+                  {tr("admin.ntir.add_row", "Add NTIR Row")}
                 </Button>
               </form>
 
@@ -450,7 +485,9 @@ export default function AdminDashboard() {
                         variant="outline"
                         className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
                       >
-                        {row.verification_status}
+                        {row.verification_status === "Verified"
+                          ? t("common.verified", { defaultValue: "Verified" })
+                          : t("common.pending", { defaultValue: "Pending" })}
                       </Button>
                     </div>
                   </div>
@@ -466,19 +503,19 @@ export default function AdminDashboard() {
                   <Input
                     value={storyForm.title}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, title: e.target.value }))}
-                    placeholder="Title"
+                    placeholder={tr("admin.stories.title_placeholder", "Title")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.category}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, category: e.target.value }))}
-                    placeholder="Category"
+                    placeholder={tr("admin.stories.category_placeholder", "Category")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.image}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, image: e.target.value }))}
-                    placeholder="Image path or URL"
+                    placeholder={tr("admin.stories.image_placeholder", "Image path or URL")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
@@ -486,19 +523,19 @@ export default function AdminDashboard() {
                   <Input
                     value={storyForm.author}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, author: e.target.value }))}
-                    placeholder="Author"
+                    placeholder={tr("admin.stories.author_placeholder", "Author")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.role}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, role: e.target.value }))}
-                    placeholder="Role"
+                    placeholder={tr("admin.stories.role_placeholder", "Role")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.revenue}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, revenue: e.target.value }))}
-                    placeholder="Revenue (e.g. $2.5M)"
+                    placeholder={tr("admin.stories.revenue_placeholder", "Revenue (e.g. $2.5M)")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
@@ -506,26 +543,26 @@ export default function AdminDashboard() {
                   <Input
                     value={storyForm.jobs}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, jobs: e.target.value }))}
-                    placeholder="Jobs (e.g. 150+)"
+                    placeholder={tr("admin.stories.jobs_placeholder", "Jobs (e.g. 150+)")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.markets}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, markets: e.target.value }))}
-                    placeholder="Markets (e.g. EU, UK)"
+                    placeholder={tr("admin.stories.markets_placeholder", "Markets (e.g. EU, UK)")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
                 <Textarea
                   value={storyForm.story}
                   onChange={(e) => setStoryForm((prev) => ({ ...prev, story: e.target.value }))}
-                  placeholder="Story content"
+                  placeholder={tr("admin.stories.story_placeholder", "Story content")}
                   className="min-h-[120px] bg-white/[0.05] border-white/20 text-white"
                 />
                 <Textarea
                   value={storyForm.testimonial}
                   onChange={(e) => setStoryForm((prev) => ({ ...prev, testimonial: e.target.value }))}
-                  placeholder="Testimonial"
+                  placeholder={tr("admin.stories.testimonial_placeholder", "Testimonial")}
                   className="min-h-[90px] bg-white/[0.05] border-white/20 text-white"
                 />
                 <label className="text-white/80 text-sm flex items-center gap-2">
@@ -534,10 +571,10 @@ export default function AdminDashboard() {
                     checked={storyForm.is_published}
                     onChange={(e) => setStoryForm((prev) => ({ ...prev, is_published: e.target.checked }))}
                   />
-                  Display on impact page
+                  {tr("admin.stories.display_label", "Display on impact page")}
                 </label>
                 <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
-                  Add Impact Story
+                  {tr("admin.stories.add_story", "Add Impact Story")}
                 </Button>
               </form>
 
@@ -552,7 +589,9 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                       <Badge className={story.is_published ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
-                        {story.is_published ? "Display" : "Don't display"}
+                        {story.is_published
+                          ? tr("admin.stories.badge_display", "Display")
+                          : tr("admin.stories.badge_hide", "Don't display")}
                       </Badge>
                       <Button
                         type="button"
@@ -560,7 +599,9 @@ export default function AdminDashboard() {
                         onClick={() => toggleStoryDisplay(story)}
                         className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
                       >
-                        {story.is_published ? "Set Don't display" : "Set Display"}
+                        {story.is_published
+                          ? tr("admin.stories.set_hide", "Set Don't display")
+                          : tr("admin.stories.set_display", "Set Display")}
                       </Button>
                     </div>
                   </div>
@@ -573,28 +614,72 @@ export default function AdminDashboard() {
             <div className="space-y-6">
               <form onSubmit={submitShopProduct} className="space-y-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
                 <div className="grid md:grid-cols-3 gap-3">
-                  <Input value={shopForm.slug} onChange={(e) => setShopForm((p) => ({ ...p, slug: e.target.value }))} placeholder="Slug" className="bg-white/[0.05] border-white/20 text-white" />
-                  <Input value={shopForm.name} onChange={(e) => setShopForm((p) => ({ ...p, name: e.target.value }))} placeholder="Product name" className="bg-white/[0.05] border-white/20 text-white" />
-                  <Input value={shopForm.image_url} onChange={(e) => setShopForm((p) => ({ ...p, image_url: e.target.value }))} placeholder="Image URL or path" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input
+                    value={shopForm.slug}
+                    onChange={(e) => setShopForm((p) => ({ ...p, slug: e.target.value }))}
+                    placeholder={tr("admin.shop.slug_placeholder", "Slug")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                  <Input
+                    value={shopForm.name}
+                    onChange={(e) => setShopForm((p) => ({ ...p, name: e.target.value }))}
+                    placeholder={tr("admin.shop.name_placeholder", "Product name")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                  <Input
+                    value={shopForm.image_url}
+                    onChange={(e) => setShopForm((p) => ({ ...p, image_url: e.target.value }))}
+                    placeholder={tr("admin.shop.image_placeholder", "Image URL or path")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
                 </div>
                 <div className="grid md:grid-cols-4 gap-3">
-                  <Input value={shopForm.category} onChange={(e) => setShopForm((p) => ({ ...p, category: e.target.value as "sports" | "crafts" | "food" }))} placeholder="Category: sports/crafts/food" className="bg-white/[0.05] border-white/20 text-white" />
-                  <Input value={shopForm.price_cents} onChange={(e) => setShopForm((p) => ({ ...p, price_cents: e.target.value }))} placeholder="Price cents (e.g. 4999)" className="bg-white/[0.05] border-white/20 text-white" />
-                  <Input value={shopForm.stock_qty} onChange={(e) => setShopForm((p) => ({ ...p, stock_qty: e.target.value }))} placeholder="Stock qty" className="bg-white/[0.05] border-white/20 text-white" />
-                  <Input value={shopForm.currency} onChange={(e) => setShopForm((p) => ({ ...p, currency: e.target.value }))} placeholder="Currency" className="bg-white/[0.05] border-white/20 text-white" />
+                  <Input
+                    value={shopForm.category}
+                    onChange={(e) =>
+                      setShopForm((p) => ({ ...p, category: e.target.value as "sports" | "crafts" | "food" }))
+                    }
+                    placeholder={tr("admin.shop.category_placeholder", "Category: sports/crafts/food")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                  <Input
+                    value={shopForm.price_cents}
+                    onChange={(e) => setShopForm((p) => ({ ...p, price_cents: e.target.value }))}
+                    placeholder={tr("admin.shop.price_placeholder", "Price cents (e.g. 4999)")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                  <Input
+                    value={shopForm.stock_qty}
+                    onChange={(e) => setShopForm((p) => ({ ...p, stock_qty: e.target.value }))}
+                    placeholder={tr("admin.shop.stock_placeholder", "Stock qty")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
+                  <Input
+                    value={shopForm.currency}
+                    onChange={(e) => setShopForm((p) => ({ ...p, currency: e.target.value }))}
+                    placeholder={tr("admin.shop.currency_placeholder", "Currency")}
+                    className="bg-white/[0.05] border-white/20 text-white"
+                  />
                 </div>
-                <Textarea value={shopForm.description} onChange={(e) => setShopForm((p) => ({ ...p, description: e.target.value }))} placeholder="Description" className="min-h-[90px] bg-white/[0.05] border-white/20 text-white" />
+                <Textarea
+                  value={shopForm.description}
+                  onChange={(e) => setShopForm((p) => ({ ...p, description: e.target.value }))}
+                  placeholder={tr("admin.shop.description_placeholder", "Description")}
+                  className="min-h-[90px] bg-white/[0.05] border-white/20 text-white"
+                />
                 <div className="flex items-center gap-4">
                   <label className="text-white/80 text-sm flex items-center gap-2">
                     <input type="checkbox" checked={shopForm.is_active} onChange={(e) => setShopForm((p) => ({ ...p, is_active: e.target.checked }))} />
-                    Display product
+                    {tr("admin.shop.display_label", "Display product")}
                   </label>
                   <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
-                    {editingShopId ? "Update Product" : "Add Product"}
+                    {editingShopId
+                      ? tr("admin.shop.update_product", "Update Product")
+                      : tr("admin.shop.add_product", "Add Product")}
                   </Button>
                   {editingShopId ? (
                     <Button type="button" variant="outline" onClick={resetShopForm} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
-                      Cancel Edit
+                      {tr("admin.shop.cancel_edit", "Cancel Edit")}
                     </Button>
                   ) : null}
                 </div>
@@ -607,24 +692,29 @@ export default function AdminDashboard() {
                       <div>
                         <p className="font-black">{row.name}</p>
                         <p className="text-white/75 text-sm">
-                          {row.category} | {row.slug} | {row.currency} {(Number(row.price_cents) / 100).toFixed(2)} | Stock {row.stock_qty}
+                          {row.category} | {row.slug} | {row.currency} {(Number(row.price_cents) / 100).toFixed(2)} |{" "}
+                          {tr("admin.shop.stock_label", "Stock")} {row.stock_qty}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge className={row.is_active ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
-                          {row.is_active ? "Display" : "Don't display"}
+                          {row.is_active
+                            ? tr("admin.shop.badge_display", "Display")
+                            : tr("admin.shop.badge_hide", "Don't display")}
                         </Badge>
                         <Button type="button" variant="outline" onClick={() => editShopProduct(row)} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
-                          Edit
+                          {tr("admin.shop.edit", "Edit")}
                         </Button>
                         <Button type="button" variant="outline" onClick={() => deleteShopProduct(row.id)} className="border-rose-400/40 bg-rose-500/10 text-rose-200 hover:bg-rose-500 hover:text-white">
-                          Delete
+                          {tr("admin.shop.delete", "Delete")}
                         </Button>
                       </div>
                     </div>
                   </div>
                 ))}
-                {shopRows.length === 0 ? <p className="text-white/70">No shop products yet.</p> : null}
+                {shopRows.length === 0 ? (
+                  <p className="text-white/70">{tr("admin.shop.empty", "No shop products yet.")}</p>
+                ) : null}
               </div>
             </div>
           ) : null}

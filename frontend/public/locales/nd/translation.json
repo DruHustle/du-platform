@@ -80,6 +80,7 @@
     "email": "Ikheli ye-Imeyili",
     "password": "Iphasivadi",
     "confirm_password": "Qinisekisa iphasivadi",
+    "password_minimum": "Minimum 8 characters required.",
     "terms_agreement": "Ngiyavumelana leMithetho yeMisebenzi lePholisi yokuLondolozwa kweDatha mayelana lokuphathwa kwedatha yeGDPR.",
     "have_account": "Usule-akhawunti kakade?",
     "login_here": "Ngena lapha",
@@ -90,6 +91,8 @@
     "no_account": "Haula i-akhawunti?",
     "register_now": "Bhalisa khonamanje",
     "close": "Vala",
+    "cancel_login": "Cancel login",
+    "cancel_registration": "Cancel registration",
     "forgot": {
       "title": "Setha kabusha Iphasiwedi",
       "subtitle": "Faka i-imeyili ye-akhawunti yakho futhi sizokuthumela imiyalelo yokusetha kabusha.",
@@ -704,6 +707,7 @@
         "open_end_date_picker": "Vula ikhalenda yosuku lokubuya",
         "multi_city": "Uhambo lwamadolobha amanengi",
         "multi_city_cities": "Amadolobha (ahlukaniswe ngekoma)",
+        "multi_city_placeholder": "Victoria Falls, Hwange, Bulawayo",
         "multi_city_hint": "Khetha uhambo olunengi ukuze ungeze amanye amadolobha.",
         "decrease_adults": "Nciphisa abantu abadala",
         "decrease_infants": "Nciphisa izinsana",
@@ -926,23 +930,20 @@
         "desc": "Ukuhlola i-risk lolwazi lwendawo."
       }
     },
-    "hdc_title": "Horticultural Development Council (HDC)",
-    "hdc_subtitle": "Ukuhlola iqophelo lamazinga okuthunyelwa kwemikhiqizo ye-horticulture.",
-    "hdc_associations": [
-      "Avocado Growers Association",
-      "Berry Growers Association",
-      "Citrus Growers Association",
-      "Coffee Growers Association",
-      "Nut Growers Association",
-      "Tea Growers Association",
-      "Export Produce Association",
-      "Flower Growers Association"
-    ],
     "database_title": "Ingobo leZisindo zezoHwebo lezokuPhonseka kweSimali",
     "database_subtitle": "Ingobo lezisindo zamankampani ezohwebo lokuphonseka kwesimali aqinisekiswayo eZimbabwe. Ukuqinisekiswa lokhu kwenziwa ngenhlanganiso ezizimeleyo.",
     "ntir_title": "Irejista Kazwelonke Yokuhweba Notshalomali (NTIR)",
     "ntir_subtitle": "Irejista esemthethweni yezinkampani zezohwebo lokutshala imali eziqinisekisiweyo eZimbabwe.",
     "ntir_button": "Dingisisa ku-Database ye-NTIR.",
+    "ntir": {
+      "back": "Back to Investment",
+      "title": "NTIR Database Search",
+      "subtitle": "Search the National Trade & Investment Register for verified entities and fallback exporter records.",
+      "placeholder": "Search by entity, sector, or location",
+      "search": "Search",
+      "empty": "No entities found.",
+      "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
+    },
     "crowdfunding_title": "Amathuba e-Crowdfunding",
     "crowdfunding_subtitle": "Ukutshala imali encane emisebenzini ehloliweyo, ngokungena okucacileyo lokubona umphumela wangempela.",
     "crowdfunding_steps_subtitle": "Ukutshala imali okuncane emisebenzini ehloliweyo ngemali ephansi ube ubona umphumela wangempela.",
@@ -999,7 +1000,6 @@
       "source_eib": "Umthombo: EIB Zimbabwe Essay"
     },
     "ntir_label": "Uhlu Lwemibhalo Kazwelonke",
-    "hdc_label": "UMkhandlu Wezokulima",
     "crowdfunding_steps": {
       "browse": "Phequlula Amaphrojekthi",
       "invest": "Tshala Isabelo Sakho",
@@ -1238,6 +1238,15 @@
     "export_roadmap_badge": "Indlela yokuthumela phandle",
     "export_roadmap_title": "Uhlelo lokuthumela kusuka eZimbabwe kusiya e-Germany",
     "export_roadmap_subtitle": "Isikhokhelo sesinyathelo ngesinyathelo sokuhamba ohambweni lokuthumela phandle.",
+    "buyer_channels": "Buyer Channels",
+    "contact_verified_buyers": "Contact Verified Buyers",
+    "export_roadmap": {
+      "phase_label": "Phase 0{{phase}}"
+    },
+    "export_documentation_title": "Export Documentation and Compliance",
+    "export_documentation_subtitle": "Core controls previously shown on Exports are now consolidated in Trade.",
+    "export_checklist_title": "Critical Export Checklist",
+    "export_checklist_cta": "Open Full Compliance Guide",
     "export_flow": {
       "product_approval": {
         "phase": "Ukuvunyelwa komkhiqizo",
@@ -1360,9 +1369,11 @@
     "view_all": "Buka Konke",
     "back_to_top": "Buyela Phezulu",
     "loading": "Iyalowuda...",
+    "loading_label": "Loading",
     "error": "Kube lephutha",
     "success": "Kuphumelele!",
     "verified": "Iqinisekisiwe",
+    "pending": "Pending",
     "target": "Okudingwayo",
     "raised": "Okuhlanganisiweyo",
     "investors": "Abatshali mali",
@@ -1379,15 +1390,190 @@
     "form_subtitle": "Gcwalisa imininingwane yakho ukuze ujoyine uhlu lokulinda lwe-{{featureName}}",
     "back": "Emuva"
   },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "go_previous": "Go to previous page",
+    "go_next": "Go to next page",
+    "more_pages": "More pages"
+  },
+  "carousel": {
+    "previous_slide": "Previous slide",
+    "next_slide": "Next slide",
+    "go_to_slide": "Go to slide {{index}}"
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "more": "More"
+  },
+  "sidebar": {
+    "title": "Sidebar",
+    "description": "Displays the mobile sidebar.",
+    "toggle": "Toggle Sidebar"
+  },
+  "globe": {
+    "preview_alt": "Globe preview",
+    "preview_mode": "Globe preview mode (WebGL unavailable)",
+    "music_on": "Music: On",
+    "music_off": "Music: Off"
+  },
+  "coming_soon": {
+    "badge": "Coming Soon",
+    "description_saved": "Notify request saved. We will alert you via your account email.",
+    "description_prompt": "Get notified as soon as this feature is available.",
+    "processing": "Processing...",
+    "notify_me": "Notify me",
+    "notified": "Notified",
+    "toast_success_title": "Notify request saved",
+    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
+    "toast_ready": "You will be notified when {{feature}} is ready.",
+    "toast_error_title": "Unable to save notify request",
+    "toast_error_description": "Please try again."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage notifications, visibility (display / don't display), and pricing.",
+    "tabs": {
+      "notify": "Notify Me",
+      "ntir": "NTIR",
+      "stories": "Impact",
+      "shop": "Shop Products"
+    },
+    "badges": {
+      "new": "new"
+    },
+    "notify": {
+      "new_request_single": "1 new notify request in Admin > Notify Me.",
+      "new_request_multi": "{{count}} new notify requests in Admin > Notify Me.",
+      "new_received_single": "1 new notify request received.",
+      "new_received_multi": "{{count}} new notify requests received.",
+      "settings_title": "Notification Email Settings",
+      "settings_description": "Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.",
+      "alert_emails_placeholder": "Alert emails (comma-separated)",
+      "from_email_placeholder": "From email",
+      "save_settings": "Save Email Settings",
+      "settings_saved": "Notification email settings saved.",
+      "feature_restock": "Shop restock: {{slug}}",
+      "feature_restock_fallback": "Shop restock request",
+      "empty": "No notify requests yet."
+    },
+    "errors": {
+      "load": "Unable to load admin data.",
+      "save_shop": "Unable to save shop product.",
+      "delete_shop": "Unable to delete shop product.",
+      "create_ntir": "Unable to create NTIR entity.",
+      "update_ntir": "Unable to update NTIR entity.",
+      "create_story": "Unable to create impact story.",
+      "update_story": "Unable to update story visibility.",
+      "save_notification_settings": "Unable to save notification settings."
+    },
+    "ntir": {
+      "entity_placeholder": "Entity name",
+      "sector_placeholder": "Sector",
+      "location_placeholder": "Location",
+      "add_row": "Add NTIR Row"
+    },
+    "stories": {
+      "title_placeholder": "Title",
+      "category_placeholder": "Category",
+      "image_placeholder": "Image path or URL",
+      "author_placeholder": "Author",
+      "role_placeholder": "Role",
+      "revenue_placeholder": "Revenue (e.g. $2.5M)",
+      "jobs_placeholder": "Jobs (e.g. 150+)",
+      "markets_placeholder": "Markets (e.g. EU, UK)",
+      "story_placeholder": "Story content",
+      "testimonial_placeholder": "Testimonial",
+      "display_label": "Display on impact page",
+      "add_story": "Add Impact Story",
+      "badge_display": "Display",
+      "badge_hide": "Don't display",
+      "set_display": "Set Display",
+      "set_hide": "Set Don't display",
+      "toast_display": "Story set to Display.",
+      "toast_hide": "Story set to Don't display."
+    },
+    "shop": {
+      "slug_placeholder": "Slug",
+      "name_placeholder": "Product name",
+      "image_placeholder": "Image URL or path",
+      "category_placeholder": "Category: sports/crafts/food",
+      "price_placeholder": "Price cents (e.g. 4999)",
+      "stock_placeholder": "Stock qty",
+      "currency_placeholder": "Currency",
+      "description_placeholder": "Description",
+      "display_label": "Display product",
+      "update_product": "Update Product",
+      "add_product": "Add Product",
+      "cancel_edit": "Cancel Edit",
+      "stock_label": "Stock",
+      "badge_display": "Display",
+      "badge_hide": "Don't display",
+      "edit": "Edit",
+      "delete": "Delete",
+      "empty": "No shop products yet."
+    }
+  },
+  "fintech": {
+    "transfer_panel": {
+      "title": "Fintech Module Example",
+      "amount_placeholder": "Amount to send",
+      "loading": "Loading quote...",
+      "fx_fee": "FX: {{fx}} | Fee: {{fee}}"
+    }
+  },
   "contact_form": {
     "get_started": "Thintana lathi",
     "full_name": "Ibizo Lonke",
     "email": "I-Email",
     "phone": "Inombolo yocingo",
+    "module_support": "{{module}} support",
+    "full_name_placeholder": "Full Name",
+    "email_placeholder": "email@example.com",
+    "phone_placeholder": "+ ...",
     "subject": "Isihloko",
     "message": "Umlayezo",
     "message_placeholder": "Bhala umlayezo wakho lapha...",
     "select_subject": "Khetha isihloko",
+    "subject_options": {
+      "general": {
+        "inquiry": "General Inquiry",
+        "feedback": "Platform Feedback",
+        "partnership": "Partnership Inquiry"
+      },
+      "technology": {
+        "ai": "AI Integration",
+        "transformation": "Digital Transformation"
+      },
+      "data": {
+        "analytics": "Analytics Inquiry",
+        "privacy": "Privacy & Governance"
+      },
+      "export": {
+        "market": "German Market Requirements",
+        "certification": "Certification Support",
+        "partners": "Partner Connections"
+      },
+      "tourism": {
+        "visa": "Visa Information",
+        "accommodation": "Accommodation",
+        "homecoming": "Diaspora Homecoming"
+      },
+      "investment": {
+        "opportunities": "Opportunity Details",
+        "ntir": "NTIR Registration",
+        "due_diligence": "Due Diligence"
+      },
+      "trade": {
+        "programs": "Export Programs",
+        "market_access": "Market Access",
+        "regulations": "Trade Regulations"
+      },
+      "success": {
+        "collaboration": "Project Collaboration"
+      }
+    },
     "send": "Thumela umlayezo",
     "sending": "Iyahamba...",
     "success_msg": "Umlayezo uthunyelwe kahle!",
@@ -1719,6 +1905,8 @@
   },
   "onesa": {
     "badge": "Onesa AI umsekeli",
+    "brand": "Onesa",
+    "assistant_alt": "Onesa AI assistant",
     "title": "Xoxa le-Onesa AI",
     "send": "Thumela",
     "thinking": "Iyacabanga...",
@@ -1958,10 +2146,13 @@
         "pay_now": "Khokha Manje",
         "processing": "Iyacubungula"
       },
+      "dismiss_error": "Dismiss error",
       "airtime": {
         "detecting": "Ithola ngokuzenzakalelayo...",
+        "detecting_operator": "Detecting operator...",
         "no_options": "Awekho amanani aphakanyisiwe okwamanje.",
         "operator": "Opharetha",
+        "operator_detected": "{{operator}} detected",
         "options": "Izinketho zenani eliphezulu"
       },
       "errors": {
@@ -2006,6 +2197,7 @@
       "payout": {
         "card_holder": "Igama lomnikazi weKhadi",
         "card_number": "Inombolo yekhadi",
+        "account_number_placeholder": "Account number",
         "ecocash_number": "Inombolo ye-EcoCash",
         "expiry_month": "Ukuphelelwa yisikhathi (MM)",
         "expiry_year": "Ukuphelelwa yisikhathi (YYYY)",
@@ -2042,7 +2234,8 @@
         "airtime_number": "Inombolo ye-airtime",
         "city": "Idolobha",
         "full_name": "Igama eligcwele lomamukeli",
-        "phone": "Inombolo yocingo"
+        "phone": "Inombolo yocingo",
+        "phone_placeholder": "+2637XXXXXXXX"
       },
       "status": {
         "pending": "okulindile",

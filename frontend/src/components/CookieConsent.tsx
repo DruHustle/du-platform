@@ -60,7 +60,7 @@ export default function CookieConsent() {
           <p className="text-white/90 text-sm leading-relaxed sm:flex-1">
             {tr("cookies.consent.description", "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.")}
           </p>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center justify-center gap-2">
             <Button asChild variant="outline" className="h-9 border-white/20 text-white hover:bg-white hover:text-zim-black text-xs">
               <Link href="/cookie-settings">{tr("cookies.consent.settings", "Cookie settings")}</Link>
             </Button>

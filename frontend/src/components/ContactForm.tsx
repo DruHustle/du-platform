@@ -27,14 +27,46 @@ export default function ContactForm({ title, description, module }: ContactFormP
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subjectOptions = {
-    general: ["General Inquiry", "Platform Feedback", "Partnership Inquiry"],
-    technology: ["AI Integration", "Digital Transformation", "General Inquiry"],  
-    data: ["Analytics Inquiry", "Privacy & Governance", "General Inquiry"],
-    export: ["German Market Requirements", "Certification Support", "Partner Connections"],
-    tourism: ["Visa Information", "Accommodation", "Diaspora Homecoming"],
-    investment: ["Opportunity Details", "NTIR Registration", "Due Diligence"],
-    trade: ["Export Programs", "Market Access", "Trade Regulations"],
-    success: ["Partnership Inquiry", "Project Collaboration", "General Inquiry"],
+    general: [
+      t("contact_form.subject_options.general.inquiry", { defaultValue: "General Inquiry" }),
+      t("contact_form.subject_options.general.feedback", { defaultValue: "Platform Feedback" }),
+      t("contact_form.subject_options.general.partnership", { defaultValue: "Partnership Inquiry" }),
+    ],
+    technology: [
+      t("contact_form.subject_options.technology.ai", { defaultValue: "AI Integration" }),
+      t("contact_form.subject_options.technology.transformation", { defaultValue: "Digital Transformation" }),
+      t("contact_form.subject_options.general.inquiry", { defaultValue: "General Inquiry" }),
+    ],
+    data: [
+      t("contact_form.subject_options.data.analytics", { defaultValue: "Analytics Inquiry" }),
+      t("contact_form.subject_options.data.privacy", { defaultValue: "Privacy & Governance" }),
+      t("contact_form.subject_options.general.inquiry", { defaultValue: "General Inquiry" }),
+    ],
+    export: [
+      t("contact_form.subject_options.export.market", { defaultValue: "German Market Requirements" }),
+      t("contact_form.subject_options.export.certification", { defaultValue: "Certification Support" }),
+      t("contact_form.subject_options.export.partners", { defaultValue: "Partner Connections" }),
+    ],
+    tourism: [
+      t("contact_form.subject_options.tourism.visa", { defaultValue: "Visa Information" }),
+      t("contact_form.subject_options.tourism.accommodation", { defaultValue: "Accommodation" }),
+      t("contact_form.subject_options.tourism.homecoming", { defaultValue: "Diaspora Homecoming" }),
+    ],
+    investment: [
+      t("contact_form.subject_options.investment.opportunities", { defaultValue: "Opportunity Details" }),
+      t("contact_form.subject_options.investment.ntir", { defaultValue: "NTIR Registration" }),
+      t("contact_form.subject_options.investment.due_diligence", { defaultValue: "Due Diligence" }),
+    ],
+    trade: [
+      t("contact_form.subject_options.trade.programs", { defaultValue: "Export Programs" }),
+      t("contact_form.subject_options.trade.market_access", { defaultValue: "Market Access" }),
+      t("contact_form.subject_options.trade.regulations", { defaultValue: "Trade Regulations" }),
+    ],
+    success: [
+      t("contact_form.subject_options.general.partnership", { defaultValue: "Partnership Inquiry" }),
+      t("contact_form.subject_options.success.collaboration", { defaultValue: "Project Collaboration" }),
+      t("contact_form.subject_options.general.inquiry", { defaultValue: "General Inquiry" }),
+    ],
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,7 +84,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
 
   const currentOptions = module in subjectOptions
     ? subjectOptions[module as keyof typeof subjectOptions]
-    : ["General Inquiry"];
+    : [t("contact_form.subject_options.general.inquiry", { defaultValue: "General Inquiry" })];
 
   // Reusable input style
   const glassInputStyle = "bg-white/[0.05] border-white/10 text-white  focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl";
@@ -71,7 +103,9 @@ export default function ContactForm({ title, description, module }: ContactFormP
             <div className="p-2 bg-zim-gold/10 rounded-lg">
               <Sparkles className="h-5 w-5 text-zim-gold" />
             </div>
-            <span className="text-zim-gold text-[10px] font-black uppercase tracking-[0.3em]">{module} support</span>
+            <span className="text-zim-gold text-[10px] font-black uppercase tracking-[0.3em]">
+              {t("contact_form.module_support", { module, defaultValue: "{{module}} support" })}
+            </span>
           </div>
           <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter">
             {title || t('contact_form.get_started')}
@@ -91,7 +125,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
               <Input
                 id="name"
                 className={glassInputStyle}
-                placeholder="Full Name"
+                placeholder={t("contact_form.full_name_placeholder", { defaultValue: "Full Name" })}
                 value={formData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
                 required
@@ -107,7 +141,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
                 id="email"
                 type="email"
                 className={glassInputStyle}
-                placeholder="email@example.com"
+                placeholder={t("contact_form.email_placeholder", { defaultValue: "email@example.com" })}
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
                 required
@@ -125,7 +159,7 @@ export default function ContactForm({ title, description, module }: ContactFormP
                 id="phone"
                 type="tel"
                 className={glassInputStyle}
-                placeholder="+ ..."
+                placeholder={t("contact_form.phone_placeholder", { defaultValue: "+ ..." })}
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
               />

@@ -80,6 +80,7 @@
     "email": "Email Address",
     "password": "Password",
     "confirm_password": "Confirm Password",
+    "password_minimum": "Minimum 8 characters required.",
     "terms_agreement": "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance.",
     "have_account": "Already have an account?",
     "login_here": "Login Here",
@@ -90,6 +91,8 @@
     "no_account": "Don't have an account?",
     "register_now": "Register Now",
     "close": "Close",
+    "cancel_login": "Cancel login",
+    "cancel_registration": "Cancel registration",
     "forgot": {
       "title": "Reset Password",
       "subtitle": "Enter your account email and we will send reset instructions.",
@@ -696,6 +699,7 @@
         "open_end_date_picker": "Open return date calendar",
         "multi_city": "Multi-city trip",
         "multi_city_cities": "Cities (comma separated)",
+        "multi_city_placeholder": "Victoria Falls, Hwange, Bulawayo",
         "multi_city_hint": "Select Multi-trip to add additional cities.",
         "decrease_adults": "Decrease adults",
         "decrease_infants": "Decrease infants",
@@ -789,7 +793,6 @@
       "title1": "Diaspora Investment",
       "subtitle1": "Supporting national development through diaspora engagement.",
       "rbz_policy": "Explore policies",
-      "rbz_currency": "Choose USD or ZiG Investment Paths",
       "highlight1": "National Growth",
       "badge2": "Masuwe SEZ",
       "title2": "Invest in Masuwe SEZ",
@@ -918,23 +921,20 @@
         "desc": "Localized risk assessment and intelligence."
       }
     },
-    "hdc_title": "Horticultural Development Council",
-    "hdc_subtitle": "Overseeing quality and standards for horticultural exports.",
-    "hdc_associations": [
-      "Avocado Growers Association",
-      "Berry Growers Association",
-      "Citrus Growers Association",
-      "Coffee Growers Association",
-      "Nut Growers Association",
-      "Tea Growers Association",
-      "Export Produce Association",
-      "Flower Growers Association"
-    ],
     "database_title": "Trade & Investment Databases and Registries",
     "database_subtitle": "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities.",
     "ntir_title": "National Trade & Investment Register (NTIR)",
     "ntir_subtitle": "Official registry of verified trade and investment entities in Zimbabwe.",
     "ntir_button": "Search NTIR Database.",
+    "ntir": {
+      "back": "Back to Investment",
+      "title": "NTIR Database Search",
+      "subtitle": "Search the National Trade & Investment Register for verified entities and fallback exporter records.",
+      "placeholder": "Search by entity, sector, or location",
+      "search": "Search",
+      "empty": "No entities found.",
+      "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
+    },
     "crowdfunding_title": "Crowdfunding Opportunities",
     "crowdfunding_subtitle": "Micro-investment in vetted projects with smaller amounts, transparent participation, and visible real-world impact.",
     "crowdfunding_steps_subtitle": "Micro-investment in vetted projects with smaller amounts and see real impact.",
@@ -991,7 +991,6 @@
     "explore_subtitle": " For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency.",
     "explore_site": "Visit ZIDA",
     "ntir_label": "National Directory",
-    "hdc_label": "Horticulture Council",
     "crowdfunding_steps": {
       "browse": "Browse Projects",
       "invest": "Invest Your Share",
@@ -1230,6 +1229,15 @@
     "export_roadmap_badge": "Export Roadmap",
     "export_roadmap_title": "Zimbabwe Export Roadmap (2026)",
     "export_roadmap_subtitle": "A practical path for exporters using ZimTrade support, ZIMRA/REX processes, and EU compliance requirements.",
+    "buyer_channels": "Buyer Channels",
+    "contact_verified_buyers": "Contact Verified Buyers",
+    "export_roadmap": {
+      "phase_label": "Phase 0{{phase}}"
+    },
+    "export_documentation_title": "Export Documentation and Compliance",
+    "export_documentation_subtitle": "Core controls previously shown on Exports are now consolidated in Trade.",
+    "export_checklist_title": "Critical Export Checklist",
+    "export_checklist_cta": "Open Full Compliance Guide",
     "export_flow": {
       "product_approval": {
         "phase": "Product Approval",
@@ -1418,9 +1426,11 @@
     "view_all": "View All",
     "back_to_top": "Back to Top",
     "loading": "Loading...",
+    "loading_label": "Loading",
     "error": "An error occurred",
     "success": "Success!",
     "verified": "Verified",
+    "pending": "Pending",
     "target": "Target",
     "raised": "Raised",
     "investors": "Investors",
@@ -1437,15 +1447,190 @@
     "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}",
     "back": "Back"
   },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "go_previous": "Go to previous page",
+    "go_next": "Go to next page",
+    "more_pages": "More pages"
+  },
+  "carousel": {
+    "previous_slide": "Previous slide",
+    "next_slide": "Next slide",
+    "go_to_slide": "Go to slide {{index}}"
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "more": "More"
+  },
+  "sidebar": {
+    "title": "Sidebar",
+    "description": "Displays the mobile sidebar.",
+    "toggle": "Toggle Sidebar"
+  },
+  "globe": {
+    "preview_alt": "Globe preview",
+    "preview_mode": "Globe preview mode (WebGL unavailable)",
+    "music_on": "Music: On",
+    "music_off": "Music: Off"
+  },
+  "coming_soon": {
+    "badge": "Coming Soon",
+    "description_saved": "Notify request saved. We will alert you via your account email.",
+    "description_prompt": "Get notified as soon as this feature is available.",
+    "processing": "Processing...",
+    "notify_me": "Notify me",
+    "notified": "Notified",
+    "toast_success_title": "Notify request saved",
+    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
+    "toast_ready": "You will be notified when {{feature}} is ready.",
+    "toast_error_title": "Unable to save notify request",
+    "toast_error_description": "Please try again."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage notifications, visibility (display / don't display), and pricing.",
+    "tabs": {
+      "notify": "Notify Me",
+      "ntir": "NTIR",
+      "stories": "Impact",
+      "shop": "Shop Products"
+    },
+    "badges": {
+      "new": "new"
+    },
+    "notify": {
+      "new_request_single": "1 new notify request in Admin > Notify Me.",
+      "new_request_multi": "{{count}} new notify requests in Admin > Notify Me.",
+      "new_received_single": "1 new notify request received.",
+      "new_received_multi": "{{count}} new notify requests received.",
+      "settings_title": "Notification Email Settings",
+      "settings_description": "Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.",
+      "alert_emails_placeholder": "Alert emails (comma-separated)",
+      "from_email_placeholder": "From email",
+      "save_settings": "Save Email Settings",
+      "settings_saved": "Notification email settings saved.",
+      "feature_restock": "Shop restock: {{slug}}",
+      "feature_restock_fallback": "Shop restock request",
+      "empty": "No notify requests yet."
+    },
+    "errors": {
+      "load": "Unable to load admin data.",
+      "save_shop": "Unable to save shop product.",
+      "delete_shop": "Unable to delete shop product.",
+      "create_ntir": "Unable to create NTIR entity.",
+      "update_ntir": "Unable to update NTIR entity.",
+      "create_story": "Unable to create impact story.",
+      "update_story": "Unable to update story visibility.",
+      "save_notification_settings": "Unable to save notification settings."
+    },
+    "ntir": {
+      "entity_placeholder": "Entity name",
+      "sector_placeholder": "Sector",
+      "location_placeholder": "Location",
+      "add_row": "Add NTIR Row"
+    },
+    "stories": {
+      "title_placeholder": "Title",
+      "category_placeholder": "Category",
+      "image_placeholder": "Image path or URL",
+      "author_placeholder": "Author",
+      "role_placeholder": "Role",
+      "revenue_placeholder": "Revenue (e.g. $2.5M)",
+      "jobs_placeholder": "Jobs (e.g. 150+)",
+      "markets_placeholder": "Markets (e.g. EU, UK)",
+      "story_placeholder": "Story content",
+      "testimonial_placeholder": "Testimonial",
+      "display_label": "Display on impact page",
+      "add_story": "Add Impact Story",
+      "badge_display": "Display",
+      "badge_hide": "Don't display",
+      "set_display": "Set Display",
+      "set_hide": "Set Don't display",
+      "toast_display": "Story set to Display.",
+      "toast_hide": "Story set to Don't display."
+    },
+    "shop": {
+      "slug_placeholder": "Slug",
+      "name_placeholder": "Product name",
+      "image_placeholder": "Image URL or path",
+      "category_placeholder": "Category: sports/crafts/food",
+      "price_placeholder": "Price cents (e.g. 4999)",
+      "stock_placeholder": "Stock qty",
+      "currency_placeholder": "Currency",
+      "description_placeholder": "Description",
+      "display_label": "Display product",
+      "update_product": "Update Product",
+      "add_product": "Add Product",
+      "cancel_edit": "Cancel Edit",
+      "stock_label": "Stock",
+      "badge_display": "Display",
+      "badge_hide": "Don't display",
+      "edit": "Edit",
+      "delete": "Delete",
+      "empty": "No shop products yet."
+    }
+  },
+  "fintech": {
+    "transfer_panel": {
+      "title": "Fintech Module Example",
+      "amount_placeholder": "Amount to send",
+      "loading": "Loading quote...",
+      "fx_fee": "FX: {{fx}} | Fee: {{fee}}"
+    }
+  },
   "contact_form": {
     "get_started": "Get in Touch",
     "full_name": "Full Name",
     "email": "Email Address",
     "phone": "Phone Number",
+    "module_support": "{{module}} support",
+    "full_name_placeholder": "Full Name",
+    "email_placeholder": "email@example.com",
+    "phone_placeholder": "+ ...",
     "subject": "Subject",
     "message": "Message",
     "message_placeholder": "Write your message here...",
     "select_subject": "Select a subject",
+    "subject_options": {
+      "general": {
+        "inquiry": "General Inquiry",
+        "feedback": "Platform Feedback",
+        "partnership": "Partnership Inquiry"
+      },
+      "technology": {
+        "ai": "AI Integration",
+        "transformation": "Digital Transformation"
+      },
+      "data": {
+        "analytics": "Analytics Inquiry",
+        "privacy": "Privacy & Governance"
+      },
+      "export": {
+        "market": "German Market Requirements",
+        "certification": "Certification Support",
+        "partners": "Partner Connections"
+      },
+      "tourism": {
+        "visa": "Visa Information",
+        "accommodation": "Accommodation",
+        "homecoming": "Diaspora Homecoming"
+      },
+      "investment": {
+        "opportunities": "Opportunity Details",
+        "ntir": "NTIR Registration",
+        "due_diligence": "Due Diligence"
+      },
+      "trade": {
+        "programs": "Export Programs",
+        "market_access": "Market Access",
+        "regulations": "Trade Regulations"
+      },
+      "success": {
+        "collaboration": "Project Collaboration"
+      }
+    },
     "send": "Send Message",
     "sending": "Sending...",
     "success_msg": "Message sent successfully!",
@@ -1711,6 +1896,8 @@
   },
   "onesa": {
     "badge": "Onesa AI",
+    "brand": "Onesa",
+    "assistant_alt": "Onesa AI assistant",
     "title": "Chat with Onesa AI",
     "send": "Send",
     "thinking": "Thinking...",
@@ -1950,10 +2137,13 @@
         "pay_now": "Pay Now",
         "processing": "Processing"
       },
+      "dismiss_error": "Dismiss error",
       "airtime": {
         "detecting": "Auto-detecting...",
+        "detecting_operator": "Detecting operator...",
         "no_options": "No suggested amounts yet.",
         "operator": "Operator",
+        "operator_detected": "{{operator}} detected",
         "options": "Top-up amount options"
       },
       "errors": {
@@ -1998,6 +2188,7 @@
       "payout": {
         "card_holder": "Card Holder Name",
         "card_number": "Card Number",
+        "account_number_placeholder": "Account number",
         "ecocash_number": "EcoCash Number",
         "expiry_month": "Expiry (MM)",
         "expiry_year": "Expiry (YYYY)",
@@ -2034,7 +2225,8 @@
         "airtime_number": "Airtime number",
         "city": "City",
         "full_name": "Receiver full name",
-        "phone": "Phone number"
+        "phone": "Phone number",
+        "phone_placeholder": "+2637XXXXXXXX"
       },
       "status": {
         "pending": "pending",

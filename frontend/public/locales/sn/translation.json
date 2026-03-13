@@ -80,6 +80,7 @@
     "email": "Kero ye-Imeyiri",
     "password": "Phasuwedi",
     "confirm_password": "Simbisai phasuwedi",
+    "password_minimum": "Minimum 8 characters required.",
     "terms_agreement": "Ndinobvuma Mitemo neMirayiro yeBasa neMitemo yeKuchengetedzwa kweData maererano nekurongeka kwedata reGDPR.",
     "have_account": "Watova neakaundi here?",
     "login_here": "Pinda pano",
@@ -90,6 +91,8 @@
     "no_account": "Hauna akaundi here?",
     "register_now": "Nyoresa iye zvino",
     "close": "Vhara",
+    "cancel_login": "Cancel login",
+    "cancel_registration": "Cancel registration",
     "forgot": {
       "title": "Gadzirisazve pasiwedhi",
       "subtitle": "Isa email yako kuti tikutumire link yekugadzirisazve pasiwedhi.",
@@ -696,6 +699,7 @@
         "open_end_date_picker": "Vhura kalenda yezuva rekudzoka",
         "multi_city": "Rwendo rwemaguta akawanda",
         "multi_city_cities": "Maguta (aparadzaniswa nekomma)",
+        "multi_city_placeholder": "Victoria Falls, Hwange, Bulawayo",
         "multi_city_hint": "Sarudza rwendo rwenzvimbo dzakawanda kuti uwedzere mamwe maguta.",
         "decrease_adults": "Deredza vanhu vakuru",
         "decrease_infants": "Kuderedza vacheche",
@@ -918,23 +922,20 @@
         "desc": "Kuongorora njodzi neruzivo rwemuno."
       }
     },
-    "hdc_title": "Dare reKusimudzira Horticulture (HDC)",
-    "hdc_subtitle": "Kutarira hunhu nemitemo yezvinotengeswa kunze zvekurima.",
-    "hdc_associations": [
-      "Sangano revanodyara Avocado",
-      "Sangano revanodyara Berries",
-      "Sangano revanodyara Citrus",
-      "Sangano revanodyara Kofii",
-      "Sangano revanodyara Nzungu",
-      "Sangano revanodyara Tii",
-      "Sangano revanotengesa kunze",
-      "Sangano revanodyara Maruva"
-    ],
     "database_title": "Matura neMabhuku eZvekutengeserana neKudyara Pfuma",
     "database_subtitle": "Matura nemabhuku emakambani ezvekutengeserana nekurima akasimbiswa muZimbabwe. Kusimbiswa uku kunoitwa nemasangano akazvimirira.",
     "ntir_title": "Rejista yeNyika yeKutengeserana neKudyara (NTIR)",
     "ntir_subtitle": "Gwaro repamutemo remabhizimusi akasimbiswa muZimbabwe.",
     "ntir_button": "Tsvaga muNTIR.",
+    "ntir": {
+      "back": "Back to Investment",
+      "title": "NTIR Database Search",
+      "subtitle": "Search the National Trade & Investment Register for verified entities and fallback exporter records.",
+      "placeholder": "Search by entity, sector, or location",
+      "search": "Search",
+      "empty": "No entities found.",
+      "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
+    },
     "crowdfunding_title": "Kudyara mari Vakawanda",
     "crowdfunding_subtitle": "Kudyara mari shoma muzvirongwa zvakaongororwa, uchiita zvinobuda pachena uye uchiona budiriro chaiyo.",
     "crowdfunding_steps_subtitle": "Kudyara mari shoma muzvirongwa zvakaongororwa uone budiriro.",
@@ -991,7 +992,6 @@
       "source_eib": "Kunobva: EIB Zimbabwe Essay"
     },
     "ntir_label": "National Directory",
-    "hdc_label": "Horticulture Council",
     "crowdfunding_steps": {
       "browse": "Browse Projects",
       "invest": "Invest Your Share",
@@ -1230,6 +1230,15 @@
     "export_roadmap_badge": "Gwara rekutengesa Kunze",
     "export_roadmap_title": "Mafambiro ekutengesa kubva Zimbabwe kuenda Germany",
     "export_roadmap_subtitle": "Nhanho nenhano dzekutengesa zvinhu kubva Zimbabwe kuenda kuGermany.",
+    "buyer_channels": "Buyer Channels",
+    "contact_verified_buyers": "Contact Verified Buyers",
+    "export_roadmap": {
+      "phase_label": "Phase 0{{phase}}"
+    },
+    "export_documentation_title": "Export Documentation and Compliance",
+    "export_documentation_subtitle": "Core controls previously shown on Exports are now consolidated in Trade.",
+    "export_checklist_title": "Critical Export Checklist",
+    "export_checklist_cta": "Open Full Compliance Guide",
     "export_flow": {
       "product_approval": {
         "phase": "Kubvumirwa kweChigadzirwa",
@@ -1352,9 +1361,11 @@
     "view_all": "Ona Zvose",
     "back_to_top": "Dzokera kumusoro",
     "loading": "Zvichauya...",
+    "loading_label": "Loading",
     "error": "Pane chakanganisika",
     "success": "Zvaibuda!",
     "verified": "Zvakasimbiswa",
+    "pending": "Pending",
     "target": "Chinangwa",
     "raised": "Mari Yawanikwa",
     "investors": "Vadyari",
@@ -1371,15 +1382,190 @@
     "form_subtitle": "Zadza ruzivo rwako kuti ubatanidze vakamirira {{featureName}}",
     "back": "Dzokera"
   },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "go_previous": "Go to previous page",
+    "go_next": "Go to next page",
+    "more_pages": "More pages"
+  },
+  "carousel": {
+    "previous_slide": "Previous slide",
+    "next_slide": "Next slide",
+    "go_to_slide": "Go to slide {{index}}"
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "more": "More"
+  },
+  "sidebar": {
+    "title": "Sidebar",
+    "description": "Displays the mobile sidebar.",
+    "toggle": "Toggle Sidebar"
+  },
+  "globe": {
+    "preview_alt": "Globe preview",
+    "preview_mode": "Globe preview mode (WebGL unavailable)",
+    "music_on": "Music: On",
+    "music_off": "Music: Off"
+  },
+  "coming_soon": {
+    "badge": "Coming Soon",
+    "description_saved": "Notify request saved. We will alert you via your account email.",
+    "description_prompt": "Get notified as soon as this feature is available.",
+    "processing": "Processing...",
+    "notify_me": "Notify me",
+    "notified": "Notified",
+    "toast_success_title": "Notify request saved",
+    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
+    "toast_ready": "You will be notified when {{feature}} is ready.",
+    "toast_error_title": "Unable to save notify request",
+    "toast_error_description": "Please try again."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage notifications, visibility (display / don't display), and pricing.",
+    "tabs": {
+      "notify": "Notify Me",
+      "ntir": "NTIR",
+      "stories": "Impact",
+      "shop": "Shop Products"
+    },
+    "badges": {
+      "new": "new"
+    },
+    "notify": {
+      "new_request_single": "1 new notify request in Admin > Notify Me.",
+      "new_request_multi": "{{count}} new notify requests in Admin > Notify Me.",
+      "new_received_single": "1 new notify request received.",
+      "new_received_multi": "{{count}} new notify requests received.",
+      "settings_title": "Notification Email Settings",
+      "settings_description": "Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.",
+      "alert_emails_placeholder": "Alert emails (comma-separated)",
+      "from_email_placeholder": "From email",
+      "save_settings": "Save Email Settings",
+      "settings_saved": "Notification email settings saved.",
+      "feature_restock": "Shop restock: {{slug}}",
+      "feature_restock_fallback": "Shop restock request",
+      "empty": "No notify requests yet."
+    },
+    "errors": {
+      "load": "Unable to load admin data.",
+      "save_shop": "Unable to save shop product.",
+      "delete_shop": "Unable to delete shop product.",
+      "create_ntir": "Unable to create NTIR entity.",
+      "update_ntir": "Unable to update NTIR entity.",
+      "create_story": "Unable to create impact story.",
+      "update_story": "Unable to update story visibility.",
+      "save_notification_settings": "Unable to save notification settings."
+    },
+    "ntir": {
+      "entity_placeholder": "Entity name",
+      "sector_placeholder": "Sector",
+      "location_placeholder": "Location",
+      "add_row": "Add NTIR Row"
+    },
+    "stories": {
+      "title_placeholder": "Title",
+      "category_placeholder": "Category",
+      "image_placeholder": "Image path or URL",
+      "author_placeholder": "Author",
+      "role_placeholder": "Role",
+      "revenue_placeholder": "Revenue (e.g. $2.5M)",
+      "jobs_placeholder": "Jobs (e.g. 150+)",
+      "markets_placeholder": "Markets (e.g. EU, UK)",
+      "story_placeholder": "Story content",
+      "testimonial_placeholder": "Testimonial",
+      "display_label": "Display on impact page",
+      "add_story": "Add Impact Story",
+      "badge_display": "Display",
+      "badge_hide": "Don't display",
+      "set_display": "Set Display",
+      "set_hide": "Set Don't display",
+      "toast_display": "Story set to Display.",
+      "toast_hide": "Story set to Don't display."
+    },
+    "shop": {
+      "slug_placeholder": "Slug",
+      "name_placeholder": "Product name",
+      "image_placeholder": "Image URL or path",
+      "category_placeholder": "Category: sports/crafts/food",
+      "price_placeholder": "Price cents (e.g. 4999)",
+      "stock_placeholder": "Stock qty",
+      "currency_placeholder": "Currency",
+      "description_placeholder": "Description",
+      "display_label": "Display product",
+      "update_product": "Update Product",
+      "add_product": "Add Product",
+      "cancel_edit": "Cancel Edit",
+      "stock_label": "Stock",
+      "badge_display": "Display",
+      "badge_hide": "Don't display",
+      "edit": "Edit",
+      "delete": "Delete",
+      "empty": "No shop products yet."
+    }
+  },
+  "fintech": {
+    "transfer_panel": {
+      "title": "Fintech Module Example",
+      "amount_placeholder": "Amount to send",
+      "loading": "Loading quote...",
+      "fx_fee": "FX: {{fx}} | Fee: {{fee}}"
+    }
+  },
   "contact_form": {
     "get_started": "Taura Nesu",
     "full_name": "Zita rakazara",
     "email": "Imeyiri",
     "phone": "Nhamba dzerunhare",
+    "module_support": "{{module}} support",
+    "full_name_placeholder": "Full Name",
+    "email_placeholder": "email@example.com",
+    "phone_placeholder": "+ ...",
     "subject": "Musoro wenyaya",
     "message": "Mashoko",
     "message_placeholder": "Nyora mashoko ako pano...",
     "select_subject": "Sarudza musoro wenyaya",
+    "subject_options": {
+      "general": {
+        "inquiry": "General Inquiry",
+        "feedback": "Platform Feedback",
+        "partnership": "Partnership Inquiry"
+      },
+      "technology": {
+        "ai": "AI Integration",
+        "transformation": "Digital Transformation"
+      },
+      "data": {
+        "analytics": "Analytics Inquiry",
+        "privacy": "Privacy & Governance"
+      },
+      "export": {
+        "market": "German Market Requirements",
+        "certification": "Certification Support",
+        "partners": "Partner Connections"
+      },
+      "tourism": {
+        "visa": "Visa Information",
+        "accommodation": "Accommodation",
+        "homecoming": "Diaspora Homecoming"
+      },
+      "investment": {
+        "opportunities": "Opportunity Details",
+        "ntir": "NTIR Registration",
+        "due_diligence": "Due Diligence"
+      },
+      "trade": {
+        "programs": "Export Programs",
+        "market_access": "Market Access",
+        "regulations": "Trade Regulations"
+      },
+      "success": {
+        "collaboration": "Project Collaboration"
+      }
+    },
     "send": "Tumira Mashoko",
     "sending": "Zvichitumirwa...",
     "success_msg": "Mashoko atumirwa nemazvo!",
@@ -1711,6 +1897,8 @@
   },
   "onesa": {
     "badge": "Onesa AI Mubatsiri",
+    "brand": "Onesa",
+    "assistant_alt": "Onesa AI assistant",
     "title": "Taura na Onesa AI",
     "send": "Tumira",
     "thinking": "Ndiri kufunga...",
@@ -1950,10 +2138,13 @@
         "pay_now": "Pay Now",
         "processing": "Processing"
       },
+      "dismiss_error": "Dismiss error",
       "airtime": {
         "detecting": "Kuongorora-otomatiki...",
+        "detecting_operator": "Detecting operator...",
         "no_options": "Hapasati pave nemari inokurudzirwa.",
         "operator": "Operator",
+        "operator_detected": "{{operator}} detected",
         "options": "Kuwedzera-up mari sarudzo"
       },
       "errors": {
@@ -1998,6 +2189,7 @@
       "payout": {
         "card_holder": "Kadhi Holder Zita",
         "card_number": "Nhamba yeKadhi",
+        "account_number_placeholder": "Account number",
         "ecocash_number": "EcoCash Number",
         "expiry_month": "Kupera (MM)",
         "expiry_year": "Kupera (YYYY)",
@@ -2034,7 +2226,8 @@
         "airtime_number": "Airtime number",
         "city": "Guta",
         "full_name": "Receiver zita rakazara",
-        "phone": "Nhamba yenhare"
+        "phone": "Nhamba yenhare",
+        "phone_placeholder": "+2637XXXXXXXX"
       },
       "status": {
         "pending": "zvakamirira",

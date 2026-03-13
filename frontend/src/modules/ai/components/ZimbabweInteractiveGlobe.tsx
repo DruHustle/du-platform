@@ -1,5 +1,6 @@
 import { Component, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
+import { useTranslation } from "react-i18next";
 
 type ArcDatum = {
   startLat: number;
@@ -39,6 +40,7 @@ export default function ZimbabweInteractiveGlobe({
   zoomToHarare = false,
   musicEnabled = true,
 }: ZimbabweInteractiveGlobeProps) {
+  const { t } = useTranslation();
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -396,10 +398,14 @@ export default function ZimbabweInteractiveGlobe({
       <div className="absolute inset-0 flex items-center justify-center">
         {webglSupported === false || globeCrashed ? (
           <div className="relative h-full w-full">
-            <img src="/globe/earth-blue-marble.jpg" alt="Globe preview" className="h-full w-full object-cover opacity-60" />
+            <img
+              src="/globe/earth-blue-marble.jpg"
+              alt={t("globe.preview_alt", { defaultValue: "Globe preview" })}
+              className="h-full w-full object-cover opacity-60"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
             <p className="absolute left-4 bottom-4 text-[10px] uppercase tracking-widest font-black text-white/85">
-              Globe preview mode (WebGL unavailable)
+              {t("globe.preview_mode", { defaultValue: "Globe preview mode (WebGL unavailable)" })}
             </p>
           </div>
         ) : (
@@ -456,15 +462,17 @@ export default function ZimbabweInteractiveGlobe({
       </div>
 
       {musicEnabled ? (
-      <button
-        type="button"
-        onClick={() => {
-          void handleMusicToggle();
-        }}
-        className="absolute z-20 bottom-6 right-6 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
-      >
-        {audioEnabled ? "Music: On" : "Music: Off"}
-      </button>
+        <button
+          type="button"
+          onClick={() => {
+            void handleMusicToggle();
+          }}
+          className="absolute z-20 bottom-6 right-6 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
+        >
+          {audioEnabled
+            ? t("globe.music_on", { defaultValue: "Music: On" })
+            : t("globe.music_off", { defaultValue: "Music: Off" })}
+        </button>
       ) : null}
       {audioBlocked ? null : null}
     </div>

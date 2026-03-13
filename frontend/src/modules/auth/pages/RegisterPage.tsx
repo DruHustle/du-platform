@@ -104,7 +104,7 @@ export default function Register() {
             <button
               onClick={() => setLocation("/")}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
-              aria-label="Cancel registration"
+              aria-label={t("auth.cancel_registration", { defaultValue: "Cancel registration" })}
             >
               <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
             </button>
@@ -175,12 +175,16 @@ export default function Register() {
                     onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
                     onBlur={() => touch("password")}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
-                  >
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={
+                  showPassword
+                    ? t("auth.reset.hide_password", { defaultValue: "Hide password" })
+                    : t("auth.reset.show_password", { defaultValue: "Show password" })
+                }
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+              >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
@@ -199,7 +203,9 @@ export default function Register() {
                     <p className="text-[10px] text-white/50">{passwordStrength.label}</p>
                   </div>
                 ) : (
-                  <p className="text-[10px] text-white/35">Minimum 8 characters required.</p>
+                  <p className="text-[10px] text-white/35">
+                    {t("auth.password_minimum", { defaultValue: "Minimum 8 characters required." })}
+                  </p>
                 )}
                 {fieldErrors.password ? (
                   <p className="flex items-center gap-1.5 text-[11px] text-rose-300">

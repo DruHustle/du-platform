@@ -606,7 +606,9 @@ export default function BookTripPage() {
                       value={multiCityInput}
                       onChange={(e) => setMultiCityInput(e.target.value)}
                       className="w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
-                      placeholder="Victoria Falls, Hwange, Bulawayo"
+                      placeholder={t("tourism.onesa.trip_planner.multi_city_placeholder", {
+                        defaultValue: "Victoria Falls, Hwange, Bulawayo",
+                      })}
                     />
                   </div>
                 ) : (

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft, Search } from "lucide-react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 
 type NTIREntity = {
   id: number;
@@ -43,6 +44,7 @@ function searchFallbackEntities(query: string): NTIREntity[] {
 }
 
 export default function NTIRSearchPage() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NTIREntity[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,12 @@ export default function NTIRSearchPage() {
     } catch (err: any) {
       const apiMessage = getApiErrorMessage(err, "");
       setResults(searchFallbackEntities(q));
-      setError(apiMessage || "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results.");
+      setError(
+        apiMessage ||
+          t("investment.ntir.service_unavailable", {
+            defaultValue: "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results.",
+          })
+      );
     } finally {
       setLoading(false);
     }
@@ -74,10 +81,17 @@ export default function NTIRSearchPage() {
           <div className="text-white">
             <Link href="/investment" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold mb-4">
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
-              Back to Investment
+              {t("investment.ntir.back", { defaultValue: "Back to Investment" })}
             </Link>
-            <h1 className="!text-2xl md:!text-2xl font-black tracking-tighter">NTIR Database Search</h1>
-            <p className="!text-xs text-white/70 mt-2">Search the National Trade & Investment Register for verified entities and fallback exporter records.</p>
+            <h1 className="!text-2xl md:!text-2xl font-black tracking-tighter">
+              {t("investment.ntir.title", { defaultValue: "NTIR Database Search" })}
+            </h1>
+            <p className="!text-xs text-white/70 mt-2">
+              {t("investment.ntir.subtitle", {
+                defaultValue:
+                  "Search the National Trade & Investment Register for verified entities and fallback exporter records.",
+              })}
+            </p>
           </div>
 
           <form
@@ -90,16 +104,18 @@ export default function NTIRSearchPage() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by entity, sector, or location"
+              placeholder={t("investment.ntir.placeholder", {
+                defaultValue: "Search by entity, sector, or location",
+              })}
               className="bg-white/[0.05] border-white/20 text-white"
             />
             <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
-              <Search className="h-4 w-4 mr-2" /> Search
+              <Search className="h-4 w-4 mr-2" /> {t("investment.ntir.search", { defaultValue: "Search" })}
             </Button>
           </form>
 
           {error ? <p className="text-red-400">{error}</p> : null}
-          {loading ? <p className="text-white/70">Loading...</p> : null}
+          {loading ? <p className="text-white/70">{t("common.loading", { defaultValue: "Loading..." })}</p> : null}
 
           <div className="grid gap-4">
             {results.map((row) => (
@@ -109,14 +125,24 @@ export default function NTIRSearchPage() {
                     <h2 className="!text-sm font-black tracking-tight">{row.name}</h2>
                     <p className="text-white/75 !text-xs mt-1">{row.location}</p>
                   </div>
-                  <Badge className={row.verification_status === "Verified" ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
-                    {row.verification_status}
+                  <Badge
+                    className={
+                      row.verification_status === "Verified"
+                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                        : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                    }
+                  >
+                    {row.verification_status === "Verified"
+                      ? t("common.verified", { defaultValue: "Verified" })
+                      : t("common.pending", { defaultValue: "Pending" })}
                   </Badge>
                 </div>
                 <p className="text-white/70 !text-[11px] mt-3">{row.sector}</p>
               </div>
             ))}
-            {!loading && results.length === 0 ? <p className="text-white/70">No entities found.</p> : null}
+            {!loading && results.length === 0 ? (
+              <p className="text-white/70">{t("investment.ntir.empty", { defaultValue: "No entities found." })}</p>
+            ) : null}
           </div>
         </div>
       </section>
