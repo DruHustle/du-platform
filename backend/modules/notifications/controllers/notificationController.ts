@@ -39,4 +39,18 @@ export class NotificationController {
         .json(error("FEATURE_NOTIFICATION_FAILED", "Unable to save notify request."));
     }
   };
+
+  createContactInquiry = async (req: express.Request, res: express.Response) => {
+    try {
+      const data = await this.service.createContactInquiry(req.body);
+      return res.status(201).json(ok(data));
+    } catch (err) {
+      if (err instanceof NotificationServiceError) {
+        return res.status(err.status).json(error(err.code, err.message));
+      }
+      return res
+        .status(500)
+        .json(error("CONTACT_INQUIRY_FAILED", "Unable to send your message. Please try again."));
+    }
+  };
 }

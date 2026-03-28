@@ -138,4 +138,51 @@ export class NotificationService {
       email: String(user.email ?? ""),
     };
   }
+
+  async createContactInquiry(input: {
+    name: string;
+    email: string;
+    phone?: string;
+    subject: string;
+    message: string;
+    module?: string;
+  }) {
+    const fromEmail = await getNotifyFromEmail();
+    const safeName = String(input.name ?? "").trim();
+    const safeEmail = String(input.email ?? "").trim().toLowerCase();
+    const safeSubject = String(input.subject ?? "").trim();
+    const safeMessage = String(input.message ?? "").trim();
+    const safePhone = String(input.phone ?? "").trim();
+    const safeModule = String(input.module ?? "general").trim();
+
+    const alertEmails = await getNotifyAlertEmails();
+    if (alertEmails.length > 0) {
+      const adminSubject = `New contact inquiry: ${safeSubject}`;
+      const adminHtml = `<p><strong>New contact inquiry via ${safeModule} module</strong></p>
+<p>Name: ${safeName}</p>
+<p>Email: ${safeEmail}</p>
+${safePhone ? `<p>Phone: ${safePhone}</p>` : ""}
+<p>Subject: ${safeSubject}</p>
+<p>Message:</p>
+<blockquote>${safeMessage.replace(/\n/g, "<br>")}</blockquote>`;
+      const adminText = `New contact inquiry (${safeModule})\nName: ${safeName}\nEmail: ${safeEmail}${safePhone ? `\nPhone: ${safePhone}` : ""}\nSubject: ${safeSubject}\nMessage:\n${safeMessage}`;
+      await sendEmailMessageSafe(
+        { to: alertEmails, subject: adminSubject, html: adminHtml, text: adminText, from: fromEmail },
+        "contact-inquiry:admin-alert"
+      );
+    }
+
+    const confirmSubject = "We received your message";
+    const confirmHtml = `<p>Hello ${safeName},</p>
+<p>Thank you for reaching out to Diaspora Unlocked. We have received your message and will get back to you shortly.</p>
+<p><strong>Your subject:</strong> ${safeSubject}</p>
+<p>Warm regards,<br>The Diaspora Unlocked Team</p>`;
+    const confirmText = `Hello ${safeName}, thank you for reaching out to Diaspora Unlocked. We have received your message and will get back to you shortly. Your subject: ${safeSubject}.`;
+    await sendEmailMessageSafe(
+      { to: safeEmail, subject: confirmSubject, html: confirmHtml, text: confirmText, from: fromEmail },
+      "contact-inquiry:user-confirmation"
+    );
+
+    return { message: "Your message has been sent. We will be in touch soon." };
+  }
 }

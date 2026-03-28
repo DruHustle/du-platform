@@ -45,13 +45,19 @@ function collectFintechProviderConfigErrors(errors: string[]) {
 
 function collectKycConfigErrors(errors: string[]) {
   const nodeEnv = getEnv("NODE_ENV", "development").toLowerCase();
-  if (nodeEnv === "production" && !hasEnv("KYC_VERIFICATION_SECRET")) {
+  if (nodeEnv !== "production") return;
+
+  // When running in sandbox/mock mode live provider secrets are not required.
+  const sandboxMock = getEnv("FINANCIAL_SANDBOX_MOCK", "false").toLowerCase() === "true";
+  if (sandboxMock) return;
+
+  if (!hasEnv("KYC_VERIFICATION_SECRET")) {
     errors.push("Production requires KYC_VERIFICATION_SECRET for provider-driven KYC decisions.");
   }
-  if (nodeEnv === "production" && !hasEnv("FINTECH_WEBHOOK_SECRET")) {
+  if (!hasEnv("FINTECH_WEBHOOK_SECRET")) {
     errors.push("Production requires FINTECH_WEBHOOK_SECRET for provider callback verification.");
   }
-  if (nodeEnv === "production" && !hasEnv("FINTECH_QUOTE_TOKEN_SECRET")) {
+  if (!hasEnv("FINTECH_QUOTE_TOKEN_SECRET")) {
     errors.push(
       "Production requires FINTECH_QUOTE_TOKEN_SECRET to sign remittance quote tokens. " +
       "This must be distinct from JWT_SECRET to maintain key separation."
