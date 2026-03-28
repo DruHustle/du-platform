@@ -16,6 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { DEFAULT_SENDER_COUNTRIES, type SenderCountryConfig } from "@shared/fintechSenderCountries";
+import { DEFAULT_RECEIVER_COUNTRIES, type ReceiverCountryConfig } from "@shared/fintechReceiverCountries";
 
 type TransferType = "send_money" | "airtime_topup";
 type RecipientType = "mobile_money" | "cash_pickup" | "bank_transfer";
@@ -89,7 +90,9 @@ const FALLBACK_TRANSFER_LIMITS: TransferLimits = {
 
 const FALLBACK_SENDER_COUNTRIES: Country[] = DEFAULT_SENDER_COUNTRIES;
 
-const RECEIVER_COUNTRY: Country = { code: "ZW", flag: "🇿🇼", name: "Zimbabwe", currency: "USD" };
+type ReceiverCountry = ReceiverCountryConfig;
+const RECEIVER_COUNTRIES: ReceiverCountry[] = DEFAULT_RECEIVER_COUNTRIES;
+const DEFAULT_RECEIVER_COUNTRY: ReceiverCountry = RECEIVER_COUNTRIES[0]!; // Zimbabwe
 
 // Module-level country detection cache with a 1-hour TTL so that locale or
 // VPN changes are picked up after the expiry window without needing a page reload.
@@ -1012,13 +1015,10 @@ export default function SendMoneyForm({
     [i18n.language, senderCountriesConfig]
   );
 
-  const receiverCountry = useMemo<Country>(
-    () => ({
-      ...RECEIVER_COUNTRY,
-      name: getLocalizedRegionName(RECEIVER_COUNTRY.code, i18n.language, RECEIVER_COUNTRY.name),
-    }),
-    [i18n.language]
-  );
+  const receiverCountry = useMemo<ReceiverCountry>(() => {
+    const match = RECEIVER_COUNTRIES.find((c) => c.code === form.receiverCountryCode) ?? DEFAULT_RECEIVER_COUNTRY;
+    return { ...match, name: getLocalizedRegionName(match.code, i18n.language, match.name) };
+  }, [form.receiverCountryCode, i18n.language]);
 
   const selectedSender = useMemo<Country>(
     () => senderCountries.find((country) => country.code === form.senderCountryCode) || senderCountries[0]!,
@@ -1253,11 +1253,13 @@ export default function SendMoneyForm({
     }
   }, [form.currencyFrom, selectedSender.currency]);
 
+  // Keep currencyTo in sync with the selected receiver country.
   useEffect(() => {
-    if (form.currencyTo !== RECEIVER_COUNTRY.currency) {
-      setForm((prev) => ({ ...prev, currencyTo: RECEIVER_COUNTRY.currency }));
+    const expectedCurrency = (RECEIVER_COUNTRIES.find((c) => c.code === form.receiverCountryCode) ?? DEFAULT_RECEIVER_COUNTRY).currency;
+    if (form.currencyTo !== expectedCurrency) {
+      setForm((prev) => ({ ...prev, currencyTo: expectedCurrency }));
     }
-  }, [form.currencyTo]);
+  }, [form.receiverCountryCode, form.currencyTo]);
 
   useEffect(() => {
     if (forcedTransferType !== "send_money" && forcedTransferType !== "airtime_topup") return;
@@ -2605,10 +2607,27 @@ export default function SendMoneyForm({
               <label htmlFor="receiver-country" className="mb-1 block text-[10px] font-black uppercase tracking-widest text-white/70">
                 {tr("payments.form.fields.receiver_country", "Receiver country")}
               </label>
-              <select id="receiver-country" className={fieldClass} value={form.receiverCountryCode} disabled>
-                <option value={RECEIVER_COUNTRY.code}>
-                  {receiverCountry.flag} {receiverCountry.name} ({receiverCountry.currency})
-                </option>
+              <select
+                id="receiver-country"
+                className={fieldClass}
+                value={form.receiverCountryCode}
+                onChange={(e) => {
+                  const selected = RECEIVER_COUNTRIES.find((c) => c.code === e.target.value) ?? DEFAULT_RECEIVER_COUNTRY;
+                  setForm((prev) => ({
+                    ...prev,
+                    receiverCountryCode: selected.code,
+                    currencyTo: selected.currency,
+                    // Clear quote-dependent fields when corridor changes.
+                    amountSent: "",
+                    amountReceive: "",
+                  }));
+                }}
+              >
+                {RECEIVER_COUNTRIES.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.flag} {getLocalizedRegionName(country.code, i18n.language, country.name)} ({country.currency})
+                  </option>
+                ))}
               </select>
             </div>
 
