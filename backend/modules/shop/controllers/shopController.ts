@@ -8,10 +8,15 @@ export class ShopController {
   private resolveOrderManageToken(req: express.Request): string {
     const fromHeader = String(req.headers['x-order-access-token'] ?? '').trim();
     if (fromHeader) return fromHeader;
+    // Body only — query params are logged in server access logs and browser history
     if (typeof req.body?.manageToken === 'string' && req.body.manageToken.trim()) {
       return req.body.manageToken.trim();
     }
-    return String(req.query.manageToken ?? '').trim();
+    // Preserve GET order-status links/bookmarks. POST confirmation still requires header or body.
+    if (req.method === 'GET') {
+      return String(req.query.manageToken ?? '').trim();
+    }
+    return '';
   }
 
   private sendError(

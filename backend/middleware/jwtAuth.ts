@@ -110,8 +110,7 @@ export function requireJwtAuth(req: express.Request, res: express.Response, next
     };
 
     return next();
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Invalid token.";
-    return res.status(401).json(error("JWT_UNAUTHORIZED", message));
+  } catch {
+    return res.status(401).json(error("JWT_UNAUTHORIZED", "Invalid or expired token."));
   }
 }

@@ -18,15 +18,7 @@ export default function Technology() {
       badgeIcon: Brain,
       title: t('tech.hero.title1') || "Onesa AI: Illuminating Zimbabwe",
       subtitle: t('tech.hero.subtitle1') || "The first AI model built specifically for the Zimbabwean context.",
-      highlight: t('tech.hero.highlight1') || "Built for Zimbabwe",
-      buttons: [
-        {
-          text: t('tech.chat_with_onesa') || "Chat with Onesa",
-          variant: "primary",
-          link: "/onesa-ai-chat",
-          showArrow: true,
-        },
-      ]
+      highlight: t('tech.hero.highlight1') || "Built for Zimbabwe"
     },
     {
       image: "/images/pages/technology/partnership_handshake.png",

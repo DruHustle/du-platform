@@ -34,7 +34,7 @@ export default function FintechTransferPanel() {
         {loading
           ? t("fintech.transfer_panel.loading", { defaultValue: "Loading quote..." })
           : t("fintech.transfer_panel.fx_fee", {
-              fx: quote?.fxRate ?? quote?.exchangeRate ?? 0,
+              fx: quote?.fxRate ?? 0,
               fee: quote?.fee ?? 0,
               defaultValue: "FX: {{fx}} | Fee: {{fee}}",
             })}

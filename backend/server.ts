@@ -1,5 +1,6 @@
 import compression from "compression";
 import express from "express";
+import fs from "fs";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -11,6 +12,8 @@ import { registerDomainModules } from "./modules";
 import { registerApiRoutes } from "./api";
 import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
 import { resolveJwtSecret } from "./utils/jwtSecret";
+import { injectSeoIntoHtml, resolveRouteSeo } from "../frontend/shared/routeSeo";
+import { validateStartupConfiguration } from "./core/startupValidation";
 
 type ModularServerOptions = {
   backend: {
@@ -37,6 +40,15 @@ export function createModularServer(options: ModularServerOptions) {
   app.use("/api", notFoundHandler);
 
   if (options.staticPath) {
+    const staticIndexPath = path.join(options.staticPath, "index.html");
+    let cachedIndexHtml: string | null = null;
+    const getIndexHtml = () => {
+      if (cachedIndexHtml == null) {
+        cachedIndexHtml = fs.readFileSync(staticIndexPath, "utf8");
+      }
+      return cachedIndexHtml;
+    };
+
     app.use(
       express.static(options.staticPath, {
         etag: true,
@@ -63,9 +75,16 @@ export function createModularServer(options: ModularServerOptions) {
         },
       })
     );
-    app.get("*", (_req, res) => {
+    app.get("*", (req, res) => {
       res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
-      res.sendFile(path.join(options.staticPath as string, "index.html"));
+      const siteUrl =
+        String(process.env.VITE_SITE_URL || process.env.APP_BASE_URL || `${req.protocol}://${req.get("host") || "localhost"}`)
+          .trim()
+          .replace(/\/+$/, "");
+      const url = new URL(req.originalUrl || req.url, `${siteUrl || "http://localhost"}/`);
+      const seo = resolveRouteSeo({ pathname: url.pathname, search: url.search });
+      const html = injectSeoIntoHtml(getIndexHtml(), seo, siteUrl);
+      res.type("html").send(html);
     });
   }
 
@@ -104,6 +123,13 @@ export async function startServer() {
     }
     // In dev/test the fallback secret is acceptable — log a reminder only.
     console.warn("[startup] JWT_SECRET is not set; using insecure dev fallback. Set JWT_SECRET before deploying.");
+  }
+
+  try {
+    validateStartupConfiguration();
+  } catch (configError) {
+    console.error("[startup] Configuration validation failed:", configError instanceof Error ? configError.message : configError);
+    process.exit(1);
   }
 
   try {

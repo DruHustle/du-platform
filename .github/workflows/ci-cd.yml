@@ -40,6 +40,11 @@ jobs:
       - name: Type check
         run: pnpm check
 
+      - name: Module tests
+        env:
+          FINANCIAL_SANDBOX_MOCK: "true"
+        run: pnpm test:modules
+
       - name: Guardrails (Build Safety)
         run: pnpm guardrails
 

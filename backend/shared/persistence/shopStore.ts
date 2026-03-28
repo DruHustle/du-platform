@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import type mysql from "mysql2/promise";
+import { cloneShopSeedProducts } from "../../../frontend/shared/shopCatalog";
 import { db, isDbConnectionError, isTransientShopQueryError } from "../databaseRuntime";
 import { sha256 } from "./authStore";
 
@@ -124,36 +125,7 @@ function toPublicShopOrder(order: Partial<ShopOrder> & Record<string, unknown>, 
   };
 }
 
-export const shopSeedProducts: ShopProduct[] = [
-  { id: 1, slug: "sables-rugby-home-kit", name: "Sables Rugby Home Kit", category: "sports", description: "Official Zimbabwe rugby jersey kit.", image_url: "/images/pages/shop/sports_rugby_jersey.jpg", price_cents: 6900, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 2, slug: "chevrons-world-cup-jersey", name: "Chevrons World Cup Jersey", category: "sports", description: "National cricket fan jersey.", image_url: "/images/pages/shop/sports_cricket_jersey.png", price_cents: 6400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 3, slug: "warriors-football-kit", name: "Warriors Football Kit", category: "sports", description: "Zimbabwe football supporters kit.", image_url: "/images/pages/shop/sports_football_jersey.png", price_cents: 5090, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 4, slug: "shona-stone-sculpture", name: "Shona Stone Sculpture", category: "crafts", description: "Hand-carved premium stone sculpture.", image_url: "/images/pages/shop/crafts_stone_sculptures_01.png", price_cents: 1490, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 5, slug: "binga-basket", name: "Binga Basket", category: "crafts", description: "Handwoven basket made by local artisans.", image_url: "/images/pages/shop/crafts_binga_baskets_01.jpg", price_cents: 390, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 6, slug: "beaded-jewelry-set", name: "Beaded Jewelry Set", category: "crafts", description: "Traditional beaded necklace and bracelet set.", image_url: "/images/pages/shop/crafts_beaded_jewelry_01.jpg", price_cents: 290, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 7, slug: "mazoe-variety-pack", name: "Mazoe Variety Pack", category: "beverage", description: "Classic Zimbabwe cordial selection.", image_url: "/images/pages/shop/beverage_mazoe_mixed_6.jpg", price_cents: 5400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 8, slug: "cerevita-corn-banana-500g", name: "Cerevita Corn and Banana Cereal", category: "food", description: "Nutritious instant cereal favorite.", image_url: "/images/pages/shop/food_cerevita_corn_banana_1.png", price_cents: 650, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 9, slug: "mazoe-raspberry-2l-case-6", name: "Mazoe Raspberry 2L Case (6 Units)", category: "beverage", description: "Bulk case pack for family and gifting.", image_url: "/images/pages/shop/beverage_mazoe_raspberry_6.png", price_cents: 5400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 10, slug: "mazoe-orange-2l-case-6", name: "Mazoe Orange 2L Case (6 Units)", category: "beverage", description: "Best-selling orange crush case pack.", image_url: "/images/pages/shop/beverage_mazoe_orange_6.png", price_cents: 5400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 11, slug: "mazoe-orange-2l", name: "Mazoe Orange 2L", category: "beverage", description: "Single bottle orange cordial.", image_url: "/images/pages/shop/beverage_mazoe_orange_1.png", price_cents: 1000, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 12, slug: "pfuko-maheu-traditional-500ml-case-12", name: "Pfuko Maheu Traditional 500ml Case (12 Units)", category: "beverage", description: "Traditional maheu in a value case pack.", image_url: "/images/pages/shop/beverage_pfuko_12.png", price_cents: 6000, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 13, slug: "pfuko-maheu-traditional-500ml-1", name: "Pfuko Maheu Traditional 500ml 1 Unit", category: "beverage", description: "Traditional maheu in a value case pack.", image_url: "/images/pages/shop/beverage_pfuko_1.png", price_cents: 500, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 14, slug: "cascade-orange-400ml-case-6", name: "Cascade Orange 500ml Case (6 Units)", category: "beverage", description: "Cascade Orange is the perfect adventure for a Dairy Fruit Mix drink.", image_url: "/images/pages/shop/beverage_cascade_6.png", price_cents: 191, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 15, slug: "kariba-kapenta-matemba-100g", name: "Kariba Kapenta (Matemba) 100g", category: "food", description: "Classic kapenta staple, premium packed.", image_url: "/images/pages/shop/food_kapenta_1.jpg", price_cents: 400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 16, slug: "royco-usavi-beef-75g", name: "Royco Usavi Beef 75g", category: "food", description: "Flavor blend for local stews and gravies.", image_url: "/images/pages/shop/food_royco_beef_1.png", price_cents: 275, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 17, slug: "colcom-pork-pie-100g", name: "Colcom Pork Pie 100g", category: "food", description: "Ready-to-eat savory pie.", image_url: "/images/pages/shop/food_pork_pie_1.png", price_cents: 199, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 18, slug: "cheeky-chilli-peri-peri-sauce-100ml", name: "Cheeky Chilli Peri Peri Sauce 100ml", category: "food", description: "Hot peri-peri kick for grills and chips.", image_url: "/images/pages/shop/food_periperi_1.png", price_cents: 500, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 19, slug: "mazoe-blackberry-2l", name: "Mazoe Blackberry 2L", category: "food", description: "Blackberry cordial favorite.", image_url: "/images/pages/shop/beverage_mazoe_blackberry_1.png", price_cents: 1000, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 20, slug: "mazoe-cream-soda-2l", name: "Mazoe Cream Soda 2L", category: "food", description: "Cream soda cordial flavor.", image_url: "/images/pages/shop/beverage_mazoe_creamsoda_1.png", price_cents: 1000, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 21, slug: "maputi-40g", name: "Maputi 40g", category: "food", description: "Traditional puffed-maize snack.", image_url: "/images/pages/shop/food_maputi.png", price_cents: 200, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 22, slug: "lobels-lemon-creams-150g", name: "Lobels Lemon Creams 150g", category: "food", description: "Classic lemon cream biscuits.", image_url: "/images/pages/shop/food_lemoncreams_1.png", price_cents: 250, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 23, slug: "sun-jam-500g", name: "Sun Jam 500g", category: "food", description: "Fruit jam made from Eastern Highlands produce.", image_url: "/images/pages/shop/food_sunjam_1.png", price_cents: 179, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 24, slug: "madras-hot-curry-powder-100g", name: "Madras Hot Curry Powder 100g", category: "food", description: "Spice blend for hot curry dishes.", image_url: "/images/pages/shop/food_curry_hot_1.png", price_cents: 400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 25, slug: "madras-mild-curry-powder-100g", name: "Madras Mild Curry Powder 100g", category: "food", description: "Mild curry spice blend.", image_url: "/images/pages/shop/food_curry_mild_1.png", price_cents: 400, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 26, slug: "cerevita-corn-cocoa-malt-500g", name: "Cerevita Corn, Cocoa & Malt 500g", category: "food", description: "Chocolate malt flavored Cerevita breakfast cereal.", image_url: "/images/pages/shop/food_cerevita_choco_malt_1.png", price_cents: 700, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 27, slug: "cerevita-corn-wheat-500g", name: "Cerevita Corn & Wheat 500g", category: "food", description: "Corn and wheat Cerevita breakfast cereal.", image_url: "/images/pages/shop/food_cerevita_corn_wheat_1.png", price_cents: 650, currency: "EUR", stock_qty: 0, is_active: 1 },
-  { id: 28, slug: "mama-dovi_750ml", name: "Mama Dovi 750ml", category: "food", description: "Mama Dovi 750ml.", image_url: "/images/pages/shop/food_mama_dovi_1.png", price_cents: 950, currency: "EUR", stock_qty: 0, is_active: 1 },
-];
+export const shopSeedProducts: ShopProduct[] = cloneShopSeedProducts();
 
 const memoryShopOrders: ShopOrder[] = [];
 const memoryShopOrderItems: ShopOrderItem[] = [];
@@ -499,7 +471,6 @@ export async function createShopOrder(payload: {
     memoryShopOrders.unshift(order);
 
     for (const entry of selectedProducts) {
-      entry.product.stock_qty = Math.max(0, entry.product.stock_qty - entry.quantity);
       const lineTotal = entry.product.price_cents * entry.quantity;
       memoryShopOrderItems.push({
         id: memoryShopOrderItems.length + 1,
@@ -536,7 +507,6 @@ export async function createShopOrder(payload: {
       SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active
       FROM shop_products
       WHERE id IN (${placeholders})
-      FOR UPDATE
       `,
       productIds
     );
@@ -601,10 +571,6 @@ export async function createShopOrder(payload: {
           lineTotal,
         ]
       );
-      await connection.execute("UPDATE shop_products SET stock_qty = stock_qty - ? WHERE id = ?", [
-        entry.quantity,
-        Number(entry.product.id),
-      ]);
     }
 
     await connection.commit();
@@ -690,20 +656,41 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
     if (order.payment_method !== "dummy_gateway") {
       throw new Error("Assisted checkout orders cannot be auto-confirmed.");
     }
+    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    if (order.status === "paid") {
+      return toPublicShopOrder(order, items);
+    }
+    for (const item of items) {
+      const product = getMemoryProductById(item.product_id);
+      if (!product || product.is_active !== 1) {
+        throw new Error("A product is unavailable.");
+      }
+      if (product.stock_qty < item.quantity) {
+        throw new Error(`Insufficient stock for ${product.name}.`);
+      }
+    }
+    for (const item of items) {
+      const product = getMemoryProductById(item.product_id);
+      if (product) {
+        product.stock_qty = Math.max(0, product.stock_qty - item.quantity);
+      }
+    }
     order.status = "paid";
     order.payment_reference = paymentRef;
     order.updated_at = new Date().toISOString();
-    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
     return toPublicShopOrder(order, items);
   }
 
+  const connection = await db.getConnection();
   try {
-    const [existingRows] = await db.query<mysql.RowDataPacket[]>(
+    await connection.beginTransaction();
+    const [existingRows] = await connection.query<mysql.RowDataPacket[]>(
       `
       SELECT id, order_ref, delivery_speed, payment_method, manage_token_hash, payment_reference, status, currency, subtotal_cents, shipping_cents, total_cents, created_at, updated_at
       FROM shop_orders
       WHERE order_ref = ? AND manage_token_hash = ?
       LIMIT 1
+      FOR UPDATE
       `,
       [ref, manageTokenHash]
     );
@@ -712,37 +699,74 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
     if (String(existing.payment_method) !== "dummy_gateway") {
       throw new Error("Assisted checkout orders cannot be auto-confirmed.");
     }
-
-    await db.execute(
-      `
-      UPDATE shop_orders
-      SET status = 'paid', payment_reference = ?, updated_at = NOW()
-      WHERE order_ref = ? AND manage_token_hash = ?
-      `,
-      [paymentRef, ref, manageTokenHash]
-    );
-    const [rows] = await db.query<mysql.RowDataPacket[]>(
-      `
-      SELECT id, order_ref, delivery_speed, payment_method, manage_token_hash, payment_reference, status, currency, subtotal_cents, shipping_cents, total_cents, created_at, updated_at
-      FROM shop_orders
-      WHERE order_ref = ? AND manage_token_hash = ?
-      LIMIT 1
-      `,
-      [ref, manageTokenHash]
-    );
-    const order = rows[0];
-    if (!order) return null;
-    const [itemRows] = await db.query<mysql.RowDataPacket[]>(
+    const [itemRows] = await connection.query<mysql.RowDataPacket[]>(
       `
       SELECT id, order_id, product_id, product_name, unit_price_cents, quantity, line_total_cents
       FROM shop_order_items
       WHERE order_id = ?
       ORDER BY id ASC
       `,
-      [Number(order.id)]
+      [Number(existing.id)]
     );
+
+    if (String(existing.status) !== "paid") {
+      const productIds = Array.from(
+        new Set(itemRows.map((row) => Number(row.product_id)).filter((id) => id > 0))
+      );
+      if (productIds.length === 0) {
+        throw new Error("Order has no items.");
+      }
+      const placeholders = productIds.map(() => "?").join(",");
+      const [productRows] = await connection.query<mysql.RowDataPacket[]>(
+        `
+        SELECT id, name, stock_qty, is_active
+        FROM shop_products
+        WHERE id IN (${placeholders})
+        FOR UPDATE
+        `,
+        productIds
+      );
+      const productsById = new Map(productRows.map((row) => [Number(row.id), row]));
+      for (const item of itemRows) {
+        const product = productsById.get(Number(item.product_id));
+        if (!product || Number(product.is_active) !== 1) {
+          throw new Error("A product is unavailable.");
+        }
+        if (Number(product.stock_qty) < Number(item.quantity)) {
+          throw new Error(`Insufficient stock for ${String(product.name)}.`);
+        }
+      }
+      for (const item of itemRows) {
+        await connection.execute("UPDATE shop_products SET stock_qty = stock_qty - ? WHERE id = ?", [
+          Number(item.quantity),
+          Number(item.product_id),
+        ]);
+      }
+      await connection.execute(
+        `
+        UPDATE shop_orders
+        SET status = 'paid', payment_reference = ?, updated_at = NOW()
+        WHERE id = ?
+        `,
+        [paymentRef, Number(existing.id)]
+      );
+    }
+
+    const [rows] = await connection.query<mysql.RowDataPacket[]>(
+      `
+      SELECT id, order_ref, delivery_speed, payment_method, manage_token_hash, payment_reference, status, currency, subtotal_cents, shipping_cents, total_cents, created_at, updated_at
+      FROM shop_orders
+      WHERE id = ?
+      LIMIT 1
+      `,
+      [Number(existing.id)]
+    );
+    const order = rows[0];
+    if (!order) return null;
+    await connection.commit();
     return toPublicShopOrder(order, itemRows);
   } catch (error) {
+    await connection.rollback();
     if (!isDbConnectionError(error)) throw error;
     const order = memoryShopOrders.find(
       (row) => row.order_ref === ref && row.manage_token_hash === manageTokenHash
@@ -751,11 +775,31 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
     if (order.payment_method !== "dummy_gateway") {
       throw new Error("Assisted checkout orders cannot be auto-confirmed.");
     }
+    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    if (order.status === "paid") {
+      return toPublicShopOrder(order, items);
+    }
+    for (const item of items) {
+      const product = getMemoryProductById(item.product_id);
+      if (!product || product.is_active !== 1) {
+        throw new Error("A product is unavailable.");
+      }
+      if (product.stock_qty < item.quantity) {
+        throw new Error(`Insufficient stock for ${product.name}.`);
+      }
+    }
+    for (const item of items) {
+      const product = getMemoryProductById(item.product_id);
+      if (product) {
+        product.stock_qty = Math.max(0, product.stock_qty - item.quantity);
+      }
+    }
     order.status = "paid";
     order.payment_reference = paymentRef;
     order.updated_at = new Date().toISOString();
-    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
     return toPublicShopOrder(order, items);
+  } finally {
+    connection.release();
   }
 }
 

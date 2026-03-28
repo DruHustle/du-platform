@@ -922,11 +922,6 @@
         "desc": "Kuongorora njodzi neruzivo rwemuno."
       }
     },
-    "database_title": "Matura neMabhuku eZvekutengeserana neKudyara Pfuma",
-    "database_subtitle": "Matura nemabhuku emakambani ezvekutengeserana nekurima akasimbiswa muZimbabwe. Kusimbiswa uku kunoitwa nemasangano akazvimirira.",
-    "ntir_title": "Rejista yeNyika yeKutengeserana neKudyara (NTIR)",
-    "ntir_subtitle": "Gwaro repamutemo remabhizimusi akasimbiswa muZimbabwe.",
-    "ntir_button": "Tsvaga muNTIR.",
     "ntir": {
       "back": "Back to Investment",
       "title": "NTIR Database Search",
@@ -991,7 +986,6 @@
       "source_eu": "Kunobva: EU International Partnerships",
       "source_eib": "Kunobva: EIB Zimbabwe Essay"
     },
-    "ntir_label": "National Directory",
     "crowdfunding_steps": {
       "browse": "Browse Projects",
       "invest": "Invest Your Share",
@@ -2103,7 +2097,7 @@
       "transfer_types": {
         "send_money": {
           "label": "Tumira Mari",
-          "description": "Endesa kune nharembozha, kutora mari, kana Visa kadhi."
+          "description": "Endesa kune mari yenharembozha, kutora mari, kana kubhanga."
         },
         "airtime_topup": {
           "label": "Airtime Top-up",
@@ -2111,9 +2105,9 @@
         }
       },
       "payout_types": {
-        "mobile_money": "Vadivelu Comedy Mobile Money",
+        "mobile_money": "Mari Yenharembozha",
         "cash_pickup": "Cash Pickup",
-        "visa_card": "Visa Card"
+        "bank_transfer": "Bank Transfer"
       },
       "steps": {
         "start": "Tanga",
@@ -2128,8 +2122,8 @@
         "continue_to_pay": "Ramba uchibhadhara",
         "download_receipt": "Dhaunirodha Receipt",
         "edit": "Edit",
-        "get_started": "Tanga",
-        "loading_rate": "Loading Rate",
+        "get_started": "Enderera mberi",
+        "loading_rate": "Tiri kutora quote...",
         "new_transfer": "New Transfer",
         "pay_now": "Pay Now",
         "processing": "Processing"
@@ -2158,19 +2152,22 @@
       "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Kazhinji mukati memaminitsi.",
+        "bank_transfer": "Kazhinji mumazuva 1 kusvika ku3 ebasa.",
         "cash_pickup": "Kazhinji mukati meawa 1 mushure mekusimbiswa kweanopa.",
         "default": "Nguva dzinoenderana nemupi wekugadzirisa mahwindo.",
-        "mobile_money": "Kazhinji mukati memaminitsi kusvika kumaawa maviri.",
-        "visa_card": "Inogona kutora maminetsi kusvika kumaawa makumi maviri nemana."
+        "mobile_money": "Kazhinji mukati memaminitsi kusvika kumaawa maviri."
       },
       "fee": "Fee",
       "fields": {
         "receive_placeholder": "Kubhadhara kunogona chete kuwanda kwe10USD.",
         "receiver_country": "Receiver nyika",
         "reloadly_receive_pending": "Mitengo inooneka mushure mekunge ruzivo rwemupi rwasimbiswa.",
+        "sender_country_auto": "Yasarudzwa yega. Unogona kuchinja kana uchida.",
+        "sender_country_detected": "Yakaonekwa kubva panzvimbo yako",
+        "sender_country_detecting": "Tiri kuona nzvimbo yako...",
         "sender_country": "Uri kutumira kubva kupi?",
         "they_receive": "Vanogamuchira",
-        "transfer_type": "Sarudza Tumira Mari, Airtime Yekuwedzera, kana Magetsi Anobhadharwa Kuti uenderere mberi.",
+        "transfer_type": "Sarudza Tumira Mari kana Airtime Yekuwedzera kuti uenderere mberi.",
         "you_send": "Unotumira"
       },
       "pay": {
@@ -2184,19 +2181,26 @@
         "card_holder": "Kadhi Holder Zita",
         "card_number": "Nhamba yeKadhi",
         "account_number_placeholder": "Account number",
+        "bank_account_number": "Nhamba yeAccount",
+        "bank_name": "Bhanga",
+        "cash_pickup_note": "Mugamuchiri anogona kutora mari panzvimbo inotsigirwa mushure mekusimbiswa.",
         "ecocash_number": "EcoCash Number",
         "expiry_month": "Kupera (MM)",
         "expiry_year": "Kupera (YYYY)",
         "method": "Kubhadhara nzira",
         "pickup_channel": "Pickup Channel",
         "pickup_location": "Pickup Nzvimbo",
+        "recipient_mobile": "Nhamba Yenhare Yemugamuchiri",
+        "select_bank": "Sarudza bhanga",
         "select_channel": "Sarudza chiteshi"
       },
       "quote": {
         "estimated_receive": "Zvinofungidzirwa Rece",
+        "fee_pending": "Fee ichasimbiswa usati wabhadhara",
         "fx_rate": "FX Rate",
         "na": "N/A",
         "route": "Nzira",
+        "total_pending": "Total ichasimbiswa usati wabhadhara",
         "to": "ku"
       },
       "receipt": {
@@ -2234,13 +2238,13 @@
       "subtitle": {
         "": "Tumira mari yako zviri nyore, nekukurumidza uye zvakachengeteka kubva murunyararo rweimba yako kuenda kuZimbabwe."
       },
+      "system_notice": "Kubhadhara kunofambiswa nevanopa marezinesi ehupfumi hwemari. Diaspora Yakavhurwa haibati mari dzevatengi.",
       "title": "Tumira Mari",
       "total": "Total",
       "transfer": {
-        "required_hint": "Sarudza Tumira Mari, Airtime Yekuwedzera, kana Magetsi Anobhadharwa Kuti uenderere mberi."
+        "required_hint": "Sarudza Tumira Mari kana Airtime Yekuwedzera kuti uenderere mberi."
       }
     },
-    "disclaimer": "Kubhadhara kunofambiswa nevanopa marezinesi ehupfumi hwemari. Diaspora Yakavhurwa haibati mari dzevatengi.",
     "hero": {
       "actions": {
         "airtime": "Wedzera Airtime",
@@ -2287,25 +2291,6 @@
         "highlight": "Kuuraya",
         "subtitle": "Maturusi ekubhadhara ehunyanzvi anoenderana neDiaspora Unlocked papuratifomu dhizaini system.",
         "title": "Trusted"
-      }
-    },
-    "process": {
-      "collect": {
-        "description": "Anogamuchira anounganidza mari kana kugamuchira airtime. Nguva dzekuratidzira dzinosiyana nechaneli uye cheki dzevanopa.",
-        "title": "Unganidza"
-      },
-      "details": {
-        "description": "Nyora anogamuchira uye ruzivo rwekubhadhara. Zvinopinza zvinosimbiswa uye mafoni emari anodzivirirwa server-parutivi.",
-        "title": "Wedzera Details"
-      },
-      "intro": "Tevedza rwendo rwakajeka rwematanho mana: wedzera ruzivo, wongororo, bhadhara, uye tora. Chengetedzo inoiswa padanho rega rega ne-server-side processing, macheki ekuteerera, uye traceable transaction mareferensi. Airtime inowanzova pedyo-pakarepo, nepo nharembozha, kadhi, uye kutora mari zvinogona kutora nguva yakareba zvichienderana nemupi wekugadzirisa mahwindo.",
-      "pay": {
-        "description": "Bvumira kuchinjisa kuti utange kugadzirisa kwevanopa. Zvigadziriso zvemamiriro zvinotarisa mafambiro kubva pakamirirwa kusvika pakupera.",
-        "title": "Pay"
-      },
-      "review": {
-        "description": "Simbisa huwandu, mubhadharo, uye FX preview. KYC uye transaction control inotariswa isati yatumirwa.",
-        "title": "Ongorora uye Dzivirira"
       }
     },
     "receipt": {

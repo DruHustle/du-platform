@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,6 @@ export default function Investment() {
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState("all");
   const [riskFilter, setRiskFilter] = useState("all");
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const crowdfundingSubtitle =
     t("investment.crowdfunding_subtitle") ||
@@ -31,10 +30,7 @@ export default function Investment() {
       badgeIcon: Shield, 
       title: t('investment.hero.title1') || "Diaspora Investment",
       titleHighlight: t('investment.hero.highlight1') || "National Growth",
-      subtitle: t('investment.hero.subtitle1') || "Supporting national development through diaspora engagement.",
-      buttons: [
-        { text: t('investment.hero.rbz_policy') || "Explore policies", variant: "primary", link: "/regulations#investment-compliance" }
-      ]
+      subtitle: t('investment.hero.subtitle1') || "Supporting national development through diaspora engagement."
     },
     {
       image: "/images/pages/investment/masuwe_sez.png",
@@ -42,8 +38,7 @@ export default function Investment() {
       badgeIcon: Globe,
       title: t('investment.hero.title2') || "Invest in Masuwe SEZ",
       titleHighlight: t('investment.hero.highlight2') || "Prime Location",
-      subtitle: t('investment.hero.subtitle2') || "Strategic hospitality opportunities near Victoria Falls.",
-      buttons: []
+      subtitle: t('investment.hero.subtitle2') || "Strategic hospitality opportunities near Victoria Falls."
     },
     {
       image: "/images/pages/investment/vfex_logo.png",
@@ -51,8 +46,7 @@ export default function Investment() {
       badgeIcon: Repeat,
       title: t('investment.hero.title3') || "Stock Exchange",
       titleHighlight: t('investment.hero.highlight3') || "Global Access",
-      subtitle: t('investment.hero.subtitle3') || "Invest in offshore-listed African companies.",
-      buttons: []
+      subtitle: t('investment.hero.subtitle3') || "Invest in offshore-listed African companies."
     },
     {
       image: "/images/pages/investment/horticulture.jpg",
@@ -60,8 +54,7 @@ export default function Investment() {
       badgeIcon: Leaf,
       title: t('investment.hero.title4') || "Green Gold",
       titleHighlight: t('investment.hero.highlight4') || "High ROI",
-      subtitle: t('investment.hero.subtitle4') || "High-value fruit exports driving growth.",
-      buttons: []
+      subtitle: t('investment.hero.subtitle4') || "High-value fruit exports driving growth."
     },
     {
       image: "/images/pages/investment/minerals_mining.png",
@@ -69,8 +62,7 @@ export default function Investment() {
       badgeIcon: Gem,
       title: t('investment.hero.title5') || "Mineral Wealth",
       titleHighlight: t('investment.hero.highlight5') || "Strategic Assets",
-      subtitle: t('investment.hero.subtitle5') || "Gold, Platinum, and Lithium opportunities.",
-      buttons: []
+      subtitle: t('investment.hero.subtitle5') || "Gold, Platinum, and Lithium opportunities."
     },
     {
       image: "/images/pages/trade/manufacturing_factory.jpg",
@@ -78,8 +70,7 @@ export default function Investment() {
       badgeIcon: Building,
       title: t("investment.hero.title6") || "Value-Added Manufacturing",
       titleHighlight: t("investment.hero.highlight6") || "Export-Ready Capacity",
-      subtitle: t("investment.hero.subtitle6") || "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
-      buttons: []
+      subtitle: t("investment.hero.subtitle6") || "Light manufacturing and processing projects create jobs and stronger regional competitiveness."
     },
     {
       image: "/images/pages/tourism/victoria_falls.jpg",
@@ -87,8 +78,7 @@ export default function Investment() {
       badgeIcon: Target,
       title: t("investment.hero.title7") || "Hospitality Growth Corridors",
       titleHighlight: t("investment.hero.highlight7") || "Visitor Economy",
-      subtitle: t("investment.hero.subtitle7") || "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
-      buttons: []
+      subtitle: t("investment.hero.subtitle7") || "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand."
     },
     {
       image: "/images/pages/investment/partnership_handshake.png",
@@ -96,15 +86,9 @@ export default function Investment() {
       badgeIcon: DollarSign,
       title: t("investment.hero.title8") || "Channel Remittances to Assets",
       titleHighlight: t("investment.hero.highlight8") || "Structured Investment",
-      subtitle: t("investment.hero.subtitle8") || "Convert household remittance strength into pooled, trackable, and productive investment pathways.",
-      buttons: []
+      subtitle: t("investment.hero.subtitle8") || "Convert household remittance strength into pooled, trackable, and productive investment pathways."
     }
   ], [t]);
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentHeroIndex(p => (p + 1) % heroSlides.length), 5000);
-    return () => clearInterval(timer);
-  }, [heroSlides.length]);
 
 const projects = [
   { 
@@ -937,42 +921,6 @@ const projects = [
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* Directories - Dual Glass Panels */}
-      <section className="p-5 bg-slate-950 relative overflow-hidden">
-        <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-              <div className="mb-10 text-center">
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <FileText className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">{t('investment.database_title') || "Trade & Investment Databases and Registries"}</h3>
-            </div>
-             <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">{t('investment.database_subtitle') || "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities."}</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="relative p-7 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-zim-gold/5 blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-4 mb-5">
-                <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-zim-gold/10 transition-colors">
-                  <span className="text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]">🗂️</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-black text-white tracking-tight">{t('investment.ntir_title') || "National Trade & Investment Register (NTIR)"}</h3>
-                  <p className="text-xs  font-black uppercase tracking-[0.2em]">
-                    {t("investment.ntir_label") || "National Directory"}
-                  </p>
-                </div>
-              </div>
-              <p className=" text-sm font-light leading-relaxed mb-6">{t('investment.ntir_subtitle') || "Official registry of verified trade and investment entities in Zimbabwe."}</p>
-              <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                <Link href="/ntir">{t('investment.ntir_button') || "Search NTIR Database."}</Link>
-              </Button>
-            </div>
-
-          </div>
           </div>
         </div>
       </section>

@@ -922,11 +922,6 @@
         "desc": "Lokalisierte Risikobewertung und Intelligenz."
       }
     },
-    "database_title": "Handels- und Investitionsdatenbanken und -register",
-    "database_subtitle": "Datenbanken und Register verifizierter Handels- und Investitionseinheiten in Simbabwe. Die Verifizierung erfolgt durch Drittanbieter.",
-    "ntir_title": "Nationales Handels- & Investitionsregister (NTIR)",
-    "ntir_subtitle": "Offizielles Register verifizierter Handels- und Investitionseinheiten in Simbabwe.",
-    "ntir_button": "NTIR-Datenbank durchsuchen",
     "ntir": {
       "back": "Back to Investment",
       "title": "NTIR Database Search",
@@ -991,7 +986,6 @@
       "source_eu": "Quelle: Internationale Partnerschaften der EU",
       "source_eib": "Quelle: Essay der EIB zu Simbabwe"
     },
-    "ntir_label": "Nationales Verzeichnis",
     "crowdfunding_steps": {
       "browse": "Durchsuchen Sie Projekte",
       "invest": "Investieren Sie Ihren Anteil",
@@ -2103,7 +2097,7 @@
       "transfer_types": {
         "send_money": {
           "label": "Geld senden",
-          "description": "Überweisung auf Mobile Money, Bargeldabholung oder Visa-Karte."
+          "description": "Überweisung auf Mobile Money, Bargeldabholung oder Banküberweisung."
         },
         "airtime_topup": {
           "label": "Aufladung der Sendezeit",
@@ -2113,7 +2107,7 @@
       "payout_types": {
         "mobile_money": "Mobiles Geld",
         "cash_pickup": "Bargeldabholung",
-        "visa_card": "Visa-Karte"
+        "bank_transfer": "Banküberweisung"
       },
       "steps": {
         "start": "Start",
@@ -2128,8 +2122,8 @@
         "continue_to_pay": "Bezahlen Sie weiter",
         "download_receipt": "Laden Sie die Quittung herunter",
         "edit": "Bearbeiten",
-        "get_started": "Legen Sie los",
-        "loading_rate": "Laderate",
+        "get_started": "Weiter",
+        "loading_rate": "Angebot wird geladen...",
         "new_transfer": "Neue Übertragung",
         "pay_now": "Jetzt bezahlen",
         "processing": "Verarbeitung"
@@ -2158,19 +2152,22 @@
       "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Normalerweise innerhalb von Minuten.",
+        "bank_transfer": "Normalerweise innerhalb von 1 bis 3 Werktagen.",
         "cash_pickup": "Normalerweise innerhalb einer Stunde nach Bestätigung des Anbieters.",
         "default": "Die Zeiten hängen von den Verarbeitungsfenstern des Anbieters ab.",
-        "mobile_money": "Normalerweise innerhalb von Minuten bis 2 Stunden.",
-        "visa_card": "Kann Minuten bis zu 24 Stunden dauern."
+        "mobile_money": "Normalerweise innerhalb von Minuten bis 2 Stunden."
       },
       "fee": "Gebühr",
       "fields": {
         "receive_placeholder": "Die Auszahlung kann nur in Vielfachen von 10 USD erfolgen.",
         "receiver_country": "Empfängerland",
         "reloadly_receive_pending": "Die Preise werden angezeigt, nachdem die Anbieterdetails bestätigt wurden.",
+        "sender_country_auto": "Automatisch ausgewählt. Sie können es weiterhin ändern.",
+        "sender_country_detected": "Von Ihrem Standort erkannt",
+        "sender_country_detecting": "Ihr Standort wird erkannt...",
         "sender_country": "Von wo aus senden Sie?",
         "they_receive": "Sie erhalten",
-        "transfer_type": "Wählen Sie „Geld senden“, „Guthaben aufladen“ oder „Prepaid-Strom“, um fortzufahren.",
+        "transfer_type": "Wählen Sie „Geld senden“ oder „Guthaben aufladen“, um fortzufahren.",
         "you_send": "Du sendest"
       },
       "pay": {
@@ -2184,19 +2181,26 @@
         "card_holder": "Name des Karteninhabers",
         "card_number": "Kartennummer",
         "account_number_placeholder": "Account number",
+        "bank_account_number": "Kontonummer",
+        "bank_name": "Bank",
+        "cash_pickup_note": "Der Empfänger kann nach der Bestätigung an einem unterstützten Bargeldabholpunkt abholen.",
         "ecocash_number": "EcoCash-Nummer",
         "expiry_month": "Ablauf (MM)",
         "expiry_year": "Ablauf (JJJJ)",
         "method": "Auszahlungsmethode",
         "pickup_channel": "Pickup-Kanal",
         "pickup_location": "Abholort",
+        "recipient_mobile": "Mobilnummer des Empfängers",
+        "select_bank": "Bank auswählen",
         "select_channel": "Kanal auswählen"
       },
       "quote": {
         "estimated_receive": "Voraussichtlicher Empfang",
+        "fee_pending": "Gebühr wird vor der Zahlung bestätigt",
         "fx_rate": "Wechselkurs",
         "na": "N / A",
         "route": "Route",
+        "total_pending": "Gesamtbetrag wird vor der Zahlung bestätigt",
         "to": "Zu"
       },
       "receipt": {
@@ -2234,13 +2238,13 @@
       "subtitle": {
         "": "Senden Sie Ihr Geld einfach, schnell und sicher bequem von zu Hause nach Simbabwe."
       },
+      "system_notice": "Zahlungen werden von lizenzierten Finanzinfrastrukturanbietern durchgeführt. Diaspora Unlocked verfügt über keine Kundengelder.",
       "title": "Geld senden",
       "total": "Gesamt",
       "transfer": {
-        "required_hint": "Wählen Sie „Geld senden“, „Guthaben aufladen“ oder „Prepaid-Strom“, um fortzufahren."
+        "required_hint": "Wählen Sie „Geld senden“ oder „Guthaben aufladen“, um fortzufahren."
       }
     },
-    "disclaimer": "Zahlungen werden von lizenzierten Finanzinfrastrukturanbietern durchgeführt. Diaspora Unlocked verfügt über keine Kundengelder.",
     "hero": {
       "actions": {
         "airtime": "Sendezeit aufladen",
@@ -2287,25 +2291,6 @@
         "highlight": "Ausführung",
         "subtitle": "Professionelle Zahlungstools, die auf das Designsystem der Diaspora Unlocked-Plattform abgestimmt sind.",
         "title": "Vertrauenswürdig"
-      }
-    },
-    "process": {
-      "collect": {
-        "description": "Der Empfänger sammelt Geld oder erhält Sendezeit. Die Reflexionszeiten variieren je nach Kanal und Anbieterprüfung.",
-        "title": "Sammeln"
-      },
-      "details": {
-        "description": "Geben Sie Empfänger- und Auszahlungsdaten ein. Eingaben werden validiert und Finanzanrufe werden serverseitig geschützt.",
-        "title": "Details hinzufügen"
-      },
-      "intro": "Folgen Sie einem klaren Weg in vier Schritten: Details hinzufügen, überprüfen, bezahlen und abholen. Sicherheit wird in jeder Phase durch serverseitige Verarbeitung, Compliance-Prüfungen und nachvollziehbare Transaktionsreferenzen gewährleistet. Die Sendezeit erfolgt oft nahezu augenblicklich, während die Abholung von mobilem Geld, Karte und Bargeld je nach Verarbeitungsfenster des Anbieters länger dauern kann.",
-      "pay": {
-        "description": "Genehmigen Sie die Übertragung, um die Verarbeitung durch den Anbieter einzuleiten. Statusaktualisierungen verfolgen den Fortschritt von „Ausstehend“ bis „Abschluss“.",
-        "title": "Zahlen"
-      },
-      "review": {
-        "description": "Bestätigen Sie Betrag, Gebühren und FX-Vorschau. KYC- und Transaktionskontrollen werden vor der Einreichung überprüft.",
-        "title": "Überprüfen und schützen"
       }
     },
     "receipt": {

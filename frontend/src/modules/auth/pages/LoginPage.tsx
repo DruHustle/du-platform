@@ -15,7 +15,7 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const params = new URLSearchParams(window.location.search);
   const nextParam = params.get("next");
-  const nextPath = nextParam && nextParam.startsWith("/") ? nextParam : "/";
+  const nextPath = nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/";
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <section className="min-h-[90vh] flex items-center justify-center bg-slate-950 relative overflow-hidden px-6 py-20">
+      <section className="min-h-[82vh] flex items-center justify-center bg-slate-950 relative overflow-hidden px-6 pt-20 pb-10 md:pt-24 md:pb-12">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -65,7 +65,7 @@ export default function Login() {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="relative w-full max-w-md p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent shadow-2xl"
         >
-          <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-12 space-y-8">
+          <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 space-y-7">
             <button
               onClick={() => setLocation(nextPath)}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
@@ -75,7 +75,7 @@ export default function Login() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className="text-xl font-black tracking-tight text-white">
+              <h1 className="!text-lg font-black tracking-tight text-white md:!text-[1.2rem]">
                 {returningUser ? t("auth.welcome_back") || "Welcome Back" : t("auth.login") || "Sign In"}
               </h1>
               <p className="text-sm font-light leading-relaxed text-white/75">
@@ -146,6 +146,7 @@ export default function Login() {
 
               {error ? (
                 <motion.div
+                  role="alert"
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-start gap-2.5 rounded-xl border border-rose-400/20 bg-rose-500/10 px-4 py-3"
@@ -158,7 +159,7 @@ export default function Login() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20 disabled:opacity-70"
+                className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-12 rounded-full shadow-xl shadow-zim-gold/20 disabled:opacity-70"
               >
                 {loading ? (
                   <>

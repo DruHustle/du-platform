@@ -8,11 +8,7 @@ import {
 } from "../providers/terrapayGatewayProvider";
 import type { FinancialFeature, RemittanceFeatureProvider } from "../providers/providerTypes";
 import { sanitizeObject, sanitizePhoneNumber, sanitizeText } from "../../../utils/sanitize";
-
-const MAX_SEND_AMOUNT = 5000;
-
-const SUPPORTED_BANKS = ["ZB Bank", "CBZ", "BancABC", "Steward Bank"] as const;
-export type SupportedBank = (typeof SUPPORTED_BANKS)[number];
+import { getRemittancePolicy } from "../config/remittancePolicy";
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
 
@@ -29,6 +25,13 @@ const RemittanceSchema = z.object({
   senderMsisdn: z.string().min(7).max(20).optional(),
   purposeOfRemittance: z.string().min(2).max(255).default("FAMILY_SUPPORT"),
   receivingCountry: z.string().min(2).max(2).default("ZW"),
+  quoteId: z.string().min(8).max(64).optional(),
+  quoteExpiryTime: z.string().min(8).max(64).optional(),
+  quoteToken: z.string().min(32).max(512).optional(),
+  quotedFxRate: z.number().positive().optional(),
+  quotedReceivingAmount: z.number().positive().optional(),
+  quotedReceivingCurrency: z.string().min(3).max(10).optional(),
+  quotedSenderFee: z.number().min(0).optional(),
   recipient: z
     .object({
       mobileNumber: z.string().min(7).max(20).optional(),
@@ -115,6 +118,7 @@ function normalizeQuoteResponse(raw: any) {
   const sendingCurrency = String(first?.sendingCurrency ?? raw?.sendingCurrency ?? "").toUpperCase();
   const receivingCurrency = String(first?.receivingCurrency ?? raw?.receivingCurrency ?? "").toUpperCase();
   const quoteId = String(first?.quoteId ?? raw?.quotationReference ?? "").trim();
+  const quoteExpiryTime = String(first?.quoteExpiryTime ?? raw?.quoteExpiryTime ?? "").trim();
 
   // Expose senderFee at the top level so extractProviderFee can find it.
   // TerraPay may return it in quotes[0].senderFee, quotes[0].charges.amount, or raw.senderFee.
@@ -130,14 +134,89 @@ function normalizeQuoteResponse(raw: any) {
   return {
     ...raw,
     quoteId: quoteId || undefined,
+    quoteExpiryTime: quoteExpiryTime || undefined,
     fxRate,
-    exchangeRate: fxRate,
     sendingAmount,
     receivingAmount,
     sendingCurrency,
     receivingCurrency,
     ...(senderFee !== null ? { senderFee } : {}),
   };
+}
+
+/**
+ * Normalise a phone number to E.164, with special handling for Zimbabwe
+ * local format (07xxxxxxxx → +263 7xxxxxxxx).  Applied before fingerprinting
+ * so that a quote requested with the local form and a payment submitted with
+ * the international form produce the same canonical value.
+ */
+function normalizeMsisdnForFingerprint(phone: string): string {
+  const sanitized = sanitizePhoneNumber(phone); // strips non-digits except leading +
+  if (/^07\d{8}$/.test(sanitized)) return `+263${sanitized.slice(1)}`;
+  if (/^2637\d{8}$/.test(sanitized)) return `+${sanitized}`;
+  return sanitized;
+}
+
+function buildQuoteRequestFingerprint(input: {
+  amountSent: number;
+  currencyFrom: string;
+  currencyTo: string;
+  receivingCountry: string;
+  originCountry?: string;
+  senderMsisdn?: string;
+  recipientType?: string;
+  payoutChannel?: string;
+  recipientMsisdn?: string;
+  recipientBankName?: string;
+  recipientBankAccountNumber?: string;
+}) {
+  return JSON.stringify({
+    amountSent: Number(Number(input.amountSent ?? 0).toFixed(2)),
+    currencyFrom: String(input.currencyFrom ?? "").trim().toUpperCase(),
+    currencyTo: String(input.currencyTo ?? "").trim().toUpperCase(),
+    receivingCountry: String(input.receivingCountry ?? "").trim().toUpperCase(),
+    originCountry: String(input.originCountry ?? "").trim().toUpperCase(),
+    senderMsisdn: normalizeMsisdnForFingerprint(input.senderMsisdn ?? ""),
+    recipientType: String(input.recipientType ?? "").trim().toLowerCase(),
+    payoutChannel: String(input.payoutChannel ?? "").trim(),
+    recipientMsisdn: normalizeMsisdnForFingerprint(input.recipientMsisdn ?? ""),
+    recipientBankName: String(input.recipientBankName ?? "").trim(),
+    recipientBankAccountNumber: normalizeBankAccountNumber(input.recipientBankAccountNumber ?? ""),
+  });
+}
+
+function createQuoteToken(input: {
+  quoteId: string;
+  quoteExpiryTime?: string;
+  fingerprint: string;
+  fxRate?: number | null;
+  receivingAmount?: number | null;
+  receivingCurrency?: string;
+  senderFee?: number | null;
+}) {
+  const canonicalPayload = {
+    quoteId: String(input.quoteId ?? "").trim(),
+    quoteExpiryTime: String(input.quoteExpiryTime ?? "").trim(),
+    fingerprint: String(input.fingerprint ?? ""),
+    fxRate: input.fxRate == null ? null : Number(input.fxRate),
+    receivingAmount: input.receivingAmount == null ? null : Number(input.receivingAmount),
+    receivingCurrency: input.receivingCurrency ? String(input.receivingCurrency).trim().toUpperCase() : null,
+    senderFee: input.senderFee == null ? null : Number(input.senderFee),
+  };
+  const secret = String(process.env.FINTECH_QUOTE_TOKEN_SECRET ?? process.env.JWT_SECRET ?? "du-quote-dev-secret").trim();
+  return crypto
+    .createHmac("sha256", secret)
+    .update(JSON.stringify(canonicalPayload))
+    .digest("hex");
+}
+
+function parseQuoteExpiryTime(input: unknown): number | null {
+  const raw = String(input ?? "").trim();
+  if (!raw) return null;
+  const parsed = Date.parse(raw.replace(" ", "T").replace(/Z?$/, "Z"));
+  if (Number.isFinite(parsed)) return parsed;
+  const fallback = Date.parse(raw);
+  return Number.isFinite(fallback) ? fallback : null;
 }
 
 // ─── Credit / debit party builders ───────────────────────────────────────────
@@ -249,10 +328,18 @@ export class TerraPayGatewayService implements RemittanceFeatureProvider {
         bankAccountNumber: normalizeBankAccountNumber((s as any)?.recipient?.bankAccountNumber) || undefined,
         bankCode: sanitizeText((s as any)?.recipient?.bankCode, 25) || undefined,
       },
+      quoteId: sanitizeText((s as any)?.quoteId, 64) || undefined,
+      quoteExpiryTime: sanitizeText((s as any)?.quoteExpiryTime, 64) || undefined,
+      quoteToken: sanitizeText((s as any)?.quoteToken, 512) || undefined,
+      quotedFxRate: toFinancialNumber((s as any)?.quotedFxRate) ?? undefined,
+      quotedReceivingAmount: toFinancialNumber((s as any)?.quotedReceivingAmount) ?? undefined,
+      quotedReceivingCurrency: sanitizeText((s as any)?.quotedReceivingCurrency ?? "", 10).toUpperCase() || undefined,
+      quotedSenderFee: toFinancialNumber((s as any)?.quotedSenderFee) ?? undefined,
     });
 
-    if (parsed.amountSent > MAX_SEND_AMOUNT) {
-      throw new Error(`Amount exceeds permitted limit of ${MAX_SEND_AMOUNT}.`);
+    const policy = getRemittancePolicy();
+    if (parsed.amountSent > policy.maxPerTransaction) {
+      throw new Error(`Amount exceeds permitted limit of ${policy.maxPerTransaction}.`);
     }
 
     this.validatePayoutDetails(parsed);
@@ -275,8 +362,9 @@ export class TerraPayGatewayService implements RemittanceFeatureProvider {
       recipientBankAccountNumber: normalizeBankAccountNumber((s as any)?.recipientBankAccountNumber) || undefined,
     });
 
-    if (parsed.amountSent > MAX_SEND_AMOUNT) {
-      throw new Error(`Amount exceeds permitted limit of ${MAX_SEND_AMOUNT}.`);
+    const policy = getRemittancePolicy();
+    if (parsed.amountSent > policy.maxPerTransaction) {
+      throw new Error(`Amount exceeds permitted limit of ${policy.maxPerTransaction}.`);
     }
 
     if (
@@ -315,9 +403,10 @@ export class TerraPayGatewayService implements RemittanceFeatureProvider {
       if (!isValidBankAccountNumber(req.recipient.bankAccountNumber)) {
         throw new Error("Bank account number format is invalid.");
       }
-      const bank = req.payoutChannel as SupportedBank | undefined;
-      if (bank && !SUPPORTED_BANKS.includes(bank as SupportedBank)) {
-        throw new Error(`Unsupported bank. Allowed: ${SUPPORTED_BANKS.join(", ")}`);
+      const configuredBanks = getRemittancePolicy().supportedBanks;
+      const bank = String(req.payoutChannel ?? req.recipient.bankName ?? "").trim();
+      if (bank && !configuredBanks.includes(bank)) {
+        throw new Error(`Unsupported bank. Allowed: ${configuredBanks.join(", ")}`);
       }
       return;
     }
@@ -373,12 +462,38 @@ export class TerraPayGatewayService implements RemittanceFeatureProvider {
 
     const quoteRaw = await this.provider.createQuotation(quoteRequest);
     const normalized = normalizeQuoteResponse(quoteRaw);
+    const fingerprint = buildQuoteRequestFingerprint({
+      amountSent: payload.amountSent,
+      currencyFrom: payload.currencyFrom,
+      currencyTo: payload.currencyTo,
+      receivingCountry: payload.receivingCountry,
+      originCountry: payload.originCountry,
+      senderMsisdn,
+      recipientType: payload.recipientType,
+      payoutChannel: payload.payoutChannel,
+      recipientMsisdn: payload.recipientMsisdn,
+      recipientBankName: payload.recipientBankName,
+      recipientBankAccountNumber: payload.recipientBankAccountNumber,
+    });
+    const quoteToken =
+      normalized.quoteId
+        ? createQuoteToken({
+            quoteId: String(normalized.quoteId),
+            quoteExpiryTime: String(normalized.quoteExpiryTime ?? ""),
+            fingerprint,
+            fxRate: normalized.fxRate,
+            receivingAmount: normalized.receivingAmount,
+            receivingCurrency: normalized.receivingCurrency || undefined,
+            senderFee: normalized.senderFee ?? null,
+          })
+        : undefined;
 
     return {
       idempotencyKey,
       quote: normalized,
       fxQuote: normalized,
       normalizedRequest: payload,
+      quoteToken,
     };
   }
 
@@ -400,33 +515,58 @@ export class TerraPayGatewayService implements RemittanceFeatureProvider {
     const requestDate = formatRequestDate();
     const senderMsisdn = this.resolveSenderMsisdn(request.senderMsisdn);
     const receivingCountry = request.receivingCountry ?? "ZW";
+    const quoteFingerprint = buildQuoteRequestFingerprint({
+      amountSent: request.amountSent,
+      currencyFrom: request.currencyFrom,
+      currencyTo: request.currencyTo,
+      receivingCountry,
+      originCountry: request.originCountry,
+      senderMsisdn,
+      recipientType: request.recipientType,
+      payoutChannel: request.payoutChannel,
+      recipientMsisdn: request.recipient.mobileNumber,
+      recipientBankName: request.recipient.bankName,
+      recipientBankAccountNumber: request.recipient.bankAccountNumber,
+    });
 
-    // Step 1: Get a quotation.
-    const quoteRequest: TerraPayQuoteRequest = {
-      requestDate,
-      type,
-      debitParty: buildDebitParty(senderMsisdn),
-      creditParty: [
-        { key: "instrumentType", value: buildInstrumentType(request.recipientType) },
-        { key: "receivingCountry", value: receivingCountry.toUpperCase() },
-        ...(request.recipientType === "mobile_money" || request.recipientType === "cash_pickup"
-          ? (() => {
-              const msisdn = sanitizePhoneNumber(request.recipient.mobileNumber ?? "");
-              return msisdn ? [{ key: "msisdn", value: msisdn }] : [];
-            })()
-          : []),
-      ],
-      requestAmount: Number(request.amountSent).toFixed(2),
-      requestCurrency: request.currencyFrom,
-      quotes: [{ sendingCurrency: request.currencyFrom, receivingCurrency: request.currencyTo }],
-    };
+    const quoteId = String(request.quoteId ?? "").trim();
+    const quoteExpiryTime = String(request.quoteExpiryTime ?? "").trim();
+    const quoteToken = String(request.quoteToken ?? "").trim();
+    const quotedFxRate = toFinancialNumber(request.quotedFxRate);
+    const quotedReceivingAmount = toFinancialNumber(request.quotedReceivingAmount);
+    const quotedReceivingCurrency = String(request.quotedReceivingCurrency ?? "").trim().toUpperCase() || undefined;
+    const quotedSenderFee = toFinancialNumber(request.quotedSenderFee);
 
-    const quoteRaw = await this.provider.createQuotation(quoteRequest);
-    const quote = normalizeQuoteResponse(quoteRaw);
+    if (!quoteId || !quoteExpiryTime || !quoteToken || quotedFxRate === null || quotedReceivingAmount === null || !quotedReceivingCurrency) {
+      throw new Error("Protected quote details are incomplete. Refresh the quote before paying.");
+    }
 
-    const quoteId = String(quote.quoteId ?? "").trim();
-    if (!quoteId) {
-      throw new Error("TerraPay quotation ID is missing from the quote response.");
+    const expectedQuoteToken =
+      createQuoteToken({
+        quoteId,
+        quoteExpiryTime,
+        fingerprint: quoteFingerprint,
+        fxRate: quotedFxRate,
+        receivingAmount: quotedReceivingAmount,
+        receivingCurrency: quotedReceivingCurrency,
+        senderFee: quotedSenderFee,
+      });
+
+    const quoteTokenValid =
+      expectedQuoteToken.length > 0 &&
+      quoteToken.length === expectedQuoteToken.length &&
+      crypto.timingSafeEqual(Buffer.from(quoteToken), Buffer.from(expectedQuoteToken));
+
+    if (!quoteTokenValid) {
+      throw new Error("Your exchange quote is unavailable or no longer matches this payout. Refresh the quote before paying.");
+    }
+
+    const quoteExpiryTimestamp = parseQuoteExpiryTime(quoteExpiryTime);
+    const quoteGracePeriodMs = getRemittancePolicy().quoteGracePeriodMs;
+    // Reject locally before we ask TerraPay to create the transaction so checkout
+    // can fail with a refresh-quote message instead of a provider-side hard error.
+    if (!quoteExpiryTimestamp || Date.now() > quoteExpiryTimestamp + quoteGracePeriodMs) {
+      throw new Error("Your exchange quote has expired. Refresh the quote before paying.");
     }
 
     // Step 2: Create the transaction using the quote reference.
@@ -446,13 +586,22 @@ export class TerraPayGatewayService implements RemittanceFeatureProvider {
     return {
       idempotencyKey,
       request,
-      quote,
+      quote: {
+        quoteId,
+        quoteExpiryTime,
+        fxRate: quotedFxRate,
+        receivingAmount: quotedReceivingAmount,
+        receivingCurrency: quotedReceivingCurrency,
+        sendingAmount: request.amountSent,
+        sendingCurrency: request.currencyFrom,
+        senderFee: quotedSenderFee,
+      },
       transaction,
       transfer: transaction,
     };
   }
 
-  getSupportedBanks(): readonly SupportedBank[] {
-    return SUPPORTED_BANKS;
+  getSupportedBanks(): readonly string[] {
+    return getRemittancePolicy().supportedBanks;
   }
 }

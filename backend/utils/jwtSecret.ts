@@ -10,7 +10,8 @@ export function resolveJwtSecret(): string {
   }
 
   if (nodeEnv !== "production") {
-    // Dev/test fallback to avoid local startup/runtime failures when JWT_SECRET is missing.
+    // Dev/test fallback — never deploy without a real JWT_SECRET.
+    console.warn("[jwtSecret] WARNING: JWT_SECRET is not set. Using insecure development fallback. Set JWT_SECRET in your .env file.");
     return "dev-local-jwt-secret-change-me";
   }
 

@@ -921,11 +921,6 @@
         "desc": "Localized risk assessment and intelligence."
       }
     },
-    "database_title": "Trade & Investment Databases and Registries",
-    "database_subtitle": "Databases and registry of verified trade and investment entities in Zimbabwe. Verification done by third-party entities.",
-    "ntir_title": "National Trade & Investment Register (NTIR)",
-    "ntir_subtitle": "Official registry of verified trade and investment entities in Zimbabwe.",
-    "ntir_button": "Search NTIR Database.",
     "ntir": {
       "back": "Back to Investment",
       "title": "NTIR Database Search",
@@ -990,7 +985,6 @@
     "explore_title": "Explore More Invest Information",
     "explore_subtitle": " For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency.",
     "explore_site": "Visit ZIDA",
-    "ntir_label": "National Directory",
     "crowdfunding_steps": {
       "browse": "Browse Projects",
       "invest": "Invest Your Share",
@@ -2102,7 +2096,7 @@
       "transfer_types": {
         "send_money": {
           "label": "Send Money",
-          "description": "Transfer to mobile money, cash pickup, or Visa card."
+          "description": "Transfer to mobile money, cash pickup, or bank transfer."
         },
         "airtime_topup": {
           "label": "Airtime Top-up",
@@ -2112,7 +2106,7 @@
       "payout_types": {
         "mobile_money": "Mobile Money",
         "cash_pickup": "Cash Pickup",
-        "visa_card": "Visa Card"
+        "bank_transfer": "Bank Transfer"
       },
       "steps": {
         "start": "Start",
@@ -2127,8 +2121,8 @@
         "continue_to_pay": "Continue to Pay",
         "download_receipt": "Download Receipt",
         "edit": "Edit",
-        "get_started": "Get Started",
-        "loading_rate": "Loading Rate",
+        "get_started": "Continue",
+        "loading_rate": "Loading quote...",
         "new_transfer": "New Transfer",
         "pay_now": "Pay Now",
         "processing": "Processing"
@@ -2157,19 +2151,22 @@
       "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Usually within minutes.",
+        "bank_transfer": "Usually 1 to 3 business days.",
         "cash_pickup": "Usually within 1 hour after provider confirmation.",
         "default": "Timings depend on provider processing windows.",
-        "mobile_money": "Usually within minutes to 2 hours.",
-        "visa_card": "Can take minutes to up to 24 hours."
+        "mobile_money": "Usually within minutes to 2 hours."
       },
       "fee": "Fee",
       "fields": {
         "receive_placeholder": "Payout can only be in multiples of 10USD.",
         "receiver_country": "Receiver country",
         "reloadly_receive_pending": "Pricing appears after provider details are confirmed.",
+        "sender_country_auto": "Selected automatically. You can still change it.",
+        "sender_country_detected": "Detected from your location",
+        "sender_country_detecting": "Detecting your location...",
         "sender_country": "Where are you sending from?",
         "they_receive": "They receive",
-        "transfer_type": "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue.",
+        "transfer_type": "Select Send Money or Airtime Top-up to continue.",
         "you_send": "You send"
       },
       "pay": {
@@ -2183,19 +2180,26 @@
         "card_holder": "Card Holder Name",
         "card_number": "Card Number",
         "account_number_placeholder": "Account number",
+        "bank_account_number": "Account Number",
+        "bank_name": "Bank",
+        "cash_pickup_note": "The recipient can collect from a supported cash pickup location after confirmation.",
         "ecocash_number": "EcoCash Number",
         "expiry_month": "Expiry (MM)",
         "expiry_year": "Expiry (YYYY)",
         "method": "Payout method",
         "pickup_channel": "Pickup Channel",
         "pickup_location": "Pickup Location",
+        "recipient_mobile": "Recipient Mobile Number",
+        "select_bank": "Select bank",
         "select_channel": "Select channel"
       },
       "quote": {
         "estimated_receive": "Estimated Receive",
+        "fee_pending": "Fee confirmed before payment",
         "fx_rate": "FX Rate",
         "na": "N/A",
         "route": "Route",
+        "total_pending": "Total confirmed before payment",
         "to": "to"
       },
       "receipt": {
@@ -2233,13 +2237,13 @@
       "subtitle": {
         "": "Send your money easy, fast and securely from the comfort of your home to Zimbabwe."
       },
+      "system_notice": "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.",
       "title": "Send Money",
       "total": "Total",
       "transfer": {
-        "required_hint": "Select Send Money, Airtime Top-up, or Prepaid Electricity to continue."
+        "required_hint": "Select Send Money or Airtime Top-up to continue."
       }
     },
-    "disclaimer": "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.",
     "hero": {
       "actions": {
         "airtime": "Top Up Airtime",
@@ -2286,25 +2290,6 @@
         "highlight": "Execution",
         "subtitle": "Professional payment tools aligned with the Diaspora Unlocked platform design system.",
         "title": "Trusted"
-      }
-    },
-    "process": {
-      "collect": {
-        "description": "Recipient collects funds or receives airtime. Reflect times vary by channel and provider checks.",
-        "title": "Collect"
-      },
-      "details": {
-        "description": "Enter recipient and payout details. Inputs are validated and financial calls are protected server-side.",
-        "title": "Add Details"
-      },
-      "intro": "Follow a clear four-step journey: add details, review, pay, and collect. Security is applied at every stage with server-side processing, compliance checks, and traceable transaction references. Airtime is often near-instant, while mobile money, card, and cash pickup can take longer depending on provider processing windows.",
-      "pay": {
-        "description": "Approve the transfer to initiate provider processing. Status updates track progress from pending to completion.",
-        "title": "Pay"
-      },
-      "review": {
-        "description": "Confirm amount, fees, and FX preview. KYC and transaction controls are checked before submission.",
-        "title": "Review and Protect"
       }
     },
     "receipt": {

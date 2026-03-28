@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { z } from "zod";
 import { ReloadlyProvider } from "../providers/reloadlyGatewayProvider";
+import type { AirtimeFeatureProvider, FinancialFeature } from "../providers/providerTypes";
 import { sanitizeObject, sanitizePhoneNumber, sanitizeText } from "../../../utils/sanitize";
 
 const AirtimeTopupSchema = z.object({
@@ -53,8 +54,15 @@ function normalizeZimbabweNumber(rawInput: string): string {
   throw new Error("Invalid Zimbabwe phone number. Use +2637XXXXXXXX or 07XXXXXXXX.");
 }
 
-export class ReloadlyService {
+export class ReloadlyService implements AirtimeFeatureProvider {
+  readonly providerName = "reloadly";
+  readonly displayName = "Reloadly";
+
   constructor(private readonly provider: ReloadlyProvider) {}
+
+  supports(feature: FinancialFeature) {
+    return feature === "airtime";
+  }
 
   private normalizePayload(input: unknown): AirtimeTopupRequest {
     const sanitized = sanitizeObject((input ?? {}) as Record<string, unknown>);
@@ -159,7 +167,9 @@ export class ReloadlyService {
       throw new Error("Unable to detect operator for top-up request.");
     }
 
-    const reference = crypto.randomUUID();
+    // Reuse the app-level idempotency key as Reloadly's customIdentifier so that
+    // provider-side deduplication covers the crash-between-provider-success-and-DB-save window.
+    const reference = String(request.idempotencyKey ?? "").trim() || crypto.randomUUID();
     const topup = await this.provider.createTopup({
       operatorId: Math.floor(operatorId),
       amount: request.amount,
@@ -179,5 +189,4 @@ export class ReloadlyService {
       reference,
     };
   }
-
 }

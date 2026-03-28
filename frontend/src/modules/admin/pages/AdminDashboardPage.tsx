@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,6 +57,7 @@ type TabKey = "notify" | "ntir" | "stories" | "shop";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
+  const [, setLocation] = useLocation();
   const tr = (key: string, fallback: string, options?: Record<string, unknown>) =>
     t(key, { defaultValue: fallback, ...options });
   const [activeTab, setActiveTab] = useState<TabKey>("notify");
@@ -157,7 +159,7 @@ export default function AdminDashboard() {
     } catch (err: any) {
       const status = Number(err?.response?.status ?? 0);
       if (status === 401) {
-        window.location.href = `/login?next=${encodeURIComponent("/admin")}`;
+        setLocation(`/login?next=${encodeURIComponent("/admin")}`, { replace: true });
         return;
       }
       setError(getApiErrorMessage(err, tr("admin.errors.load", "Unable to load admin data.")));

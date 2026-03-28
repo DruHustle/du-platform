@@ -54,11 +54,30 @@ function isAllowedRequestOrigin(req: express.Request, configuredOrigins: string[
     return normalizedRefererOrigin !== null && allowedOrigins.has(normalizedRefererOrigin);
   }
 
-  return true;
+  // Neither Origin nor Referer present on a session-cookie POST — reject to prevent CSRF
+  // from clients that strip request headers. Bearer-token requests bypass this check earlier.
+  return false;
 }
 
 export function registerCoreMiddleware(app: Express) {
   const config = loadConfig();
+  const isProduction = (process.env.NODE_ENV ?? 'development').toLowerCase() === 'production';
+
+  // connect-src enumerates specific external origins the browser is allowed to
+  // fetch from.  Using the wildcard `https:` is too broad — a compromised
+  // dependency could exfiltrate data to any HTTPS endpoint.
+  // Add domains here as new first-party browser fetch targets are introduced.
+  const connectSrcOrigins: string[] = [
+    "'self'",
+    // Vercel Speed Insights / Analytics (loaded only when VITE_ENABLE_VERCEL_ANALYTICS=true)
+    'https://vitals.vercel-insights.com',
+    'https://va.vercel-scripts.com',
+  ];
+  if (!isProduction) {
+    // Allow HMR WebSocket in development
+    connectSrcOrigins.push('ws:', 'wss:');
+  }
+  const connectSrc = connectSrcOrigins;
 
   app.disable('x-powered-by');
   app.set('trust proxy', resolveTrustProxySetting());
@@ -91,28 +110,43 @@ export function registerCoreMiddleware(app: Express) {
     })
   );
 
-  app.use(express.json({ limit: '1mb' }));
+  app.use(
+    express.json({
+      limit: '1mb',
+      verify: (req, _res, buf, encoding) => {
+        (req as any).rawBody = buf.length > 0 ? buf.toString((encoding as BufferEncoding) || 'utf8') : '';
+      },
+    })
+  );
 
   app.use((_req, res, next) => {
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('Permissions-Policy', 'geolocation=(self), microphone=(self), camera=(self)');
+    res.setHeader('Report-To', JSON.stringify({
+      group: 'csp-endpoint',
+      max_age: 86400,
+      endpoints: [{ url: '/api/csp-report' }],
+    }));
     res.setHeader(
       'Content-Security-Policy',
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // SPA needs eval/inline; tighten post-CSP-hash rollout
-        "style-src 'self' 'unsafe-inline'",
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: blob: https:",
-        "font-src 'self' data:",
-        "connect-src 'self' https:",
+        "font-src 'self' data: https://fonts.gstatic.com",
+        `connect-src ${connectSrc.join(' ')}`,
+        "object-src 'none'",
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "form-action 'self'",
+        "report-uri /api/csp-report",
+        "report-to csp-endpoint",
       ].join('; ')
     );
-    if ((process.env.NODE_ENV ?? 'development').toLowerCase() === 'production') {
+    if (isProduction) {
       res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     }
     next();
@@ -137,7 +171,6 @@ export function registerCoreMiddleware(app: Express) {
     }
 
     // Default CSRF token enforcement to enabled in production; set CSRF_ENABLED=false to disable.
-    const isProduction = (process.env.NODE_ENV ?? 'development').toLowerCase() === 'production';
     const csrfEnabled = process.env.CSRF_ENABLED !== undefined
       ? process.env.CSRF_ENABLED.toLowerCase() === 'true'
       : isProduction;

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { api, clearAuthToken, getApiErrorMessage, type AuthUser } from "@/lib/api";
 import { clearCurrentUserBootstrap, resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { setAppLanguage } from "@/i18n";
+import RouteSeo from "@/components/RouteSeo";
 
 
 interface LayoutProps {
@@ -59,6 +60,7 @@ export default function Layout({ children }: LayoutProps) {
   const { t, i18n } = useTranslation();
   const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [location, setLocation] = useLocation();
+  const search = useSearch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -366,6 +368,15 @@ export default function Layout({ children }: LayoutProps) {
     };
   }, [isHomePage, location]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileMenuOpen]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -416,8 +427,16 @@ export default function Layout({ children }: LayoutProps) {
   const activeAbout = activeAboutSection ? aboutSections.find((section) => section.id === activeAboutSection) ?? null : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-zim-gold/30 selection:text-slate-900 font-sans">
-      
+    <div className="min-h-screen flex flex-col bg-slate-950 selection:bg-zim-gold/30 selection:text-slate-900 font-sans">
+      <RouteSeo pathname={location} search={search} />
+      {/* Skip to main content — visible on focus for keyboard users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:rounded-full focus:bg-zim-gold focus:px-5 focus:py-2.5 focus:text-[11px] focus:font-black focus:uppercase focus:tracking-widest focus:text-zim-black focus:shadow-xl"
+      >
+        Skip to main content
+      </a>
+
       {/* --- INTEGRATED GLASS CEILING --- */}
       <header 
         className={`hidden lg:block fixed top-0 left-0 right-0 z-[210] pt-[env(safe-area-inset-top)] transition-all duration-500 ${
@@ -467,10 +486,11 @@ export default function Layout({ children }: LayoutProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={`
                       relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
-                      ${active 
-                          ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]' 
+                      ${active
+                          ? 'text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]'
                           : 'text-white/70 hover:text-yellow-400 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)]'
                       }
                     `}
@@ -615,6 +635,7 @@ export default function Layout({ children }: LayoutProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-yellow-400 outline-none transition-all"
+              aria-label="Search"
               autoFocus
             />
           </form>
@@ -814,6 +835,7 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       <main
+        id="main-content"
         className={`relative z-0 flex-1 w-full ${mainTopPaddingClass} ${mainBottomPaddingClass}`}
         style={mainViewportOffsetsStyle}
       >

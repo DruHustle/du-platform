@@ -69,8 +69,9 @@ export async function createNewsletterSubscription(email: string) {
 }
 
 export async function createFeatureNotification(userId: number, email: string, feature: string) {
+  const normalizedEmail = email.trim().toLowerCase();
   const normalizedFeature = feature.trim();
-  if (!normalizedFeature) {
+  if (!normalizedEmail || !normalizedFeature) {
     throw new Error("Feature is required.");
   }
 
@@ -78,7 +79,7 @@ export async function createFeatureNotification(userId: number, email: string, f
     const existing = memoryFeatureNotifications.find(
       (row) =>
         row.user_id === userId &&
-        row.email.toLowerCase() === email.toLowerCase() &&
+        row.email.toLowerCase() === normalizedEmail &&
         row.feature === normalizedFeature
     );
     if (existing) return { created: false, record: existing };
@@ -86,7 +87,7 @@ export async function createFeatureNotification(userId: number, email: string, f
     const record = {
       id: memoryFeatureNotifications.length + 1,
       user_id: userId,
-      email,
+      email: normalizedEmail,
       feature: normalizedFeature,
       created_at: new Date().toISOString(),
     };
@@ -97,12 +98,12 @@ export async function createFeatureNotification(userId: number, email: string, f
   try {
     const [result] = await db.execute<mysql.ResultSetHeader>(
       "INSERT IGNORE INTO feature_notifications (user_id, email, feature) VALUES (?, ?, ?)",
-      [userId, email, normalizedFeature]
+      [userId, normalizedEmail, normalizedFeature]
     );
 
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       "SELECT id, user_id, email, feature, created_at FROM feature_notifications WHERE email = ? AND feature = ? LIMIT 1",
-      [email, normalizedFeature]
+      [normalizedEmail, normalizedFeature]
     );
     return {
       created: Number(result.affectedRows ?? 0) > 0,
@@ -114,7 +115,7 @@ export async function createFeatureNotification(userId: number, email: string, f
     const existing = memoryFeatureNotifications.find(
       (row) =>
         row.user_id === userId &&
-        row.email.toLowerCase() === email.toLowerCase() &&
+        row.email.toLowerCase() === normalizedEmail &&
         row.feature === normalizedFeature
     );
     if (existing) return { created: false, record: existing };
@@ -122,7 +123,7 @@ export async function createFeatureNotification(userId: number, email: string, f
     const record = {
       id: memoryFeatureNotifications.length + 1,
       user_id: userId,
-      email,
+      email: normalizedEmail,
       feature: normalizedFeature,
       created_at: new Date().toISOString(),
     };

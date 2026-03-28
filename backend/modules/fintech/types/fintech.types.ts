@@ -1,9 +1,9 @@
-export type PayoutType = 'mobile_money' | 'cash_pickup' | 'visa_card';
+export type PayoutType = 'mobile_money' | 'cash_pickup' | 'bank_transfer';
 
 export type RemittanceRequest = {
   recipientName: string;
   recipientType: PayoutType;
-  provider: string;
+  provider?: string;
   payoutChannel?: string;
   amountSent: number;
   currencyFrom: string;
@@ -12,10 +12,8 @@ export type RemittanceRequest = {
   recipient: {
     mobileNumber?: string;
     cashPickupLocation?: string;
-    cardNumber?: string;
-    cardExpiryMonth?: string;
-    cardExpiryYear?: string;
-    cardHolderName?: string;
+    bankName?: string;
+    bankAccountNumber?: string;
   };
   idempotencyKey?: string;
 };

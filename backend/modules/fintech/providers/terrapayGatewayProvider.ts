@@ -286,13 +286,10 @@ export class TerraPayProvider implements FinancialProvider {
     }
 
     this.assertConfigured();
-    const response = await withProviderRetry(
-      "createTransaction",
-      () =>
-        this.client.post<TerraPayTransactionResponse>(
-          "/eig/gsma/transactions",
-          payload
-        )
+    // Do not automatically retry non-idempotent money-moving requests.
+    const response = await this.client.post<TerraPayTransactionResponse>(
+      "/eig/gsma/transactions",
+      payload
     );
     return response.data;
   }
