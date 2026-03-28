@@ -6,8 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import { Mail, Phone, User, MessageSquare, Send, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { Mail, Phone, User, MessageSquare, Send, Sparkles, AlertCircle } from "lucide-react";
+import { api, getApiErrorMessage } from "@/lib/api";
 
 interface ContactFormProps {
   title?: string;
@@ -25,6 +25,8 @@ export default function ContactForm({ title, description, module }: ContactFormP
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [submitError, setSubmitError] = useState("");
 
   const subjectOptions = {
     general: [
@@ -69,13 +71,42 @@ export default function ContactForm({ title, description, module }: ContactFormP
     ],
   };
 
+  const fieldErrors = {
+    name: touched.name && !formData.name.trim()
+      ? t("contact_form.errors.name_required", { defaultValue: "Full name is required." })
+      : "",
+    email: touched.email && !formData.email.trim()
+      ? t("contact_form.errors.email_required", { defaultValue: "Email is required." })
+      : touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+        ? t("contact_form.errors.email_invalid", { defaultValue: "Please enter a valid email address." })
+        : "",
+    subject: touched.subject && !formData.subject
+      ? t("contact_form.errors.subject_required", { defaultValue: "Please select a subject." })
+      : "",
+    message: touched.message && !formData.message.trim()
+      ? t("contact_form.errors.message_required", { defaultValue: "Message is required." })
+      : "",
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ name: true, email: true, subject: true, message: true });
+    setSubmitError("");
+
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject || !formData.message.trim()) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return;
+
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    toast.success(t('contact_form.success_msg'), { description: t('contact_form.success_desc') });
-    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-    setIsSubmitting(false);
+    try {
+      await api.post("/notifications/contact", { ...formData, module });
+      toast.success(t("contact_form.success_msg"), { description: t("contact_form.success_desc") });
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      setTouched({});
+    } catch (err) {
+      setSubmitError(getApiErrorMessage(err, t("contact_form.errors.submit_failed", { defaultValue: "Unable to send your message. Please try again." })));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
