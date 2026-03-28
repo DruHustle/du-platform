@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { rateLimiter } from '../../../core/rateLimiter';
+import { requireJwtAuth } from '../../../middleware/jwtAuth';
 import { AuthController } from '../controllers/authController';
 import {
   validateForgotPassword,
+  validateKycDecision,
   validateLogin,
   validateRegister,
   validateResetPassword,
@@ -42,13 +44,29 @@ export function createAuthModuleRouter() {
     validateResetPassword,
     controller.resetPassword
   );
-  router.get('/me', controller.me);
+  router.get(
+    '/me',
+    requireJwtAuth,
+    rateLimiter({ keyPrefix: 'api:auth:me', windowMs: 60_000, maxRequests: 60, keyByUser: true }),
+    controller.me
+  );
   router.post(
     '/token/refresh',
     rateLimiter({ keyPrefix: 'api:auth:token-refresh', windowMs: 60_000, maxRequests: 30 }),
     controller.refresh
   );
-  router.post('/kyc/verify', controller.verifyKyc);
+  router.post(
+    '/kyc/verify',
+    requireJwtAuth,
+    rateLimiter({ keyPrefix: 'api:auth:kyc-verify', windowMs: 60_000, maxRequests: 10, keyByUser: true }),
+    controller.verifyKyc
+  );
+  router.post(
+    '/kyc/provider/decision',
+    rateLimiter({ keyPrefix: 'api:auth:kyc-provider-decision', windowMs: 60_000, maxRequests: 30 }),
+    validateKycDecision,
+    controller.kycDecision
+  );
 
   return router;
 }

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { useLocation } from "wouter";
 
 interface ComingSoonProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface ComingSoonProps {
 
 export default function ComingSoon({ children, featureName }: ComingSoonProps) {
   const { t } = useTranslation();
+  const [, setLocation] = useLocation();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const tr = (key: string, fallback: string, options?: Record<string, unknown>) =>
@@ -39,7 +41,7 @@ export default function ComingSoon({ children, featureName }: ComingSoonProps) {
       const status = Number(error?.response?.status ?? 0);
       if (status === 401) {
         const nextPath = `${window.location.pathname}${window.location.search}`;
-        window.location.href = `/login?next=${encodeURIComponent(nextPath)}`;
+        setLocation(`/login?next=${encodeURIComponent(nextPath)}`);
         return;
       }
       toast.error(tr("coming_soon.toast_error_title", "Unable to save notify request"), {

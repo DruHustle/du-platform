@@ -7,7 +7,7 @@
     "dev": "./scripts/dev-all.sh",
     "dev:fast": "./scripts/dev-all.sh --fast",
     "dev:web": "vite --host",
-    "dev:server": "node --env-file=.env --import tsx backend/server.ts",
+    "dev:server": "node --watch --env-file=.env --import tsx backend/server.ts",
     "dev:all": "./scripts/dev-all.sh",
     "prepare": "pnpm hooks:install",
     "hooks:install": "sh -c 'if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then git config core.hooksPath .githooks; chmod +x .githooks/pre-commit; else echo \"[hooks:install] Not a git worktree; skipping.\"; fi'",

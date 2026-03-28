@@ -19,23 +19,48 @@ const VercelAnalytics = shouldEnableVercelAnalytics
   ? lazy(() => import("@vercel/analytics/react").then((module) => ({ default: module.Analytics })))
   : null;
 
-// Prefetch remaining lazy route chunks after the first frame so they're cached for navigation/refresh.
-// Static-import pages (home, auth, payments, tourism, care, trade, shop, investment-main,
-// technology, legal, search) don't need prefetching — they're already in the main bundle.
+type NavigatorWithConnection = Navigator & {
+  connection?: {
+    saveData?: boolean;
+    effectiveType?: string;
+  };
+};
+
+function shouldPrefetchRouteChunks() {
+  if (typeof window === "undefined") return false;
+
+  const connection = (window.navigator as NavigatorWithConnection).connection;
+  if (connection?.saveData) return false;
+  if (connection?.effectiveType && ["slow-2g", "2g"].includes(connection.effectiveType)) {
+    return false;
+  }
+
+  return true;
+}
+
+// Prefetch a small set of frequently visited lazy routes when the browser is idle
+// and the network is not in data-saver or low-bandwidth mode. Keep immersive VR/AR
+// routes out of this eager list so they stay truly route-lazy.
 function usePrefetchRouteChunks() {
   useEffect(() => {
-    let rafId: number;
-    rafId = requestAnimationFrame(() => {
+    if (!shouldPrefetchRouteChunks()) return;
+
+    const startPrefetch = () => {
       void import("./modules/investment/pages/InvestmentOpportunitiesPage");
       void import("./modules/investment/pages/ProjectDetailsPage");
       void import("./modules/investment/pages/NTIRSearchPage");
       void import("./modules/shop/pages/ShopProductsPage");
       void import("./modules/ai/pages/ChatPage");
       void import("./modules/ai/pages/BookTripPage");
-      void import("./modules/ai/pages/TourismVirtualExperiencePage");
-      void import("./modules/ai/pages/TourismAugmentedExperiencePage");
       void import("./modules/admin/pages/AdminDashboardPage");
-    });
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      const idleId = window.requestIdleCallback(startPrefetch, { timeout: 1500 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const rafId = requestAnimationFrame(startPrefetch);
     return () => cancelAnimationFrame(rafId);
   }, []);
 }

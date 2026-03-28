@@ -2,6 +2,58 @@ import crypto from "crypto";
 import type mysql from "mysql2/promise";
 import { db, isDbConnectionError } from "../databaseRuntime";
 
+// ── Per-email login lockout (in-memory) ─────────────────────────────────────
+// Provides a secondary defense against credential stuffing when the per-IP
+// rate limit alone cannot catch distributed attacks targeting a single account.
+// Resets on process restart; the per-IP rate limiter is the primary hard gate.
+
+const LOCKOUT_MAX_FAILURES = 10;
+const LOCKOUT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const LOCKOUT_DURATION_MS = 30 * 60 * 1000; // 30 minutes
+
+type LockoutEntry = { failures: number; windowStart: number; lockedUntil: number | null };
+const loginLockouts = new Map<string, LockoutEntry>();
+
+function pruneLoginLockouts() {
+  const now = Date.now();
+  loginLockouts.forEach((entry, key) => {
+    const expired = entry.lockedUntil
+      ? now > entry.lockedUntil
+      : now > entry.windowStart + LOCKOUT_WINDOW_MS;
+    if (expired) loginLockouts.delete(key);
+  });
+}
+
+export function recordLoginFailure(emailKey: string): void {
+  pruneLoginLockouts();
+  const now = Date.now();
+  const entry = loginLockouts.get(emailKey);
+  if (!entry || now > entry.windowStart + LOCKOUT_WINDOW_MS) {
+    loginLockouts.set(emailKey, { failures: 1, windowStart: now, lockedUntil: null });
+    return;
+  }
+  entry.failures += 1;
+  if (entry.failures >= LOCKOUT_MAX_FAILURES) {
+    entry.lockedUntil = now + LOCKOUT_DURATION_MS;
+  }
+}
+
+export function clearLoginFailures(emailKey: string): void {
+  loginLockouts.delete(emailKey);
+}
+
+export function isLoginLocked(emailKey: string): { locked: boolean; retryAfterMs: number } {
+  pruneLoginLockouts();
+  const entry = loginLockouts.get(emailKey);
+  if (!entry?.lockedUntil) return { locked: false, retryAfterMs: 0 };
+  const remaining = entry.lockedUntil - Date.now();
+  if (remaining <= 0) {
+    loginLockouts.delete(emailKey);
+    return { locked: false, retryAfterMs: 0 };
+  }
+  return { locked: true, retryAfterMs: remaining };
+}
+
 type MemoryUser = {
   id: number;
   full_name: string;
@@ -28,9 +80,12 @@ const memoryUsers: MemoryUser[] = [];
 const memoryAuthSessions: MemorySession[] = [];
 const memoryPasswordResetTokens: MemoryPasswordResetToken[] = [];
 
+// Monotonic counter — avoids ID collisions if entries are ever spliced out.
+let memoryUserIdCounter = 0;
+
 function createMemoryUser(fullName: string, email: string, passwordHash: string): MemoryUser {
   return {
-    id: memoryUsers.length + 1,
+    id: ++memoryUserIdCounter,
     full_name: fullName,
     email,
     password_hash: passwordHash,
@@ -245,6 +300,30 @@ export async function deleteSession(token: string) {
     const index = memoryAuthSessions.findIndex((entry) => entry.token_hash === tokenHash);
     if (index >= 0) memoryAuthSessions.splice(index, 1);
   }
+}
+
+export async function deleteAllSessionsForUser(userId: number) {
+  if (!db) {
+    const count = memoryAuthSessions.length;
+    memoryAuthSessions.splice(0, count, ...memoryAuthSessions.filter((s) => s.user_id !== userId));
+    return;
+  }
+
+  try {
+    await db.execute("DELETE FROM auth_sessions WHERE user_id = ?", [userId]);
+  } catch (error) {
+    if (!isDbConnectionError(error)) throw error;
+    const count = memoryAuthSessions.length;
+    memoryAuthSessions.splice(0, count, ...memoryAuthSessions.filter((s) => s.user_id !== userId));
+  }
+}
+
+export async function deleteAllSessionsForUserStrict(userId: number) {
+  if (!db) {
+    throw new Error("Persistent session store is unavailable.");
+  }
+
+  await db.execute("DELETE FROM auth_sessions WHERE user_id = ?", [userId]);
 }
 
 export async function createPasswordResetToken(userId: number, ttlMinutes = 30) {

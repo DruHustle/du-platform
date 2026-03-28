@@ -4,7 +4,10 @@ import {
   createSession,
   createUser,
   deleteSession,
+  deleteAllSessionsForUser,
+  deleteAllSessionsForUserStrict,
   findUserByEmail,
+  findUserById,
   setUserKycVerified,
   updateUserPassword,
 } from "../../../shared/persistence/authStore";
@@ -12,6 +15,10 @@ import {
 export class AuthRepository {
   findByEmail(email: string) {
     return findUserByEmail(email);
+  }
+
+  findById(id: number) {
+    return findUserById(id);
   }
 
   createUser(fullName: string, email: string, passwordHash: string) {
@@ -24,6 +31,14 @@ export class AuthRepository {
 
   deleteSession(token: string) {
     return deleteSession(token);
+  }
+
+  deleteAllSessionsForUser(userId: number) {
+    return deleteAllSessionsForUser(userId);
+  }
+
+  deleteAllSessionsForUserStrict(userId: number) {
+    return deleteAllSessionsForUserStrict(userId);
   }
 
   createPasswordResetToken(userId: number) {

@@ -51,6 +51,12 @@ function collectKycConfigErrors(errors: string[]) {
   if (nodeEnv === "production" && !hasEnv("FINTECH_WEBHOOK_SECRET")) {
     errors.push("Production requires FINTECH_WEBHOOK_SECRET for provider callback verification.");
   }
+  if (nodeEnv === "production" && !hasEnv("FINTECH_QUOTE_TOKEN_SECRET")) {
+    errors.push(
+      "Production requires FINTECH_QUOTE_TOKEN_SECRET to sign remittance quote tokens. " +
+      "This must be distinct from JWT_SECRET to maintain key separation."
+    );
+  }
 }
 
 export function validateStartupConfiguration() {

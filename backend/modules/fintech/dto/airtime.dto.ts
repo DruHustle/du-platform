@@ -16,7 +16,7 @@ export const airtimeTopupSchema = z.object({
   phoneNumber: z.string().trim().min(8).max(20),
   amount: preciseAmount(),
   currency: z.string().trim().min(3).max(10).optional(),
-  idempotencyKey: z.string().uuid().optional(),
+  idempotencyKey: z.string().uuid(),
 });
 
 export type AirtimeLookupDto = z.infer<typeof airtimeLookupSchema>;

@@ -1,6 +1,7 @@
 import { validateBody } from '../../../shared/validators';
 import {
   forgotPasswordSchema,
+  kycDecisionSchema,
   loginSchema,
   registerSchema,
   resetPasswordSchema,
@@ -10,3 +11,4 @@ export const validateLogin = validateBody(loginSchema);
 export const validateRegister = validateBody(registerSchema);
 export const validateForgotPassword = validateBody(forgotPasswordSchema);
 export const validateResetPassword = validateBody(resetPasswordSchema);
+export const validateKycDecision = validateBody(kycDecisionSchema);

@@ -3,6 +3,7 @@ import { UserFacingError } from '../../../core/errorHandler';
 import { AirtimeService } from '../services/airtimeService';
 import { ok, error } from '../../../shared/responseFormatter';
 import { logger } from '../../../core/logger';
+import { verifyWebhookHmacSignature } from '../../../core/webhookVerifier';
 
 function toClientMessage(err: unknown, fallback: string): string {
   if (err instanceof UserFacingError) return err.message;
@@ -10,17 +11,21 @@ function toClientMessage(err: unknown, fallback: string): string {
   return fallback;
 }
 
+function toStatusCode(err: unknown, fallback: number): number {
+  return err instanceof UserFacingError ? err.statusCode : fallback;
+}
+
 const SYSTEM_NOTICE = 'Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.';
 
 export class AirtimeController {
-  constructor(private readonly service = new AirtimeService()) {}
+  constructor(private readonly service: AirtimeService) {}
 
   detectOperator = async (req: express.Request, res: express.Response) => {
     try {
       const operator = await this.service.detectOperator(Number(req.auth?.userId ?? 0), req.body);
       return res.json(ok({ operator, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('OPERATOR_DETECTION_FAILED', toClientMessage(err, 'Operator detection failed.')));
+      return res.status(toStatusCode(err, 400)).json(error('OPERATOR_DETECTION_FAILED', toClientMessage(err, 'Operator detection failed.')));
     }
   };
 
@@ -29,7 +34,7 @@ export class AirtimeController {
       const result = await this.service.getOptions(Number(req.auth?.userId ?? 0), req.body);
       return res.json(ok({ ...result, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('TOPUP_OPTIONS_FAILED', toClientMessage(err, 'Failed to retrieve top-up options.')));
+      return res.status(toStatusCode(err, 400)).json(error('TOPUP_OPTIONS_FAILED', toClientMessage(err, 'Failed to retrieve top-up options.')));
     }
   };
 
@@ -41,7 +46,20 @@ export class AirtimeController {
       const result = await this.service.topup(userId, req.body);
       return res.status(201).json(ok({ ...result, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
-      return res.status(400).json(error('AIRTIME_TOPUP_FAILED', toClientMessage(err, 'Top-up could not be processed.')));
+      return res.status(toStatusCode(err, 400)).json(error('AIRTIME_TOPUP_FAILED', toClientMessage(err, 'Top-up could not be processed.')));
+    }
+  };
+
+  listHistory = async (req: express.Request, res: express.Response) => {
+    const userId = Number(req.auth?.userId ?? 0);
+    const limit = Math.min(100, Math.max(1, Math.floor(Number(req.query.limit ?? 20) || 20)));
+    if (!userId) return res.status(401).json(error('UNAUTHORIZED', 'Authentication required.'));
+
+    try {
+      const transactions = await this.service.listHistory(userId, limit);
+      return res.json(ok({ transactions, systemNotice: SYSTEM_NOTICE }));
+    } catch (err) {
+      return res.status(toStatusCode(err, 500)).json(error('AIRTIME_HISTORY_FAILED', toClientMessage(err, 'Unable to retrieve airtime history.')));
     }
   };
 
@@ -59,6 +77,20 @@ export class AirtimeController {
       return res.json(ok({ transaction, systemNotice: SYSTEM_NOTICE }));
     } catch (err) {
       return res.status(500).json(error('AIRTIME_STATUS_FAILED', toClientMessage(err, 'Unable to retrieve transaction status.')));
+    }
+  };
+
+  webhook = async (req: express.Request, res: express.Response) => {
+    const configuredSecret = String(process.env.FINTECH_WEBHOOK_SECRET ?? '').trim();
+    if (!configuredSecret || !verifyWebhookHmacSignature({ req, secret: configuredSecret })) {
+      return res.status(401).json(error('WEBHOOK_UNAUTHORIZED', 'Unauthorized webhook request.'));
+    }
+
+    try {
+      const transaction = await this.service.applyWebhookStatus(req.body);
+      return res.json(ok({ transaction, systemNotice: SYSTEM_NOTICE }));
+    } catch (err) {
+      return res.status(toStatusCode(err, 400)).json(error('AIRTIME_WEBHOOK_FAILED', toClientMessage(err, 'Unable to process airtime webhook.')));
     }
   };
 }

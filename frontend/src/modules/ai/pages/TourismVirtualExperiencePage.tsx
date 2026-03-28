@@ -1509,6 +1509,23 @@ export default function TourismVirtualExperiencePage() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             {backToTourismLabel}
           </Link>
+          <div className="mb-6 max-w-4xl rounded-[1.75rem] border border-white/10 bg-white/[0.02] p-5 md:p-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-zim-gold">
+              {t("tourism.vr.seo.badge", { defaultValue: "Onesa AI Tourism" })}
+            </p>
+            <h1 className="mt-3 text-2xl font-black tracking-tight text-white md:text-4xl">
+              {t("tourism.vr.seo.title", { defaultValue: "Zimbabwe Virtual Tourism Experience" })}
+            </h1>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
+              {t(
+                "tourism.vr.seo.description",
+                {
+                  defaultValue:
+                    "Explore Zimbabwe destinations through an interactive virtual guide with narrated context, landmark details, and immersive place previews before you plan a trip.",
+                },
+              )}
+            </p>
+          </div>
           {/* Main two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               

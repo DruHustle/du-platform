@@ -930,11 +930,6 @@
         "desc": "Ukuhlola i-risk lolwazi lwendawo."
       }
     },
-    "database_title": "Ingobo leZisindo zezoHwebo lezokuPhonseka kweSimali",
-    "database_subtitle": "Ingobo lezisindo zamankampani ezohwebo lokuphonseka kwesimali aqinisekiswayo eZimbabwe. Ukuqinisekiswa lokhu kwenziwa ngenhlanganiso ezizimeleyo.",
-    "ntir_title": "Irejista Kazwelonke Yokuhweba Notshalomali (NTIR)",
-    "ntir_subtitle": "Irejista esemthethweni yezinkampani zezohwebo lokutshala imali eziqinisekisiweyo eZimbabwe.",
-    "ntir_button": "Dingisisa ku-Database ye-NTIR.",
     "ntir": {
       "back": "Back to Investment",
       "title": "NTIR Database Search",
@@ -999,7 +994,6 @@
       "source_eu": "Umthombo: I-EU International Partnerships",
       "source_eib": "Umthombo: EIB Zimbabwe Essay"
     },
-    "ntir_label": "Uhlu Lwemibhalo Kazwelonke",
     "crowdfunding_steps": {
       "browse": "Phequlula Amaphrojekthi",
       "invest": "Tshala Isabelo Sakho",
@@ -2111,7 +2105,7 @@
       "transfer_types": {
         "send_money": {
           "label": "Thumela Imali",
-          "description": "Dlulisela imali yeselula, ukuthatha imali, noma ikhadi le-Visa."
+          "description": "Dlulisela imali yeselula, ukuthatha imali, noma ukubhanga."
         },
         "airtime_topup": {
           "label": "I-Airtime Top-up",
@@ -2121,7 +2115,7 @@
       "payout_types": {
         "mobile_money": "Imali Yeselula",
         "cash_pickup": "I-Cash Pickup",
-        "visa_card": "Ikhadi leVisa"
+        "bank_transfer": "Ukudluliselwa Ebhange"
       },
       "steps": {
         "start": "Qala",
@@ -2136,8 +2130,8 @@
         "continue_to_pay": "Qhubeka nokukhokha",
         "download_receipt": "Landa irisidi",
         "edit": "Hlela",
-        "get_started": "Qalisa",
-        "loading_rate": "Ilayisha isilinganiso",
+        "get_started": "Qhubeka",
+        "loading_rate": "Iyalayisha i-quote...",
         "new_transfer": "Ukudlulisa Okusha",
         "pay_now": "Khokha Manje",
         "processing": "Iyacubungula"
@@ -2166,19 +2160,22 @@
       "eta_label": "Estimated reflect time",
       "eta": {
         "airtime": "Ngokuvamile kungakapheli imizuzu.",
+        "bank_transfer": "Ngokuvamile phakathi kwezinsuku zokusebenza ezingu-1 kuya ku-3.",
         "cash_pickup": "Ngokuvamile lingakapheli ihora elingu-1 ngemva kokuqinisekiswa komhlinzeki.",
         "default": "Izikhathi zincike kumawindi okucubungula abahlinzeki.",
-        "mobile_money": "Ngokuvamile phakathi kwemizuzu kuya emahoreni angu-2.",
-        "visa_card": "Kungathatha amaminithi kufika emahoreni angama-24."
+        "mobile_money": "Ngokuvamile phakathi kwemizuzu kuya emahoreni angu-2."
       },
       "fee": "Imali",
       "fields": {
         "receive_placeholder": "Inkokhelo ingaba ngokuphindaphinda okungu-10USD.",
         "receiver_country": "Izwe lomamukeli",
         "reloadly_receive_pending": "Intengo ivela ngemva kokuqinisekiswa kwemininingwane yomhlinzeki.",
+        "sender_country_auto": "Ikhethwe ngokuzenzakalela. Ungakayiguqula.",
+        "sender_country_detected": "Itholwe endaweni okuyo",
+        "sender_country_detecting": "Ithola indawo okuyo...",
         "sender_country": "Uthumela kuphi?",
         "they_receive": "Bemukela",
-        "transfer_type": "Khetha Thumela Imali, I-Airtime Top-up, noma Ugesi Okhokhelwa Ngaphambili ukuze uqhubeke.",
+        "transfer_type": "Khetha Thumela Imali noma I-Airtime Top-up ukuze uqhubeke.",
         "you_send": "Uyathumela"
       },
       "pay": {
@@ -2192,19 +2189,26 @@
         "card_holder": "Igama lomnikazi weKhadi",
         "card_number": "Inombolo yekhadi",
         "account_number_placeholder": "Account number",
+        "bank_account_number": "Inombolo Ye-akhawunti",
+        "bank_name": "Ibhange",
+        "cash_pickup_note": "Umamukeli angalanda endaweni esekelwayo yokuthatha imali ngemva kokuqinisekiswa.",
         "ecocash_number": "Inombolo ye-EcoCash",
         "expiry_month": "Ukuphelelwa yisikhathi (MM)",
         "expiry_year": "Ukuphelelwa yisikhathi (YYYY)",
         "method": "Indlela yokukhokha",
         "pickup_channel": "Isiteshi Sokulanda",
         "pickup_location": "Indawo yokuthatha",
+        "recipient_mobile": "Inombolo Yocingo Lomamukeli",
+        "select_bank": "Khetha ibhange",
         "select_channel": "Khetha isiteshi"
       },
       "quote": {
         "estimated_receive": "Thola okulinganiselwe",
+        "fee_pending": "Imali izaqinisekiswa ngaphambi kokukhokha",
         "fx_rate": "Isilinganiso se-FX",
         "na": "N/A",
         "route": "Umzila",
+        "total_pending": "Inani lonke lizaqinisekiswa ngaphambi kokukhokha",
         "to": "ku"
       },
       "receipt": {
@@ -2242,13 +2246,13 @@
       "subtitle": {
         "": "Thumela imali yakho kalula, ngokushesha nangokuvikelekile ukusuka ekunethezekeni kwekhaya lakho ukuya eZimbabwe."
       },
+      "system_notice": "Izinkokhelo zinikwa amandla abahlinzeki bengqalasizinda yezezimali abanelayisensi. I-Diaspora Unlocked ayizibambi izimali zekhasimende.",
       "title": "Thumela Imali",
       "total": "Ingqikithi",
       "transfer": {
-        "required_hint": "Khetha Thumela Imali, I-Airtime Top-up, noma Ugesi Okhokhelwa Ngaphambili ukuze uqhubeke."
+        "required_hint": "Khetha Thumela Imali noma I-Airtime Top-up ukuze uqhubeke."
       }
     },
-    "disclaimer": "Izinkokhelo zinikwa amandla abahlinzeki bengqalasizinda yezezimali abanelayisensi. I-Diaspora Unlocked ayizibambi izimali zekhasimende.",
     "hero": {
       "actions": {
         "airtime": "Phakamisa I-Airtime",
@@ -2295,25 +2299,6 @@
         "highlight": "Ukubulawa",
         "subtitle": "Amathuluzi okukhokha angochwepheshe aqondaniswe nesistimu yokuklama yesikhulumi se-Diaspora Unlocked.",
         "title": "Othenjwayo"
-      }
-    },
-    "process": {
-      "collect": {
-        "description": "Umamukeli uqoqa izimali noma uthola i-airtime. Izikhathi zokubonisa ziyahlukahluka ngesiteshi nokuhlolwa kwabahlinzeki.",
-        "title": "Qoqa"
-      },
-      "details": {
-        "description": "Faka imininingwane yomamukeli nenkokhelo. Okokufaka kuqinisekisiwe futhi izingcingo zezimali zivikelekile ohlangothini lweseva.",
-        "title": "Engeza Imininingwane"
-      },
-      "intro": "Landela uhambo olucacile olunezinyathelo ezine: engeza imininingwane, buyekeza, khokha, futhi uqoqe. Ukuvikeleka kusetshenziswa kuzo zonke izigaba ngokucutshungulwa kohlangothi lweseva, ukuhlola ukuthobelana, nezithenjwa zokwenziwe ezilandelekayo. I-Airtime ivamise ukuba seduze nokushesha, kuyilapho imali yeselula, ikhadi, nokulandwa kwemali kungathatha isikhathi eside kuye ngamawindi okucubungula abahlinzeki.",
-      "pay": {
-        "description": "Gunyaza ukudluliswa ukuze uqalise ukucutshungulwa komhlinzeki. Izibuyekezo zesimo zilandela inqubekelaphambili ukusuka kokusalindile kuye ekupheleni.",
-        "title": "Khokha"
-      },
-      "review": {
-        "description": "Qinisekisa inani, izinkokhelo, nokuhlola kuqala kwe-FX. I-KYC nezilawuli zokwenziwayo ziyahlolwa ngaphambi kokuthunyelwa.",
-        "title": "Buyekeza futhi Uvikele"
       }
     },
     "receipt": {

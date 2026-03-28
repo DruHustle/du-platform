@@ -1,4 +1,8 @@
-import axios, { type AxiosInstance } from "axios";
+import axios, {
+  AxiosHeaders,
+  type AxiosInstance,
+  type InternalAxiosRequestConfig,
+} from "axios";
 import { logger } from "../../../core/logger";
 import type { FinancialFeature, FinancialProvider } from "./providerTypes";
 
@@ -44,19 +48,68 @@ export type ReloadlyTopupRequest = {
   customIdentifier: string;
 };
 
+function ensureAxiosHeaders(config: InternalAxiosRequestConfig): AxiosHeaders {
+  if (config.headers instanceof AxiosHeaders) {
+    return config.headers;
+  }
+
+  const headers = AxiosHeaders.from(config.headers ?? {});
+  config.headers = headers;
+  return headers;
+}
+
+function shouldRetryReloadlyError(error: unknown): boolean {
+  const status = Number((error as any)?.response?.status ?? 0);
+  const code = String((error as any)?.code ?? '').trim().toUpperCase();
+
+  if ([408, 429, 500, 502, 503, 504].includes(status)) {
+    return true;
+  }
+
+  return [
+    'ECONNABORTED',
+    'ECONNRESET',
+    'ENOTFOUND',
+    'EAI_AGAIN',
+    'ETIMEDOUT',
+  ].includes(code);
+}
+
+async function withReloadlyRetry<T>(operationName: string, fn: () => Promise<T>): Promise<T> {
+  let attempt = 0;
+  let delayMs = 250;
+
+  while (true) {
+    try {
+      return await fn();
+    } catch (error) {
+      attempt += 1;
+      if (attempt >= 3 || !shouldRetryReloadlyError(error)) {
+        throw error;
+      }
+
+      logger.warn('reloadly_retry', {
+        operation: operationName,
+        attempt,
+        delayMs,
+        status: Number((error as any)?.response?.status ?? 0) || null,
+        code: String((error as any)?.code ?? '').trim() || null,
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      delayMs *= 2;
+    }
+  }
+}
+
 export class ReloadlyProvider implements FinancialProvider {
   readonly providerName = "reloadly";
+  readonly displayName = "Reloadly";
   private readonly apiClient: AxiosInstance;
   private readonly authClient: AxiosInstance;
   private readonly topupsAudience: string;
 
   constructor() {
-    // Validate credentials at construction time in non-mock mode so misconfiguration
-    // is caught at startup rather than on the first real transaction.
-    if (String(process.env.FINANCIAL_SANDBOX_MOCK ?? "").trim().toLowerCase() !== "true") {
-      this.assertConfigured();
-    }
-
     const baseURL = String(process.env.RELOADLY_BASE_URL ?? "https://topups-sandbox.reloadly.com").replace(/\/+$/, "");
     const authURL = String(process.env.RELOADLY_AUTH_URL ?? "https://auth.reloadly.com").replace(/\/+$/, "");
     this.topupsAudience = resolveReloadlyAudience(process.env.RELOADLY_AUDIENCE, baseURL, "https://topups.reloadly.com");
@@ -81,9 +134,12 @@ export class ReloadlyProvider implements FinancialProvider {
     this.apiClient.interceptors.request.use(async (config) => {
       const token = await this.getAccessToken(this.topupsAudience);
       (config as any).metadata = { startedAt: Date.now() };
-      config.headers = config.headers ?? {};
-      (config.headers as any).Authorization = `Bearer ${token}`;
-      logger.info("reloadly_request", { method: String(config.method ?? "GET").toUpperCase(), url: sanitizeUrlForLog(`${config.baseURL}${config.url}`) });
+      const headers = ensureAxiosHeaders(config);
+      headers.set("Authorization", `Bearer ${token}`);
+      logger.info("reloadly_request", {
+        method: String(config.method ?? "GET").toUpperCase(),
+        url: sanitizeUrlForLog(`${config.baseURL ?? ""}${config.url ?? ""}`),
+      });
       return config;
     });
 
@@ -148,13 +204,16 @@ export class ReloadlyProvider implements FinancialProvider {
     const inflight = oauthInflightByAudience.get(audience);
     if (inflight) return inflight;
 
-    const tokenRequest = this.authClient
-      .post("/oauth/token", {
-        client_id: String(process.env.RELOADLY_CLIENT_ID ?? "").trim(),
-        client_secret: String(process.env.RELOADLY_CLIENT_SECRET ?? "").trim(),
-        grant_type: "client_credentials",
-        audience,
-      })
+    const tokenRequest = withReloadlyRetry(
+      "oauthToken",
+      () =>
+        this.authClient.post("/oauth/token", {
+          client_id: String(process.env.RELOADLY_CLIENT_ID ?? "").trim(),
+          client_secret: String(process.env.RELOADLY_CLIENT_SECRET ?? "").trim(),
+          grant_type: "client_credentials",
+          audience,
+        })
+    )
       .then((response) => {
         const accessToken = String(response.data?.access_token ?? "").trim();
         const expiresIn = Number(response.data?.expires_in ?? 0);
@@ -193,18 +252,26 @@ export class ReloadlyProvider implements FinancialProvider {
     }
     const params = { includeBundles: true };
     try {
-      const response = await this.apiClient.get(
-        `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/countries/${encodeURIComponent(countryCode)}`,
-        { params }
+      const response = await withReloadlyRetry(
+        "detectOperator",
+        () =>
+          this.apiClient.get(
+            `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/countries/${encodeURIComponent(countryCode)}`,
+            { params }
+          )
       );
       return response.data;
     } catch (error: any) {
       if (Number(error?.response?.status ?? 0) !== 404) {
         throw error;
       }
-      const fallbackResponse = await this.apiClient.get(
-        `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/country-code/${encodeURIComponent(countryCode)}`,
-        { params }
+      const fallbackResponse = await withReloadlyRetry(
+        "detectOperatorFallback",
+        () =>
+          this.apiClient.get(
+            `/operators/auto-detect/phone/${encodeURIComponent(phoneNumber)}/country-code/${encodeURIComponent(countryCode)}`,
+            { params }
+          )
       );
       return fallbackResponse.data;
     }
@@ -229,7 +296,10 @@ export class ReloadlyProvider implements FinancialProvider {
       ];
     }
 
-    const response = await this.apiClient.get(`/operators/countries/${encodeURIComponent(countryCode)}`);
+    const response = await withReloadlyRetry(
+      "listOperatorsByCountry",
+      () => this.apiClient.get(`/operators/countries/${encodeURIComponent(countryCode)}`)
+    );
     const payload = response.data;
     if (Array.isArray(payload)) return payload;
     if (Array.isArray(payload?.content)) return payload.content;
@@ -246,10 +316,14 @@ export class ReloadlyProvider implements FinancialProvider {
         amount,
       };
     }
-    const response = await this.apiClient.post("/operators/fx-rate", {
-      operatorId,
-      amount,
-    });
+    const response = await withReloadlyRetry(
+      "fetchOperatorFxRate",
+      () =>
+        this.apiClient.post("/operators/fx-rate", {
+          operatorId,
+          amount,
+        })
+    );
     return response.data;
   }
 
@@ -272,7 +346,10 @@ export class ReloadlyProvider implements FinancialProvider {
         suggestedAmounts: [1, 2, 5, 10, 20, 50],
       };
     }
-    const response = await this.apiClient.get(`/operators/${operatorId}`);
+    const response = await withReloadlyRetry(
+      "getOperatorById",
+      () => this.apiClient.get(`/operators/${operatorId}`)
+    );
     return response.data;
   }
 
@@ -290,8 +367,8 @@ export class ReloadlyProvider implements FinancialProvider {
         recipientPhone: payload.recipientPhone,
       };
     }
+    // Do not automatically retry non-idempotent money-moving requests.
     const response = await this.apiClient.post("/topups", payload);
     return response.data;
   }
-
 }

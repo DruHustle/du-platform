@@ -23,7 +23,6 @@ type Attraction = {
 
 export default function Tourism() {
   const { t } = useTranslation();
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [selectedAttraction, setSelectedAttraction] = useState<Attraction | null>(null);
   const [conversationIndex, setConversationIndex] = useState(0);
   const [showConversationAnswer, setShowConversationAnswer] = useState(false);
@@ -40,88 +39,58 @@ export default function Tourism() {
       badgeIcon: Globe,
       title: t('tourism.hero.title1') || "Discover the Majesty",
       titleHighlight: t('tourism.hero.highlight1') || "World-Class Beauty",
-      subtitle: t('tourism.hero.subtitle1') || "From Victoria Falls to Great Zimbabwe, experience the heart of Africa.",
-      buttons: [
-        { text: t('tourism.hero.book_trip') || "Book Trip", variant: "primary", link: "/onesa-ai-book-trip" },
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
-      ]
+      subtitle: t('tourism.hero.subtitle1') || "From Victoria Falls to Great Zimbabwe, experience the heart of Africa."
     },
     {
       image: "/images/pages/shop/zimbabwe_shop_hero.jpg",
       badge: t('tourism.hero.badge2') || "Cultural Heritage",
       badgeIcon: Award,
       title: t('tourism.hero.title2') || "Rich History",
-      subtitle: t('tourism.hero.subtitle2') || "Explore ancient civilizations and vibrant modern culture.",
-      buttons: [
-        { text: t('tourism.hero.book_trip') || "Book Trip", variant: "primary", link: "/onesa-ai-book-trip" }
-      ]
+      subtitle: t('tourism.hero.subtitle2') || "Explore ancient civilizations and vibrant modern culture."
     },
     {
       image: "/images/pages/tourism/african-elephant.jpg",
       badge: t('tourism.hero.badge3') || "Adventure",
       badgeIcon: Car,
       title: t('tourism.hero.title3') || "Wildlife & Safari",
-      subtitle: t('tourism.hero.subtitle3') || "Unforgettable encounters in pristine national parks.",
-      buttons: [
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
-      ]
+      subtitle: t('tourism.hero.subtitle3') || "Unforgettable encounters in pristine national parks."
     },
     {
       image: "/images/pages/tourism/great_zimbabwe.jpeg",
       badge: t('tourism.hero.badge4') || "Historical Site",
       badgeIcon: Building2,
       title: t('tourism.hero.title4') || "Great Zimbabwe",
-      subtitle: t('tourism.hero.subtitle4') || "Ancient stone ruins showcasing medieval African civilization.",
-      buttons: []
-    }
-    ,
+      subtitle: t('tourism.hero.subtitle4') || "Ancient stone ruins showcasing medieval African civilization."
+    },
     {
       image: "/images/pages/tourism/cheetah.png",
       badge: t('tourism.hero.badge3') || "Adventure",
       badgeIcon: Dog,
       title: t('tourism.hero.title3') || "Wildlife & Safari",
-      subtitle: t('tourism.hero.subtitle3') || "Unforgettable encounters in pristine national parks.",
-      buttons: [
-        { text: t('tourism.hero.book_trip') || "Book Trip", variant: "primary", link: "/onesa-ai-book-trip" }
-      ]
+      subtitle: t('tourism.hero.subtitle3') || "Unforgettable encounters in pristine national parks."
     },
     {
       image: "/images/pages/tourism/mana_pools.jpg",
       badge: t("tourism.hero.badge6") || "UNESCO Wilderness",
       badgeIcon: Globe2,
       title: t("tourism.hero.title6") || "Mana Pools Experience",
-      subtitle: t("tourism.hero.subtitle6") || "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
-      buttons: [
-        { text: t('tourism.hero.virtual_center') || "Virtual Reality", variant: "outline", link: "/onesa-ai-tourism-virtual-experience", showArrow: true }
-      ]
+      subtitle: t("tourism.hero.subtitle6") || "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes."
     },
     {
       image: "/images/pages/tourism/dest_hwange.png",
       badge: t("tourism.hero.badge7") || "National Parks",
       badgeIcon: Shield,
       title: t("tourism.hero.title7") || "Hwange Wildlife Corridor",
-      subtitle: t("tourism.hero.subtitle7") || "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
-      buttons: []
+      subtitle: t("tourism.hero.subtitle7") || "Zimbabwe's largest national park, known for elephant herds and strong safari potential."
     },
     {
       image: "/images/pages/tourism/kariba_sunset.jpg",
       badge: t("tourism.hero.badge8") || "Lake & Leisure",
       badgeIcon: TrendingUp,
       title: t("tourism.hero.title8") || "Kariba Adventure Tourism",
-      subtitle: t("tourism.hero.subtitle8") || "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors.",
-      buttons: [
-        { text: t('tourism.hero.book_trip') || "Book Trip", variant: "primary", link: "/onesa-ai-book-trip" }
-      ]
+      subtitle: t("tourism.hero.subtitle8") || "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
     }
-  
   ], [t]);
-
-  useEffect(() => {
-    const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(heroTimer);
-  }, [heroSlides.length]);
 
   const phoneConversation = useMemo(
     () => [

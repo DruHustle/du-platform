@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import SubPageHero from "@/components/SubPageHero";
 export default function Trade() {
   const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isFlowDiagramOpen, setIsFlowDiagramOpen] = useState(false);
 
   const heroSlides = useMemo(() => [
@@ -83,13 +82,6 @@ export default function Trade() {
       highlight: t("trade.hero.highlight8") || "Risk Balanced Growth"
     }
   ], [t]);
-
-  useEffect(() => {
-    const heroTimer = setInterval(() => {
-      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(heroTimer);
-  }, [heroSlides.length]);
 
   const exportSectors = [
     {

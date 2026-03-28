@@ -36,6 +36,10 @@ const buttonVariants = cva(
   }
 );
 
+function hasExplicitWidthClass(className: string): boolean {
+  return /(^|\s)(w-|min-w-|max-w-|size-)/.test(className);
+}
+
 function Button({
   className,
   variant,
@@ -47,11 +51,18 @@ function Button({
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot : "button";
+  const normalizedClassName = typeof className === "string" ? className : "";
+  const isIconButton = size === "icon" || size === "icon-sm" || size === "icon-lg";
+  const isUtilityVariant = variant === "ghost" || variant === "link";
+  const standardWidthClass =
+    !isIconButton && !isUtilityVariant && !hasExplicitWidthClass(normalizedClassName)
+      ? "sm:min-w-[11rem]"
+      : "";
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size }), standardWidthClass, className)}
       {...props}
     />
   );

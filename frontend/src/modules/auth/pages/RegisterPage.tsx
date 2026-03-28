@@ -21,7 +21,8 @@ export default function Register() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,15 +31,27 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [touched, setTouched] = useState({ fullName: false, email: false, password: false, confirmPassword: false });
+  const [touched, setTouched] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsTouched, setTermsTouched] = useState(false);
 
   const glassInputStyle =
-    "bg-white/[0.05] border-white/10 text-white focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-12";
+    "bg-white/[0.05] border-white/10 text-white focus:border-zim-gold/50 focus:ring-zim-gold/20 transition-all rounded-xl h-11";
 
   const passwordStrength = getPasswordStrength(formData.password);
+  const normalizedFirstName = formData.firstName.trim();
+  const normalizedLastName = formData.lastName.trim();
+  const normalizedFullName = `${normalizedFirstName} ${normalizedLastName}`.trim();
 
   const fieldErrors = {
-    fullName: touched.fullName && !formData.fullName.trim() ? "Full name is required." : "",
+    firstName: touched.firstName && !normalizedFirstName ? "First name is required." : "",
+    lastName: touched.lastName && !normalizedLastName ? "Surname is required." : "",
     email:
       touched.email && !formData.email
         ? "Email is required."
@@ -62,17 +75,19 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTouched({ fullName: true, email: true, password: true, confirmPassword: true });
+    setTouched({ firstName: true, lastName: true, email: true, password: true, confirmPassword: true });
+    setTermsTouched(true);
     setError("");
 
-    if (!formData.fullName.trim() || !formData.email || !formData.password || !formData.confirmPassword) return;
+    if (!normalizedFirstName || !normalizedLastName || !formData.email || !formData.password || !formData.confirmPassword) return;
     if (formData.password.length < 8) return;
     if (formData.password !== formData.confirmPassword) return;
+    if (!termsAccepted) return;
 
     setLoading(true);
     try {
       const response = await api.post("/auth/register", {
-        fullName: formData.fullName,
+        fullName: normalizedFullName,
         email: formData.email,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
@@ -90,7 +105,7 @@ export default function Register() {
 
   return (
     <Layout>
-      <section className="min-h-[90vh] flex items-center justify-center bg-slate-950 relative overflow-hidden px-6 py-20">
+      <section className="min-h-[82vh] flex items-center justify-center bg-slate-950 relative overflow-hidden px-6 pt-20 pb-10 md:pt-24 md:pb-12">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-zim-gold/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
 
@@ -100,7 +115,7 @@ export default function Register() {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="relative w-full max-w-lg p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent"
         >
-          <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 md:p-12 space-y-8">
+          <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 space-y-7">
             <button
               onClick={() => setLocation("/")}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
@@ -110,7 +125,7 @@ export default function Register() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className="text-xl font-black tracking-tight text-white">
+              <h1 className="!text-lg font-black tracking-tight text-white md:!text-[1.2rem]">
                 {t("auth.register", { defaultValue: "Create Account" })}
               </h1>
               <p className="text-sm font-light leading-relaxed text-white/75">
@@ -123,43 +138,63 @@ export default function Register() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
                   <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
-                    <User className="h-3.5 w-3.5" /> {t("auth.full_name") || "Full Name"}
+                    <User className="h-3.5 w-3.5" /> {t("auth.first_name", { defaultValue: "First Name" })}
                   </Label>
                   <Input
                     type="text"
-                    autoComplete="name"
-                    className={`${glassInputStyle} ${fieldErrors.fullName ? "border-rose-400/60" : ""}`}
-                    value={formData.fullName}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, fullName: e.target.value }))}
-                    onBlur={() => touch("fullName")}
+                    autoComplete="given-name"
+                    className={`${glassInputStyle} ${fieldErrors.firstName ? "border-rose-400/60" : ""}`}
+                    value={formData.firstName}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, firstName: e.target.value }))}
+                    onBlur={() => touch("firstName")}
                   />
-                  {fieldErrors.fullName ? (
+                  {fieldErrors.firstName ? (
                     <p className="flex items-center gap-1.5 text-[11px] text-rose-300">
                       <AlertCircle className="h-3 w-3 shrink-0" />
-                      {fieldErrors.fullName}
+                      {fieldErrors.firstName}
                     </p>
                   ) : null}
                 </div>
 
                 <div className="space-y-1.5">
                   <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
-                    <Mail className="h-3.5 w-3.5" /> {t("auth.email") || "Email Address"}
+                    <User className="h-3.5 w-3.5" /> {t("auth.last_name", { defaultValue: "Surname" })}
                   </Label>
                   <Input
-                    type="email"
-                    autoComplete="email"
-                    className={`${glassInputStyle} ${fieldErrors.email ? "border-rose-400/60" : ""}`}
-                    value={formData.email}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                    onBlur={() => touch("email")}
+                    type="text"
+                    autoComplete="family-name"
+                    className={`${glassInputStyle} ${fieldErrors.lastName ? "border-rose-400/60" : ""}`}
+                    value={formData.lastName}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, lastName: e.target.value }))}
+                    onBlur={() => touch("lastName")}
                   />
-                  {fieldErrors.email ? (
+                  {fieldErrors.lastName ? (
                     <p className="flex items-center gap-1.5 text-[11px] text-rose-300">
                       <AlertCircle className="h-3 w-3 shrink-0" />
-                      {fieldErrors.email}
+                      {fieldErrors.lastName}
                     </p>
                   ) : null}
                 </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[10px] uppercase font-black text-white/70 tracking-widest flex items-center gap-2">
+                  <Mail className="h-3.5 w-3.5" /> {t("auth.email") || "Email Address"}
+                </Label>
+                <Input
+                  type="email"
+                  autoComplete="email"
+                  className={`${glassInputStyle} ${fieldErrors.email ? "border-rose-400/60" : ""}`}
+                  value={formData.email}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                  onBlur={() => touch("email")}
+                />
+                {fieldErrors.email ? (
+                  <p className="flex items-center gap-1.5 text-[11px] text-rose-300">
+                    <AlertCircle className="h-3 w-3 shrink-0" />
+                    {fieldErrors.email}
+                  </p>
+                ) : null}
               </div>
 
               <div className="space-y-1.5">
@@ -175,16 +210,16 @@ export default function Register() {
                     onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
                     onBlur={() => touch("password")}
                   />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={
-                  showPassword
-                    ? t("auth.reset.hide_password", { defaultValue: "Hide password" })
-                    : t("auth.reset.show_password", { defaultValue: "Show password" })
-                }
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
-              >
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={
+                      showPassword
+                        ? t("auth.reset.hide_password", { defaultValue: "Hide password" })
+                        : t("auth.reset.show_password", { defaultValue: "Show password" })
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+                  >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
@@ -245,21 +280,31 @@ export default function Register() {
                 ) : null}
               </div>
 
-              <div className="flex items-start gap-3 pt-1">
-                <input
-                  type="checkbox"
-                  className="mt-1 h-4 w-4 rounded border-white/10 bg-white/5 accent-zim-gold"
-                  id="terms"
-                  required
-                />
-                <label htmlFor="terms" className="text-[11px] text-white/70 leading-tight cursor-pointer">
-                  {t("auth.terms_agreement") ||
-                    "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance."}
-                </label>
+              <div className="space-y-1">
+                <div className="flex items-start gap-3 pt-1">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 rounded border-white/10 bg-white/5 accent-zim-gold"
+                    id="terms"
+                    checked={termsAccepted}
+                    onChange={(e) => { setTermsAccepted(e.target.checked); setTermsTouched(true); }}
+                  />
+                  <label htmlFor="terms" className="text-[11px] text-white/70 leading-tight cursor-pointer">
+                    {t("auth.terms_agreement") ||
+                      "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance."}
+                  </label>
+                </div>
+                {termsTouched && !termsAccepted ? (
+                  <p className="flex items-center gap-1.5 text-[11px] text-rose-300 pl-7">
+                    <AlertCircle className="h-3 w-3 shrink-0" />
+                    {t("auth.terms_required", { defaultValue: "You must accept the terms to continue." })}
+                  </p>
+                ) : null}
               </div>
 
               {error ? (
                 <motion.div
+                  role="alert"
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-start gap-2.5 rounded-xl border border-rose-400/20 bg-rose-500/10 px-4 py-3"
@@ -272,7 +317,7 @@ export default function Register() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-14 rounded-full shadow-xl shadow-zim-gold/20 disabled:opacity-70"
+                className="w-full bg-zim-gold text-zim-black hover:bg-white transition-all duration-300 font-black text-[11px] uppercase tracking-widest h-12 rounded-full shadow-xl shadow-zim-gold/20 disabled:opacity-70"
               >
                 {loading ? (
                   <>

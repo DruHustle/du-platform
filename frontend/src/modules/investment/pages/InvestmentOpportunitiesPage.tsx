@@ -132,6 +132,21 @@ export default function InvestmentOpportunitiesPage() {
               </div>
             </div>
 
+            {filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
+                <Target className="h-10 w-10 text-white/20" />
+                <p className="text-sm font-semibold text-white/50">
+                  {t("investment.no_results", { defaultValue: "No projects match your current filters." })}
+                </p>
+                <button
+                  onClick={() => { setActiveFilter("all"); setRiskFilter("all"); }}
+                  className="text-[10px] font-black uppercase tracking-widest text-zim-gold hover:underline"
+                >
+                  {t("investment.clear_filters", { defaultValue: "Clear filters" })}
+                </button>
+              </div>
+            ) : null}
+
             <div className="grid lg:grid-cols-2 gap-8">
               {filtered.map((p) => (
                 <motion.div
@@ -189,7 +204,14 @@ export default function InvestmentOpportunitiesPage() {
                             <span>{t("investment.project_card.raised", { amount: p.raised }) || `Raised: ${p.raised}`}</span>
                             <span className="text-zim-gold">{p.prog}%</span>
                           </div>
-                          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                          <div
+                            role="progressbar"
+                            aria-valuenow={p.prog}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-label={`${p.prog}% funded`}
+                            className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden"
+                          >
                             <motion.div
                               initial={{ width: 0 }}
                               whileInView={{ width: `${p.prog}%` }}

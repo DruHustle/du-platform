@@ -20,9 +20,14 @@ export class AppError extends Error {
  * Any other Error type is caught by controllers and replaced with a generic message.
  */
 export class UserFacingError extends Error {
-  constructor(message: string) {
+  readonly statusCode: number;
+  readonly code: string;
+
+  constructor(message: string, statusCode = 400, code = 'BAD_REQUEST') {
     super(message);
     this.name = "UserFacingError";
+    this.statusCode = statusCode;
+    this.code = code;
   }
 }
 

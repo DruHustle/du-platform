@@ -1,4 +1,5 @@
 import express, { type Express, type Request } from "express";
+import { rateLimiter } from "../../../core/rateLimiter";
 import {
   createMockSpeechReply,
   createMockTtsAudio,
@@ -254,7 +255,7 @@ function convertPcm16BeToWav(bytes: Uint8Array, sampleRate: number): Uint8Array 
 
 async function requestGroqStt(file: Blob): Promise<SttResult> {
   const apiKey = getGroqApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "GROQ_API_KEY is not configured." };
+  if (!apiKey) return { ok: false, status: 503, error: "Speech-to-text service is not configured." };
 
   const form = new FormData();
   form.append("file", file, "audio.webm");
@@ -283,7 +284,7 @@ async function requestGroqStt(file: Blob): Promise<SttResult> {
 
 async function requestElevenLabsTts(text: string, voiceId?: string): Promise<TtsResult> {
   const apiKey = getElevenLabsApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "ELEVENLABS_API_KEY is not configured.", provider: "elevenlabs" };
+  if (!apiKey) return { ok: false, status: 503, error: "Text-to-speech service is not configured.", provider: "elevenlabs" };
 
   const normalizedText = String(text ?? "").replace(/\s+/g, " ").trim();
   if (!normalizedText) return { ok: false, status: 400, error: "Text input is required.", provider: "elevenlabs" };
@@ -353,7 +354,7 @@ async function requestElevenLabsTts(text: string, voiceId?: string): Promise<Tts
 
 async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd"): Promise<TtsResult> {
   const apiKey = getGeminiApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "GEMINI_API_KEY is not configured.", provider: "gemini" };
+  if (!apiKey) return { ok: false, status: 503, error: "Text-to-speech service is not configured.", provider: "gemini" };
 
   const normalizedText = String(text ?? "").replace(/\s+/g, " ").trim();
   if (!normalizedText) return { ok: false, status: 400, error: "Text input is required.", provider: "gemini" };
@@ -384,10 +385,11 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
         };
       }
 
-      const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+      const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
         },
         body: JSON.stringify(payload),
       });
@@ -461,7 +463,7 @@ async function requestTtsForLanguage(text: string, options: { voiceId?: string; 
 
 async function requestGroqLlm(prompt: string): Promise<LlmResult> {
   const apiKey = getGroqApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "GROQ_API_KEY is not configured." };
+  if (!apiKey) return { ok: false, status: 503, error: "AI language model service is not configured." };
 
   try {
     const response = await fetch(`${getGroqBaseUrl()}/chat/completions`, {
@@ -499,7 +501,7 @@ async function requestGroqLlm(prompt: string): Promise<LlmResult> {
 
 export function registerWhisperRoutes(app: Express) {
   // Groq-only whisper route (OpenAI Whisper removed)
-  app.post("/api/whisper", express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
+  app.post("/api/whisper", rateLimiter({ keyPrefix: "api:whisper", windowMs: 60_000, maxRequests: 20 }), express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
     if (isOnesaMockModeEnabled()) {
       return res.status(200).json({ text: getMockSpeechTranscription(), provider: "mock" });
     }
@@ -513,7 +515,7 @@ export function registerWhisperRoutes(app: Express) {
 
 export function registerTtsRoutes(app: Express) {
   // Legacy route retained for compatibility.
-  app.post("/api/tts", express.json({ limit: "1mb" }), async (req, res) => {
+  app.post("/api/tts", rateLimiter({ keyPrefix: "api:tts", windowMs: 60_000, maxRequests: 30 }), express.json({ limit: "1mb" }), async (req, res) => {
     const body = (req.body ?? {}) as { text?: string; voiceId?: string; language?: string };
     const text = String(body.text ?? "").trim();
     if (!text) return res.status(400).json({ error: "Text input is required." });
@@ -530,8 +532,10 @@ export function registerTtsRoutes(app: Express) {
 }
 
 export function registerSpeechRoutes(app: Express) {
+  const speechRateLimit = rateLimiter({ keyPrefix: "api:speech", windowMs: 60_000, maxRequests: 30 });
+
   // JSON branch: action=tts|llm
-  app.post("/api/speech", express.json({ limit: "1mb" }), async (req, res, next) => {
+  app.post("/api/speech", speechRateLimit, express.json({ limit: "1mb" }), async (req, res, next) => {
     const contentType = String(req.headers["content-type"] ?? "");
     if (!contentType.includes("application/json")) return next();
 
@@ -573,7 +577,7 @@ export function registerSpeechRoutes(app: Express) {
   });
 
   // Multipart branch: action=stt (Groq only)
-  app.post("/api/speech", express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
+  app.post("/api/speech", speechRateLimit, express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
     const contentType = String(req.headers["content-type"] ?? "");
     if (!contentType.includes("multipart/form-data")) {
       return res.status(415).json({ error: "Unsupported Content-Type" });

@@ -15,7 +15,7 @@ export default function ForgotPassword() {
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const authHeadingClass = "text-xl font-black tracking-tight text-white";
+  const authHeadingClass = "!text-lg font-black tracking-tight text-white md:!text-[1.2rem]";
   const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -36,8 +36,8 @@ export default function ForgotPassword() {
 
   return (
     <Layout>
-      <section className="min-h-[80vh] bg-slate-950 px-6 py-20 flex items-center justify-center">
-        <div className="outer-glass-panel w-full max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-10 text-white md:p-12">
+      <section className="min-h-[72vh] bg-slate-950 px-6 pt-20 pb-10 md:pt-24 md:pb-12 flex items-center justify-center">
+        <div className="outer-glass-panel w-full max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white md:p-10">
           <div className="space-y-2 text-center">
             <h1 className={authHeadingClass}>{tr("auth.forgot.title", "Reset Password")}</h1>
             <p className={authSubtitleClass}>{tr("auth.forgot.subtitle", "Enter your account email and we will send reset instructions.")}</p>
@@ -58,7 +58,7 @@ export default function ForgotPassword() {
             {status ? <p className="text-green-400 text-sm">{status}</p> : null}
             {error ? <p className="text-red-400 text-sm">{error}</p> : null}
 
-            <Button type="submit" disabled={loading} className="h-14 w-full rounded-full bg-zim-gold text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white">
+            <Button type="submit" disabled={loading} className="h-12 w-full rounded-full bg-zim-gold text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white">
               {loading ? tr("auth.forgot.submitting", "Submitting...") : tr("auth.forgot.send_reset_link", "Send Reset Link")}
             </Button>
           </form>

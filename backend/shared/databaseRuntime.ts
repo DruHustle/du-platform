@@ -22,12 +22,20 @@ function buildSslConfig() {
   const caPath = getEnv("AIVEN_CA_CERT_PATH");
 
   if (caFromEnv) return { rejectUnauthorized: true, ca: caFromEnv };
-  if (caPath && fs.existsSync(caPath)) return { rejectUnauthorized: true, ca: fs.readFileSync(caPath, "utf8") };
+  if (caPath) {
+    if (!fs.existsSync(caPath)) {
+      if (NODE_ENV === "production") {
+        throw new Error(`[databaseRuntime] AIVEN_CA_CERT_PATH does not exist: ${caPath}`);
+      }
+    } else {
+      return { rejectUnauthorized: true, ca: fs.readFileSync(caPath, "utf8") };
+    }
+  }
 
   if (NODE_ENV === "production") {
-    // In production without a CA cert, connections are encrypted but the server certificate is not verified.
-    // Set AIVEN_CA_CERT or AIVEN_CA_CERT_PATH to enable full certificate validation.
-    console.warn("[databaseRuntime] WARNING: SSL certificate verification is disabled (rejectUnauthorized=false). Set AIVEN_CA_CERT or AIVEN_CA_CERT_PATH to enable full TLS validation.");
+    throw new Error(
+      "[databaseRuntime] Production database TLS requires AIVEN_CA_CERT or AIVEN_CA_CERT_PATH."
+    );
   }
   return { rejectUnauthorized: false };
 }
@@ -116,10 +124,17 @@ export function isDbConnectionError(error: unknown): boolean {
   const code = (error as any)?.code;
   return [
     "ECONNREFUSED",
+    "ECONNRESET",
     "ENOTFOUND",
+    "EHOSTUNREACH",
+    "EPIPE",
     "PROTOCOL_CONNECTION_LOST",
+    "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR",
+    "PROTOCOL_ENQUEUE_AFTER_QUIT",
     "ER_ACCESS_DENIED_ERROR",
     "ER_BAD_DB_ERROR",
+    "EPERM",
+    "EACCES",
     "ETIMEDOUT",
   ].includes(String(code));
 }

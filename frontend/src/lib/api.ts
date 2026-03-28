@@ -1,19 +1,18 @@
-import axios from "axios";
+import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from "axios";
 
 const ACCESS_TOKEN_STORAGE_KEY = "du_jwt";
 const HAS_LOGGED_IN_KEY = "du_has_logged_in";
-const SESSION_AUTH_ENDPOINTS = new Set([
-  "/auth/me",
+const AUTH_HEADER_EXCLUDED_ENDPOINTS = new Set([
   "/auth/login",
   "/auth/register",
   "/auth/token/refresh",
   "/auth/forgot-password",
   "/auth/reset-password",
-  "/auth/kyc/verify",
   "/auth/logout",
 ]);
 
 let refreshPromise: Promise<string> | null = null;
+let accessToken = "";
 
 function resolveApiBaseUrl() {
   const raw = String(import.meta.env.VITE_API_URL ?? "").trim();
@@ -36,11 +35,26 @@ export const api = axios.create({
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    // Custom-header CSRF defence: the backend requires this header to be
+    // non-empty on cookie-backed POSTs.  Browsers cannot set custom headers
+    // on cross-origin requests without a CORS preflight, so presence alone
+    // is sufficient proof of same-origin intent.
+    "X-CSRF-Token": "csrf",
   },
 });
 
-function isSessionAuthEndpoint(requestUrl: string): boolean {
-  return SESSION_AUTH_ENDPOINTS.has(requestUrl);
+function isAuthHeaderExcludedEndpoint(requestUrl: string): boolean {
+  return AUTH_HEADER_EXCLUDED_ENDPOINTS.has(requestUrl);
+}
+
+function ensureAxiosHeaders(config: InternalAxiosRequestConfig): AxiosHeaders {
+  if (config.headers instanceof AxiosHeaders) {
+    return config.headers;
+  }
+
+  const headers = AxiosHeaders.from(config.headers ?? {});
+  config.headers = headers;
+  return headers;
 }
 
 export type AuthUser = {
@@ -49,30 +63,43 @@ export type AuthUser = {
   email: string;
 };
 
+export function markHasLoggedInBefore() {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(HAS_LOGGED_IN_KEY, "1");
+}
+
 export function saveAuthToken(token: string) {
   if (typeof window === "undefined") return;
   const normalized = String(token ?? "").trim();
   if (!normalized) return;
-  // Store access tokens in sessionStorage (tab-scoped) to reduce persistence risk.
-  window.sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, normalized);
+  accessToken = normalized;
+  // Do not persist bearer tokens in browser storage.
+  window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-  window.localStorage.setItem(HAS_LOGGED_IN_KEY, "1");
+  markHasLoggedInBefore();
 }
 
 export function clearAuthToken() {
   if (typeof window === "undefined") return;
+  accessToken = "";
   window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
 }
 
 export function loadAuthToken(): string {
   if (typeof window === "undefined") return "";
+  if (accessToken) return accessToken;
+
   const sessionToken = String(window.sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
-  if (sessionToken) return sessionToken;
+  if (sessionToken) {
+    accessToken = sessionToken;
+    window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    return sessionToken;
+  }
 
   const localToken = String(window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
   if (localToken) {
-    window.sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, localToken);
+    accessToken = localToken;
     window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
     return localToken;
   }
@@ -90,10 +117,10 @@ api.interceptors.request.use((config) => {
   if (!token) return config;
 
   const requestUrl = String(config.url ?? "");
-  if (isSessionAuthEndpoint(requestUrl)) return config;
+  if (isAuthHeaderExcludedEndpoint(requestUrl)) return config;
 
-  config.headers = config.headers ?? {};
-  config.headers.Authorization = `Bearer ${token}`;
+  const headers = ensureAxiosHeaders(config);
+  headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
 
@@ -120,8 +147,7 @@ api.interceptors.response.use(
       status !== 401 ||
       !config ||
       config._retryAfterRefresh ||
-      isSessionAuthEndpoint(requestUrl) ||
-      !hasLoggedInBefore()
+      isAuthHeaderExcludedEndpoint(requestUrl)
     ) {
       return Promise.reject(error);
     }
@@ -136,8 +162,8 @@ api.interceptors.response.use(
       }
 
       config._retryAfterRefresh = true;
-      config.headers = config.headers ?? {};
-      config.headers.Authorization = `Bearer ${token}`;
+      const headers = ensureAxiosHeaders(config as InternalAxiosRequestConfig);
+      headers.set("Authorization", `Bearer ${token}`);
       return api(config);
     } catch {
       return Promise.reject(error);
@@ -164,4 +190,11 @@ export function getApiErrorMessage(error: unknown, fallback = "Request failed.")
   }
 
   return fallback;
+}
+
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    accessToken = "";
+    refreshPromise = null;
+  });
 }

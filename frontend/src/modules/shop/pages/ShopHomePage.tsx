@@ -88,7 +88,6 @@ export default function Shop() {
             "shop.hero.subtitle1",
           "Buy curated products from Zimbabwe with diaspora-friendly delivery and trusted sourcing.",
           ),
-        buttons: [{ text: tx("shop.hero.button1", "Browse Collections"), link: "/shop#collections", variant: "primary", showArrow: true }],
       },
       {
         image: "/images/pages/shop/crafts_stone_sculptures_01.png",
@@ -325,13 +324,13 @@ export default function Shop() {
 
                 <div
                   ref={collectionsRailRef}
-                  className="tile-scroll-rail relative z-10 -mx-8 -mt-3 overflow-x-auto pb-7 pt-3 scroll-smooth overscroll-x-contain snap-x snap-mandatory md:-mx-10 md:-mt-4 md:pb-8 md:pt-4 md:cursor-grab active:cursor-grabbing"
+                  className="tile-scroll-rail relative z-10 -mx-8 -mt-3 overflow-x-auto pb-7 pt-3 scroll-pl-4 scroll-smooth overscroll-x-contain snap-x snap-mandatory md:-mx-10 md:-mt-4 md:pb-8 md:pt-4 md:scroll-pl-4 md:cursor-grab active:cursor-grabbing"
                   onPointerCancel={handleCollectionsRailPointerEnd}
                   onPointerDown={handleCollectionsRailPointerDown}
                   onPointerMove={handleCollectionsRailPointerMove}
                   onPointerUp={handleCollectionsRailPointerEnd}
                 >
-                  <div className="flex w-max items-stretch gap-4 pr-8 md:pr-10">
+                  <div className="flex w-max items-stretch gap-4 pl-4 pr-8 md:pr-10">
                     {SHOP_CATEGORY_CONFIG.map((category) => {
                       const categoryHref = getCategoryHref(category.key, category.baseCategory);
                       const categoryTitle = getCategoryTitle(category.key, category.title);

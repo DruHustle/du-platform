@@ -1,4 +1,17 @@
 import { getNotifyAlertEmails, getNotifyFromEmail, sendEmailMessageSafe } from "../../../shared/email";
+
+function escHtml(str: string): string {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escSubject(str: string): string {
+  return String(str ?? "").replace(/[\r\n]/g, " ").trim();
+}
 import { OrderRepository } from "../repositories/orderRepository";
 import { PaymentRepository } from "../repositories/paymentRepository";
 import { ProductRepository } from "../repositories/productRepository";
@@ -51,9 +64,12 @@ export class ShopService {
 
     if (result.created) {
       const fromEmail = await getNotifyFromEmail();
-      const userSubject = `Notify request received: ${payload.productName}`;
+      const safeName = escHtml(payload.productName);
+      const safeSlug = escHtml(payload.productSlug);
+      const safeEmail = escHtml(payload.email);
+      const userSubject = escSubject(`Notify request received: ${payload.productName}`);
       const userHtml = `<p>Hello,</p>
-<p>Your notify request for <strong>${payload.productName}</strong> has been saved.</p>
+<p>Your notify request for <strong>${safeName}</strong> has been saved.</p>
 <p>We will email you when stock is available.</p>`;
       const userText = `Your notify request for ${payload.productName} has been saved. We will email you when stock is available.`;
       await sendEmailMessageSafe(
@@ -63,11 +79,11 @@ export class ShopService {
 
       const alertEmails = await getNotifyAlertEmails();
       if (alertEmails.length > 0) {
-        const adminSubject = `New shop notify request: ${payload.productName}`;
+        const adminSubject = escSubject(`New shop notify request: ${payload.productName}`);
         const adminHtml = `<p><strong>New shop restock notify request</strong></p>
-<p>Product: ${payload.productName}</p>
-<p>Slug: ${payload.productSlug}</p>
-<p>Subscriber email: ${payload.email}</p>`;
+<p>Product: ${safeName}</p>
+<p>Slug: ${safeSlug}</p>
+<p>Subscriber email: ${safeEmail}</p>`;
         const adminText = `New shop restock notify request. Product: ${payload.productName}. Slug: ${payload.productSlug}. Subscriber email: ${payload.email}.`;
         await sendEmailMessageSafe(
           { to: alertEmails, subject: adminSubject, html: adminHtml, text: adminText, from: fromEmail },

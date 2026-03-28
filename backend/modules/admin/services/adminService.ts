@@ -76,16 +76,21 @@ export class AdminService {
       throw new AdminServiceError("VALIDATION_FAILED", 400, "From email is invalid.");
     }
 
+    const joinedEmails = parsedAlertEmails.join(", ");
+    if (joinedEmails.length > 5000) {
+      throw new AdminServiceError("VALIDATION_FAILED", 400, "Email list exceeds maximum allowed length.");
+    }
+
     await Promise.all([
       this.repository.upsertNotificationSetting(
         ADMIN_SETTING_NOTIFY_ALERT_EMAILS,
-        parsedAlertEmails.join(", ")
+        joinedEmails
       ),
       this.repository.upsertNotificationSetting(ADMIN_SETTING_NOTIFY_FROM_EMAIL, fromEmail),
     ]);
 
     return {
-      alert_emails: parsedAlertEmails.join(", "),
+      alert_emails: joinedEmails,
       from_email: fromEmail,
       ok: true,
     };

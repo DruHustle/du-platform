@@ -34,20 +34,6 @@ function buildOnboardingUrl(baseUrl: string, referralId: string, userId: number 
   }
 }
 
-function upsertMetaTag(attribute: "name" | "property", key: string, content: string) {
-  const selector = `meta[${attribute}="${key}"]`;
-  let element = document.head.querySelector(selector) as HTMLMetaElement | null;
-  const created = !element;
-  if (!element) {
-    element = document.createElement("meta");
-    element.setAttribute(attribute, key);
-    document.head.appendChild(element);
-  }
-  const previous = element.getAttribute("content");
-  element.setAttribute("content", content);
-  return { element, previous, created };
-}
-
 export default function CareHomePage() {
   const { t } = useTranslation();
   const [userId, setUserId] = useState<number | null>(null);
@@ -77,45 +63,6 @@ export default function CareHomePage() {
     };
   }, []);
 
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = t("care.seo.title", { defaultValue: "Care | The Diaspora Gateway" });
-
-    const updates = [
-      upsertMetaTag("name", "description", t("care.seo.description", { defaultValue: "Diaspora funeral policy onboarding with Nyaradzo through The Diaspora Gateway." })),
-      upsertMetaTag("property", "og:title", t("care.seo.title", { defaultValue: "Care | The Diaspora Gateway" })),
-      upsertMetaTag("property", "og:description", t("care.seo.og_description", { defaultValue: "Secure family funeral cover onboarding via Nyaradzo for Zimbabweans abroad." })),
-      upsertMetaTag("name", "twitter:title", t("care.seo.title", { defaultValue: "Care | The Diaspora Gateway" })),
-      upsertMetaTag("name", "twitter:description", t("care.seo.twitter_description", { defaultValue: "Diaspora funeral policy integration with Nyaradzo." })),
-    ];
-
-    const canonicalHref = typeof window !== "undefined" ? `${window.location.origin}/care` : "/care";
-    let canonical = document.head.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
-    const createdCanonical = !canonical;
-    const previousCanonical = canonical?.getAttribute("href") ?? null;
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute("href", canonicalHref);
-
-    return () => {
-      document.title = previousTitle;
-      for (const update of updates) {
-        if (update.created) {
-          update.element.remove();
-        } else if (update.previous != null) {
-          update.element.setAttribute("content", update.previous);
-        }
-      }
-      if (canonical) {
-        if (createdCanonical) canonical.remove();
-        else if (previousCanonical != null) canonical.setAttribute("href", previousCanonical);
-      }
-    };
-  }, [t]);
-
   const logReferralClick = useCallback(() => {
     if (!userId) return;
     void api.post("/care/referrals", { provider: CARE_PROVIDER, referral_id: referralId }).catch(() => {});
@@ -135,19 +82,6 @@ export default function CareHomePage() {
         description: t("care.hero.slide_1.description", {
           defaultValue: "Support loved ones at home with reliable onboarding and transparent care pathways.",
         }),
-        buttons: [
-          {
-            text: t("care.hero.actions.explore", { defaultValue: "Explore Cover" }),
-            variant: "primary",
-            link: "#care-content",
-            showArrow: true,
-          },
-          {
-            text: t("care.hero.actions.next_step", { defaultValue: "Start Onboarding" }),
-            variant: "outline",
-            link: "#care-start",
-          },
-        ],
       },
       {
         image: "/images/pages/care/family-eating-zimbabwe.jpg",

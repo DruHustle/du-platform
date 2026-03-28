@@ -1,4 +1,4 @@
-import { api, hasLoggedInBefore, type AuthUser } from "@/lib/api";
+import { api, markHasLoggedInBefore, type AuthUser } from "@/lib/api";
 
 const CURRENT_USER_CACHE_TTL_MS = 60_000;
 
@@ -6,11 +6,6 @@ let currentUserCache: { checkedAt: number; user: AuthUser | null } | null = null
 let currentUserInFlight: Promise<AuthUser | null> | null = null;
 
 export async function resolveCurrentUserBootstrap(options?: { force?: boolean }) {
-  if (!hasLoggedInBefore()) {
-    currentUserCache = { checkedAt: Date.now(), user: null };
-    return null;
-  }
-
   const force = options?.force === true;
   if (!force && currentUserCache && Date.now() - currentUserCache.checkedAt < CURRENT_USER_CACHE_TTL_MS) {
     return currentUserCache.user;
@@ -18,7 +13,13 @@ export async function resolveCurrentUserBootstrap(options?: { force?: boolean })
 
   currentUserInFlight ??= api
     .get("/auth/me")
-    .then((response) => (response.data?.user ?? null) as AuthUser | null)
+    .then((response) => {
+      const user = (response.data?.user ?? null) as AuthUser | null;
+      if (user) {
+        markHasLoggedInBefore();
+      }
+      return user;
+    })
     .catch(() => null)
     .finally(() => {
       currentUserInFlight = null;

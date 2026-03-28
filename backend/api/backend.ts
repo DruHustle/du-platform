@@ -1,4 +1,4 @@
-import type express from "express";
+import express from "express";
 import type { Pool } from "mysql2/promise";
 
 type SystemApiDeps = {
@@ -33,4 +33,30 @@ export function registerBackendApiRoutes(app: express.Express, deps: SystemApiDe
       now: new Date().toISOString(),
     });
   });
+
+  // Route: POST /api/csp-report
+  // Purpose: Receive Content-Security-Policy violation reports from browsers.
+  // The body uses the `application/csp-report` or `application/reports+json` content type.
+  // We accept any body, log it for monitoring, and always return 204.
+  app.post(
+    "/api/csp-report",
+    express.json({ type: ["application/csp-report", "application/json", "application/reports+json"], limit: "16kb" }),
+    express.text({ type: "text/plain", limit: "16kb" }),
+    (req, res) => {
+      try {
+        const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+        const report = body?.["csp-report"] ?? body;
+        console.warn("[csp-report]", JSON.stringify({
+          blockedUri: report?.["blocked-uri"] ?? report?.blockedURL,
+          violatedDirective: report?.["violated-directive"] ?? report?.effectiveDirective,
+          documentUri: report?.["document-uri"] ?? report?.documentURL,
+          referrer: report?.referrer,
+          userAgent: req.headers["user-agent"],
+        }));
+      } catch {
+        // Malformed report — still return 204 to avoid browser console noise.
+      }
+      return res.status(204).end();
+    }
+  );
 }
