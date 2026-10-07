@@ -2,7 +2,7 @@
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
   "about": "About",
-  "about_us": "Diaspora Unlocked is a unified digital gateway connecting Zimbabwe’s global diaspora to structured opportunities in tourism, trade, and investment — integrating trusted financial, remittance, and family assurance partners to enable secure economic participation and meaningful connection with home.",
+  "about_us": "Diaspora Unlocked is a unified digital gateway connecting Zimbabwe’s global diaspora to tourism, investment, remittances, shopping, and technology services.",
   "select_lang": "Select Language",
   "account": {
     "logout": "Logout"
@@ -27,13 +27,13 @@
       "vision_label": "Our Vision",
       "vision_content": "To be the trusted diaspora gateway connecting Zimbabweans abroad to meaningful opportunities and services back home.",
       "mission_label": "Our Mission",
-      "mission_content": "To unify tourism, trade, investment, remittance, and family care pathways through one secure and accessible digital platform.",
+      "mission_content": "To unify tourism, investment, remittance, shopping, and technology pathways through one secure and accessible digital platform.",
       "values_label": "Our Values",
       "values_content": "Trust, service excellence, transparency, innovation, and lasting commitment to diaspora impact.",
       "who_label": "Who we are",
       "who_content": "We are a team comprised of Zimbabwe diaspora professionals building practical digital solutions that keep families, businesses, and communities connected to home.",
       "what_label": "What we do",
-      "what_content": "We build and operate a unified diaspora platform that connects users to tourism, trade, investment, payments, family care, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable."
+      "what_content": "We build and operate a unified diaspora platform that connects users to tourism, investment, payments, shopping, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable."
     },
     "local_partners": {
       "items": {
@@ -122,9 +122,7 @@
     "shop": "Shop",
     "tourism": "Tourism",
     "investment": "Investments",
-    "trade": "Trade",
     "payments": "Payments",
-    "care": "Care",
     "market_requirements": "Market Requirements",
     "market_requirements_desc": "German market regulations and certifications",
     "product_intelligence": "Product Intelligence",
@@ -186,11 +184,6 @@
         "title": "Payments",
         "desc": "Send money or top up airtime with secure provider-backed flows and clear fee visibility.",
         "stats": "Remittance + Airtime"
-      },
-      "trade": {
-        "title": "Trade",
-        "desc": "Access comprehensive trade resources and connect with Zimbabwe's export sectors.",
-        "stats": "8 Export Sectors"
       }
     },
     "tiles": {
@@ -206,23 +199,11 @@
         "detail": "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable.",
         "stats": "Marketplace Ready"
       },
-      "care": {
-        "title": "Care",
-        "description": "Coordinate trusted family support and cross-border care services from one place, with clearer pathways for urgent needs and ongoing help.",
-        "detail": "The goal is to reduce friction when supporting relatives at home and make care decisions easier to manage from abroad.",
-        "stats": "Family Support"
-      },
       "technology": {
         "title": "Technology",
         "description": "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity.",
         "detail": "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults.",
         "stats": "Onesa AI"
-      },
-      "trade": {
-        "title": "Trade",
-        "description": "Access export pathways, market-entry support, and practical trade execution guidance for businesses looking to move from interest to delivery.",
-        "detail": "Use the platform to understand corridors, requirements, and partner readiness before entering new markets.",
-        "stats": "Export Growth"
       },
       "investment": {
         "title": "Investment",
@@ -256,10 +237,10 @@
       "title4": "Innovation in Classrooms",
       "subtitle4": "Digital learning and skills development are powering Zimbabwe's next generation of tech talent.",
       "highlight4": "Future Skills",
-      "badge5": "Digital Trade",
+      "badge5": "Smart Logistics",
       "title5": "Technology for Logistics",
       "subtitle5": "Smarter export and supply-chain systems create more reliable access to regional and global markets.",
-      "highlight5": "Connected Trade",
+      "highlight5": "Connected Supply Chains",
       "badge6": "Industrial AI",
       "title6": "Tech in Mining Operations",
       "subtitle6": "Data-driven operations, predictive maintenance, and process optimization improve output and safety.",
@@ -281,7 +262,7 @@
     "onesa_local_edge_title": "Beyond Western-Centric Models",
     "onesa_local_edge_desc": "Standard models are often Western-centric, excelling in formal economies but failing to navigate the \"kukiya-kiya\" (hustle) economy of Mbare Musika or the deep nuances of Shona slang mixed with rural Ndebele.",
     "diaspora_unlocked_title": "Diaspora Unlocked Technology",
-    "diaspora_unlocked_desc": "We use cutting-edge technology to enable seamless tourism, trade, and investment. Our platform bridges the gap between the diaspora and local opportunities through digital transparency and AI-powered insights.",
+    "diaspora_unlocked_desc": "We use cutting-edge technology to support tourism, investment, logistics, and everyday services. Our platform bridges the gap between the diaspora and local opportunities through digital transparency and AI-powered insights.",
     "features_title": "Onesa AI Capabilities",
     "features_subtitle": "Specialized tools designed to bridge the gap between the diaspora and local opportunities.",
     "cta_title": "Ready to Illuminate Your Journey?",
@@ -1185,165 +1166,6 @@
     "sectors_explore": "Explore Opportunities",
     "sectors_info": "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile."
   },
-  "trade": {
-    "hero": {
-      "badge1": "ZimTrade Export Support",
-      "title1": "Export from Zimbabwe with Confidence",
-      "subtitle1": "Use ZimTrade market intelligence, buyer linkages, and compliance support to enter priority markets.",
-      "highlight1": "Market Readiness",
-      "badge2": "EU Market Access",
-      "title2": "iEPA Duty-Free Entry",
-      "subtitle2": "Eligible Zimbabwean products can access the EU under preferential terms when origin rules are met.",
-      "highlight2": "Duty-Free & Quota-Free",
-      "badge3": "Compliance First",
-      "title3": "Meet EU Product Rules",
-      "subtitle3": "Align with SPS, food safety, and traceability requirements before shipment.",
-      "highlight3": "Standards Compliance",
-      "badge4": "REX Origin System",
-      "title4": "Self-Certify Origin Correctly",
-      "subtitle4": "For consignments above EUR 6,000, use REX registration and statement on origin requirements.",
-      "highlight4": "Correct Documentation",
-      "badge5": "Strategic Export Planning",
-      "title5": "Use Access2Markets + ZimTrade",
-      "subtitle5": "Validate duties, technical measures, and buyer requirements by HS code before closing deals.",
-      "highlight5": "Data-Driven Exports",
-      "badge6": "Regulatory Readiness",
-      "title6": "Meet Documentation Standards",
-      "subtitle6": "Build complete shipment files with invoices, packing lists, transport documents, and origin statements.",
-      "highlight6": "Clean Documentation",
-      "badge7": "Value Addition",
-      "title7": "Scale Higher-Value Products",
-      "subtitle7": "Move beyond raw exports by improving packaging, branding, and product finishing for premium buyers.",
-      "highlight7": "Better Margins",
-      "badge8": "Sector Expansion",
-      "title8": "Diversify Export Portfolio",
-      "subtitle8": "Balance commodity exports with processed goods and sector-specific compliance planning.",
-      "highlight8": "Risk Balanced Growth"
-    },
-    "export_roadmap_badge": "Export Roadmap",
-    "export_roadmap_title": "Zimbabwe Export Roadmap (2026)",
-    "export_roadmap_subtitle": "A practical path for exporters using ZimTrade support, ZIMRA/REX processes, and EU compliance requirements.",
-    "buyer_channels": "Buyer Channels",
-    "contact_verified_buyers": "Contact Verified Buyers",
-    "export_roadmap": {
-      "phase_label": "Phase 0{{phase}}"
-    },
-    "export_documentation_title": "Export Documentation and Compliance",
-    "export_documentation_subtitle": "Core controls previously shown on Exports are now consolidated in Trade.",
-    "export_checklist_title": "Critical Export Checklist",
-    "export_checklist_cta": "Open Full Compliance Guide",
-    "export_flow": {
-      "product_approval": {
-        "phase": "Product Approval",
-        "description": "Start with market access and product classification",
-        "steps": [
-          "Classify your product with the correct HS code.",
-          "Check the EU Access2Markets portal for duties, taxes, and measures.",
-          "Confirm eligibility for iEPA preferential access before pricing contracts.",
-          "For restricted product categories, obtain sector-specific approvals first."
-        ]
-      },
-      "registration_compliance": {
-        "phase": "Registration & Compliance",
-        "description": "Core registrations for Zimbabwe exporters",
-        "steps": [
-          "Register the business and tax profile with ZIMRA.",
-          "Apply for Registered Exporter (REX) status for origin self-certification.",
-          "Consignments above EUR 6,000 require statement on origin by a registered exporter.",
-          "Consignments at or below EUR 6,000 can be self-certified without REX."
-        ]
-      },
-      "certification_quality": {
-        "phase": "Certification & Quality",
-        "description": "Meet destination standards and risk rules",
-        "steps": [
-          "Comply with SPS requirements for food and plant products.",
-          "Use GLOBALG.A.P. or HACCP where required by buyers and retailers.",
-          "Prepare traceability documentation for EUDR-affected supply chains.",
-          "Track CBAM developments for carbon-intensive products and contracts."
-        ]
-      },
-      "logistics_documentation": {
-        "phase": "Logistics & Documentation",
-        "description": "Dispatch, customs, and payment controls",
-        "steps": [
-          "Prepare commercial invoice, packing list, and bill of lading/air waybill.",
-          "Include correct origin declarations and shipping marks.",
-          "Align payment terms with exchange-control and banking requirements.",
-          "Keep complete records for audits, claims, and repeat shipments."
-        ]
-      }
-    },
-    "export_sectors_badge": "Sectors",
-    "export_sectors_title": "Key Export Sectors",
-    "export_sectors_subtitle": "Discover the primary sectors driving Zimbabwe's export economy.",
-    "sectors": {
-      "horticulture": {
-        "name": "Horticulture",
-        "description": "Fresh produce and processed foods with strong EU and regional demand when SPS standards are met",
-        "opportunities": [
-          "EU organic markets",
-          "Middle East exports",
-          "Regional SADC trade"
-        ]
-      },
-      "leather_products": {
-        "name": "Leather Products",
-        "description": "Value-added manufacturing exports including footwear and lifestyle products for diaspora and EU channels",
-        "opportunities": [
-          "European fashion markets",
-          "Luxury goods sector",
-          "Government procurement"
-        ]
-      },
-      "arts_crafts": {
-        "name": "Arts & Crafts",
-        "description": "Authentic artisan exports that perform well in niche retail and diaspora-curated marketplaces",
-        "opportunities": [
-          "Tourism markets",
-          "Cultural exports",
-          "Fair trade channels"
-        ]
-      },
-      "minerals_mining": {
-        "name": "Minerals & Mining",
-        "description": "Strategic minerals and value-added products with increasing demand in industrial and energy value chains",
-        "opportunities": [
-          "Industrial exports",
-          "Jewelry sector",
-          "Technology minerals"
-        ]
-      }
-    },
-    "diaspora_role_badge": "Diaspora Role",
-    "diaspora_role_title": "Our Role in Export Growth",
-    "diaspora_role_subtitle": "Diaspora Unlocked provides practical market support to help Zimbabwean exporters validate, enter, and scale in international markets.",
-    "diaspora_roles": {
-      "market_intelligence": {
-        "title": "Market Intelligence",
-        "description": "We provide practical insight on buyer behavior, demand shifts, and product opportunities across target export markets."
-      },
-      "buyer_connections": {
-        "title": "Buyer Connections",
-        "description": "We connect Zimbabwean exporters to relevant retailers, distributors, and importers through curated trade relationships."
-      },
-      "quality_feedback": {
-        "title": "Quality Feedback",
-        "description": "We help improve export readiness with structured feedback on product quality, packaging, and market fit."
-      },
-      "brand_ambassadors": {
-        "title": "Brand Ambassadors",
-        "description": "We promote Zimbabwean products and brands in international markets through coordinated visibility and outreach."
-      }
-    },
-    "cta_title": "Ready to Export?",
-    "cta_subtitle": "Our trade specialists can help you navigate export requirements and connect you with the right resources and partners.",
-    "cta_button": "Connect with an Expert",
-    "contact_form_title": "Trade Inquiry",
-    "explore_title": "Explore More Trade Information",
-    "explore_subtitle": " For comprehensive trade information and official guidelines, visit the ZimTrade.",
-    "explore_site": "Visit ZimTrade"
-  },
   "regulations": {
     "badge": "Compliance Hub",
     "title": "Regulations & Compliance Guide",
@@ -1615,11 +1437,6 @@
         "opportunities": "Opportunity Details",
         "ntir": "NTIR Registration",
         "due_diligence": "Due Diligence"
-      },
-      "trade": {
-        "programs": "Export Programs",
-        "market_access": "Market Access",
-        "regulations": "Trade Regulations"
       },
       "success": {
         "collaboration": "Project Collaboration"
@@ -1896,7 +1713,7 @@
     "send": "Send",
     "thinking": "Thinking...",
     "starter_prompt": "Start chat....",
-    "welcome": "I am an expert on Zimbabwe. Let me help you navigate everything from investment, trade, and tourism to your day-to-day tasks.",
+    "welcome": "I am an expert on Zimbabwe. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
     "status_prefix": "Onesa status",
     "status_offline": "Offline",
     "status_backend_unreachable": "Onesa is currently unavailable. AI mode is off",
@@ -1906,130 +1723,6 @@
     "error_timeout": "Onesa request timed out after 3 minutes. Please try again.",
     "offline_text": "Offline",
     "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds."
-  },
-  "care": {
-    "hero": {
-      "badge": "Family Care Partner",
-      "title": "Diaspora Funeral Cover With Nyaradzo",
-      "description": "Protect your loved ones at home with trusted funeral policy onboarding through Nyaradzo, integrated into The Diaspora Gateway.",
-      "cta": "Start Nyaradzo Onboarding",
-      "actions": {
-        "explore": "Explore Cover",
-        "next_step": "Start Onboarding"
-      },
-      "slide_1": {
-        "badge": "Family Care Partner",
-        "description": "Support loved ones at home with reliable onboarding and transparent care pathways.",
-        "highlight": "With Confidence",
-        "subtitle": "Diaspora-linked funeral cover powered by trusted local delivery with Nyaradzo.",
-        "title": "Protect Family"
-      },
-      "slide_2": {
-        "badge": "Respect and Dignity",
-        "description": "Designed for diaspora families who need practical, trusted and culturally grounded cover.",
-        "highlight": "Feels Human",
-        "subtitle": "Give elders and dependants dependable support from wherever you live.",
-        "title": "Care That"
-      },
-      "slide_3": {
-        "badge": "Diaspora Connected",
-        "description": "The Care module keeps support clear and coordinated across borders.",
-        "highlight": "One Care Path",
-        "subtitle": "Manage cover remotely while staying present in family decisions at home.",
-        "title": "Global Families"
-      },
-      "slide_4": {
-        "badge": "Peace of Mind",
-        "description": "Built for monthly diaspora commitments and long-term household resilience.",
-        "highlight": "From Abroad",
-        "subtitle": "Keep family care stable through structured and transparent cover options.",
-        "title": "Protect Home"
-      },
-      "slide_5": {
-        "badge": "Trusted Execution",
-        "description": "Integrated onboarding gives one clear path from selection to activation.",
-        "highlight": "Reliable Service",
-        "subtitle": "Nyaradzo delivers local service operations for dependable family support.",
-        "title": "Local Partner"
-      },
-      "slide_6": {
-        "badge": "Designed for Diaspora",
-        "description": "Move from account access to active cover with minimal friction.",
-        "highlight": "Made Simple",
-        "subtitle": "Access family cover through a secure, familiar Diaspora Gateway experience.",
-        "title": "Family Assurance"
-      }
-    },
-    "why": {
-      "title": "Why It Matters",
-      "subtitle": "Family care is a core diaspora priority. This integration makes cover access easier and more transparent.",
-      "cards": {
-        "0": {
-          "description": "Funeral cover reduces sudden financial pressure and supports dignified send-offs.",
-          "title": "Dignity for Families"
-        },
-        "1": {
-          "description": "Manage policy support remotely while staying connected to home responsibilities.",
-          "title": "Built for Diaspora Families"
-        },
-        "2": {
-          "description": "Nyaradzo provides established local service delivery and family-facing care.",
-          "title": "Trusted Local Execution"
-        }
-      }
-    },
-    "coverage": {
-      "title": "Coverage Options",
-      "subtitle": "Choose a plan category that matches your family care commitments and budget profile.",
-      "cards": {
-        "0": {
-          "summary": "Affordable entry-level cover for immediate household support.",
-          "title": "Essential Family Cover"
-        },
-        "1": {
-          "summary": "Wider beneficiary support for parents and dependants back home.",
-          "title": "Extended Family Plan"
-        },
-        "2": {
-          "summary": "Enhanced benefits and service options for larger family structures.",
-          "title": "Premium Assurance"
-        }
-      }
-    },
-    "how": {
-      "title": "How It Works",
-      "subtitle": "A simple onboarding path from diaspora account access to active family cover.",
-      "steps": {
-        "0": {
-          "description": "Open the Nyaradzo onboarding flow from Diaspora Unlocked and provide your details.",
-          "title": "1. Start Application"
-        },
-        "1": {
-          "description": "Choose the plan band aligned to your family setup and preferred contribution level.",
-          "title": "2. Select Cover"
-        },
-        "2": {
-          "description": "Complete verification and payment setup to activate policy coverage.",
-          "title": "3. Confirm & Activate"
-        }
-      },
-      "step_label": "Step"
-    },
-    "cta": {
-      "title": "Ready to Protect Your Family?",
-      "subtitle": "Continue to Nyaradzo onboarding with tracked diaspora referral metadata.",
-      "referral_label": "referral_id",
-      "user_label": "user_id",
-      "guest": "guest",
-      "button": "Continue To Nyaradzo",
-      "badge": "Next Step 💛"
-    },
-    "seo": {
-      "title": "Care | The Diaspora Gateway",
-      "description": "Diaspora funeral policy onboarding with Nyaradzo through The Diaspora Gateway.",
-      "og_description": "Secure family funeral cover onboarding via Nyaradzo for Zimbabweans abroad.",
-      "twitter_description": "Diaspora funeral policy integration with Nyaradzo."
-    }
   },
   "logout": "Logout",
   "legal": {
@@ -2063,7 +1756,6 @@
   },
   "search": {
     "categories": {
-      "trade": "Trade",
       "tourism": "Tourism",
       "investment": "Investment",
       "technology": "Technology",
@@ -2079,7 +1771,7 @@
     },
     "no_results": {
       "title": "No results found",
-      "message": "We couldn't find anything matching \"{{query}}\". Try searching for broader terms like \"Investment\", \"Trade\", or \"Onesa\".",
+      "message": "We couldn't find anything matching \"{{query}}\". Try searching for broader terms like \"Investment\", \"Tourism\", or \"Onesa\".",
       "return_home": "Return Home"
     }
   },

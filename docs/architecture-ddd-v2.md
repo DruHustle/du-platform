@@ -7,12 +7,10 @@ The platform is organized as bounded domains with strict service-layer communica
 - core (cross-cutting concerns)
 - auth
 - tourism
-- trade
 - investment
 - shop
 - ai
 - fintech
-- care
 - data
 - search
 - legal
@@ -39,8 +37,6 @@ backend/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
     tourism/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    trade/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
     investment/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
     shop/
@@ -54,8 +50,6 @@ backend/
       shared/
     fintech/
       providers/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    care/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
     data/
       controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
@@ -73,12 +67,10 @@ backend/
 frontend/src/
   modules/
     tourism/
-    trade/
     investment/
     shop/
     ai/
     fintech/
-    care/
     data/
     legal/
     shared/
@@ -93,10 +85,8 @@ frontend/src/
 ## Route Domain Mapping
 
 - `/tourism` -> tourism module
-- `/trade` -> trade module
 - `/investment` -> investment module
 - `/shop` -> shop module
-- `/care` -> care module
 - `/ai/chat` -> ai.chat module
 - `/ai/book-trip` -> ai.booking module
 - `/ai/ar` -> ai.ar module

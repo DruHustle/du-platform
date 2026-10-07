@@ -2,7 +2,7 @@
   "brand": "I-Diaspora Ivuliwe",
   "tagline": "Ipulatifomu yeZimbabwe Global Diaspora",
   "about": "Mayelana",
-  "about_us": "Ukuxhumanisa amaZimbabwean akwamanye amazwe lathuba kwezohwebo, ezokuvakasha, lokutshala izimali.",
+  "about_us": "Diaspora Unlocked ixhumanisa amaZimbabwe akwamanye amazwe lezokuvakasha, ukutshala imali, remitensi, ukuthenga, kanye lamasevisi obuchwepheshe.",
   "select_lang": "Khetha ulimi",
   "account": {
     "logout": "Phuma"
@@ -27,13 +27,13 @@
       "vision_label": "Umbono Wethu",
       "vision_content": "Ukuba yisango elithembekileyo le-diaspora elixhumanisa amaZimbabwean akwamanye amazwe lamathuba kanye lamasevisi abalulekileyo ekhaya.",
       "mission_label": "Inhloso Yethu",
-      "mission_content": "Ukuhlanganisa ezokuvakasha, ezohwebo, ukutshala imali, remitensi, lokunakekelwa kwemindeni ngepulatifomu eyodwa ephephileyo futhi etholakala lula.",
+      "mission_content": "Ukuhlanganisa ezokuvakasha, ukutshala imali, remitensi, ukuthenga, lobuchwepheshe ngepulatifomu eyodwa ephephileyo futhi etholakala lula.",
       "values_label": "Amanani Ethu",
       "values_content": "Ukuthembeka, ukusebenza ngemfanelo ephezulu, ukubonakala sobala, ukusungula izinto ezintsha, lokuzinikela okuqhubekayo kumphumela we-diaspora.",
       "who_label": "Singobani",
       "who_content": "Siyiqembu labachwepheshe beZimbabwe diaspora elakha izixazululo zedijithali ezisebenzayo ezigcina imindeni, amabhizinisi, lemiphakathi kuxhumene lekhaya.",
       "what_label": "Esikwenzayo",
-      "what_content": "Sakha futhi siqhube ipulatifomu ehlanganisiweyo ye-diaspora exhumanisa abasebenzisi lezokuvakasha, ezohwebo, ukutshala imali, ukukhokha, ukunakekelwa kwemindeni, lokuqondiswa nge-AI. Siphinde sisebenze labalingani abathembekileyo labahlinzeki bamasevisi ukuze ukubamba iqhaza kube kuphephile, kusebenze, futhi kulinganiseke."
+      "what_content": "Sakha futhi siqhube ipulatifomu ehlanganisiweyo ye-diaspora exhumanisa abasebenzisi lezokuvakasha, ukutshala imali, ukukhokha, ukuthenga, lokuqondiswa nge-AI. Siphinde sisebenze labalingani abathembekileyo labahlinzeki bamasevisi ukuze ukubamba iqhaza kube kuphephile, kusebenze, futhi kulinganiseke."
     },
     "local_partners": {
       "items": {
@@ -122,8 +122,6 @@
     "shop": "Thenga",
     "tourism": "Ezokuvakasha",
     "investment": "Ukutshala Imali",
-    "trade": "Ezohwebo",
-    "care": "Ukunakekelwa Komndeni",
     "market_requirements": "Izidingo zemakethe",
     "market_requirements_desc": "Imithetho lezitifiketi zemakethe yase-Germany",
     "product_intelligence": "Ulwazi lwemikhiqizo",
@@ -186,11 +184,6 @@
         "title": "Izinkokhelo",
         "desc": "Thumela imali kumbe ugcwalise i-airtime usebenzisa izindlela ezivikelekileyo ezibonisa izindleko ngokucacileyo.",
         "stats": "Imali ethunyelwayo + Airtime"
-      },
-      "trade": {
-        "title": "Ezohwebo",
-        "desc": "Finyelela izinsiza zezohwebo ezibanzi njalo uxhumane lezingxenye zezokuthumela ngaphandle zaseZimbabwe.",
-        "stats": "Ingxenye ezingu-8 zokuthumela ngaphandle"
       }
     },
     "tiles": {
@@ -206,23 +199,11 @@
         "detail": "Kusukela ekudleni nezipho kuye ezimpahleni zasendaweni eziphezulu, ukuzizwisa kuklanyelwe ukwenza ukuthenga okuwela imingcele kuzizwe kuqondile futhi kuthembekile.",
         "stats": "Imakethe Isilungile"
       },
-      "care": {
-        "title": "Ukunakekela",
-        "description": "Hlanganisa ukwesekwa komndeni okuthembekile kanye nezinsizakalo zokunakekelwa kwemingcele ukusuka endaweni eyodwa, nezindlela ezicacile zezidingo eziphuthumayo nosizo oluqhubekayo.",
-        "detail": "Umgomo uwukunciphisa ukungezwani lapho usekela izihlobo ekhaya futhi wenze izinqumo zokunakekela kube lula ukuzisingatha ezivela phesheya.",
-        "stats": "Ukusekela Komndeni"
-      },
       "technology": {
         "title": "Ubuchwepheshe",
         "description": "Hlola i-Onesa AI, ingqalasizinda yedijithali egxile e-Zimbabwe, kanye namathuluzi akha ukufinyelela okuhlakaniphile kuzo zonke izinkambo zakwa-diaspora namathuba endawo.",
         "detail": "Imojula yobuchwepheshe ixhuma umbono womkhiqizo, i-AI esetshenziswayo, kanye nokuqanjwa okusha okusebenzayo okwakhiwe endaweni yaseZimbabwe kunokuzenzakalelayo okujwayelekile emhlabeni jikelele.",
         "stats": "Onesa AI"
-      },
-      "trade": {
-        "title": "Uhwebo",
-        "description": "Finyelela izindlela zokuthekelisa, ukwesekwa kokungena ezimakethe, kanye neziqondiso ezisebenzayo zokuhwebelana kumabhizinisi afuna ukusuka ekubeni nentshisekelo kuye ekulethweni.",
-        "detail": "Sebenzisa inkundla ukuze uqonde amaphasishi, izidingo, nokulungela uzakwethu ngaphambi kokungena ezimakethe ezintsha.",
-        "stats": "Thumela Ukukhula"
       },
       "investment": {
         "title": "Investment",
@@ -256,10 +237,10 @@
       "title4": "Ukuvuselelwa Eziklilasini",
       "subtitle4": "Ukufunda ngedijithali lokuthuthukiswa kwamakhono kukhuphula isizukulwane esilandelayo sethalente ye-tech eZimbabwe.",
       "highlight4": "Amakhono Esikhathi Esizayo",
-      "badge5": "Ukuhweba Kwedijithali",
+      "badge5": "Ukuthuthwa Okuhlakaniphileyo",
       "title5": "Ubuchwepheshe beLogistics",
       "subtitle5": "Amahlelo akhaliphileyo e-export le supply-chain adala ukufinyelela okuthembekileyo ezimakethe zesifunda lezomhlaba.",
-      "highlight5": "Ukuhweba Okuxhumene",
+      "highlight5": "Amaketane Okuthumela Axhumene",
       "badge6": "I-Industrial AI",
       "title6": "I-Tech Emisebenzini Yezezimayini",
       "subtitle6": "Imisebenzi eqhutshwa yidatha, predictive maintenance, le process optimization kuthuthukisa output lokuphepha.",
@@ -277,17 +258,11 @@
     "onesa_badge": "Hlangana le-Onesa AI",
     "onesa_title": "Ukukhanyisa indlela yakho",
     "onesa_meaning": "Onesa kugoqela ukuthi \"khanyisa\" ngesiShona",
-    "onesa_desc1": "I-Onesa AI luphawu lwethu olwakhelwe ukukhanyisa indlela yokuthi ungaphila kanjani, utshale imali njalo uphumelele eZimbabwe. Lapho amanye amamodeli e-AI ejwayelekileyo esilela kulwazi lwendawo, i-Onesa yakhiwe kusukela phansi ukuze izwisise isimo seZimbabwe ukwedlula noma iyiphi enye.",
     "onesa_desc2": "Kusukela ekulandeleni imithetho yendawo kusiya ekuhleleni amabhizinisi axazulula izinkinga ezithile zeZimbabwe, i-Onesa ikunika ulwazi lendawo oludingayo ukuze uphumelele.",
     "onesa_local_edge_title": "Ukwedlula amamodeli aseNtshonalanga",
     "onesa_local_edge_desc": "Amamodeli ajwayelekileyo ajwayele ukugxila eNtshonalanga, ephumelela eminnothweni ehlelekileyo kodwa ehluleka ukuhambisana lomnotho we-\"kukiya-kiya\" weMbare Musika kumbe ukujula kolimi lwesigodi sasekhaya.",
     "diaspora_unlocked_title": "Ezobuchwepheshe ze-Diaspora Unlocked",
-    "diaspora_unlocked_desc": "Sisebenzisa ubuchwepheshe besimanje ukunika lula ezokuvakasha, ezohwebo, lokutshala imali. Ipulatifomu yethu ivala igebe phakathi kwama-diaspora lamathuba asekhaya ngokusebenzisa obala kwedijithali.",
-    "onesa_usp1": "Ukwisisa isimo sendawo",
-    "onesa_usp2": "Ukuhumusha ulimi okuchanekileyo",
-    "ai_status": "Inguqulo ye-Beta",
-    "ai_demo_question": "Yimaphi amathuba okutshala imali e-agriculture athola inzuzo enengi eZimbabwe njengamanje?",
-    "ai_demo_response": "Ingxenye ye-agriculture eZimbabwe njengamanje ibona ukukhula okukhulu ekuthunyelweni kwemikhiqizo ye-horticulture. Ngokusekelwe kulokho okwenzakalayo njengamanje, ukutshala imali ekuhlelweni kwezinto zokuthutha ezibandayo (cold-chain logistics) kumatshungwa (blueberries) asuka e-Eastern Highlands kunika inzuzo enkulu...",
+    "diaspora_unlocked_desc": "Sisebenzisa ubuchwepheshe besimanje ukusekela ezokuvakasha, ukutshala imali, ukuthuthwa kwezinto, kanye lamasevisi ansuku zonke. Ipulatifomu yethu ivala igebe phakathi kwama-diaspora lamathuba asekhaya ngokusebenzisa obala kwedijithali.",
     "features_title": "Amandla e-Onesa AI",
     "features_subtitle": "Izisetshenziswa ezikhethekileyo ezakhelwe ukuxhumanisa ama-diaspora lamathuba asekhaya.",
     "cta_title": "Usulungele ukukhanyisa uhambo lwakho?",
@@ -395,8 +370,6 @@
         "detail": "Hlela mentors, co-investors, lama-operators emazweni ahlukene usebenzisa i-project context ehlanganyelwayo."
       }
     },
-    "onesa_name": "Onesa AI",
-    "onesa_meaning_badge": "Onesa = Khanyisa",
     "diaspora_ai": {
       "title": "Indlela iDiaspora Unlocked Esebenzisa Ngayo i-AI",
       "subtitle": "I-Onesa AI yakhelwe ukusekela uhambo lonke lwe-diaspora, kusukela ekuxhumaneni kabusha lokubuya kuze kufike ekuhloleni amathuba kanye lokuqhuba amabhizimusi."
@@ -801,7 +774,6 @@
       "title1": "Ukutshala imali kwama-Diaspora",
       "subtitle1": "Ukusekela ukuthuthukiswa kwelizwe ngokuzibandakanya kwama-diaspora.",
       "rbz_policy": "Hlola izinqubomgomo",
-      "rbz_currency": "Khetha Izindlela Zokutshala nge-USD kumbe i-ZiG",
       "highlight1": "Ukukhula kwelizwe",
       "badge2": "Masuwe SEZ",
       "title2": "Tshala e-Masuwe SEZ",
@@ -1194,165 +1166,6 @@
     "sectors_explore": "Hlola Amathuba",
     "sectors_info": "Hlola amathuba ahlelekile kuzo zonke ezokuvakasha, ezolimo, ezokukhiqiza, ingqalasizinda yedijithali namandla avuselelekayo. Ithayela ngalinye lihlanganisa umongo wobunikazi, ubuncane bosayizi wethikithi, ububanzi obulindelekile bokubuyisela, kanye nephrofayela yobungozi."
   },
-  "trade": {
-    "hero": {
-      "badge1": "Ezohwebo zomhlaba",
-      "title1": "Indawo yezohwebo yaseZimbabwe",
-      "subtitle1": "Ukuxhuma amabhizinisi asekhaya emazweni omhlaba lokukhulisa umnotho.",
-      "highlight1": "Ukukhula kokuthumela phandle",
-      "badge2": "Ukuhlanganyela okuqakathekileyo",
-      "title2": "Ukusebenzelana kwamazwe ngamazwe",
-      "subtitle2": "Ukwakha ubudlelwano obuqinileyo bezohwebo labahlanganyeli bomhlaba wonke.",
-      "highlight2": "Inethiwekhi yomhlaba wonke",
-      "badge3": "Ezohwebo ezisimeme",
-      "title3": "Ukuthumela phandle okulungileyo",
-      "subtitle3": "Ukugqugquzela izinqubo zezohwebo ezingalimazi imvelo njalo eziqakathekisa umphakathi.",
-      "highlight3": "Ibhizinisi elizibopheleleyo",
-      "badge4": "Ukukhula kokuthumela phandle",
-      "title4": "Ukuphakamisa ukuthunyelwa kwemikhiqizo yelizwe",
-      "subtitle4": "Ukuqhuba ukuchuma komnotho ngezinhlelo ezitshiyeneyo.",
-      "highlight4": "Ukuchuma komnotho",
-      "badge5": "Ukungena emakethe ye-EU",
-      "title5": "Ukungena ezimakethe zaseYurophu",
-      "subtitle5": "Ukwenza lula ukungena kwemikhiqizo yaseZimbabwe emakethe ye-EU.",
-      "highlight5": "Ukungena ngaphandle kwentela",
-      "badge6": "Ukulungela Ukulawula",
-      "title6": "Meet Documentation Standards",
-      "subtitle6": "Yakha amafayela okuthunyelwa aphelele anama-invoyisi, izinhlu zokupakisha, imibhalo yezokuthutha, nezitatimende zomsuka.",
-      "highlight6": "Amadokhumenti Ahlanzekile",
-      "badge7": "Ukwengezwa Kwenani",
-      "title7": "Kala Imikhiqizo Yenani Eliphezulu",
-      "subtitle7": "Dlulela ngale kokuthunyelwa ngaphandle okungavuthiwe ngokuthuthukisa ukupakishwa, ukufaka uphawu, nokuqedwa komkhiqizo kubathengi abaphambili.",
-      "highlight7": "Amamajini Angcono",
-      "badge8": "Ukunwetshwa komkhakha",
-      "title8": "Diversify Export Portfolio",
-      "subtitle8": "Linganisa ukuthunyelwa kwempahla kwamanye amazwe nezimpahla ezicutshunguliwe kanye nokuhlela ukuthobela umthetho okuqondene nomkhakha othile.",
-      "highlight8": "Ukukhula Okulinganiselayo Kwengozi"
-    },
-    "export_roadmap_badge": "Indlela yokuthumela phandle",
-    "export_roadmap_title": "Uhlelo lokuthumela kusuka eZimbabwe kusiya e-Germany",
-    "export_roadmap_subtitle": "Isikhokhelo sesinyathelo ngesinyathelo sokuhamba ohambweni lokuthumela phandle.",
-    "buyer_channels": "Buyer Channels",
-    "contact_verified_buyers": "Contact Verified Buyers",
-    "export_roadmap": {
-      "phase_label": "Phase 0{{phase}}"
-    },
-    "export_documentation_title": "Export Documentation and Compliance",
-    "export_documentation_subtitle": "Core controls previously shown on Exports are now consolidated in Trade.",
-    "export_checklist_title": "Critical Export Checklist",
-    "export_checklist_cta": "Open Full Compliance Guide",
-    "export_flow": {
-      "product_approval": {
-        "phase": "Ukuvunyelwa komkhiqizo",
-        "description": "Yemikhiqizo engakavunyelwa yi-EU (isib. Inyosi)",
-        "steps": [
-          "Faka i-Residue Monitoring Plan (RMP)",
-          "Sungula izinhlelo zokuhlola eziqinisekisiweyo yi-EU",
-          "Bhalisa ohlelweni lwe-EU TRACES",
-          "Lindela ukufakwa ohlwini oluvunyelweyo yi-EU"
-        ]
-      },
-      "registration_compliance": {
-        "phase": "Ukubhalisa lokuhambisana",
-        "description": "Kudingeka kubathumeli bonke",
-        "steps": [
-          "Bhalisa ohlelweni lwe-REX usebenzisa i-ZIMRA",
-          "Khuluma le-ZimTrade ukuze uthole ulwazi lwemakethe",
-          "Thola izitifiketi ezidingekayo",
-          "Qeda ukubhalisa ukuthumela phandle kuziphathimandla ezifanele"
-        ]
-      },
-      "certification_quality": {
-        "phase": "Isitifiketi le-Quality",
-        "description": "Hlangabezana lamazinga we-quality we-EU",
-        "steps": [
-          "Isitifiketi se-GLOBALG.A.P. le-GRASP",
-          "Isitifiketi se-EU Organic (uma sifanele)",
-          "Ukuhlola i-Quality: Class I, imingcele ye-MRL",
-          "Ukuhlolwa ngabanye (Third-Party Audits)"
-        ]
-      },
-      "logistics_documentation": {
-        "phase": "Ezokuthutha lemibhalo",
-        "description": "Ukulungiselela kokugcina kokuthumela",
-        "steps": [
-          "Lungisa imibhalo yokuthumela phandle",
-          "Izitifiketi zezempilo (Phytosanitary Certificates)",
-          "Commercial Invoice elesiitatimende se-REX",
-          "Hlela ezokuthutha ezibandayo (Cold Chain)"
-        ]
-      }
-    },
-    "export_sectors_badge": "Izingxenye",
-    "export_sectors_title": "Ingxenye eziyinhloko zokuthumela phandle",
-    "export_sectors_subtitle": "Thola izimboni eziqhuba umnotho wezokuthumela phandle eZimbabwe.",
-    "sectors": {
-      "horticulture": {
-        "name": "I-Horticulture",
-        "description": "Imikhiqizo emitsha, amaluva, lemibhida ye-organic yezimakethe zomhlaba.",
-        "opportunities": [
-          "Izimakethe ze-EU organic",
-          "Ukuthumela e-Middle East",
-          "Ezohwebo zesigaba se-SADC"
-        ]
-      },
-      "leather_products": {
-        "name": "Imikhiqizo yesikhumba",
-        "description": "Impahla yesikhumba eqandayo, izicathulo, lezinye izinto ezenziwe ngobuciko base-Africa.",
-        "opportunities": [
-          "Izimakethe zezembatho zaseYurophu",
-          "Ingxenye yempahla kanokusho (Luxury)",
-          "Ukuthengiselana lohulumende"
-        ]
-      },
-      "arts_crafts": {
-        "name": "Ezobuciko lezandla",
-        "description": "Izithombe zamatshe (stone sculptures), ubuhlalu, izitsha ezilukiweyo (baskets).",
-        "opportunities": [
-          "Izimakethe zezokuvakasha",
-          "Ukuthunyelwa kwamasiko",
-          "Imigudu ye-Fair trade"
-        ]
-      },
-      "minerals_mining": {
-        "name": "Ezokumbiwa phansi",
-        "description": "Imikhiqizo yezokumbiwa enenani elengeziweyo, amatshe aligugu (precious stones).",
-        "opportunities": [
-          "Ukuthunyelwa kwezimboni",
-          "Ingxenye yobucwebe (Jewelry)",
-          "Ezokumbiwa zezobuchwepheshe"
-        ]
-      }
-    },
-    "diaspora_role_badge": "Iqhaza le-Diaspora",
-    "diaspora_role_title": "Indima yethu ekukhuleni kokuthumela phandle",
-    "diaspora_role_subtitle": "I-Diaspora Unlocked inikeza usekelo lwemakethe olusebenzayo ukusiza abathumeli baseZimbabwe ukuqinisekisa, ukungena, lokukhulisa ezimakethe zomhlaba.",
-    "diaspora_roles": {
-      "market_intelligence": {
-        "title": "Ulwazi lwemakethe",
-        "description": "Sinikeza ulwazi olusebenzayo ngendlela yokuziphatha kwabathengi, ukuguquka kwemfuno, lamathuba omkhiqizo ezimakethe eziqondiweyo."
-      },
-      "buyer_connections": {
-        "title": "Ukuxhuma abathengi",
-        "description": "Sixhumanisa abathumeli baseZimbabwe labathengisi, abasabalalisi, labangenisi abafaneleyo ngokusebenzisa ubudlelwano bezohwebo obukhethiwe."
-      },
-      "quality_feedback": {
-        "title": "Imibono ngeqophelo",
-        "description": "Siyasiza ukuthuthukisa ukulungela ukuthumela phandle ngokuphendula okuhlelekile mayelana lekhwalithi yomkhiqizo, ukupakishwa, lokufaneleka kwemakethe."
-      },
-      "brand_ambassadors": {
-        "title": "Abanxusa be-Brand",
-        "description": "Siphakamisa imikhiqizo lamabhrendi aseZimbabwe ezimakethe zomhlaba ngokubonakala okuhleliwe lokufinyelela kwabantu."
-      }
-    },
-    "cta_title": "Usulungele ukuthumela phandle?",
-    "cta_subtitle": "Abachwepheshe bethu bangakusiza ekulandeleni izidingo zokuthumela phandle.",
-    "cta_button": "Xhumana lochwepheshe",
-    "contact_form_title": "Imibuzo yezohwebo",
-    "explore_title": "Hlola eminye imininingwane yezohwebo",
-    "explore_subtitle": "Ukuze uthole imininingwane ebanzi, vakashela i-ZimTrade.",
-    "explore_site": "Vakashela i-ZimTrade"
-  },
   "common": {
     "coming_soon": "Sidingida amacebo akhaliphileyo ahloselwe ukuntshintsha indlela elixhumana ngayo, elisebenza ngayo, lelokukhula kwenu sisebenzisa ithekinoji ye-AI ethuthukileyo.",
     "explore_now": "Hlola Manje",
@@ -1558,11 +1371,6 @@
         "opportunities": "Opportunity Details",
         "ntir": "NTIR Registration",
         "due_diligence": "Due Diligence"
-      },
-      "trade": {
-        "programs": "Export Programs",
-        "market_access": "Market Access",
-        "regulations": "Trade Regulations"
       },
       "success": {
         "collaboration": "Project Collaboration"
@@ -1905,7 +1713,7 @@
     "send": "Thumela",
     "thinking": "Iyacabanga...",
     "starter_prompt": "Qalisa ingxoxo....",
-    "welcome": "Nginguchwepheshe weZimbabwe. Ake ngikusize kuzo zonke izinto ezimayelana lokutshala imali, ezohwebo, ezokuvakasha, kanye lemisebenzi yakho yansuku zonke.",
+    "welcome": "Nginguchwepheshe weZimbabwe. Ake ngikusize kuzo zonke izinto ezimayelana lokutshala imali, ubuchwepheshe, ezokuvakasha, kanye lemisebenzi yakho yansuku zonke.",
     "status_prefix": "Isimo se-Onesa",
     "status_offline": "Ayikho online",
     "status_backend_unreachable": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
@@ -1915,130 +1723,6 @@
     "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi ngemva kwemizuzu emithathu. Zama njalo.",
     "offline_text": "Okungaxhunyiwe ku-inthanethi",
     "error_rate_limited": "U-Onesa umatasatasa njengamanje. Sicela uzame futhi emizuzwaneni embalwa."
-  },
-  "care": {
-    "hero": {
-      "badge": "Umngane Wokunakekelwa Komndeni",
-      "title": "I-Funeral Cover yeDiaspora loNyaradzo",
-      "description": "Vikela abemuli ekhaya ngokubhalisa i-funeral policy ethembekileyo ngeNyaradzo, ehlanganiswe kuThe Diaspora Gateway.",
-      "cta": "Qalisa ukubhalisa kuNyaradzo",
-      "actions": {
-        "explore": "Hlola Ikhava",
-        "next_step": "Qala Ukugibela"
-      },
-      "slide_1": {
-        "badge": "Uzakwethu Wokunakekela Umndeni",
-        "description": "Sekela obathandayo ekhaya ngezindlela ezinokwethenjelwa zokugibela kanye nokunakekelwa okusobala.",
-        "highlight": "Ngokuzethemba",
-        "subtitle": "Ikhava yomngcwabo exhumene ne-diaspora inikwa amandla ukulethwa kwasendaweni okuthembekile noNyaradzo.",
-        "title": "Vikela Umndeni"
-      },
-      "slide_2": {
-        "badge": "Inhlonipho Nesithunzi",
-        "description": "Idizayinelwe imindeni ehlala emazweni angaphandle edinga ikhava esebenzayo, ethenjwayo nesekelwe ngokwesiko.",
-        "highlight": "Uzizwa Engumuntu",
-        "subtitle": "Nikeza abadala nabathembele kuwe ukwesekwa okuthembekile kunoma yikuphi lapho uhlala khona.",
-        "title": "Nakekela Lokho"
-      },
-      "slide_3": {
-        "badge": "I-Diaspora Ixhunyiwe",
-        "description": "Imojula Yokunakekela igcina ukwesekwa kucacile futhi kuhlanganiswe emikhawulweni yonke.",
-        "highlight": "Indlela Yokunakekela Eyodwa",
-        "subtitle": "Phatha ikhava ukude ngenkathi uhlala ukhona ezinqumweni zomndeni ekhaya.",
-        "title": "Imindeni Yomhlaba Wonke"
-      },
-      "slide_4": {
-        "badge": "Ukuba nokuthula",
-        "description": "Yakhelwe ukuzibophezela kwanyanga zonke kwe-diaspora kanye nokuqina kwekhaya kwesikhathi eside.",
-        "highlight": "Evela phesheya",
-        "subtitle": "Gcina ukunakekelwa komndeni kuzinzile ngezinketho zekhava ezihlelekile nezisobala.",
-        "title": "Vikela Ikhaya"
-      },
-      "slide_5": {
-        "badge": "Ukubulawa Okwethenjwayo",
-        "description": "Ukugibela okuhlanganisiwe kunikeza indlela eyodwa ecacile kusukela ekukhethweni kuya ekusebenziseni.",
-        "highlight": "Isevisi Ethembekile",
-        "subtitle": "I-Nyaradzo iletha imisebenzi yesevisi yendawo ukuze uthole ukwesekwa komndeni okuthembekile.",
-        "title": "Uzakwethu Wasendaweni"
-      },
-      "slide_6": {
-        "badge": "Idizayinelwe i-Diaspora",
-        "description": "Susa ekufinyeleleni kwe-akhawunti uye kukhava esebenzayo enokuphikisana okuncane.",
-        "highlight": "Yenziwe Yalula",
-        "subtitle": "Finyelela ikhava yomndeni ngokusebenzisa ulwazi oluvikelekile, olujwayelekile lwe-Diaspora Gateway.",
-        "title": "Isiqinisekiso Somndeni"
-      }
-    },
-    "why": {
-      "title": "Kungani kubalulekile",
-      "subtitle": "Ukunakekela umndeni kuyinto eqakathekileyo kuDiaspora. Lokhu kubambisana kwenza ukuthola i-cover kube lula futhi kucace.",
-      "cards": {
-        "0": {
-          "description": "Ikhava yomngcwabo inciphisa ingcindezi yezezimali engazelelwe futhi isekela ukuthumela okunesithunzi.",
-          "title": "Isithunzi Semindeni"
-        },
-        "1": {
-          "description": "Lawula ukusekelwa kwenqubomgomo ukude ngenkathi uhlala uxhumekile kuzibopho zasekhaya.",
-          "title": "Yakhelwe imindeni yangaphandle"
-        },
-        "2": {
-          "description": "I-Nyaradzo ihlinzeka ngokuhlinzekwa kwezinsizakalo zasendaweni kanye nokunakekela okubhekene nomndeni.",
-          "title": "Ukusebenzisa Kwendawo Okwethenjwayo"
-        }
-      }
-    },
-    "coverage": {
-      "title": "Izinketho zeCoverage",
-      "subtitle": "Khetha isigaba seplan esihambelana lezibopho zomndeni wakho kanye lebhajethi yakho.",
-      "cards": {
-        "0": {
-          "summary": "Ikhava yezinga lokungena ethengekayo ukuze uthole ukwesekwa komndeni ngokushesha.",
-          "title": "Ikhava Yomndeni Ebalulekile"
-        },
-        "1": {
-          "summary": "Ukwesekwa okubanzi kwabahlomuli kwabazali nababondliwa ekhaya.",
-          "title": "Uhlelo Lomndeni Olunwetshiwe"
-        },
-        "2": {
-          "summary": "Izinzuzo ezithuthukisiwe nezinketho zesevisi zezakhiwo zomndeni ezinkulu.",
-          "title": "Isiqiniseko se-Premium"
-        }
-      }
-    },
-    "how": {
-      "title": "Kusebenza njani",
-      "subtitle": "Indlela elula kusukela ekufinyeleleni i-akhawunti yeDiaspora kuze kube i-cover esebenzayo.",
-      "steps": {
-        "0": {
-          "description": "Vula i-Nyaradzo onboarding flow from Diaspora Unlocked futhi unikeze imininingwane yakho.",
-          "title": "1. Qala Isicelo"
-        },
-        "1": {
-          "description": "Khetha ibhendi yohlelo eqondaniswe nokusethwa komndeni wakho kanye neleveli yomnikelo oyincamelayo.",
-          "title": "2. Khetha Ikhava"
-        },
-        "2": {
-          "description": "Qedela ukuqinisekiswa nokusethwa kwenkokhelo ukuze uvule ukufakwa kwenqubomgomo.",
-          "title": "3. Qinisekisa & Yenza Kusebenze"
-        }
-      },
-      "step_label": "Isinyathelo"
-    },
-    "cta": {
-      "title": "Usukulungele ukuvikela umndeni wakho?",
-      "subtitle": "Qhubekela kuNyaradzo onboarding elereferral metadata elandelwayo.",
-      "referral_label": "referral_id",
-      "user_label": "I-ID Yomsebenzisi",
-      "guest": "isivakashi",
-      "button": "Qhubekela kuNyaradzo",
-      "badge": "Isinyathelo Esilandelayo 💛"
-    },
-    "seo": {
-      "title": "Ukunakekelwa Komndeni | The Diaspora Gateway",
-      "description": "Ukubhalisa i-funeral policy yeDiaspora loNyaradzo kuThe Diaspora Gateway.",
-      "og_description": "Ukubhalisa okuphephileyo kwe-family funeral cover ngeNyaradzo kwabantu baseZimbabwe abangaphandle.",
-      "twitter_description": "Ukuhlanganiswa kwe-funeral policy yeDiaspora loNyaradzo."
-    }
   },
   "logout": "Phuma",
   "legal": {
@@ -2072,7 +1756,6 @@
   },
   "search": {
     "categories": {
-      "trade": "Uhwebo",
       "tourism": "Ezokuvakasha",
       "investment": "Investment",
       "technology": "Ubuchwepheshe",
@@ -2088,7 +1771,7 @@
     },
     "no_results": {
       "title": "Ayikho imiphumela etholiwe",
-      "message": "Asikwazanga ukuthola lutho olufana ne-\"{{query}}\". Zama ukusesha amagama abanzi njengokuthi \"Investment\", \"Trade\", noma \"Onesa\".",
+      "message": "Asikwazanga ukuthola lutho olufana ne-\"{{query}}\". Zama ukusesha amagama abanzi njengokuthi \"Investment\", \"Tourism\", noma \"Onesa\".",
       "return_home": "Buyela Ekhaya"
     }
   },

@@ -12,7 +12,7 @@ import { api, getApiErrorMessage } from "@/lib/api";
 interface ContactFormProps {
   title?: string;
   description?: string;
-  module: "general" | "technology" | "export" | "tourism" | "investment" | "trade" | "data" | "success";
+  module: "general" | "technology" | "export" | "tourism" | "investment" | "data" | "success";
 }
 
 export default function ContactForm({ title, description, module }: ContactFormProps) {
@@ -58,11 +58,6 @@ export default function ContactForm({ title, description, module }: ContactFormP
       t("contact_form.subject_options.investment.opportunities", { defaultValue: "Opportunity Details" }),
       t("contact_form.subject_options.investment.ntir", { defaultValue: "NTIR Registration" }),
       t("contact_form.subject_options.investment.due_diligence", { defaultValue: "Due Diligence" }),
-    ],
-    trade: [
-      t("contact_form.subject_options.trade.programs", { defaultValue: "Export Programs" }),
-      t("contact_form.subject_options.trade.market_access", { defaultValue: "Market Access" }),
-      t("contact_form.subject_options.trade.regulations", { defaultValue: "Trade Regulations" }),
     ],
     success: [
       t("contact_form.subject_options.general.partnership", { defaultValue: "Partnership Inquiry" }),

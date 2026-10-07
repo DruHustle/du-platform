@@ -2,7 +2,7 @@
   "brand": "Diaspora erschliesen",
   "tagline": "Globale Plattform für die Simbabwische Diaspora",
   "about": "Über uns",
-  "about_us": "Verbindung der weltweiten simbabwischen Diaspora mit Möglichkeiten in Handel, Tourismus und Investitionen.",
+  "about_us": "Diaspora Unlocked verbindet Simbabwes weltweite Diaspora mit Tourismus, Investitionen, Überweisungen, Shopping und Technologiediensten.",
   "select_lang": "Sprache wählen",
   "account": {
     "logout": "Abmelden"
@@ -27,13 +27,13 @@
       "vision_label": "Unsere Vision",
       "vision_content": "Das vertrauenswürdige Diaspora-Gateway zu sein, das Simbabwerinnen und Simbabwer im Ausland mit sinnvollen Chancen und Dienstleistungen in der Heimat verbindet.",
       "mission_label": "Unsere Mission",
-      "mission_content": "Tourismus, Handel, Investitionen, Remittances und Familienvorsorge über eine sichere und zugängliche digitale Plattform zu vereinen.",
+      "mission_content": "Tourismus, Investitionen, Remittances, Shopping und Technologie über eine sichere und zugängliche digitale Plattform zu vereinen.",
       "values_label": "Unsere Werte",
       "values_content": "Vertrauen, Servicequalität, Transparenz, Innovation und nachhaltiges Engagement für Diaspora-Wirkung.",
       "who_label": "Wer wir sind",
       "who_content": "Wir sind ein Team aus Fachkräften der simbabwischen Diaspora, das praxisnahe digitale Lösungen entwickelt, um Familien, Unternehmen und Gemeinschaften mit der Heimat verbunden zu halten.",
       "what_label": "Was wir tun",
-      "what_content": "Wir entwickeln und betreiben eine einheitliche Diaspora-Plattform, die Nutzerinnen und Nutzer mit Tourismus, Handel, Investitionen, Zahlungen, Familienvorsorge und KI-gestützter Beratung verbindet. Außerdem arbeiten wir mit vertrauenswürdigen Institutionen und Dienstleistern zusammen, damit die Teilhabe sicher, praktikabel und messbar ist."
+      "what_content": "Wir entwickeln und betreiben eine einheitliche Diaspora-Plattform, die Nutzerinnen und Nutzer mit Tourismus, Investitionen, Zahlungen, Shopping und KI-gestützter Beratung verbindet. Außerdem arbeiten wir mit vertrauenswürdigen Institutionen und Dienstleistern zusammen, damit die Teilhabe sicher, praktikabel und messbar ist."
     },
     "local_partners": {
       "items": {
@@ -122,8 +122,6 @@
     "shop": "Geschäft",
     "tourism": "Tourismus",
     "investment": "Investitionen",
-    "trade": "Handel",
-    "care": "Vorsorge",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
     "product_intelligence": "Produkt-Informationen",
@@ -186,11 +184,6 @@
         "title": "Zahlungen",
         "desc": "Senden Sie Geld oder laden Sie Airtime mit sicheren providergestuetzten Ablaeufen und klarer Gebuehrenanzeige auf.",
         "stats": "Überweisung + Sendezeit"
-      },
-      "trade": {
-        "title": "Handel",
-        "desc": "Nutzen Sie umfassende Handelsressourcen und verbinden Sie sich mit simbabwischen Exportsektoren.",
-        "stats": "8 Exportsektoren"
       }
     },
     "tiles": {
@@ -206,23 +199,11 @@
         "detail": "Von Lebensmitteln und Geschenken bis hin zu erstklassigen lokalen Waren – das Erlebnis soll dafür sorgen, dass sich grenzüberschreitende Einkäufe direkt und zuverlässig anfühlen.",
         "stats": "Bereit für den Marktplatz"
       },
-      "care": {
-        "title": "Pflege",
-        "description": "Koordinieren Sie vertrauenswürdige Familienunterstützung und grenzüberschreitende Pflegedienste von einem Ort aus, mit klareren Wegen für dringende Bedürfnisse und fortlaufende Hilfe.",
-        "detail": "Ziel ist es, Reibungsverluste bei der Betreuung der Angehörigen im Inland zu reduzieren und Pflegeentscheidungen leichter aus dem Ausland zu treffen.",
-        "stats": "Familienunterstützung"
-      },
       "technology": {
         "title": "Technologie",
         "description": "Entdecken Sie Onesa AI, die auf Simbabwe ausgerichtete digitale Infrastruktur und die Tools, die einen intelligenteren Zugang für Diaspora-Reisen und lokale Möglichkeiten ermöglichen.",
         "detail": "Das Technologiemodul verbindet Produktvision, angewandte KI und praktische Innovation, die auf dem simbabwischen Kontext und nicht auf generischen globalen Standards basiert.",
         "stats": "Onesa KI"
-      },
-      "trade": {
-        "title": "Handel",
-        "description": "Greifen Sie auf Exportwege, Markteintrittsunterstützung und praktische Anleitungen zur Handelsabwicklung für Unternehmen zu, die den Übergang vom Interesse zur Lieferung anstreben.",
-        "detail": "Nutzen Sie die Plattform, um Korridore, Anforderungen und Partnerbereitschaft zu verstehen, bevor Sie neue Märkte erschließen.",
-        "stats": "Exportwachstum"
       },
       "investment": {
         "title": "Investition",
@@ -256,10 +237,10 @@
       "title4": "Innovation in Klassenzimmern",
       "subtitle4": "Digitales Lernen und Kompetenzaufbau treiben Simbabwes nächste Generation von Tech-Talenten voran.",
       "highlight4": "Zukunftskompetenzen",
-      "badge5": "Digitaler Handel",
+      "badge5": "Intelligente Logistik",
       "title5": "Technologie für Logistik",
       "subtitle5": "Intelligentere Export- und Lieferketten schaffen verlässlicheren Zugang zu regionalen und globalen Märkten.",
-      "highlight5": "Vernetzter Handel",
+      "highlight5": "Vernetzte Lieferketten",
       "badge6": "Industrielle KI",
       "title6": "Technologie im Bergbau",
       "subtitle6": "Datengetriebene Abläufe, vorausschauende Wartung und Prozessoptimierung verbessern Output und Sicherheit.",
@@ -281,7 +262,7 @@
     "onesa_local_edge_title": "Jenseits westlich-zentrierter Modelle",
     "onesa_local_edge_desc": "Standardmodelle sind oft westlich geprägt; sie glänzen in formalen Wirtschaftssystemen, scheitern aber an der „Kukiya-kiya“-Wirtschaft (Hustle) von Mbare Musika oder den tiefen Nuancen von Shona-Slang gemischt mit ländlichem Ndebele.",
     "diaspora_unlocked_title": "Diaspora Unlocked Technologie",
-    "diaspora_unlocked_desc": "Wir nutzen modernste Technologie, um nahtlosen Tourismus, Handel und Investitionen zu ermöglichen. Unsere Plattform schließt die Lücke zwischen der Diaspora und lokalen Möglichkeiten durch digitale Transparenz und KI-gestützte Erkenntnisse.",
+    "diaspora_unlocked_desc": "Wir nutzen modernste Technologie für Tourismus, Investitionen, Logistik und alltägliche Dienste. Unsere Plattform schließt die Lücke zwischen der Diaspora und lokalen Möglichkeiten durch digitale Transparenz und KI-gestützte Erkenntnisse.",
     "features_title": "Onesa AI Fähigkeiten",
     "features_subtitle": "Spezialisierte Tools, um die Lücke zwischen der Diaspora und lokalen Chancen zu schließen.",
     "cta_title": "Bereit, Ihre Reise zu beleuchten?",
@@ -793,7 +774,6 @@
       "title1": "Diaspora-Investitionen",
       "subtitle1": "Unterstützung der nationalen Entwicklung durch Diaspora-Engagement.",
       "rbz_policy": "Richtlinien erkunden",
-      "rbz_currency": "USD- oder ZiG-Investitionspfade waehlen",
       "highlight1": "Nationales Wachstum",
       "badge2": "Masuwe SWZ",
       "title2": "Investieren in Masuwe SEZ",
@@ -1186,165 +1166,6 @@
     "sectors_explore": "Entdecken Sie Möglichkeiten",
     "sectors_info": "Entdecken Sie strukturierte Möglichkeiten in den Bereichen Tourismus, Landwirtschaft, Fertigung, digitale Infrastruktur und erneuerbare Energien. Jede Kachel enthält den Eigentumskontext, die Mindestticketgröße, die erwartete Renditespanne und das Risikoprofil."
   },
-  "trade": {
-    "hero": {
-      "badge1": "Globaler Handel",
-      "title1": "Simbabwes Handels-Hub",
-      "subtitle1": "Verbindung lokaler Unternehmen mit globalen Märkten.",
-      "highlight1": "Exportwachstum",
-      "badge2": "Strategische Partner",
-      "title2": "Internationale Zusammenarbeit",
-      "subtitle2": "Aufbau starker Handelsbeziehungen mit Partnern weltweit.",
-      "highlight2": "Globales Netzwerk",
-      "badge3": "Nachhaltiger Handel",
-      "title3": "Ethische & Grüne Exporte",
-      "subtitle3": "Förderung umweltfreundlicher und sozial verantwortlicher Handelspraktiken.",
-      "highlight3": "Verantwortungsvolles Business",
-      "badge4": "Exportförderung",
-      "title4": "Nationale Exporte stärken",
-      "subtitle4": "Wirtschaftliche Prosperität durch diversifizierte Exportstrategien.",
-      "highlight4": "Wirtschaftlicher Wohlstand",
-      "badge5": "EU-Marktzugang",
-      "title5": "Zugang zum europäischen Markt",
-      "subtitle5": "Erleichterung des Markteintritts für simbabwische Produkte in die EU.",
-      "highlight5": "Zollfreier Zugang",
-      "badge6": "Regulatorische Bereitschaft",
-      "title6": "Erfüllen Sie Dokumentationsstandards",
-      "subtitle6": "Erstellen Sie vollständige Sendungsdateien mit Rechnungen, Packlisten, Transportdokumenten und Ursprungserklärungen.",
-      "highlight6": "Saubere Dokumentation",
-      "badge7": "Mehrwert",
-      "title7": "Skalieren Sie höherwertige Produkte",
-      "subtitle7": "Gehen Sie über den Rohexport hinaus, indem Sie die Verpackung, das Branding und die Produktveredelung für Premiumkäufer verbessern.",
-      "highlight7": "Bessere Margen",
-      "badge8": "Sektorerweiterung",
-      "title8": "Diversifizieren Sie das Exportportfolio",
-      "subtitle8": "Bringen Sie Rohstoffexporte mit verarbeiteten Gütern und sektorspezifischer Compliance-Planung in Einklang.",
-      "highlight8": "Risikobalanciertes Wachstum"
-    },
-    "export_roadmap_badge": "Export-Roadmap",
-    "export_roadmap_title": "Exportprozess Simbabwe nach Deutschland",
-    "export_roadmap_subtitle": "Eine Schritt-für-Schritt-Anleitung für Ihre Exportreise.",
-    "buyer_channels": "Buyer Channels",
-    "contact_verified_buyers": "Contact Verified Buyers",
-    "export_roadmap": {
-      "phase_label": "Phase 0{{phase}}"
-    },
-    "export_documentation_title": "Export Documentation and Compliance",
-    "export_documentation_subtitle": "Core controls previously shown on Exports are now consolidated in Trade.",
-    "export_checklist_title": "Critical Export Checklist",
-    "export_checklist_cta": "Open Full Compliance Guide",
-    "export_flow": {
-      "product_approval": {
-        "phase": "Produktzulassung",
-        "description": "Für Produkte ohne EU-Zulassung (z. B. Honig)",
-        "steps": [
-          "Rückstandsüberwachungsplan (RMP) einreichen",
-          "EU-akkreditierte Testsysteme etablieren",
-          "Registrierung im EU TRACES-System",
-          "Warten auf Aufnahme in die EU-Liste"
-        ]
-      },
-      "registration_compliance": {
-        "phase": "Registrierung & Compliance",
-        "description": "Erforderlich für alle Exporteure",
-        "steps": [
-          "Registrierung für das REX-System über ZIMRA",
-          "ZimTrade für Marktanalysen konsultieren",
-          "Erforderliche Zertifikate einholen",
-          "Exportregistrierung bei Behörden abschließen"
-        ]
-      },
-      "certification_quality": {
-        "phase": "Zertifizierung & Qualität",
-        "description": "EU-Qualitätsstandards erfüllen",
-        "steps": [
-          "GLOBALG.A.P. & GRASP Zertifizierung",
-          "EU-Bio-Zertifizierung (falls zutreffend)",
-          "Qualitätskontrolle: Klasse I, MRL-Grenzwerte",
-          "Audits durch Drittanbieter"
-        ]
-      },
-      "logistics_documentation": {
-        "phase": "Logistik & Dokumentation",
-        "description": "Letzte Exportvorbereitungen",
-        "steps": [
-          "Exportdokumente vorbereiten",
-          "Gesundheits- & Pflanzengesundheitszeugnisse",
-          "Handelsrechnung mit REX-Erklärung",
-          "Kühlkettenlogistik organisieren"
-        ]
-      }
-    },
-    "export_sectors_badge": "Sektoren",
-    "export_sectors_title": "Wichtige Exportsektoren",
-    "export_sectors_subtitle": "Entdecken Sie die Branchen, die Simbabwes Exportwirtschaft antreiben.",
-    "sectors": {
-      "horticulture": {
-        "name": "Gartenbau",
-        "description": "Frischwaren, Blumen und Bio-Gemüse für internationale Märkte.",
-        "opportunities": [
-          "EU-Biomärkte",
-          "Exporte in den Nahen Osten",
-          "Regionaler SADC-Handel"
-        ]
-      },
-      "leather_products": {
-        "name": "Lederprodukte",
-        "description": "Hochwertige Lederwaren und Schuhe mit authentischer afrikanischer Handwerkskunst.",
-        "opportunities": [
-          "Europäische Modemärkte",
-          "Luxusgütersektor",
-          "Staatliche Beschaffung"
-        ]
-      },
-      "arts_crafts": {
-        "name": "Kunst & Handwerk",
-        "description": "Steinskulpturen, Flechtwaren und traditionelle Kunstprodukte.",
-        "opportunities": [
-          "Tourismusmärkte",
-          "Kulturexporte",
-          "Fair-Trade-Kanäle"
-        ]
-      },
-      "minerals_mining": {
-        "name": "Mineralien & Bergbau",
-        "description": "Veredelte Mineralprodukte, Edelsteine und verarbeitete Materialien.",
-        "opportunities": [
-          "Industrielle Exporte",
-          "Schmucksektor",
-          "Technologie-Mineralien"
-        ]
-      }
-    },
-    "diaspora_role_badge": "Rolle der Diaspora",
-    "diaspora_role_title": "Unsere Rolle beim Exportwachstum",
-    "diaspora_role_subtitle": "Diaspora Unlocked bietet praxisnahe Marktunterstützung, damit simbabwische Exporteure internationale Märkte validieren, betreten und skalieren können.",
-    "diaspora_roles": {
-      "market_intelligence": {
-        "title": "Marktinformationen",
-        "description": "Wir liefern praxisnahe Einblicke in Käuferverhalten, Nachfrageverschiebungen und Produktchancen in Zielmärkten."
-      },
-      "buyer_connections": {
-        "title": "Käuferkontakte",
-        "description": "Wir verbinden simbabwische Exporteure mit relevanten Einzelhändlern, Distributoren und Importeuren über kuratierte Handelsbeziehungen."
-      },
-      "quality_feedback": {
-        "title": "Qualitäts-Feedback",
-        "description": "Wir verbessern die Exportbereitschaft durch strukturiertes Feedback zu Produktqualität, Verpackung und Markttauglichkeit."
-      },
-      "brand_ambassadors": {
-        "title": "Markenbotschafter",
-        "description": "Wir fördern simbabwische Produkte und Marken in internationalen Märkten durch koordinierte Sichtbarkeit und Reichweite."
-      }
-    },
-    "cta_title": "Bereit für den Export?",
-    "cta_subtitle": "Unsere Spezialisten helfen Ihnen bei den Anforderungen und verbinden Sie mit Partnern.",
-    "cta_button": "Mit einem Experten sprechen",
-    "contact_form_title": "Handelsanfrage",
-    "explore_title": "Mehr Informationen",
-    "explore_subtitle": "Für umfassende Handelsrichtlinien besuchen Sie ZimTrade.",
-    "explore_site": "ZimTrade besuchen"
-  },
   "common": {
     "coming_soon": "Wir entwickeln intelligente Lösungen, die mithilfe fortschrittlicher KI-Technologie die Art und Weise verändern, wie Sie sich vernetzen, arbeiten und wachsen.",
     "explore_now": "Jetzt entdecken",
@@ -1550,11 +1371,6 @@
         "opportunities": "Opportunity Details",
         "ntir": "NTIR Registration",
         "due_diligence": "Due Diligence"
-      },
-      "trade": {
-        "programs": "Export Programs",
-        "market_access": "Market Access",
-        "regulations": "Trade Regulations"
       },
       "success": {
         "collaboration": "Project Collaboration"
@@ -1897,7 +1713,7 @@
     "send": "Senden",
     "thinking": "Überlegt...",
     "starter_prompt": "Chat starten....",
-    "welcome": "Ich bin ein Experte für Simbabwe. Ich helfe Ihnen bei Investitionen, Handel, Tourismus und Ihren alltäglichen Aufgaben.",
+    "welcome": "Ich bin ein Experte für Simbabwe. Ich helfe Ihnen bei Investitionen, Technologie, Tourismus und Ihren alltäglichen Aufgaben.",
     "status_prefix": "Onesa-Status",
     "status_offline": "Nicht verbunden",
     "status_backend_unreachable": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
@@ -1907,130 +1723,6 @@
     "error_timeout": "Die Onesa-Anfrage ist nach 3 Minuten abgelaufen. Bitte versuchen Sie es erneut.",
     "offline_text": "Nicht verbunden",
     "error_rate_limited": "Onesa ist gerade beschäftigt. Bitte versuchen Sie es in ein paar Sekunden noch einmal."
-  },
-  "care": {
-    "hero": {
-      "badge": "Familienvorsorge-Partner",
-      "title": "Diaspora-Bestattungsschutz mit Nyaradzo",
-      "description": "Schützen Sie Ihre Angehörigen zu Hause mit vertrauenswürdigem Bestattungsschutz-Onboarding über Nyaradzo, integriert in The Diaspora Gateway.",
-      "cta": "Nyaradzo-Onboarding starten",
-      "actions": {
-        "explore": "Entdecken Sie Cover",
-        "next_step": "Beginnen Sie mit dem Onboarding"
-      },
-      "slide_1": {
-        "badge": "Familienpflegepartner",
-        "description": "Unterstützen Sie Ihre Lieben zu Hause mit zuverlässiger Einarbeitung und transparenten Pflegewegen.",
-        "highlight": "Mit Zuversicht",
-        "subtitle": "Diaspora-bezogener Bestattungsschutz durch vertrauenswürdige lokale Zustellung mit Nyaradzo.",
-        "title": "Familie schützen"
-      },
-      "slide_2": {
-        "badge": "Respekt und Würde",
-        "description": "Konzipiert für Diasporafamilien, die einen praktischen, vertrauenswürdigen und kulturell fundierten Schutz benötigen.",
-        "highlight": "Fühlt sich menschlich an",
-        "subtitle": "Bieten Sie Ältesten und Angehörigen zuverlässige Unterstützung, egal wo Sie leben.",
-        "title": "Kümmere dich darum"
-      },
-      "slide_3": {
-        "badge": "Diaspora vernetzt",
-        "description": "Das Care-Modul sorgt für eine klare und grenzüberschreitende Koordination der Betreuung.",
-        "highlight": "Ein Pflegepfad",
-        "subtitle": "Verwalten Sie den Versicherungsschutz aus der Ferne und bleiben Sie gleichzeitig bei Familienentscheidungen zu Hause anwesend.",
-        "title": "Globale Familien"
-      },
-      "slide_4": {
-        "badge": "Seelenfrieden",
-        "description": "Entwickelt für monatliche Diaspora-Verpflichtungen und langfristige Widerstandsfähigkeit von Haushalten.",
-        "highlight": "Aus dem Ausland",
-        "subtitle": "Halten Sie die familiäre Betreuung durch strukturierte und transparente Deckungsoptionen stabil.",
-        "title": "Schützen Sie Ihr Zuhause"
-      },
-      "slide_5": {
-        "badge": "Vertrauenswürdige Ausführung",
-        "description": "Integriertes Onboarding bietet einen klaren Weg von der Auswahl bis zur Aktivierung.",
-        "highlight": "Zuverlässiger Service",
-        "subtitle": "Nyaradzo bietet lokale Servicebetriebe für zuverlässige Familienunterstützung.",
-        "title": "Lokaler Partner"
-      },
-      "slide_6": {
-        "badge": "Entwickelt für die Diaspora",
-        "description": "Wechseln Sie mit minimaler Reibung vom Kontozugriff zum aktiven Schutz.",
-        "highlight": "Einfach gemacht",
-        "subtitle": "Greifen Sie über ein sicheres, vertrautes Diaspora Gateway-Erlebnis auf Familienschutz zu.",
-        "title": "Familienversicherung"
-      }
-    },
-    "why": {
-      "title": "Warum es wichtig ist",
-      "subtitle": "Familienvorsorge hat für die Diaspora höchste Priorität. Diese Integration macht den Zugang einfacher und transparenter.",
-      "cards": {
-        "0": {
-          "description": "Eine Bestattungsversicherung reduziert plötzlichen finanziellen Druck und unterstützt einen würdevollen Abschied.",
-          "title": "Würde für Familien"
-        },
-        "1": {
-          "description": "Verwalten Sie die Richtlinienunterstützung aus der Ferne und bleiben Sie gleichzeitig mit Ihren häuslichen Pflichten in Verbindung.",
-          "title": "Gebaut für Diaspora-Familien"
-        },
-        "2": {
-          "description": "Nyaradzo bietet etablierte lokale Dienstleistungen und familienorientierte Pflege.",
-          "title": "Vertrauenswürdige lokale Ausführung"
-        }
-      }
-    },
-    "coverage": {
-      "title": "Leistungsoptionen",
-      "subtitle": "Wählen Sie eine Plan-Kategorie, die zu Ihren familiären Verpflichtungen und Ihrem Budget passt.",
-      "cards": {
-        "0": {
-          "summary": "Erschwinglicher Einstiegsschutz für die sofortige Unterstützung im Haushalt.",
-          "title": "Unverzichtbarer Familienschutz"
-        },
-        "1": {
-          "summary": "Umfangreichere Unterstützung für Eltern und Angehörige zu Hause.",
-          "title": "Erweiterter Familienplan"
-        },
-        "2": {
-          "summary": "Erweiterte Leistungen und Serviceoptionen für größere Familienstrukturen.",
-          "title": "Premium-Versicherung"
-        }
-      }
-    },
-    "how": {
-      "title": "So funktioniert es",
-      "subtitle": "Ein einfacher Onboarding-Ablauf vom Diaspora-Zugang bis zum aktiven Schutz.",
-      "steps": {
-        "0": {
-          "description": "Öffnen Sie den Nyaradzo-Onboarding-Flow von Diaspora Unlocked und geben Sie Ihre Daten ein.",
-          "title": "1. Anwendung starten"
-        },
-        "1": {
-          "description": "Wählen Sie den Planbereich, der auf Ihre Familienstruktur und die bevorzugte Beitragshöhe abgestimmt ist.",
-          "title": "2. Wählen Sie Cover"
-        },
-        "2": {
-          "description": "Schließen Sie die Verifizierung und Zahlungseinrichtung ab, um den Versicherungsschutz zu aktivieren.",
-          "title": "3. Bestätigen und aktivieren"
-        }
-      },
-      "step_label": "Schritt"
-    },
-    "cta": {
-      "title": "Bereit, Ihre Familie zu schützen?",
-      "subtitle": "Weiter zum Nyaradzo-Onboarding mit nachverfolgbaren Diaspora-Referral-Daten.",
-      "referral_label": "referral_id",
-      "user_label": "Benutzer-ID",
-      "guest": "gast",
-      "button": "Weiter zu Nyaradzo",
-      "badge": "Nächster Schritt 💛"
-    },
-    "seo": {
-      "title": "Vorsorge | The Diaspora Gateway",
-      "description": "Diaspora-Onboarding für Bestattungsschutz mit Nyaradzo über The Diaspora Gateway.",
-      "og_description": "Sicheres Onboarding für Familien-Bestattungsschutz über Nyaradzo für Simbabwer im Ausland.",
-      "twitter_description": "Diaspora-Bestattungsschutz-Integration mit Nyaradzo."
-    }
   },
   "logout": "Abmelden",
   "legal": {
@@ -2064,7 +1756,6 @@
   },
   "search": {
     "categories": {
-      "trade": "Handel",
       "tourism": "Tourismus",
       "investment": "Investition",
       "technology": "Technologie",
@@ -2080,7 +1771,7 @@
     },
     "no_results": {
       "title": "Keine Ergebnisse gefunden",
-      "message": "Wir konnten nichts finden, was mit „{{query}}“ übereinstimmt. Versuchen Sie, nach umfassenderen Begriffen wie „Investment“, „Handel“ oder „Onesa“ zu suchen.",
+      "message": "Wir konnten nichts finden, was mit „{{query}}“ übereinstimmt. Versuchen Sie, nach umfassenderen Begriffen wie „Investment“, „Tourismus“ oder „Onesa“ zu suchen.",
       "return_home": "Heimkehr"
     }
   },

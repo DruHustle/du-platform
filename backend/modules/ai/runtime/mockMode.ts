@@ -92,10 +92,10 @@ export function createMockOnesaReply(
 
   return getLanguageTemplate(
     language,
-    "Start with demand validation, local compliance, and a small pilot. I can help you break that down for tourism, trade, investment, or family support.",
-    "Tanga nekuongorora kudiwa, mitemo inodiwa, uye pilot diki. Ndinogona kukubatsira pakupatsanura izvi mu tourism, trade, investment, kana family support.",
-    "Qala ngokuhlola isidingo, imithetho efunekayo, kanye le-pilot encane. Ngingakuncedisa ukukuhlukanisa ku-tourism, trade, investment, loba family support.",
-    "Beginnen Sie mit Nachfragepruefung, Compliance und einem kleinen Pilot. Ich kann das fuer Tourismus, Handel, Investitionen oder Familienunterstuetzung aufschluesseln."
+    "Start with demand validation, local compliance, and a small pilot. I can help you break that down for tourism, investment, technology, or everyday needs.",
+    "Tanga nekuongorora kudiwa, mitemo inodiwa, uye pilot diki. Ndinogona kukubatsira pakupatsanura izvi mu tourism, investment, technology, kana zvinodiwa zuva nezuva.",
+    "Qala ngokuhlola isidingo, imithetho efunekayo, kanye le-pilot encane. Ngingakuncedisa ukukuhlukanisa ku-tourism, investment, technology, loba izidingo zansuku zonke.",
+    "Beginnen Sie mit Nachfragepruefung, Compliance und einem kleinen Pilot. Ich kann das fuer Tourismus, Investitionen, Technologie oder alltaegliche Beduerfnisse aufschluesseln."
   );
 }
 

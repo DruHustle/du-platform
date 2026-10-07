@@ -65,7 +65,7 @@ export default function Investment() {
       subtitle: t('investment.hero.subtitle5') || "Gold, Platinum, and Lithium opportunities."
     },
     {
-      image: "/images/pages/trade/manufacturing_factory.jpg",
+      image: "/images/pages/shared/manufacturing_factory.jpg",
       badge: t("investment.hero.badge6") || "Manufacturing Upside",
       badgeIcon: Building,
       title: t("investment.hero.title6") || "Value-Added Manufacturing",

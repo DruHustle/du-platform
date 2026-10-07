@@ -23,6 +23,10 @@ type ModularServerOptions = {
   staticPath?: string | null;
 };
 
+export function getSpaDocumentStatus(canonicalPath: string): 200 | 404 {
+  return canonicalPath === "/404" ? 404 : 200;
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -84,7 +88,8 @@ export function createModularServer(options: ModularServerOptions) {
       const url = new URL(req.originalUrl || req.url, `${siteUrl || "http://localhost"}/`);
       const seo = resolveRouteSeo({ pathname: url.pathname, search: url.search });
       const html = injectSeoIntoHtml(getIndexHtml(), seo, siteUrl);
-      res.type("html").send(html);
+      const status = getSpaDocumentStatus(seo.canonicalPath);
+      res.status(status).type("html").send(html);
     });
   }
 
