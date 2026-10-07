@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useState, useEffect, useMemo, useRef, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ArrowRightLeft, Brain, HeartHandshake, Landmark, MapPin, Package, Plus, ShoppingBag } from "lucide-react";
+import { ArrowRightLeft, Brain, Landmark, MapPin, Plus, ShoppingBag } from "lucide-react";
 import MainPageHero from "@/modules/home/components/MainPageHero";
 import InstantImage, { preloadImages } from "@/components/InstantImage";
 
@@ -23,10 +23,10 @@ export default function Home() {
     "/images/pages/tourism/victoria_falls.jpg",
     "/images/pages/home/eu_symbol.png",
     "/images/pages/home/partnership_handshake.png",
-    "/images/pages/trade/export_port_01.jpg",
+    "/images/pages/shared/export_port_01.jpg",
     "/images/pages/home/zimbabwe_lion.png",
     "/images/pages/home/minerals_mining.png",
-    "/images/pages/trade/manufacturing_factory.jpg",
+    "/images/pages/shared/manufacturing_factory.jpg",
     "/images/pages/technology/ai_innovation.jpg",
   ], []);
 
@@ -101,15 +101,6 @@ export default function Home() {
       icon: ShoppingBag,
     },
     {
-      title: tr("home.tiles.care.title", "Care"),
-      description: tr("home.tiles.care.description", "Coordinate trusted family support and cross-border care services from one place, with clearer pathways for urgent needs and ongoing help."),
-      detail: tr("home.tiles.care.detail", "The goal is to reduce friction when supporting relatives at home and make care decisions easier to manage from abroad."),
-      href: "/care",
-      bgImage: "/images/pages/care/family-gathering-zimbabwe.jpg",
-      stats: tr("home.tiles.care.stats", "Family Support"),
-      icon: HeartHandshake,
-    },
-    {
       title: tr("home.tiles.technology.title", "Technology"),
       description: tr("home.tiles.technology.description", "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity."),
       detail: tr("home.tiles.technology.detail", "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults."),
@@ -117,15 +108,6 @@ export default function Home() {
       bgImage: "/images/pages/technology/ai_innovation.jpg",
       stats: tr("home.tiles.technology.stats", "Onesa AI"),
       icon: Brain,
-    },
-    {
-      title: tr("home.tiles.trade.title", "Trade"),
-      description: tr("home.tiles.trade.description", "Access export pathways, market-entry support, and practical trade execution guidance for businesses looking to move from interest to delivery."),
-      detail: tr("home.tiles.trade.detail", "Use the platform to understand corridors, requirements, and partner readiness before entering new markets."),
-      href: "/trade",
-      bgImage: "/images/pages/trade/export_port_01.jpg",
-      stats: tr("home.tiles.trade.stats", "Export Growth"),
-      icon: Package,
     },
     {
       title: tr("home.tiles.investment.title", "Investment"),

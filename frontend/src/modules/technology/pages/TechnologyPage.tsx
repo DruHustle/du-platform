@@ -45,12 +45,12 @@ export default function Technology() {
       highlight: t("tech.hero.highlight4") || "Future Skills"
     },
     {
-      image: "/images/pages/trade/export_port_01.jpg",
-      badge: t("tech.hero.badge5") || "Digital Trade",
+      image: "/images/pages/shared/export_port_01.jpg",
+      badge: t("tech.hero.badge5") || "Smart Logistics",
       badgeIcon: Network,
       title: t("tech.hero.title5") || "Technology for Logistics",
       subtitle: t("tech.hero.subtitle5") || "Smarter export and supply-chain systems create more reliable access to regional and global markets.",
-      highlight: t("tech.hero.highlight5") || "Connected Trade"
+      highlight: t("tech.hero.highlight5") || "Connected Supply Chains"
     },
     {
       image: "/images/pages/technology/minerals_mining.png",
@@ -93,7 +93,7 @@ export default function Technology() {
     },
     {
       title: t('tech.sectors.logistics.title') || "Smart Logistics",
-      image: "/images/pages/trade/export_port_01.jpg",
+      image: "/images/pages/shared/export_port_01.jpg",
       description: t('tech.sectors.logistics.desc') || "Optimizing supply chains and cross-border trade routes through the Zimbabwean corridor.",
       details: [t('tech.sectors.logistics.d1') || "Route optimization for regional distribution", t('tech.sectors.logistics.d2') || "Real-time tracking and border clearance assistance"]
     },

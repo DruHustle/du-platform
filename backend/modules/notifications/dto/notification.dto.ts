@@ -10,5 +10,5 @@ export const contactInquirySchema = z.object({
   phone: z.string().trim().max(30).optional(),
   subject: z.string().trim().min(1).max(200),
   message: z.string().trim().min(1).max(4000),
-  module: z.enum(["general", "technology", "export", "tourism", "investment", "trade", "data", "success"]).optional(),
+  module: z.enum(["general", "technology", "export", "tourism", "investment", "data", "success"]).optional(),
 });

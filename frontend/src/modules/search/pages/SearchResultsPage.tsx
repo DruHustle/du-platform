@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search, ArrowRight, FileText, Globe, TrendingUp, Plane, Brain, Award } from "lucide-react";
+import { Search, ArrowRight, FileText, Globe, TrendingUp, Plane, Brain } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 import { api } from "@/lib/api";
@@ -17,20 +17,16 @@ export default function SearchResults() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const iconByCategory: Record<string, any> = {
-    Trade: FileText,
     Tourism: Plane,
     Investment: TrendingUp,
     Technology: Brain,
-    Impact: Award,
     NTIR: Globe,
     Compliance: FileText,
   };
   const categoryLabels: Record<string, string> = {
-    Trade: tr("search.categories.trade", "Trade"),
     Tourism: tr("search.categories.tourism", "Tourism"),
     Investment: tr("search.categories.investment", "Investment"),
     Technology: tr("search.categories.technology", "Technology"),
-    Impact: tr("search.categories.impact", "Impact"),
     NTIR: tr("search.categories.ntir", "NTIR"),
     Compliance: tr("search.categories.compliance", "Compliance"),
   };
@@ -108,7 +104,7 @@ export default function SearchResults() {
                 <Search className="h-16 w-16  mx-auto mb-6 opacity-40" />
                 <h2 className="text-2xl font-semibold mb-2 text-white">{tr("search.no_results.title", "No results found")}</h2>
                 <p className=" max-w-md mx-auto">
-                  {tr("search.no_results.message", `We couldn't find anything matching "{{query}}". Try searching for broader terms like "Investment", "Trade", or "Onesa".`).replace("{{query}}", query)}
+                  {tr("search.no_results.message", `We couldn't find anything matching "{{query}}". Try searching for broader terms like "Investment", "Tourism", or "Onesa".`).replace("{{query}}", query)}
                 </p>
                 <Button asChild className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black" variant="outline">
                   <Link href="/">{tr("search.no_results.return_home", "Return Home")}</Link>

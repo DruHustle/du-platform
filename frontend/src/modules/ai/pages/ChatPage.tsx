@@ -31,7 +31,7 @@ export default function ChatPage() {
       role: "assistant",
       content: t("onesa.welcome", {
         defaultValue:
-          "I am an expert on Zimbabwe. Let me help you navigate everything from investment, trade, and tourism to your day-to-day tasks.",
+          "I am an expert on Zimbabwe. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
       }),
     },
   ]);

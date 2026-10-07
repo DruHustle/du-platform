@@ -16,7 +16,7 @@ export type RouteSeo = {
 const SITE_NAME = "Diaspora Unlocked";
 const SITE_DEFAULT_TITLE = `${SITE_NAME} | Zimbabwe Diaspora Services`;
 const SITE_DEFAULT_DESCRIPTION =
-  "Explore one platform for Zimbabwe tourism, trade, investment, remittances, shopping, family care, and AI support built for diaspora households and partners.";
+  "Explore one platform for Zimbabwe tourism, investment, remittances, shopping, and AI support built for diaspora households and partners.";
 const DEFAULT_ROBOTS = "index,follow";
 
 function normalizePathname(pathname: string): string {
@@ -96,15 +96,6 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
-  if (pathname === "/care") {
-    return buildSeo(
-      "Family Care and Funeral Cover | Diaspora Unlocked",
-      "Support family care planning from abroad with trusted funeral cover onboarding, clear next steps, and local-provider delivery designed for diaspora households.",
-      "/care",
-      "Family Care and Funeral Cover",
-    );
-  }
-
   if (pathname === "/investment") {
     return buildSeo(
       "Zimbabwe Investment Opportunities | Diaspora Unlocked",
@@ -143,19 +134,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
-  if (pathname === "/trade") {
-    return buildSeo(
-      "Zimbabwe Trade and Export Support | Diaspora Unlocked",
-      "Access Zimbabwe export guidance, market-entry support, compliance references, and diaspora trade pathways designed to move businesses from interest to execution.",
-      "/trade",
-      "Zimbabwe Trade and Export Support",
-    );
-  }
-
   if (pathname === "/technology") {
     return buildSeo(
       "Onesa AI and Zimbabwe Technology | Diaspora Unlocked",
-      "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and practical technology use cases across tourism, trade, investment, logistics, and education.",
+      "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and practical technology use cases across tourism, investment, logistics, and education.",
       "/technology",
       "Onesa AI and Zimbabwe Technology",
     );
@@ -173,7 +155,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/onesa-ai-chat") {
     return buildSeo(
       "Onesa AI Chat for Zimbabwe Guidance | Diaspora Unlocked",
-      "Use Onesa AI for Zimbabwe-focused travel, trade, investment, and practical local guidance built around local context instead of generic global answers.",
+      "Use Onesa AI for Zimbabwe-focused travel, investment, technology, and practical local guidance built around local context instead of generic global answers.",
       "/onesa-ai-chat",
       "Onesa AI Chat for Zimbabwe Guidance",
     );

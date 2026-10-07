@@ -1,6 +1,6 @@
 # Diaspora Unlocked Platform
 
-**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with trade, tourism, investment, remittance, and family care opportunities.
+**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with tourism, investment, remittance, shopping, and technology opportunities.
 
 ## Definitions
 
@@ -12,10 +12,8 @@
 
 The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora engagement strategy by providing:
 
-- **Export Knowledge Hub**: Comprehensive guidance on German market requirements, certifications, and partnerships.
 - **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
 - **Investment Marketplace**: Micro-investment and crowdfunding opportunities with government support.
-- **Trade Information**: Export development programs and diaspora trade networks.
 - **Impact & Insights**: Diaspora impact stories, remittance insights, and economic participation indicators.
 
 ## Key Features
@@ -30,23 +28,15 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 - Auto-playing carousels with interactive indicators and smooth transitions.
 - Fully translated captions and badges for every slide.
 
-### 📦 Export Knowledge Hub
-- German market requirements and regulations.
-- EU import compliance (REACH, CE marking, phytosanitary).
-- Certification requirements (organic, fair trade).
-- Potential partners database (retailers, logistics, regulatory).
-
 ### ✈️ Tourism Information
 - Forbes #1 destination 2025 highlights.
 - Key attractions (Victoria Falls, Great Zimbabwe, Kariba, Matobo Hills).
 - Planning information (visa, health, safety, payments).
 - Diaspora homecoming packages.
 
-### 💰 Investment & Trade
+### 💰 Investment
 - Diaspora-friendly crowdfunding projects and share-based models.
 - National Trusted Investment Registry (NTIR) integration.
-- Key export sectors (horticulture, leather, arts & crafts, minerals).
-- ZimTrade programs (Eagles Nest, Next She Exporter, Shop At Zim).
 
 ## Technology Stack
 

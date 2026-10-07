@@ -366,18 +366,6 @@ export async function initializeDatabase(): Promise<void> {
   `);
 
   await db.execute(`
-    CREATE TABLE IF NOT EXISTS care_referrals (
-      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-      user_id INT NULL,
-      provider VARCHAR(100) NOT NULL,
-      \`timestamp\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      INDEX idx_care_referrals_user_id (user_id),
-      INDEX idx_care_referrals_provider (provider),
-      CONSTRAINT fk_care_referrals_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-    )
-  `);
-
-  await db.execute(`
     CREATE TABLE IF NOT EXISTS shop_restock_notifications (
       id INT AUTO_INCREMENT PRIMARY KEY,
       product_id INT NULL,

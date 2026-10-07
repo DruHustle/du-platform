@@ -2,7 +2,7 @@ import { Link, useLocation, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, House, ArrowRightLeft, ShoppingBag, HeartHandshake, Package, Landmark, Compass, Brain, ChevronRight, Twitter, Linkedin, Instagram } from "lucide-react";
+import { Menu, X, Search, User, Globe, MessageCircle, Mail, Phone, MapPin, LogOut, House, ArrowRightLeft, ShoppingBag, Landmark, Compass, Brain, ChevronRight, Twitter, Linkedin, Instagram } from "lucide-react";
 import { useState, useEffect, useRef, useCallback, useMemo, type CSSProperties, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
@@ -168,32 +168,16 @@ export default function Layout({ children }: LayoutProps) {
     { name: tr("nav.home", "Home"), href: "/", icon: House },
     { name: tr("nav.remittances", "Remittances"), href: "/remittances", icon: ArrowRightLeft },
     { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
-    { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
     { name: tr("nav.technology", "Technology"), href: "/technology", icon: Brain },
-    { name: tr("nav.trade", "Trade"), href: "/trade", matchPaths: ["/trade"], icon: Package },
     { name: tr("nav.investment", "Investment"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
     { name: tr("nav.tourism", "Tourism"), href: "/tourism", icon: MapPin },
   ];
-  const isInZimbabwe = useMemo(() => {
-    try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (tz === "Africa/Harare") return true;
-      const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
-      return langs.some((l) => l.toLowerCase().endsWith("-zw"));
-    } catch {
-      return false;
-    }
-  }, []);
-
   const mobileTopNavigation = [
     { name: tr("nav.home", "Home"), href: "/", icon: House },
     { name: tr("nav.remittances", "Remittances"), href: "/remittances", icon: ArrowRightLeft },
-    { name: tr("nav.care", "Care"), href: "/care", icon: HeartHandshake },
     { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
     { name: tr("nav.discover", "Discover"), href: "/tourism", matchPaths: ["/tourism"], icon: Compass },
-    isInZimbabwe
-      ? { name: tr("nav.trade", "Trade"), href: "/trade", matchPaths: ["/trade"], icon: Package }
-      : { name: tr("nav.investment", "Invest"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
+    { name: tr("nav.investment", "Invest"), href: "/investment", matchPaths: ["/investment", "/ntir"], icon: Landmark },
   ];
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
@@ -219,8 +203,6 @@ export default function Layout({ children }: LayoutProps) {
   const hasHeroSection =
     isHomePage ||
     location === "/remittances" ||
-    location === "/care" ||
-    location === "/trade" ||
     location === "/investment" ||
     location === "/tourism" ||
     location === "/shop" ||
@@ -398,7 +380,7 @@ export default function Layout({ children }: LayoutProps) {
       id: "mission",
       label: t("footer.about.mission_label", { defaultValue: "Our Mission" }),
       content: t("footer.about.mission_content", {
-        defaultValue: "To unify tourism, trade, investment, remittance, and family care pathways through one secure and accessible digital platform.",
+        defaultValue: "To unify tourism, investment, remittance, shopping, and technology pathways through one secure and accessible digital platform.",
       }),
     },
     {
@@ -420,7 +402,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.what_label", { defaultValue: "What we do" }),
       content: t("footer.about.what_content", {
         defaultValue:
-          "We build and operate a unified diaspora platform that connects users to tourism, trade, investment, payments, family care, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable.",
+          "We build and operate a unified diaspora platform that connects users to tourism, investment, payments, shopping, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable.",
       }),
     },
   ];

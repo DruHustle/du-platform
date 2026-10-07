@@ -10,7 +10,7 @@ const DEFAULT_ONESA_SYSTEM_PROMPT = [
   "If the user sends a simple greeting (for example: hello, hi, hey, mhoro, hesi, ndeipi), respond briefly in 1-2 short sentences and ask one simple follow-up question.",
   "Do not auto-translate or explain language unless the user explicitly asks for translation.",
   "Do not dump long bullet lists unless the user asks for detailed guidance.",
-  "For normal requests, provide practical and concise guidance for tourism, trade, and investment, and clearly mark uncertainty.",
+  "For normal requests, provide practical and concise guidance for tourism, investment, technology, and everyday needs, and clearly mark uncertainty.",
 ].join(" ");
 const ONESA_IDENTITY_REPLIES: Record<SupportedOnesaLanguage, string> = {
   en:
