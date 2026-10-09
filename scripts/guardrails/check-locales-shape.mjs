@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const rootDir = process.cwd();
-const localesDir = path.join(rootDir, "frontend", "public", "locales");
+const localesDir = path.join(rootDir, "du-platform-frontend", "public", "locales");
 
 function valueType(value) {
   if (Array.isArray(value)) return "array";
@@ -39,7 +39,7 @@ const localeCodes = fs
   .sort();
 
 if (!localeCodes.includes("en")) {
-  fail("Missing required baseline locale: frontend/public/locales/en/translation.json");
+  fail("Missing required baseline locale: du-platform-frontend/public/locales/en/translation.json");
 }
 
 const localeObjects = {};

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PUBLIC_DIR="frontend/public"
+PUBLIC_DIR="du-platform-frontend/public"
 
 EN_FILE="$PUBLIC_DIR/locales/en/translation.json"
 if git diff --cached --name-only | grep -qx "$EN_FILE"; then

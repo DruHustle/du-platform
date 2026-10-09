@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = process.cwd();
-const frontendSourcePath = path.join(repoRoot, "frontend", "src");
-const sitemapPath = path.join(repoRoot, "frontend", "public", "sitemap.xml");
+const frontendSourcePath = path.join(repoRoot, "du-platform-frontend", "src");
+const sitemapPath = path.join(repoRoot, "du-platform-frontend", "public", "sitemap.xml");
 const siteUrl = (process.env.SITE_URL || "https://www.diasporaunlocked.com").replace(/\/+$/, "");
 
 const routeFactoryRegex = /create(?:Static|Lazy)Route\(\s*"([^"]+)"/g;

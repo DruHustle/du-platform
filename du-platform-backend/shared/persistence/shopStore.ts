@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import type mysql from "mysql2/promise";
-import { cloneShopSeedProducts } from "../../../frontend/shared/shopCatalog";
+import { cloneShopSeedProducts } from "../../../shared/shopCatalog";
 import { db, isDbConnectionError, isTransientShopQueryError } from "../databaseRuntime";
 import { sha256 } from "./authStore";
 

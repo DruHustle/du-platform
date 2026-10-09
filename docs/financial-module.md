@@ -3,7 +3,7 @@
 ## Folder Structure
 
 ```text
-backend/
+du-platform-backend/
   modules/
     fintech/
       controllers/
@@ -24,7 +24,7 @@ backend/
         airtimeService.ts
   utils/
     sanitize.ts
-frontend/src/components/
+du-platform-frontend/src/components/
   SendMoneyForm.tsx
   AirtimeTopupForm.tsx
 ```
