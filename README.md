@@ -120,6 +120,7 @@ pnpm check                 # Frontend and backend TypeScript checks
 pnpm check:frontend        # Frontend only
 pnpm check:backend         # Backend only
 FINANCIAL_SANDBOX_MOCK=true pnpm test:modules
+pnpm test:frontend         # Frontend regression tests
 pnpm guardrails            # Vite, deployment, and locale safety checks
 pnpm translations:check:keys
 pnpm format:check          # Read-only Prettier check (not a lint command)
