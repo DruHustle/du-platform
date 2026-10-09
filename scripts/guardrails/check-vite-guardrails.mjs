@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const rootDir = process.cwd();
-const viteConfigPath = path.join(rootDir, "vite.config.ts");
+const viteConfigPath = path.join(rootDir, "du-platform-frontend", "vite.config.ts");
 
 function fail(message) {
   console.error(`[guardrails:vite] ${message}`);

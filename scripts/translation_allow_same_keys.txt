@@ -41,5 +41,3 @@ tourism.other_attractions.eastern_highlands.name
 tourism.other_attractions.gonarezhou.h1
 tourism.other_attractions.hwange.name
 tourism.other_attractions.matobo.name
-trade.programs.eagles_nest.title
-trade.sectors.horticulture.name

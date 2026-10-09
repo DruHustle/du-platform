@@ -1,5 +1,10 @@
 {
-  "include": ["frontend/src/**/*", "frontend/shared/**/*", "backend/**/*"],
+  "include": [
+    "du-platform-frontend/src/**/*",
+    "du-platform-frontend/shared/**/*",
+    "du-platform-backend/**/*",
+    "shared/**/*"
+  ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
@@ -17,8 +22,8 @@
     "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
-      "@/*": ["./frontend/src/*"],
-      "@shared/*": ["./frontend/shared/*"]
+      "@/*": ["./du-platform-frontend/src/*"],
+      "@shared/*": ["./shared/*"]
     }
   }
 }

@@ -2,13 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = process.cwd();
-const appPath = path.join(repoRoot, "frontend", "src", "App.tsx");
-const sitemapPath = path.join(repoRoot, "frontend", "public", "sitemap.xml");
+const frontendSourcePath = path.join(repoRoot, "du-platform-frontend", "src");
+const sitemapPath = path.join(repoRoot, "du-platform-frontend", "public", "sitemap.xml");
 const siteUrl = (process.env.SITE_URL || "https://www.diasporaunlocked.com").replace(/\/+$/, "");
 
-const appSource = fs.readFileSync(appPath, "utf8");
-
-const routeRegex = /<Route\s+path="([^"]+)"/g;
+const routeFactoryRegex = /create(?:Static|Lazy)Route\(\s*"([^"]+)"/g;
 const skipExact = new Set([
   "/404",
   "/coming-soon",
@@ -17,15 +15,23 @@ const skipExact = new Set([
   "/register",
   "/forgot-password",
   "/reset-password",
+  "/search",
 ]);
 
 const routes = new Set();
-for (const match of appSource.matchAll(routeRegex)) {
-  const route = match[1]?.trim();
-  if (!route) continue;
-  if (route.includes(":")) continue; // Skip dynamic routes.
-  if (skipExact.has(route)) continue; // Skip non-index/public auth/admin routes.
-  routes.add(route);
+const routeManifestPaths = fs
+  .readdirSync(path.join(frontendSourcePath, "modules"), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => path.join(frontendSourcePath, "modules", entry.name, "routes.tsx"))
+  .filter((routePath) => fs.existsSync(routePath));
+
+for (const routeManifestPath of routeManifestPaths) {
+  const routeSource = fs.readFileSync(routeManifestPath, "utf8");
+  for (const match of routeSource.matchAll(routeFactoryRegex)) {
+    const route = match[1]?.trim();
+    if (!route || route.includes(":") || skipExact.has(route)) continue;
+    routes.add(route);
+  }
 }
 
 const sortedRoutes = [...routes].sort((a, b) => {
