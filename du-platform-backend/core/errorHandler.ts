@@ -41,6 +41,13 @@ export function errorHandler(
   res: express.Response,
   _next: express.NextFunction
 ) {
+  const bodyError = err as { type?: string } | null;
+  if (bodyError?.type === 'entity.parse.failed') {
+    return res.status(400).json(error('INVALID_JSON', 'Request body must contain valid JSON.'));
+  }
+  if (bodyError?.type === 'entity.too.large') {
+    return res.status(413).json(error('PAYLOAD_TOO_LARGE', 'Request body is too large.'));
+  }
   if (err instanceof AppError) {
     return res.status(err.statusCode).json(error(err.code, err.message, err.details));
   }
