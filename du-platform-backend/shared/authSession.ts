@@ -10,7 +10,13 @@ function getCookie(req: express.Request, key: string): string | null {
   const entries = raw.split(";").map((value) => value.trim());
   for (const entry of entries) {
     const [cookieKey, ...cookieValue] = entry.split("=");
-    if (cookieKey === key) return decodeURIComponent(cookieValue.join("="));
+    if (cookieKey === key) {
+      try {
+        return decodeURIComponent(cookieValue.join("="));
+      } catch {
+        return null;
+      }
+    }
   }
 
   return null;

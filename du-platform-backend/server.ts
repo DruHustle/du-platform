@@ -240,5 +240,8 @@ export async function startServer() {
 const isMainModule = process.argv[1] != null && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 
 if (isMainModule) {
-  startServer().catch(console.error);
+  startServer().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
 }
