@@ -1,7 +1,7 @@
 import {
   DEFAULT_SENDER_COUNTRIES,
   type SenderCountryConfig,
-} from "../../../../frontend/shared/fintechSenderCountries";
+} from "../../../../shared/fintechSenderCountries";
 
 export type { SenderCountryConfig };
 

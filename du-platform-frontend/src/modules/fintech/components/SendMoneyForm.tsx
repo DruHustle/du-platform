@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { DEFAULT_SENDER_COUNTRIES, type SenderCountryConfig } from "@shared/fintechSenderCountries";
-import { DEFAULT_RECEIVER_COUNTRIES, type ReceiverCountryConfig } from "@shared/fintechReceiverCountries";
+import { DEFAULT_RECEIVER_COUNTRIES, type ReceiverCountryConfig } from "../../../../shared/fintechReceiverCountries";
 
 type TransferType = "send_money" | "airtime_topup";
 type RecipientType = "mobile_money" | "cash_pickup" | "bank_transfer";

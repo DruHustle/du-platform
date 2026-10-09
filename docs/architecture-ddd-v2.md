@@ -19,7 +19,7 @@ The platform is organized as bounded domains with strict service-layer communica
 ## Backend Structure
 
 ```text
-backend/
+du-platform-backend/
   core/
     config.ts
     logger.ts
@@ -64,7 +64,7 @@ backend/
 ## Frontend Structure
 
 ```text
-frontend/src/
+du-platform-frontend/src/
   modules/
     tourism/
     investment/

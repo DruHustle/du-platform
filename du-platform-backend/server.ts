@@ -12,7 +12,7 @@ import { registerDomainModules } from "./modules";
 import { registerApiRoutes } from "./api";
 import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
 import { resolveJwtSecret } from "./utils/jwtSecret";
-import { injectSeoIntoHtml, resolveRouteSeo } from "../frontend/shared/routeSeo";
+import { injectSeoIntoHtml, resolveRouteSeo } from "../shared/routeSeo";
 import { validateStartupConfiguration } from "./core/startupValidation";
 
 type ModularServerOptions = {
