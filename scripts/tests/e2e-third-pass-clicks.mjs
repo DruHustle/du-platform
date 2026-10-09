@@ -172,7 +172,6 @@ try {
 
   const genericRoutes = [
     '/tourism',
-    '/trade',
     '/investment',
     '/shop',
     '/technology',

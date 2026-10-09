@@ -1,6 +1,6 @@
 # Diaspora Unlocked Platform
 
-**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with trade, tourism, investment, remittance, and family care opportunities.
+**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with tourism, investment, remittance, shopping, and technology opportunities.
 
 ## Definitions
 
@@ -12,41 +12,35 @@
 
 The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora engagement strategy by providing:
 
-- **Export Knowledge Hub**: Comprehensive guidance on German market requirements, certifications, and partnerships.
 - **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
 - **Investment Marketplace**: Micro-investment and crowdfunding opportunities with government support.
-- **Trade Information**: Export development programs and diaspora trade networks.
 - **Impact & Insights**: Diaspora impact stories, remittance insights, and economic participation indicators.
 
 ## Key Features
 
 ### 🌍 Multi-Language Support
+
 - Full localization in **English**, **German**, **Shona**, and **Ndebele**.
 - Seamless language switching across all pages and components.
 - Culturally relevant content for diverse diaspora communities.
 
 ### 🖼️ Dynamic Visual Experience
+
 - Enhanced hero carousels with 5+ unique, high-quality images per page.
 - Auto-playing carousels with interactive indicators and smooth transitions.
 - Fully translated captions and badges for every slide.
 
-### 📦 Export Knowledge Hub
-- German market requirements and regulations.
-- EU import compliance (REACH, CE marking, phytosanitary).
-- Certification requirements (organic, fair trade).
-- Potential partners database (retailers, logistics, regulatory).
-
 ### ✈️ Tourism Information
+
 - Forbes #1 destination 2025 highlights.
 - Key attractions (Victoria Falls, Great Zimbabwe, Kariba, Matobo Hills).
 - Planning information (visa, health, safety, payments).
 - Diaspora homecoming packages.
 
-### 💰 Investment & Trade
+### 💰 Investment
+
 - Diaspora-friendly crowdfunding projects and share-based models.
 - National Trusted Investment Registry (NTIR) integration.
-- Key export sectors (horticulture, leather, arts & crafts, minerals).
-- ZimTrade programs (Eagles Nest, Next She Exporter, Shop At Zim).
 
 ## Technology Stack
 
@@ -62,62 +56,98 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 ## Project Structure
 
 ```text
-du-platform/
-├── backend/                         # Express API backend
-│   ├── api/                         # API route registration
-│   ├── core/                        # Core middleware, RBAC, logging
-│   ├── db.ts                        # Database bootstrap + schema sync
-│   ├── modules/                     # Domain modules (ai, fintech, tourism, etc.)
-│   ├── shared/                      # Backend shared helpers + persistence stores
-│   ├── sql/                         # Database SQL artifacts
-│   └── server.ts                    # Backend entry point
-├── frontend/
-│   ├── index.html
-│   ├── public/                      # Static assets + SEO files
-│   │   ├── images/
-│   │   ├── locales/                 # i18n translation JSONs (en, de, sn, nd)
-│   │   ├── sitemap.xml
-│   │   └── e5444f8401994dd898d81a68b1a0c23a.txt
-│   ├── shared/
-│   │   └── const.ts                 # Frontend-shared constants
-│   └── src/
-│       ├── components/              # Reusable UI components
-│       ├── modules/                 # Feature modules
-│       ├── pages/                   # Route-level pages
-│       ├── i18n.ts
-│       ├── App.tsx
-│       └── main.tsx
-├── scripts/
-│   ├── dev-all.sh
-│   ├── generate-sitemap.mjs
-│   ├── sync_translations.py
-│   └── tests/
+du-platform/                         # One parent Git/GitHub repository
+├── du-platform-frontend/            # React 19 + Vite application
+│   ├── src/                        # UI, routes, domain modules, localization
+│   ├── public/                     # Images, locales, audio, SEO assets
+│   ├── shared/                     # Frontend-only helpers and data
+│   ├── index.html                  # Browser entry; src/main.tsx boots React
+│   ├── vite.config.ts
+│   ├── components.json             # shadcn/ui configuration
+│   ├── tsconfig.json
+│   └── tsconfig.node.json
+├── du-platform-backend/             # Existing Express API application
+│   ├── server.ts                   # HTTP entry and production SPA serving
+│   ├── db.ts                       # MySQL bootstrap and schema synchronization
+│   ├── api/                        # API registration
+│   ├── core/                       # Middleware, startup validation, RBAC
+│   ├── modules/                    # Domain APIs and existing module tests
+│   ├── shared/                     # Backend helpers and persistence stores
+│   └── tsconfig.json
+├── shared/                         # Both applications: SEO, shop catalog, sender countries
+├── .github/                        # Repository workflows
+├── .githooks/                      # Repository hooks
+├── scripts/                        # Development, guardrails, translations, E2E tools
 ├── docs/
-├── patches/                         # pnpm dependency patches
-├── package.json
-└── ...
+├── patches/                        # Existing pnpm dependency patches
+├── package.json                    # Single dependency manifest and app scripts
+├── pnpm-lock.yaml                  # Single, unchanged lockfile
+├── tsconfig.json                   # Shared compiler options and root aliases
+├── render.yaml                     # Full-stack deployment from repository root
+├── vercel.json                     # Static frontend deployment from repository root
+└── README.md
 ```
+
+Both application folders belong to the parent repository. They have no separate
+Git repositories or submodules. Dependencies remain centralized in the existing
+root manifest; install once at the root. This restructuring does not introduce
+pnpm workspaces or change dependency versions.
 
 ## Local Development
 
-### Prerequisites
-- Node.js 22.x or higher
-- pnpm 10.x or higher
-
-### Installation
+Use Node.js 22 or higher (Vite 7 requires at least Node 22.12 on the 22.x line)
+and the pnpm version pinned in `package.json`. Run all commands from the repository
+root:
 
 ```bash
-# Install dependencies
-pnpm install
-
-# Start development environment
+pnpm install --frozen-lockfile
+# For a new checkout only; keep an existing .env intact:
+cp .env.example .env
+# Configure local credentials in .env, then:
 pnpm dev
-
-# Build for production
-pnpm build
 ```
 
-The frontend app will start at `http://localhost:3000`
+`pnpm dev` starts the existing development orchestrator, including its MySQL and
+AI-provider checks. `pnpm dev:fast` skips local provider/database setup. Start the
+applications separately with `pnpm dev:web` and `pnpm dev:server`. The frontend
+normally uses `https://localhost:3000` (set `VITE_DEV_HTTPS=false` for HTTP), proxies
+`/api` to `BACKEND_URL` (default `http://localhost:5001`), and reads the existing
+root `.env` and `.cert/`. The backend also loads root `.env`; its port can be
+configured with `DEV_PORT` or `PORT`. Never put backend secrets in `VITE_*` variables.
+
+```bash
+pnpm check                 # Frontend and backend TypeScript checks
+pnpm check:frontend        # Frontend only
+pnpm check:backend         # Backend only
+FINANCIAL_SANDBOX_MOCK=true pnpm test:modules
+pnpm guardrails            # Vite, deployment, and locale safety checks
+pnpm translations:check:keys
+pnpm format:check          # Read-only Prettier check (not a lint command)
+pnpm build                 # Builds both applications
+pnpm build:frontend        # Outputs dist/public/
+pnpm build:backend         # Outputs dist/server.js
+pnpm preview               # Vite static preview; does not start the API
+pnpm start                 # Production Express server; configure production env first
+```
+
+There is no separate lint script. Existing browser/provider E2E scripts require
+running services and their configured providers; see the Onesa section below.
+Production Express serves the built frontend from `dist/public/`, including the
+existing SPA fallback and SEO injection. Build outputs stay at the repository
+root to preserve this behavior.
+
+## Hosting Configuration
+
+GitHub repository: https://github.com/DruHustle/du-platform (one repository).
+Vercel and Render must use the **repository root**, not either application folder,
+because dependencies, the lockfile, environment configuration, shared code, and
+build orchestration are rooted there. Keep Vercel output directory `dist/public`
+and Render start command `pnpm start`; both use `pnpm install` and `pnpm build`.
+If a dashboard currently uses `frontend` or `backend` as its root directory, clear
+that setting. Reconnect an integration still pointing to the old GitHub repository
+name if it does not follow GitHub's rename redirect. No deployment is needed to
+review the local restructuring; deployments should wait until the changes are
+committed and approved.
 
 ## Payment Provider Setup
 
@@ -131,6 +161,7 @@ Direct Stripe, PayPal, and Amazon Pay checkout flows are not implemented in this
 ## Reloadly Setup
 
 Reloadly powers:
+
 - airtime top-up
 
 These credentials are **backend-only secrets**.
@@ -191,6 +222,7 @@ Only set them if Reloadly support explicitly tells you to override the default a
 Reloadly uses **OAuth Client ID + Client Secret**.
 
 If your dashboard labels them as:
+
 - `Client ID`
 - `Client Secret`
 
@@ -229,6 +261,7 @@ pnpm test:e2e:onesa
 ```
 
 By default, the script auto-detects a local backend on:
+
 - `http://127.0.0.1:5001`
 - `http://127.0.0.1:5002`
 - `http://127.0.0.1:5003`
@@ -296,6 +329,7 @@ KEEPALIVE_URL=https://<your-backend>/api/ping pnpm keepalive:ping
 ## Strategic Framework Alignment
 
 The Diaspora Unlocked Platform addresses key gaps identified in the Diaspora Unlocked Strategic Framework:
+
 - ✅ **SME Visibility**: Knowledge of international market requirements.
 - ✅ **Trust Infrastructure**: National Trusted Investment Registry (NTIR).
 - ✅ **Unified Presence**: Centralized digital hub for all diaspora engagement.
@@ -304,6 +338,7 @@ The Diaspora Unlocked Platform addresses key gaps identified in the Diaspora Unl
 ## Partner Integration
 
 The platform integrates with official Zimbabwe government agencies:
+
 - **Zimbabwe Tourism Authority**: [zimbabwetourism.net](https://zimbabwetourism.net/)
 - **ZIDA (Investment)**: [zidainvest.com](https://zidainvest.com/)
 - **ZimTrade**: [tradezimbabwe.com](https://tradezimbabwe.com/)
