@@ -45,6 +45,9 @@ jobs:
           FINANCIAL_SANDBOX_MOCK: "true"
         run: pnpm test:modules
 
+      - name: Frontend tests
+        run: pnpm test:frontend
+
       - name: Guardrails (Build Safety)
         run: pnpm guardrails
 

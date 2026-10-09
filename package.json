@@ -33,7 +33,9 @@
     "build:backend": "esbuild du-platform-backend/server.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "check:frontend": "tsc --noEmit -p du-platform-frontend/tsconfig.json",
     "check:backend": "tsc --noEmit -p du-platform-backend/tsconfig.json",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:frontend": "vitest run --config du-platform-frontend/vite.config.ts --root . --dir du-platform-frontend/src",
+    "test": "pnpm test:modules && pnpm test:frontend"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

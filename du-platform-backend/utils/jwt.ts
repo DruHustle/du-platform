@@ -23,7 +23,12 @@ export function createJwtToken(
   const secret = resolveJwtSecret();
 
   const now = Math.floor(Date.now() / 1000);
-  const exp = now + Math.max(60, Number(options?.expiresInSeconds ?? 3600));
+  const ttl = Number(options?.expiresInSeconds ?? 3600);
+  if (!Number.isFinite(ttl) || ttl <= 0 || !Number.isSafeInteger(Math.ceil(ttl))) {
+    throw new Error("JWT expiry duration must be a finite positive number.");
+  }
+  const exp = now + Math.max(60, Math.floor(ttl));
+  if (!Number.isSafeInteger(exp)) throw new Error("JWT expiry is out of range.");
 
   const claims: JwtPayload = {
     ...payload,

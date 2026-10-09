@@ -43,8 +43,9 @@ function timingSafeEqualText(a: string, b: string): boolean {
 }
 
 function verifyToken(token: string, secret: string): JwtClaims {
-  const [encodedHeader, encodedPayload, encodedSignature] = token.split(".");
-  if (!encodedHeader || !encodedPayload || !encodedSignature) {
+  const parts = token.split(".");
+  const [encodedHeader, encodedPayload, encodedSignature] = parts;
+  if (parts.length !== 3 || !encodedHeader || !encodedPayload || !encodedSignature) {
     throw new Error("Malformed token.");
   }
 
@@ -65,11 +66,17 @@ function verifyToken(token: string, secret: string): JwtClaims {
   const claims = JSON.parse(decodeBase64Url(encodedPayload)) as JwtClaims;
   const now = Math.floor(Date.now() / 1000);
 
+  if (!claims || typeof claims !== "object" || Array.isArray(claims)) {
+    throw new Error("Invalid JWT claims.");
+  }
+  if (typeof claims.exp !== "number" || !Number.isFinite(claims.exp) || now >= claims.exp) {
+    throw new Error("JWT expiry is missing, invalid, or expired.");
+  }
+  if (claims.nbf !== undefined && (typeof claims.nbf !== "number" || !Number.isFinite(claims.nbf))) {
+    throw new Error("Invalid JWT activation time.");
+  }
   if (typeof claims.nbf === "number" && now < claims.nbf) {
     throw new Error("JWT not active yet.");
-  }
-  if (typeof claims.exp === "number" && now >= claims.exp) {
-    throw new Error("JWT expired.");
   }
 
   return claims;
@@ -99,12 +106,12 @@ export function requireJwtAuth(req: express.Request, res: express.Response, next
 
     const rawUserId = claims.sub ?? claims.userId;
     const userId = Number(rawUserId);
-    if (!Number.isFinite(userId) || userId <= 0) {
+    if ((typeof rawUserId !== "number" && typeof rawUserId !== "string") || !Number.isSafeInteger(userId) || userId <= 0) {
       return res.status(401).json(error("JWT_INVALID_SUBJECT", "Token subject is invalid."));
     }
 
     req.auth = {
-      userId: Math.floor(userId),
+      userId,
       email: typeof claims.email === "string" ? claims.email : undefined,
       claims,
     };
