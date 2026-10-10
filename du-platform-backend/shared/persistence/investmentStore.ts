@@ -146,7 +146,7 @@ export async function updateNtirEntity(
 
   try {
     const updates: string[] = [];
-    const params: unknown[] = [];
+    const params: (string | number | boolean | null)[] = [];
     if (payload.name !== undefined) {
       updates.push("name = ?");
       params.push(payload.name);

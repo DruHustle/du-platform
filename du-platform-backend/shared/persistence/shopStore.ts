@@ -925,7 +925,7 @@ export async function updateShopProductAdmin(
 
   try {
     const updates: string[] = [];
-    const params: unknown[] = [];
+    const params: (string | number | boolean | null)[] = [];
     const pushIf = (key: keyof typeof payload, column = key) => {
       if (payload[key] !== undefined) {
         updates.push(`${String(column)} = ?`);

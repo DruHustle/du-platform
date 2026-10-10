@@ -125,7 +125,7 @@ export async function updateSuccessStory(
 
   try {
     const updates: string[] = [];
-    const params: unknown[] = [];
+    const params: (string | number | boolean | null)[] = [];
     const pushIf = (key: keyof typeof payload) => {
       if (payload[key] === undefined) return;
       updates.push(`${String(key)} = ?`);
