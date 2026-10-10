@@ -909,7 +909,7 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
       chatMessages: ChatMessage[]
     ) => {
       const anthropicInput = buildAnthropicInput(chatMessages);
-      const response = await withRetry(
+      const response = await withRetry<import("axios").AxiosResponse>(
         () => {
           if (providerTarget.kind === "anthropic") {
             return axios.post(
