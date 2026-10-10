@@ -28,6 +28,7 @@ export function registerBackendApiRoutes(app: express.Express, deps: SystemApiDe
     return res.json({
       ok: true,
       service: "du-platform",
+      commit: process.env.RENDER_GIT_COMMIT || null,
       uptimeSeconds: Math.floor(process.uptime()),
       startedAt: new Date(deps.serverStartedAt).toISOString(),
       now: new Date().toISOString(),

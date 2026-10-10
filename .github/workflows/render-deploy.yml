@@ -1,30 +1,60 @@
 name: Deploy to Render
 
 on:
-  # Auto-trigger Render deploy hook on pushes to main.
-  push:
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    types: [completed]
     branches: [main]
-  # Allow manual deploy hook trigger from the Actions tab.
-  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: du-render-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
-    name: Deploy to Render
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    name: Deploy tested revision to Render
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 20
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      
-      - name: Trigger Render Deployment
+      - name: Deploy tested commit and await database readiness
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          EXPECTED_COMMIT: ${{ github.event.workflow_run.head_sha }}
         run: |
-          test -n "$RENDER_DEPLOY_HOOK_URL" || { echo "RENDER_DEPLOY_HOOK_URL is missing"; exit 1; }
-          curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
-            -X POST "$RENDER_DEPLOY_HOOK_URL"
-      
-      - name: Deployment notification
-        run: |
-          echo "Deployment triggered successfully on Render"
-          echo "Check deployment status at: https://dashboard.render.com"
+          python3 - <<'PYTHON'
+          import json, os, time, urllib.parse, urllib.request
+          hook = os.environ['RENDER_DEPLOY_HOOK_URL']
+          expected = os.environ['EXPECTED_COMMIT']
+          if not hook:
+              raise SystemExit('RENDER_DEPLOY_HOOK_URL is missing')
+          parsed = urllib.parse.urlsplit(hook)
+          query = dict(urllib.parse.parse_qsl(parsed.query))
+          query['ref'] = expected
+          url = urllib.parse.urlunsplit(parsed._replace(query=urllib.parse.urlencode(query)))
+          try:
+              with urllib.request.urlopen(urllib.request.Request(url, method='POST'), timeout=60) as response:
+                  if response.status not in (200, 202):
+                      raise RuntimeError()
+          except Exception:
+              raise SystemExit('Render rejected the deployment request; check the service dashboard')
+          print('Deployment requested for tested revision ' + expected, flush=True)
+          origin = 'https://du-platform.onrender.com'
+          for attempt in range(90):
+              try:
+                  with urllib.request.urlopen(origin + '/api/ping', timeout=10) as response:
+                      ping = json.load(response)
+                  with urllib.request.urlopen(origin + '/api/health/db', timeout=10) as response:
+                      database = json.load(response)
+                  if ping.get('commit') == expected and ping.get('ok') and database.get('ok'):
+                      print('Tested Render revision is live and its database is ready', flush=True)
+                      break
+              except Exception:
+                  pass
+              time.sleep(10)
+          else:
+              raise SystemExit('Render did not serve the tested revision with a ready database within the release window')
+          PYTHON
