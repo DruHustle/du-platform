@@ -59,7 +59,7 @@ export default function Tourism() {
   const heroSlides = useMemo(
     () => [
       {
-        image: "/images/pages/tourism/victoria_falls.jpg",
+        image: "/images/pages/tourism/victoria_falls.webp",
         badge: t("tourism.hero.badge1") || "Visit Zimbabwe",
         badgeIcon: Globe,
         title: t("tourism.hero.title1") || "Discover the Majesty",
@@ -69,7 +69,7 @@ export default function Tourism() {
           "From Victoria Falls to Great Zimbabwe, experience the heart of Africa.",
       },
       {
-        image: "/images/pages/shop/zimbabwe_shop_hero.jpg",
+        image: "/images/pages/shop/zimbabwe_shop_hero.webp",
         badge: t("tourism.hero.badge2") || "Cultural Heritage",
         badgeIcon: Award,
         title: t("tourism.hero.title2") || "Rich History",
@@ -201,7 +201,7 @@ export default function Tourism() {
   const attractions: Attraction[] = [
     {
       name: t("tourism.attractions.vicfalls.name") || "Victoria Falls",
-      image: "/images/pages/tourism/victoria_falls.jpg",
+      image: "/images/pages/tourism/victoria_falls.webp",
       highlights: [
         t("tourism.attractions.vicfalls.h1") || "UNESCO World Heritage",
         t("tourism.attractions.vicfalls.h2") || "Adventure Hub",
@@ -725,7 +725,7 @@ export default function Tourism() {
               {attractions.map((attraction, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
@@ -825,7 +825,7 @@ export default function Tourism() {
       <section className="p-5 bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="outer-glass-panel p-8 md:p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] group"

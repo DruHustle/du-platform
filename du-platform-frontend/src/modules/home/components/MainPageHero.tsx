@@ -35,7 +35,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
       {/* SECTION 1: CINEMATIC HERO */}
       <section className="relative min-h-[max(40rem,100svh)] py-28 w-full flex items-center justify-center overflow-hidden bg-slate-950">
-        <AnimatePresence mode="sync">
+        <AnimatePresence mode="sync" initial={false}>
           <motion.div
             key={hero.currentBgIndex}
             initial={prefersReducedMotion ? false : { opacity: 0 }}
@@ -72,7 +72,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
         {/* Mobile logo: absolutely centered between navbar (3.5rem) and headline (~50vh) */}
         <motion.div
           id="home-hero-logo"
-          initial={{ opacity: 0, y: 15 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
           className="hidden"
@@ -93,7 +93,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
         <div className="relative z-20 container mx-auto px-6 flex flex-col items-center justify-center text-center">
           {/* Desktop logo: in flow above headline */}
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
             className="mb-8"
@@ -113,7 +113,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
 
           {/* Headline */}
           <motion.h1
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
             className="text-[clamp(2.5rem,6.5vw,6rem)] max-w-[18ch] font-black text-white leading-[1.05] text-center uppercase tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
@@ -123,7 +123,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}
             className="mt-6 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
@@ -133,7 +133,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
 
           {/* Scroll Indicator */}
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.8, duration: 1, type: "spring" }}
             className="mt-12 md:mt-16"

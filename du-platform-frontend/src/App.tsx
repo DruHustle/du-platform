@@ -4,6 +4,7 @@ import { filterOptionalTelemetry, useCookieConsent } from "@/lib/cookieConsent";
 import { MotionConfig } from "framer-motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToHash from "./components/ScrollToHash";
+import NavigationRouter from "./components/NavigationRouter";
 import CookieConsent from "./components/CookieConsent";
 import ComingSoon from "./components/ComingSoon";
 import NotFoundPage from "@/modules/core/pages/NotFoundPage";
@@ -91,8 +92,10 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <CookieConsent />
-            <Router />
-            <OnesaFloatingAssistant />
+            <NavigationRouter>
+              <Router />
+              <OnesaFloatingAssistant />
+            </NavigationRouter>
             {VercelAnalytics && consent === "accepted" ? (
               <Suspense fallback={null}>
                 <VercelAnalytics beforeSend={filterOptionalTelemetry} />

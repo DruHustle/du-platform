@@ -1,4 +1,9 @@
-import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ImgHTMLAttributes,
+} from "react";
 import { cn } from "@/lib/utils";
 
 type FetchPriority = "high" | "low" | "auto";
@@ -49,10 +54,9 @@ export default function InstantImage({
   const imageRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    setIsLoaded(false);
+  useLayoutEffect(() => {
     const image = imageRef.current;
-    if (image?.complete && image.naturalWidth > 0) setIsLoaded(true);
+    setIsLoaded(Boolean(image?.complete && image.naturalWidth > 0));
   }, [src]);
 
   return (
@@ -62,10 +66,7 @@ export default function InstantImage({
       {!isLoaded && (
         <div
           aria-hidden="true"
-          className={cn(
-            "absolute inset-0 animate-pulse bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),rgba(15,23,42,0.96)_65%)]",
-            placeholderClassName
-          )}
+          className={cn("absolute inset-0 bg-slate-900", placeholderClassName)}
         />
       )}
       <img
@@ -76,8 +77,9 @@ export default function InstantImage({
         decoding={decoding}
         fetchPriority={fetchPriority ?? (priority ? "high" : "auto")}
         className={cn(
-          "transition-opacity duration-300",
-          isLoaded ? "opacity-100" : "opacity-0",
+          !priority &&
+            "transition-opacity duration-200 motion-reduce:transition-none",
+          priority || isLoaded ? "opacity-100" : "opacity-0",
           className
         )}
         onLoad={event => {

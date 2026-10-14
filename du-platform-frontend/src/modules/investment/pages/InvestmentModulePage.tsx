@@ -34,7 +34,7 @@ export default function Investment() {
   const heroSlides = useMemo(
     () => [
       {
-        image: "/images/pages/investment/rbz_building.png",
+        image: "/images/pages/investment/rbz_building.webp",
         badge: t("investment.hero.badge1") || "RBZ Initiatives",
         badgeIcon: Shield,
         title: t("investment.hero.title1") || "Diaspora Investment",
@@ -95,7 +95,7 @@ export default function Investment() {
           "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
       },
       {
-        image: "/images/pages/tourism/victoria_falls.jpg",
+        image: "/images/pages/tourism/victoria_falls.webp",
         badge: t("investment.hero.badge7") || "Tourism Capital",
         badgeIcon: Target,
         title: t("investment.hero.title7") || "Hospitality Growth Corridors",

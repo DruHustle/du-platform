@@ -135,6 +135,23 @@ There is no separate lint script. The offline suite below requires no configured
 services or devices. The older live-provider smoke scripts are documented in the
 Onesa section below.
 
+### Navigation regression tests
+
+```bash
+pnpm build
+pnpm test:e2e:navigation
+```
+
+Uses installed Google Chrome and serves the production build on a temporary local
+port without loading `.env`. API and optional font responses are mocked. At 375,
+768, and 1440 pixels, it checks that primary tabs require no page-script downloads,
+keep content visible, reset scrolling immediately, and show decoded hero images.
+It also holds a lazy chunk to verify navigation stays usable and the latest click
+wins, then exercises keyboard navigation, browser history, and search queries.
+Reports and screenshots are saved to `/tmp/du-navigation-tests`
+(`NAVIGATION_OUTPUT_DIR` overrides it). CI runs this check against installed
+Playwright Chromium with `NAVIGATION_BROWSER_CHANNEL=chromium` before deployment.
+
 ### Service-free AI and device regression tests
 
 ```bash
