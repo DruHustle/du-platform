@@ -31,7 +31,7 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const authHeadingClass =
-    "!text-lg font-black tracking-tight text-white md:!text-[1.2rem]";
+    "auth-title text-white";
   const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -79,7 +79,7 @@ export default function ResetPassword() {
   return (
     <Layout>
       <section className="min-h-[72vh] bg-slate-950 px-6 pt-20 pb-10 md:pt-24 md:pb-12 flex items-center justify-center">
-        <div className="outer-glass-panel w-full max-w-md mx-auto rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white md:p-10">
+        <div className="content-panel auth-panel w-full max-w-md mx-auto  p-8 text-white md:p-10">
           <div className="space-y-2 text-center">
             <h1 className={authHeadingClass}>
               {tr("auth.reset.title", "Set New Password")}

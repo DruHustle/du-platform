@@ -188,7 +188,7 @@ export default function NTIRSearchPage() {
 
   return (
     <Layout>
-      <section className="min-h-screen bg-slate-950 px-6 py-28">
+      <section className="document-section min-h-screen bg-slate-950">
         <div className="container mx-auto max-w-5xl space-y-8">
           <div className="text-white">
             <Link
@@ -200,12 +200,12 @@ export default function NTIRSearchPage() {
                 defaultValue: "Back to Investment",
               })}
             </Link>
-            <h1 className="!text-2xl md:!text-2xl font-black tracking-tighter">
+            <h1 className="page-title">
               {t("investment.ntir.title", {
                 defaultValue: "NTIR Database Search",
               })}
             </h1>
-            <p className="!text-xs text-white/70 mt-2">
+            <p className="text-sm text-white/70 mt-2">
               {t("investment.ntir.subtitle", {
                 defaultValue:
                   "Search the National Trade & Investment Register for verified entities and fallback exporter records.",
@@ -256,14 +256,14 @@ export default function NTIRSearchPage() {
             {results.map(row => (
               <div
                 key={row.id}
-                className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white"
+                className="surface-card p-7 text-white"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <h2 className="!text-sm font-black tracking-tight">
+                    <h2 className="text-sm font-black tracking-tight">
                       {row.name}
                     </h2>
-                    <p className="text-white/75 !text-xs mt-1">
+                    <p className="text-white/75 text-sm mt-1">
                       {row.location}
                     </p>
                   </div>

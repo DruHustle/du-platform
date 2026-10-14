@@ -34,7 +34,7 @@ export default function SubPageHero({
   return (
     <div id="sub-page-hero-wrapper" className="flex flex-col w-full">
       <section
-        className={`relative ${heroHeightClassName ?? "h-[40vh] min-h-[340px] lg:min-h-[420px]"} w-full flex items-center justify-center overflow-hidden bg-slate-950`}
+        className={`interior-hero relative ${heroHeightClassName ?? ""} w-full flex items-end overflow-hidden bg-slate-950`}
       >
         <div className="absolute inset-0 z-0 saturate-[1.1] brightness-[1.05]">
           <InstantImage
@@ -52,13 +52,13 @@ export default function SubPageHero({
           aria-hidden="true"
         />
 
-        <div className="relative z-20 container mx-auto h-full px-6 md:px-12">
-          <div className="flex h-full flex-col justify-end pb-12 pt-20 md:pb-14 md:pt-24">
+        <div className="relative z-20 container mx-auto px-6 md:px-12">
+          <div className="interior-hero-content flex flex-col justify-end">
             <div className="max-w-5xl">
               {(current.badge || current.badgeIcon) && (
                 <div className="mb-4 flex items-center gap-3 drop-shadow-md">
                   {renderIcon(current.badgeIcon, "h-5 w-5 text-zim-gold")}
-                  <span className="text-zim-gold text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] border-l border-zim-gold/50 pl-4">
+                  <span className="hero-eyebrow text-zim-gold uppercase">
                     {current.badge}
                   </span>
                 </div>

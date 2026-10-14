@@ -335,10 +335,10 @@ export default function AdminDashboard() {
 
   return (
     <Layout>
-      <section className="min-h-screen bg-slate-950 px-6 py-28">
+      <section className="document-section min-h-screen bg-slate-950">
         <div className="container mx-auto max-w-6xl space-y-8">
           <div className="text-white">
-            <h1 className="text-4xl font-black tracking-tighter">
+            <h1 className="page-title">
               {tr("admin.title", "Admin Dashboard")}
             </h1>
             <p className="text-white/75 mt-2">
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
             <div className="grid gap-4">
               <form
                 onSubmit={saveNotificationSettings}
-                className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 space-y-3"
+                className="surface-card p-7 space-y-3"
               >
                 <p className="text-white font-black">
                   {tr("admin.notify.settings_title", "Notification Email Settings")}
@@ -430,7 +430,7 @@ export default function AdminDashboard() {
               </form>
 
               {notifyRows.map((row) => (
-                <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
+                <div key={row.id} className="surface-card p-7 text-white">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-black">{row.email}</p>
@@ -448,7 +448,7 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "ntir" ? (
             <div className="space-y-6">
-              <form onSubmit={submitNtir} className="grid md:grid-cols-4 gap-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <form onSubmit={submitNtir} className="grid md:grid-cols-4 gap-3 surface-card p-7">
                 <Input
                   value={ntirForm.name}
                   onChange={(e) => setNtirForm((prev) => ({ ...prev, name: e.target.value }))}
@@ -474,7 +474,7 @@ export default function AdminDashboard() {
 
               <div className="grid gap-4">
                 {ntirRows.map((row) => (
-                  <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
+                  <div key={row.id} className="surface-card p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-black">{row.name}</p>
@@ -500,7 +500,7 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "stories" ? (
             <div className="space-y-6">
-              <form onSubmit={submitStory} className="space-y-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <form onSubmit={submitStory} className="space-y-3 surface-card p-7">
                 <div className="grid md:grid-cols-3 gap-3">
                   <Input
                     value={storyForm.title}
@@ -582,7 +582,7 @@ export default function AdminDashboard() {
 
               <div className="grid gap-4">
                 {storyRows.map((story) => (
-                  <div key={story.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
+                  <div key={story.id} className="surface-card p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-black">{story.title}</p>
@@ -614,7 +614,7 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "shop" ? (
             <div className="space-y-6">
-              <form onSubmit={submitShopProduct} className="space-y-3 rounded-[2rem] border border-white/10 bg-white/[0.02] p-7">
+              <form onSubmit={submitShopProduct} className="space-y-3 surface-card p-7">
                 <div className="grid md:grid-cols-3 gap-3">
                   <Input
                     value={shopForm.slug}
@@ -689,7 +689,7 @@ export default function AdminDashboard() {
 
               <div className="grid gap-4">
                 {shopRows.map((row) => (
-                  <div key={row.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 text-white">
+                  <div key={row.id} className="surface-card p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-black">{row.name}</p>

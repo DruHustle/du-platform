@@ -531,7 +531,11 @@ export default function Layout({ children }: LayoutProps) {
     : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 selection:bg-zim-gold/30 selection:text-slate-900 font-sans">
+    <div
+      data-page-variant={isHomePage ? "home" : "content"}
+      data-page-path={location}
+      className={`${isHomePage ? "" : "content-page "}min-h-screen flex flex-col bg-slate-950 selection:bg-zim-gold/30 selection:text-slate-900 font-sans`}
+    >
       <RouteSeo pathname={location} search={search} />
       {/* Skip to main content — visible on focus for keyboard users */}
       <a

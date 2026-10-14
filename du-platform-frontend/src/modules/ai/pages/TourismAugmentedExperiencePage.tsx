@@ -1178,11 +1178,11 @@ export default function TourismAugmentedExperiencePage() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             {backToTourismLabel}
           </Link>
-          <div className="mb-6 max-w-4xl rounded-[1.75rem] border border-white/10 bg-white/[0.02] p-5 md:p-6">
+          <div className="content-panel mb-6 max-w-4xl p-5 md:p-6">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-zim-gold">
               {t("tourism.ar.seo.badge", { defaultValue: "Onesa AI Tourism" })}
             </p>
-            <h1 className="mt-3 text-2xl font-black tracking-tight text-white md:text-4xl">
+            <h1 className="page-title mt-3">
               {t("tourism.ar.seo.title", {
                 defaultValue: "Zimbabwe Augmented Tourism Guide",
               })}
