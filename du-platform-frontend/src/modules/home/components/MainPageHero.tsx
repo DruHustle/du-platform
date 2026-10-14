@@ -69,34 +69,14 @@ export default function MainPageHero({ hero }: MainPageProps) {
           aria-hidden="true"
         />
 
-        {/* Mobile logo: absolutely centered between navbar (3.5rem) and headline (~50vh) */}
-        <motion.div
-          id="home-hero-logo"
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-          className="hidden"
-        >
-          <div className="relative inline-flex h-20 w-20 items-center justify-center">
-            <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
-            <InstantImage
-              src="/images/brand/diaspora_unlocked.png"
-              alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
-              priority
-              wrapperClassName="relative overflow-visible bg-transparent"
-              placeholderClassName="bg-transparent animate-none"
-              className="relative h-16 scale-[1.12] object-contain drop-shadow-2xl"
-            />
-          </div>
-        </motion.div>
-
-        <div className="relative z-20 container mx-auto px-6 flex flex-col items-center justify-center text-center">
-          {/* Desktop logo: in flow above headline */}
+        <div className="relative z-20 container mx-auto translate-y-15 px-6 flex flex-col items-center justify-center text-center md:translate-y-18">
+          {/* Place the brand mark at the former heading position. */}
           <motion.div
+            id="home-hero-logo"
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
-            className="mb-8"
+            className="mb-0"
           >
             <div className="relative inline-flex h-20 w-20 items-center justify-center md:h-28 md:w-28">
               <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
