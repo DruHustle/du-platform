@@ -235,16 +235,16 @@ export default function Investment() {
       </section>
 
       {/* How it Works - Glass Dashboard */}
-      <section className="p-5 bg-slate-950">
+      <section className="editorial-section bg-slate-950">
         <div className="container px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
+            <div className="section-heading mb-8">
+              <div className="flex items-center gap-3 mb-4">
                 <Repeat className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">
+                <h2 className="page-section-title">
                   {t("investment.crowdfunding_title") ||
                     "Crowdfunding Opportunities"}
-                </h3>
+                </h2>
               </div>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
                 {crowdfundingSubtitle}
@@ -280,7 +280,7 @@ export default function Investment() {
               ].map((step, i) => (
                 <div
                   key={i}
-                  className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 shadow-none transition-all duration-500 hover:bg-slate-950/60 hover:shadow-none group"
+                  className="surface-card p-5 shadow-none transition-all duration-500 hover:bg-slate-950/60 hover:shadow-none group"
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <step.icon className="h-4 w-4 text-zim-gold" />
@@ -301,16 +301,16 @@ export default function Investment() {
       {/* Collective Model */}
       <section
         id="collective-model"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
+            <div className="flex items-center gap-3 mb-4">
               <Users className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">
+              <h2 className="page-section-title">
                 {t("investment.collective_model.title") ||
                   "How Diaspora Collective Investing Works"}
-              </h3>
+              </h2>
             </div>
             <p className=" text-sm leading-relaxed mb-8 max-w-3xl mx-auto">
               {t("investment.collective_model.subtitle") ||
@@ -333,17 +333,17 @@ export default function Investment() {
       {/* Active Projects - Cinematic Glass Grid */}
       <section
         id="active-projects"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
+          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
             <div className="text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
+              <div className="flex items-center gap-3 mb-4">
                 <Target className="h-6 w-6 text-zim-gold" />
-                <h3 className="section-title-compact">
+                <h2 className="page-section-title">
                   {t("investment.sectors_title") ||
                     "Active Investment Opportunities"}
-                </h3>
+                </h2>
               </div>
               <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") ||
@@ -376,16 +376,16 @@ export default function Investment() {
       {/* Innovation opportunities */}
       <section
         id="investment-innovation-opportunities"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
+            <div className="flex items-center gap-3 mb-4">
               <Lightbulb className="h-6 w-6 text-zim-gold" />
-              <h3 className="text-xl font-black text-white tracking-tight">
+              <h2 className="page-section-title">
                 {t("tech.opportunities.title") ||
                   "Top Opportunities for Investment and Innovation"}
-              </h3>
+              </h2>
             </div>
             <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed text-center mb-8">
               {t("investment.opportunities.subtitle") ||
@@ -429,17 +429,17 @@ export default function Investment() {
       {/* European Investment Partnerships */}
       <section
         id="eu-partnerships"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
+            <div className="section-heading mb-8">
+              <div className="flex items-center gap-3 mb-4">
                 <Globe className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">
+                <h2 className="page-section-title">
                   {t("investment.eu_focus.title") ||
                     "European Partnership Capital in Zimbabwe"}
-                </h3>
+                </h2>
               </div>
               <p className="text-sm  max-w-3xl mx-auto mt-4 font-light leading-relaxed">
                 {t("investment.eu_focus.subtitle") ||
@@ -462,7 +462,7 @@ export default function Investment() {
               {europeFocusAreas.map(item => (
                 <div
                   key={item.title}
-                  className="rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7"
+                  className="surface-card text-white/80 p-7"
                 >
                   <h3 className="text-lg font-black text-white tracking-tight mb-3">
                     {item.title}
@@ -472,7 +472,7 @@ export default function Investment() {
               ))}
             </div>
 
-            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.02] text-white/80 p-7">
+            <div className="mt-8 surface-card text-white/80 p-7">
               <h4 className="text-lg font-black text-white tracking-tight mb-4">
                 {t("investment.eu_focus.eib_takeaways_title") ||
                   "EIB Practical Takeaways for Diaspora Investors"}

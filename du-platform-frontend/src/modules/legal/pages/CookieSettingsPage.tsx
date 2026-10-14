@@ -20,10 +20,10 @@ export default function CookieSettings() {
 
   return (
     <Layout>
-      <section className="py-16 bg-slate-950 min-h-[70vh]">
+      <section className="document-section bg-slate-950 min-h-[70vh]">
         <div className="container px-6 mx-auto max-w-3xl">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/20 bg-slate-900/95 backdrop-blur-xl p-8 md:p-10">
-            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
+          <div className="content-panel editorial-panel p-8 md:p-10">
+            <h1 className="page-title">
               {tr("cookies.settings.title", "Cookie settings")}
             </h1>
             <p className=" leading-relaxed mb-6">

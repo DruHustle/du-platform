@@ -82,28 +82,28 @@ export default function InvestmentOpportunitiesPage() {
 
   return (
     <Layout>
-      <section className="min-h-screen pt-28 pb-10 px-5 bg-slate-950 relative overflow-hidden">
+      <section className="document-section min-h-screen bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto space-y-6">
           <Link href="/investment" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t("investment.back_to_investment", { defaultValue: "Back to Investment" })}
           </Link>
 
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="content-panel editorial-panel p-8 md:p-10">
+            <div className="section-heading mb-8">
+              <div className="flex items-center gap-3 mb-4">
                 <Target className="h-6 w-6 text-zim-gold" />
-                <h1 className="section-title-compact">{t("investment.sectors_title") || "Active Investment Opportunities"}</h1>
+                <h1 className="page-title">{t("investment.sectors_title") || "Active Investment Opportunities"}</h1>
               </div>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") || "Carefully vetted projects with government support and transparent tracking."}
               </p>
-              <div className="flex flex-wrap justify-center gap-2 mt-8">
+              <div className="flex flex-wrap gap-2 mt-8">
                 {["all", "tourism", "agriculture", "manufacturing", "it", "energy"].map((s) => (
                   <button
                     key={s}
                     onClick={() => setActiveFilter(s)}
-                    className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                    className={`filter-control px-4 py-2 border ${
                       activeFilter === s
                         ? "bg-zim-gold text-zim-black border-zim-gold shadow-[0_0_20px_rgba(212,175,55,0.3)]"
                         : "bg-white/5 text-white/70 border-white/10 hover:border-white/30"
@@ -154,7 +154,7 @@ export default function InvestmentOpportunitiesPage() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="group rounded-[2rem] border border-white/10 bg-white/[0.02] transition-colors duration-300 hover:bg-white/[0.03]"
+                  className="group surface-card transition-colors duration-300 hover:bg-white/[0.03]"
                 >
                   <div className="grid md:grid-cols-12 gap-6 p-7">
                     <div className="md:col-span-8 space-y-5">

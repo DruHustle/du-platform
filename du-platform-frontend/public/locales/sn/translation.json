@@ -1338,24 +1338,6 @@
       "title3": "Chikafu neNostalgia",
       "subtitle3": "Nakidzwa nezvinodiwa zveZimbabwe zvine quality control kune vatengi vemuno neveexport."
     },
-    "how_it_works": {
-      "title": "Mashandiro eShop",
-      "subtitle": "Mafambiro anoshanda e-commerce yezvinhu zvakagadzirwa muZimbabwe, zvakagadzirirwa kuvimba, nyore, uye mhedzisiro ye diaspora."
-    },
-    "process": {
-      "verified": {
-        "title": "Sourcing Yakasimbiswa",
-        "desc": "Zvigadzirwa zvinounganidzwa kubva kuvagadziri, vanyanzvi vemabasa emaoko, nevapi vezvinhu vanotevedzera mitemo."
-      },
-      "delivery": {
-        "title": "Rutsigiro rweDelivery kuDiaspora",
-        "desc": "Tinokoshesa nzira dzekuendesa zvinhu dzinoshanda kune vatengi vemuno, mudunhu, nepasirese."
-      },
-      "payment": {
-        "title": "Nzira dzeKubhadhara Dzinochinjika",
-        "desc": "Tsigiro yenzira dzemazuva ano dzekubhadhara nemitengo yakajeka kuderedza kusagadzikana pa checkout."
-      }
-    },
     "sports_title": "Mitambo yeNyika",
     "sports_desc": "Mbatya dzepamutemo dzeSables, Chevrons, nemaWarriors.",
     "sports_mech_soccer": "Mbatya dzeSoccer.",
