@@ -798,7 +798,7 @@ export default function ShopProducts() {
                               onError={event => {
                                 event.currentTarget.onerror = null;
                                 event.currentTarget.src =
-                                  "/images/pages/shop/zimbabwe_shop_hero.jpg";
+                                  "/images/pages/shop/zimbabwe_shop_hero.webp";
                               }}
                             />
                             {product.stock_qty <= 0 ? (

@@ -58,6 +58,7 @@ import {
 } from "@/lib/authSessionBootstrap";
 import { setAppLanguage } from "@/i18n";
 import RouteSeo from "@/components/RouteSeo";
+import { preloadNavigationImage } from "@/lib/navigationImages";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -590,6 +591,9 @@ export default function Layout({ children }: LayoutProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onPointerEnter={() => preloadNavigationImage(item.href)}
+                    onFocus={() => preloadNavigationImage(item.href)}
+                    onTouchStart={() => preloadNavigationImage(item.href)}
                     aria-current={active ? "page" : undefined}
                     className={`
                       relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
@@ -939,6 +943,9 @@ export default function Layout({ children }: LayoutProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onPointerEnter={() => preloadNavigationImage(item.href)}
+                    onFocus={() => preloadNavigationImage(item.href)}
+                    onTouchStart={() => preloadNavigationImage(item.href)}
                     aria-current={active ? "page" : undefined}
                     aria-label={item.name}
                     title={item.name}

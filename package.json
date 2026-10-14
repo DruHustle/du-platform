@@ -36,7 +36,8 @@
     "format:check": "prettier --check .",
     "test:frontend": "vitest run --config du-platform-frontend/vite.config.ts --root . --dir du-platform-frontend/src",
     "test": "pnpm test:modules && pnpm test:frontend",
-    "test:e2e:offline": "node scripts/tests/e2e-offline-services.mjs"
+    "test:e2e:offline": "node scripts/tests/e2e-offline-services.mjs",
+    "test:e2e:navigation": "node scripts/tests/e2e-navigation.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

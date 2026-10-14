@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useLocation } from "wouter";
 
 export default function ScrollToHash() {
   const [location] = useLocation();
 
-  useEffect(() => {
-    const scrollToHash = () => {
+  useLayoutEffect(() => {
+    const scrollToHash = (behavior: ScrollBehavior = "instant") => {
       const hash = window.location.hash;
       if (hash) {
         const id = hash.replace("#", "");
@@ -13,35 +13,38 @@ export default function ScrollToHash() {
         if (element) {
           const headerOffset = 80;
           const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
 
           window.scrollTo({
             top: offsetPosition,
-            behavior: "smooth"
+            behavior,
           });
         }
       } else {
         // Only scroll to top if we don't have a hash
         window.scrollTo({
           top: 0,
-          behavior: "smooth"
+          behavior: "instant",
         });
       }
     };
 
-    // Small delay to ensure the DOM is rendered
-    const timer = setTimeout(scrollToHash, 100);
+    // The route has committed, including lazy content. Reset before the first paint
+    // instead of showing the destination at the old scroll position for 100 ms.
+    scrollToHash();
+    const handleHashChange = () =>
+      scrollToHash(
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth"
+      );
 
     // Also listen for hashchange events for same-page navigation
-    window.addEventListener("hashchange", scrollToHash);
-    
-    // Listen for popstate for browser back/forward with hashes
-    window.addEventListener("popstate", scrollToHash);
+    window.addEventListener("hashchange", handleHashChange);
 
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("hashchange", scrollToHash);
-      window.removeEventListener("popstate", scrollToHash);
+      window.removeEventListener("hashchange", handleHashChange);
     };
   }, [location]); // Re-run when location (path) changes
 

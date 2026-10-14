@@ -25,7 +25,7 @@ export default function Technology() {
   const heroSlides = useMemo(
     () => [
       {
-        image: "/images/pages/technology/ai_innovation.jpg",
+        image: "/images/pages/technology/ai_innovation.webp",
         badge: t("tech.hero.badge1") || "Future of Innovation",
         badgeIcon: Brain,
         title: t("tech.hero.title1") || "Onesa AI: Illuminating Zimbabwe",
@@ -249,7 +249,7 @@ export default function Technology() {
       >
         <div className="container relative z-10 px-6 mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
@@ -395,7 +395,7 @@ export default function Technology() {
               {sectors.map((sector, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
