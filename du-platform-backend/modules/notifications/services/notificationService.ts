@@ -1,4 +1,5 @@
 import {
+  escapeEmailHtml,
   getNotifyAlertEmails,
   getNotifyFromEmail,
   sendEmailMessageSafe,
@@ -20,12 +21,19 @@ export class NotificationService {
   constructor(private readonly repository = new NotificationRepository()) {}
 
   async createNewsletterSubscription(email: string) {
-    const normalizedEmail = String(email ?? "").trim().toLowerCase();
+    const normalizedEmail = String(email ?? "")
+      .trim()
+      .toLowerCase();
     if (!normalizedEmail) {
-      throw new NotificationServiceError("VALIDATION_FAILED", 400, "Email is required.");
+      throw new NotificationServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Email is required."
+      );
     }
 
-    const result = await this.repository.createNewsletterSubscription(normalizedEmail);
+    const result =
+      await this.repository.createNewsletterSubscription(normalizedEmail);
 
     if (result.created) {
       const fromEmail = await getNotifyFromEmail();
@@ -50,7 +58,7 @@ export class NotificationService {
       if (alertEmails.length > 0) {
         const adminSubject = "New newsletter subscription";
         const adminHtml = `<p><strong>New newsletter subscription</strong></p>
-<p>Email: ${normalizedEmail}</p>`;
+<p>Email: ${escapeEmailHtml(normalizedEmail)}</p>`;
         const adminText = `New newsletter subscription: ${normalizedEmail}`;
         await sendEmailMessageSafe(
           {
@@ -77,12 +85,20 @@ export class NotificationService {
   async createFeatureNotification(userId: number, feature: string) {
     const normalizedFeature = String(feature ?? "").trim();
     if (!normalizedFeature) {
-      throw new NotificationServiceError("VALIDATION_FAILED", 400, "Feature is required.");
+      throw new NotificationServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Feature is required."
+      );
     }
 
     const user = await this.repository.findUserById(Math.floor(userId));
     if (!user) {
-      throw new NotificationServiceError("AUTH_USER_NOT_FOUND", 401, "User not found.");
+      throw new NotificationServiceError(
+        "AUTH_USER_NOT_FOUND",
+        401,
+        "User not found."
+      );
     }
 
     const result = await this.repository.createFeatureNotification(
@@ -96,7 +112,7 @@ export class NotificationService {
       const safeFeature = normalizedFeature.replace(/[_-]+/g, " ").trim();
       const userSubject = `Notify request received: ${safeFeature}`;
       const userHtml = `<p>Hello,</p>
-<p>Your notify request for <strong>${safeFeature}</strong> has been saved.</p>
+<p>Your notify request for <strong>${escapeEmailHtml(safeFeature)}</strong> has been saved.</p>
 <p>We will email you when this feature becomes available.</p>`;
       const userText = `Your notify request for ${safeFeature} has been saved. We will email you when this feature becomes available.`;
       await sendEmailMessageSafe(
@@ -114,8 +130,8 @@ export class NotificationService {
       if (alertEmails.length > 0) {
         const adminSubject = `New feature notify request: ${safeFeature}`;
         const adminHtml = `<p><strong>New notify request</strong></p>
-<p>Feature: ${safeFeature}</p>
-<p>User email: ${String(user.email ?? "")}</p>
+<p>Feature: ${escapeEmailHtml(safeFeature)}</p>
+<p>User email: ${escapeEmailHtml(String(user.email ?? ""))}</p>
 <p>User id: ${Number(user.id)}</p>`;
         const adminText = `New notify request. Feature: ${safeFeature}. User email: ${String(user.email ?? "")}. User id: ${Number(user.id)}.`;
         await sendEmailMessageSafe(
@@ -132,7 +148,9 @@ export class NotificationService {
     }
 
     return {
-      message: result.created ? "Notify request saved." : "Notify request already exists.",
+      message: result.created
+        ? "Notify request saved."
+        : "Notify request already exists.",
       created: result.created,
       feature: normalizedFeature,
       email: String(user.email ?? ""),
@@ -149,7 +167,9 @@ export class NotificationService {
   }) {
     const fromEmail = await getNotifyFromEmail();
     const safeName = String(input.name ?? "").trim();
-    const safeEmail = String(input.email ?? "").trim().toLowerCase();
+    const safeEmail = String(input.email ?? "")
+      .trim()
+      .toLowerCase();
     const safeSubject = String(input.subject ?? "").trim();
     const safeMessage = String(input.message ?? "").trim();
     const safePhone = String(input.phone ?? "").trim();
@@ -158,28 +178,40 @@ export class NotificationService {
     const alertEmails = await getNotifyAlertEmails();
     if (alertEmails.length > 0) {
       const adminSubject = `New contact inquiry: ${safeSubject}`;
-      const adminHtml = `<p><strong>New contact inquiry via ${safeModule} module</strong></p>
-<p>Name: ${safeName}</p>
-<p>Email: ${safeEmail}</p>
-${safePhone ? `<p>Phone: ${safePhone}</p>` : ""}
-<p>Subject: ${safeSubject}</p>
+      const adminHtml = `<p><strong>New contact inquiry via ${escapeEmailHtml(safeModule)} module</strong></p>
+<p>Name: ${escapeEmailHtml(safeName)}</p>
+<p>Email: ${escapeEmailHtml(safeEmail)}</p>
+${safePhone ? `<p>Phone: ${escapeEmailHtml(safePhone)}</p>` : ""}
+<p>Subject: ${escapeEmailHtml(safeSubject)}</p>
 <p>Message:</p>
-<blockquote>${safeMessage.replace(/\n/g, "<br>")}</blockquote>`;
+<blockquote>${escapeEmailHtml(safeMessage).replace(/\n/g, "<br>")}</blockquote>`;
       const adminText = `New contact inquiry (${safeModule})\nName: ${safeName}\nEmail: ${safeEmail}${safePhone ? `\nPhone: ${safePhone}` : ""}\nSubject: ${safeSubject}\nMessage:\n${safeMessage}`;
       await sendEmailMessageSafe(
-        { to: alertEmails, subject: adminSubject, html: adminHtml, text: adminText, from: fromEmail },
+        {
+          to: alertEmails,
+          subject: adminSubject,
+          html: adminHtml,
+          text: adminText,
+          from: fromEmail,
+        },
         "contact-inquiry:admin-alert"
       );
     }
 
     const confirmSubject = "We received your message";
-    const confirmHtml = `<p>Hello ${safeName},</p>
+    const confirmHtml = `<p>Hello ${escapeEmailHtml(safeName)},</p>
 <p>Thank you for reaching out to Diaspora Unlocked. We have received your message and will get back to you shortly.</p>
-<p><strong>Your subject:</strong> ${safeSubject}</p>
+<p><strong>Your subject:</strong> ${escapeEmailHtml(safeSubject)}</p>
 <p>Warm regards,<br>The Diaspora Unlocked Team</p>`;
     const confirmText = `Hello ${safeName}, thank you for reaching out to Diaspora Unlocked. We have received your message and will get back to you shortly. Your subject: ${safeSubject}.`;
     await sendEmailMessageSafe(
-      { to: safeEmail, subject: confirmSubject, html: confirmHtml, text: confirmText, from: fromEmail },
+      {
+        to: safeEmail,
+        subject: confirmSubject,
+        html: confirmHtml,
+        text: confirmText,
+        from: fromEmail,
+      },
       "contact-inquiry:user-confirmation"
     );
 

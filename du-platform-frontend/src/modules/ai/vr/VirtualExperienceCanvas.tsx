@@ -1,3 +1,4 @@
+import * as Dialog from "@radix-ui/react-dialog";
 import {
   Suspense,
   useCallback,
@@ -8,15 +9,30 @@ import {
   type MutableRefObject,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Html, OrbitControls, PointMaterial, Points, PositionalAudio, useTexture } from "@react-three/drei";
+import {
+  Html,
+  OrbitControls,
+  PointMaterial,
+  Points,
+  PositionalAudio,
+  useTexture,
+} from "@react-three/drei";
 import { XR, createXRStore, useXR } from "@react-three/xr";
 import * as THREE from "three";
 import { PoiBillboard } from "@/modules/ai/vr/poiSystem";
 import { VRFloatingControls } from "@/modules/ai/vr/VRFloatingControls";
-import { getVrHintCopy, VR_UI_TEXT, type UiLanguage } from "./virtualExperienceText";
+import {
+  getVrHintCopy,
+  VR_UI_TEXT,
+  type UiLanguage,
+} from "./virtualExperienceText";
 import type { Point3D, VirtualWalkStage } from "./virtualExperienceTypes";
 
-const xrStore = createXRStore({ emulate: false });
+const xrStore = createXRStore({
+  emulate: false,
+  baseAssetPath: new URL("/xr/profiles/", window.location.origin).href,
+  defaultControllerProfileId: "generic-trigger-squeeze-thumbstick",
+});
 
 type VrSupportState = "checking" | "supported" | "unsupported";
 type VrSupportReason = "unavailable" | "insecure_context" | "check_failed";
@@ -80,7 +96,12 @@ function createVrHintTexture(
   ctx.lineTo(canvas.width - radius, 0);
   ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
   ctx.lineTo(canvas.width, canvas.height - radius);
-  ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - radius, canvas.height);
+  ctx.quadraticCurveTo(
+    canvas.width,
+    canvas.height,
+    canvas.width - radius,
+    canvas.height
+  );
   ctx.lineTo(radius, canvas.height);
   ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
   ctx.lineTo(0, radius);
@@ -140,10 +161,16 @@ function VRSessionHintPanel({
 
   useFrame((_, delta) => {
     if (!panelRef.current || !visible) return;
-    forwardRef.current.set(0, 0.2, -1.55).applyQuaternion(camera.quaternion);
+    forwardRef.current.set(0, 0.48, -1.75).applyQuaternion(camera.quaternion);
     targetPositionRef.current.copy(camera.position).add(forwardRef.current);
-    panelRef.current.position.lerp(targetPositionRef.current, Math.min(1, delta * 8));
-    panelRef.current.quaternion.slerp(camera.quaternion, Math.min(1, delta * 10));
+    panelRef.current.position.lerp(
+      targetPositionRef.current,
+      Math.min(1, delta * 8)
+    );
+    panelRef.current.quaternion.slerp(
+      camera.quaternion,
+      Math.min(1, delta * 10)
+    );
   });
 
   if (!visible) return null;
@@ -151,7 +178,12 @@ function VRSessionHintPanel({
   return (
     <mesh ref={panelRef} renderOrder={130}>
       <planeGeometry args={[1.18, 0.37]} />
-      <meshBasicMaterial map={texture} transparent depthTest={false} depthWrite={false} />
+      <meshBasicMaterial
+        map={texture}
+        transparent
+        depthTest={false}
+        depthWrite={false}
+      />
     </mesh>
   );
 }
@@ -175,15 +207,27 @@ function VRGuideOrb({
   useFrame((state, delta) => {
     if (!groupRef.current || !visible) return;
     const t = state.clock.elapsedTime;
-    forwardRef.current.set(0.72, -0.34, -1.42).applyQuaternion(camera.quaternion);
+    forwardRef.current
+      .set(0.72, -0.34, -1.42)
+      .applyQuaternion(camera.quaternion);
     targetPositionRef.current.copy(camera.position).add(forwardRef.current);
     targetPositionRef.current.y += Math.sin(t * 2.1) * 0.025;
-    groupRef.current.position.lerp(targetPositionRef.current, Math.min(1, delta * 10));
-    groupRef.current.quaternion.slerp(camera.quaternion, Math.min(1, delta * 10));
+    groupRef.current.position.lerp(
+      targetPositionRef.current,
+      Math.min(1, delta * 10)
+    );
+    groupRef.current.quaternion.slerp(
+      camera.quaternion,
+      Math.min(1, delta * 10)
+    );
 
     if (orbRef.current) {
       const targetScale = pressed ? 0.92 : hovered ? 1.12 : 1;
-      const scale = THREE.MathUtils.lerp(orbRef.current.scale.x, targetScale, Math.min(1, delta * 12));
+      const scale = THREE.MathUtils.lerp(
+        orbRef.current.scale.x,
+        targetScale,
+        Math.min(1, delta * 12)
+      );
       orbRef.current.scale.setScalar(scale);
     }
     if (ringRef.current) {
@@ -199,7 +243,11 @@ function VRGuideOrb({
     <group ref={groupRef}>
       <mesh ref={ringRef}>
         <torusGeometry args={[0.085, 0.008, 18, 44]} />
-        <meshBasicMaterial color={hovered ? "#facc15" : "#93c5fd"} transparent opacity={0.9} />
+        <meshBasicMaterial
+          color={hovered ? "#facc15" : "#93c5fd"}
+          transparent
+          opacity={0.9}
+        />
       </mesh>
       <mesh
         ref={orbRef}
@@ -251,7 +299,8 @@ function ForwardWalkRing({
     }
     if (haloRef.current) {
       haloRef.current.lookAt(camera.position);
-      const scale = 1.08 + Math.sin(t * 1.6) * 0.1 + hoverBoost * 0.6 + clickBoost * 0.8;
+      const scale =
+        1.08 + Math.sin(t * 1.6) * 0.1 + hoverBoost * 0.6 + clickBoost * 0.8;
       haloRef.current.scale.set(scale, scale, scale);
     }
     if (hitRef.current) {
@@ -263,11 +312,19 @@ function ForwardWalkRing({
     <group position={position}>
       <mesh ref={haloRef}>
         <ringGeometry args={[0.28, 0.4, 48]} />
-        <meshBasicMaterial color={hovered ? "#facc15" : "#d4af37"} transparent opacity={hovered ? 0.45 : 0.3} />
+        <meshBasicMaterial
+          color={hovered ? "#facc15" : "#d4af37"}
+          transparent
+          opacity={hovered ? 0.45 : 0.3}
+        />
       </mesh>
       <mesh ref={ringRef}>
         <ringGeometry args={[0.2, 0.26, 48]} />
-        <meshBasicMaterial color={hovered ? "#fde047" : "#facc15"} transparent opacity={hovered ? 1 : 0.92} />
+        <meshBasicMaterial
+          color={hovered ? "#fde047" : "#facc15"}
+          transparent
+          opacity={hovered ? 1 : 0.92}
+        />
       </mesh>
       <group>
         <mesh position={[0, 0.055, 0]}>
@@ -321,7 +378,8 @@ function BackwardWalkRing({
     }
     if (haloRef.current) {
       haloRef.current.lookAt(camera.position);
-      const scale = 1.08 + Math.sin(t * 1.5) * 0.1 + hoverBoost * 0.6 + clickBoost * 0.8;
+      const scale =
+        1.08 + Math.sin(t * 1.5) * 0.1 + hoverBoost * 0.6 + clickBoost * 0.8;
       haloRef.current.scale.set(scale, scale, scale);
     }
     if (hitRef.current) {
@@ -333,11 +391,19 @@ function BackwardWalkRing({
     <group position={position}>
       <mesh ref={haloRef}>
         <ringGeometry args={[0.28, 0.4, 48]} />
-        <meshBasicMaterial color={hovered ? "#93c5fd" : "#60a5fa"} transparent opacity={hovered ? 0.45 : 0.28} />
+        <meshBasicMaterial
+          color={hovered ? "#93c5fd" : "#60a5fa"}
+          transparent
+          opacity={hovered ? 0.45 : 0.28}
+        />
       </mesh>
       <mesh ref={ringRef}>
         <ringGeometry args={[0.2, 0.26, 48]} />
-        <meshBasicMaterial color={hovered ? "#dbeafe" : "#93c5fd"} transparent opacity={hovered ? 1 : 0.9} />
+        <meshBasicMaterial
+          color={hovered ? "#dbeafe" : "#93c5fd"}
+          transparent
+          opacity={hovered ? 1 : 0.9}
+        />
       </mesh>
       <group>
         <mesh position={[0, -0.055, 0]} rotation={[Math.PI, 0, 0]}>
@@ -385,7 +451,11 @@ function InteractiveLandmark({
     const clickScale = 1 + clickPulseRef.current * 0.22;
     const scale = hoverScale * clickScale;
 
-    groupRef.current.position.set(position[0], position[1] + floatOffset, position[2]);
+    groupRef.current.position.set(
+      position[0],
+      position[1] + floatOffset,
+      position[2]
+    );
     groupRef.current.rotation.y = Math.sin(t * 0.3) * 0.08;
     groupRef.current.scale.set(scale, scale, scale);
   });
@@ -456,7 +526,8 @@ function InterestRing({
     }
     if (haloRef.current) {
       haloRef.current.lookAt(camera.position);
-      const scale = 1.06 + Math.sin(t * 1.7) * 0.08 + hoverBoost * 0.55 + clickBoost * 0.75;
+      const scale =
+        1.06 + Math.sin(t * 1.7) * 0.08 + hoverBoost * 0.55 + clickBoost * 0.75;
       haloRef.current.scale.set(scale, scale, scale);
     }
   });
@@ -465,11 +536,19 @@ function InterestRing({
     <group position={position}>
       <mesh ref={haloRef}>
         <ringGeometry args={[0.22, 0.3, 40]} />
-        <meshBasicMaterial color={hovered ? "#60a5fa" : "#3b82f6"} transparent opacity={hovered ? 0.34 : 0.22} />
+        <meshBasicMaterial
+          color={hovered ? "#60a5fa" : "#3b82f6"}
+          transparent
+          opacity={hovered ? 0.34 : 0.22}
+        />
       </mesh>
       <mesh ref={ringRef}>
         <ringGeometry args={[0.17, 0.2, 40]} />
-        <meshBasicMaterial color={hovered ? "#dbeafe" : "#93c5fd"} transparent opacity={hovered ? 0.95 : 0.8} />
+        <meshBasicMaterial
+          color={hovered ? "#dbeafe" : "#93c5fd"}
+          transparent
+          opacity={hovered ? 0.95 : 0.8}
+        />
       </mesh>
       <mesh
         onClick={() => {
@@ -480,9 +559,17 @@ function InterestRing({
         onPointerOut={() => setHovered(false)}
       >
         <circleGeometry args={[0.03, 20]} />
-        <meshBasicMaterial color={hovered ? "#ffffff" : "#dbeafe"} transparent opacity={hovered ? 1 : 0.95} />
+        <meshBasicMaterial
+          color={hovered ? "#ffffff" : "#dbeafe"}
+          transparent
+          opacity={hovered ? 1 : 0.95}
+        />
       </mesh>
-      <PoiBillboard label={label} onInfoClick={onInfoClick} infoHidden={infoHidden} />
+      <PoiBillboard
+        label={label}
+        onInfoClick={onInfoClick}
+        infoHidden={infoHidden}
+      />
     </group>
   );
 }
@@ -497,7 +584,7 @@ function AtmosphericParticles() {
     return nextPoints;
   }, []);
 
-  useFrame((state) => {
+  useFrame(state => {
     if (!pointsRef.current) return;
     const t = state.clock.elapsedTime;
     pointsRef.current.rotation.y = t * 0.015;
@@ -506,7 +593,14 @@ function AtmosphericParticles() {
 
   return (
     <Points ref={pointsRef as any} positions={points} stride={3}>
-      <PointMaterial transparent color="#fff" size={0.012} sizeAttenuation depthWrite={false} opacity={0.2} />
+      <PointMaterial
+        transparent
+        color="#fff"
+        size={0.012}
+        sizeAttenuation
+        depthWrite={false}
+        opacity={0.2}
+      />
     </Points>
   );
 }
@@ -524,7 +618,7 @@ function VrSessionStateSync({
 }: {
   onChange: (isInVrSession: boolean) => void;
 }) {
-  const isInVrSession = useXR((state) => state.mode === "immersive-vr");
+  const isInVrSession = useXR(state => state.mode === "immersive-vr");
 
   useEffect(() => {
     onChange(isInVrSession);
@@ -556,9 +650,12 @@ function VrQuickAction({
         <div className="absolute left-4 right-4 top-20 flex justify-end sm:left-auto sm:right-6 sm:top-20">
           <div
             className="pointer-events-auto w-full max-w-[16rem] rounded-2xl border border-white/15 bg-slate-950/80 px-4 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.38)] backdrop-blur-md"
-            onPointerDown={(event) => event.stopPropagation()}
+            onPointerDown={event => event.stopPropagation()}
           >
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold" aria-live="polite">
+            <p
+              className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold"
+              aria-live="polite"
+            >
               {isVrSessionActive ? ui.vrActive : ui.vrReady}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-white/78">
@@ -607,44 +704,37 @@ function VrSupportPopup({
 
   return (
     <Html fullscreen>
-      <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center p-4">
-        <button
-          type="button"
-          aria-label={ui.close}
-          className="pointer-events-auto absolute inset-0 cursor-default bg-black/55 backdrop-blur-[2px]"
-          onClick={onClose}
-        />
-        <div
-          className="pointer-events-auto relative z-10 w-full max-w-md rounded-[1.75rem] border border-white/15 bg-slate-950/92 p-6 shadow-[0_28px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl"
-          onPointerDown={(event) => event.stopPropagation()}
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.24em] text-zim-gold" aria-live="assertive">
+      <Dialog.Root
+        open={open}
+        onOpenChange={next => {
+          if (!next) onClose();
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-[300] bg-black/55 backdrop-blur-[2px]" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-[301] w-[calc(100%-2rem)] max-w-md max-h-[calc(100dvh-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[1.75rem] border border-white/15 bg-slate-950 p-6 text-white shadow-[0_28px_70px_rgba(0,0,0,0.55)]">
+            <div className="flex items-start justify-between gap-4">
+              <Dialog.Title className="text-[10px] font-black uppercase tracking-[0.24em] text-zim-gold">
                 {title}
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-white/80">{body}</p>
+              </Dialog.Title>
+              <Dialog.Close
+                aria-label={ui.close}
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white hover:text-zim-black"
+              >
+                ×
+              </Dialog.Close>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={ui.close}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-colors hover:bg-white hover:text-zim-black"
-            >
-              ×
-            </button>
-          </div>
-          <div className="mt-5 flex justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-zim-gold px-4 text-[10px] font-black uppercase tracking-widest text-zim-black transition-colors hover:bg-white"
-            >
-              {ui.close}
-            </button>
-          </div>
-        </div>
-      </div>
+            <Dialog.Description className="mt-3 text-sm leading-relaxed text-white/80">
+              {body}
+            </Dialog.Description>
+            <div className="mt-5 flex justify-end">
+              <Dialog.Close className="inline-flex h-11 items-center justify-center rounded-full bg-zim-gold px-4 text-[10px] font-black uppercase tracking-widest text-zim-black hover:bg-white">
+                {ui.close}
+              </Dialog.Close>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </Html>
   );
 }
@@ -688,26 +778,30 @@ function VRScene({
 }) {
   const { scene } = useThree();
   const ambientAudioRef = useRef<THREE.PositionalAudio>(null);
-  const isInVrSession = useXR((state) => state.mode === "immersive-vr");
+  const isInVrSession = useXR(state => state.mode === "immersive-vr");
   const [showVrHint, setShowVrHint] = useState(false);
   const [interactionCount, setInteractionCount] = useState(0);
   const guideOrbCooldownRef = useRef(0);
 
   const registerVrInteraction = useCallback(() => {
-    setInteractionCount((count) => count + 1);
+    setInteractionCount(count => count + 1);
     setShowVrHint(false);
   }, []);
 
   const hotspotBuckets = useMemo(() => {
     const byId = new Map(stageOrder.map((id, index) => [id, index]));
     const all = stage.hotspots ?? [];
-    const forward = all.filter((hotspot) => {
+    const forward = all.filter(hotspot => {
       const targetIdx = byId.get(hotspot.targetId);
-      return typeof targetIdx === "number" ? targetIdx > currentStageIndex : !/back/i.test(hotspot.label);
+      return typeof targetIdx === "number"
+        ? targetIdx > currentStageIndex
+        : !/back/i.test(hotspot.label);
     });
-    const backward = all.filter((hotspot) => {
+    const backward = all.filter(hotspot => {
       const targetIdx = byId.get(hotspot.targetId);
-      return typeof targetIdx === "number" ? targetIdx < currentStageIndex : /back/i.test(hotspot.label);
+      return typeof targetIdx === "number"
+        ? targetIdx < currentStageIndex
+        : /back/i.test(hotspot.label);
     });
     return { forward, backward };
   }, [stage.hotspots, stageOrder, currentStageIndex]);
@@ -765,9 +859,15 @@ function VRScene({
 
   return (
     <group>
-      <PositionalAudio ref={ambientAudioRef as any} url="/sounds/nature_ambient.mp3" loop autoplay={false} distance={60} />
+      <PositionalAudio
+        ref={ambientAudioRef as any}
+        url="/sounds/nature_ambient.mp3"
+        loop
+        autoplay={false}
+        distance={60}
+      />
       <AtmosphericParticles />
-      {hotspotBuckets.forward.map((hotspot) => (
+      {hotspotBuckets.forward.map(hotspot => (
         <ForwardWalkRing
           key={`forward-${hotspot.targetId}`}
           position={hotspot.position}
@@ -777,7 +877,7 @@ function VRScene({
           }}
         />
       ))}
-      {hotspotBuckets.backward.map((hotspot) => (
+      {hotspotBuckets.backward.map(hotspot => (
         <BackwardWalkRing
           key={`back-${hotspot.targetId}`}
           position={hotspot.position}
@@ -787,7 +887,7 @@ function VRScene({
           }}
         />
       ))}
-      {stage.pointsOfInterest?.map((poi) => (
+      {stage.pointsOfInterest?.map(poi => (
         <InterestRing
           key={poi.id}
           position={poi.position}
@@ -805,7 +905,7 @@ function VRScene({
       ))}
       <InteractiveLandmark
         position={[0, -0.95, -4.25]}
-        onClick={(position) => {
+        onClick={position => {
           registerVrInteraction();
           onLandmarkClick(position);
         }}
@@ -874,11 +974,17 @@ export default function VirtualExperienceCanvas({
   onPointerMissed,
 }: VirtualExperienceCanvasProps) {
   const ui = useMemo(
-    () => ({ ...VR_UI_TEXT.en, ...(VR_UI_TEXT[uiLanguage] ?? {}) }) as Record<string, string>,
+    () =>
+      ({ ...VR_UI_TEXT.en, ...(VR_UI_TEXT[uiLanguage] ?? {}) }) as Record<
+        string,
+        string
+      >,
     [uiLanguage]
   );
-  const [vrSupportState, setVrSupportState] = useState<VrSupportState>("checking");
-  const [vrSupportReason, setVrSupportReason] = useState<VrSupportReason | null>(null);
+  const [vrSupportState, setVrSupportState] =
+    useState<VrSupportState>("checking");
+  const [vrSupportReason, setVrSupportReason] =
+    useState<VrSupportReason | null>(null);
   const [isVrSessionActive, setIsVrSessionActive] = useState(false);
   const [isEnteringVr, setIsEnteringVr] = useState(false);
   const [vrLaunchError, setVrLaunchError] = useState<string | null>(null);
@@ -911,7 +1017,7 @@ export default function VirtualExperienceCanvas({
     setVrSupportReason(null);
 
     xr.isSessionSupported("immersive-vr")
-      .then((supported) => {
+      .then(supported => {
         if (cancelled) return;
         setVrSupportState(supported ? "supported" : "unsupported");
         setVrSupportReason(supported ? null : "unavailable");
@@ -952,6 +1058,10 @@ export default function VirtualExperienceCanvas({
 
   useEffect(() => {
     return () => {
+      void xrStore
+        .getState()
+        .session?.end()
+        .catch(() => undefined);
       cameraRef.current = null;
       orbitControlsRef.current = null;
     };
@@ -966,7 +1076,13 @@ export default function VirtualExperienceCanvas({
   }, [autoRotateEnabled, orbitControlsRef]);
 
   const handleEnterVr = useCallback(() => {
-    if (vrSupportState !== "supported" || isVrSessionActive || isEnteringVr || !isCanvasReady) return;
+    if (
+      vrSupportState !== "supported" ||
+      isVrSessionActive ||
+      isEnteringVr ||
+      !isCanvasReady
+    )
+      return;
 
     setIsEnteringVr(true);
     setVrLaunchError(null);
@@ -1003,10 +1119,9 @@ export default function VirtualExperienceCanvas({
       }}
       style={{ background: "#000000" }}
       onPointerMissed={onPointerMissed}
-      onCreated={({ camera, gl, scene }) => {
+      onCreated={({ camera, gl }) => {
         gl.xr.enabled = true;
         gl.setClearColor(0x000000, 1);
-        scene.background = new THREE.Color(0x000000);
         cameraRef.current = camera as THREE.PerspectiveCamera;
         setIsCanvasReady(true);
       }}
@@ -1035,11 +1150,18 @@ export default function VirtualExperienceCanvas({
           />
         </Suspense>
         <VrQuickAction
-          visible={(vrSupportState === "supported" && isCanvasReady) || isVrSessionActive}
+          visible={
+            (vrSupportState === "supported" && isCanvasReady) ||
+            isVrSessionActive
+          }
           ui={ui}
           isVrSessionActive={isVrSessionActive}
           isEnteringVr={isEnteringVr}
-          canEnterVr={vrSupportState === "supported" && !isVrSessionActive && isCanvasReady}
+          canEnterVr={
+            vrSupportState === "supported" &&
+            !isVrSessionActive &&
+            isCanvasReady
+          }
           onEnterVr={handleEnterVr}
         />
         <VrSupportPopup
@@ -1051,6 +1173,7 @@ export default function VirtualExperienceCanvas({
         />
         <OrbitControls
           ref={orbitControlsRef}
+          enabled={!isVrSessionActive}
           enableZoom
           enablePan
           rotateSpeed={-0.3}

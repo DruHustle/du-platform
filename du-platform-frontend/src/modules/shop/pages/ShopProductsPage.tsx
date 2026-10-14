@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation } from "wouter";
-import { ArrowLeft, ShoppingCart, CreditCard, ShieldCheck, Loader2, MessageCircle, Mail, Package, CheckCircle2, Clock } from "lucide-react";
+import { Link, useLocation, useSearch } from "wouter";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  CreditCard,
+  ShieldCheck,
+  Loader2,
+  MessageCircle,
+  Mail,
+  Package,
+  Clock,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
@@ -16,8 +26,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { api, type AuthUser } from "@/lib/api";
-import { SHOP_CATEGORY_CONFIG, type ShopSegmentKey } from "@/lib/shopCategories";
+import { SHOP_CATEGORY_CONFIG } from "@/lib/shopCategories";
 
 type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
 type PaymentMethod = "manual_assisted" | "dummy_gateway";
@@ -70,11 +81,11 @@ function readCart(): CartItem[] {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .map((item) => ({
+      .map(item => ({
         productId: Number(item?.productId),
         quantity: Math.max(1, Math.floor(Number(item?.quantity) || 1)),
       }))
-      .filter((item) => Number.isFinite(item.productId) && item.productId > 0);
+      .filter(item => Number.isFinite(item.productId) && item.productId > 0);
   } catch {
     return [];
   }
@@ -102,30 +113,50 @@ function normalizeWhatsAppPhone(raw: string) {
 }
 
 function normalizeProductCategory(raw: unknown): ProductCategory {
-  const value = String(raw ?? "").trim().toLowerCase();
-  if (value === "sports" || value === "crafts" || value === "food") return value;
+  const value = String(raw ?? "")
+    .trim()
+    .toLowerCase();
+  if (value === "sports" || value === "crafts" || value === "food")
+    return value;
   // Treat beverage-like categories as food for UI filters.
-  if (value === "beverage" || value === "beverages" || value === "drinks" || value === "drink") return "food";
+  if (
+    value === "beverage" ||
+    value === "beverages" ||
+    value === "drinks" ||
+    value === "drink"
+  )
+    return "food";
   return "all";
 }
 
 export default function ShopProducts() {
   const { t } = useTranslation();
-  const [location, setLocation] = useLocation();
+  const [pathname, setLocation] = useLocation();
+  const search = useSearch();
+  const location = `${pathname}${search ? `?${search}` : ""}`;
   const processedAddToCartQueryRef = useRef<string | null>(null);
   const cartSectionRef = useRef<HTMLDivElement | null>(null);
-  const { queryCategory, querySegment, queryAddProductSlug } = useMemo<QueryState>(() => {
-    const params = new URLSearchParams(location.split("?")[1] ?? "");
-    const category = params.get("category") ?? "";
-    const segment = String(params.get("segment") ?? "").trim().toLowerCase();
-    const add = String(params.get("add") ?? "").trim().toLowerCase();
-    const normalizedCategory = ["all", "sports", "crafts", "food"].includes(category) ? (category as ProductCategory) : "all";
-    return {
-      queryCategory: normalizedCategory,
-      querySegment: segment,
-      queryAddProductSlug: add,
-    };
-  }, [location]);
+  const { queryCategory, querySegment, queryAddProductSlug } =
+    useMemo<QueryState>(() => {
+      const params = new URLSearchParams(search);
+      const category = params.get("category") ?? "";
+      const segment = String(params.get("segment") ?? "")
+        .trim()
+        .toLowerCase();
+      const add = String(params.get("add") ?? "")
+        .trim()
+        .toLowerCase();
+      const normalizedCategory = ["all", "sports", "crafts", "food"].includes(
+        category
+      )
+        ? (category as ProductCategory)
+        : "all";
+      return {
+        queryCategory: normalizedCategory,
+        querySegment: segment,
+        queryAddProductSlug: add,
+      };
+    }, [search]);
 
   const [category, setCategory] = useState<ProductCategory>(queryCategory);
   const [segment, setSegment] = useState(querySegment);
@@ -136,22 +167,31 @@ export default function ShopProducts() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
-  const [shippingCountry, setShippingCountry] = useState(t("shop.products.default_country") || "Germany");
+  const [shippingCountry, setShippingCountry] = useState(
+    t("shop.products.default_country") || "Germany"
+  );
   const [shippingCity, setShippingCity] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [deliverySpeed, setDeliverySpeed] = useState<DeliverySpeed>("normal");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("manual_assisted");
+  const [paymentMethod, setPaymentMethod] =
+    useState<PaymentMethod>("manual_assisted");
   const [placingOrder, setPlacingOrder] = useState(false);
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [order, setOrder] = useState<PlacedOrder | null>(null);
-  const [notifyState, setNotifyState] = useState<Record<number, "idle" | "saving" | "saved">>({});
+  const [notifyState, setNotifyState] = useState<
+    Record<number, "idle" | "saving" | "saved">
+  >({});
   const [notifyMessage, setNotifyMessage] = useState("");
-  const [notifyDialogProduct, setNotifyDialogProduct] = useState<ShopProduct | null>(null);
+  const [notifyDialogProduct, setNotifyDialogProduct] =
+    useState<ShopProduct | null>(null);
   const [notifyEmailInput, setNotifyEmailInput] = useState("");
   const [notifyEmailError, setNotifyEmailError] = useState("");
-  const [mobileView, setMobileView] = useState<"products" | "checkout">("products");
-  const supportsDummyGateway = import.meta.env.DEV || import.meta.env.MODE === "test";
+  const [mobileView, setMobileView] = useState<"products" | "checkout">(
+    "products"
+  );
+  const supportsDummyGateway =
+    import.meta.env.DEV || import.meta.env.MODE === "test";
 
   useEffect(() => {
     setCategory(queryCategory);
@@ -171,44 +211,64 @@ export default function ShopProducts() {
     if (processedAddToCartQueryRef.current === location) return;
 
     const targetProduct = allProducts.find(
-      (product) => String(product.slug ?? "").trim().toLowerCase() === queryAddProductSlug
+      product =>
+        String(product.slug ?? "")
+          .trim()
+          .toLowerCase() === queryAddProductSlug
     );
     if (!targetProduct) return;
 
     processedAddToCartQueryRef.current = location;
-    setCart((prev) => {
-      const existing = prev.find((item) => item.productId === targetProduct.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.productId === targetProduct.id
-            ? {
-                ...item,
-                quantity: Math.min(item.quantity + 1, Math.max(1, targetProduct.stock_qty)),
-              }
-            : item
-        );
-      }
-      return [...prev, { productId: targetProduct.id, quantity: 1 }];
-    });
-
+    if (targetProduct.stock_qty <= 0) {
+      toast.error(
+        t("shop.products.stock.out_message") ||
+          "This item is currently out of stock."
+      );
+    } else {
+      setCart(prev => {
+        const existing = prev.find(item => item.productId === targetProduct.id);
+        if (existing) {
+          return prev.map(item =>
+            item.productId === targetProduct.id
+              ? {
+                  ...item,
+                  quantity: Math.min(
+                    item.quantity + 1,
+                    Math.max(1, targetProduct.stock_qty)
+                  ),
+                }
+              : item
+          );
+        }
+        return [...prev, { productId: targetProduct.id, quantity: 1 }];
+      });
+    }
     const nextParams = new URLSearchParams();
     if (queryCategory) nextParams.set("category", queryCategory);
     if (querySegment) nextParams.set("segment", querySegment);
-    const nextHref = nextParams.toString() ? `/shop/products?${nextParams.toString()}` : "/shop/products";
+    const nextHref = nextParams.toString()
+      ? `/shop/products?${nextParams.toString()}`
+      : "/shop/products";
     setLocation(nextHref, { replace: true });
-  }, [allProducts, location, queryAddProductSlug, queryCategory, querySegment, setLocation]);
+  }, [
+    allProducts,
+    location,
+    queryAddProductSlug,
+    queryCategory,
+    querySegment,
+    setLocation,
+  ]);
 
   useEffect(() => {
     let mounted = true;
     const loadSessionUser = async () => {
       try {
-        const { data } = await api.get("/auth/me");
+        const sessionUser = await resolveCurrentUserBootstrap();
         if (!mounted) return;
-        const sessionUser = data?.user ?? null;
         setAuthUser(sessionUser);
         if (sessionUser) {
-          setCustomerName((prev) => prev || sessionUser.fullName || "");
-          setCustomerEmail((prev) => prev || sessionUser.email || "");
+          setCustomerName(prev => prev || sessionUser.fullName || "");
+          setCustomerEmail(prev => prev || sessionUser.email || "");
         }
       } catch {
         if (mounted) setAuthUser(null);
@@ -227,7 +287,9 @@ export default function ShopProducts() {
       setLoading(true);
       try {
         const allRes = await api.get("/shop/products");
-        const products = Array.isArray(allRes.data?.products) ? allRes.data.products : [];
+        const products = Array.isArray(allRes.data?.products)
+          ? allRes.data.products
+          : [];
         if (!cancelled) {
           setAllProducts(products.length > 0 ? products : FALLBACK_PRODUCTS);
         }
@@ -254,13 +316,15 @@ export default function ShopProducts() {
   const matchesSegment = (product: ShopProduct, activeSegment: string) => {
     if (!activeSegment) return true;
     const haystack = `${product.name} ${product.description}`.toLowerCase();
-    const segmentConfig = SHOP_CATEGORY_CONFIG.find((item) => item.key === activeSegment);
+    const segmentConfig = SHOP_CATEGORY_CONFIG.find(
+      item => item.key === activeSegment
+    );
     const keywords = segmentConfig?.keywords ?? [activeSegment];
-    return keywords.some((keyword) => haystack.includes(keyword));
+    return keywords.some(keyword => haystack.includes(keyword));
   };
 
   useEffect(() => {
-    const filtered = allProducts.filter((product) => {
+    const filtered = allProducts.filter(product => {
       const normalized = normalizeProductCategory(product.category);
       const categoryMatch = category === "all" ? true : normalized === category;
       return categoryMatch && matchesSegment(product, segment);
@@ -269,32 +333,50 @@ export default function ShopProducts() {
   }, [allProducts, category, segment]);
 
   const availableSegments = useMemo(
-    () => SHOP_CATEGORY_CONFIG.filter((item) => category === "all" || item.baseCategory === category),
+    () =>
+      SHOP_CATEGORY_CONFIG.filter(
+        item => category === "all" || item.baseCategory === category
+      ),
     [category]
   );
 
-  const productsById = useMemo(() => new Map(allProducts.map((product) => [product.id, product])), [allProducts]);
+  const productsById = useMemo(
+    () => new Map(allProducts.map(product => [product.id, product])),
+    [allProducts]
+  );
 
   const cartRows = useMemo(() => {
     return cart
-      .map((item) => {
+      .map(item => {
         const product = productsById.get(item.productId);
         if (!product) return null;
-        return { item, product, lineTotal: product.price_cents * item.quantity };
+        return {
+          item,
+          product,
+          lineTotal: product.price_cents * item.quantity,
+        };
       })
-      .filter(Boolean) as Array<{ item: CartItem; product: ShopProduct; lineTotal: number }>;
+      .filter(Boolean) as Array<{
+      item: CartItem;
+      product: ShopProduct;
+      lineTotal: number;
+    }>;
   }, [cart, productsById]);
 
   const getLocalizedProductDescription = (product: ShopProduct) =>
     t(`shop.products.descriptions.${product.slug}`) || product.description;
 
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
-  const baseShippingCents = subtotalCents >= 7500 ? 0 : subtotalCents > 0 ? 1200 : 0;
-  const deliverySurchargeCents = subtotalCents > 0 && deliverySpeed === "express" ? 800 : 0;
+  const baseShippingCents =
+    subtotalCents >= 7500 ? 0 : subtotalCents > 0 ? 1200 : 0;
+  const deliverySurchargeCents =
+    subtotalCents > 0 && deliverySpeed === "express" ? 800 : 0;
   const shippingCents = baseShippingCents + deliverySurchargeCents;
   const totalCents = subtotalCents + shippingCents;
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const whatsappNumber = normalizeWhatsAppPhone(String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? ""));
+  const whatsappNumber = normalizeWhatsAppPhone(
+    String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? "")
+  );
   const isAuthenticated = Boolean(authUser);
   const profileName = String(authUser?.fullName ?? "").trim();
   const profileEmail = String(authUser?.email ?? "").trim();
@@ -306,11 +388,12 @@ export default function ShopProducts() {
   const whatsappOrderHref = useMemo(() => {
     if (cartRows.length === 0) return "";
     const lines = [
-      t("shop.products.whatsapp.intro") || "Hello, I want to place an order from the Zimbabwe Shop.",
+      t("shop.products.whatsapp.intro") ||
+        "Hello, I want to place an order from the Zimbabwe Shop.",
       "",
       t("shop.products.whatsapp.order_items") || "Order Items:",
       ...cartRows.map(
-        (row) =>
+        row =>
           `- ${row.product.name} x${row.item.quantity} (${formatMoney(
             row.product.price_cents,
             row.product.currency
@@ -333,7 +416,8 @@ export default function ShopProducts() {
       `${t("shop.products.fields.city") || "City"}: ${shippingCity || "-"}`,
       `${t("shop.products.fields.address") || "Address"}: ${shippingAddress || "-"}`,
       "",
-      t("shop.products.whatsapp.outro") || "Please confirm availability and payment instructions.",
+      t("shop.products.whatsapp.outro") ||
+        "Please confirm availability and payment instructions.",
     ];
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
   }, [
@@ -351,12 +435,18 @@ export default function ShopProducts() {
   ]);
 
   const addToCart = (product: ShopProduct) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.productId === product.id);
+    setCart(prev => {
+      const existing = prev.find(item => item.productId === product.id);
       if (existing) {
-        return prev.map((item) =>
+        return prev.map(item =>
           item.productId === product.id
-            ? { ...item, quantity: Math.min(item.quantity + 1, Math.max(1, product.stock_qty)) }
+            ? {
+                ...item,
+                quantity: Math.min(
+                  item.quantity + 1,
+                  Math.max(1, product.stock_qty)
+                ),
+              }
             : item
         );
       }
@@ -371,20 +461,27 @@ export default function ShopProducts() {
     if (typeof window === "undefined") return;
 
     window.requestAnimationFrame(() => {
-      cartSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      cartSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     });
   };
 
   const updateQty = (productId: number, qty: number) => {
     if (qty <= 0) {
       const removedProduct = productsById.get(productId);
-      setCart((prev) => prev.filter((item) => item.productId !== productId));
+      setCart(prev => prev.filter(item => item.productId !== productId));
       if (removedProduct) {
         toast(`${removedProduct.name} removed from cart`, { duration: 2000 });
       }
       return;
     }
-    setCart((prev) => prev.map((item) => (item.productId === productId ? { ...item, quantity: qty } : item)));
+    setCart(prev =>
+      prev.map(item =>
+        item.productId === productId ? { ...item, quantity: qty } : item
+      )
+    );
   };
 
   const openNotifyDialog = (product: ShopProduct) => {
@@ -397,16 +494,19 @@ export default function ShopProducts() {
   const submitNotifyRequest = async () => {
     if (!notifyDialogProduct) return;
 
-    const email = String(notifyEmailInput ?? "").trim().toLowerCase();
+    const email = String(notifyEmailInput ?? "")
+      .trim()
+      .toLowerCase();
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!validEmail) {
       setNotifyEmailError(
-        t("shop.products.notify.invalid_email") || "Please enter a valid email address."
+        t("shop.products.notify.invalid_email") ||
+          "Please enter a valid email address."
       );
       return;
     }
 
-    setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "saving" }));
+    setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "saving" }));
     setNotifyEmailError("");
     setNotifyMessage("");
     try {
@@ -418,32 +518,48 @@ export default function ShopProducts() {
       });
       const message = String(
         data?.message ??
-          (t("shop.products.notify.saved") || "We'll notify you when this product is available.")
+          (t("shop.products.notify.saved") ||
+            "We'll notify you when this product is available.")
       );
       setNotifyMessage(message);
       setCustomerEmail(email);
-      setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "saved" }));
+      setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "saved" }));
       setNotifyDialogProduct(null);
-      toast.success("Notification saved", { description: `We'll email you when ${notifyDialogProduct.name} is back in stock.`, duration: 4000 });
+      toast.success("Notification saved", {
+        description: `We'll email you when ${notifyDialogProduct.name} is back in stock.`,
+        duration: 4000,
+      });
     } catch (error: any) {
       setNotifyEmailError(
         String(
           error?.response?.data?.message ??
-            (t("shop.products.notify.failed") || "Unable to save notify request right now.")
+            (t("shop.products.notify.failed") ||
+              "Unable to save notify request right now.")
         )
       );
-      setNotifyState((prev) => ({ ...prev, [notifyDialogProduct.id]: "idle" }));
+      setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "idle" }));
     }
   };
 
   const placeOrder = async () => {
     setCheckoutError("");
     if (cartRows.length === 0) {
-      setCheckoutError(t("shop.products.errors.empty_cart") || "Your cart is empty.");
+      setCheckoutError(
+        t("shop.products.errors.empty_cart") || "Your cart is empty."
+      );
       return;
     }
-    if (!effectiveCustomerName || !effectiveCustomerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
-      setCheckoutError(t("shop.products.errors.complete_fields") || "Please complete all checkout fields.");
+    if (
+      !effectiveCustomerName ||
+      !effectiveCustomerEmail ||
+      !shippingCountry ||
+      !shippingCity ||
+      !shippingAddress
+    ) {
+      setCheckoutError(
+        t("shop.products.errors.complete_fields") ||
+          "Please complete all checkout fields."
+      );
       return;
     }
     setPlacingOrder(true);
@@ -456,7 +572,7 @@ export default function ShopProducts() {
         shippingAddress,
         deliverySpeed,
         paymentMethod,
-        items: cartRows.map((row) => ({
+        items: cartRows.map(row => ({
           productId: row.product.id,
           quantity: row.item.quantity,
         })),
@@ -466,7 +582,11 @@ export default function ShopProducts() {
       setCart([]);
     } catch (error: any) {
       setCheckoutError(
-        String(error?.response?.data?.message ?? (t("shop.products.errors.unable_place_order") || "Unable to place order."))
+        String(
+          error?.response?.data?.message ??
+            (t("shop.products.errors.unable_place_order") ||
+              "Unable to place order.")
+        )
       );
     } finally {
       setPlacingOrder(false);
@@ -478,17 +598,24 @@ export default function ShopProducts() {
     setConfirmingPayment(true);
     setCheckoutError("");
     try {
-      const { data } = await api.post(`/shop/orders/${order.orderRef}/confirm-payment`, {
-        manageToken: order.manageToken,
-        paymentReference: `${paymentMethod.toUpperCase()}-${crypto.randomUUID()}`,
-      });
-      setOrder((prev) => ({
+      const { data } = await api.post(
+        `/shop/orders/${order.orderRef}/confirm-payment`,
+        {
+          manageToken: order.manageToken,
+          paymentReference: `${paymentMethod.toUpperCase()}-${crypto.randomUUID()}`,
+        }
+      );
+      setOrder(prev => ({
         ...(prev ?? ({} as PlacedOrder)),
         ...((data?.order ?? {}) as Partial<PlacedOrder>),
       }));
     } catch (error: any) {
       setCheckoutError(
-        String(error?.response?.data?.message ?? (t("shop.products.errors.unable_confirm_payment") || "Unable to confirm payment."))
+        String(
+          error?.response?.data?.message ??
+            (t("shop.products.errors.unable_confirm_payment") ||
+              "Unable to confirm payment.")
+        )
       );
     } finally {
       setConfirmingPayment(false);
@@ -504,28 +631,51 @@ export default function ShopProducts() {
             <div className="relative z-10">
               <div className="mb-8 flex items-center justify-between gap-3">
                 <div>
-                  <h1 className="section-title-compact text-left">{t("shop.products.title") || "Shop Products"}</h1>
+                  <h1 className="section-title-compact text-left">
+                    {t("shop.products.title") || "Shop Products"}
+                  </h1>
                   <p className="text-sm text-white/75 mt-3 max-w-2xl">
                     {t("shop.products.subtitle") ||
                       "End-to-end checkout with secure payment options and clear delivery selection."}
                   </p>
                 </div>
-                <Link href="/shop" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
+                <Link
+                  href="/shop"
+                  className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold"
+                >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   {t("shop.products.back_to_shop") || "Back to Shop"}
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div className={`lg:col-span-8 space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}>
+                <div
+                  className={`lg:col-span-8 space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}
+                >
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="hidden sm:flex flex-wrap gap-2">
                       {[
-                        { key: "all" as ProductCategory, label: t("shop.products.filters.all") || "All" },
-                        { key: "sports" as ProductCategory, label: t("shop.products.filters.sports") || "Sports" },
-                        { key: "crafts" as ProductCategory, label: t("shop.products.filters.crafts") || "Arts & Crafts" },
-                        { key: "food" as ProductCategory, label: t("shop.products.filters.food") || "Food & Nostalgia" },
-                      ].map((tab) => (
+                        {
+                          key: "all" as ProductCategory,
+                          label: t("shop.products.filters.all") || "All",
+                        },
+                        {
+                          key: "sports" as ProductCategory,
+                          label: t("shop.products.filters.sports") || "Sports",
+                        },
+                        {
+                          key: "crafts" as ProductCategory,
+                          label:
+                            t("shop.products.filters.crafts") ||
+                            "Arts & Crafts",
+                        },
+                        {
+                          key: "food" as ProductCategory,
+                          label:
+                            t("shop.products.filters.food") ||
+                            "Food & Nostalgia",
+                        },
+                      ].map(tab => (
                         <Button
                           key={tab.key}
                           type="button"
@@ -548,7 +698,7 @@ export default function ShopProducts() {
                     <div className="relative min-w-[190px]">
                       <select
                         value={segment}
-                        onChange={(event) => {
+                        onChange={event => {
                           const nextSegment = event.target.value;
                           setSegment(nextSegment);
                           const query = nextSegment
@@ -559,11 +709,17 @@ export default function ShopProducts() {
                         className="w-full rounded-full border border-zim-gold bg-zim-gold px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-black outline-none focus:border-zim-gold sm:border-white/20 sm:bg-white/10 sm:text-white"
                       >
                         <option value="" className="bg-slate-900 text-white">
-                          {t("shop.products.filters.select_segment") || "Select Segment"}
+                          {t("shop.products.filters.select_segment") ||
+                            "Select Segment"}
                         </option>
-                        {availableSegments.map((item) => (
-                          <option key={item.key} value={item.key} className="bg-slate-900 text-white">
-                            {t(`shop.categories.${item.key}.title`) || item.title}
+                        {availableSegments.map(item => (
+                          <option
+                            key={item.key}
+                            value={item.key}
+                            className="bg-slate-900 text-white"
+                          >
+                            {t(`shop.categories.${item.key}.title`) ||
+                              item.title}
                           </option>
                         ))}
                       </select>
@@ -573,7 +729,10 @@ export default function ShopProducts() {
                   {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] animate-pulse">
+                        <div
+                          key={i}
+                          className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] animate-pulse"
+                        >
                           <div className="h-48 bg-white/[0.05]" />
                           <div className="p-6 space-y-3">
                             <div className="h-4 bg-white/[0.05] rounded-full w-3/4" />
@@ -596,7 +755,8 @@ export default function ShopProducts() {
                           </div>
                           <div>
                             <p className="text-white font-bold text-sm">
-                              {t("shop.products.empty_state") || "No products found"}
+                              {t("shop.products.empty_state") ||
+                                "No products found"}
                             </p>
                             <p className="text-white/45 text-xs mt-1">
                               {category !== "all" || segment
@@ -619,11 +779,13 @@ export default function ShopProducts() {
                           )}
                         </div>
                       ) : null}
-                      {products.map((product) => (
+                      {products.map(product => (
                         <div
                           key={product.id}
                           data-shop-product-card={product.slug}
-                          data-stock-state={product.stock_qty <= 0 ? "out" : "in"}
+                          data-stock-state={
+                            product.stock_qty <= 0 ? "out" : "in"
+                          }
                           className="rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02]"
                         >
                           <div className="h-48 overflow-hidden relative bg-slate-900">
@@ -633,9 +795,10 @@ export default function ShopProducts() {
                               className="w-full h-full object-cover"
                               loading="lazy"
                               decoding="async"
-                              onError={(event) => {
+                              onError={event => {
                                 event.currentTarget.onerror = null;
-                                event.currentTarget.src = "/images/pages/shop/zimbabwe_shop_hero.jpg";
+                                event.currentTarget.src =
+                                  "/images/pages/shop/zimbabwe_shop_hero.jpg";
                               }}
                             />
                             {product.stock_qty <= 0 ? (
@@ -649,34 +812,52 @@ export default function ShopProducts() {
                             )}
                           </div>
                           <div className="p-6">
-                            <h3 className="text-lg font-black text-white tracking-tight">{product.name}</h3>
-                            <p className="text-sm text-white/70 mt-2">{getLocalizedProductDescription(product)}</p>
+                            <h3 className="text-lg font-black text-white tracking-tight">
+                              {product.name}
+                            </h3>
+                            <p className="text-sm text-white/70 mt-2">
+                              {getLocalizedProductDescription(product)}
+                            </p>
                             {product.stock_qty <= 0 ? (
                               <p className="mt-3 text-[11px] font-semibold text-rose-200">
-                                {t("shop.products.stock.out_message") || "We are sorry. The item is currently out of stock"}
+                                {t("shop.products.stock.out_message") ||
+                                  "We are sorry. The item is currently out of stock"}
                               </p>
                             ) : null}
                             <div className="mt-4 flex items-center justify-between">
-                              <p className="text-zim-gold font-black">{formatMoney(product.price_cents, product.currency)}</p>
+                              <p className="text-zim-gold font-black">
+                                {formatMoney(
+                                  product.price_cents,
+                                  product.currency
+                                )}
+                              </p>
                               {product.stock_qty <= 0 ? (
                                 <Button
                                   type="button"
-                                  disabled={notifyState[product.id] === "saving"}
+                                  disabled={
+                                    notifyState[product.id] === "saving"
+                                  }
                                   onClick={() => openNotifyDialog(product)}
                                   className="rounded-full px-3 py-1 h-auto bg-zim-gold text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 disabled:opacity-40 font-black text-[8px] uppercase tracking-[0.1em] transition-all duration-200"
                                 >
                                   {notifyState[product.id] === "saving"
-                                    ? t("shop.products.notify.saving") || "Saving..."
+                                    ? t("shop.products.notify.saving") ||
+                                      "Saving..."
                                     : notifyState[product.id] === "saved"
-                                      ? t("shop.products.notify.saved_short") || "Notify Saved"
-                                      : t("shop.products.notify.cta") || "Notify Me"}
+                                      ? t("shop.products.notify.saved_short") ||
+                                        "Notify Saved"
+                                      : t("shop.products.notify.cta") ||
+                                        "Notify Me"}
                                 </Button>
                               ) : (
                                 <Button
                                   type="button"
                                   onClick={() => addToCartAndGoToCart(product)}
                                   aria-label={`${t("shop.products.actions.add_to_cart") || "Add to Cart"}: ${product.name}`}
-                                  title={t("shop.products.actions.add_to_cart") || "Add to Cart"}
+                                  title={
+                                    t("shop.products.actions.add_to_cart") ||
+                                    "Add to Cart"
+                                  }
                                   className="h-10 w-10 rounded-full bg-zim-gold p-0 text-black hover:bg-white hover:text-black hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(212,175,55,0.35)] active:translate-y-0 transition-all duration-200"
                                 >
                                   <ShoppingCart className="h-4 w-4" />
@@ -701,34 +882,53 @@ export default function ShopProducts() {
                     className="lg:hidden mb-3 flex items-center gap-1.5 text-xs text-white/70 hover:text-white transition-colors"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    {t("shop.products.actions.back_to_products") || "Back to Products"}
+                    {t("shop.products.actions.back_to_products") ||
+                      "Back to Products"}
                   </button>
                   <div className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-3.5 md:p-4">
                     <div className="flex items-center gap-1.5 mb-2">
                       <ShoppingCart className="h-3.5 w-3.5 text-zim-gold" />
-                      <h2 className="section-title-compact">{t("shop.products.cart.title") || "Cart & Checkout"}</h2>
+                      <h2 className="section-title-compact">
+                        {t("shop.products.cart.title") || "Cart & Checkout"}
+                      </h2>
                     </div>
 
                     {cartRows.length === 0 ? (
                       <p className="text-[11px] text-white/70">
-                        {t("shop.products.cart.empty") || "No items yet. Add products to begin checkout."}
+                        {t("shop.products.cart.empty") ||
+                          "No items yet. Add products to begin checkout."}
                       </p>
                     ) : (
                       <div className="space-y-1.5">
-                        {cartRows.map((row) => (
-                          <div key={row.product.id} className="rounded-lg border border-white/10 bg-white/[0.02] p-2">
-                            <p className="text-[11px] font-bold text-white truncate">{row.product.name}</p>
+                        {cartRows.map(row => (
+                          <div
+                            key={row.product.id}
+                            className="rounded-lg border border-white/10 bg-white/[0.02] p-2"
+                          >
+                            <p className="text-[11px] font-bold text-white truncate">
+                              {row.product.name}
+                            </p>
                             <div className="mt-1 flex items-center justify-between gap-2">
                               <input
                                 type="number"
                                 min={1}
                                 max={Math.max(1, row.product.stock_qty)}
                                 value={row.item.quantity}
-                                onChange={(event) => updateQty(row.product.id, Number(event.target.value))}
+                                onChange={event =>
+                                  updateQty(
+                                    row.product.id,
+                                    Number(event.target.value)
+                                  )
+                                }
                                 aria-label={`${row.product.name} quantity`}
                                 className="w-12 rounded-md bg-white/[0.04] border border-white/20 px-1.5 py-0.5 text-white text-[10px]"
                               />
-                              <p className="text-[11px] text-zim-gold font-black">{formatMoney(row.lineTotal, row.product.currency)}</p>
+                              <p className="text-[11px] text-zim-gold font-black">
+                                {formatMoney(
+                                  row.lineTotal,
+                                  row.product.currency
+                                )}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -737,15 +937,21 @@ export default function ShopProducts() {
 
                     <div className="mt-2.5 border-t border-white/10 pt-2.5 text-[10px] text-white/75 space-y-1">
                       <div className="flex justify-between">
-                        <span>{t("shop.products.totals.subtotal") || "Subtotal"}</span>
+                        <span>
+                          {t("shop.products.totals.subtotal") || "Subtotal"}
+                        </span>
                         <span>{formatMoney(subtotalCents)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>{t("shop.products.totals.shipping") || "Shipping"}</span>
+                        <span>
+                          {t("shop.products.totals.shipping") || "Shipping"}
+                        </span>
                         <span>{formatMoney(shippingCents)}</span>
                       </div>
                       <div className="flex justify-between text-white font-black text-[11px]">
-                        <span>{t("shop.products.totals.total") || "Total"}</span>
+                        <span>
+                          {t("shop.products.totals.total") || "Total"}
+                        </span>
                         <span>{formatMoney(totalCents)}</span>
                       </div>
                     </div>
@@ -754,12 +960,14 @@ export default function ShopProducts() {
                       <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
                         {isAuthenticated
                           ? t("shop.products.checkout.title") || "Checkout"
-                          : t("shop.products.guest_checkout.title") || "Guest Checkout"}
+                          : t("shop.products.guest_checkout.title") ||
+                            "Guest Checkout"}
                       </h3>
 
                       {isAuthenticated ? (
                         <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-[11px] text-white/75">
-                          {t("shop.products.checkout.logged_in_as") || "Signed in as"}{" "}
+                          {t("shop.products.checkout.logged_in_as") ||
+                            "Signed in as"}{" "}
                           <span className="font-semibold text-white">
                             {profileName || "-"} ({profileEmail || "-"})
                           </span>
@@ -770,65 +978,96 @@ export default function ShopProducts() {
                         {showCustomerIdentityInputs ? (
                           <>
                             <div className="space-y-1">
-                              <Label htmlFor="shop-customer-name" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
-                                {t("shop.products.fields.full_name") || "Full Name"}
+                              <Label
+                                htmlFor="shop-customer-name"
+                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                              >
+                                {t("shop.products.fields.full_name") ||
+                                  "Full Name"}
                               </Label>
                               <Input
                                 id="shop-customer-name"
                                 value={customerName}
-                                onChange={(e) => setCustomerName(e.target.value)}
-                                placeholder={t("shop.products.fields.full_name") || "Full Name"}
+                                onChange={e => setCustomerName(e.target.value)}
+                                placeholder={
+                                  t("shop.products.fields.full_name") ||
+                                  "Full Name"
+                                }
                                 className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
                               />
                             </div>
                             <div className="space-y-1">
-                              <Label htmlFor="shop-customer-email" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
-                                {t("shop.products.fields.email_address") || "Email Address"}
+                              <Label
+                                htmlFor="shop-customer-email"
+                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                              >
+                                {t("shop.products.fields.email_address") ||
+                                  "Email Address"}
                               </Label>
                               <Input
                                 id="shop-customer-email"
                                 type="email"
                                 value={customerEmail}
-                                onChange={(e) => setCustomerEmail(e.target.value)}
-                                placeholder={t("shop.products.fields.email_address") || "Email Address"}
+                                onChange={e => setCustomerEmail(e.target.value)}
+                                placeholder={
+                                  t("shop.products.fields.email_address") ||
+                                  "Email Address"
+                                }
                                 className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
                               />
                             </div>
                           </>
                         ) : null}
                         <div className="space-y-1">
-                          <Label htmlFor="shop-shipping-country" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                          <Label
+                            htmlFor="shop-shipping-country"
+                            className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                          >
                             {t("shop.products.fields.country") || "Country"}
                           </Label>
                           <Input
                             id="shop-shipping-country"
                             value={shippingCountry}
-                            onChange={(e) => setShippingCountry(e.target.value)}
-                            placeholder={t("shop.products.fields.country") || "Country"}
+                            onChange={e => setShippingCountry(e.target.value)}
+                            placeholder={
+                              t("shop.products.fields.country") || "Country"
+                            }
                             className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label htmlFor="shop-shipping-city" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+                          <Label
+                            htmlFor="shop-shipping-city"
+                            className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                          >
                             {t("shop.products.fields.city") || "City"}
                           </Label>
                           <Input
                             id="shop-shipping-city"
                             value={shippingCity}
-                            onChange={(e) => setShippingCity(e.target.value)}
-                            placeholder={t("shop.products.fields.city") || "City"}
+                            onChange={e => setShippingCity(e.target.value)}
+                            placeholder={
+                              t("shop.products.fields.city") || "City"
+                            }
                             className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label htmlFor="shop-shipping-address" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
-                            {t("shop.products.fields.shipping_address") || "Shipping Address"}
+                          <Label
+                            htmlFor="shop-shipping-address"
+                            className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                          >
+                            {t("shop.products.fields.shipping_address") ||
+                              "Shipping Address"}
                           </Label>
                           <Input
                             id="shop-shipping-address"
                             value={shippingAddress}
-                            onChange={(e) => setShippingAddress(e.target.value)}
-                            placeholder={t("shop.products.fields.shipping_address") || "Shipping Address"}
+                            onChange={e => setShippingAddress(e.target.value)}
+                            placeholder={
+                              t("shop.products.fields.shipping_address") ||
+                              "Shipping Address"
+                            }
                             className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
                           />
                         </div>
@@ -836,20 +1075,27 @@ export default function ShopProducts() {
 
                       <div className="mt-2.5 space-y-1">
                         <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
-                          {t("shop.products.delivery_speed.label") || "Send speed"}
+                          {t("shop.products.delivery_speed.label") ||
+                            "Send speed"}
                         </p>
                         {[
                           {
                             value: "normal" as DeliverySpeed,
-                            label: t("shop.products.delivery_speed.normal") || "Normal Send",
-                            hint: t("shop.products.delivery_speed.normal_hint") || "Standard dispatch timeline",
+                            label:
+                              t("shop.products.delivery_speed.normal") ||
+                              "Normal Send",
+                            hint:
+                              t("shop.products.delivery_speed.normal_hint") ||
+                              "Standard dispatch timeline",
                           },
                           {
                             value: "express" as DeliverySpeed,
-                            label: t("shop.products.delivery_speed.express") || "Express Send",
+                            label:
+                              t("shop.products.delivery_speed.express") ||
+                              "Express Send",
                             hint: `${t("shop.products.delivery_speed.express_hint") || "Priority handling"} (+${formatMoney(800)})`,
                           },
-                        ].map((option) => (
+                        ].map(option => (
                           <label
                             key={option.value}
                             htmlFor={`shop-delivery-${option.value}`}
@@ -864,20 +1110,25 @@ export default function ShopProducts() {
                               />
                               {option.label}
                             </span>
-                            <span className="text-[10px] text-white/70">{option.hint}</span>
+                            <span className="text-[10px] text-white/70">
+                              {option.hint}
+                            </span>
                           </label>
                         ))}
                       </div>
 
                       <div className="mt-2.5 space-y-1">
                         <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
-                          {t("shop.products.payment_methods.label") || "Payment handling"}
+                          {t("shop.products.payment_methods.label") ||
+                            "Payment handling"}
                         </p>
                         {[
                           {
                             value: "manual_assisted" as PaymentMethod,
                             label:
-                              t("shop.products.payment_methods.manual_assisted") ||
+                              t(
+                                "shop.products.payment_methods.manual_assisted"
+                              ) ||
                               "Assisted checkout (email / WhatsApp follow-up)",
                           },
                           ...(supportsDummyGateway
@@ -885,12 +1136,13 @@ export default function ShopProducts() {
                                 {
                                   value: "dummy_gateway" as PaymentMethod,
                                   label:
-                                    t("shop.products.payment_methods.dummy_gateway") ||
-                                    "Dummy Gateway (Dev/Test)",
+                                    t(
+                                      "shop.products.payment_methods.dummy_gateway"
+                                    ) || "Dummy Gateway (Dev/Test)",
                                 },
                               ]
                             : []),
-                        ].map((option) => (
+                        ].map(option => (
                           <label
                             key={option.value}
                             htmlFor={`shop-payment-${option.value}`}
@@ -907,8 +1159,16 @@ export default function ShopProducts() {
                         ))}
                       </div>
 
-                      {checkoutError ? <p className="mt-2 text-[11px] text-rose-300">{checkoutError}</p> : null}
-                      {notifyMessage ? <p className="mt-2 text-[11px] text-white/75">{notifyMessage}</p> : null}
+                      {checkoutError ? (
+                        <p className="mt-2 text-[11px] text-rose-300">
+                          {checkoutError}
+                        </p>
+                      ) : null}
+                      {notifyMessage ? (
+                        <p className="mt-2 text-[11px] text-white/75">
+                          {notifyMessage}
+                        </p>
+                      ) : null}
 
                       {!order ? (
                         <>
@@ -919,9 +1179,14 @@ export default function ShopProducts() {
                             className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.14em] disabled:opacity-70"
                           >
                             {placingOrder ? (
-                              <><Loader2 className="mr-1.5 h-3 w-3 animate-spin" />{t("shop.products.actions.creating_order") || "Placing Order..."}</>
+                              <>
+                                <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                                {t("shop.products.actions.creating_order") ||
+                                  "Placing Order..."}
+                              </>
                             ) : (
-                              t("shop.products.actions.place_order") || "Place Order"
+                              t("shop.products.actions.place_order") ||
+                              "Place Order"
                             )}
                           </Button>
                           <Button
@@ -931,32 +1196,49 @@ export default function ShopProducts() {
                             variant="outline"
                             className="mt-1.5 w-full rounded-full px-4 py-1.5 h-auto border-[#25D366] bg-[#25D366] text-white hover:bg-[#1ebe5d] hover:border-[#1ebe5d] disabled:opacity-40 font-black text-[9px] uppercase tracking-[0.14em]"
                           >
-                            <a href={whatsappOrderHref || "#"} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={whatsappOrderHref || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                              {t("shop.products.actions.order_whatsapp") || "Order on WhatsApp"}
+                              {t("shop.products.actions.order_whatsapp") ||
+                                "Order on WhatsApp"}
                             </a>
                           </Button>
                         </>
                       ) : (
                         <div className="mt-3 rounded-xl border border-emerald-300/30 bg-emerald-500/10 p-3">
                           <p className="text-xs text-white">
-                            {t("shop.products.order.reference") || "Order reference"}: <span className="font-black">{order.orderRef}</span>
+                            {t("shop.products.order.reference") ||
+                              "Order reference"}
+                            :{" "}
+                            <span className="font-black">{order.orderRef}</span>
                           </p>
                           <p className="text-[11px] text-white/70 mt-1">
-                            {t("shop.products.order.status") || "Status"}: {String(order.status ?? "").toUpperCase()}
+                            {t("shop.products.order.status") || "Status"}:{" "}
+                            {String(order.status ?? "").toUpperCase()}
                           </p>
                           {order.paymentMethod === "dummy_gateway" ? (
                             <Button
                               type="button"
                               onClick={confirmPayment}
-                              disabled={confirmingPayment || String(order.status) === "paid"}
+                              disabled={
+                                confirmingPayment ||
+                                String(order.status) === "paid"
+                              }
                               className="mt-2.5 w-full rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-50 font-black text-[9px] uppercase tracking-[0.14em]"
                             >
                               {String(order.status) === "paid"
-                                ? t("shop.products.actions.payment_confirmed") || "Payment Confirmed"
+                                ? t(
+                                    "shop.products.actions.payment_confirmed"
+                                  ) || "Payment Confirmed"
                                 : confirmingPayment
-                                  ? t("shop.products.actions.processing") || "Processing..."
-                                  : t("shop.products.payment_methods.dummy_gateway_short") || "Confirm Dummy Payment"}
+                                  ? t("shop.products.actions.processing") ||
+                                    "Processing..."
+                                  : t(
+                                      "shop.products.payment_methods.dummy_gateway_short"
+                                    ) || "Confirm Dummy Payment"}
                             </Button>
                           ) : (
                             <p className="mt-2.5 text-[11px] text-white/80">
@@ -979,7 +1261,9 @@ export default function ShopProducts() {
                                   <span className="shrink-0 h-4 w-4 rounded-full bg-zim-gold/15 border border-zim-gold/30 text-zim-gold text-[9px] font-black flex items-center justify-center mt-0.5">
                                     {i + 1}
                                   </span>
-                                  <p className="text-[10px] text-white/55 leading-relaxed">{text}</p>
+                                  <p className="text-[10px] text-white/55 leading-relaxed">
+                                    {text}
+                                  </p>
                                 </div>
                               ))}
                             </div>
@@ -991,8 +1275,10 @@ export default function ShopProducts() {
                         <ShieldCheck className="h-3.5 w-3.5 text-zim-gold" />
                         <span>
                           {isAuthenticated
-                            ? t("shop.products.notes.logged_in_checkout") || "Signed-in checkout active."
-                            : t("shop.products.notes.guest_checkout") || "Guest checkout enabled: no login required."}
+                            ? t("shop.products.notes.logged_in_checkout") ||
+                              "Signed-in checkout active."
+                            : t("shop.products.notes.guest_checkout") ||
+                              "Guest checkout enabled: no login required."}
                         </span>
                       </div>
                       <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/70">
@@ -1013,16 +1299,20 @@ export default function ShopProducts() {
           </div>
         </div>
       </section>
-      <Dialog open={Boolean(notifyDialogProduct)} onOpenChange={(open) => {
-        if (!open) {
-          setNotifyDialogProduct(null);
-          setNotifyEmailError("");
-        }
-      }}>
+      <Dialog
+        open={Boolean(notifyDialogProduct)}
+        onOpenChange={open => {
+          if (!open) {
+            setNotifyDialogProduct(null);
+            setNotifyEmailError("");
+          }
+        }}
+      >
         <DialogContent className="border-white/10 bg-slate-950 text-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white">
-              {t("shop.products.notify.dialog_title") || "Notify me when it is back in stock"}
+              {t("shop.products.notify.dialog_title") ||
+                "Notify me when it is back in stock"}
             </DialogTitle>
             <DialogDescription className="text-white/70">
               {notifyDialogProduct
@@ -1031,7 +1321,10 @@ export default function ShopProducts() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label htmlFor="restock-email" className="text-[10px] uppercase tracking-[0.14em] text-white/70">
+            <Label
+              htmlFor="restock-email"
+              className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+            >
               {t("shop.products.fields.email_address") || "Email Address"}
             </Label>
             <div className="relative">
@@ -1040,8 +1333,10 @@ export default function ShopProducts() {
                 id="restock-email"
                 type="email"
                 value={notifyEmailInput}
-                onChange={(event) => setNotifyEmailInput(event.target.value)}
-                placeholder={t("shop.products.fields.email_address") || "Email Address"}
+                onChange={event => setNotifyEmailInput(event.target.value)}
+                placeholder={
+                  t("shop.products.fields.email_address") || "Email Address"
+                }
                 className="border-white/20 bg-white/[0.04] pl-9 text-white placeholder:text-white/60"
               />
             </div>
@@ -1063,10 +1358,14 @@ export default function ShopProducts() {
             <Button
               type="button"
               onClick={submitNotifyRequest}
-              disabled={!notifyDialogProduct || notifyState[notifyDialogProduct.id] === "saving"}
+              disabled={
+                !notifyDialogProduct ||
+                notifyState[notifyDialogProduct.id] === "saving"
+              }
               className="bg-zim-gold text-black hover:bg-white"
             >
-              {notifyDialogProduct && notifyState[notifyDialogProduct.id] === "saving"
+              {notifyDialogProduct &&
+              notifyState[notifyDialogProduct.id] === "saving"
                 ? t("shop.products.notify.saving") || "Saving..."
                 : t("shop.products.notify.cta") || "Notify Me"}
             </Button>

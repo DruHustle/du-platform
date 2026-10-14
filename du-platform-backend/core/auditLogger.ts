@@ -1,5 +1,5 @@
-import { logger } from './logger';
-import { db } from '../shared/databaseRuntime';
+import { logger } from "./logger";
+import { db } from "../shared/databaseRuntime";
 
 export type AuditEvent = {
   actorId?: number | null;
@@ -11,10 +11,10 @@ export type AuditEvent = {
 
 // Domains where a failed audit write is business-critical and must be surfaced
 // loudly so that operators know the audit trail has a gap.
-const CRITICAL_AUDIT_DOMAINS = new Set(['fintech', 'auth']);
+const CRITICAL_AUDIT_DOMAINS = new Set(["auth"]);
 
 export async function appendAuditEvent(event: AuditEvent) {
-  logger.info('audit_event', {
+  logger.info("audit_event", {
     domain: event.domain,
     action: event.action,
     actorId: event.actorId ?? null,
@@ -39,7 +39,7 @@ export async function appendAuditEvent(event: AuditEvent) {
       ]
     );
   } catch (error) {
-    logger.error('audit_event_persist_failed', {
+    logger.error("audit_event_persist_failed", {
       domain: event.domain,
       action: event.action,
       message: error instanceof Error ? error.message : String(error),
@@ -49,12 +49,12 @@ export async function appendAuditEvent(event: AuditEvent) {
       // Log at WARN level with a distinct key so monitoring/alerting rules can
       // catch audit trail gaps in regulated domains without needing to parse
       // the general error stream.
-      logger.warn('audit_trail_gap_critical', {
+      logger.warn("audit_trail_gap_critical", {
         domain: event.domain,
         action: event.action,
         resource: event.resource ?? null,
         actorId: event.actorId ?? null,
-        note: 'Audit record could not be persisted. Manual reconciliation may be required.',
+        note: "Audit record could not be persisted. Manual reconciliation may be required.",
       });
     }
   }

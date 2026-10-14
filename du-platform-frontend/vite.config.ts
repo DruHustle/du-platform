@@ -9,10 +9,14 @@ import { createHtmlPlugin } from "vite-plugin-html";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(import.meta.dirname, ".."), "");
-  const siteUrl = (env.VITE_SITE_URL || env.APP_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
+  const siteUrl = (
+    env.VITE_SITE_URL ||
+    env.APP_BASE_URL ||
+    "http://localhost:3000"
+  ).replace(/\/+$/, "");
   const useDevHttps = env.VITE_DEV_HTTPS !== "false";
   const useJsxLoc = mode !== "production";
-  
+
   const certDir = path.resolve(import.meta.dirname, "..", ".cert");
   const keyPath = path.join(certDir, "localhost-key.pem");
   const certPath = path.join(certDir, "localhost-cert.pem");
@@ -27,7 +31,7 @@ export default defineConfig(({ mode }) => {
       ...(useDevHttps && !hasTrustedLocalCert ? [basicSsl()] : []),
       react(),
       tailwindcss(),
-...(useJsxLoc ? [jsxLocPlugin()] : []),
+      ...(useJsxLoc ? [jsxLocPlugin()] : []),
       createHtmlPlugin({
         inject: {
           data: {
@@ -53,10 +57,10 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       minify: "terser",
       terserOptions: {
-        compress: { 
+        compress: {
           // Only drop consoles in production to allow dev debugging
-          drop_console: mode === "production", 
-          passes: 2 
+          drop_console: mode === "production",
+          passes: 2,
         },
         format: { comments: false },
       },
@@ -89,19 +93,16 @@ export default defineConfig(({ mode }) => {
           : true
         : false,
       proxy: {
-        '/api': {
-          target: env.BACKEND_URL || 'http://localhost:5001',
+        "/api": {
+          target: env.BACKEND_URL || "http://localhost:5001",
           changeOrigin: true,
         },
-      },
-      hmr: {
-        clientPort: 3000,
       },
       fs: {
         strict: true,
         allow: [path.resolve(import.meta.dirname, "..")],
         deny: ["**/.*"],
-      }
+      },
     },
   };
 });

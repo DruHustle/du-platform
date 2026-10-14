@@ -1,11 +1,9 @@
 # Frontend Modules
 
-This directory contains self-contained feature modules:
-- tourism
-- investment
-- shop
-- ai
-- fintech
-- legal
+Active domains are home, authentication, core routing, tourism, investment,
+technology, shop, Onesa AI, search, legal content, and administration.
 
-Each module can own its components, hooks, lib clients, route-level pages, route manifests, preload policy, and types.
+Each domain owns its route manifest and relevant components, hooks, API clients,
+pages, and types. The parent route registry combines these manifests. Shared
+layout, controls, localization, and browser/session helpers remain outside the
+domain directories.

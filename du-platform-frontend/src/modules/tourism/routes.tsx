@@ -1,4 +1,5 @@
-import { createStaticRoute } from "../core/routing";
-import TourismModulePage from "./pages/TourismModulePage";
+import { createLazyRoute } from "../core/routing";
 
-export const tourismRoutes = [createStaticRoute("/tourism", TourismModulePage)];
+export const tourismRoutes = [
+  createLazyRoute("/tourism", () => import("./pages/TourismModulePage")),
+];

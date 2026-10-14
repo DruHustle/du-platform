@@ -8,7 +8,13 @@ describe("SPA document fallback", () => {
     expect(getSpaDocumentStatus(seo.canonicalPath)).toBe(200);
   });
 
-  it.each(["/care", "/trade", "/not-a-real-route"])("returns 404 for %s", (pathname) => {
+  it.each([
+    "/care",
+    "/trade",
+    "/remittances",
+    "/payments",
+    "/not-a-real-route",
+  ])("returns 404 for %s", pathname => {
     const seo = resolveRouteSeo({ pathname });
     expect(seo.robots).toBe("noindex,nofollow");
     expect(getSpaDocumentStatus(seo.canonicalPath)).toBe(404);

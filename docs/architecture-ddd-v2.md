@@ -1,145 +1,56 @@
-# Diaspora Unlocked Architecture V2 (DDD Modular)
+# Diaspora Unlocked Architecture
 
-## Strategic Model
+The repository contains a React 19/Vite frontend and an Express backend, with a
+single root dependency manifest and lockfile. Shared route metadata and shop
+catalogue data live in `shared/`.
 
-The platform is organized as bounded domains with strict service-layer communication:
+## Frontend
 
-- core (cross-cutting concerns)
-- auth
-- tourism
-- investment
-- shop
-- ai
-- fintech
-- data
-- search
-- legal
-- admin
+`du-platform-frontend/src/main.tsx` initializes localization and mounts `App`.
+Domain route manifests are combined in `src/modules/routes.tsx`. The shared
+`Layout` provides navigation, search, account controls, page metadata, and the
+footer. Secondary pages use the shared lazy-route factory.
 
-## Backend Structure
+Active domains are home, tourism, investment, technology, shop, authentication,
+legal content, search, Onesa AI, and administration. The UI supports English,
+German, Shona, and Ndebele through locale files in `public/locales/`.
 
-```text
-du-platform-backend/
-  core/
-    config.ts
-    logger.ts
-    errorHandler.ts
-    middleware.ts
-    rateLimiter.ts
-    rbac.ts
-    auditLogger.ts
-  shared/
-    database.ts
-    responseFormatter.ts
-    validators.ts
-  modules/
-    auth/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    tourism/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    investment/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    shop/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    ai/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-      chat/
-      booking/
-      ar/
-      vr/
-      shared/
-    fintech/
-      providers/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    data/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    search/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    legal/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-    admin/
-      controllers/ services/ repositories/ routes/ validators/ dto/ types/ tests/
-```
+## Backend
 
-## Frontend Structure
+`du-platform-backend/server.ts` installs core middleware, system endpoints, domain
+routers, JSON API fallbacks, and the production SPA document handler. Domains use
+controllers, services, repositories, validation, and persistence helpers.
 
-```text
-du-platform-frontend/src/
-  modules/
-    tourism/
-    investment/
-    shop/
-    ai/
-    fintech/
-    data/
-    legal/
-    shared/
-  layouts/
-    ModuleLayout.tsx
-  styles/
-    modules.css
-  types/
-    api.ts
-```
+Active API prefixes are `/api/auth`, `/api/tourism`, `/api/investment`, `/api/shop`,
+`/api/ai`, `/api/search`, `/api/legal`, `/api/admin`, `/api/notifications`,
+and `/api/impact`. Impact content remains manageable through the admin
+API. The AI module also owns the compatibility speech endpoints.
 
-## Route Domain Mapping
+Authentication uses password hashing, short-lived bearer tokens, and HttpOnly
+session cookies. Protected APIs retain JWT validation, admin authorization,
+request limits, origin checks, and CSRF enforcement. Production requires a
+configured database and JWT secret. Development can use memory storage.
 
-- `/tourism` -> tourism module
-- `/investment` -> investment module
-- `/shop` -> shop module
-- `/ai/chat` -> ai.chat module
-- `/ai/book-trip` -> ai.booking module
-- `/ai/ar` -> ai.ar module
-- `/ai/vr` -> ai.vr module
-- `/search` -> search module
-- `/impact` -> legal/content-admin responsibility split
-- `/technology` -> core/product-marketing domain
-- `/regulations` -> legal module
-- `/legal/privacy-policy`, `/legal/terms-of-service`, `/legal/cookie-settings` -> legal module
+## Public journeys
 
-## Fintech Design
+- `/tourism`: destinations, planning information, and Onesa travel experiences.
+- `/investment`, `/investment/opportunities`, `/investment/projects/:id`, `/ntir`:
+  investment information and registry discovery.
+- `/shop`, `/shop/products`: catalogue, cart, and assisted checkout.
+- `/technology`: product and technology information.
+- `/onesa-ai-chat`, `/onesa-ai-book-trip`, and the tourism virtual/augmented
+  experience routes: AI and immersive experiences.
+- `/login`, `/register`, `/forgot-password`, `/reset-password`: account access.
+- `/regulations`, `/privacy-policy`, `/terms-of-service`, `/cookie-settings`:
+  legal content and preferences.
+- `/search` and `/admin`: discovery and authorized administration.
 
-Controllers -> Services -> Providers + Repositories
+The retired money-transfer module is absent from frontend and API registries.
+Database initialization does not create or migrate its historical tables. Existing
+records are left intact; this source change does not drop or delete stored data.
 
-- Controllers: orchestration only
-- Services: business rules, idempotency, compliance checks
-- Providers: Thunes/Reloadly integration
-- Repositories: transaction persistence (shared DB connection via `withTransaction`)
+## Verification
 
-## AI Design
-
-- ai/chat
-- ai/booking
-- ai/ar
-- ai/vr
-
-Module-level discovery endpoint:
-- `GET /api/ai/capabilities`
-
-Shared AI utilities:
-- prompt templates
-- in-memory session memory store
-- analytics tracker (audit stream)
-
-## Security Hardening
-
-- input validation via zod middleware
-- structured request logging
-- centralized error formatting
-- RBAC middleware scaffold
-- API rate limiting middleware scaffold
-- CSRF gate scaffold (toggle via env)
-- fintech request limits and idempotency handling in services
-
-## Migration Plan
-
-1. Keep the module registry mounted under `/api/*`.
-2. Move one domain at a time from legacy handlers to module services.
-3. Attach module-level unit + integration tests in CI.
-4. Retire legacy route code once feature parity is validated.
-
-## Test Commands
-
-- `pnpm check`
-- `pnpm build`
-- `pnpm test:modules`
+Run `pnpm check`, `pnpm test`, `pnpm guardrails`, `pnpm translations:check:keys`,
+and `pnpm build` from the repository root. See the README for local sandbox
+startup and browser regression scripts.
