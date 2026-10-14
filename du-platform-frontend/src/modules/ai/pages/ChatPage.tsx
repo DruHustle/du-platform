@@ -179,12 +179,12 @@ export default function ChatPage() {
 
   return (
     <Layout>
-      <section className="min-h-screen bg-slate-950 px-3 py-3 md:px-6 md:py-24">
-        <div className="mx-auto flex min-h-screen w-full md:max-w-[440px]">
-          <div className="outer-glass-panel flex w-full flex-1 flex-col overflow-hidden rounded-[2rem] border border-zim-gold/20 bg-slate-950/95 !p-0 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl md:rounded-[1.8rem] md:min-h-[min(72vh,640px)]">
-            <div className="flex h-full min-h-0 flex-col">
+      <section className="chat-section bg-slate-950 px-4 py-6 lg:pt-28 lg:pb-12">
+        <div className="chat-workspace mx-auto flex w-full">
+          <div className="content-panel flex w-full flex-1 flex-col overflow-hidden rounded-[2rem] border border-zim-gold/20 bg-slate-950/95 !p-0 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl md:rounded-[1.8rem] md:min-h-[min(72vh,640px)]">
+            <div className="flex flex-1 min-h-0 flex-col">
               <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
-                <div className="flex min-w-0 items-center gap-3">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
                   <Button
                     asChild
                     className="h-8 rounded-full border border-white/15 bg-slate-900 px-3 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800"
@@ -198,7 +198,7 @@ export default function ChatPage() {
                     <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold">
                       {t("onesa.badge", { defaultValue: "Onesa AI" })}
                     </p>
-                    <h1 className="truncate !text-sm font-black text-white">
+                    <h1 className="font-semibold text-white">
                       {t("onesa.title", { defaultValue: "Chat with Onesa AI" })}
                     </h1>
                   </div>
@@ -241,7 +241,7 @@ export default function ChatPage() {
                         className={`max-w-[92%] px-3 py-2 text-sm leading-relaxed ${
                           message.role === "user"
                             ? "rounded-[1.25rem] rounded-br-[0.45rem] border border-zim-gold/30 bg-slate-900/90 text-white"
-                            : "rounded-[1.25rem] rounded-bl-[0.45rem] border border-zim-gold/45 bg-zim-gold/10 text-white shadow-[0_0_24px_rgba(212,175,55,0.22)]"
+                            : "rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.04] text-white"
                         }`}
                       >
                         <FormattedChatMessage

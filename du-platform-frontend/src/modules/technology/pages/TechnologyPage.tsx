@@ -245,26 +245,26 @@ export default function Technology() {
 
       <section
         id="onesa-intro"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
           <motion.div
             initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
+            className="content-panel editorial-panel relative p-8 md:p-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
           >
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
 
             <div id="technology-onesa-vision" className="relative z-10">
               <div className="space-y-8">
                 <div>
-                  <div className="flex flex-col items-center gap-3 mb-4 text-center">
+                  <div className="flex flex-col items-start justify-between gap-5 mb-5 sm:flex-row sm:items-center">
                     <div className="flex items-center justify-center gap-3">
                       <Sparkles className="h-6 w-6 text-zim-gold" />
-                      <h3 className="text-xl font-black text-white tracking-tight">
+                      <h2 className="page-section-title">
                         {t("tech.onesa_matter.title") || "Why Onesa AI Matters"}
-                      </h3>
+                      </h2>
                     </div>
                     <Button
                       asChild
@@ -275,34 +275,40 @@ export default function Technology() {
                       </Link>
                     </Button>
                   </div>
-                  <p className="max-w-3xl mx-auto text-center text-white/75 text-sm leading-relaxed mb-4">
+                  <p className="text-white/75 text-sm leading-relaxed mb-5">
                     {t("tech.onesa_matter.headline") ||
                       "Africa deserves AI that understands Africa."}
                   </p>
-                  <p className="text-white/75 text-sm leading-relaxed mb-4">
-                    {t("tech.onesa_matter.p1") ||
-                      "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}
-                    {t("tech.onesa_matter.p2") ||
-                      "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
-                  </p>
-                  <p className="text-white/75 text-sm leading-relaxed mb-4">
-                    {t("tech.onesa_matter.p3") ||
-                      "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}
-                    {t("tech.onesa_matter.p4") ||
-                      "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
-                  </p>
-                  <p className="text-white/85 text-sm leading-relaxed font-medium">
-                    {t("tech.onesa_matter.p5") ||
-                      "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
-                  </p>
+                  <details className="editorial-details">
+                    <summary>
+                      {t("tech.onesa_matter.read_vision", {
+                        defaultValue: "Read the Onesa AI vision",
+                      })}
+                    </summary>
+                    <div className="mt-5 space-y-5">
+                      <p className="text-white/75 text-sm leading-relaxed mb-4">
+                        {t("tech.onesa_matter.p1") ||
+                          "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}{" "}
+                        {t("tech.onesa_matter.p2") ||
+                          "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
+                      </p>
+                      <p className="text-white/75 text-sm leading-relaxed mb-4">
+                        {t("tech.onesa_matter.p3") ||
+                          "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}{" "}
+                        {t("tech.onesa_matter.p4") ||
+                          "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
+                      </p>
+                      <p className="text-white/85 text-sm leading-relaxed font-medium">
+                        {t("tech.onesa_matter.p5") ||
+                          "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
+                      </p>
+                    </div>
+                  </details>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {onesaVisionTiles.map(tile => (
-                    <div
-                      key={tile.title}
-                      className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 h-full"
-                    >
+                    <div key={tile.title} className="surface-card p-7 h-full">
                       <div className="flex items-center gap-2 mb-3">
                         <tile.icon className="h-4 w-4 text-zim-gold" />
                         <h3 className="text-white font-black text-sm tracking-tight">
@@ -324,18 +330,18 @@ export default function Technology() {
       {/* Diaspora Use Cases */}
       <section
         id="technology-diaspora-use-cases"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
+          <div className="content-panel editorial-panel relative p-8 md:p-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
+            <div className="section-heading mb-8">
+              <div className="flex items-center gap-3 mb-4">
                 <Globe className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">
+                <h2 className="page-section-title">
                   {t("tech.diaspora_ai.title") ||
                     "How Diaspora Unlocked Uses AI"}
-                </h3>
+                </h2>
               </div>
               <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
                 {t("tech.diaspora_ai.subtitle") ||
@@ -345,10 +351,7 @@ export default function Technology() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {diasporaUseCases.map(item => (
-                <div
-                  key={item.title}
-                  className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7"
-                >
+                <div key={item.title} className="surface-card p-7">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
                       <item.icon className="h-5 w-5 text-zim-gold" />
@@ -370,20 +373,20 @@ export default function Technology() {
       {/* Sector Transformation - Cinematic Glass Grid */}
       <section
         id="technology-industries"
-        className="pt-5 pb-10 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         {/* Background glow for depth */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
 
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="relative p-8 md:p-10 rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
+          <div className="content-panel editorial-panel relative p-8 md:p-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
             <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="mb-10 text-center">
-              <div className="flex items-center justify-center gap-3 mb-5">
+            <div className="section-heading mb-8">
+              <div className="flex items-center gap-3 mb-4">
                 <BarChart3 className="h-6 w-6 text-zim-gold" />
-                <h3 className="text-xl font-black text-white tracking-tight">
+                <h2 className="page-section-title">
                   {t("tech.sectors_title") || "Powering Key Industries"}
-                </h3>
+                </h2>
               </div>
               <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
                 {t("tech.sectors_subtitle") ||
@@ -402,7 +405,7 @@ export default function Technology() {
                   className="group relative"
                 >
                   {/* Standardized glass card style */}
-                  <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02]">
+                  <div className="relative h-full overflow-hidden surface-card">
                     <div className="flex flex-col sm:flex-row h-full">
                       {/* Image Section */}
                       <div className="sm:w-2/5 h-44 sm:h-auto relative overflow-hidden rounded-l-[2rem]">

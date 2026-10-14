@@ -63,6 +63,11 @@ jobs:
         env:
           NAVIGATION_BROWSER_CHANNEL: chromium
 
+      - name: Shop cart regression tests
+        run: pnpm test:e2e:shop
+        env:
+          SHOP_BROWSER_CHANNEL: chromium
+
   # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
   #    On failure, rolls back to the last successful Vercel production deployment.
   deploy-vercel-production:

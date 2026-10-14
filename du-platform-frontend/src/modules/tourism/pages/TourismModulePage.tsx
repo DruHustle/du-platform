@@ -673,42 +673,52 @@ export default function Tourism() {
       {/* Key Attractions - Cinematic Glass Grid */}
       <section
         id="attractions"
-        className="p-5 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="section-title-compact">
+          <div className="content-panel editorial-panel p-8 md:p-10">
+            <div className="section-heading mb-8">
+              <h2 className="page-section-title">
                 {t("tourism.attractions_title") || "Must-Visit Destinations"}
               </h2>
               <p className="mt-4 text-left text-sm text-white/75 font-light leading-relaxed">
                 {t("tourism.intro.p1") ||
                   "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality."}
               </p>
-              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
-                {t("tourism.intro.p2_before_ar") ||
-                  "When you are onsite, use Onesa's"}{" "}
-                <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.local_guide_ar") || "Local guide AR"}
-                </span>{" "}
-                {t("tourism.intro.p2_after_ar") ||
-                  "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
-              </p>
-              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
-                {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
-                <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.gastronomy_tourism") ||
-                    "gastronomy tourism"}
-                </span>{" "}
-                {t("tourism.intro.p3_between") ||
-                  "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities."}{" "}
-                <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.cultural_tourism") || "Cultural tourism"}
-                </span>{" "}
-                {t("tourism.intro.p3_after_cultural") ||
-                  "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
-              </p>
-              <div className="mt-6 flex justify-center">
+              <details className="editorial-details mt-5">
+                <summary>
+                  {t("tourism.intro.read_more", {
+                    defaultValue: "More about travelling in Zimbabwe",
+                  })}
+                </summary>
+                <div className="mt-4 space-y-4">
+                  <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
+                    {t("tourism.intro.p2_before_ar") ||
+                      "When you are onsite, use Onesa's"}{" "}
+                    <span className="text-zim-gold font-semibold">
+                      {t("tourism.intro.local_guide_ar") || "Local guide AR"}
+                    </span>{" "}
+                    {t("tourism.intro.p2_after_ar") ||
+                      "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
+                  </p>
+                  <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
+                    {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
+                    <span className="text-zim-gold font-semibold">
+                      {t("tourism.intro.gastronomy_tourism") ||
+                        "gastronomy tourism"}
+                    </span>{" "}
+                    {t("tourism.intro.p3_between") ||
+                      "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities."}{" "}
+                    <span className="text-zim-gold font-semibold">
+                      {t("tourism.intro.cultural_tourism") ||
+                        "Cultural tourism"}
+                    </span>{" "}
+                    {t("tourism.intro.p3_after_cultural") ||
+                      "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
+                  </p>
+                </div>
+              </details>
+              <div className="mt-6 flex">
                 <Button
                   asChild
                   className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]"
@@ -734,7 +744,7 @@ export default function Tourism() {
                     className="block w-full text-left"
                     onClick={() => setSelectedAttraction(attraction)}
                   >
-                    <div className="group relative h-[450px] rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-2 cursor-pointer">
+                    <div className="group relative h-[450px] surface-card overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-2 cursor-pointer">
                       <img
                         src={attraction.image}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 saturate-[0.8]"
@@ -771,7 +781,7 @@ export default function Tourism() {
 
             {/* Other Destinations - Compact Glass Grid */}
             <div className="pt-10">
-              <div className="mb-10 text-center">
+              <div className="section-heading mb-8">
                 <h2 className="section-title-compact mb-3">
                   {t("tourism.other_attractions_title") ||
                     "Other Incredible Destinations"}
@@ -822,13 +832,13 @@ export default function Tourism() {
       </section>
 
       {/* Onesa AI Tourist Companion Section - Glassy UI Upgrade */}
-      <section className="p-5 bg-slate-950 relative overflow-hidden">
+      <section className="editorial-section bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <motion.div
             initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="outer-glass-panel p-8 md:p-10 rounded-[2rem] border border-white/10 bg-white/[0.02] group"
+            className="content-panel editorial-panel p-8 md:p-10  group"
           >
             {/* The Crispy Edge Finish */}
             <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
@@ -1067,12 +1077,12 @@ export default function Tourism() {
       {/* Planning Info - High-End Dashboard Style */}
       <section
         id="plan-visit"
-        className="pt-5 pb-10 bg-slate-950 relative overflow-hidden"
+        className="editorial-section bg-slate-950 relative overflow-hidden"
       >
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
-            <div className="mb-10 text-center">
-              <h2 className="section-title-compact">
+          <div className="content-panel editorial-panel p-8 md:p-10">
+            <div className="section-heading mb-8">
+              <h2 className="page-section-title">
                 {t("tourism.planning.essential_info") ||
                   "Essential Planning Information"}
               </h2>
@@ -1088,7 +1098,7 @@ export default function Tourism() {
                 return (
                   <div
                     key={index}
-                    className="h-full rounded-[2rem] border border-white/10 bg-white/[0.02] p-5 transition-all duration-300 hover:bg-white/[0.04]"
+                    className="h-full surface-card p-5 transition-all duration-300 hover:bg-white/[0.04]"
                   >
                     <div className="mb-4 flex items-center gap-3">
                       <div className="rounded-xl border border-zim-gold/25 bg-zim-gold/10 p-2.5">

@@ -36,7 +36,22 @@ server.stdout.on("data", chunk => {
 server.stderr.on("data", chunk => {
   serverLog += chunk;
 });
-const startedAt = Date.now();
+let rateWindowStartedAt = Date.now();
+const waitForRateWindow = async label => {
+  // API, browser, AR, and VR groups use the same local IP and the real limiter.
+  // Pace independent groups instead of disabling protection or ignoring 429s.
+  const cooldown = 61_000 - (Date.now() - rateWindowStartedAt);
+  if (cooldown > 0) {
+    console.log(`Waiting for the AI rate-limit window before ${label}.`);
+    let remaining = cooldown;
+    while (remaining > 0) {
+      const pause = Math.min(remaining, 60_000);
+      await new Promise(done => setTimeout(done, pause));
+      remaining -= pause;
+    }
+  }
+  rateWindowStartedAt = Date.now();
+};
 const checks = [];
 const pageErrors = [];
 const securityErrors = [];
@@ -325,6 +340,7 @@ try {
   pass(
     "floating chat sends locally, traps keyboard focus, closes with Escape, and restores focus"
   );
+  await waitForRateWindow("AR scenarios");
   await context.close();
 
   context = await newContext(
@@ -476,14 +492,7 @@ try {
   );
   await context.close();
 
-  // The rapid API/browser scenarios share one local IP; respect the real 20/min chat limit.
-  const cooldown = 61_000 - (Date.now() - startedAt);
-  if (cooldown > 0) {
-    console.log(
-      "Waiting for the AI rate-limit window before headset scenarios."
-    );
-    await new Promise(done => setTimeout(done, Math.min(cooldown, 60_000)));
-  }
+  await waitForRateWindow("headset scenarios");
   const require = createRequire(import.meta.url);
   const xrRequire = createRequire(require.resolve("@react-three/xr"));
   const pmRequire = createRequire(xrRequire.resolve("@pmndrs/xr"));

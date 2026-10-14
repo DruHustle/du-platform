@@ -89,12 +89,12 @@ export default function Login() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative w-full max-w-md p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent shadow-2xl"
+          className="auth-wrapper relative w-full max-w-md"
         >
-          <div className="outer-glass-panel relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 space-y-7">
+          <div className="content-panel auth-panel relative p-8 md:p-10 space-y-7">
             <button
               onClick={() => setLocation(nextPath)}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
+              className="absolute top-5 right-5 min-h-11 min-w-11 flex items-center justify-center p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
               aria-label={t("auth.cancel_login", {
                 defaultValue: "Cancel login",
               })}
@@ -103,7 +103,7 @@ export default function Login() {
             </button>
 
             <div className="text-center space-y-2">
-              <h1 className="!text-lg font-black tracking-tight text-white md:!text-[1.2rem]">
+              <h1 className="auth-title text-white">
                 {returningUser
                   ? t("auth.welcome_back") || "Welcome Back"
                   : t("auth.login") || "Sign In"}
@@ -162,7 +162,7 @@ export default function Login() {
                   </Label>
                   <Link
                     href="/forgot-password"
-                    className="text-[10px] uppercase font-black text-zim-gold/70 hover:text-zim-gold transition-colors tracking-widest cursor-pointer"
+                    className="text-xs font-medium text-zim-gold hover:underline cursor-pointer"
                   >
                     {t("auth.forgot_password") || "Forgot Password?"}
                   </Link>

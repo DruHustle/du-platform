@@ -76,7 +76,7 @@ export default function SearchResults() {
 
   return (
     <Layout>
-      <section className="pt-16 pb-20 lg:pt-32 bg-slate-950 min-h-[60vh] text-white">
+      <section className="document-section bg-slate-950 min-h-[60vh] text-white">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -85,7 +85,7 @@ export default function SearchResults() {
           >
             <div className="flex items-center gap-3 mb-8">
               <Search className="h-8 w-8 text-zim-gold" />
-              <h1 className="text-3xl md:text-4xl font-bold text-white break-words min-w-0">
+              <h1 className="page-title">
                 {query
                   ? tr(
                       "search.results.title_with_query",
@@ -164,7 +164,7 @@ export default function SearchResults() {
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
                       <Link href={result.href}>
-                        <Card className="h-full hover:shadow-xl transition-all cursor-pointer group border border-white/10 bg-white/[0.02] text-white">
+                        <Card className="surface-card h-full hover:shadow-xl transition-all cursor-pointer group border border-white/10 bg-white/[0.02] text-white">
                           <CardHeader className="flex flex-row items-center gap-4 pb-2">
                             <div className="p-3 bg-zim-gold/10 rounded-xl text-zim-gold group-hover:bg-zim-gold group-hover:text-zim-black transition-colors">
                               <Icon className="h-6 w-6" />

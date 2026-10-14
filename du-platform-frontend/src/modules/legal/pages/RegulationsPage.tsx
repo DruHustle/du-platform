@@ -96,17 +96,17 @@ export default function Regulations() {
 
   return (
     <Layout>
-      <section className="min-h-screen bg-slate-950 px-6 py-28">
+      <section className="document-section min-h-screen bg-slate-950">
         <div className="container mx-auto max-w-6xl space-y-10">
           <div className="text-white space-y-4">
             <Link href="/" className="inline-flex items-center text-xs uppercase tracking-widest font-bold  hover:text-zim-gold">
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
               {t("regulations.cta.back") || "Back"}
             </Link>
-            <h1 className="!text-xl md:!text-3xl font-black tracking-tighter">
+            <h1 className="page-title">
               {t("regulations.title") || "Regulations & Compliance Guide"}
             </h1>
-            <p className="!text-xs md:!text-sm  max-w-3xl leading-relaxed">
+            <p className="text-sm text-slate-300  max-w-3xl leading-relaxed">
               {t("regulations.subtitle") ||
                 "Practical regulatory guidance for diaspora investors, exporters, and returnees. Use this as an execution checklist and align final decisions with qualified legal, tax, and sector advisors."}
             </p>
@@ -114,16 +114,16 @@ export default function Regulations() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {regulationSections.map((section) => (
-              <div id={section.id} key={section.id} className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-7 scroll-mt-24">
+              <div id={section.id} key={section.id} className="surface-card p-7 scroll-mt-24">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
                     <section.icon className="h-5 w-5 text-zim-gold" />
                   </div>
-                  <h2 className="!text-lg font-black text-white tracking-tight">{section.title}</h2>
+                  <h2 className="text-lg font-semibold text-white tracking-tight">{section.title}</h2>
                 </div>
                 <ul className="space-y-3">
                   {section.points.map((point) => (
-                    <li key={point} className="!text-xs md:!text-sm  leading-relaxed">
+                    <li key={point} className="text-sm text-slate-300  leading-relaxed">
                       {point}
                     </li>
                   ))}

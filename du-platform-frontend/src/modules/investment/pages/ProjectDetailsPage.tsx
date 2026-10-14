@@ -179,76 +179,76 @@ export default function ProjectDetails() {
 
   return (
     <Layout>
-      <section className="min-h-screen bg-slate-950 px-6 py-28">
+      <section className="document-section min-h-screen bg-slate-950">
         <div className="container mx-auto max-w-5xl space-y-8">
           <Link href="/investment" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
             <ArrowLeft className="h-4 w-4 mr-2" /> {tr("investment.project_details.back", "Back to Investment")}
           </Link>
 
           {!project ? (
-            <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
-              <h1 className="text-3xl font-black">{tr("investment.project_details.not_found_title", "Project not found")}</h1>
+            <div className="content-panel editorial-panel p-8 text-white">
+              <h1 className="page-title">{tr("investment.project_details.not_found_title", "Project not found")}</h1>
               <p className="text-white/75 mt-2">{tr("investment.project_details.not_found_desc", "The selected project ID does not exist.")}</p>
             </div>
           ) : (
             <>
-              <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10 text-white">
+              <div className="content-panel editorial-panel p-8 md:p-10 text-white">
                 <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase text-[10px] tracking-widest font-black">
                   {tr("investment.project_details.badge", "Project Details")}
                 </Badge>
-                <h1 className="!text-xl md:!text-2xl font-black tracking-tighter">{project.title}</h1>
-                <p className="mt-3 !text-sm text-white/75">{project.subtitle}</p>
-                <p className="mt-2 !text-xs text-white/70 uppercase tracking-widest font-black">
+                <h1 className="page-title">{project.title}</h1>
+                <p className="mt-3 text-sm text-white/75">{project.subtitle}</p>
+                <p className="mt-2 text-sm text-white/70 uppercase tracking-widest font-black">
                   {tr("investment.project_details.responsible_company", "Responsible Company")}: {project.owner}
                 </p>
-                <p className="mt-6 !text-sm text-white/80 leading-relaxed">{project.overview}</p>
+                <p className="mt-6 text-sm text-white/80 leading-relaxed">{project.overview}</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+                <div className="content-panel editorial-panel p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-zim-gold" /> {tr("investment.project_details.highlights", "Highlights")}
                   </h2>
                   <ul className="space-y-3">
                     {project.highlights.map((item) => (
-                      <li key={item} className="!text-xs text-white/80 leading-relaxed">
+                      <li key={item} className="text-sm text-white/80 leading-relaxed">
                         {item}
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white">
+                <div className="content-panel editorial-panel p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
                     <Building2 className="h-5 w-5 text-zim-gold" /> {tr("investment.project_details.key_metrics", "Key Metrics")}
                   </h2>
                   <div className="space-y-3">
                     {project.stats.map((stat) => (
                       <div key={stat.label} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
-                        <span className="text-white/75 !text-xs">{stat.label}</span>
-                        <span className="font-black !text-sm">{stat.value}</span>
+                        <span className="text-white/75 text-sm">{stat.label}</span>
+                        <span className="font-black text-sm">{stat.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 text-white grid md:grid-cols-3 gap-4">
+              <div className="content-panel editorial-panel p-8 text-white grid md:grid-cols-3 gap-4">
                 <div className="rounded-xl border border-white/10 p-4">
                   <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.location", "Location")}</p>
-                  <p className="font-bold !text-sm mt-2 flex items-center gap-2">
+                  <p className="font-bold text-sm mt-2 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-zim-gold" /> {project.location}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
                   <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.land_framework", "Land Framework")}</p>
-                  <p className="font-bold !text-sm mt-2 flex items-center gap-2">
+                  <p className="font-bold text-sm mt-2 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-zim-gold" /> {project.framework}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
                   <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.regulatory", "Regulatory")}</p>
-                  <p className="font-bold !text-sm mt-2 flex items-center gap-2">
+                  <p className="font-bold text-sm mt-2 flex items-center gap-2">
                     <Landmark className="h-4 w-4 text-zim-gold" /> {project.regulatory}
                   </p>
                 </div>

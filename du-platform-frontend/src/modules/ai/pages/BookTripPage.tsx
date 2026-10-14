@@ -645,14 +645,14 @@ export default function BookTripPage() {
 
   return (
     <Layout>
-      <section className="pt-28 pb-10 bg-slate-950 relative overflow-hidden">
+      <section className="document-section bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+          <div className="content-panel editorial-panel p-8 md:p-10">
             <div className="mb-8 text-center">
               <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
                 {t("tourism.onesa.trip_planner.badge") || "Onesa AI Travel"}
               </Badge>
-              <h1 className="section-title-compact mt-3">
+              <h1 className="page-title mt-3">
                 {t("tourism.onesa.trip_planner.title") ||
                   "Onesa Booking Information"}
               </h1>
@@ -1026,7 +1026,7 @@ export default function BookTripPage() {
       {result ? (
         <section className="pb-12 bg-slate-950 relative overflow-hidden">
           <div className="container relative z-10 px-6 mx-auto">
-            <div className="outer-glass-panel rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 md:p-10">
+            <div className="content-panel editorial-panel p-8 md:p-10">
               <div className="flex flex-wrap items-center gap-3 mb-5">
                 <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
                   {source === "ai"

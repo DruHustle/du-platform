@@ -152,6 +152,21 @@ Reports and screenshots are saved to `/tmp/du-navigation-tests`
 (`NAVIGATION_OUTPUT_DIR` overrides it). CI runs this check against installed
 Playwright Chromium with `NAVIGATION_BROWSER_CHANNEL=chromium` before deployment.
 
+### Shop cart regression tests
+
+```bash
+pnpm build
+pnpm test:e2e:shop
+```
+
+Uses a temporary static server and installed Chrome, with browser-only inventory,
+order, and notification fixtures. No database, payment, email, or other configured
+service is needed. It checks product-card clicks, stock limits, +/− controls,
+shared quantities across shop routes, refresh persistence, cross-tab updates,
+blocked storage, availability retries, and failed/successful checkout at 375,
+768, and 1440 pixels. Reports and screenshots go to `/tmp/du-shop-tests`
+(`SHOP_OUTPUT_DIR` overrides it). CI uses `SHOP_BROWSER_CHANNEL=chromium`.
+
 ### Service-free AI and device regression tests
 
 ```bash
