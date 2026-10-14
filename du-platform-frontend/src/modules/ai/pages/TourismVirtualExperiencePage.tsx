@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMediaStream } from "@/modules/ai/lib/useMediaStream";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { animateCameraFocus } from "@/modules/ai/vr/interactionManager";
@@ -51,10 +52,17 @@ export default function TourismVirtualExperiencePage() {
     [i18n.language, i18n.resolvedLanguage]
   );
   const ui = useMemo(
-    () => ({ ...VR_UI_TEXT.en, ...(VR_UI_TEXT[uiLanguage] ?? {}) }) as Record<string, string>,
+    () =>
+      ({ ...VR_UI_TEXT.en, ...(VR_UI_TEXT[uiLanguage] ?? {}) }) as Record<
+        string,
+        string
+      >,
     [uiLanguage]
   );
-  const selectedLanguageLabel = useMemo(() => getLanguageLabel(uiLanguage), [uiLanguage]);
+  const selectedLanguageLabel = useMemo(
+    () => getLanguageLabel(uiLanguage),
+    [uiLanguage]
+  );
   const backToTourismLabel = t("tourism.back_to_tourism", {
     defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Tourism" })}`,
   });
@@ -67,17 +75,20 @@ export default function TourismVirtualExperiencePage() {
     return "en-US";
   }, [uiLanguage]);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   const [virtualNarrative, setVirtualNarrative] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedDestinationId, setSelectedDestinationId] = useState("");
-  const [isGlobeZoomTransitioning, setIsGlobeZoomTransitioning] = useState(false);
+  const [isGlobeZoomTransitioning, setIsGlobeZoomTransitioning] =
+    useState(false);
   const [walkStageIndex, setWalkStageIndex] = useState(0);
   const [isConversationMode, setIsConversationMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   const [isTtsEnabled, setIsTtsEnabled] = useState(false);
-  const [selectedVoiceGender, setSelectedVoiceGender] = useState<"male" | "female">("female");
+  const [selectedVoiceGender, setSelectedVoiceGender] = useState<
+    "male" | "female"
+  >("female");
   const [isNarrationPlaying, setIsNarrationPlaying] = useState(false);
   const [conversationTranscript, setConversationTranscript] = useState("");
   const [conversationResponse, setConversationResponse] = useState("");
@@ -89,12 +100,16 @@ export default function TourismVirtualExperiencePage() {
   const [poiInfoTitle, setPoiInfoTitle] = useState("");
   const [poiInfoText, setPoiInfoText] = useState("");
   const [poiInfoLoading, setPoiInfoLoading] = useState(false);
-  const [hiddenPoiInfoIconIds, setHiddenPoiInfoIconIds] = useState<Set<string>>(() => new Set());
+  const [hiddenPoiInfoIconIds, setHiddenPoiInfoIconIds] = useState<Set<string>>(
+    () => new Set()
+  );
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const ttsAudioUrlRef = useRef<string | null>(null);
   const ttsAudioContextRef = useRef<AudioContext | null>(null);
-  const ttsAudioSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const ttsAudioSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(
+    null
+  );
   const ttsAudioHighShelfRef = useRef<BiquadFilterNode | null>(null);
   const ttsAudioLowPassRef = useRef<BiquadFilterNode | null>(null);
   const cloudTtsRequestInFlightRef = useRef(false);
@@ -107,6 +122,8 @@ export default function TourismVirtualExperiencePage() {
   const rotationAnimFrameRef = useRef<number | null>(null);
   const pinchScaleRef = useRef<number>(1);
 
+  const microphone = useMediaStream();
+  const pushToTalkHeldRef = useRef(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const recordingStream = useRef<MediaStream | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -115,22 +132,31 @@ export default function TourismVirtualExperiencePage() {
   const isRecordingRef = useRef(false);
   const globeTransitionTimerRef = useRef<number | null>(null);
 
-  const localizedDestinations = useMemo(() => getLocalizedVirtualDestinations(uiLanguage), [uiLanguage]);
+  const localizedDestinations = useMemo(
+    () => getLocalizedVirtualDestinations(uiLanguage),
+    [uiLanguage]
+  );
 
   const stopViewportMusic = useCallback(() => {
     const allAudioNodes = new Set<HTMLAudioElement>();
     const host = containerRef.current;
     if (host) {
-      host.querySelectorAll("audio").forEach((audio) => allAudioNodes.add(audio));
+      host.querySelectorAll("audio").forEach(audio => allAudioNodes.add(audio));
     }
     if (typeof document !== "undefined") {
-      document.querySelectorAll<HTMLAudioElement>('audio[data-onesa-globe-music="true"]').forEach((audio) => allAudioNodes.add(audio));
       document
-        .querySelectorAll<HTMLAudioElement>('audio[src*="zimbabwe_a_world_of_wonders.mp3"]')
-        .forEach((audio) => allAudioNodes.add(audio));
+        .querySelectorAll<HTMLAudioElement>(
+          'audio[data-onesa-globe-music="true"]'
+        )
+        .forEach(audio => allAudioNodes.add(audio));
+      document
+        .querySelectorAll<HTMLAudioElement>(
+          'audio[src*="zimbabwe_a_world_of_wonders.mp3"]'
+        )
+        .forEach(audio => allAudioNodes.add(audio));
     }
 
-    allAudioNodes.forEach((audio) => {
+    allAudioNodes.forEach(audio => {
       audio.pause();
       audio.currentTime = 0;
       audio.muted = true;
@@ -147,17 +173,36 @@ export default function TourismVirtualExperiencePage() {
   }, [selectedDestinationId, stopViewportMusic]);
 
   const currentDestination =
-    localizedDestinations.find((destination) => destination.id === selectedDestinationId) ?? localizedDestinations[0];
+    localizedDestinations.find(
+      destination => destination.id === selectedDestinationId
+    ) ?? localizedDestinations[0];
   const walkStages = currentDestination.walkStages;
   const currentStage = walkStages[walkStageIndex];
-  const stageOrder = useMemo(() => walkStages.map((stage) => stage.id), [walkStages]);
+  const stageOrder = useMemo(
+    () => walkStages.map(stage => stage.id),
+    [walkStages]
+  );
   const sidebarNarration = useMemo(() => {
     if (!isConversationMode) {
-      return [currentDestination.summary, `${ui.stageLabel}: ${currentStage.title}`, currentStage.caption].join(" ");
+      return [
+        currentDestination.summary,
+        `${ui.stageLabel}: ${currentStage.title}`,
+        currentStage.caption,
+      ].join(" ");
     }
     return virtualNarrative;
-  }, [currentDestination.summary, currentStage.caption, currentStage.title, isConversationMode, ui.stageLabel, virtualNarrative]);
-  const sidebarNarrationLines = useMemo(() => formatNarrationLines(sidebarNarration), [sidebarNarration]);
+  }, [
+    currentDestination.summary,
+    currentStage.caption,
+    currentStage.title,
+    isConversationMode,
+    ui.stageLabel,
+    virtualNarrative,
+  ]);
+  const sidebarNarrationLines = useMemo(
+    () => formatNarrationLines(sidebarNarration),
+    [sidebarNarration]
+  );
 
   const clearRecordingTurnTimer = useCallback(() => {
     if (recordingTurnTimerRef.current !== null) {
@@ -172,7 +217,8 @@ export default function TourismVirtualExperiencePage() {
       if (ttsAudioRef.current) {
         ttsAudioRef.current.load();
       }
-      const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      const AudioCtx =
+        (window as any).AudioContext || (window as any).webkitAudioContext;
       if (AudioCtx) {
         const ctx = new AudioCtx();
         if (ctx.state === "suspended") await ctx.resume();
@@ -182,7 +228,9 @@ export default function TourismVirtualExperiencePage() {
         source.buffer = buffer;
         source.connect(ctx.destination);
         source.start(0);
-        setTimeout(() => { void ctx.close().catch(() => {}); }, 1000);
+        setTimeout(() => {
+          void ctx.close().catch(() => {});
+        }, 1000);
       }
       speechUnlockedRef.current = true;
       setAudioReady(true);
@@ -239,8 +287,12 @@ export default function TourismVirtualExperiencePage() {
   useEffect(() => {
     if (!selectedDestinationId || walkStages.length === 0) return;
 
-    const stageIndexesToPreload = new Set([walkStageIndex, walkStageIndex + 1, walkStageIndex - 1]);
-    stageIndexesToPreload.forEach((index) => {
+    const stageIndexesToPreload = new Set([
+      walkStageIndex,
+      walkStageIndex + 1,
+      walkStageIndex - 1,
+    ]);
+    stageIndexesToPreload.forEach(index => {
       const imageUrl = walkStages[index]?.image;
       if (!imageUrl) return;
       const img = new Image();
@@ -257,17 +309,25 @@ export default function TourismVirtualExperiencePage() {
 
   useEffect(() => {
     const getFullscreenElement = () => {
-      const doc = document as Document & { webkitFullscreenElement?: Element | null };
+      const doc = document as Document & {
+        webkitFullscreenElement?: Element | null;
+      };
       return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
     };
     const onFullscreenChange = () => {
       setIsFullscreen(getFullscreenElement() === containerRef.current);
     };
     document.addEventListener("fullscreenchange", onFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", onFullscreenChange as EventListener);
+    document.addEventListener(
+      "webkitfullscreenchange",
+      onFullscreenChange as EventListener
+    );
     return () => {
       document.removeEventListener("fullscreenchange", onFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", onFullscreenChange as EventListener);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        onFullscreenChange as EventListener
+      );
     };
   }, []);
 
@@ -275,7 +335,11 @@ export default function TourismVirtualExperiencePage() {
     const unlockSpeech = () => {
       void unlockAudio();
     };
-    window.addEventListener("pointerdown", unlockSpeech, { once: true, passive: true, capture: true });
+    window.addEventListener("pointerdown", unlockSpeech, {
+      once: true,
+      passive: true,
+      capture: true,
+    });
     return () => window.removeEventListener("pointerdown", unlockSpeech, true);
   }, [unlockAudio]);
 
@@ -283,7 +347,9 @@ export default function TourismVirtualExperiencePage() {
     if (!selectedDestinationId || isConversationMode) return;
     if (introNarratedDestinationIdRef.current === selectedDestinationId) return;
     introNarratedDestinationIdRef.current = selectedDestinationId;
-    const destination = localizedDestinations.find((item) => item.id === selectedDestinationId);
+    const destination = localizedDestinations.find(
+      item => item.id === selectedDestinationId
+    );
     if (!destination) {
       introNarratedDestinationIdRef.current = null;
       return;
@@ -316,20 +382,28 @@ export default function TourismVirtualExperiencePage() {
         });
         const reply = String(data?.reply ?? "").trim();
         const finalText = reply || destination.summary;
-        const introStage = destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
+        const introStage =
+          destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
         setVirtualNarrative(finalText);
         const introFinished = await speakWithTts(finalText, false, true);
         if (introFinished && introStage) {
-          const demoStartGuidance = buildPostIntroStartGuidance(uiLanguage, introStage);
+          const demoStartGuidance = buildPostIntroStartGuidance(
+            uiLanguage,
+            introStage
+          );
           await speakWithTts(demoStartGuidance);
         }
       } catch {
-        const introStage = destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
+        const introStage =
+          destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
         const fallbackText = destination.summary;
         setVirtualNarrative(fallbackText);
         const introFinished = await speakWithTts(fallbackText, false, true);
         if (introFinished && introStage) {
-          const demoStartGuidance = buildPostIntroStartGuidance(uiLanguage, introStage);
+          const demoStartGuidance = buildPostIntroStartGuidance(
+            uiLanguage,
+            introStage
+          );
           await speakWithTts(demoStartGuidance);
         }
       } finally {
@@ -338,7 +412,15 @@ export default function TourismVirtualExperiencePage() {
       }
     };
     void runNarration();
-  }, [localizedDestinations, ui.guideThinking, ui.systemReady, selectedLanguageLabel, isConversationMode, selectedDestinationId, uiLanguage]);
+  }, [
+    localizedDestinations,
+    ui.guideThinking,
+    ui.systemReady,
+    selectedLanguageLabel,
+    isConversationMode,
+    selectedDestinationId,
+    uiLanguage,
+  ]);
 
   // --- AUDIO & AI UTILITIES ---
 
@@ -353,20 +435,30 @@ export default function TourismVirtualExperiencePage() {
     }
   }, [isConversationMode]);
 
-  const speakWithTts = async (text: string, force = false, waitForCompletion = false): Promise<boolean> => {
+  const speakWithTts = async (
+    text: string,
+    force = false,
+    waitForCompletion = false
+  ): Promise<boolean> => {
     if (!text) return false;
     if (!force && !isTtsEnabled) return false;
     let cloudFailureReason = "";
 
     const audio = ttsAudioRef.current;
-    const cloudPlaybackActive = Boolean(audio && !audio.paused && audio.currentSrc && !audio.currentSrc.startsWith("data:"));
+    const cloudPlaybackActive = Boolean(
+      audio &&
+        !audio.paused &&
+        audio.currentSrc &&
+        !audio.currentSrc.startsWith("data:")
+    );
     if (cloudTtsRequestInFlightRef.current || cloudPlaybackActive) {
       queuedCloudNarrationRef.current = text;
       return true;
     }
 
     const speakWithBrowserVoice = async () => {
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+      if (typeof window === "undefined" || !("speechSynthesis" in window))
+        return false;
       try {
         if (ttsAudioRef.current) {
           ttsAudioRef.current.pause();
@@ -380,7 +472,7 @@ export default function TourismVirtualExperiencePage() {
         const synth = window.speechSynthesis;
         const voices = synth.getVoices();
         if (!voices.length) {
-          await new Promise<void>((resolve) => {
+          await new Promise<void>(resolve => {
             let settled = false;
             const finish = () => {
               if (settled) return;
@@ -408,24 +500,31 @@ export default function TourismVirtualExperiencePage() {
           utterance.lang = safeLang;
 
           const runtimeVoices = synth.getVoices();
-          const localVoices = runtimeVoices.filter((v) => v.localService);
+          const localVoices = runtimeVoices.filter(v => v.localService);
           const pool = localVoices.length ? localVoices : runtimeVoices;
           const languagePrefix = safeLang.split("-")[0].toLowerCase();
           const genderPattern =
             selectedVoiceGender === "male"
               ? /(male|man|david|daniel|alex|fred|thomas|tom|michael|john|james|oliver|liam|andreas|hans|wolfgang)/i
               : /(female|woman|samantha|victoria|karen|zira|ava|susan|allison|amy|emma|olivia|sarah|sofia|anna|heidi)/i;
-          const neutralQualityPattern = /google|natural|premium|enhanced|neural|compact|online/i;
-          const languagePool = pool.filter((v) => v.lang.toLowerCase().startsWith(languagePrefix));
+          const neutralQualityPattern =
+            /google|natural|premium|enhanced|neural|compact|online/i;
+          const languagePool = pool.filter(v =>
+            v.lang.toLowerCase().startsWith(languagePrefix)
+          );
           const searchPool = languagePool.length ? languagePool : pool;
 
           const preferred =
-            (useBestVoice ? searchPool.find((v) => genderPattern.test(v.name)) : undefined) ??
-            searchPool.find((v) => genderPattern.test(v.name)) ??
-            (useBestVoice ? searchPool.find((v) => neutralQualityPattern.test(v.name)) : undefined) ??
-            searchPool.find((v) => v.default) ??
+            (useBestVoice
+              ? searchPool.find(v => genderPattern.test(v.name))
+              : undefined) ??
+            searchPool.find(v => genderPattern.test(v.name)) ??
+            (useBestVoice
+              ? searchPool.find(v => neutralQualityPattern.test(v.name))
+              : undefined) ??
+            searchPool.find(v => v.default) ??
             searchPool[0] ??
-            pool.find((v) => v.lang.toLowerCase().startsWith("en")) ??
+            pool.find(v => v.lang.toLowerCase().startsWith("en")) ??
             pool[0];
 
           if (preferred) {
@@ -435,7 +534,7 @@ export default function TourismVirtualExperiencePage() {
             utterance.lang = safeLang;
           }
 
-          return await new Promise<boolean>((resolve) => {
+          return await new Promise<boolean>(resolve => {
             let settled = false;
             let started = false;
             const finish = (ok: boolean) => {
@@ -444,7 +543,9 @@ export default function TourismVirtualExperiencePage() {
               window.clearTimeout(timer);
               resolve(ok);
             };
-            const timerMs = waitForCompletion ? Math.min(90000, Math.max(6000, text.length * 90)) : 2300;
+            const timerMs = waitForCompletion
+              ? Math.min(90000, Math.max(6000, text.length * 90))
+              : 2300;
             const timer = window.setTimeout(() => {
               if (!waitForCompletion && synth.speaking) {
                 finish(true);
@@ -505,7 +606,8 @@ export default function TourismVirtualExperiencePage() {
         cloudFailureReason = `Unsupported cloud audio format: ${effectiveMime || "unknown"}`;
         return false;
       }
-      const playableBlob = !blob.type && headerMime ? blob.slice(0, blob.size, headerMime) : blob;
+      const playableBlob =
+        !blob.type && headerMime ? blob.slice(0, blob.size, headerMime) : blob;
       const url = URL.createObjectURL(playableBlob);
       if (ttsAudioUrlRef.current) URL.revokeObjectURL(ttsAudioUrlRef.current);
       ttsAudioUrlRef.current = url;
@@ -516,7 +618,9 @@ export default function TourismVirtualExperiencePage() {
       ttsAudioRef.current.volume = 0.72;
       ttsAudioRef.current.playbackRate = 1;
       if ("preservesPitch" in ttsAudioRef.current) {
-        (ttsAudioRef.current as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true;
+        (
+          ttsAudioRef.current as HTMLAudioElement & { preservesPitch?: boolean }
+        ).preservesPitch = true;
       }
       if ("webkitPreservesPitch" in (ttsAudioRef.current as any)) {
         (ttsAudioRef.current as any).webkitPreservesPitch = true;
@@ -532,7 +636,7 @@ export default function TourismVirtualExperiencePage() {
       setAiStatus(ui.systemReady);
       if (waitForCompletion) {
         const timeoutMs = Math.min(90000, Math.max(6000, text.length * 90));
-        await new Promise<void>((resolve) => {
+        await new Promise<void>(resolve => {
           if (!ttsAudioRef.current) {
             resolve();
             return;
@@ -559,12 +663,22 @@ export default function TourismVirtualExperiencePage() {
 
     const tryCloudTts = async (): Promise<boolean> => {
       // Prioritized by gender so "male/female" keeps working even if one voice is unavailable.
-      const maleVoiceIds = ["ErXwobaYiN019PkySvjV", "pNInz6obpgDQGcFmaJgB", "VR6AewLTigWG4xSOukaG"];
-      const femaleVoiceIds = ["EXAVITQu4vr4xnSDxMaL", "MF3mGyEYCl7XYWbV9V6O", "XB0fDUnXU5powFXDhCwa"];
-      const voiceIdCandidates = selectedVoiceGender === "male" ? maleVoiceIds : femaleVoiceIds;
+      const maleVoiceIds = [
+        "ErXwobaYiN019PkySvjV",
+        "pNInz6obpgDQGcFmaJgB",
+        "VR6AewLTigWG4xSOukaG",
+      ];
+      const femaleVoiceIds = [
+        "EXAVITQu4vr4xnSDxMaL",
+        "MF3mGyEYCl7XYWbV9V6O",
+        "XB0fDUnXU5powFXDhCwa",
+      ];
+      const voiceIdCandidates =
+        selectedVoiceGender === "male" ? maleVoiceIds : femaleVoiceIds;
 
       const shouldTryNextVoice = (status: number, reason: string): boolean => {
-        if (status === 400) return /voice|invalid|not\s*found|unsupported/i.test(reason);
+        if (status === 400)
+          return /voice|invalid|not\s*found|unsupported/i.test(reason);
         return false;
       };
 
@@ -619,7 +733,10 @@ export default function TourismVirtualExperiencePage() {
       } catch {
         // handled by browser fallback below
       }
-      const quotaExceeded = /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(cloudFailureReason);
+      const quotaExceeded =
+        /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(
+          cloudFailureReason
+        );
       setAiStatus(quotaExceeded ? ui.cloudQuotaExceeded : ui.cloudFailed);
       const browserOk = await speakWithBrowserVoice();
       if (!browserOk) {
@@ -632,7 +749,10 @@ export default function TourismVirtualExperiencePage() {
       if (isTtsEnabled && !isConversationMode) {
         const activeAudio = ttsAudioRef.current;
         const cloudStillPlaying = Boolean(
-          activeAudio && !activeAudio.paused && activeAudio.currentSrc && !activeAudio.currentSrc.startsWith("data:")
+          activeAudio &&
+            !activeAudio.paused &&
+            activeAudio.currentSrc &&
+            !activeAudio.currentSrc.startsWith("data:")
         );
         if (!cloudStillPlaying) {
           const queued = queuedCloudNarrationRef.current;
@@ -697,7 +817,7 @@ export default function TourismVirtualExperiencePage() {
       try {
         mediaRecorder.current?.stop();
       } catch {
-        recordingStream.current?.getTracks().forEach((track) => track.stop());
+        recordingStream.current?.getTracks().forEach(track => track.stop());
         recordingStream.current = null;
       }
       isRecordingRef.current = false;
@@ -734,7 +854,11 @@ export default function TourismVirtualExperiencePage() {
     setIsConversationMode(false);
     setIsSoundEnabled(false);
 
-    const introText = buildNarrationButtonIntro(uiLanguage, currentDestination.name, currentDestination.summary);
+    const introText = buildNarrationButtonIntro(
+      uiLanguage,
+      currentDestination.name,
+      currentDestination.summary
+    );
     if (!introText) {
       setAiStatus(ui.narrationPending);
       return;
@@ -801,35 +925,46 @@ export default function TourismVirtualExperiencePage() {
     return "";
   }, []);
 
-  const transcribeWithGroq = useCallback(async (blob: Blob): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", blob, "audio.webm");
-    formData.append("action", "stt");
-    formData.append("provider", "groq");
-    const res = await fetch("/api/speech", { method: "POST", body: formData });
-    if (!res.ok) {
-      const message = await res.text().catch(() => "");
-      throw new Error(message || `Groq STT failed (${res.status})`);
-    }
-    const payload = await res.json().catch(() => ({}));
-    return extractTranscriptText(payload);
-  }, [extractTranscriptText]);
+  const transcribeWithGroq = useCallback(
+    async (blob: Blob): Promise<string> => {
+      const formData = new FormData();
+      formData.append("file", blob, "audio.webm");
+      formData.append("action", "stt");
+      formData.append("provider", "groq");
+      const res = await fetch("/api/speech", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const message = await res.text().catch(() => "");
+        throw new Error(message || `Groq STT failed (${res.status})`);
+      }
+      const payload = await res.json().catch(() => ({}));
+      return extractTranscriptText(payload);
+    },
+    [extractTranscriptText]
+  );
 
-  const transcribeWithWhisper = useCallback(async (blob: Blob): Promise<string> => {
-    const res = await fetch("/api/whisper", { method: "POST", body: blob });
-    if (!res.ok) {
-      const message = await res.text().catch(() => "");
-      throw new Error(message || `Whisper STT failed (${res.status})`);
-    }
-    const payload = await res.json().catch(() => ({}));
-    return extractTranscriptText(payload);
-  }, [extractTranscriptText]);
+  const transcribeWithWhisper = useCallback(
+    async (blob: Blob): Promise<string> => {
+      const res = await fetch("/api/whisper", { method: "POST", body: blob });
+      if (!res.ok) {
+        const message = await res.text().catch(() => "");
+        throw new Error(message || `Whisper STT failed (${res.status})`);
+      }
+      const payload = await res.json().catch(() => ({}));
+      return extractTranscriptText(payload);
+    },
+    [extractTranscriptText]
+  );
 
   const transcribeWithBrowserSpeech = useCallback(async (): Promise<string> => {
     if (typeof window === "undefined") {
       throw new Error("Browser speech recognition unavailable");
     }
-    const RecognitionCtor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const RecognitionCtor =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
     if (!RecognitionCtor) {
       throw new Error("Browser speech recognition unsupported");
     }
@@ -862,23 +997,36 @@ export default function TourismVirtualExperiencePage() {
       }, 10000);
 
       recognition.onresult = (event: any) => {
-        const transcript = String(event?.results?.[0]?.[0]?.transcript ?? "").trim();
+        const transcript = String(
+          event?.results?.[0]?.[0]?.transcript ?? ""
+        ).trim();
         finish(transcript);
       };
       recognition.onerror = (event: any) => {
-        finish(undefined, new Error(String(event?.error ?? "Browser speech recognition failed")));
+        finish(
+          undefined,
+          new Error(String(event?.error ?? "Browser speech recognition failed"))
+        );
       };
       recognition.onnomatch = () => {
         finish(undefined, new Error("No matching speech recognized"));
       };
       recognition.onend = () => {
-        finish(undefined, new Error("Browser speech recognition ended without text"));
+        finish(
+          undefined,
+          new Error("Browser speech recognition ended without text")
+        );
       };
 
       try {
         recognition.start();
       } catch (error) {
-        finish(undefined, error instanceof Error ? error : new Error("Unable to start browser speech recognition"));
+        finish(
+          undefined,
+          error instanceof Error
+            ? error
+            : new Error("Unable to start browser speech recognition")
+        );
       }
     });
   }, [speechLanguageCode]);
@@ -900,8 +1048,11 @@ export default function TourismVirtualExperiencePage() {
           text = await transcribeWithBrowserSpeech();
         }
       }
+      if (!isConversationModeRef.current) return;
       if (!text) {
-        setConversationTranscript(ui.sttUnavailable ?? "Could not transcribe audio.");
+        setConversationTranscript(
+          ui.sttUnavailable ?? "Could not transcribe audio."
+        );
         throw new Error("No speech detected");
       }
       capturedTranscript = text;
@@ -911,18 +1062,27 @@ export default function TourismVirtualExperiencePage() {
 
       // 2. Send text to Onesa AI
       const { data } = await sendOnesaChatMessage({
-        messages: [{ role: "user", content: `Response language: ${selectedLanguageLabel}.\nUse ${selectedLanguageLabel} only.\n${text}` }],
+        messages: [
+          {
+            role: "user",
+            content: `Response language: ${selectedLanguageLabel}.\nUse ${selectedLanguageLabel} only.\n${text}`,
+          },
+        ],
         language: uiLanguage,
       });
 
+      if (!isConversationModeRef.current) return;
       const reply = String(data?.reply ?? "").trim() || ui.guideThinking;
       setVirtualNarrative(reply);
       setConversationResponse(reply);
       await speakWithTts(reply, true);
       setAiStatus(ui.systemReady);
     } catch {
+      if (!isConversationModeRef.current) return;
       if (!capturedTranscript) {
-        setConversationTranscript(ui.sttUnavailable ?? "Could not transcribe audio.");
+        setConversationTranscript(
+          ui.sttUnavailable ?? "Could not transcribe audio."
+        );
       }
       setAiStatus(ui.whisperFallback);
       const fallbackPrompt = [
@@ -940,13 +1100,16 @@ export default function TourismVirtualExperiencePage() {
           messages: [{ role: "user", content: fallbackPrompt }],
           language: uiLanguage,
         });
-        const reply = String(data?.reply ?? "").trim() || currentDestination.summary;
+        const reply =
+          String(data?.reply ?? "").trim() || currentDestination.summary;
         setVirtualNarrative(reply);
         setConversationResponse(reply);
         await speakWithTts(reply, true);
         setAiStatus(ui.onesaFallback);
       } catch {
-        const localFallback = String(currentDestination.summary || currentStage.caption || "").trim();
+        const localFallback = String(
+          currentDestination.summary || currentStage.caption || ""
+        ).trim();
         setVirtualNarrative(localFallback);
         setConversationResponse(localFallback);
         await speakWithTts(localFallback, true);
@@ -958,8 +1121,12 @@ export default function TourismVirtualExperiencePage() {
   };
 
   const buildClickGuidanceNarration = useCallback(() => {
-    const hotspotLabels = (currentStage.hotspots ?? []).map((hotspot) => hotspot.label).filter(Boolean);
-    const poiLabels = (currentStage.pointsOfInterest ?? []).map((poi) => poi.label).filter(Boolean);
+    const hotspotLabels = (currentStage.hotspots ?? [])
+      .map(hotspot => hotspot.label)
+      .filter(Boolean);
+    const poiLabels = (currentStage.pointsOfInterest ?? [])
+      .map(poi => poi.label)
+      .filter(Boolean);
     const hotspotText = hotspotLabels.length
       ? hotspotLabels.slice(0, 3).join(", ")
       : uiLanguage === "sn"
@@ -984,7 +1151,13 @@ export default function TourismVirtualExperiencePage() {
       `Tap the glowing gold rings to move to ${hotspotText}.`,
       `For place details, tap ${poiText}, then tap the document icon.`,
     ].join(" ");
-  }, [currentDestination.name, currentStage.hotspots, currentStage.pointsOfInterest, currentStage.title, uiLanguage]);
+  }, [
+    currentDestination.name,
+    currentStage.hotspots,
+    currentStage.pointsOfInterest,
+    currentStage.title,
+    uiLanguage,
+  ]);
 
   const handleVrPointerMissed = useCallback(() => {
     if (!selectedDestinationId || isGlobeZoomTransitioning) return;
@@ -1010,6 +1183,7 @@ export default function TourismVirtualExperiencePage() {
   ]);
 
   const stopRecording = useCallback(() => {
+    microphone.release();
     if (!isRecordingRef.current) return;
     clearRecordingTurnTimer();
     try {
@@ -1019,7 +1193,7 @@ export default function TourismVirtualExperiencePage() {
     }
     isRecordingRef.current = false;
     setIsRecording(false);
-  }, [clearRecordingTurnTimer]);
+  }, [clearRecordingTurnTimer, microphone]);
 
   const startRecording = useCallback(async () => {
     if (isRecordingRef.current) return;
@@ -1036,24 +1210,27 @@ export default function TourismVirtualExperiencePage() {
       return;
     }
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      if (!isConversationModeRef.current) {
-        stream.getTracks().forEach((track) => track.stop());
+      const stream = await microphone.acquire({ audio: true });
+      if (!stream) return;
+      if (!isConversationModeRef.current || !pushToTalkHeldRef.current) {
+        stream.getTracks().forEach(track => track.stop());
         return;
       }
       recordingStream.current = stream;
       mediaRecorder.current = new MediaRecorder(stream);
       audioChunks.current = [];
-      mediaRecorder.current.ondataavailable = (e) => audioChunks.current.push(e.data);
+      mediaRecorder.current.ondataavailable = e =>
+        audioChunks.current.push(e.data);
       mediaRecorder.current.onstop = () => {
         clearRecordingTurnTimer();
-        stream.getTracks().forEach((track) => track.stop());
+        stream.getTracks().forEach(track => track.stop());
         recordingStream.current = null;
         isRecordingRef.current = false;
         setIsRecording(false);
         const recordedBlob = new Blob(audioChunks.current, {
           type: mediaRecorder.current?.mimeType || "audio/webm",
         });
+        if (!isConversationModeRef.current) return;
         void (async () => {
           await processConversation(recordedBlob);
         })();
@@ -1079,66 +1256,107 @@ export default function TourismVirtualExperiencePage() {
       setIsConversationMode(false);
       setIsRecording(false);
     }
-  }, [clearRecordingTurnTimer, processConversation, ui.listening, ui.micDenied, ui.micNotSupported]);
+  }, [
+    clearRecordingTurnTimer,
+    microphone,
+    processConversation,
+    ui.listening,
+    ui.micDenied,
+    ui.micNotSupported,
+  ]);
 
-  const rotateView = useCallback((direction: "left" | "right" | "up" | "down") => {
-    setAutoRotateEnabled(false);
-    const controls = orbitControlsRef.current;
-    if (controls) {
-      controls.autoRotate = false;
-    }
-    if (rotationAnimFrameRef.current !== null) {
-      window.cancelAnimationFrame(rotationAnimFrameRef.current);
-      rotationAnimFrameRef.current = null;
-    }
-    const step = Math.PI / 14;
-    const startAzimuth = typeof controls?.getAzimuthalAngle === "function" ? controls.getAzimuthalAngle() : 0;
-    const startPolar = typeof controls?.getPolarAngle === "function" ? controls.getPolarAngle() : Math.PI / 2;
-    const targetAzimuth =
-      direction === "left" ? startAzimuth + step : direction === "right" ? startAzimuth - step : startAzimuth;
-    const targetPolarUnclamped =
-      direction === "up" ? startPolar - step : direction === "down" ? startPolar + step : startPolar;
-    const targetPolar = THREE.MathUtils.clamp(targetPolarUnclamped, 0.05, Math.PI - 0.05);
-    const fallbackStartX = cameraRef.current?.rotation.x ?? 0;
-    const fallbackStartY = cameraRef.current?.rotation.y ?? 0;
-    const fallbackTargetX =
-      direction === "up" ? fallbackStartX + step : direction === "down" ? fallbackStartX - step : fallbackStartX;
-    const fallbackTargetY =
-      direction === "left"
-        ? fallbackStartY + step
-        : direction === "right"
-          ? fallbackStartY - step
-          : fallbackStartY;
-    const durationMs = 220;
-    const startAt = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - startAt) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      if (typeof controls?.setAzimuthalAngle === "function" && typeof controls?.setPolarAngle === "function") {
-        const az = startAzimuth + (targetAzimuth - startAzimuth) * eased;
-        const pol = startPolar + (targetPolar - startPolar) * eased;
-        controls.setAzimuthalAngle(az);
-        controls.setPolarAngle(pol);
-      } else if (cameraRef.current) {
-        const camera = cameraRef.current;
-        camera.rotation.x = fallbackStartX + (fallbackTargetX - fallbackStartX) * eased;
-        camera.rotation.y = fallbackStartY + (fallbackTargetY - fallbackStartY) * eased;
-        camera.updateProjectionMatrix();
+  const rotateView = useCallback(
+    (direction: "left" | "right" | "up" | "down") => {
+      setAutoRotateEnabled(false);
+      const controls = orbitControlsRef.current;
+      if (controls) {
+        controls.autoRotate = false;
       }
-      controls?.update?.();
-      if (t < 1) {
-        rotationAnimFrameRef.current = window.requestAnimationFrame(tick);
-      } else {
+      if (rotationAnimFrameRef.current !== null) {
+        window.cancelAnimationFrame(rotationAnimFrameRef.current);
         rotationAnimFrameRef.current = null;
       }
-    };
-    rotationAnimFrameRef.current = window.requestAnimationFrame(tick);
-  }, []);
+      const step = Math.PI / 14;
+      const startAzimuth =
+        typeof controls?.getAzimuthalAngle === "function"
+          ? controls.getAzimuthalAngle()
+          : 0;
+      const startPolar =
+        typeof controls?.getPolarAngle === "function"
+          ? controls.getPolarAngle()
+          : Math.PI / 2;
+      const targetAzimuth =
+        direction === "left"
+          ? startAzimuth + step
+          : direction === "right"
+            ? startAzimuth - step
+            : startAzimuth;
+      const targetPolarUnclamped =
+        direction === "up"
+          ? startPolar - step
+          : direction === "down"
+            ? startPolar + step
+            : startPolar;
+      const targetPolar = THREE.MathUtils.clamp(
+        targetPolarUnclamped,
+        0.05,
+        Math.PI - 0.05
+      );
+      const fallbackStartX = cameraRef.current?.rotation.x ?? 0;
+      const fallbackStartY = cameraRef.current?.rotation.y ?? 0;
+      const fallbackTargetX =
+        direction === "up"
+          ? fallbackStartX + step
+          : direction === "down"
+            ? fallbackStartX - step
+            : fallbackStartX;
+      const fallbackTargetY =
+        direction === "left"
+          ? fallbackStartY + step
+          : direction === "right"
+            ? fallbackStartY - step
+            : fallbackStartY;
+      const durationMs = 220;
+      const startAt = performance.now();
+      const tick = (now: number) => {
+        const t = Math.min((now - startAt) / durationMs, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        if (
+          typeof controls?.setAzimuthalAngle === "function" &&
+          typeof controls?.setPolarAngle === "function"
+        ) {
+          const az = startAzimuth + (targetAzimuth - startAzimuth) * eased;
+          const pol = startPolar + (targetPolar - startPolar) * eased;
+          controls.setAzimuthalAngle(az);
+          controls.setPolarAngle(pol);
+        } else if (cameraRef.current) {
+          const camera = cameraRef.current;
+          camera.rotation.x =
+            fallbackStartX + (fallbackTargetX - fallbackStartX) * eased;
+          camera.rotation.y =
+            fallbackStartY + (fallbackTargetY - fallbackStartY) * eased;
+          camera.updateProjectionMatrix();
+        }
+        controls?.update?.();
+        if (t < 1) {
+          rotationAnimFrameRef.current = window.requestAnimationFrame(tick);
+        } else {
+          rotationAnimFrameRef.current = null;
+        }
+      };
+      rotationAnimFrameRef.current = window.requestAnimationFrame(tick);
+    },
+    []
+  );
 
   const zoomView = useCallback((direction: "in" | "out") => {
     const camera = cameraRef.current;
     if (!camera) return;
-    camera.fov = THREE.MathUtils.clamp(camera.fov + (direction === "in" ? -6 : 6), 28, 100);
+    camera.fov = THREE.MathUtils.clamp(
+      camera.fov + (direction === "in" ? -6 : 6),
+      28,
+      100
+    );
     camera.updateProjectionMatrix();
     orbitControlsRef.current?.update?.();
   }, []);
@@ -1195,13 +1413,27 @@ export default function TourismVirtualExperiencePage() {
     };
 
     container.addEventListener("wheel", onWheel, { passive: false });
-    container.addEventListener("gesturestart", onGestureStart as EventListener, { passive: false });
-    container.addEventListener("gesturechange", onGestureChange as EventListener, { passive: false });
+    container.addEventListener(
+      "gesturestart",
+      onGestureStart as EventListener,
+      { passive: false }
+    );
+    container.addEventListener(
+      "gesturechange",
+      onGestureChange as EventListener,
+      { passive: false }
+    );
 
     return () => {
       container.removeEventListener("wheel", onWheel as EventListener);
-      container.removeEventListener("gesturestart", onGestureStart as EventListener);
-      container.removeEventListener("gesturechange", onGestureChange as EventListener);
+      container.removeEventListener(
+        "gesturestart",
+        onGestureStart as EventListener
+      );
+      container.removeEventListener(
+        "gesturechange",
+        onGestureChange as EventListener
+      );
     };
   }, [isGlobeZoomTransitioning, selectedDestinationId]);
 
@@ -1250,18 +1482,23 @@ export default function TourismVirtualExperiencePage() {
     stopRecording();
     setIsConversationMode(false);
     setAiStatus(ui.systemReady);
-  }, [isConversationMode, stopRecording, ui.holdToSpeakHint, ui.systemReady, unlockAudio]);
+  }, [
+    isConversationMode,
+    stopRecording,
+    ui.holdToSpeakHint,
+    ui.systemReady,
+    unlockAudio,
+  ]);
 
   const handlePushToTalkStart = useCallback(() => {
     if (!isConversationMode || isRecordingRef.current) return;
-    void (async () => {
-      await unlockAudio();
-      await startRecording();
-    })();
-  }, [isConversationMode, startRecording, unlockAudio]);
+    pushToTalkHeldRef.current = true;
+    void startRecording();
+  }, [isConversationMode, startRecording]);
 
   const handlePushToTalkEnd = useCallback(() => {
-    if (!isConversationMode || !isRecordingRef.current) return;
+    pushToTalkHeldRef.current = false;
+    if (!isConversationMode) return;
     stopRecording();
   }, [isConversationMode, stopRecording]);
 
@@ -1314,7 +1551,8 @@ export default function TourismVirtualExperiencePage() {
           messages: [{ role: "user", content: prompt }],
           language: uiLanguage,
         });
-        const enrichedNarration = String(data?.reply ?? "").trim() || localRichNarration;
+        const enrichedNarration =
+          String(data?.reply ?? "").trim() || localRichNarration;
         setVirtualNarrative(enrichedNarration);
         setAiStatus(`${ui.systemReady}: ${poiLabel}`);
         if (!isConversationMode) {
@@ -1375,12 +1613,18 @@ export default function TourismVirtualExperiencePage() {
         await speakWithTts(narration);
       }
     },
-    [currentDestination.name, currentStage.caption, currentStage.title, isConversationMode, speakWithTts]
+    [
+      currentDestination.name,
+      currentStage.caption,
+      currentStage.title,
+      isConversationMode,
+      speakWithTts,
+    ]
   );
 
   const handlePointOfInterestInfoClick = useCallback(
     async (poiId: string, poiLabel: string) => {
-      setHiddenPoiInfoIconIds((prev) => {
+      setHiddenPoiInfoIconIds(prev => {
         if (prev.has(poiId)) return prev;
         const next = new Set(prev);
         next.add(poiId);
@@ -1438,6 +1682,7 @@ export default function TourismVirtualExperiencePage() {
 
   useEffect(() => {
     return () => {
+      isConversationModeRef.current = false;
       if (globeTransitionTimerRef.current !== null) {
         window.clearTimeout(globeTransitionTimerRef.current);
         globeTransitionTimerRef.current = null;
@@ -1469,7 +1714,7 @@ export default function TourismVirtualExperiencePage() {
       } catch {
         // no-op
       }
-      recordingStream.current?.getTracks().forEach((track) => track.stop());
+      recordingStream.current?.getTracks().forEach(track => track.stop());
       recordingStream.current = null;
     };
   }, [clearRecordingTurnTimer]);
@@ -1483,7 +1728,8 @@ export default function TourismVirtualExperiencePage() {
     const container = containerRef.current as HTMLElement & {
       webkitRequestFullscreen?: () => Promise<void> | void;
     };
-    const fullscreenElement = doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+    const fullscreenElement =
+      doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
     if (fullscreenElement === containerRef.current) {
       if (doc.exitFullscreen) {
         await doc.exitFullscreen();
@@ -1501,6 +1747,9 @@ export default function TourismVirtualExperiencePage() {
 
   return (
     <Layout>
+      <p role="status" aria-live="polite" className="sr-only">
+        {loading ? ui.guideThinking : aiStatus}
+      </p>
       <audio ref={ttsAudioRef} preload="auto" style={{ display: "none" }} />
       {/* Page shell */}
       <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
@@ -1514,474 +1763,560 @@ export default function TourismVirtualExperiencePage() {
               {t("tourism.vr.seo.badge", { defaultValue: "Onesa AI Tourism" })}
             </p>
             <h1 className="mt-3 text-2xl font-black tracking-tight text-white md:text-4xl">
-              {t("tourism.vr.seo.title", { defaultValue: "Zimbabwe Virtual Tourism Experience" })}
+              {t("tourism.vr.seo.title", {
+                defaultValue: "Zimbabwe Virtual Tourism Experience",
+              })}
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
-              {t(
-                "tourism.vr.seo.description",
-                {
-                  defaultValue:
-                    "Explore Zimbabwe destinations through an interactive virtual guide with narrated context, landmark details, and immersive place previews before you plan a trip.",
-                },
-              )}
+              {t("tourism.vr.seo.description", {
+                defaultValue:
+                  "Explore Zimbabwe destinations through an interactive virtual guide with narrated context, landmark details, and immersive place previews before you plan a trip.",
+              })}
             </p>
           </div>
           {/* Main two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              
-              {/* NARRATION SIDEBAR */}
-              <div className="lg:col-span-3 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 space-y-4 flex flex-col">
-                {/* Destination selector */}
-                <div>
-                  <select
-                    id="vr-destination"
-                    className="mt-2 w-full rounded-xl border border-white/15 bg-slate-950 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-zim-gold/60"
-                    value={selectedDestinationId}
-                    onChange={(event) => {
-                      const nextId = event.target.value;
-                      if (nextId) {
-                        isConversationModeRef.current = false;
-                        stopViewportMusic();
-                        stopRecording();
-                        setIsConversationMode(false);
-                        setConversationTranscript("");
-                        setConversationResponse("");
-                        setIsTtsEnabled(false);
-                        setIsNarrationPlaying(false);
-                        if (ttsAudioRef.current) {
-                          ttsAudioRef.current.pause();
-                          ttsAudioRef.current.currentTime = 0;
-                        }
-                        cancelBrowserSpeech();
+            {/* NARRATION SIDEBAR */}
+            <div className="lg:col-span-3 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 space-y-4 flex flex-col">
+              {/* Destination selector */}
+              <div>
+                <select
+                  id="vr-destination"
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-slate-950 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-zim-gold/60"
+                  value={selectedDestinationId}
+                  onChange={event => {
+                    const nextId = event.target.value;
+                    if (nextId) {
+                      isConversationModeRef.current = false;
+                      stopViewportMusic();
+                      stopRecording();
+                      setIsConversationMode(false);
+                      setConversationTranscript("");
+                      setConversationResponse("");
+                      setIsTtsEnabled(false);
+                      setIsNarrationPlaying(false);
+                      if (ttsAudioRef.current) {
+                        ttsAudioRef.current.pause();
+                        ttsAudioRef.current.currentTime = 0;
                       }
-                      if (!selectedDestinationId && nextId) {
-                        setIsGlobeZoomTransitioning(true);
-                        if (globeTransitionTimerRef.current !== null) {
-                          window.clearTimeout(globeTransitionTimerRef.current);
-                        }
-                        globeTransitionTimerRef.current = window.setTimeout(() => {
+                      cancelBrowserSpeech();
+                    }
+                    if (!selectedDestinationId && nextId) {
+                      setIsGlobeZoomTransitioning(true);
+                      if (globeTransitionTimerRef.current !== null) {
+                        window.clearTimeout(globeTransitionTimerRef.current);
+                      }
+                      globeTransitionTimerRef.current = window.setTimeout(
+                        () => {
                           setIsGlobeZoomTransitioning(false);
                           globeTransitionTimerRef.current = null;
-                        }, 2200);
-                      }
-                      setSelectedDestinationId(nextId);
-                      setWalkStageIndex(0);
-                      // On city selection: music off, ambient on.
-                      setIsSoundEnabled(Boolean(nextId));
-                    }}
-                  >
-                    <option value="" disabled>
-                      {ui.selectDestination}
+                        },
+                        2200
+                      );
+                    }
+                    setSelectedDestinationId(nextId);
+                    setWalkStageIndex(0);
+                    // On city selection: music off, ambient on.
+                    setIsSoundEnabled(Boolean(nextId));
+                  }}
+                >
+                  <option value="" disabled>
+                    {ui.selectDestination}
+                  </option>
+                  {localizedDestinations.map(destination => (
+                    <option key={destination.id} value={destination.id}>
+                      {destination.name}
                     </option>
-                    {localizedDestinations.map((destination) => (
-                      <option key={destination.id} value={destination.id}>
-                        {destination.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                
-                {!isTtsEnabled && !isConversationMode ? null : (
-                  <div className="mt-2 border-t border-white/10 pt-3">
-                    <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">
-                      {isConversationMode ? ui.conversation : selectedDestinationId ? ui.narration : ui.selectLocation}
-                    </p>
-                    {!selectedDestinationId ? null : isConversationMode ? (
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/75 leading-relaxed">
-                          <span className="font-black">{ui.sttText ?? "STT"}:</span>{" "}
-                          {conversationTranscript || "..."}
-                        </p>
-                        <p className="text-sm text-white/75 leading-relaxed">
-                          <span className="font-black">{ui.response ?? "Response"}:</span>{" "}
-                          {conversationResponse || "..."}
-                        </p>
-                      </div>
-                    ) : sidebarNarrationLines.length > 0 ? (
-                      <div className="space-y-1.5">
-                        {sidebarNarrationLines.map((line, index) => (
-                          <p key={`${line}-${index}`} className="text-sm text-white/75 leading-relaxed">
-                            {line.includes(":") ? (
-                              <>
-                                <span className="font-black">{line.split(":")[0]}:</span>{" "}
-                                {line.split(":").slice(1).join(":").trim()}
-                              </>
-                            ) : (
-                              line
-                            )}
-                          </p>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-white/70 leading-relaxed">
-                        {ui.narrationPending}
-                      </p>
-                    )}
-                  </div>
-                )}
-                <p className="m-0 mt-auto text-[11px] text-white/70 leading-relaxed">
-                  {ui.conversation} {isConversationMode ? ui.conversationEnabled : ui.conversationDisabled}. {ui.ambient} {isSoundEnabled ? ui.ambientOn : ui.ambientOff}.
-                </p>
+                  ))}
+                </select>
               </div>
 
-              {/* MAIN VIEWPORT */}
-              <div className="lg:col-span-9 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-6 !pb-2 space-y-5 flex flex-col">
-                {/* 360 viewport */}
-                <div
-                  ref={containerRef}
-                  className="rounded-2xl border border-white/15 overflow-hidden bg-black h-[500px] md:h-[600px] relative group"
-                >
-                  {!selectedDestinationId || isGlobeZoomTransitioning ? (
-                    <div
-                      className={`h-full w-full transition-transform duration-[2200ms] ease-in ${
-                        isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
-                      }`}
-                    >
-                      <ZimbabweInteractiveGlobeLoader
-                        zoomToHarare={isGlobeZoomTransitioning}
-                        musicEnabled={!selectedDestinationId}
-                      />
+              {!isTtsEnabled && !isConversationMode ? null : (
+                <div className="mt-2 border-t border-white/10 pt-3">
+                  <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">
+                    {isConversationMode
+                      ? ui.conversation
+                      : selectedDestinationId
+                        ? ui.narration
+                        : ui.selectLocation}
+                  </p>
+                  {!selectedDestinationId ? null : isConversationMode ? (
+                    <div className="space-y-2">
+                      <p className="text-sm text-white/75 leading-relaxed">
+                        <span className="font-black">
+                          {ui.sttText ?? "STT"}:
+                        </span>{" "}
+                        {conversationTranscript || "..."}
+                      </p>
+                      <p className="text-sm text-white/75 leading-relaxed">
+                        <span className="font-black">
+                          {ui.response ?? "Response"}:
+                        </span>{" "}
+                        {conversationResponse || "..."}
+                      </p>
+                    </div>
+                  ) : sidebarNarrationLines.length > 0 ? (
+                    <div className="space-y-1.5">
+                      {sidebarNarrationLines.map((line, index) => (
+                        <p
+                          key={`${line}-${index}`}
+                          className="text-sm text-white/75 leading-relaxed"
+                        >
+                          {line.includes(":") ? (
+                            <>
+                              <span className="font-black">
+                                {line.split(":")[0]}:
+                              </span>{" "}
+                              {line.split(":").slice(1).join(":").trim()}
+                            </>
+                          ) : (
+                            line
+                          )}
+                        </p>
+                      ))}
                     </div>
                   ) : (
-                    <VirtualExperienceCanvas
-                      uiLanguage={uiLanguage}
-                      stage={currentStage}
-                      currentStageIndex={walkStageIndex}
-                      stageOrder={stageOrder}
-                      hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
-                      ambientAudioEnabled={!isConversationMode && isSoundEnabled && !isNarrationPlaying}
-                      narrationButtonLabel={ui.vrStartNarration}
-                      conversationButtonLabel={ui.vrStartConversation}
-                      narrationActive={isTtsEnabled}
-                      conversationActive={isConversationMode}
-                      autoRotateEnabled={autoRotateEnabled}
-                      cameraRef={cameraRef}
-                      orbitControlsRef={orbitControlsRef}
-                      onNavigate={(id: string) => {
-                        const nextIndex = walkStages.findIndex((stage) => stage.id === id);
-                        if (nextIndex >= 0) setWalkStageIndex(nextIndex);
-                      }}
-                      onNavigatePrevious={() => {
-                        setWalkStageIndex((current) => Math.max(0, current - 1));
-                      }}
-                      onPointOfInterestClick={handlePointOfInterestClick}
-                      onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
-                      onToggleNarration={handleNarrationToggle}
-                      onToggleConversation={() => {
-                        void handleConversationToggle();
-                      }}
-                      onLandmarkClick={(position) => {
-                        void handleLandmarkClick(position);
-                      }}
-                      onPointerMissed={handleVrPointerMissed}
-                    />
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      {ui.narrationPending}
+                    </p>
                   )}
+                </div>
+              )}
+              <p className="m-0 mt-auto text-[11px] text-white/70 leading-relaxed">
+                {ui.conversation}{" "}
+                {isConversationMode
+                  ? ui.conversationEnabled
+                  : ui.conversationDisabled}
+                . {ui.ambient} {isSoundEnabled ? ui.ambientOn : ui.ambientOff}.
+              </p>
+            </div>
 
-                  {/* Fullscreen Toggle */}
-                  <div className="absolute top-6 right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                    <Button 
-                      onClick={() => void toggleFullscreen()}
-                      variant="outline" 
-                      className="h-10 px-3 rounded-full border-white/20 bg-black/40 text-white flex items-center gap-1.5"
-                      aria-label={isFullscreen ? ui.exitFullscreen : ui.enterFullscreen}
+            {/* MAIN VIEWPORT */}
+            <div className="lg:col-span-9 rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-6 !pb-2 space-y-5 flex flex-col">
+              {/* 360 viewport */}
+              <div
+                ref={containerRef}
+                className="rounded-2xl border border-white/15 overflow-hidden bg-black h-[500px] md:h-[600px] relative group"
+              >
+                {!selectedDestinationId || isGlobeZoomTransitioning ? (
+                  <div
+                    className={`h-full w-full transition-transform duration-[2200ms] ease-in ${
+                      isGlobeZoomTransitioning ? "scale-[3.2]" : "scale-100"
+                    }`}
+                  >
+                    <ZimbabweInteractiveGlobeLoader
+                      zoomToHarare={isGlobeZoomTransitioning}
+                      musicEnabled={!selectedDestinationId}
+                    />
+                  </div>
+                ) : (
+                  <VirtualExperienceCanvas
+                    uiLanguage={uiLanguage}
+                    stage={currentStage}
+                    currentStageIndex={walkStageIndex}
+                    stageOrder={stageOrder}
+                    hiddenPoiInfoIconIds={hiddenPoiInfoIconIds}
+                    ambientAudioEnabled={
+                      !isConversationMode &&
+                      isSoundEnabled &&
+                      !isNarrationPlaying
+                    }
+                    narrationButtonLabel={ui.vrStartNarration}
+                    conversationButtonLabel={ui.vrStartConversation}
+                    narrationActive={isTtsEnabled}
+                    conversationActive={isConversationMode}
+                    autoRotateEnabled={autoRotateEnabled}
+                    cameraRef={cameraRef}
+                    orbitControlsRef={orbitControlsRef}
+                    onNavigate={(id: string) => {
+                      const nextIndex = walkStages.findIndex(
+                        stage => stage.id === id
+                      );
+                      if (nextIndex >= 0) setWalkStageIndex(nextIndex);
+                    }}
+                    onNavigatePrevious={() => {
+                      setWalkStageIndex(current => Math.max(0, current - 1));
+                    }}
+                    onPointOfInterestClick={handlePointOfInterestClick}
+                    onPointOfInterestInfoClick={handlePointOfInterestInfoClick}
+                    onToggleNarration={handleNarrationToggle}
+                    onToggleConversation={() => {
+                      void handleConversationToggle();
+                    }}
+                    onLandmarkClick={position => {
+                      void handleLandmarkClick(position);
+                    }}
+                    onPointerMissed={handleVrPointerMissed}
+                  />
+                )}
+
+                {/* Fullscreen Toggle */}
+                <div className="absolute z-40 top-4 right-4 sm:top-6 sm:right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity">
+                  <Button
+                    onClick={() => void toggleFullscreen()}
+                    variant="outline"
+                    className="h-11 w-11 p-0 sm:w-auto sm:px-3 rounded-full border-white/20 bg-black/40 text-white flex items-center gap-1.5"
+                    aria-label={
+                      isFullscreen ? ui.exitFullscreen : ui.enterFullscreen
+                    }
+                  >
+                    <span className="hidden sm:inline text-[9px] font-black uppercase tracking-widest">
+                      {isFullscreen ? ui.minimize : ui.fullscreen}
+                    </span>
+                    {isFullscreen ? (
+                      <Minimize className="h-4 w-4" />
+                    ) : (
+                      <Maximize className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+
+                {/* HUD controls (available in normal + fullscreen) */}
+                {selectedDestinationId ? (
+                  <>
+                    <div
+                      className="absolute z-30 top-4 left-4 right-20 sm:top-6 sm:left-6 sm:right-auto pointer-events-auto flex flex-wrap items-center gap-2"
+                      onPointerDown={event => event.stopPropagation()}
                     >
-                      <span className="text-[9px] font-black uppercase tracking-widest">
-                        {isFullscreen ? ui.minimize : ui.fullscreen}
-                      </span>
-                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-                    </Button>
-                  </div>
-
-                  {/* HUD controls (available in normal + fullscreen) */}
-                  {selectedDestinationId ? (
-                    <>
-                      <div
-                        className="absolute z-30 top-6 left-6 pointer-events-auto flex flex-wrap items-center gap-2"
-                        onPointerDown={(event) => event.stopPropagation()}
+                      <Button
+                        type="button"
+                        onClick={() => zoomView("in")}
+                        variant="outline"
+                        className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        aria-label={ui.zoomIn}
                       >
-                        <Button
-                          type="button"
-                          onClick={() => zoomView("in")}
-                          variant="outline"
-                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label={ui.zoomIn}
-                        >
-                          <ZoomIn className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => zoomView("out")}
-                          variant="outline"
-                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label={ui.zoomOut}
-                        >
-                          <ZoomOut className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={resetView}
-                          variant="outline"
-                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label={ui.resetView}
-                        >
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => setAutoRotateEnabled((prev) => !prev)}
-                          variant="outline"
-                          className={`h-8 px-3 rounded-full border text-[9px] font-black uppercase tracking-widest ${
-                            autoRotateEnabled
-                              ? "bg-zim-gold text-zim-black border-zim-gold"
-                              : "border-white/20 bg-black/50 text-white"
-                          }`}
-                          aria-label={ui.toggleAutoRotate}
-                        >
-                          {autoRotateEnabled ? ui.autoOn : ui.autoOff}
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => setShowStageInfo(true)}
-                          variant="outline"
-                          className="h-8 px-2 rounded-full border-white/20 bg-black/50 text-white"
-                          aria-label={ui.showPlaceInformation}
-                        >
-                          <CircleHelp className="h-4 w-4" />
-                        </Button>
-                      </div>
-
-                      <div className="absolute z-30 inset-x-0 bottom-4 flex flex-col items-center gap-2 pointer-events-none">
-                        <div
-                          className="pointer-events-auto rounded-2xl border border-zim-gold/40 bg-black/55 px-3 py-3 shadow-[0_0_30px_rgba(212,175,55,0.25)]"
-                          onPointerDown={(event) => event.stopPropagation()}
-                        >
-                          <div className="grid grid-cols-3 gap-1 items-center">
-                            <span />
-                            <Button
-                              type="button"
-                              onClick={() => rotateView("up")}
-                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label={ui.lookUp}
-                            >
-                              <ArrowUp className="h-4 w-4" />
-                            </Button>
-                            <span />
-                            <Button
-                              type="button"
-                              onClick={() => rotateView("left")}
-                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label={ui.lookLeft}
-                            >
-                              <ArrowLeft className="h-4 w-4" />
-                            </Button>
-                            <span className="h-7 w-7" />
-                            <Button
-                              type="button"
-                              onClick={() => rotateView("right")}
-                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label={ui.lookRight}
-                            >
-                              <ArrowRight className="h-4 w-4" />
-                            </Button>
-                            <span />
-                            <Button
-                              type="button"
-                              onClick={() => rotateView("down")}
-                              className="h-7 w-7 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
-                              aria-label={ui.lookDown}
-                            >
-                              <ArrowDown className="h-4 w-4" />
-                            </Button>
-                            <span />
-                          </div>
-                        </div>
-                        <p className="text-[9px] uppercase tracking-widest font-black  pointer-events-none">
-                          {ui.walkthrough} {walkStageIndex + 1}/{walkStages.length}
-                        </p>
-                      </div>
-                    </>
-                  ) : null}
-
-                  {showStageInfo && selectedDestinationId ? (
-                    <div className="absolute inset-0 z-[120] flex items-center justify-center bg-black/65 p-4">
-                      <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
-                        <div className="flex items-center justify-between gap-2">
-                          <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
-                            {currentDestination.name} - {currentStage.title}
-                          </h3>
-                          <Button
-                            onClick={() => setShowStageInfo(false)}
-                            variant="outline"
-                            className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
-                          >
-                            {ui.close}
-                          </Button>
-                        </div>
-                        <p className="text-sm  mt-3 leading-relaxed">{currentStage.caption}</p>
-                        <p className="text-sm  mt-2 leading-relaxed">{currentDestination.summary}</p>
-                        {currentDestination.locationHighlights?.length ? (
-                          <div className="mt-3">
-                            <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">{ui.highlights}</p>
-                            <div className="space-y-1">
-                              {currentDestination.locationHighlights.map((item) => (
-                                <p key={item} className="text-xs  leading-relaxed">
-                                  - {item}
-                                </p>
-                              ))}
-                            </div>
-                          </div>
-                        ) : null}
-                      </div>
+                        <ZoomIn className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => zoomView("out")}
+                        variant="outline"
+                        className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        aria-label={ui.zoomOut}
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={resetView}
+                        variant="outline"
+                        className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        aria-label={ui.resetView}
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => setAutoRotateEnabled(prev => !prev)}
+                        variant="outline"
+                        className={`h-11 px-3 rounded-full border text-[9px] font-black uppercase tracking-widest ${
+                          autoRotateEnabled
+                            ? "bg-zim-gold text-zim-black border-zim-gold"
+                            : "border-white/20 bg-black/50 text-white"
+                        }`}
+                        aria-label={ui.toggleAutoRotate}
+                      >
+                        {autoRotateEnabled ? ui.autoOn : ui.autoOff}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => setShowStageInfo(true)}
+                        variant="outline"
+                        className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        aria-label={ui.showPlaceInformation}
+                      >
+                        <CircleHelp className="h-4 w-4" />
+                      </Button>
                     </div>
-                  ) : null}
 
-                  {showPoiInfo && selectedDestinationId ? (
-                    <div className="absolute inset-0 z-[130] flex items-center justify-center bg-black/65 p-4">
-                      <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
-                        <div className="flex items-center justify-between gap-2">
-                          <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
-                            {poiInfoTitle}
-                          </h3>
+                    <div className="absolute z-30 inset-x-0 bottom-4 flex flex-col items-center gap-2 pointer-events-none">
+                      <div
+                        className="pointer-events-auto rounded-2xl border border-zim-gold/40 bg-black/55 px-3 py-3 shadow-[0_0_30px_rgba(212,175,55,0.25)]"
+                        onPointerDown={event => event.stopPropagation()}
+                      >
+                        <div className="grid grid-cols-3 gap-1 items-center">
+                          <span />
                           <Button
                             type="button"
-                            onClick={() => setShowPoiInfo(false)}
-                            variant="outline"
-                            className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                            onClick={() => rotateView("up")}
+                            className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            aria-label={ui.lookUp}
                           >
-                            {ui.close}
+                            <ArrowUp className="h-4 w-4" />
                           </Button>
-                        </div>
-                        {poiInfoLoading ? (
-                          <p className="text-sm  mt-3 leading-relaxed">{ui.loadingPoi}</p>
-                        ) : (
-                          <p className="text-sm  mt-3 leading-relaxed">{poiInfoText}</p>
-                        )}
-                      </div>
-                    </div>
-                  ) : null}
-
-                </div>
-
-                {/* CONTROL PANEL (AR-style structure) */}
-                <div className="space-y-3">
-                  <div className="rounded-xl border border-zim-gold/20 bg-zim-gold/5 p-3 mt-2">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <MapPin className="h-2.5 w-2.5 text-zim-gold" />
-                        <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold">{ui.currentContext}</p>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Button
-                          onClick={handleConversationToggle}
-                          variant="outline"
-                          aria-pressed={isConversationMode}
-                          className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap shrink-0 border ${
-                            isConversationMode
-                              ? "bg-zim-gold text-zim-black border-zim-gold hover:bg-white"
-                              : "border-white/20 text-white hover:bg-white hover:text-zim-black"
-                          }`}
-                        >
-                          <MessageSquare className="h-3 w-3 mr-1" />
-                          {isConversationMode ? ui.conversationOn : ui.conversationOff}
-                        </Button>
-                        {isConversationMode ? (
+                          <span />
                           <Button
                             type="button"
-                            onPointerDown={handlePushToTalkStart}
-                            onPointerUp={handlePushToTalkEnd}
-                            onPointerCancel={handlePushToTalkEnd}
-                            onPointerLeave={handlePushToTalkEnd}
-                            onKeyDown={(event) => {
-                              if (event.key !== " " && event.key !== "Enter") return;
-                              event.preventDefault();
-                              handlePushToTalkStart();
-                            }}
-                            onKeyUp={(event) => {
-                              if (event.key !== " " && event.key !== "Enter") return;
-                              event.preventDefault();
-                              handlePushToTalkEnd();
-                            }}
-                            variant="outline"
-                            aria-label={isRecording ? ui.releaseToSend : ui.pushToTalk}
-                            className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap border ${
-                              isRecording
-                                ? "bg-zim-gold text-zim-black border-zim-gold"
-                                : "border-white/20 text-white hover:bg-white hover:text-zim-black"
-                            }`}
+                            onClick={() => rotateView("left")}
+                            className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            aria-label={ui.lookLeft}
                           >
-                            {isRecording ? ui.releaseToSend : ui.pushToTalk}
+                            <ArrowLeft className="h-4 w-4" />
                           </Button>
-                        ) : null}
-                        <Button
-                          onClick={() => {
-                            if (!selectedDestinationId) return;
-                            if (isConversationMode || isTtsEnabled || isNarrationPlaying) {
-                              setIsSoundEnabled(false);
-                              return;
-                            }
-                            setIsSoundEnabled((prev) => !prev);
-                          }}
-                          variant="outline"
-                          className="h-6 px-2.5 border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap"
-                          aria-label={isSoundEnabled ? ui.muteAmbientSound : ui.enableAmbientSound}
-                          disabled={!selectedDestinationId}
-                        >
-                          {isSoundEnabled ? <Volume2 className="h-3 w-3 mr-1" /> : <VolumeX className="h-3 w-3 mr-1" />}
-                          {isSoundEnabled ? ui.ambientOnBadge : ui.ambientOffBadge}
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={handleNarrationToggle}
-                          variant="outline"
-                          disabled={isConversationMode}
-                          className={`h-6 px-2.5 font-black uppercase tracking-widest text-[8px] leading-none rounded-full whitespace-nowrap border ${
-                            isTtsEnabled
-                              ? "bg-zim-gold text-zim-black border-zim-gold hover:bg-white"
-                              : "border-white/20 text-white hover:bg-white hover:text-zim-black"
-                          }`}
-                          aria-label={isTtsEnabled ? ui.disableTts : ui.enableTts}
-                        >
-                          {isTtsEnabled ? ui.narrationOn : ui.narrationOff}
-                        </Button>
-                        {isTtsEnabled ? (
-                          <div className="h-6 px-2.5 border border-white/20 text-white rounded-full flex items-center gap-2">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-white">{ui.voice}</span>
-                            <select
-                              id="vr-voice-gender-inline"
-                              value={selectedVoiceGender}
-                              onChange={(event) => {
-                                const nextGender = event.target.value as "male" | "female";
-                                setSelectedVoiceGender(nextGender);
-                                if (!isTtsEnabled || isConversationMode) return;
-                                const replayText = String(virtualNarrative || currentStage.caption || currentDestination.summary || "").trim();
-                                if (!replayText) return;
-                                void (async () => {
-                                  await unlockAudio();
-                                  await speakWithTts(replayText, true);
-                                })();
-                              }}
-                              className="bg-transparent text-[8px] font-black uppercase tracking-widest text-zim-gold focus:outline-none"
-                            >
-                              <option className="text-zim-gold bg-slate-950" value="male">{ui.male}</option>
-                              <option className="text-zim-gold bg-slate-950" value="female">{ui.female}</option>
-                            </select>
-                          </div>
-                        ) : null}
+                          <span className="h-11 w-11" />
+                          <Button
+                            type="button"
+                            onClick={() => rotateView("right")}
+                            className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            aria-label={ui.lookRight}
+                          >
+                            <ArrowRight className="h-4 w-4" />
+                          </Button>
+                          <span />
+                          <Button
+                            type="button"
+                            onClick={() => rotateView("down")}
+                            className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            aria-label={ui.lookDown}
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </Button>
+                          <span />
+                        </div>
                       </div>
+                      <p className="text-[9px] uppercase tracking-widest font-black  pointer-events-none">
+                        {ui.walkthrough} {walkStageIndex + 1}/
+                        {walkStages.length}
+                      </p>
                     </div>
-                    <div className="mt-2 border-t border-white/15" />
-                    {selectedDestinationId ? (
-                      <>
-                        <h2 className="!text-lg font-black text-white leading-tight mt-2">{currentDestination.name}</h2>
-                        <p className="text-[11px]  mt-1 leading-snug">{currentStage.caption}</p>
-                      </>
-                    ) : null}
+                  </>
+                ) : null}
+
+                {showStageInfo && selectedDestinationId ? (
+                  <div className="absolute inset-0 z-[120] flex items-center justify-center bg-black/65 p-4">
+                    <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
+                          {currentDestination.name} - {currentStage.title}
+                        </h3>
+                        <Button
+                          onClick={() => setShowStageInfo(false)}
+                          variant="outline"
+                          className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                        >
+                          {ui.close}
+                        </Button>
+                      </div>
+                      <p className="text-sm  mt-3 leading-relaxed">
+                        {currentStage.caption}
+                      </p>
+                      <p className="text-sm  mt-2 leading-relaxed">
+                        {currentDestination.summary}
+                      </p>
+                      {currentDestination.locationHighlights?.length ? (
+                        <div className="mt-3">
+                          <p className="text-[10px] uppercase tracking-widest font-black text-zim-gold mb-1">
+                            {ui.highlights}
+                          </p>
+                          <div className="space-y-1">
+                            {currentDestination.locationHighlights.map(item => (
+                              <p
+                                key={item}
+                                className="text-xs  leading-relaxed"
+                              >
+                                - {item}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
+                ) : null}
 
-                  
-                </div>
+                {showPoiInfo && selectedDestinationId ? (
+                  <div className="absolute inset-0 z-[130] flex items-center justify-center bg-black/65 p-4">
+                    <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
+                          {poiInfoTitle}
+                        </h3>
+                        <Button
+                          type="button"
+                          onClick={() => setShowPoiInfo(false)}
+                          variant="outline"
+                          className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                        >
+                          {ui.close}
+                        </Button>
+                      </div>
+                      {poiInfoLoading ? (
+                        <p className="text-sm  mt-3 leading-relaxed">
+                          {ui.loadingPoi}
+                        </p>
+                      ) : (
+                        <p className="text-sm  mt-3 leading-relaxed">
+                          {poiInfoText}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
+              {/* CONTROL PANEL (AR-style structure) */}
+              <div className="space-y-3">
+                <div className="rounded-xl border border-zim-gold/20 bg-zim-gold/5 p-3 mt-2">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <MapPin className="h-2.5 w-2.5 text-zim-gold" />
+                      <p className="text-[9px] uppercase tracking-widest font-black text-zim-gold">
+                        {ui.currentContext}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        onClick={handleConversationToggle}
+                        variant="outline"
+                        aria-pressed={isConversationMode}
+                        className={`min-h-11 px-3 font-black uppercase tracking-widest text-[10px] leading-none rounded-full whitespace-nowrap shrink-0 border ${
+                          isConversationMode
+                            ? "bg-zim-gold text-zim-black border-zim-gold hover:bg-white"
+                            : "border-white/20 text-white hover:bg-white hover:text-zim-black"
+                        }`}
+                      >
+                        <MessageSquare className="h-3 w-3 mr-1" />
+                        {isConversationMode
+                          ? ui.conversationOn
+                          : ui.conversationOff}
+                      </Button>
+                      {isConversationMode ? (
+                        <Button
+                          type="button"
+                          onPointerDown={handlePushToTalkStart}
+                          onPointerUp={handlePushToTalkEnd}
+                          onPointerCancel={handlePushToTalkEnd}
+                          onPointerLeave={handlePushToTalkEnd}
+                          onKeyDown={event => {
+                            if (event.key !== " " && event.key !== "Enter")
+                              return;
+                            event.preventDefault();
+                            handlePushToTalkStart();
+                          }}
+                          onKeyUp={event => {
+                            if (event.key !== " " && event.key !== "Enter")
+                              return;
+                            event.preventDefault();
+                            handlePushToTalkEnd();
+                          }}
+                          variant="outline"
+                          aria-label={
+                            isRecording ? ui.releaseToSend : ui.pushToTalk
+                          }
+                          className={`min-h-11 px-3 font-black uppercase tracking-widest text-[10px] leading-none rounded-full whitespace-nowrap border ${
+                            isRecording
+                              ? "bg-zim-gold text-zim-black border-zim-gold"
+                              : "border-white/20 text-white hover:bg-white hover:text-zim-black"
+                          }`}
+                        >
+                          {isRecording ? ui.releaseToSend : ui.pushToTalk}
+                        </Button>
+                      ) : null}
+                      <Button
+                        onClick={() => {
+                          if (!selectedDestinationId) return;
+                          if (
+                            isConversationMode ||
+                            isTtsEnabled ||
+                            isNarrationPlaying
+                          ) {
+                            setIsSoundEnabled(false);
+                            return;
+                          }
+                          setIsSoundEnabled(prev => !prev);
+                        }}
+                        variant="outline"
+                        className="min-h-11 px-3 border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] leading-none rounded-full whitespace-nowrap"
+                        aria-label={
+                          isSoundEnabled
+                            ? ui.muteAmbientSound
+                            : ui.enableAmbientSound
+                        }
+                        disabled={!selectedDestinationId}
+                      >
+                        {isSoundEnabled ? (
+                          <Volume2 className="h-3 w-3 mr-1" />
+                        ) : (
+                          <VolumeX className="h-3 w-3 mr-1" />
+                        )}
+                        {isSoundEnabled
+                          ? ui.ambientOnBadge
+                          : ui.ambientOffBadge}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={handleNarrationToggle}
+                        variant="outline"
+                        disabled={isConversationMode}
+                        className={`min-h-11 px-3 font-black uppercase tracking-widest text-[10px] leading-none rounded-full whitespace-nowrap border ${
+                          isTtsEnabled
+                            ? "bg-zim-gold text-zim-black border-zim-gold hover:bg-white"
+                            : "border-white/20 text-white hover:bg-white hover:text-zim-black"
+                        }`}
+                        aria-label={isTtsEnabled ? ui.disableTts : ui.enableTts}
+                      >
+                        {isTtsEnabled ? ui.narrationOn : ui.narrationOff}
+                      </Button>
+                      {isTtsEnabled ? (
+                        <div className="min-h-11 px-3 border border-white/20 text-white rounded-full flex items-center gap-2">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-white">
+                            {ui.voice}
+                          </span>
+                          <select
+                            id="vr-voice-gender-inline"
+                            aria-label={ui.voice}
+                            value={selectedVoiceGender}
+                            onChange={event => {
+                              const nextGender = event.target.value as
+                                | "male"
+                                | "female";
+                              setSelectedVoiceGender(nextGender);
+                              if (!isTtsEnabled || isConversationMode) return;
+                              const replayText = String(
+                                virtualNarrative ||
+                                  currentStage.caption ||
+                                  currentDestination.summary ||
+                                  ""
+                              ).trim();
+                              if (!replayText) return;
+                              void (async () => {
+                                await unlockAudio();
+                                await speakWithTts(replayText, true);
+                              })();
+                            }}
+                            className="bg-transparent text-[8px] font-black uppercase tracking-widest text-zim-gold focus:outline-none"
+                          >
+                            <option
+                              className="text-zim-gold bg-slate-950"
+                              value="male"
+                            >
+                              {ui.male}
+                            </option>
+                            <option
+                              className="text-zim-gold bg-slate-950"
+                              value="female"
+                            >
+                              {ui.female}
+                            </option>
+                          </select>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="mt-2 border-t border-white/15" />
+                  {selectedDestinationId ? (
+                    <>
+                      <h2 className="!text-lg font-black text-white leading-tight mt-2">
+                        {currentDestination.name}
+                      </h2>
+                      <p className="text-[11px]  mt-1 leading-snug">
+                        {currentStage.caption}
+                      </p>
+                    </>
+                  ) : null}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

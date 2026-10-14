@@ -1,39 +1,54 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
-import { useState, useEffect, useMemo, useRef, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ArrowRightLeft, Brain, Landmark, MapPin, Plus, ShoppingBag } from "lucide-react";
+import { Brain, Landmark, MapPin, Plus, ShoppingBag } from "lucide-react";
 import MainPageHero from "@/modules/home/components/MainPageHero";
-import InstantImage, { preloadImages } from "@/components/InstantImage";
+import InstantImage from "@/components/InstantImage";
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
   const { t } = useTranslation();
-  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
+  const tr = (key: string, fallback: string) =>
+    t(key, { defaultValue: fallback });
   const [currentBgIndex, setCurrentBgIndex] = useState<number>(0); // Hero background images - Zimbabwe tourist destinations
   const scrollRailRef = useRef<HTMLDivElement | null>(null);
-  const dragStateRef = useRef<{ pointerId: number | null; startX: number; startScrollLeft: number }>({
+  const dragStateRef = useRef<{
+    pointerId: number | null;
+    startX: number;
+    startScrollLeft: number;
+  }>({
     pointerId: null,
     startX: 0,
     startScrollLeft: 0,
   });
   const suppressClickUntilRef = useRef(0);
-  const heroBackgrounds = useMemo(() => [
-    "/images/pages/tourism/victoria_falls.jpg",
-    "/images/pages/home/eu_symbol.png",
-    "/images/pages/home/partnership_handshake.png",
-    "/images/pages/shared/export_port_01.jpg",
-    "/images/pages/home/zimbabwe_lion.png",
-    "/images/pages/home/minerals_mining.png",
-    "/images/pages/shared/manufacturing_factory.jpg",
-    "/images/pages/technology/ai_innovation.jpg",
-  ], []);
+  const heroBackgrounds = useMemo(
+    () => [
+      "/images/pages/tourism/victoria_falls.jpg",
+      "/images/pages/home/eu_symbol.png",
+      "/images/pages/home/partnership_handshake.png",
+      "/images/pages/shared/export_port_01.jpg",
+      "/images/pages/home/zimbabwe_lion.png",
+      "/images/pages/home/minerals_mining.png",
+      "/images/pages/shared/manufacturing_factory.jpg",
+      "/images/pages/technology/ai_innovation.jpg",
+    ],
+    []
+  );
 
   useEffect(() => {
     if (prefersReducedMotion || heroBackgrounds.length <= 1) return;
     const bgTimer = setInterval(() => {
-      setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
+      setCurrentBgIndex(prev => (prev + 1) % heroBackgrounds.length);
     }, 9000);
     return () => clearInterval(bgTimer);
   }, [heroBackgrounds.length, prefersReducedMotion]);
@@ -51,7 +66,11 @@ export default function Home() {
   };
 
   const handleRailPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!scrollRailRef.current || dragStateRef.current.pointerId !== event.pointerId) return;
+    if (
+      !scrollRailRef.current ||
+      dragStateRef.current.pointerId !== event.pointerId
+    )
+      return;
 
     const deltaX = event.clientX - dragStateRef.current.startX;
 
@@ -59,7 +78,8 @@ export default function Home() {
       suppressClickUntilRef.current = Date.now() + 250;
     }
 
-    scrollRailRef.current.scrollLeft = dragStateRef.current.startScrollLeft - deltaX;
+    scrollRailRef.current.scrollLeft =
+      dragStateRef.current.startScrollLeft - deltaX;
   };
 
   const handleRailPointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -81,69 +101,79 @@ export default function Home() {
     event.preventDefault();
   };
 
-  const modules = useMemo(() => [
-    {
-      title: tr("home.tiles.remittances.title", "Remittances"),
-      description: tr("home.tiles.remittances.description", "Send money, pay essential support costs, or top up airtime with secure provider-backed flows and clear fee visibility built for diaspora households."),
-      detail: tr("home.tiles.remittances.detail", "Track value clearly before you send and keep everyday family support fast, predictable, and simple."),
-      href: "/remittances",
-      bgImage: "/images/pages/payments/mobile-payment-terminal.jpg",
-      stats: tr("home.tiles.remittances.stats", "Remittance + Airtime"),
-      icon: ArrowRightLeft,
-    },
-    {
-      title: tr("home.tiles.shop.title", "Shop"),
-      description: tr("home.tiles.shop.description", "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout."),
-      detail: tr("home.tiles.shop.detail", "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable."),
-      href: "/shop",
-      bgImage: "/images/pages/shop/zimbabwe_shop_hero.jpg",
-      stats: tr("home.tiles.shop.stats", "Marketplace Ready"),
-      icon: ShoppingBag,
-    },
-    {
-      title: tr("home.tiles.technology.title", "Technology"),
-      description: tr("home.tiles.technology.description", "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity."),
-      detail: tr("home.tiles.technology.detail", "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults."),
-      href: "/technology",
-      bgImage: "/images/pages/technology/ai_innovation.jpg",
-      stats: tr("home.tiles.technology.stats", "Onesa AI"),
-      icon: Brain,
-    },
-    {
-      title: tr("home.tiles.investment.title", "Investment"),
-      description: tr("home.tiles.investment.description", "Explore vetted opportunities, diaspora-friendly projects, and structured investment access across sectors with clearer context and better visibility."),
-      detail: tr("home.tiles.investment.detail", "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story."),
-      href: "/investment",
-      bgImage: "/images/pages/investment/rbz_building.png",
-      stats: tr("home.tiles.investment.stats", "$50M+ Opportunities"),
-      icon: Landmark,
-    },
-    {
-      title: tr("home.tiles.tourism.title", "Tourism"),
-      description: tr("home.tiles.tourism.description", "Explore Zimbabwe's world-class attractions and plan your visit with confidence, from iconic landmarks to deeper cultural and heritage experiences."),
-      detail: tr("home.tiles.tourism.detail", "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context."),
-      href: "/tourism",
-      bgImage: "/images/pages/tourism/victoria_falls.jpg",
-      stats: tr("home.tiles.tourism.stats", "Diaspora Travel Ready"),
-      icon: MapPin,
-    },
-  ], [t]);
-
-  useEffect(() => {
-    preloadImages([...heroBackgrounds.slice(0, 2), ...modules.slice(0, 3).map((module) => module.bgImage)], 3);
-  }, [heroBackgrounds, modules]);
-
-
+  const modules = useMemo(
+    () => [
+      {
+        title: tr("home.tiles.shop.title", "Shop"),
+        description: tr(
+          "home.tiles.shop.description",
+          "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout."
+        ),
+        detail: tr(
+          "home.tiles.shop.detail",
+          "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable."
+        ),
+        href: "/shop",
+        bgImage: "/images/pages/shop/zimbabwe_shop_hero.jpg",
+        stats: tr("home.tiles.shop.stats", "Marketplace Ready"),
+        icon: ShoppingBag,
+      },
+      {
+        title: tr("home.tiles.technology.title", "Technology"),
+        description: tr(
+          "home.tiles.technology.description",
+          "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity."
+        ),
+        detail: tr(
+          "home.tiles.technology.detail",
+          "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults."
+        ),
+        href: "/technology",
+        bgImage: "/images/pages/technology/ai_innovation.jpg",
+        stats: tr("home.tiles.technology.stats", "Onesa AI"),
+        icon: Brain,
+      },
+      {
+        title: tr("home.tiles.investment.title", "Investment"),
+        description: tr(
+          "home.tiles.investment.description",
+          "Explore vetted opportunities, diaspora-friendly projects, and structured investment access across sectors with clearer context and better visibility."
+        ),
+        detail: tr(
+          "home.tiles.investment.detail",
+          "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story."
+        ),
+        href: "/investment",
+        bgImage: "/images/pages/investment/rbz_building.png",
+        stats: tr("home.tiles.investment.stats", "$50M+ Opportunities"),
+        icon: Landmark,
+      },
+      {
+        title: tr("home.tiles.tourism.title", "Tourism"),
+        description: tr(
+          "home.tiles.tourism.description",
+          "Explore Zimbabwe's world-class attractions and plan your visit with confidence, from iconic landmarks to deeper cultural and heritage experiences."
+        ),
+        detail: tr(
+          "home.tiles.tourism.detail",
+          "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context."
+        ),
+        href: "/tourism",
+        bgImage: "/images/pages/tourism/victoria_falls.jpg",
+        stats: tr("home.tiles.tourism.stats", "Diaspora Travel Ready"),
+        icon: MapPin,
+      },
+    ],
+    [t]
+  );
 
   return (
-    
     <Layout>
-      
       {/* Hero Section */}
-      <MainPageHero 
-        hero={{ 
-          currentBgIndex: currentBgIndex, 
-          heroBackgrounds: heroBackgrounds
+      <MainPageHero
+        hero={{
+          currentBgIndex: currentBgIndex,
+          heroBackgrounds: heroBackgrounds,
         }}
       />
 
@@ -172,7 +202,7 @@ export default function Home() {
                   >
                     <Link
                       href={module.href}
-                      className="group block h-full rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      className="group block h-full rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-zim-green focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       onClick={handleTileClick}
                     >
                       <div className="glass-morphism glow-border h-[35rem] overflow-hidden rounded-3xl p-1 transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_12px_30px_rgba(15,23,42,0.32)] md:h-[37rem]">
@@ -182,9 +212,9 @@ export default function Home() {
                               <InstantImage
                                 src={module.bgImage}
                                 alt={module.title}
-                                priority={index < 2}
-                                loading={index < 2 ? "eager" : "lazy"}
-                                fetchPriority={index === 0 ? "high" : "auto"}
+                                priority={false}
+                                loading="lazy"
+                                fetchPriority="low"
                                 draggable={false}
                                 wrapperClassName="h-full w-full bg-slate-900"
                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -235,7 +265,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
     </Layout>
   );
 }

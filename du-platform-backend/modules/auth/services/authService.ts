@@ -1,5 +1,4 @@
 import { issueAccessTokenForUser } from "../../../shared/authSession";
-import { appendAuditEvent } from "../../../core/auditLogger";
 import { sendResetEmail } from "../../../shared/email";
 import { hashPassword, verifyPassword } from "../../../shared/passwords";
 import { isUserEmailConflictError } from "../../../utils/dbErrors";
@@ -28,16 +27,11 @@ export class AuthServiceError extends Error {
 export class AuthService {
   constructor(private readonly repository = new AuthRepository()) {}
 
-  private isKycSelfVerifyEnabled() {
-    return String(process.env.KYC_SELF_VERIFY_ENABLED ?? "").trim().toLowerCase() === "true";
-  }
-
   private toPublicUser(user: Record<string, unknown>) {
     return {
       id: Number(user.id ?? 0),
       fullName: String(user.full_name ?? ""),
       email: String(user.email ?? ""),
-      ...(user.kyc_verified === undefined ? {} : { kycVerified: Boolean(user.kyc_verified) }),
     };
   }
 
@@ -47,7 +41,9 @@ export class AuthService {
     password: string;
     confirmPassword?: string;
   }) {
-    const normalizedEmail = String(input.email ?? "").trim().toLowerCase();
+    const normalizedEmail = String(input.email ?? "")
+      .trim()
+      .toLowerCase();
     const existing = await this.repository.findByEmail(normalizedEmail);
     if (existing) {
       throw new AuthServiceError(
@@ -91,7 +87,9 @@ export class AuthService {
   }
 
   async login(input: { email: string; password: string }) {
-    const normalizedEmail = String(input.email ?? "").trim().toLowerCase();
+    const normalizedEmail = String(input.email ?? "")
+      .trim()
+      .toLowerCase();
 
     const lockStatus = isLoginLocked(normalizedEmail);
     if (lockStatus.locked) {
@@ -105,12 +103,19 @@ export class AuthService {
 
     const user = await this.repository.findByEmail(normalizedEmail);
     const passwordValid = user
-      ? await verifyPassword(String(input.password ?? ""), String(user.password_hash ?? ""))
+      ? await verifyPassword(
+          String(input.password ?? ""),
+          String(user.password_hash ?? "")
+        )
       : false;
 
     if (!user || !passwordValid) {
       recordLoginFailure(normalizedEmail);
-      throw new AuthServiceError("AUTH_INVALID_CREDENTIALS", 401, "Invalid email or password.");
+      throw new AuthServiceError(
+        "AUTH_INVALID_CREDENTIALS",
+        401,
+        "Invalid email or password."
+      );
     }
 
     clearLoginFailures(normalizedEmail);
@@ -137,13 +142,17 @@ export class AuthService {
   }
 
   async forgotPassword(input: { email: string }) {
-    const normalizedEmail = String(input.email ?? "").trim().toLowerCase();
+    const normalizedEmail = String(input.email ?? "")
+      .trim()
+      .toLowerCase();
     const start = Date.now();
 
     const user = await this.repository.findByEmail(normalizedEmail);
 
     if (user) {
-      const tokenData = await this.repository.createPasswordResetToken(Number(user.id));
+      const tokenData = await this.repository.createPasswordResetToken(
+        Number(user.id)
+      );
       const appBaseUrl =
         process.env.APP_BASE_URL ??
         `http://localhost:${process.env.NODE_ENV === "production" ? 3000 : 5000}`;
@@ -155,14 +164,18 @@ export class AuthService {
     // cannot enumerate valid accounts via response latency.
     const elapsed = Date.now() - start;
     if (elapsed < FORGOT_PASSWORD_MIN_MS) {
-      await new Promise<void>((resolve) => setTimeout(resolve, FORGOT_PASSWORD_MIN_MS - elapsed));
+      await new Promise<void>(resolve =>
+        setTimeout(resolve, FORGOT_PASSWORD_MIN_MS - elapsed)
+      );
     }
 
     return { message: "If this email exists, a reset link has been sent." };
   }
 
   async resetPassword(input: { token: string; password: string }) {
-    const resetToken = await this.repository.consumePasswordResetToken(String(input.token ?? ""));
+    const resetToken = await this.repository.consumePasswordResetToken(
+      String(input.token ?? "")
+    );
     if (!resetToken) {
       throw new AuthServiceError(
         "AUTH_INVALID_RESET_TOKEN",
@@ -172,7 +185,10 @@ export class AuthService {
     }
 
     const userId = Number(resetToken.user_id);
-    await this.repository.updateUserPassword(userId, await hashPassword(String(input.password ?? "")));
+    await this.repository.updateUserPassword(
+      userId,
+      await hashPassword(String(input.password ?? ""))
+    );
     try {
       await this.repository.deleteAllSessionsForUserStrict(userId);
     } catch {
@@ -187,7 +203,8 @@ export class AuthService {
 
   async getUserById(userId: number) {
     const user = await this.repository.findById(userId);
-    if (!user) throw new AuthServiceError("AUTH_UNAUTHORIZED", 401, "Unauthorized.");
+    if (!user)
+      throw new AuthServiceError("AUTH_UNAUTHORIZED", 401, "Unauthorized.");
     return user;
   }
 
@@ -203,44 +220,6 @@ export class AuthService {
         email: String(user.email ?? ""),
         full_name: String(user.full_name ?? ""),
       }),
-    };
-  }
-
-  async verifyKyc(userId: number) {
-    const nodeEnv = (process.env.NODE_ENV ?? "development").toLowerCase();
-    if (nodeEnv === "production" || !this.isKycSelfVerifyEnabled()) {
-      throw new AuthServiceError(
-        "KYC_SELF_VERIFY_DISABLED",
-        403,
-        "KYC self-verify is disabled. Verification must come from the configured KYC provider."
-      );
-    }
-
-    return this.applyKycDecision({ userId, verified: true });
-  }
-
-  async applyKycDecision(input: { userId: number; verified: boolean }) {
-    const updated = await this.repository.setUserKycVerified(
-      Math.floor(input.userId),
-      Boolean(input.verified)
-    );
-    if (!updated) {
-      throw new AuthServiceError("AUTH_USER_NOT_FOUND", 404, "User not found.");
-    }
-
-    await appendAuditEvent({
-      actorId: Math.floor(input.userId),
-      domain: "auth",
-      action: input.verified ? "kyc_verified" : "kyc_rejected",
-      resource: `user:${Math.floor(input.userId)}`,
-      metadata: {
-        verified: Boolean(input.verified),
-      },
-    });
-
-    return {
-      message: "KYC status updated from provider decision.",
-      user: this.toPublicUser(updated),
     };
   }
 }

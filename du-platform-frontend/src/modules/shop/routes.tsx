@@ -1,7 +1,6 @@
-import { createLazyRoute, createStaticRoute } from "../core/routing";
-import ShopHomePage from "./pages/ShopHomePage";
+import { createLazyRoute } from "../core/routing";
 
 export const shopRoutes = [
-  createStaticRoute("/shop", ShopHomePage),
+  createLazyRoute("/shop", () => import("./pages/ShopHomePage")),
   createLazyRoute("/shop/products", () => import("./pages/ShopProductsPage")),
 ];

@@ -7,7 +7,6 @@ import {
 } from "../../../shared/authSession";
 import { error, ok } from "../../../shared/responseFormatter";
 import { AuthService, AuthServiceError } from "../services/authService";
-import { verifyWebhookHmacSignature } from "../../../core/webhookVerifier";
 
 export class AuthController {
   constructor(private readonly service = new AuthService()) {}
@@ -22,7 +21,9 @@ export class AuthController {
       return res.status(err.status).json(error(err.code, err.message));
     }
 
-    const isProduction = String(process.env.NODE_ENV ?? "development").toLowerCase() === "production";
+    const isProduction =
+      String(process.env.NODE_ENV ?? "development").toLowerCase() ===
+      "production";
     const unexpectedMessage =
       !isProduction && err instanceof Error && String(err.message).trim()
         ? String(err.message).trim()
@@ -38,7 +39,12 @@ export class AuthController {
       setSessionCookie(res, result.sessionToken);
       return res.status(201).json(ok(result.payload));
     } catch (err) {
-      return this.sendError(res, err, "AUTH_REGISTER_FAILED", "Registration failed.");
+      return this.sendError(
+        res,
+        err,
+        "AUTH_REGISTER_FAILED",
+        "Registration failed."
+      );
     }
   };
 
@@ -79,7 +85,12 @@ export class AuthController {
     try {
       return res.json(ok(await this.service.resetPassword(req.body)));
     } catch (err) {
-      return this.sendError(res, err, "AUTH_RESET_PASSWORD_FAILED", "Password reset failed.");
+      return this.sendError(
+        res,
+        err,
+        "AUTH_RESET_PASSWORD_FAILED",
+        "Password reset failed."
+      );
     }
   };
 
@@ -90,47 +101,30 @@ export class AuthController {
       const user = await this.service.getUserById(req.auth!.userId);
       return res.json(ok(this.service.currentUser(user)));
     } catch (err) {
-      return this.sendError(res, err, "AUTH_ME_FAILED", "Failed to resolve current user.");
+      return this.sendError(
+        res,
+        err,
+        "AUTH_ME_FAILED",
+        "Failed to resolve current user."
+      );
     }
   };
 
   refresh = async (req: express.Request, res: express.Response) => {
     try {
       const user = await resolveSessionUser(req);
-      if (!user) return res.status(401).json(error("AUTH_UNAUTHORIZED", "Unauthorized."));
+      if (!user)
+        return res
+          .status(401)
+          .json(error("AUTH_UNAUTHORIZED", "Unauthorized."));
       return res.json(ok(this.service.refresh(user)));
     } catch (err) {
-      return this.sendError(res, err, "AUTH_REFRESH_FAILED", "Failed to refresh token.");
-    }
-  };
-
-  verifyKyc = async (req: express.Request, res: express.Response) => {
-    try {
-      // Use the JWT subject, not the session cookie, to prevent acting on the
-      // wrong account when the two identity sources have drifted.
-      return res.json(ok(await this.service.verifyKyc(req.auth!.userId)));
-    } catch (err) {
-      return this.sendError(res, err, "KYC_VERIFY_FAILED", "Failed to update KYC status.");
-    }
-  };
-
-  kycDecision = async (req: express.Request, res: express.Response) => {
-    const configuredSecret = String(process.env.KYC_VERIFICATION_SECRET ?? "").trim();
-    if (
-      !configuredSecret ||
-      !verifyWebhookHmacSignature({
-        req,
-        secret: configuredSecret,
-        headerNames: ["x-kyc-signature", "x-kyc-webhook-signature"],
-      })
-    ) {
-      return res.status(401).json(error("KYC_PROVIDER_UNAUTHORIZED", "Unauthorized KYC provider request."));
-    }
-
-    try {
-      return res.json(ok(await this.service.applyKycDecision(req.body)));
-    } catch (err) {
-      return this.sendError(res, err, "KYC_PROVIDER_DECISION_FAILED", "Failed to apply KYC provider decision.");
+      return this.sendError(
+        res,
+        err,
+        "AUTH_REFRESH_FAILED",
+        "Failed to refresh token."
+      );
     }
   };
 }

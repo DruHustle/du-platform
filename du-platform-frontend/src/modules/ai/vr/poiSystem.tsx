@@ -1,8 +1,11 @@
+import { Billboard } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-function makeCanvasTexture(draw: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void): THREE.CanvasTexture {
+function makeCanvasTexture(
+  draw: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void
+): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
   canvas.height = 256;
@@ -19,7 +22,6 @@ function makeCanvasTexture(draw: (ctx: CanvasRenderingContext2D, canvas: HTMLCan
 function createPoiLabelTexture(label: string): THREE.CanvasTexture {
   return makeCanvasTexture((ctx, canvas) => {
     const padX = 30;
-    const padY = 20;
     const font = "700 46px system-ui, -apple-system, Segoe UI, sans-serif";
 
     ctx.font = font;
@@ -40,7 +42,12 @@ function createPoiLabelTexture(label: string): THREE.CanvasTexture {
     ctx.lineTo(x + boxWidth - radius, y);
     ctx.quadraticCurveTo(x + boxWidth, y, x + boxWidth, y + radius);
     ctx.lineTo(x + boxWidth, y + boxHeight - radius);
-    ctx.quadraticCurveTo(x + boxWidth, y + boxHeight, x + boxWidth - radius, y + boxHeight);
+    ctx.quadraticCurveTo(
+      x + boxWidth,
+      y + boxHeight,
+      x + boxWidth - radius,
+      y + boxHeight
+    );
     ctx.lineTo(x + radius, y + boxHeight);
     ctx.quadraticCurveTo(x, y + boxHeight, x, y + boxHeight - radius);
     ctx.lineTo(x, y + radius);
@@ -103,8 +110,8 @@ export function PoiBillboard({
   position?: [number, number, number];
 }) {
   const { camera } = useThree();
-  const iconRef = useRef<THREE.Sprite>(null);
-  const labelRef = useRef<THREE.Sprite>(null);
+  const iconRef = useRef<THREE.Mesh>(null);
+  const labelRef = useRef<THREE.Mesh>(null);
   const rootRef = useRef<THREE.Group>(null);
   const worldPositionRef = useRef(new THREE.Vector3());
   const [hovered, setHovered] = useState(false);
@@ -118,25 +125,33 @@ export function PoiBillboard({
     };
   }, [labelTexture]);
 
+  useEffect(() => () => iconTexture.dispose(), [iconTexture]);
+
   useFrame(() => {
-    if (!rootRef.current || !labelRef.current || !iconRef.current) return;
+    if (!rootRef.current || !labelRef.current) return;
     rootRef.current.getWorldPosition(worldPositionRef.current);
     const dist = camera.position.distanceTo(worldPositionRef.current);
     const base = THREE.MathUtils.clamp(dist * 0.09, 0.65, 1.35);
 
     labelRef.current.scale.set(base * 1.6, base * 0.58, 1);
     const iconScale = hovered ? base * 0.52 : base * 0.44;
-    iconRef.current.scale.set(iconScale, iconScale, 1);
+    iconRef.current?.scale.set(iconScale, iconScale, 1);
   });
 
   return (
-    <group ref={rootRef} position={position}>
-      <sprite ref={labelRef} renderOrder={90}>
-        <spriteMaterial map={labelTexture} transparent depthWrite={false} depthTest={false} />
-      </sprite>
+    <Billboard ref={rootRef} position={position}>
+      <mesh ref={labelRef} renderOrder={90}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial
+          map={labelTexture}
+          transparent
+          depthWrite={false}
+          depthTest={false}
+        />
+      </mesh>
 
       {infoHidden ? null : (
-        <sprite
+        <mesh
           ref={iconRef}
           position={[0, -0.24, 0]}
           renderOrder={95}
@@ -144,9 +159,15 @@ export function PoiBillboard({
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
         >
-          <spriteMaterial map={iconTexture} transparent depthWrite={false} depthTest={false} />
-        </sprite>
+          <planeGeometry args={[1, 1]} />
+          <meshBasicMaterial
+            map={iconTexture}
+            transparent
+            depthWrite={false}
+            depthTest={false}
+          />
+        </mesh>
       )}
-    </group>
+    </Billboard>
   );
 }

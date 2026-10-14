@@ -1,71 +1,83 @@
-import { Router } from 'express';
-import { rateLimiter } from '../../../core/rateLimiter';
-import { requireJwtAuth } from '../../../middleware/jwtAuth';
-import { AuthController } from '../controllers/authController';
+import { Router } from "express";
+import { rateLimiter } from "../../../core/rateLimiter";
+import { requireJwtAuth } from "../../../middleware/jwtAuth";
+import { AuthController } from "../controllers/authController";
 import {
   validateForgotPassword,
-  validateKycDecision,
   validateLogin,
   validateRegister,
   validateResetPassword,
-} from '../validators';
+} from "../validators";
 
 export function createAuthModuleRouter() {
   const router = Router();
   const controller = new AuthController();
 
   router.use((_req, res, next) => {
-    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader("Cache-Control", "no-store");
     next();
   });
 
   router.post(
-    '/register',
-    rateLimiter({ keyPrefix: 'api:auth:register', windowMs: 5 * 60_000, maxRequests: 10 }),
+    "/register",
+    rateLimiter({
+      keyPrefix: "api:auth:register",
+      windowMs: 5 * 60_000,
+      maxRequests: 10,
+    }),
     validateRegister,
     controller.register
   );
   router.post(
-    '/login',
-    rateLimiter({ keyPrefix: 'api:auth:login', windowMs: 5 * 60_000, maxRequests: 12 }),
+    "/login",
+    rateLimiter({
+      keyPrefix: "api:auth:login",
+      windowMs: 5 * 60_000,
+      maxRequests: 12,
+    }),
     validateLogin,
     controller.login
   );
-  router.post('/logout', controller.logout);
+  router.post("/logout", controller.logout);
   router.post(
-    '/forgot-password',
-    rateLimiter({ keyPrefix: 'api:auth:forgot-password', windowMs: 5 * 60_000, maxRequests: 8 }),
+    "/forgot-password",
+    rateLimiter({
+      keyPrefix: "api:auth:forgot-password",
+      windowMs: 5 * 60_000,
+      maxRequests: 8,
+    }),
     validateForgotPassword,
     controller.forgotPassword
   );
   router.post(
-    '/reset-password',
-    rateLimiter({ keyPrefix: 'api:auth:reset-password', windowMs: 5 * 60_000, maxRequests: 12 }),
+    "/reset-password",
+    rateLimiter({
+      keyPrefix: "api:auth:reset-password",
+      windowMs: 5 * 60_000,
+      maxRequests: 12,
+    }),
     validateResetPassword,
     controller.resetPassword
   );
   router.get(
-    '/me',
+    "/me",
     requireJwtAuth,
-    rateLimiter({ keyPrefix: 'api:auth:me', windowMs: 60_000, maxRequests: 60, keyByUser: true }),
+    rateLimiter({
+      keyPrefix: "api:auth:me",
+      windowMs: 60_000,
+      maxRequests: 60,
+      keyByUser: true,
+    }),
     controller.me
   );
   router.post(
-    '/token/refresh',
-    rateLimiter({ keyPrefix: 'api:auth:token-refresh', windowMs: 60_000, maxRequests: 30 }),
+    "/token/refresh",
+    rateLimiter({
+      keyPrefix: "api:auth:token-refresh",
+      windowMs: 60_000,
+      maxRequests: 30,
+    }),
     controller.refresh
-  );
-  router.post(
-    '/kyc/verify',
-    requireJwtAuth,
-    rateLimiter({ keyPrefix: 'api:auth:kyc-verify', windowMs: 60_000, maxRequests: 10, keyByUser: true }),
-    controller.verifyKyc
-  );
-  router.post(
-    '/kyc/provider/decision',
-    rateLimiter({ keyPrefix: 'api:auth:kyc-provider-decision', windowMs: 60_000, maxRequests: 30 }),
-    validateKycDecision,
-    controller.kycDecision
   );
 
   return router;

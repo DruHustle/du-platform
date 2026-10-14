@@ -24,6 +24,8 @@
     "paths": {
       "@/*": ["./du-platform-frontend/src/*"],
       "@shared/*": ["./shared/*"]
-    }
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   }
 }

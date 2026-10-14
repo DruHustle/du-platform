@@ -20,8 +20,18 @@ type SttResult =
   | { ok: false; status: number; error: string };
 
 type TtsResult =
-  | { ok: true; bytes: Uint8Array; mimeType: string; provider: "gemini" | "elevenlabs" }
-  | { ok: false; status: number; error: string; provider?: "gemini" | "elevenlabs" };
+  | {
+      ok: true;
+      bytes: Uint8Array;
+      mimeType: string;
+      provider: "gemini" | "elevenlabs";
+    }
+  | {
+      ok: false;
+      status: number;
+      error: string;
+      provider?: "gemini" | "elevenlabs";
+    };
 
 type LlmResult =
   | { ok: true; reply: string }
@@ -43,7 +53,7 @@ const elevenLabsWaitQueue: Array<() => void> = [];
 
 async function acquireElevenLabsSlot(): Promise<void> {
   while (activeElevenLabsRequests >= ELEVENLABS_MAX_CONCURRENT_REQUESTS) {
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       elevenLabsWaitQueue.push(resolve);
     });
   }
@@ -64,7 +74,12 @@ function getRequestBuffer(req: Request): Buffer {
 }
 
 async function parseJsonBody(req: Request): Promise<SpeechJsonPayload> {
-  if (req.body && typeof req.body === "object" && !Buffer.isBuffer(req.body) && !(req.body instanceof Uint8Array)) {
+  if (
+    req.body &&
+    typeof req.body === "object" &&
+    !Buffer.isBuffer(req.body) &&
+    !(req.body instanceof Uint8Array)
+  ) {
     return req.body as SpeechJsonPayload;
   }
   const raw = getRequestBuffer(req).toString("utf8");
@@ -165,9 +180,12 @@ function getGroqBaseUrl(): string {
 }
 
 function buildQuotaSafeTtsSnippet(text: string): string {
-  const normalized = String(text ?? "").replace(/\s+/g, " ").trim();
+  const normalized = String(text ?? "")
+    .replace(/\s+/g, " ")
+    .trim();
   if (!normalized) return "";
-  const firstSentence = normalized.split(/(?<=[.!?])\s+/)[0]?.trim() ?? normalized;
+  const firstSentence =
+    normalized.split(/(?<=[.!?])\s+/)[0]?.trim() ?? normalized;
   const base = firstSentence.length >= 24 ? firstSentence : normalized;
   const maxChars = 170;
   if (base.length <= maxChars) return base;
@@ -175,7 +193,9 @@ function buildQuotaSafeTtsSnippet(text: string): string {
 }
 
 function normalizeTtsLanguage(input?: string): "en" | "de" | "sn" | "nd" {
-  const raw = String(input ?? "").trim().toLowerCase();
+  const raw = String(input ?? "")
+    .trim()
+    .toLowerCase();
   const base = raw.split("-")[0];
   if (base === "de" || raw === "german" || raw === "deutsch") return "de";
   if (base === "sn" || raw === "shona") return "sn";
@@ -186,10 +206,17 @@ function normalizeTtsLanguage(input?: string): "en" | "de" | "sn" | "nd" {
 function shouldUseElevenLabs(language: "en" | "de" | "sn" | "nd"): boolean {
   const elevenKeyAvailable = Boolean(getElevenLabsApiKey());
   if (!elevenKeyAvailable) return language === "sn" || language === "nd";
-  return language === "en" || language === "de" || language === "sn" || language === "nd";
+  return (
+    language === "en" ||
+    language === "de" ||
+    language === "sn" ||
+    language === "nd"
+  );
 }
 
-function getGeminiVoiceCandidates(language: "en" | "de" | "sn" | "nd"): string[] {
+function getGeminiVoiceCandidates(
+  language: "en" | "de" | "sn" | "nd"
+): string[] {
   const byLanguage =
     language === "de"
       ? [
@@ -209,11 +236,7 @@ function getGeminiVoiceCandidates(language: "en" | "de" | "sn" | "nd"): string[]
           "Kore",
         ];
   return Array.from(
-    new Set(
-      byLanguage
-        .map((value) => String(value ?? "").trim())
-        .filter(Boolean)
-    )
+    new Set(byLanguage.map(value => String(value ?? "").trim()).filter(Boolean))
   );
 }
 
@@ -223,7 +246,10 @@ function parsePcmSampleRate(mimeType: string): number {
   return Number.isFinite(rate) && rate > 0 ? rate : 24000;
 }
 
-function convertPcm16BeToWav(bytes: Uint8Array, sampleRate: number): Uint8Array {
+function convertPcm16BeToWav(
+  bytes: Uint8Array,
+  sampleRate: number
+): Uint8Array {
   const littleEndianPcm = new Uint8Array(bytes.length);
   for (let i = 0; i < bytes.length; i += 2) {
     littleEndianPcm[i] = bytes[i + 1] ?? 0;
@@ -255,11 +281,19 @@ function convertPcm16BeToWav(bytes: Uint8Array, sampleRate: number): Uint8Array 
 
 async function requestGroqStt(file: Blob): Promise<SttResult> {
   const apiKey = getGroqApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "Speech-to-text service is not configured." };
+  if (!apiKey)
+    return {
+      ok: false,
+      status: 503,
+      error: "Speech-to-text service is not configured.",
+    };
 
   const form = new FormData();
   form.append("file", file, "audio.webm");
-  form.append("model", process.env.GROQ_WHISPER_MODEL ?? DEFAULT_GROQ_STT_MODEL);
+  form.append(
+    "model",
+    process.env.GROQ_WHISPER_MODEL ?? DEFAULT_GROQ_STT_MODEL
+  );
 
   try {
     const response = await fetch(`${getGroqBaseUrl()}/audio/transcriptions`, {
@@ -270,94 +304,190 @@ async function requestGroqStt(file: Blob): Promise<SttResult> {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => "");
-      return { ok: false, status: response.status, error: errorText || "Groq STT error." };
+      return {
+        ok: false,
+        status: response.status,
+        error: errorText || "Groq STT error.",
+      };
     }
 
     const payload = (await response.json()) as { text?: string };
     const text = String(payload?.text ?? "").trim();
-    if (!text) return { ok: false, status: 502, error: "Groq STT returned empty text." };
+    if (!text)
+      return { ok: false, status: 502, error: "Groq STT returned empty text." };
     return { ok: true, text };
   } catch (error) {
-    return { ok: false, status: 502, error: error instanceof Error ? error.message : "Groq STT network error." };
+    return {
+      ok: false,
+      status: 502,
+      error: error instanceof Error ? error.message : "Groq STT network error.",
+    };
   }
 }
 
-async function requestElevenLabsTts(text: string, voiceId?: string): Promise<TtsResult> {
+async function requestElevenLabsTts(
+  text: string,
+  voiceId?: string
+): Promise<TtsResult> {
   const apiKey = getElevenLabsApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "Text-to-speech service is not configured.", provider: "elevenlabs" };
+  if (!apiKey)
+    return {
+      ok: false,
+      status: 503,
+      error: "Text-to-speech service is not configured.",
+      provider: "elevenlabs",
+    };
 
-  const normalizedText = String(text ?? "").replace(/\s+/g, " ").trim();
-  if (!normalizedText) return { ok: false, status: 400, error: "Text input is required.", provider: "elevenlabs" };
+  const normalizedText = String(text ?? "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!normalizedText)
+    return {
+      ok: false,
+      status: 400,
+      error: "Text input is required.",
+      provider: "elevenlabs",
+    };
 
-  const resolvedVoiceId = String(voiceId ?? DEFAULT_ELEVENLABS_VOICE_ID).trim() || DEFAULT_ELEVENLABS_VOICE_ID;
+  const resolvedVoiceId =
+    String(voiceId ?? DEFAULT_ELEVENLABS_VOICE_ID).trim() ||
+    DEFAULT_ELEVENLABS_VOICE_ID;
   const maxAttempts = 3;
   const conciseSnippet = buildQuotaSafeTtsSnippet(normalizedText);
-  const textVariants = conciseSnippet && conciseSnippet !== normalizedText ? [normalizedText, conciseSnippet] : [normalizedText];
+  const textVariants =
+    conciseSnippet && conciseSnippet !== normalizedText
+      ? [normalizedText, conciseSnippet]
+      : [normalizedText];
   let lastQuotaError: { status: number; error: string } | null = null;
 
   await acquireElevenLabsSlot();
   try {
-    for (let variantIndex = 0; variantIndex < textVariants.length; variantIndex++) {
+    for (
+      let variantIndex = 0;
+      variantIndex < textVariants.length;
+      variantIndex++
+    ) {
       const candidateText = textVariants[variantIndex];
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${resolvedVoiceId}`, {
-          method: "POST",
-          headers: {
-            Accept: "audio/mpeg",
-            "Content-Type": "application/json",
-            "xi-api-key": apiKey,
-          },
-          body: JSON.stringify({
-            text: candidateText,
-            model_id: ELEVENLABS_TTS_MODEL_ID,
-            output_format: ELEVENLABS_OUTPUT_FORMAT,
-            voice_settings: {
-              stability: 0.62,
-              similarity_boost: 0.88,
-              style: 0.08,
-              use_speaker_boost: true,
+        const response = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${resolvedVoiceId}`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "audio/mpeg",
+              "Content-Type": "application/json",
+              "xi-api-key": apiKey,
             },
-          }),
-        });
+            body: JSON.stringify({
+              text: candidateText,
+              model_id: ELEVENLABS_TTS_MODEL_ID,
+              output_format: ELEVENLABS_OUTPUT_FORMAT,
+              voice_settings: {
+                stability: 0.62,
+                similarity_boost: 0.88,
+                style: 0.08,
+                use_speaker_boost: true,
+              },
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorText = await response.text().catch(() => "");
           const concurrentLimitError =
-            response.status === 429 && /concurrent_limit_exceeded|too many concurrent requests/i.test(errorText);
+            response.status === 429 &&
+            /concurrent_limit_exceeded|too many concurrent requests/i.test(
+              errorText
+            );
           if (concurrentLimitError && attempt < maxAttempts) {
-            await new Promise((resolve) => setTimeout(resolve, 250 * attempt));
+            await new Promise(resolve => setTimeout(resolve, 250 * attempt));
             continue;
           }
 
           const quotaExceededError =
-            /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(errorText);
-          if (quotaExceededError && variantIndex === 0 && textVariants.length > 1) {
-            lastQuotaError = { status: response.status, error: errorText || "ElevenLabs quota exceeded." };
+            /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(
+              errorText
+            );
+          if (
+            quotaExceededError &&
+            variantIndex === 0 &&
+            textVariants.length > 1
+          ) {
+            lastQuotaError = {
+              status: response.status,
+              error: errorText || "ElevenLabs quota exceeded.",
+            };
             break;
           }
 
-          return { ok: false, status: response.status, error: errorText || "ElevenLabs TTS error.", provider: "elevenlabs" };
+          return {
+            ok: false,
+            status: response.status,
+            error: errorText || "ElevenLabs TTS error.",
+            provider: "elevenlabs",
+          };
         }
 
         const arrayBuffer = await response.arrayBuffer();
-        return { ok: true, bytes: new Uint8Array(arrayBuffer), mimeType: "audio/mpeg", provider: "elevenlabs" };
+        return {
+          ok: true,
+          bytes: new Uint8Array(arrayBuffer),
+          mimeType: "audio/mpeg",
+          provider: "elevenlabs",
+        };
       }
     }
-    if (lastQuotaError) return { ok: false, status: lastQuotaError.status, error: lastQuotaError.error, provider: "elevenlabs" };
-    return { ok: false, status: 502, error: "ElevenLabs TTS retry loop exhausted.", provider: "elevenlabs" };
+    if (lastQuotaError)
+      return {
+        ok: false,
+        status: lastQuotaError.status,
+        error: lastQuotaError.error,
+        provider: "elevenlabs",
+      };
+    return {
+      ok: false,
+      status: 502,
+      error: "ElevenLabs TTS retry loop exhausted.",
+      provider: "elevenlabs",
+    };
   } catch (error) {
-    return { ok: false, status: 502, error: error instanceof Error ? error.message : "ElevenLabs TTS network error.", provider: "elevenlabs" };
+    return {
+      ok: false,
+      status: 502,
+      error:
+        error instanceof Error
+          ? error.message
+          : "ElevenLabs TTS network error.",
+      provider: "elevenlabs",
+    };
   } finally {
     releaseElevenLabsSlot();
   }
 }
 
-async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd"): Promise<TtsResult> {
+async function requestGeminiTts(
+  text: string,
+  language: "en" | "de" | "sn" | "nd"
+): Promise<TtsResult> {
   const apiKey = getGeminiApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "Text-to-speech service is not configured.", provider: "gemini" };
+  if (!apiKey)
+    return {
+      ok: false,
+      status: 503,
+      error: "Text-to-speech service is not configured.",
+      provider: "gemini",
+    };
 
-  const normalizedText = String(text ?? "").replace(/\s+/g, " ").trim();
-  if (!normalizedText) return { ok: false, status: 400, error: "Text input is required.", provider: "gemini" };
+  const normalizedText = String(text ?? "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!normalizedText)
+    return {
+      ok: false,
+      status: 400,
+      error: "Text input is required.",
+      provider: "gemini",
+    };
 
   const baseUrl = getGeminiTtsBaseUrl();
   const model = getGeminiTtsModel();
@@ -376,31 +506,42 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
         },
       };
       if (voice) {
-        (payload.generationConfig as { speechConfig?: unknown }).speechConfig = {
-          voiceConfig: {
-            prebuiltVoiceConfig: {
-              voiceName: voice,
+        (payload.generationConfig as { speechConfig?: unknown }).speechConfig =
+          {
+            voiceConfig: {
+              prebuiltVoiceConfig: {
+                voiceName: voice,
+              },
             },
-          },
-        };
+          };
       }
 
-      const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${baseUrl}/models/${encodeURIComponent(model)}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text().catch(() => "");
         lastError = errorText || "Gemini TTS error.";
         lastStatus = response.status;
-        const invalidVoice = response.status === 400 && /voice|unsupported|invalid/i.test(lastError);
+        const invalidVoice =
+          response.status === 400 &&
+          /voice|unsupported|invalid/i.test(lastError);
         if (invalidVoice && voice) continue;
-        return { ok: false, status: response.status, error: lastError, provider: "gemini" };
+        return {
+          ok: false,
+          status: response.status,
+          error: lastError,
+          provider: "gemini",
+        };
       }
 
       const payloadJson = (await response.json()) as {
@@ -416,9 +557,9 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
         }>;
       };
       const inlineData = payloadJson.candidates
-        ?.flatMap((candidate) => candidate.content?.parts ?? [])
-        .map((part) => part.inlineData)
-        .find((data) => Boolean(data?.data));
+        ?.flatMap(candidate => candidate.content?.parts ?? [])
+        .map(part => part.inlineData)
+        .find(data => Boolean(data?.data));
 
       if (!inlineData?.data) {
         lastError = "Gemini TTS response did not include audio data.";
@@ -426,7 +567,9 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
         continue;
       }
 
-      const rawBytes = new Uint8Array(Buffer.from(String(inlineData.data), "base64"));
+      const rawBytes = new Uint8Array(
+        Buffer.from(String(inlineData.data), "base64")
+      );
       const inlineMimeType = String(inlineData.mimeType ?? "").trim();
       if (/audio\/l16|codec=pcm/i.test(inlineMimeType)) {
         if (responseFormat === "pcm" || responseFormat === "l16") {
@@ -439,21 +582,35 @@ async function requestGeminiTts(text: string, language: "en" | "de" | "sn" | "nd
         }
         const sampleRate = parsePcmSampleRate(inlineMimeType);
         const wavBytes = convertPcm16BeToWav(rawBytes, sampleRate);
-        return { ok: true, bytes: wavBytes, mimeType: "audio/wav", provider: "gemini" };
+        return {
+          ok: true,
+          bytes: wavBytes,
+          mimeType: "audio/wav",
+          provider: "gemini",
+        };
       }
 
       const mimeType = inlineMimeType || "audio/mpeg";
       return { ok: true, bytes: rawBytes, mimeType, provider: "gemini" };
     } catch (error) {
-      lastError = error instanceof Error ? error.message : "Gemini TTS network error.";
+      lastError =
+        error instanceof Error ? error.message : "Gemini TTS network error.";
       lastStatus = 502;
     }
   }
 
-  return { ok: false, status: lastStatus, error: lastError || "Gemini TTS network error.", provider: "gemini" };
+  return {
+    ok: false,
+    status: lastStatus,
+    error: lastError || "Gemini TTS network error.",
+    provider: "gemini",
+  };
 }
 
-async function requestTtsForLanguage(text: string, options: { voiceId?: string; language?: string }): Promise<TtsResult> {
+async function requestTtsForLanguage(
+  text: string,
+  options: { voiceId?: string; language?: string }
+): Promise<TtsResult> {
   const normalizedLanguage = normalizeTtsLanguage(options.language);
   if (shouldUseElevenLabs(normalizedLanguage)) {
     return await requestElevenLabsTts(text, options.voiceId);
@@ -463,7 +620,12 @@ async function requestTtsForLanguage(text: string, options: { voiceId?: string; 
 
 async function requestGroqLlm(prompt: string): Promise<LlmResult> {
   const apiKey = getGroqApiKey();
-  if (!apiKey) return { ok: false, status: 503, error: "AI language model service is not configured." };
+  if (!apiKey)
+    return {
+      ok: false,
+      status: 503,
+      error: "AI language model service is not configured.",
+    };
 
   try {
     const response = await fetch(`${getGroqBaseUrl()}/chat/completions`, {
@@ -485,119 +647,193 @@ async function requestGroqLlm(prompt: string): Promise<LlmResult> {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => "");
-      return { ok: false, status: response.status, error: errorText || "Groq LLM error." };
+      return {
+        ok: false,
+        status: response.status,
+        error: errorText || "Groq LLM error.",
+      };
     }
 
     const payload = (await response.json()) as {
       choices?: Array<{ message?: { content?: string } }>;
     };
     const reply = String(payload?.choices?.[0]?.message?.content ?? "").trim();
-    if (!reply) return { ok: false, status: 502, error: "Groq LLM returned empty response." };
+    if (!reply)
+      return {
+        ok: false,
+        status: 502,
+        error: "Groq LLM returned empty response.",
+      };
     return { ok: true, reply };
   } catch (error) {
-    return { ok: false, status: 502, error: error instanceof Error ? error.message : "Groq LLM network error." };
+    return {
+      ok: false,
+      status: 502,
+      error: error instanceof Error ? error.message : "Groq LLM network error.",
+    };
   }
 }
 
 export function registerWhisperRoutes(app: Express) {
   // Groq-only whisper route (OpenAI Whisper removed)
-  app.post("/api/whisper", rateLimiter({ keyPrefix: "api:whisper", windowMs: 60_000, maxRequests: 20 }), express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
-    if (isOnesaMockModeEnabled()) {
-      return res.status(200).json({ text: getMockSpeechTranscription(), provider: "mock" });
+  app.post(
+    "/api/whisper",
+    rateLimiter({
+      keyPrefix: "api:whisper",
+      windowMs: 60_000,
+      maxRequests: 20,
+    }),
+    express.raw({ type: "*/*", limit: "25mb" }),
+    async (req, res) => {
+      if (isOnesaMockModeEnabled()) {
+        return res
+          .status(200)
+          .json({ text: getMockSpeechTranscription(), provider: "mock" });
+      }
+      const buffer = getRequestBuffer(req);
+      const blob = new Blob([new Uint8Array(buffer)], { type: "audio/webm" });
+      const result = await requestGroqStt(blob);
+      if (!result.ok)
+        return res
+          .status(result.status)
+          .json({ error: result.error, provider: "groq" });
+      return res.status(200).json({ text: result.text });
     }
-    const buffer = getRequestBuffer(req);
-    const blob = new Blob([new Uint8Array(buffer)], { type: "audio/webm" });
-    const result = await requestGroqStt(blob);
-    if (!result.ok) return res.status(result.status).json({ error: result.error, provider: "groq" });
-    return res.status(200).json({ text: result.text });
-  });
+  );
 }
 
 export function registerTtsRoutes(app: Express) {
   // Legacy route retained for compatibility.
-  app.post("/api/tts", rateLimiter({ keyPrefix: "api:tts", windowMs: 60_000, maxRequests: 30 }), express.json({ limit: "1mb" }), async (req, res) => {
-    const body = (req.body ?? {}) as { text?: string; voiceId?: string; language?: string };
-    const text = String(body.text ?? "").trim();
-    if (!text) return res.status(400).json({ error: "Text input is required." });
-    if (isOnesaMockModeEnabled()) {
-      res.setHeader("Content-Type", "audio/wav");
-      return res.status(200).send(Buffer.from(createMockTtsAudio()));
-    }
-
-    const tts = await requestTtsForLanguage(text, { voiceId: body.voiceId, language: body.language });
-    if (!tts.ok) return res.status(tts.status).json({ error: tts.error, provider: tts.provider ?? "unknown" });
-    res.setHeader("Content-Type", tts.mimeType);
-    return res.status(200).send(Buffer.from(tts.bytes));
-  });
-}
-
-export function registerSpeechRoutes(app: Express) {
-  const speechRateLimit = rateLimiter({ keyPrefix: "api:speech", windowMs: 60_000, maxRequests: 30 });
-
-  // JSON branch: action=tts|llm
-  app.post("/api/speech", speechRateLimit, express.json({ limit: "1mb" }), async (req, res, next) => {
-    const contentType = String(req.headers["content-type"] ?? "");
-    if (!contentType.includes("application/json")) return next();
-
-    let body: SpeechJsonPayload;
-    try {
-      body = await parseJsonBody(req);
-    } catch {
-      return res.status(400).json({ error: "Invalid JSON payload" });
-    }
-
-    if (body.action === "tts") {
+  app.post(
+    "/api/tts",
+    rateLimiter({ keyPrefix: "api:tts", windowMs: 60_000, maxRequests: 30 }),
+    express.json({ limit: "1mb" }),
+    async (req, res) => {
+      const body = (req.body ?? {}) as {
+        text?: string;
+        voiceId?: string;
+        language?: string;
+      };
       const text = String(body.text ?? "").trim();
-      if (!text) return res.status(400).json({ error: "Text input is required." });
+      if (!text)
+        return res.status(400).json({ error: "Text input is required." });
       if (isOnesaMockModeEnabled()) {
         res.setHeader("Content-Type", "audio/wav");
         return res.status(200).send(Buffer.from(createMockTtsAudio()));
       }
-      const tts = await requestTtsForLanguage(text, { voiceId: body.voiceId, language: body.language });
-      if (!tts.ok) return res.status(tts.status).json({ error: tts.error, provider: tts.provider ?? "unknown" });
+
+      const tts = await requestTtsForLanguage(text, {
+        voiceId: body.voiceId,
+        language: body.language,
+      });
+      if (!tts.ok)
+        return res
+          .status(tts.status)
+          .json({ error: tts.error, provider: tts.provider ?? "unknown" });
       res.setHeader("Content-Type", tts.mimeType);
       return res.status(200).send(Buffer.from(tts.bytes));
     }
+  );
+}
 
-    if (body.action === "llm") {
-      const prompt = String(body.prompt ?? "").trim();
-      if (!prompt) return res.status(400).json({ error: "Prompt is required." });
-      if (isOnesaMockModeEnabled()) {
-        return res.status(200).json({
-          reply: createMockSpeechReply(prompt),
-          provider: "mock",
-        });
-      }
-      const llm = await requestGroqLlm(prompt);
-      if (!llm.ok) return res.status(llm.status).json({ error: llm.error });
-      return res.status(200).json({ reply: llm.reply });
-    }
-
-    return res.status(400).json({ error: "Invalid JSON action" });
+export function registerSpeechRoutes(app: Express) {
+  const speechRateLimit = rateLimiter({
+    keyPrefix: "api:speech",
+    windowMs: 60_000,
+    maxRequests: 30,
   });
+
+  // JSON branch: action=tts|llm
+  app.post(
+    "/api/speech",
+    speechRateLimit,
+    express.json({ limit: "1mb" }),
+    async (req, res, next) => {
+      const contentType = String(req.headers["content-type"] ?? "");
+      if (!contentType.includes("application/json")) return next();
+
+      let body: SpeechJsonPayload;
+      try {
+        body = await parseJsonBody(req);
+      } catch {
+        return res.status(400).json({ error: "Invalid JSON payload" });
+      }
+
+      if (body.action === "tts") {
+        const text = String(body.text ?? "").trim();
+        if (!text)
+          return res.status(400).json({ error: "Text input is required." });
+        if (isOnesaMockModeEnabled()) {
+          res.setHeader("Content-Type", "audio/wav");
+          return res.status(200).send(Buffer.from(createMockTtsAudio()));
+        }
+        const tts = await requestTtsForLanguage(text, {
+          voiceId: body.voiceId,
+          language: body.language,
+        });
+        if (!tts.ok)
+          return res
+            .status(tts.status)
+            .json({ error: tts.error, provider: tts.provider ?? "unknown" });
+        res.setHeader("Content-Type", tts.mimeType);
+        return res.status(200).send(Buffer.from(tts.bytes));
+      }
+
+      if (body.action === "llm") {
+        const prompt = String(body.prompt ?? "").trim();
+        if (!prompt)
+          return res.status(400).json({ error: "Prompt is required." });
+        if (isOnesaMockModeEnabled()) {
+          return res.status(200).json({
+            reply: createMockSpeechReply(prompt),
+            provider: "mock",
+          });
+        }
+        const llm = await requestGroqLlm(prompt);
+        if (!llm.ok) return res.status(llm.status).json({ error: llm.error });
+        return res.status(200).json({ reply: llm.reply });
+      }
+
+      return res.status(400).json({ error: "Invalid JSON action" });
+    }
+  );
 
   // Multipart branch: action=stt (Groq only)
-  app.post("/api/speech", speechRateLimit, express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
-    const contentType = String(req.headers["content-type"] ?? "");
-    if (!contentType.includes("multipart/form-data")) {
-      return res.status(415).json({ error: "Unsupported Content-Type" });
-    }
-    try {
-      if (isOnesaMockModeEnabled()) {
-        return res.status(200).json({ text: getMockSpeechTranscription(), provider: "mock" });
+  app.post(
+    "/api/speech",
+    speechRateLimit,
+    express.raw({ type: "*/*", limit: "25mb" }),
+    async (req, res) => {
+      const contentType = String(req.headers["content-type"] ?? "");
+      if (!contentType.includes("multipart/form-data")) {
+        return res.status(415).json({ error: "Unsupported Content-Type" });
       }
-      const form = await parseMultipartForm(req);
-      const action = String(form.get("action") ?? "").toLowerCase();
-      if (action !== "stt") return res.status(400).json({ error: "Invalid multipart action" });
+      try {
+        const form = await parseMultipartForm(req);
+        const action = String(form.get("action") ?? "").toLowerCase();
+        if (action !== "stt")
+          return res.status(400).json({ error: "Invalid multipart action" });
 
-      const fileEntry = form.get("file");
-      if (!(fileEntry instanceof Blob)) return res.status(400).json({ error: "Audio file is required." });
+        const fileEntry = form.get("file");
+        if (!(fileEntry instanceof Blob))
+          return res.status(400).json({ error: "Audio file is required." });
+        if (isOnesaMockModeEnabled()) {
+          return res
+            .status(200)
+            .json({ text: getMockSpeechTranscription(), provider: "mock" });
+        }
 
-      const stt = await requestGroqStt(fileEntry);
-      if (!stt.ok) return res.status(stt.status).json({ error: stt.error, provider: "groq" });
-      return res.status(200).json({ text: stt.text });
-    } catch (error) {
-      return res.status(500).json({ error: error instanceof Error ? error.message : "Speech STT error." });
+        const stt = await requestGroqStt(fileEntry);
+        if (!stt.ok)
+          return res
+            .status(stt.status)
+            .json({ error: stt.error, provider: "groq" });
+        return res.status(200).json({ text: stt.text });
+      } catch (error) {
+        return res.status(500).json({
+          error: error instanceof Error ? error.message : "Speech STT error.",
+        });
+      }
     }
-  });
+  );
 }

@@ -1,0 +1,8 @@
+{
+  "generic-trigger-squeeze-thumbstick": {
+    "path": "generic-trigger-squeeze-thumbstick/profile.json"
+  },
+  "generic-trigger": {
+    "path": "generic-trigger-squeeze-thumbstick/profile.json"
+  }
+}

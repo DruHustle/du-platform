@@ -20,23 +20,36 @@ export default function MainPageHero({ hero }: MainPageProps) {
 
   useEffect(() => {
     const currentImage = hero.heroBackgrounds[hero.currentBgIndex];
-    const nextImage = hero.heroBackgrounds[(hero.currentBgIndex + 1) % hero.heroBackgrounds.length];
+    const nextImage =
+      hero.heroBackgrounds[
+        (hero.currentBgIndex + 1) % hero.heroBackgrounds.length
+      ];
 
-    preloadImages([currentImage, nextImage, "/images/brand/diaspora_unlocked.png"], 2);
+    preloadImages(
+      [currentImage, nextImage, "/images/brand/diaspora_unlocked.png"],
+      2
+    );
   }, [hero.currentBgIndex, hero.heroBackgrounds]);
 
   return (
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
-      
       {/* SECTION 1: CINEMATIC HERO */}
-      <section className="relative h-screen min-h-[var(--mobile-full-viewport)] md:min-h-[700px] w-full flex items-center justify-center overflow-hidden bg-slate-950">
+      <section className="relative min-h-[max(40rem,100svh)] py-28 w-full flex items-center justify-center overflow-hidden bg-slate-950">
         <AnimatePresence mode="sync">
           <motion.div
             key={hero.currentBgIndex}
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(8px)" }}
-            transition={prefersReducedMotion ? { duration: 0.15 } : { opacity: { duration: 0.9 } }}
+            exit={
+              prefersReducedMotion
+                ? { opacity: 0 }
+                : { opacity: 0, filter: "blur(8px)" }
+            }
+            transition={
+              prefersReducedMotion
+                ? { duration: 0.15 }
+                : { opacity: { duration: 0.9 } }
+            }
             className="absolute inset-0 z-0"
           >
             <InstantImage
@@ -51,13 +64,18 @@ export default function MainPageHero({ hero }: MainPageProps) {
           </motion.div>
         </AnimatePresence>
 
+        <div
+          className="absolute inset-0 z-10 bg-slate-950/35"
+          aria-hidden="true"
+        />
+
         {/* Mobile logo: absolutely centered between navbar (3.5rem) and headline (~50vh) */}
         <motion.div
           id="home-hero-logo"
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
-          className="md:hidden absolute z-20 left-1/2 -translate-x-1/2 top-[calc(25vh+5rem)]"
+          className="hidden"
         >
           <div className="relative inline-flex h-20 w-20 items-center justify-center">
             <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
@@ -72,22 +90,22 @@ export default function MainPageHero({ hero }: MainPageProps) {
           </div>
         </motion.div>
 
-        <div className="relative z-20 container mx-auto px-6 flex flex-col items-center justify-start pt-[50vh] lg:pt-[calc(50vh-14rem)]">
+        <div className="relative z-20 container mx-auto px-6 flex flex-col items-center justify-center text-center">
           {/* Desktop logo: in flow above headline */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
-            className="hidden md:block mb-12 -mt-5"
+            className="mb-8"
           >
             <div className="relative inline-flex h-20 w-20 items-center justify-center md:h-28 md:w-28">
               <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
-            <InstantImage
-              src="/images/brand/diaspora_unlocked.png"
-              alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
-              priority
-              wrapperClassName="relative overflow-visible bg-transparent"
-              placeholderClassName="bg-transparent animate-none"
+              <InstantImage
+                src="/images/brand/diaspora_unlocked.png"
+                alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
+                priority
+                wrapperClassName="relative overflow-visible bg-transparent"
+                placeholderClassName="bg-transparent animate-none"
                 className="relative md:h-24 md:scale-[1.05] object-contain drop-shadow-2xl"
               />
             </div>
@@ -98,9 +116,9 @@ export default function MainPageHero({ hero }: MainPageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-            className="text-[12vw] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] xl:text-[26rem] font-black text-white leading-[0.75] text-center uppercase tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
+            className="text-[clamp(2.5rem,6.5vw,6rem)] max-w-[18ch] font-black text-white leading-[1.05] text-center uppercase tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
           >
-            {t('home.hero_title')}
+            {t("home.hero_title")}
           </motion.h1>
 
           {/* Subtitle */}
@@ -108,9 +126,9 @@ export default function MainPageHero({ hero }: MainPageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}
-            className="mt-15 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
+            className="mt-6 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
           >
-            {t('home.hero_subtitle')}.
+            {t("home.hero_subtitle")}.
           </motion.p>
 
           {/* Scroll Indicator */}
@@ -118,14 +136,23 @@ export default function MainPageHero({ hero }: MainPageProps) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.8, duration: 1, type: "spring" }}
-            className="mt-32 md:mt-20"
+            className="mt-12 md:mt-16"
           >
             <motion.button
               type="button"
               animate={prefersReducedMotion ? undefined : { y: [0, 12, 0] }}
-              transition={prefersReducedMotion ? undefined : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              transition={
+                prefersReducedMotion
+                  ? undefined
+                  : { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }
               className="flex flex-col items-center gap-2 cursor-pointer border-0 bg-transparent text-white"
-              onClick={() => window.scrollTo({ top: window.innerHeight, behavior: prefersReducedMotion ? "auto" : "smooth" })}
+              onClick={() =>
+                window.scrollTo({
+                  top: window.innerHeight,
+                  behavior: prefersReducedMotion ? "auto" : "smooth",
+                })
+              }
             >
               <span className="text-[10px] uppercase tracking-[0.5em] font-black text-white drop-shadow-md">
                 Explore
