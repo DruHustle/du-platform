@@ -40,13 +40,13 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
+
   /* Zimbabwe Color Palette */
   --color-zim-green: oklch(0.35 0.08 150);
   --color-zim-green-dark: oklch(0.25 0.08 150);
   --color-zim-gold: oklch(0.85 0.15 85);
   --color-zim-red: oklch(0.45 0.18 25);
-  --color-zim-black: oklch(0.20 0.01 280);
+  --color-zim-black: oklch(0.2 0.01 280);
 }
 
 :root {
@@ -61,26 +61,26 @@
   --primary: oklch(0.35 0.08 150); /* Dark Green */
   --primary-foreground: oklch(0.98 0 0); /* White */
   --secondary: oklch(0.85 0.15 85); /* Gold/Yellow */
-  --secondary-foreground: oklch(0.20 0.01 280); /* Dark text */
+  --secondary-foreground: oklch(0.2 0.01 280); /* Dark text */
   --accent: oklch(0.45 0.18 25); /* Red accent - improved contrast */
   --accent-foreground: oklch(0.98 0 0); /* White */
-  
+
   --sidebar-primary: oklch(0.35 0.08 150);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  
+
   --chart-1: oklch(0.35 0.08 150);
   --chart-2: oklch(0.85 0.15 85);
   --chart-3: oklch(0.45 0.18 25);
   --chart-4: oklch(0.45 0.08 150);
   --chart-5: oklch(0.75 0.12 85);
-  
+
   --radius: 0.625rem;
   --background: oklch(0.96 0.002 286);
-  --foreground: oklch(0.20 0.01 280);
+  --foreground: oklch(0.2 0.01 280);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.01 280);
+  --card-foreground: oklch(0.2 0.01 280);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.01 280);
+  --popover-foreground: oklch(0.2 0.01 280);
   --muted: oklch(0.97 0.002 286);
   --muted-foreground: oklch(0.45 0.015 286);
   --destructive: oklch(0.45 0.18 25);
@@ -89,10 +89,10 @@
   --input: oklch(0.92 0.004 286);
   --ring: oklch(0.35 0.08 150);
   --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.20 0.01 280);
+  --sidebar-foreground: oklch(0.2 0.01 280);
   --sidebar-accent: oklch(0.96 0.002 286);
-  --sidebar-accent-foreground: oklch(0.20 0.01 280);
-  --sidebar-border: oklch(0.90 0.004 286);
+  --sidebar-accent-foreground: oklch(0.2 0.01 280);
+  --sidebar-border: oklch(0.9 0.004 286);
   --sidebar-ring: oklch(0.35 0.08 150);
 }
 
@@ -109,27 +109,27 @@
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --background: oklch(0.15 0.005 285);
   --foreground: oklch(0.92 0.005 65);
-  --card: oklch(0.20 0.006 285);
+  --card: oklch(0.2 0.006 285);
   --card-foreground: oklch(0.92 0.005 65);
-  --popover: oklch(0.20 0.006 285);
+  --popover: oklch(0.2 0.006 285);
   --popover-foreground: oklch(0.92 0.005 65);
   --secondary: oklch(0.25 0.006 286);
   --secondary-foreground: oklch(0.85 0.15 85);
   --muted: oklch(0.27 0.006 286);
-  --muted-foreground: oklch(0.70 0.015 286);
+  --muted-foreground: oklch(0.7 0.015 286);
   --accent: oklch(0.27 0.006 286);
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.50 0.18 25);
+  --destructive: oklch(0.5 0.18 25);
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.45 0.08 150);
   --chart-1: oklch(0.45 0.08 150);
   --chart-2: oklch(0.85 0.15 85);
-  --chart-3: oklch(0.50 0.20 25);
+  --chart-3: oklch(0.5 0.2 25);
   --chart-4: oklch(0.55 0.08 150);
   --chart-5: oklch(0.75 0.12 85);
-  --sidebar: oklch(0.20 0.006 285);
+  --sidebar: oklch(0.2 0.006 285);
   --sidebar-foreground: oklch(0.92 0.005 65);
   --sidebar-accent: oklch(0.27 0.006 286);
   --sidebar-accent-foreground: oklch(0.98 0 0);
@@ -141,43 +141,60 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
     line-height: 1.6;
     letter-spacing: -0.01em;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family:
+      "Montserrat",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
-  
+
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
   }
-  
+
   h2 {
     @apply text-3xl md:text-4xl;
   }
-  
+
   h3 {
     @apply text-2xl md:text-3xl;
   }
-  
+
   p {
     @apply text-base leading-relaxed;
   }
-  
+
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
@@ -189,12 +206,12 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
-  
+
   /* Focus styles for accessibility */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
+    @apply outline-2 outline-offset-4 outline-zim-gold;
   }
-  
+
   /* Selection color */
   ::selection {
     background: oklch(0.35 0.08 150 / 20%);
@@ -205,7 +222,9 @@
       scroll-behavior: auto;
     }
 
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -224,13 +243,15 @@
 
     main .min-h-screen {
       min-height: calc(
-        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) - var(--mobile-shell-offset-bottom, 0px)
+        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) -
+          var(--mobile-shell-offset-bottom, 0px)
       ) !important;
     }
 
     main .h-screen {
       height: calc(
-        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) - var(--mobile-shell-offset-bottom, 0px)
+        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) -
+          var(--mobile-shell-offset-bottom, 0px)
       ) !important;
     }
 
@@ -246,7 +267,8 @@
     main [class*="min-h-[80vh]"],
     main [class*="min-h-[90vh]"] {
       min-height: calc(
-        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) - var(--mobile-shell-offset-bottom, 0px)
+        var(--mobile-full-viewport) - var(--mobile-shell-offset-top, 0px) -
+          var(--mobile-shell-offset-bottom, 0px)
       ) !important;
     }
   }
@@ -280,50 +302,59 @@
       max-width: 1280px;
     }
   }
-  
+
   /* Custom utility classes for Zimbabwe theme */
   .zim-gradient {
-    background: linear-gradient(135deg, oklch(0.35 0.08 150) 0%, oklch(0.25 0.08 150) 100%);
+    background: linear-gradient(
+      135deg,
+      oklch(0.35 0.08 150) 0%,
+      oklch(0.25 0.08 150) 100%
+    );
   }
-  
+
   .zim-gold-gradient {
-    background: linear-gradient(135deg, oklch(0.85 0.15 85) 0%, oklch(0.75 0.12 85) 100%);
+    background: linear-gradient(
+      135deg,
+      oklch(0.85 0.15 85) 0%,
+      oklch(0.75 0.12 85) 100%
+    );
   }
-  
+
   /* Professional Card Styles */
   .card-professional {
     @apply bg-card rounded-xl border shadow-sm;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .card-professional:hover {
     @apply shadow-lg border-primary/20;
     transform: translateY(-2px);
   }
-  
+
   /* Hover animations */
   .hover-lift {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .hover-lift:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
   }
-  
+
   .hover-scale {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .hover-scale:hover {
     transform: scale(1.02);
   }
-  
+
   .hover-glow {
     transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .hover-glow:hover {
     box-shadow: 0 0 30px rgba(34, 139, 34, 0.25);
   }
@@ -345,17 +376,49 @@
   }
 
   /* Shared card candidates across pages (stable, no :has selectors) */
-  main section[class*="bg-slate-950"] {
-    background-color: rgb(255 255 255 / 1) !important;
-  }
 
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/5"],
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/90"],
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/95"],
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"] {
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/5"],
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/90"],
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/95"],
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-950/40"] {
     background-color: rgb(15 23 42 / 1) !important;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -366,31 +429,72 @@
       border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"]:hover,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"]:hover,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"]:hover,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/5"]:hover,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/90"]:hover,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/95"]:hover,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]:hover {
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"]:hover,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"]:hover,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"]:hover,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/5"]:hover,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/90"]:hover,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/95"]:hover,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 24px -16px rgba(212, 175, 55, 0.26);
     border-color: rgba(212, 175, 55, 0.25);
   }
 
   /* Media consistency inside tiles */
-  main :is(div, article)[class*="rounded-"][class*="border"] img[class*="object-cover"] {
+  main
+    :is(div, article)[class*="rounded-"][class*="border"]
+    img[class*="object-cover"] {
     transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
   }
 
-  main :is(div, article)[class*="rounded-"][class*="border"]:hover img[class*="object-cover"] {
+  main
+    :is(div, article)[class*="rounded-"][class*="border"]:hover
+    img[class*="object-cover"] {
     transform: scale(1.02);
   }
 
   .recharts-wrapper,
   .recharts-responsive-container {
-    transition: filter 0.28s ease, transform 0.28s ease;
+    transition:
+      filter 0.28s ease,
+      transform 0.28s ease;
   }
 
   .recharts-wrapper:hover,
@@ -403,7 +507,7 @@
     z-index: 90 !important;
     pointer-events: none !important;
   }
-  
+
   /* Button enhancements */
   .btn-primary {
     @apply bg-primary text-primary-foreground font-semibold;
@@ -411,37 +515,37 @@
     @apply shadow-md hover:shadow-lg;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .btn-primary:hover {
     @apply bg-primary/90;
     transform: translateY(-1px);
   }
-  
+
   .btn-primary:active {
     transform: translateY(0);
   }
-  
+
   .btn-secondary {
     @apply bg-secondary text-secondary-foreground font-semibold;
     @apply px-6 py-3 rounded-lg;
     @apply shadow-md hover:shadow-lg;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .btn-secondary:hover {
     @apply bg-secondary/90;
     transform: translateY(-1px);
   }
-  
+
   /* Section spacing */
   .section-padding {
     @apply py-16 md:py-20 lg:py-24;
   }
-  
+
   .section-padding-sm {
     @apply py-12 md:py-16;
   }
-  
+
   /* Hero section styles */
   .hero-gradient {
     background: linear-gradient(
@@ -451,27 +555,27 @@
       oklch(0.35 0.08 150 / 90%) 100%
     );
   }
-  
+
   .hero-text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
-  
+
   /* Badge styles */
   .badge-primary {
     @apply bg-primary/10 text-primary border border-primary/20;
     @apply px-3 py-1 rounded-full text-sm font-medium;
   }
-  
+
   .badge-secondary {
     @apply bg-secondary/20 text-secondary-foreground border border-secondary/30;
     @apply px-3 py-1 rounded-full text-sm font-medium;
   }
-  
+
   .badge-success {
     @apply bg-green-100 text-green-800 border border-green-200;
     @apply px-3 py-1 rounded-full text-sm font-medium;
   }
-  
+
   .badge-warning {
     @apply bg-amber-100 text-amber-800 border border-amber-200;
     @apply px-3 py-1 rounded-full text-sm font-medium;
@@ -525,13 +629,48 @@
   :where(
       .outer-glass-panel,
       .glass-morphism,
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/5"],
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/90"],
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/95"],
-      main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-white/5"],
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-slate-900/90"],
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-slate-900/95"],
+      main
+        :is(
+          div,
+          article,
+          section
+        )[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]
     )
     :where(p, li, td, th, label, small) {
     color: rgb(255 255 255 / 0.8);
@@ -540,13 +679,55 @@
   /* Match shared tile typography to the home card treatment. */
   .outer-glass-panel h3,
   .glass-morphism h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"] h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"] h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"] h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/5"] h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/90"] h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/95"] h3,
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"] h3 {
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"]
+    h3,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"]
+    h3,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"]
+    h3,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/5"]
+    h3,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/90"]
+    h3,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/95"]
+    h3,
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]
+    h3 {
     color: rgb(255 255 255);
     font-size: 1.25rem;
     line-height: 1.75rem;
@@ -554,24 +735,148 @@
     letter-spacing: -0.025em;
   }
 
-  .outer-glass-panel p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  .outer-glass-panel li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  .glass-morphism p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  .glass-morphism li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/5"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-white/5"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/90"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/90"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/95"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-900/95"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"] p:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]),
-  main :is(div, article, section)[class*="rounded-"][class*="border"][class*="bg-slate-950/40"] li:not([class*="text-zim-gold"]):not([class*="font-black"]):not([class*="uppercase"]) {
+  .outer-glass-panel
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  .outer-glass-panel
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  .glass-morphism
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  .glass-morphism
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/5"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-white/5"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/90"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/90"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/95"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-900/95"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]
+    p:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ),
+  main
+    :is(
+      div,
+      article,
+      section
+    )[class*="rounded-"][class*="border"][class*="bg-slate-950/40"]
+    li:not([class*="text-zim-gold"]):not([class*="font-black"]):not(
+      [class*="uppercase"]
+    ) {
     color: rgb(148 163 184);
     font-size: 0.875rem;
     line-height: 1.625;
@@ -591,13 +896,29 @@
      matching the home tile gap on both sides. */
   @media (min-width: 1024px) {
     main section:has(> .container > .outer-glass-panel),
-    main section:has(> .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]) {
+    main
+      section:has(
+        > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+      ) {
       padding-left: 1.75rem !important;
       padding-right: 1.75rem !important;
     }
 
     main section > .container:has(> .outer-glass-panel),
-    main section > .container:has(> :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]) {
+    main
+      section
+      > .container:has(
+        > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+      ) {
       width: 100% !important;
       max-width: 100% !important;
       padding-left: 0 !important;
@@ -605,7 +926,14 @@
     }
 
     main section > .container > .outer-glass-panel,
-    main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"] {
+    main
+      section
+      > .container
+      > :is(
+        div,
+        article,
+        section
+      )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"] {
       width: 100%;
       max-width: 100%;
     }
@@ -615,13 +943,28 @@
      Keep outer glass panels aligned to container width on compact view. */
   @media (max-width: 767px) {
     main section:has(> .container > .outer-glass-panel),
-    main section:has(> .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]) {
+    main
+      section:has(
+        > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+      ) {
       padding-left: 0 !important;
       padding-right: 0 !important;
     }
 
     main section > .container > .outer-glass-panel,
-    main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"] {
+    main
+      section
+      > .container
+      > :is(
+        div,
+        article,
+        section
+      )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"] {
       width: 100%;
       max-width: 100%;
       margin-left: 0;
@@ -632,38 +975,172 @@
        20px outer panel padding, 16px grid gaps, 16px inner-card padding,
        and 24px inner-card corners. */
     :is(
-        .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
-      ):has(
-        .grid > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
-        .grid > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
-        .grid > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
-        .grid > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
-        .grid > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/5"],
-        .grid > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
-        .grid > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
-        .grid > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
-        .grid > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
-        .grid > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/5"]
-      ) {
+      .outer-glass-panel,
+      main
+        section
+        > .container
+        > :is(
+          div,
+          article,
+          section
+        )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+    ):has(
+      .grid
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+      .grid
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+      .grid
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
+      .grid
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+      .grid
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/5"],
+      .grid
+        > *
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+      .grid
+        > *
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+      .grid
+        > *
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
+      .grid
+        > *
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+      .grid
+        > *
+        > :is(
+          div,
+          article,
+          section,
+          li
+        )[class*="rounded-"][class*="border"][class*="bg-white/5"]
+    ) {
       padding: 1.25rem !important;
     }
 
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid:has(
-        > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
-        > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
-        > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
-        > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
-        > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/5"],
-        > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
-        > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
-        > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
-        > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
-        > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/5"]
+        > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+        > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+        > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
+        > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+        > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/5"],
+        > *
+          > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+        > *
+          > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+        > *
+          > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
+        > *
+          > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+        > *
+          > :is(
+            div,
+            article,
+            section,
+            li
+          )[class*="rounded-"][class*="border"][class*="bg-white/5"]
       ) {
       gap: 1rem !important;
     }
@@ -671,95 +1148,224 @@
     /* Tighten mobile padding for inner grid tiles without affecting the outer panel shell. */
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
+      > *
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.04]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
+      > *
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.02]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
+      > *
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.01]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
+      > *
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/[0.03]"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > * > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/5"],
+      > *
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/5"],
     :is(
         .outer-glass-panel,
-        main section > .container > :is(div, article, section)[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
+        main
+          section
+          > .container
+          > :is(
+            div,
+            article,
+            section
+          )[class*="rounded-[2rem]"][class*="border"][class*="bg-white/[0.02]"]
       )
       .grid
-      > :is(div, article, section, li)[class*="rounded-"][class*="border"][class*="bg-white/5"] {
+      > :is(
+        div,
+        article,
+        section,
+        li
+      )[class*="rounded-"][class*="border"][class*="bg-white/5"] {
       padding: 1rem !important;
       border-radius: 1.5rem !important;
     }
   }
-  
+
   /* Gradient text */
   .gradient-text {
-    background: linear-gradient(135deg, oklch(0.35 0.08 150) 0%, oklch(0.45 0.10 150) 100%);
+    background: linear-gradient(
+      135deg,
+      oklch(0.35 0.08 150) 0%,
+      oklch(0.45 0.1 150) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   /* Divider styles */
   .divider {
     @apply border-t border-border my-8;
   }
-  
+
   .divider-thick {
     @apply border-t-2 border-primary/20 my-8;
   }
-  
+
   /* Image styles */
   .img-cover {
     @apply w-full h-full object-cover;
   }
-  
+
   .img-rounded {
     @apply rounded-xl overflow-hidden;
   }
-  
+
   /* Glassmorphism effect */
   .glass {
     background: rgba(255, 255, 255, 0.8);
@@ -767,7 +1373,7 @@
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
-  
+
   .glass-dark {
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
@@ -783,7 +1389,11 @@
   }
 
   .liquid-glass {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.8) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(15, 23, 42, 0.8) 100%
+    );
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -800,15 +1410,15 @@
     border-color: rgba(255, 255, 255, 0.5);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
   }
-  
+
   /* Animated underline for links */
   .link-underline {
     position: relative;
     text-decoration: none;
   }
-  
+
   .link-underline::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 0;
     height: 2px;
@@ -817,30 +1427,31 @@
     background-color: currentColor;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .link-underline:hover::after {
     width: 100%;
   }
-  
+
   /* Pulse animation for CTAs */
   .pulse-subtle {
     animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
+
   @keyframes pulse-subtle {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 0 0 rgba(34, 139, 34, 0.4);
     }
     50% {
       box-shadow: 0 0 0 8px rgba(34, 139, 34, 0);
     }
   }
-  
+
   /* Fade in animation */
   .fade-in {
     animation: fadeIn 0.5s ease-out forwards;
   }
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -851,13 +1462,13 @@
       transform: translateY(0);
     }
   }
-  
+
   /* Slide up animation */
   .slide-up {
     animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     opacity: 0;
   }
-  
+
   @keyframes slideUp {
     from {
       opacity: 0;
@@ -868,14 +1479,18 @@
       transform: translateY(0);
     }
   }
-  
+
   /* Scroll indicator animation */
   .scroll-indicator {
     animation: scrollBounce 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
+
   @keyframes scrollBounce {
-    0%, 20%, 50%, 80%, 100% {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
       opacity: 1;
       transform: translateY(0);
     }
@@ -888,46 +1503,60 @@
       transform: translateY(8px);
     }
   }
-  
+
   .scroll-indicator-dot {
     animation: scrollDot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
+
   @keyframes scrollDot {
-    0%, 20% {
+    0%,
+    20% {
       opacity: 1;
       transform: translateY(0);
     }
-    40%, 100% {
+    40%,
+    100% {
       opacity: 0;
       transform: translateY(12px);
     }
   }
-  
+
   /* Stagger children animation */
   .stagger-children > * {
     opacity: 0;
     animation: fadeIn 0.5s ease-out forwards;
   }
-  
-  .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
-  .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
-  .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
-  .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
-  .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
-  .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
-  
+
+  .stagger-children > *:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stagger-children > *:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stagger-children > *:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stagger-children > *:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .stagger-children > *:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+  .stagger-children > *:nth-child(6) {
+    animation-delay: 0.6s;
+  }
+
   /* Progress bar animation */
   .progress-animate {
     animation: progressGrow 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   @keyframes progressGrow {
     from {
       width: 0;
     }
   }
-  
+
   /* Shimmer loading effect */
   .shimmer {
     background: linear-gradient(
@@ -939,7 +1568,7 @@
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
-  
+
   @keyframes shimmer {
     0% {
       background-position: -200% 0;
@@ -948,7 +1577,7 @@
       background-position: 200% 0;
     }
   }
-  
+
   /* WhatsApp FAB styles */
   .whatsapp-fab {
     @apply fixed bottom-6 right-6 z-50;
@@ -956,12 +1585,12 @@
     @apply p-4 rounded-full shadow-lg;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .whatsapp-fab:hover {
     transform: scale(1.1);
     box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
   }
-  
+
   /* Tooltip styles */
   .tooltip {
     @apply absolute z-50 px-3 py-2 text-sm;
@@ -969,11 +1598,11 @@
     @apply opacity-0 invisible;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .tooltip-trigger:hover .tooltip {
     @apply opacity-100 visible;
   }
-  
+
   /* Form input styles */
   .input-professional {
     @apply w-full px-4 py-3 rounded-lg border border-input;
@@ -981,114 +1610,114 @@
     @apply focus:border-primary focus:ring-2 focus:ring-primary/20;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .input-professional:focus {
     @apply outline-none;
   }
-  
+
   /* Table styles */
   .table-professional {
     @apply w-full border-collapse;
   }
-  
+
   .table-professional th {
     @apply bg-muted/50 text-left px-4 py-3 font-semibold text-sm;
     @apply border-b-2 border-primary/20;
   }
-  
+
   .table-professional td {
     @apply px-4 py-3 border-b border-border;
   }
-  
+
   .table-professional tr:hover td {
     @apply bg-muted/30;
   }
-  
+
   /* Stat card styles */
   .stat-card {
     @apply bg-card rounded-xl p-6 border shadow-sm;
     @apply text-center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .stat-card:hover {
     @apply shadow-md border-primary/20;
     transform: translateY(-2px);
   }
-  
+
   .stat-value {
     @apply text-3xl md:text-4xl font-bold text-primary;
     @apply mb-1;
   }
-  
+
   .stat-label {
     @apply text-sm text-muted-foreground font-medium;
   }
-  
+
   /* Timeline styles */
   .timeline {
     @apply relative pl-8 border-l-2 border-primary/30;
   }
-  
+
   .timeline-item {
     @apply relative pb-8;
   }
-  
+
   .timeline-item::before {
-    content: '';
+    content: "";
     @apply absolute -left-[41px] top-0;
     @apply w-4 h-4 rounded-full bg-primary;
     @apply border-4 border-background;
   }
-  
+
   .timeline-item:last-child {
     @apply pb-0;
   }
-  
+
   /* Feature grid */
   .feature-grid {
     @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
   }
-  
+
   .feature-card {
     @apply bg-card rounded-xl p-6 border;
     @apply hover:shadow-lg hover:border-primary/20;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .feature-icon {
     @apply w-12 h-12 rounded-lg bg-primary/10;
     @apply flex items-center justify-center mb-4;
   }
-  
+
   .feature-icon svg {
     @apply w-6 h-6 text-primary;
   }
-  
+
   /* Testimonial styles */
   .testimonial-card {
     @apply bg-card rounded-xl p-6 border;
     @apply relative;
   }
-  
+
   .testimonial-card::before {
     content: '"';
     @apply absolute top-4 left-4 text-6xl  font-serif;
     line-height: 1;
   }
-  
+
   .testimonial-content {
     @apply relative z-10 pt-8;
   }
-  
+
   /* Navigation active state */
   .nav-active {
     @apply bg-primary text-primary-foreground;
     @apply relative;
   }
-  
+
   .nav-active::after {
-    content: '';
+    content: "";
     @apply absolute bottom-0 left-1/2 -translate-x-1/2;
     @apply w-1/2 h-0.5 bg-secondary;
     @apply rounded-full;
@@ -1133,112 +1762,114 @@
   display: none;
 }
 
-/* Mobile-first responsive design */
-@media (max-width: 640px) {
-  .container {
-    @apply px-3;
-  }
-  
-  /* Responsive text sizes */
-  h1 {
-    @apply text-2xl;
-  }
-  
-  h2 {
-    @apply text-xl;
-  }
-  
-  h3 {
-    @apply text-lg;
-  }
-  
-  /* Responsive padding */
-  .section-padding {
-    @apply py-8;
-  }
-  
-  .section-padding-sm {
-    @apply py-6;
-  }
-  
-  /* Responsive grid */
-  .responsive-grid {
-    @apply grid grid-cols-1 gap-4;
-  }
-  
-  /* Responsive flex */
-  .responsive-flex {
-    @apply flex flex-col gap-4;
-  }
-  
-  /* Hide on mobile */
-  .hidden-mobile {
-    @apply hidden;
-  }
-}
+@layer base {
+  /* Mobile-first responsive design */
+  @media (max-width: 640px) {
+    .container {
+      @apply px-3;
+    }
 
-@media (min-width: 641px) and (max-width: 1024px) {
-  .container {
-    @apply px-4;
-  }
-  
-  h1 {
-    @apply text-3xl;
-  }
-  
-  h2 {
-    @apply text-2xl;
-  }
-  
-  .section-padding {
-    @apply py-12;
-  }
-  
-  .section-padding-sm {
-    @apply py-8;
-  }
-  
-  .responsive-grid {
-    @apply grid grid-cols-2 gap-6;
-  }
-  
-  .responsive-flex {
-    @apply flex flex-row gap-6;
-  }
-}
+    /* Responsive text sizes */
+    h1 {
+      @apply text-2xl;
+    }
 
-@media (min-width: 1025px) {
-  .container {
-    @apply px-6;
+    h2 {
+      @apply text-xl;
+    }
+
+    h3 {
+      @apply text-lg;
+    }
+
+    /* Responsive padding */
+    .section-padding {
+      @apply py-8;
+    }
+
+    .section-padding-sm {
+      @apply py-6;
+    }
+
+    /* Responsive grid */
+    .responsive-grid {
+      @apply grid grid-cols-1 gap-4;
+    }
+
+    /* Responsive flex */
+    .responsive-flex {
+      @apply flex flex-col gap-4;
+    }
+
+    /* Hide on mobile */
+    .hidden-mobile {
+      @apply hidden;
+    }
   }
-  
-  h1 {
-    @apply text-4xl;
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .container {
+      @apply px-4;
+    }
+
+    h1 {
+      @apply text-3xl;
+    }
+
+    h2 {
+      @apply text-2xl;
+    }
+
+    .section-padding {
+      @apply py-12;
+    }
+
+    .section-padding-sm {
+      @apply py-8;
+    }
+
+    .responsive-grid {
+      @apply grid grid-cols-2 gap-6;
+    }
+
+    .responsive-flex {
+      @apply flex flex-row gap-6;
+    }
   }
-  
-  h2 {
-    @apply text-3xl;
-  }
-  
-  .section-padding {
-    @apply py-16;
-  }
-  
-  .section-padding-sm {
-    @apply py-10;
-  }
-  
-  .responsive-grid {
-    @apply grid grid-cols-3 gap-8;
-  }
-  
-  .responsive-flex {
-    @apply flex flex-row gap-8;
-  }
-  
-  /* Show on desktop */
-  .hidden-mobile {
-    @apply block;
+
+  @media (min-width: 1025px) {
+    .container {
+      @apply px-6;
+    }
+
+    h1 {
+      @apply text-4xl;
+    }
+
+    h2 {
+      @apply text-3xl;
+    }
+
+    .section-padding {
+      @apply py-16;
+    }
+
+    .section-padding-sm {
+      @apply py-10;
+    }
+
+    .responsive-grid {
+      @apply grid grid-cols-3 gap-8;
+    }
+
+    .responsive-flex {
+      @apply flex flex-row gap-8;
+    }
+
+    /* Show on desktop */
+    .hidden-mobile {
+      @apply block;
+    }
   }
 }
 
@@ -1247,12 +1878,12 @@
   .no-print {
     display: none !important;
   }
-  
+
   body {
     font-size: 12pt;
     line-height: 1.5;
   }
-  
+
   a[href]::after {
     content: " (" attr(href) ")";
     font-size: 0.8em;

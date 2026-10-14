@@ -1,6 +1,6 @@
 import axios from "axios";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { sendResetEmail } from "../../../shared/email";
+import { sendEmailMessage, sendResetEmail } from "../../../shared/email";
 
 const { axiosPost } = vi.hoisted(() => ({
   axiosPost: vi.fn(),
@@ -25,7 +25,8 @@ describe("sendResetEmail", () => {
   });
 
   afterEach(() => {
-    if (originalResetEmailProvider === undefined) delete process.env.RESET_EMAIL_PROVIDER;
+    if (originalResetEmailProvider === undefined)
+      delete process.env.RESET_EMAIL_PROVIDER;
     else process.env.RESET_EMAIL_PROVIDER = originalResetEmailProvider;
 
     if (originalResendApiKey === undefined) delete process.env.RESEND_API_KEY;
@@ -35,8 +36,20 @@ describe("sendResetEmail", () => {
     else process.env.FROM_EMAIL = originalFromEmail;
   });
 
+  it("strips line breaks from user-controlled subject headers", async () => {
+    await sendEmailMessage({
+      to: "user@example.com",
+      subject: "Question\r\nBcc: attacker@example.com",
+      text: "Test",
+    });
+    expect(axiosPost.mock.calls[0][1].subject).toBe(
+      "Question  Bcc: attacker@example.com"
+    );
+  });
+
   it("escapes reset URLs before embedding them in email HTML", async () => {
-    const resetUrl = 'https://du.example/reset?next="><script>alert(1)</script>';
+    const resetUrl =
+      'https://du.example/reset?next="><script>alert(1)</script>';
 
     await sendResetEmail("user@example.com", resetUrl);
 

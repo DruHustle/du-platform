@@ -11,7 +11,11 @@ const LOCKOUT_MAX_FAILURES = 10;
 const LOCKOUT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const LOCKOUT_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 
-type LockoutEntry = { failures: number; windowStart: number; lockedUntil: number | null };
+type LockoutEntry = {
+  failures: number;
+  windowStart: number;
+  lockedUntil: number | null;
+};
 const loginLockouts = new Map<string, LockoutEntry>();
 
 function pruneLoginLockouts() {
@@ -29,7 +33,11 @@ export function recordLoginFailure(emailKey: string): void {
   const now = Date.now();
   const entry = loginLockouts.get(emailKey);
   if (!entry || now > entry.windowStart + LOCKOUT_WINDOW_MS) {
-    loginLockouts.set(emailKey, { failures: 1, windowStart: now, lockedUntil: null });
+    loginLockouts.set(emailKey, {
+      failures: 1,
+      windowStart: now,
+      lockedUntil: null,
+    });
     return;
   }
   entry.failures += 1;
@@ -42,7 +50,10 @@ export function clearLoginFailures(emailKey: string): void {
   loginLockouts.delete(emailKey);
 }
 
-export function isLoginLocked(emailKey: string): { locked: boolean; retryAfterMs: number } {
+export function isLoginLocked(emailKey: string): {
+  locked: boolean;
+  retryAfterMs: number;
+} {
   pruneLoginLockouts();
   const entry = loginLockouts.get(emailKey);
   if (!entry?.lockedUntil) return { locked: false, retryAfterMs: 0 };
@@ -59,7 +70,6 @@ type MemoryUser = {
   full_name: string;
   email: string;
   password_hash: string;
-  kyc_verified: 0 | 1;
   created_at: string;
 };
 
@@ -83,13 +93,16 @@ const memoryPasswordResetTokens: MemoryPasswordResetToken[] = [];
 // Monotonic counter — avoids ID collisions if entries are ever spliced out.
 let memoryUserIdCounter = 0;
 
-function createMemoryUser(fullName: string, email: string, passwordHash: string): MemoryUser {
+function createMemoryUser(
+  fullName: string,
+  email: string,
+  passwordHash: string
+): MemoryUser {
   return {
     id: ++memoryUserIdCounter,
     full_name: fullName,
     email,
     password_hash: passwordHash,
-    kyc_verified: 0,
     created_at: new Date().toISOString(),
   };
 }
@@ -99,30 +112,49 @@ export function sha256(value: string): string {
 }
 
 export async function findUserByEmail(email: string) {
-  if (!db) return memoryUsers.find((user) => user.email.toLowerCase() === email.toLowerCase()) ?? null;
+  if (!db)
+    return (
+      memoryUsers.find(
+        user => user.email.toLowerCase() === email.toLowerCase()
+      ) ?? null
+    );
 
   try {
-    const [rows] = await db.query<mysql.RowDataPacket[]>("SELECT * FROM users WHERE email = ? LIMIT 1", [email]);
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT * FROM users WHERE email = ? LIMIT 1",
+      [email]
+    );
     return rows[0] ?? null;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    return memoryUsers.find((user) => user.email.toLowerCase() === email.toLowerCase()) ?? null;
+    return (
+      memoryUsers.find(
+        user => user.email.toLowerCase() === email.toLowerCase()
+      ) ?? null
+    );
   }
 }
 
 export async function findUserById(id: number) {
-  if (!db) return memoryUsers.find((user) => user.id === id) ?? null;
+  if (!db) return memoryUsers.find(user => user.id === id) ?? null;
 
   try {
-    const [rows] = await db.query<mysql.RowDataPacket[]>("SELECT * FROM users WHERE id = ? LIMIT 1", [id]);
+    const [rows] = await db.query<mysql.RowDataPacket[]>(
+      "SELECT * FROM users WHERE id = ? LIMIT 1",
+      [id]
+    );
     return rows[0] ?? null;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    return memoryUsers.find((user) => user.id === id) ?? null;
+    return memoryUsers.find(user => user.id === id) ?? null;
   }
 }
 
-export async function createUser(fullName: string, email: string, passwordHash: string) {
+export async function createUser(
+  fullName: string,
+  email: string,
+  passwordHash: string
+) {
   if (!db) {
     const user = createMemoryUser(fullName, email, passwordHash);
     memoryUsers.push(user);
@@ -151,68 +183,20 @@ export async function createUser(fullName: string, email: string, passwordHash: 
 
 export async function updateUserPassword(userId: number, passwordHash: string) {
   if (!db) {
-    const user = memoryUsers.find((entry) => entry.id === userId);
+    const user = memoryUsers.find(entry => entry.id === userId);
     if (user) user.password_hash = passwordHash;
     return;
   }
 
   try {
-    await db.execute("UPDATE users SET password_hash = ? WHERE id = ?", [passwordHash, userId]);
+    await db.execute("UPDATE users SET password_hash = ? WHERE id = ?", [
+      passwordHash,
+      userId,
+    ]);
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    const user = memoryUsers.find((entry) => entry.id === userId);
+    const user = memoryUsers.find(entry => entry.id === userId);
     if (user) user.password_hash = passwordHash;
-  }
-}
-
-export async function setUserKycVerified(userId: number, verified: boolean) {
-  const normalizedUserId = Math.floor(Number(userId));
-  if (!Number.isFinite(normalizedUserId) || normalizedUserId <= 0) return null;
-
-  const value: 0 | 1 = verified ? 1 : 0;
-
-  if (!db) {
-    const user = memoryUsers.find((entry) => entry.id === normalizedUserId);
-    if (!user) return null;
-    user.kyc_verified = value;
-    return {
-      id: user.id,
-      full_name: user.full_name,
-      email: user.email,
-      kyc_verified: Boolean(user.kyc_verified),
-    };
-  }
-
-  try {
-    await db.execute("UPDATE users SET kyc_verified = ? WHERE id = ?", [value, normalizedUserId]);
-    const [rows] = await db.query<mysql.RowDataPacket[]>(
-      "SELECT id, full_name, email, COALESCE(kyc_verified, 0) AS kyc_verified FROM users WHERE id = ? LIMIT 1",
-      [normalizedUserId]
-    );
-    const row = rows[0];
-    if (!row) return null;
-
-    return {
-      id: Number(row.id),
-      full_name: String(row.full_name ?? ""),
-      email: String(row.email ?? ""),
-      kyc_verified: Boolean(Number(row.kyc_verified ?? 0)),
-    };
-  } catch (error: any) {
-    if (String(error?.code ?? "") === "ER_BAD_FIELD_ERROR") {
-      return null;
-    }
-    if (!isDbConnectionError(error)) throw error;
-
-    const user = memoryUsers.find((entry) => entry.id === normalizedUserId);
-    if (!user) return null;
-    user.kyc_verified = value;
-    return {
-      id: user.id,
-      full_name: user.full_name,
-      email: user.email,
-      kyc_verified: Boolean(user.kyc_verified),
-    };
   }
 }
 
@@ -229,11 +213,10 @@ export async function createSession(userId: number, ttlHours = 24 * 7) {
     });
   } else {
     try {
-      await db.execute("INSERT INTO auth_sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)", [
-        tokenHash,
-        userId,
-        expiresAt,
-      ]);
+      await db.execute(
+        "INSERT INTO auth_sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
+        [tokenHash, userId, expiresAt]
+      );
     } catch (error) {
       if (!isDbConnectionError(error)) throw error;
       memoryAuthSessions.push({
@@ -251,10 +234,14 @@ export async function getSession(token: string) {
   const tokenHash = sha256(token);
 
   if (!db) {
-    const session = memoryAuthSessions.find((entry) => entry.token_hash === tokenHash);
+    const session = memoryAuthSessions.find(
+      entry => entry.token_hash === tokenHash
+    );
     if (!session) return null;
     if (new Date(session.expires_at).getTime() < Date.now()) {
-      const index = memoryAuthSessions.findIndex((entry) => entry.token_hash === tokenHash);
+      const index = memoryAuthSessions.findIndex(
+        entry => entry.token_hash === tokenHash
+      );
       if (index >= 0) memoryAuthSessions.splice(index, 1);
       return null;
     }
@@ -271,13 +258,17 @@ export async function getSession(token: string) {
 
     const expiresAt = new Date(session.expires_at);
     if (expiresAt.getTime() < Date.now()) {
-      await db.execute("DELETE FROM auth_sessions WHERE token_hash = ?", [tokenHash]);
+      await db.execute("DELETE FROM auth_sessions WHERE token_hash = ?", [
+        tokenHash,
+      ]);
       return null;
     }
     return session;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    const session = memoryAuthSessions.find((entry) => entry.token_hash === tokenHash);
+    const session = memoryAuthSessions.find(
+      entry => entry.token_hash === tokenHash
+    );
     if (!session) return null;
     if (new Date(session.expires_at).getTime() < Date.now()) return null;
     return session;
@@ -288,16 +279,22 @@ export async function deleteSession(token: string) {
   const tokenHash = sha256(token);
 
   if (!db) {
-    const index = memoryAuthSessions.findIndex((entry) => entry.token_hash === tokenHash);
+    const index = memoryAuthSessions.findIndex(
+      entry => entry.token_hash === tokenHash
+    );
     if (index >= 0) memoryAuthSessions.splice(index, 1);
     return;
   }
 
   try {
-    await db.execute("DELETE FROM auth_sessions WHERE token_hash = ?", [tokenHash]);
+    await db.execute("DELETE FROM auth_sessions WHERE token_hash = ?", [
+      tokenHash,
+    ]);
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    const index = memoryAuthSessions.findIndex((entry) => entry.token_hash === tokenHash);
+    const index = memoryAuthSessions.findIndex(
+      entry => entry.token_hash === tokenHash
+    );
     if (index >= 0) memoryAuthSessions.splice(index, 1);
   }
 }
@@ -305,7 +302,11 @@ export async function deleteSession(token: string) {
 export async function deleteAllSessionsForUser(userId: number) {
   if (!db) {
     const count = memoryAuthSessions.length;
-    memoryAuthSessions.splice(0, count, ...memoryAuthSessions.filter((s) => s.user_id !== userId));
+    memoryAuthSessions.splice(
+      0,
+      count,
+      ...memoryAuthSessions.filter(s => s.user_id !== userId)
+    );
     return;
   }
 
@@ -314,7 +315,11 @@ export async function deleteAllSessionsForUser(userId: number) {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     const count = memoryAuthSessions.length;
-    memoryAuthSessions.splice(0, count, ...memoryAuthSessions.filter((s) => s.user_id !== userId));
+    memoryAuthSessions.splice(
+      0,
+      count,
+      ...memoryAuthSessions.filter(s => s.user_id !== userId)
+    );
   }
 }
 
@@ -326,7 +331,10 @@ export async function deleteAllSessionsForUserStrict(userId: number) {
   await db.execute("DELETE FROM auth_sessions WHERE user_id = ?", [userId]);
 }
 
-export async function createPasswordResetToken(userId: number, ttlMinutes = 30) {
+export async function createPasswordResetToken(
+  userId: number,
+  ttlMinutes = 30
+) {
   const token = crypto.randomBytes(48).toString("hex");
   const tokenHash = sha256(token);
   const expiresAt = new Date(Date.now() + ttlMinutes * 60 * 1000);
@@ -340,11 +348,10 @@ export async function createPasswordResetToken(userId: number, ttlMinutes = 30) 
     });
   } else {
     try {
-      await db.execute("INSERT INTO password_reset_tokens (token_hash, user_id, expires_at) VALUES (?, ?, ?)", [
-        tokenHash,
-        userId,
-        expiresAt,
-      ]);
+      await db.execute(
+        "INSERT INTO password_reset_tokens (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
+        [tokenHash, userId, expiresAt]
+      );
     } catch (error) {
       if (!isDbConnectionError(error)) throw error;
       memoryPasswordResetTokens.push({
@@ -363,7 +370,9 @@ export async function consumePasswordResetToken(rawToken: string) {
   const tokenHash = sha256(rawToken);
 
   if (!db) {
-    const row = memoryPasswordResetTokens.find((entry) => entry.token_hash === tokenHash);
+    const row = memoryPasswordResetTokens.find(
+      entry => entry.token_hash === tokenHash
+    );
     if (!row || row.used_at) return null;
     if (new Date(row.expires_at).getTime() < Date.now()) return null;
     row.used_at = new Date().toISOString();
@@ -386,7 +395,9 @@ export async function consumePasswordResetToken(rawToken: string) {
     return rows[0] ?? null;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    const row = memoryPasswordResetTokens.find((entry) => entry.token_hash === tokenHash);
+    const row = memoryPasswordResetTokens.find(
+      entry => entry.token_hash === tokenHash
+    );
     if (!row || row.used_at) return null;
     if (new Date(row.expires_at).getTime() < Date.now()) return null;
     row.used_at = new Date().toISOString();

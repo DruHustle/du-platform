@@ -10,7 +10,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
-        generateValue: true   # Render generates a random secret on first deploy
+        generateValue: true # Render generates a random secret on first deploy
       - key: TRUST_PROXY
         value: "true"
       # ── Database (Aiven MySQL) ──────────────────────────────────────────
@@ -20,10 +20,6 @@ services:
       # AIVEN_CA_CERT    (paste the full PEM certificate)
       # ── Email (Resend) ─────────────────────────────────────────────────
       # RESEND_API_KEY  |  FROM_EMAIL  |  APP_BASE_URL
-      # ── Financial APIs ─────────────────────────────────────────────────
-      # RELOADLY_CLIENT_ID  |  RELOADLY_CLIENT_SECRET
-      # THUNES_API_KEY      |  THUNES_API_SECRET
-      # FINANCIAL_SANDBOX_MOCK=false  (set to true to keep mock mode in production)
       # ── AI (Onesa) ─────────────────────────────────────────────────────
       # ONESA_AI_BASE_URL  |  ONESA_AI_API_KEY
       # ── Admin ──────────────────────────────────────────────────────────

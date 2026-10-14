@@ -2,10 +2,11 @@
   "brand": "Diaspora Yakavhurwa",
   "tagline": "Dandira reZimbabwe neVana vari Kunze kweNyika",
   "about": "Nezvedu",
-  "about_us": "Diaspora Unlocked inobatanidza vana veZimbabwe vari kunze kwenyika neushanyi, kudyara mari, remitensi, kutenga, uye masevhisi etekinoroji.",
+  "about_us": "Diaspora Unlocked inobatanidza vanhu veZimbabwe vari pasi rose nezvekushanya, kuisa mari, kutenga, nemasevhisi etekinoroji.",
   "select_lang": "Sarudza Mutauro",
   "account": {
-    "logout": "Buda"
+    "logout": "Buda",
+    "logout_failed": "Hatina kukwanisa kukubudisa muakaundi. Ndapota edza zvakare."
   },
   "login": "Pinda",
   "register": "Nyoresa",
@@ -27,13 +28,13 @@
       "vision_label": "Chiratidzo Chedu",
       "vision_content": "Kuva gedhi rinovimbika re diaspora rinobatanidza maZimbabweans vari kunze kwenyika nemikana nemasevhisi ane zvazvinoreva kumusha.",
       "mission_label": "Basa Redu",
-      "mission_content": "Kubatanidza nzira dzeushanyi, kudyara, remitensi, kutenga, uye tekinoroji kuburikidza nepuratifomu imwe yakachengeteka uye inowanikwa nyore.",
+      "mission_content": "Kubatanidza zvekushanya, kuisa mari, kutenga, netekinoroji papuratifomu imwe yakachengeteka uye iri nyore kushandisa.",
       "values_label": "Hunhu Hwedu",
       "values_content": "Kuvimbika, kunaka kwemasevhisi, pachena, hutsva, uye kuzvipira kwenguva refu kumhedzisiro yediaspora.",
       "who_label": "Tiri Vanani",
       "who_content": "Tiri chikwata chehunyanzvi hweZimbabwe diaspora chinovaka mhinduro dzedhijitari dzinoshanda dzinochengeta mhuri, mabhizinesi, nenharaunda zvakabatana kumusha.",
       "what_label": "Zvatinoita",
-      "what_content": "Tinovaka nekushandisa puratifomu yakabatana yediaspora inobatanidza vashandisi kuushanyi, kudyara, kubhadhara, kutenga, uye kutungamirirwa neAI. Tinobatsiranawo nemasangano nevapi vemasevhisi vanovimbika kuti kutora chikamu kuve kwakachengeteka, kunoshanda, uye kunoyerwa."
+      "what_content": "Tinovaka nekushandisa puratifomu inobatanidza vanhu vari kunze kwenyika nezvekushanya, kuisa mari, kutenga, nemazano eAI. Tinoshanda nemasangano nevapi vemasevhisi kutsigira kutora chikamu."
     },
     "local_partners": {
       "items": {
@@ -80,7 +81,7 @@
     "email": "Kero ye-Imeyiri",
     "password": "Phasuwedi",
     "confirm_password": "Simbisai phasuwedi",
-    "password_minimum": "Minimum 8 characters required.",
+    "password_minimum": "Shandisa mavara 8–255, kusanganisira bhii guru, nhamba, nechiratidzo.",
     "terms_agreement": "Ndinobvuma Mitemo neMirayiro yeBasa neMitemo yeKuchengetedzwa kweData maererano nekurongeka kwedata reGDPR.",
     "have_account": "Watova neakaundi here?",
     "login_here": "Pinda pano",
@@ -115,7 +116,15 @@
       "error": "Hatina kukwanisa kugadzirisazve pasiwedhi yako.",
       "back_to_login": "Dzokera pakupinda"
     },
-    "register": "Nyoresa"
+    "register": "Nyoresa",
+    "password_rules": {
+      "too_short": "Pasipoti inofanira kuva nemavara anokwana 8.",
+      "too_long": "Pasipoti haifaniri kudarika mavara 255.",
+      "uppercase": "Pasipoti inofanira kuva nebhii guru rimwe chete kana kupfuura.",
+      "number": "Pasipoti inofanira kuva nenhamba imwe chete kana kupfuura.",
+      "special": "Pasipoti inofanira kuva nechiratidzo chimwe chete kana kupfuura.",
+      "meets": "Zvinodiwa pasipoti zvazadziswa"
+    }
   },
   "nav": {
     "home": "Pamba",
@@ -150,12 +159,12 @@
     "technology_industries": "Maindasitiri eTekinoroji",
     "technology_industries_desc": "Zvikamu zvikuru zveunhare nesainzi muZimbabwe",
     "payments": "Payments",
-    "remittances": "Mari dzekutumira",
     "discover": "Discover",
     "admin": "Admin",
     "close_menu": "Vhara menyu",
     "language_hint": "Shandisa chiratidzo chepasi rose kuchinja mutauro.",
-    "open_menu": "Vhura menyu"
+    "open_menu": "Vhura menyu",
+    "menu": "Menyu yekufamba pasaiti"
   },
   "home": {
     "hero_title": "Diaspora Yakavhurwa",
@@ -179,20 +188,9 @@
         "title": "Kudyara Mari",
         "desc": "Tsvaga mikana yekudyara mari shoma neyekubatana nevamwe.",
         "stats": "$50M+ yeMikana"
-      },
-      "payments": {
-        "title": "Payments",
-        "desc": "Tumira mari kana wedzera airtime uchishandisa nzira dzakachengeteka uye dzinooneka mari dzemubhadharo.",
-        "stats": "Remittance + Airtime"
       }
     },
     "tiles": {
-      "remittances": {
-        "title": "Mari dzekutumira",
-        "description": "Tumira mari, bhadhara mari dzekutsigira dzakakosha, kana wedzera nguva yemhepo neakachengeteka-inotsigirwa inoyerera uye yakajeka mubhadharo kuoneka kwakavakirwa kudzimba dzediaspora.",
-        "detail": "Tevera kukosha zvakajeka usati watumira uye kuchengeta zuva nezuva rutsigiro rwemhuri nekukurumidza, kufungidzira, uye nyore.",
-        "stats": "Remittance + Airtime"
-      },
       "shop": {
         "title": "Shop",
         "description": "Tenga zvigadzirwa zvemuZimbabwe kuburikidza nemusika wakasarudzika une mafashama ekutumira zvinhu, kuwanikwa kwechigadzirwa chaunovimba, uye kubhadhara kuri nyore.",
@@ -761,7 +759,6 @@
       "subtitle": "Ongorora mafambiro ekukura, mari, mutero, nemitemo usati wagovera mari.",
       "gdp_growth": "Kukura kweGDP",
       "latest_macro_signal": "Chiratidzo cheupfumi chazvino",
-      "diaspora_remittances": "Mari inotumirwa neDiaspora",
       "annual_inflows": "Mari inopinda pagore",
       "total_exports": "Zvose zvinotengeswa kunze",
       "external_demand": "Chiratidzo chekudiwa kwemisika yekunze",
@@ -800,9 +797,9 @@
       "highlight7": "Visitor Economy",
       "subtitle7": "Mapurojekiti akabatana neTourism ari pedyo nezvinokwezva zvikuru anogona kuvhura kudiwa kwemari yekunze.",
       "badge8": "Diaspora Inoyerera",
-      "title8": "Kutumirwa kweChannel kune Assets",
+      "title8": "Vaka Zvinhu Zvinogara",
       "highlight8": "Structured Investment",
-      "subtitle8": "Shandura simba remari yemumba kuti ive nzira dzakabatana, dzinotevedzwa, uye dzine pundutso dzekudyara."
+      "subtitle8": "Ongorora mikana yekuisa mari pamwe chete, ichiteverwa uye ichibereka zvibereko."
     },
     "projects": {
       "masuwe": {
@@ -1119,8 +1116,8 @@
           "title": "Digital Adoption Kukura"
         },
         "payments": {
-          "detail": "Mhiri-muganhu remittance uye dhijitari yekubhadhara zvivakwa zvinoramba zviri yakasimba fintech inoda mutyairi.",
-          "title": "Kubhadhara uye Remittance Rails"
+          "detail": "Mapuratifomu ekutengeserana nemasevhisi paindaneti anobatanidza mabhizimisi nevatengi.",
+          "title": "Zvivakwa zveKutengeserana paIndaneti"
         },
         "regulatory": {
           "detail": "Kutevedzera-yekutanga modhi dzakaenderana nerezinesi uye AML kudzora anogona kukwira nekukurumidza uye kuchengetedza kuvimba.",
@@ -1321,81 +1318,6 @@
       "delete": "Delete",
       "empty": "No shop products yet."
     }
-  },
-  "fintech": {
-    "transfer_panel": {
-      "title": "Fintech Module Example",
-      "amount_placeholder": "Amount to send",
-      "loading": "Loading quote...",
-      "fx_fee": "FX: {{fx}} | Fee: {{fee}}"
-    }
-  },
-  "contact_form": {
-    "get_started": "Taura Nesu",
-    "full_name": "Zita rakazara",
-    "email": "Imeyiri",
-    "phone": "Nhamba dzerunhare",
-    "module_support": "{{module}} support",
-    "full_name_placeholder": "Full Name",
-    "email_placeholder": "email@example.com",
-    "phone_placeholder": "+ ...",
-    "subject": "Musoro wenyaya",
-    "message": "Mashoko",
-    "message_placeholder": "Nyora mashoko ako pano...",
-    "select_subject": "Sarudza musoro wenyaya",
-    "subject_options": {
-      "general": {
-        "inquiry": "General Inquiry",
-        "feedback": "Platform Feedback",
-        "partnership": "Partnership Inquiry"
-      },
-      "technology": {
-        "ai": "AI Integration",
-        "transformation": "Digital Transformation"
-      },
-      "data": {
-        "analytics": "Analytics Inquiry",
-        "privacy": "Privacy & Governance"
-      },
-      "export": {
-        "market": "German Market Requirements",
-        "certification": "Certification Support",
-        "partners": "Partner Connections"
-      },
-      "tourism": {
-        "visa": "Visa Information",
-        "accommodation": "Accommodation",
-        "homecoming": "Diaspora Homecoming"
-      },
-      "investment": {
-        "opportunities": "Opportunity Details",
-        "ntir": "NTIR Registration",
-        "due_diligence": "Due Diligence"
-      },
-      "success": {
-        "collaboration": "Project Collaboration"
-      }
-    },
-    "send": "Tumira Mashoko",
-    "sending": "Zvichitumirwa...",
-    "success_msg": "Mashoko atumirwa nemazvo!",
-    "description": "Une mibvunzo here? Zadzisa fomu riri pasi apa tichakubatsira.",
-    "required_field": "Zvinodiwa *",
-    "success_desc": "Tichadzoka kwauri nekukurumidza."
-  },
-  "calculator": {
-    "title": "Muchina wekuverenga Mari",
-    "desc": "Verenga mhindu yaungawana nekudyara mari",
-    "amount": "Mari yaunodyara",
-    "timeline": "Nguva yekudyara",
-    "return_rate": "Mhindu inotarisirwa paGore",
-    "total_investment": "Mari yose yaunodyara",
-    "total_returns": "Mhindu yose",
-    "final_value": "Mutengo wekupedzisira",
-    "projected_growth": "Kukura kunotarisirwa",
-    "year": "Gore",
-    "annual_return": "Mhindu yegore",
-    "disclaimer": "Cherechedzo: Ichi chirongwa chinopa fungidziro."
   },
   "shop": {
     "collections": "Zvirongwa",
@@ -1720,9 +1642,10 @@
     "error_unable_contact": "Onesa haasi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
     "online_indicator_aria": "Onesa ari online",
     "online_text": "Pamhepo",
-    "error_timeout": "Maminetsi matatu apfuura mhinduro kubva kunaOnesa isati yauya. Edza zvakare.",
+    "error_timeout": "Nguva yekumirira mhinduro yaOnesa yapera. Edza zvakare.",
     "offline_text": "Haisi pamhepo",
-    "error_rate_limited": "Onesa ari busy izvozvi. Edza zvakare mumasekonzi mashoma."
+    "error_rate_limited": "Onesa ari busy izvozvi. Edza zvakare mumasekonzi mashoma.",
+    "message_label": "Meseji kuna Onesa"
   },
   "logout": "Logout",
   "legal": {
@@ -1746,12 +1669,18 @@
       "analytics_title": "Anonymised analytics makuki",
       "analytics_description": "Yakagoneswa kutibatsira kuvandudza mashandiro uye usability.",
       "save": "Sevha uye enderera mberi",
-      "privacy_policy": "Privacy policy"
+      "privacy_policy": "Privacy policy",
+      "optional_description": "Kuchengetwa kwemashoko anodiwa kunotsigira akaundi yako nezvaunosarudza. Ongororo yekushandiswa kwesaiti inotanga kana wabvumira. Unogona kuchinja sarudzo yako pano chero nguva.",
+      "analytics_optional": "Hazvimanikidzwi. Zvinotibatsira kunzwisisa mashandiro nekushandiswa kwesaiti.",
+      "saved": "Sarudzo dzako dzemakuki dzachengetwa."
     },
     "consent": {
       "description": "Webhusaiti yedu inoshandisa makuki asingazivikanwe kukupa yakanakisa browser ruzivo uye kuunganidza akaunganidzwa manhamba. Izvi hazvibatanidzi makuki ekushambadza online.",
       "settings": "Cookie settings",
-      "accept": "Bvuma makuki"
+      "accept": "Bvuma makuki",
+      "title": "Zvaunoda pamakuki",
+      "optional_description": "Kuchengetwa kwemashoko anodiwa kunoita kuti akaundi yako nezvaunosarudza zvishande. Unogonawo kubvumira ongororo yekushandiswa kwesaiti kuti tibatsirwe kuivandudza.",
+      "reject": "Zvinodiwa chete"
     }
   },
   "search": {
@@ -1773,7 +1702,13 @@
       "title": "Hapana zvawanikwa",
       "message": "Hatina kuwana chinoenderana ne\"{{query}}\". Edza kutsvaga mazwi akadai se \"Investment\", \"Tourism\", kana \"Onesa\".",
       "return_home": "Dzoka Kumba"
-    }
+    },
+    "submit": "Tsvaga",
+    "loading": "Tiri kutsvaga…",
+    "failed": "Kutsvaga hakusi kushanda pari zvino. Ndapota edza zvakare.",
+    "retry": "Edza zvakare",
+    "prompt": "Tsvaga zvekushanya, kuisa mari, kutenga, kana Onesa AI.",
+    "description": "Tsvaga masevhisi nemashoko."
   },
   "error_boundary": {
     "unexpected": "Paitika chikanganiso chisingatarisirwi.",
@@ -1782,212 +1717,6 @@
   "routing": {
     "loading_page": "Loading Page",
     "loading_page_content": "Kurodha zvemukati peji"
-  },
-  "payments": {
-    "form": {
-      "transfer_types": {
-        "send_money": {
-          "label": "Tumira Mari",
-          "description": "Endesa kune mari yenharembozha, kutora mari, kana kubhanga."
-        },
-        "airtime_topup": {
-          "label": "Airtime Top-up",
-          "description": "Wedzera mutsara wenhare weZimbabwe nekuona maota."
-        }
-      },
-      "payout_types": {
-        "mobile_money": "Mari Yenharembozha",
-        "cash_pickup": "Cash Pickup",
-        "bank_transfer": "Bank Transfer"
-      },
-      "steps": {
-        "start": "Tanga",
-        "recipient": "Mugamuchiri",
-        "payment_method": "Nzira yekubhadhara",
-        "pay": "Pay",
-        "receipt": "Receipt"
-      },
-      "actions": {
-        "back": "Back",
-        "continue": "Enderera mberi",
-        "continue_to_pay": "Ramba uchibhadhara",
-        "download_receipt": "Dhaunirodha Receipt",
-        "edit": "Edit",
-        "get_started": "Enderera mberi",
-        "loading_rate": "Tiri kutora quote...",
-        "new_transfer": "New Transfer",
-        "pay_now": "Pay Now",
-        "processing": "Processing"
-      },
-      "dismiss_error": "Dismiss error",
-      "airtime": {
-        "detecting": "Kuongorora-otomatiki...",
-        "detecting_operator": "Detecting operator...",
-        "no_options": "Hapasati pave nemari inokurudzirwa.",
-        "operator": "Operator",
-        "options": "Kuwedzera-up mari sarudzo",
-        "detected": "detected"
-      },
-      "errors": {
-        "amount_limit": "Mari inodarika muganhu unobvumirwa we5000.",
-        "auth_required": "Kusimbisa kunodiwa.",
-        "invalid_amount": "Isa mari inodiwa.",
-        "login_required_steps": "Ndokumbira upinde kuti uenderere mberi neanotambira, muripo, mubhadharo, uye matanho ekugamuchira.",
-        "receive_multiple_ten": "Mari yekugamuchira inofanira kunge iri mu10 USD increments.",
-        "reloadly_pricing_pending": "Mutengo wevanopa vanopihwa unozowanikwa mushure meruzivo rwemugamuchiri. Isa mari yaunoda kutumira kuti uenderere mberi.",
-        "unable_complete_payment": "Hatina kukwanisa kubhadhara.",
-        "unable_fetch_quote": "Hatina kukwanisa kutora FX quote.",
-        "unable_verify_session": "Hatina kukwanisa kuona chikamu chako.",
-        "unable_download_receipt": "Unable to download receipt."
-      },
-      "eta_label": "Estimated reflect time",
-      "eta": {
-        "airtime": "Kazhinji mukati memaminitsi.",
-        "bank_transfer": "Kazhinji mumazuva 1 kusvika ku3 ebasa.",
-        "cash_pickup": "Kazhinji mukati meawa 1 mushure mekusimbiswa kweanopa.",
-        "default": "Nguva dzinoenderana nemupi wekugadzirisa mahwindo.",
-        "mobile_money": "Kazhinji mukati memaminitsi kusvika kumaawa maviri."
-      },
-      "fee": "Fee",
-      "fields": {
-        "receive_placeholder": "Kubhadhara kunogona chete kuwanda kwe10USD.",
-        "receiver_country": "Receiver nyika",
-        "reloadly_receive_pending": "Mitengo inooneka mushure mekunge ruzivo rwemupi rwasimbiswa.",
-        "sender_country_auto": "Yasarudzwa yega. Unogona kuchinja kana uchida.",
-        "sender_country_detected": "Yakaonekwa kubva panzvimbo yako",
-        "sender_country_detecting": "Tiri kuona nzvimbo yako...",
-        "sender_country": "Uri kutumira kubva kupi?",
-        "they_receive": "Vanogamuchira",
-        "transfer_type": "Sarudza Tumira Mari kana Airtime Yekuwedzera kuti uenderere mberi.",
-        "you_send": "Unotumira"
-      },
-      "pay": {
-        "method": "Nzira",
-        "phone": "Phone",
-        "recipient": "Mugamuchiri",
-        "settlement_timing": "Settlement nguva",
-        "summary": "Payment Summary"
-      },
-      "payout": {
-        "card_holder": "Kadhi Holder Zita",
-        "card_number": "Nhamba yeKadhi",
-        "account_number_placeholder": "Account number",
-        "bank_account_number": "Nhamba yeAccount",
-        "bank_name": "Bhanga",
-        "cash_pickup_note": "Mugamuchiri anogona kutora mari panzvimbo inotsigirwa mushure mekusimbiswa.",
-        "ecocash_number": "EcoCash Number",
-        "expiry_month": "Kupera (MM)",
-        "expiry_year": "Kupera (YYYY)",
-        "method": "Kubhadhara nzira",
-        "pickup_channel": "Pickup Channel",
-        "pickup_location": "Pickup Nzvimbo",
-        "recipient_mobile": "Nhamba Yenhare Yemugamuchiri",
-        "select_bank": "Sarudza bhanga",
-        "select_channel": "Sarudza chiteshi"
-      },
-      "quote": {
-        "estimated_receive": "Zvinofungidzirwa Rece",
-        "fee_pending": "Fee ichasimbiswa usati wabhadhara",
-        "fx_rate": "FX Rate",
-        "na": "N/A",
-        "route": "Nzira",
-        "total_pending": "Total ichasimbiswa usati wabhadhara",
-        "to": "ku"
-      },
-      "receipt": {
-        "address": "Kero",
-        "amount_sent": "Mari Yakatumirwa",
-        "date": "Date",
-        "payout_method": "Payout Method",
-        "phone": "Phone",
-        "receiver_country": "Receiver Nyika",
-        "recipient": "Mugamuchiri",
-        "sender_country": "Sender Country",
-        "title": "Diaspora Yakavhurwa - Mari yekubhadhara",
-        "transaction_id": "Transaction ID",
-        "transaction_details": "Transaction Details",
-        "recipient_section": "Recipient Details",
-        "type": "Transaction Type"
-      },
-      "recipient": {
-        "address": "Receiver address",
-        "address_placeholder": "Street / Suburb",
-        "airtime_number": "Airtime number",
-        "city": "Guta",
-        "full_name": "Receiver zita rakazara",
-        "phone": "Nhamba yenhare",
-        "phone_placeholder": "+2637XXXXXXXX"
-      },
-      "status": {
-        "pending": "zvakamirira",
-        "pending_title": "Pending",
-        "reference": "Reference",
-        "status": "Status",
-        "submitted": "Kubhadhara Kwatumirwa",
-        "receipt_auto_download": "Your PDF receipt should download automatically."
-      },
-      "subtitle": {
-        "": "Tumira mari yako zviri nyore, nekukurumidza uye zvakachengeteka kubva murunyararo rweimba yako kuenda kuZimbabwe."
-      },
-      "system_notice": "Kubhadhara kunofambiswa nevanopa marezinesi ehupfumi hwemari. Diaspora Yakavhurwa haibati mari dzevatengi.",
-      "title": "Tumira Mari",
-      "total": "Total",
-      "transfer": {
-        "required_hint": "Sarudza Tumira Mari kana Airtime Yekuwedzera kuti uenderere mberi."
-      }
-    },
-    "hero": {
-      "actions": {
-        "airtime": "Wedzera Airtime",
-        "send_money": "Tanga Kutumira Mari"
-      },
-      "slide_1": {
-        "badge": "Chengetedza Checkout",
-        "description": "Fambisa mari uine chivimbo neyakadzivirirwa server-parutivi kugadzirisa uye yakajeka transaction tracking.",
-        "highlight": "Yakavakwa Right",
-        "subtitle": "Mari yebhangi-giredhi remittance uye airtime inoyerera kumhuri dziri diaspora.",
-        "title": "Global Payments"
-      },
-      "slide_2": {
-        "badge": "Cash Pickup Network",
-        "description": "Yakagadzirirwa kukurumidza diaspora rutsigiro ine mashandiro ekutonga uye yekubhadhara chiteshi kuchinjika.",
-        "highlight": "Mikoto",
-        "subtitle": "Tsigira vanobatsirwa kuburikidza nenharembozha, kutora mari, uye makadhi ekubhadhara njanji.",
-        "title": "Remittance"
-      },
-      "slide_3": {
-        "badge": "Mobile First",
-        "description": "Yakavimbika opareta kutarisa uye chiyero sarudzo inoderedza yakakundikana kutengeserana uye kunatsiridza kukurumidza.",
-        "highlight": "Top-Ups",
-        "subtitle": "Ziva vashandisi uye upedze mafoni ekumusoro-soro ane nyore, inotungamirwa kuyerera.",
-        "title": "Airtime"
-      },
-      "slide_4": {
-        "badge": "Kadhi Deposits",
-        "description": "Zviitiko zvekubhadhara zvakarongwa zvine chimiro chakajeka chekuonekwa kubva pakatanga kusvika pakupera.",
-        "highlight": "Payouts",
-        "subtitle": "Nzira yekufambisa inokodzera yakananga kumakadhi ekubhengi eVisa anotsigirwa.",
-        "title": "Visa Debit"
-      },
-      "slide_5": {
-        "badge": "Digital Wallets",
-        "description": "Kubva parutsigiro rwepamwedzi kusvika kune zvinodiwa nekukurumidza, kubhadhara kunogara kuchitarisika uye kuri nyore kusimbisa.",
-        "highlight": "Liquidity",
-        "subtitle": "Chengetedza mhuri dzakabatana ne-inoda dhijitari kukosha kwekutamisa.",
-        "title": "Mazuva ese"
-      },
-      "slide_6": {
-        "badge": "Inoenderana UX",
-        "description": "Yakabatana yekuona kuyerera kwemari yekutumira uye airtime module inovandudza kujeka uye kuvimba.",
-        "highlight": "Kuuraya",
-        "subtitle": "Maturusi ekubhadhara ehunyanzvi anoenderana neDiaspora Unlocked papuratifomu dhizaini system.",
-        "title": "Trusted"
-      }
-    },
-    "receipt": {
-      "disclaimer_line_1": "Kubhadhara kunofambiswa nevanopa marezinesi ehupfumi hwemari.",
-      "disclaimer_line_2": "Diaspora Yakavhurwa haibati mari dzevatengi."
-    }
   },
   "cancel": "Kanzura",
   "close": "Close",

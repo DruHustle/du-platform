@@ -2,10 +2,11 @@
   "brand": "I-Diaspora Ivuliwe",
   "tagline": "Ipulatifomu yeZimbabwe Global Diaspora",
   "about": "Mayelana",
-  "about_us": "Diaspora Unlocked ixhumanisa amaZimbabwe akwamanye amazwe lezokuvakasha, ukutshala imali, remitensi, ukuthenga, kanye lamasevisi obuchwepheshe.",
+  "about_us": "I-Diaspora Unlocked ixhumanisa abantu beZimbabwe abasemhlabeni wonke lezokuvakasha, ukutshala imali, ukuthenga, lamasevisi obuchwepheshe.",
   "select_lang": "Khetha ulimi",
   "account": {
-    "logout": "Phuma"
+    "logout": "Phuma",
+    "logout_failed": "Asenelisanga ukukukhipha ku-akhawunti. Sicela uzame futhi."
   },
   "login": "Ngena",
   "register": "Bhalisa",
@@ -27,13 +28,13 @@
       "vision_label": "Umbono Wethu",
       "vision_content": "Ukuba yisango elithembekileyo le-diaspora elixhumanisa amaZimbabwean akwamanye amazwe lamathuba kanye lamasevisi abalulekileyo ekhaya.",
       "mission_label": "Inhloso Yethu",
-      "mission_content": "Ukuhlanganisa ezokuvakasha, ukutshala imali, remitensi, ukuthenga, lobuchwepheshe ngepulatifomu eyodwa ephephileyo futhi etholakala lula.",
+      "mission_content": "Ukuhlanganisa ezokuvakasha, ukutshala imali, ukuthenga lobuchwepheshe enkundleni eyodwa ephephileyo lefinyelelekayo.",
       "values_label": "Amanani Ethu",
       "values_content": "Ukuthembeka, ukusebenza ngemfanelo ephezulu, ukubonakala sobala, ukusungula izinto ezintsha, lokuzinikela okuqhubekayo kumphumela we-diaspora.",
       "who_label": "Singobani",
       "who_content": "Siyiqembu labachwepheshe beZimbabwe diaspora elakha izixazululo zedijithali ezisebenzayo ezigcina imindeni, amabhizinisi, lemiphakathi kuxhumene lekhaya.",
       "what_label": "Esikwenzayo",
-      "what_content": "Sakha futhi siqhube ipulatifomu ehlanganisiweyo ye-diaspora exhumanisa abasebenzisi lezokuvakasha, ukutshala imali, ukukhokha, ukuthenga, lokuqondiswa nge-AI. Siphinde sisebenze labalingani abathembekileyo labahlinzeki bamasevisi ukuze ukubamba iqhaza kube kuphephile, kusebenze, futhi kulinganiseke."
+      "what_content": "Sakha futhi siqhuba inkundla exhumanisa abantu abasemazweni lezokuvakasha, ukutshala imali, ukuthenga leziqondiso ze-AI. Sisebenza lezinhlanganiso labanikeza amasevisi ukusekela ukubamba iqhaza."
     },
     "local_partners": {
       "items": {
@@ -80,7 +81,7 @@
     "email": "Ikheli ye-Imeyili",
     "password": "Iphasivadi",
     "confirm_password": "Qinisekisa iphasivadi",
-    "password_minimum": "Minimum 8 characters required.",
+    "password_minimum": "Sebenzisa izinhlamvu ezingu-8–255, ezilohlamvu olukhulu, inombolo lophawu olukhethekileyo.",
     "terms_agreement": "Ngiyavumelana leMithetho yeMisebenzi lePholisi yokuLondolozwa kweDatha mayelana lokuphathwa kwedatha yeGDPR.",
     "have_account": "Usule-akhawunti kakade?",
     "login_here": "Ngena lapha",
@@ -115,7 +116,15 @@
       "error": "Ayikwazi ukusetha kabusha iphasiwedi.",
       "back_to_login": "Buyela Ekungeneni"
     },
-    "register": "Bhalisa"
+    "register": "Bhalisa",
+    "password_rules": {
+      "too_short": "Iphasiwedi kumele ibe lezinhlamvu ezingaba ngu-8.",
+      "too_long": "Iphasiwedi akumelanga idlule izinhlamvu ezingu-255.",
+      "uppercase": "Iphasiwedi kumele ibe lohlamvu olukhulu olulodwa kumbe ngaphezulu.",
+      "number": "Iphasiwedi kumele ibe lenombolo eyodwa kumbe ngaphezulu.",
+      "special": "Iphasiwedi kumele ibe lophawu olukhethekileyo olulodwa kumbe ngaphezulu.",
+      "meets": "Ihlangabezana lezidingo zephasiwedi"
+    }
   },
   "nav": {
     "home": "Ekhaya",
@@ -150,12 +159,12 @@
     "technology_industries": "Izimboni zezobuchwepheshe",
     "technology_industries_desc": "Ingxenye zezobuchwepheshe eziyinhloko eZimbabwe",
     "payments": "Izinkokhelo",
-    "remittances": "Imali ethunyelwayo",
     "discover": "Zitholele",
     "admin": "Admin",
     "close_menu": "Vala imenyu",
     "language_hint": "Sebenzisa isithonjana sembulunga ukuze ushintshe ulimi.",
-    "open_menu": "Vula imenyu"
+    "open_menu": "Vula imenyu",
+    "menu": "Imenyu yokuhamba kusayithi"
   },
   "home": {
     "hero_title": "I-Diaspora Ivuliwe",
@@ -179,20 +188,9 @@
         "title": "Ukutshala Imali",
         "desc": "Hlola amathuba okutshala imali amancane (micro-investment) lalawo okuhlanganyela (crowdfunding).",
         "stats": "$50M+ Yamathuba"
-      },
-      "payments": {
-        "title": "Izinkokhelo",
-        "desc": "Thumela imali kumbe ugcwalise i-airtime usebenzisa izindlela ezivikelekileyo ezibonisa izindleko ngokucacileyo.",
-        "stats": "Imali ethunyelwayo + Airtime"
       }
     },
     "tiles": {
-      "remittances": {
-        "title": "Imali ethunyelwayo",
-        "description": "Thumela imali, khokha izindleko zosekelo ezibalulekile, noma gcwalisa isikhathi somoya ngokugeleza okuvikelekile okusekelwa abahlinzeki nokubonakala kwenkokhelo ecacile eyakhelwe imindeni ehlala kwamanye amazwe.",
-        "detail": "Landelela inani ngokucacile ngaphambi kokuthi uthumele futhi ugcine ukwesekwa komndeni kwansuku zonke kushesha, kubikezelwe, futhi kulula.",
-        "stats": "Imali ethunyelwayo + Airtime"
-      },
       "shop": {
         "title": "Thenga",
         "description": "Thenga imikhiqizo yaseZimbabwe endaweni yemakethe ekhethiwe ehambisa ukulethwa kwezidingo kubantu abavela kwamanye amazwe, ukuthola imikhiqizo ethembekile, kanye nokukhokha okulula.",
@@ -761,7 +759,6 @@
       "subtitle": "Hlola ukunyakaza kokukhula, imali, intela, lemigomo ngaphambi kokubeka imali.",
       "gdp_growth": "Ukukhula kweGDP",
       "latest_macro_signal": "Uphawu lwemakro lwakamuva",
-      "diaspora_remittances": "Imali ethunyelwa ngama-diaspora",
       "annual_inflows": "Ukungena kwemali ngomnyaka",
       "total_exports": "Konke okuthunyelwa phandle",
       "external_demand": "Uphawu lwesidingo semakethe zangaphandle",
@@ -800,9 +797,9 @@
       "highlight7": "Umnotho Wezivakashi",
       "subtitle7": "Amaphrojekthi axhumene nezokuvakasha eduze kwezindawo ezikhangayo ezinkulu angavula isidingo semali yangaphandle eqhubekayo.",
       "badge8": "I-Diaspora Iyageleza",
-      "title8": "Ukuthunyelwa Kwesiteshi Ezimpahleni",
+      "title8": "Yakha Impahla Ehlala Isikhathi Eside",
       "highlight8": "Utshalomali Oluhlelekile",
-      "subtitle8": "Guqula amandla emali ethunyelwa ekhaya abe izindlela zokutshala ezihlanganisiwe, ezilandelekayo, nezikhiqizayo."
+      "subtitle8": "Hlola amathuba okutshala imali ndawonye, alandelekayo futhi akhiqizayo."
     },
     "projects": {
       "masuwe": {
@@ -1119,8 +1116,8 @@
           "title": "Ukukhula Kokutholwa Kwedijithali"
         },
         "payments": {
-          "detail": "Ingqalasizinda yemali ethunyelwa ngaphandle kwemingcele kanye nezinkokhelo zedijithali isalokhu ingumshayeli oqinile wesidingo se-fintech.",
-          "title": "Izinkokhelo kanye Nezitimela Ezithunyelwayo"
+          "detail": "Izinkundla zentengiselwano lamasevisi edijithali zixhumanisa amabhizimusi lamakhasimende.",
+          "title": "Ingqalasizinda Yezentengiselwano Zedijithali"
         },
         "regulatory": {
           "detail": "Amamodeli okuthobela-okokuqala aqondaniswe nokulayisensa kanye nezilawuli ze-AML zingakhula ngokushesha futhi zigcine ukwethenjwa.",
@@ -1321,81 +1318,6 @@
       "delete": "Delete",
       "empty": "No shop products yet."
     }
-  },
-  "fintech": {
-    "transfer_panel": {
-      "title": "Fintech Module Example",
-      "amount_placeholder": "Amount to send",
-      "loading": "Loading quote...",
-      "fx_fee": "FX: {{fx}} | Fee: {{fee}}"
-    }
-  },
-  "contact_form": {
-    "get_started": "Thintana lathi",
-    "full_name": "Ibizo Lonke",
-    "email": "I-Email",
-    "phone": "Inombolo yocingo",
-    "module_support": "{{module}} support",
-    "full_name_placeholder": "Full Name",
-    "email_placeholder": "email@example.com",
-    "phone_placeholder": "+ ...",
-    "subject": "Isihloko",
-    "message": "Umlayezo",
-    "message_placeholder": "Bhala umlayezo wakho lapha...",
-    "select_subject": "Khetha isihloko",
-    "subject_options": {
-      "general": {
-        "inquiry": "General Inquiry",
-        "feedback": "Platform Feedback",
-        "partnership": "Partnership Inquiry"
-      },
-      "technology": {
-        "ai": "AI Integration",
-        "transformation": "Digital Transformation"
-      },
-      "data": {
-        "analytics": "Analytics Inquiry",
-        "privacy": "Privacy & Governance"
-      },
-      "export": {
-        "market": "German Market Requirements",
-        "certification": "Certification Support",
-        "partners": "Partner Connections"
-      },
-      "tourism": {
-        "visa": "Visa Information",
-        "accommodation": "Accommodation",
-        "homecoming": "Diaspora Homecoming"
-      },
-      "investment": {
-        "opportunities": "Opportunity Details",
-        "ntir": "NTIR Registration",
-        "due_diligence": "Due Diligence"
-      },
-      "success": {
-        "collaboration": "Project Collaboration"
-      }
-    },
-    "send": "Thumela umlayezo",
-    "sending": "Iyahamba...",
-    "success_msg": "Umlayezo uthunyelwe kahle!",
-    "description": "Ulemibuzo kumbe ufuna ukwazi okunengi? Gcwalisa ifomu elingezansi sizakubuyela kuwe.",
-    "required_field": "Kudingekile *",
-    "success_desc": "Sizobuyela kuwe maduze."
-  },
-  "calculator": {
-    "title": "Isibali sokutshala imali",
-    "desc": "Bala inzuzo engaba khona kuphothifoliyo yakho yokutshala imali.",
-    "amount": "Imali oyitshalayo",
-    "timeline": "Isikhathi sokutshala",
-    "return_rate": "Inzuzo yonyaka elindelekileyo",
-    "total_investment": "Imali yonke eyitshaliweyo",
-    "total_returns": "Inzuzo yonke",
-    "final_value": "Inani lokugcina",
-    "projected_growth": "Ukukhula okulindelekileyo",
-    "year": "Unyaka",
-    "annual_return": "Inzuzo yonyaka",
-    "disclaimer": "Qaphela: Lesi sibali sinika izilinganiso kuye ngenzuzo elindelekileyo."
   },
   "shop": {
     "collections": "Amaqoqo (Collections)",
@@ -1720,9 +1642,10 @@
     "error_unable_contact": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
     "online_indicator_aria": "Onesa iku-online",
     "online_text": "Ku-inthanethi",
-    "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi ngemva kwemizuzu emithathu. Zama njalo.",
+    "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi. Zama njalo.",
     "offline_text": "Okungaxhunyiwe ku-inthanethi",
-    "error_rate_limited": "U-Onesa umatasatasa njengamanje. Sicela uzame futhi emizuzwaneni embalwa."
+    "error_rate_limited": "U-Onesa umatasatasa njengamanje. Sicela uzame futhi emizuzwaneni embalwa.",
+    "message_label": "Umlayezo ku-Onesa"
   },
   "logout": "Phuma",
   "legal": {
@@ -1746,12 +1669,18 @@
       "analytics_title": "Amakhukhi ezibalo ezingaziwa",
       "analytics_description": "Inikwe amandla ukusisiza sithuthukise ukusebenza nokusebenziseka.",
       "save": "Londoloza futhi uqhubeke",
-      "privacy_policy": "Inqubomgomo yobumfihlo"
+      "privacy_policy": "Inqubomgomo yobumfihlo",
+      "optional_description": "Ukugcinwa kolwazi oludingekayo kusekela i-akhawunti yakho lokukhethayo. Ukuhlaziywa kokusetshenziswa kwesayithi kuhlala kuvaliwe uze uvume. Ungatshintsha okukhethayo lapha loba nini.",
+      "analytics_optional": "Akuphoqelekanga. Kusisiza ukuqonda ukusebenza lokusetshenziswa kwesayithi.",
+      "saved": "Okukhethayo ngamakhukhi sekugciniwe."
     },
     "consent": {
       "description": "Iwebhusayithi yethu isebenzisa amakhukhi angaziwa ukuze uthole ulwazi olungcono kakhulu lwesiphequluli futhi iqoqe izibalo ezihlanganisiwe. Lokhu akubandakanyi amakhukhi okukhangisa ku-inthanethi.",
       "settings": "Izilungiselelo zekhukhi",
-      "accept": "Yamukela amakhukhi"
+      "accept": "Yamukela amakhukhi",
+      "title": "Okukhethayo ngamakhukhi",
+      "optional_description": "Ukugcinwa kolwazi oludingekayo kwenza i-akhawunti yakho lokukhethayo kusebenze. Ungavumela lokuhlaziywa kokusetshenziswa kwesayithi ukuze sisithuthukise.",
+      "reject": "Okudingekayo kuphela"
     }
   },
   "search": {
@@ -1773,7 +1702,13 @@
       "title": "Ayikho imiphumela etholiwe",
       "message": "Asikwazanga ukuthola lutho olufana ne-\"{{query}}\". Zama ukusesha amagama abanzi njengokuthi \"Investment\", \"Tourism\", noma \"Onesa\".",
       "return_home": "Buyela Ekhaya"
-    }
+    },
+    "submit": "Dinga",
+    "loading": "Siyadinga…",
+    "failed": "Ukudinga akutholakali okwamanje. Sicela uzame futhi.",
+    "retry": "Zama futhi",
+    "prompt": "Dinga ezokuvakasha, ukutshala imali, ukuthenga, kumbe i-Onesa AI.",
+    "description": "Dinga amasevisi lolwazi."
   },
   "error_boundary": {
     "unexpected": "Kwenzeke iphutha elingalindelekile.",
@@ -1782,212 +1717,6 @@
   "routing": {
     "loading_page": "Iyalayisha Ikhasi",
     "loading_page_content": "Ilayisha okuqukethwe kwekhasi"
-  },
-  "payments": {
-    "form": {
-      "transfer_types": {
-        "send_money": {
-          "label": "Thumela Imali",
-          "description": "Dlulisela imali yeselula, ukuthatha imali, noma ukubhanga."
-        },
-        "airtime_topup": {
-          "label": "I-Airtime Top-up",
-          "description": "Gcwalisa ulayini weselula waseZimbabwe ngokutholwa kwama-opharetha."
-        }
-      },
-      "payout_types": {
-        "mobile_money": "Imali Yeselula",
-        "cash_pickup": "I-Cash Pickup",
-        "bank_transfer": "Ukudluliselwa Ebhange"
-      },
-      "steps": {
-        "start": "Qala",
-        "recipient": "Umamukeli",
-        "payment_method": "Indlela yokukhokha",
-        "pay": "Khokha",
-        "receipt": "Irisidi"
-      },
-      "actions": {
-        "back": "Emuva",
-        "continue": "Qhubeka",
-        "continue_to_pay": "Qhubeka nokukhokha",
-        "download_receipt": "Landa irisidi",
-        "edit": "Hlela",
-        "get_started": "Qhubeka",
-        "loading_rate": "Iyalayisha i-quote...",
-        "new_transfer": "Ukudlulisa Okusha",
-        "pay_now": "Khokha Manje",
-        "processing": "Iyacubungula"
-      },
-      "dismiss_error": "Dismiss error",
-      "airtime": {
-        "detecting": "Ithola ngokuzenzakalelayo...",
-        "detecting_operator": "Detecting operator...",
-        "no_options": "Awekho amanani aphakanyisiwe okwamanje.",
-        "operator": "Opharetha",
-        "options": "Izinketho zenani eliphezulu",
-        "detected": "detected"
-      },
-      "errors": {
-        "amount_limit": "Inani leqa umkhawulo ovunyelwe wezi-5000.",
-        "auth_required": "Ukuqinisekisa kuyadingeka.",
-        "invalid_amount": "Faka inani elivumelekile.",
-        "login_required_steps": "Sicela ungene ngemvume ukuze uqhubeke nezinyathelo zomamukeli, inkokhelo, inkokhelo, kanye namarisidi.",
-        "receive_multiple_ten": "Inani lomamukeli kufanele libe ngama-increments angu-10 USD.",
-        "reloadly_pricing_pending": "Izintengo zabahlinzeki zitholakala ngemva kwemininingwane yomamukeli. Faka inani ofuna ukulithumela ukuze uqhubeke.",
-        "unable_complete_payment": "Ayikwazi ukuqedela inkokhelo.",
-        "unable_fetch_quote": "Ayikwazi ukulanda isilinganiso se-FX.",
-        "unable_verify_session": "Ayikwazi ukuqinisekisa isikhathi sakho.",
-        "unable_download_receipt": "Unable to download receipt."
-      },
-      "eta_label": "Estimated reflect time",
-      "eta": {
-        "airtime": "Ngokuvamile kungakapheli imizuzu.",
-        "bank_transfer": "Ngokuvamile phakathi kwezinsuku zokusebenza ezingu-1 kuya ku-3.",
-        "cash_pickup": "Ngokuvamile lingakapheli ihora elingu-1 ngemva kokuqinisekiswa komhlinzeki.",
-        "default": "Izikhathi zincike kumawindi okucubungula abahlinzeki.",
-        "mobile_money": "Ngokuvamile phakathi kwemizuzu kuya emahoreni angu-2."
-      },
-      "fee": "Imali",
-      "fields": {
-        "receive_placeholder": "Inkokhelo ingaba ngokuphindaphinda okungu-10USD.",
-        "receiver_country": "Izwe lomamukeli",
-        "reloadly_receive_pending": "Intengo ivela ngemva kokuqinisekiswa kwemininingwane yomhlinzeki.",
-        "sender_country_auto": "Ikhethwe ngokuzenzakalela. Ungakayiguqula.",
-        "sender_country_detected": "Itholwe endaweni okuyo",
-        "sender_country_detecting": "Ithola indawo okuyo...",
-        "sender_country": "Uthumela kuphi?",
-        "they_receive": "Bemukela",
-        "transfer_type": "Khetha Thumela Imali noma I-Airtime Top-up ukuze uqhubeke.",
-        "you_send": "Uyathumela"
-      },
-      "pay": {
-        "method": "Indlela",
-        "phone": "Ucingo",
-        "recipient": "Umamukeli",
-        "settlement_timing": "Isikhathi sokukhokha",
-        "summary": "Isifinyezo senkokhelo"
-      },
-      "payout": {
-        "card_holder": "Igama lomnikazi weKhadi",
-        "card_number": "Inombolo yekhadi",
-        "account_number_placeholder": "Account number",
-        "bank_account_number": "Inombolo Ye-akhawunti",
-        "bank_name": "Ibhange",
-        "cash_pickup_note": "Umamukeli angalanda endaweni esekelwayo yokuthatha imali ngemva kokuqinisekiswa.",
-        "ecocash_number": "Inombolo ye-EcoCash",
-        "expiry_month": "Ukuphelelwa yisikhathi (MM)",
-        "expiry_year": "Ukuphelelwa yisikhathi (YYYY)",
-        "method": "Indlela yokukhokha",
-        "pickup_channel": "Isiteshi Sokulanda",
-        "pickup_location": "Indawo yokuthatha",
-        "recipient_mobile": "Inombolo Yocingo Lomamukeli",
-        "select_bank": "Khetha ibhange",
-        "select_channel": "Khetha isiteshi"
-      },
-      "quote": {
-        "estimated_receive": "Thola okulinganiselwe",
-        "fee_pending": "Imali izaqinisekiswa ngaphambi kokukhokha",
-        "fx_rate": "Isilinganiso se-FX",
-        "na": "N/A",
-        "route": "Umzila",
-        "total_pending": "Inani lonke lizaqinisekiswa ngaphambi kokukhokha",
-        "to": "ku"
-      },
-      "receipt": {
-        "address": "Ikheli",
-        "amount_sent": "Inani Elithunyelwe",
-        "date": "Usuku",
-        "payout_method": "Indlela Yokukhokha",
-        "phone": "Ucingo",
-        "receiver_country": "Izwe Lomamukeli",
-        "recipient": "Umamukeli",
-        "sender_country": "Izwe Lomthumeli",
-        "title": "I-Diaspora Ivuliwe - Irisidi Yenkokhelo",
-        "transaction_id": "I-ID yokwenziwe",
-        "transaction_details": "Transaction Details",
-        "recipient_section": "Recipient Details",
-        "type": "Transaction Type"
-      },
-      "recipient": {
-        "address": "Ikheli lomamukeli",
-        "address_placeholder": "Umgwaqo / Idolobha",
-        "airtime_number": "Inombolo ye-airtime",
-        "city": "Idolobha",
-        "full_name": "Igama eligcwele lomamukeli",
-        "phone": "Inombolo yocingo",
-        "phone_placeholder": "+2637XXXXXXXX"
-      },
-      "status": {
-        "pending": "okulindile",
-        "pending_title": "Kusalindile",
-        "reference": "Ireferensi",
-        "status": "Isimo",
-        "submitted": "Inkokhelo Ithunyelwe",
-        "receipt_auto_download": "Your PDF receipt should download automatically."
-      },
-      "subtitle": {
-        "": "Thumela imali yakho kalula, ngokushesha nangokuvikelekile ukusuka ekunethezekeni kwekhaya lakho ukuya eZimbabwe."
-      },
-      "system_notice": "Izinkokhelo zinikwa amandla abahlinzeki bengqalasizinda yezezimali abanelayisensi. I-Diaspora Unlocked ayizibambi izimali zekhasimende.",
-      "title": "Thumela Imali",
-      "total": "Ingqikithi",
-      "transfer": {
-        "required_hint": "Khetha Thumela Imali noma I-Airtime Top-up ukuze uqhubeke."
-      }
-    },
-    "hero": {
-      "actions": {
-        "airtime": "Phakamisa I-Airtime",
-        "send_money": "Qala Thumela Imali"
-      },
-      "slide_1": {
-        "badge": "Ukuphuma Okuphephile",
-        "description": "Hambisa imali ngokuzethemba ngokucutshungulwa kohlangothi lweseva oluvikelekile kanye nokulandela okucacile kokwenziwe.",
-        "highlight": "Kwakhiwe Kwesokudla",
-        "subtitle": "Izimali ezithunyelwa ebhange kanye ne-airtime yemindeni ehlala ngaphandle.",
-        "title": "Izinkokhelo Zomhlaba Wonke"
-      },
-      "slide_2": {
-        "badge": "I-Cash Pickup Network",
-        "description": "Idizayinelwe ukwesekwa okusheshayo kwe-diaspora ngezilawuli zokusebenza kanye nokuvumelana nezimo kwesiteshi sokukhokha.",
-        "highlight": "Amaphasishi",
-        "subtitle": "Sekela abahlomuli ngemali yeselula, iveni lemali, kanye nezinsimbi zokukhokha amakhadi.",
-        "title": "Imali ethunyelwayo"
-      },
-      "slide_3": {
-        "badge": "Iselula Okokuqala",
-        "description": "Ukubheka u-opharetha okuthembekile nezinketho zenani kunciphisa ukuthengiselana okuhlulekile futhi kuthuthukise isivinini.",
-        "highlight": "Okuphezulu",
-        "subtitle": "Thola ama-opharetha bese uqedela ama-top-ups eselula ngokugeleza okulula, okuqondisiwe.",
-        "title": "I-Airtime"
-      },
-      "slide_4": {
-        "badge": "Idiphozithi Yekhadi",
-        "description": "Okuhlangenwe nakho kokukhokha okuhleliwe nokubonakala kwesimo esicacile kusukela ekuqalisweni kuya ekupheleni.",
-        "highlight": "Izinkokhelo",
-        "subtitle": "Thumela ukudluliselwa okufanelekile ngokuqondile kumakhadi edebithi e-Visa asekelwe.",
-        "title": "I-Visa Debit"
-      },
-      "slide_5": {
-        "badge": "I-Digital Wallets",
-        "description": "Kusukela ekusekelweni kwanyanga zonke kuya ezidingweni eziphuthumayo, izinkokhelo zihlala zilandeleka futhi kulula ukuziqinisekisa.",
-        "highlight": "I-Liquidity",
-        "subtitle": "Gcina amakhaya exhumene nokudluliswa kwevelu yedijithali efunekayo.",
-        "title": "Nsuku zonke"
-      },
-      "slide_6": {
-        "badge": "I-UX engaguquki",
-        "description": "Ukugeleza okubonakalayo okubonakalayo kuwo wonke amamojula wemali ethunyelwayo nawesikhathi somoya kuthuthukisa ukucaca nokuzethemba.",
-        "highlight": "Ukubulawa",
-        "subtitle": "Amathuluzi okukhokha angochwepheshe aqondaniswe nesistimu yokuklama yesikhulumi se-Diaspora Unlocked.",
-        "title": "Othenjwayo"
-      }
-    },
-    "receipt": {
-      "disclaimer_line_1": "Izinkokhelo zinikwa amandla abahlinzeki bengqalasizinda yezezimali abanelayisensi.",
-      "disclaimer_line_2": "I-Diaspora Unlocked ayizibambi izimali zekhasimende."
-    }
   },
   "cancel": "Khansela",
   "close": "Vala",

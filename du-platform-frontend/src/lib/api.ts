@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "./browserStorage";
 import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from "axios";
 
 const ACCESS_TOKEN_STORAGE_KEY = "du_jwt";
@@ -65,7 +66,7 @@ export type AuthUser = {
 
 export function markHasLoggedInBefore() {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(HAS_LOGGED_IN_KEY, "1");
+  safeLocalStorage.setItem(HAS_LOGGED_IN_KEY, "1");
 }
 
 export function saveAuthToken(token: string) {
@@ -74,33 +75,37 @@ export function saveAuthToken(token: string) {
   if (!normalized) return;
   accessToken = normalized;
   // Do not persist bearer tokens in browser storage.
-  window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-  window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   markHasLoggedInBefore();
 }
 
 export function clearAuthToken() {
   if (typeof window === "undefined") return;
   accessToken = "";
-  window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-  window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
 }
 
 export function loadAuthToken(): string {
   if (typeof window === "undefined") return "";
   if (accessToken) return accessToken;
 
-  const sessionToken = String(window.sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
+  const sessionToken = String(
+    safeSessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? ""
+  ).trim();
   if (sessionToken) {
     accessToken = sessionToken;
-    window.sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
     return sessionToken;
   }
 
-  const localToken = String(window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
+  const localToken = String(
+    safeLocalStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? ""
+  ).trim();
   if (localToken) {
     accessToken = localToken;
-    window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
     return localToken;
   }
 
@@ -109,10 +114,10 @@ export function loadAuthToken(): string {
 
 export function hasLoggedInBefore(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(HAS_LOGGED_IN_KEY) === "1";
+  return safeLocalStorage.getItem(HAS_LOGGED_IN_KEY) === "1";
 }
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(config => {
   const token = loadAuthToken();
   if (!token) return config;
 
@@ -125,7 +130,7 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => {
+  response => {
     const payload = response?.data;
     if (
       payload &&
@@ -138,9 +143,11 @@ api.interceptors.response.use(
     }
     return response;
   },
-  async (error) => {
+  async error => {
     const status = Number(error?.response?.status ?? 0);
-    const config = error?.config as (typeof error.config & { _retryAfterRefresh?: boolean }) | undefined;
+    const config = error?.config as
+      | (typeof error.config & { _retryAfterRefresh?: boolean })
+      | undefined;
     const requestUrl = String(config?.url ?? "");
 
     if (
@@ -178,7 +185,10 @@ export async function refreshAuthTokenFromSession(): Promise<string> {
   return token;
 }
 
-export function getApiErrorMessage(error: unknown, fallback = "Request failed."): string {
+export function getApiErrorMessage(
+  error: unknown,
+  fallback = "Request failed."
+): string {
   const err = error as any;
   const payload = err?.response?.data;
   const candidates = [payload?.error?.message, payload?.message, err?.message];

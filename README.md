@@ -1,6 +1,6 @@
 # Diaspora Unlocked Platform
 
-**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with tourism, investment, remittance, shopping, and technology opportunities.
+**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with tourism, investment, shopping, and technology opportunities.
 
 ## Definitions
 
@@ -14,7 +14,7 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 
 - **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
 - **Investment Marketplace**: Micro-investment and crowdfunding opportunities with government support.
-- **Impact & Insights**: Diaspora impact stories, remittance insights, and economic participation indicators.
+- **Impact & Insights**: Diaspora impact stories and economic participation indicators.
 
 ## Key Features
 
@@ -74,7 +74,7 @@ du-platform/                         # One parent Git/GitHub repository
 │   ├── modules/                    # Domain APIs and existing module tests
 │   ├── shared/                     # Backend helpers and persistence stores
 │   └── tsconfig.json
-├── shared/                         # Both applications: SEO, shop catalog, sender countries
+├── shared/                         # Both applications: SEO, shop catalog, password policy
 ├── .github/                        # Repository workflows
 ├── .githooks/                      # Repository hooks
 ├── scripts/                        # Development, guardrails, translations, E2E tools
@@ -119,7 +119,7 @@ configured with `DEV_PORT` or `PORT`. Never put backend secrets in `VITE_*` vari
 pnpm check                 # Frontend and backend TypeScript checks
 pnpm check:frontend        # Frontend only
 pnpm check:backend         # Backend only
-FINANCIAL_SANDBOX_MOCK=true pnpm test:modules
+pnpm test:modules
 pnpm test:frontend         # Frontend regression tests
 pnpm guardrails            # Vite, deployment, and locale safety checks
 pnpm translations:check:keys
@@ -131,8 +131,70 @@ pnpm preview               # Vite static preview; does not start the API
 pnpm start                 # Production Express server; configure production env first
 ```
 
-There is no separate lint script. Existing browser/provider E2E scripts require
-running services and their configured providers; see the Onesa section below.
+There is no separate lint script. The offline suite below requires no configured
+services or devices. The older live-provider smoke scripts are documented in the
+Onesa section below.
+
+### Service-free AI and device regression tests
+
+```bash
+pnpm build
+E2E_BROWSER_CHANNEL=chrome pnpm test:e2e:offline
+```
+
+This suite starts and stops its own server on port 5012 (`E2E_MOCK_PORT` overrides
+it). It supplies an explicit environment without database, email, or AI-provider
+credentials and never loads `.env`. Local AI mock mode supplies replies,
+transcriptions, and silent but decodable WAV audio. Chrome supplies synthetic
+camera/microphone streams. The already-installed IWER dependency emulates a
+Quest 3 WebXR session with stereo frames and two controllers; the emulator is
+injected by the test and is absent from the application at runtime.
+
+Reports, screenshots, server logs, and a downloaded trip PDF are saved to
+`/tmp/du-platform-offline` (`E2E_OUTPUT_DIR` overrides it). Omit the browser channel
+when Playwright Chromium is installed. Run the suites sequentially to respect
+normal API rate limits. The offline suite also waits for the chat rate-limit
+window before starting headset scenarios. Physical tracking, controller ergonomics, spoken audio
+quality, and real-provider output still require hardware/provider acceptance.
+
+### Browser regression review
+
+The site audit and journey scripts accept **local URLs only**. The audit checks
+public routes at 375, 768, and 1440 pixels and writes screenshots plus a JSON report
+to `/tmp/du-platform-audit` (override with `E2E_OUTPUT_DIR`). Journey tests create
+an account in the local sandbox and use browser-only fixtures for inventory and
+newsletter responses; they do not place orders or send payments.
+
+To review without loading saved database, email, or provider credentials, build
+first, then start a memory-backed API serving the built frontend:
+
+```bash
+pnpm build
+env -i PATH="$PATH" HOME="$HOME" \
+  NODE_ENV=development PORT=5001 APP_BASE_URL=http://localhost:5001 \
+  CORS_ORIGINS=http://localhost:5001 \
+  node --import tsx du-platform-backend/server.ts
+```
+
+Open `http://localhost:5001`. From another terminal, run:
+
+```bash
+E2E_BROWSER_CHANNEL=chrome node scripts/tests/e2e-site-audit.mjs
+E2E_BROWSER_CHANNEL=chrome node scripts/tests/e2e-site-journeys.mjs
+```
+
+Use `E2E_BASE_URL` for another local address. Omit `E2E_BROWSER_CHANNEL` when using
+Playwright's installed Chromium. Restart the API after rebuilding so its cached
+SPA document points to the current hashed assets. If testing Vite on a fallback
+port, explicitly include that frontend origin in `CORS_ORIGINS`; keep the origin
+allowlist and CSRF protection enabled. Optional Vercel analytics and Speed Insights
+require both `VITE_ENABLE_VERCEL_ANALYTICS=true` at build time and visitor consent.
+Revoking consent filters subsequent telemetry events.
+The retired transfer feature is absent from navigation, route metadata, API
+registration, provider configuration, and schema initialization. Existing database
+records are preserved; no historical tables are dropped. Accounts, the shop,
+tourism, investment information, and Onesa retain their independent controls.
+
 Production Express serves the built frontend from `dist/public/`, including the
 existing SPA fallback and SEO injection. Build outputs stay at the repository
 root to preserve this behavior.
@@ -158,83 +220,6 @@ The shop currently supports:
 - Dummy Gateway in development/testing
 
 Direct Stripe, PayPal, and Amazon Pay checkout flows are not implemented in this codebase yet.
-
-## Reloadly Setup
-
-Reloadly powers:
-
-- airtime top-up
-
-These credentials are **backend-only secrets**.
-
-### Where to set Reloadly env vars
-
-- **Local development**: root `.env`
-- **Render**: backend service environment variables
-- **Vercel**: do **not** set these unless you are intentionally running backend code there
-- **GitHub Actions**: not required for normal app runtime
-
-In this repo, the Reloadly integration runs from the Express backend on Render, so the production values belong on **Render**, not Vercel.
-
-### Required variables
-
-Enter these on the **Render backend service** and in your local `.env` when testing locally:
-
-```env
-RELOADLY_CLIENT_ID=your_reloadly_client_id
-RELOADLY_CLIENT_SECRET=your_reloadly_client_secret
-RELOADLY_BASE_URL=https://topups-sandbox.reloadly.com
-```
-
-Optional:
-
-```env
-RELOADLY_AUTH_URL=https://auth.reloadly.com
-```
-
-### Sandbox vs live
-
-For **sandbox**:
-
-```env
-RELOADLY_BASE_URL=https://topups-sandbox.reloadly.com
-```
-
-For **live/production**:
-
-```env
-RELOADLY_BASE_URL=https://topups.reloadly.com
-```
-
-### Audience variables
-
-You normally do **not** need to set these:
-
-```env
-RELOADLY_AUDIENCE=
-```
-
-The backend now derives the correct OAuth audience from the configured Reloadly base URLs.
-
-Only set them if Reloadly support explicitly tells you to override the default audience.
-
-### Important note about credentials
-
-Reloadly uses **OAuth Client ID + Client Secret**.
-
-If your dashboard labels them as:
-
-- `Client ID`
-- `Client Secret`
-
-map them directly to:
-
-```env
-RELOADLY_CLIENT_ID=...
-RELOADLY_CLIENT_SECRET=...
-```
-
-Do not expose these values in frontend env vars such as `VITE_*`.
 
 ### Shop Checkout Modes
 

@@ -2,10 +2,11 @@
   "brand": "Diaspora Unlocked",
   "tagline": "Zimbabwe Global Diaspora Platform",
   "about": "About",
-  "about_us": "Diaspora Unlocked is a unified digital gateway connecting Zimbabwe’s global diaspora to tourism, investment, remittances, shopping, and technology services.",
+  "about_us": "Diaspora Unlocked connects Zimbabwe’s global diaspora to tourism, investment, shopping, and technology services.",
   "select_lang": "Select Language",
   "account": {
-    "logout": "Logout"
+    "logout": "Logout",
+    "logout_failed": "Unable to sign out. Please try again."
   },
   "login": "Login",
   "register": "Register",
@@ -27,13 +28,13 @@
       "vision_label": "Our Vision",
       "vision_content": "To be the trusted diaspora gateway connecting Zimbabweans abroad to meaningful opportunities and services back home.",
       "mission_label": "Our Mission",
-      "mission_content": "To unify tourism, investment, remittance, shopping, and technology pathways through one secure and accessible digital platform.",
+      "mission_content": "To unify tourism, investment, shopping, and technology pathways through one secure and accessible digital platform.",
       "values_label": "Our Values",
       "values_content": "Trust, service excellence, transparency, innovation, and lasting commitment to diaspora impact.",
       "who_label": "Who we are",
       "who_content": "We are a team comprised of Zimbabwe diaspora professionals building practical digital solutions that keep families, businesses, and communities connected to home.",
       "what_label": "What we do",
-      "what_content": "We build and operate a unified diaspora platform that connects users to tourism, investment, payments, shopping, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable."
+      "what_content": "We build and operate a unified diaspora platform connecting people to tourism, investment, shopping, and AI-powered guidance. We partner with institutions and service providers to support practical participation."
     },
     "local_partners": {
       "items": {
@@ -80,7 +81,7 @@
     "email": "Email Address",
     "password": "Password",
     "confirm_password": "Confirm Password",
-    "password_minimum": "Minimum 8 characters required.",
+    "password_minimum": "Use 8–255 characters, including an uppercase letter, a number, and a special character.",
     "terms_agreement": "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance.",
     "have_account": "Already have an account?",
     "login_here": "Login Here",
@@ -115,7 +116,15 @@
       "error": "Unable to reset password.",
       "back_to_login": "Back to Login"
     },
-    "register": "Register"
+    "register": "Register",
+    "password_rules": {
+      "too_short": "Password must be at least 8 characters.",
+      "too_long": "Password must be at most 255 characters.",
+      "uppercase": "Password must contain at least one uppercase letter.",
+      "number": "Password must contain at least one number.",
+      "special": "Password must contain at least one special character.",
+      "meets": "Meets password requirements"
+    }
   },
   "nav": {
     "home": "Home",
@@ -150,12 +159,12 @@
     "technology_capabilities_desc": "Zimbabwe's technology and innovation landscape",
     "technology_industries": "Technology Industries",
     "technology_industries_desc": "Key technology sectors in Zimbabwe",
-    "remittances": "Remittances",
     "discover": "Discover",
     "admin": "Admin",
     "close_menu": "Close menu",
     "language_hint": "Use the globe icon to change language.",
-    "open_menu": "Open menu"
+    "open_menu": "Open menu",
+    "menu": "Navigation menu"
   },
   "home": {
     "hero_title": "Diaspora Unlocked",
@@ -179,20 +188,9 @@
         "title": "Investment",
         "desc": "Explore diaspora-friendly micro-investment and crowdfunding opportunities.",
         "stats": "$50M+ Opportunities"
-      },
-      "payments": {
-        "title": "Payments",
-        "desc": "Send money or top up airtime with secure provider-backed flows and clear fee visibility.",
-        "stats": "Remittance + Airtime"
       }
     },
     "tiles": {
-      "remittances": {
-        "title": "Remittances",
-        "description": "Send money, pay essential support costs, or top up airtime with secure provider-backed flows and clear fee visibility built for diaspora households.",
-        "detail": "Track value clearly before you send and keep everyday family support fast, predictable, and simple.",
-        "stats": "Remittance + Airtime"
-      },
       "shop": {
         "title": "Shop",
         "description": "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout.",
@@ -761,7 +759,6 @@
       "subtitle": "Review growth momentum together with currency, tax, and compliance conditions before allocating capital.",
       "gdp_growth": "GDP Growth",
       "latest_macro_signal": "Latest macro signal",
-      "diaspora_remittances": "Diaspora Remittances",
       "annual_inflows": "Annual inflows",
       "total_exports": "Total Exports",
       "external_demand": "External demand indicator",
@@ -800,19 +797,15 @@
       "highlight7": "Visitor Economy",
       "subtitle7": "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
       "badge8": "Diaspora Flows",
-      "title8": "Channel Remittances to Assets",
+      "title8": "Build Lasting Assets",
       "highlight8": "Structured Investment",
-      "subtitle8": "Convert household remittance strength into pooled, trackable, and productive investment pathways."
+      "subtitle8": "Explore pooled, trackable, and productive investment opportunities."
     },
     "projects": {
       "masuwe": {
         "title": "Masuwe SEZ Construction of Villas Project",
         "description": "Tourism-linked hospitality infrastructure opportunity in the Victoria Falls growth corridor.",
-        "highlights": [
-          "SEZ Corridor",
-          "Hospitality Assets",
-          "Tourism Demand"
-        ]
+        "highlights": ["SEZ Corridor", "Hospitality Assets", "Tourism Demand"]
       },
       "leather": {
         "title": "Linkdef Soap Manufacturing Project",
@@ -853,11 +846,7 @@
       "solar": {
         "title": "Solgas Energy 60MW Solar PV Plant + BESS",
         "description": "Utility-scale renewable energy project combining solar generation with battery storage capacity.",
-        "highlights": [
-          "60MW Solar",
-          "Battery Storage",
-          "Grid Support"
-        ]
+        "highlights": ["60MW Solar", "Battery Storage", "Grid Support"]
       }
     },
     "project_filters": {
@@ -1119,8 +1108,8 @@
           "title": "Digital Adoption Growth"
         },
         "payments": {
-          "detail": "Cross-border remittance and digital payments infrastructure remains a strong fintech demand driver.",
-          "title": "Payments and Remittance Rails"
+          "detail": "Digital commerce and service platforms connect businesses with customers.",
+          "title": "Digital Commerce Infrastructure"
         },
         "regulatory": {
           "detail": "Compliance-first models aligned to licensing and AML controls can scale faster and sustain trust.",
@@ -1388,81 +1377,6 @@
       "empty": "No shop products yet."
     }
   },
-  "fintech": {
-    "transfer_panel": {
-      "title": "Fintech Module Example",
-      "amount_placeholder": "Amount to send",
-      "loading": "Loading quote...",
-      "fx_fee": "FX: {{fx}} | Fee: {{fee}}"
-    }
-  },
-  "contact_form": {
-    "get_started": "Get in Touch",
-    "full_name": "Full Name",
-    "email": "Email Address",
-    "phone": "Phone Number",
-    "module_support": "{{module}} support",
-    "full_name_placeholder": "Full Name",
-    "email_placeholder": "email@example.com",
-    "phone_placeholder": "+ ...",
-    "subject": "Subject",
-    "message": "Message",
-    "message_placeholder": "Write your message here...",
-    "select_subject": "Select a subject",
-    "subject_options": {
-      "general": {
-        "inquiry": "General Inquiry",
-        "feedback": "Platform Feedback",
-        "partnership": "Partnership Inquiry"
-      },
-      "technology": {
-        "ai": "AI Integration",
-        "transformation": "Digital Transformation"
-      },
-      "data": {
-        "analytics": "Analytics Inquiry",
-        "privacy": "Privacy & Governance"
-      },
-      "export": {
-        "market": "German Market Requirements",
-        "certification": "Certification Support",
-        "partners": "Partner Connections"
-      },
-      "tourism": {
-        "visa": "Visa Information",
-        "accommodation": "Accommodation",
-        "homecoming": "Diaspora Homecoming"
-      },
-      "investment": {
-        "opportunities": "Opportunity Details",
-        "ntir": "NTIR Registration",
-        "due_diligence": "Due Diligence"
-      },
-      "success": {
-        "collaboration": "Project Collaboration"
-      }
-    },
-    "send": "Send Message",
-    "sending": "Sending...",
-    "success_msg": "Message sent successfully!",
-    "description": "Have questions or want to learn more? Fill out the form below and we'll get back to you.",
-    "required_field": "Required *",
-    "success_desc": "We will get back to you soon."
-  },
-  "calculator": {
-    "title": "Investment Calculator",
-    "desc": "Calculate potential returns on your diaspora investment portfolio",
-    "amount": "Investment Amount",
-    "timeline": "Investment Timeline",
-    "return_rate": "Expected Annual Return",
-    "total_investment": "Total Investment",
-    "total_returns": "Total Returns",
-    "final_value": "Final Value",
-    "projected_growth": "Projected Growth",
-    "year": "Year",
-    "annual_return": "Annual return",
-    "disclaimer": "Note: This calculator provides estimates based on assumed constant returns. Actual investment performance may vary."
-  },
   "shop": {
     "collections": "Collections",
     "collections_title": "Curated Zimbabwean Excellence",
@@ -1720,9 +1634,10 @@
     "error_unable_contact": "Onesa is currently unavailable. AI mode is off",
     "online_indicator_aria": "Onesa online",
     "online_text": "Online",
-    "error_timeout": "Onesa request timed out after 3 minutes. Please try again.",
+    "error_timeout": "Onesa request timed out. Please try again.",
     "offline_text": "Offline",
-    "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds."
+    "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds.",
+    "message_label": "Message to Onesa"
   },
   "logout": "Logout",
   "legal": {
@@ -1746,12 +1661,18 @@
       "analytics_title": "Anonymised analytics cookies",
       "analytics_description": "Enabled to help us improve performance and usability.",
       "save": "Save and continue",
-      "privacy_policy": "Privacy policy"
+      "privacy_policy": "Privacy policy",
+      "optional_description": "Essential storage supports your account and preferences. Optional analytics stays off until you allow it. You can change your choice here at any time.",
+      "analytics_optional": "Optional. Helps us understand site performance and usage.",
+      "saved": "Your cookie preferences have been saved."
     },
     "consent": {
       "description": "Our website uses anonymised cookies to give you the best browser experience and to collect aggregated statistics. This does not include online advertising cookies.",
       "settings": "Cookie settings",
-      "accept": "Accept cookies"
+      "accept": "Accept cookies",
+      "title": "Cookie preferences",
+      "optional_description": "Essential storage keeps your account and preferences working. You can also allow optional analytics to help us improve the site.",
+      "reject": "Essential only"
     }
   },
   "search": {
@@ -1773,7 +1694,13 @@
       "title": "No results found",
       "message": "We couldn't find anything matching \"{{query}}\". Try searching for broader terms like \"Investment\", \"Tourism\", or \"Onesa\".",
       "return_home": "Return Home"
-    }
+    },
+    "submit": "Search",
+    "loading": "Searching…",
+    "failed": "Search is unavailable right now. Please try again.",
+    "retry": "Try again",
+    "prompt": "Search for tourism, investment, shopping, or Onesa AI.",
+    "description": "Search services and information."
   },
   "error_boundary": {
     "unexpected": "An unexpected error occurred.",
@@ -1782,212 +1709,6 @@
   "routing": {
     "loading_page": "Loading Page",
     "loading_page_content": "Loading page content"
-  },
-  "payments": {
-    "form": {
-      "transfer_types": {
-        "send_money": {
-          "label": "Send Money",
-          "description": "Transfer to mobile money, cash pickup, or bank transfer."
-        },
-        "airtime_topup": {
-          "label": "Airtime Top-up",
-          "description": "Top up a Zimbabwe mobile line with operator detection."
-        }
-      },
-      "payout_types": {
-        "mobile_money": "Mobile Money",
-        "cash_pickup": "Cash Pickup",
-        "bank_transfer": "Bank Transfer"
-      },
-      "steps": {
-        "start": "Start",
-        "recipient": "Recipient",
-        "payment_method": "Payment Method",
-        "pay": "Pay",
-        "receipt": "Receipt"
-      },
-      "actions": {
-        "back": "Back",
-        "continue": "Continue",
-        "continue_to_pay": "Continue to Pay",
-        "download_receipt": "Download Receipt",
-        "edit": "Edit",
-        "get_started": "Continue",
-        "loading_rate": "Loading quote...",
-        "new_transfer": "New Transfer",
-        "pay_now": "Pay Now",
-        "processing": "Processing"
-      },
-      "dismiss_error": "Dismiss error",
-      "airtime": {
-        "detecting": "Auto-detecting...",
-        "detecting_operator": "Detecting operator...",
-        "no_options": "No suggested amounts yet.",
-        "operator": "Operator",
-        "options": "Top-up amount options",
-        "detected": "detected"
-      },
-      "errors": {
-        "amount_limit": "Amount exceeds permitted limit of 5000.",
-        "auth_required": "Authentication required.",
-        "invalid_amount": "Enter a valid amount.",
-        "login_required_steps": "Please log in to continue with recipient, payout, payment, and receipt steps.",
-        "receive_multiple_ten": "Receiver amount must be in 10 USD increments.",
-        "reloadly_pricing_pending": "Provider pricing becomes available after recipient details. Enter the amount you want to send to continue.",
-        "unable_complete_payment": "Unable to complete payment.",
-        "unable_fetch_quote": "Unable to fetch FX quote.",
-        "unable_verify_session": "Unable to verify your session.",
-        "unable_download_receipt": "Unable to download receipt."
-      },
-      "eta_label": "Estimated reflect time",
-      "eta": {
-        "airtime": "Usually within minutes.",
-        "bank_transfer": "Usually 1 to 3 business days.",
-        "cash_pickup": "Usually within 1 hour after provider confirmation.",
-        "default": "Timings depend on provider processing windows.",
-        "mobile_money": "Usually within minutes to 2 hours."
-      },
-      "fee": "Fee",
-      "fields": {
-        "receive_placeholder": "Payout can only be in multiples of 10USD.",
-        "receiver_country": "Receiver country",
-        "reloadly_receive_pending": "Pricing appears after provider details are confirmed.",
-        "sender_country_auto": "Selected automatically. You can still change it.",
-        "sender_country_detected": "Detected from your location",
-        "sender_country_detecting": "Detecting your location...",
-        "sender_country": "Where are you sending from?",
-        "they_receive": "They receive",
-        "transfer_type": "Select Send Money or Airtime Top-up to continue.",
-        "you_send": "You send"
-      },
-      "pay": {
-        "method": "Method",
-        "phone": "Phone",
-        "recipient": "Recipient",
-        "settlement_timing": "Settlement timing",
-        "summary": "Payment Summary"
-      },
-      "payout": {
-        "card_holder": "Card Holder Name",
-        "card_number": "Card Number",
-        "account_number_placeholder": "Account number",
-        "bank_account_number": "Account Number",
-        "bank_name": "Bank",
-        "cash_pickup_note": "The recipient can collect from a supported cash pickup location after confirmation.",
-        "ecocash_number": "EcoCash Number",
-        "expiry_month": "Expiry (MM)",
-        "expiry_year": "Expiry (YYYY)",
-        "method": "Payout method",
-        "pickup_channel": "Pickup Channel",
-        "pickup_location": "Pickup Location",
-        "recipient_mobile": "Recipient Mobile Number",
-        "select_bank": "Select bank",
-        "select_channel": "Select channel"
-      },
-      "quote": {
-        "estimated_receive": "Estimated Receive",
-        "fee_pending": "Fee confirmed before payment",
-        "fx_rate": "FX Rate",
-        "na": "N/A",
-        "route": "Route",
-        "total_pending": "Total confirmed before payment",
-        "to": "to"
-      },
-      "receipt": {
-        "address": "Address",
-        "amount_sent": "Amount Sent",
-        "date": "Date",
-        "payout_method": "Payout Method",
-        "phone": "Phone",
-        "receiver_country": "Receiver Country",
-        "recipient": "Recipient",
-        "sender_country": "Sender Country",
-        "title": "Diaspora Unlocked - Payment Receipt",
-        "transaction_id": "Transaction ID",
-        "transaction_details": "Transaction Details",
-        "recipient_section": "Recipient Details",
-        "type": "Transaction Type"
-      },
-      "recipient": {
-        "address": "Receiver address",
-        "address_placeholder": "Street / Suburb",
-        "airtime_number": "Airtime number",
-        "city": "City",
-        "full_name": "Receiver full name",
-        "phone": "Phone number",
-        "phone_placeholder": "+2637XXXXXXXX"
-      },
-      "status": {
-        "pending": "pending",
-        "pending_title": "Pending",
-        "reference": "Reference",
-        "status": "Status",
-        "submitted": "Payment Submitted",
-        "receipt_auto_download": "Your PDF receipt should download automatically."
-      },
-      "subtitle": {
-        "": "Send your money easy, fast and securely from the comfort of your home to Zimbabwe."
-      },
-      "system_notice": "Payments are powered by licensed financial infrastructure providers. Diaspora Unlocked does not hold customer funds.",
-      "title": "Send Money",
-      "total": "Total",
-      "transfer": {
-        "required_hint": "Select Send Money or Airtime Top-up to continue."
-      }
-    },
-    "hero": {
-      "actions": {
-        "airtime": "Top Up Airtime",
-        "send_money": "Start Send Money"
-      },
-      "slide_1": {
-        "badge": "Secure Checkout",
-        "description": "Move money confidently with protected server-side processing and clear transaction tracking.",
-        "highlight": "Built Right",
-        "subtitle": "Bank-grade remittance and airtime flows for diaspora families.",
-        "title": "Global Payments"
-      },
-      "slide_2": {
-        "badge": "Cash Pickup Network",
-        "description": "Designed for fast diaspora support with operational controls and payout channel flexibility.",
-        "highlight": "Corridors",
-        "subtitle": "Support beneficiaries through mobile money, cash pickup, and card payout rails.",
-        "title": "Remittance"
-      },
-      "slide_3": {
-        "badge": "Mobile First",
-        "description": "Reliable operator lookup and amount options reduce failed transactions and improve speed.",
-        "highlight": "Top-Ups",
-        "subtitle": "Detect operators and complete mobile top-ups with a simple, guided flow.",
-        "title": "Airtime"
-      },
-      "slide_4": {
-        "badge": "Card Deposits",
-        "description": "Structured payment experiences with clear status visibility from initiation to completion.",
-        "highlight": "Payouts",
-        "subtitle": "Route eligible transfers directly to supported Visa debit cards.",
-        "title": "Visa Debit"
-      },
-      "slide_5": {
-        "badge": "Digital Wallets",
-        "description": "From monthly support to urgent needs, payments stay traceable and easy to confirm.",
-        "highlight": "Liquidity",
-        "subtitle": "Keep households connected with on-demand digital value transfer.",
-        "title": "Everyday"
-      },
-      "slide_6": {
-        "badge": "Consistent UX",
-        "description": "Unified visual flow across remittance and airtime modules improves clarity and confidence.",
-        "highlight": "Execution",
-        "subtitle": "Professional payment tools aligned with the Diaspora Unlocked platform design system.",
-        "title": "Trusted"
-      }
-    },
-    "receipt": {
-      "disclaimer_line_1": "Payments are powered by licensed financial infrastructure providers.",
-      "disclaimer_line_2": "Diaspora Unlocked does not hold customer funds."
-    }
   },
   "cancel": "Cancel",
   "close": "Close",

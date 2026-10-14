@@ -16,7 +16,7 @@ export type RouteSeo = {
 const SITE_NAME = "Diaspora Unlocked";
 const SITE_DEFAULT_TITLE = `${SITE_NAME} | Zimbabwe Diaspora Services`;
 const SITE_DEFAULT_DESCRIPTION =
-  "Explore one platform for Zimbabwe tourism, investment, remittances, shopping, and AI support built for diaspora households and partners.";
+  "Explore one platform for Zimbabwe tourism, investment, shopping, and AI support built for diaspora households and partners.";
 const DEFAULT_ROBOTS = "index,follow";
 
 function normalizePathname(pathname: string): string {
@@ -33,7 +33,7 @@ function ensureLeadingSlash(value: string): string {
 function humanizeSlug(slug: string): string {
   return slug
     .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .replace(/\b\w/g, char => char.toUpperCase())
     .trim();
 }
 
@@ -42,7 +42,7 @@ function buildSeo(
   description: string,
   canonicalPath: string,
   bodyHeading: string,
-  robots = DEFAULT_ROBOTS,
+  robots = DEFAULT_ROBOTS
 ): RouteSeo {
   return {
     title,
@@ -65,16 +65,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       SITE_DEFAULT_TITLE,
       SITE_DEFAULT_DESCRIPTION,
       "/",
-      "Diaspora Unlocked Zimbabwe Diaspora Services",
-    );
-  }
-
-  if (pathname === "/remittances") {
-    return buildSeo(
-      "Send Money and Airtime Top Up | Diaspora Unlocked",
-      "Send money to Zimbabwe through provider-backed remittance routes, compare fees and exchange rates, and top up airtime with a simpler, mobile-friendly checkout.",
-      "/remittances",
-      "Send Money and Airtime Top Up",
+      "Diaspora Unlocked Zimbabwe Diaspora Services"
     );
   }
 
@@ -83,7 +74,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Shop Zimbabwe Products | Diaspora Unlocked",
       "Browse curated Zimbabwean food, gifts, crafts, and lifestyle products with diaspora-friendly delivery flows, trusted sourcing, and clearer checkout guidance.",
       "/shop",
-      "Shop Zimbabwe Products",
+      "Shop Zimbabwe Products"
     );
   }
 
@@ -92,7 +83,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Product Catalogue | Diaspora Unlocked",
       "Explore the live Diaspora Unlocked Zimbabwe product catalogue with curated staples, artisan goods, pantry essentials, and diaspora-ready delivery information.",
       "/shop/products",
-      "Zimbabwe Product Catalogue",
+      "Zimbabwe Product Catalogue"
     );
   }
 
@@ -101,7 +92,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Investment Opportunities | Diaspora Unlocked",
       "Review Zimbabwe investment themes, sector opportunities, and diaspora participation pathways across hospitality, agriculture, manufacturing, technology, and infrastructure.",
       "/investment",
-      "Zimbabwe Investment Opportunities",
+      "Zimbabwe Investment Opportunities"
     );
   }
 
@@ -110,7 +101,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Active Investment Projects in Zimbabwe | Diaspora Unlocked",
       "Browse active Zimbabwe investment opportunities with sector context, return ranges, participation thresholds, and diaspora-ready project summaries.",
       "/investment/opportunities",
-      "Active Investment Projects in Zimbabwe",
+      "Active Investment Projects in Zimbabwe"
     );
   }
 
@@ -121,7 +112,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       `${projectName} Investment Project | Diaspora Unlocked`,
       `Review the ${projectName} opportunity on Diaspora Unlocked, including sector focus, participation context, and diaspora-oriented investment detail.`,
       ensureLeadingSlash(pathname),
-      `${projectName} Investment Project`,
+      `${projectName} Investment Project`
     );
   }
 
@@ -130,7 +121,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Investment Registry Search | Diaspora Unlocked",
       "Search Zimbabwe investment and registry information through Diaspora Unlocked with guided access to structured records and discovery tools.",
       "/ntir",
-      "Zimbabwe Investment Registry Search",
+      "Zimbabwe Investment Registry Search"
     );
   }
 
@@ -139,7 +130,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Onesa AI and Zimbabwe Technology | Diaspora Unlocked",
       "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and practical technology use cases across tourism, investment, logistics, and education.",
       "/technology",
-      "Onesa AI and Zimbabwe Technology",
+      "Onesa AI and Zimbabwe Technology"
     );
   }
 
@@ -148,7 +139,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Tourism and Trip Planning | Diaspora Unlocked",
       "Discover Zimbabwe attractions, safari and heritage destinations, and diaspora-ready trip planning tools with guided itinerary and experience support.",
       "/tourism",
-      "Zimbabwe Tourism and Trip Planning",
+      "Zimbabwe Tourism and Trip Planning"
     );
   }
 
@@ -157,7 +148,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Onesa AI Chat for Zimbabwe Guidance | Diaspora Unlocked",
       "Use Onesa AI for Zimbabwe-focused travel, investment, technology, and practical local guidance built around local context instead of generic global answers.",
       "/onesa-ai-chat",
-      "Onesa AI Chat for Zimbabwe Guidance",
+      "Onesa AI Chat for Zimbabwe Guidance"
     );
   }
 
@@ -166,7 +157,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Trip Planner | Onesa AI",
       "Plan Zimbabwe travel with AI-assisted routing, attraction selection, budget guidance, and downloadable itinerary support for visitors and diaspora return journeys.",
       "/onesa-ai-book-trip",
-      "Zimbabwe Trip Planner",
+      "Zimbabwe Trip Planner"
     );
   }
 
@@ -175,7 +166,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Virtual Tourism Experience | Onesa AI",
       "Preview Zimbabwe destinations through an interactive virtual tourism experience with guided narration, landmark context, and immersive destination exploration.",
       "/onesa-ai-tourism-virtual-experience",
-      "Zimbabwe Virtual Tourism Experience",
+      "Zimbabwe Virtual Tourism Experience"
     );
   }
 
@@ -184,7 +175,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Augmented Tourism Guide | Onesa AI",
       "Use an augmented tourism guide to explore Zimbabwe destinations with location-aware context, camera support, narration controls, and Onesa AI assistance.",
       "/onesa-ai-tourism-augmented-experience",
-      "Zimbabwe Augmented Tourism Guide",
+      "Zimbabwe Augmented Tourism Guide"
     );
   }
 
@@ -194,7 +185,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Secure sign-in page for existing Diaspora Unlocked users.",
       "/login",
       "Sign In",
-      "noindex,follow",
+      "noindex,follow"
     );
   }
 
@@ -204,7 +195,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Create a Diaspora Unlocked account to access platform services and updates.",
       "/register",
       "Create Account",
-      "noindex,follow",
+      "noindex,follow"
     );
   }
 
@@ -214,7 +205,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Request a password reset for your Diaspora Unlocked account.",
       "/forgot-password",
       "Reset Password",
-      "noindex,follow",
+      "noindex,follow"
     );
   }
 
@@ -224,7 +215,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Choose a new password for your Diaspora Unlocked account.",
       "/reset-password",
       "Set New Password",
-      "noindex,follow",
+      "noindex,follow"
     );
   }
 
@@ -233,7 +224,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Privacy Policy | Diaspora Unlocked",
       "Read the Diaspora Unlocked privacy policy to understand how personal data is handled across platform services and communications.",
       "/privacy-policy",
-      "Privacy Policy",
+      "Privacy Policy"
     );
   }
 
@@ -242,7 +233,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Terms of Service | Diaspora Unlocked",
       "Review the Diaspora Unlocked terms of service governing use of the platform, services, and related digital experiences.",
       "/terms-of-service",
-      "Terms of Service",
+      "Terms of Service"
     );
   }
 
@@ -251,7 +242,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Cookie Settings | Diaspora Unlocked",
       "Manage cookie preferences and learn how Diaspora Unlocked uses cookies to support functionality, analytics, and service improvements.",
       "/cookie-settings",
-      "Cookie Settings",
+      "Cookie Settings"
     );
   }
 
@@ -260,7 +251,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Zimbabwe Regulations and Compliance | Diaspora Unlocked",
       "Explore Zimbabwe regulatory guidance, diaspora compliance context, and supporting references across investment, trade, and platform participation.",
       "/regulations",
-      "Zimbabwe Regulations and Compliance",
+      "Zimbabwe Regulations and Compliance"
     );
   }
 
@@ -275,8 +266,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       title,
       description,
       "/search",
-      searchQuery ? `Search results for ${searchQuery}` : "Search Diaspora Unlocked",
-      "noindex,follow",
+      searchQuery
+        ? `Search results for ${searchQuery}`
+        : "Search Diaspora Unlocked",
+      "noindex,follow"
     );
   }
 
@@ -286,7 +279,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Administrative dashboard for authorized Diaspora Unlocked operators.",
       "/admin",
       "Admin Dashboard",
-      "noindex,nofollow",
+      "noindex,nofollow"
     );
   }
 
@@ -296,7 +289,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "The page you requested could not be found on Diaspora Unlocked.",
       "/404",
       "Page Not Found",
-      "noindex,nofollow",
+      "noindex,nofollow"
     );
   }
 
@@ -305,7 +298,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     "The page you requested could not be found on Diaspora Unlocked.",
     "/404",
     "Page Not Found",
-    "noindex,nofollow",
+    "noindex,nofollow"
   );
 }
 
@@ -318,31 +311,74 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export function resolveCanonicalUrl(siteUrl: string, canonicalPath: string): string {
-  const normalizedSiteUrl = String(siteUrl || "").trim().replace(/\/+$/, "");
-  const normalizedPath = ensureLeadingSlash(canonicalPath).replace(/\/{2,}/g, "/");
-  return normalizedSiteUrl ? `${normalizedSiteUrl}${normalizedPath}` : normalizedPath;
+export function resolveCanonicalUrl(
+  siteUrl: string,
+  canonicalPath: string
+): string {
+  const normalizedSiteUrl = String(siteUrl || "")
+    .trim()
+    .replace(/\/+$/, "");
+  const normalizedPath = ensureLeadingSlash(canonicalPath).replace(
+    /\/{2,}/g,
+    "/"
+  );
+  return normalizedSiteUrl
+    ? `${normalizedSiteUrl}${normalizedPath}`
+    : normalizedPath;
 }
 
-export function injectSeoIntoHtml(html: string, seo: RouteSeo, siteUrl: string): string {
+export function injectSeoIntoHtml(
+  html: string,
+  seo: RouteSeo,
+  siteUrl: string
+): string {
   const canonicalUrl = resolveCanonicalUrl(siteUrl, seo.canonicalPath);
   const title = escapeHtml(seo.title);
   const description = escapeHtml(seo.description);
   const socialTitle = escapeHtml(seo.socialTitle ?? seo.title);
-  const socialDescription = escapeHtml(seo.socialDescription ?? seo.description);
+  const socialDescription = escapeHtml(
+    seo.socialDescription ?? seo.description
+  );
   const robots = escapeHtml(seo.robots);
   const heading = escapeHtml(seo.bodyHeading);
   const canonical = escapeHtml(canonicalUrl);
 
   return html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
-    .replace(/<meta\s+name="description"\s+content="[\s\S]*?"\s*\/?>/i, `<meta name="description" content="${description}" />`)
-    .replace(/<meta\s+name="robots"\s+content="[\s\S]*?"\s*\/?>/i, `<meta name="robots" content="${robots}" />`)
-    .replace(/<meta\s+property="og:title"\s+content="[\s\S]*?"\s*\/?>/i, `<meta property="og:title" content="${socialTitle}" />`)
-    .replace(/<meta\s+property="og:description"\s+content="[\s\S]*?"\s*\/?>/i, `<meta property="og:description" content="${socialDescription}" />`)
-    .replace(/<meta\s+property="og:url"\s+content="[\s\S]*?"\s*\/?>/i, `<meta property="og:url" content="${canonical}" />`)
-    .replace(/<meta\s+name="twitter:title"\s+content="[\s\S]*?"\s*\/?>/i, `<meta name="twitter:title" content="${socialTitle}" />`)
-    .replace(/<meta\s+name="twitter:description"\s+content="[\s\S]*?"\s*\/?>/i, `<meta name="twitter:description" content="${socialDescription}" />`)
-    .replace(/<link\s+rel="canonical"\s+href="[\s\S]*?"\s*\/?>/i, `<link rel="canonical" href="${canonical}" />`)
-    .replace(/<h1 class="seo-h1">[\s\S]*?<\/h1>/i, `<h1 class="seo-h1">${heading}</h1>`);
+    .replace(
+      /<meta\s+name="description"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta name="description" content="${description}" />`
+    )
+    .replace(
+      /<meta\s+name="robots"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta name="robots" content="${robots}" />`
+    )
+    .replace(
+      /<meta\s+property="og:title"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta property="og:title" content="${socialTitle}" />`
+    )
+    .replace(
+      /<meta\s+property="og:description"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta property="og:description" content="${socialDescription}" />`
+    )
+    .replace(
+      /<meta\s+property="og:url"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta property="og:url" content="${canonical}" />`
+    )
+    .replace(
+      /<meta\s+name="twitter:title"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta name="twitter:title" content="${socialTitle}" />`
+    )
+    .replace(
+      /<meta\s+name="twitter:description"\s+content="[\s\S]*?"\s*\/?>/i,
+      `<meta name="twitter:description" content="${socialDescription}" />`
+    )
+    .replace(
+      /<link\s+rel="canonical"\s+href="[\s\S]*?"\s*\/?>/i,
+      `<link rel="canonical" href="${canonical}" />`
+    )
+    .replace(
+      /<h1 class="seo-h1">[\s\S]*?<\/h1>/i,
+      `<h1 class="seo-h1">${heading}</h1>`
+    );
 }

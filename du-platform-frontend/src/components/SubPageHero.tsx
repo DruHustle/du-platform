@@ -19,7 +19,10 @@ interface SubPageHeroProps {
   heroHeightClassName?: string;
 }
 
-export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPageHeroProps) {
+export default function SubPageHero({
+  heroSlides,
+  heroHeightClassName,
+}: SubPageHeroProps) {
   const current = heroSlides[0];
 
   useEffect(() => {
@@ -48,6 +51,11 @@ export default function SubPageHero({ heroSlides, heroHeightClassName }: SubPage
             className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
+
+        <div
+          className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-slate-950/20"
+          aria-hidden="true"
+        />
 
         <div className="relative z-20 container mx-auto h-full px-6 md:px-12">
           <div className="flex h-full flex-col justify-end pb-12 pt-20 md:pb-14 md:pt-24">

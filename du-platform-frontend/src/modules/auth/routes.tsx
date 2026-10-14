@@ -1,13 +1,11 @@
-import { createStaticRoute } from "../core/routing";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { createLazyRoute } from "../core/routing";
 
-// Auth pages are statically imported so they render immediately on direct navigation/refresh.
 export const authRoutes = [
-  createStaticRoute("/login", LoginPage),
-  createStaticRoute("/register", RegisterPage),
-  createStaticRoute("/forgot-password", ForgotPasswordPage),
-  createStaticRoute("/reset-password", ResetPasswordPage),
+  createLazyRoute("/login", () => import("./pages/LoginPage")),
+  createLazyRoute("/register", () => import("./pages/RegisterPage")),
+  createLazyRoute(
+    "/forgot-password",
+    () => import("./pages/ForgotPasswordPage")
+  ),
+  createLazyRoute("/reset-password", () => import("./pages/ResetPasswordPage")),
 ];

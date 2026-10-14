@@ -13,14 +13,10 @@ const DEFAULT_ONESA_SYSTEM_PROMPT = [
   "For normal requests, provide practical and concise guidance for tourism, investment, technology, and everyday needs, and clearly mark uncertainty.",
 ].join(" ");
 const ONESA_IDENTITY_REPLIES: Record<SupportedOnesaLanguage, string> = {
-  en:
-    "Onesa was built by developers at Onesa AI. Onesa means illuminate and that’s exactly what we’re here to do. We’re building AI that brings relevant, up-to-date local information to communities that are too often overlooked or under-served. The goal is simple: help people make more accurate, informed decisions in their own context.\n\nBig AI companies build powerful tools, but they usually miss the local nuance. What matters in one city, neighborhood, or community can be totally different in another. We’re focused on closing that gap by working with local data, local realities, and real community needs.",
-  sn:
-    "Onesa yakavakwa nevagadziri vari paOnesa AI. Onesa zvinoreva kuvhenekera, uye ndizvo chaizvo zvatiri pano kuita. Tiri kuvaka AI inounza ruzivo rwemuno rwakakodzera uye rwemazuva ano kunharaunda dzinowanzoregeredzwa kana kusashandirwa zvakakwana. Chinangwa chiri nyore: kubatsira vanhu kuita sarudzo dzakarurama uye dzine ruzivo mumamiriro avo chaiwo.\n\nMakambani makuru eAI anovaka maturusi ane simba, asi kazhinji anopotsa nuance yemuno. Chinokosha muguta rimwe, munharaunda imwe, kana munzvimbo imwe chinogona kusiyana zvikuru mune imwe. Isu takatarisa kuvhara gaka iri nekushanda nedata remuno, chokwadi chemuno, uye zvinodiwa chaizvo nenharaunda.",
-  nd:
-    "Onesa yakhiwe ngabaqambi abaseOnesa AI. Onesa kutsho ukukhanyisa, njalo yikho kanye esilapha ukukwenza. Sakha i-AI eletha ulwazi lwendawo olufaneleyo, olusesikhathini, emiphakathini evame ukunganakwa loba engasizakali kahle. Injongo ilula: ukusiza abantu benze izinqumo ezinembile, ezinolwazi, endaweni yabo.\n\nAmankampani amakhulu e-AI akha amathuluzi alomfutho, kodwa kuvamile ukuthi aphuthe umehluko wendawo. Okubalulekileyo kwelinye idolobho, umakhelwane, loba umphakathi kungahluka kakhulu kwenye indawo. Thina sigxile ukuvala lowo mgodi ngokusebenza ngedatha yendawo, izimo zendawo, kanye lezidingo zangempela zomphakathi.",
-  de:
-    "Onesa wurde von Entwicklerinnen und Entwicklern bei Onesa AI aufgebaut. Onesa bedeutet erleuchten, und genau das ist unser Auftrag. Wir entwickeln KI, die relevante und aktuelle lokale Informationen in Gemeinschaften bringt, die zu oft übersehen oder unterversorgt sind. Das Ziel ist einfach: Menschen dabei zu helfen, in ihrem eigenen Kontext präzisere und fundiertere Entscheidungen zu treffen.\n\nGroße KI-Unternehmen bauen leistungsstarke Werkzeuge, aber ihnen entgeht oft die lokale Nuance. Was in einer Stadt, Nachbarschaft oder Gemeinschaft wichtig ist, kann in einer anderen völlig anders sein. Wir schließen diese Lücke, indem wir mit lokalen Daten, lokalen Realitäten und echten Bedürfnissen der Gemeinschaft arbeiten.",
+  en: "Onesa was built by developers at Onesa AI. Onesa means illuminate and that’s exactly what we’re here to do. We’re building AI that brings relevant, up-to-date local information to communities that are too often overlooked or under-served. The goal is simple: help people make more accurate, informed decisions in their own context.\n\nBig AI companies build powerful tools, but they usually miss the local nuance. What matters in one city, neighborhood, or community can be totally different in another. We’re focused on closing that gap by working with local data, local realities, and real community needs.",
+  sn: "Onesa yakavakwa nevagadziri vari paOnesa AI. Onesa zvinoreva kuvhenekera, uye ndizvo chaizvo zvatiri pano kuita. Tiri kuvaka AI inounza ruzivo rwemuno rwakakodzera uye rwemazuva ano kunharaunda dzinowanzoregeredzwa kana kusashandirwa zvakakwana. Chinangwa chiri nyore: kubatsira vanhu kuita sarudzo dzakarurama uye dzine ruzivo mumamiriro avo chaiwo.\n\nMakambani makuru eAI anovaka maturusi ane simba, asi kazhinji anopotsa nuance yemuno. Chinokosha muguta rimwe, munharaunda imwe, kana munzvimbo imwe chinogona kusiyana zvikuru mune imwe. Isu takatarisa kuvhara gaka iri nekushanda nedata remuno, chokwadi chemuno, uye zvinodiwa chaizvo nenharaunda.",
+  nd: "Onesa yakhiwe ngabaqambi abaseOnesa AI. Onesa kutsho ukukhanyisa, njalo yikho kanye esilapha ukukwenza. Sakha i-AI eletha ulwazi lwendawo olufaneleyo, olusesikhathini, emiphakathini evame ukunganakwa loba engasizakali kahle. Injongo ilula: ukusiza abantu benze izinqumo ezinembile, ezinolwazi, endaweni yabo.\n\nAmankampani amakhulu e-AI akha amathuluzi alomfutho, kodwa kuvamile ukuthi aphuthe umehluko wendawo. Okubalulekileyo kwelinye idolobho, umakhelwane, loba umphakathi kungahluka kakhulu kwenye indawo. Thina sigxile ukuvala lowo mgodi ngokusebenza ngedatha yendawo, izimo zendawo, kanye lezidingo zangempela zomphakathi.",
+  de: "Onesa wurde von Entwicklerinnen und Entwicklern bei Onesa AI aufgebaut. Onesa bedeutet erleuchten, und genau das ist unser Auftrag. Wir entwickeln KI, die relevante und aktuelle lokale Informationen in Gemeinschaften bringt, die zu oft übersehen oder unterversorgt sind. Das Ziel ist einfach: Menschen dabei zu helfen, in ihrem eigenen Kontext präzisere und fundiertere Entscheidungen zu treffen.\n\nGroße KI-Unternehmen bauen leistungsstarke Werkzeuge, aber ihnen entgeht oft die lokale Nuance. Was in einer Stadt, Nachbarschaft oder Gemeinschaft wichtig ist, kann in einer anderen völlig anders sein. Wir schließen diese Lücke, indem wir mit lokalen Daten, lokalen Realitäten und echten Bedürfnissen der Gemeinschaft arbeiten.",
 };
 
 function getOnesaIdentityReply(language: SupportedOnesaLanguage): string {
@@ -40,7 +36,8 @@ type OnesaReadiness = {
   providerTargets?: Array<{ name: string; baseUrl: string }>;
 };
 
-let onesaReadinessCache: { checkedAt: number; value: OnesaReadiness } | null = null;
+let onesaReadinessCache: { checkedAt: number; value: OnesaReadiness } | null =
+  null;
 let lastOnesaSuccessAt = 0;
 const onesaProviderBackoffUntilByEndpoint = new Map<string, number>();
 
@@ -58,10 +55,13 @@ type OnesaReplyResult = {
 type SupportedOnesaLanguage = "en" | "sn" | "nd" | "de";
 
 function normalizeOnesaLanguage(value: unknown): SupportedOnesaLanguage {
-  const raw = String(value ?? "").trim().toLowerCase();
+  const raw = String(value ?? "")
+    .trim()
+    .toLowerCase();
   if (!raw) return "en";
   const base = raw.split("-")[0];
-  if (base === "sn" || base === "nd" || base === "de" || base === "en") return base;
+  if (base === "sn" || base === "nd" || base === "de" || base === "en")
+    return base;
   if (raw === "shona") return "sn";
   if (raw === "ndebele") return "nd";
   if (raw === "german" || raw === "deutsch") return "de";
@@ -75,7 +75,9 @@ function getOnesaLanguageLabel(language: SupportedOnesaLanguage): string {
   return "English";
 }
 
-function getOnesaLanguageFallbackReply(language: SupportedOnesaLanguage): string {
+function getOnesaLanguageFallbackReply(
+  language: SupportedOnesaLanguage
+): string {
   if (language === "sn") {
     return "Pane dambudziko diki pakugadzira mhinduro izvozvi. Ndapota edza zvakare munguva pfupi.";
   }
@@ -101,7 +103,7 @@ function getEndpointBackoffRemainingMs(endpointKey: string): number {
 function getGlobalBackoffRemainingMs(): number {
   const now = Date.now();
   let maxRemaining = 0;
-  onesaProviderBackoffUntilByEndpoint.forEach((until) => {
+  onesaProviderBackoffUntilByEndpoint.forEach(until => {
     maxRemaining = Math.max(maxRemaining, Math.max(0, until - now));
   });
   return maxRemaining;
@@ -137,8 +139,17 @@ function getRetryAfterMs(error: any): number | null {
 function isRateLimitedUpstreamError(error: any): boolean {
   const status = getUpstreamStatus(error);
   if (status === 429) return true;
-  const message = String(error?.response?.data?.error ?? error?.response?.data?.message ?? error?.message ?? "").toLowerCase();
-  return message.includes("rate limit") || message.includes("too many requests") || message.includes("status code 429");
+  const message = String(
+    error?.response?.data?.error ??
+      error?.response?.data?.message ??
+      error?.message ??
+      ""
+  ).toLowerCase();
+  return (
+    message.includes("rate limit") ||
+    message.includes("too many requests") ||
+    message.includes("status code 429")
+  );
 }
 
 function isRetryableUpstreamError(error: any): boolean {
@@ -147,7 +158,11 @@ function isRetryableUpstreamError(error: any): boolean {
   return status === 503 || status === 504 || status === 529;
 }
 
-async function withRetry<T>(run: () => Promise<T>, maxAttempts = 3, endpointKey?: string): Promise<T> {
+async function withRetry<T>(
+  run: () => Promise<T>,
+  maxAttempts = 3,
+  endpointKey?: string
+): Promise<T> {
   let lastError: any = null;
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
@@ -160,8 +175,12 @@ async function withRetry<T>(run: () => Promise<T>, maxAttempts = 3, endpointKey?
         const fallbackBackoffMs = 10000 + jitterMs;
         const delayMs = Math.max(fallbackBackoffMs, retryAfterMs ?? 0);
         if (endpointKey) {
-          const existing = onesaProviderBackoffUntilByEndpoint.get(endpointKey) ?? 0;
-          onesaProviderBackoffUntilByEndpoint.set(endpointKey, Math.max(existing, Date.now() + delayMs));
+          const existing =
+            onesaProviderBackoffUntilByEndpoint.get(endpointKey) ?? 0;
+          onesaProviderBackoffUntilByEndpoint.set(
+            endpointKey,
+            Math.max(existing, Date.now() + delayMs)
+          );
         }
         // Immediately fail over to the next provider endpoint for 429s.
         throw error;
@@ -171,13 +190,17 @@ async function withRetry<T>(run: () => Promise<T>, maxAttempts = 3, endpointKey?
       }
       const retryAfterMs = getRetryAfterMs(error);
       const jitterMs = Math.floor(Math.random() * 250);
-      const backoffMs = Math.min(15000, 700 * (2 ** (attempt - 1))) + jitterMs;
+      const backoffMs = Math.min(15000, 700 * 2 ** (attempt - 1)) + jitterMs;
       const delayMs = Math.max(backoffMs, retryAfterMs ?? 0);
       if (isRateLimitedUpstreamError(error) && endpointKey) {
-        const existing = onesaProviderBackoffUntilByEndpoint.get(endpointKey) ?? 0;
-        onesaProviderBackoffUntilByEndpoint.set(endpointKey, Math.max(existing, Date.now() + delayMs));
+        const existing =
+          onesaProviderBackoffUntilByEndpoint.get(endpointKey) ?? 0;
+        onesaProviderBackoffUntilByEndpoint.set(
+          endpointKey,
+          Math.max(existing, Date.now() + delayMs)
+        );
       }
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      await new Promise(resolve => setTimeout(resolve, delayMs));
     }
   }
   throw lastError;
@@ -195,22 +218,33 @@ function getLatestUserMessage(messages: ChatMessage[]): string {
 }
 
 function normalizeSmallTalkPhrase(content: string): string {
-  const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, "");
+  const normalized = content
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "");
   if (!normalized) return "";
   const tokens = normalized.split(/\s+/).filter(Boolean);
   if (tokens.length > 4) return "";
   return tokens.join(" ");
 }
 
-function detectLatestUserLanguage(content: string): SupportedOnesaLanguage | null {
+function detectLatestUserLanguage(
+  content: string
+): SupportedOnesaLanguage | null {
   const greetingLanguage = detectGreetingLanguage(content);
   if (greetingLanguage) return greetingLanguage;
 
-  const normalized = content.trim().toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  const normalized = content
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ");
   const words = normalized.split(/\s+/).filter(Boolean);
   if (words.length === 0) return null;
 
-  const score = { en: 0, sn: 0, nd: 0, de: 0 } as Record<SupportedOnesaLanguage, number>;
+  const score = { en: 0, sn: 0, nd: 0, de: 0 } as Record<
+    SupportedOnesaLanguage,
+    number
+  >;
   const has = (set: Set<string>, word: string) => set.has(word);
   const snWords = new Set([
     "mhoro",
@@ -225,9 +259,37 @@ function detectLatestUserLanguage(content: string): SupportedOnesaLanguage | nul
     "kubatsira",
     "urisei",
   ]);
-  const ndWords = new Set(["sawubona", "salibonani", "kunjani", "ngiyabonga", "nxa", "lamuhla", "ngingakuncedisa"]);
-  const deWords = new Set(["hallo", "guten", "danke", "bitte", "ich", "und", "wie", "kann"]);
-  const enWords = new Set(["hello", "hi", "hey", "thanks", "thank", "you", "how", "can", "help", "today"]);
+  const ndWords = new Set([
+    "sawubona",
+    "salibonani",
+    "kunjani",
+    "ngiyabonga",
+    "nxa",
+    "lamuhla",
+    "ngingakuncedisa",
+  ]);
+  const deWords = new Set([
+    "hallo",
+    "guten",
+    "danke",
+    "bitte",
+    "ich",
+    "und",
+    "wie",
+    "kann",
+  ]);
+  const enWords = new Set([
+    "hello",
+    "hi",
+    "hey",
+    "thanks",
+    "thank",
+    "you",
+    "how",
+    "can",
+    "help",
+    "today",
+  ]);
 
   for (const word of words) {
     if (has(snWords, word) || word.startsWith("ndi")) score.sn += 1;
@@ -236,7 +298,9 @@ function detectLatestUserLanguage(content: string): SupportedOnesaLanguage | nul
     if (has(enWords, word)) score.en += 1;
   }
 
-  const ranked = (Object.keys(score) as SupportedOnesaLanguage[]).sort((a, b) => score[b] - score[a]);
+  const ranked = (Object.keys(score) as SupportedOnesaLanguage[]).sort(
+    (a, b) => score[b] - score[a]
+  );
   const top = ranked[0];
   if (score[top] <= 0) return null;
   const second = ranked[1];
@@ -244,7 +308,10 @@ function detectLatestUserLanguage(content: string): SupportedOnesaLanguage | nul
   return top;
 }
 
-function isMixedLanguageReply(reply: string, expectedLanguage: SupportedOnesaLanguage): boolean {
+function isMixedLanguageReply(
+  reply: string,
+  expectedLanguage: SupportedOnesaLanguage
+): boolean {
   const normalized = reply.toLowerCase();
   if (expectedLanguage === "en") return false;
 
@@ -258,11 +325,24 @@ function isMixedLanguageReply(reply: string, expectedLanguage: SupportedOnesaLan
     "trade",
     "tourism",
   ];
-  const swahiliMarkers = ["kwa kutumia", "kama ", " au ", "mifumo yote", "naweza", "leo"];
-  const englishHits = englishMarkers.reduce((count, marker) => (normalized.includes(marker) ? count + 1 : count), 0);
+  const swahiliMarkers = [
+    "kwa kutumia",
+    "kama ",
+    " au ",
+    "mifumo yote",
+    "naweza",
+    "leo",
+  ];
+  const englishHits = englishMarkers.reduce(
+    (count, marker) => (normalized.includes(marker) ? count + 1 : count),
+    0
+  );
 
   if (expectedLanguage === "sn") {
-    const swahiliHits = swahiliMarkers.reduce((count, marker) => (normalized.includes(marker) ? count + 1 : count), 0);
+    const swahiliHits = swahiliMarkers.reduce(
+      (count, marker) => (normalized.includes(marker) ? count + 1 : count),
+      0
+    );
     return englishHits >= 2 || swahiliHits >= 1;
   }
 
@@ -273,7 +353,9 @@ function isMixedLanguageReply(reply: string, expectedLanguage: SupportedOnesaLan
   return false;
 }
 
-function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null {
+function detectGreetingLanguage(
+  content: string
+): SupportedOnesaLanguage | null {
   const phrase = normalizeSmallTalkPhrase(content);
   if (!phrase) return null;
 
@@ -281,14 +363,14 @@ function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null 
 
   const greetingsByLanguage: Record<SupportedOnesaLanguage, Set<string>> = {
     en: new Set([
-    "hi",
-    "hello",
-    "hey",
-    "yo",
-    "howdy",
-    "good morning",
-    "good afternoon",
-    "good evening",
+      "hi",
+      "hello",
+      "hey",
+      "yo",
+      "howdy",
+      "good morning",
+      "good afternoon",
+      "good evening",
     ]),
     sn: new Set([
       "mhoro",
@@ -301,11 +383,7 @@ function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null 
       "uri sei",
       "urisei",
     ]),
-    nd: new Set([
-      "salibonani",
-      "sawubona",
-      "kunjani",
-    ]),
+    nd: new Set(["salibonani", "sawubona", "kunjani"]),
     de: new Set([
       "hallo",
       "guten tag",
@@ -315,7 +393,9 @@ function detectGreetingLanguage(content: string): SupportedOnesaLanguage | null 
     ]),
   };
 
-  for (const language of Object.keys(greetingsByLanguage) as SupportedOnesaLanguage[]) {
+  for (const language of Object.keys(
+    greetingsByLanguage
+  ) as SupportedOnesaLanguage[]) {
     if (greetingsByLanguage[language].has(phrase)) return language;
   }
   return null;
@@ -349,23 +429,30 @@ function getSmallTalkReply(
     /\bwho developed you\b/,
     /\bwhat('?s| is) the name of (your|the) team\b/,
   ];
-  if (identityPatterns.some((pattern) => pattern.test(normalized))) {
-    const identityLanguage = detectLatestUserLanguage(content) ?? defaultLanguage;
+  if (identityPatterns.some(pattern => pattern.test(normalized))) {
+    const identityLanguage =
+      detectLatestUserLanguage(content) ?? defaultLanguage;
     return getOnesaIdentityReply(identityLanguage);
   }
   const greetingLanguage = detectGreetingLanguage(normalized);
   if (greetingLanguage) {
     const language = greetingLanguage ?? defaultLanguage;
-    if (language === "sn") return "Mhoro! Ndini Onesa. Ndingakubatsirai nei nhasi?";
-    if (language === "nd") return "Sawubona! Ngingu Onesa. Ngingakuncedisa ngani lamuhla?";
-    if (language === "de") return "Hallo! Ich bin Onesa. Wie kann ich dir heute helfen?";
+    if (language === "sn")
+      return "Mhoro! Ndini Onesa. Ndingakubatsirai nei nhasi?";
+    if (language === "nd")
+      return "Sawubona! Ngingu Onesa. Ngingakuncedisa ngani lamuhla?";
+    if (language === "de")
+      return "Hallo! Ich bin Onesa. Wie kann ich dir heute helfen?";
     return "Hi! I am Onesa. How can I help you today?";
   }
   return null;
 }
 
 function hasForbiddenOriginClaim(reply: string): boolean {
-  const text = String(reply ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+  const text = String(reply ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
   if (!text) return false;
 
   const llmSelfIdPatterns = [
@@ -380,7 +467,7 @@ function hasForbiddenOriginClaim(reply: string): boolean {
     /\bi'm an ai language model\b/,
     /\blarge language model trained by\b/,
   ];
-  if (llmSelfIdPatterns.some((pattern) => pattern.test(text))) {
+  if (llmSelfIdPatterns.some(pattern => pattern.test(text))) {
     return true;
   }
 
@@ -390,7 +477,11 @@ function hasForbiddenOriginClaim(reply: string): boolean {
   const verbPattern = /\b(developed|created|trained|built|made)\b/;
   const orgPattern = providerPattern;
 
-  if (subjectPattern.test(text) && verbPattern.test(text) && orgPattern.test(text)) {
+  if (
+    subjectPattern.test(text) &&
+    verbPattern.test(text) &&
+    orgPattern.test(text)
+  ) {
     return true;
   }
 
@@ -401,10 +492,13 @@ function hasForbiddenOriginClaim(reply: string): boolean {
     /\btrained by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
     /\bbuilt by (google|google gemini|gemini|openai|chatgpt|microsoft|azure|azure openai|meta|anthropic|claude|cerebras|groq|ollama)\b/,
   ];
-  return directClaimPatterns.some((pattern) => pattern.test(text));
+  return directClaimPatterns.some(pattern => pattern.test(text));
 }
 
-function enforceOnesaIdentityGuard(reply: string, language: SupportedOnesaLanguage): string {
+function enforceOnesaIdentityGuard(
+  reply: string,
+  language: SupportedOnesaLanguage
+): string {
   if (hasForbiddenOriginClaim(reply)) {
     return getOnesaIdentityReply(language);
   }
@@ -420,7 +514,7 @@ function hasLanguageMetaReply(reply: string): boolean {
     text.includes("speaking in german") ||
     text.includes("let me try that again in english") ||
     text.includes("let me try that again in") ||
-    text.includes("in english") && text.includes("let me try")
+    (text.includes("in english") && text.includes("let me try"))
   );
 }
 
@@ -444,23 +538,51 @@ function isPlaceholderApiKey(value: string): boolean {
   );
 }
 
-function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): CloudProviderTarget[] {
+function buildCloudProviderTargets(
+  config: ReturnType<typeof getOnesaConfig>
+): CloudProviderTarget[] {
   const primaryModels = Array.from(
-    new Set([...config.modelCandidates, config.model, config.fallbackModel].filter(Boolean))
+    new Set(
+      [...config.modelCandidates, config.model, config.fallbackModel].filter(
+        Boolean
+      )
+    )
   );
   const secondaryModels = Array.from(
     new Set(
-      [...config.secondaryModelCandidates, config.secondaryModel, config.secondaryFallbackModel].filter(Boolean)
+      [
+        ...config.secondaryModelCandidates,
+        config.secondaryModel,
+        config.secondaryFallbackModel,
+      ].filter(Boolean)
     )
   );
   const claudeModels = Array.from(
-    new Set([...config.claudeModelCandidates, config.claudeModel, config.claudeFallbackModel].filter(Boolean))
+    new Set(
+      [
+        ...config.claudeModelCandidates,
+        config.claudeModel,
+        config.claudeFallbackModel,
+      ].filter(Boolean)
+    )
   );
   const cerebrasModels = Array.from(
-    new Set([...config.cerebrasModelCandidates, config.cerebrasModel, config.cerebrasFallbackModel].filter(Boolean))
+    new Set(
+      [
+        ...config.cerebrasModelCandidates,
+        config.cerebrasModel,
+        config.cerebrasFallbackModel,
+      ].filter(Boolean)
+    )
   );
   const perplexityModels = Array.from(
-    new Set([...config.perplexityModelCandidates, config.perplexityModel, config.perplexityFallbackModel].filter(Boolean))
+    new Set(
+      [
+        ...config.perplexityModelCandidates,
+        config.perplexityModel,
+        config.perplexityFallbackModel,
+      ].filter(Boolean)
+    )
   );
 
   const targets: CloudProviderTarget[] = [];
@@ -475,13 +597,19 @@ function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): C
     });
   }
   // Secondary: Groq (OpenAI-compatible)
-  if (config.secondaryOpenaiBase && !isPlaceholderApiKey(config.secondaryOpenaiApiKey)) {
+  if (
+    config.secondaryOpenaiBase &&
+    !isPlaceholderApiKey(config.secondaryOpenaiApiKey)
+  ) {
     targets.push({
       name: "secondary",
       kind: "openai",
       baseUrl: config.secondaryOpenaiBase,
       apiKey: config.secondaryOpenaiApiKey,
-      models: secondaryModels.length > 0 ? secondaryModels : [config.secondaryModel || config.model],
+      models:
+        secondaryModels.length > 0
+          ? secondaryModels
+          : [config.secondaryModel || config.model],
     });
   }
   // Tertiary: Claude
@@ -519,12 +647,18 @@ function buildCloudProviderTargets(config: ReturnType<typeof getOnesaConfig>): C
 }
 
 function getOnesaConfig() {
-  const provider = (process.env.ONESA_PROVIDER ?? process.env.ONESA_AI_PROVIDER ?? "ollama").toLowerCase();
+  const provider = (
+    process.env.ONESA_PROVIDER ??
+    process.env.ONESA_AI_PROVIDER ??
+    "ollama"
+  ).toLowerCase();
   const geminiModel = process.env.ONESA_GEMINI_MODEL ?? "";
   const geminiFallbackModel = process.env.ONESA_GEMINI_FALLBACK_MODEL ?? "";
-  const geminiModelCandidates = String(process.env.ONESA_GEMINI_MODEL_CANDIDATES ?? "")
+  const geminiModelCandidates = String(
+    process.env.ONESA_GEMINI_MODEL_CANDIDATES ?? ""
+  )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
   const model = geminiModel || process.env.ONESA_AI_MODEL || "llama3.1:8b";
   const fallbackModel =
@@ -532,69 +666,99 @@ function getOnesaConfig() {
     process.env.ONESA_AI_FALLBACK_MODEL ||
     (provider === "openai_compatible" ? model : "llama3.1:8b");
   const modelCandidates = String(
-    (geminiModelCandidates.length ? geminiModelCandidates.join(",") : undefined) ||
+    (geminiModelCandidates.length
+      ? geminiModelCandidates.join(",")
+      : undefined) ||
       process.env.ONESA_AI_MODEL_CANDIDATES ||
       ""
   )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
   const secondaryModel = process.env.ONESA_GROK_MODEL ?? "";
   const secondaryFallbackModel = process.env.ONESA_GROK_FALLBACK_MODEL ?? "";
-  const secondaryModelCandidates = String(process.env.ONESA_GROK_MODEL_CANDIDATES ?? "")
+  const secondaryModelCandidates = String(
+    process.env.ONESA_GROK_MODEL_CANDIDATES ?? ""
+  )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
   const tertiaryModel = process.env.ONESA_TERTIARY_MODEL ?? "";
   const tertiaryFallbackModel = process.env.ONESA_TERTIARY_FALLBACK_MODEL ?? "";
-  const tertiaryModelCandidates = String(process.env.ONESA_TERTIARY_MODEL_CANDIDATES ?? "")
+  const tertiaryModelCandidates = String(
+    process.env.ONESA_TERTIARY_MODEL_CANDIDATES ?? ""
+  )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
-  const claudeBase = String(process.env.ONESA_CLAUDE_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  const claudeBase = String(process.env.ONESA_CLAUDE_BASE_URL ?? "")
+    .trim()
+    .replace(/\/+$/, "");
   const claudeApiKey = process.env.ONESA_CLAUDE_API_KEY ?? "";
   const claudeModel = process.env.ONESA_CLAUDE_MODEL ?? "";
   const claudeFallbackModel = process.env.ONESA_CLAUDE_FALLBACK_MODEL ?? "";
-  const claudeModelCandidates = String(process.env.ONESA_CLAUDE_MODEL_CANDIDATES ?? "")
+  const claudeModelCandidates = String(
+    process.env.ONESA_CLAUDE_MODEL_CANDIDATES ?? ""
+  )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
-  const claudeAnthropicVersion = process.env.ONESA_CLAUDE_ANTHROPIC_VERSION ?? "2023-06-01";
-  const cerebrasBase = String(process.env.ONESA_CEREBRAS_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  const claudeAnthropicVersion =
+    process.env.ONESA_CLAUDE_ANTHROPIC_VERSION ?? "2023-06-01";
+  const cerebrasBase = String(process.env.ONESA_CEREBRAS_BASE_URL ?? "")
+    .trim()
+    .replace(/\/+$/, "");
   const cerebrasApiKey = process.env.ONESA_CEREBRAS_API_KEY ?? "";
   const cerebrasModel = process.env.ONESA_CEREBRAS_MODEL ?? "";
   const cerebrasFallbackModel = process.env.ONESA_CEREBRAS_FALLBACK_MODEL ?? "";
-  const cerebrasModelCandidates = String(process.env.ONESA_CEREBRAS_MODEL_CANDIDATES ?? "")
+  const cerebrasModelCandidates = String(
+    process.env.ONESA_CEREBRAS_MODEL_CANDIDATES ?? ""
+  )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
-  const perplexityBase = String(process.env.ONESA_PERPLEXITY_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  const perplexityBase = String(process.env.ONESA_PERPLEXITY_BASE_URL ?? "")
+    .trim()
+    .replace(/\/+$/, "");
   const perplexityApiKey = process.env.ONESA_PERPLEXITY_API_KEY ?? "";
   const perplexityModel = process.env.ONESA_PERPLEXITY_MODEL ?? "";
-  const perplexityFallbackModel = process.env.ONESA_PERPLEXITY_FALLBACK_MODEL ?? "";
-  const perplexityModelCandidates = String(process.env.ONESA_PERPLEXITY_MODEL_CANDIDATES ?? "")
+  const perplexityFallbackModel =
+    process.env.ONESA_PERPLEXITY_FALLBACK_MODEL ?? "";
+  const perplexityModelCandidates = String(
+    process.env.ONESA_PERPLEXITY_MODEL_CANDIDATES ?? ""
+  )
     .split(",")
-    .map((x) => x.trim())
+    .map(x => x.trim())
     .filter(Boolean);
-  const ollamaBase = (process.env.ONESA_OLLAMA_URL ?? "http://127.0.0.1:11434").replace(/\/+$/, "");
+  const ollamaBase = (
+    process.env.ONESA_OLLAMA_URL ?? "http://127.0.0.1:11434"
+  ).replace(/\/+$/, "");
   const openaiBase = (
     process.env.ONESA_GEMINI_BASE_URL ??
     process.env.ONESA_AI_BASE_URL ??
     "http://127.0.0.1:1234/v1"
   ).replace(/\/+$/, "");
   const openaiApiKey =
-    process.env.ONESA_GEMINI_API_KEY ??
-    process.env.ONESA_AI_API_KEY ??
-    "";
-  const secondaryOpenaiBase = String(process.env.ONESA_GROK_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
+    process.env.ONESA_GEMINI_API_KEY ?? process.env.ONESA_AI_API_KEY ?? "";
+  const secondaryOpenaiBase = String(process.env.ONESA_GROK_AI_BASE_URL ?? "")
+    .trim()
+    .replace(/\/+$/, "");
   const secondaryOpenaiApiKey = process.env.ONESA_GROK_AI_API_KEY ?? "";
-  const tertiaryOpenaiBase = String(process.env.ONESA_TERTIARY_AI_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  const tertiaryOpenaiBase = String(
+    process.env.ONESA_TERTIARY_AI_BASE_URL ?? ""
+  )
+    .trim()
+    .replace(/\/+$/, "");
   const tertiaryOpenaiApiKey = process.env.ONESA_TERTIARY_AI_API_KEY ?? "";
   const timeoutRaw = Number(process.env.ONESA_REQUEST_TIMEOUT_MS ?? "180000");
-  const timeoutMs = Number.isFinite(timeoutRaw) && timeoutRaw > 0 ? timeoutRaw : 180000;
+  const timeoutMs =
+    Number.isFinite(timeoutRaw) && timeoutRaw > 0 ? timeoutRaw : 180000;
   // Default response budget tuned to reduce mid-sentence truncation.
   const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "500");
-  const maxTokens = Number.isFinite(maxTokensRaw) && maxTokensRaw > 0 ? Math.floor(maxTokensRaw) : 500;
+  const maxTokens =
+    Number.isFinite(maxTokensRaw) && maxTokensRaw > 0
+      ? Math.floor(maxTokensRaw)
+      : 500;
   return {
     provider,
     model,
@@ -634,7 +798,10 @@ function getOnesaConfig() {
   };
 }
 
-function resolveOllamaModelName(requestedModel: string, availableModels: string[]): string | null {
+function resolveOllamaModelName(
+  requestedModel: string,
+  availableModels: string[]
+): string | null {
   if (!requestedModel) return null;
   if (availableModels.includes(requestedModel)) return requestedModel;
 
@@ -645,18 +812,15 @@ function resolveOllamaModelName(requestedModel: string, availableModels: string[
   }
 
   const requestedBase = requestedModel.split(":")[0];
-  const sameBase = availableModels.filter((m) => m.split(":")[0] === requestedBase);
+  const sameBase = availableModels.filter(
+    m => m.split(":")[0] === requestedBase
+  );
   if (sameBase.length > 0) {
-    const latest = sameBase.find((m) => m.endsWith(":latest"));
+    const latest = sameBase.find(m => m.endsWith(":latest"));
     return latest ?? sameBase[0];
   }
 
   return null;
-}
-
-function isOllamaModelNotFoundError(error: any): boolean {
-  const message = String(error?.response?.data?.error ?? error?.message ?? "").toLowerCase();
-  return message.includes("model") && message.includes("not found");
 }
 
 function isLowQualityOnesaReply(reply: string): boolean {
@@ -668,18 +832,24 @@ function isLowQualityOnesaReply(reply: string): boolean {
   if (notedCount >= 3) return true;
 
   const normalized = text.replace(/\s+/g, " ").trim();
-  const segments = normalized.split(/[.!?]\s+/).map((s) => s.trim()).filter(Boolean);
+  const segments = normalized
+    .split(/[.!?]\s+/)
+    .map(s => s.trim())
+    .filter(Boolean);
   if (segments.length >= 4) {
     const segmentCounts = new Map<string, number>();
     for (const segment of segments) {
       segmentCounts.set(segment, (segmentCounts.get(segment) ?? 0) + 1);
     }
-    if (Array.from(segmentCounts.values()).some((count) => count >= 3)) {
+    if (Array.from(segmentCounts.values()).some(count => count >= 3)) {
       return true;
     }
   }
 
-  const words = normalized.replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+  const words = normalized
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
   if (words.length >= 20) {
     const uniqueRatio = new Set(words).size / words.length;
     if (uniqueRatio < 0.35) return true;
@@ -690,14 +860,14 @@ function isLowQualityOnesaReply(reply: string): boolean {
 
 function buildAnthropicInput(messages: ChatMessage[]) {
   const system = messages
-    .filter((message) => message.role === "system")
-    .map((message) => message.content.trim())
+    .filter(message => message.role === "system")
+    .map(message => message.content.trim())
     .filter(Boolean)
     .join("\n\n")
     .trim();
   const chatMessages = messages
-    .filter((message) => message.role === "user" || message.role === "assistant")
-    .map((message) => ({
+    .filter(message => message.role === "user" || message.role === "assistant")
+    .map(message => ({
       role: message.role,
       content: message.content,
     }));
@@ -708,29 +878,46 @@ function extractAnthropicText(data: any): string {
   const content = data?.content;
   if (!Array.isArray(content)) return "";
   return content
-    .filter((block: any) => block?.type === "text" && typeof block?.text === "string")
+    .filter(
+      (block: any) => block?.type === "text" && typeof block?.text === "string"
+    )
     .map((block: any) => String(block.text).trim())
     .filter(Boolean)
     .join("\n")
     .trim();
 }
 
-async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: string): Promise<OnesaReplyResult> {
-  const hasRequestedLanguage = typeof requestedLanguage === "string" && requestedLanguage.trim().length > 0;
+async function generateOnesaReply(
+  messages: ChatMessage[],
+  requestedLanguage?: string
+): Promise<OnesaReplyResult> {
+  const hasRequestedLanguage =
+    typeof requestedLanguage === "string" &&
+    requestedLanguage.trim().length > 0;
   const preferredLanguage = normalizeOnesaLanguage(requestedLanguage);
   const latestUserMessage = getLatestUserMessage(messages);
-  const detectedUserLanguage = latestUserMessage ? detectLatestUserLanguage(latestUserMessage) : null;
-  const responseLanguage = hasRequestedLanguage ? preferredLanguage : detectedUserLanguage ?? preferredLanguage;
+  const detectedUserLanguage = latestUserMessage
+    ? detectLatestUserLanguage(latestUserMessage)
+    : null;
+  const responseLanguage = hasRequestedLanguage
+    ? preferredLanguage
+    : (detectedUserLanguage ?? preferredLanguage);
   if (isOnesaMockModeEnabled()) {
-    const smallTalkReply = latestUserMessage ? getSmallTalkReply(latestUserMessage, responseLanguage) : null;
-    const reply = smallTalkReply ?? createMockOnesaReply(latestUserMessage, responseLanguage);
+    const smallTalkReply = latestUserMessage
+      ? getSmallTalkReply(latestUserMessage, responseLanguage)
+      : null;
+    const reply =
+      smallTalkReply ??
+      createMockOnesaReply(latestUserMessage, responseLanguage);
     lastOnesaSuccessAt = Date.now();
     return { reply, truncated: false };
   }
 
   const config = getOnesaConfig();
-  const { provider, model, fallbackModel, ollamaBase, openaiBase, timeoutMs, maxTokens } = config;
-  const systemPrompt = process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
+  const { provider, model, fallbackModel, ollamaBase, timeoutMs, maxTokens } =
+    config;
+  const systemPrompt =
+    process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
   const languageInstruction = hasRequestedLanguage
     ? [
         `Respond only in ${getOnesaLanguageLabel(responseLanguage)}.`,
@@ -760,12 +947,18 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   const normalizedMessages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
     { role: "system", content: languageInstruction },
-    ...messages.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim()),
+    ...messages.filter(
+      m =>
+        m &&
+        (m.role === "user" || m.role === "assistant") &&
+        typeof m.content === "string" &&
+        m.content.trim()
+    ),
   ];
 
   const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
     chatMessages
-      .map((m) => {
+      .map(m => {
         if (m.role === "system") return `System: ${m.content}`;
         if (m.role === "assistant") return `Assistant: ${m.content}`;
         return `User: ${m.content}`;
@@ -773,7 +966,9 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
       .join("\n\n");
 
   const extractOllamaText = (data: any) =>
-    String(data?.message?.content ?? data?.response ?? data?.content ?? "").trim();
+    String(
+      data?.message?.content ?? data?.response ?? data?.content ?? ""
+    ).trim();
 
   const sendOllamaChat = async (targetModel: string) => {
     const response = await axios.post(
@@ -832,7 +1027,9 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
   const runOllamaFallback = async (): Promise<OnesaReplyResult> => {
     let availableModels: string[] = [];
     try {
-      const tagsResponse = await axios.get(`${ollamaBase}/api/tags`, { timeout: 5000 });
+      const tagsResponse = await axios.get(`${ollamaBase}/api/tags`, {
+        timeout: 5000,
+      });
       availableModels = Array.isArray(tagsResponse.data?.models)
         ? tagsResponse.data.models.map((m: any) => String(m?.name ?? ""))
         : [];
@@ -841,11 +1038,20 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
     }
 
     const candidates = Array.from(
-      new Set([model, resolveOllamaModelName(model, availableModels)].filter((m): m is string => Boolean(m)))
+      new Set(
+        [model, resolveOllamaModelName(model, availableModels)].filter(
+          (m): m is string => Boolean(m)
+        )
+      )
     );
     const fallbackCandidates = Array.from(
-      new Set([fallbackModel, resolveOllamaModelName(fallbackModel, availableModels)].filter((m): m is string => Boolean(m)))
-    ).filter((candidate) => !candidates.includes(candidate));
+      new Set(
+        [
+          fallbackModel,
+          resolveOllamaModelName(fallbackModel, availableModels),
+        ].filter((m): m is string => Boolean(m))
+      )
+    ).filter(candidate => !candidates.includes(candidate));
 
     let lastError: any = null;
     let lowQualityReply: string | null = null;
@@ -857,7 +1063,10 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
           ? getOnesaLanguageFallbackReply(responseLanguage)
           : guardedReply;
         if (finalReply) {
-          if (isLowQualityOnesaReply(finalReply) || isMixedLanguageReply(finalReply, responseLanguage)) {
+          if (
+            isLowQualityOnesaReply(finalReply) ||
+            isMixedLanguageReply(finalReply, responseLanguage)
+          ) {
             lowQualityReply = finalReply;
             continue;
           }
@@ -877,7 +1086,10 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
           ? getOnesaLanguageFallbackReply(responseLanguage)
           : guardedReply;
         if (finalReply) {
-          if (isLowQualityOnesaReply(finalReply) || isMixedLanguageReply(finalReply, responseLanguage)) {
+          if (
+            isLowQualityOnesaReply(finalReply) ||
+            isMixedLanguageReply(finalReply, responseLanguage)
+          ) {
             lowQualityReply = finalReply;
             continue;
           }
@@ -925,7 +1137,8 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
                 timeout: timeoutMs,
                 headers: {
                   "x-api-key": providerTarget.apiKey,
-                  "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
+                  "anthropic-version":
+                    providerTarget.anthropicVersion ?? "2023-06-01",
                   "Content-Type": "application/json",
                 },
               }
@@ -959,9 +1172,13 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
           finishReason,
         };
       }
-      const finishReason = String(response.data?.choices?.[0]?.finish_reason ?? "").trim();
+      const finishReason = String(
+        response.data?.choices?.[0]?.finish_reason ?? ""
+      ).trim();
       return {
-        reply: String(response.data?.choices?.[0]?.message?.content ?? "").trim(),
+        reply: String(
+          response.data?.choices?.[0]?.message?.content ?? ""
+        ).trim(),
         truncated: finishReason === "length",
         finishReason,
       };
@@ -972,7 +1189,9 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
     let longestBackoffMs = 0;
 
     for (const providerTarget of providers) {
-      const providerBackoffMs = getEndpointBackoffRemainingMs(providerTarget.baseUrl);
+      const providerBackoffMs = getEndpointBackoffRemainingMs(
+        providerTarget.baseUrl
+      );
       if (providerBackoffMs > 0) {
         longestBackoffMs = Math.max(longestBackoffMs, providerBackoffMs);
         continue;
@@ -980,11 +1199,18 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
 
       let shouldSkipEndpoint = false;
       for (const targetModel of providerTarget.models) {
-        if (shouldSkipEndpoint || getEndpointBackoffRemainingMs(providerTarget.baseUrl) > 0) {
+        if (
+          shouldSkipEndpoint ||
+          getEndpointBackoffRemainingMs(providerTarget.baseUrl) > 0
+        ) {
           break;
         }
         try {
-          const firstPass = await requestCloudCompletion(providerTarget, targetModel, normalizedMessages);
+          const firstPass = await requestCloudCompletion(
+            providerTarget,
+            targetModel,
+            normalizedMessages
+          );
           let reply = firstPass.reply;
           let truncated = firstPass.truncated;
           let finishReason = firstPass.finishReason;
@@ -996,11 +1222,16 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
               { role: "assistant", content: reply },
               {
                 role: "user",
-                content: "Continue exactly from where you stopped. Do not repeat previous text.",
+                content:
+                  "Continue exactly from where you stopped. Do not repeat previous text.",
               },
             ];
             try {
-              const continuation = await requestCloudCompletion(providerTarget, targetModel, continuationMessages);
+              const continuation = await requestCloudCompletion(
+                providerTarget,
+                targetModel,
+                continuationMessages
+              );
               if (continuation.reply) {
                 reply = `${reply} ${continuation.reply}`.trim();
                 truncated = continuation.truncated;
@@ -1011,19 +1242,32 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
             }
           }
 
-          const guardedReply = enforceOnesaIdentityGuard(reply, responseLanguage);
+          const guardedReply = enforceOnesaIdentityGuard(
+            reply,
+            responseLanguage
+          );
           const finalReply = hasLanguageMetaReply(guardedReply)
             ? getOnesaLanguageFallbackReply(responseLanguage)
             : guardedReply;
-          if (finalReply && !isLowQualityOnesaReply(finalReply) && !isMixedLanguageReply(finalReply, responseLanguage)) {
+          if (
+            finalReply &&
+            !isLowQualityOnesaReply(finalReply) &&
+            !isMixedLanguageReply(finalReply, responseLanguage)
+          ) {
             lastOnesaSuccessAt = Date.now();
             return { reply: finalReply, truncated, finishReason };
           }
         } catch (error: any) {
           if (isRateLimitedUpstreamError(error)) {
             lastRateLimitError = error;
-            const remaining = getEndpointBackoffRemainingMs(providerTarget.baseUrl);
-            longestBackoffMs = Math.max(longestBackoffMs, remaining, getRetryAfterMs(error) ?? 0);
+            const remaining = getEndpointBackoffRemainingMs(
+              providerTarget.baseUrl
+            );
+            longestBackoffMs = Math.max(
+              longestBackoffMs,
+              remaining,
+              getRetryAfterMs(error) ?? 0
+            );
             shouldSkipEndpoint = true;
             break;
           }
@@ -1047,9 +1291,14 @@ async function generateOnesaReply(messages: ChatMessage[], requestedLanguage?: s
       } catch {
         // Keep cloud rate-limit signal when local fallback is unavailable.
       }
-      const retryAfterMs = longestBackoffMs > 0 ? longestBackoffMs : getRetryAfterMs(lastRateLimitError);
+      const retryAfterMs =
+        longestBackoffMs > 0
+          ? longestBackoffMs
+          : getRetryAfterMs(lastRateLimitError);
       if (retryAfterMs && retryAfterMs > 0) {
-        const existing = Number(lastRateLimitError?.response?.headers?.["retry-after"] ?? 0);
+        const existing = Number(
+          lastRateLimitError?.response?.headers?.["retry-after"] ?? 0
+        );
         if (!existing) {
           lastRateLimitError.response = {
             ...(lastRateLimitError.response ?? {}),
@@ -1099,7 +1348,7 @@ async function getOnesaHealth() {
   const { provider, model, ollamaBase, openaiBase } = config;
   if (provider === "openai_compatible") {
     const providerTargets = buildCloudProviderTargets(config);
-    const targetSummaries = providerTargets.map((target) => ({
+    const targetSummaries = providerTargets.map(target => ({
       name: target.name,
       baseUrl: target.baseUrl,
     }));
@@ -1124,13 +1373,47 @@ async function getOnesaHealth() {
         config.perplexityModelCandidates.length > 0;
       const tiers = [
         { name: "primary", base: config.openaiBase, key: config.openaiApiKey },
-        { name: "secondary", base: config.secondaryOpenaiBase, key: config.secondaryOpenaiApiKey },
-        { name: "tertiary", base: config.tertiaryOpenaiBase, key: config.tertiaryOpenaiApiKey },
-        ...(claudeConfigured ? [{ name: "claude", base: config.claudeBase || "https://api.anthropic.com", key: config.claudeApiKey }] : []),
-        ...(cerebrasConfigured ? [{ name: "cerebras", base: config.cerebrasBase || "https://api.cerebras.ai/v1", key: config.cerebrasApiKey }] : []),
-        ...(perplexityConfigured ? [{ name: "perplexity", base: config.perplexityBase || "https://api.perplexity.ai", key: config.perplexityApiKey }] : []),
-      ].filter((tier) => Boolean(tier.base));
-      const missingKeyTiers = tiers.filter((tier) => isPlaceholderApiKey(tier.key)).map((tier) => tier.name);
+        {
+          name: "secondary",
+          base: config.secondaryOpenaiBase,
+          key: config.secondaryOpenaiApiKey,
+        },
+        {
+          name: "tertiary",
+          base: config.tertiaryOpenaiBase,
+          key: config.tertiaryOpenaiApiKey,
+        },
+        ...(claudeConfigured
+          ? [
+              {
+                name: "claude",
+                base: config.claudeBase || "https://api.anthropic.com",
+                key: config.claudeApiKey,
+              },
+            ]
+          : []),
+        ...(cerebrasConfigured
+          ? [
+              {
+                name: "cerebras",
+                base: config.cerebrasBase || "https://api.cerebras.ai/v1",
+                key: config.cerebrasApiKey,
+              },
+            ]
+          : []),
+        ...(perplexityConfigured
+          ? [
+              {
+                name: "perplexity",
+                base: config.perplexityBase || "https://api.perplexity.ai",
+                key: config.perplexityApiKey,
+              },
+            ]
+          : []),
+      ].filter(tier => Boolean(tier.base));
+      const missingKeyTiers = tiers
+        .filter(tier => isPlaceholderApiKey(tier.key))
+        .map(tier => tier.name);
 
       let message = "Cloud AI provider is missing configuration.";
       if (tiers.length > 0 && missingKeyTiers.length === tiers.length) {
@@ -1157,7 +1440,8 @@ async function getOnesaHealth() {
             timeout: 5000,
             headers: {
               "x-api-key": providerTarget.apiKey,
-              "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
+              "anthropic-version":
+                providerTarget.anthropicVersion ?? "2023-06-01",
               "Content-Type": "application/json",
             },
           });
@@ -1170,14 +1454,28 @@ async function getOnesaHealth() {
             },
           });
         }
-        return { ok: true, provider, model, endpoint: providerTarget.baseUrl, providerTargets: targetSummaries };
+        return {
+          ok: true,
+          provider,
+          model,
+          endpoint: providerTarget.baseUrl,
+          providerTargets: targetSummaries,
+        };
       } catch (error: any) {
         const status = Number(error?.response?.status ?? 0);
         if (status === 404 || status === 405) {
           // Some providers may not expose a models list endpoint.
-          return { ok: true, provider, model, endpoint: providerTarget.baseUrl, providerTargets: targetSummaries };
+          return {
+            ok: true,
+            provider,
+            model,
+            endpoint: providerTarget.baseUrl,
+            providerTargets: targetSummaries,
+          };
         }
-        failures.push(`${providerTarget.name}:${String(error?.message ?? "unknown error")}`);
+        failures.push(
+          `${providerTarget.name}:${String(error?.message ?? "unknown error")}`
+        );
       }
     }
     return {
@@ -1191,7 +1489,9 @@ async function getOnesaHealth() {
   }
 
   try {
-    const response = await axios.get(`${ollamaBase}/api/tags`, { timeout: 5000 });
+    const response = await axios.get(`${ollamaBase}/api/tags`, {
+      timeout: 5000,
+    });
     const availableModels: string[] = Array.isArray(response.data?.models)
       ? response.data.models.map((m: any) => String(m?.name ?? ""))
       : [];
@@ -1205,7 +1505,9 @@ async function getOnesaHealth() {
       endpoint: ollamaBase,
       modelAvailable,
       availableModels,
-      message: modelAvailable ? undefined : `Model "${model}" not found in Ollama.`,
+      message: modelAvailable
+        ? undefined
+        : `Model "${model}" not found in Ollama.`,
     };
   } catch (error: any) {
     return {
@@ -1235,11 +1537,15 @@ async function getOnesaReadiness() {
 
   const config = getOnesaConfig();
   const { provider, model, ollamaBase, openaiBase, timeoutMs } = config;
-  const fallbackEndpoint = provider === "openai_compatible" ? openaiBase : ollamaBase;
+  const fallbackEndpoint =
+    provider === "openai_compatible" ? openaiBase : ollamaBase;
   const now = Date.now();
   const probeTimeout = Math.min(timeoutMs, 10000);
 
-  if (onesaReadinessCache && now - onesaReadinessCache.checkedAt < ONESA_READINESS_CACHE_MS) {
+  if (
+    onesaReadinessCache &&
+    now - onesaReadinessCache.checkedAt < ONESA_READINESS_CACHE_MS
+  ) {
     return onesaReadinessCache.value;
   }
 
@@ -1269,13 +1575,16 @@ async function getOnesaReadiness() {
       provider,
       model,
       endpoint,
-      resolvedModel: provider === "ollama" ? String((health as any)?.resolvedModel ?? model) : undefined,
+      resolvedModel:
+        provider === "ollama"
+          ? String((health as any)?.resolvedModel ?? model)
+          : undefined,
     });
   }
 
   if (provider === "openai_compatible") {
     const providerTargets = buildCloudProviderTargets(config);
-    const targetSummaries = providerTargets.map((target) => ({
+    const targetSummaries = providerTargets.map(target => ({
       name: target.name,
       baseUrl: target.baseUrl,
     }));
@@ -1295,7 +1604,9 @@ async function getOnesaReadiness() {
     let lastFailureMessage = "";
 
     for (const providerTarget of providerTargets) {
-      const endpointBackoffMs = getEndpointBackoffRemainingMs(providerTarget.baseUrl);
+      const endpointBackoffMs = getEndpointBackoffRemainingMs(
+        providerTarget.baseUrl
+      );
       if (endpointBackoffMs > 0) {
         observedRateLimit = true;
         continue;
@@ -1307,7 +1618,8 @@ async function getOnesaReadiness() {
             timeout: probeTimeout,
             headers: {
               "x-api-key": providerTarget.apiKey,
-              "anthropic-version": providerTarget.anthropicVersion ?? "2023-06-01",
+              "anthropic-version":
+                providerTarget.anthropicVersion ?? "2023-06-01",
               "Content-Type": "application/json",
             },
           });
@@ -1344,7 +1656,9 @@ async function getOnesaReadiness() {
         if (isRateLimitedUpstreamError(error)) {
           observedRateLimit = true;
           const retryAfterMs = getRetryAfterMs(error) ?? 10000;
-          const existing = onesaProviderBackoffUntilByEndpoint.get(providerTarget.baseUrl) ?? 0;
+          const existing =
+            onesaProviderBackoffUntilByEndpoint.get(providerTarget.baseUrl) ??
+            0;
           onesaProviderBackoffUntilByEndpoint.set(
             providerTarget.baseUrl,
             Math.max(existing, Date.now() + Math.min(30000, retryAfterMs))
@@ -1412,14 +1726,18 @@ async function getOnesaReadiness() {
       message: ready ? undefined : "Onesa is unavailable.",
     });
   } catch {
-    const stillWarm = Date.now() - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
+    const stillWarm =
+      Date.now() - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
     return remember({
       ok: stillWarm,
       ready: stillWarm,
       provider,
       model,
       endpoint,
-      resolvedModel: provider === "ollama" ? String((health as any)?.resolvedModel ?? model) : undefined,
+      resolvedModel:
+        provider === "ollama"
+          ? String((health as any)?.resolvedModel ?? model)
+          : undefined,
       message: stillWarm ? undefined : "Onesa is unavailable.",
     });
   }

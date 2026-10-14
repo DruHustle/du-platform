@@ -8,7 +8,6 @@ import {
   deleteAllSessionsForUserStrict,
   findUserByEmail,
   findUserById,
-  setUserKycVerified,
   updateUserPassword,
 } from "../../../shared/persistence/authStore";
 
@@ -51,9 +50,5 @@ export class AuthRepository {
 
   updateUserPassword(userId: number, passwordHash: string) {
     return updateUserPassword(userId, passwordHash);
-  }
-
-  setUserKycVerified(userId: number, verified: boolean) {
-    return setUserKycVerified(userId, verified);
   }
 }
