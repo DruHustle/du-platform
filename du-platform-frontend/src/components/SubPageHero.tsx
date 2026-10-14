@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { LucideIcon } from "lucide-react";
-import InstantImage, { preloadImages } from "@/components/InstantImage";
+import InstantImage from "@/components/InstantImage";
 
 interface HeroSlide {
   image: string;
@@ -25,10 +24,6 @@ export default function SubPageHero({
 }: SubPageHeroProps) {
   const current = heroSlides[0];
 
-  useEffect(() => {
-    if (current?.image) preloadImages([current.image], 1);
-  }, [current?.image]);
-
   const renderIcon = (IconInput: LucideIcon | undefined, className: string) => {
     if (!IconInput) return null;
     return <IconInput className={className} />;
@@ -39,7 +34,7 @@ export default function SubPageHero({
   return (
     <div id="sub-page-hero-wrapper" className="flex flex-col w-full">
       <section
-        className={`relative ${heroHeightClassName ?? "h-[40vh] min-h-[340px]"} w-full flex items-center justify-center overflow-hidden bg-slate-950`}
+        className={`relative ${heroHeightClassName ?? "h-[40vh] min-h-[340px] lg:min-h-[420px]"} w-full flex items-center justify-center overflow-hidden bg-slate-950`}
       >
         <div className="absolute inset-0 z-0 saturate-[1.1] brightness-[1.05]">
           <InstantImage

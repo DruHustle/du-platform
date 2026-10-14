@@ -109,7 +109,7 @@ export default function Shop() {
   const heroSlides = useMemo(
     () => [
       {
-        image: "/images/pages/shop/zimbabwe_shop_hero.jpg",
+        image: "/images/pages/shop/zimbabwe_shop_hero.webp",
         badge: tx("shop.hero.badge1", "Authentic Zimbabwe Goods"),
         badgeIcon: ShoppingBag,
         title: tx("shop.hero.title1", "Shop Zimbabwe"),
@@ -348,7 +348,7 @@ export default function Shop() {
             <div className="relative z-10">
               <motion.div
                 id="zimbabwe-shop-info"
-                initial={{ opacity: 0 }}
+                initial={false}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-100px" }}
                 className="space-y-8 py-6 scroll-mt-24 relative"
@@ -393,7 +393,7 @@ export default function Shop() {
                       return (
                         <motion.div
                           key={category.key}
-                          initial={{ y: 20, opacity: 0 }}
+                          initial={false}
                           whileInView={{ y: 0, opacity: 1 }}
                           viewport={{ once: true }}
                           className="h-full w-[74vw] max-w-[19.5rem] flex-none self-stretch snap-start sm:w-[20.5rem] lg:w-[22.5rem] xl:w-[23.5rem]"

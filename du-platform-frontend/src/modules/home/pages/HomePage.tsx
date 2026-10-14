@@ -33,14 +33,14 @@ export default function Home() {
   const suppressClickUntilRef = useRef(0);
   const heroBackgrounds = useMemo(
     () => [
-      "/images/pages/tourism/victoria_falls.jpg",
+      "/images/pages/tourism/victoria_falls.webp",
       "/images/pages/home/eu_symbol.png",
       "/images/pages/home/partnership_handshake.png",
       "/images/pages/shared/export_port_01.jpg",
       "/images/pages/home/zimbabwe_lion.png",
       "/images/pages/home/minerals_mining.png",
       "/images/pages/shared/manufacturing_factory.jpg",
-      "/images/pages/technology/ai_innovation.jpg",
+      "/images/pages/technology/ai_innovation.webp",
     ],
     []
   );
@@ -114,7 +114,7 @@ export default function Home() {
           "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable."
         ),
         href: "/shop",
-        bgImage: "/images/pages/shop/zimbabwe_shop_hero.jpg",
+        bgImage: "/images/pages/shop/zimbabwe_shop_hero.webp",
         stats: tr("home.tiles.shop.stats", "Marketplace Ready"),
         icon: ShoppingBag,
       },
@@ -129,7 +129,7 @@ export default function Home() {
           "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults."
         ),
         href: "/technology",
-        bgImage: "/images/pages/technology/ai_innovation.jpg",
+        bgImage: "/images/pages/technology/ai_innovation.webp",
         stats: tr("home.tiles.technology.stats", "Onesa AI"),
         icon: Brain,
       },
@@ -144,7 +144,7 @@ export default function Home() {
           "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story."
         ),
         href: "/investment",
-        bgImage: "/images/pages/investment/rbz_building.png",
+        bgImage: "/images/pages/investment/rbz_building.webp",
         stats: tr("home.tiles.investment.stats", "$50M+ Opportunities"),
         icon: Landmark,
       },
@@ -159,7 +159,7 @@ export default function Home() {
           "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context."
         ),
         href: "/tourism",
-        bgImage: "/images/pages/tourism/victoria_falls.jpg",
+        bgImage: "/images/pages/tourism/victoria_falls.webp",
         stats: tr("home.tiles.tourism.stats", "Diaspora Travel Ready"),
         icon: MapPin,
       },
@@ -194,7 +194,7 @@ export default function Home() {
                 return (
                   <motion.div
                     key={module.href}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={false}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, delay: index * 0.1 }}
