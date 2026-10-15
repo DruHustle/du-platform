@@ -688,39 +688,6 @@
       },
       "personalized_experience": "Personalisierte Erlebnisse. - leistungsstarke Empfehlungstechnologie, die Informationen liefert, um Ihre Reise einzigartig und unvergesslich zu machen."
     },
-    "planning": {
-      "guide_badge": "Reiseführer",
-      "essential_info": "Wichtige Planungsinformationen",
-      "essential_desc": "Alles, was Sie wissen müssen, um ein unvergessliches Abenteuer in Simbabwe zu garantieren.",
-      "visa": {
-        "title": "Visa-Anforderungen",
-        "desc": "Wichtige Einreiseinformationen für internationale Reisende.",
-        "d1": "E-Visum-System verfügbar",
-        "d2": "Visa-on-Arrival für viele Nationalitäten",
-        "d3": "Gültiger Reisepass (6 Monate) erforderlich"
-      },
-      "health": {
-        "title": "Gesundheit & Sicherheit",
-        "desc": "Bleiben Sie gesund und sicher auf Ihrem Abenteuer.",
-        "d1": "Gelbfieber-Zertifikat falls zutreffend",
-        "d2": "Malaria-Prophylaxe empfohlen",
-        "d3": "Umfassende Reiseversicherung ratsam"
-      },
-      "payment": {
-        "title": "Währung & Zahlung",
-        "desc": "Navigation in der lokalen Finanzlandschaft.",
-        "d1": "Mehrwährungssystem (USD weit verbreitet)",
-        "d2": "Visa und Mastercard in großen Hotels akzeptiert",
-        "d3": "Mobiles Bezahlen (EcoCash) verbreitet"
-      },
-      "time": {
-        "title": "Beste Reisezeit",
-        "desc": "Das richtige Timing für das beste Erlebnis.",
-        "d1": "Mai bis Oktober für Wildtierbeobachtung",
-        "d2": "Februar bis Mai für die Victoriafälle",
-        "d3": "Ganzjährig angenehmes gemäßigtes Klima"
-      }
-    },
     "cta_title": "Bereit für Ihr Abenteuer?",
     "cta_button": "Mit einem Experten sprechen",
     "cta_subtitle": "Unser Reiseteam hilft Ihnen, die richtigen Möglichkeiten zu finden und führt Sie durch den Prozess.",
@@ -908,9 +875,6 @@
       "empty": "No entities found.",
       "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
     },
-    "crowdfunding_title": "Crowdfunding-Möglichkeiten",
-    "crowdfunding_subtitle": "Mikro-Investitionen in geprüfte Projekte mit kleineren Beträgen, transparenter Beteiligung und sichtbar realer Wirkung.",
-    "crowdfunding_steps_subtitle": "Mikro-Investitionen in geprüfte Projekte und reale Wirkung sehen.",
     "sectors_title": "Aktive Investitionsmöglichkeiten",
     "sectors_subtitle": "Sorgfältig geprüfte Projekte mit staatlicher Unterstützung und Transparenz.",
     "cta_title": "Bereit zum Investieren?",

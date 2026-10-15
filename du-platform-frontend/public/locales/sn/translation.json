@@ -688,39 +688,6 @@
       },
       "personalized_experience": "Chiitiko chakagadzirirwa iwe. - injini ine simba yekurudziro inopa ruzivo runoita kuti rwendo rwako ruve rwakasiyana uye rusingakanganwiki."
     },
-    "planning": {
-      "guide_badge": "Gwara reMufambi",
-      "essential_info": "Ruzivo rwakakosha rweKuronga",
-      "essential_desc": "Zvese zvaunoda kuziva kuti rwendo rwako muZimbabwe rutsvedze.",
-      "visa": {
-        "title": "Mitemo yeVhazha",
-        "desc": "Ruzivo rwekupinda munyika kune vanofamba.",
-        "d1": "Chirongwa che-e-Visa chiripo",
-        "d2": "Vhazha pakuvasvika kune dzimwe nyika dzakawanda",
-        "d3": "Paspoti inoshanda (mwedzi mitanhatu) inodiwa"
-      },
-      "health": {
-        "title": "Utano neChengetedzo",
-        "desc": "Ramba uine utano uye wakachengeteka parwendo rwako.",
-        "d1": "Gwaro reYellow fever kana richidiwa",
-        "d2": "Mishonga yeMalaria inokurudzirwa",
-        "d3": "Insurance yekufamba inokurudzirwa"
-      },
-      "payment": {
-        "title": "Mari neKubhadhara",
-        "desc": "Kuziva mafambisirwo emari.",
-        "d1": "Mari dzakasiyana (USD inogamuchirwa kwazvo)",
-        "d2": "Visa neMastercard dzinogamuchirwa mumahotera makuru",
-        "d3": "Mari yerunhare (EcoCash) inoshandiswa kwazvo"
-      },
-      "time": {
-        "title": "Nguva Yakanaka yekushanya",
-        "desc": "Kusarudza nguva yakanaka kuitira rwendo rwako.",
-        "d1": "Chivabvu kusvika Gumiguru kuitira kuona mhuka",
-        "d2": "Kukadzi kusvika Chivabvu kuitira Victoria Falls",
-        "d3": "Kunze kwakanaka gore rose"
-      }
-    },
     "cta_title": "Wagadzirira kutanga Kufara Here?",
     "cta_button": "Taura neNyanzvi",
     "cta_subtitle": "Chikwata chedu chinokubatsira kutsvaga mikana yakanaka nekukutungamirira.",
@@ -908,9 +875,6 @@
       "empty": "No entities found.",
       "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
     },
-    "crowdfunding_title": "Kudyara mari Vakawanda",
-    "crowdfunding_subtitle": "Kudyara mari shoma muzvirongwa zvakaongororwa, uchiita zvinobuda pachena uye uchiona budiriro chaiyo.",
-    "crowdfunding_steps_subtitle": "Kudyara mari shoma muzvirongwa zvakaongororwa uone budiriro.",
     "sectors_title": "Mikana yeKudyara Mari iripo",
     "sectors_subtitle": "Zvirongwa zvakaongororwa zvine rubatsiro rwehurumende.",
     "cta_title": "Wagadzirira kudyara Mari here?",
