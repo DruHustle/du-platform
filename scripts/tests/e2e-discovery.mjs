@@ -264,6 +264,34 @@ try {
       scenario:
         "project filtering resets position; empty recovery and detail navigation work",
     });
+    await page.goto(base + "/regulations#due-diligence-checklist");
+    await page.locator("#due-diligence-checklist").waitFor();
+    await page.waitForFunction(() => {
+      const tile = document
+        .getElementById("due-diligence-checklist")
+        .getBoundingClientRect();
+      const view = document
+        .querySelector(".swipe-rail-viewport")
+        .getBoundingClientRect();
+      return tile.left >= view.left - 3 && tile.right <= view.right + 3;
+    });
+    await page.evaluate(() => {
+      location.hash = "export-certification-and-labeling";
+    });
+    await page.waitForFunction(() => {
+      const tile = document
+        .getElementById("export-certification-and-labeling")
+        .getBoundingClientRect();
+      const view = document
+        .querySelector(".swipe-rail-viewport")
+        .getBoundingClientRect();
+      return tile.left >= view.left - 3 && tile.right <= view.right + 3;
+    });
+    record({
+      width,
+      scenario:
+        "regulation deep links and same-page anchors reveal the correct tile",
+    });
     await context.close();
   }
   assert.deepEqual(errors, []);

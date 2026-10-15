@@ -1,6 +1,6 @@
 import {
   Children,
-  useEffect,
+  useLayoutEffect,
   useId,
   useRef,
   useState,
@@ -40,7 +40,7 @@ export default function SwipeRail({
   const [position, setPosition] = useState(initial);
   const items = Children.toArray(children);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const node = viewport.current;
     const row = track.current;
     if (!node || !row) return;
@@ -73,16 +73,41 @@ export default function SwipeRail({
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(measure);
     };
+    const revealHash = () => {
+      let target: HTMLElement | null = null;
+      try {
+        target = document.getElementById(
+          decodeURIComponent(window.location.hash.slice(1))
+        );
+      } catch {
+        return;
+      }
+      const tile = target?.closest<HTMLElement>(".swipe-rail-item");
+      if (tile && node.contains(tile)) {
+        node.scrollTo({
+          left:
+            tile.getBoundingClientRect().left -
+            node.getBoundingClientRect().left +
+            node.scrollLeft -
+            2,
+          behavior: "instant",
+        });
+        measure();
+      }
+    };
     node.scrollTo({ left: 0, behavior: "instant" });
+    revealHash();
     measure();
     node.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
+    window.addEventListener("hashchange", revealHash);
     const observer = new ResizeObserver(schedule);
     observer.observe(node);
     observer.observe(row);
     return () => {
       node.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      window.removeEventListener("hashchange", revealHash);
       observer.disconnect();
       if (frame) cancelAnimationFrame(frame);
     };
