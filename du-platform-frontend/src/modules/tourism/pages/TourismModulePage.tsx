@@ -16,7 +16,6 @@ import {
   MapPin,
   Calendar,
   Shield,
-  CreditCard,
   Award,
   Brain,
   Globe,
@@ -570,64 +569,6 @@ export default function Tourism() {
     },
   ];
 
-  const planningInfo = [
-    {
-      icon: MapPin,
-      title: t("tourism.planning.visa.title") || "Visa Requirements",
-      description:
-        t("tourism.planning.visa.desc") ||
-        "Essential entry information for international travelers.",
-      details: [
-        t("tourism.planning.visa.d1") || "e-Visa application system available",
-        t("tourism.planning.visa.d2") ||
-          "Visa on arrival for many nationalities",
-        t("tourism.planning.visa.d3") || "Valid passport (6 months) required",
-      ],
-    },
-    {
-      icon: Shield,
-      title: t("tourism.planning.health.title") || "Health & Safety",
-      description:
-        t("tourism.planning.health.desc") ||
-        "Stay healthy and safe during your Zimbabwean adventure.",
-      details: [
-        t("tourism.planning.health.d1") ||
-          "Yellow fever certificate if applicable",
-        t("tourism.planning.health.d2") || "Malaria prophylaxis recommended",
-        t("tourism.planning.health.d3") ||
-          "Comprehensive travel insurance advised",
-      ],
-    },
-    {
-      icon: CreditCard,
-      title: t("tourism.planning.payment.title") || "Currency & Payments",
-      description:
-        t("tourism.planning.payment.desc") ||
-        "Navigating the local financial landscape.",
-      details: [
-        t("tourism.planning.payment.d1") ||
-          "Multi-currency system (USD widely accepted)",
-        t("tourism.planning.payment.d2") ||
-          "Visa and Mastercard accepted in major hotels",
-        t("tourism.planning.payment.d3") ||
-          "Mobile money (EcoCash) widely used",
-      ],
-    },
-    {
-      icon: Calendar,
-      title: t("tourism.planning.time.title") || "Best Time to Visit",
-      description:
-        t("tourism.planning.time.desc") ||
-        "Timing your trip for the best experience.",
-      details: [
-        t("tourism.planning.time.d1") || "May to October for wildlife viewing",
-        t("tourism.planning.time.d2") || "February to May for Victoria Falls",
-        t("tourism.planning.time.d3") ||
-          "Pleasant year-round temperate climate",
-      ],
-    },
-  ];
-
   const onesaTouristFeatures = [
     {
       icon: Brain,
@@ -986,34 +927,6 @@ export default function Tourism() {
           ) : null}
         </DialogContent>
       </Dialog>
-
-      <DiscoverySection
-        id="plan-visit"
-        title={t("tourism.planning.essential_info", {
-          defaultValue: "Essential Planning Information",
-        })}
-        description={t("tourism.planning.essential_desc", {
-          defaultValue:
-            "Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.",
-        })}
-      >
-        <SwipeRail
-          label={t("tourism.planning.essential_info", {
-            defaultValue: "Essential Planning Information",
-          })}
-        >
-          {planningInfo.map(info => (
-            <DiscoveryTile key={info.title} title={info.title} icon={info.icon}>
-              <p>{info.description}</p>
-              <ul className="list-disc space-y-2 pl-4">
-                {info.details.map(detail => (
-                  <li key={detail}>{detail}</li>
-                ))}
-              </ul>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-      </DiscoverySection>
     </Layout>
   );
 }

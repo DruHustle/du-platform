@@ -6,7 +6,6 @@ import DiscoveryTile from "@/components/discovery/DiscoveryTile";
 import DiscoverySection from "@/components/discovery/DiscoverySection";
 import InstantImage from "@/components/InstantImage";
 import {
-  TrendingUp,
   DollarSign,
   CheckCircle,
   Globe,
@@ -15,7 +14,6 @@ import {
   Shield,
   Gem,
   Repeat,
-  FileText,
   Target,
   AlertTriangle,
 } from "lucide-react";
@@ -25,13 +23,6 @@ import { Link } from "wouter";
 
 export default function Investment() {
   const { t } = useTranslation();
-  const crowdfundingSubtitle =
-    t("investment.crowdfunding_subtitle") ||
-    "Micro-investment in vetted projects with smaller amounts, transparent participation, and visible real-world impact.";
-  const crowdfundingStepSubtitle =
-    t("investment.crowdfunding_steps_subtitle") ||
-    "Micro-investment in vetted projects with smaller amounts and see real impact.";
-
   const heroSlides = useMemo(
     () => [
       {
@@ -228,64 +219,25 @@ export default function Investment() {
       "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
   ];
 
-  const investmentSteps = [
-    {
-      title: t("investment.crowdfunding_steps.browse", {
-        defaultValue: "Browse Projects",
-      }),
-      icon: FileText,
-      image: "/images/pages/investment/masuwe_sez.png",
-    },
-    {
-      title: t("investment.crowdfunding_steps.invest", {
-        defaultValue: "Invest Your Share",
-      }),
-      icon: DollarSign,
-      image: "/images/pages/investment/partnership_handshake.png",
-    },
-    {
-      title: t("investment.crowdfunding_steps.track", {
-        defaultValue: "Track Performance",
-      }),
-      icon: TrendingUp,
-      image: "/images/pages/shared/manufacturing_factory.jpg",
-    },
-    {
-      title: t("investment.crowdfunding_steps.returns", {
-        defaultValue: "Receive Returns",
-      }),
-      icon: CheckCircle,
-      image: "/images/pages/investment/horticulture.jpg",
-    },
+  const collectiveStepTitles = [
+    t("investment.crowdfunding_steps.browse", {
+      defaultValue: "Browse Projects",
+    }),
+    t("investment.crowdfunding_steps.invest", {
+      defaultValue: "Invest Your Share",
+    }),
+    t("investment.crowdfunding_steps.track", {
+      defaultValue: "Track Performance",
+    }),
+    t("investment.crowdfunding_steps.returns", {
+      defaultValue: "Receive Returns",
+    }),
   ];
   return (
     <Layout>
       <section id="hero">
         <SubPageHero heroSlides={heroSlides} />
       </section>
-      <DiscoverySection
-        title={t("investment.crowdfunding_title", {
-          defaultValue: "Crowdfunding Opportunities",
-        })}
-        description={crowdfundingSubtitle}
-      >
-        <SwipeRail
-          label={t("investment.crowdfunding_title", {
-            defaultValue: "Crowdfunding Opportunities",
-          })}
-        >
-          {investmentSteps.map(step => (
-            <DiscoveryTile
-              key={step.title}
-              title={step.title}
-              image={step.image}
-              icon={step.icon}
-            >
-              <p>{crowdfundingStepSubtitle}</p>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-      </DiscoverySection>
       <DiscoverySection
         id="collective-model"
         title={t("investment.collective_model.title", {
@@ -304,7 +256,7 @@ export default function Investment() {
           {collectiveModelSteps.map((item, index) => (
             <DiscoveryTile
               key={item}
-              title={investmentSteps[index].title}
+              title={collectiveStepTitles[index]}
               number={index + 1}
             >
               <p>{item}</p>

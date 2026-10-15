@@ -34,7 +34,6 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 
 - Forbes #1 destination 2025 highlights.
 - Key attractions (Victoria Falls, Great Zimbabwe, Kariba, Matobo Hills).
-- Planning information (visa, health, safety, payments).
 - Diaspora homecoming packages.
 
 ### 💰 Investment
