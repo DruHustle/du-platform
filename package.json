@@ -38,7 +38,8 @@
     "test": "pnpm test:modules && pnpm test:frontend",
     "test:e2e:offline": "node scripts/tests/e2e-offline-services.mjs",
     "test:e2e:navigation": "node scripts/tests/e2e-navigation.mjs",
-    "test:e2e:shop": "node --import tsx scripts/tests/e2e-shop.mjs"
+    "test:e2e:shop": "node --import tsx scripts/tests/e2e-shop.mjs",
+    "test:e2e:discovery": "node scripts/tests/e2e-discovery.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

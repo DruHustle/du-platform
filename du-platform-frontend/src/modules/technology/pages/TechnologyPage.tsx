@@ -3,7 +3,6 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
   Brain,
-  Sparkles,
   Globe,
   Shield,
   TrendingUp,
@@ -13,11 +12,12 @@ import {
   Building2,
   MapPin,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 import SubPageHero from "@/components/SubPageHero";
-import InstantImage from "@/components/InstantImage";
+import SwipeRail from "@/components/discovery/SwipeRail";
+import DiscoveryTile from "@/components/discovery/DiscoveryTile";
+import DiscoverySection from "@/components/discovery/DiscoverySection";
 
 export default function Technology() {
   const { t } = useTranslation();
@@ -238,216 +238,144 @@ export default function Technology() {
 
   return (
     <Layout>
-      {/* Hero Section */}
       <section id="hero">
         <SubPageHero heroSlides={heroSlides} />
       </section>
-
-      <section
+      <DiscoverySection
         id="onesa-intro"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
-      >
-        <div className="container relative z-10 px-6 mx-auto">
-          <motion.div
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="content-panel editorial-panel relative p-8 md:p-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group"
+        title={t("tech.onesa_matter.title", {
+          defaultValue: "Why Onesa AI Matters",
+        })}
+        description={t("tech.onesa_matter.headline", {
+          defaultValue: "Africa deserves AI that understands Africa.",
+        })}
+        action={
+          <Button
+            asChild
+            className="bg-zim-gold text-slate-950 hover:bg-yellow-300"
           >
-            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-
-            <div id="technology-onesa-vision" className="relative z-10">
-              <div className="space-y-8">
-                <div>
-                  <div className="flex flex-col items-start justify-between gap-5 mb-5 sm:flex-row sm:items-center">
-                    <div className="flex items-center justify-center gap-3">
-                      <Sparkles className="h-6 w-6 text-zim-gold" />
-                      <h2 className="page-section-title">
-                        {t("tech.onesa_matter.title") || "Why Onesa AI Matters"}
-                      </h2>
-                    </div>
-                    <Button
-                      asChild
-                      className="shrink-0 bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full"
-                    >
-                      <Link href="/onesa-ai-chat">
-                        {t("tech.chat_with_onesa") || "Chat with Onesa"}
-                      </Link>
-                    </Button>
-                  </div>
-                  <p className="text-white/75 text-sm leading-relaxed mb-5">
-                    {t("tech.onesa_matter.headline") ||
-                      "Africa deserves AI that understands Africa."}
-                  </p>
-                  <details className="editorial-details">
-                    <summary>
-                      {t("tech.onesa_matter.read_vision", {
-                        defaultValue: "Read the Onesa AI vision",
-                      })}
-                    </summary>
-                    <div className="mt-5 space-y-5">
-                      <p className="text-white/75 text-sm leading-relaxed mb-4">
-                        {t("tech.onesa_matter.p1") ||
-                          "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}{" "}
-                        {t("tech.onesa_matter.p2") ||
-                          "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
-                      </p>
-                      <p className="text-white/75 text-sm leading-relaxed mb-4">
-                        {t("tech.onesa_matter.p3") ||
-                          "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}{" "}
-                        {t("tech.onesa_matter.p4") ||
-                          "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
-                      </p>
-                      <p className="text-white/85 text-sm leading-relaxed font-medium">
-                        {t("tech.onesa_matter.p5") ||
-                          "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
-                      </p>
-                    </div>
-                  </details>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {onesaVisionTiles.map(tile => (
-                    <div key={tile.title} className="surface-card p-7 h-full">
-                      <div className="flex items-center gap-2 mb-3">
-                        <tile.icon className="h-4 w-4 text-zim-gold" />
-                        <h3 className="text-white font-black text-sm tracking-tight">
-                          {tile.title}
-                        </h3>
-                      </div>
-                      <p className="text-white/70 text-xs leading-relaxed">
-                        {tile.detail}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <Link href="/onesa-ai-chat">
+              {t("tech.chat_with_onesa", { defaultValue: "Chat with Onesa" })}
+            </Link>
+          </Button>
+        }
+      >
+        <SwipeRail
+          label={t("tech.onesa_matter.title", {
+            defaultValue: "Why Onesa AI Matters",
+          })}
+        >
+          {onesaVisionTiles.map((tile, index) => (
+            <DiscoveryTile
+              key={tile.title}
+              title={tile.title}
+              icon={tile.icon}
+              image={
+                [
+                  "/images/pages/technology/ai_innovation.webp",
+                  "/images/pages/shared/export_port_01.jpg",
+                  "/images/pages/home/partnership_handshake.png",
+                  "/images/pages/shared/manufacturing_factory.jpg",
+                ][index]
+              }
+            >
+              <p>{tile.detail}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+        <div id="technology-onesa-vision" className="discovery-introduction">
+          <details className="editorial-details">
+            <summary>
+              {t("tech.onesa_matter.read_vision", {
+                defaultValue: "Read the Onesa AI vision",
+              })}
+            </summary>
+            <div className="mt-5 space-y-5">
+              <p className="text-white/75 text-sm leading-relaxed mb-4">
+                {t("tech.onesa_matter.p1") ||
+                  "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}{" "}
+                {t("tech.onesa_matter.p2") ||
+                  "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
+              </p>
+              <p className="text-white/75 text-sm leading-relaxed mb-4">
+                {t("tech.onesa_matter.p3") ||
+                  "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}{" "}
+                {t("tech.onesa_matter.p4") ||
+                  "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
+              </p>
+              <p className="text-white/85 text-sm leading-relaxed font-medium">
+                {t("tech.onesa_matter.p5") ||
+                  "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
+              </p>
             </div>
-          </motion.div>
+          </details>
         </div>
-      </section>
-
-      {/* Diaspora Use Cases */}
-      <section
+      </DiscoverySection>
+      <DiscoverySection
         id="technology-diaspora-use-cases"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+        title={t("tech.diaspora_ai.title", {
+          defaultValue: "How Diaspora Unlocked Uses AI",
+        })}
+        description={t("tech.diaspora_ai.subtitle", {
+          defaultValue:
+            "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses.",
+        })}
       >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel relative p-8 md:p-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500">
-            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="section-heading mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <Globe className="h-6 w-6 text-zim-gold" />
-                <h2 className="page-section-title">
-                  {t("tech.diaspora_ai.title") ||
-                    "How Diaspora Unlocked Uses AI"}
-                </h2>
-              </div>
-              <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-                {t("tech.diaspora_ai.subtitle") ||
-                  "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {diasporaUseCases.map(item => (
-                <div key={item.title} className="surface-card p-7">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-xl bg-zim-gold/10 border border-zim-gold/20">
-                      <item.icon className="h-5 w-5 text-zim-gold" />
-                    </div>
-                    <h3 className="text-lg font-black text-white tracking-tight">
-                      {item.title}
-                    </h3>
-                  </div>
-                  <p className="text-white/70 text-sm leading-relaxed">
-                    {item.detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sector Transformation - Cinematic Glass Grid */}
-      <section
+        <SwipeRail
+          label={t("tech.diaspora_ai.title", {
+            defaultValue: "How Diaspora Unlocked Uses AI",
+          })}
+        >
+          {diasporaUseCases.map((item, index) => (
+            <DiscoveryTile
+              key={item.title}
+              title={item.title}
+              icon={item.icon}
+              image={
+                [
+                  "/images/pages/tourism/victoria_falls.webp",
+                  "/images/pages/investment/rbz_building.webp",
+                  "/images/pages/shared/export_port_01.jpg",
+                  "/images/pages/home/partnership_handshake.png",
+                ][index]
+              }
+            >
+              <p>{item.detail}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+      </DiscoverySection>
+      <DiscoverySection
         id="technology-industries"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+        title={t("tech.sectors_title", {
+          defaultValue: "Powering Key Industries",
+        })}
+        description={t("tech.sectors_subtitle", {
+          defaultValue:
+            "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
+        })}
       >
-        {/* Background glow for depth */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
-
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel relative p-8 md:p-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] transition-all duration-500 group">
-            <span className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
-            <div className="section-heading mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <BarChart3 className="h-6 w-6 text-zim-gold" />
-                <h2 className="page-section-title">
-                  {t("tech.sectors_title") || "Powering Key Industries"}
-                </h2>
-              </div>
-              <p className="text-white/75 text-sm leading-relaxed max-w-3xl mx-auto">
-                {t("tech.sectors_subtitle") ||
-                  "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {sectors.map((sector, index) => (
-                <motion.div
-                  key={index}
-                  initial={false}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group relative"
-                >
-                  {/* Standardized glass card style */}
-                  <div className="relative h-full overflow-hidden surface-card">
-                    <div className="flex flex-col sm:flex-row h-full">
-                      {/* Image Section */}
-                      <div className="sm:w-2/5 h-44 sm:h-auto relative overflow-hidden rounded-l-[2rem]">
-                        <InstantImage
-                          src={sector.image}
-                          alt={sector.title}
-                          priority={index < 2}
-                          wrapperClassName="h-full w-full bg-slate-900"
-                          className="h-full w-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-105 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="p-8 sm:w-3/5 flex flex-col justify-center">
-                        <h3 className="text-lg font-black text-white tracking-tight mb-2 group-hover:text-zim-gold transition-colors">
-                          {sector.title}
-                        </h3>
-                        <p className="text-[13px] text-white/70 mb-5 leading-relaxed font-light">
-                          {sector.description}
-                        </p>
-
-                        <ul className="space-y-2.5">
-                          {sector.details.map((detail, dIdx) => (
-                            <li
-                              key={dIdx}
-                              className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-wider text-white/80"
-                            >
-                              <div className="h-1.5 w-1.5 rounded-full bg-zim-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
-                              <span>{detail}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+        <SwipeRail
+          label={t("tech.sectors_title", {
+            defaultValue: "Powering Key Industries",
+          })}
+        >
+          {sectors.map(sector => (
+            <DiscoveryTile
+              key={sector.title}
+              title={sector.title}
+              image={sector.image}
+            >
+              <p>{sector.description}</p>
+              <ul className="list-disc space-y-2 pl-4">
+                {sector.details.map(detail => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+      </DiscoverySection>
     </Layout>
   );
 }

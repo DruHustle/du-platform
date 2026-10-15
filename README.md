@@ -167,6 +167,20 @@ blocked storage, availability retries, and failed/successful checkout at 375,
 768, and 1440 pixels. Reports and screenshots go to `/tmp/du-shop-tests`
 (`SHOP_OUTPUT_DIR` overrides it). CI uses `SHOP_BROWSER_CHANNEL=chromium`.
 
+### Swipeable discovery regression tests
+
+```bash
+pnpm build
+pnpm test:e2e:discovery
+```
+
+Runs without configured services using a temporary static server and mocked API
+responses. At 375, 768, and 1440 pixels, it checks every discovery rail's final
+tile, keyboard and arrow controls, mouse dragging, native touch swipes, attraction
+dialog focus restoration, and project filtering/navigation. Screenshots and
+reports go to `/tmp/du-discovery-tests` (`DISCOVERY_OUTPUT_DIR` overrides it).
+CI uses `DISCOVERY_BROWSER_CHANNEL=chromium`.
+
 ### Service-free AI and device regression tests
 
 ```bash

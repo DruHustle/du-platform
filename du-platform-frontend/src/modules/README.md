@@ -19,3 +19,11 @@ Shop product cards, quantity controls, catalog fetching, and the persisted cart
 are shared by both shop routes. The browser key remains `shop_cart_v1`.
 Purchasing requires confirmed catalog availability; fallback catalog content
 never invents stock. The server remains authoritative for prices and inventory.
+
+Discovery collections use `DiscoverySection`, `DiscoveryTile`, and `SwipeRail`
+from `components/discovery`. Their light canvas and dark image tiles follow the
+Home page, while `styles/discovery.css` applies only to opted-in sections. Keep
+Home and Shop's established layouts separate. Rails use native touch scrolling,
+explicit previous/next controls, and keyboard navigation; they never autoplay.
+Use `resetKey` when a filter changes the set of cards. `DiscoveryTile.onSelect`
+provides a semantic card button; dialog callers should restore focus to it.
