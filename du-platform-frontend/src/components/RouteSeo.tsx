@@ -1,12 +1,20 @@
 import { useEffect } from "react";
-import { resolveRouteSeo, resolveCanonicalUrl } from "@shared/routeSeo";
+import {
+  PUBLIC_SITE_ORIGIN,
+  resolveRouteSeo,
+  resolveCanonicalUrl,
+} from "@shared/routeSeo";
 
 type RouteSeoProps = {
   pathname: string;
   search: string;
 };
 
-function upsertMetaTag(attribute: "name" | "property", key: string, content: string) {
+function upsertMetaTag(
+  attribute: "name" | "property",
+  key: string,
+  content: string
+) {
   const selector = `meta[${attribute}="${key}"]`;
   let element = document.head.querySelector(selector) as HTMLMetaElement | null;
   if (!element) {
@@ -18,7 +26,9 @@ function upsertMetaTag(attribute: "name" | "property", key: string, content: str
 }
 
 function upsertLinkTag(rel: string, href: string) {
-  let element = document.head.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+  let element = document.head.querySelector(
+    `link[rel="${rel}"]`
+  ) as HTMLLinkElement | null;
   if (!element) {
     element = document.createElement("link");
     element.setAttribute("rel", rel);
@@ -29,11 +39,18 @@ function upsertLinkTag(rel: string, href: string) {
 
 export default function RouteSeo({ pathname, search }: RouteSeoProps) {
   useEffect(() => {
-    if (typeof document === "undefined" || typeof window === "undefined") return;
+    if (typeof document === "undefined" || typeof window === "undefined")
+      return;
 
     const seo = resolveRouteSeo({ pathname, search });
     const siteUrl =
-      String(import.meta.env.VITE_SITE_URL || window.location.origin || "")
+      String(
+        import.meta.env.VITE_SITE_URL ||
+          (import.meta.env.PROD
+            ? PUBLIC_SITE_ORIGIN
+            : window.location.origin) ||
+          ""
+      )
         .trim()
         .replace(/\/+$/, "") || window.location.origin;
     const canonicalUrl = resolveCanonicalUrl(siteUrl, seo.canonicalPath);
@@ -42,10 +59,18 @@ export default function RouteSeo({ pathname, search }: RouteSeoProps) {
     upsertMetaTag("name", "description", seo.description);
     upsertMetaTag("name", "robots", seo.robots);
     upsertMetaTag("property", "og:title", seo.socialTitle ?? seo.title);
-    upsertMetaTag("property", "og:description", seo.socialDescription ?? seo.description);
+    upsertMetaTag(
+      "property",
+      "og:description",
+      seo.socialDescription ?? seo.description
+    );
     upsertMetaTag("property", "og:url", canonicalUrl);
     upsertMetaTag("name", "twitter:title", seo.socialTitle ?? seo.title);
-    upsertMetaTag("name", "twitter:description", seo.socialDescription ?? seo.description);
+    upsertMetaTag(
+      "name",
+      "twitter:description",
+      seo.socialDescription ?? seo.description
+    );
     upsertLinkTag("canonical", canonicalUrl);
   }, [pathname, search]);
 

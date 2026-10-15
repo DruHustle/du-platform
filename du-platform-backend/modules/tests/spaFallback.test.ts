@@ -14,6 +14,7 @@ describe("SPA document fallback", () => {
     "/remittances",
     "/payments",
     "/not-a-real-route",
+    "/investment/projects/unknown",
   ])("returns 404 for %s", pathname => {
     const seo = resolveRouteSeo({ pathname });
     expect(seo.robots).toBe("noindex,nofollow");

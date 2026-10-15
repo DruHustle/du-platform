@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import investmentProjectRoutes from "@shared/investmentProjectRoutes.json";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, MapPin, Ruler, Landmark, Building2 } from "lucide-react";
@@ -19,7 +20,7 @@ type ProjectDetails = {
 
 const PROJECTS: Record<string, ProjectDetails> = {
   masuwe: {
-    title: "Masuwe SEZ Construction of Villas Project",
+    title: investmentProjectRoutes.masuwe,
     subtitle: "Tourism Infrastructure Opportunity near Victoria Falls",
     owner: "Mosi Oa Tunya Development Company",
     overview:
@@ -49,7 +50,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "SEZ Act / Investment Framework",
   },
   leather: {
-    title: "Linkdef Soap Manufacturing Project",
+    title: investmentProjectRoutes.leather,
     subtitle: "Consumer Goods Manufacturing Expansion",
     owner: "Linkdef Soap Manufacturing (Pvt) Ltd",
     overview: "Establish a modern soap and detergent manufacturing operation aligned to Zimbabwe's industrialization agenda.",
@@ -60,7 +61,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Industrial Licensing / Investment Support",
   },
   apparel: {
-    title: "NRZ Concrete Manufacturing Plant Project",
+    title: investmentProjectRoutes.apparel,
     subtitle: "Rail Infrastructure Supply Chain Investment",
     owner: "National Railways of Zimbabwe",
     overview: "Concrete sleeper manufacturing project designed to support railway rehabilitation and industrial supply capacity.",
@@ -71,7 +72,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Public Infrastructure Partnership Model",
   },
   horticulture: {
-    title: "CICADA Macadamia and Avocado Plantation",
+    title: investmentProjectRoutes.horticulture,
     subtitle: "High-Value Crop and Export Processing Platform",
     owner: "Cicada Group",
     overview: "Commercial macadamia and avocado production with strong value-add and export potential across regional and global markets.",
@@ -82,7 +83,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Agriculture Investment Framework",
   },
   fintech: {
-    title: "Powertel Fibre Internet (GPON)",
+    title: investmentProjectRoutes.fintech,
     subtitle: "National Broadband Infrastructure Rollout",
     owner: "Powertel Communications (Pvt) Ltd",
     overview: "Broadband network expansion focused on improving internet penetration, capacity, and enterprise-grade connectivity.",
@@ -93,7 +94,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Telecom / ICT Regulatory Compliance",
   },
   solar: {
-    title: "Solgas Energy 60MW Solar PV Plant + 20MWh BESS",
+    title: investmentProjectRoutes.solar,
     subtitle: "Utility-Scale Renewable Energy Deployment",
     owner: "Solgas Energy Pvt Ltd",
     overview: "A combined solar and battery storage project to support grid reliability, clean generation, and energy security.",
@@ -104,7 +105,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Energy Licensing / Environmental Compliance",
   },
   beef_dairy: {
-    title: "Agro Strong Beef and Dairy Farming Venture",
+    title: investmentProjectRoutes.beef_dairy,
     subtitle: "Livestock and Dairy Value Chain Expansion",
     owner: "Agro Strong (Pvt) Ltd",
     overview: "Integrated beef and dairy operation focused on herd growth, processing readiness, and consistent domestic supply.",
@@ -115,7 +116,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Agriculture and Veterinary Compliance",
   },
   agro_park: {
-    title: "Goromonzi Agro Processing Industrial Park (SEZ)",
+    title: investmentProjectRoutes.agro_park,
     subtitle: "Agro-Industrial Cluster Development",
     owner: "Goromonzi Agro Industrial Company (GAIC)",
     overview: "SEZ-linked agro-processing park designed to improve post-harvest value addition and export competitiveness.",
@@ -126,7 +127,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "SEZ Licensing / Agro-Industry Compliance",
   },
   data_centres: {
-    title: "TelOne Data Centres Project",
+    title: investmentProjectRoutes.data_centres,
     subtitle: "Digital Infrastructure and Hosting Expansion",
     owner: "TelOne (Pvt) Ltd",
     overview: "Data centre expansion programme to support enterprise hosting, government workloads, and cloud-scale services.",
@@ -137,7 +138,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Telecom and Data Compliance",
   },
   vaccine: {
-    title: "Foot and Mouth Disease Vaccine Manufacturing Project",
+    title: investmentProjectRoutes.vaccine,
     subtitle: "Veterinary Biotech Production Capacity",
     owner: "SIRDC",
     overview: "Domestic vaccine production project intended to enhance livestock disease response and reduce import exposure.",
@@ -148,7 +149,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Health and Biotech Manufacturing Compliance",
   },
   roof_tiles: {
-    title: "Orangerose Solar Roof Tile Manufacturing Project",
+    title: investmentProjectRoutes.roof_tiles,
     subtitle: "Distributed Energy Technology Manufacturing",
     owner: "Orangerose Investments",
     overview: "Manufacturing line for integrated solar roof tiles to support clean energy adoption in residential and commercial developments.",
@@ -159,7 +160,7 @@ const PROJECTS: Record<string, ProjectDetails> = {
     regulatory: "Manufacturing and Energy Product Compliance",
   },
   radco_solar: {
-    title: "RADCO Solar and Smart City Project",
+    title: investmentProjectRoutes.radco_solar,
     subtitle: "Integrated Energy and Smart Infrastructure",
     owner: "RADCO Holdings",
     overview: "Grid-support solar generation and smart infrastructure components designed for long-term sustainable urban growth.",
@@ -175,7 +176,7 @@ export default function ProjectDetails() {
   const { t } = useTranslation();
   const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
   const [matched, params] = useRoute<{ id: string }>("/investment/projects/:id");
-  const project = matched && params?.id ? PROJECTS[params.id] : null;
+  const project = matched && params?.id && Object.hasOwn(PROJECTS, params.id) ? PROJECTS[params.id] : null;
 
   return (
     <Layout>
