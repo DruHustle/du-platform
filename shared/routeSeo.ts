@@ -1,3 +1,7 @@
+import investmentProjectRoutes from "./investmentProjectRoutes.json";
+
+export const PUBLIC_SITE_ORIGIN = "https://www.diasporaunlocked.com";
+
 export type RouteSeoInput = {
   pathname: string;
   search?: string;
@@ -28,13 +32,6 @@ function normalizePathname(pathname: string): string {
 
 function ensureLeadingSlash(value: string): string {
   return value.startsWith("/") ? value : `/${value}`;
-}
-
-function humanizeSlug(slug: string): string {
-  return slug
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, char => char.toUpperCase())
-    .trim();
 }
 
 function buildSeo(
@@ -106,14 +103,17 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   }
 
   if (pathname.startsWith("/investment/projects/")) {
-    const slug = pathname.split("/").pop() ?? "project";
-    const projectName = humanizeSlug(slug);
-    return buildSeo(
-      `${projectName} Investment Project | Diaspora Unlocked`,
-      `Review the ${projectName} opportunity on Diaspora Unlocked, including sector focus, participation context, and diaspora-oriented investment detail.`,
-      ensureLeadingSlash(pathname),
-      `${projectName} Investment Project`
-    );
+    const slug = pathname.slice("/investment/projects/".length);
+    if (Object.hasOwn(investmentProjectRoutes, slug)) {
+      const projectName =
+        investmentProjectRoutes[slug as keyof typeof investmentProjectRoutes];
+      return buildSeo(
+        `${projectName} | Diaspora Unlocked`,
+        `Review the ${projectName} opportunity on Diaspora Unlocked, including sector focus, participation context, and diaspora-oriented investment detail.`,
+        pathname,
+        projectName
+      );
+    }
   }
 
   if (pathname === "/ntir") {
@@ -315,9 +315,18 @@ export function resolveCanonicalUrl(
   siteUrl: string,
   canonicalPath: string
 ): string {
-  const normalizedSiteUrl = String(siteUrl || "")
+  let normalizedSiteUrl = String(siteUrl || "")
     .trim()
     .replace(/\/+$/, "");
+  // Both public domain variants resolve to www. Keep HTML, SPA navigation,
+  // social metadata, and the sitemap on that same canonical origin.
+  if (
+    /^https?:\/\/(?:www\.)?diasporaunlocked\.com(?::\d+)?$/i.test(
+      normalizedSiteUrl
+    )
+  ) {
+    normalizedSiteUrl = PUBLIC_SITE_ORIGIN;
+  }
   const normalizedPath = ensureLeadingSlash(canonicalPath).replace(
     /\/{2,}/g,
     "/"

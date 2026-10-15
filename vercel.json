@@ -4,14 +4,26 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": null,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/index", "destination": "/", "permanent": true },
+    {
+      "source": "/onesa-ai-tourism-virtual-experince",
+      "destination": "/onesa-ai-tourism-virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experince",
+      "destination": "/onesa-ai-tourism-augmented-experience",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "https://du-platform.onrender.com/api/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ],
   "headers": [
