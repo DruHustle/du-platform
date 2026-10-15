@@ -1,7 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import Layout from "@/components/Layout";
+import SwipeRail from "@/components/discovery/SwipeRail";
+import DiscoveryTile from "@/components/discovery/DiscoveryTile";
+import DiscoverySection from "@/components/discovery/DiscoverySection";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -10,14 +12,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Plus,
   MapPin,
   Calendar,
   Shield,
   CreditCard,
   Award,
-  CheckCircle2,
   Brain,
-  Sparkles,
   Globe,
   Building2,
   Car,
@@ -25,7 +26,6 @@ import {
   Dog,
   TrendingUp,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SubPageHero from "@/components/SubPageHero";
 import { Link } from "wouter";
@@ -45,8 +45,14 @@ export default function Tourism() {
   const { t } = useTranslation();
   const [selectedAttraction, setSelectedAttraction] =
     useState<Attraction | null>(null);
-  const [conversationIndex, setConversationIndex] = useState(0);
-  const [showConversationAnswer, setShowConversationAnswer] = useState(false);
+  const attractionTrigger = useRef<HTMLButtonElement | null>(null);
+  const openAttraction = (
+    attraction: Attraction,
+    trigger: HTMLButtonElement
+  ) => {
+    attractionTrigger.current = trigger;
+    setSelectedAttraction(attraction);
+  };
   const getTranslatedList = (key: string, fallback: string[]) => {
     const value = t(key, { returnObjects: true });
     return Array.isArray(value) && value.length > 0
@@ -180,23 +186,6 @@ export default function Tourism() {
     ],
     [t]
   );
-
-  useEffect(() => {
-    setShowConversationAnswer(false);
-
-    const answerTimer = window.setTimeout(() => {
-      setShowConversationAnswer(true);
-    }, 1200);
-
-    const nextConversationTimer = window.setTimeout(() => {
-      setConversationIndex(prev => (prev + 1) % phoneConversation.length);
-    }, 7600);
-
-    return () => {
-      window.clearTimeout(answerTimer);
-      window.clearTimeout(nextConversationTimer);
-    };
-  }, [conversationIndex, phoneConversation.length]);
 
   const attractions: Attraction[] = [
     {
@@ -670,320 +659,244 @@ export default function Tourism() {
         <SubPageHero heroSlides={heroSlides} />
       </section>
 
-      {/* Key Attractions - Cinematic Glass Grid */}
-      <section
+      <DiscoverySection
         id="attractions"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+        title={t("tourism.attractions_title", {
+          defaultValue: "Must-Visit Destinations",
+        })}
+        action={
+          <Button
+            asChild
+            className="bg-zim-gold text-slate-950 hover:bg-yellow-300"
+          >
+            <Link href="/onesa-ai-tourism-virtual-experience">
+              {t("tourism.intro.virtual_experience_center_cta", {
+                defaultValue: "Virtual Experience Center",
+              })}
+            </Link>
+          </Button>
+        }
       >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel p-8 md:p-10">
-            <div className="section-heading mb-8">
-              <h2 className="page-section-title">
-                {t("tourism.attractions_title") || "Must-Visit Destinations"}
-              </h2>
-              <p className="mt-4 text-left text-sm text-white/75 font-light leading-relaxed">
-                {t("tourism.intro.p1") ||
-                  "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality."}
+        <SwipeRail
+          label={t("tourism.attractions_title", {
+            defaultValue: "Must-Visit Destinations",
+          })}
+        >
+          {attractions.map(attraction => (
+            <DiscoveryTile
+              key={attraction.name}
+              onSelect={event =>
+                openAttraction(attraction, event.currentTarget)
+              }
+              title={attraction.name}
+              image={attraction.image}
+              footer={
+                <span className="discovery-tile-link">
+                  <span>
+                    {t("tourism.attraction_card.tap_for_details", {
+                      defaultValue: "Tap for more details",
+                    })}
+                  </span>
+                  <span className="discovery-tile-plus">
+                    <Plus aria-hidden="true" />
+                  </span>
+                </span>
+              }
+            >
+              <ul className="discovery-tags">
+                {attraction.highlights.map(highlight => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+              <p className="mt-4 line-clamp-3">{attraction.summary}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+        <div className="discovery-introduction">
+          <details className="editorial-details mt-5">
+            <summary>
+              {t("tourism.intro.read_more", {
+                defaultValue: "More about travelling in Zimbabwe",
+              })}
+            </summary>
+            <div className="mt-4 space-y-4">
+              <p className="text-sm leading-7">
+                {t("tourism.intro.p1", {
+                  defaultValue:
+                    "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality.",
+                })}
               </p>
-              <details className="editorial-details mt-5">
-                <summary>
-                  {t("tourism.intro.read_more", {
-                    defaultValue: "More about travelling in Zimbabwe",
-                  })}
-                </summary>
-                <div className="mt-4 space-y-4">
-                  <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
-                    {t("tourism.intro.p2_before_ar") ||
-                      "When you are onsite, use Onesa's"}{" "}
-                    <span className="text-zim-gold font-semibold">
-                      {t("tourism.intro.local_guide_ar") || "Local guide AR"}
-                    </span>{" "}
-                    {t("tourism.intro.p2_after_ar") ||
-                      "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
-                  </p>
-                  <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
-                    {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
-                    <span className="text-zim-gold font-semibold">
-                      {t("tourism.intro.gastronomy_tourism") ||
-                        "gastronomy tourism"}
-                    </span>{" "}
-                    {t("tourism.intro.p3_between") ||
-                      "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities."}{" "}
-                    <span className="text-zim-gold font-semibold">
-                      {t("tourism.intro.cultural_tourism") ||
-                        "Cultural tourism"}
-                    </span>{" "}
-                    {t("tourism.intro.p3_after_cultural") ||
-                      "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
-                  </p>
-                </div>
-              </details>
-              <div className="mt-6 flex">
+              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
+                {t("tourism.intro.p2_before_ar") ||
+                  "When you are onsite, use Onesa's"}{" "}
+                <span className="text-zim-gold font-semibold">
+                  {t("tourism.intro.local_guide_ar") || "Local guide AR"}
+                </span>{" "}
+                {t("tourism.intro.p2_after_ar") ||
+                  "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
+              </p>
+              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
+                {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
+                <span className="text-zim-gold font-semibold">
+                  {t("tourism.intro.gastronomy_tourism") ||
+                    "gastronomy tourism"}
+                </span>{" "}
+                {t("tourism.intro.p3_between") ||
+                  "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities."}{" "}
+                <span className="text-zim-gold font-semibold">
+                  {t("tourism.intro.cultural_tourism") || "Cultural tourism"}
+                </span>{" "}
+                {t("tourism.intro.p3_after_cultural") ||
+                  "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
+              </p>
+            </div>
+          </details>
+        </div>
+      </DiscoverySection>
+      <DiscoverySection
+        title={t("tourism.other_attractions_title", {
+          defaultValue: "Other Incredible Destinations",
+        })}
+        description={t("tourism.other_attractions_subtitle", {
+          defaultValue:
+            "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.",
+        })}
+      >
+        <SwipeRail
+          label={t("tourism.other_attractions_title", {
+            defaultValue: "Other Incredible Destinations",
+          })}
+        >
+          {otherAttractions.map(dest => (
+            <DiscoveryTile
+              key={dest.name}
+              onSelect={event => openAttraction(dest, event.currentTarget)}
+              title={dest.name}
+              image={dest.image}
+              footer={
+                <span className="discovery-tile-link">
+                  <span>
+                    {t("tourism.attraction_card.tap_for_details", {
+                      defaultValue: "Tap for more details",
+                    })}
+                  </span>
+                  <span className="discovery-tile-plus">
+                    <Plus aria-hidden="true" />
+                  </span>
+                </span>
+              }
+            >
+              <p className="line-clamp-3">{dest.summary}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+      </DiscoverySection>
+
+      <DiscoverySection
+        title={t("tourism.onesa.badge", { defaultValue: "Onesa AI Companion" })}
+        description={t("tourism.onesa.companion_subtitle", {
+          defaultValue:
+            "Onesa AI helps you plan your trip and navigate the ins and outs once you're here. From understanding local etiquette to finding hidden gems, Onesa is your perfect travel companion.",
+        })}
+      >
+        <div className="discovery-introduction space-y-3">
+          <p className="text-base leading-7">
+            {t("tourism.onesa.companion_title", {
+              defaultValue:
+                "From booking flights,accurate weather information or discovering local gems, Onesa AI has you covered",
+            })}
+          </p>
+          <p className="text-sm leading-7">
+            {t("tourism.onesa.personalized_experience", {
+              defaultValue:
+                "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable.",
+            })}
+          </p>
+        </div>
+        <SwipeRail
+          label={t("tourism.onesa.badge", {
+            defaultValue: "Onesa AI Companion",
+          })}
+        >
+          {onesaTouristFeatures.map((feature, index) => (
+            <DiscoveryTile
+              key={feature.title}
+              title={feature.title}
+              icon={feature.icon}
+              image={
+                [
+                  "/images/pages/technology/zim_think.jpg",
+                  "/images/pages/tourism/great_zimbabwe.jpeg",
+                  "/images/pages/tourism/victoria_falls.webp",
+                ][index]
+              }
+              footer={
                 <Button
                   asChild
-                  className="bg-zim-gold text-zim-black hover:bg-white transition-all px-7 py-2 h-auto rounded-full font-black text-[10px] uppercase tracking-[0.2em]"
+                  className="w-full bg-zim-gold text-slate-950 hover:bg-yellow-300"
                 >
-                  <Link href="/onesa-ai-tourism-virtual-experience">
-                    {t("tourism.intro.virtual_experience_center_cta") ||
-                      "Virtual Experience Center"}
+                  <Link
+                    href={
+                      [
+                        "/onesa-ai-chat",
+                        "/onesa-ai-tourism-augmented-experience",
+                        "/onesa-ai-book-trip",
+                      ][index]
+                    }
+                  >
+                    {
+                      [
+                        t("tourism.onesa.cta.chat", {
+                          defaultValue: "Chat with Onesa",
+                        }),
+                        t("tourism.onesa.cta.local_guide_ar", {
+                          defaultValue: "Local guide AR",
+                        }),
+                        t("tourism.onesa.cta.plan_trip", {
+                          defaultValue: "Plan your trip",
+                        }),
+                      ][index]
+                    }
                   </Link>
                 </Button>
+              }
+            >
+              <p>{feature.description}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+        <details className="editorial-details mt-4">
+          <summary>
+            {t("tourism.onesa.example_conversation", {
+              defaultValue: "Example conversation with Onesa",
+            })}
+          </summary>
+          <dl className="discovery-example mt-5 space-y-5">
+            {phoneConversation.map(turn => (
+              <div key={turn.question}>
+                <dt className="font-semibold text-sm leading-7">
+                  {turn.question}
+                </dt>
+                <dd className="mt-2 text-sm leading-7">{turn.answer}</dd>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {attractions.map((attraction, index) => (
-                <motion.div
-                  key={index}
-                  initial={false}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <button
-                    type="button"
-                    className="block w-full text-left"
-                    onClick={() => setSelectedAttraction(attraction)}
-                  >
-                    <div className="group relative h-[450px] surface-card overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                      <img
-                        src={attraction.image}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 saturate-[0.8]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-
-                      <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                        <h3 className="text-lg font-black text-white tracking-tight mb-4 group-hover:text-zim-gold transition-colors">
-                          {attraction.name}
-                        </h3>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {attraction.highlights.map((highlight, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[10px] font-black uppercase tracking-widest bg-white/10 backdrop-blur-xl text-white/80 px-3 py-1 rounded-full border border-white/10"
-                            >
-                              {highlight}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-sm text-white/70 font-light leading-relaxed line-clamp-2 group-hover:text-white transition-colors">
-                          {attraction.summary}
-                        </p>
-                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
-                          {t("tourism.attraction_card.tap_for_details") ||
-                            "Tap for more details"}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Other Destinations - Compact Glass Grid */}
-            <div className="pt-10">
-              <div className="section-heading mb-8">
-                <h2 className="section-title-compact mb-3">
-                  {t("tourism.other_attractions_title") ||
-                    "Other Incredible Destinations"}
-                </h2>
-                <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
-                  {t("tourism.other_attractions_subtitle") ||
-                    "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country."}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {otherAttractions.map((dest, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ y: -5 }}
-                    className="w-full rounded-[1.5rem] border border-white/10 bg-white/[0.02] overflow-hidden group"
-                  >
-                    <button
-                      type="button"
-                      className="block cursor-pointer w-full text-left"
-                      onClick={() => setSelectedAttraction(dest)}
-                    >
-                      <div className="h-44 overflow-hidden relative">
-                        <img
-                          src={dest.image}
-                          className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
-                      </div>
-                      <div className="p-5">
-                        <h4 className="text-base font-bold text-white mb-2 group-hover:text-zim-gold transition-colors">
-                          {dest.name}
-                        </h4>
-                        <p className="text-xs text-white/70 leading-snug font-light">
-                          {dest.summary}
-                        </p>
-                        <p className="text-[10px] text-zim-gold/90 mt-3 font-black uppercase tracking-widest">
-                          {t("tourism.attraction_card.tap_for_details") ||
-                            "Tap for more details"}
-                        </p>
-                      </div>
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Onesa AI Tourist Companion Section - Glassy UI Upgrade */}
-      <section className="editorial-section bg-slate-950 relative overflow-hidden">
-        <div className="container relative z-10 px-6 mx-auto">
-          <motion.div
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="content-panel editorial-panel p-8 md:p-10  group"
-          >
-            {/* The Crispy Edge Finish */}
-            <span className="absolute inset-0 rounded-[2rem] border border-white/5 pointer-events-none" />
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-              {/* Left Column */}
-              <div className="lg:col-span-6 space-y-8">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-zim-gold/10 rounded-xl border border-zim-gold/20">
-                    <Sparkles className="h-5 w-5 text-zim-gold" />
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className="border-zim-gold/40 text-zim-gold px-3 py-0.5 text-[10px] font-black uppercase tracking-widest"
-                  >
-                    {t("tourism.onesa.badge") || "Onesa AI Companion"}
-                  </Badge>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-lg font-black text-white leading-tight">
-                    {t("tourism.onesa.companion_title") ||
-                      "From booking flights,accurate weather information or discovering local gems, Onesa AI has you covered"}
-                  </h3>
-                  <p className="text-sm text-white/70 leading-relaxed font-light">
-                    {t("tourism.onesa.companion_subtitle") ||
-                      "Onesa AI helps you plan your trip and navigate the ins and outs once you're here. From understanding local etiquette to finding hidden gems, Onesa is your perfect travel companion."}
-                  </p>
-                  <p className="text-sm text-white/70 leading-relaxed font-light">
-                    {t("tourism.onesa.personalized_experience") ||
-                      "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable."}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
-                  {onesaTouristFeatures.map((feature, idx) => {
-                    return (
-                      <article
-                        key={idx}
-                        className="group rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-4 transition-all duration-500 hover:bg-slate-950/60"
-                      >
-                        <div>
-                          <h4 className="text-sm font-black text-white">
-                            {feature.title}
-                          </h4>
-                          <p className="mt-1.5 text-[13px] leading-relaxed text-white/70">
-                            {feature.description}
-                          </p>
-                          <div className="mt-3 h-0.5 w-10 rounded-full bg-zim-gold/50 transition-all duration-500 group-hover:w-16" />
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-
-                <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-3">
-                  <Button
-                    asChild
-                    className="w-full justify-center bg-zim-gold text-zim-black hover:bg-white transition-all px-3 py-2 h-auto min-h-[42px] rounded-full font-black text-[10px] uppercase tracking-[0.14em] md:tracking-[0.12em] gap-0.5 text-center whitespace-normal leading-tight"
-                  >
-                    <Link href="/onesa-ai-chat">
-                      {t("tourism.onesa.cta.chat") || "Chat with Onesa"}
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className="w-full justify-center bg-zim-gold text-zim-black hover:bg-white transition-all px-3 py-2 h-auto min-h-[42px] rounded-full font-black text-[10px] uppercase tracking-[0.14em] md:tracking-[0.12em] gap-0.5 text-center whitespace-normal leading-tight"
-                  >
-                    <Link href="/onesa-ai-book-trip">
-                      {t("tourism.onesa.cta.plan_trip") || "Plan your trip"}
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className="w-full justify-center bg-zim-gold text-zim-black hover:bg-white transition-all px-3 py-2 h-auto min-h-[42px] rounded-full font-black text-[10px] uppercase tracking-[0.14em] md:tracking-[0.12em] gap-0.5 text-center whitespace-normal leading-tight"
-                  >
-                    <Link href="/onesa-ai-tourism-augmented-experience">
-                      {t("tourism.onesa.cta.local_guide_ar") ||
-                        "Local guide AR"}
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-
-              {/* Right Column: Phone Mockup */}
-              <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                <div className="relative w-full max-w-[300px] aspect-[9/18.5] rounded-[3rem] p-3 border-[6px] border-white/10 bg-zinc-950 overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8)]">
-                  <div className="relative h-full w-full rounded-[2.2rem] overflow-hidden bg-slate-950">
-                    <img
-                      src="/images/pages/technology/zim_think.jpg"
-                      className="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-[3000ms]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                    <div className="absolute inset-x-4 bottom-8 space-y-4">
-                      <AnimatePresence mode="wait">
-                        <motion.div
-                          key={`question-${conversationIndex}`}
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.35 }}
-                          className="bg-zim-gold p-4 rounded-2xl rounded-br-none shadow-xl w-[90%] ml-auto"
-                        >
-                          <p className="text-zim-black text-[11px] font-bold leading-tight">
-                            {phoneConversation[conversationIndex]?.question}
-                          </p>
-                        </motion.div>
-                      </AnimatePresence>
-
-                      <AnimatePresence>
-                        {showConversationAnswer && (
-                          <motion.div
-                            key={`answer-${conversationIndex}`}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            transition={{ duration: 0.35 }}
-                            className="bg-white/10 backdrop-blur-2xl p-4 rounded-2xl rounded-bl-none border border-white/20 shadow-2xl"
-                          >
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="h-1.5 w-1.5 rounded-full bg-zim-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,1)]" />
-                              <span className="text-[9px] font-black text-zim-gold uppercase tracking-[0.2em]">
-                                {t("tourism.onesa.name") || "Onesa AI"}
-                              </span>
-                            </div>
-                            <p className="text-white text-[11px] leading-relaxed font-light">
-                              {phoneConversation[conversationIndex]?.answer}
-                            </p>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            ))}
+          </dl>
+        </details>
+      </DiscoverySection>
 
       <Dialog
         open={Boolean(selectedAttraction)}
         onOpenChange={open => !open && setSelectedAttraction(null)}
       >
-        <DialogContent className="max-w-3xl mx-auto max-h-[85vh] overflow-y-auto bg-slate-950 border-white/10 text-white">
+        <DialogContent
+          onCloseAutoFocus={event => {
+            if (attractionTrigger.current?.isConnected) {
+              event.preventDefault();
+              attractionTrigger.current.focus({ preventScroll: true });
+            }
+          }}
+          className="max-w-3xl mx-auto max-h-[85vh] overflow-y-auto bg-slate-950 border-white/10 text-white"
+        >
           {selectedAttraction ? (
             <>
               <DialogHeader>
@@ -1074,63 +987,33 @@ export default function Tourism() {
         </DialogContent>
       </Dialog>
 
-      {/* Planning Info - High-End Dashboard Style */}
-      <section
+      <DiscoverySection
         id="plan-visit"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+        title={t("tourism.planning.essential_info", {
+          defaultValue: "Essential Planning Information",
+        })}
+        description={t("tourism.planning.essential_desc", {
+          defaultValue:
+            "Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.",
+        })}
       >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel p-8 md:p-10">
-            <div className="section-heading mb-8">
-              <h2 className="page-section-title">
-                {t("tourism.planning.essential_info") ||
-                  "Essential Planning Information"}
-              </h2>
-              <p className="section-subtitle-compact">
-                {t("tourism.planning.essential_desc") ||
-                  "Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {planningInfo.map((info, index) => {
-                const Icon = info.icon;
-                return (
-                  <div
-                    key={index}
-                    className="h-full surface-card p-5 transition-all duration-300 hover:bg-white/[0.04]"
-                  >
-                    <div className="mb-4 flex items-center gap-3">
-                      <div className="rounded-xl border border-zim-gold/25 bg-zim-gold/10 p-2.5">
-                        <Icon className="h-5 w-5 text-zim-gold" />
-                      </div>
-                      <h3 className="text-lg font-black text-white tracking-tight">
-                        {info.title}
-                      </h3>
-                    </div>
-
-                    <p className="mb-4 text-sm font-light leading-relaxed text-white/70">
-                      {info.description}
-                    </p>
-
-                    <ul className="space-y-2">
-                      {info.details.map((detail, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start gap-3 text-sm leading-relaxed text-white/75"
-                        >
-                          <CheckCircle2 className="mt-[2px] h-4 w-4 shrink-0 text-zim-gold/80" />
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+        <SwipeRail
+          label={t("tourism.planning.essential_info", {
+            defaultValue: "Essential Planning Information",
+          })}
+        >
+          {planningInfo.map(info => (
+            <DiscoveryTile key={info.title} title={info.title} icon={info.icon}>
+              <p>{info.description}</p>
+              <ul className="list-disc space-y-2 pl-4">
+                {info.details.map(detail => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+      </DiscoverySection>
     </Layout>
   );
 }

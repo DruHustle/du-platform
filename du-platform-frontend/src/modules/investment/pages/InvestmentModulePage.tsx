@@ -1,10 +1,12 @@
 import { useMemo } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import SwipeRail from "@/components/discovery/SwipeRail";
+import DiscoveryTile from "@/components/discovery/DiscoveryTile";
+import DiscoverySection from "@/components/discovery/DiscoverySection";
+import InstantImage from "@/components/InstantImage";
 import {
   TrendingUp,
-  Users,
   DollarSign,
   CheckCircle,
   Globe,
@@ -15,7 +17,6 @@ import {
   Repeat,
   FileText,
   Target,
-  Lightbulb,
   AlertTriangle,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -227,301 +228,261 @@ export default function Investment() {
       "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
   ];
 
+  const investmentSteps = [
+    {
+      title: t("investment.crowdfunding_steps.browse", {
+        defaultValue: "Browse Projects",
+      }),
+      icon: FileText,
+      image: "/images/pages/investment/masuwe_sez.png",
+    },
+    {
+      title: t("investment.crowdfunding_steps.invest", {
+        defaultValue: "Invest Your Share",
+      }),
+      icon: DollarSign,
+      image: "/images/pages/investment/partnership_handshake.png",
+    },
+    {
+      title: t("investment.crowdfunding_steps.track", {
+        defaultValue: "Track Performance",
+      }),
+      icon: TrendingUp,
+      image: "/images/pages/shared/manufacturing_factory.jpg",
+    },
+    {
+      title: t("investment.crowdfunding_steps.returns", {
+        defaultValue: "Receive Returns",
+      }),
+      icon: CheckCircle,
+      image: "/images/pages/investment/horticulture.jpg",
+    },
+  ];
   return (
     <Layout>
-      {/* Hero Section */}
       <section id="hero">
         <SubPageHero heroSlides={heroSlides} />
       </section>
-
-      {/* How it Works - Glass Dashboard */}
-      <section className="editorial-section bg-slate-950">
-        <div className="container px-6 mx-auto">
-          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
-            <div className="section-heading mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <Repeat className="h-6 w-6 text-zim-gold" />
-                <h2 className="page-section-title">
-                  {t("investment.crowdfunding_title") ||
-                    "Crowdfunding Opportunities"}
-                </h2>
-              </div>
-              <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
-                {crowdfundingSubtitle}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title:
-                    t("investment.crowdfunding_steps.browse") ||
-                    "Browse Projects",
-                  icon: FileText,
-                },
-                {
-                  title:
-                    t("investment.crowdfunding_steps.invest") ||
-                    "Invest Your Share",
-                  icon: DollarSign,
-                },
-                {
-                  title:
-                    t("investment.crowdfunding_steps.track") ||
-                    "Track Performance",
-                  icon: TrendingUp,
-                },
-                {
-                  title:
-                    t("investment.crowdfunding_steps.returns") ||
-                    "Receive Returns",
-                  icon: CheckCircle,
-                },
-              ].map((step, i) => (
-                <div
-                  key={i}
-                  className="surface-card p-5 shadow-none transition-all duration-500 hover:bg-slate-950/60 hover:shadow-none group"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <step.icon className="h-4 w-4 text-zim-gold" />
-                    <h3 className="text-sm font-black tracking-tight text-white">
-                      {step.title}
-                    </h3>
-                  </div>
-                  <p className="text-xs leading-relaxed text-white/70">
-                    {crowdfundingStepSubtitle}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Collective Model */}
-      <section
+      <DiscoverySection
+        title={t("investment.crowdfunding_title", {
+          defaultValue: "Crowdfunding Opportunities",
+        })}
+        description={crowdfundingSubtitle}
+      >
+        <SwipeRail
+          label={t("investment.crowdfunding_title", {
+            defaultValue: "Crowdfunding Opportunities",
+          })}
+        >
+          {investmentSteps.map(step => (
+            <DiscoveryTile
+              key={step.title}
+              title={step.title}
+              image={step.image}
+              icon={step.icon}
+            >
+              <p>{crowdfundingStepSubtitle}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+      </DiscoverySection>
+      <DiscoverySection
         id="collective-model"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+        title={t("investment.collective_model.title", {
+          defaultValue: "How Diaspora Collective Investing Works",
+        })}
+        description={t("investment.collective_model.subtitle", {
+          defaultValue:
+            "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
+        })}
       >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-4">
-              <Users className="h-6 w-6 text-zim-gold" />
-              <h2 className="page-section-title">
-                {t("investment.collective_model.title") ||
-                  "How Diaspora Collective Investing Works"}
-              </h2>
-            </div>
-            <p className=" text-sm leading-relaxed mb-8 max-w-3xl mx-auto">
-              {t("investment.collective_model.subtitle") ||
-                "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes."}
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {collectiveModelSteps.map(item => (
-                <div
-                  key={item}
-                  className="rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-4  text-sm"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Active Projects - Cinematic Glass Grid */}
-      <section
+        <SwipeRail
+          label={t("investment.collective_model.title", {
+            defaultValue: "How Diaspora Collective Investing Works",
+          })}
+        >
+          {collectiveModelSteps.map((item, index) => (
+            <DiscoveryTile
+              key={item}
+              title={investmentSteps[index].title}
+              number={index + 1}
+            >
+              <p>{item}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+      </DiscoverySection>
+      <DiscoverySection
         id="active-projects"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+        title={t("investment.sectors_title", {
+          defaultValue: "Active Investment Opportunities",
+        })}
+        description={t("investment.sectors_subtitle", {
+          defaultValue:
+            "Carefully vetted projects with government support and transparent tracking.",
+        })}
       >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
-            <div className="text-center">
-              <div className="flex items-center gap-3 mb-4">
-                <Target className="h-6 w-6 text-zim-gold" />
-                <h2 className="page-section-title">
-                  {t("investment.sectors_title") ||
-                    "Active Investment Opportunities"}
-                </h2>
-              </div>
-              <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed">
-                {t("investment.sectors_subtitle") ||
-                  "Carefully vetted projects with government support and transparent tracking."}
-              </p>
-              <p className="text-xs  max-w-3xl mx-auto font-light leading-relaxed mt-3">
-                {t("investment.sectors_info", {
-                  defaultValue:
-                    "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile.",
-                })}
-              </p>
-              <div className="mt-8">
-                <Button
-                  asChild
-                  type="button"
-                  className="rounded-full bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] px-7"
-                >
-                  <Link href="/investment/opportunities">
-                    {t("investment.sectors_explore", {
-                      defaultValue: "Explore Opportunities",
-                    })}
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Innovation opportunities */}
-      <section
-        id="investment-innovation-opportunities"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
-      >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-4">
-              <Lightbulb className="h-6 w-6 text-zim-gold" />
-              <h2 className="page-section-title">
-                {t("tech.opportunities.title") ||
-                  "Top Opportunities for Investment and Innovation"}
-              </h2>
-            </div>
-            <p className="text-sm  max-w-3xl mx-auto font-light leading-relaxed text-center mb-8">
-              {t("investment.opportunities.subtitle") ||
-                "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise."}
+        <div className="discovery-callout">
+          <InstantImage
+            src="/images/pages/investment/rbz_building.webp"
+            alt=""
+            draggable={false}
+            loading="lazy"
+            wrapperClassName="discovery-callout-image bg-slate-900"
+            className="h-full w-full object-cover"
+          />
+          <div className="discovery-callout-content">
+            <p>
+              {t("investment.sectors_info", {
+                defaultValue:
+                  "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile.",
+              })}
             </p>
-
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-              <div className="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {innovationOpportunityAreas.map(item => (
-                  <div
-                    key={item.title}
-                    className="rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-4"
-                  >
-                    <p className="text-zim-gold text-xs uppercase font-black tracking-widest mb-2">
-                      {item.title}
-                    </p>
-                    <p className=" text-sm leading-relaxed">{item.driver}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="xl:col-span-5 rounded-xl border border-white/10 bg-white/[0.02] text-white/80 p-5">
-                <h4 className="text-lg font-black text-white tracking-tight mb-4">
-                  {t("tech.challenges.title") ||
-                    "Critical Challenges to Address"}
-                </h4>
-                <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-3">
-                  {innovationChallenges.map(item => (
-                    <li key={item} className="flex items-start gap-3">
-                      <AlertTriangle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                      <span className=" text-sm leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <Button
+              asChild
+              className="mt-6 bg-zim-gold text-slate-950 hover:bg-yellow-300"
+            >
+              <Link href="/investment/opportunities">
+                {t("investment.sectors_explore", {
+                  defaultValue: "Explore Opportunities",
+                })}
+              </Link>
+            </Button>
           </div>
         </div>
-      </section>
-
-      {/* European Investment Partnerships */}
-      <section
-        id="eu-partnerships"
-        className="editorial-section bg-slate-950 relative overflow-hidden"
+      </DiscoverySection>
+      <DiscoverySection
+        id="investment-innovation-opportunities"
+        title={t("tech.opportunities.title", {
+          defaultValue: "Top Opportunities for Investment and Innovation",
+        })}
+        description={t("investment.opportunities.subtitle", {
+          defaultValue:
+            "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise.",
+        })}
       >
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="content-panel editorial-panel text-white/80 p-8 md:p-10">
-            <div className="section-heading mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <Globe className="h-6 w-6 text-zim-gold" />
-                <h2 className="page-section-title">
-                  {t("investment.eu_focus.title") ||
-                    "European Partnership Capital in Zimbabwe"}
-                </h2>
-              </div>
-              <p className="text-sm  max-w-3xl mx-auto mt-4 font-light leading-relaxed">
-                {t("investment.eu_focus.subtitle") ||
-                  "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure."}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2 justify-center mb-8">
-              {europePartners.map(partner => (
-                <Badge
-                  key={partner}
-                  className="bg-white/5  border border-white/10 text-[10px] uppercase font-black tracking-wider px-3 py-1"
-                >
-                  {partner}
-                </Badge>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {europeFocusAreas.map(item => (
-                <div
-                  key={item.title}
-                  className="surface-card text-white/80 p-7"
-                >
-                  <h3 className="text-lg font-black text-white tracking-tight mb-3">
-                    {item.title}
-                  </h3>
-                  <p className=" text-sm leading-relaxed">{item.detail}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 surface-card text-white/80 p-7">
-              <h4 className="text-lg font-black text-white tracking-tight mb-4">
-                {t("investment.eu_focus.eib_takeaways_title") ||
-                  "EIB Practical Takeaways for Diaspora Investors"}
-              </h4>
-              <ul className="space-y-3">
-                {eibTakeaways.map(point => (
-                  <li key={point} className="flex items-start gap-3  text-sm">
-                    <CheckCircle className="h-4 w-4 text-zim-gold mt-1 shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3 justify-center">
-              <a
-                href="https://www.get-invest.eu/about/country-windows/zimbabwe/"
-                target="_blank"
-                rel="noopener noreferrer"
+        <SwipeRail
+          label={t("tech.opportunities.title", {
+            defaultValue: "Top Opportunities for Investment and Innovation",
+          })}
+        >
+          {innovationOpportunityAreas.map((item, index) => (
+            <DiscoveryTile
+              key={item.title}
+              title={item.title}
+              image={
+                [
+                  "/images/pages/technology/ai_innovation.webp",
+                  "/images/pages/shared/manufacturing_factory.jpg",
+                  "/images/pages/technology/digital-classroom.jpg",
+                  "/images/pages/shared/export_port_01.jpg",
+                ][index]
+              }
+            >
+              <p>{item.driver}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+        <aside className="discovery-support-panel">
+          <h3 className="text-lg font-semibold mb-4">
+            {t("tech.challenges.title", {
+              defaultValue: "Critical Challenges to Address",
+            })}
+          </h3>
+          <ul className="space-y-3">
+            {innovationChallenges.map(item => (
+              <li
+                key={item}
+                className="flex items-start gap-3 text-sm leading-7"
               >
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.eu_focus.source_getinvest") ||
-                    "Source: GET.invest Zimbabwe"}
-                </Button>
-              </a>
-              <a
-                href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en"
-                target="_blank"
-                rel="noopener noreferrer"
+                <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-700" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </DiscoverySection>
+      <DiscoverySection
+        id="eu-partnerships"
+        title={t("investment.eu_focus.title", {
+          defaultValue: "European Partnership Capital in Zimbabwe",
+        })}
+        description={t("investment.eu_focus.subtitle", {
+          defaultValue:
+            "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure.",
+        })}
+      >
+        <ul className="discovery-partners mb-6">
+          {europePartners.map(partner => (
+            <li key={partner}>{partner}</li>
+          ))}
+        </ul>
+        <SwipeRail
+          label={t("investment.eu_focus.title", {
+            defaultValue: "European Partnership Capital in Zimbabwe",
+          })}
+        >
+          {europeFocusAreas.map((item, index) => (
+            <DiscoveryTile
+              key={item.title}
+              title={item.title}
+              icon={[Leaf, Building, DollarSign, Shield, Globe, Gem][index]}
+            >
+              <p>{item.detail}</p>
+            </DiscoveryTile>
+          ))}
+        </SwipeRail>
+        <aside className="discovery-support-panel">
+          <h3 className="text-lg font-semibold mb-4">
+            {t("investment.eu_focus.eib_takeaways_title", {
+              defaultValue: "EIB Practical Takeaways for Diaspora Investors",
+            })}
+          </h3>
+          <ul className="space-y-3">
+            {eibTakeaways.map(point => (
+              <li
+                key={point}
+                className="flex items-start gap-3 text-sm leading-7"
               >
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.eu_focus.source_eu") ||
-                    "Source: EU International Partnerships"}
-                </Button>
-              </a>
-              <a
-                href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-                  {t("investment.eu_focus.source_eib") ||
-                    "Source: EIB Zimbabwe Essay"}
-                </Button>
-              </a>
-            </div>
-          </div>
+                <CheckCircle className="mt-1 h-4 w-4 shrink-0 text-amber-700" />
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+        </aside>
+        <div className="mt-8 flex flex-wrap gap-3 ">
+          <a
+            href="https://www.get-invest.eu/about/country-windows/zimbabwe/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+              {t("investment.eu_focus.source_getinvest") ||
+                "Source: GET.invest Zimbabwe"}
+            </Button>
+          </a>
+          <a
+            href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+              {t("investment.eu_focus.source_eu") ||
+                "Source: EU International Partnerships"}
+            </Button>
+          </a>
+          <a
+            href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+              {t("investment.eu_focus.source_eib") ||
+                "Source: EIB Zimbabwe Essay"}
+            </Button>
+          </a>
         </div>
-      </section>
+      </DiscoverySection>
     </Layout>
   );
 }
