@@ -36,24 +36,6 @@
       "what_label": "Was wir tun",
       "what_content": "Wir betreiben eine gemeinsame Diaspora-Plattform für Tourismus, Investitionen, Einkauf und KI-gestützte Orientierung. Mit Institutionen und Dienstleistern unterstützen wir die praktische Teilnahme."
     },
-    "local_partners": {
-      "items": {
-        "zimbabwe_tourism": "Simbabwe Tourismus",
-        "zimparks": "ZimParks",
-        "zida": "ZIDA Invest",
-        "zimtrade": "ZimTrade",
-        "zimra": "ZIMRA"
-      }
-    },
-    "international_partners": {
-      "items": {
-        "gtai": "Deutschland Handel & Invest",
-        "eu_global_gateway": "Globales EU-Gateway",
-        "eib": "Europäische Investitionsbank",
-        "proparco": "PROPARCO",
-        "itc": "Internationales Handelszentrum"
-      }
-    },
     "newsletter": {
       "title": "Newsletter",
       "description": "Bleiben Sie auf dem Laufenden.",
@@ -1914,7 +1896,5 @@
         "role": "Operations Manager, Zim Macadamia Processors"
       }
     ]
-  },
-  "international_partners": "Internationale Partner",
-  "local_partners": "Lokale Partner"
+  }
 }
