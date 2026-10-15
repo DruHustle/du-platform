@@ -1040,8 +1040,8 @@ export default function Layout({ children }: LayoutProps) {
       {/* Footer */}
       <footer className="bg-slate-950 pt-20 pb-28 lg:pb-12">
         <div className="container mx-auto px-6">
-          {/* Main Grid: flex-col on mobile, grid on larger screens */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 mb-12 lg:grid-cols-[0.8fr_0.8fr_0.85fr_1.15fr_1.25fr_1.15fr]">
+          {/* Footer information and contact grid */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 mb-12 lg:grid-cols-[0.8fr_0.8fr_1.25fr_1.15fr]">
             {/* About Column */}
             <div className="space-y-4">
               <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
@@ -1083,144 +1083,6 @@ export default function Layout({ children }: LayoutProps) {
                       </Link>
                     </li>
                   ))}
-              </ul>
-            </div>
-
-            {/* Local Partners Column */}
-            <div className="space-y-4">
-              <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
-                {t("local_partners", { defaultValue: "Local Partners" })}
-              </h3>
-              <ul className="text-slate-400 space-y-2 text-xs">
-                <li>
-                  <a
-                    href="https://zimbabwetourism.net/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr(
-                      "footer.local_partners.items.zimbabwe_tourism",
-                      "Zimbabwe Tourism"
-                    )}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://zimparks.org.zw/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr("footer.local_partners.items.zimparks", "ZimParks")}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://zidainvest.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr("footer.local_partners.items.zida", "ZIDA Invest")}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://tradezimbabwe.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr("footer.local_partners.items.zimtrade", "ZimTrade")}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.zimra.co.zw/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr("footer.local_partners.items.zimra", "ZIMRA")}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* International Partners Column */}
-            <div className="space-y-4">
-              <h3 className="text-white text-[10px] font-black uppercase tracking-widest">
-                {t("international_partners", {
-                  defaultValue: "International Partners",
-                })}
-              </h3>
-              <ul className="text-slate-400 space-y-2 text-xs">
-                <li>
-                  <a
-                    href="https://www.gtai.de/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr(
-                      "footer.international_partners.items.gtai",
-                      "Germany Trade & Invest"
-                    )}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://international-partnerships.ec.europa.eu/policies/global-gateway_en"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr(
-                      "footer.international_partners.items.eu_global_gateway",
-                      "EU Global Gateway"
-                    )}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.eib.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr(
-                      "footer.international_partners.items.eib",
-                      "European Investment Bank"
-                    )}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.proparco.fr/en"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr(
-                      "footer.international_partners.items.proparco",
-                      "PROPARCO"
-                    )}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.intracen.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
-                  >
-                    {tr(
-                      "footer.international_partners.items.itc",
-                      "International Trade Centre"
-                    )}
-                  </a>
-                </li>
               </ul>
             </div>
 
