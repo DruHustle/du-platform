@@ -36,24 +36,6 @@
       "what_label": "Esikwenzayo",
       "what_content": "Sakha futhi siqhuba inkundla exhumanisa abantu abasemazweni lezokuvakasha, ukutshala imali, ukuthenga leziqondiso ze-AI. Sisebenza lezinhlanganiso labanikeza amasevisi ukusekela ukubamba iqhaza."
     },
-    "local_partners": {
-      "items": {
-        "zimbabwe_tourism": "Zimbabwe Tourism",
-        "zimparks": "ZimParks",
-        "zida": "ZIDA Invest",
-        "zimtrade": "IZimTrade",
-        "zimra": "IZIMRA"
-      }
-    },
-    "international_partners": {
-      "items": {
-        "gtai": "I-Germany Trade & Invest",
-        "eu_global_gateway": "I-EU Global Gateway",
-        "eib": "I-European Investment Bank",
-        "proparco": "I-PROPARCO",
-        "itc": "International Trade Center"
-      }
-    },
     "newsletter": {
       "title": "Iphephandaba",
       "description": "Hlala unolwazi.",
@@ -1914,7 +1896,5 @@
         "role": "Operations Manager, Zim Macadamia Processors"
       }
     ]
-  },
-  "international_partners": "Ozakwethu bamazwe ngamazwe",
-  "local_partners": "Ozakwethu Bendawo"
+  }
 }

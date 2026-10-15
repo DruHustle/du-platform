@@ -36,24 +36,6 @@
       "what_label": "Zvatinoita",
       "what_content": "Tinovaka nekushandisa puratifomu inobatanidza vanhu vari kunze kwenyika nezvekushanya, kuisa mari, kutenga, nemazano eAI. Tinoshanda nemasangano nevapi vemasevhisi kutsigira kutora chikamu."
     },
-    "local_partners": {
-      "items": {
-        "zimbabwe_tourism": "Zimbabwe Tourism",
-        "zimparks": "ZimParks",
-        "zida": "ZIDA Invest",
-        "zimtrade": "ZimTrade",
-        "zimra": "ZIMRA"
-      }
-    },
-    "international_partners": {
-      "items": {
-        "gtai": "Germany Trade & Invest",
-        "eu_global_gateway": "EU Global Gateway",
-        "eib": "European Investment Bank",
-        "proparco": "PROPARCO",
-        "itc": "International Trade Center"
-      }
-    },
     "newsletter": {
       "title": "Tsamba yenhau",
       "description": "Stay updated.",
@@ -1914,7 +1896,5 @@
         "role": "Operations Manager, Zim Macadamia Processors"
       }
     ]
-  },
-  "international_partners": "International Partners",
-  "local_partners": "Local Partners"
+  }
 }

@@ -36,24 +36,6 @@
       "what_label": "What we do",
       "what_content": "We build and operate a unified diaspora platform connecting people to tourism, investment, shopping, and AI-powered guidance. We partner with institutions and service providers to support practical participation."
     },
-    "local_partners": {
-      "items": {
-        "zimbabwe_tourism": "Zimbabwe Tourism",
-        "zimparks": "ZimParks",
-        "zida": "ZIDA Invest",
-        "zimtrade": "ZimTrade",
-        "zimra": "ZIMRA"
-      }
-    },
-    "international_partners": {
-      "items": {
-        "gtai": "Germany Trade & Invest",
-        "eu_global_gateway": "EU Global Gateway",
-        "eib": "European Investment Bank",
-        "proparco": "PROPARCO",
-        "itc": "International Trade Centre"
-      }
-    },
     "newsletter": {
       "title": "Newsletter",
       "description": "Stay updated.",
@@ -1906,7 +1888,5 @@
         "role": "Operations Manager, Zim Macadamia Processors"
       }
     ]
-  },
-  "international_partners": "International Partners",
-  "local_partners": "Local Partners"
+  }
 }
