@@ -688,39 +688,6 @@
       },
       "personalized_experience": "Okuhlangenwe nakho okuqondene lawe. - injini enamandla yokuncoma enikeza ulwazi olwenza uhambo lwakho lube lwehlukile futhi lungalibaleki."
     },
-    "planning": {
-      "guide_badge": "Isikhokhelo sohambo",
-      "essential_info": "Imininingwane eqakathekileyo yokuhlela",
-      "essential_desc": "Konke okudingayo ukuze uqiniseke ukuthi uhambo lwakho eZimbabwe luhamba kahle njalo luyajabulisa.",
-      "visa": {
-        "title": "Izidingo ze-Visa",
-        "desc": "Imininingwane eqakathekileyo yokungena kubahambi bamazwe ngamazwe.",
-        "d1": "Uhlelo lokufaka isicelo se-e-Visa lukhona",
-        "d2": "I-Visa itholakala emngceleni ezizweni ezinengi",
-        "d3": "I-Passport esasebenza (izinyanga ezingu-6) iyadingeka"
-      },
-      "health": {
-        "title": "Ezempilo lokuphepha",
-        "desc": "Hlala uphilile njalo uphephile phakathi lohambo lwakho lwaseZimbabwe.",
-        "d1": "Isitifiketi se-Yellow fever uma sodingeka",
-        "d2": "Imithi yokuvikela i-Malaria iyelulekwa",
-        "d3": "I-Travel insurance ebanzi iyelulekwa"
-      },
-      "payment": {
-        "title": "Imali lokubhadala",
-        "desc": "Ukuhamba phakathi kwesimo semali sakhona.",
-        "d1": "Uhlelo lwemali ezinengi (USD iyamukelwa kakhulu)",
-        "d2": "I-Visa le-Mastercard ziyamukelwa emahhotela amakhulu",
-        "d3": "Imali yomakhalekhukhwini (EcoCash) isetshenziswa kakhulu"
-      },
-      "time": {
-        "title": "Isikhathi esihle sokuvakasha",
-        "desc": "Ukuhlela uhambo lwakho ngesikhathi esingcono.",
-        "d1": "May kusiya ku-October kukulungele ukubuka izinyamazana",
-        "d2": "February kusiya ku-May kulungele iVictoria Falls",
-        "d3": "Isimo sezulu esihle unyaka wonke"
-      }
-    },
     "cta_title": "Usulungele ukuqalisa uhambo lwakho?",
     "cta_button": "Xhumana lochwepheshe",
     "cta_subtitle": "Ithimba lethu lezokuvakasha lingakusiza ekutholeni amathuba afaneleyo likuqondise ohlelweni lonke.",
@@ -908,9 +875,6 @@
       "empty": "No entities found.",
       "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
     },
-    "crowdfunding_title": "Amathuba e-Crowdfunding",
-    "crowdfunding_subtitle": "Ukutshala imali encane emisebenzini ehloliweyo, ngokungena okucacileyo lokubona umphumela wangempela.",
-    "crowdfunding_steps_subtitle": "Ukutshala imali okuncane emisebenzini ehloliweyo ngemali ephansi ube ubona umphumela wangempela.",
     "sectors_title": "Amathuba okutshala imali akhona",
     "sectors_subtitle": "Imisebenzi ehloliweyo ngokucophelela isekelwa nguhulumende.",
     "cta_title": "Usulungele ukutshala imali?",

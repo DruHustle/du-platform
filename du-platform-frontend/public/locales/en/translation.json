@@ -688,39 +688,6 @@
       },
       "personalized_experience": "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable."
     },
-    "planning": {
-      "guide_badge": "Travel Guide",
-      "essential_info": "Essential Planning Information",
-      "essential_desc": "Everything you need to know to ensure a seamless and unforgettable adventure in Zimbabwe.",
-      "visa": {
-        "title": "Visa Requirements",
-        "desc": "Essential entry information for international travelers.",
-        "d1": "e-Visa application system available",
-        "d2": "Visa on arrival for many nationalities",
-        "d3": "Valid passport (6 months) required"
-      },
-      "health": {
-        "title": "Health & Safety",
-        "desc": "Stay healthy and safe during your Zimbabwean adventure.",
-        "d1": "Yellow fever certificate if applicable",
-        "d2": "Malaria prophylaxis recommended",
-        "d3": "Comprehensive travel insurance advised"
-      },
-      "payment": {
-        "title": "Currency & Payments",
-        "desc": "Navigating the local financial landscape.",
-        "d1": "Multi-currency system (USD widely accepted)",
-        "d2": "Visa and Mastercard accepted in major hotels",
-        "d3": "Mobile money (EcoCash) widely used"
-      },
-      "time": {
-        "title": "Best Time to Visit",
-        "desc": "Timing your trip for the best experience.",
-        "d1": "May to October for wildlife viewing",
-        "d2": "February to May for Victoria Falls",
-        "d3": "Pleasant year-round temperate climate"
-      }
-    },
     "cta_title": "Ready to Start Your Adventure?",
     "cta_button": "Connect with an Expert",
     "cta_subtitle": "Our travel team can help you identify the right opportunities and guide you through the process.",
@@ -900,9 +867,6 @@
       "empty": "No entities found.",
       "service_unavailable": "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results."
     },
-    "crowdfunding_title": "Crowdfunding Opportunities",
-    "crowdfunding_subtitle": "Micro-investment in vetted projects with smaller amounts, transparent participation, and visible real-world impact.",
-    "crowdfunding_steps_subtitle": "Micro-investment in vetted projects with smaller amounts and see real impact.",
     "sectors_title": "Active Investment Opportunities",
     "sectors_subtitle": "Carefully vetted projects with government support and transparent tracking.",
     "collective_model": {

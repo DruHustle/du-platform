@@ -92,6 +92,37 @@ try {
     ]) {
       await page.goto(base + path);
       await page.locator(".swipe-rail").first().waitFor();
+      if (path === "/tourism") {
+        assert.equal(await page.locator("#plan-visit").count(), 0);
+        assert.equal(
+          await page
+            .getByRole("heading", {
+              name: "Essential Planning Information",
+              exact: true,
+            })
+            .count(),
+          0
+        );
+      }
+      if (path === "/investment") {
+        assert.equal(
+          await page
+            .getByRole("heading", {
+              name: "Crowdfunding Opportunities",
+              exact: true,
+            })
+            .count(),
+          0
+        );
+        assert(
+          await page
+            .getByRole("heading", {
+              name: "How Diaspora Collective Investing Works",
+              exact: true,
+            })
+            .isVisible()
+        );
+      }
       assert(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth + 1
