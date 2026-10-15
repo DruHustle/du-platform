@@ -13,7 +13,7 @@ else
 fi
 
 echo "[pre-commit] Generating sitemap..."
-node scripts/generate-sitemap.mjs
+node --import tsx scripts/generate-sitemap.mjs
 
 echo "[pre-commit] Staging generated files..."
 git add "$PUBLIC_DIR/sitemap.xml"

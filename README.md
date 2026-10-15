@@ -251,6 +251,26 @@ Vercel and Render must use the **repository root**, not either application folde
 because dependencies, the lockfile, environment configuration, shared code, and
 build orchestration are rooted there. Keep Vercel output directory `dist/public`
 and Render start command `pnpm start`; both use `pnpm install` and `pnpm build`.
+The frontend build emits a static HTML document for each registered route,
+including project details, with its own initial canonical, title, and robots
+directive. Vercel serves these documents with `cleanUrls: true`; do not restore
+the catch-all rewrite to `index.html`, which makes every initial document point
+at the homepage. Unmatched URLs use `404.html` with HTTP 404. Existing typo
+aliases permanently redirect to their corrected routes, and the API proxy stays
+separate from static document routing.
+
+Public canonical URLs use `https://www.diasporaunlocked.com`, matching the domain
+redirect. `VITE_SITE_URL` can set a different deployment origin; production builds
+default to the public origin rather than a local backend address. The build
+generates `robots.txt` and a sitemap containing only indexable canonical routes.
+Run `pnpm build && pnpm test:seo` to verify all initial HTML documents and sitemap
+entries without JavaScript or configured services. After release, check the raw
+HTML as well as the rendered DOM; canonical values must agree. Search Console
+must recrawl the corrected pages before its indexing report can change.
+`pnpm test:seo:live` checks the public site's raw HTML, redirects, robots file,
+sitemap URLs, and API proxy without submitting data. Set `SEO_BASE_URL` to
+inspect a preview deployment while expecting the public canonical origin.
+
 If a dashboard currently uses `frontend` or `backend` as its root directory, clear
 that setting. Reconnect an integration still pointing to the old GitHub repository
 name if it does not follow GitHub's rename redirect. No deployment is needed to

@@ -6,13 +6,16 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, loadEnv } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
+import { PUBLIC_SITE_ORIGIN, resolveCanonicalUrl } from "../shared/routeSeo";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(import.meta.dirname, ".."), "");
-  const siteUrl = (
+  const siteUrl = resolveCanonicalUrl(
     env.VITE_SITE_URL ||
-    env.APP_BASE_URL ||
-    "http://localhost:3000"
+      (mode === "production"
+        ? PUBLIC_SITE_ORIGIN
+        : env.APP_BASE_URL || "http://localhost:3000"),
+    "/"
   ).replace(/\/+$/, "");
   const useDevHttps = env.VITE_DEV_HTTPS !== "false";
   const useJsxLoc = mode !== "production";
