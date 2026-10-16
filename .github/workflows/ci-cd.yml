@@ -8,6 +8,11 @@ on:
   pull_request:
     branches: [main]
 
+# GitHub Actions owns deployment; cancel obsolete PR runs and serialize releases.
+concurrency:
+  group: du-platform-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 # Set environment variables at the top level for cleaner code
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

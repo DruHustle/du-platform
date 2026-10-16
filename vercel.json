@@ -1,5 +1,8 @@
 {
-  "buildCommand": "VITE_API_URL=/api pnpm build && pnpm test:seo",
+  "buildCommand": "VITE_API_URL=/api pnpm build:frontend && pnpm test:seo",
+  "git": {
+    "deploymentEnabled": false
+  },
   "outputDirectory": "dist/public",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
