@@ -247,10 +247,12 @@ root to preserve this behavior.
 ## Hosting Configuration
 
 GitHub repository: https://github.com/DruHustle/du-platform (one repository).
-Vercel and Render must use the **repository root**, not either application folder,
-because dependencies, the lockfile, environment configuration, shared code, and
-build orchestration are rooted there. Keep Vercel output directory `dist/public`
-and Render start command `pnpm start`; both use `pnpm install` and `pnpm build`.
+Vercel builds the frontend from the **repository root** with output directory
+`dist/public`. The production backend runs on the Oracle VM **Software Engineering
+Backend**, shared with other independent applications. See
+[Oracle deployment and rollback](deploy/oracle/README.md). Managed database and
+provider integrations remain unchanged. `render.yaml` is retained for rollback;
+Render deployment is gated by `RENDER_ROLLBACK_ENABLED=true` and disabled normally.
 The frontend build emits a static HTML document for each registered route,
 including project details, with its own initial canonical, title, and robots
 directive. Vercel serves these documents with `cleanUrls: true`; do not restore
@@ -273,9 +275,7 @@ inspect a preview deployment while expecting the public canonical origin.
 
 If a dashboard currently uses `frontend` or `backend` as its root directory, clear
 that setting. Reconnect an integration still pointing to the old GitHub repository
-name if it does not follow GitHub's rename redirect. No deployment is needed to
-review the local restructuring; deployments should wait until the changes are
-committed and approved.
+name if it does not follow GitHub's rename redirect. Review source changes and run the documented checks before updating production.
 
 ## Payment Provider Setup
 

@@ -17,7 +17,7 @@ assert.equal(config.trailingSlash, false);
 assert.deepEqual(config.rewrites, [
   {
     source: "/api/:path*",
-    destination: "https://du-platform.onrender.com/api/:path*",
+    destination: "https://du-api.152-70-22-84.sslip.io/api/:path*",
   },
 ]);
 for (const redirect of redirects) {
