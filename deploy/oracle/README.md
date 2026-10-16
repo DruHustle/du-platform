@@ -10,6 +10,12 @@ Production runs on the shared **Software Engineering Backend** VM, hostname
 - External ingress network: `du-platform-ingress`; Caddy alias: `du-platform-api`
 - Initial runtime source: `5e0a5fb73b7d8149de4165ac8ec1cb11e2281db5`
 
+Vercel builds explicitly use `VITE_API_URL=/api` so browser requests go through
+the configured same-origin proxy. A stale dashboard environment override must
+not send visitors to the retained, suspended Render service. Build and live SEO
+checks also inspect the actual browser entry bundle for that retired origin;
+checking the proxy's health endpoint alone does not verify client routing.
+
 ## Build and update
 
 Run the repository's tests, typecheck, build and SEO checks first. Build a

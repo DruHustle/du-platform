@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { readSiteRoutes } from "../lib/site-routes.mjs";
+import { assertActiveFrontendApi } from "../lib/frontend-api-origin.mjs";
 import {
   PUBLIC_SITE_ORIGIN,
   resolveCanonicalUrl,
@@ -20,6 +21,21 @@ assert.deepEqual(config.rewrites, [
     destination: "https://du-api.152-70-22-84.sslip.io/api/:path*",
   },
 ]);
+const entryAssets = [
+  ...fs
+    .readFileSync(path.join(root, "index.html"), "utf8")
+    .matchAll(/<script\b[^>]*src="(\/assets\/[^"?]+\.js)"/g),
+].map(match => match[1]);
+assert(
+  entryAssets.length > 0,
+  "Production HTML must load a browser entry bundle"
+);
+for (const asset of entryAssets) {
+  assertActiveFrontendApi(
+    fs.readFileSync(path.join(root, asset), "utf8"),
+    asset
+  );
+}
 for (const redirect of redirects) {
   assert(
     config.redirects.some(
