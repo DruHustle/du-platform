@@ -34,7 +34,7 @@
     "check:frontend": "tsc --noEmit -p du-platform-frontend/tsconfig.json",
     "check:backend": "tsc --noEmit -p du-platform-backend/tsconfig.json",
     "format:check": "prettier --check .",
-    "test:frontend": "vitest run --config du-platform-frontend/vite.config.ts --root . --dir du-platform-frontend/src",
+    "test:frontend": "vitest run --config du-platform-frontend/vite.config.ts --root . --dir du-platform-frontend/src && node --test scripts/tests/frontend-api-origin.test.mjs",
     "test": "pnpm test:modules && pnpm test:frontend",
     "test:seo": "node --import tsx scripts/tests/seo-build.mjs",
     "test:seo:live": "node scripts/tests/seo-live.mjs",
