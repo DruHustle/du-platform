@@ -96,6 +96,8 @@ Thumbs.db
 .eslintcache
 .rpt2_cache/
 .rts2_cache_*/
-.dockerignore
 *.orig
 *.bak
+
+# Private Oracle runtime environment overrides
+/deploy/oracle/compose.runtime*.json

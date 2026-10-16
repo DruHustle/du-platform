@@ -19,9 +19,9 @@ jobs:
       - name: Validate app liveness JSON
         env:
           # Primary app health endpoint. Prefer a repo variable, but allow secret fallback.
-          KEEPALIVE_URL: ${{ vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL || vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
           # Optional DB URL used only to derive the app origin if KEEPALIVE_URL is unset.
-          RENDER_DB_KEEPALIVE_URL: ${{ vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          RENDER_DB_KEEPALIVE_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL || vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
           # Allow some time for cold starts on the hosting side.
           KEEPALIVE_TIMEOUT_SECONDS: "30"
         run: |
@@ -53,9 +53,9 @@ jobs:
       - name: Validate DB health JSON
         env:
           # Explicit DB health URL if you want to override the derived default.
-          RENDER_DB_KEEPALIVE_URL: ${{ vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          RENDER_DB_KEEPALIVE_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL || vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
           # Fallback source used to derive the service origin.
-          RENDER_KEEPALIVE_URL: ${{ vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          RENDER_KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL || vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
           KEEPALIVE_TIMEOUT_SECONDS: "30"
         run: |
           DB_URL="$(echo "${RENDER_DB_KEEPALIVE_URL:-}" | xargs)"
@@ -84,10 +84,10 @@ jobs:
       - name: Validate Onesa readiness JSON
         env:
           # Optional explicit Onesa readiness URL.
-          RENDER_ONESA_READY_URL: ${{ vars.RENDER_ONESA_READY_URL || secrets.RENDER_ONESA_READY_URL }}
+          RENDER_ONESA_READY_URL: ${{ vars.BACKEND_ONESA_HEALTH_URL || vars.RENDER_ONESA_READY_URL || secrets.RENDER_ONESA_READY_URL }}
           # Fallback sources used to derive the backend origin if the explicit Onesa URL is absent.
-          RENDER_KEEPALIVE_URL: ${{ vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
-          RENDER_DB_KEEPALIVE_URL: ${{ vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          RENDER_KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL || vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          RENDER_DB_KEEPALIVE_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL || vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
           KEEPALIVE_TIMEOUT_SECONDS: "30"
         run: |
           ONESA_URL="$(echo "${RENDER_ONESA_READY_URL:-}" | xargs)"
@@ -168,4 +168,4 @@ jobs:
             - DB health: ${{ needs.db-health.result }}
             - Onesa readiness: ${{ needs.onesa-health.result }}
 
-            Check the failing job logs in GitHub Actions and Render service logs for the underlying cause.
+            Check the failing job logs in GitHub Actions and Oracle container logs for the underlying cause.
