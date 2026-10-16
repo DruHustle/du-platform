@@ -82,7 +82,7 @@ du-platform/                         # One parent Git/GitHub repository
 ├── package.json                    # Single dependency manifest and app scripts
 ├── pnpm-lock.yaml                  # Single, unchanged lockfile
 ├── tsconfig.json                   # Shared compiler options and root aliases
-├── render.yaml                     # Full-stack deployment from repository root
+├── deploy/oracle/                  # Oracle container deployment and operations
 ├── vercel.json                     # Static frontend deployment from repository root
 └── README.md
 ```
@@ -251,8 +251,8 @@ Vercel builds the frontend from the **repository root** with output directory
 `dist/public`. The production backend runs on the Oracle VM **Software Engineering
 Backend**, shared with other independent applications. See
 [Oracle deployment and rollback](deploy/oracle/README.md). Managed database and
-provider integrations remain unchanged. `render.yaml` is retained for rollback;
-Render deployment is gated by `RENDER_ROLLBACK_ENABLED=true` and disabled normally.
+provider integrations remain unchanged. Retired deployment configuration has been
+removed; rollback uses the previous tested Oracle image.
 The frontend build emits a static HTML document for each registered route,
 including project details, with its own initial canonical, title, and robots
 directive. Vercel serves these documents with `cleanUrls: true`; do not restore
@@ -345,9 +345,9 @@ You should see:
 [E2E] Onesa smoke test passed.
 ```
 
-## Render Health Check And Keepalive
+## Oracle Infrastructure Health Checks
 
-To reduce cold starts and detect production outages, this repo includes a scheduled GitHub Action:
+To detect production outages, this repo includes a scheduled GitHub Action:
 
 - Workflow: `.github/workflows/infra-health-check.yml`
 - Frequency: every 15 minutes
@@ -358,9 +358,9 @@ To reduce cold starts and detect production outages, this repo includes a schedu
 ### Setup
 
 1. In GitHub repo settings, add repository variables:
-   - `RENDER_KEEPALIVE_URL` = your backend app health URL (recommended: `https://<your-backend>/api/ping`)
-   - `RENDER_DB_KEEPALIVE_URL` = your backend DB health URL (recommended: `https://<your-backend>/api/health/db`)
-   - `RENDER_ONESA_READY_URL` = your Onesa readiness URL (recommended: `https://<your-backend>/api/ai/ready`)
+   - `BACKEND_HEALTH_URL` = `https://du-api.152-70-22-84.sslip.io/api/ping`
+   - `BACKEND_DATABASE_HEALTH_URL` = `https://du-api.152-70-22-84.sslip.io/api/health/db`
+   - `BACKEND_ONESA_HEALTH_URL` = `https://du-api.152-70-22-84.sslip.io/api/ai/ready`
    - `HEALTHCHECK_ALERT_TO` = destination alert email
    - `HEALTHCHECK_ALERT_FROM` = sender email identity
 2. Add repository secrets for SMTP:
@@ -374,7 +374,7 @@ To reduce cold starts and detect production outages, this repo includes a schedu
 ### Local manual ping
 
 ```bash
-KEEPALIVE_URL=https://<your-backend>/api/ping pnpm keepalive:ping
+KEEPALIVE_URL=https://du-api.152-70-22-84.sslip.io/api/ping pnpm keepalive:ping
 ```
 
 ## Strategic Framework Alignment

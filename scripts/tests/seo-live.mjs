@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import { assertActiveFrontendApi } from "../lib/frontend-api-origin.mjs";
+import {
+  assertActiveFrontendApi,
+  referencedFrontendScripts,
+} from "../lib/frontend-api-origin.mjs";
 
 // Read-only release smoke check. Fetching raw HTML deliberately does not execute
 // JavaScript, so client-side metadata updates cannot hide hosting regressions.
@@ -135,17 +138,32 @@ const entryAssets = [
   ...homeHtml.matchAll(/<script\b[^>]*src="(\/assets\/[^"?]+\.js)"/g),
 ].map(match => match[1]);
 assert(entryAssets.length > 0, "Public HTML must load a browser entry bundle");
-for (const asset of entryAssets) {
-  const { response, html: source } = await read(asset);
-  assert.equal(response.status, 200, asset);
-  assert(
-    response.headers.get("content-type")?.includes("javascript"),
-    `${asset}: JavaScript content type`
+const pendingAssets = new Set(entryAssets);
+const checkedAssets = new Set();
+while (pendingAssets.size) {
+  const batch = [...pendingAssets].slice(0, 8);
+  batch.forEach(asset => {
+    pendingAssets.delete(asset);
+    checkedAssets.add(asset);
+  });
+  const sources = await Promise.all(
+    batch.map(async asset => {
+      const { response, html: source } = await read(asset);
+      assert.equal(response.status, 200, asset);
+      assert(
+        response.headers.get("content-type")?.includes("javascript"),
+        `${asset}: JavaScript content type`
+      );
+      assertActiveFrontendApi(source, asset);
+      return referencedFrontendScripts(source, asset);
+    })
   );
-  assertActiveFrontendApi(source, asset);
+  sources.flat().forEach(asset => {
+    if (!checkedAssets.has(asset)) pendingAssets.add(asset);
+  });
 }
 console.log(
-  "PASS published browser JavaScript does not use the retired Render backend"
+  `PASS ${checkedAssets.size} published browser JavaScript chunks do not use a retired Render backend`
 );
 console.log(
   `PASS ${urls.length} public canonical pages; private noindex pages; genuine 404s; redirects; robots; API proxy`

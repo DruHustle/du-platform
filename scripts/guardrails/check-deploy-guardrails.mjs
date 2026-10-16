@@ -26,6 +26,27 @@ if (!vercel.buildCommand.includes("pnpm test:seo")) {
   fail("Vercel must verify its actual browser output before publishing.");
 }
 
+if (
+  vercel.rewrites.find(rule => rule.source === "/api/:path*")?.destination !==
+  "https://du-api.152-70-22-84.sslip.io/api/:path*"
+) {
+  fail("The Vercel API proxy must target the Oracle backend.");
+}
+for (const filename of fs.readdirSync(
+  path.join(rootDir, ".github", "workflows")
+)) {
+  const workflow = fs.readFileSync(
+    path.join(rootDir, ".github", "workflows", filename),
+    "utf8"
+  );
+  if (/onrender\.com|\bRENDER_[A-Z_]+\b/i.test(workflow))
+    fail(`${filename} still depends on retired hosting configuration.`);
+}
+for (const filename of ["render.yaml", "render.yml"]) {
+  if (fs.existsSync(path.join(rootDir, filename)))
+    fail(`Remove retired deployment manifest ${filename}.`);
+}
+
 if (/vercel\s+deploy[^\n]*--prebuilt/.test(source)) {
   fail(
     "Found `vercel deploy --prebuilt`. Use source builds on Vercel to avoid stale output deploys."

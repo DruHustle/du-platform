@@ -30,7 +30,10 @@ assert(
   entryAssets.length > 0,
   "Production HTML must load a browser entry bundle"
 );
-for (const asset of entryAssets) {
+for (const filename of fs
+  .readdirSync(path.join(root, "assets"))
+  .filter(name => name.endsWith(".js"))) {
+  const asset = `/assets/${filename}`;
   assertActiveFrontendApi(
     fs.readFileSync(path.join(root, asset), "utf8"),
     asset
