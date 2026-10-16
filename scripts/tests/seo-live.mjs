@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { assertActiveFrontendApi } from "../lib/frontend-api-origin.mjs";
 
 // Read-only release smoke check. Fetching raw HTML deliberately does not execute
 // JavaScript, so client-side metadata updates cannot hide hosting regressions.
@@ -129,6 +130,23 @@ for (const [pathname, status] of [
   assert.equal(response.status, status);
   assert(response.headers.get("content-type")?.includes("application/json"));
 }
+const { html: homeHtml } = await read("/");
+const entryAssets = [
+  ...homeHtml.matchAll(/<script\b[^>]*src="(\/assets\/[^"?]+\.js)"/g),
+].map(match => match[1]);
+assert(entryAssets.length > 0, "Public HTML must load a browser entry bundle");
+for (const asset of entryAssets) {
+  const { response, html: source } = await read(asset);
+  assert.equal(response.status, 200, asset);
+  assert(
+    response.headers.get("content-type")?.includes("javascript"),
+    `${asset}: JavaScript content type`
+  );
+  assertActiveFrontendApi(source, asset);
+}
+console.log(
+  "PASS published browser JavaScript does not use the retired Render backend"
+);
 console.log(
   `PASS ${urls.length} public canonical pages; private noindex pages; genuine 404s; redirects; robots; API proxy`
 );

@@ -100,6 +100,9 @@ jobs:
         id: vercel_deploy
         run: vercel deploy --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Verify published browser API routing and canonical pages
+        run: node scripts/tests/seo-live.mjs
+
       - name: Rollback on deployment failure
         if: failure() && steps.vercel_deploy.conclusion == 'failure'
         run: |
