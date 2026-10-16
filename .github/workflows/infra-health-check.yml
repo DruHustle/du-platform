@@ -18,15 +18,15 @@ jobs:
 
       - name: Validate app liveness JSON
         env:
-          # Primary app health endpoint. Prefer a repo variable, but allow secret fallback.
-          KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL || vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          # Oracle app health endpoint from repository variables.
+          KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL }}
           # Optional DB URL used only to derive the app origin if KEEPALIVE_URL is unset.
-          RENDER_DB_KEEPALIVE_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL || vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
-          # Allow some time for cold starts on the hosting side.
+          BACKEND_DATABASE_HEALTH_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL }}
+          # Bound network waits when the backend is unavailable.
           KEEPALIVE_TIMEOUT_SECONDS: "30"
         run: |
           APP_URL="$(echo "${KEEPALIVE_URL:-}" | xargs)"
-          DB_URL="$(echo "${RENDER_DB_KEEPALIVE_URL:-}" | xargs)"
+          DB_URL="$(echo "${BACKEND_DATABASE_HEALTH_URL:-}" | xargs)"
 
           # If only the DB URL is configured, infer the same service origin for /api/ping.
           if [[ -z "$APP_URL" && -n "$DB_URL" ]]; then
@@ -36,7 +36,7 @@ jobs:
 
           if [[ -z "$APP_URL" ]]; then
             echo "[keepalive] Missing app URL."
-            echo "[keepalive] Set one of: vars.RENDER_KEEPALIVE_URL, secrets.RENDER_KEEPALIVE_URL, vars.RENDER_DB_KEEPALIVE_URL, secrets.RENDER_DB_KEEPALIVE_URL"
+            echo "[keepalive] Set vars.BACKEND_HEALTH_URL or vars.BACKEND_DATABASE_HEALTH_URL."
             exit 1
           fi
 
@@ -53,17 +53,17 @@ jobs:
       - name: Validate DB health JSON
         env:
           # Explicit DB health URL if you want to override the derived default.
-          RENDER_DB_KEEPALIVE_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL || vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          BACKEND_DATABASE_HEALTH_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL }}
           # Fallback source used to derive the service origin.
-          RENDER_KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL || vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
+          BACKEND_HEALTH_URL: ${{ vars.BACKEND_HEALTH_URL }}
           KEEPALIVE_TIMEOUT_SECONDS: "30"
         run: |
-          DB_URL="$(echo "${RENDER_DB_KEEPALIVE_URL:-}" | xargs)"
-          APP_URL="$(echo "${RENDER_KEEPALIVE_URL:-}" | xargs)"
+          DB_URL="$(echo "${BACKEND_DATABASE_HEALTH_URL:-}" | xargs)"
+          APP_URL="$(echo "${BACKEND_HEALTH_URL:-}" | xargs)"
 
           if [[ -z "$DB_URL" ]]; then
             if [[ -z "$APP_URL" ]]; then
-              echo "[keepalive] Missing both RENDER_DB_KEEPALIVE_URL and RENDER_KEEPALIVE_URL."
+              echo "[keepalive] Missing both BACKEND_DATABASE_HEALTH_URL and BACKEND_HEALTH_URL."
               exit 1
             fi
             # Default DB health path on the same backend service.
@@ -84,15 +84,15 @@ jobs:
       - name: Validate Onesa readiness JSON
         env:
           # Optional explicit Onesa readiness URL.
-          RENDER_ONESA_READY_URL: ${{ vars.BACKEND_ONESA_HEALTH_URL || vars.RENDER_ONESA_READY_URL || secrets.RENDER_ONESA_READY_URL }}
+          BACKEND_ONESA_HEALTH_URL: ${{ vars.BACKEND_ONESA_HEALTH_URL }}
           # Fallback sources used to derive the backend origin if the explicit Onesa URL is absent.
-          RENDER_KEEPALIVE_URL: ${{ vars.BACKEND_HEALTH_URL || vars.RENDER_KEEPALIVE_URL || secrets.RENDER_KEEPALIVE_URL }}
-          RENDER_DB_KEEPALIVE_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL || vars.RENDER_DB_KEEPALIVE_URL || secrets.RENDER_DB_KEEPALIVE_URL }}
+          BACKEND_HEALTH_URL: ${{ vars.BACKEND_HEALTH_URL }}
+          BACKEND_DATABASE_HEALTH_URL: ${{ vars.BACKEND_DATABASE_HEALTH_URL }}
           KEEPALIVE_TIMEOUT_SECONDS: "30"
         run: |
-          ONESA_URL="$(echo "${RENDER_ONESA_READY_URL:-}" | xargs)"
-          APP_URL="$(echo "${RENDER_KEEPALIVE_URL:-}" | xargs)"
-          DB_URL="$(echo "${RENDER_DB_KEEPALIVE_URL:-}" | xargs)"
+          ONESA_URL="$(echo "${BACKEND_ONESA_HEALTH_URL:-}" | xargs)"
+          APP_URL="$(echo "${BACKEND_HEALTH_URL:-}" | xargs)"
+          DB_URL="$(echo "${BACKEND_DATABASE_HEALTH_URL:-}" | xargs)"
 
           # Prefer deriving from the app URL first, then the DB URL.
           if [[ -z "$ONESA_URL" && -n "$APP_URL" ]]; then
@@ -107,7 +107,7 @@ jobs:
 
           if [[ -z "$ONESA_URL" ]]; then
             echo "[healthcheck] Missing Onesa readiness URL."
-            echo "[healthcheck] Set vars.RENDER_ONESA_READY_URL or provide RENDER_KEEPALIVE_URL / RENDER_DB_KEEPALIVE_URL."
+            echo "[healthcheck] Set vars.BACKEND_ONESA_HEALTH_URL or provide BACKEND_HEALTH_URL / BACKEND_DATABASE_HEALTH_URL."
             exit 1
           fi
 
