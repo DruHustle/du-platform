@@ -522,6 +522,9 @@ try {
     );
   });
   assert.deepEqual(xrState, { views: 2, inputs: 2 });
+  // XR frames can start before the asynchronously decoded panorama is uploaded.
+  // Wait for the actual texture instead of assuming ten frames prove readiness.
+  await page.waitForFunction(() => window.__xrScene?.background?.isTexture);
   const sceneState = await page.evaluate(() => {
     const scene = window.__xrScene;
     const renderer = window.__xrRenderer;
