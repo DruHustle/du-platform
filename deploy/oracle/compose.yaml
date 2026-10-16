@@ -1,0 +1,44 @@
+{
+  "name": "du-platform",
+  "services": {
+    "app": {
+      "image": "${APP_IMAGE:?Set APP_IMAGE to the tested ARM64 image}",
+      "restart": "unless-stopped",
+      "init": true,
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,noexec,nosuid,size=128m,mode=1777"
+      ],
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "mem_limit": "768m",
+      "ports": [
+        "127.0.0.1:11000:10000"
+      ],
+      "networks": {
+        "ingress": {
+          "aliases": [
+            "du-platform-api"
+          ]
+        }
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    }
+  },
+  "networks": {
+    "ingress": {
+      "name": "du-platform-ingress",
+      "external": true
+    }
+  }
+}
