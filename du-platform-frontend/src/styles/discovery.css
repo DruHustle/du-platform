@@ -280,7 +280,7 @@
   align-items: center;
   justify-content: center;
   color: #0f172a;
-  background: #fff;
+  background: var(--color-zim-gold);
 }
 .content-page .discovery-tile-plus svg {
   height: 20px;
