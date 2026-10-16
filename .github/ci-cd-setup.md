@@ -23,7 +23,10 @@ prevents dashboard API settings from overriding the tested routing.
 The production job also checks the published HTML, canonical URLs, API proxy and
 all referenced JavaScript chunks, including lazy routes. No production browser
 chunk may reference a retired backend. Run the same check with
-`pnpm test:seo:live`. Both the Vercel Git integration and CI use `vercel.json`.
+`pnpm test:seo:live`. GitHub Actions is the only automatic deployment owner;
+`git.deploymentEnabled=false` disables duplicate Vercel Git builds while keeping
+the repository connected. PR previews and production releases still run after
+the complete CI gate.
 
 Oracle backend releases are independent, manual container updates using a tested
 source commit. They do not run automatically when the frontend is published.
@@ -77,3 +80,23 @@ alone does not prove the compiled browser uses it; inspect all published chunks.
 Keep authentication, CORS, CSRF and TLS checks enabled. Backend rollback restores
 the previous tested Oracle image and repeats readiness checks, without changing
 managed production data or restarting sibling applications.
+
+## Deployment storage
+
+The frontend output has a 60 MiB total budget and a 6 MiB per-file budget.
+`pnpm build:frontend` checks both automatically; `pnpm check:deployment-size`
+repeats the check. Home and Shop image content is unchanged. Large tourism/VR
+JPEGs are encoded efficiently at their original dimensions, and unused originals
+and retired-feature images are excluded. Keep media source backups outside the
+public directory; every public file is copied into every deployment.
+
+Vercel builds only the frontend. `.vercelignore` excludes the Oracle backend,
+deployment tools, local output, private environment files and dependencies from
+source uploads. Full backend/frontend checks still run in GitHub Actions.
+
+Keep project-specific retention appropriate to review and rollback needs. The
+current production alias and Vercel's protected recent releases remain available.
+Avoid creating duplicate manual releases of an unchanged commit. The Usage chart
+records daily storage peaks; an earlier peak does not disappear when deployments
+are later removed. Compare retained releases and new build output separately from
+historical usage. See [Vercel Deployment Storage](https://vercel.com/docs/deployment-storage).

@@ -1,0 +1,17 @@
+# The frontend is built remotely; never upload local output or private files.
+.git
+.vercel
+.env*
+.cert
+.claude
+**/*.pem
+**/node_modules
+dist
+playwright-report
+test-results
+private
+
+# Oracle owns the backend. These directories are not needed for the static build.
+du-platform-backend
+deploy
+docs

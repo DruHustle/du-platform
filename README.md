@@ -253,6 +253,11 @@ Backend**, shared with other independent applications. See
 [Oracle deployment and rollback](deploy/oracle/README.md). Managed database and
 provider integrations remain unchanged. Retired deployment configuration has been
 removed; rollback uses the previous tested Oracle image.
+GitHub Actions owns automatic frontend releases and PR previews after CI passes;
+Vercel Git auto-deployment is disabled to prevent duplicate copies. Vercel builds
+only `build:frontend`; Oracle backend releases remain independent.
+Frontend builds enforce a 60 MiB output budget and a 6 MiB per-file budget. Run
+`pnpm check:deployment-size` to inspect the current output.
 The frontend build emits a static HTML document for each registered route,
 including project details, with its own initial canonical, title, and robots
 directive. Vercel serves these documents with `cleanUrls: true`; do not restore

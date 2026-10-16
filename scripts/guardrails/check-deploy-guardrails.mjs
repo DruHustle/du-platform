@@ -25,6 +25,19 @@ if (!vercel.buildCommand.startsWith("VITE_API_URL=/api ")) {
 if (!vercel.buildCommand.includes("pnpm test:seo")) {
   fail("Vercel must verify its actual browser output before publishing.");
 }
+if (vercel.git?.deploymentEnabled !== false) {
+  fail(
+    "GitHub Actions must be the only automatic deployer; duplicate Git deployments waste storage and bypass CI gates."
+  );
+}
+if (
+  !vercel.buildCommand.includes("pnpm build:frontend") ||
+  vercel.outputDirectory !== "dist/public"
+) {
+  fail(
+    "Vercel must build and publish only the static frontend; the backend runs on Oracle."
+  );
+}
 
 if (
   vercel.rewrites.find(rule => rule.source === "/api/:path*")?.destination !==
