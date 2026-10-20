@@ -20,7 +20,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedChatMessage from "@/components/FormattedChatMessage";
-import { getApiErrorMessage } from "@/lib/api";
 import {
   checkOnesaHealth,
   sendOnesaChatMessage,
@@ -52,9 +51,9 @@ function getWelcomeMessage(t: ReturnType<typeof useTranslation>["t"]) {
   return (
     t("onesa.welcome", {
       defaultValue:
-        "I am an expert on Zimbabwe. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
+        "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
     }) ||
-    "I am an expert on Zimbabwe. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks."
+    "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks."
   );
 }
 
@@ -98,6 +97,8 @@ export default function OnesaFloatingAssistant() {
   const bubbleRef = useRef<HTMLDivElement | null>(null);
   const bubblePositionRef = useRef<{ x: number; y: number } | null>(null);
   const onesaMessagesEndRef = useRef<HTMLDivElement | null>(null);
+  const requestInFlightRef = useRef(false);
+  const healthCheckVersionRef = useRef(0);
   const suppressBubbleClickRef = useRef(false);
   const dragStateRef = useRef<DragState | null>(null);
   const touchDragArmTimeoutRef = useRef<number | null>(null);
@@ -319,13 +320,16 @@ export default function OnesaFloatingAssistant() {
   ]);
 
   const checkOnesaPopupHealth = useCallback(async (): Promise<boolean> => {
+    const version = ++healthCheckVersionRef.current;
     const backendUnreachableStatus =
       t("onesa.status_backend_unreachable", {
         defaultValue: "Onesa is currently unavailable. AI mode is off",
       }) || "Onesa is currently unavailable. AI mode is off";
     const health = await checkOnesaHealth(backendUnreachableStatus);
-    setOnesaIsOnline(health.online);
-    setOnesaStatus(health.statusText);
+    if (version === healthCheckVersionRef.current) {
+      setOnesaIsOnline(health.online);
+      setOnesaStatus(health.statusText);
+    }
     return health.online;
   }, [t]);
 
@@ -362,8 +366,13 @@ export default function OnesaFloatingAssistant() {
 
   const sendOnesaPopupMessage = async () => {
     const trimmed = onesaInput.trim();
-    if (!trimmed || onesaLoading) return;
-    void checkOnesaPopupHealth();
+    if (
+      !trimmed ||
+      requestInFlightRef.current ||
+      (onesaRetryAfterSecondsRemaining ?? 0) > 0
+    )
+      return;
+    requestInFlightRef.current = true;
 
     const nextMessages: OnesaChatMessage[] = [
       ...onesaMessages,
@@ -384,20 +393,20 @@ export default function OnesaFloatingAssistant() {
       if (!reply) throw new Error("Empty model response.");
       setOnesaMessages(prev => [
         ...prev,
-        { role: "assistant", content: reply },
+        { role: "assistant", content: reply, truncated: data.truncated },
       ]);
+      healthCheckVersionRef.current += 1;
       setOnesaIsOnline(true);
       setOnesaStatus("");
     } catch (err: any) {
       const statusCode = Number(err?.response?.status ?? 0);
-      const responseMessage = getApiErrorMessage(err, "");
       const retryAfterMs = Number(err?.response?.data?.retryAfterMs ?? 0);
       const retryAfterSeconds =
         retryAfterMs > 0 ? Math.max(1, Math.ceil(retryAfterMs / 1000)) : null;
       const isRateLimited =
         statusCode === 429 ||
         /status code 429|rate limit|too many requests/i.test(
-          String(err?.message ?? responseMessage ?? "")
+          String(err?.message ?? "")
         );
       const rateLimitedError =
         t("onesa.error_rate_limited", {
@@ -414,22 +423,20 @@ export default function OnesaFloatingAssistant() {
               defaultValue: "Onesa request timed out. Please try again.",
             })
           : null;
-      const safeResponseMessage =
-        typeof responseMessage === "string" &&
-        !/status code \d+/i.test(responseMessage)
-          ? responseMessage
-          : null;
       const message = isRateLimited
         ? rateLimitedError
-        : (timeoutMessage ?? safeResponseMessage ?? genericContactError);
+        : (timeoutMessage ?? genericContactError);
       setOnesaRetryAfterSecondsRemaining(
         isRateLimited ? retryAfterSeconds : null
       );
       setOnesaError(message);
+      setOnesaMessages(nextMessages.slice(0, -1));
+      setOnesaInput(current => current || trimmed);
       if (!isRateLimited) {
         void checkOnesaPopupHealth();
       }
     } finally {
+      requestInFlightRef.current = false;
       setOnesaLoading(false);
     }
   };
@@ -442,7 +449,11 @@ export default function OnesaFloatingAssistant() {
   const handleOnesaPopupInputKeyDown = async (
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       await sendOnesaPopupMessage();
     }
@@ -857,6 +868,17 @@ export default function OnesaFloatingAssistant() {
                                 content={message.content}
                                 className="text-sm leading-relaxed"
                               />
+                              {message.truncated ? (
+                                <p
+                                  className="mt-2 text-xs text-zim-gold"
+                                  role="status"
+                                >
+                                  {t("onesa.response_incomplete", {
+                                    defaultValue:
+                                      "This answer was cut short. Ask Onesa to continue.",
+                                  })}
+                                </p>
+                              ) : null}
                             </div>
                           </div>
                         ))}
@@ -895,7 +917,11 @@ export default function OnesaFloatingAssistant() {
                       <div className="flex justify-end">
                         <Button
                           type="submit"
-                          disabled={onesaLoading}
+                          disabled={
+                            onesaLoading ||
+                            !onesaInput.trim() ||
+                            (onesaRetryAfterSecondsRemaining ?? 0) > 0
+                          }
                           className="rounded-full bg-zim-gold px-6 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
                         >
                           <Send className="mr-2 h-4 w-4" />

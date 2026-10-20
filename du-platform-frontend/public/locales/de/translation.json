@@ -1563,7 +1563,7 @@
     "send": "Senden",
     "thinking": "Überlegt...",
     "starter_prompt": "Chat starten....",
-    "welcome": "Ich bin ein Experte für Simbabwe. Ich helfe Ihnen bei Investitionen, Technologie, Tourismus und Ihren alltäglichen Aufgaben.",
+    "welcome": "Ich bin ein Experte für Simbabwe und den afrikanischen Kontinent. Ich helfe Ihnen bei Investitionen, Technologie, Tourismus und Ihren alltäglichen Aufgaben.",
     "status_prefix": "Onesa-Status",
     "status_offline": "Nicht verbunden",
     "status_backend_unreachable": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
@@ -1573,7 +1573,8 @@
     "error_timeout": "Die Onesa-Anfrage ist abgelaufen. Bitte versuchen Sie es erneut.",
     "offline_text": "Nicht verbunden",
     "error_rate_limited": "Onesa ist gerade beschäftigt. Bitte versuchen Sie es in ein paar Sekunden noch einmal.",
-    "message_label": "Nachricht an Onesa"
+    "message_label": "Nachricht an Onesa",
+    "response_incomplete": "Diese Antwort wurde abgeschnitten. Bitten Sie Onesa, fortzufahren."
   },
   "logout": "Abmelden",
   "legal": {

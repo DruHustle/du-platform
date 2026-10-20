@@ -1563,7 +1563,7 @@
     "send": "Thumela",
     "thinking": "Iyacabanga...",
     "starter_prompt": "Qalisa ingxoxo....",
-    "welcome": "Nginguchwepheshe weZimbabwe. Ake ngikusize kuzo zonke izinto ezimayelana lokutshala imali, ubuchwepheshe, ezokuvakasha, kanye lemisebenzi yakho yansuku zonke.",
+    "welcome": "Nginguchwepheshe weZimbabwe kanye lelizwekazi le-Afrika. Ake ngikusize kuzo zonke izinto ezimayelana lokutshala imali, ubuchwepheshe, ezokuvakasha, kanye lemisebenzi yakho yansuku zonke.",
     "status_prefix": "Isimo se-Onesa",
     "status_offline": "Ayikho online",
     "status_backend_unreachable": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
@@ -1573,7 +1573,8 @@
     "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi. Zama njalo.",
     "offline_text": "Okungaxhunyiwe ku-inthanethi",
     "error_rate_limited": "U-Onesa umatasatasa njengamanje. Sicela uzame futhi emizuzwaneni embalwa.",
-    "message_label": "Umlayezo ku-Onesa"
+    "message_label": "Umlayezo ku-Onesa",
+    "response_incomplete": "Impendulo le inqunyuliwe. Cela u-Onesa ukuthi aqhubeke."
   },
   "logout": "Phuma",
   "legal": {

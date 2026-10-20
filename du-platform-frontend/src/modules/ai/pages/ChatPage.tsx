@@ -3,7 +3,6 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedChatMessage from "@/components/FormattedChatMessage";
-import { getApiErrorMessage } from "@/lib/api";
 import {
   checkOnesaHealth,
   OnesaChatMessage,
@@ -32,13 +31,14 @@ export default function ChatPage() {
   });
   const backLabel = t("common.back", { defaultValue: "Back" });
 
+  const welcomeMessage = t("onesa.welcome", {
+    defaultValue:
+      "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
+  });
   const [messages, setMessages] = useState<OnesaChatMessage[]>([
     {
       role: "assistant",
-      content: t("onesa.welcome", {
-        defaultValue:
-          "I am an expert on Zimbabwe. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
-      }),
+      content: welcomeMessage,
     },
   ]);
   const [input, setInput] = useState("");
@@ -50,7 +50,17 @@ export default function ChatPage() {
   const [status, setStatus] = useState("");
   const [isOnline, setIsOnline] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const requestInFlightRef = useRef(false);
+  const healthCheckVersionRef = useRef(0);
   const hasChatStarted = messages.some(message => message.role === "user");
+
+  useEffect(() => {
+    setMessages(current =>
+      current.some(message => message.role === "user")
+        ? current
+        : [{ role: "assistant", content: welcomeMessage }]
+    );
+  }, [welcomeMessage]);
 
   const scrollMessagesToBottom = useCallback(
     (behavior: ScrollBehavior = "smooth") => {
@@ -75,9 +85,12 @@ export default function ChatPage() {
   }, [retryAfterSecondsRemaining]);
 
   const checkHealth = useCallback(async (): Promise<boolean> => {
+    const version = ++healthCheckVersionRef.current;
     const health = await checkOnesaHealth(backendUnreachableStatus);
-    setIsOnline(health.online);
-    setStatus(health.statusText);
+    if (version === healthCheckVersionRef.current) {
+      setIsOnline(health.online);
+      setStatus(health.statusText);
+    }
     return health.online;
   }, [backendUnreachableStatus]);
 
@@ -102,8 +115,13 @@ export default function ChatPage() {
 
   const sendMessage = async () => {
     const trimmed = input.trim();
-    if (!trimmed || loading) return;
-    void checkHealth();
+    if (
+      !trimmed ||
+      requestInFlightRef.current ||
+      (retryAfterSecondsRemaining ?? 0) > 0
+    )
+      return;
+    requestInFlightRef.current = true;
 
     const nextMessages: OnesaChatMessage[] = [
       ...messages,
@@ -122,19 +140,22 @@ export default function ChatPage() {
       });
       const reply = String(data?.reply ?? "").trim();
       if (!reply) throw new Error("Empty model response.");
-      setMessages(prev => [...prev, { role: "assistant", content: reply }]);
+      setMessages(prev => [
+        ...prev,
+        { role: "assistant", content: reply, truncated: data.truncated },
+      ]);
+      healthCheckVersionRef.current += 1;
       setIsOnline(true);
       setStatus("");
     } catch (err: any) {
       const status = Number(err?.response?.status ?? 0);
-      const responseMessage = getApiErrorMessage(err, "");
       const retryAfterMs = Number(err?.response?.data?.retryAfterMs ?? 0);
       const retryAfterSeconds =
         retryAfterMs > 0 ? Math.max(1, Math.ceil(retryAfterMs / 1000)) : null;
       const isRateLimited =
         status === 429 ||
         /status code 429|rate limit|too many requests/i.test(
-          String(err?.message ?? responseMessage ?? "")
+          String(err?.message ?? "")
         );
       setRetryAfterSecondsRemaining(isRateLimited ? retryAfterSeconds : null);
       const rateLimitedMessage = isRateLimited ? rateLimitedError : null;
@@ -144,21 +165,16 @@ export default function ChatPage() {
               defaultValue: "Onesa request timed out. Please try again.",
             })
           : null;
-      const safeResponseMessage =
-        typeof responseMessage === "string" &&
-        !/status code \d+/i.test(responseMessage)
-          ? responseMessage
-          : null;
       const message =
-        rateLimitedMessage ??
-        timeoutMessage ??
-        safeResponseMessage ??
-        genericContactError;
+        rateLimitedMessage ?? timeoutMessage ?? genericContactError;
       setError(message);
+      setMessages(nextMessages.slice(0, -1));
+      setInput(current => current || trimmed);
       if (!isRateLimited) {
         void checkHealth();
       }
     } finally {
+      requestInFlightRef.current = false;
       setLoading(false);
     }
   };
@@ -171,7 +187,11 @@ export default function ChatPage() {
   const handleInputKeyDown = async (
     event: KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       await sendMessage();
     }
@@ -248,6 +268,17 @@ export default function ChatPage() {
                           content={message.content}
                           className="text-sm leading-relaxed"
                         />
+                        {message.truncated ? (
+                          <p
+                            className="mt-2 text-xs text-zim-gold"
+                            role="status"
+                          >
+                            {t("onesa.response_incomplete", {
+                              defaultValue:
+                                "This answer was cut short. Ask Onesa to continue.",
+                            })}
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   ))}
@@ -281,7 +312,11 @@ export default function ChatPage() {
                 <div className="flex justify-end">
                   <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={
+                      loading ||
+                      !input.trim() ||
+                      (retryAfterSecondsRemaining ?? 0) > 0
+                    }
                     className="rounded-full bg-zim-gold px-6 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
                   >
                     <Send className="mr-2 h-4 w-4" />
