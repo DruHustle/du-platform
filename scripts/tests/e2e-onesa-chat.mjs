@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
-import { chromium } from "playwright";
+import { chromium, webkit } from "playwright";
 
 // Exercise the production UI without credentials or external service calls.
 const root = resolve("dist/public");
@@ -41,8 +41,12 @@ const server = createServer(async (request, response) => {
 await new Promise(done => server.listen(0, "127.0.0.1", done));
 const base = `http://127.0.0.1:${server.address().port}`;
 const channel = process.env.ONESA_BROWSER_CHANNEL || "chrome";
-const browser = await chromium.launch({
-  channel: channel === "chromium" ? undefined : channel,
+const engine = process.env.ONESA_BROWSER_ENGINE || "chromium";
+assert(["chromium", "webkit"].includes(engine), "Unsupported test browser");
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  ...(engine === "chromium"
+    ? { channel: channel === "chromium" ? undefined : channel }
+    : {}),
   headless: true,
 });
 const errors = [];
@@ -251,7 +255,7 @@ try {
       );
       await context.close();
       console.log(
-        `PASS ${width}px ${surface}: welcome, single submit, blocks incomplete answers, failed input, retry cooldown, clean history, IME`
+        `PASS ${engine} ${width}px ${surface}: welcome, single submit, blocks incomplete answers, failed input, retry cooldown, clean history, IME`
       );
     }
   }
