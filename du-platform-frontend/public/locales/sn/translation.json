@@ -1574,7 +1574,8 @@
     "offline_text": "Haisi pamhepo",
     "error_rate_limited": "Onesa ari busy izvozvi. Edza zvakare mumasekonzi mashoma.",
     "message_label": "Meseji kuna Onesa",
-    "response_incomplete": "Mhinduro iyi haina kupera. Kumbira Onesa kuti aenderere mberi."
+    "response_incomplete": "Mhinduro iyi haina kupera. Kumbira Onesa kuti aenderere mberi.",
+    "error_incomplete": "Onesa haana kukwanisa kupedzisa mhinduro iyi. Edza zvakare kana kukumbira mhinduro pfupi."
   },
   "logout": "Logout",
   "legal": {

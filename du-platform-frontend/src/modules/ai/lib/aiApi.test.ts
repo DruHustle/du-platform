@@ -20,9 +20,9 @@ beforeEach(() => {
 });
 
 describe("Onesa chat requests", () => {
-  it("allows time for generation, strips display metadata, and preserves truncation", async () => {
+  it("allows time for generation and strips display metadata", async () => {
     post.mockResolvedValueOnce({
-      data: { reply: "  I am Onesa.  ", truncated: true },
+      data: { reply: "  I am Onesa.  ", truncated: false },
     });
     const response = await sendOnesaChatMessage({
       messages: [
@@ -42,7 +42,16 @@ describe("Onesa chat requests", () => {
       },
       { timeout: 180_000 }
     );
-    expect(response.data).toEqual({ reply: "I am Onesa.", truncated: true });
+    expect(response.data).toEqual({ reply: "I am Onesa.", truncated: false });
+  });
+
+  it("rejects a cut-off reply even if an older backend returns HTTP 200", async () => {
+    post.mockResolvedValueOnce({
+      data: { reply: "An unfinished sentence with", truncated: true },
+    });
+    await expect(sendOnesaChatMessage(input)).rejects.toThrow(
+      "Onesa could not finish a complete response."
+    );
   });
 
   it.each([

@@ -165,8 +165,19 @@ export default function ChatPage() {
               defaultValue: "Onesa request timed out. Please try again.",
             })
           : null;
+      const incompleteMessage =
+        err?.code === "ONESA_INCOMPLETE_REPLY" ||
+        err?.response?.data?.code === "ONESA_INCOMPLETE_REPLY"
+          ? t("onesa.error_incomplete", {
+              defaultValue:
+                "Onesa couldn't finish this answer. Please try again or ask for a shorter answer.",
+            })
+          : null;
       const message =
-        rateLimitedMessage ?? timeoutMessage ?? genericContactError;
+        rateLimitedMessage ??
+        timeoutMessage ??
+        incompleteMessage ??
+        genericContactError;
       setError(message);
       setMessages(nextMessages.slice(0, -1));
       setInput(current => current || trimmed);

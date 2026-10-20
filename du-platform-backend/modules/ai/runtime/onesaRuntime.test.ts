@@ -1,6 +1,7 @@
 import axios from "axios";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getOnesaRouteDeps } from "./onesaRuntime";
+import { IncompleteOnesaReplyError } from "./replyCompletion";
 
 vi.mock("axios", () => ({ default: { post: vi.fn(), get: vi.fn() } }));
 
@@ -35,10 +36,14 @@ describe("Onesa generated replies", () => {
     vi.stubEnv("ONESA_GEMINI_API_KEY", "test-key");
     vi.stubEnv("ONESA_GEMINI_BASE_URL", "https://onesa.test/v1");
     vi.stubEnv("ONESA_GEMINI_MODEL", "test-model");
+    vi.stubEnv("ONESA_OLLAMA_URL", "http://127.0.0.1:11434");
     get.mockResolvedValue({ data: { models: [] } });
   });
 
-  afterEach(() => vi.unstubAllEnvs());
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
 
   it("cleans repeated text in a non-truncated cloud response", async () => {
     post.mockResolvedValueOnce(cloudReply(`- ${repeated}\n* ${complete}`));
@@ -48,7 +53,7 @@ describe("Onesa generated replies", () => {
     expect(post).toHaveBeenCalledTimes(1);
   });
 
-  it("joins a restarted cloud continuation once and returns the final completion status", async () => {
+  it("replaces a cut-off cloud answer with a fresh complete answer", async () => {
     post.mockResolvedValueOnce(cloudReply(repeated, "length"));
     post.mockResolvedValueOnce(cloudReply(complete));
     const result = await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
@@ -58,29 +63,38 @@ describe("Onesa generated replies", () => {
       finishReason: "stop",
     });
     expect(post).toHaveBeenCalledTimes(2);
+    const messages = post.mock.calls[1][1].messages;
+    expect(messages.at(-1).content).toContain("fresh, complete answer");
+    expect(
+      messages.some(
+        (message: any) =>
+          message.role === "assistant" && message.content === repeated
+      )
+    ).toBe(false);
   });
 
-  it("keeps the initial partial reply if requesting a continuation fails", async () => {
+  it("never returns the initial partial reply if rewriting fails", async () => {
+    post.mockRejectedValue({ response: { status: 400 } });
     post.mockResolvedValueOnce(cloudReply(repeated, "length"));
-    post.mockRejectedValueOnce({ response: { status: 400 } });
-    const result = await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
-    expect(result).toEqual({
-      reply: repeated,
-      truncated: true,
-      finishReason: "length",
-    });
+    await expect(
+      getOnesaRouteDeps().generateOnesaReply(prompt, "en")
+    ).rejects.toMatchObject({ response: { status: 400 } });
   });
 
   it("cleans repeated text from the local model too", async () => {
     vi.stubEnv("ONESA_PROVIDER", "ollama");
     post.mockResolvedValueOnce({
-      data: { message: { content: `${repeated}\n${complete}` } },
+      data: {
+        message: { content: `${repeated}\n${complete}` },
+        done: true,
+        done_reason: "stop",
+      },
     });
     const result = await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
     expect(result.reply).toBe(complete);
   });
 
-  it("merges overlapping Anthropic continuations too", async () => {
+  it("replaces an Anthropic token-limit response with a complete rewrite", async () => {
     vi.stubEnv("ONESA_GEMINI_API_KEY", "");
     vi.stubEnv("ONESA_CLAUDE_API_KEY", "test-key");
     vi.stubEnv("ONESA_CLAUDE_MODEL", "test-model");
@@ -128,7 +142,11 @@ describe("Onesa generated replies", () => {
   it("applies identity protection to the local model", async () => {
     vi.stubEnv("ONESA_PROVIDER", "ollama");
     post.mockResolvedValueOnce({
-      data: { message: { content: "I am Grok." } },
+      data: {
+        message: { content: "I am Grok." },
+        done: true,
+        done_reason: "stop",
+      },
     });
     const result = await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
     expect(result.reply).toContain("I am Onesa");
@@ -148,7 +166,7 @@ describe("Onesa generated replies", () => {
     expect(result.reply).toContain("I am Onesa");
   });
 
-  it("guards identity text introduced by a continuation", async () => {
+  it("guards identity text introduced by a rewrite", async () => {
     post.mockResolvedValueOnce(cloudReply(repeated, "length"));
     post.mockResolvedValueOnce(cloudReply(`${complete} I am Gemini.`));
     const result = await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
@@ -232,6 +250,113 @@ describe("Onesa generated replies", () => {
           )
       )
     ).toBe(true);
+  });
+
+  it("fails over to another cloud provider when both the draft and rewrite are incomplete", async () => {
+    vi.stubEnv("ONESA_GROK_AI_BASE_URL", "https://secondary.onesa.test/v1");
+    vi.stubEnv("ONESA_GROK_AI_API_KEY", "secondary-test-key");
+    vi.stubEnv("ONESA_GROK_MODEL", "secondary-model");
+    post.mockResolvedValueOnce(cloudReply(repeated, "length"));
+    post.mockResolvedValueOnce(cloudReply("Another unfinished", "length"));
+    post.mockResolvedValueOnce(cloudReply(complete));
+    const result = await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
+    expect(result.reply).toBe(complete);
+    expect(result.truncated).toBe(false);
+    expect(post.mock.calls[2][0]).toBe(
+      "https://secondary.onesa.test/v1/chat/completions"
+    );
+  });
+
+  it("rejects all incomplete drafts when no provider finishes an answer", async () => {
+    post.mockImplementation(async url =>
+      String(url).endsWith("/chat/completions")
+        ? cloudReply(repeated, "length")
+        : {
+            data: {
+              message: { content: repeated },
+              done: true,
+              done_reason: "length",
+            },
+          }
+    );
+    await expect(
+      getOnesaRouteDeps().generateOnesaReply(prompt, "en")
+    ).rejects.toBeInstanceOf(IncompleteOnesaReplyError);
+    expect(post).toHaveBeenCalledTimes(4);
+  });
+
+  it.each(["length", "content_filter", "tool_calls", ""])(
+    "requires a confirmed normal cloud finish: %s",
+    async finishReason => {
+      post.mockResolvedValueOnce(cloudReply(repeated, finishReason));
+      post.mockResolvedValueOnce(cloudReply(complete));
+      expect(
+        (await getOnesaRouteDeps().generateOnesaReply(prompt, "en")).reply
+      ).toBe(complete);
+      expect(post).toHaveBeenCalledTimes(2);
+    }
+  );
+
+  it("checks local-model stop metadata rather than assuming every reply finished", async () => {
+    vi.stubEnv("ONESA_PROVIDER", "ollama");
+    post.mockResolvedValueOnce({
+      data: {
+        message: { content: repeated },
+        done: true,
+        done_reason: "length",
+      },
+    });
+    post.mockResolvedValueOnce({
+      data: { message: { content: complete }, done: true, done_reason: "stop" },
+    });
+    expect(
+      (await getOnesaRouteDeps().generateOnesaReply(prompt, "en")).reply
+    ).toBe(complete);
+    expect(post).toHaveBeenCalledTimes(2);
+  });
+
+  it("recovers incomplete replies from local models without chat templates", async () => {
+    vi.stubEnv("ONESA_PROVIDER", "ollama");
+    post.mockRejectedValueOnce({ response: { status: 400 } });
+    post.mockResolvedValueOnce({
+      data: { response: repeated, done: true, done_reason: "length" },
+    });
+    post.mockResolvedValueOnce({
+      data: { response: complete, done: true, done_reason: "stop" },
+    });
+    expect(
+      (await getOnesaRouteDeps().generateOnesaReply(prompt, "en")).reply
+    ).toBe(complete);
+    expect(
+      post.mock.calls.map(call => new URL(String(call[0])).pathname)
+    ).toEqual(["/api/chat", "/api/generate", "/api/generate"]);
+  });
+
+  it.each([
+    ["220", 512],
+    ["", 1200],
+    ["1500", 1500],
+  ])(
+    "uses a usable output budget with configuration %s",
+    async (configured, expected) => {
+      vi.stubEnv("ONESA_MAX_TOKENS", String(configured));
+      post.mockResolvedValueOnce(cloudReply(complete));
+      await getOnesaRouteDeps().generateOnesaReply(prompt, "en");
+      expect(post.mock.calls[0][1].max_tokens).toBe(expected);
+    }
+  );
+
+  it("stops recovery within the browser request budget rather than returning a partial reply", async () => {
+    const now = Date.now();
+    const clock = vi.spyOn(Date, "now").mockReturnValue(now);
+    post.mockImplementationOnce(async () => {
+      clock.mockReturnValue(now + 151_000);
+      return cloudReply(repeated, "length");
+    });
+    await expect(
+      getOnesaRouteDeps().generateOnesaReply(prompt, "en")
+    ).rejects.toBeInstanceOf(IncompleteOnesaReplyError);
+    expect(post).toHaveBeenCalledTimes(1);
   });
 });
 

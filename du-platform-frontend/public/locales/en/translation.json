@@ -1566,7 +1566,8 @@
     "offline_text": "Offline",
     "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds.",
     "message_label": "Message to Onesa",
-    "response_incomplete": "This answer was cut short. Ask Onesa to continue."
+    "response_incomplete": "This answer was cut short. Ask Onesa to continue.",
+    "error_incomplete": "Onesa couldn't finish this answer. Please try again or ask for a shorter answer."
   },
   "logout": "Logout",
   "legal": {

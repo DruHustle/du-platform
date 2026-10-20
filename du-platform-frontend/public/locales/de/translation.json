@@ -1574,7 +1574,8 @@
     "offline_text": "Nicht verbunden",
     "error_rate_limited": "Onesa ist gerade beschäftigt. Bitte versuchen Sie es in ein paar Sekunden noch einmal.",
     "message_label": "Nachricht an Onesa",
-    "response_incomplete": "Diese Antwort wurde abgeschnitten. Bitten Sie Onesa, fortzufahren."
+    "response_incomplete": "Diese Antwort wurde abgeschnitten. Bitten Sie Onesa, fortzufahren.",
+    "error_incomplete": "Onesa konnte diese Antwort nicht abschließen. Bitte versuchen Sie es erneut oder bitten Sie um eine kürzere Antwort."
   },
   "logout": "Abmelden",
   "legal": {
