@@ -54,6 +54,9 @@ jobs:
       - name: Frontend tests
         run: pnpm test:frontend
 
+      - name: Onesa provider HTTP regression tests
+        run: pnpm test:e2e:onesa:runtime
+
       - name: Guardrails (Build Safety)
         run: pnpm guardrails
 
@@ -63,8 +66,8 @@ jobs:
       - name: Initial HTML and canonical SEO regression checks
         run: pnpm test:seo
 
-      - name: Install browser for navigation regression tests
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Install browsers for regression tests
+        run: pnpm exec playwright install --with-deps chromium webkit
 
       - name: Navigation regression tests
         run: pnpm test:e2e:navigation
@@ -75,6 +78,11 @@ jobs:
         run: pnpm test:e2e:onesa:chat
         env:
           ONESA_BROWSER_CHANNEL: chromium
+
+      - name: Onesa WebKit chat regression tests
+        run: pnpm test:e2e:onesa:chat
+        env:
+          ONESA_BROWSER_ENGINE: webkit
 
       - name: Shop cart regression tests
         run: pnpm test:e2e:shop

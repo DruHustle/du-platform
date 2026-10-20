@@ -29,7 +29,7 @@ const ONESA_IDENTITY_INSTRUCTION = [
 ].join(" ");
 
 const OTHER_ASSISTANT_NAMES =
-  "google(?: gemini)?|gemini|grok|xai|x\\.ai|openai|chatgpt|gpt(?:[- ]?[0-9][a-z0-9.-]*)?|microsoft|azure(?: openai)?|copilot|bing(?: ai)?|bard|meta|llama|anthropic|claude|cerebras|groq|ollama|perplexity|deepseek|qwen|mistral|le chat|kimi|ernie|doubao";
+  "google(?: gemini)?|gemini|grok|xai|x\\.ai|openai|chat\\s*gpt|gpt(?:[- ]?[0-9][a-z0-9.-]*)?|microsoft|azure(?: openai)?|copilot|bing(?: ai)?|bard|meta|llama|anthropic|claude|cerebras|groq|ollama|perplexity|deepseek|qwen|mistral|le chat|kimi|ernie|doubao";
 
 const ONESA_IDENTITY_REPLIES: Record<SupportedOnesaLanguage, string> = {
   en: "I am Onesa, your AI assistant for Zimbabwe and the African continent. Onesa means illuminate. Our mission is to help communities make informed decisions with practical, locally relevant guidance.",
@@ -498,8 +498,10 @@ function hasForbiddenOriginClaim(reply: string): boolean {
     `\\b(?:${self}|my name is|my identity is|this is|you(?:'re| are) (?:chatting|speaking|talking) (?:to|with)) (?:actually |an? |the |called |named )?${provider}`,
     "i"
   );
+  const selfDescription =
+    "(?:(?:an? |the )?(?:(?:helpful |ai |large |language |virtual )*(?:model|assistant|chatbot)|ai|artificial intelligence)[, ]+)?";
   const originClaim = new RegExp(
-    `\\b${self} (?:(?:an? |the )?(?:helpful |ai |large |language |virtual )*(?:model|assistant|chatbot)[, ]+)?(?:(?:developed|created|trained|built|made|powered|provided|operated|hosted) (?:by|on|using)|(?:a version|an instance) of|based on|from|(?:a chatbot|an assistant|a model) (?:named|called)) (?:the )?${provider}`,
+    `\\b${self} ${selfDescription}(?:(?:developed|created|trained|built|made|powered|provided|operated|hosted) (?:by|on|using)|(?:a version|an instance) of|based on|from|named|called) (?:the |(?:an? )?(?:team|company|group)(?: of developers)? (?:at|from) )?${provider}`,
     "i"
   );
   const creatorClaim = new RegExp(
@@ -507,7 +509,7 @@ function hasForbiddenOriginClaim(reply: string): boolean {
     "i"
   );
   const translatedOriginClaim = new RegExp(
-    `\\b(?:ich (?:wurde|bin) (?:von |ein von )${provider}|ndakagadzirwa ne${provider}|ngadalwa yi${provider})`,
+    `\\b(?:ich (?:wurde|bin) (?:von |ein von )${provider}|ich bin (?:ein|eine) (?:sprachmodell|ki-modell|ki-assistent) (?:von|entwickelt von) ${provider}|ndakagadzirwa ne${provider}|ngadalwa yi${provider})`,
     "i"
   );
   const otherNameClaim = new RegExp(

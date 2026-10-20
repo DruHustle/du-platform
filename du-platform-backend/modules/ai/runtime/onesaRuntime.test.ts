@@ -387,6 +387,11 @@ describe("Onesa output identity guard", () => {
     "Ndakagadzirwa neGoogle.",
     "Ngingu Grok.",
     "I am a chatbot named Bard.",
+    "I am an AI developed by Google.",
+    "I was trained by a team at Google.",
+    "I'm a helpful assistant named Gemini.",
+    "I am Chat GPT.",
+    "Ich bin ein Sprachmodell von Google.",
   ])("corrects another identity or origin claim: %s", reply => {
     expect(
       getOnesaRouteDeps().enforceOnesaIdentityGuard(reply, "en")
