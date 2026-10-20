@@ -29,6 +29,15 @@ get_env_value() {
   printf '%s\n' ""
 }
 
+get_groq_env_value() {
+  local value
+  value="$(get_env_value "ONESA_GROQ_$1")"
+  if [[ -z "$value" ]]; then
+    value="$(get_env_value "ONESA_GROK_$1")"
+  fi
+  printf '%s\n' "$value"
+}
+
 get_backend_port() {
   local dev_port
   dev_port="$(get_env_value "DEV_PORT")"
@@ -127,10 +136,10 @@ ensure_ollama() {
     local tertiary_key tertiary_base tertiary_model tertiary_candidates
     local claude_key claude_base claude_model
     local cerebras_key cerebras_base cerebras_model
-    secondary_key="$(get_env_value "ONESA_GROK_AI_API_KEY")"
-    secondary_base="$(get_env_value "ONESA_GROK_AI_BASE_URL")"
-    secondary_model="$(get_env_value "ONESA_GROK_MODEL")"
-    secondary_candidates="$(get_env_value "ONESA_GROK_MODEL_CANDIDATES")"
+    secondary_key="$(get_groq_env_value "AI_API_KEY")"
+    secondary_base="$(get_groq_env_value "AI_BASE_URL")"
+    secondary_model="$(get_groq_env_value "MODEL")"
+    secondary_candidates="$(get_groq_env_value "MODEL_CANDIDATES")"
     tertiary_key="$(get_env_value "ONESA_TERTIARY_AI_API_KEY")"
     tertiary_base="$(get_env_value "ONESA_TERTIARY_AI_BASE_URL")"
     tertiary_model="$(get_env_value "ONESA_TERTIARY_MODEL")"
@@ -143,12 +152,12 @@ ensure_ollama() {
     cerebras_model="$(get_env_value "ONESA_CEREBRAS_MODEL")"
 
     if [[ -n "${secondary_key}" && -n "${secondary_base}" && -n "${secondary_model}" ]]; then
-      echo "[dev:all] Cloud fallback enabled from env: ONESA_GROK_* configured."
+      echo "[dev:all] Cloud fallback enabled from env: ONESA_GROQ_* (or legacy ONESA_GROK_*) configured."
     else
       echo "[dev:all] WARNING: Secondary cloud fallback is not fully configured in env."
-      echo "[dev:all] Set ONESA_GROK_AI_BASE_URL, ONESA_GROK_AI_API_KEY, and ONESA_GROK_MODEL."
+      echo "[dev:all] Set ONESA_GROQ_AI_BASE_URL, ONESA_GROQ_AI_API_KEY, and ONESA_GROQ_MODEL."
       if [[ -n "${secondary_candidates}" ]]; then
-        echo "[dev:all] NOTE: ONESA_GROK_MODEL_CANDIDATES is set but base/key/model is incomplete."
+        echo "[dev:all] NOTE: Groq model candidates are set but base/key/model is incomplete."
       fi
     fi
 
