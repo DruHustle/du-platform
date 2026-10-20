@@ -56,6 +56,15 @@ GitHub health checks use `BACKEND_HEALTH_URL`, `BACKEND_DATABASE_HEALTH_URL` and
 Oracle container releases are manual, independent from Vercel releases. Keep the
 former Render service suspended with automatic deployments disabled.
 
+Onesa's secondary cloud provider uses `ONESA_GROQ_AI_BASE_URL`,
+`ONESA_GROQ_AI_API_KEY`, `ONESA_GROQ_MODEL`, `ONESA_GROQ_FALLBACK_MODEL` and
+`ONESA_GROQ_MODEL_CANDIDATES`. Legacy `ONESA_GROK_*` aliases remain supported;
+nonempty `ONESA_GROQ_*` values take precedence. Verify model IDs against the
+provider's authenticated `/models` endpoint and run a real completion before
+changing production models. Listing models alone does not prove completion
+quota is available. Verify a normal conversation through the public chat route
+after a release, including fallback when the primary provider is rate limited.
+
 ## Rollback
 
 Retain the previous local image and Compose manifest. Restore its image tag and

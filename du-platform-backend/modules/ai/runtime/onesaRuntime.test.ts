@@ -252,6 +252,34 @@ describe("Onesa generated replies", () => {
     ).toBe(true);
   });
 
+  it.each([false, true])(
+    "uses canonical Groq settings, with legacy settings present: %s",
+    async legacy => {
+      vi.stubEnv("ONESA_GEMINI_API_KEY", "");
+      vi.stubEnv("ONESA_GROQ_AI_BASE_URL", "https://canonical.onesa.test/v1");
+      vi.stubEnv("ONESA_GROQ_AI_API_KEY", "canonical-test-key");
+      vi.stubEnv("ONESA_GROQ_MODEL", "canonical-model");
+      vi.stubEnv("ONESA_GROQ_MODEL_CANDIDATES", "canonical-candidate");
+      if (legacy) {
+        vi.stubEnv("ONESA_GROK_AI_BASE_URL", "https://legacy.onesa.test/v1");
+        vi.stubEnv("ONESA_GROK_AI_API_KEY", "legacy-test-key");
+        vi.stubEnv("ONESA_GROK_MODEL", "legacy-model");
+        vi.stubEnv("ONESA_GROK_MODEL_CANDIDATES", "legacy-candidate");
+      }
+      post.mockResolvedValueOnce(cloudReply(complete));
+      expect(
+        (await getOnesaRouteDeps().generateOnesaReply(prompt, "en")).reply
+      ).toBe(complete);
+      expect(post.mock.calls[0][0]).toBe(
+        "https://canonical.onesa.test/v1/chat/completions"
+      );
+      expect(post.mock.calls[0][1].model).toBe("canonical-candidate");
+      expect(post.mock.calls[0][2].headers.Authorization).toBe(
+        "Bearer canonical-test-key"
+      );
+    }
+  );
+
   it("fails over to another cloud provider when both the draft and rewrite are incomplete", async () => {
     vi.stubEnv("ONESA_GROK_AI_BASE_URL", "https://secondary.onesa.test/v1");
     vi.stubEnv("ONESA_GROK_AI_API_KEY", "secondary-test-key");

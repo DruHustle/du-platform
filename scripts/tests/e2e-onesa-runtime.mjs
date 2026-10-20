@@ -354,6 +354,20 @@ try {
   pass(
     "rate-limited primary provider fails over without leaking its identity or an error body"
   );
+
+  configure("cloud", true);
+  for (const suffix of ["AI_BASE_URL", "AI_API_KEY", "MODEL"]) {
+    process.env[`ONESA_GROQ_${suffix}`] = process.env[`ONESA_GROK_${suffix}`];
+    delete process.env[`ONESA_GROK_${suffix}`];
+  }
+  const canonicalFallback = await chat("Use the configured cloud fallback.");
+  assert.equal(canonicalFallback.status, 200);
+  assert.equal(canonicalFallback.data.reply, complete);
+  assert.equal(requests.length, 2);
+  assert(requests[1].path.startsWith("/secondary/"));
+  pass(
+    "production GROQ settings fail over after an upstream 429 without legacy aliases"
+  );
 } catch (error) {
   process.exitCode = 1;
   console.error(error);
