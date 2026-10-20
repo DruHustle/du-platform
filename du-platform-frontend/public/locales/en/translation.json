@@ -1555,7 +1555,7 @@
     "send": "Send",
     "thinking": "Thinking...",
     "starter_prompt": "Start chat....",
-    "welcome": "I am an expert on Zimbabwe. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
+    "welcome": "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
     "status_prefix": "Onesa status",
     "status_offline": "Offline",
     "status_backend_unreachable": "Onesa is currently unavailable. AI mode is off",
@@ -1565,7 +1565,8 @@
     "error_timeout": "Onesa request timed out. Please try again.",
     "offline_text": "Offline",
     "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds.",
-    "message_label": "Message to Onesa"
+    "message_label": "Message to Onesa",
+    "response_incomplete": "This answer was cut short. Ask Onesa to continue."
   },
   "logout": "Logout",
   "legal": {

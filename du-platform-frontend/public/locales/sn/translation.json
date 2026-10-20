@@ -1563,7 +1563,7 @@
     "send": "Tumira",
     "thinking": "Ndiri kufunga...",
     "starter_prompt": "Tanga kutaura....",
-    "welcome": "Ndiri nyanzvi yeZimbabwe. Ndibvumire kukubatsira munzira dzese dzekudyara, tekinoroji, kushanya, uye mabasa ako ezuva nezuva.",
+    "welcome": "Ndiri nyanzvi yeZimbabwe nekondinendi yeAfrica. Ndibvumire kukubatsira munzira dzese dzekudyara, tekinoroji, kushanya, uye mabasa ako ezuva nezuva.",
     "status_prefix": "Mamiro aOnesa",
     "status_offline": "Haisi online",
     "status_backend_unreachable": "Onesa haisi kuwanikwa pari zvino. Ndapota edzazve munguva pfupi.",
@@ -1573,7 +1573,8 @@
     "error_timeout": "Nguva yekumirira mhinduro yaOnesa yapera. Edza zvakare.",
     "offline_text": "Haisi pamhepo",
     "error_rate_limited": "Onesa ari busy izvozvi. Edza zvakare mumasekonzi mashoma.",
-    "message_label": "Meseji kuna Onesa"
+    "message_label": "Meseji kuna Onesa",
+    "response_incomplete": "Mhinduro iyi haina kupera. Kumbira Onesa kuti aenderere mberi."
   },
   "logout": "Logout",
   "legal": {

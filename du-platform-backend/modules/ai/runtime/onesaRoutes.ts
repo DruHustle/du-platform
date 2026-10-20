@@ -480,45 +480,84 @@ export function registerOnesaAIRoutes(
 
   app.post(chatPath, async (req: express.Request, res: express.Response) => {
     try {
-      const rawMessages = Array.isArray(req.body?.messages) ? req.body.messages : [];
-      const requestedLanguage = typeof req.body?.language === "string" ? req.body.language : undefined;
+      const rawMessages = Array.isArray(req.body?.messages)
+        ? req.body.messages
+        : [];
+      const requestedLanguage =
+        typeof req.body?.language === "string" ? req.body.language : undefined;
       const messages: ChatMessage[] = rawMessages
         .map((m: any) => ({
           role: m?.role,
           content: typeof m?.content === "string" ? m.content.trim() : "",
         }))
-        .filter((m: ChatMessage) => (m.role === "user" || m.role === "assistant" || m.role === "system") && m.content.length > 0)
+        .filter(
+          (m: ChatMessage) =>
+            (m.role === "user" || m.role === "assistant") &&
+            m.content.length > 0
+        )
         .slice(-20);
 
-      if (messages.length === 0) {
-        return res.status(400).json({ message: "At least one user message is required." });
+      if (messages.at(-1)?.role !== "user") {
+        return res
+          .status(400)
+          .json({ message: "The conversation must end with a user message." });
       }
 
       const result = await deps.generateOnesaReply(messages, requestedLanguage);
-      if (!result?.reply) {
-        return res.status(502).json({ message: "Onesa model returned an empty response." });
+      if (typeof result?.reply !== "string" || !result.reply.trim()) {
+        return res
+          .status(502)
+          .json({ message: "Onesa model returned an empty response." });
       }
-      const guardLanguage = deps.normalizeOnesaLanguage(requestedLanguage ?? "");
-      const safeReply = deps.enforceOnesaIdentityGuard(result.reply, guardLanguage);
+      const guardLanguage = deps.normalizeOnesaLanguage(
+        requestedLanguage ?? ""
+      );
+      const safeReply = deps.enforceOnesaIdentityGuard(
+        result.reply.trim(),
+        guardLanguage
+      );
       deps.onChatSuccess();
-      return res.json({ reply: safeReply, truncated: Boolean(result.truncated) });
+      return res.json({
+        reply: safeReply,
+        truncated: Boolean(result.truncated),
+      });
     } catch (error: any) {
       const upstreamStatus = deps.getUpstreamStatus(error);
-      const retryAfterMs = deps.getRetryAfterMs(error) ?? deps.getGlobalBackoffRemainingMs();
+      const retryAfterMs =
+        deps.getRetryAfterMs(error) ?? deps.getGlobalBackoffRemainingMs();
       if (upstreamStatus === 429 || deps.isRateLimitedUpstreamError(error)) {
         return res.status(429).json({
-          message: "Onesa is receiving too many requests right now. Please try again shortly.",
+          message:
+            "Onesa is receiving too many requests right now. Please try again shortly.",
           retryAfterMs: retryAfterMs > 0 ? retryAfterMs : undefined,
         });
       }
       if (upstreamStatus === 503 || upstreamStatus === 504) {
-        return res.status(503).json({ message: "Onesa provider is temporarily unavailable. Please try again shortly." });
+        return res
+          .status(503)
+          .json({
+            message:
+              "Onesa provider is temporarily unavailable. Please try again shortly.",
+          });
       }
       if (upstreamStatus === 401 || upstreamStatus === 403) {
-        return res.status(503).json({ message: "Onesa provider is temporarily unavailable. Please try again shortly." });
+        return res
+          .status(503)
+          .json({
+            message:
+              "Onesa provider is temporarily unavailable. Please try again shortly.",
+          });
       }
-      const upstream = String(error?.response?.data?.error ?? error?.response?.data?.message ?? error?.message ?? "").trim();
-      console.error("[onesa/chat] request failed", { upstreamStatus, upstream });
+      const upstream = String(
+        error?.response?.data?.error ??
+          error?.response?.data?.message ??
+          error?.message ??
+          ""
+      ).trim();
+      console.error("[onesa/chat] request failed", {
+        upstreamStatus,
+        upstream,
+      });
       return res.status(500).json({ message: "Onesa chat request failed." });
     }
   });

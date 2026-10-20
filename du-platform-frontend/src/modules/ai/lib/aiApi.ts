@@ -3,6 +3,7 @@ import { api } from "@/lib/api";
 export type OnesaChatMessage = {
   role: "user" | "assistant";
   content: string;
+  truncated?: boolean;
 };
 
 export type OnesaHealthStatus = {
@@ -11,15 +12,20 @@ export type OnesaHealthStatus = {
 };
 
 const ONESA_HEALTH_CACHE_TTL_MS = 15_000;
+const ONESA_CHAT_TIMEOUT_MS = 180_000;
 let onesaHealthCache: { checkedAt: number; online: boolean } | null = null;
 let onesaHealthInFlight: Promise<boolean> | null = null;
+let onesaHealthVersion = 0;
 
 function parseObjectPayload(payload: unknown): Record<string, any> | null {
-  if (typeof payload === "object" && payload !== null) return payload as Record<string, any>;
+  if (typeof payload === "object" && payload !== null)
+    return payload as Record<string, any>;
   if (typeof payload === "string") {
     try {
       const parsed = JSON.parse(payload);
-      return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, any>) : null;
+      return typeof parsed === "object" && parsed !== null
+        ? (parsed as Record<string, any>)
+        : null;
     } catch {
       return null;
     }
@@ -27,14 +33,20 @@ function parseObjectPayload(payload: unknown): Record<string, any> | null {
   return null;
 }
 
-export async function checkOnesaHealth(backendUnreachableStatus: string): Promise<OnesaHealthStatus> {
+export async function checkOnesaHealth(
+  backendUnreachableStatus: string
+): Promise<OnesaHealthStatus> {
   const formatStatus = (online: boolean): OnesaHealthStatus => ({
     online,
     statusText: online ? "" : backendUnreachableStatus,
   });
 
   const now = Date.now();
-  if (onesaHealthCache && now - onesaHealthCache.checkedAt < ONESA_HEALTH_CACHE_TTL_MS) {
+  const version = onesaHealthVersion;
+  if (
+    onesaHealthCache &&
+    now - onesaHealthCache.checkedAt < ONESA_HEALTH_CACHE_TTL_MS
+  ) {
     return formatStatus(onesaHealthCache.online);
   }
 
@@ -42,13 +54,15 @@ export async function checkOnesaHealth(backendUnreachableStatus: string): Promis
     try {
       const response = await api.get("/ai/health", { timeout: 10000 });
       const payload = parseObjectPayload(response.data);
-      return Boolean(payload?.ok ?? payload?.modelAvailable ?? payload?.ready);
+      return (
+        (payload?.ready ?? payload?.modelAvailable ?? payload?.ok) === true
+      );
     } catch {
       return false;
     }
   };
 
-  onesaHealthInFlight ??= (async () => {
+  const loadReadiness = async () => {
     try {
       const response = await api.get("/ai/ready", { timeout: 12000 });
       const payload = parseObjectPayload(response.data);
@@ -59,16 +73,24 @@ export async function checkOnesaHealth(backendUnreachableStatus: string): Promis
     } catch {
       return await loadFreshHealth();
     }
-  })().finally(() => {
-    onesaHealthInFlight = null;
-  });
+  };
+  if (!onesaHealthInFlight) {
+    const pending = loadReadiness();
+    onesaHealthInFlight = pending;
+    void pending.finally(() => {
+      if (onesaHealthInFlight === pending) onesaHealthInFlight = null;
+    });
+  }
 
   const online = await onesaHealthInFlight;
-  onesaHealthCache = { checkedAt: Date.now(), online };
-  return formatStatus(online);
+  if (version === onesaHealthVersion) {
+    onesaHealthCache = { checkedAt: Date.now(), online };
+  }
+  return formatStatus(onesaHealthCache?.online ?? online);
 }
 
 export function clearOnesaHealthCache() {
+  onesaHealthVersion += 1;
   onesaHealthCache = null;
   onesaHealthInFlight = null;
 }
@@ -77,19 +99,37 @@ export async function sendOnesaChatMessage(input: {
   messages: OnesaChatMessage[];
   language: string;
 }) {
-  return api.post(
+  const response = await api.post(
     "/ai/chat",
     {
-      messages: input.messages.map((message) => ({ role: message.role, content: message.content })),
+      messages: input.messages.map(message => ({
+        role: message.role,
+        content: message.content,
+      })),
       language: input.language,
     },
-    { timeout: 12000 }
+    { timeout: ONESA_CHAT_TIMEOUT_MS }
   );
+  const payload = parseObjectPayload(response.data);
+  if (typeof payload?.reply !== "string" || !payload.reply.trim()) {
+    throw new Error("Onesa returned an empty or invalid response.");
+  }
+  onesaHealthVersion += 1;
+  onesaHealthCache = { checkedAt: Date.now(), online: true };
+  return {
+    ...response,
+    data: {
+      reply: payload.reply.trim(),
+      truncated: payload.truncated === true,
+    },
+  };
 }
 
 export async function requestOnesaTripPlan(
   payload: Record<string, unknown>,
   options?: { timeout?: number }
 ) {
-  return api.post("/ai/trip-plan", payload, { timeout: options?.timeout ?? 12000 });
+  return api.post("/ai/trip-plan", payload, {
+    timeout: options?.timeout ?? 12000,
+  });
 }
