@@ -1,7 +1,12 @@
 import axios from "axios";
 import type { OnesaRouteDeps } from "./onesaRoutes";
 import { createMockOnesaReply, isOnesaMockModeEnabled } from "./mockMode";
-import { mergeReplyContinuation, removeRepeatedReplyText } from "./replyText";
+import { removeRepeatedReplyText } from "./replyText";
+import {
+  finishOnesaReply,
+  IncompleteOnesaReplyError,
+  type ReplyCompletion,
+} from "./replyCompletion";
 
 const DEFAULT_ONESA_SYSTEM_PROMPT = [
   "You are Onesa AI, a diaspora decision-support assistant for Zimbabwe and the African continent.",
@@ -175,7 +180,8 @@ function isRetryableUpstreamError(error: any): boolean {
 async function withRetry<T>(
   run: () => Promise<T>,
   maxAttempts = 3,
-  endpointKey?: string
+  endpointKey?: string,
+  deadline?: number
 ): Promise<T> {
   let lastError: any = null;
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
@@ -206,6 +212,9 @@ async function withRetry<T>(
       const jitterMs = Math.floor(Math.random() * 250);
       const backoffMs = Math.min(15000, 700 * 2 ** (attempt - 1)) + jitterMs;
       const delayMs = Math.max(backoffMs, retryAfterMs ?? 0);
+      if (deadline !== undefined && Date.now() + delayMs >= deadline) {
+        throw new IncompleteOnesaReplyError();
+      }
       if (isRateLimitedUpstreamError(error) && endpointKey) {
         const existing =
           onesaProviderBackoffUntilByEndpoint.get(endpointKey) ?? 0;
@@ -789,12 +798,12 @@ function getOnesaConfig() {
   const timeoutRaw = Number(process.env.ONESA_REQUEST_TIMEOUT_MS ?? "180000");
   const timeoutMs =
     Number.isFinite(timeoutRaw) && timeoutRaw > 0 ? timeoutRaw : 180000;
-  // Default response budget tuned to reduce mid-sentence truncation.
-  const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "500");
+  // Very small budgets were cutting off ordinary answers before a sentence finished.
+  const maxTokensRaw = Number(process.env.ONESA_MAX_TOKENS ?? "1200");
   const maxTokens =
     Number.isFinite(maxTokensRaw) && maxTokensRaw > 0
-      ? Math.floor(maxTokensRaw)
-      : 500;
+      ? Math.max(512, Math.floor(maxTokensRaw))
+      : 1200;
   return {
     provider,
     model,
@@ -952,6 +961,13 @@ async function generateOnesaReply(
   const config = getOnesaConfig();
   const { provider, model, fallbackModel, ollamaBase, timeoutMs, maxTokens } =
     config;
+  // Leave time for the API response before the browser's 180-second timeout.
+  const deadline = Date.now() + Math.min(timeoutMs, 150_000);
+  const remainingTimeout = () => {
+    const remaining = deadline - Date.now();
+    if (remaining <= 0) throw new IncompleteOnesaReplyError();
+    return remaining;
+  };
   const systemPrompt =
     process.env.ONESA_SYSTEM_PROMPT ?? DEFAULT_ONESA_SYSTEM_PROMPT;
   const languageInstruction = hasRequestedLanguage
@@ -973,7 +989,7 @@ async function generateOnesaReply(
         "Do not mention language detection or switching languages in your response.",
       ].join(" ");
   const responseStyleInstruction =
-    "Keep each point in your answer once. Do not restart or repeat sentences, paragraphs, or list items.";
+    `Keep each point in your answer once. Do not restart or repeat sentences, paragraphs, or list items. Finish your answer within about ${Math.max(60, Math.floor(maxTokens * 0.35))} words; prioritize the useful points and end with a complete sentence. Preserve any required structured output format.`;
   const safeFallbackReply = getOnesaLanguageFallbackReply(responseLanguage);
   const smallTalkReply = latestUserMessage
     ? getSmallTalkReply(latestUserMessage, responseLanguage)
@@ -1001,6 +1017,13 @@ async function generateOnesaReply(
         m.content.trim()
     ),
   ];
+  const rewriteMessages: ChatMessage[] = [
+    ...normalizedMessages,
+    {
+      role: "system",
+      content: `The previous generation ran out of space. Give a fresh, complete answer to the user's latest request in at most ${Math.max(40, Math.floor(maxTokens * 0.2))} words. Use a few short sentences. Do not continue or refer to the cut-off draft. Finish the answer within this response. Preserve any required JSON schema or structured output format.`,
+    },
+  ];
 
   const buildPromptFromMessages = (chatMessages: ChatMessage[]) =>
     chatMessages
@@ -1011,17 +1034,25 @@ async function generateOnesaReply(
       })
       .join("\n\n");
 
-  const extractOllamaText = (data: any) =>
-    String(
-      data?.message?.content ?? data?.response ?? data?.content ?? ""
-    ).trim();
+  const extractOllamaCompletion = (data: any): ReplyCompletion => {
+    const text = data?.message?.content ?? data?.response ?? data?.content;
+    const finishReason = String(data?.done_reason ?? "").trim();
+    return {
+      reply: typeof text === "string" ? text.trim() : "",
+      truncated: data?.done === false || finishReason !== "stop",
+      finishReason,
+    };
+  };
 
-  const sendOllamaChat = async (targetModel: string) => {
+  const sendOllamaChat = async (
+    targetModel: string,
+    chatMessages: ChatMessage[]
+  ) => {
     const response = await axios.post(
       `${ollamaBase}/api/chat`,
       {
         model: targetModel,
-        messages: normalizedMessages,
+        messages: chatMessages,
         stream: false,
         options: {
           temperature: 0.3,
@@ -1029,21 +1060,24 @@ async function generateOnesaReply(
         },
       },
       {
-        timeout: timeoutMs,
+        timeout: remainingTimeout(),
         headers: {
           "Content-Type": "application/json",
         },
       }
     );
-    return extractOllamaText(response.data);
+    return extractOllamaCompletion(response.data);
   };
 
-  const sendOllamaGenerate = async (targetModel: string) => {
+  const sendOllamaGenerate = async (
+    targetModel: string,
+    chatMessages: ChatMessage[]
+  ) => {
     const response = await axios.post(
       `${ollamaBase}/api/generate`,
       {
         model: targetModel,
-        prompt: buildPromptFromMessages(normalizedMessages),
+        prompt: buildPromptFromMessages(chatMessages),
         stream: false,
         options: {
           temperature: 0.3,
@@ -1051,30 +1085,41 @@ async function generateOnesaReply(
         },
       },
       {
-        timeout: timeoutMs,
+        timeout: remainingTimeout(),
         headers: {
           "Content-Type": "application/json",
         },
       }
     );
-    return extractOllamaText(response.data);
+    return extractOllamaCompletion(response.data);
   };
 
   const tryOllamaModel = async (targetModel: string): Promise<string> => {
-    try {
-      const chatReply = await sendOllamaChat(targetModel);
-      if (chatReply) return chatReply;
-    } catch {
-      // Fall back to /api/generate for models that don't support chat templates.
-    }
-    return await sendOllamaGenerate(targetModel);
+    let useGenerate = false;
+    const request = async (chatMessages: ChatMessage[]) => {
+      if (!useGenerate) {
+        try {
+          const result = await sendOllamaChat(targetModel, chatMessages);
+          if (result.reply || result.truncated) return result;
+        } catch {
+          // Models without chat templates use the generate endpoint for all recovery passes.
+        }
+        useGenerate = true;
+      }
+      return sendOllamaGenerate(targetModel, chatMessages);
+    };
+    const result = await finishOnesaReply(
+      await request(normalizedMessages),
+      () => request(rewriteMessages)
+    );
+    return result.reply;
   };
 
   const runOllamaFallback = async (): Promise<OnesaReplyResult> => {
     let availableModels: string[] = [];
     try {
       const tagsResponse = await axios.get(`${ollamaBase}/api/tags`, {
-        timeout: 5000,
+        timeout: Math.min(5000, remainingTimeout()),
       });
       availableModels = Array.isArray(tagsResponse.data?.models)
         ? tagsResponse.data.models.map((m: any) => String(m?.name ?? ""))
@@ -1186,7 +1231,7 @@ async function generateOnesaReply(
                 max_tokens: maxTokens,
               },
               {
-                timeout: timeoutMs,
+                timeout: remainingTimeout(),
                 headers: {
                   "x-api-key": providerTarget.apiKey,
                   "anthropic-version":
@@ -1205,7 +1250,7 @@ async function generateOnesaReply(
               max_tokens: maxTokens,
             },
             {
-              timeout: timeoutMs,
+              timeout: remainingTimeout(),
               headers: {
                 Authorization: `Bearer ${providerTarget.apiKey}`,
                 "Content-Type": "application/json",
@@ -1214,24 +1259,25 @@ async function generateOnesaReply(
           );
         },
         3,
-        providerTarget.baseUrl
+        providerTarget.baseUrl,
+        deadline
       );
       if (providerTarget.kind === "anthropic") {
         const finishReason = String(response.data?.stop_reason ?? "").trim();
         return {
           reply: extractAnthropicText(response.data),
-          truncated: finishReason === "max_tokens",
+          truncated:
+            finishReason !== "end_turn" && finishReason !== "stop_sequence",
           finishReason,
         };
       }
       const finishReason = String(
         response.data?.choices?.[0]?.finish_reason ?? ""
       ).trim();
+      const text = response.data?.choices?.[0]?.message?.content;
       return {
-        reply: String(
-          response.data?.choices?.[0]?.message?.content ?? ""
-        ).trim(),
-        truncated: finishReason === "length",
+        reply: typeof text === "string" ? text.trim() : "",
+        truncated: finishReason !== "stop",
         finishReason,
       };
     };
@@ -1258,41 +1304,20 @@ async function generateOnesaReply(
           break;
         }
         try {
-          const firstPass = await requestCloudCompletion(
-            providerTarget,
-            targetModel,
-            normalizedMessages
-          );
-          let reply = firstPass.reply;
-          let truncated = firstPass.truncated;
-          let finishReason = firstPass.finishReason;
-
-          if (reply && truncated) {
-            // Attempt one continuation pass when upstream stopped on token length.
-            const continuationMessages: ChatMessage[] = [
-              ...normalizedMessages,
-              { role: "assistant", content: reply },
-              {
-                role: "user",
-                content:
-                  "Continue exactly from where you stopped. Do not repeat previous text.",
-              },
-            ];
-            try {
-              const continuation = await requestCloudCompletion(
+          const completed = await finishOnesaReply(
+            await requestCloudCompletion(
+              providerTarget,
+              targetModel,
+              normalizedMessages
+            ),
+            () =>
+              requestCloudCompletion(
                 providerTarget,
                 targetModel,
-                continuationMessages
-              );
-              if (continuation.reply) {
-                reply = mergeReplyContinuation(reply, continuation.reply);
-                truncated = continuation.truncated;
-                finishReason = continuation.finishReason ?? finishReason;
-              }
-            } catch {
-              // Keep initial partial reply when continuation fails.
-            }
-          }
+                rewriteMessages
+              )
+          );
+          const { reply, truncated, finishReason } = completed;
 
           const guardedReply = enforceOnesaIdentityGuard(
             removeRepeatedReplyText(reply),

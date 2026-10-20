@@ -111,7 +111,7 @@ describe("Onesa public chat route", () => {
     }
   );
 
-  it("preserves truncation metadata", async () => {
+  it("blocks a truncated runtime reply at the public API boundary", async () => {
     generateOnesaReply.mockResolvedValue({
       reply: "An incomplete answer",
       truncated: true,
@@ -119,9 +119,11 @@ describe("Onesa public chat route", () => {
     const res = await chat({
       messages: [{ role: "user", content: "Please explain" }],
     });
+    expect(res.status).toHaveBeenCalledWith(503);
     expect(res.json).toHaveBeenCalledWith({
-      reply: "An incomplete answer",
-      truncated: true,
+      message: "Onesa could not finish a complete response. Please try again.",
+      code: "ONESA_INCOMPLETE_REPLY",
     });
+    expect(onChatSuccess).not.toHaveBeenCalled();
   });
 });

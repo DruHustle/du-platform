@@ -1574,7 +1574,8 @@
     "offline_text": "Okungaxhunyiwe ku-inthanethi",
     "error_rate_limited": "U-Onesa umatasatasa njengamanje. Sicela uzame futhi emizuzwaneni embalwa.",
     "message_label": "Umlayezo ku-Onesa",
-    "response_incomplete": "Impendulo le inqunyuliwe. Cela u-Onesa ukuthi aqhubeke."
+    "response_incomplete": "Impendulo le inqunyuliwe. Cela u-Onesa ukuthi aqhubeke.",
+    "error_incomplete": "U-Onesa wehlulekile ukuqedisa impendulo le. Sicela uzame njalo kumbe ucele impendulo emfutshane."
   },
   "logout": "Phuma",
   "legal": {

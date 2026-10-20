@@ -114,6 +114,14 @@ export async function sendOnesaChatMessage(input: {
   if (typeof payload?.reply !== "string" || !payload.reply.trim()) {
     throw new Error("Onesa returned an empty or invalid response.");
   }
+  if (payload.truncated === true) {
+    throw Object.assign(
+      new Error(
+        "Onesa could not finish a complete response. Please try again."
+      ),
+      { code: "ONESA_INCOMPLETE_REPLY" }
+    );
+  }
   onesaHealthVersion += 1;
   onesaHealthCache = { checkedAt: Date.now(), online: true };
   return {

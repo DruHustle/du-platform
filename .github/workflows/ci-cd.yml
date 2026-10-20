@@ -71,6 +71,11 @@ jobs:
         env:
           NAVIGATION_BROWSER_CHANNEL: chromium
 
+      - name: Onesa chat regression tests
+        run: pnpm test:e2e:onesa:chat
+        env:
+          ONESA_BROWSER_CHANNEL: chromium
+
       - name: Shop cart regression tests
         run: pnpm test:e2e:shop
         env:

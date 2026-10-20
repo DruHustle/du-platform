@@ -1,4 +1,5 @@
 import type express from "express";
+import { IncompleteOnesaReplyError } from "./replyCompletion";
 
 type ChatMessage = {
   role: "system" | "user" | "assistant";
@@ -509,6 +510,7 @@ export function registerOnesaAIRoutes(
           .status(502)
           .json({ message: "Onesa model returned an empty response." });
       }
+      if (result.truncated) throw new IncompleteOnesaReplyError();
       const guardLanguage = deps.normalizeOnesaLanguage(
         requestedLanguage ?? ""
       );
@@ -522,6 +524,9 @@ export function registerOnesaAIRoutes(
         truncated: Boolean(result.truncated),
       });
     } catch (error: any) {
+      if (error instanceof IncompleteOnesaReplyError) {
+        return res.status(503).json({ message: error.message, code: error.code });
+      }
       const upstreamStatus = deps.getUpstreamStatus(error);
       const retryAfterMs =
         deps.getRetryAfterMs(error) ?? deps.getGlobalBackoffRemainingMs();

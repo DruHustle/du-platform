@@ -40,8 +40,9 @@ const server = createServer(async (request, response) => {
 });
 await new Promise(done => server.listen(0, "127.0.0.1", done));
 const base = `http://127.0.0.1:${server.address().port}`;
+const channel = process.env.ONESA_BROWSER_CHANNEL || "chrome";
 const browser = await chromium.launch({
-  channel: process.env.ONESA_BROWSER_CHANNEL || "chrome",
+  channel: channel === "chromium" ? undefined : channel,
   headless: true,
 });
 const errors = [];
@@ -123,14 +124,56 @@ try {
         1,
         "Rapid Enter and submit must share one request"
       );
-      release({ reply: "I am Onesa.", truncated: true });
-      await scope
-        .getByText("This answer was cut short. Ask Onesa to continue.")
-        .waitFor();
+      release({ reply: "I am Onesa.", truncated: false });
+      await scope.getByText("I am Onesa.", { exact: true }).waitFor();
       assert.equal(
         await scope.getByText("I am Onesa.", { exact: true }).count(),
         1
       );
+
+      respond = async route =>
+        route.fulfill({
+          json: { reply: "A cut-off answer ending with", truncated: true },
+        });
+      await input.fill("Please give a complete answer");
+      await send.click();
+      await scope
+        .getByRole("alert")
+        .filter({ hasText: "Onesa couldn't finish this answer." })
+        .waitFor();
+      assert.equal(
+        await scope
+          .getByText("A cut-off answer ending with", { exact: true })
+          .count(),
+        0,
+        "Cut-off replies must never be rendered"
+      );
+      assert.equal(
+        await input.inputValue(),
+        "Please give a complete answer",
+        "An incomplete answer must keep the request available for retry"
+      );
+
+      respond = async route =>
+        route.fulfill({
+          status: 503,
+          json: {
+            code: "ONESA_INCOMPLETE_REPLY",
+            message:
+              "Onesa could not finish a complete response. Please try again.",
+          },
+        });
+      const failure = page.waitForResponse(
+        response =>
+          response.url().endsWith("/api/ai/chat") && response.status() === 503
+      );
+      await send.click();
+      await failure;
+      await scope
+        .getByRole("alert")
+        .filter({ hasText: "Onesa couldn't finish this answer." })
+        .waitFor();
+      assert.equal(await input.inputValue(), "Please give a complete answer");
 
       respond = async route => route.fulfill({ json: { reply: {} } });
       const retryPrompt = "Please answer my travel question";
@@ -208,7 +251,7 @@ try {
       );
       await context.close();
       console.log(
-        `PASS ${width}px ${surface}: welcome, single submit, incomplete answer, failed input, retry cooldown, clean history, IME`
+        `PASS ${width}px ${surface}: welcome, single submit, blocks incomplete answers, failed input, retry cooldown, clean history, IME`
       );
     }
   }
