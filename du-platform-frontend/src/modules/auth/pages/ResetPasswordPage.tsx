@@ -2,7 +2,7 @@ import {
   getPasswordIssue,
   PASSWORD_ERROR_MESSAGES,
 } from "@shared/passwordPolicy";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,23 @@ export default function ResetPassword() {
   const tr = (key: string, fallback: string) =>
     t(key, { defaultValue: fallback });
   const [, setLocation] = useLocation();
-  const [token] = useState(getTokenFromUrl());
+  const [token] = useState(getTokenFromUrl);
+  const resetRequest = useRef<AbortController | null>(null);
+  const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    // Keep legacy email links working, then remove the bearer token from history.
+    const url = new URL(window.location.href);
+    url.searchParams.delete("token");
+    window.history.replaceState(
+      window.history.state,
+      "",
+      url.pathname + url.search + url.hash
+    );
+    return () => {
+      resetRequest.current?.abort();
+      if (redirectTimer.current) clearTimeout(redirectTimer.current);
+    };
+  }, []);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState("");
@@ -30,13 +46,12 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const authHeadingClass =
-    "auth-title text-white";
+  const authHeadingClass = "auth-title text-white";
   const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) return;
+    if (loading || status) return;
     const passwordIssue = getPasswordIssue(password);
     if (passwordIssue) {
       setError(
@@ -54,17 +69,25 @@ export default function ResetPassword() {
     setError("");
     setStatus("");
     setLoading(true);
+    const request = new AbortController();
+    resetRequest.current = request;
     try {
-      const { data } = await api.post("/auth/reset-password", {
-        token,
-        password,
-        confirmPassword,
-      });
+      const { data } = await api.post(
+        "/auth/reset-password",
+        {
+          token,
+          password,
+          confirmPassword,
+        },
+        { signal: request.signal }
+      );
+      if (request.signal.aborted) return;
       setStatus(
         data.message ?? tr("auth.reset.success", "Password reset successful.")
       );
-      setTimeout(() => setLocation("/login"), 900);
+      redirectTimer.current = setTimeout(() => setLocation("/login"), 900);
     } catch (err: any) {
+      if (request.signal.aborted) return;
       setError(
         getApiErrorMessage(
           err,
@@ -72,7 +95,7 @@ export default function ResetPassword() {
         )
       );
     } finally {
-      setLoading(false);
+      if (!request.signal.aborted) setLoading(false);
     }
   };
 
@@ -187,7 +210,7 @@ export default function ResetPassword() {
 
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={loading || Boolean(status)}
                 className="h-12 w-full rounded-full bg-zim-gold text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
               >
                 {loading

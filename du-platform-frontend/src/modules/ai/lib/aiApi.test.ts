@@ -45,6 +45,25 @@ describe("Onesa chat requests", () => {
     expect(response.data).toEqual({ reply: "I am Onesa.", truncated: false });
   });
 
+  it("forwards cancellation and ignores a response arriving after cancellation", async () => {
+    const controller = new AbortController();
+    let finish!: (response: unknown) => void;
+    post.mockImplementationOnce(
+      () =>
+        new Promise(resolve => {
+          finish = resolve;
+        })
+    );
+    const pending = sendOnesaChatMessage({
+      ...input,
+      signal: controller.signal,
+    });
+    expect(post.mock.calls[0][2]?.signal).toBe(controller.signal);
+    controller.abort();
+    finish({ data: { reply: "Stale guidance" } });
+    await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+  });
+
   it("rejects a cut-off reply even if an older backend returns HTTP 200", async () => {
     post.mockResolvedValueOnce({
       data: { reply: "An unfinished sentence with", truncated: true },

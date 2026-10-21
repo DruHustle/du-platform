@@ -1,4 +1,10 @@
+import { getSpeechLanguageCode } from "@/modules/ai/ar/arExperienceText";
+import * as Dialog from "@radix-ui/react-dialog";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useExperienceRequests,
+  experienceMediaSignal,
+} from "@/modules/ai/lib/useExperienceRequests";
 import { useMediaStream } from "@/modules/ai/lib/useMediaStream";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -68,12 +74,11 @@ export default function TourismVirtualExperiencePage() {
   });
   const backToTourismButtonClass =
     "mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 transition-colors hover:text-zim-gold";
-  const speechLanguageCode = useMemo(() => {
-    if (uiLanguage === "sn") return "sn-ZW";
-    if (uiLanguage === "nd") return "nr-ZW";
-    if (uiLanguage === "de") return "de-DE";
-    return "en-US";
-  }, [uiLanguage]);
+  const speechLanguageCode = useMemo(
+    () => getSpeechLanguageCode(uiLanguage),
+    [uiLanguage]
+  );
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [virtualNarrative, setVirtualNarrative] = useState("");
@@ -86,6 +91,10 @@ export default function TourismVirtualExperiencePage() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   const [isTtsEnabled, setIsTtsEnabled] = useState(false);
+  const narrationEnabledRef = useRef(false);
+  narrationEnabledRef.current = isTtsEnabled;
+  const poiNarrationRequest = useRef<AbortController | null>(null);
+  const poiInformationRequest = useRef<AbortController | null>(null);
   const [selectedVoiceGender, setSelectedVoiceGender] = useState<
     "male" | "female"
   >("female");
@@ -95,6 +104,8 @@ export default function TourismVirtualExperiencePage() {
   const [audioReady, setAudioReady] = useState(false);
   const [aiStatus, setAiStatus] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenError, setFullscreenError] = useState("");
+  const stageInfoButtonRef = useRef<HTMLButtonElement>(null);
   const [showStageInfo, setShowStageInfo] = useState(false);
   const [showPoiInfo, setShowPoiInfo] = useState(false);
   const [poiInfoTitle, setPoiInfoTitle] = useState("");
@@ -104,6 +115,12 @@ export default function TourismVirtualExperiencePage() {
     () => new Set()
   );
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
+  const experienceContext = `${selectedDestinationId}:${walkStageIndex}:${uiLanguage}:${isConversationMode}`;
+  const { getSignal: getGuideSignal } =
+    useExperienceRequests(experienceContext);
+  const { getSignal: getNarrationSignal, cancel: cancelNarration } =
+    useExperienceRequests(`${experienceContext}:${selectedVoiceGender}`);
+
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const ttsAudioUrlRef = useRef<string | null>(null);
   const ttsAudioContextRef = useRef<AudioContext | null>(null);
@@ -354,6 +371,8 @@ export default function TourismVirtualExperiencePage() {
       introNarratedDestinationIdRef.current = null;
       return;
     }
+    const signal = getGuideSignal();
+    const narrationSignal = getNarrationSignal();
     const runNarration = async () => {
       setLoading(true);
       setAiStatus(ui.guideThinking);
@@ -379,14 +398,23 @@ export default function TourismVirtualExperiencePage() {
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: prompt }],
           language: uiLanguage,
+          signal,
         });
+        if (signal.aborted) return;
         const reply = String(data?.reply ?? "").trim();
         const finalText = reply || destination.summary;
         const introStage =
           destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
         setVirtualNarrative(finalText);
-        const introFinished = await speakWithTts(finalText, false, true);
-        if (introFinished && introStage) {
+        const introFinished =
+          !narrationSignal.aborted &&
+          (await speakWithTts(finalText, false, true));
+        if (
+          !signal.aborted &&
+          !narrationSignal.aborted &&
+          introFinished &&
+          introStage
+        ) {
           const demoStartGuidance = buildPostIntroStartGuidance(
             uiLanguage,
             introStage
@@ -394,12 +422,20 @@ export default function TourismVirtualExperiencePage() {
           await speakWithTts(demoStartGuidance);
         }
       } catch {
+        if (signal.aborted) return;
         const introStage =
           destination.walkStages[0] ?? destination.walkStages[walkStageIndex];
         const fallbackText = destination.summary;
         setVirtualNarrative(fallbackText);
-        const introFinished = await speakWithTts(fallbackText, false, true);
-        if (introFinished && introStage) {
+        const introFinished =
+          !narrationSignal.aborted &&
+          (await speakWithTts(fallbackText, false, true));
+        if (
+          !signal.aborted &&
+          !narrationSignal.aborted &&
+          introFinished &&
+          introStage
+        ) {
           const demoStartGuidance = buildPostIntroStartGuidance(
             uiLanguage,
             introStage
@@ -407,11 +443,16 @@ export default function TourismVirtualExperiencePage() {
           await speakWithTts(demoStartGuidance);
         }
       } finally {
-        setAiStatus(ui.systemReady);
-        setLoading(false);
+        if (!signal.aborted) {
+          setAiStatus(ui.systemReady);
+          setLoading(false);
+        }
       }
     };
     void runNarration();
+    return () => {
+      introNarratedDestinationIdRef.current = null;
+    };
   }, [
     localizedDestinations,
     ui.guideThinking,
@@ -440,8 +481,9 @@ export default function TourismVirtualExperiencePage() {
     force = false,
     waitForCompletion = false
   ): Promise<boolean> => {
-    if (!text) return false;
-    if (!force && !isTtsEnabled) return false;
+    const signal = getNarrationSignal();
+    if (signal.aborted || !text) return false;
+    if (!force && !narrationEnabledRef.current) return false;
     let cloudFailureReason = "";
 
     const audio = ttsAudioRef.current;
@@ -488,6 +530,7 @@ export default function TourismVirtualExperiencePage() {
         }
 
         const speakAttempt = async (useBestVoice: boolean) => {
+          if (signal.aborted) return false;
           synth.resume();
           synth.cancel();
           setIsNarrationPlaying(false);
@@ -541,8 +584,14 @@ export default function TourismVirtualExperiencePage() {
               if (settled) return;
               settled = true;
               window.clearTimeout(timer);
+              signal.removeEventListener("abort", abort);
               resolve(ok);
             };
+            const abort = () => {
+              synth.cancel();
+              finish(false);
+            };
+            signal.addEventListener("abort", abort, { once: true });
             const timerMs = waitForCompletion
               ? Math.min(90000, Math.max(6000, text.length * 90))
               : 2300;
@@ -559,6 +608,7 @@ export default function TourismVirtualExperiencePage() {
               finish(false);
             }, timerMs);
             utterance.onstart = () => {
+              if (signal.aborted) return finish(false);
               started = true;
               setIsNarrationPlaying(true);
               setAiStatus(ui.systemReady);
@@ -581,6 +631,7 @@ export default function TourismVirtualExperiencePage() {
           });
         };
 
+        if (signal.aborted) return false;
         let started = await speakAttempt(true);
         if (!started) started = await speakAttempt(false);
         return started;
@@ -601,6 +652,7 @@ export default function TourismVirtualExperiencePage() {
         .trim()
         .toLowerCase();
       const blob = await response.blob();
+      if (signal.aborted || !ttsAudioRef.current) return false;
       const effectiveMime = String(blob.type || headerMime).toLowerCase();
       if (/audio\/l16|codec=pcm/.test(effectiveMime)) {
         cloudFailureReason = `Unsupported cloud audio format: ${effectiveMime || "unknown"}`;
@@ -626,6 +678,7 @@ export default function TourismVirtualExperiencePage() {
         (ttsAudioRef.current as any).webkitPreservesPitch = true;
       }
       await ensureCloudAudioNoiseFilter();
+      if (signal.aborted || !ttsAudioRef.current) return false;
       setIsNarrationPlaying(true);
       try {
         await ttsAudioRef.current.play();
@@ -647,11 +700,13 @@ export default function TourismVirtualExperiencePage() {
             if (settled) return;
             settled = true;
             window.clearTimeout(timeoutId);
+            signal.removeEventListener("abort", finish);
             audioEl.removeEventListener("ended", finish);
             audioEl.removeEventListener("error", finish);
             audioEl.removeEventListener("abort", finish);
             resolve();
           };
+          signal.addEventListener("abort", finish, { once: true });
           const timeoutId = window.setTimeout(finish, timeoutMs);
           audioEl.addEventListener("ended", finish, { once: true });
           audioEl.addEventListener("error", finish, { once: true });
@@ -683,9 +738,11 @@ export default function TourismVirtualExperiencePage() {
       };
 
       for (const selectedVoiceId of voiceIdCandidates) {
+        if (signal.aborted) return false;
         try {
           setAiStatus(ui.requestingCloudNarration ?? ui.guideThinking);
           const speechRes = await fetch("/api/speech", {
+            signal: experienceMediaSignal(signal),
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -696,15 +753,17 @@ export default function TourismVirtualExperiencePage() {
             }),
           });
           if (await playCloudResponse(speechRes)) return true;
-          const speechFailure = await speechRes.text().catch(() => "");
+          const speechFailure = cloudFailureReason;
           if (!shouldTryNextVoice(speechRes.status, speechFailure)) {
             cloudFailureReason = speechFailure;
           }
         } catch {
           // continue to /api/tts fallback for the same voice
         }
+        if (signal.aborted) return false;
         try {
           const ttsRes = await fetch("/api/tts", {
+            signal: experienceMediaSignal(signal),
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -714,12 +773,14 @@ export default function TourismVirtualExperiencePage() {
             }),
           });
           if (await playCloudResponse(ttsRes)) return true;
-          const ttsFailure = await ttsRes.text().catch(() => "");
+          const ttsFailure = cloudFailureReason;
+          if (!shouldTryNextVoice(ttsRes.status, ttsFailure)) return false;
           if (!shouldTryNextVoice(ttsRes.status, ttsFailure)) {
             cloudFailureReason = ttsFailure;
           }
         } catch {
-          // try next candidate
+          // Transport outages are not voice-specific; use the browser fallback.
+          return false;
         }
       }
       return false;
@@ -733,32 +794,36 @@ export default function TourismVirtualExperiencePage() {
       } catch {
         // handled by browser fallback below
       }
+      if (signal.aborted) return false;
       const quotaExceeded =
         /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(
           cloudFailureReason
         );
       setAiStatus(quotaExceeded ? ui.cloudQuotaExceeded : ui.cloudFailed);
       const browserOk = await speakWithBrowserVoice();
+      if (signal.aborted) return false;
       if (!browserOk) {
         setAiStatus(ui.browserBlocked);
         return false;
       }
       return true;
     } finally {
-      cloudTtsRequestInFlightRef.current = false;
-      if (isTtsEnabled && !isConversationMode) {
-        const activeAudio = ttsAudioRef.current;
-        const cloudStillPlaying = Boolean(
-          activeAudio &&
-            !activeAudio.paused &&
-            activeAudio.currentSrc &&
-            !activeAudio.currentSrc.startsWith("data:")
-        );
-        if (!cloudStillPlaying) {
-          const queued = queuedCloudNarrationRef.current;
-          if (queued) {
-            queuedCloudNarrationRef.current = null;
-            void speakWithTts(queued, false);
+      if (!signal.aborted) {
+        cloudTtsRequestInFlightRef.current = false;
+        if (isTtsEnabled && !isConversationMode) {
+          const activeAudio = ttsAudioRef.current;
+          const cloudStillPlaying = Boolean(
+            activeAudio &&
+              !activeAudio.paused &&
+              activeAudio.currentSrc &&
+              !activeAudio.currentSrc.startsWith("data:")
+          );
+          if (!cloudStillPlaying) {
+            const queued = queuedCloudNarrationRef.current;
+            if (queued) {
+              queuedCloudNarrationRef.current = null;
+              void speakWithTts(queued, false);
+            }
           }
         }
       }
@@ -886,6 +951,7 @@ export default function TourismVirtualExperiencePage() {
 
   useEffect(() => {
     if (isTtsEnabled) return;
+    cancelNarration();
     if (ttsAudioRef.current) {
       ttsAudioRef.current.pause();
       ttsAudioRef.current.currentTime = 0;
@@ -894,7 +960,7 @@ export default function TourismVirtualExperiencePage() {
     setIsNarrationPlaying(false);
     queuedCloudNarrationRef.current = null;
     cloudTtsRequestInFlightRef.current = false;
-  }, [isTtsEnabled]);
+  }, [isTtsEnabled, cancelNarration]);
 
   useEffect(() => {
     isConversationModeRef.current = isConversationMode;
@@ -926,7 +992,7 @@ export default function TourismVirtualExperiencePage() {
   }, []);
 
   const transcribeWithGroq = useCallback(
-    async (blob: Blob): Promise<string> => {
+    async (blob: Blob, signal: AbortSignal): Promise<string> => {
       const formData = new FormData();
       formData.append("file", blob, "audio.webm");
       formData.append("action", "stt");
@@ -934,6 +1000,7 @@ export default function TourismVirtualExperiencePage() {
       const res = await fetch("/api/speech", {
         method: "POST",
         body: formData,
+        signal: experienceMediaSignal(signal),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -946,8 +1013,12 @@ export default function TourismVirtualExperiencePage() {
   );
 
   const transcribeWithWhisper = useCallback(
-    async (blob: Blob): Promise<string> => {
-      const res = await fetch("/api/whisper", { method: "POST", body: blob });
+    async (blob: Blob, signal: AbortSignal): Promise<string> => {
+      const res = await fetch("/api/whisper", {
+        method: "POST",
+        body: blob,
+        signal: experienceMediaSignal(signal),
+      });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
         throw new Error(message || `Whisper STT failed (${res.status})`);
@@ -958,80 +1029,94 @@ export default function TourismVirtualExperiencePage() {
     [extractTranscriptText]
   );
 
-  const transcribeWithBrowserSpeech = useCallback(async (): Promise<string> => {
-    if (typeof window === "undefined") {
-      throw new Error("Browser speech recognition unavailable");
-    }
-    const RecognitionCtor =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
-    if (!RecognitionCtor) {
-      throw new Error("Browser speech recognition unsupported");
-    }
-
-    return await new Promise<string>((resolve, reject) => {
-      const recognition = new RecognitionCtor();
-      recognition.lang = speechLanguageCode;
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-
-      let settled = false;
-      const finish = (result?: string, error?: Error) => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeoutId);
-        if (result && result.trim()) {
-          resolve(result.trim());
-          return;
-        }
-        reject(error ?? new Error("No speech detected"));
-      };
-
-      const timeoutId = window.setTimeout(() => {
-        try {
-          recognition.stop();
-        } catch {
-          // no-op
-        }
-        finish(undefined, new Error("Browser speech recognition timed out"));
-      }, 10000);
-
-      recognition.onresult = (event: any) => {
-        const transcript = String(
-          event?.results?.[0]?.[0]?.transcript ?? ""
-        ).trim();
-        finish(transcript);
-      };
-      recognition.onerror = (event: any) => {
-        finish(
-          undefined,
-          new Error(String(event?.error ?? "Browser speech recognition failed"))
-        );
-      };
-      recognition.onnomatch = () => {
-        finish(undefined, new Error("No matching speech recognized"));
-      };
-      recognition.onend = () => {
-        finish(
-          undefined,
-          new Error("Browser speech recognition ended without text")
-        );
-      };
-
-      try {
-        recognition.start();
-      } catch (error) {
-        finish(
-          undefined,
-          error instanceof Error
-            ? error
-            : new Error("Unable to start browser speech recognition")
-        );
+  const transcribeWithBrowserSpeech = useCallback(
+    async (signal: AbortSignal): Promise<string> => {
+      if (typeof window === "undefined") {
+        throw new Error("Browser speech recognition unavailable");
       }
-    });
-  }, [speechLanguageCode]);
+      const RecognitionCtor =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
+      if (!RecognitionCtor) {
+        throw new Error("Browser speech recognition unsupported");
+      }
+
+      return await new Promise<string>((resolve, reject) => {
+        signal.throwIfAborted();
+        const recognition = new RecognitionCtor();
+        recognition.lang = speechLanguageCode;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        let settled = false;
+        const finish = (result?: string, error?: Error) => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeoutId);
+          signal.removeEventListener("abort", abort);
+          if (result && result.trim()) {
+            resolve(result.trim());
+            return;
+          }
+          reject(error ?? new Error("No speech detected"));
+        };
+
+        const abort = () => {
+          recognition.abort();
+          finish(undefined, new Error("Canceled"));
+        };
+        signal.addEventListener("abort", abort, { once: true });
+        const timeoutId = window.setTimeout(() => {
+          try {
+            recognition.stop();
+          } catch {
+            // no-op
+          }
+          finish(undefined, new Error("Browser speech recognition timed out"));
+        }, 10000);
+
+        recognition.onresult = (event: any) => {
+          const transcript = String(
+            event?.results?.[0]?.[0]?.transcript ?? ""
+          ).trim();
+          finish(transcript);
+        };
+        recognition.onerror = (event: any) => {
+          finish(
+            undefined,
+            new Error(
+              String(event?.error ?? "Browser speech recognition failed")
+            )
+          );
+        };
+        recognition.onnomatch = () => {
+          finish(undefined, new Error("No matching speech recognized"));
+        };
+        recognition.onend = () => {
+          finish(
+            undefined,
+            new Error("Browser speech recognition ended without text")
+          );
+        };
+
+        try {
+          recognition.start();
+        } catch (error) {
+          finish(
+            undefined,
+            error instanceof Error
+              ? error
+              : new Error("Unable to start browser speech recognition")
+          );
+        }
+      });
+    },
+    [speechLanguageCode]
+  );
 
   const processConversation = async (blob: Blob) => {
+    const signal = getGuideSignal();
+    if (signal.aborted) return;
     setLoading(true);
     setAiStatus(ui.transcribing);
     let capturedTranscript = "";
@@ -1039,16 +1124,18 @@ export default function TourismVirtualExperiencePage() {
       // Prefer multipart Groq STT path used across modules, with Whisper-route fallback.
       let text = "";
       try {
-        text = await transcribeWithGroq(blob);
+        text = await transcribeWithGroq(blob, signal);
       } catch {
+        if (signal.aborted) return;
         try {
-          text = await transcribeWithWhisper(blob);
+          text = await transcribeWithWhisper(blob, signal);
         } catch {
+          if (signal.aborted) return;
           setAiStatus(ui.whisperFallback);
-          text = await transcribeWithBrowserSpeech();
+          text = await transcribeWithBrowserSpeech(signal);
         }
       }
-      if (!isConversationModeRef.current) return;
+      if (signal.aborted || !isConversationModeRef.current) return;
       if (!text) {
         setConversationTranscript(
           ui.sttUnavailable ?? "Could not transcribe audio."
@@ -1069,16 +1156,17 @@ export default function TourismVirtualExperiencePage() {
           },
         ],
         language: uiLanguage,
+        signal,
       });
 
-      if (!isConversationModeRef.current) return;
+      if (signal.aborted || !isConversationModeRef.current) return;
       const reply = String(data?.reply ?? "").trim() || ui.guideThinking;
       setVirtualNarrative(reply);
       setConversationResponse(reply);
       await speakWithTts(reply, true);
       setAiStatus(ui.systemReady);
     } catch {
-      if (!isConversationModeRef.current) return;
+      if (signal.aborted || !isConversationModeRef.current) return;
       if (!capturedTranscript) {
         setConversationTranscript(
           ui.sttUnavailable ?? "Could not transcribe audio."
@@ -1099,7 +1187,9 @@ export default function TourismVirtualExperiencePage() {
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: fallbackPrompt }],
           language: uiLanguage,
+          signal,
         });
+        if (signal.aborted) return;
         const reply =
           String(data?.reply ?? "").trim() || currentDestination.summary;
         setVirtualNarrative(reply);
@@ -1107,6 +1197,7 @@ export default function TourismVirtualExperiencePage() {
         await speakWithTts(reply, true);
         setAiStatus(ui.onesaFallback);
       } catch {
+        if (signal.aborted) return;
         const localFallback = String(
           currentDestination.summary || currentStage.caption || ""
         ).trim();
@@ -1116,7 +1207,7 @@ export default function TourismVirtualExperiencePage() {
         setAiStatus(ui.localGuidance);
       }
     } finally {
-      setLoading(false);
+      if (!signal.aborted) setLoading(false);
     }
   };
 
@@ -1504,6 +1595,13 @@ export default function TourismVirtualExperiencePage() {
 
   const handlePointOfInterestClick = useCallback(
     async (poiLabel: string, poiPosition: Point3D) => {
+      poiNarrationRequest.current?.abort();
+      poiNarrationRequest.current = new AbortController();
+      const signal = AbortSignal.any([
+        getGuideSignal(),
+        poiNarrationRequest.current.signal,
+      ]);
+      const narrationSignal = getNarrationSignal();
       setAutoRotateEnabled(false);
       const camera = cameraRef.current;
       const controls = orbitControlsRef.current;
@@ -1550,18 +1648,21 @@ export default function TourismVirtualExperiencePage() {
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: prompt }],
           language: uiLanguage,
+          signal,
         });
+        if (signal.aborted) return;
         const enrichedNarration =
           String(data?.reply ?? "").trim() || localRichNarration;
         setVirtualNarrative(enrichedNarration);
         setAiStatus(`${ui.systemReady}: ${poiLabel}`);
-        if (!isConversationMode) {
+        if (!narrationSignal.aborted && !isConversationMode) {
           await speakWithTts(enrichedNarration);
         }
       } catch {
+        if (signal.aborted) return;
         setVirtualNarrative(localRichNarration);
         setAiStatus(`${ui.systemReady}: ${poiLabel}`);
-        if (!isConversationMode) {
+        if (!narrationSignal.aborted && !isConversationMode) {
           await speakWithTts(localRichNarration);
         }
       }
@@ -1624,6 +1725,12 @@ export default function TourismVirtualExperiencePage() {
 
   const handlePointOfInterestInfoClick = useCallback(
     async (poiId: string, poiLabel: string) => {
+      poiInformationRequest.current?.abort();
+      poiInformationRequest.current = new AbortController();
+      const signal = AbortSignal.any([
+        getGuideSignal(),
+        poiInformationRequest.current.signal,
+      ]);
       setHiddenPoiInfoIconIds(prev => {
         if (prev.has(poiId)) return prev;
         const next = new Set(prev);
@@ -1658,13 +1765,16 @@ export default function TourismVirtualExperiencePage() {
         const { data } = await sendOnesaChatMessage({
           messages: [{ role: "user", content: prompt }],
           language: uiLanguage,
+          signal,
         });
+        if (signal.aborted) return;
         const info = String(data?.reply ?? "").trim() || fallbackInfo;
         setPoiInfoText(info);
       } catch {
+        if (signal.aborted) return;
         setPoiInfoText(fallbackInfo);
       } finally {
-        setPoiInfoLoading(false);
+        if (!signal.aborted) setPoiInfoLoading(false);
       }
     },
     [
@@ -1681,8 +1791,20 @@ export default function TourismVirtualExperiencePage() {
   );
 
   useEffect(() => {
+    queuedCloudNarrationRef.current = null;
+    cloudTtsRequestInFlightRef.current = false;
+    ttsAudioRef.current?.pause();
+    cancelBrowserSpeech();
+    setIsNarrationPlaying(false);
+    setLoading(false);
+    setShowPoiInfo(false);
+    setShowStageInfo(false);
+  }, [experienceContext, selectedVoiceGender]);
+
+  useEffect(() => {
     return () => {
       isConversationModeRef.current = false;
+      cancelBrowserSpeech();
       if (globeTransitionTimerRef.current !== null) {
         window.clearTimeout(globeTransitionTimerRef.current);
         globeTransitionTimerRef.current = null;
@@ -1720,6 +1842,7 @@ export default function TourismVirtualExperiencePage() {
   }, [clearRecordingTurnTimer]);
 
   const toggleFullscreen = async () => {
+    setFullscreenError("");
     if (!containerRef.current) return;
     const doc = document as Document & {
       webkitFullscreenElement?: Element | null;
@@ -1770,7 +1893,7 @@ export default function TourismVirtualExperiencePage() {
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
               {t("tourism.vr.seo.description", {
                 defaultValue:
-                  "Explore Zimbabwe destinations through an interactive virtual guide with narrated context, landmark details, and immersive place previews before you plan a trip.",
+                  "Try a Sample City demonstration with panoramic scenes, points of interest and optional narration. Zimbabwe destination tours are not available yet.",
               })}
             </p>
           </div>
@@ -1782,6 +1905,7 @@ export default function TourismVirtualExperiencePage() {
               <div>
                 <select
                   id="vr-destination"
+                  aria-label={ui.selectDestination}
                   className="mt-2 w-full rounded-xl border border-white/15 bg-slate-950 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-zim-gold/60"
                   value={selectedDestinationId}
                   onChange={event => {
@@ -1953,7 +2077,11 @@ export default function TourismVirtualExperiencePage() {
                 {/* Fullscreen Toggle */}
                 <div className="absolute z-40 top-4 right-4 sm:top-6 sm:right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity">
                   <Button
-                    onClick={() => void toggleFullscreen()}
+                    onClick={() =>
+                      void toggleFullscreen().catch(() =>
+                        setFullscreenError(ui.fullscreenUnavailable)
+                      )
+                    }
                     variant="outline"
                     className="h-11 w-11 p-0 sm:w-auto sm:px-3 rounded-full border-white/20 bg-black/40 text-white flex items-center gap-1.5"
                     aria-label={
@@ -2020,6 +2148,7 @@ export default function TourismVirtualExperiencePage() {
                       </Button>
                       <Button
                         type="button"
+                        ref={stageInfoButtonRef}
                         onClick={() => setShowStageInfo(true)}
                         variant="outline"
                         className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
@@ -2082,24 +2211,33 @@ export default function TourismVirtualExperiencePage() {
                   </>
                 ) : null}
 
-                {showStageInfo && selectedDestinationId ? (
-                  <div className="absolute inset-0 z-[120] flex items-center justify-center bg-black/65 p-4">
-                    <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
+                <Dialog.Root
+                  open={showStageInfo && Boolean(selectedDestinationId)}
+                  onOpenChange={setShowStageInfo}
+                >
+                  <Dialog.Content
+                    onCloseAutoFocus={event => {
+                      event.preventDefault();
+                      stageInfoButtonRef.current?.focus();
+                    }}
+                    className="absolute inset-0 z-[120] flex items-center justify-center bg-black/65 p-4"
+                  >
+                    <div className="w-full max-w-lg max-h-full overflow-y-auto rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
+                        <Dialog.Title className="text-sm font-black uppercase tracking-widest text-zim-gold">
                           {currentDestination.name} - {currentStage.title}
-                        </h3>
+                        </Dialog.Title>
                         <Button
                           onClick={() => setShowStageInfo(false)}
                           variant="outline"
-                          className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                          className="min-h-11 px-4 rounded-full border-white/20 text-white bg-black/40"
                         >
                           {ui.close}
                         </Button>
                       </div>
-                      <p className="text-sm  mt-3 leading-relaxed">
+                      <Dialog.Description className="text-sm mt-3 leading-relaxed">
                         {currentStage.caption}
-                      </p>
+                      </Dialog.Description>
                       <p className="text-sm  mt-2 leading-relaxed">
                         {currentDestination.summary}
                       </p>
@@ -2121,39 +2259,95 @@ export default function TourismVirtualExperiencePage() {
                         </div>
                       ) : null}
                     </div>
-                  </div>
-                ) : null}
+                  </Dialog.Content>
+                </Dialog.Root>
 
-                {showPoiInfo && selectedDestinationId ? (
-                  <div className="absolute inset-0 z-[130] flex items-center justify-center bg-black/65 p-4">
-                    <div className="w-full max-w-lg rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
+                <Dialog.Root
+                  open={showPoiInfo && Boolean(selectedDestinationId)}
+                  onOpenChange={setShowPoiInfo}
+                >
+                  <Dialog.Content
+                    aria-describedby="vr-poi-description"
+                    onCloseAutoFocus={event => {
+                      event.preventDefault();
+                      stageInfoButtonRef.current?.focus();
+                    }}
+                    className="absolute inset-0 z-[130] flex items-center justify-center bg-black/65 p-4"
+                  >
+                    <div className="w-full max-w-lg max-h-full overflow-y-auto rounded-2xl border border-white/30 bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] p-5">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold">
+                        <Dialog.Title className="text-sm font-black uppercase tracking-widest text-zim-gold">
                           {poiInfoTitle}
-                        </h3>
+                        </Dialog.Title>
                         <Button
                           type="button"
                           onClick={() => setShowPoiInfo(false)}
                           variant="outline"
-                          className="h-7 px-2 rounded-full border-white/20 text-white bg-black/40"
+                          className="min-h-11 px-4 rounded-full border-white/20 text-white bg-black/40"
                         >
                           {ui.close}
                         </Button>
                       </div>
-                      {poiInfoLoading ? (
-                        <p className="text-sm  mt-3 leading-relaxed">
-                          {ui.loadingPoi}
-                        </p>
-                      ) : (
-                        <p className="text-sm  mt-3 leading-relaxed">
-                          {poiInfoText}
-                        </p>
-                      )}
+                      <Dialog.Description id="vr-poi-description" asChild>
+                        {poiInfoLoading ? (
+                          <p className="text-sm  mt-3 leading-relaxed">
+                            {ui.loadingPoi}
+                          </p>
+                        ) : (
+                          <p className="text-sm  mt-3 leading-relaxed">
+                            {poiInfoText}
+                          </p>
+                        )}
+                      </Dialog.Description>
                     </div>
-                  </div>
-                ) : null}
+                  </Dialog.Content>
+                </Dialog.Root>
               </div>
 
+              {fullscreenError ? (
+                <p role="status" className="text-sm text-zim-gold">
+                  {fullscreenError}
+                </p>
+              ) : null}
+              {selectedDestinationId ? (
+                <nav
+                  aria-label={ui.walkthrough}
+                  className="flex items-center justify-between gap-3"
+                >
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={walkStageIndex === 0}
+                    onClick={() => setWalkStageIndex(index => index - 1)}
+                    className="min-h-11 border-white/20 text-white"
+                    aria-label={ui.previousStage}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    <span className="ml-2 hidden sm:inline">
+                      {ui.previousStage}
+                    </span>
+                  </Button>
+                  <span
+                    role="status"
+                    className="text-xs text-center text-white/75"
+                  >
+                    {ui.stageLabel} {walkStageIndex + 1}/{walkStages.length}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={walkStageIndex >= walkStages.length - 1}
+                    onClick={() => setWalkStageIndex(index => index + 1)}
+                    className="min-h-11 border-white/20 text-white"
+                    aria-label={ui.nextStage}
+                  >
+                    <span className="mr-2 hidden sm:inline">
+                      {ui.nextStage}
+                    </span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </nav>
+              ) : null}
               {/* CONTROL PANEL (AR-style structure) */}
               <div className="space-y-3">
                 <div className="rounded-xl border border-zim-gold/20 bg-zim-gold/5 p-3 mt-2">

@@ -34,12 +34,12 @@ export default function Shop() {
     () => [
       {
         image: "/images/pages/shop/zimbabwe_shop_hero.webp",
-        badge: tx("shop.hero.badge1", "Authentic Zimbabwe Goods"),
+        badge: tx("shop.hero.badge1", "Products from Zimbabwe"),
         badgeIcon: ShoppingBag,
         title: tx("shop.hero.title1", "Shop Zimbabwe"),
         subtitle: tx(
           "shop.hero.subtitle1",
-          "Buy curated products from Zimbabwe with diaspora-friendly delivery and trusted sourcing."
+          "Find familiar flavours and gifts. Build your basket, then request availability and delivery details."
         ),
       },
     ],
@@ -60,12 +60,15 @@ export default function Shop() {
             <div className="max-w-2xl">
               <p className="page-eyebrow">{tx("nav.shop", "Shop")}</p>
               <h2 className="page-section-title">
-                {tx("shop.collections_title", "Curated Zimbabwean Excellence")}
+                {tx(
+                  "shop.collections_title",
+                  "Zimbabwean favourites, in one place"
+                )}
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-400">
                 {tx(
                   "shop.collections_description",
-                  "Discover food, crafts, and apparel from Zimbabwe."
+                  "Find food, crafts and supporter apparel for your household or as a gift. Add items to your cart and send an order request. The team will confirm whether delivery to your destination can be arranged, along with availability and payment instructions."
                 )}
               </p>
             </div>
@@ -128,7 +131,7 @@ export default function Shop() {
               href="/shop/products?category=all"
               className="shop-primary-link"
             >
-              {tx("shop.explore_shop", "Discover Shop")}
+              {tx("shop.explore_shop", "Browse all products")}
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>

@@ -1,27 +1,28 @@
 # Diaspora Unlocked Platform
 
-**The Diaspora Gateway** - A unified digital platform connecting Zimbabwe's diaspora with tourism, investment, shopping, and technology opportunities.
+**Diaspora Unlocked** connects people in Zimbabwe and abroad with products, travel information, business opportunities and practical AI assistance.
 
 ## Definitions
 
-- **The Diaspora Gateway**: The official product identity used across public-facing materials.
+- **Diaspora Unlocked**: The public product name.
 - **Diaspora Unlocked Platform**: The technical platform/repository name used in development and operations contexts.
-- **NTIR**: National Trusted Investment Registry.
+- **NTIR**: The platform-maintained business directory at `/ntir`; it is not an official national register or an independent verification service.
 
 ## Overview
 
-The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora engagement strategy by providing:
+Visitors can use the platform to:
 
-- **Tourism Information**: Discover Zimbabwe's world-class attractions with diaspora-focused packages.
-- **Investment Marketplace**: Micro-investment and crowdfunding opportunities with government support.
-- **Impact & Insights**: Diaspora impact stories and economic participation indicators.
+- **Tourism information**: Compare destinations, explore interactive previews and draft an itinerary with indicative budgets. The planner does not check live prices or make bookings.
+- **Project research**: Read sector and project profiles, search directory entries and prepare questions for promoters. Capital pooling, investment payments and portfolio tracking are not offered.
+- **Product discovery**: Build a cart and send an assisted order request. Availability, delivery and payment details are confirmed separately.
+- **AI assistance**: Onesa powers explanations and planning with Zimbabwe-focused content. The wider Onesa platform is modular and general-purpose, for European and international applications.
 
 ## Key Features
 
 ### 🌍 Multi-Language Support
 
-- Full localization in **English**, **German**, **Shona**, and **Ndebele**.
-- Seamless language switching across all pages and components.
+- Language options in **English**, **German**, **Shona**, and **Ndebele**.
+- Shared navigation and content catalogs use react-i18next. Some legacy interface strings still need translation review.
 - Culturally relevant content for diverse diaspora communities.
 
 ### 🖼️ Dynamic Visual Experience
@@ -32,14 +33,28 @@ The Diaspora Unlocked Platform addresses critical gaps in Zimbabwe's diaspora en
 
 ### ✈️ Tourism Information
 
-- Forbes #1 destination 2025 highlights.
+- Zimbabwe destination information and source links.
 - Key attractions (Victoria Falls, Great Zimbabwe, Kariba, Matobo Hills).
-- Diaspora homecoming packages.
+- Draft itineraries and interactive destination previews.
 
 ### 💰 Investment
 
-- Diaspora-friendly crowdfunding projects and share-based models.
-- National Trusted Investment Registry (NTIR) integration.
+- Informational project profiles and independent research prompts.
+- Searchable platform-maintained NTIR business records.
+
+### AR and VR previews
+
+The AR camera is a local preview: AI receives selected destination text, not camera
+frames or live positioning. Location permission only helps select a nearby listed
+destination; visitors can always select one manually. VR currently offers the
+labelled Sample City demonstration, with keyboard scene controls and optional
+WebXR headset support. These previews do not make bookings or provide live navigation.
+
+Run `pnpm build` followed by `E2E_BROWSER_CHANNEL=chrome pnpm test:e2e:offline`
+for local service fixtures, synthetic camera/microphone, permission failures,
+cancelled narration, responsive layouts and a simulated Quest headset. This suite
+starts its own server without provider credentials. Simulated-device checks do not
+replace acceptance testing on a physical phone or headset.
 
 ## Technology Stack
 
@@ -294,8 +309,35 @@ Direct Stripe, PayPal, and Amazon Pay checkout flows are not implemented in this
 ### Shop Checkout Modes
 
 1. In production, the shop API accepts `manual_assisted` checkout only.
-2. In non-production (`NODE_ENV !== production`), the API also accepts `dummy_gateway` for local/dev testing.
+2. In non-production (`NODE_ENV !== production`), the API also accepts `dummy_gateway` for local/dev testing. The browser shows this option only in Vite development or test mode; a production frontend build always hides it.
 3. The dummy flow exists only for testing order confirmation and stock handling.
+
+Customers choose their delivery country explicitly; the displayed delivery charge
+and total are estimates pending review. Order requests remain unpaid and do not
+reserve inventory. The receipt retains the server-priced items and a reference,
+with email and WhatsApp handoff links. Customer and merchant acknowledgements are
+attempted through the existing configured email provider; the on-screen receipt
+remains usable when email delivery fails.
+
+The optional 256-bit `requestToken` makes an interrupted checkout retry the same
+order. The existing unique order reference and hashed access grant enforce this
+without a schema migration. Reusing a grant for different customer, delivery or
+item details is rejected. The browser retains the grant and receipt only in the
+current tab's session storage, without the customer's email or address. Account
+creation is not required.
+
+`pnpm test:e2e:shop` verifies selection, quantities, validation, stock limits,
+lost-response retries, receipt reload and contact handoff at 375/768/1440px.
+For transaction and concurrency checks against an **explicit disposable localhost
+database ending in `_test`**, run:
+
+```bash
+SHOP_TEST_DATABASE_URL=mysql://USER:PASSWORD@127.0.0.1:3306/du_shop_test \
+  node --import tsx scripts/tests/shop-database.mjs
+```
+
+This test creates its own product and order fixtures, then removes them. It does
+not contact payment or email services. Never point it at an application database.
 
 ### Development and Testing Mode
 

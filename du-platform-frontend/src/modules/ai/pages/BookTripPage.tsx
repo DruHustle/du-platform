@@ -587,25 +587,37 @@ export default function BookTripPage() {
     if (!result) return;
     const lines: string[] = [];
     lines.push(t("tourism.onesa.trip_planner.pdf_title") || "Onesa Trip Plan");
+    const noticeLines = t("tourism.onesa.trip_planner.booking_focus")
+      .split(/\s+/)
+      .reduce<string[]>((wrapped, word) => {
+        const last = wrapped.length - 1;
+        if (last < 0 || wrapped[last].length + word.length + 1 > 85) {
+          wrapped.push(word);
+        } else {
+          wrapped[last] += ` ${word}`;
+        }
+        return wrapped;
+      }, []);
+    lines.push(...noticeLines);
     lines.push("----------------------------------------");
     lines.push(
       `${t("tourism.onesa.trip_planner.summary") || "Summary"}: ${result.summary}`
     );
     lines.push(
-      `${t("tourism.onesa.trip_planner.optimized_for") || "Optimized for"}: ${result.optimizedFor}`
+      `${t("tourism.onesa.trip_planner.optimized_for") || "Planning preferences"}: ${result.optimizedFor}`
     );
     lines.push(
-      `${t("tourism.onesa.trip_planner.estimated_total") || "Estimated total"}: USD ${result.estimatedTotalUsd}`
+      `${t("tourism.onesa.trip_planner.estimated_total") || "Indicative budget (USD)"}: USD ${result.estimatedTotalUsd}`
     );
     lines.push("");
     lines.push(
-      `${t("tourism.onesa.trip_planner.flights") || "Flights"}: ${result.flights.route} (${result.flights.cabin}) - USD ${result.flights.estimatedCostUsd}`
+      `${t("tourism.onesa.trip_planner.flights") || "Flight estimate"}: ${result.flights.route} (${result.flights.cabin}) - USD ${result.flights.estimatedCostUsd}`
     );
     lines.push(
-      `${t("tourism.onesa.trip_planner.hotels") || "Hotels"}: ${result.hotels.area} (${result.hotels.style}) - USD ${result.hotels.estimatedCostUsd}`
+      `${t("tourism.onesa.trip_planner.hotels") || "Stay estimate"}: ${result.hotels.area} (${result.hotels.style}) - USD ${result.hotels.estimatedCostUsd}`
     );
     lines.push(
-      `${t("tourism.onesa.trip_planner.car_hire") || "Car hire"}: ${result.carHire.vehicleClass} - USD ${result.carHire.estimatedCostUsd}`
+      `${t("tourism.onesa.trip_planner.car_hire") || "Transport estimate"}: ${result.carHire.vehicleClass} - USD ${result.carHire.estimatedCostUsd}`
     );
     lines.push("");
     lines.push(
@@ -618,7 +630,7 @@ export default function BookTripPage() {
     });
     lines.push("");
     lines.push(
-      `${t("tourism.onesa.trip_planner.itinerary") || "Personalized Itinerary"}:`
+      `${t("tourism.onesa.trip_planner.itinerary") || "Draft itinerary"}:`
     );
     result.itinerary.forEach(day => {
       lines.push(
@@ -654,15 +666,15 @@ export default function BookTripPage() {
               </Badge>
               <h1 className="page-title mt-3">
                 {t("tourism.onesa.trip_planner.title") ||
-                  "Onesa Booking Information"}
+                  "Plan your Zimbabwe trip"}
               </h1>
               <p className="section-subtitle-compact">
                 {t("tourism.onesa.trip_planner.subtitle") ||
-                  "Build a season-aware trip optimized for cost and comfort across flights, hotels, experiences, and car hire."}
+                  "Create a draft itinerary with indicative budgets for flights, stays, transport and experiences, based on your dates and preferences."}
               </p>
               <p className="text-xs text-white/70 mt-3">
                 {t("tourism.onesa.trip_planner.booking_focus") ||
-                  "Use this page for booking information and recommendations before you confirm travel."}
+                  "This planner does not check live prices or availability and does not make bookings. Confirm costs and arrangements directly with providers."}
               </p>
             </div>
 
@@ -700,7 +712,7 @@ export default function BookTripPage() {
                 </select>
                 <p className="mt-2 text-xs text-white/70">
                   {t("tourism.onesa.trip_planner.nearest_airport_hint") ||
-                    "Nearest airport (auto-selected by engine)"}
+                    "Suggested nearby airport; confirm routes with your airline"}
                   :{" "}
                   <span className="text-white/80">
                     {selectedArrival.nearestAirport}
@@ -868,19 +880,17 @@ export default function BookTripPage() {
                 </div>
               </div>
 
-              <div className="text-sm text-white/80 grid grid-cols-2 gap-3">
+              <div className="text-sm text-white/80 grid grid-cols-1 xl:grid-cols-2 gap-3">
                 <label className="block text-sm text-white/80">
                   {t("tourism.onesa.trip_planner.start_date") || "Start date"}
                   <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 focus-within:border-zim-gold/60">
                     <input
                       ref={startDateInputRef}
                       type="date"
+                      required
                       value={startDate}
                       onChange={e => setStartDate(e.target.value)}
                       onClick={() => openDatePicker(startDateInputRef.current)}
-                      onKeyDown={e => e.preventDefault()}
-                      onPaste={e => e.preventDefault()}
-                      inputMode="none"
                       className="w-full bg-transparent text-white outline-none"
                     />
                     <button
@@ -905,12 +915,11 @@ export default function BookTripPage() {
                       <input
                         ref={endDateInputRef}
                         type="date"
+                        required
+                        min={startDate}
                         value={endDate}
                         onChange={e => setEndDate(e.target.value)}
                         onClick={() => openDatePicker(endDateInputRef.current)}
-                        onKeyDown={e => e.preventDefault()}
-                        onPaste={e => e.preventDefault()}
-                        inputMode="none"
                         className="w-full bg-transparent text-white outline-none"
                       />
                       <button
@@ -1031,9 +1040,9 @@ export default function BookTripPage() {
                 <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
                   {source === "ai"
                     ? t("tourism.onesa.trip_planner.ai_optimized") ||
-                      "AI Optimized"
+                      "AI-generated draft"
                     : t("tourism.onesa.trip_planner.fallback_plan") ||
-                      "Smart Fallback Plan"}
+                      "Sample plan with calculated estimates"}
                 </Badge>
                 <span className="text-white/70 text-xs">
                   {result.optimizedFor}
@@ -1055,7 +1064,7 @@ export default function BookTripPage() {
               <p className="text-zim-gold text-sm font-black uppercase tracking-wider mb-8">
                 <Wallet className="h-4 w-4 inline mr-2" />
                 {(t("tourism.onesa.trip_planner.estimated_total") ||
-                  "Estimated total") + ": $"}
+                  "Indicative budget (USD)") + ": $"}
                 {result.estimatedTotalUsd.toLocaleString()}
               </p>
 
@@ -1063,7 +1072,8 @@ export default function BookTripPage() {
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
                   <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                     <Plane className="h-4 w-4 inline mr-2" />
-                    {t("tourism.onesa.trip_planner.flights") || "Flights"}
+                    {t("tourism.onesa.trip_planner.flights") ||
+                      "Flight estimate"}
                   </p>
                   <p className="text-white text-sm font-bold">
                     {result.flights.route}
@@ -1079,7 +1089,7 @@ export default function BookTripPage() {
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
                   <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                     <Hotel className="h-4 w-4 inline mr-2" />
-                    {t("tourism.onesa.trip_planner.hotels") || "Hotels"}
+                    {t("tourism.onesa.trip_planner.hotels") || "Stay estimate"}
                   </p>
                   <p className="text-white text-sm font-bold">
                     {result.hotels.area}
@@ -1095,7 +1105,8 @@ export default function BookTripPage() {
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
                   <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
                     <Car className="h-4 w-4 inline mr-2" />
-                    {t("tourism.onesa.trip_planner.car_hire") || "Car hire"}
+                    {t("tourism.onesa.trip_planner.car_hire") ||
+                      "Transport estimate"}
                   </p>
                   <p className="text-white text-sm font-bold">
                     {result.carHire.vehicleClass}
@@ -1135,7 +1146,7 @@ export default function BookTripPage() {
                 <h3 className="text-base font-black text-white tracking-tight mb-3">
                   <Calendar className="h-4 w-4 inline mr-2" />
                   {t("tourism.onesa.trip_planner.itinerary") ||
-                    "Personalized Itinerary"}
+                    "Draft itinerary"}
                 </h3>
                 <div className="space-y-3">
                   {result.itinerary.map(dayPlan => (

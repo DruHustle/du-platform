@@ -81,6 +81,7 @@ export async function sendEmailMessage(payload: {
         text: payload.text,
       },
       {
+        timeout: 5_000,
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
@@ -174,9 +175,9 @@ export async function notifyRestockSubscribersAndAdmins(input: {
       const safeName = escapeEmailHtml(input.productName);
       const html = `<p>Hello,</p>
 <p><strong>${safeName}</strong> is now back in stock on the Zimbabwe Shop.</p>
-<p>You can return to the shop and place your order.</p>
+<p>Return to the shop to send an order request and confirm delivery and payment details.</p>
 <p>Thank you.</p>`;
-      const text = `${input.productName} is now back in stock on the Zimbabwe Shop. You can return to the shop and place your order.`;
+      const text = `${input.productName} is now back in stock on the Zimbabwe Shop. Return to the shop to send an order request and confirm delivery and payment details.`;
 
       await sendEmailMessage({
         to: uniqueEmails,
@@ -198,10 +199,10 @@ export async function notifyRestockSubscribersAndAdmins(input: {
 <p>Product: ${safeName}</p>
 <p>Slug: ${safeSlug}</p>
 <p>Current stock: ${safeQty}</p>
-<p>Subscribers notified automatically: ${uniqueEmails.length}</p>
+<p>Stock alerts attempted: ${uniqueEmails.length}</p>
 <p>Action: please review Admin &gt; Notify Me and send any additional manual communication if needed.</p>
 <p>Updated by: ${safeEditor}</p>`;
-      const text = `Restock detected for ${input.productName} (${productSlug}). Current stock: ${input.stockQty}. Subscribers notified automatically: ${uniqueEmails.length}. Action: review Admin > Notify Me and send any additional manual communication if needed. Updated by: ${input.updatedByEmail}`;
+      const text = `Restock detected for ${input.productName} (${productSlug}). Current stock: ${input.stockQty}. Stock alerts attempted: ${uniqueEmails.length}. Action: review Admin > Notify Me and send any additional manual communication if needed. Updated by: ${input.updatedByEmail}`;
 
       await sendEmailMessage({
         to: adminEmails,

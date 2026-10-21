@@ -1,8 +1,28 @@
 import crypto from "crypto";
+import {
+  shopOrderRequestSchema,
+  calculateShopShippingCents,
+} from "../../../shared/shopCheckout";
 import type mysql from "mysql2/promise";
 import { cloneShopSeedProducts } from "../../../shared/shopCatalog";
-import { db, isDbConnectionError, isTransientShopQueryError } from "../databaseRuntime";
+import {
+  db,
+  isDbConnectionError,
+  isTransientShopQueryError,
+  isMemoryFallbackEnabled,
+} from "../databaseRuntime";
 import { sha256 } from "./authStore";
+
+/** Deliberate, safe public validation errors; driver/provider errors stay private. */
+export class ShopRequestError extends Error {
+  constructor(
+    message: string,
+    public readonly status = 400
+  ) {
+    super(message);
+    this.name = "ShopRequestError";
+  }
+}
 
 export type ShopPaymentMethod = "manual_assisted" | "dummy_gateway";
 export type ShopOrderStatus = "awaiting_payment" | "paid" | "failed";
@@ -59,29 +79,23 @@ type ShopOrderItem = {
   line_total_cents: number;
 };
 
-const SHOP_FREE_SHIPPING_THRESHOLD_CENTS = 7_500;
-const SHOP_BASE_SHIPPING_CENTS = 1_200;
-const SHOP_EXPRESS_SURCHARGE_CENTS = 800;
 const SHOP_PRODUCTS_CACHE_TTL_MS = 60_000;
 const SHOP_PRODUCTS_QUERY_TIMEOUT_MS = 5_000;
 
 function normalizeDeliverySpeed(raw: unknown): ShopDeliverySpeed {
-  return String(raw ?? "").trim().toLowerCase() === "express" ? "express" : "normal";
-}
-
-function calculateShopShippingCents(subtotalCents: number, deliverySpeed: ShopDeliverySpeed): number {
-  if (subtotalCents <= 0) return 0;
-  const baseShippingCents = subtotalCents >= SHOP_FREE_SHIPPING_THRESHOLD_CENTS ? 0 : SHOP_BASE_SHIPPING_CENTS;
-  const expressSurchargeCents = deliverySpeed === "express" ? SHOP_EXPRESS_SURCHARGE_CENTS : 0;
-  return baseShippingCents + expressSurchargeCents;
+  return String(raw ?? "")
+    .trim()
+    .toLowerCase() === "express"
+    ? "express"
+    : "normal";
 }
 
 function createOrderReference(): string {
   return `DU-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(8).toString("hex").toUpperCase()}`;
 }
 
-function createOrderAccessGrant() {
-  const token = crypto.randomBytes(32).toString("hex");
+function createOrderAccessGrant(requestToken?: string) {
+  const token = requestToken ?? crypto.randomBytes(32).toString("hex");
   return {
     token,
     tokenHash: sha256(token),
@@ -93,19 +107,32 @@ function isValidEmailAddress(email: string): boolean {
 }
 
 function normalizeShopCategory(raw: unknown): "sports" | "crafts" | "food" {
-  const value = String(raw ?? "").trim().toLowerCase();
+  const value = String(raw ?? "")
+    .trim()
+    .toLowerCase();
   if (value === "sports") return "sports";
   if (value === "crafts") return "crafts";
-  if (value === "beverage" || value === "beverages" || value === "drink" || value === "drinks") return "food";
+  if (
+    value === "beverage" ||
+    value === "beverages" ||
+    value === "drink" ||
+    value === "drinks"
+  )
+    return "food";
   return "food";
 }
 
-function toPublicShopOrder(order: Partial<ShopOrder> & Record<string, unknown>, items?: Array<Record<string, unknown>>) {
+function toPublicShopOrder(
+  order: Partial<ShopOrder> & Record<string, unknown>,
+  items?: Array<Record<string, unknown>>
+) {
   return {
     orderRef: String(order.order_ref ?? ""),
     status: String(order.status ?? "awaiting_payment"),
     paymentMethod: String(order.payment_method ?? "manual_assisted"),
-    paymentReference: order.payment_reference ? String(order.payment_reference) : null,
+    paymentReference: order.payment_reference
+      ? String(order.payment_reference)
+      : null,
     currency: String(order.currency ?? "EUR"),
     subtotalCents: Number(order.subtotal_cents ?? 0),
     shippingCents: Number(order.shipping_cents ?? 0),
@@ -114,7 +141,7 @@ function toPublicShopOrder(order: Partial<ShopOrder> & Record<string, unknown>, 
     createdAt: order.created_at ?? null,
     updatedAt: order.updated_at ?? null,
     items:
-      items?.map((item) => ({
+      items?.map(item => ({
         id: Number(item.id ?? 0),
         productId: Number(item.product_id ?? 0),
         productName: String(item.product_name ?? ""),
@@ -137,14 +164,17 @@ const memoryShopRestockNotifications: Array<{
   email: string;
   created_at: string;
 }> = [];
-const shopProductsCache = new Map<string, { expiresAt: number; source: ShopProductsSource; products: any[] }>();
+const shopProductsCache = new Map<
+  string,
+  { expiresAt: number; source: ShopProductsSource; products: any[] }
+>();
 
 function getShopProductsCacheKey(categoryFilter: string) {
   return categoryFilter || "__all__";
 }
 
 function getMemoryProductById(productId: number) {
-  return shopSeedProducts.find((product) => product.id === productId);
+  return shopSeedProducts.find(product => product.id === productId);
 }
 
 export async function createShopRestockNotification(payload: {
@@ -153,21 +183,25 @@ export async function createShopRestockNotification(payload: {
   productName: string;
   email: string;
 }) {
-  const productSlug = String(payload.productSlug ?? "").trim().toLowerCase();
+  const productSlug = String(payload.productSlug ?? "")
+    .trim()
+    .toLowerCase();
   const productName = String(payload.productName ?? "").trim();
-  const email = String(payload.email ?? "").trim().toLowerCase();
+  const email = String(payload.email ?? "")
+    .trim()
+    .toLowerCase();
   const productId =
     payload.productId == null || !Number.isFinite(Number(payload.productId))
       ? null
       : Math.max(1, Math.floor(Number(payload.productId)));
 
   if (!productSlug || !productName || !email) {
-    throw new Error("Product and email are required.");
+    throw new ShopRequestError("Product and email are required.");
   }
 
   if (!db) {
     const existing = memoryShopRestockNotifications.find(
-      (row) => row.product_slug === productSlug && row.email === email
+      row => row.product_slug === productSlug && row.email === email
     );
     if (existing) return { created: false, record: existing };
 
@@ -207,7 +241,7 @@ export async function createShopRestockNotification(payload: {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     const existing = memoryShopRestockNotifications.find(
-      (row) => row.product_slug === productSlug && row.email === email
+      row => row.product_slug === productSlug && row.email === email
     );
     if (existing) return { created: false, record: existing };
 
@@ -226,7 +260,9 @@ export async function createShopRestockNotification(payload: {
 
 export async function getShopRestockNotifications() {
   if (!db) {
-    return [...memoryShopRestockNotifications].sort((left, right) => right.id - left.id);
+    return [...memoryShopRestockNotifications].sort(
+      (left, right) => right.id - left.id
+    );
   }
 
   try {
@@ -241,17 +277,21 @@ export async function getShopRestockNotifications() {
     return rows;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    return [...memoryShopRestockNotifications].sort((left, right) => right.id - left.id);
+    return [...memoryShopRestockNotifications].sort(
+      (left, right) => right.id - left.id
+    );
   }
 }
 
 export async function getShopRestockNotificationsBySlug(productSlug: string) {
-  const slug = String(productSlug ?? "").trim().toLowerCase();
+  const slug = String(productSlug ?? "")
+    .trim()
+    .toLowerCase();
   if (!slug) return [];
 
   if (!db) {
     return memoryShopRestockNotifications
-      .filter((row) => row.product_slug === slug)
+      .filter(row => row.product_slug === slug)
       .sort((left, right) => right.id - left.id);
   }
 
@@ -270,40 +310,85 @@ export async function getShopRestockNotificationsBySlug(productSlug: string) {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     return memoryShopRestockNotifications
-      .filter((row) => row.product_slug === slug)
+      .filter(row => row.product_slug === slug)
       .sort((left, right) => right.id - left.id);
   }
 }
 
-export async function listShopProducts(category?: string): Promise<ShopProductsResult> {
+let shopProductsCacheVersion = 0;
+function invalidateShopProductsCache() {
+  shopProductsCacheVersion += 1;
+  shopProductsCache.clear();
+}
+
+async function withShopQueryTimeout<T>(query: Promise<T>): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      query,
+      new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(
+          () =>
+            reject(
+              Object.assign(new Error("Shop products query timed out"), {
+                code: "ER_QUERY_TIMEOUT",
+              })
+            ),
+          SHOP_PRODUCTS_QUERY_TIMEOUT_MS
+        );
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function listShopProducts(
+  category?: string
+): Promise<ShopProductsResult> {
   const pool = db;
-  const normalizedCategory = String(category ?? "").trim().toLowerCase();
+  const normalizedCategory = String(category ?? "")
+    .trim()
+    .toLowerCase();
   const categoryFilter =
-    normalizedCategory && ["sports", "crafts", "food"].includes(normalizedCategory) ? normalizedCategory : "";
+    normalizedCategory &&
+    ["sports", "crafts", "food"].includes(normalizedCategory)
+      ? normalizedCategory
+      : "";
+  const cacheVersion = shopProductsCacheVersion;
   const cacheKey = getShopProductsCacheKey(categoryFilter);
   const cachedEntry = shopProductsCache.get(cacheKey);
   if (cachedEntry && cachedEntry.expiresAt > Date.now()) {
-    return { products: cachedEntry.products, source: cachedEntry.source, cached: true };
+    return {
+      products: cachedEntry.products,
+      source: cachedEntry.source,
+      cached: true,
+    };
   }
 
   const finalizeProducts = (rows: any[]) =>
-    rows.map((row) => ({
+    rows.map(row => ({
       ...row,
       category: normalizeShopCategory(row.category),
     }));
 
   if (!pool) {
-    const rows = shopSeedProducts.filter((product) => {
+    const rows = shopSeedProducts.filter(product => {
       if (product.is_active !== 1) return false;
-      if (categoryFilter && normalizeShopCategory(product.category) !== categoryFilter) return false;
+      if (
+        categoryFilter &&
+        normalizeShopCategory(product.category) !== categoryFilter
+      )
+        return false;
       return true;
     });
     const normalizedRows = finalizeProducts(rows);
-    shopProductsCache.set(cacheKey, {
-      expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
-      source: "memory",
-      products: normalizedRows,
-    });
+    if (cacheVersion === shopProductsCacheVersion)
+      shopProductsCache.set(cacheKey, {
+        expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
+        source: "memory",
+        products: normalizedRows,
+      });
     return { products: normalizedRows, source: "memory", cached: false };
   }
 
@@ -322,13 +407,7 @@ export async function listShopProducts(category?: string): Promise<ShopProductsR
         `,
         [categoryFilter, categoryFilter]
       );
-      const timeoutPromise = new Promise<never>((_resolve, reject) =>
-        setTimeout(
-          () => reject(Object.assign(new Error("Shop products query timed out"), { code: "ER_QUERY_TIMEOUT" })),
-          SHOP_PRODUCTS_QUERY_TIMEOUT_MS
-        )
-      );
-      const [rows] = (await Promise.race([queryPromise, timeoutPromise])) as [mysql.RowDataPacket[], any];
+      const [rows] = await withShopQueryTimeout(queryPromise);
       return rows;
     }
 
@@ -340,13 +419,7 @@ export async function listShopProducts(category?: string): Promise<ShopProductsR
       ORDER BY id ASC
       `
     );
-    const timeoutPromise = new Promise<never>((_resolve, reject) =>
-      setTimeout(
-        () => reject(Object.assign(new Error("Shop products query timed out"), { code: "ER_QUERY_TIMEOUT" })),
-        SHOP_PRODUCTS_QUERY_TIMEOUT_MS
-      )
-    );
-    const [rows] = (await Promise.race([queryPromise, timeoutPromise])) as [mysql.RowDataPacket[], any];
+    const [rows] = await withShopQueryTimeout(queryPromise);
     return rows;
   };
 
@@ -362,25 +435,32 @@ export async function listShopProducts(category?: string): Promise<ShopProductsR
       }
     }
     const normalizedRows = finalizeProducts(rows);
-    shopProductsCache.set(cacheKey, {
-      expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
-      source: "db",
-      products: normalizedRows,
-    });
+    if (cacheVersion === shopProductsCacheVersion)
+      shopProductsCache.set(cacheKey, {
+        expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
+        source: "db",
+        products: normalizedRows,
+      });
     return { products: normalizedRows, source: "db", cached: false };
   } catch (error) {
-    if (!isDbConnectionError(error) && !isTransientShopQueryError(error)) throw error;
-    const rows = shopSeedProducts.filter((product) => {
+    if (!isDbConnectionError(error) && !isTransientShopQueryError(error))
+      throw error;
+    const rows = shopSeedProducts.filter(product => {
       if (product.is_active !== 1) return false;
-      if (categoryFilter && normalizeShopCategory(product.category) !== categoryFilter) return false;
+      if (
+        categoryFilter &&
+        normalizeShopCategory(product.category) !== categoryFilter
+      )
+        return false;
       return true;
     });
     const normalizedRows = finalizeProducts(rows);
-    shopProductsCache.set(cacheKey, {
-      expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
-      source: "memory",
-      products: normalizedRows,
-    });
+    if (cacheVersion === shopProductsCacheVersion)
+      shopProductsCache.set(cacheKey, {
+        expiresAt: Date.now() + SHOP_PRODUCTS_CACHE_TTL_MS,
+        source: "memory",
+        products: normalizedRows,
+      });
     return { products: normalizedRows, source: "memory", cached: false };
   }
 }
@@ -394,7 +474,9 @@ export async function createShopOrder(payload: {
   deliverySpeed?: ShopDeliverySpeed;
   paymentMethod: ShopPaymentMethod;
   items: Array<{ productId: number; quantity: number }>;
+  requestToken?: string;
 }) {
+  payload = shopOrderRequestSchema.parse(payload);
   const customerName = payload.customerName.trim();
   const customerEmail = payload.customerEmail.trim().toLowerCase();
   const shippingCountry = payload.shippingCountry.trim();
@@ -403,17 +485,23 @@ export async function createShopOrder(payload: {
   const deliverySpeed = normalizeDeliverySpeed(payload.deliverySpeed);
   const paymentMethod = payload.paymentMethod;
   const items = payload.items
-    .map((item) => ({
+    .map(item => ({
       productId: Number(item.productId),
       quantity: Math.max(1, Math.floor(Number(item.quantity) || 1)),
     }))
-    .filter((item) => Number.isFinite(item.productId) && item.productId > 0);
+    .filter(item => Number.isFinite(item.productId) && item.productId > 0);
 
-  if (!customerName || !customerEmail || !shippingCountry || !shippingCity || !shippingAddress) {
-    throw new Error("Missing customer or shipping fields.");
+  if (
+    !customerName ||
+    !customerEmail ||
+    !shippingCountry ||
+    !shippingCity ||
+    !shippingAddress
+  ) {
+    throw new ShopRequestError("Missing customer or shipping fields.");
   }
   if (!isValidEmailAddress(customerEmail)) {
-    throw new Error("A valid customer email address is required.");
+    throw new ShopRequestError("A valid customer email address is required.");
   }
 
   const allowedPaymentMethods =
@@ -421,20 +509,84 @@ export async function createShopOrder(payload: {
       ? ["manual_assisted"]
       : ["manual_assisted", "dummy_gateway"];
   if (!allowedPaymentMethods.includes(paymentMethod)) {
-    throw new Error("Unsupported payment method.");
+    throw new ShopRequestError("Unsupported payment method.");
   }
   if (items.length === 0) {
-    throw new Error("Cart is empty.");
+    throw new ShopRequestError("Cart is empty.");
   }
 
-  const orderRef = createOrderReference();
-  const accessGrant = createOrderAccessGrant();
+  const accessGrant = createOrderAccessGrant(payload.requestToken);
+  // The existing unique order_ref index arbitrates concurrent retries across
+  // processes. Hashing the grant keeps the reference safe to share publicly.
+  const orderRef = payload.requestToken
+    ? `DU-${accessGrant.tokenHash.slice(0, 32).toUpperCase()}`
+    : createOrderReference();
+
+  const replay = async () => {
+    const existing = await getShopOrderByRef(orderRef, accessGrant.token);
+    if (!existing) return null;
+    const stored = db
+      ? (
+          await db.query<mysql.RowDataPacket[]>(
+            "SELECT customer_name, customer_email, shipping_country, shipping_city, shipping_address FROM shop_orders WHERE order_ref = ? AND manage_token_hash = ? LIMIT 1",
+            [orderRef, accessGrant.tokenHash]
+          )
+        )[0][0]
+      : memoryShopOrders.find(row => row.order_ref === orderRef);
+    const sameItems =
+      JSON.stringify(
+        existing.items
+          .map(item => [item.productId, item.quantity])
+          .sort((a, b) => a[0] - b[0])
+      ) ===
+      JSON.stringify(
+        items
+          .map(item => [item.productId, item.quantity])
+          .sort((a, b) => a[0] - b[0])
+      );
+    if (
+      !stored ||
+      stored.customer_name !== customerName ||
+      stored.customer_email !== customerEmail ||
+      stored.shipping_country !== shippingCountry ||
+      stored.shipping_city !== shippingCity ||
+      stored.shipping_address !== shippingAddress ||
+      existing.deliverySpeed !== deliverySpeed ||
+      existing.paymentMethod !== paymentMethod ||
+      !sameItems
+    ) {
+      throw new ShopRequestError(
+        "This request has already been used for different order details. Please review your cart and try again."
+      );
+    }
+    return { ...existing, manageToken: accessGrant.token, replayed: true };
+  };
+  if (payload.requestToken) {
+    const existing = await replay();
+    if (existing) return existing;
+  }
+
+  if (!db && !isMemoryFallbackEnabled()) {
+    throw new ShopRequestError(
+      "Order requests are temporarily unavailable. Please contact the shop.",
+      503
+    );
+  }
 
   if (!db) {
-    const selectedProducts = items.map((item) => {
+    // The replay lookup above yields; another in-memory request may have saved
+    // the order meanwhile. Database writes use the unique index instead.
+    if (
+      payload.requestToken &&
+      memoryShopOrders.some(row => row.order_ref === orderRef)
+    )
+      return (await replay())!;
+    const selectedProducts = items.map(item => {
       const product = getMemoryProductById(item.productId);
-      if (!product || product.is_active !== 1) throw new Error("A product is unavailable.");
-      if (product.stock_qty < item.quantity) throw new Error(`Insufficient stock for ${product.name}.`);
+      if (!product || product.is_active !== 1)
+        throw new ShopRequestError("A product is unavailable.");
+      if (product.stock_qty < item.quantity)
+        throw new ShopRequestError(`Insufficient stock for ${product.name}.`);
       return { product, quantity: item.quantity };
     });
 
@@ -442,7 +594,24 @@ export async function createShopOrder(payload: {
       (sum, entry) => sum + entry.product.price_cents * entry.quantity,
       0
     );
-    const shippingCents = calculateShopShippingCents(subtotalCents, deliverySpeed);
+    if (selectedProducts.some(entry => entry.product.currency !== "EUR")) {
+      throw new ShopRequestError(
+        "These products cannot be combined in a EUR order request. Please contact the shop."
+      );
+    }
+    if (
+      !Number.isSafeInteger(subtotalCents) ||
+      subtotalCents < 0 ||
+      subtotalCents > 2_147_481_647
+    ) {
+      throw new ShopRequestError(
+        "The order total is too large. Please contact the shop."
+      );
+    }
+    const shippingCents = calculateShopShippingCents(
+      subtotalCents,
+      deliverySpeed
+    );
     const totalCents = subtotalCents + shippingCents;
     const currency = selectedProducts[0]?.product.currency ?? "EUR";
 
@@ -493,6 +662,13 @@ export async function createShopOrder(payload: {
       totalCents: order.total_cents,
       deliverySpeed: order.delivery_speed,
       manageToken: accessGrant.token,
+      items: selectedProducts.map(({ product, quantity }) => ({
+        productId: Number(product.id),
+        productName: String(product.name),
+        quantity,
+        unitPriceCents: Number(product.price_cents),
+        lineTotalCents: Number(product.price_cents) * quantity,
+      })),
     };
   }
 
@@ -500,7 +676,7 @@ export async function createShopOrder(payload: {
   try {
     await connection.beginTransaction();
 
-    const productIds = items.map((item) => item.productId);
+    const productIds = items.map(item => item.productId);
     const placeholders = productIds.map(() => "?").join(",");
     const [productRows] = await connection.query<mysql.RowDataPacket[]>(
       `
@@ -510,15 +686,17 @@ export async function createShopOrder(payload: {
       `,
       productIds
     );
-    const productsById = new Map(productRows.map((row) => [Number(row.id), row]));
+    const productsById = new Map(productRows.map(row => [Number(row.id), row]));
 
-    const selectedProducts = items.map((item) => {
+    const selectedProducts = items.map(item => {
       const product = productsById.get(item.productId);
       if (!product || Number(product.is_active) !== 1) {
-        throw new Error("A product is unavailable.");
+        throw new ShopRequestError("A product is unavailable.");
       }
       if (Number(product.stock_qty) < item.quantity) {
-        throw new Error(`Insufficient stock for ${String(product.name)}.`);
+        throw new ShopRequestError(
+          `Insufficient stock for ${String(product.name)}.`
+        );
       }
       return { product, quantity: item.quantity };
     });
@@ -527,7 +705,24 @@ export async function createShopOrder(payload: {
       (sum, entry) => sum + Number(entry.product.price_cents) * entry.quantity,
       0
     );
-    const shippingCents = calculateShopShippingCents(subtotalCents, deliverySpeed);
+    if (selectedProducts.some(entry => entry.product.currency !== "EUR")) {
+      throw new ShopRequestError(
+        "These products cannot be combined in a EUR order request. Please contact the shop."
+      );
+    }
+    if (
+      !Number.isSafeInteger(subtotalCents) ||
+      subtotalCents < 0 ||
+      subtotalCents > 2_147_481_647
+    ) {
+      throw new ShopRequestError(
+        "The order total is too large. Please contact the shop."
+      );
+    }
+    const shippingCents = calculateShopShippingCents(
+      subtotalCents,
+      deliverySpeed
+    );
     const totalCents = subtotalCents + shippingCents;
     const currency = String(selectedProducts[0]?.product.currency ?? "EUR");
 
@@ -584,9 +779,23 @@ export async function createShopOrder(payload: {
       totalCents,
       deliverySpeed,
       manageToken: accessGrant.token,
+      items: selectedProducts.map(({ product, quantity }) => ({
+        productId: Number(product.id),
+        productName: String(product.name),
+        quantity,
+        unitPriceCents: Number(product.price_cents),
+        lineTotalCents: Number(product.price_cents) * quantity,
+      })),
     };
   } catch (error) {
     await connection.rollback();
+    if (
+      payload.requestToken &&
+      String((error as any)?.code) === "ER_DUP_ENTRY"
+    ) {
+      const existing = await replay();
+      if (existing) return existing;
+    }
     throw error;
   } finally {
     connection.release();
@@ -601,10 +810,10 @@ export async function getShopOrderByRef(orderRef: string, manageToken: string) {
 
   if (!db) {
     const order = memoryShopOrders.find(
-      (row) => row.order_ref === ref && row.manage_token_hash === manageTokenHash
+      row => row.order_ref === ref && row.manage_token_hash === manageTokenHash
     );
     if (!order) return null;
-    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    const items = memoryShopOrderItems.filter(row => row.order_id === order.id);
     return toPublicShopOrder(order, items);
   }
 
@@ -633,15 +842,19 @@ export async function getShopOrderByRef(orderRef: string, manageToken: string) {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     const order = memoryShopOrders.find(
-      (row) => row.order_ref === ref && row.manage_token_hash === manageTokenHash
+      row => row.order_ref === ref && row.manage_token_hash === manageTokenHash
     );
     if (!order) return null;
-    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    const items = memoryShopOrderItems.filter(row => row.order_id === order.id);
     return toPublicShopOrder(order, items);
   }
 }
 
-export async function confirmShopOrderPayment(orderRef: string, paymentReference: string, manageToken: string) {
+export async function confirmShopOrderPayment(
+  orderRef: string,
+  paymentReference: string,
+  manageToken: string
+) {
   const ref = orderRef.trim();
   const normalizedManageToken = manageToken.trim();
   const paymentRef = paymentReference.trim() || `SIM-${Date.now()}`;
@@ -650,23 +863,25 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
 
   if (!db) {
     const order = memoryShopOrders.find(
-      (row) => row.order_ref === ref && row.manage_token_hash === manageTokenHash
+      row => row.order_ref === ref && row.manage_token_hash === manageTokenHash
     );
     if (!order) return null;
     if (order.payment_method !== "dummy_gateway") {
-      throw new Error("Assisted checkout orders cannot be auto-confirmed.");
+      throw new ShopRequestError(
+        "Assisted checkout orders cannot be auto-confirmed."
+      );
     }
-    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    const items = memoryShopOrderItems.filter(row => row.order_id === order.id);
     if (order.status === "paid") {
       return toPublicShopOrder(order, items);
     }
     for (const item of items) {
       const product = getMemoryProductById(item.product_id);
       if (!product || product.is_active !== 1) {
-        throw new Error("A product is unavailable.");
+        throw new ShopRequestError("A product is unavailable.");
       }
       if (product.stock_qty < item.quantity) {
-        throw new Error(`Insufficient stock for ${product.name}.`);
+        throw new ShopRequestError(`Insufficient stock for ${product.name}.`);
       }
     }
     for (const item of items) {
@@ -675,6 +890,7 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
         product.stock_qty = Math.max(0, product.stock_qty - item.quantity);
       }
     }
+    invalidateShopProductsCache();
     order.status = "paid";
     order.payment_reference = paymentRef;
     order.updated_at = new Date().toISOString();
@@ -695,9 +911,14 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
       [ref, manageTokenHash]
     );
     const existing = existingRows[0];
-    if (!existing) return null;
+    if (!existing) {
+      await connection.rollback();
+      return null;
+    }
     if (String(existing.payment_method) !== "dummy_gateway") {
-      throw new Error("Assisted checkout orders cannot be auto-confirmed.");
+      throw new ShopRequestError(
+        "Assisted checkout orders cannot be auto-confirmed."
+      );
     }
     const [itemRows] = await connection.query<mysql.RowDataPacket[]>(
       `
@@ -711,10 +932,12 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
 
     if (String(existing.status) !== "paid") {
       const productIds = Array.from(
-        new Set(itemRows.map((row) => Number(row.product_id)).filter((id) => id > 0))
+        new Set(
+          itemRows.map(row => Number(row.product_id)).filter(id => id > 0)
+        )
       );
       if (productIds.length === 0) {
-        throw new Error("Order has no items.");
+        throw new ShopRequestError("Order has no items.");
       }
       const placeholders = productIds.map(() => "?").join(",");
       const [productRows] = await connection.query<mysql.RowDataPacket[]>(
@@ -726,21 +949,25 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
         `,
         productIds
       );
-      const productsById = new Map(productRows.map((row) => [Number(row.id), row]));
+      const productsById = new Map(
+        productRows.map(row => [Number(row.id), row])
+      );
       for (const item of itemRows) {
         const product = productsById.get(Number(item.product_id));
         if (!product || Number(product.is_active) !== 1) {
-          throw new Error("A product is unavailable.");
+          throw new ShopRequestError("A product is unavailable.");
         }
         if (Number(product.stock_qty) < Number(item.quantity)) {
-          throw new Error(`Insufficient stock for ${String(product.name)}.`);
+          throw new ShopRequestError(
+            `Insufficient stock for ${String(product.name)}.`
+          );
         }
       }
       for (const item of itemRows) {
-        await connection.execute("UPDATE shop_products SET stock_qty = stock_qty - ? WHERE id = ?", [
-          Number(item.quantity),
-          Number(item.product_id),
-        ]);
+        await connection.execute(
+          "UPDATE shop_products SET stock_qty = stock_qty - ? WHERE id = ?",
+          [Number(item.quantity), Number(item.product_id)]
+        );
       }
       await connection.execute(
         `
@@ -762,30 +989,36 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
       [Number(existing.id)]
     );
     const order = rows[0];
-    if (!order) return null;
+    if (!order) {
+      await connection.rollback();
+      return null;
+    }
     await connection.commit();
+    invalidateShopProductsCache();
     return toPublicShopOrder(order, itemRows);
   } catch (error) {
     await connection.rollback();
     if (!isDbConnectionError(error)) throw error;
     const order = memoryShopOrders.find(
-      (row) => row.order_ref === ref && row.manage_token_hash === manageTokenHash
+      row => row.order_ref === ref && row.manage_token_hash === manageTokenHash
     );
     if (!order) return null;
     if (order.payment_method !== "dummy_gateway") {
-      throw new Error("Assisted checkout orders cannot be auto-confirmed.");
+      throw new ShopRequestError(
+        "Assisted checkout orders cannot be auto-confirmed."
+      );
     }
-    const items = memoryShopOrderItems.filter((row) => row.order_id === order.id);
+    const items = memoryShopOrderItems.filter(row => row.order_id === order.id);
     if (order.status === "paid") {
       return toPublicShopOrder(order, items);
     }
     for (const item of items) {
       const product = getMemoryProductById(item.product_id);
       if (!product || product.is_active !== 1) {
-        throw new Error("A product is unavailable.");
+        throw new ShopRequestError("A product is unavailable.");
       }
       if (product.stock_qty < item.quantity) {
-        throw new Error(`Insufficient stock for ${product.name}.`);
+        throw new ShopRequestError(`Insufficient stock for ${product.name}.`);
       }
     }
     for (const item of items) {
@@ -794,6 +1027,7 @@ export async function confirmShopOrderPayment(orderRef: string, paymentReference
         product.stock_qty = Math.max(0, product.stock_qty - item.quantity);
       }
     }
+    invalidateShopProductsCache();
     order.status = "paid";
     order.payment_reference = paymentRef;
     order.updated_at = new Date().toISOString();
@@ -861,10 +1095,11 @@ export async function createShopProductAdmin(payload: {
 }) {
   if (!db) {
     const row: ShopProduct = {
-      id: shopSeedProducts.length + 1,
+      id: Math.max(0, ...shopSeedProducts.map(product => product.id)) + 1,
       ...payload,
     };
     shopSeedProducts.unshift(row);
+    invalidateShopProductsCache();
     return row;
   }
 
@@ -886,6 +1121,7 @@ export async function createShopProductAdmin(payload: {
         payload.is_active,
       ]
     );
+    invalidateShopProductsCache();
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       "SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active FROM shop_products WHERE id = ? LIMIT 1",
       [result.insertId]
@@ -894,10 +1130,11 @@ export async function createShopProductAdmin(payload: {
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     const row: ShopProduct = {
-      id: shopSeedProducts.length + 1,
+      id: Math.max(0, ...shopSeedProducts.map(product => product.id)) + 1,
       ...payload,
     };
     shopSeedProducts.unshift(row);
+    invalidateShopProductsCache();
     return row;
   }
 }
@@ -917,9 +1154,13 @@ export async function updateShopProductAdmin(
   }>
 ) {
   if (!db) {
-    const index = shopSeedProducts.findIndex((item) => item.id === id);
+    const index = shopSeedProducts.findIndex(item => item.id === id);
     if (index < 0) return null;
-    shopSeedProducts[index] = { ...shopSeedProducts[index], ...payload } as ShopProduct;
+    shopSeedProducts[index] = {
+      ...shopSeedProducts[index],
+      ...payload,
+    } as ShopProduct;
+    invalidateShopProductsCache();
     return shopSeedProducts[index];
   }
 
@@ -946,7 +1187,11 @@ export async function updateShopProductAdmin(
     if (updates.length === 0) return null;
 
     params.push(id);
-    await db.execute(`UPDATE shop_products SET ${updates.join(", ")} WHERE id = ?`, params);
+    await db.execute(
+      `UPDATE shop_products SET ${updates.join(", ")} WHERE id = ?`,
+      params
+    );
+    invalidateShopProductsCache();
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       "SELECT id, slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active FROM shop_products WHERE id = ? LIMIT 1",
       [id]
@@ -954,29 +1199,39 @@ export async function updateShopProductAdmin(
     return rows[0] ?? null;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    const index = shopSeedProducts.findIndex((item) => item.id === id);
+    const index = shopSeedProducts.findIndex(item => item.id === id);
     if (index < 0) return null;
-    shopSeedProducts[index] = { ...shopSeedProducts[index], ...payload } as ShopProduct;
+    shopSeedProducts[index] = {
+      ...shopSeedProducts[index],
+      ...payload,
+    } as ShopProduct;
+    invalidateShopProductsCache();
     return shopSeedProducts[index];
   }
 }
 
 export async function deleteShopProductAdmin(id: number) {
   if (!db) {
-    const index = shopSeedProducts.findIndex((item) => item.id === id);
+    const index = shopSeedProducts.findIndex(item => item.id === id);
     if (index < 0) return false;
     shopSeedProducts.splice(index, 1);
+    invalidateShopProductsCache();
     return true;
   }
 
   try {
-    const [result] = await db.execute<mysql.ResultSetHeader>("DELETE FROM shop_products WHERE id = ?", [id]);
+    const [result] = await db.execute<mysql.ResultSetHeader>(
+      "DELETE FROM shop_products WHERE id = ?",
+      [id]
+    );
+    invalidateShopProductsCache();
     return Number(result.affectedRows ?? 0) > 0;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    const index = shopSeedProducts.findIndex((item) => item.id === id);
+    const index = shopSeedProducts.findIndex(item => item.id === id);
     if (index < 0) return false;
     shopSeedProducts.splice(index, 1);
+    invalidateShopProductsCache();
     return true;
   }
 }

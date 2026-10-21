@@ -293,7 +293,7 @@ try {
   await goto("/onesa-ai-book-trip");
   await page.getByRole("button", { name: /generate trip plan/i }).click();
   await page.getByRole("button", { name: /download pdf/i }).waitFor();
-  await expectText(/smart fallback plan/i);
+  await expectText(/sample plan with calculated estimates/i);
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /download pdf/i }).click();
   const download = await downloadPromise;
@@ -309,13 +309,13 @@ try {
     })
   );
   await page.getByRole("button", { name: /generate trip plan/i }).click();
-  await expectText(/ai optimized/i);
+  await expectText(/ai-generated draft/i);
   await page.unroute("**/api/ai/trip-plan");
   await page.route("**/api/ai/trip-plan", route =>
     route.fulfill({ status: 503, body: "offline" })
   );
   await page.getByRole("button", { name: /generate trip plan/i }).click();
-  await expectText(/smart fallback plan/i);
+  await expectText(/sample plan with calculated estimates/i);
   await responsive("trip");
   pass(
     "trip planner renders fallback and AI fixtures, downloads PDF, and survives an API outage"
@@ -492,6 +492,159 @@ try {
   );
   await context.close();
 
+  // Deferred responses reproduce destination switches and narration cancellation.
+  context = await newContext(375);
+  let staleGuide;
+  let guideRequests = 0;
+  await page.route("**/api/ai/chat", route => {
+    guideRequests++;
+    if (guideRequests === 1) {
+      staleGuide = route;
+      return;
+    }
+    return route.fulfill({
+      json: { success: true, data: { reply: "Current destination guidance." } },
+    });
+  });
+  await goto("/onesa-ai-tourism-augmented-experience");
+  await page.locator("#aug-place").selectOption({ index: 1 });
+  await page.waitForFunction(() => document.querySelector("#aug-place")?.value);
+  for (let i = 0; !staleGuide && i < 100; i++) await page.waitForTimeout(20);
+  assert(staleGuide, "First AR guide request must start");
+  await page.locator("#aug-place").selectOption({ index: 2 });
+  await expectText("Current destination guidance.");
+  await staleGuide.fulfill({
+    json: { success: true, data: { reply: "Obsolete destination guidance." } },
+  });
+  await page.waitForTimeout(350);
+  assert.equal(
+    await page.getByText("Obsolete destination guidance.").count(),
+    0
+  );
+  assert.equal(
+    guideRequests,
+    2,
+    "Switching destination starts fresh guidance without an obsolete retry"
+  );
+  pass(
+    "AR ignores obsolete destination responses and immediately requests the new destination"
+  );
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: -20.15, longitude: 28.58 });
+  await page.getByRole("button", { name: /use my location/i }).click();
+  await page.waitForFunction(
+    () => document.querySelector("#aug-place")?.value === "bulawayo"
+  );
+  await context.setGeolocation({ latitude: 52.52, longitude: 13.4 });
+  await page.getByRole("button", { name: /use my location/i }).click();
+  await expectText(/no listed destination is near/i);
+  assert.equal(await page.locator("#aug-place").inputValue(), "bulawayo");
+  pass(
+    "AR locates Bulawayo correctly and keeps manual selection for locations outside the guide"
+  );
+  await context.close();
+
+  for (const mode of ["ar", "vr"]) {
+    context = await newContext(
+      768,
+      `window.__spoken=[];const play=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){if(this.src.startsWith('blob:'))window.__spoken.push(this.src);return play.call(this);};window.speechSynthesis.speak=utterance=>{if(utterance.text.trim())window.__spoken.push(utterance.text);};`
+    );
+    await page.route("**/api/ai/chat", route =>
+      route.fulfill({
+        json: {
+          success: true,
+          data: { reply: "Local destination description." },
+        },
+      })
+    );
+    if (mode === "ar") {
+      await goto("/onesa-ai-tourism-augmented-experience");
+      await page.locator("#aug-place").selectOption({ index: 1 });
+      await expectText("Local destination description.");
+    } else {
+      await chooseVr();
+      await page.getByRole("dialog", { name: /vr.*unavailable/i }).waitFor();
+      await page
+        .getByRole("dialog")
+        .getByRole("button", { name: /^close$/i })
+        .last()
+        .click();
+    }
+    let pendingNarration;
+    await page.route("**/api/speech", route => {
+      pendingNarration = route;
+    });
+    await page
+      .getByRole("button", {
+        name: mode === "vr" ? /^enable text-to-speech$/i : /^narration: off$/i,
+      })
+      .click();
+    for (let i = 0; !pendingNarration && i < 100; i++)
+      await page.waitForTimeout(20);
+    assert(pendingNarration, `${mode} narration should start a request`);
+    await page
+      .getByRole("button", {
+        name: mode === "vr" ? /^disable text-to-speech$/i : /^narration: on$/i,
+      })
+      .click();
+    const spokenBefore = await page.evaluate(() => window.__spoken.length);
+    await pendingNarration.fulfill({ contentType: "audio/wav", body: audio });
+    await page.waitForTimeout(500);
+    assert.equal(
+      await page.evaluate(() => window.__spoken.length),
+      spokenBefore,
+      `${mode}: disabled narration must not play a late response or browser fallback`
+    );
+    if (mode === "vr") {
+      const infoButton = page.getByRole("button", {
+        name: /^show place information$/i,
+      });
+      await infoButton.focus();
+      await page.keyboard.press("Enter");
+      const informationDialog = page.getByRole("dialog");
+      await informationDialog.waitFor();
+      await page.keyboard.press("Tab");
+      assert(
+        await informationDialog.evaluate(dialog =>
+          dialog.contains(document.activeElement)
+        ),
+        "Place information must keep keyboard focus in its dialog"
+      );
+      await page.keyboard.press("Escape");
+      await informationDialog.waitFor({ state: "hidden" });
+      await page.waitForFunction(
+        () =>
+          document.activeElement?.getAttribute("aria-label") ===
+          "Show place information"
+      );
+      const next = page.getByRole("button", { name: /^next scene$/i });
+      await next.focus();
+      await page.keyboard.press("Enter");
+      await expectText(/walkthrough 2\/3/i);
+      await page.getByRole("button", { name: /^previous scene$/i }).click();
+      await expectText(/walkthrough 1\/3/i);
+      pass(
+        "VR scene navigation and place-information dialogs work by keyboard, trap focus and restore it"
+      );
+      await page.evaluate(() => {
+        Element.prototype.requestFullscreen = async () => {
+          throw new DOMException("Denied by browser", "NotAllowedError");
+        };
+      });
+      await page.getByRole("button", { name: /^enter fullscreen$/i }).click();
+      await page
+        .getByRole("status")
+        .filter({ hasText: /fullscreen is unavailable/i })
+        .waitFor();
+    }
+    await page.unroute("**/api/speech");
+    await page.getByRole("link", { name: /back to tourism/i }).click();
+    pass(
+      `${mode.toUpperCase()} ignores late narration after switching it off${mode === "vr" ? " and handles denied fullscreen" : ""}`
+    );
+    await context.close();
+  }
+
   await waitForRateWindow("headset scenarios");
   const require = createRequire(import.meta.url);
   const xrRequire = createRequire(require.resolve("@react-three/xr"));
@@ -597,6 +750,32 @@ try {
   await responsive("vr");
   pass(
     "desktop VR fallback supports push-to-talk transcription and AI response without a headset"
+  );
+  await context.close();
+
+  context = await newContext(
+    1440,
+    `${iwer}
+    window.__device=new IWER.XRDevice(IWER.metaQuest3,{stereoEnabled:true});window.__device.installRuntime();
+    const request=navigator.xr.requestSession.bind(navigator.xr);
+    navigator.xr.requestSession=async(...args)=>{
+      const session=await request(...args);window.__lateSession=session;window.__lateSessionEnded=false;
+      session.addEventListener('end',()=>{window.__lateSessionEnded=true;});
+      await new Promise(resolve=>{window.__grantVr=resolve;});return session;
+    };`
+  );
+  await chooseVr();
+  await page.getByRole("button", { name: /^enter vr$/i }).click();
+  await page.waitForFunction(() => Boolean(window.__grantVr));
+  await page
+    .locator('a[href="/tourism"]:visible')
+    .first()
+    .evaluate(link => link.click());
+  await page.waitForURL("**/tourism");
+  await page.evaluate(() => window.__grantVr());
+  await page.waitForFunction(() => window.__lateSessionEnded === true);
+  pass(
+    "headset permission granted after navigation ends its session instead of leaving VR running"
   );
   await context.close();
 

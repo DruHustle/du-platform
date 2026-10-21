@@ -28,12 +28,6 @@ import {
 } from "./virtualExperienceText";
 import type { Point3D, VirtualWalkStage } from "./virtualExperienceTypes";
 
-const xrStore = createXRStore({
-  emulate: false,
-  baseAssetPath: new URL("/xr/profiles/", window.location.origin).href,
-  defaultControllerProfileId: "generic-trigger-squeeze-thumbstick",
-});
-
 type VrSupportState = "checking" | "supported" | "unsupported";
 type VrSupportReason = "unavailable" | "insecure_context" | "check_failed";
 type NavigatorWithXR = Navigator & {
@@ -981,6 +975,15 @@ export default function VirtualExperienceCanvas({
       >,
     [uiLanguage]
   );
+  const [xrStore] = useState(() =>
+    createXRStore({
+      emulate: false,
+      baseAssetPath: new URL("/xr/profiles/", window.location.origin).href,
+      defaultControllerProfileId: "generic-trigger-squeeze-thumbstick",
+    })
+  );
+
+  const mounted = useRef(true);
   const [vrSupportState, setVrSupportState] =
     useState<VrSupportState>("checking");
   const [vrSupportReason, setVrSupportReason] =
@@ -1057,7 +1060,12 @@ export default function VirtualExperienceCanvas({
   }, [vrLaunchError]);
 
   useEffect(() => {
+    mounted.current = true;
     return () => {
+      mounted.current = false;
+      queueMicrotask(() => {
+        if (!mounted.current) xrStore.destroy();
+      });
       void xrStore
         .getState()
         .session?.end()
@@ -1065,7 +1073,7 @@ export default function VirtualExperienceCanvas({
       cameraRef.current = null;
       orbitControlsRef.current = null;
     };
-  }, [cameraRef, orbitControlsRef]);
+  }, [cameraRef, orbitControlsRef, xrStore]);
 
   useEffect(() => {
     const controls = orbitControlsRef.current;
@@ -1089,7 +1097,12 @@ export default function VirtualExperienceCanvas({
 
     void xrStore
       .enterVR()
+      .then(session => {
+        // Permission may resolve after this canvas was removed.
+        if (!mounted.current) return session?.end().catch(() => undefined);
+      })
       .catch((error: unknown) => {
+        if (!mounted.current) return;
         const name = error instanceof Error ? error.name : "";
         if (name === "SecurityError") {
           setVrLaunchError(ui.vrSecureContextRequired);
@@ -1102,6 +1115,7 @@ export default function VirtualExperienceCanvas({
         setVrLaunchError(ui.vrLaunchFailed);
       })
       .finally(() => {
+        if (!mounted.current) return;
         setIsEnteringVr(false);
       });
   }, [isCanvasReady, isEnteringVr, isVrSessionActive, ui, vrSupportState]);

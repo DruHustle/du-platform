@@ -27,23 +27,23 @@ export default function Investment() {
     () => [
       {
         image: "/images/pages/investment/rbz_building.webp",
-        badge: t("investment.hero.badge1") || "RBZ Initiatives",
+        badge: t("investment.hero.badge1") || "Explore Zimbabwe",
         badgeIcon: Shield,
-        title: t("investment.hero.title1") || "Diaspora Investment",
-        titleHighlight: t("investment.hero.highlight1") || "National Growth",
+        title: t("investment.hero.title1") || "Understand the opportunities",
+        titleHighlight: t("investment.hero.highlight1") || "in Zimbabwe",
         subtitle:
           t("investment.hero.subtitle1") ||
-          "Supporting national development through diaspora engagement.",
+          "Read project profiles, compare sectors and prepare questions before taking an investment further.",
       },
       {
         image: "/images/pages/investment/masuwe_sez.png",
         badge: t("investment.hero.badge2") || "Masuwe SEZ",
         badgeIcon: Globe,
-        title: t("investment.hero.title2") || "Invest in Masuwe SEZ",
+        title: t("investment.hero.title2") || "Explore the Masuwe project",
         titleHighlight: t("investment.hero.highlight2") || "Prime Location",
         subtitle:
           t("investment.hero.subtitle2") ||
-          "Strategic hospitality opportunities near Victoria Falls.",
+          "Read about a tourism and hospitality project in the Victoria Falls area. Confirm current plans with the listed promoter.",
       },
       {
         image: "/images/pages/investment/vfex_logo.png",
@@ -53,17 +53,18 @@ export default function Investment() {
         titleHighlight: t("investment.hero.highlight3") || "Global Access",
         subtitle:
           t("investment.hero.subtitle3") ||
-          "Invest in offshore-listed African companies.",
+          "Explore Zimbabwe's capital-market landscape. Trading and account opening are handled by licensed providers.",
       },
       {
         image: "/images/pages/investment/horticulture.jpg",
         badge: t("investment.hero.badge4") || "Horticulture",
         badgeIcon: Leaf,
-        title: t("investment.hero.title4") || "Green Gold",
-        titleHighlight: t("investment.hero.highlight4") || "High ROI",
+        title: t("investment.hero.title4") || "Horticulture projects",
+        titleHighlight:
+          t("investment.hero.highlight4") || "Agriculture & exports",
         subtitle:
           t("investment.hero.subtitle4") ||
-          "High-value fruit exports driving growth.",
+          "Explore agriculture and processing profiles. Check market access, operating costs and project status with the promoter.",
       },
       {
         image: "/images/pages/investment/minerals_mining.png",
@@ -94,18 +95,18 @@ export default function Investment() {
         titleHighlight: t("investment.hero.highlight7") || "Visitor Economy",
         subtitle:
           t("investment.hero.subtitle7") ||
-          "Tourism-linked projects near major attractions can unlock recurring foreign-currency demand.",
+          "Explore hospitality project information near Zimbabwe's visitor destinations.",
       },
       {
         image: "/images/pages/investment/partnership_handshake.png",
         badge: t("investment.hero.badge8") || "Diaspora Flows",
         badgeIcon: DollarSign,
-        title: t("investment.hero.title8") || "Build Lasting Assets",
+        title: t("investment.hero.title8") || "Research your next step",
         titleHighlight:
-          t("investment.hero.highlight8") || "Structured Investment",
+          t("investment.hero.highlight8") || "Project information",
         subtitle:
           t("investment.hero.subtitle8") ||
-          "Explore pooled, trackable, and productive investment opportunities.",
+          "Use these profiles as a starting point for research and direct enquiries. This site does not pool capital or process investments.",
       },
     ],
     [t]
@@ -116,54 +117,54 @@ export default function Investment() {
       title: t("tech.opportunities.ai.title") || "Artificial Intelligence",
       driver:
         t("tech.opportunities.ai.driver") ||
-        "Deployment momentum in mining, healthcare, and governance under the national AI strategy.",
+        "Explore how AI could help organise information and answer routine questions.",
     },
     {
       title: t("tech.opportunities.sme.title") || "SME Digitalization",
       driver:
         t("tech.opportunities.sme.driver") ||
-        "High demand for affordable inventory tools, payroll automation, and customer support chat systems.",
+        "Research inventory, payroll and customer-support needs with local businesses.",
     },
     {
       title: t("tech.opportunities.cybersecurity.title") || "Cybersecurity",
       driver:
         t("tech.opportunities.cybersecurity.driver") ||
-        "Rapid digital adoption is increasing attack surfaces and demand for local security services and skills.",
+        "Consider data protection, access control and staff security training.",
     },
     {
       title:
         t("tech.opportunities.ecommerce.title") || "E-commerce & Logistics",
       driver:
         t("tech.opportunities.ecommerce.driver") ||
-        "A major gap remains in reliable domestic logistics and last-mile delivery infrastructure.",
+        "Research stock visibility, delivery coordination and communication with customers.",
     },
   ];
 
   const innovationChallenges = [
     t("tech.challenges.infrastructure") ||
-      "Infrastructure gaps: high internet costs and irregular power supply still constrain startup execution.",
+      "Infrastructure: check connectivity, power requirements and operating costs.",
     t("tech.challenges.human_capital") ||
-      "Human capital pressure: strong technical talent exists, but retention is difficult due to outward migration.",
+      "People: assess the skills, staffing and training a project would need.",
     t("tech.challenges.regulation") ||
-      "Regulatory complexity: licensing, tax compliance, and approvals can delay product launch in regulated sectors.",
+      "Regulation: confirm licensing, tax and approval requirements with qualified advisers.",
   ];
 
   const collectiveModelSteps = [
     t("investment.collective_model.s1") ||
-      "Create an investor profile and complete verification checks.",
+      "Browse sector profiles and read what each project describes.",
     t("investment.collective_model.s2") ||
-      "Join vetted opportunities with clear minimum-ticket participation.",
+      "Prepare questions about ownership, current status, costs and participation terms.",
     t("investment.collective_model.s3") ||
-      "Pool capital with other diaspora investors through structured terms.",
+      "Request current documents from the promoter and check them with independent advisers.",
     t("investment.collective_model.s4") ||
-      "Track project updates, milestones, and performance on one dashboard.",
+      "Agree any investment directly through the appropriate legal and financial channels, outside this site.",
   ];
   const europeFocusAreas = [
     {
       title: t("investment.eu_focus.energy.title") || "Green Energy",
       detail:
         t("investment.eu_focus.energy.detail") ||
-        "GET.invest Zimbabwe (launched in May 2025 with EU and Germany funding) supports clean-energy project finance, with strong focus on solar and diversifying hydro-dependent generation.",
+        "GET.invest Zimbabwe launched in May 2025 with EU and German funding to support clean-energy finance. Check the programme's current eligibility criteria at the source below.",
     },
     {
       title:
@@ -177,7 +178,7 @@ export default function Investment() {
         t("investment.eu_focus.sme.title") || "Private Sector and SME Finance",
       detail:
         t("investment.eu_focus.sme.detail") ||
-        "EIB-backed lines through local banks expanded affordable finance for SMEs; reported EIB lending in recent years includes EUR 60 million, including EUR 20 million to Stanbic in March 2025.",
+        "EIB report, 2 October 2025: €60 million lent to Zimbabwean banks over five years, including €20 million to Stanbic in March 2025. These are external bank programmes.",
     },
     {
       title:
@@ -201,7 +202,7 @@ export default function Investment() {
         "Global Gateway Partnership Envelope",
       detail:
         t("investment.eu_focus.gateway.detail") ||
-        "EU-Zimbabwe cooperation under Global Gateway includes a EUR 165 million grant allocation for 2021-2027, with Team Europe partners including EIB and PROPARCO.",
+        "The European Commission lists €165 million in grants for its Zimbabwe partnership for 2021–2027. This is a cooperation allocation, not money raised through Diaspora Unlocked.",
     },
   ];
   const europePartners = [
@@ -221,16 +222,16 @@ export default function Investment() {
 
   const collectiveStepTitles = [
     t("investment.crowdfunding_steps.browse", {
-      defaultValue: "Browse Projects",
+      defaultValue: "Read profiles",
     }),
     t("investment.crowdfunding_steps.invest", {
-      defaultValue: "Invest Your Share",
+      defaultValue: "Prepare questions",
     }),
     t("investment.crowdfunding_steps.track", {
-      defaultValue: "Track Performance",
+      defaultValue: "Check documents",
     }),
     t("investment.crowdfunding_steps.returns", {
-      defaultValue: "Receive Returns",
+      defaultValue: "Decide independently",
     }),
   ];
   return (
@@ -241,16 +242,16 @@ export default function Investment() {
       <DiscoverySection
         id="collective-model"
         title={t("investment.collective_model.title", {
-          defaultValue: "How Diaspora Collective Investing Works",
+          defaultValue: "How to explore an opportunity",
         })}
         description={t("investment.collective_model.subtitle", {
           defaultValue:
-            "Diaspora Unlocked is designed for pooled investing so small and medium investors can access opportunities that typically require larger ticket sizes.",
+            "Start with information, then check the documents and terms independently before making any commitment.",
         })}
       >
         <SwipeRail
           label={t("investment.collective_model.title", {
-            defaultValue: "How Diaspora Collective Investing Works",
+            defaultValue: "How to explore an opportunity",
           })}
         >
           {collectiveModelSteps.map((item, index) => (
@@ -267,11 +268,11 @@ export default function Investment() {
       <DiscoverySection
         id="active-projects"
         title={t("investment.sectors_title", {
-          defaultValue: "Active Investment Opportunities",
+          defaultValue: "Explore project profiles",
         })}
         description={t("investment.sectors_subtitle", {
           defaultValue:
-            "Carefully vetted projects with government support and transparent tracking.",
+            "Browse sector ideas and listed promoters. Current availability, financial terms and approvals require independent confirmation.",
         })}
       >
         <div className="discovery-callout">
@@ -287,7 +288,7 @@ export default function Investment() {
             <p>
               {t("investment.sectors_info", {
                 defaultValue:
-                  "Explore structured opportunities across tourism, agriculture, manufacturing, digital infrastructure, and renewable energy. Each tile includes ownership context, minimum ticket size, expected return range, and risk profile.",
+                  "Read project descriptions and identify questions for the listed promoter. These profiles do not confirm an offer to invest, project availability or financial performance.",
               })}
             </p>
             <Button
@@ -296,7 +297,7 @@ export default function Investment() {
             >
               <Link href="/investment/opportunities">
                 {t("investment.sectors_explore", {
-                  defaultValue: "Explore Opportunities",
+                  defaultValue: "Browse project profiles",
                 })}
               </Link>
             </Button>
@@ -306,16 +307,16 @@ export default function Investment() {
       <DiscoverySection
         id="investment-innovation-opportunities"
         title={t("tech.opportunities.title", {
-          defaultValue: "Top Opportunities for Investment and Innovation",
+          defaultValue: "Ideas for business and innovation",
         })}
         description={t("investment.opportunities.subtitle", {
           defaultValue:
-            "These priority areas can unlock stronger returns when paired with compliant execution, practical partnerships, and sector expertise.",
+            "Explore these sector themes as a starting point for your own research.",
         })}
       >
         <SwipeRail
           label={t("tech.opportunities.title", {
-            defaultValue: "Top Opportunities for Investment and Innovation",
+            defaultValue: "Ideas for business and innovation",
           })}
         >
           {innovationOpportunityAreas.map((item, index) => (
@@ -357,11 +358,11 @@ export default function Investment() {
       <DiscoverySection
         id="eu-partnerships"
         title={t("investment.eu_focus.title", {
-          defaultValue: "European Partnership Capital in Zimbabwe",
+          defaultValue: "External programmes to research",
         })}
         description={t("investment.eu_focus.subtitle", {
           defaultValue:
-            "European institutions under Team Europe are active in Zimbabwe across energy, agriculture, SME finance, health, and digital infrastructure.",
+            "European programmes provide useful context for Zimbabwe's economy. Sources checked on 21 October 2026; they do not establish funding or endorsement for projects listed here.",
         })}
       >
         <ul className="discovery-partners mb-6">
@@ -371,7 +372,7 @@ export default function Investment() {
         </ul>
         <SwipeRail
           label={t("investment.eu_focus.title", {
-            defaultValue: "European Partnership Capital in Zimbabwe",
+            defaultValue: "External programmes to research",
           })}
         >
           {europeFocusAreas.map((item, index) => (
@@ -405,32 +406,34 @@ export default function Investment() {
         <div className="mt-8 flex flex-wrap gap-3 ">
           <a
             href="https://www.get-invest.eu/about/country-windows/zimbabwe/"
+            className="max-w-full"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full h-auto min-h-9 max-w-full whitespace-normal py-2 leading-5">
               {t("investment.eu_focus.source_getinvest") ||
-                "Source: GET.invest Zimbabwe"}
+                "GET.invest Zimbabwe · checked 21 Oct 2026"}
             </Button>
           </a>
           <a
             href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en"
+            className="max-w-full"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
+            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full h-auto min-h-9 max-w-full whitespace-normal py-2 leading-5">
               {t("investment.eu_focus.source_eu") ||
-                "Source: EU International Partnerships"}
+                "European Commission · checked 21 Oct 2026"}
             </Button>
           </a>
           <a
             href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business"
+            className="max-w-full"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full">
-              {t("investment.eu_focus.source_eib") ||
-                "Source: EIB Zimbabwe Essay"}
+            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full h-auto min-h-9 max-w-full whitespace-normal py-2 leading-5">
+              {t("investment.eu_focus.source_eib") || "EIB report · 2 Oct 2025"}
             </Button>
           </a>
         </div>
