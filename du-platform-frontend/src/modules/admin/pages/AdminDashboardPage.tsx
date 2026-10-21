@@ -66,6 +66,7 @@ export default function AdminDashboard() {
   ) => t(key, { defaultValue: fallback, ...options });
   const [activeTab, setActiveTab] = useState<TabKey>("newsletter");
   const [newsletterDirty, setNewsletterDirty] = useState(false);
+  const [legacyDataLoaded, setLegacyDataLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notifyRows, setNotifyRows] = useState<NotifyRow[]>([]);
@@ -109,6 +110,7 @@ export default function AdminDashboard() {
   });
   const [editingShopId, setEditingShopId] = useState<number | null>(null);
   const notifyIdsRef = useRef<Set<number>>(new Set());
+  const notifyInitializedRef = useRef(false);
 
   const tabs = useMemo(
     () => [
@@ -163,7 +165,7 @@ export default function AdminDashboard() {
         for (const row of nextNotifyRows) {
           if (!notifyIdsRef.current.has(Number(row.id))) freshCount += 1;
         }
-        if (freshCount > 0) {
+        if (freshCount > 0 && notifyInitializedRef.current) {
           setNewNotifyCount(prev => prev + freshCount);
           toast.success(
             freshCount === 1
@@ -181,6 +183,7 @@ export default function AdminDashboard() {
         notifyIdsRef.current = new Set(
           nextNotifyRows.map(row => Number(row.id))
         );
+        notifyInitializedRef.current = true;
         setNotifyRows(nextNotifyRows);
         return;
       }
@@ -199,6 +202,8 @@ export default function AdminDashboard() {
       setNtirRows(ntirRes.data?.rows ?? []);
       setStoryRows(storiesRes.data?.stories ?? []);
       setShopRows(shopRes.data?.rows ?? []);
+      setLegacyDataLoaded(true);
+      notifyInitializedRef.current = true;
       setNotificationSettingsForm({
         alert_emails: String(settingsRes.data?.alert_emails ?? ""),
         from_email: String(settingsRes.data?.from_email ?? ""),
@@ -481,11 +486,13 @@ export default function AdminDashboard() {
                 }}
               >
                 {tab.label}{" "}
-                {tab.count !== null && (
-                  <Badge className="ml-2 bg-white/20 text-white border-transparent">
-                    {tab.count}
-                  </Badge>
-                )}
+                {tab.count !== null &&
+                  (legacyDataLoaded ||
+                    (tab.key === "notify" && notifyInitializedRef.current)) && (
+                    <Badge className="ml-2 bg-white/20 text-white border-transparent">
+                      {tab.count}
+                    </Badge>
+                  )}
                 {"newCount" in tab && tab.newCount ? (
                   <Badge className="ml-2 bg-zim-gold text-zim-black border-transparent">
                     {tab.newCount} {tr("admin.badges.new", "new")}
