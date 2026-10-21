@@ -109,9 +109,7 @@ export default function Login() {
                   : t("auth.login") || "Sign In"}
               </h1>
               <p className="text-sm font-light leading-relaxed text-white/75">
-                {returningUser
-                  ? "Good to see you again. Sign in to continue."
-                  : "Sign in to access Diaspora Unlocked services."}
+                {t("auth.login_subtitle")}
               </p>
             </div>
 

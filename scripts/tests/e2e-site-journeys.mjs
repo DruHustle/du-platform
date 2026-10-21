@@ -185,6 +185,32 @@ try {
   await page.unroute("**/api/investment/ntir/search?**");
   pass("registry searches keep the latest response and announce loading");
 
+  await page.goto(`${baseUrl}/onesa-ai-book-trip`);
+  const startDate = page.locator('input[type="date"]').first();
+  const endDate = page.locator('input[type="date"]').nth(1);
+  await startDate.fill("2030-07-10");
+  await startDate.focus();
+  // Native date inputs have several keyboard segments; Tab must eventually leave.
+  for (
+    let i = 0;
+    i < 8 &&
+    (await startDate.evaluate(input => input === document.activeElement));
+    i++
+  )
+    await page.keyboard.press("Tab");
+  assert(
+    !(await startDate.evaluate(input => input === document.activeElement)),
+    "Trip dates must not trap keyboard focus"
+  );
+  await endDate.fill("2030-07-09");
+  assert(
+    !(await endDate.evaluate(input => input.checkValidity())),
+    "Return dates before departure must be invalid"
+  );
+  pass(
+    "trip dates support Tab navigation and reject a return before departure"
+  );
+
   await page.goto(`${baseUrl}/reset-password?token=local-test-token`);
   await page.locator("#ResetPasswordPage-password").fill("lowercase123!");
   await page
@@ -198,6 +224,64 @@ try {
     .filter({ hasText: /uppercase letter/i })
     .waitFor();
   pass("password reset enforces the API password policy before sending");
+  assert(
+    !new URL(page.url()).searchParams.has("token"),
+    "Reset tokens must be removed from browser history"
+  );
+  await page.route("**/api/auth/reset-password", route =>
+    route.fulfill({
+      json: { success: true, data: { message: "Local reset complete" } },
+    })
+  );
+  await page.locator("#ResetPasswordPage-password").fill("StrongLocal123!");
+  await page
+    .locator("#ResetPasswordPage-confirmPassword")
+    .fill("StrongLocal123!");
+  await page
+    .getByRole("button", { name: "Reset Password", exact: true })
+    .click();
+  await page
+    .getByRole("status")
+    .filter({ hasText: "Local reset complete" })
+    .waitFor();
+  await page.locator('a[href="/tourism"]:visible').first().click();
+  await page.waitForURL("**/tourism");
+  await page.waitForTimeout(1000);
+  assert.equal(
+    new URL(page.url()).pathname,
+    "/tourism",
+    "A stale reset timer must not redirect after navigation"
+  );
+  await page.unroute("**/api/auth/reset-password");
+  let pendingReset;
+  await page.route("**/api/auth/reset-password", route => {
+    pendingReset = route;
+  });
+  await page.goto(`${baseUrl}/reset-password?token=another-local-test-token`);
+  await page.locator("#ResetPasswordPage-password").fill("StrongLocal123!");
+  await page
+    .locator("#ResetPasswordPage-confirmPassword")
+    .fill("StrongLocal123!");
+  await page
+    .getByRole("button", { name: "Reset Password", exact: true })
+    .click();
+  for (let i = 0; !pendingReset && i < 100; i++) await page.waitForTimeout(20);
+  assert(pendingReset);
+  await page.locator('a[href="/tourism"]:visible').first().click();
+  await page.waitForURL("**/tourism");
+  await pendingReset.fulfill({
+    json: { success: true, data: { message: "Late reset response" } },
+  });
+  await page.waitForTimeout(1100);
+  assert.equal(
+    new URL(page.url()).pathname,
+    "/tourism",
+    "A reset response arriving after navigation must not schedule a new redirect"
+  );
+  await page.unroute("**/api/auth/reset-password");
+  pass(
+    "reset tokens leave history and reset completion cannot redirect a later journey"
+  );
 
   await page.goto(`${baseUrl}/register`);
   const email = `audit-${Date.now()}@example.com`;
@@ -303,7 +387,7 @@ try {
   pass("failed sign-in shows an accessible error and allows retry");
   await page.getByRole("button", { name: /^login$/i }).click();
   await page.waitForURL("**/shop/products");
-  await page.getByRole("heading", { name: /cart & checkout/i }).waitFor();
+  await page.getByRole("heading", { name: /cart & order request/i }).waitFor();
   // The real seed catalog intentionally has zero stock. Use a browser-only fixture
   // to verify cart behavior without changing inventory or creating an order.
   await page.route("**/api/shop/products", async route => {

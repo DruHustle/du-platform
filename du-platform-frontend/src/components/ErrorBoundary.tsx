@@ -3,7 +3,7 @@ import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Component, ReactNode } from "react";
 import i18n from "@/i18n";
 
-const SHOW_ERROR_DETAILS = import.meta.env.DEV;
+const SHOW_ERROR_DETAILS = import.meta.env.MODE === "development";
 
 interface Props {
   children: ReactNode;
@@ -27,7 +27,11 @@ class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, info: { componentStack: string }) {
     // Log caught errors so they surface in browser devtools and any error monitoring.
     // In production this is the only way to observe what crashed.
-    console.error("[ErrorBoundary] Caught unhandled React error:", error, info.componentStack);
+    console.error(
+      "[ErrorBoundary] Caught unhandled React error:",
+      error,
+      info.componentStack
+    );
   }
 
   render() {
@@ -40,7 +44,11 @@ class ErrorBoundary extends Component<Props, State> {
               className="text-destructive mb-6 flex-shrink-0"
             />
 
-            <h2 className="text-xl mb-4">{i18n.t("error_boundary.unexpected", { defaultValue: "An unexpected error occurred." })}</h2>
+            <h2 className="text-xl mb-4">
+              {i18n.t("error_boundary.unexpected", {
+                defaultValue: "An unexpected error occurred.",
+              })}
+            </h2>
 
             {SHOW_ERROR_DETAILS ? (
               <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">

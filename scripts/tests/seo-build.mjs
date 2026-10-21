@@ -89,7 +89,17 @@ for (const pathname of paths) {
     html.includes(`content="${canonical}"`),
     `${pathname}: social URL must match`
   );
-  assert(html.includes(`<title>${seo.title}</title>`), `${pathname}: title`);
+  const titleEntities = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#39;": "'",
+  };
+  const documentTitle = html
+    .match(/<title>([\s\S]*?)<\/title>/i)?.[1]
+    .replace(/&(?:amp|lt|gt|quot|#39);/g, entity => titleEntities[entity]);
+  assert.equal(documentTitle, seo.title, `${pathname}: title`);
   assert(
     html.includes('id="root"'),
     `${pathname}: retain React application shell`

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { api, getApiErrorMessage } from "@/lib/api";
 
 export default function NewsletterPreferencesPage() {
+  const { t } = useTranslation();
   const [input] = useState(() => {
     const params = new URLSearchParams(window.location.hash.slice(1));
     return {
@@ -36,12 +38,7 @@ export default function NewsletterPreferencesPage() {
       });
       setDone(data.message);
     } catch (err) {
-      setError(
-        getApiErrorMessage(
-          err,
-          "Unable to update your newsletter preferences. Please try again."
-        )
-      );
+      setError(getApiErrorMessage(err, t("newsletter_preferences.error")));
     } finally {
       setBusy(false);
     }
@@ -51,12 +48,12 @@ export default function NewsletterPreferencesPage() {
       <section className="document-section min-h-[65vh]">
         <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-slate-900 p-6 sm:p-10 text-white">
           <p className="text-xs font-semibold uppercase tracking-widest text-zim-gold">
-            Diaspora Unlocked newsletter
+            {t("newsletter_preferences.brand")}
           </p>
           <h1 className="mt-4 text-3xl font-semibold">
             {input.action === "unsubscribe"
-              ? "Manage your subscription"
-              : "Confirm your subscription"}
+              ? t("newsletter_preferences.manage_title")
+              : t("newsletter_preferences.confirm_title")}
           </h1>
           {done ? (
             <p role="status" className="mt-6 leading-7 text-emerald-200">
@@ -64,16 +61,14 @@ export default function NewsletterPreferencesPage() {
             </p>
           ) : !valid ? (
             <p role="alert" className="mt-6 leading-7 text-slate-300">
-              Open the link in your newsletter email to confirm or unsubscribe.
-              To request a new confirmation link, subscribe using the newsletter
-              form below.
+              {t("newsletter_preferences.invalid_link")}
             </p>
           ) : (
             <>
               <p className="mt-6 leading-7 text-slate-300">
                 {input.action === "unsubscribe"
-                  ? "Select unsubscribe to stop receiving Diaspora Unlocked newsletters. You can subscribe again using the newsletter form."
-                  : "Confirm that you want to receive news and opportunities from Diaspora Unlocked. You can unsubscribe at any time."}
+                  ? t("newsletter_preferences.unsubscribe_help")
+                  : t("newsletter_preferences.confirm_help")}
               </p>
               <Button
                 className="mt-6 bg-zim-gold text-slate-950 hover:bg-yellow-300"
@@ -81,10 +76,10 @@ export default function NewsletterPreferencesPage() {
                 disabled={busy}
               >
                 {busy
-                  ? "Updating…"
+                  ? t("newsletter_preferences.updating")
                   : input.action === "unsubscribe"
-                    ? "Unsubscribe"
-                    : "Confirm subscription"}
+                    ? t("newsletter_preferences.unsubscribe")
+                    : t("newsletter_preferences.confirm")}
               </Button>
             </>
           )}
@@ -97,7 +92,7 @@ export default function NewsletterPreferencesPage() {
             href="/"
             className="mt-8 inline-flex min-h-11 items-center text-sm text-zim-gold underline"
           >
-            Return home
+            {t("newsletter_preferences.return_home")}
           </Link>
         </div>
       </section>

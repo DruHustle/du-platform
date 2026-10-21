@@ -23,7 +23,7 @@ function resolveApiBaseUrl() {
   if (normalized.endsWith("/api")) return normalized;
 
   // In Vite dev, prefer relative /api so proxy settings are respected.
-  if (import.meta.env.DEV && typeof window !== "undefined") {
+  if (import.meta.env.MODE === "development" && typeof window !== "undefined") {
     const origin = window.location.origin.replace(/\/+$/, "");
     if (normalized === origin) return "/api";
   }
@@ -34,6 +34,7 @@ function resolveApiBaseUrl() {
 export const api = axios.create({
   baseURL: resolveApiBaseUrl(),
   withCredentials: true,
+  timeout: 15_000,
   headers: {
     "Content-Type": "application/json",
     // Custom-header CSRF defence: the backend requires this header to be
@@ -191,6 +192,11 @@ export function getApiErrorMessage(
 ): string {
   const err = error as any;
   const payload = err?.response?.data;
+  if (
+    !err?.response &&
+    ["ECONNABORTED", "ETIMEDOUT", "ERR_NETWORK"].includes(err?.code)
+  )
+    return fallback;
   const candidates = [payload?.error?.message, payload?.message, err?.message];
 
   for (const candidate of candidates) {

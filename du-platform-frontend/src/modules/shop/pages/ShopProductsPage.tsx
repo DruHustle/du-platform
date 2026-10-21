@@ -34,24 +34,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { api, type AuthUser } from "@/lib/api";
+import {
+  shopOrderRequestSchema,
+  calculateShopShippingCents,
+} from "@shared/shopCheckout";
+import {
+  isOrderReceipt,
+  prepareCheckoutAttempt,
+  readOrderReceipt,
+  saveOrderReceipt,
+  type OrderReceipt,
+} from "../lib/checkoutSession";
 import { SHOP_CATEGORY_CONFIG } from "@/lib/shopCategories";
 
 type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
 type PaymentMethod = "manual_assisted" | "dummy_gateway";
 type DeliverySpeed = "normal" | "express";
 
-type PlacedOrder = {
-  orderRef: string;
-  status: string;
-  paymentMethod: PaymentMethod;
-  paymentReference: string | null;
-  currency: string;
-  subtotalCents: number;
-  shippingCents: number;
-  totalCents: number;
-  deliverySpeed: DeliverySpeed;
-  manageToken: string;
-};
+type PlacedOrder = OrderReceipt;
 
 type QueryState = {
   queryCategory: ProductCategory;
@@ -61,7 +61,7 @@ type QueryState = {
 
 function normalizeWhatsAppPhone(raw: string) {
   const digits = String(raw ?? "").replace(/\D/g, "");
-  return digits || "263780000000";
+  return digits.length >= 8 && digits.length <= 15 ? digits : "4915147416152";
 }
 
 function normalizeProductCategory(raw: unknown): ProductCategory {
@@ -121,24 +121,25 @@ export default function ShopProducts() {
     add: addToSharedCart,
     removeOne,
     clear: clearCart,
+    setQuantity,
     consume: consumeCart,
     itemCount: cartItemCount,
   } = useShopCart();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
-  const [shippingCountry, setShippingCountry] = useState(
-    t("shop.products.default_country", { defaultValue: "Germany" })
-  );
+  const [shippingCountry, setShippingCountry] = useState("");
   const [shippingCity, setShippingCity] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [deliverySpeed, setDeliverySpeed] = useState<DeliverySpeed>("normal");
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethod>("manual_assisted");
   const [placingOrder, setPlacingOrder] = useState(false);
+  const submittingRef = useRef(false);
+  const confirmationRef = useRef<HTMLDivElement | null>(null);
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
-  const [order, setOrder] = useState<PlacedOrder | null>(null);
+  const [order, setOrder] = useState<PlacedOrder | null>(readOrderReceipt);
   const [notifyState, setNotifyState] = useState<
     Record<number, "idle" | "saving" | "saved">
   >({});
@@ -147,11 +148,24 @@ export default function ShopProducts() {
     useState<ShopProduct | null>(null);
   const [notifyEmailInput, setNotifyEmailInput] = useState("");
   const [notifyEmailError, setNotifyEmailError] = useState("");
-  const [mobileView, setMobileView] = useState<"products" | "checkout">(
-    new URLSearchParams(search).get("cart") === "1" ? "checkout" : "products"
-  );
+  const mobileView =
+    new URLSearchParams(search).get("cart") === "1" ? "checkout" : "products";
+  const setMobileView = (view: "products" | "checkout") => {
+    const params = new URLSearchParams(search);
+    if (view === "checkout") params.set("cart", "1");
+    else params.delete("cart");
+    setLocation(`/shop/products${params.size ? `?${params}` : ""}`);
+    requestAnimationFrame(() => {
+      document
+        .getElementById(
+          view === "checkout" ? "shop-cart-checkout" : "shop-products-heading"
+        )
+        ?.scrollIntoView({ block: "start" });
+    });
+  };
+  const receiptOnly = Boolean(order && cart.length === 0);
   const supportsDummyGateway =
-    import.meta.env.DEV || import.meta.env.MODE === "test";
+    import.meta.env.MODE === "development" || import.meta.env.MODE === "test";
 
   useEffect(() => {
     setCategory(queryCategory);
@@ -179,7 +193,8 @@ export default function ShopProducts() {
     if (targetProduct.stock_qty <= 0) {
       toast.error(
         t("shop.products.stock.out_message", {
-          defaultValue: "This item is currently out of stock.",
+          defaultValue:
+            "Currently unavailable. Leave your email for a stock update.",
         })
       );
     } else {
@@ -290,11 +305,10 @@ export default function ShopProducts() {
     });
 
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
-  const baseShippingCents =
-    subtotalCents >= 7500 ? 0 : subtotalCents > 0 ? 1200 : 0;
-  const deliverySurchargeCents =
-    subtotalCents > 0 && deliverySpeed === "express" ? 800 : 0;
-  const shippingCents = baseShippingCents + deliverySurchargeCents;
+  const shippingCents = calculateShopShippingCents(
+    subtotalCents,
+    deliverySpeed
+  );
   const totalCents = subtotalCents + shippingCents;
   const whatsappNumber = normalizeWhatsAppPhone(
     String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? "")
@@ -311,7 +325,8 @@ export default function ShopProducts() {
     if (cartRows.length === 0) return "";
     const lines = [
       t("shop.products.whatsapp.intro", {
-        defaultValue: "Hello, I want to place an order from the Zimbabwe Shop.",
+        defaultValue:
+          "Hello, I would like to request these products from Diaspora Unlocked.",
       }),
       "",
       t("shop.products.whatsapp.order_items", { defaultValue: "Order Items:" }),
@@ -324,15 +339,15 @@ export default function ShopProducts() {
       ),
       "",
       `${t("shop.products.totals.subtotal", { defaultValue: "Subtotal" })}: ${formatMoney(subtotalCents)}`,
-      `${t("shop.products.totals.shipping", { defaultValue: "Shipping" })}: ${formatMoney(shippingCents)}`,
-      `${t("shop.products.totals.total", { defaultValue: "Total" })}: ${formatMoney(totalCents)}`,
-      `${t("shop.products.delivery_speed.label", { defaultValue: "Send speed" })}: ${
+      `${t("shop.products.totals.shipping", { defaultValue: "Estimated delivery" })}: ${formatMoney(shippingCents)}`,
+      `${t("shop.products.totals.total", { defaultValue: "Estimated total" })}: ${formatMoney(totalCents)}`,
+      `${t("shop.products.delivery_speed.label", { defaultValue: "Delivery preference" })}: ${
         deliverySpeed === "express"
           ? t("shop.products.delivery_speed.express", {
-              defaultValue: "Express Send",
+              defaultValue: "Express delivery request",
             })
           : t("shop.products.delivery_speed.normal", {
-              defaultValue: "Normal Send",
+              defaultValue: "Standard delivery request",
             })
       }`,
       "",
@@ -369,7 +384,6 @@ export default function ShopProducts() {
       catalogStatus === "ready" &&
       addToSharedCart(product.id, product.stock_qty)
     ) {
-      setOrder(null);
       setCheckoutError("");
     }
   };
@@ -417,8 +431,10 @@ export default function ShopProducts() {
       setCustomerEmail(email);
       setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "saved" }));
       setNotifyDialogProduct(null);
-      toast.success("Notification saved", {
-        description: `We'll email you when ${notifyDialogProduct.name} is back in stock.`,
+      toast.success(t("shop.products.notify.toast_title"), {
+        description: t("shop.products.notify.toast_detail", {
+          name: notifyDialogProduct.name,
+        }),
         duration: 4000,
       });
     } catch (error: any) {
@@ -435,25 +451,12 @@ export default function ShopProducts() {
   };
 
   const placeOrder = async () => {
+    if (submittingRef.current) return;
     setCheckoutError("");
     if (cartRows.length === 0) {
       setCheckoutError(
         t("shop.products.errors.empty_cart", {
           defaultValue: "Your cart is empty.",
-        })
-      );
-      return;
-    }
-    if (
-      !effectiveCustomerName ||
-      !effectiveCustomerEmail ||
-      !shippingCountry ||
-      !shippingCity ||
-      !shippingAddress
-    ) {
-      setCheckoutError(
-        t("shop.products.errors.complete_fields", {
-          defaultValue: "Please complete all checkout fields.",
         })
       );
       return;
@@ -471,9 +474,10 @@ export default function ShopProducts() {
       );
       return;
     }
+    submittingRef.current = true;
     setPlacingOrder(true);
     try {
-      const payload = {
+      const parsed = shopOrderRequestSchema.safeParse({
         customerName: effectiveCustomerName,
         customerEmail: effectiveCustomerEmail,
         shippingCountry,
@@ -485,21 +489,38 @@ export default function ShopProducts() {
           productId: row.product.id,
           quantity: row.item.quantity,
         })),
-      };
-      const { data } = await api.post("/shop/orders", payload);
-      if (!data?.order?.orderRef) throw new Error("Invalid order response");
-      setOrder(data.order as PlacedOrder);
+      });
+      if (!parsed.success) {
+        setCheckoutError(t("shop.products.errors.complete_fields"));
+        return;
+      }
+      const payload = parsed.data;
+      const requestToken = await prepareCheckoutAttempt(payload);
+      const { data } = await api.post(
+        "/shop/orders",
+        { ...payload, requestToken },
+        { timeout: 20_000 }
+      );
+      if (!isOrderReceipt(data?.order))
+        throw new Error("Invalid order response");
+      saveOrderReceipt(data.order);
+      setOrder(data.order);
       consumeCart(payload.items);
+      requestAnimationFrame(() => confirmationRef.current?.focus());
     } catch (error: any) {
+      if (error?.response?.status === 400 || error?.response?.status === 409)
+        void refreshCatalog();
       setCheckoutError(
         String(
           error?.response?.data?.message ??
             t("shop.products.errors.unable_place_order", {
-              defaultValue: "Unable to place order.",
+              defaultValue:
+                "Your request could not be saved. Try again, or contact us on WhatsApp.",
             })
         )
       );
     } finally {
+      submittingRef.current = false;
       setPlacingOrder(false);
     }
   };
@@ -516,10 +537,11 @@ export default function ShopProducts() {
           paymentReference: `${paymentMethod.toUpperCase()}-${crypto.randomUUID()}`,
         }
       );
-      setOrder(prev => ({
-        ...(prev ?? ({} as PlacedOrder)),
-        ...((data?.order ?? {}) as Partial<PlacedOrder>),
-      }));
+      const confirmed = { ...order, ...data?.order };
+      if (!isOrderReceipt(confirmed))
+        throw new Error("Invalid payment response");
+      saveOrderReceipt(confirmed);
+      setOrder(confirmed);
     } catch (error: any) {
       setCheckoutError(
         String(
@@ -542,7 +564,7 @@ export default function ShopProducts() {
             <div className="relative z-10">
               <div className="mb-8 flex flex-wrap items-start justify-between gap-5">
                 <div>
-                  <h1 className="page-title">
+                  <h1 id="shop-products-heading" className="page-title">
                     {t("shop.products.title", {
                       defaultValue: "Shop Products",
                     })}
@@ -550,7 +572,7 @@ export default function ShopProducts() {
                   <p className="text-sm text-white/75 mt-3 max-w-2xl">
                     {t("shop.products.subtitle", {
                       defaultValue:
-                        "End-to-end checkout with secure payment options and clear delivery selection.",
+                        "Add products to your cart and send an order request. Availability, delivery and payment are confirmed with you before the order goes ahead.",
                     })}
                   </p>
                 </div>
@@ -618,6 +640,7 @@ export default function ShopProducts() {
 
                     <div className="relative min-w-[190px]">
                       <select
+                        aria-label={t("shop.products.filters.select_segment")}
                         value={segment}
                         onChange={event => {
                           const nextSegment = event.target.value;
@@ -666,8 +689,8 @@ export default function ShopProducts() {
                           </p>
                           <p className="text-white/45 text-xs mt-1">
                             {category !== "all" || segment
-                              ? "Try adjusting your filters to find what you're looking for."
-                              : "No products available in this category yet."}
+                              ? t("shop.products.filter_hint")
+                              : t("shop.products.empty_hint")}
                           </p>
                         </div>
                         {(category !== "all" || segment) && (
@@ -680,7 +703,7 @@ export default function ShopProducts() {
                             }}
                             className="rounded-full px-5 py-2 h-auto bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black font-black text-[10px] uppercase tracking-[0.2em] transition-all"
                           >
-                            Clear Filters
+                            {t("shop.products.clear_filters")}
                           </Button>
                         )}
                       </div>
@@ -704,7 +727,7 @@ export default function ShopProducts() {
                               type="button"
                               disabled={notifyState[product.id] === "saving"}
                               onClick={() => openNotifyDialog(product)}
-                              className="min-h-11 w-full rounded-full border border-white/20 bg-transparent text-xs font-medium text-white hover:bg-white/10"
+                              className="h-auto min-h-11 w-full whitespace-normal rounded-full border border-white/20 bg-transparent px-2 py-2 text-xs font-medium text-white hover:bg-white/10"
                             >
                               {notifyState[product.id] === "saving"
                                 ? t("shop.products.notify.saving", {
@@ -739,16 +762,26 @@ export default function ShopProducts() {
                       defaultValue: "Back to Products",
                     })}
                   </button>
-                  <div className="content-panel">
+                  <form
+                    className="content-panel"
+                    onSubmit={event => {
+                      event.preventDefault();
+                      void placeOrder();
+                    }}
+                    aria-busy={placingOrder}
+                  >
                     <div className="flex items-center gap-1.5 mb-2">
                       <ShoppingCart className="h-3.5 w-3.5 text-zim-gold" />
                       <h2 className="cart-panel-title">
-                        {t("shop.products.cart.title", {
-                          defaultValue: "Cart & Checkout",
-                        })}
+                        {receiptOnly
+                          ? t("shop.products.order.received_title")
+                          : t("shop.products.cart.title", {
+                              defaultValue: "Cart & order request",
+                            })}
                       </h2>
                       <span
                         className="shop-cart-count"
+                        hidden={receiptOnly}
                         aria-live="polite"
                         aria-atomic="true"
                       >
@@ -756,307 +789,414 @@ export default function ShopProducts() {
                       </span>
                     </div>
 
-                    {cart.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          clearCart();
-                          setCheckoutError("");
-                        }}
-                        className="mb-3 min-h-11 text-xs text-slate-300 underline underline-offset-4 hover:text-white"
-                      >
-                        {t("shop.products.cart.clear", {
-                          defaultValue: "Clear cart",
-                        })}
-                      </button>
-                    )}
-                    {cartRows.length !== cart.length && (
-                      <p role="alert" className="mb-3 text-sm text-amber-200">
-                        {t("shop.products.cart.unavailable", {
-                          defaultValue:
-                            "Some saved items are no longer available. Clear the cart to start again.",
-                        })}
-                      </p>
-                    )}
-                    {cartRows.length === 0 ? (
-                      <p className="cart-empty text-slate-300">
-                        {t("shop.products.cart.empty", {
-                          defaultValue:
-                            "No items yet. Add products to begin checkout.",
-                        })}
-                      </p>
-                    ) : (
-                      <div className="space-y-1.5">
-                        {cartRows.map(row => (
-                          <div key={row.product.id} className="shop-cart-row">
-                            <p className="text-[11px] font-bold text-white truncate">
-                              {row.product.name}
+                    {!receiptOnly && (
+                      <>
+                        {cart.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              clearCart();
+                              setCheckoutError("");
+                            }}
+                            className="mb-3 min-h-11 text-xs text-slate-300 underline underline-offset-4 hover:text-white"
+                          >
+                            {t("shop.products.cart.clear", {
+                              defaultValue: "Clear cart",
+                            })}
+                          </button>
+                        )}
+                        {catalogStatus === "ready" &&
+                          cartRows.length !== cart.length && (
+                            <p
+                              role="alert"
+                              className="mb-3 text-sm text-amber-200"
+                            >
+                              {t("shop.products.cart.unavailable", {
+                                defaultValue:
+                                  "Some saved items are no longer available. Remove those items to continue.",
+                              })}{" "}
+                              <button
+                                type="button"
+                                className="min-h-11 underline"
+                                onClick={() =>
+                                  cart
+                                    .filter(
+                                      item => !productsById.has(item.productId)
+                                    )
+                                    .forEach(item =>
+                                      setQuantity(item.productId, 0)
+                                    )
+                                }
+                              >
+                                {t("shop.products.cart.remove_unavailable")}
+                              </button>
                             </p>
-                            <div className="shop-cart-row-controls">
-                              <QuantityControl
-                                name={row.product.name}
-                                quantity={row.item.quantity}
-                                limit={row.product.stock_qty}
-                                disabled={catalogStatus !== "ready"}
-                                onAdd={() => addToCart(row.product)}
-                                onRemove={() => removeOne(row.product.id)}
+                          )}
+                        {cartRows.length === 0 ? (
+                          <p className="cart-empty text-slate-300">
+                            {t("shop.products.cart.empty", {
+                              defaultValue:
+                                "Your cart is empty. Add products to start an order request.",
+                            })}
+                          </p>
+                        ) : (
+                          <div className="space-y-1.5">
+                            {cartRows.map(row => (
+                              <div
+                                key={row.product.id}
+                                className="shop-cart-row"
+                              >
+                                <p className="text-[11px] font-bold text-white break-words">
+                                  {row.product.name}
+                                </p>
+                                {catalogStatus === "ready" &&
+                                  row.item.quantity > row.product.stock_qty && (
+                                    <p
+                                      role="alert"
+                                      className="text-xs text-amber-200"
+                                    >
+                                      {t(
+                                        "shop.products.errors.availability_changed"
+                                      )}{" "}
+                                      <button
+                                        type="button"
+                                        className="min-h-11 underline"
+                                        onClick={() =>
+                                          setQuantity(
+                                            row.product.id,
+                                            Math.min(
+                                              row.item.quantity,
+                                              row.product.stock_qty
+                                            )
+                                          )
+                                        }
+                                      >
+                                        {t("shop.products.cart.update_stock")}
+                                      </button>
+                                    </p>
+                                  )}
+                                <div className="shop-cart-row-controls">
+                                  <QuantityControl
+                                    name={row.product.name}
+                                    quantity={row.item.quantity}
+                                    limit={row.product.stock_qty}
+                                    disabled={catalogStatus !== "ready"}
+                                    onAdd={() => addToCart(row.product)}
+                                    onRemove={() => removeOne(row.product.id)}
+                                  />
+                                  <p className="text-[11px] text-zim-gold font-black">
+                                    {formatMoney(
+                                      row.lineTotal,
+                                      row.product.currency
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="cart-totals mt-5 border-t border-white/10 pt-4 text-slate-300 space-y-2">
+                          <div className="flex justify-between">
+                            <span>
+                              {t("shop.products.totals.subtotal", {
+                                defaultValue: "Subtotal",
+                              })}
+                            </span>
+                            <span>{formatMoney(subtotalCents)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>
+                              {t("shop.products.totals.shipping", {
+                                defaultValue: "Estimated delivery",
+                              })}
+                            </span>
+                            <span>{formatMoney(shippingCents)}</span>
+                          </div>
+                          <div className="flex justify-between text-white font-black text-[11px]">
+                            <span>
+                              {t("shop.products.totals.total", {
+                                defaultValue: "Estimated total",
+                              })}
+                            </span>
+                            <span>{formatMoney(totalCents)}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className="mt-3 border-t border-white/10 pt-2.5">
+                      {!receiptOnly && (
+                        <>
+                          <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
+                            {isAuthenticated
+                              ? t("shop.products.checkout.title", {
+                                  defaultValue: "Your order request",
+                                })
+                              : t("shop.products.guest_checkout.title", {
+                                  defaultValue: "Your order request",
+                                })}
+                          </h3>
+
+                          {isAuthenticated ? (
+                            <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-[11px] text-white/75">
+                              {t("shop.products.checkout.logged_in_as", {
+                                defaultValue: "Signed in as",
+                              })}{" "}
+                              <span className="font-semibold text-white">
+                                {profileName || "-"} ({profileEmail || "-"})
+                              </span>
+                            </div>
+                          ) : null}
+
+                          <div className="space-y-1.5">
+                            {showCustomerIdentityInputs ? (
+                              <>
+                                <div className="space-y-1">
+                                  <Label
+                                    htmlFor="shop-customer-name"
+                                    className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                  >
+                                    {t("shop.products.fields.full_name", {
+                                      defaultValue: "Full Name",
+                                    })}
+                                  </Label>
+                                  <Input
+                                    id="shop-customer-name"
+                                    name="name"
+                                    autoComplete="name"
+                                    required
+                                    minLength={2}
+                                    maxLength={120}
+                                    disabled={placingOrder}
+                                    value={customerName}
+                                    onChange={e =>
+                                      setCustomerName(e.target.value)
+                                    }
+                                    placeholder={t(
+                                      "shop.products.fields.full_name",
+                                      { defaultValue: "Full Name" }
+                                    )}
+                                    className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <Label
+                                    htmlFor="shop-customer-email"
+                                    className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                  >
+                                    {t("shop.products.fields.email_address", {
+                                      defaultValue: "Email Address",
+                                    })}
+                                  </Label>
+                                  <Input
+                                    id="shop-customer-email"
+                                    name="email"
+                                    autoComplete="email"
+                                    required
+                                    maxLength={254}
+                                    disabled={placingOrder}
+                                    type="email"
+                                    value={customerEmail}
+                                    onChange={e =>
+                                      setCustomerEmail(e.target.value)
+                                    }
+                                    placeholder={t(
+                                      "shop.products.fields.email_address",
+                                      { defaultValue: "Email Address" }
+                                    )}
+                                    className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                                  />
+                                </div>
+                              </>
+                            ) : null}
+                            <div className="space-y-1">
+                              <Label
+                                htmlFor="shop-shipping-country"
+                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                              >
+                                {t("shop.products.fields.country", {
+                                  defaultValue: "Country",
+                                })}
+                              </Label>
+                              <Input
+                                id="shop-shipping-country"
+                                name="country"
+                                autoComplete="country-name"
+                                required
+                                minLength={2}
+                                maxLength={120}
+                                disabled={placingOrder}
+                                value={shippingCountry}
+                                onChange={e =>
+                                  setShippingCountry(e.target.value)
+                                }
+                                placeholder={t("shop.products.fields.country", {
+                                  defaultValue: "Country",
+                                })}
+                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
                               />
-                              <p className="text-[11px] text-zim-gold font-black">
-                                {formatMoney(
-                                  row.lineTotal,
-                                  row.product.currency
+                            </div>
+                            <div className="space-y-1">
+                              <Label
+                                htmlFor="shop-shipping-city"
+                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                              >
+                                {t("shop.products.fields.city", {
+                                  defaultValue: "City",
+                                })}
+                              </Label>
+                              <Input
+                                id="shop-shipping-city"
+                                name="city"
+                                autoComplete="address-level2"
+                                required
+                                minLength={2}
+                                maxLength={120}
+                                disabled={placingOrder}
+                                value={shippingCity}
+                                onChange={e => setShippingCity(e.target.value)}
+                                placeholder={t("shop.products.fields.city", {
+                                  defaultValue: "City",
+                                })}
+                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label
+                                htmlFor="shop-shipping-address"
+                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                              >
+                                {t("shop.products.fields.shipping_address", {
+                                  defaultValue: "Shipping Address",
+                                })}
+                              </Label>
+                              <Input
+                                id="shop-shipping-address"
+                                name="address"
+                                autoComplete="street-address"
+                                required
+                                minLength={5}
+                                maxLength={400}
+                                disabled={placingOrder}
+                                value={shippingAddress}
+                                onChange={e =>
+                                  setShippingAddress(e.target.value)
+                                }
+                                placeholder={t(
+                                  "shop.products.fields.shipping_address",
+                                  { defaultValue: "Shipping Address" }
                                 )}
-                              </p>
+                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
+                              />
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
 
-                    <div className="cart-totals mt-5 border-t border-white/10 pt-4 text-slate-300 space-y-2">
-                      <div className="flex justify-between">
-                        <span>
-                          {t("shop.products.totals.subtotal", {
-                            defaultValue: "Subtotal",
-                          })}
-                        </span>
-                        <span>{formatMoney(subtotalCents)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>
-                          {t("shop.products.totals.shipping", {
-                            defaultValue: "Shipping",
-                          })}
-                        </span>
-                        <span>{formatMoney(shippingCents)}</span>
-                      </div>
-                      <div className="flex justify-between text-white font-black text-[11px]">
-                        <span>
-                          {t("shop.products.totals.total", {
-                            defaultValue: "Total",
-                          })}
-                        </span>
-                        <span>{formatMoney(totalCents)}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 border-t border-white/10 pt-2.5">
-                      <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
-                        {isAuthenticated
-                          ? t("shop.products.checkout.title", {
-                              defaultValue: "Checkout",
-                            })
-                          : t("shop.products.guest_checkout.title", {
-                              defaultValue: "Guest Checkout",
-                            })}
-                      </h3>
-
-                      {isAuthenticated ? (
-                        <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-[11px] text-white/75">
-                          {t("shop.products.checkout.logged_in_as", {
-                            defaultValue: "Signed in as",
-                          })}{" "}
-                          <span className="font-semibold text-white">
-                            {profileName || "-"} ({profileEmail || "-"})
-                          </span>
-                        </div>
-                      ) : null}
-
-                      <div className="space-y-1.5">
-                        {showCustomerIdentityInputs ? (
-                          <>
-                            <div className="space-y-1">
-                              <Label
-                                htmlFor="shop-customer-name"
-                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                          <div className="mt-2.5 space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
+                              {t("shop.products.delivery_speed.label", {
+                                defaultValue: "Delivery preference",
+                              })}
+                            </p>
+                            {[
+                              {
+                                value: "normal" as DeliverySpeed,
+                                label: t(
+                                  "shop.products.delivery_speed.normal",
+                                  {
+                                    defaultValue: "Standard delivery request",
+                                  }
+                                ),
+                                hint: t(
+                                  "shop.products.delivery_speed.normal_hint",
+                                  {
+                                    defaultValue:
+                                      "Timing confirmed after review",
+                                  }
+                                ),
+                              },
+                              {
+                                value: "express" as DeliverySpeed,
+                                label: t(
+                                  "shop.products.delivery_speed.express",
+                                  {
+                                    defaultValue: "Express delivery request",
+                                  }
+                                ),
+                                hint: `${t("shop.products.delivery_speed.express_hint", { defaultValue: "Availability and timing confirmed after review" })} (+${formatMoney(800)})`,
+                              },
+                            ].map(option => (
+                              <label
+                                key={option.value}
+                                htmlFor={`shop-delivery-${option.value}`}
+                                className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/85"
                               >
-                                {t("shop.products.fields.full_name", {
-                                  defaultValue: "Full Name",
-                                })}
-                              </Label>
-                              <Input
-                                id="shop-customer-name"
-                                value={customerName}
-                                onChange={e => setCustomerName(e.target.value)}
-                                placeholder={t(
-                                  "shop.products.fields.full_name",
-                                  { defaultValue: "Full Name" }
-                                )}
-                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <Label
-                                htmlFor="shop-customer-email"
-                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                <span className="flex items-center gap-1">
+                                  <input
+                                    id={`shop-delivery-${option.value}`}
+                                    name="deliverySpeed"
+                                    disabled={placingOrder}
+                                    type="radio"
+                                    checked={deliverySpeed === option.value}
+                                    onChange={() =>
+                                      setDeliverySpeed(option.value)
+                                    }
+                                  />
+                                  {option.label}
+                                </span>
+                                <span className="text-[10px] text-white/70">
+                                  {option.hint}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+
+                          <div className="mt-2.5 space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
+                              {t("shop.products.payment_methods.label", {
+                                defaultValue: "Order support",
+                              })}
+                            </p>
+                            {[
+                              {
+                                value: "manual_assisted" as PaymentMethod,
+                                label:
+                                  t(
+                                    "shop.products.payment_methods.manual_assisted"
+                                  ) || "Confirm details by email or WhatsApp",
+                              },
+                              ...(supportsDummyGateway
+                                ? [
+                                    {
+                                      value: "dummy_gateway" as PaymentMethod,
+                                      label:
+                                        t(
+                                          "shop.products.payment_methods.dummy_gateway"
+                                        ) || "Dummy Gateway (Dev/Test)",
+                                    },
+                                  ]
+                                : []),
+                            ].map(option => (
+                              <label
+                                key={option.value}
+                                htmlFor={`shop-payment-${option.value}`}
+                                className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/80"
                               >
-                                {t("shop.products.fields.email_address", {
-                                  defaultValue: "Email Address",
-                                })}
-                              </Label>
-                              <Input
-                                id="shop-customer-email"
-                                type="email"
-                                value={customerEmail}
-                                onChange={e => setCustomerEmail(e.target.value)}
-                                placeholder={t(
-                                  "shop.products.fields.email_address",
-                                  { defaultValue: "Email Address" }
-                                )}
-                                className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
-                              />
-                            </div>
-                          </>
-                        ) : null}
-                        <div className="space-y-1">
-                          <Label
-                            htmlFor="shop-shipping-country"
-                            className="text-[10px] uppercase tracking-[0.14em] text-white/70"
-                          >
-                            {t("shop.products.fields.country", {
-                              defaultValue: "Country",
-                            })}
-                          </Label>
-                          <Input
-                            id="shop-shipping-country"
-                            value={shippingCountry}
-                            onChange={e => setShippingCountry(e.target.value)}
-                            placeholder={t("shop.products.fields.country", {
-                              defaultValue: "Country",
-                            })}
-                            className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <Label
-                            htmlFor="shop-shipping-city"
-                            className="text-[10px] uppercase tracking-[0.14em] text-white/70"
-                          >
-                            {t("shop.products.fields.city", {
-                              defaultValue: "City",
-                            })}
-                          </Label>
-                          <Input
-                            id="shop-shipping-city"
-                            value={shippingCity}
-                            onChange={e => setShippingCity(e.target.value)}
-                            placeholder={t("shop.products.fields.city", {
-                              defaultValue: "City",
-                            })}
-                            className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <Label
-                            htmlFor="shop-shipping-address"
-                            className="text-[10px] uppercase tracking-[0.14em] text-white/70"
-                          >
-                            {t("shop.products.fields.shipping_address", {
-                              defaultValue: "Shipping Address",
-                            })}
-                          </Label>
-                          <Input
-                            id="shop-shipping-address"
-                            value={shippingAddress}
-                            onChange={e => setShippingAddress(e.target.value)}
-                            placeholder={t(
-                              "shop.products.fields.shipping_address",
-                              { defaultValue: "Shipping Address" }
-                            )}
-                            className="w-full rounded-xl border-white/20 bg-white/[0.04] px-3 py-1.5 text-xs text-white placeholder:text-white/70"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="mt-2.5 space-y-1">
-                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
-                          {t("shop.products.delivery_speed.label", {
-                            defaultValue: "Send speed",
-                          })}
-                        </p>
-                        {[
-                          {
-                            value: "normal" as DeliverySpeed,
-                            label: t("shop.products.delivery_speed.normal", {
-                              defaultValue: "Normal Send",
-                            }),
-                            hint: t(
-                              "shop.products.delivery_speed.normal_hint",
-                              { defaultValue: "Standard dispatch timeline" }
-                            ),
-                          },
-                          {
-                            value: "express" as DeliverySpeed,
-                            label: t("shop.products.delivery_speed.express", {
-                              defaultValue: "Express Send",
-                            }),
-                            hint: `${t("shop.products.delivery_speed.express_hint", { defaultValue: "Priority handling" })} (+${formatMoney(800)})`,
-                          },
-                        ].map(option => (
-                          <label
-                            key={option.value}
-                            htmlFor={`shop-delivery-${option.value}`}
-                            className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/85"
-                          >
-                            <span className="flex items-center gap-1">
-                              <input
-                                id={`shop-delivery-${option.value}`}
-                                type="radio"
-                                checked={deliverySpeed === option.value}
-                                onChange={() => setDeliverySpeed(option.value)}
-                              />
-                              {option.label}
-                            </span>
-                            <span className="text-[10px] text-white/70">
-                              {option.hint}
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-
-                      <div className="mt-2.5 space-y-1">
-                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
-                          {t("shop.products.payment_methods.label", {
-                            defaultValue: "Payment handling",
-                          })}
-                        </p>
-                        {[
-                          {
-                            value: "manual_assisted" as PaymentMethod,
-                            label:
-                              t(
-                                "shop.products.payment_methods.manual_assisted"
-                              ) ||
-                              "Assisted checkout (email / WhatsApp follow-up)",
-                          },
-                          ...(supportsDummyGateway
-                            ? [
-                                {
-                                  value: "dummy_gateway" as PaymentMethod,
-                                  label:
-                                    t(
-                                      "shop.products.payment_methods.dummy_gateway"
-                                    ) || "Dummy Gateway (Dev/Test)",
-                                },
-                              ]
-                            : []),
-                        ].map(option => (
-                          <label
-                            key={option.value}
-                            htmlFor={`shop-payment-${option.value}`}
-                            className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/80"
-                          >
-                            <input
-                              id={`shop-payment-${option.value}`}
-                              type="radio"
-                              checked={paymentMethod === option.value}
-                              onChange={() => setPaymentMethod(option.value)}
-                            />
-                            {option.label}
-                          </label>
-                        ))}
-                      </div>
-
+                                <input
+                                  id={`shop-payment-${option.value}`}
+                                  name="paymentMethod"
+                                  disabled={placingOrder}
+                                  type="radio"
+                                  checked={paymentMethod === option.value}
+                                  onChange={() =>
+                                    setPaymentMethod(option.value)
+                                  }
+                                />
+                                {option.label}
+                              </label>
+                            ))}
+                          </div>
+                        </>
+                      )}
                       {checkoutError ? (
                         <p
                           role="alert"
@@ -1074,51 +1214,65 @@ export default function ShopProducts() {
                         </p>
                       ) : null}
 
-                      {!order ? (
+                      {(!order || cart.length > 0) && (
                         <>
                           <Button
-                            type="button"
-                            onClick={placeOrder}
-                            disabled={placingOrder}
+                            type="submit"
+                            disabled={
+                              placingOrder ||
+                              catalogStatus !== "ready" ||
+                              cart.length === 0
+                            }
                             className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.14em] disabled:opacity-70"
                           >
                             {placingOrder ? (
                               <>
                                 <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
                                 {t("shop.products.actions.creating_order", {
-                                  defaultValue: "Placing Order...",
+                                  defaultValue: "Sending request…",
                                 })}
                               </>
                             ) : (
                               t("shop.products.actions.place_order", {
-                                defaultValue: "Place Order",
+                                defaultValue: "Send order request",
                               })
                             )}
                           </Button>
                           <Button
                             asChild
                             type="button"
-                            disabled={!whatsappOrderHref}
                             variant="outline"
                             className="mt-1.5 w-full rounded-full px-4 py-1.5 h-auto border-[#25D366] bg-[#25D366] text-white hover:bg-[#1ebe5d] hover:border-[#1ebe5d] disabled:opacity-40 font-black text-[9px] uppercase tracking-[0.14em]"
                           >
                             <a
-                              href={whatsappOrderHref || "#"}
+                              href={whatsappOrderHref || undefined}
+                              aria-disabled={!whatsappOrderHref || placingOrder}
+                              onClick={event => {
+                                if (!whatsappOrderHref || placingOrder)
+                                  event.preventDefault();
+                              }}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
                               <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
                               {t("shop.products.actions.order_whatsapp", {
-                                defaultValue: "Order on WhatsApp",
+                                defaultValue:
+                                  "Ask about this order on WhatsApp",
                               })}
                             </a>
                           </Button>
                         </>
-                      ) : (
-                        <div className="mt-3 rounded-xl border border-emerald-300/30 bg-emerald-500/10 p-3">
+                      )}
+                      {order && (
+                        <div
+                          ref={confirmationRef}
+                          tabIndex={-1}
+                          role="status"
+                          className="mt-3 rounded-xl border border-emerald-300/30 bg-emerald-500/10 p-3"
+                        >
                           <p className="text-xs text-white">
                             {t("shop.products.order.reference", {
-                              defaultValue: "Order reference",
+                              defaultValue: "Request reference",
                             })}
                             :{" "}
                             <span className="font-black">{order.orderRef}</span>
@@ -1127,7 +1281,10 @@ export default function ShopProducts() {
                             {t("shop.products.order.status", {
                               defaultValue: "Status",
                             })}
-                            : {String(order.status ?? "").toUpperCase()}
+                            :{" "}
+                            {t(`shop.products.order.status_${order.status}`, {
+                              defaultValue: "Request status unavailable",
+                            })}
                           </p>
                           {order.paymentMethod === "dummy_gateway" ? (
                             <Button
@@ -1155,20 +1312,48 @@ export default function ShopProducts() {
                             <p className="mt-2.5 text-[11px] text-white/80">
                               {t("shop.products.order.manual_follow_up", {
                                 defaultValue:
-                                  "Your order request is saved. Complete the assisted checkout by contacting us on WhatsApp or waiting for the follow-up email/invoice.",
+                                  "Request received. Payment has not been taken and delivery is not yet confirmed. Contact us with your reference to agree availability, delivery costs and payment instructions.",
                               })}
                             </p>
                           )}
+                          {order.items?.map(item => (
+                            <p
+                              key={item.productId}
+                              className="mt-2 break-words text-xs text-white/80"
+                            >
+                              {item.productName} × {item.quantity} ·{" "}
+                              {formatMoney(item.lineTotalCents, order.currency)}
+                            </p>
+                          ))}
+                          <p className="mt-2 text-sm font-semibold text-white">
+                            {t("shop.products.order.request_total")}:{" "}
+                            {formatMoney(order.totalCents, order.currency)}
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-3 text-xs text-zim-gold underline underline-offset-4">
+                            <a
+                              href={`mailto:info@diasporaunlocked.com?subject=${encodeURIComponent(`Order request ${order.orderRef}`)}`}
+                            >
+                              {t("shop.products.order.contact_email")}
+                            </a>
+                            <a
+                              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hello, please help me with order request ${order.orderRef}.`)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {t("shop.products.order.contact_whatsapp")}
+                            </a>
+                          </div>
                           {/* What happens next */}
                           <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2">
                             <p className="text-[9px] font-black uppercase tracking-[0.14em] text-white/40 flex items-center gap-1.5">
-                              <Clock className="h-3 w-3" /> What happens next
+                              <Clock className="h-3 w-3" />{" "}
+                              {t("shop.products.order.next_title")}
                             </p>
                             <div className="space-y-2">
                               {[
-                                "You'll receive an order confirmation via email.",
-                                "Our team will review and contact you via WhatsApp or email.",
-                                "Once payment is confirmed, we'll arrange delivery to your address.",
+                                t("shop.products.order.next_reference"),
+                                t("shop.products.order.next_review"),
+                                t("shop.products.order.next_delivery"),
                               ].map((text, i) => (
                                 <div key={i} className="flex items-start gap-2">
                                   <span className="shrink-0 h-4 w-4 rounded-full bg-zim-gold/15 border border-zim-gold/30 text-zim-gold text-[9px] font-black flex items-center justify-center mt-0.5">
@@ -1189,11 +1374,12 @@ export default function ShopProducts() {
                         <span>
                           {isAuthenticated
                             ? t("shop.products.notes.logged_in_checkout", {
-                                defaultValue: "Signed-in checkout active.",
+                                defaultValue:
+                                  "Your request uses the contact details above.",
                               })
                             : t("shop.products.notes.guest_checkout", {
                                 defaultValue:
-                                  "Guest checkout enabled: no login required.",
+                                  "No account needed to send an order request.",
                               })}
                         </span>
                       </div>
@@ -1207,12 +1393,12 @@ export default function ShopProducts() {
                               })
                             : t("shop.products.notes.supported_methods", {
                                 defaultValue:
-                                  "Supported methods: assisted checkout with email or WhatsApp follow-up.",
+                                  "Availability, final delivery costs and payment instructions are agreed after review.",
                               })}
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -1304,7 +1490,7 @@ export default function ShopProducts() {
               <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />
               <span className="text-xs text-white/80 truncate">
                 {cartItemCount > 0
-                  ? `${cartItemCount} item${cartItemCount !== 1 ? "s" : ""} · ${formatMoney(totalCents)}`
+                  ? `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${formatMoney(totalCents)}`
                   : t("shop.products.cart.empty_short", {
                       defaultValue: "Your cart is empty",
                     })}
@@ -1313,11 +1499,14 @@ export default function ShopProducts() {
             <Button
               type="button"
               onClick={() => setMobileView("checkout")}
+              disabled={!order && cartItemCount === 0}
               className="shrink-0 rounded-full px-5 py-2 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[10px] uppercase tracking-[0.14em]"
             >
-              {t("shop.products.actions.checkout", {
-                defaultValue: "Checkout",
-              })}
+              {receiptOnly
+                ? t("shop.products.order.view_request")
+                : t("shop.products.actions.checkout", {
+                    defaultValue: "Checkout",
+                  })}
             </Button>
           </div>
         </div>

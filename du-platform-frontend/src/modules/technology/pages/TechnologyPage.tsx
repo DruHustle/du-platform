@@ -26,33 +26,35 @@ export default function Technology() {
     () => [
       {
         image: "/images/pages/technology/ai_innovation.webp",
-        badge: t("tech.hero.badge1") || "Future of Innovation",
+        badge: t("tech.hero.badge1") || "Powered by Onesa",
         badgeIcon: Brain,
-        title: t("tech.hero.title1") || "Onesa AI: Illuminating Zimbabwe",
+        title: t("tech.hero.title1") || "AI help, with Zimbabwe in focus",
         subtitle:
           t("tech.hero.subtitle1") ||
-          "The first AI model built specifically for the Zimbabwean context.",
-        highlight: t("tech.hero.highlight1") || "Built for Zimbabwe",
+          "Onesa powers practical assistance on Diaspora Unlocked: ask questions, explore products and plan your next steps.",
+        highlight: t("tech.hero.highlight1") || "Ask, explore, plan",
       },
       {
         image: "/images/pages/technology/partnership_handshake.png",
         badge: t("tech.hero.badge2") || "Contextual Intelligence",
         badgeIcon: Lightbulb,
-        title: t("tech.hero.title2") || "Deep Contextual Understanding",
+        title:
+          t("tech.hero.title2") || "Local questions, clearer starting points",
         subtitle:
           t("tech.hero.subtitle2") ||
-          "Unlike general AI, Onesa understands the nuances of life and business in Zimbabwe.",
+          "Zimbabwe-focused content helps shape answers. Check important details with the relevant provider or official source.",
         highlight: t("tech.hero.highlight2") || "Localized Knowledge",
       },
       {
         image: "/images/pages/technology/zim_tech_map.jpg",
-        badge: t("tech.hero.badge3") || "Investor Tools",
+        badge: t("tech.hero.badge3") || "Explore ideas",
         badgeIcon: Globe,
-        title: t("tech.hero.title3") || "Smart Investment Brainstorming",
+        title:
+          t("tech.hero.title3") || "Better questions for business research",
         subtitle:
           t("tech.hero.subtitle3") ||
-          "Assess risks and generate business ideas that actually succeed in the local market.",
-        highlight: t("tech.hero.highlight3") || "Data-Driven Success",
+          "Use Onesa to explain unfamiliar terms and prepare questions about a project. It does not verify returns or assess investment suitability.",
+        highlight: t("tech.hero.highlight3") || "Research with context",
       },
       {
         image: "/images/pages/technology/zim_tech_map.jpg",
@@ -61,7 +63,7 @@ export default function Technology() {
         title: t("tech.hero.title4") || "Innovation in Classrooms",
         subtitle:
           t("tech.hero.subtitle4") ||
-          "Digital learning and skills development are powering Zimbabwe's next generation of tech talent.",
+          "Explore ideas for learning and digital skills. These are sector themes, not a classroom service offered here.",
         highlight: t("tech.hero.highlight4") || "Future Skills",
       },
       {
@@ -71,7 +73,7 @@ export default function Technology() {
         title: t("tech.hero.title5") || "Technology for Logistics",
         subtitle:
           t("tech.hero.subtitle5") ||
-          "Smarter export and supply-chain systems create more reliable access to regional and global markets.",
+          "Explore questions about distribution and cross-border trade. Shipment tracking and customs clearance are not provided here.",
         highlight: t("tech.hero.highlight5") || "Connected Supply Chains",
       },
       {
@@ -81,7 +83,7 @@ export default function Technology() {
         title: t("tech.hero.title6") || "Tech in Mining Operations",
         subtitle:
           t("tech.hero.subtitle6") ||
-          "Data-driven operations, predictive maintenance, and process optimization improve output and safety.",
+          "Explore how data could support mining operations. Specialist monitoring and geological analysis are not available on this site.",
         highlight: t("tech.hero.highlight6") || "Operational Efficiency",
       },
       {
@@ -91,7 +93,7 @@ export default function Technology() {
         title: t("tech.hero.title7") || "Smarter Farming Systems",
         subtitle:
           t("tech.hero.subtitle7") ||
-          "Precision agriculture and real-time monitoring support stronger yields and food security outcomes.",
+          "Explore digital agriculture ideas. This site does not provide crop monitoring, soil tests or live weather alerts.",
         highlight: t("tech.hero.highlight7") || "Climate-Smart Agriculture",
       },
       {
@@ -101,7 +103,7 @@ export default function Technology() {
         title: t("tech.hero.title8") || "Tech Talent Across Borders",
         subtitle:
           t("tech.hero.subtitle8") ||
-          "Diaspora professionals contribute capital, mentorship, and practical execution support for local startups.",
+          "Use your experience abroad to explore ideas for Zimbabwe. Start with project information and practical questions.",
         highlight: t("tech.hero.highlight8") || "Global Collaboration",
       },
     ],
@@ -114,12 +116,12 @@ export default function Technology() {
       image: "/images/pages/technology/minerals_mining.png",
       description:
         t("tech.sectors.mining.desc") ||
-        "Leveraging AI for geological data analysis and regulatory compliance in Zimbabwe's vast mineral sector.",
+        "Questions to explore about data use in mining, with specialist advice before operational decisions.",
       details: [
         t("tech.sectors.mining.d1") ||
-          "Real-time mineral pricing and market trends",
+          "Research mineral-market information sources",
         t("tech.sectors.mining.d2") ||
-          "Environmental and safety compliance monitoring",
+          "Prepare questions about safety and environmental requirements",
       ],
     },
     {
@@ -127,12 +129,12 @@ export default function Technology() {
       image: "/images/pages/technology/horticulture.jpg",
       description:
         t("tech.sectors.farming.desc") ||
-        "Transforming agriculture through data-driven crop management and weather pattern prediction.",
+        "Explore questions about agricultural planning and the information a grower needs.",
       details: [
         t("tech.sectors.farming.d1") ||
-          "Soil health analysis and crop yield optimization",
+          "Understand crop-planning terms and considerations",
         t("tech.sectors.farming.d2") ||
-          "Localized weather alerts and pest control advice",
+          "Identify questions for local agronomists",
       ],
     },
     {
@@ -140,12 +142,12 @@ export default function Technology() {
       image: "/images/pages/shared/export_port_01.jpg",
       description:
         t("tech.sectors.logistics.desc") ||
-        "Optimizing supply chains and cross-border trade routes through the Zimbabwean corridor.",
+        "Research delivery routes and the practical steps involved in moving goods.",
       details: [
         t("tech.sectors.logistics.d1") ||
-          "Route optimization for regional distribution",
+          "Prepare questions about routes and lead times",
         t("tech.sectors.logistics.d2") ||
-          "Real-time tracking and border clearance assistance",
+          "Check customs requirements with the relevant authority",
       ],
     },
     {
@@ -153,12 +155,12 @@ export default function Technology() {
       image: "/images/pages/technology/digital-classroom.jpg",
       description:
         t("tech.sectors.education.desc") ||
-        "Bridging the digital divide through AI-powered personalized learning and vocational training.",
+        "Use AI explanations to explore a subject or plan further learning.",
       details: [
         t("tech.sectors.education.d1") ||
-          "Adaptive learning platforms for local schools",
+          "Ask for an explanation of unfamiliar concepts",
         t("tech.sectors.education.d2") ||
-          "Technical skill development for the digital economy",
+          "Find questions and topics for further study",
       ],
     },
   ];
@@ -167,37 +169,35 @@ export default function Technology() {
     {
       icon: Globe,
       title:
-        t("tech.diaspora_use_cases.relocation.title") ||
-        "Relocation & Reintegration",
+        t("tech.diaspora_use_cases.relocation.title") || "Find your bearings",
       detail:
         t("tech.diaspora_use_cases.relocation.detail") ||
-        "Get practical guidance on housing, legal setup, schooling options, and service providers before arrival.",
+        "Ask about places, local customs and practical questions to research before a visit or return.",
     },
     {
       icon: TrendingUp,
       title:
-        t("tech.diaspora_use_cases.investment.title") || "Investment Screening",
+        t("tech.diaspora_use_cases.investment.title") ||
+        "Understand project information",
       detail:
         t("tech.diaspora_use_cases.investment.detail") ||
-        "Compare opportunities by sector, expected returns, regulatory readiness, and market demand signals.",
+        "Ask for plain-language explanations of sector terms and questions to take to a promoter or independent adviser.",
     },
     {
       icon: BarChart3,
       title:
         t("tech.diaspora_use_cases.business_intelligence.title") ||
-        "Business Intelligence",
+        "Explore products and ideas",
       detail:
         t("tech.diaspora_use_cases.business_intelligence.detail") ||
-        "Generate market-entry briefs for exports, pricing benchmarks, and demand snapshots by destination market.",
+        "Use Onesa to explore product information and organise questions before sending an enquiry.",
     },
     {
       icon: Network,
-      title:
-        t("tech.diaspora_use_cases.collaboration.title") ||
-        "Diaspora Collaboration",
+      title: t("tech.diaspora_use_cases.collaboration.title") || "Plan a visit",
       detail:
         t("tech.diaspora_use_cases.collaboration.detail") ||
-        "Coordinate mentors, co-investors, and operators across countries using shared project context.",
+        "Discuss destinations and interests, then turn them into a draft itinerary with indicative budgets.",
     },
   ];
 
@@ -206,33 +206,36 @@ export default function Technology() {
       icon: Lightbulb,
       title:
         t("tech.onesa_matter.tiles.illuminate.title") ||
-        "Onesa Means Illuminate",
+        "One platform, many applications",
       detail:
         t("tech.onesa_matter.tiles.illuminate.detail") ||
-        "Onesa is built to bring practical clarity for how people and businesses can grow in Zimbabwe and across Africa.",
+        "Onesa is a modular AI platform for European and international applications. Diaspora Unlocked is one of them.",
     },
     {
       icon: Globe,
       title:
         t("tech.onesa_matter.tiles.africa_centric.title") ||
-        "Africa-Centric Intelligence",
+        "Zimbabwe-focused help",
       detail:
         t("tech.onesa_matter.tiles.africa_centric.detail") ||
-        "Models grounded in African languages, markets, and realities create more relevant and useful outcomes.",
+        "This application adds Zimbabwean content, language support and local context to help you ask more relevant questions.",
     },
     {
       icon: Shield,
-      title: t("tech.onesa_matter.tiles.sovereignty.title") || "AI Sovereignty",
+      title:
+        t("tech.onesa_matter.tiles.sovereignty.title") ||
+        "Practical next steps",
       detail:
         t("tech.onesa_matter.tiles.sovereignty.detail") ||
-        "Owning our data, models, and infrastructure protects long-term strategic independence and resilience.",
+        "Get explanations, explore products and draft travel ideas. Use the answers as a starting point for your own checks.",
     },
     {
       icon: TrendingUp,
-      title: t("tech.onesa_matter.tiles.growth.title") || "Future-Ready Growth",
+      title:
+        t("tech.onesa_matter.tiles.growth.title") || "Built to develop further",
       detail:
         t("tech.onesa_matter.tiles.growth.detail") ||
-        "Onesa supports innovation, investment confidence, and stronger digital participation for future generations.",
+        "The aim is to make assistance more useful over time. Industry examples below show areas to explore, not specialist services already available here.",
     },
   ];
 
@@ -244,10 +247,11 @@ export default function Technology() {
       <DiscoverySection
         id="onesa-intro"
         title={t("tech.onesa_matter.title", {
-          defaultValue: "Why Onesa AI Matters",
+          defaultValue: "Onesa powers the assistance here",
         })}
         description={t("tech.onesa_matter.headline", {
-          defaultValue: "Africa deserves AI that understands Africa.",
+          defaultValue:
+            "A general-purpose AI platform, applied to your Zimbabwe questions.",
         })}
         action={
           <Button
@@ -262,7 +266,7 @@ export default function Technology() {
       >
         <SwipeRail
           label={t("tech.onesa_matter.title", {
-            defaultValue: "Why Onesa AI Matters",
+            defaultValue: "Onesa powers the assistance here",
           })}
         >
           {onesaVisionTiles.map((tile, index) => (
@@ -287,25 +291,25 @@ export default function Technology() {
           <details className="editorial-details">
             <summary>
               {t("tech.onesa_matter.read_vision", {
-                defaultValue: "Read the Onesa AI vision",
+                defaultValue: "How Onesa and Diaspora Unlocked fit together",
               })}
             </summary>
             <div className="mt-5 space-y-5">
               <p className="text-white/75 text-sm leading-relaxed mb-4">
                 {t("tech.onesa_matter.p1") ||
-                  "Across the world, AI is reshaping economies, industries, and societies at incredible speed. Yet most models are built on data, priorities, and contexts that often miss African realities. For Africa to fully participate in the global digital economy, we need Africa-centric models that understand our languages, cultures, business environments, and development priorities."}{" "}
+                  "Onesa is a modular, general-purpose AI platform for European and international applications."}{" "}
                 {t("tech.onesa_matter.p2") ||
-                  "At Diaspora Unlocked, we believe Africa should not only consume AI. Africa must help build it. That belief is exactly why we began developing Onesa AI: to create intelligent systems that are truly relevant to African markets, African data environments, and African economic transformation goals."}
+                  "Diaspora Unlocked is one application powered by Onesa. It brings Zimbabwe-focused content and workflows into the conversations and planning tools on this site."}
               </p>
               <p className="text-white/75 text-sm leading-relaxed mb-4">
                 {t("tech.onesa_matter.p3") ||
-                  "We also know this journey is not easy. Training AI models demands serious infrastructure, computing power, data preparation, and world-class talent. The costs are high, and the barriers are real. We chose to move forward anyway because Africa's long-term future depends on technological ownership, digital independence, and the ability to shape our own digital ecosystems."}{" "}
+                  "Start with a question about a product, a destination or a project. Ask for an explanation or a starting plan you can refine."}{" "}
                 {t("tech.onesa_matter.p4") ||
-                  "AI sovereignty is becoming one of the defining global conversations of this era. Nations that control their data, their models, and their digital infrastructure will be better positioned to protect their economies, accelerate innovation, and preserve strategic independence. Africa must be in that future, not as observers, but as creators and leaders."}
+                  "Language and local context support belong to this application's Zimbabwe focus. They do not limit the wider Onesa platform to one country or industry."}
               </p>
               <p className="text-white/85 text-sm leading-relaxed font-medium">
                 {t("tech.onesa_matter.p5") ||
-                  "Onesa AI is our commitment to that future. This is bigger than technology. It is about opportunity, resilience, and building systems that serve future generations across the continent and the diaspora."}
+                  "AI answers can be incomplete or mistaken. Check prices, availability, requirements and important decisions with the relevant provider or official source."}
               </p>
             </div>
           </details>
@@ -318,7 +322,7 @@ export default function Technology() {
         })}
         description={t("tech.diaspora_ai.subtitle", {
           defaultValue:
-            "Onesa AI is built to support the full diaspora journey, from reconnecting and returning to evaluating opportunities and operating businesses.",
+            "Use Onesa for explanations, discovery and planning across this platform. It helps you prepare; providers confirm the details.",
         })}
       >
         <SwipeRail
@@ -348,16 +352,16 @@ export default function Technology() {
       <DiscoverySection
         id="technology-industries"
         title={t("tech.sectors_title", {
-          defaultValue: "Powering Key Industries",
+          defaultValue: "Technology ideas by sector",
         })}
         description={t("tech.sectors_subtitle", {
           defaultValue:
-            "Onesa AI provides specialized intelligence to optimize Zimbabwe's most critical economic sectors.",
+            "Explore where technology could help. These are ideas to research; specialist industry tools are not offered here.",
         })}
       >
         <SwipeRail
           label={t("tech.sectors_title", {
-            defaultValue: "Powering Key Industries",
+            defaultValue: "Technology ideas by sector",
           })}
         >
           {sectors.map(sector => (

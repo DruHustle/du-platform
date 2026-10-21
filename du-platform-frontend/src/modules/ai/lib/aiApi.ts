@@ -98,6 +98,7 @@ export function clearOnesaHealthCache() {
 export async function sendOnesaChatMessage(input: {
   messages: OnesaChatMessage[];
   language: string;
+  signal?: AbortSignal;
 }) {
   const response = await api.post(
     "/ai/chat",
@@ -108,8 +109,12 @@ export async function sendOnesaChatMessage(input: {
       })),
       language: input.language,
     },
-    { timeout: ONESA_CHAT_TIMEOUT_MS }
+    {
+      timeout: ONESA_CHAT_TIMEOUT_MS,
+      ...(input.signal ? { signal: input.signal } : {}),
+    }
   );
+  input.signal?.throwIfAborted();
   const payload = parseObjectPayload(response.data);
   if (typeof payload?.reply !== "string" || !payload.reply.trim()) {
     throw new Error("Onesa returned an empty or invalid response.");
@@ -135,9 +140,10 @@ export async function sendOnesaChatMessage(input: {
 
 export async function requestOnesaTripPlan(
   payload: Record<string, unknown>,
-  options?: { timeout?: number }
+  options?: { timeout?: number; signal?: AbortSignal }
 ) {
   return api.post("/ai/trip-plan", payload, {
     timeout: options?.timeout ?? 12000,
+    signal: options?.signal,
   });
 }

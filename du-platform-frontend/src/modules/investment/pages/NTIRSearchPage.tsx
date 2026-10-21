@@ -173,7 +173,7 @@ export default function NTIRSearchPage() {
         apiMessage ||
           t("investment.ntir.service_unavailable", {
             defaultValue:
-              "NTIR service unavailable right now. Showing Trade Zimbabwe directory fallback results.",
+              "Search is unavailable. Showing the directory entries included with the site.",
           })
       );
     } finally {
@@ -202,13 +202,13 @@ export default function NTIRSearchPage() {
             </Link>
             <h1 className="page-title">
               {t("investment.ntir.title", {
-                defaultValue: "NTIR Database Search",
+                defaultValue: "NTIR business directory",
               })}
             </h1>
             <p className="text-sm text-white/70 mt-2">
               {t("investment.ntir.subtitle", {
                 defaultValue:
-                  "Search the National Trade & Investment Register for verified entities and fallback exporter records.",
+                  "Search business records maintained by Diaspora Unlocked, with bundled entries available when search cannot be reached. NTIR is a platform directory, not an official national register or independent verification service.",
               })}
             </p>
           </div>
@@ -254,29 +254,18 @@ export default function NTIRSearchPage() {
 
           <div className="grid gap-4">
             {results.map(row => (
-              <div
-                key={row.id}
-                className="surface-card p-7 text-white"
-              >
-                <div className="flex items-center justify-between gap-4">
+              <div key={row.id} className="surface-card p-7 text-white">
+                <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h2 className="text-sm font-black tracking-tight">
                       {row.name}
                     </h2>
-                    <p className="text-white/75 text-sm mt-1">
-                      {row.location}
-                    </p>
+                    <p className="text-white/75 text-sm mt-1">{row.location}</p>
                   </div>
-                  <Badge
-                    className={
-                      row.verification_status === "Verified"
-                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                        : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                    }
-                  >
-                    {row.verification_status === "Verified"
-                      ? t("common.verified", { defaultValue: "Verified" })
-                      : t("common.pending", { defaultValue: "Pending" })}
+                  <Badge className="bg-slate-500/10 text-slate-300 border border-slate-500/20 whitespace-normal max-w-full text-left">
+                    {t("investment.project_card.verified", {
+                      defaultValue: "Not independently verified",
+                    })}
                   </Badge>
                 </div>
                 <p className="text-white/70 !text-[11px] mt-3">{row.sector}</p>

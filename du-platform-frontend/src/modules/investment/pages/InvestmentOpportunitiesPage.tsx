@@ -6,18 +6,14 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Award, Target } from "lucide-react";
+import { ArrowLeft, CircleHelp, Target } from "lucide-react";
 
+// Keep the existing catalogue groups for filter continuity, without presenting them as risk assessments.
 type ProjectCard = {
   id: string;
   owner: string;
   sector: string;
-  raised: string;
-  prog: number;
-  min: string;
-  ret: string;
   risk: "conservative" | "moderate" | "aggressive";
-  ver: boolean;
 };
 
 const PROJECTS: ProjectCard[] = [
@@ -25,133 +21,73 @@ const PROJECTS: ProjectCard[] = [
     id: "masuwe",
     owner: "Mosi Oa Tunya Development Company",
     sector: "tourism",
-    raised: "$0",
-    prog: 10,
-    min: "$10k",
-    ret: "14-20%",
     risk: "moderate",
-    ver: true,
   },
   {
     id: "leather",
     owner: "Linkdef Soap Manufacturing (Pvt) Ltd",
     sector: "manufacturing",
-    raised: "$0",
-    prog: 35,
-    min: "$500",
-    ret: "12-16%",
     risk: "moderate",
-    ver: true,
   },
   {
     id: "apparel",
     owner: "National Railways of Zimbabwe",
     sector: "manufacturing",
-    raised: "$0",
-    prog: 20,
-    min: "$1k",
-    ret: "16-22%",
     risk: "aggressive",
-    ver: true,
   },
   {
     id: "horticulture",
     owner: "Cicada Group",
     sector: "agriculture",
-    raised: "$0",
-    prog: 40,
-    min: "$300",
-    ret: "10-14%",
     risk: "conservative",
-    ver: true,
   },
   {
     id: "fintech",
     owner: "Powertel Communications (Pvt) Ltd",
     sector: "it",
-    raised: "$0",
-    prog: 15,
-    min: "$2,500",
-    ret: "22-30%",
     risk: "aggressive",
-    ver: true,
   },
   {
     id: "solar",
     owner: "Solgas Energy Pvt Ltd",
     sector: "energy",
-    raised: "$0",
-    prog: 12,
-    min: "$1,000",
-    ret: "14-18%",
     risk: "conservative",
-    ver: true,
   },
   {
     id: "beef_dairy",
     owner: "Agro Strong (Pvt) Ltd",
     sector: "agriculture",
-    raised: "$0",
-    prog: 18,
-    min: "$750",
-    ret: "13-18%",
     risk: "moderate",
-    ver: true,
   },
   {
     id: "agro_park",
     owner: "Goromonzi Agro Industrial Company (GAIC)",
     sector: "agriculture",
-    raised: "$0",
-    prog: 14,
-    min: "$1,500",
-    ret: "15-22%",
     risk: "moderate",
-    ver: true,
   },
   {
     id: "data_centres",
     owner: "TelOne (Pvt) Ltd",
     sector: "it",
-    raised: "$0",
-    prog: 9,
-    min: "$2,000",
-    ret: "18-26%",
     risk: "aggressive",
-    ver: true,
   },
   {
     id: "vaccine",
     owner: "SIRDC",
     sector: "manufacturing",
-    raised: "$0",
-    prog: 11,
-    min: "$1,250",
-    ret: "12-17%",
     risk: "moderate",
-    ver: true,
   },
   {
     id: "roof_tiles",
     owner: "Orangerose Investments",
     sector: "manufacturing",
-    raised: "$0",
-    prog: 16,
-    min: "$1,000",
-    ret: "14-19%",
     risk: "moderate",
-    ver: true,
   },
   {
     id: "radco_solar",
     owner: "RADCO Holdings",
     sector: "energy",
-    raised: "$0",
-    prog: 8,
-    min: "$2,500",
-    ret: "13-18%",
     risk: "conservative",
-    ver: true,
   },
 ];
 
@@ -162,9 +98,9 @@ const PROJECT_FILTER_FALLBACKS: Record<string, string> = {
   manufacturing: "Manufacturing",
   it: "Technology",
   energy: "Energy",
-  conservative: "Conservative",
-  moderate: "Moderate",
-  aggressive: "Aggressive",
+  conservative: "Group A",
+  moderate: "Group B",
+  aggressive: "Group C",
 };
 
 const PROJECT_CONTENT_FALLBACKS: Record<
@@ -174,19 +110,19 @@ const PROJECT_CONTENT_FALLBACKS: Record<
   masuwe: {
     title: "Masuwe SEZ Construction of Villas Project",
     description:
-      "Tourism-linked hospitality infrastructure opportunity in the Victoria Falls growth corridor.",
+      "Profile of a proposed tourism and hospitality development in the Victoria Falls area.",
     highlights: ["SEZ Corridor", "Hospitality Assets", "Tourism Demand"],
   },
   leather: {
     title: "Linkdef Soap Manufacturing Project",
     description:
-      "State-of-the-art soap and detergent manufacturing facility aligned to Zimbabwe's industrialization strategy.",
+      "Profile of a proposed soap and detergent manufacturing project.",
     highlights: ["Import Substitution", "Consumer Goods", "Manufacturing Jobs"],
   },
   apparel: {
     title: "NRZ Concrete Manufacturing Plant Project",
     description:
-      "Concrete sleeper manufacturing to support rail infrastructure renewal and domestic industrial supply.",
+      "Profile of a concrete sleeper manufacturing proposal for rail infrastructure.",
     highlights: [
       "Infrastructure Supply",
       "Industrial Demand",
@@ -196,13 +132,13 @@ const PROJECT_CONTENT_FALLBACKS: Record<
   horticulture: {
     title: "CICADA Macadamia and Avocado Plantation",
     description:
-      "High-value agriculture and value-addition platform for avocado and macadamia export markets.",
+      "Profile of an avocado and macadamia agriculture and processing proposal.",
     highlights: ["Export Agriculture", "Value Addition", "Regional Processing"],
   },
   fintech: {
     title: "Powertel Fibre Internet (GPON)",
     description:
-      "Fibre broadband infrastructure rollout to improve national digital access and enterprise connectivity.",
+      "Profile of a fibre broadband expansion proposal. Confirm routes, scope and current project status with the promoter.",
     highlights: [
       "Broadband Expansion",
       "ICT Infrastructure",
@@ -210,33 +146,33 @@ const PROJECT_CONTENT_FALLBACKS: Record<
     ],
   },
   solar: {
-    title: "Solgas Energy 60MW Solar PV Plant + BESS",
+    title: "Solgas Energy Solar PV Plant + BESS",
     description:
-      "Utility-scale renewable energy project combining solar generation with battery storage capacity.",
-    highlights: ["60MW Solar", "Battery Storage", "Grid Support"],
+      "Profile of a solar generation and battery storage proposal. Capacity, approvals and financing need confirmation.",
+    highlights: ["Solar generation", "Battery Storage", "Grid Support"],
   },
   beef_dairy: {
     title: "Agro Strong Beef and Dairy Farming Venture",
     description:
-      "Integrated livestock project designed to strengthen domestic protein supply and value-added dairy processing.",
+      "Profile of a proposed livestock and dairy project, including production and processing themes.",
     highlights: ["Livestock Scale-Up", "Dairy Value Addition", "Food Security"],
   },
   agro_park: {
     title: "Goromonzi Agro Processing Industrial Park (SEZ)",
     description:
-      "Specialized agro-processing cluster targeting export-ready outputs, storage logistics, and value-chain efficiency.",
+      "Profile of an agro-processing park proposal in Mashonaland East. Check the current site and project scope.",
     highlights: ["Agro Processing", "SEZ Cluster", "Export Readiness"],
   },
   data_centres: {
     title: "TelOne Data Centres Project",
     description:
-      "Enterprise-grade data centre capacity expansion for cloud workloads, hosting, and digital public infrastructure.",
+      "Profile of a data centre expansion proposal for hosting and digital infrastructure.",
     highlights: ["Data Hosting", "Cloud Capacity", "Digital Backbone"],
   },
   vaccine: {
     title: "Foot and Mouth Disease Vaccine Manufacturing Project",
     description:
-      "Strategic pharmaceutical manufacturing initiative to localize vaccine production and reduce import dependence.",
+      "Profile of a veterinary vaccine manufacturing proposal. Confirm technical scope, approvals and current plans.",
     highlights: [
       "Biotech Production",
       "Import Substitution",
@@ -246,13 +182,13 @@ const PROJECT_CONTENT_FALLBACKS: Record<
   roof_tiles: {
     title: "Orangerose Solar Roof Tile Manufacturing Project",
     description:
-      "Local clean-tech manufacturing project for solar roof tiles aligned to distributed energy adoption.",
+      "Profile of a solar roof tile manufacturing proposal for buildings.",
     highlights: ["Solar Materials", "Local Manufacturing", "Clean Energy"],
   },
   radco_solar: {
     title: "RADCO Solar and Smart City Project",
     description:
-      "Large-scale clean energy and smart infrastructure platform supporting sustainable urban and industrial growth.",
+      "Profile of a solar and urban infrastructure proposal. Confirm the current scope and participation terms with the promoter.",
     highlights: ["Smart City", "Grid-Scale Solar", "Energy Transition"],
   },
 };
@@ -308,13 +244,12 @@ export default function InvestmentOpportunitiesPage() {
               <div className="flex items-center gap-3 mb-4">
                 <Target className="h-6 w-6 text-zim-gold" />
                 <h1 className="page-title discovery-page-title">
-                  {t("investment.sectors_title") ||
-                    "Active Investment Opportunities"}
+                  {t("investment.sectors_title") || "Explore project profiles"}
                 </h1>
               </div>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") ||
-                  "Carefully vetted projects with government support and transparent tracking."}
+                  "Browse sector ideas and listed promoters. Current availability, financial terms and approvals require independent confirmation."}
               </p>
               <div className="flex flex-wrap gap-2 mt-8">
                 {[
@@ -341,7 +276,7 @@ export default function InvestmentOpportunitiesPage() {
                 ))}
                 <div className="relative min-w-[210px]">
                   <label htmlFor="risk-level-filter" className="sr-only">
-                    {t("investment.project_card.risk") || "Risk Level"}
+                    {t("investment.project_card.risk") || "Catalogue group"}
                   </label>
                   <select
                     id="risk-level-filter"
@@ -352,7 +287,9 @@ export default function InvestmentOpportunitiesPage() {
                     {["all", "conservative", "moderate", "aggressive"].map(
                       risk => (
                         <option key={risk} value={risk} className="text-black">
-                          {t("investment.project_card.risk") || "Risk Level"}:{" "}
+                          {t("investment.project_card.risk") ||
+                            "Catalogue group"}
+                          :{" "}
                           {t(`investment.project_filters.${risk}`) ||
                             PROJECT_FILTER_FALLBACKS[risk] ||
                             risk}
@@ -388,7 +325,7 @@ export default function InvestmentOpportunitiesPage() {
 
             <SwipeRail
               label={t("investment.sectors_title", {
-                defaultValue: "Active Investment Opportunities",
+                defaultValue: "Explore project profiles",
               })}
               resetKey={`${activeFilter}:${riskFilter}`}
             >
@@ -417,36 +354,29 @@ export default function InvestmentOpportunitiesPage() {
                   }
                 >
                   <div className="mb-4 flex items-center gap-2">
-                    <Badge
-                      className={`text-xs ${p.risk === "conservative" ? "bg-emerald-500/15 text-emerald-300" : p.risk === "moderate" ? "bg-yellow-500/15 text-yellow-200" : "bg-rose-500/15 text-rose-300"}`}
-                    >
-                      {t(`investment.project_filters.${p.risk}`) ||
-                        PROJECT_FILTER_FALLBACKS[p.risk] ||
-                        p.risk}{" "}
-                      {t("investment.project_card.risk", {
-                        defaultValue: "Risk Level",
+                    <Badge className="text-xs bg-slate-500/15 text-slate-300">
+                      {t("investment.project_card.risk_unassessed", {
+                        defaultValue: "Risk not assessed",
                       })}
                     </Badge>
-                    {p.ver && (
-                      <Award
-                        className="h-4 w-4 text-sky-300"
-                        aria-label={t("investment.project_card.verified", {
-                          defaultValue: "Verified Asset",
-                        })}
-                      />
-                    )}
+                    <CircleHelp
+                      className="h-4 w-4 shrink-0 text-slate-400"
+                      aria-label={t("investment.project_card.verified", {
+                        defaultValue: "Not independently verified",
+                      })}
+                    />
                   </div>
                   <p>
                     {getProjectText(
                       p.id,
                       "description",
                       PROJECT_CONTENT_FALLBACKS[p.id]?.description ||
-                        "Verified opportunity for diaspora investors."
+                        "Project profile for further research."
                     )}
                   </p>
                   <p className="mt-3">
                     {t("investment.project_card.owner", {
-                      defaultValue: "Responsible Company",
+                      defaultValue: "Listed promoter",
                     })}
                     : {p.owner}
                   </p>
@@ -469,42 +399,45 @@ export default function InvestmentOpportunitiesPage() {
                     <div className="flex justify-between gap-3 text-xs text-slate-300">
                       <span>
                         {t("investment.project_card.raised", {
-                          amount: p.raised,
-                          defaultValue: `Raised: ${p.raised}`,
+                          defaultValue: "Funding data unavailable",
                         })}
                       </span>
-                      <span>{p.prog}%</span>
+                      <span aria-hidden="true">—</span>
                     </div>
                     <div
-                      role="progressbar"
-                      aria-label={`${p.prog}% funded`}
-                      aria-valuenow={p.prog}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
+                      role="img"
+                      aria-label={t("investment.project_card.raised", {
+                        defaultValue: "Funding data unavailable",
+                      })}
                       className="h-1.5 overflow-hidden rounded-full bg-white/10"
                     >
-                      <div
-                        className="h-full bg-zim-gold"
-                        style={{ width: `${p.prog}%` }}
-                      />
+                      <div className="h-full bg-zim-gold w-0" />
                     </div>
                   </div>
                   <dl className="discovery-project-metrics">
                     <div>
                       <dt>
                         {t("investment.project_filters.min_investment", {
-                          defaultValue: "Min.",
+                          defaultValue: "Minimum contribution",
                         })}
                       </dt>
-                      <dd>{p.min}</dd>
+                      <dd>
+                        {t("investment.project_card.unavailable", {
+                          defaultValue: "Not published",
+                        })}
+                      </dd>
                     </div>
                     <div>
                       <dt>
                         {t("investment.project_filters.expected_return", {
-                          defaultValue: "Expected",
+                          defaultValue: "Return information",
                         })}
                       </dt>
-                      <dd>{p.ret}</dd>
+                      <dd>
+                        {t("investment.project_card.unavailable", {
+                          defaultValue: "Not published",
+                        })}
+                      </dd>
                     </div>
                   </dl>
                 </DiscoveryTile>

@@ -176,7 +176,7 @@ export default function Register() {
               </h1>
               <p className="text-sm font-light leading-relaxed text-white/75">
                 {t("auth.register_subtitle") ||
-                  "Start your journey toward impactful diaspora collaboration."}
+                  "Create a platform account. Browsing and newsletter subscriptions do not require one."}
               </p>
             </div>
 

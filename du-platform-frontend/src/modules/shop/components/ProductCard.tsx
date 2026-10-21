@@ -74,7 +74,9 @@ export default function ProductCard({
         )}
         <h3 className="shop-product-name">{product.name}</h3>
         {description && (
-          <p className="mt-2 text-xs leading-6 text-slate-400">{description}</p>
+          <p className="mt-2 break-words text-xs leading-6 text-slate-400">
+            {description}
+          </p>
         )}
         <div className="mt-auto pt-4">
           <p className="mb-3 text-sm font-semibold text-white tabular-nums">

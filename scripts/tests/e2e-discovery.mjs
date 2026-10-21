@@ -114,14 +114,7 @@ try {
             .count(),
           0
         );
-        assert(
-          await page
-            .getByRole("heading", {
-              name: "How Diaspora Collective Investing Works",
-              exact: true,
-            })
-            .isVisible()
-        );
+        assert(await page.locator("#collective-model h2").isVisible());
       }
       assert(
         await page.evaluate(
@@ -129,6 +122,15 @@ try {
         ),
         `${path} overflows`
       );
+      if (path === "/investment/opportunities") {
+        // Unsubstantiated funding data must not be represented as measured progress.
+        assert.equal(await page.getByRole("progressbar").count(), 0);
+        const values = await page
+          .locator(".discovery-project-metrics dd")
+          .allTextContents();
+        assert(values.length > 0);
+        assert(values.every(value => !/[0-9%$€]/.test(value)));
+      }
       const rails = page.locator(".swipe-rail");
       for (const rail of await rails.all()) {
         const viewport = rail.locator(".swipe-rail-viewport");
@@ -277,7 +279,7 @@ try {
       0
     );
     await page
-      .getByLabel("Risk Level", { exact: true })
+      .getByLabel("Catalogue group", { exact: true })
       .selectOption("aggressive");
     await page
       .getByText("No projects match your current filters.", { exact: true })

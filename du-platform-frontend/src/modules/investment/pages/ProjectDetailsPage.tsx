@@ -2,7 +2,14 @@ import Layout from "@/components/Layout";
 import investmentProjectRoutes from "@shared/investmentProjectRoutes.json";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle2, MapPin, Ruler, Landmark, Building2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CircleHelp,
+  MapPin,
+  Ruler,
+  Landmark,
+  Building2,
+} from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { useTranslation } from "react-i18next";
 
@@ -18,178 +25,275 @@ type ProjectDetails = {
   regulatory: string;
 };
 
+const STAT_LABEL_KEYS: Record<string, string> = {
+  Target: "target",
+  "Total SEZ Area": "area",
+  "Phase 1": "phase1",
+  "Phase 2": "phase2",
+  "Golf Course": "golf",
+  "Holiday Homes": "homes",
+  "IFSC Site": "ifsc",
+};
+
 const PROJECTS: Record<string, ProjectDetails> = {
   masuwe: {
     title: investmentProjectRoutes.masuwe,
     subtitle: "Tourism Infrastructure Opportunity near Victoria Falls",
     owner: "Mosi Oa Tunya Development Company",
     overview:
-      "Masuwe SEZ is located about 10km from Victoria Falls City on the Victoria Falls-Bulawayo highway. It was established under General Notice 747 of 2018 and operates under Zimbabwe's Special Economic Zone framework.",
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
     highlights: [
-      "Total area: 1,200 hectares designated for Tourism and Financial Services.",
-      "Phase 1: 271.5 hectares titled under Mosi Oa Tunya Development Company.",
-      "Phase 2: 930 hectares to follow after Phase 1 stabilization.",
-      "Subdivision layout and development permit approved (June 2024).",
-      "Cadastral survey completed (May 2025).",
-      "International Cricket Stadium partnership with Zimbabwe Cricket, with surrounding villas and lodges.",
-      "Golf Estate includes a 44-hectare golf course and 64 holiday homes.",
-      "Hotel & Conference Centre sites: 4ha, 6ha, and 9ha.",
-      "Medical resort sites: 9ha and 4ha for international-standard health tourism.",
-      "International Finance Services Centre established via SI 29 of 2025 on 3.5ha.",
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+      "What land is included in each proposed phase?",
+      "Are current surveys and site plans available?",
+      "What agreements support the proposed sports facilities?",
+      "What is the status of the golf and accommodation plans?",
+      "Which hotel and conference sites are currently proposed?",
+      "What approvals would any medical tourism facilities need?",
+      "What is the current status of the financial services site?",
     ],
     stats: [
-      { label: "Total SEZ Area", value: "1,200 ha" },
-      { label: "Phase 1", value: "271.5 ha" },
-      { label: "Phase 2", value: "930 ha" },
-      { label: "Golf Course", value: "44 ha" },
-      { label: "Holiday Homes", value: "64 Units" },
-      { label: "IFSC Site", value: "3.5 ha" },
+      { label: "Total SEZ Area", value: "Not independently verified" },
+      { label: "Phase 1", value: "Not independently verified" },
+      { label: "Phase 2", value: "Not independently verified" },
+      { label: "Golf Course", value: "Not independently verified" },
+      { label: "Holiday Homes", value: "Not independently verified" },
+      { label: "IFSC Site", value: "Not independently verified" },
     ],
     location: "Matabeleland North (Victoria Falls Corridor)",
-    framework: "SEZ Infrastructure Development",
-    regulatory: "SEZ Act / Investment Framework",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   leather: {
     title: investmentProjectRoutes.leather,
     subtitle: "Consumer Goods Manufacturing Expansion",
     owner: "Linkdef Soap Manufacturing (Pvt) Ltd",
-    overview: "Establish a modern soap and detergent manufacturing operation aligned to Zimbabwe's industrialization agenda.",
-    highlights: ["Import substitution", "Local value addition", "Scalable FMCG production"],
-    stats: [{ label: "Target", value: "$180k" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Harare",
-    framework: "Manufacturing Scale-Up",
-    regulatory: "Industrial Licensing / Investment Support",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   apparel: {
     title: investmentProjectRoutes.apparel,
     subtitle: "Rail Infrastructure Supply Chain Investment",
     owner: "National Railways of Zimbabwe",
-    overview: "Concrete sleeper manufacturing project designed to support railway rehabilitation and industrial supply capacity.",
-    highlights: ["Rail infrastructure support", "Domestic supply chain", "Industrial job creation"],
-    stats: [{ label: "Target", value: "$300k" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Bulawayo",
-    framework: "Infrastructure-linked Manufacturing",
-    regulatory: "Public Infrastructure Partnership Model",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   horticulture: {
     title: investmentProjectRoutes.horticulture,
     subtitle: "High-Value Crop and Export Processing Platform",
     owner: "Cicada Group",
-    overview: "Commercial macadamia and avocado production with strong value-add and export potential across regional and global markets.",
-    highlights: ["Top export crop category", "Value addition potential", "Agriculture-to-export chain"],
-    stats: [{ label: "Target", value: "$120k" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Midlands / Manicaland",
-    framework: "Commercial Agriculture Expansion",
-    regulatory: "Agriculture Investment Framework",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   fintech: {
     title: investmentProjectRoutes.fintech,
     subtitle: "National Broadband Infrastructure Rollout",
     owner: "Powertel Communications (Pvt) Ltd",
-    overview: "Broadband network expansion focused on improving internet penetration, capacity, and enterprise-grade connectivity.",
-    highlights: ["Fibre access growth", "Digital infrastructure", "Enterprise connectivity"],
-    stats: [{ label: "Target", value: "$850k" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Harare (national expansion scope)",
-    framework: "ICT Infrastructure Development",
-    regulatory: "Telecom / ICT Regulatory Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   solar: {
     title: investmentProjectRoutes.solar,
     subtitle: "Utility-Scale Renewable Energy Deployment",
     owner: "Solgas Energy Pvt Ltd",
-    overview: "A combined solar and battery storage project to support grid reliability, clean generation, and energy security.",
-    highlights: ["60MW Solar PV", "20MWh battery storage", "National grid support"],
-    stats: [{ label: "Target", value: "$2.5M" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Matabeleland North",
-    framework: "Independent Power Project (IPP)",
-    regulatory: "Energy Licensing / Environmental Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   beef_dairy: {
     title: investmentProjectRoutes.beef_dairy,
     subtitle: "Livestock and Dairy Value Chain Expansion",
     owner: "Agro Strong (Pvt) Ltd",
-    overview: "Integrated beef and dairy operation focused on herd growth, processing readiness, and consistent domestic supply.",
-    highlights: ["Herd expansion strategy", "Dairy processing potential", "Regional supply opportunity"],
-    stats: [{ label: "Target", value: "$420k" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Matabeleland South",
-    framework: "Commercial Livestock Development",
-    regulatory: "Agriculture and Veterinary Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   agro_park: {
     title: investmentProjectRoutes.agro_park,
     subtitle: "Agro-Industrial Cluster Development",
     owner: "Goromonzi Agro Industrial Company (GAIC)",
-    overview: "SEZ-linked agro-processing park designed to improve post-harvest value addition and export competitiveness.",
-    highlights: ["Processing ecosystem", "SEZ industrial land", "Export-oriented value chains"],
-    stats: [{ label: "Target", value: "$1.8M" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Mashonaland East",
-    framework: "SEZ Agro-Industrial Development",
-    regulatory: "SEZ Licensing / Agro-Industry Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   data_centres: {
     title: investmentProjectRoutes.data_centres,
     subtitle: "Digital Infrastructure and Hosting Expansion",
     owner: "TelOne (Pvt) Ltd",
-    overview: "Data centre expansion programme to support enterprise hosting, government workloads, and cloud-scale services.",
-    highlights: ["Tiered data centre capacity", "Cloud hosting growth", "National digital resilience"],
-    stats: [{ label: "Target", value: "$3.2M" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Harare (national infrastructure footprint)",
-    framework: "ICT Infrastructure Modernization",
-    regulatory: "Telecom and Data Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   vaccine: {
     title: investmentProjectRoutes.vaccine,
     subtitle: "Veterinary Biotech Production Capacity",
     owner: "SIRDC",
-    overview: "Domestic vaccine production project intended to enhance livestock disease response and reduce import exposure.",
-    highlights: ["Veterinary biotech", "Strategic health security", "Import substitution pathway"],
-    stats: [{ label: "Target", value: "$1.1M" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Harare",
-    framework: "Industrial Biotech Manufacturing",
-    regulatory: "Health and Biotech Manufacturing Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   roof_tiles: {
     title: investmentProjectRoutes.roof_tiles,
     subtitle: "Distributed Energy Technology Manufacturing",
     owner: "Orangerose Investments",
-    overview: "Manufacturing line for integrated solar roof tiles to support clean energy adoption in residential and commercial developments.",
-    highlights: ["Clean-tech manufacturing", "Distributed solar adoption", "Building-integrated energy products"],
-    stats: [{ label: "Target", value: "$950k" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Harare",
-    framework: "Renewable Manufacturing Scale-Up",
-    regulatory: "Manufacturing and Energy Product Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
   radco_solar: {
     title: investmentProjectRoutes.radco_solar,
     subtitle: "Integrated Energy and Smart Infrastructure",
     owner: "RADCO Holdings",
-    overview: "Grid-support solar generation and smart infrastructure components designed for long-term sustainable urban growth.",
-    highlights: ["Utility-scale solar", "Smart city systems", "Long-horizon infrastructure returns"],
-    stats: [{ label: "Target", value: "$4.1M" }],
+    overview:
+      "Project information for research. Confirm the promoter, scope, approvals and any investment terms independently before proceeding.",
+    highlights: [
+      "What is the proposed scope and current timetable?",
+      "Which costs and participation terms are documented?",
+      "Which ownership records and approvals can be checked independently?",
+    ],
+    stats: [{ label: "Target", value: "Not published" }],
     location: "Mashonaland Central",
-    framework: "Smart Infrastructure PPP Model",
-    regulatory: "Energy, Urban Planning, and Environmental Compliance",
+    framework: "Request the current project scope and supporting documents.",
+    regulatory:
+      "Confirm current approvals with the promoter and relevant authorities.",
   },
 };
 
 export default function ProjectDetails() {
   const { t } = useTranslation();
-  const tr = (key: string, fallback: string) => t(key, { defaultValue: fallback });
-  const [matched, params] = useRoute<{ id: string }>("/investment/projects/:id");
-  const project = matched && params?.id && Object.hasOwn(PROJECTS, params.id) ? PROJECTS[params.id] : null;
+  const tr = (key: string, fallback: string) =>
+    t(key, { defaultValue: fallback });
+  const [matched, params] = useRoute<{ id: string }>(
+    "/investment/projects/:id"
+  );
+  const project =
+    matched && params?.id && Object.hasOwn(PROJECTS, params.id)
+      ? PROJECTS[params.id]
+      : null;
 
   return (
     <Layout>
       <section className="document-section min-h-screen bg-slate-950">
         <div className="container mx-auto max-w-5xl space-y-8">
-          <Link href="/investment" className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold">
-            <ArrowLeft className="h-4 w-4 mr-2" /> {tr("investment.project_details.back", "Back to Investment")}
+          <Link
+            href="/investment"
+            className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />{" "}
+            {tr("investment.project_details.back", "Back to Investment")}
           </Link>
 
           {!project ? (
             <div className="content-panel editorial-panel p-8 text-white">
-              <h1 className="page-title">{tr("investment.project_details.not_found_title", "Project not found")}</h1>
-              <p className="text-white/75 mt-2">{tr("investment.project_details.not_found_desc", "The selected project ID does not exist.")}</p>
+              <h1 className="page-title">
+                {tr(
+                  "investment.project_details.not_found_title",
+                  "Project not found"
+                )}
+              </h1>
+              <p className="text-white/75 mt-2">
+                {tr(
+                  "investment.project_details.not_found_desc",
+                  "The selected project ID does not exist."
+                )}
+              </p>
             </div>
           ) : (
             <>
@@ -197,23 +301,49 @@ export default function ProjectDetails() {
                 <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase text-[10px] tracking-widest font-black">
                   {tr("investment.project_details.badge", "Project Details")}
                 </Badge>
-                <h1 className="page-title">{project.title}</h1>
-                <p className="mt-3 text-sm text-white/75">{project.subtitle}</p>
-                <p className="mt-2 text-sm text-white/70 uppercase tracking-widest font-black">
-                  {tr("investment.project_details.responsible_company", "Responsible Company")}: {project.owner}
+                <h1 className="page-title">
+                  {tr(`investment.projects.${params?.id}.title`, project.title)}
+                </h1>
+                <p className="mt-3 text-sm text-white/75">
+                  {tr(
+                    `investment.projects.${params?.id}.description`,
+                    project.subtitle
+                  )}
                 </p>
-                <p className="mt-6 text-sm text-white/80 leading-relaxed">{project.overview}</p>
+                <p className="mt-2 text-sm text-white/70 uppercase tracking-widest font-black">
+                  {tr(
+                    "investment.project_details.responsible_company",
+                    "Listed promoter"
+                  )}
+                  : {project.owner}
+                </p>
+                <p className="mt-6 text-sm text-white/80 leading-relaxed">
+                  {tr(
+                    "investment.project_details.profile_notice",
+                    project.overview
+                  )}
+                </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="content-panel editorial-panel p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-zim-gold" /> {tr("investment.project_details.highlights", "Highlights")}
+                    <CircleHelp className="h-5 w-5 text-zim-gold" />{" "}
+                    {tr(
+                      "investment.project_details.highlights",
+                      "Questions to explore"
+                    )}
                   </h2>
                   <ul className="space-y-3">
-                    {project.highlights.map((item) => (
-                      <li key={item} className="text-sm text-white/80 leading-relaxed">
-                        {item}
+                    {project.highlights.map((item, index) => (
+                      <li
+                        key={item}
+                        className="text-sm text-white/80 leading-relaxed"
+                      >
+                        {tr(
+                          `investment.project_details.question${index + 1}`,
+                          item
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -221,13 +351,32 @@ export default function ProjectDetails() {
 
                 <div className="content-panel editorial-panel p-8 text-white">
                   <h2 className="!text-base font-black tracking-tight mb-4 flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-zim-gold" /> {tr("investment.project_details.key_metrics", "Key Metrics")}
+                    <Building2 className="h-5 w-5 text-zim-gold" />{" "}
+                    {tr(
+                      "investment.project_details.key_metrics",
+                      "Details to confirm"
+                    )}
                   </h2>
                   <div className="space-y-3">
-                    {project.stats.map((stat) => (
-                      <div key={stat.label} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
-                        <span className="text-white/75 text-sm">{stat.label}</span>
-                        <span className="font-black text-sm">{stat.value}</span>
+                    {project.stats.map(stat => (
+                      <div
+                        key={stat.label}
+                        className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3"
+                      >
+                        <span className="text-white/75 text-sm">
+                          {tr(
+                            `investment.project_details.stat_${STAT_LABEL_KEYS[stat.label] || "target"}`,
+                            stat.label
+                          )}
+                        </span>
+                        <span className="font-black text-sm">
+                          {tr(
+                            stat.label === "Target"
+                              ? "investment.project_card.unavailable"
+                              : "investment.project_card.verified",
+                            stat.value
+                          )}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -236,28 +385,57 @@ export default function ProjectDetails() {
 
               <div className="content-panel editorial-panel p-8 text-white grid md:grid-cols-3 gap-4">
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.location", "Location")}</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">
+                    {tr(
+                      "investment.project_details.location",
+                      "Profile location"
+                    )}
+                  </p>
                   <p className="font-bold text-sm mt-2 flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-zim-gold" /> {project.location}
+                    <MapPin className="h-4 w-4 text-zim-gold" />{" "}
+                    {project.location}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.land_framework", "Land Framework")}</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">
+                    {tr(
+                      "investment.project_details.land_framework",
+                      "Project background"
+                    )}
+                  </p>
                   <p className="font-bold text-sm mt-2 flex items-center gap-2">
-                    <Ruler className="h-4 w-4 text-zim-gold" /> {project.framework}
+                    <Ruler className="h-4 w-4 text-zim-gold" />{" "}
+                    {tr(
+                      "investment.project_details.confirm_scope",
+                      project.framework
+                    )}
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 p-4">
-                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">{tr("investment.project_details.regulatory", "Regulatory")}</p>
+                  <p className="text-white/70 !text-[11px] uppercase tracking-widest">
+                    {tr("investment.project_details.regulatory", "Approvals")}
+                  </p>
                   <p className="font-bold text-sm mt-2 flex items-center gap-2">
-                    <Landmark className="h-4 w-4 text-zim-gold" /> {project.regulatory}
+                    <Landmark className="h-4 w-4 text-zim-gold" />{" "}
+                    {tr(
+                      "investment.project_details.confirm_approvals",
+                      project.regulatory
+                    )}
                   </p>
                 </div>
               </div>
 
               <div>
-                <Button asChild className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6">
-                  <Link href="/ntir">{tr("investment.project_details.search_ntir", "Search NTIR Database")}.</Link>
+                <Button
+                  asChild
+                  className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6"
+                >
+                  <Link href="/ntir">
+                    {tr(
+                      "investment.project_details.search_ntir",
+                      "Search business directory"
+                    )}
+                  </Link>
                 </Button>
               </div>
             </>

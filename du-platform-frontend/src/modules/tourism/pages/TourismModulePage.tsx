@@ -67,20 +67,20 @@ export default function Tourism() {
         image: "/images/pages/tourism/victoria_falls.webp",
         badge: t("tourism.hero.badge1") || "Visit Zimbabwe",
         badgeIcon: Globe,
-        title: t("tourism.hero.title1") || "Discover the Majesty",
-        titleHighlight: t("tourism.hero.highlight1") || "World-Class Beauty",
+        title: t("tourism.hero.title1") || "Find your",
+        titleHighlight: t("tourism.hero.highlight1") || "Zimbabwe journey",
         subtitle:
           t("tourism.hero.subtitle1") ||
-          "From Victoria Falls to Great Zimbabwe, experience the heart of Africa.",
+          "Compare waterfalls, wildlife and heritage destinations, then turn your interests into a trip plan.",
       },
       {
         image: "/images/pages/shop/zimbabwe_shop_hero.webp",
         badge: t("tourism.hero.badge2") || "Cultural Heritage",
         badgeIcon: Award,
-        title: t("tourism.hero.title2") || "Rich History",
+        title: t("tourism.hero.title2") || "Explore living heritage",
         subtitle:
           t("tourism.hero.subtitle2") ||
-          "Explore ancient civilizations and vibrant modern culture.",
+          "Explore historical places and cultural experiences to include alongside family visits and sightseeing.",
       },
       {
         image: "/images/pages/tourism/african-elephant.jpg",
@@ -145,41 +145,41 @@ export default function Tourism() {
       {
         question: tx(
           "tourism.onesa.phone_conversation.q1",
-          "Onesa, what's the best local spot for traditional Sadza in Harare tonight?"
+          "Onesa, how could I explore Zimbabwean food in Harare?"
         ),
         answer: tx(
           "tourism.onesa.phone_conversation.a1",
-          "For an authentic Sadza experience in Harare, head to Mbare Musika. The local vendors there serve up delicious, freshly made Sadza with a variety of tasty relishes. It's a favorite among locals and offers a true taste of Zimbabwean cuisine. Just ask for 'Sadza ne Nyama' (Sadza with meat) for a hearty meal!"
+          "Start with sadza, seasonal vegetables and local relishes. Ask your host or a restaurant about the menu and opening hours before you go."
         ),
       },
       {
         question: tx(
           "tourism.onesa.phone_conversation.q2",
-          "Great. Is it safe to go there at night, and what time should I arrive?"
+          "What should I check before an evening visit?"
         ),
         answer: tx(
           "tourism.onesa.phone_conversation.a2",
-          "Aim for early evening, ideally before 8:00 PM, and use a trusted ride service. For first-time visitors, going with a local guide or friend is best for a smoother experience."
+          "Confirm opening hours and transport with local providers. Ask your host for current local advice and arrange a way back."
         ),
       },
       {
         question: tx(
           "tourism.onesa.phone_conversation.q3",
-          "Can you suggest one backup restaurant near the city center if it's too crowded?"
+          "Could I combine food with a cultural visit?"
         ),
         answer: tx(
           "tourism.onesa.phone_conversation.a3",
-          "Yes. Try a traditional restaurant in Avondale or the CBD that serves Sadza, beef stew, and leafy greens. Ask for fresh-cooked meals and local relishes for the most authentic plate."
+          "Consider a gallery or heritage stop near your meal. Check visiting hours and leave time for travel between places."
         ),
       },
       {
         question: tx(
           "tourism.onesa.phone_conversation.q4",
-          "Perfect. Add transport advice and a rough dinner budget for two."
+          "How should I budget for that outing?"
         ),
         answer: tx(
           "tourism.onesa.phone_conversation.a4",
-          "Plan around USD 20 to USD 35 for two, depending on drinks and sides. For transport, use registered taxis or app rides, share your live location, and keep your return trip booked in advance."
+          "Allow for meals, transport and any entry fees. Ask providers for current prices; my suggestions are planning ideas rather than a quote or booking."
         ),
       },
     ],
@@ -575,21 +575,21 @@ export default function Tourism() {
       title: t("tourism.onesa.guide.title") || "Local Insights",
       description:
         t("tourism.onesa.guide.desc") ||
-        "Understand local etiquette, tipping culture, and social norms.",
+        "Ask about local etiquette, food and places to research before you travel.",
     },
     {
       icon: MapPin,
-      title: t("tourism.onesa.navigate.title") || "Smart Navigation",
+      title: t("tourism.onesa.navigate.title") || "Route ideas",
       description:
         t("tourism.onesa.navigate.desc") ||
-        "Find the best routes and hidden spots known only to locals.",
+        "Explore places to combine in one itinerary. Confirm travel times and transport locally.",
     },
     {
       icon: Calendar,
       title: t("tourism.onesa.plan.title") || "Custom Itineraries",
       description:
         t("tourism.onesa.plan.desc") ||
-        "AI-generated plans based on your interests and travel style.",
+        "Create a draft itinerary based on your interests, dates and travel preferences.",
     },
   ];
 
@@ -612,7 +612,7 @@ export default function Tourism() {
           >
             <Link href="/onesa-ai-tourism-virtual-experience">
               {t("tourism.intro.virtual_experience_center_cta", {
-                defaultValue: "Virtual Experience Center",
+                defaultValue: "Explore virtual previews",
               })}
             </Link>
           </Button>
@@ -664,17 +664,18 @@ export default function Tourism() {
               <p className="text-sm leading-7">
                 {t("tourism.intro.p1", {
                   defaultValue:
-                    "Zimbabwe is crafted for discovery, from world-famous waterfalls and ancient stone cities to safari frontiers and lake adventures. Guided by the ZimBho tourism vision and the national brand promise, Zimbabwe: A World of Wonders, every route can combine landscapes, story, culture, and unforgettable hospitality.",
+                    "Start with the places that interest you: waterfalls, stone cities, wildlife parks or lake landscapes. Open a destination card for highlights, visit ideas and links to further information.",
                 })}
               </p>
               <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
                 {t("tourism.intro.p2_before_ar") ||
-                  "When you are onsite, use Onesa's"}{" "}
+                  "Explore a destination with Onesa's"}{" "}
                 <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.local_guide_ar") || "Local guide AR"}
+                  {t("tourism.intro.local_guide_ar") ||
+                    "camera and location guide"}
                 </span>{" "}
                 {t("tourism.intro.p2_after_ar") ||
-                  "feature for a full AI-powered AR experience. You can also visit our AI-powered Virtual Experience Center to preview destinations before your trip."}
+                  "for place information and optional narration. Camera and location access are optional. The virtual experience offers interactive previews you can explore before travelling."}
               </p>
               <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
                 {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
@@ -683,12 +684,12 @@ export default function Tourism() {
                     "gastronomy tourism"}
                 </span>{" "}
                 {t("tourism.intro.p3_between") ||
-                  "is also a core part of the journey: from traditional dishes like sadza with nyama and muriwo, to freshwater fish from Kariba, local coffee routes in the Eastern Highlands, and market-to-table food experiences in major cities."}{" "}
+                  "can be part of your itinerary, from sadza and local relishes to coffee-growing areas and lakeside food experiences."}{" "}
                 <span className="text-zim-gold font-semibold">
                   {t("tourism.intro.cultural_tourism") || "Cultural tourism"}
                 </span>{" "}
                 {t("tourism.intro.p3_after_cultural") ||
-                  "adds another layer through living heritage traditions, community storytelling, mbira and dance performances, contemporary stone sculpture, and historical sites that connect visitors to the country's identity across generations. Wildlife tourism completes the experience with Big Five and birding circuits, guided safari drives in Hwange and Mana Pools, and conservation-led encounters across Zimbabwe's national parks and protected landscapes."}
+                  "adds heritage sites, music, sculpture and community traditions to the journey. Combine these with wildlife destinations to suit your interests, then confirm current visitor arrangements locally."}
               </p>
             </div>
           </details>
@@ -737,20 +738,19 @@ export default function Tourism() {
         title={t("tourism.onesa.badge", { defaultValue: "Onesa AI Companion" })}
         description={t("tourism.onesa.companion_subtitle", {
           defaultValue:
-            "Onesa AI helps you plan your trip and navigate the ins and outs once you're here. From understanding local etiquette to finding hidden gems, Onesa is your perfect travel companion.",
+            "Discuss your interests, compare places and plan a route. Check opening hours, transport and availability directly before travelling.",
         })}
       >
         <div className="discovery-introduction space-y-3">
           <p className="text-base leading-7">
             {t("tourism.onesa.companion_title", {
-              defaultValue:
-                "From booking flights,accurate weather information or discovering local gems, Onesa AI has you covered",
+              defaultValue: "Explore destinations and build a draft itinerary",
             })}
           </p>
           <p className="text-sm leading-7">
             {t("tourism.onesa.personalized_experience", {
               defaultValue:
-                "Personalised experience. - powerful recommendation engine providing information that makes your travel unique and unforgettable.",
+                "Explore places that match your interests, then refine the plan with current information from providers.",
             })}
           </p>
         </div>
@@ -791,7 +791,7 @@ export default function Tourism() {
                           defaultValue: "Chat with Onesa",
                         }),
                         t("tourism.onesa.cta.local_guide_ar", {
-                          defaultValue: "Local guide AR",
+                          defaultValue: "Camera & location guide",
                         }),
                         t("tourism.onesa.cta.plan_trip", {
                           defaultValue: "Plan your trip",
