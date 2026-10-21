@@ -134,6 +134,37 @@ try {
       const rails = page.locator(".swipe-rail");
       for (const rail of await rails.all()) {
         const viewport = rail.locator(".swipe-rail-viewport");
+        if (["/technology", "/investment", "/tourism"].includes(path)) {
+          const bounds = await viewport.boundingBox();
+          const screenWidth = await page.evaluate(
+            () => document.documentElement.clientWidth
+          );
+          assert(
+            Math.abs(bounds.x) <= 1,
+            `${path}: rail must start at the screen edge`
+          );
+          assert(
+            Math.abs(bounds.x + bounds.width - screenWidth) <= 1,
+            `${path}: rail must end at the screen edge`
+          );
+          const first = await rail
+            .locator(".swipe-rail-item")
+            .first()
+            .boundingBox();
+          assert(
+            Math.abs(first.x - (width < 768 ? 24 : 32)) <= 1,
+            "Leading tile uses Home's inset"
+          );
+          const rows = await rail
+            .locator(".swipe-rail-item")
+            .evaluateAll(items =>
+              items.map(item => item.getBoundingClientRect().top)
+            );
+          assert(
+            rows.every(top => Math.abs(top - rows[0]) < 1),
+            "Tiles must stay in one row"
+          );
+        }
         const previous = rail.getByRole("button", { name: /^Previous:/ });
         const next = rail.getByRole("button", { name: /^Next:/ });
         assert(await previous.isDisabled());

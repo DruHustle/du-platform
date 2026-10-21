@@ -1,4 +1,50 @@
 /* Home-inspired browsing, scoped to explicitly opted-in discovery pages. */
+.content-page .discovery-section-layout {
+  --rail-gutter: 24px;
+  display: grid;
+  grid-template-columns:
+    [edge-start] minmax(var(--rail-gutter), 1fr)
+    [content-start] minmax(0, 1232px)
+    [content-end] minmax(var(--rail-gutter), 1fr) [edge-end];
+}
+.content-page .discovery-section-layout > * {
+  grid-column: content;
+  min-width: 0;
+}
+.content-page .discovery-section-layout > .swipe-rail {
+  grid-column: edge;
+}
+.content-page .discovery-section-layout > .swipe-rail .swipe-rail-controls {
+  max-width: 1296px;
+  margin-inline: auto;
+  padding-inline: var(--rail-gutter);
+}
+.content-page .discovery-section-layout > .swipe-rail .swipe-rail-viewport {
+  padding-inline: var(--rail-gutter);
+  scroll-padding-inline: var(--rail-gutter);
+  border-radius: 0;
+}
+.content-page .discovery-section-layout > .swipe-rail .swipe-rail-track {
+  padding-right: 0;
+}
+.content-page
+  .shop-collection-section
+  :is(.swipe-rail-hint, .swipe-rail-position) {
+  color: #94a3b8;
+}
+.content-page .shop-collection-section .swipe-rail-arrow {
+  border-color: #334155;
+  background: #111b2b;
+  color: #f8fafc;
+}
+.content-page .shop-collection-section .swipe-rail-arrow:hover:not(:disabled) {
+  background: #1e293b;
+}
+@media (min-width: 768px) {
+  .content-page .discovery-section-layout {
+    --rail-gutter: 32px;
+  }
+}
 .content-page .discovery-section {
   background: #f8fafb;
   color: #0f172a;

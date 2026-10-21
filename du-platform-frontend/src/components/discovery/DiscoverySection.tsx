@@ -16,7 +16,7 @@ export default function DiscoverySection({
 }: Props) {
   return (
     <section id={id} className="discovery-section">
-      <div className="container mx-auto">
+      <div className="discovery-section-layout">
         <header className="section-heading mb-7">
           <div className="flex flex-wrap items-start justify-between gap-5">
             <h2 className="page-section-title max-w-4xl">{title}</h2>
