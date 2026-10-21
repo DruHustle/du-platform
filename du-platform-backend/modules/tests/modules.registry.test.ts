@@ -12,6 +12,7 @@ describe("domain module registry", () => {
     const mountedPaths = use.mock.calls.map(call => call[0]);
 
     expect(mountedPaths).toEqual([
+      "/api/newsletter",
       "/api/auth",
       "/api/tourism",
       "/api/investment",

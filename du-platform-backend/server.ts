@@ -1,3 +1,4 @@
+import { startNewsletterWorker } from "./modules/newsletter/worker";
 import compression from "compression";
 import express from "express";
 import fs from "fs";
@@ -58,19 +59,31 @@ export function createModularServer(options: ModularServerOptions) {
         etag: true,
         lastModified: true,
         setHeaders: (res, filePath) => {
-          const relativePath = path.relative(options.staticPath as string, filePath).replace(/\\/g, "/");
+          const relativePath = path
+            .relative(options.staticPath as string, filePath)
+            .replace(/\\/g, "/");
 
           if (relativePath.endsWith(".html")) {
-            res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
+            res.setHeader(
+              "Cache-Control",
+              "no-cache, max-age=0, must-revalidate"
+            );
             return;
           }
 
           if (/^assets\/.+-[A-Za-z0-9_-]{8,}\.[^/]+$/i.test(relativePath)) {
-            res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+            res.setHeader(
+              "Cache-Control",
+              "public, max-age=31536000, immutable"
+            );
             return;
           }
 
-          if (/\.(?:css|js|mjs|png|jpe?g|gif|svg|webp|avif|ico|woff2?|mp3|wav)$/i.test(relativePath)) {
+          if (
+            /\.(?:css|js|mjs|png|jpe?g|gif|svg|webp|avif|ico|woff2?|mp3|wav)$/i.test(
+              relativePath
+            )
+          ) {
             res.setHeader("Cache-Control", "public, max-age=86400");
             return;
           }
@@ -81,12 +94,21 @@ export function createModularServer(options: ModularServerOptions) {
     );
     app.get("*", (req, res) => {
       res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
-      const siteUrl =
-        String(process.env.VITE_SITE_URL || process.env.APP_BASE_URL || `${req.protocol}://${req.get("host") || "localhost"}`)
-          .trim()
-          .replace(/\/+$/, "");
-      const url = new URL(req.originalUrl || req.url, `${siteUrl || "http://localhost"}/`);
-      const seo = resolveRouteSeo({ pathname: url.pathname, search: url.search });
+      const siteUrl = String(
+        process.env.VITE_SITE_URL ||
+          process.env.APP_BASE_URL ||
+          `${req.protocol}://${req.get("host") || "localhost"}`
+      )
+        .trim()
+        .replace(/\/+$/, "");
+      const url = new URL(
+        req.originalUrl || req.url,
+        `${siteUrl || "http://localhost"}/`
+      );
+      const seo = resolveRouteSeo({
+        pathname: url.pathname,
+        search: url.search,
+      });
       const html = injectSeoIntoHtml(getIndexHtml(), seo, siteUrl);
       const status = getSpaDocumentStatus(seo.canonicalPath);
       res.status(status).type("html").send(html);
@@ -108,11 +130,11 @@ function parsePort(value: unknown): number | null {
 }
 
 export async function startServer() {
-  process.on("unhandledRejection", (reason) => {
+  process.on("unhandledRejection", reason => {
     console.error("[process] Unhandled promise rejection:", reason);
   });
 
-  process.on("uncaughtException", (error) => {
+  process.on("uncaughtException", error => {
     console.error("[process] Uncaught exception:", error);
   });
 
@@ -123,17 +145,25 @@ export async function startServer() {
   } catch (jwtError) {
     const nodeEnv = String(process.env.NODE_ENV ?? "development").toLowerCase();
     if (nodeEnv === "production") {
-      console.error("[startup] JWT_SECRET validation failed:", jwtError instanceof Error ? jwtError.message : jwtError);
+      console.error(
+        "[startup] JWT_SECRET validation failed:",
+        jwtError instanceof Error ? jwtError.message : jwtError
+      );
       process.exit(1);
     }
     // In dev/test the fallback secret is acceptable — log a reminder only.
-    console.warn("[startup] JWT_SECRET is not set; using insecure dev fallback. Set JWT_SECRET before deploying.");
+    console.warn(
+      "[startup] JWT_SECRET is not set; using insecure dev fallback. Set JWT_SECRET before deploying."
+    );
   }
 
   try {
     validateStartupConfiguration();
   } catch (configError) {
-    console.error("[startup] Configuration validation failed:", configError instanceof Error ? configError.message : configError);
+    console.error(
+      "[startup] Configuration validation failed:",
+      configError instanceof Error ? configError.message : configError
+    );
     process.exit(1);
   }
 
@@ -143,7 +173,9 @@ export async function startServer() {
     if (!isMemoryFallbackEnabled()) {
       throw error;
     }
-    console.warn("[db] Database initialization failed. Continuing with in-memory fallback mode.");
+    console.warn(
+      "[db] Database initialization failed. Continuing with in-memory fallback mode."
+    );
     console.warn(error);
   }
 
@@ -167,17 +199,23 @@ export async function startServer() {
   const envMode = String(process.env.NODE_ENV ?? "development").toLowerCase();
   const isProduction = envMode === "production";
   const isTest = envMode === "test";
-  const requestedPort =
-    (isProduction
-      ? parsePort(process.env.PORT) ?? parsePort(process.env.PROD_PORT) ?? 3000
-      : isTest
-        ? parsePort(process.env.TEST_PORT) ?? parsePort(process.env.PORT) ?? 5002
-        : parsePort(process.env.DEV_PORT) ?? parsePort(process.env.PORT) ?? 5001);
+  const requestedPort = isProduction
+    ? (parsePort(process.env.PORT) ?? parsePort(process.env.PROD_PORT) ?? 3000)
+    : isTest
+      ? (parsePort(process.env.TEST_PORT) ??
+        parsePort(process.env.PORT) ??
+        5002)
+      : (parsePort(process.env.DEV_PORT) ??
+        parsePort(process.env.PORT) ??
+        5001);
   const allowPortFallback =
     String(process.env.ALLOW_PORT_FALLBACK ?? "").toLowerCase() === "true" ||
     process.env.NODE_ENV === "production";
 
-  const listenWithFallback = async (startPort: number, maxAttempts = 20): Promise<number> => {
+  const listenWithFallback = async (
+    startPort: number,
+    maxAttempts = 20
+  ): Promise<number> => {
     let attempt = 0;
     let candidate = startPort;
 
@@ -207,7 +245,9 @@ export async function startServer() {
       }
     }
 
-    throw new Error(`No open port found starting from ${startPort} after ${maxAttempts} attempts.`);
+    throw new Error(
+      `No open port found starting from ${startPort} after ${maxAttempts} attempts.`
+    );
   };
 
   let activePort = requestedPort;
@@ -230,17 +270,24 @@ export async function startServer() {
   }
 
   if (activePort !== requestedPort) {
-    console.warn(`[server] Port ${requestedPort} is in use. Switched to ${activePort}.`);
+    console.warn(
+      `[server] Port ${requestedPort} is in use. Switched to ${activePort}.`
+    );
   }
+
+  const stopNewsletterWorker = startNewsletterWorker();
+  server.once("close", stopNewsletterWorker);
 
   console.log(`Server running on http://localhost:${activePort}/`);
   return { app, server, port: activePort };
 }
 
-const isMainModule = process.argv[1] != null && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+const isMainModule =
+  process.argv[1] != null &&
+  fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 
 if (isMainModule) {
-  startServer().catch((error) => {
+  startServer().catch(error => {
     console.error(error);
     process.exit(1);
   });

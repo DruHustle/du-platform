@@ -211,7 +211,10 @@ try {
       releasePrivacy = done;
     });
     const requestStarted = page.waitForRequest(/PrivacyPolicyPage.*\.js/);
-    await page.locator('footer a[href="/privacy-policy"]').click();
+    await page
+      .locator("footer")
+      .getByRole("link", { name: "Privacy Policy", exact: true })
+      .click();
     await requestStarted;
     await page
       .getByRole("status")
@@ -233,7 +236,10 @@ try {
       scenario: "slow lazy destination remains interactive; latest click wins",
     });
 
-    await page.locator('footer a[href="/privacy-policy"]').click();
+    await page
+      .locator("footer")
+      .getByRole("link", { name: "Privacy Policy", exact: true })
+      .click();
     await page
       .getByRole("heading", { name: "Privacy Policy", exact: true })
       .waitFor();

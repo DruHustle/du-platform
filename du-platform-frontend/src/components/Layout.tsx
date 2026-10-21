@@ -331,25 +331,22 @@ export default function Layout({ children }: LayoutProps) {
 
       const { data } = await api.post("/notifications/newsletter", {
         email: newsletterEmail.trim(),
+        consent: true,
       });
 
       setNewsletterFeedback({
         kind: "success",
-        message:
-          data?.created === false
-            ? tr(
-                "footer.newsletter.already_subscribed",
-                "This email is already subscribed to the newsletter."
-              )
-            : tr(
-                "footer.newsletter.subscribed",
-                "Subscribed. Watch your inbox for updates."
-              ),
+        message: data?.deliveryPending
+          ? tr(
+              "footer.newsletter.delivery_pending",
+              "Subscription request saved. Email delivery is temporarily unavailable. If no confirmation arrives, try subscribing again later."
+            )
+          : tr(
+              "footer.newsletter.confirmation_sent",
+              "If this address needs confirmation, we’ll email a link. Already confirmed? You’re on the list."
+            ),
       });
-
-      if (data?.created !== false) {
-        setNewsletterEmail("");
-      }
+      setNewsletterEmail("");
     } catch (error) {
       setNewsletterFeedback({
         kind: "error",
@@ -1118,6 +1115,7 @@ export default function Layout({ children }: LayoutProps) {
                   <button
                     type="submit"
                     disabled={newsletterSubmitting}
+                    aria-busy={newsletterSubmitting}
                     aria-label={tr(
                       "footer.newsletter.subscribe_aria",
                       "Subscribe to newsletter"
@@ -1127,6 +1125,18 @@ export default function Layout({ children }: LayoutProps) {
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </form>
+                <p className="text-xs leading-5 text-slate-400">
+                  {tr(
+                    "footer.newsletter.consent",
+                    "By subscribing, you agree to receive Diaspora Unlocked news and opportunities. Confirm your email to join. Unsubscribe at any time."
+                  )}{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="underline hover:text-white"
+                  >
+                    {tr("footer.newsletter.privacy", "Privacy policy")}
+                  </Link>
+                </p>
                 {newsletterFeedback ? (
                   <p
                     className={`text-xs ${

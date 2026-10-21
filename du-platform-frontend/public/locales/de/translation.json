@@ -37,6 +37,10 @@
       "what_content": "Wir betreiben eine gemeinsame Diaspora-Plattform für Tourismus, Investitionen, Einkauf und KI-gestützte Orientierung. Mit Institutionen und Dienstleistern unterstützen wir die praktische Teilnahme."
     },
     "newsletter": {
+      "confirmation_sent": "Falls diese Adresse bestätigt werden muss, senden wir einen Link per E-Mail. Bereits bestätigt? Dann stehen Sie auf der Liste.",
+      "delivery_pending": "Anmeldung gespeichert. Der E-Mail-Versand ist vorübergehend nicht verfügbar. Ihre Bestätigung wird gesendet, sobald er wieder funktioniert.",
+      "consent": "Mit der Anmeldung stimmen Sie zu, Neuigkeiten und Angebote von Diaspora Unlocked zu erhalten. Bestätigen Sie Ihre E-Mail-Adresse. Eine Abmeldung ist jederzeit möglich.",
+      "privacy": "Datenschutzerklärung",
       "title": "Newsletter",
       "description": "Bleiben Sie auf dem Laufenden.",
       "email_placeholder": "E-Mail-Adresse",

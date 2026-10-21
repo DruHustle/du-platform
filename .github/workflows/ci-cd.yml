@@ -26,6 +26,16 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
+    services:
+      newsletter-mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: newsletter-ci-test-only
+          MYSQL_DATABASE: du_newsletter_test
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pnewsletter-ci-test-only"
+          --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -50,6 +60,8 @@ jobs:
 
       - name: Module tests
         run: pnpm test:modules
+        env:
+          NEWSLETTER_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Frontend tests
         run: pnpm test:frontend
@@ -68,6 +80,12 @@ jobs:
 
       - name: Install browsers for regression tests
         run: pnpm exec playwright install --with-deps chromium webkit
+
+      - name: Newsletter database and admin workflow regression tests
+        run: pnpm test:e2e:newsletter
+        env:
+          NEWSLETTER_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
+          NEWSLETTER_BROWSER_CHANNEL: chromium
 
       - name: Navigation regression tests
         run: pnpm test:e2e:navigation

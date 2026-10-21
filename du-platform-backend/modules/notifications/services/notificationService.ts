@@ -20,68 +20,6 @@ export class NotificationServiceError extends Error {
 export class NotificationService {
   constructor(private readonly repository = new NotificationRepository()) {}
 
-  async createNewsletterSubscription(email: string) {
-    const normalizedEmail = String(email ?? "")
-      .trim()
-      .toLowerCase();
-    if (!normalizedEmail) {
-      throw new NotificationServiceError(
-        "VALIDATION_FAILED",
-        400,
-        "Email is required."
-      );
-    }
-
-    const result =
-      await this.repository.createNewsletterSubscription(normalizedEmail);
-
-    if (result.created) {
-      const fromEmail = await getNotifyFromEmail();
-      const userSubject = "Newsletter subscription confirmed";
-      const userHtml = `<p>Hello,</p>
-<p>You have been subscribed to the Diaspora Unlocked newsletter.</p>
-<p>We will keep you updated on weekly opportunities.</p>`;
-      const userText =
-        "You have been subscribed to the Diaspora Unlocked newsletter. We will keep you updated on weekly opportunities.";
-      await sendEmailMessageSafe(
-        {
-          to: normalizedEmail,
-          subject: userSubject,
-          html: userHtml,
-          text: userText,
-          from: fromEmail,
-        },
-        "newsletter-subscriptions:user-confirmation"
-      );
-
-      const alertEmails = await getNotifyAlertEmails();
-      if (alertEmails.length > 0) {
-        const adminSubject = "New newsletter subscription";
-        const adminHtml = `<p><strong>New newsletter subscription</strong></p>
-<p>Email: ${escapeEmailHtml(normalizedEmail)}</p>`;
-        const adminText = `New newsletter subscription: ${normalizedEmail}`;
-        await sendEmailMessageSafe(
-          {
-            to: alertEmails,
-            subject: adminSubject,
-            html: adminHtml,
-            text: adminText,
-            from: fromEmail,
-          },
-          "newsletter-subscriptions:admin-alert"
-        );
-      }
-    }
-
-    return {
-      message: result.created
-        ? "Newsletter subscription saved."
-        : "This email is already subscribed to the newsletter.",
-      created: result.created,
-      email: normalizedEmail,
-    };
-  }
-
   async createFeatureNotification(userId: number, feature: string) {
     const normalizedFeature = String(feature ?? "").trim();
     if (!normalizedFeature) {

@@ -273,6 +273,16 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
+  if (pathname === "/newsletter") {
+    return buildSeo(
+      "Newsletter Preferences | Diaspora Unlocked",
+      "Confirm or manage your Diaspora Unlocked newsletter subscription.",
+      "/newsletter",
+      "Newsletter Preferences",
+      "noindex,nofollow"
+    );
+  }
+
   if (pathname === "/admin") {
     return buildSeo(
       "Admin Dashboard | Diaspora Unlocked",

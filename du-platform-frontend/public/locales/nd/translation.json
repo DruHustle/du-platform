@@ -37,6 +37,10 @@
       "what_content": "Sakha futhi siqhuba inkundla exhumanisa abantu abasemazweni lezokuvakasha, ukutshala imali, ukuthenga leziqondiso ze-AI. Sisebenza lezinhlanganiso labanikeza amasevisi ukusekela ukubamba iqhaza."
     },
     "newsletter": {
+      "confirmation_sent": "Nxa ikheli leli lidinga ukuqinisekiswa, sizathumela isixhumanisi nge-imeyili. Nxa seliqinisekisiwe, selisohlwini.",
+      "delivery_pending": "Ukubhalisa kulondoloziwe. Ukuthumela ama-imeyili akusebenzi okwamanje; umlayezo wokuqinisekisa uzathunyelwa nxa sekusebenza.",
+      "consent": "Ngokubhalisa, uyavuma ukwamukela izindaba lamathuba avela kuDiaspora Unlocked. Qinisekisa i-imeyili yakho ukuze ujoyine. Ungazikhipha loba nini.",
+      "privacy": "Umgomo wobumfihlo",
       "title": "Iphephandaba",
       "description": "Hlala unolwazi.",
       "email_placeholder": "Ikheli le-imeyili",

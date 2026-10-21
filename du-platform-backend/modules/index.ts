@@ -1,3 +1,4 @@
+import { createNewsletterPublicRouter } from "./newsletter/routes";
 import type express from "express";
 import { createAuthModuleRouter } from "./auth/routes";
 import { registerAiModule } from "./ai/routes";
@@ -11,6 +12,7 @@ import { createAdminModuleRouter } from "./admin/routes";
 import { createNotificationsModuleRouter } from "./notifications/routes";
 
 export function registerDomainModules(app: express.Express) {
+  app.use("/api/newsletter", createNewsletterPublicRouter());
   app.use("/api/auth", createAuthModuleRouter());
   app.use("/api/tourism", createTourismModuleRouter());
   app.use("/api/investment", createInvestmentModuleRouter());
