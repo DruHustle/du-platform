@@ -563,26 +563,17 @@
       "subtitle": "Fragen Sie nach Zielen, lokalen Gepflogenheiten und Reiseideen. Onesa hilft bei Fragen und Reiseentwürfen; Anbieter bestätigen Preise und Buchungen.",
       "companion_title": "Reiseziele erkunden und einen Reiseplan entwerfen",
       "companion_subtitle": "Besprechen Sie Interessen, vergleichen Sie Orte und planen Sie eine Route. Klären Sie Öffnungszeiten, Verkehr und Verfügbarkeit vor der Reise direkt.",
-      "assistant_label": "Beispielgespräch mit Onesa",
-      "prompt_question": "Onesa, wie kann ich simbabwisches Essen in Harare entdecken?",
-      "prompt_response": "Beginnen Sie mit Sadza, Saisongemüse und lokalen Beilagen. Fragen Sie Gastgeber oder Restaurant vorab nach Speisekarte und Öffnungszeiten.",
-      "phone_conversation": {
-        "q1": "Onesa, wie kann ich simbabwisches Essen in Harare entdecken?",
-        "a1": "Beginnen Sie mit Sadza, Saisongemüse und lokalen Beilagen. Fragen Sie Gastgeber oder Restaurant vorab nach Speisekarte und Öffnungszeiten.",
-        "q2": "Was sollte ich vor einem Abendbesuch prüfen?",
-        "a2": "Klären Sie Öffnungszeiten und Verkehr vor Ort. Fragen Sie Ihren Gastgeber nach aktuellen Hinweisen und organisieren Sie den Rückweg.",
-        "q3": "Kann ich Essen mit einem Kulturbesuch verbinden?",
-        "a3": "Erwägen Sie eine Galerie oder Kulturstätte in der Nähe. Prüfen Sie Besuchszeiten und planen Sie Wege ein.",
-        "q4": "Wie plane ich das Budget dafür?",
-        "a4": "Planen Sie Essen, Verkehr und Eintritt ein. Fragen Sie Anbieter nach aktuellen Preisen; meine Vorschläge sind Planungsideen, kein Angebot oder eine Buchung."
+      "virtual_preview": {
+        "title": "Interaktive Vorschauen",
+        "desc": "Probiere die Sample-City-Demo mit Panoramaszenen und optionaler VR-Brille aus. Touren zu Reisezielen in Simbabwe sind noch nicht verfügbar."
       },
       "guide": {
         "title": "Lokale Einblicke",
         "desc": "Fragen Sie nach Gepflogenheiten, Essen und Orten für Ihre Reisevorbereitung."
       },
       "navigate": {
-        "title": "Routenideen",
-        "desc": "Entdecken Sie kombinierbare Reiseziele. Bestätigen Sie Fahrzeiten und Verkehrsmittel vor Ort."
+        "title": "Augmented-Reality-Guide",
+        "desc": "Erkunden Sie Reiseziele mit Kameravorschau, Ortshinweisen von Onesa und optionaler Erzählung."
       },
       "plan": {
         "title": "Individuelle Reisepläne",
@@ -592,7 +583,7 @@
       "cta": {
         "chat": "Mit Onesa chatten",
         "plan_trip": "Reise planen",
-        "local_guide_ar": "Kamera- & Standortführer"
+        "local_guide_ar": "In AR erkunden"
       },
       "trip_planner": {
         "badge": "Onesa AI Reise",

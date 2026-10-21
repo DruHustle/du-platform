@@ -112,6 +112,14 @@ jobs:
         env:
           DISCOVERY_BROWSER_CHANNEL: chromium
 
+      - name: VR music toggle regression tests
+        run: pnpm test:e2e:vr:music
+
+      - name: VR WebKit music toggle regression tests
+        run: pnpm test:e2e:vr:music
+        env:
+          VR_MUSIC_BROWSER_ENGINE: webkit
+
   # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
   #    On failure, rolls back to the last successful Vercel production deployment.
   deploy-vercel-production:
