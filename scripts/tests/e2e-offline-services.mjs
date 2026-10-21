@@ -704,6 +704,8 @@ try {
   );
   await chooseVr();
   await expectText(/3D preview is unavailable/i);
+  assert(await page.getByRole("button", { name: /^zoom in$/i }).isDisabled());
+  assert(await page.getByRole("button", { name: /^look left$/i }).isDisabled());
   await page.getByRole("button", { name: /^next scene$/i }).click();
   await expectText(/walkthrough 2\/3/i);
   await page.getByRole("button", { name: /^show place information$/i }).click();

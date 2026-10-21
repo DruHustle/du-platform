@@ -106,6 +106,7 @@ export default function TourismVirtualExperiencePage() {
   const [audioReady, setAudioReady] = useState(false);
   const [aiStatus, setAiStatus] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPreviewReady, setIsPreviewReady] = useState(false);
   const [fullscreenError, setFullscreenError] = useState("");
   const stageInfoButtonRef = useRef<HTMLButtonElement>(null);
   const [showStageInfo, setShowStageInfo] = useState(false);
@@ -2052,6 +2053,7 @@ export default function TourismVirtualExperiencePage() {
                     narrationActive={isTtsEnabled}
                     conversationActive={isConversationMode}
                     autoRotateEnabled={autoRotateEnabled}
+                    onPreviewReady={setIsPreviewReady}
                     cameraRef={cameraRef}
                     orbitControlsRef={orbitControlsRef}
                     onNavigate={(id: string) => {
@@ -2113,6 +2115,7 @@ export default function TourismVirtualExperiencePage() {
                         onClick={() => zoomView("in")}
                         variant="outline"
                         className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        disabled={!isPreviewReady}
                         aria-label={ui.zoomIn}
                       >
                         <ZoomIn className="h-4 w-4" />
@@ -2122,6 +2125,7 @@ export default function TourismVirtualExperiencePage() {
                         onClick={() => zoomView("out")}
                         variant="outline"
                         className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        disabled={!isPreviewReady}
                         aria-label={ui.zoomOut}
                       >
                         <ZoomOut className="h-4 w-4" />
@@ -2131,6 +2135,7 @@ export default function TourismVirtualExperiencePage() {
                         onClick={resetView}
                         variant="outline"
                         className="h-11 w-11 p-0 rounded-full border-white/20 bg-black/50 text-white"
+                        disabled={!isPreviewReady}
                         aria-label={ui.resetView}
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -2144,6 +2149,7 @@ export default function TourismVirtualExperiencePage() {
                             ? "bg-zim-gold text-zim-black border-zim-gold"
                             : "border-white/20 bg-black/50 text-white"
                         }`}
+                        disabled={!isPreviewReady}
                         aria-label={ui.toggleAutoRotate}
                         aria-pressed={autoRotateEnabled}
                       >
@@ -2172,6 +2178,7 @@ export default function TourismVirtualExperiencePage() {
                             type="button"
                             onClick={() => rotateView("up")}
                             className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            disabled={!isPreviewReady}
                             aria-label={ui.lookUp}
                           >
                             <ArrowUp className="h-4 w-4" />
@@ -2181,6 +2188,7 @@ export default function TourismVirtualExperiencePage() {
                             type="button"
                             onClick={() => rotateView("left")}
                             className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            disabled={!isPreviewReady}
                             aria-label={ui.lookLeft}
                           >
                             <ArrowLeft className="h-4 w-4" />
@@ -2190,6 +2198,7 @@ export default function TourismVirtualExperiencePage() {
                             type="button"
                             onClick={() => rotateView("right")}
                             className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            disabled={!isPreviewReady}
                             aria-label={ui.lookRight}
                           >
                             <ArrowRight className="h-4 w-4" />
@@ -2199,6 +2208,7 @@ export default function TourismVirtualExperiencePage() {
                             type="button"
                             onClick={() => rotateView("down")}
                             className="h-11 w-11 p-0 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                            disabled={!isPreviewReady}
                             aria-label={ui.lookDown}
                           >
                             <ArrowDown className="h-4 w-4" />

@@ -261,7 +261,14 @@ export default function ChatPage() {
                 </p>
               ) : null}
 
-              <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
+              <div
+                role="log"
+                aria-label={t("onesa.title")}
+                aria-live="polite"
+                aria-relevant="additions"
+                aria-busy={loading}
+                className="flex-1 overflow-y-auto px-4 py-4 min-h-0"
+              >
                 <div className="space-y-4">
                   {messages.map((message, index) => (
                     <div

@@ -97,9 +97,17 @@ try {
           : page.locator(".chat-workspace");
       const input = scope.getByRole("textbox", { name: "Message to Onesa" });
       const send = scope.getByRole("button", { name: "Send", exact: true });
-      await scope
-        .getByText(/I am an expert on Zimbabwe and the African continent/)
-        .waitFor();
+      const conversation = scope.getByRole("log");
+      await conversation.waitFor();
+      assert(
+        (await conversation.textContent()).trim().length > 0,
+        "Opening chat must show an introductory assistant message"
+      );
+      assert.equal(
+        requests.length,
+        0,
+        "Opening chat must not send a generation request"
+      );
       assert(await send.isDisabled(), "Empty messages must not be sent");
 
       let release;

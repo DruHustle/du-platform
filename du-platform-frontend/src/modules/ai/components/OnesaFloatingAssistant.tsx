@@ -860,7 +860,14 @@ export default function OnesaFloatingAssistant() {
                       </p>
                     ) : null}
 
-                    <div className="flex-1 overflow-y-auto px-4 py-4">
+                    <div
+                      role="log"
+                      aria-label={t("onesa.title")}
+                      aria-live="polite"
+                      aria-relevant="additions"
+                      aria-busy={onesaLoading}
+                      className="flex-1 overflow-y-auto px-4 py-4"
+                    >
                       <div className="space-y-4">
                         {onesaMessages.map((message, index) => (
                           <div

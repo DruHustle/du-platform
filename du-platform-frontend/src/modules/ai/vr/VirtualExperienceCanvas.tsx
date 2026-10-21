@@ -60,6 +60,7 @@ type VirtualExperienceCanvasProps = {
   onToggleConversation: () => void;
   onLandmarkClick: (position: Point3D) => void;
   onPointerMissed: () => void;
+  onPreviewReady?: (ready: boolean) => void;
 };
 
 function createVrHintTexture(
@@ -968,6 +969,7 @@ function VirtualExperienceRenderer({
   onToggleConversation,
   onLandmarkClick,
   onPointerMissed,
+  onPreviewReady,
 }: VirtualExperienceCanvasProps) {
   const ui = useMemo(
     () =>
@@ -1072,10 +1074,11 @@ function VirtualExperienceRenderer({
         .getState()
         .session?.end()
         .catch(() => undefined);
+      onPreviewReady?.(false);
       cameraRef.current = null;
       orbitControlsRef.current = null;
     };
-  }, [cameraRef, orbitControlsRef, xrStore]);
+  }, [cameraRef, orbitControlsRef, xrStore, onPreviewReady]);
 
   useEffect(() => {
     const controls = orbitControlsRef.current;
@@ -1140,6 +1143,7 @@ function VirtualExperienceRenderer({
         gl.setClearColor(0x000000, 1);
         cameraRef.current = camera as THREE.PerspectiveCamera;
         setIsCanvasReady(true);
+        onPreviewReady?.(true);
       }}
     >
       <XR store={xrStore}>
