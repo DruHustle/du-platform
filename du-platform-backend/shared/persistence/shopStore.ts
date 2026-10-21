@@ -505,7 +505,8 @@ export async function createShopOrder(payload: {
   }
 
   const allowedPaymentMethods =
-    (process.env.NODE_ENV ?? "development").toLowerCase() === "production"
+    (process.env.NODE_ENV ?? "development").trim().toLowerCase() ===
+    "production"
       ? ["manual_assisted"]
       : ["manual_assisted", "dummy_gateway"];
   if (!allowedPaymentMethods.includes(paymentMethod)) {
@@ -855,6 +856,15 @@ export async function confirmShopOrderPayment(
   paymentReference: string,
   manageToken: string
 ) {
+  if (
+    (process.env.NODE_ENV ?? "development").trim().toLowerCase() ===
+    "production"
+  ) {
+    throw new ShopRequestError(
+      "Simulated payment confirmation is unavailable in production.",
+      403
+    );
+  }
   const ref = orderRef.trim();
   const normalizedManageToken = manageToken.trim();
   const paymentRef = paymentReference.trim() || `SIM-${Date.now()}`;

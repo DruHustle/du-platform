@@ -1,3 +1,4 @@
+import { useReducedMotion } from "framer-motion";
 import { getSpeechLanguageCode } from "@/modules/ai/ar/arExperienceText";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -53,6 +54,7 @@ function cancelBrowserSpeech() {
 
 export default function TourismVirtualExperiencePage() {
   const { i18n, t } = useTranslation();
+  const prefersReducedMotion = useReducedMotion();
   const uiLanguage = useMemo<UiLanguage>(
     () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
     [i18n.language, i18n.resolvedLanguage]
@@ -114,7 +116,12 @@ export default function TourismVirtualExperiencePage() {
   const [hiddenPoiInfoIconIds, setHiddenPoiInfoIconIds] = useState<Set<string>>(
     () => new Set()
   );
-  const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
+  const [autoRotateEnabled, setAutoRotateEnabled] = useState(
+    () => !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
+  useEffect(() => {
+    if (prefersReducedMotion) setAutoRotateEnabled(false);
+  }, [prefersReducedMotion]);
   const experienceContext = `${selectedDestinationId}:${walkStageIndex}:${uiLanguage}:${isConversationMode}`;
   const { getSignal: getGuideSignal } =
     useExperienceRequests(experienceContext);
@@ -1529,11 +1536,6 @@ export default function TourismVirtualExperiencePage() {
   }, [isGlobeZoomTransitioning, selectedDestinationId]);
 
   useEffect(() => {
-    if (!isFullscreen) return;
-    setAutoRotateEnabled(true);
-  }, [isFullscreen]);
-
-  useEffect(() => {
     if (!isSoundEnabled) return;
     if (isConversationMode || isTtsEnabled) {
       setIsSoundEnabled(false);
@@ -2143,6 +2145,7 @@ export default function TourismVirtualExperiencePage() {
                             : "border-white/20 bg-black/50 text-white"
                         }`}
                         aria-label={ui.toggleAutoRotate}
+                        aria-pressed={autoRotateEnabled}
                       >
                         {autoRotateEnabled ? ui.autoOn : ui.autoOff}
                       </Button>

@@ -1,6 +1,8 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   Suspense,
+  Component,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -944,7 +946,7 @@ function VRScene({
   );
 }
 
-export default function VirtualExperienceCanvas({
+function VirtualExperienceRenderer({
   uiLanguage,
   stage,
   currentStageIndex,
@@ -1198,5 +1200,66 @@ export default function VirtualExperienceCanvas({
         />
       </XR>
     </Canvas>
+  );
+}
+
+class VrPreviewBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
+export default function VirtualExperienceCanvas(
+  props: VirtualExperienceCanvasProps
+) {
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+  useEffect(() => {
+    const canvas = document.createElement("canvas");
+    let context: WebGLRenderingContext | WebGL2RenderingContext | null = null;
+    try {
+      context = canvas.getContext("webgl2") || canvas.getContext("webgl");
+      setWebglSupported(Boolean(context));
+    } catch {
+      setWebglSupported(false);
+    } finally {
+      context?.getExtension("WEBGL_lose_context")?.loseContext();
+    }
+  }, []);
+  const ui = { ...VR_UI_TEXT.en, ...VR_UI_TEXT[props.uiLanguage] };
+  const fallback = (
+    <div className="relative h-full w-full bg-slate-950">
+      <img
+        src={props.stage.image}
+        alt={props.stage.title}
+        className="h-full w-full object-cover opacity-60"
+      />
+      <p
+        role="status"
+        className="absolute inset-x-4 top-28 rounded-xl bg-slate-950/90 p-4 text-sm leading-6 text-white"
+      >
+        {ui.previewUnavailable}
+      </p>
+    </div>
+  );
+  if (webglSupported === null)
+    return (
+      <div
+        role="status"
+        className="h-full w-full bg-slate-950"
+        aria-label={ui.loadingPoi}
+      />
+    );
+  if (!webglSupported) return fallback;
+  return (
+    <VrPreviewBoundary fallback={fallback}>
+      <VirtualExperienceRenderer {...props} />
+    </VrPreviewBoundary>
   );
 }

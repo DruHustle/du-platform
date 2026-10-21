@@ -199,6 +199,24 @@ describe("checkout reliability", () => {
       "Unable to create order."
     );
   });
+  it("cannot mark a legacy simulated order paid in production", async () => {
+    const order = await createShopOrder({
+      ...payload(),
+      paymentMethod: "dummy_gateway",
+    });
+    vi.stubEnv("NODE_ENV", "production");
+    try {
+      await expect(
+        confirmShopOrderPayment(order.orderRef, "FAKE", order.manageToken)
+      ).rejects.toMatchObject({ status: 403 });
+      expect(
+        (await getShopOrderByRef(order.orderRef, order.manageToken))?.status
+      ).toBe("awaiting_payment");
+      expect(shopSeedProducts[0].stock_qty).toBe(3);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
   it("rate-limits public checkout attempts before they can create records or send email", async () => {
     const app = express();
     app.use(express.json());

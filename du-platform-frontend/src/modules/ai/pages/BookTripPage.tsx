@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,40 +14,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-type PlanResult = {
-  summary: string;
-  optimizedFor: string;
-  estimatedTotalUsd: number;
-  flights: {
-    route: string;
-    cabin: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  };
-  hotels: {
-    area: string;
-    style: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  };
-  carHire: {
-    vehicleClass: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  };
-  experiences: Array<{
-    name: string;
-    location: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  }>;
-  itinerary: Array<{
-    day: number;
-    title: string;
-    details: string;
-    estimatedDailyCostUsd: number;
-  }>;
-};
+import { tripPlanSchema, type PlanResult } from "@/modules/ai/lib/tripPlan";
 
 type Interest =
   | "wildlife"
@@ -423,10 +390,34 @@ export default function BookTripPage() {
     "wildlife",
     "culture",
   ]);
+  const planRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => planRequest.current?.abort(), []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [source, setSource] = useState<"ai" | "fallback" | null>(null);
   const [result, setResult] = useState<PlanResult | null>(null);
+  useEffect(() => {
+    planRequest.current?.abort();
+    planRequest.current = null;
+    setLoading(false);
+    setResult(null);
+    setSource(null);
+    setError("");
+  }, [
+    origin,
+    arrivalCity,
+    tripType,
+    startDate,
+    endDate,
+    multiCityInput,
+    budget,
+    comfort,
+    adultPassengers,
+    infantPassengers,
+    interests,
+    i18n.language,
+    i18n.resolvedLanguage,
+  ]);
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
   const adultCount = Number(adultPassengers) || 0;
@@ -517,6 +508,9 @@ export default function BookTripPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    if (planRequest.current && !planRequest.current.signal.aborted) return;
+    const request = new AbortController();
+    planRequest.current = request;
     setLoading(true);
     setError("");
     const normalizedAdults = Math.max(
@@ -559,13 +553,14 @@ export default function BookTripPage() {
           interests,
           language: i18n.resolvedLanguage ?? i18n.language ?? "en",
         },
-        { timeout: 240000 }
+        { timeout: 240000, signal: request.signal }
       );
-      const plan = data?.plan as PlanResult | undefined;
-      if (!plan) throw new Error("Plan generation returned no data.");
+      if (request.signal.aborted) return;
+      const plan = tripPlanSchema.parse(data?.plan);
       setResult(plan);
       setSource(data?.source === "ai" ? "ai" : "fallback");
     } catch {
+      if (request.signal.aborted) return;
       const fallbackPlan = buildClientFallbackPlan({
         departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
         arrivalAttraction: selectedArrival.label,
@@ -579,7 +574,8 @@ export default function BookTripPage() {
       setSource("fallback");
       setError("");
     } finally {
-      setLoading(false);
+      if (!request.signal.aborted) setLoading(false);
+      if (planRequest.current === request) planRequest.current = null;
     }
   };
 

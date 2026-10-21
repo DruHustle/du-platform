@@ -140,9 +140,10 @@ export async function sendOnesaChatMessage(input: {
 
 export async function requestOnesaTripPlan(
   payload: Record<string, unknown>,
-  options?: { timeout?: number }
+  options?: { timeout?: number; signal?: AbortSignal }
 ) {
   return api.post("/ai/trip-plan", payload, {
     timeout: options?.timeout ?? 12000,
+    signal: options?.signal,
   });
 }

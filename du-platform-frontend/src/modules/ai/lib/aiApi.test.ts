@@ -4,6 +4,7 @@ import {
   checkOnesaHealth,
   clearOnesaHealthCache,
   sendOnesaChatMessage,
+  requestOnesaTripPlan,
 } from "./aiApi";
 
 vi.mock("@/lib/api", () => ({ api: { post: vi.fn(), get: vi.fn() } }));
@@ -144,5 +145,21 @@ describe("Onesa availability", () => {
     resolve({ data: { ready: false } });
     expect((await pending).online).toBe(true);
     expect((await checkOnesaHealth("Unavailable")).online).toBe(true);
+  });
+});
+
+describe("trip request cancellation", () => {
+  it("passes the caller's cancellation signal and generation timeout", async () => {
+    const request = new AbortController();
+    post.mockResolvedValueOnce({ data: { plan: {} } });
+    await requestOnesaTripPlan(
+      { days: 3 },
+      { signal: request.signal, timeout: 240000 }
+    );
+    expect(post).toHaveBeenCalledWith(
+      "/ai/trip-plan",
+      { days: 3 },
+      { signal: request.signal, timeout: 240000 }
+    );
   });
 });

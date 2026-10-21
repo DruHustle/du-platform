@@ -1,3 +1,4 @@
+import { useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useExperienceRequests,
@@ -47,6 +48,7 @@ const DEFAULT_AR_FEATURES: ArExperienceMetadata["features"] = {
 
 export default function TourismAugmentedExperiencePage() {
   const { i18n, t } = useTranslation();
+  const prefersReducedMotion = useReducedMotion();
   const uiLanguage = useMemo<UiLanguage>(
     () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
     [i18n.language, i18n.resolvedLanguage]
@@ -1231,14 +1233,14 @@ export default function TourismAugmentedExperiencePage() {
   }, [unlockBrowserSpeech]);
 
   useEffect(() => {
-    if (cameraEnabled) return;
+    if (cameraEnabled || prefersReducedMotion) return;
     const timerId = window.setInterval(() => {
       setFallbackImageIndex(
         current => (current + 1) % selectedPreviewImages.length
       );
     }, 4000);
     return () => window.clearInterval(timerId);
-  }, [cameraEnabled, selectedPreviewImages.length]);
+  }, [cameraEnabled, selectedPreviewImages.length, prefersReducedMotion]);
 
   useEffect(() => {
     setFallbackImageIndex(0);

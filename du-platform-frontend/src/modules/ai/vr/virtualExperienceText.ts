@@ -179,6 +179,8 @@ export const VR_UI_TEXT: Record<UiLanguage, Partial<Record<string, string>>> = {
     female: "Female",
     minimize: "Minimize",
     fullscreen: "Fullscreen",
+    previewUnavailable:
+      "The 3D preview is unavailable in this browser. You can still view scenes, read place information and use the voice controls.",
     fullscreenUnavailable:
       "Fullscreen is unavailable in this browser. You can continue in the page.",
     autoOn: "Auto: On",
@@ -272,6 +274,8 @@ export const VR_UI_TEXT: Record<UiLanguage, Partial<Record<string, string>>> = {
     female: "Mukadzi",
     minimize: "Deredza",
     fullscreen: "Sikirini Yakazara",
+    previewUnavailable:
+      "Mufananidzo we3D hausi kuwanikwa mubrowser iri. Unogona kuona mifananidzo, kuverenga ruzivo rwenzvimbo uye kushandisa izwi.",
     fullscreenUnavailable:
       "Sikirini yakazara haisi kuwanikwa. Unogona kuenderera papeji.",
     autoOn: "Auto: Yabatidzwa",
@@ -365,6 +369,8 @@ export const VR_UI_TEXT: Record<UiLanguage, Partial<Record<string, string>>> = {
     female: "Owesifazana",
     minimize: "Nciphisa",
     fullscreen: "Isikrini Esigcwele",
+    previewUnavailable:
+      "Umfanekiso we3D awutholakali kubrawuza le. Ungabona imifanekiso, ufunde ulwazi lwendawo njalo usebenzise ilizwi.",
     fullscreenUnavailable:
       "Isikrini esigcwele asitholakali. Ungaqhubeka ekhasini.",
     autoOn: "Auto: Ivuliwe",
@@ -459,6 +465,8 @@ export const VR_UI_TEXT: Record<UiLanguage, Partial<Record<string, string>>> = {
     female: "Weiblich",
     minimize: "Minimieren",
     fullscreen: "Vollbild",
+    previewUnavailable:
+      "Die 3D-Vorschau ist in diesem Browser nicht verfügbar. Sie können weiterhin Bilder ansehen, Ortsinformationen lesen und die Sprachfunktionen nutzen.",
     fullscreenUnavailable:
       "Vollbild ist hier nicht verfügbar. Sie können auf der Seite fortfahren.",
     autoOn: "Auto: An",

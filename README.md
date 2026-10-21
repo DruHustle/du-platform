@@ -48,7 +48,7 @@ The AR camera is a local preview: AI receives selected destination text, not cam
 frames or live positioning. Location permission only helps select a nearby listed
 destination; visitors can always select one manually. VR currently offers the
 labelled Sample City demonstration, with keyboard scene controls and optional
-WebXR headset support. These previews do not make bookings or provide live navigation.
+WebXR headset support. These previews do not make bookings or provide live navigation. If WebGL is unavailable, the VR page retains static scenes, place information and keyboard scene controls. Reduced-motion preferences keep automatic rotation and image cycling off.
 
 Run `pnpm build` followed by `E2E_BROWSER_CHANNEL=chrome pnpm test:e2e:offline`
 for local service fixtures, synthetic camera/microphone, permission failures,

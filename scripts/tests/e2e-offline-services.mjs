@@ -176,6 +176,13 @@ const chooseVr = async () => {
   await goto("/onesa-ai-tourism-virtual-experience");
   await page.locator("#vr-destination").selectOption({ index: 1 });
   await expectText(/walkthrough 1\/3/i);
+  assert.equal(
+    await page
+      .getByRole("button", { name: /^toggle auto rotate$/i })
+      .getAttribute("aria-pressed"),
+    "false",
+    "Reduced motion must keep automatic rotation off"
+  );
 };
 try {
   // A preexisting listener must never be mistaken for our isolated server.
@@ -319,6 +326,52 @@ try {
   await responsive("trip");
   pass(
     "trip planner renders fallback and AI fixtures, downloads PDF, and survives an API outage"
+  );
+  await page.unroute("**/api/ai/trip-plan");
+  await page.route("**/api/ai/trip-plan", route =>
+    route.fulfill({
+      json: { source: "ai", plan: { summary: "Malformed plan" } },
+    })
+  );
+  await page.getByRole("button", { name: /generate trip plan/i }).click();
+  await expectText(/sample plan with calculated estimates/i);
+  await page.getByRole("button", { name: /download pdf/i }).waitFor();
+  await page.unroute("**/api/ai/trip-plan");
+  let oldPlan;
+  await page.route("**/api/ai/trip-plan", route => {
+    oldPlan = route;
+  });
+  await page.getByRole("button", { name: /generate trip plan/i }).click();
+  for (let i = 0; !oldPlan && i < 100; i++) await page.waitForTimeout(20);
+  assert(oldPlan);
+  await page.getByLabel(/^Departure city/i).selectOption({ index: 1 });
+  await page.getByRole("button", { name: /generate trip plan/i }).waitFor();
+  await oldPlan.fulfill({
+    json: {
+      source: "ai",
+      plan: { ...plan.plan, summary: "Obsolete trip response" },
+    },
+  });
+  await page.waitForTimeout(300);
+  assert.equal(await page.getByText("Obsolete trip response").count(), 0);
+  assert.equal(
+    await page.getByRole("button", { name: /download pdf/i }).count(),
+    0
+  );
+  await page.unroute("**/api/ai/trip-plan");
+  await page.route("**/api/ai/trip-plan", route =>
+    route.fulfill({
+      json: {
+        source: "ai",
+        plan: { ...plan.plan, summary: "Updated trip response" },
+      },
+    })
+  );
+  await page.getByRole("button", { name: /generate trip plan/i }).click();
+  await expectText("Updated trip response");
+  await page.unroute("**/api/ai/trip-plan");
+  pass(
+    "trip planning rejects malformed results, cancels obsolete inputs and accepts a fresh plan"
   );
   await goto("/technology");
   const bubble = page.locator('[data-onesa-bubble-trigger="true"]');
@@ -644,6 +697,23 @@ try {
     );
     await context.close();
   }
+
+  context = await newContext(
+    375,
+    `const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return String(type).includes('webgl')?null:original.call(this,type,...args);};`
+  );
+  await chooseVr();
+  await expectText(/3D preview is unavailable/i);
+  await page.getByRole("button", { name: /^next scene$/i }).click();
+  await expectText(/walkthrough 2\/3/i);
+  await page.getByRole("button", { name: /^show place information$/i }).click();
+  await page.getByRole("dialog").waitFor();
+  await page.keyboard.press("Escape");
+  await screenshot("vr-no-webgl-375");
+  pass(
+    "VR without WebGL retains a static scene, keyboard navigation and place information"
+  );
+  await context.close();
 
   await waitForRateWindow("headset scenarios");
   const require = createRequire(import.meta.url);
