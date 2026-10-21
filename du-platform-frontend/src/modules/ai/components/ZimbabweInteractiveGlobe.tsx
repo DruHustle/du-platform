@@ -59,51 +59,62 @@ export default function ZimbabweInteractiveGlobe({
   const previousZoomToHarareRef = useRef(false);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [audioEnabled, setAudioEnabled] = useState(musicEnabled);
-  const [audioBlocked, setAudioBlocked] = useState(false);
-  const [audioPlaying, setAudioPlaying] = useState(false);
+  // Playback attempts must read the latest intent, including before React renders.
+  const musicRequestedRef = useRef(musicEnabled);
+  const musicAllowedRef = useRef(musicEnabled);
+  musicAllowedRef.current = musicEnabled;
+  const musicIntentRef = useRef(0);
   const [zimbabweBoundary, setZimbabweBoundary] = useState<any[]>([]);
   const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
   const [globeCrashed, setGlobeCrashed] = useState(false);
   const wasZimbabweVisibleRef = useRef(true);
 
   const hardStopMusic = useCallback(() => {
-    if (!audioRef.current) return;
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
-    audioRef.current.muted = true;
+    musicRequestedRef.current = false;
+    musicIntentRef.current++;
     setAudioEnabled(false);
-    setAudioPlaying(false);
-    setAudioBlocked(false);
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+    audio.muted = true;
   }, []);
 
-  const handleMusicToggle = useCallback(async () => {
-    const audio = audioRef.current;
-    if (!audio || !musicEnabled) return;
+  const attemptAutoPlay = useCallback(
+    async (explicit = false) => {
+      const audio = audioRef.current;
+      if (!audio || !musicAllowedRef.current || !musicRequestedRef.current)
+        return;
+      if (!audio.paused) return;
+      const intent = musicIntentRef.current;
+      audio.muted = false;
+      audio.volume = 0.5;
+      try {
+        await audio.play();
+        // A pending play() can finish after Off, destination selection or unmount.
+        if (!musicAllowedRef.current || !musicRequestedRef.current) {
+          audio.pause();
+          audio.muted = true;
+        }
+      } catch {
+        // Autoplay may need a gesture. A failed explicit On attempt stays Off.
+        if (explicit && intent === musicIntentRef.current) hardStopMusic();
+      }
+    },
+    [hardStopMusic]
+  );
 
-    if (audioEnabled) {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.muted = true;
-      setAudioEnabled(false);
-      setAudioPlaying(false);
-      setAudioBlocked(false);
+  const handleMusicToggle = useCallback(() => {
+    if (!musicAllowedRef.current) return;
+    if (musicRequestedRef.current) {
+      hardStopMusic();
       return;
     }
-
-    audio.muted = false;
-    audio.volume = 0.5;
+    musicRequestedRef.current = true;
+    musicIntentRef.current++;
     setAudioEnabled(true);
-
-    try {
-      await audio.play();
-      setAudioBlocked(false);
-      setAudioPlaying(true);
-    } catch {
-      setAudioEnabled(false);
-      setAudioBlocked(true);
-      setAudioPlaying(false);
-    }
-  }, [audioEnabled, musicEnabled]);
+    void attemptAutoPlay(true);
+  }, [attemptAutoPlay, hardStopMusic]);
 
   const locations = useMemo(
     () => [
@@ -294,119 +305,60 @@ export default function ZimbabweInteractiveGlobe({
     }
   }, [handleFlyTo, zimCoords.lat, zimCoords.lng]);
 
-  const attemptAutoPlay = useCallback(async () => {
-    if (!audioRef.current || !audioEnabled) return;
-    try {
-      audioRef.current.muted = false;
-      await audioRef.current.play();
-      setAudioBlocked(false);
-      setAudioPlaying(true);
-    } catch {
-      // Autoplay blocked; user gesture will be required.
-      setAudioBlocked(true);
-      setAudioPlaying(false);
-    }
-  }, [audioEnabled]);
-
   useEffect(() => {
-    if (!audioRef.current) return;
     if (!musicEnabled) {
       hardStopMusic();
       return;
     }
-    // Prop controls whether music is allowed in this view. Do not force-enable
-    // on local toggle changes while the prop itself is unchanged.
+    // Only the view-level prop may reset the user's music choice.
+    musicRequestedRef.current = true;
+    musicIntentRef.current++;
     setAudioEnabled(true);
     void attemptAutoPlay();
-    // Intentionally keyed only by prop-level enablement.
   }, [attemptAutoPlay, hardStopMusic, musicEnabled]);
 
   useEffect(() => {
-    const onStop = () => {
-      hardStopMusic();
+    const audio = audioRef.current;
+    if (!audio) return;
+    const retry = () => {
+      void attemptAutoPlay();
     };
-    window.addEventListener("onesa:stop-globe-music", onStop as EventListener);
-    return () => {
-      window.removeEventListener(
-        "onesa:stop-globe-music",
-        onStop as EventListener
-      );
+    const onPlay = () => {
+      if (!musicRequestedRef.current || !musicAllowedRef.current) {
+        audio.pause();
+        audio.muted = true;
+      }
     };
-  }, [hardStopMusic]);
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.muted = false;
-    audioRef.current.volume = 0.5;
-    void attemptAutoPlay();
-    const retry1 = window.setTimeout(() => {
-      if (!audioPlaying && audioEnabled) void attemptAutoPlay();
-    }, 1000);
-    const retry2 = window.setTimeout(() => {
-      if (!audioPlaying && audioEnabled) void attemptAutoPlay();
-    }, 3000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") retry();
+    };
+    audio.addEventListener("loadedmetadata", retry);
+    audio.addEventListener("canplay", retry);
+    audio.addEventListener("canplaythrough", retry);
+    audio.addEventListener("play", onPlay);
+    window.addEventListener("onesa:stop-globe-music", hardStopMusic);
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+    window.addEventListener("pointerdown", retry);
+    const retry1 = window.setTimeout(retry, 1000);
+    const retry2 = window.setTimeout(retry, 3000);
     return () => {
       window.clearTimeout(retry1);
       window.clearTimeout(retry2);
+      audio.removeEventListener("loadedmetadata", retry);
+      audio.removeEventListener("canplay", retry);
+      audio.removeEventListener("canplaythrough", retry);
+      audio.removeEventListener("play", onPlay);
+      window.removeEventListener("onesa:stop-globe-music", hardStopMusic);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+      window.removeEventListener("pointerdown", retry);
+      musicRequestedRef.current = false;
+      musicIntentRef.current++;
+      audio.pause();
+      audio.muted = true;
     };
-  }, [attemptAutoPlay, audioEnabled, audioPlaying]);
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    const handleCanPlay = () => {
-      void attemptAutoPlay();
-    };
-    const handleCanPlayThrough = () => {
-      void attemptAutoPlay();
-    };
-    const handlePlay = () => {
-      if (audioRef.current) {
-        audioRef.current.muted = false;
-      }
-      setAudioPlaying(true);
-    };
-    const handlePause = () => {
-      setAudioPlaying(false);
-    };
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible") {
-        void attemptAutoPlay();
-      }
-    };
-    const handlePointer = () => {
-      if (!audioRef.current || audioPlaying || !audioEnabled) return;
-      audioRef.current.muted = false;
-      void audioRef.current
-        .play()
-        .then(() => {
-          setAudioBlocked(false);
-          setAudioPlaying(true);
-        })
-        .catch(() => {
-          setAudioBlocked(true);
-          setAudioPlaying(false);
-        });
-    };
-    audioRef.current.addEventListener("canplay", handleCanPlay);
-    audioRef.current.addEventListener("canplaythrough", handleCanPlayThrough);
-    audioRef.current.addEventListener("play", handlePlay);
-    audioRef.current.addEventListener("pause", handlePause);
-    document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("focus", handleVisibility);
-    window.addEventListener("pointerdown", handlePointer);
-    return () => {
-      audioRef.current?.removeEventListener("canplay", handleCanPlay);
-      audioRef.current?.removeEventListener(
-        "canplaythrough",
-        handleCanPlayThrough
-      );
-      audioRef.current?.removeEventListener("play", handlePlay);
-      audioRef.current?.removeEventListener("pause", handlePause);
-      document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("focus", handleVisibility);
-      window.removeEventListener("pointerdown", handlePointer);
-    };
-  }, [attemptAutoPlay, audioEnabled, audioPlaying]);
+  }, [attemptAutoPlay, hardStopMusic]);
 
   useEffect(() => {
     let rafId = 0;
@@ -473,17 +425,8 @@ export default function ZimbabweInteractiveGlobe({
         ref={audioRef}
         data-onesa-globe-music="true"
         src="/sounds/zimbabwe_a_world_of_wonders.mp3"
-        autoPlay={musicEnabled}
         loop
         preload={musicEnabled ? "metadata" : "none"}
-        onLoadedMetadata={e => {
-          e.currentTarget.muted = false;
-          e.currentTarget.volume = 0.5;
-          void attemptAutoPlay();
-        }}
-        onPlay={() => {
-          if (audioRef.current) audioRef.current.muted = false;
-        }}
       />
 
       <div className="absolute inset-0 flex items-center justify-center">
@@ -565,17 +508,15 @@ export default function ZimbabweInteractiveGlobe({
       {musicEnabled ? (
         <button
           type="button"
-          onClick={() => {
-            void handleMusicToggle();
-          }}
-          className="absolute z-20 bottom-6 right-6 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
+          aria-pressed={audioEnabled}
+          onClick={handleMusicToggle}
+          className="absolute z-20 bottom-6 right-6 min-h-11 rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-zim-black"
         >
           {audioEnabled
             ? t("globe.music_on", { defaultValue: "Music: On" })
             : t("globe.music_off", { defaultValue: "Music: Off" })}
         </button>
       ) : null}
-      {audioBlocked ? null : null}
     </div>
   );
 }

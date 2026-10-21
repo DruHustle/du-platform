@@ -563,26 +563,17 @@
       "subtitle": "Bvunza nezvenzvimbo, tsika nemazano enzendo. Onesa inobatsira kugadzira mibvunzo nehurongwa; vanopa mabasa vanosimbisa mitengo nebookings.",
       "companion_title": "Ongorora nzvimbo ugadzire hurongwa hwekutanga",
       "companion_subtitle": "Taura zvaunofarira, enzanisa nzvimbo uye ronga nzira. Simbisa nguva dzekuvhura, zvifambiso nekuwanikwa usati wafamba.",
-      "assistant_label": "Muenzaniso wehurukuro naOnesa",
-      "prompt_question": "Onesa, ndingaziva sei zvekudya zveZimbabwe muHarare?",
-      "prompt_response": "Tanga nesadza, muriwo wemwaka nezvinonaka zvemuno. Bvunza waunoshanyira kana resitorendi menyu nenguva dzekuvhura usati waenda.",
-      "phone_conversation": {
-        "q1": "Onesa, ndingaziva sei zvekudya zveZimbabwe muHarare?",
-        "a1": "Tanga nesadza, muriwo wemwaka nezvinonaka zvemuno. Bvunza waunoshanyira kana resitorendi menyu nenguva dzekuvhura usati waenda.",
-        "q2": "Chii chandinofanira kusimbisa ndisati ndaenda manheru?",
-        "a2": "Simbisa nguva dzekuvhura nezvifambiso nemuno. Bvunza waunoshanyira mazano azvino uye ronga kudzoka.",
-        "q3": "Ndingabatanidza kudya nekushanyira nzvimbo dzetsika here?",
-        "a3": "Funga nezvegallery kana nzvimbo yenhaka iri pedyo nekudya. Simbisa nguva dzekuvhura upe nguva yekufamba.",
-        "q4": "Ndingaronga sei mari yekushanya ikoko?",
-        "a4": "Isa mari yekudya, zvifambiso nemari yekupinda kana iripo. Bvunza vanopa mabasa mitengo yazvino; aya mazano ekuronga, kwete mutengo wakasimbiswa kana booking."
+      "virtual_preview": {
+        "title": "Ongorora nzvimbo muVR",
+        "desc": "Edza muenzaniso weSample City une mifananidzo inotenderera. Unogonawo kushandisa mudziyo weVR. Nzendo dzenzvimbo dzeZimbabwe hadzisati dzavapo."
       },
       "guide": {
         "title": "Ruzivo rweMuno",
         "desc": "Bvunza nezvetsika, zvekudya nenzvimbo dzekutsvakurudza usati wafamba."
       },
       "navigate": {
-        "title": "Mazano enzira",
-        "desc": "Ona nzvimbo dzekubatanidza murwendo rumwe. Simbisa nguva nezvifambiso nemuno."
+        "title": "Gwara reAugmented Reality",
+        "desc": "Ongorora nzvimbo nekamera yako, rubatsiro rwaOnesa uye tsananguro dzaunogona kuteerera."
       },
       "plan": {
         "title": "Zvirongwa Zvako",
@@ -592,7 +583,7 @@
       "cta": {
         "chat": "Taura neOnesa",
         "plan_trip": "Ronga rwendo rwako",
-        "local_guide_ar": "Gwara rekamera nenzvimbo"
+        "local_guide_ar": "Ongorora neAR"
       },
       "trip_planner": {
         "badge": "Onesa AI Rwendo",

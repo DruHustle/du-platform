@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   Plus,
-  MapPin,
+  Camera,
   Calendar,
   Shield,
   Award,
@@ -58,8 +58,6 @@ export default function Tourism() {
       ? (value as string[])
       : fallback;
   };
-  const tx = (key: string, fallback: string) =>
-    t(key, { defaultValue: fallback });
 
   const heroSlides = useMemo(
     () => [
@@ -135,52 +133,6 @@ export default function Tourism() {
         subtitle:
           t("tourism.hero.subtitle8") ||
           "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors.",
-      },
-    ],
-    [t]
-  );
-
-  const phoneConversation = useMemo(
-    () => [
-      {
-        question: tx(
-          "tourism.onesa.phone_conversation.q1",
-          "Onesa, how could I explore Zimbabwean food in Harare?"
-        ),
-        answer: tx(
-          "tourism.onesa.phone_conversation.a1",
-          "Start with sadza, seasonal vegetables and local relishes. Ask your host or a restaurant about the menu and opening hours before you go."
-        ),
-      },
-      {
-        question: tx(
-          "tourism.onesa.phone_conversation.q2",
-          "What should I check before an evening visit?"
-        ),
-        answer: tx(
-          "tourism.onesa.phone_conversation.a2",
-          "Confirm opening hours and transport with local providers. Ask your host for current local advice and arrange a way back."
-        ),
-      },
-      {
-        question: tx(
-          "tourism.onesa.phone_conversation.q3",
-          "Could I combine food with a cultural visit?"
-        ),
-        answer: tx(
-          "tourism.onesa.phone_conversation.a3",
-          "Consider a gallery or heritage stop near your meal. Check visiting hours and leave time for travel between places."
-        ),
-      },
-      {
-        question: tx(
-          "tourism.onesa.phone_conversation.q4",
-          "How should I budget for that outing?"
-        ),
-        answer: tx(
-          "tourism.onesa.phone_conversation.a4",
-          "Allow for meals, transport and any entry fees. Ask providers for current prices; my suggestions are planning ideas rather than a quote or booking."
-        ),
       },
     ],
     [t]
@@ -576,13 +528,21 @@ export default function Tourism() {
       description:
         t("tourism.onesa.guide.desc") ||
         "Ask about local etiquette, food and places to research before you travel.",
+      image: "/images/pages/technology/zim_think.jpg",
+      href: "/onesa-ai-chat",
+      cta: t("tourism.onesa.cta.chat", { defaultValue: "Chat with Onesa" }),
     },
     {
-      icon: MapPin,
-      title: t("tourism.onesa.navigate.title") || "Route ideas",
+      icon: Camera,
+      title: t("tourism.onesa.navigate.title") || "Augmented Reality Guide",
       description:
         t("tourism.onesa.navigate.desc") ||
-        "Explore places to combine in one itinerary. Confirm travel times and transport locally.",
+        "Explore destinations with a camera preview, Onesa’s place guidance and optional narration.",
+      image: "/images/pages/tourism/great_zimbabwe.jpeg",
+      href: "/onesa-ai-tourism-augmented-experience",
+      cta: t("tourism.onesa.cta.local_guide_ar", {
+        defaultValue: "Explore in AR",
+      }),
     },
     {
       icon: Calendar,
@@ -590,6 +550,24 @@ export default function Tourism() {
       description:
         t("tourism.onesa.plan.desc") ||
         "Create a draft itinerary based on your interests, dates and travel preferences.",
+      image: "/images/pages/tourism/victoria_falls.webp",
+      href: "/onesa-ai-book-trip",
+      cta: t("tourism.onesa.cta.plan_trip", { defaultValue: "Plan your trip" }),
+    },
+    {
+      icon: Globe2,
+      title: t("tourism.onesa.virtual_preview.title", {
+        defaultValue: "Interactive previews",
+      }),
+      description: t("tourism.onesa.virtual_preview.desc", {
+        defaultValue:
+          "Try the Sample City demo with panoramic scenes and optional headset support. Zimbabwe destination tours are not available yet.",
+      }),
+      image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
+      href: "/onesa-ai-tourism-virtual-experience",
+      cta: t("tourism.intro.virtual_experience_center_cta", {
+        defaultValue: "Explore virtual previews",
+      }),
     },
   ];
 
@@ -759,46 +737,18 @@ export default function Tourism() {
             defaultValue: "Onesa AI Companion",
           })}
         >
-          {onesaTouristFeatures.map((feature, index) => (
+          {onesaTouristFeatures.map(feature => (
             <DiscoveryTile
               key={feature.title}
               title={feature.title}
               icon={feature.icon}
-              image={
-                [
-                  "/images/pages/technology/zim_think.jpg",
-                  "/images/pages/tourism/great_zimbabwe.jpeg",
-                  "/images/pages/tourism/victoria_falls.webp",
-                ][index]
-              }
+              image={feature.image}
               footer={
                 <Button
                   asChild
                   className="w-full bg-zim-gold text-slate-950 hover:bg-yellow-300"
                 >
-                  <Link
-                    href={
-                      [
-                        "/onesa-ai-chat",
-                        "/onesa-ai-tourism-augmented-experience",
-                        "/onesa-ai-book-trip",
-                      ][index]
-                    }
-                  >
-                    {
-                      [
-                        t("tourism.onesa.cta.chat", {
-                          defaultValue: "Chat with Onesa",
-                        }),
-                        t("tourism.onesa.cta.local_guide_ar", {
-                          defaultValue: "Camera & location guide",
-                        }),
-                        t("tourism.onesa.cta.plan_trip", {
-                          defaultValue: "Plan your trip",
-                        }),
-                      ][index]
-                    }
-                  </Link>
+                  <Link href={feature.href}>{feature.cta}</Link>
                 </Button>
               }
             >
@@ -806,23 +756,6 @@ export default function Tourism() {
             </DiscoveryTile>
           ))}
         </SwipeRail>
-        <details className="editorial-details mt-4">
-          <summary>
-            {t("tourism.onesa.example_conversation", {
-              defaultValue: "Example conversation with Onesa",
-            })}
-          </summary>
-          <dl className="discovery-example mt-5 space-y-5">
-            {phoneConversation.map(turn => (
-              <div key={turn.question}>
-                <dt className="font-semibold text-sm leading-7">
-                  {turn.question}
-                </dt>
-                <dd className="mt-2 text-sm leading-7">{turn.answer}</dd>
-              </div>
-            ))}
-          </dl>
-        </details>
       </DiscoverySection>
 
       <Dialog

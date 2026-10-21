@@ -563,26 +563,17 @@
       "subtitle": "Buza ngezindawo, amasiko lamacebo ohambo. IOnesa isiza ukulungisa imibuzo lohlelo lokuqala; abahlinzeki baqinisekisa intengo lamabhukhingi.",
       "companion_title": "Hlola izindawo wenze uhlelo lokuqala lohambo",
       "companion_subtitle": "Xoxa ngokuthandayo, qathanisa izindawo uhlele indlela. Qinisekisa izikhathi zokuvula, ezokuthutha lokutholakala ungakahambi.",
-      "assistant_label": "Isibonelo sengxoxo leOnesa",
-      "prompt_question": "Onesa, ngingahlola njani ukudla kweZimbabwe eHarare?",
-      "prompt_response": "Qala ngesadza, imibhida yesizini lemitshende yendawo. Buza umamukeli kumbe irestshurenti ngemenyu lezikhathi zokuvula ungakayi.",
-      "phone_conversation": {
-        "q1": "Onesa, ngingahlola njani ukudla kweZimbabwe eHarare?",
-        "a1": "Qala ngesadza, imibhida yesizini lemitshende yendawo. Buza umamukeli kumbe irestshurenti ngemenyu lezikhathi zokuvula ungakayi.",
-        "q2": "Kuyini okumele ngikuhlole ngingakayi kusihlwa?",
-        "a2": "Qinisekisa izikhathi zokuvula lezokuthutha endaweni. Buza umamukeli amacebo amanje uhlele ukubuyela.",
-        "q3": "Ngingahlanganisa ukudla lokuvakatshela amasiko yini?",
-        "a3": "Cabanga ngegalari kumbe indawo yamagugu eduzane. Hlola izikhathi zokuvakatshela unike isikhathi sokuhamba.",
-        "q4": "Ngingayihlela njani imali yokuvakatsha lokho?",
-        "a4": "Lungisela ukudla, ezokuthutha lemali yokungena nxa ikhona. Buza abahlinzeki intengo zamanje; la ngamacebo okuhlela, hatshi intengo eqinisekisiweyo kumbe ibhukhingi."
+      "virtual_preview": {
+        "title": "Hlola izindawo ngeVR",
+        "desc": "Zama isibonelo seSample City esilemifanekiso ezungezayo. Ungasebenzisa ledivayisi yeVR. Uhambo lwezindawo zeZimbabwe alukatholakali."
       },
       "guide": {
         "title": "Ulwazi lwendawo",
         "desc": "Buza ngamasiko, ukudla lezindawo zokucwaninga ungakahambi."
       },
       "navigate": {
-        "title": "Amacebo ezindlela",
-        "desc": "Bona izindawo zokuhlanganisa ohambweni olulodwa. Qinisekisa izikhathi lezokuthutha endaweni."
+        "title": "Umhlahlandlela weAugmented Reality",
+        "desc": "Hlola izindawo ngekhamera yakho, ulwazi lukaOnesa kanye lokulandisa ongakukhetha."
       },
       "plan": {
         "title": "Izinhlelo ezenziwe wena",
@@ -592,7 +583,7 @@
       "cta": {
         "chat": "Xoxa le-Onesa",
         "plan_trip": "Hlela uhambo lwakho",
-        "local_guide_ar": "Umhlahlandlela wekhamera lendawo"
+        "local_guide_ar": "Hlola ngeAR"
       },
       "trip_planner": {
         "badge": "Onesa AI Uhambo",

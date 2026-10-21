@@ -563,26 +563,17 @@
       "subtitle": "Ask about destinations, local customs and travel ideas. Onesa helps you prepare questions and a draft plan; providers confirm prices and bookings.",
       "companion_title": "Explore destinations and build a draft itinerary",
       "companion_subtitle": "Discuss your interests, compare places and plan a route. Check opening hours, transport and availability directly before travelling.",
-      "assistant_label": "Example conversation with Onesa",
-      "prompt_question": "Onesa, how could I explore Zimbabwean food in Harare?",
-      "prompt_response": "Start with sadza, seasonal vegetables and local relishes. Ask your host or a restaurant about the menu and opening hours before you go.",
-      "phone_conversation": {
-        "q1": "Onesa, how could I explore Zimbabwean food in Harare?",
-        "a1": "Start with sadza, seasonal vegetables and local relishes. Ask your host or a restaurant about the menu and opening hours before you go.",
-        "q2": "What should I check before an evening visit?",
-        "a2": "Confirm opening hours and transport with local providers. Ask your host for current local advice and arrange a way back.",
-        "q3": "Could I combine food with a cultural visit?",
-        "a3": "Consider a gallery or heritage stop near your meal. Check visiting hours and leave time for travel between places.",
-        "q4": "How should I budget for that outing?",
-        "a4": "Allow for meals, transport and any entry fees. Ask providers for current prices; my suggestions are planning ideas rather than a quote or booking."
+      "virtual_preview": {
+        "title": "Interactive previews",
+        "desc": "Try the Sample City demo with panoramic scenes and optional headset support. Zimbabwe destination tours are not available yet."
       },
       "guide": {
         "title": "Local Insights",
         "desc": "Ask about local etiquette, food and places to research before you travel."
       },
       "navigate": {
-        "title": "Route ideas",
-        "desc": "Explore places to combine in one itinerary. Confirm travel times and transport locally."
+        "title": "Augmented Reality Guide",
+        "desc": "Explore destinations with a camera preview, Onesa’s place guidance and optional narration."
       },
       "plan": {
         "title": "Custom Itineraries",
@@ -592,7 +583,7 @@
       "cta": {
         "chat": "Chat with Onesa",
         "plan_trip": "Plan your trip",
-        "local_guide_ar": "Camera & location guide"
+        "local_guide_ar": "Explore in AR"
       },
       "trip_planner": {
         "badge": "Onesa AI Travel",

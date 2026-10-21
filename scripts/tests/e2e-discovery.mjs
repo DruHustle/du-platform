@@ -356,6 +356,73 @@ try {
       scenario:
         "regulation deep links and same-page anchors reveal the correct tile",
     });
+    await page.goto(base + "/tourism");
+    const companion = page.locator('[data-swipe-rail="Onesa AI Companion"]');
+    assert.equal(await companion.locator(".swipe-rail-item").count(), 4);
+    assert.equal(
+      await page
+        .locator("summary")
+        .filter({ hasText: "Example conversation with Onesa" })
+        .count(),
+      0
+    );
+    const companionViewport = companion.locator(".swipe-rail-viewport");
+    const arTile = companion.locator(".swipe-rail-item").nth(1);
+    assert.equal(
+      await arTile
+        .getByRole("heading", { name: "Augmented Reality Guide", exact: true })
+        .count(),
+      1
+    );
+    const arLink = arTile.getByRole("link", {
+      name: "Explore in AR",
+      exact: true,
+    });
+    assert.equal(
+      await arLink.getAttribute("href"),
+      "/onesa-ai-tourism-augmented-experience"
+    );
+    await arLink.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${output}/onesa-ar-tile-${width}.png` });
+    await arLink.click();
+    await page.waitForURL("**/onesa-ai-tourism-augmented-experience");
+    await page.locator("#aug-place").waitFor();
+    await page.getByRole("link", { name: /back to tourism/i }).click();
+    await page.waitForURL("**/tourism");
+    record({
+      width,
+      scenario:
+        "AR companion tile names the feature and opens the augmented-reality guide",
+    });
+    await companionViewport.focus();
+    await companionViewport.press("End");
+    const fourth = companion.locator(".swipe-rail-item").last();
+    const previewLink = fourth.getByRole("link", {
+      name: "Explore virtual previews",
+      exact: true,
+    });
+    await previewLink.scrollIntoViewIfNeeded();
+    assert.equal(await fourth.locator(".discovery-tile-with-image").count(), 1);
+    assert.equal(await fourth.locator(".onesa-chat-preview").count(), 0);
+    assert.equal(
+      await previewLink.getAttribute("href"),
+      "/onesa-ai-tourism-virtual-experience"
+    );
+    const cardBounds = await fourth.boundingBox();
+    assert(
+      cardBounds.x >= 0 && cardBounds.x + cardBounds.width <= width + 1,
+      "Fourth tile is fully reachable"
+    );
+    await companionViewport.evaluate(el => el.blur());
+    await page.screenshot({ path: `${output}/onesa-companion-${width}.png` });
+    await previewLink.click();
+    await page.waitForURL("**/onesa-ai-tourism-virtual-experience");
+    await page.locator("main h1").waitFor();
+    record({
+      width,
+      scenario:
+        "four matching companion tiles; static transcript removed; fourth tile opens virtual previews",
+    });
     await context.close();
   }
   assert.deepEqual(errors, []);
