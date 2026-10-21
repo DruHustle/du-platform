@@ -53,9 +53,9 @@ function getWelcomeMessage(t: ReturnType<typeof useTranslation>["t"]) {
   return (
     t("onesa.welcome", {
       defaultValue:
-        "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
+        "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?",
     }) ||
-    "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks."
+    "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?"
   );
 }
 
@@ -860,7 +860,14 @@ export default function OnesaFloatingAssistant() {
                       </p>
                     ) : null}
 
-                    <div className="flex-1 overflow-y-auto px-4 py-4">
+                    <div
+                      role="log"
+                      aria-label={t("onesa.title")}
+                      aria-live="polite"
+                      aria-relevant="additions"
+                      aria-busy={onesaLoading}
+                      className="flex-1 overflow-y-auto px-4 py-4"
+                    >
                       <div className="space-y-4">
                         {onesaMessages.map((message, index) => (
                           <div
@@ -911,7 +918,7 @@ export default function OnesaFloatingAssistant() {
                           hasOnesaChatStarted
                             ? ""
                             : t("onesa.starter_prompt", {
-                                defaultValue: "Start chat....",
+                                defaultValue: "Ask about Zimbabwe…",
                               })
                         }
                         className="min-h-[96px] border-white/20 bg-white/[0.02] text-white placeholder:text-white/70"

@@ -107,26 +107,26 @@ export default function Home() {
         title: tr("home.tiles.shop.title", "Shop"),
         description: tr(
           "home.tiles.shop.description",
-          "Shop Zimbabwean products through a curated marketplace with diaspora-friendly delivery flows, trusted product sourcing, and simpler checkout."
+          "Find Zimbabwean food, crafts and supporter apparel for your home or as a gift."
         ),
         detail: tr(
           "home.tiles.shop.detail",
-          "From food and gifts to premium local goods, the experience is designed to make cross-border buying feel direct and dependable."
+          "Build a basket and send an order request. Confirm availability, delivery and payment with the team before buying."
         ),
         href: "/shop",
         bgImage: "/images/pages/shop/zimbabwe_shop_hero.webp",
-        stats: tr("home.tiles.shop.stats", "Marketplace Ready"),
+        stats: tr("home.tiles.shop.stats", "Browse products"),
         icon: ShoppingBag,
       },
       {
         title: tr("home.tiles.technology.title", "Technology"),
         description: tr(
           "home.tiles.technology.description",
-          "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and the tools shaping smarter access across diaspora journeys and local opportunity."
+          "Meet Onesa, the AI platform powering assistance on Diaspora Unlocked."
         ),
         detail: tr(
           "home.tiles.technology.detail",
-          "The technology module connects product vision, applied AI, and practical innovation built around Zimbabwean context rather than generic global defaults."
+          "Ask questions about Zimbabwe, explore ideas and get help with products, opportunities and travel plans."
         ),
         href: "/technology",
         bgImage: "/images/pages/technology/ai_innovation.webp",
@@ -137,30 +137,30 @@ export default function Home() {
         title: tr("home.tiles.investment.title", "Investment"),
         description: tr(
           "home.tiles.investment.description",
-          "Explore vetted opportunities, diaspora-friendly projects, and structured investment access across sectors with clearer context and better visibility."
+          "Explore project profiles across tourism, agriculture, manufacturing, technology and energy."
         ),
         detail: tr(
           "home.tiles.investment.detail",
-          "Discover projects that align with long-term participation, capital deployment, and practical engagement in Zimbabwe's growth story."
+          "Read the background and identify questions for project promoters. Funding terms and availability need independent confirmation."
         ),
         href: "/investment",
         bgImage: "/images/pages/investment/rbz_building.webp",
-        stats: tr("home.tiles.investment.stats", "$50M+ Opportunities"),
+        stats: tr("home.tiles.investment.stats", "Explore project profiles"),
         icon: Landmark,
       },
       {
         title: tr("home.tiles.tourism.title", "Tourism"),
         description: tr(
           "home.tiles.tourism.description",
-          "Explore Zimbabwe's world-class attractions and plan your visit with confidence, from iconic landmarks to deeper cultural and heritage experiences."
+          "Discover waterfalls, wildlife, heritage sites and places to explore across Zimbabwe."
         ),
         detail: tr(
           "home.tiles.tourism.detail",
-          "Travel planning is shaped for both first-time visitors and diaspora return journeys that need stronger local context."
+          "Compare destinations, preview virtual experiences and create an indicative trip plan with Onesa."
         ),
         href: "/tourism",
         bgImage: "/images/pages/tourism/victoria_falls.webp",
-        stats: tr("home.tiles.tourism.stats", "Diaspora Travel Ready"),
+        stats: tr("home.tiles.tourism.stats", "Find your next destination"),
         icon: MapPin,
       },
     ],

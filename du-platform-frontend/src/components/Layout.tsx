@@ -487,7 +487,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.vision_label", { defaultValue: "Our Vision" }),
       content: t("footer.about.vision_content", {
         defaultValue:
-          "To be the trusted diaspora gateway connecting Zimbabweans abroad to meaningful opportunities and services back home.",
+          "Make it easier to stay connected to Zimbabwe, wherever you live.",
       }),
     },
     {
@@ -495,7 +495,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.mission_label", { defaultValue: "Our Mission" }),
       content: t("footer.about.mission_content", {
         defaultValue:
-          "To unify tourism, investment, shopping, and technology pathways through one secure and accessible digital platform.",
+          "Bring Zimbabwean products, travel information, project profiles and practical AI help into one place.",
       }),
     },
     {
@@ -503,7 +503,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.values_label", { defaultValue: "Our Values" }),
       content: t("footer.about.values_content", {
         defaultValue:
-          "Trust, service excellence, transparency, innovation, and lasting commitment to diaspora impact.",
+          "Clear information, useful guidance and honest explanations of what is available.",
       }),
     },
     {
@@ -511,7 +511,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.who_label", { defaultValue: "Who we are" }),
       content: t("footer.about.who_content", {
         defaultValue:
-          "We are a team comprised of Zimbabwe diaspora professionals building practical digital solutions that keep families, businesses, and communities connected to home.",
+          "Diaspora Unlocked is a digital platform for Zimbabweans abroad and anyone exploring Zimbabwe.",
       }),
     },
     {
@@ -519,7 +519,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.what_label", { defaultValue: "What we do" }),
       content: t("footer.about.what_content", {
         defaultValue:
-          "We build and operate a unified diaspora platform that connects users to tourism, investment, shopping, and AI-powered guidance. We also partner with trusted institutions and service providers to make participation secure, practical, and measurable.",
+          "Browse products, plan a visit, research project profiles and ask Onesa for help. Product orders are reviewed with you before payment and delivery are agreed.",
       }),
     },
   ];
@@ -1090,7 +1090,10 @@ export default function Layout({ children }: LayoutProps) {
               </h3>
               <div className="space-y-4">
                 <p className="text-sm text-slate-500">
-                  {tr("footer.newsletter.description", "Stay updated.")}
+                  {tr(
+                    "footer.newsletter.description",
+                    "News and updates by email."
+                  )}
                 </p>
                 <form
                   className="flex min-w-0 flex-row items-center gap-2"

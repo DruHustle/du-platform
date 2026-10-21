@@ -15,7 +15,7 @@ import { Link } from "wouter";
 export default function ChatPage() {
   const { t, i18n } = useTranslation();
   const starterPrompt = t("onesa.starter_prompt", {
-    defaultValue: "Start chat....",
+    defaultValue: "Ask about Zimbabwe…",
   });
   const onlineAria = t("onesa.online_indicator_aria", {
     defaultValue: "Onesa online",
@@ -33,7 +33,7 @@ export default function ChatPage() {
 
   const welcomeMessage = t("onesa.welcome", {
     defaultValue:
-      "I am an expert on Zimbabwe and the African continent. Let me help you navigate everything from investment, technology, and tourism to your day-to-day tasks.",
+      "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?",
   });
   const [messages, setMessages] = useState<OnesaChatMessage[]>([
     {
@@ -214,18 +214,18 @@ export default function ChatPage() {
         <div className="chat-workspace mx-auto flex w-full">
           <div className="content-panel flex w-full flex-1 flex-col overflow-hidden rounded-[2rem] border border-zim-gold/20 bg-slate-950/95 !p-0 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl md:rounded-[1.8rem] md:min-h-[min(72vh,640px)]">
             <div className="flex flex-1 min-h-0 flex-col">
-              <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
-                <div className="flex min-w-0 flex-1 items-center gap-3">
+              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
+                <div className="flex min-w-0 flex-1 basis-48 flex-wrap items-center gap-3">
                   <Button
                     asChild
-                    className="h-8 rounded-full border border-white/15 bg-slate-900 px-3 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800"
+                    className="h-auto min-h-8 max-w-full whitespace-normal rounded-full border border-white/15 bg-slate-900 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800"
                   >
                     <Link href="/tourism">
                       <ArrowLeft className="h-4 w-4" />
                       {backLabel}
                     </Link>
                   </Button>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1 basis-32">
                     <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold">
                       {t("onesa.badge", { defaultValue: "Onesa AI" })}
                     </p>
@@ -261,7 +261,14 @@ export default function ChatPage() {
                 </p>
               ) : null}
 
-              <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
+              <div
+                role="log"
+                aria-label={t("onesa.title")}
+                aria-live="polite"
+                aria-relevant="additions"
+                aria-busy={loading}
+                className="flex-1 overflow-y-auto px-4 py-4 min-h-0"
+              >
                 <div className="space-y-4">
                   {messages.map((message, index) => (
                     <div

@@ -1,6 +1,8 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   Suspense,
+  Component,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -27,12 +29,6 @@ import {
   type UiLanguage,
 } from "./virtualExperienceText";
 import type { Point3D, VirtualWalkStage } from "./virtualExperienceTypes";
-
-const xrStore = createXRStore({
-  emulate: false,
-  baseAssetPath: new URL("/xr/profiles/", window.location.origin).href,
-  defaultControllerProfileId: "generic-trigger-squeeze-thumbstick",
-});
 
 type VrSupportState = "checking" | "supported" | "unsupported";
 type VrSupportReason = "unavailable" | "insecure_context" | "check_failed";
@@ -64,6 +60,7 @@ type VirtualExperienceCanvasProps = {
   onToggleConversation: () => void;
   onLandmarkClick: (position: Point3D) => void;
   onPointerMissed: () => void;
+  onPreviewReady?: (ready: boolean) => void;
 };
 
 function createVrHintTexture(
@@ -950,7 +947,7 @@ function VRScene({
   );
 }
 
-export default function VirtualExperienceCanvas({
+function VirtualExperienceRenderer({
   uiLanguage,
   stage,
   currentStageIndex,
@@ -972,6 +969,7 @@ export default function VirtualExperienceCanvas({
   onToggleConversation,
   onLandmarkClick,
   onPointerMissed,
+  onPreviewReady,
 }: VirtualExperienceCanvasProps) {
   const ui = useMemo(
     () =>
@@ -981,6 +979,15 @@ export default function VirtualExperienceCanvas({
       >,
     [uiLanguage]
   );
+  const [xrStore] = useState(() =>
+    createXRStore({
+      emulate: false,
+      baseAssetPath: new URL("/xr/profiles/", window.location.origin).href,
+      defaultControllerProfileId: "generic-trigger-squeeze-thumbstick",
+    })
+  );
+
+  const mounted = useRef(true);
   const [vrSupportState, setVrSupportState] =
     useState<VrSupportState>("checking");
   const [vrSupportReason, setVrSupportReason] =
@@ -1057,15 +1064,21 @@ export default function VirtualExperienceCanvas({
   }, [vrLaunchError]);
 
   useEffect(() => {
+    mounted.current = true;
     return () => {
+      mounted.current = false;
+      queueMicrotask(() => {
+        if (!mounted.current) xrStore.destroy();
+      });
       void xrStore
         .getState()
         .session?.end()
         .catch(() => undefined);
+      onPreviewReady?.(false);
       cameraRef.current = null;
       orbitControlsRef.current = null;
     };
-  }, [cameraRef, orbitControlsRef]);
+  }, [cameraRef, orbitControlsRef, xrStore, onPreviewReady]);
 
   useEffect(() => {
     const controls = orbitControlsRef.current;
@@ -1089,7 +1102,12 @@ export default function VirtualExperienceCanvas({
 
     void xrStore
       .enterVR()
+      .then(session => {
+        // Permission may resolve after this canvas was removed.
+        if (!mounted.current) return session?.end().catch(() => undefined);
+      })
       .catch((error: unknown) => {
+        if (!mounted.current) return;
         const name = error instanceof Error ? error.name : "";
         if (name === "SecurityError") {
           setVrLaunchError(ui.vrSecureContextRequired);
@@ -1102,6 +1120,7 @@ export default function VirtualExperienceCanvas({
         setVrLaunchError(ui.vrLaunchFailed);
       })
       .finally(() => {
+        if (!mounted.current) return;
         setIsEnteringVr(false);
       });
   }, [isCanvasReady, isEnteringVr, isVrSessionActive, ui, vrSupportState]);
@@ -1124,6 +1143,7 @@ export default function VirtualExperienceCanvas({
         gl.setClearColor(0x000000, 1);
         cameraRef.current = camera as THREE.PerspectiveCamera;
         setIsCanvasReady(true);
+        onPreviewReady?.(true);
       }}
     >
       <XR store={xrStore}>
@@ -1184,5 +1204,66 @@ export default function VirtualExperienceCanvas({
         />
       </XR>
     </Canvas>
+  );
+}
+
+class VrPreviewBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
+export default function VirtualExperienceCanvas(
+  props: VirtualExperienceCanvasProps
+) {
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+  useEffect(() => {
+    const canvas = document.createElement("canvas");
+    let context: WebGLRenderingContext | WebGL2RenderingContext | null = null;
+    try {
+      context = canvas.getContext("webgl2") || canvas.getContext("webgl");
+      setWebglSupported(Boolean(context));
+    } catch {
+      setWebglSupported(false);
+    } finally {
+      context?.getExtension("WEBGL_lose_context")?.loseContext();
+    }
+  }, []);
+  const ui = { ...VR_UI_TEXT.en, ...VR_UI_TEXT[props.uiLanguage] };
+  const fallback = (
+    <div className="relative h-full w-full bg-slate-950">
+      <img
+        src={props.stage.image}
+        alt={props.stage.title}
+        className="h-full w-full object-cover opacity-60"
+      />
+      <p
+        role="status"
+        className="absolute inset-x-4 top-28 rounded-xl bg-slate-950/90 p-4 text-sm leading-6 text-white"
+      >
+        {ui.previewUnavailable}
+      </p>
+    </div>
+  );
+  if (webglSupported === null)
+    return (
+      <div
+        role="status"
+        className="h-full w-full bg-slate-950"
+        aria-label={ui.loadingPoi}
+      />
+    );
+  if (!webglSupported) return fallback;
+  return (
+    <VrPreviewBoundary fallback={fallback}>
+      <VirtualExperienceRenderer {...props} />
+    </VrPreviewBoundary>
   );
 }

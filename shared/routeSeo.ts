@@ -18,9 +18,9 @@ export type RouteSeo = {
 };
 
 const SITE_NAME = "Diaspora Unlocked";
-const SITE_DEFAULT_TITLE = `${SITE_NAME} | Zimbabwe Diaspora Services`;
+const SITE_DEFAULT_TITLE = `${SITE_NAME} | Products, Travel & Opportunities`;
 const SITE_DEFAULT_DESCRIPTION =
-  "Explore one platform for Zimbabwe tourism, investment, shopping, and AI support built for diaspora households and partners.";
+  "Explore Zimbabwean products, travel information, business opportunities and practical AI help on Diaspora Unlocked, wherever you live.";
 const DEFAULT_ROBOTS = "index,follow";
 
 function normalizePathname(pathname: string): string {
@@ -62,14 +62,14 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       SITE_DEFAULT_TITLE,
       SITE_DEFAULT_DESCRIPTION,
       "/",
-      "Diaspora Unlocked Zimbabwe Diaspora Services"
+      "Diaspora Unlocked — connect with Zimbabwe"
     );
   }
 
   if (pathname === "/shop") {
     return buildSeo(
       "Shop Zimbabwe Products | Diaspora Unlocked",
-      "Browse curated Zimbabwean food, gifts, crafts, and lifestyle products with diaspora-friendly delivery flows, trusted sourcing, and clearer checkout guidance.",
+      "Browse Zimbabwean food, crafts and supporter apparel. Build a basket and send an order request to confirm availability, delivery and payment details.",
       "/shop",
       "Shop Zimbabwe Products"
     );
@@ -78,7 +78,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/shop/products") {
     return buildSeo(
       "Zimbabwe Product Catalogue | Diaspora Unlocked",
-      "Explore the live Diaspora Unlocked Zimbabwe product catalogue with curated staples, artisan goods, pantry essentials, and diaspora-ready delivery information.",
+      "Browse the Zimbabwean product catalogue and send an assisted order request. The team confirms product availability, delivery options and payment instructions.",
       "/shop/products",
       "Zimbabwe Product Catalogue"
     );
@@ -95,10 +95,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
 
   if (pathname === "/investment/opportunities") {
     return buildSeo(
-      "Active Investment Projects in Zimbabwe | Diaspora Unlocked",
-      "Browse active Zimbabwe investment opportunities with sector context, return ranges, participation thresholds, and diaspora-ready project summaries.",
+      "Zimbabwe Project Profiles | Diaspora Unlocked",
+      "Explore Zimbabwe project profiles by sector. Research listed promoters and confirm current scope, financial terms and approvals independently.",
       "/investment/opportunities",
-      "Active Investment Projects in Zimbabwe"
+      "Zimbabwe Project Profiles"
     );
   }
 
@@ -109,7 +109,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
         investmentProjectRoutes[slug as keyof typeof investmentProjectRoutes];
       return buildSeo(
         `${projectName} | Diaspora Unlocked`,
-        `Review the ${projectName} opportunity on Diaspora Unlocked, including sector focus, participation context, and diaspora-oriented investment detail.`,
+        `Review the ${projectName} opportunity on Diaspora Unlocked, as a starting point for research. Confirm scope, availability, financial terms and approvals independently.`,
         pathname,
         projectName
       );
@@ -118,17 +118,17 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
 
   if (pathname === "/ntir") {
     return buildSeo(
-      "Zimbabwe Investment Registry Search | Diaspora Unlocked",
-      "Search Zimbabwe investment and registry information through Diaspora Unlocked with guided access to structured records and discovery tools.",
+      "NTIR Business Directory | Diaspora Unlocked",
+      "Search business records maintained by Diaspora Unlocked. NTIR is a platform directory, not an official national register or independent verification service.",
       "/ntir",
-      "Zimbabwe Investment Registry Search"
+      "NTIR Business Directory"
     );
   }
 
   if (pathname === "/technology") {
     return buildSeo(
       "Onesa AI and Zimbabwe Technology | Diaspora Unlocked",
-      "Explore Onesa AI, Zimbabwe-focused digital infrastructure, and practical technology use cases across tourism, investment, logistics, and education.",
+      "Learn how Onesa powers AI help on Diaspora Unlocked. Explore Zimbabwean products, understand project information and plan travel with practical assistance.",
       "/technology",
       "Onesa AI and Zimbabwe Technology"
     );
@@ -146,7 +146,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/onesa-ai-chat") {
     return buildSeo(
       "Onesa AI Chat for Zimbabwe Guidance | Diaspora Unlocked",
-      "Use Onesa AI for Zimbabwe-focused travel, investment, technology, and practical local guidance built around local context instead of generic global answers.",
+      "Ask Onesa about Zimbabwean products, travel ideas and project information. Get explanations and starting points, then confirm important details with providers.",
       "/onesa-ai-chat",
       "Onesa AI Chat for Zimbabwe Guidance"
     );
@@ -155,7 +155,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/onesa-ai-book-trip") {
     return buildSeo(
       "Zimbabwe Trip Planner | Onesa AI",
-      "Plan Zimbabwe travel with AI-assisted routing, attraction selection, budget guidance, and downloadable itinerary support for visitors and diaspora return journeys.",
+      "Create a draft Zimbabwe itinerary with indicative budgets and download a PDF. Prices and availability are not live; bookings are made directly with providers.",
       "/onesa-ai-book-trip",
       "Zimbabwe Trip Planner"
     );
@@ -164,7 +164,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/onesa-ai-tourism-virtual-experience") {
     return buildSeo(
       "Zimbabwe Virtual Tourism Experience | Onesa AI",
-      "Preview Zimbabwe destinations through an interactive virtual tourism experience with guided narration, landmark context, and immersive destination exploration.",
+      "Try a Sample City demonstration with panoramic scenes, points of interest and optional narration. Zimbabwe destination tours are not available yet.",
       "/onesa-ai-tourism-virtual-experience",
       "Zimbabwe Virtual Tourism Experience"
     );
@@ -173,7 +173,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/onesa-ai-tourism-augmented-experience") {
     return buildSeo(
       "Zimbabwe Augmented Tourism Guide | Onesa AI",
-      "Use an augmented tourism guide to explore Zimbabwe destinations with location-aware context, camera support, narration controls, and Onesa AI assistance.",
+      "Explore destination information with optional camera, location and narration controls. This guide provides place context rather than object recognition or navigation.",
       "/onesa-ai-tourism-augmented-experience",
       "Zimbabwe Augmented Tourism Guide"
     );
@@ -192,7 +192,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/register") {
     return buildSeo(
       "Create Account | Diaspora Unlocked",
-      "Create a Diaspora Unlocked account to access platform services and updates.",
+      "Create a platform account. Browsing, order requests and newsletter subscriptions do not require an account.",
       "/register",
       "Create Account",
       "noindex,follow"

@@ -7,6 +7,7 @@ EN_FILE="$PUBLIC_DIR/locales/en/translation.json"
 if git diff --cached --name-only | grep -qx "$EN_FILE"; then
   echo "[pre-commit] English translations changed. Syncing locale keys..."
   python3 scripts/sync_translations.py --mode sync
+  pnpm exec prettier --write "$PUBLIC_DIR"/locales/*/translation.json
   git add "$PUBLIC_DIR"/locales/*/translation.json
 else
   echo "[pre-commit] No English translation key changes detected. Skipping translation sync."

@@ -1,5 +1,6 @@
 import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
 import assert from "node:assert/strict";
+import { calculateShopShippingCents } from "../../shared/shopCheckout.ts";
 import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
@@ -75,6 +76,9 @@ const setup = async (width, options = {}) => {
   let failCatalog = options.failCatalog;
   let failOrder = false;
   let submittedOrder;
+  let loseOrderResponse = false;
+  let orderRequests = 0;
+  const savedOrders = new Map();
   await context.route("**/*", async route => {
     const url = new URL(route.request().url());
     if (url.hostname === "fonts.googleapis.com")
@@ -90,22 +94,49 @@ const setup = async (width, options = {}) => {
       );
     }
     if (url.pathname === "/api/shop/orders") {
+      orderRequests++;
       submittedOrder = route.request().postDataJSON();
-      return route.fulfill(
-        failOrder
-          ? { status: 503, json: { message: "Please retry checkout" } }
-          : {
-              json: {
-                order: {
-                  orderRef: "LOCAL-TEST",
-                  status: "pending",
-                  totalCents: 6900,
-                  paymentStatus: "pending",
-                  paymentMethod: "manual_assisted",
-                },
-              },
-            }
-      );
+      if (failOrder)
+        return route.fulfill({
+          status: 503,
+          json: { message: "Please retry checkout" },
+        });
+      const key = submittedOrder.requestToken;
+      if (!savedOrders.has(key)) {
+        const items = submittedOrder.items.map(item => {
+          const p = products.find(p => p.id === item.productId);
+          return {
+            ...item,
+            productName: p.name,
+            lineTotalCents: p.price_cents * item.quantity,
+          };
+        });
+        const subtotalCents = items.reduce(
+          (sum, item) => sum + item.lineTotalCents,
+          0
+        );
+        const shippingCents = calculateShopShippingCents(
+          subtotalCents,
+          submittedOrder.deliverySpeed
+        );
+        savedOrders.set(key, {
+          orderRef: `DU-LOCAL-TEST-${savedOrders.size + 1}`,
+          status: "awaiting_payment",
+          paymentMethod: "manual_assisted",
+          manageToken: key,
+          currency: "EUR",
+          deliverySpeed: submittedOrder.deliverySpeed,
+          subtotalCents,
+          shippingCents,
+          totalCents: subtotalCents + shippingCents,
+          items,
+        });
+      }
+      if (loseOrderResponse) {
+        loseOrderResponse = false;
+        return route.abort("connectionreset");
+      }
+      return route.fulfill({ json: { order: savedOrders.get(key) } });
     }
     if (url.pathname === "/api/shop/restock-notifications")
       return route.fulfill({ json: { message: "Notification saved" } });
@@ -136,6 +167,11 @@ const setup = async (width, options = {}) => {
       failOrder = value;
     },
     submitted: () => submittedOrder,
+    orderRequests: () => orderRequests,
+    savedOrders: () => savedOrders.size,
+    loseOrderResponse: () => {
+      loseOrderResponse = true;
+    },
   };
 };
 try {
@@ -241,17 +277,42 @@ try {
     // Checkout is fully mocked; no orders, email, or production writes occur.
     if (width < 1024)
       await page.getByRole("button", { name: "Checkout", exact: true }).click();
+    assert.equal(
+      await page.locator("#shop-payment-dummy_gateway").count(),
+      0,
+      "Production builds must not offer simulated payment even with a local development environment file"
+    );
     await page.getByLabel("Full Name", { exact: true }).fill("Local Test");
     await page
       .getByLabel("Email Address", { exact: true })
       .fill("test@example.test");
-    await page.getByLabel("City", { exact: true }).fill("Berlin");
+    await page.getByLabel("Country", { exact: true }).fill("Zimbabwe");
+    await page.getByLabel("City", { exact: true }).fill("Harare");
     await page
       .getByLabel("Shipping Address", { exact: true })
       .fill("Local mock address");
+    // Native form constraints block malformed identity and support Enter submission.
+    await page.getByLabel("Email Address", { exact: true }).fill("invalid");
+    await page
+      .getByRole("button", { name: "Send order request", exact: true })
+      .click();
+    assert.equal(t.orderRequests(), 0, "Invalid email must not reach the API");
+    await page
+      .getByLabel("Email Address", { exact: true })
+      .fill("test@example.test");
+    await page.getByLabel("City", { exact: true }).fill("   ");
+    await page
+      .getByRole("button", { name: "Send order request", exact: true })
+      .click();
+    assert.equal(
+      t.orderRequests(),
+      0,
+      "Whitespace-only delivery details must not reach the API"
+    );
+    await page.getByLabel("City", { exact: true }).fill("Berlin");
     t.failOrder(true);
     await page
-      .getByRole("button", { name: "Place Order", exact: true })
+      .getByRole("button", { name: "Send order request", exact: true })
       .click();
     await page
       .getByRole("alert")
@@ -259,12 +320,58 @@ try {
       .waitFor();
     assert.equal((await cart())[0].quantity, 2);
     t.failOrder(false);
+    t.loseOrderResponse();
     await page
-      .getByRole("button", { name: "Place Order", exact: true })
+      .getByRole("button", { name: "Send order request", exact: true })
+      .click();
+    await page
+      .getByRole("alert")
+      .filter({ hasText: /could not be saved/i })
+      .waitFor();
+    const lostToken = t.submitted().requestToken;
+    assert.equal((await cart())[0].quantity, 2);
+    await page
+      .getByRole("button", { name: "Send order request", exact: true })
       .click();
     await page.getByText("LOCAL-TEST", { exact: false }).first().waitFor();
     assert.deepEqual(await cart(), []);
+    assert.equal(
+      t.submitted().requestToken,
+      lostToken,
+      "Lost responses must retry the same private grant"
+    );
+    assert.equal(t.savedOrders(), 1, "A retry must not create another order");
     assert.deepEqual(t.submitted().items, [{ productId: 1, quantity: 2 }]);
+    await page.reload();
+    await page.getByText("DU-LOCAL-TEST-1", { exact: true }).waitFor();
+    assert.equal(
+      await page.getByLabel("Full Name", { exact: true }).count(),
+      0,
+      "A restored receipt must replace the empty checkout form"
+    );
+    assert.equal(
+      await page.getByText("€0.00", { exact: true }).count(),
+      0,
+      "A receipt must not show empty-basket totals"
+    );
+    assert.equal(
+      await page.locator('main a[href^="https://wa.me/4915147416152"]').count(),
+      1
+    );
+    assert(
+      await page
+        .locator('main a[href^="mailto:info@diasporaunlocked.com"]')
+        .getAttribute("href")
+        .then(href => href.includes("DU-LOCAL-TEST-1"))
+    );
+    if (width < 1024) {
+      await page
+        .getByRole("button", { name: "Back to Products", exact: true })
+        .click();
+      assert(!new URL(page.url()).searchParams.has("cart"));
+      await page.goBack();
+      await page.getByText("DU-LOCAL-TEST-1", { exact: true }).waitFor();
+    }
     assert(
       !(await page.evaluate(
         () => document.documentElement.scrollWidth > innerWidth + 1
@@ -273,7 +380,7 @@ try {
     );
     await page.screenshot({ path: `${output}/checkout-${width}.png` });
     pass(
-      `${width}px item click, +/−, shared cart, all products, inventory, reload, notify dialog, failed and successful checkout`
+      `${width}px item click, +/−, shared cart, all products, inventory, reload, notify dialog, validation, lost-response retry, receipt reload, support handoff and checkout navigation`
     );
     await t.context.close();
   }

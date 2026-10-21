@@ -1,4 +1,9 @@
+import { useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useExperienceRequests,
+  experienceMediaSignal,
+} from "@/modules/ai/lib/useExperienceRequests";
 import { useMediaStream } from "@/modules/ai/lib/useMediaStream";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -43,6 +48,7 @@ const DEFAULT_AR_FEATURES: ArExperienceMetadata["features"] = {
 
 export default function TourismAugmentedExperiencePage() {
   const { i18n, t } = useTranslation();
+  const prefersReducedMotion = useReducedMotion();
   const uiLanguage = useMemo<UiLanguage>(
     () => normalizeUiLanguage(i18n.resolvedLanguage ?? i18n.language),
     [i18n.language, i18n.resolvedLanguage]
@@ -98,6 +104,11 @@ export default function TourismAugmentedExperiencePage() {
   const [selectedVoiceGender, setSelectedVoiceGender] = useState<
     "male" | "female"
   >("female");
+  const experienceContext = `${selectedPlaceId}:${uiLanguage}:${cameraEnabled}:${isConversationMode}`;
+  const { getSignal: getGuideSignal } =
+    useExperienceRequests(experienceContext);
+  const { getSignal: getNarrationSignal, cancel: cancelNarration } =
+    useExperienceRequests(`${experienceContext}:${selectedVoiceGender}`);
   const narrationVolume = 0.82;
   const [fallbackImageIndex, setFallbackImageIndex] = useState(0);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -123,6 +134,7 @@ export default function TourismAugmentedExperiencePage() {
   const lastNarratedTextRef = useRef("");
   const lastNarratedAtRef = useRef(0);
   const pendingNarrationRetryRef = useRef<string | null>(null);
+  const narrationRetryCleanupRef = useRef<(() => void) | null>(null);
   const cloudTtsRequestInFlightRef = useRef(false);
   const queuedCloudNarrationRef = useRef<string | null>(null);
   const availablePlaces = useMemo(() => {
@@ -223,6 +235,7 @@ export default function TourismAugmentedExperiencePage() {
   }, []);
 
   const queueNarrationRetry = useCallback((text: string) => {
+    narrationRetryCleanupRef.current?.();
     pendingNarrationRetryRef.current = text;
     const retry = () => {
       const queued = pendingNarrationRetryRef.current;
@@ -230,6 +243,8 @@ export default function TourismAugmentedExperiencePage() {
       pendingNarrationRetryRef.current = null;
       void speakWithBrowserVoice(queued, true);
     };
+    narrationRetryCleanupRef.current = () =>
+      window.removeEventListener("pointerdown", retry, true);
     window.addEventListener("pointerdown", retry, {
       once: true,
       passive: true,
@@ -238,8 +253,12 @@ export default function TourismAugmentedExperiencePage() {
   }, []);
 
   const speakWithBrowserVoice = useCallback(
-    async (text: string, fromUserGesture = false): Promise<boolean> => {
-      if (!text) return false;
+    async (
+      text: string,
+      fromUserGesture = false,
+      signal = getNarrationSignal()
+    ): Promise<boolean> => {
+      if (signal.aborted || !text) return false;
       if (typeof window === "undefined" || !("speechSynthesis" in window))
         return false;
       if (fromUserGesture) unlockBrowserSpeech();
@@ -249,6 +268,7 @@ export default function TourismAugmentedExperiencePage() {
       ): Promise<boolean> => {
         return await new Promise<boolean>(resolve => {
           try {
+            if (signal.aborted) return resolve(false);
             synth.resume();
             if (synth.speaking || synth.pending) synth.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
@@ -295,20 +315,26 @@ export default function TourismAugmentedExperiencePage() {
               if (settled) return;
               settled = true;
               window.clearTimeout(timerId);
+              signal.removeEventListener("abort", abort);
               resolve(ok);
             };
 
+            const abort = () => {
+              synth.cancel();
+              done(false);
+            };
+            signal.addEventListener("abort", abort, { once: true });
             utterance.onstart = () => {
+              if (signal.aborted) return done(false);
               setVoiceStatus(ui.narratingBrowser);
               done(true);
             };
             utterance.onend = () => done(true);
             utterance.onerror = () => done(false);
-            synth.speak(utterance);
-
             const timerId = window.setTimeout(() => {
               done(synth.speaking || synth.pending);
             }, 2200);
+            synth.speak(utterance);
           } catch {
             resolve(false);
           }
@@ -316,6 +342,7 @@ export default function TourismAugmentedExperiencePage() {
       };
 
       const voices = await loadVoicesWithTimeout();
+      if (signal.aborted) return false;
       if (voices.length > 0) setAvailableVoices(voices);
 
       let started = await speakAttempt(true);
@@ -340,19 +367,29 @@ export default function TourismAugmentedExperiencePage() {
       return;
     }
 
+    const signal = getGuideSignal();
     setLocationStatus(ui.detectingLocation);
     navigator.geolocation.getCurrentPosition(
       position => {
+        if (signal.aborted) return;
         const inferred = inferNearestPlace(
           position.coords.latitude,
           position.coords.longitude
         );
+        if (
+          !inferred ||
+          !availablePlaces.some(place => place.id === inferred)
+        ) {
+          setLocationStatus(ui.locationNoMatch);
+          return;
+        }
         setSelectedPlaceId(inferred);
         setLocationStatus(ui.locationDetected);
       },
       () => {
-        setLocationStatus(ui.locationDetectFail);
-      }
+        if (!signal.aborted) setLocationStatus(ui.locationDetectFail);
+      },
+      { timeout: 10000, maximumAge: 0 }
     );
   };
 
@@ -364,8 +401,9 @@ export default function TourismAugmentedExperiencePage() {
 
   const queryAI = useCallback(
     async (inputPrompt?: string) => {
+      const signal = getGuideSignal();
+      if (signal.aborted) return;
       const trimmed = String(inputPrompt ?? "").trim();
-      if (loadingRef.current) return;
       if (Date.now() < aiBackoffUntilRef.current) {
         const response = buildLocalGuidance(
           selectedPlace,
@@ -392,7 +430,7 @@ export default function TourismAugmentedExperiencePage() {
         const defaultGuidancePrompt =
           arOverlayEnabled && cameraEnabled
             ? [
-                "Camera is ON. You are Onesa AR guide in street-view style.",
+                "The camera is a local preview only. You cannot see it or determine the visitor\'s position or heading.",
                 `Current destination: ${selectedPlace.name}.`,
                 `Heritage context: ${selectedPlace.heritage}`,
                 `History context: ${selectedPlace.history}`,
@@ -400,8 +438,8 @@ export default function TourismAugmentedExperiencePage() {
                 `Culture context: ${selectedPlace.culture}`,
                 `Cultural highlights context: ${selectedPlace.culturalHighlights}`,
                 `Reply language requirement: Respond only in ${selectedLanguageLabel}.`,
-                "Provide directional guidance as if the user is walking and looking through camera.",
-                "Tell the user where to move next (left/right/forward), where to pause at points of interest, and narrate those stops.",
+                "Provide background about the selected destination. Do not claim to identify anything in the camera.",
+                "Do not invent live directions or nearby hazards. Suggest marked visitor routes and official guides.",
                 "Use concise, practical voice-friendly sentences, include a safety cue, and include at least one concrete date or historical period.",
               ].join("\n")
             : [
@@ -432,6 +470,7 @@ export default function TourismAugmentedExperiencePage() {
           const { data } = await sendOnesaChatMessage({
             messages: [{ role: "user", content: prompt }],
             language: uiLanguage,
+            signal,
           });
           const reply = String(data?.reply ?? "").trim();
           if (!reply) throw new Error("Empty model response.");
@@ -440,19 +479,24 @@ export default function TourismAugmentedExperiencePage() {
 
         let reply = "";
         try {
+          if (signal.aborted) return;
           reply = await requestAI();
         } catch {
+          if (signal.aborted) return;
           // Retry once before falling back to local guidance mode.
           await new Promise(resolve => window.setTimeout(resolve, 700));
+          if (signal.aborted) return;
           reply = await requestAI();
         }
 
+        if (signal.aborted) return;
         setAnswer(reply);
         setVoiceStatus("");
         setIsOnline(true);
         setOnlineStatusText("");
         aiBackoffUntilRef.current = 0;
       } catch {
+        if (signal.aborted) return;
         // Graceful fallback: keep guidance flowing without a disruptive error banner.
         setError("");
         setVoiceStatus(ui.localGuidanceMode);
@@ -461,8 +505,10 @@ export default function TourismAugmentedExperiencePage() {
         aiBackoffUntilRef.current = Date.now() + 30000;
         setAnswer(response);
       } finally {
-        loadingRef.current = false;
-        setLoading(false);
+        if (!signal.aborted) {
+          loadingRef.current = false;
+          setLoading(false);
+        }
       }
     },
     [
@@ -482,7 +528,7 @@ export default function TourismAugmentedExperiencePage() {
   );
 
   const transcribeWithGroq = useCallback(
-    async (blob: Blob): Promise<string> => {
+    async (blob: Blob, signal: AbortSignal): Promise<string> => {
       const formData = new FormData();
       formData.append("file", blob, "audio.webm");
       formData.append("action", "stt");
@@ -490,6 +536,7 @@ export default function TourismAugmentedExperiencePage() {
       const res = await fetch("/api/speech", {
         method: "POST",
         body: formData,
+        signal: experienceMediaSignal(signal),
       });
       if (!res.ok) {
         const msg = await res.text().catch(() => "");
@@ -502,12 +549,14 @@ export default function TourismAugmentedExperiencePage() {
   );
 
   const processConversation = async (blob: Blob) => {
+    const signal = getGuideSignal();
+    if (signal.aborted) return;
     setLoading(true);
     setVoiceStatus(ui.transcribing);
     try {
       setVoiceStatus(ui.listeningGroq);
-      const text = await transcribeWithGroq(blob);
-      if (!isConversationModeRef.current) return;
+      const text = await transcribeWithGroq(blob, signal);
+      if (signal.aborted || !isConversationModeRef.current) return;
       if (!text) {
         setVoiceStatus(ui.noSpeechDetected);
         return;
@@ -529,24 +578,27 @@ export default function TourismAugmentedExperiencePage() {
       const { data } = await sendOnesaChatMessage({
         messages: [{ role: "user", content: prompt }],
         language: uiLanguage,
+        signal,
       });
-      if (!isConversationModeRef.current) return;
+      if (signal.aborted || !isConversationModeRef.current) return;
       const reply = String(data?.reply ?? "").trim();
       setAnswer(
         reply || buildLocalGuidance(selectedPlace, cameraEnabled, uiLanguage)
       );
       setVoiceStatus("");
     } catch {
+      if (signal.aborted || !isConversationModeRef.current) return;
       setVoiceStatus(ui.groqUnavailable);
       setAnswer(buildLocalGuidance(selectedPlace, cameraEnabled, uiLanguage));
     } finally {
-      setLoading(false);
+      if (!signal.aborted) setLoading(false);
     }
   };
 
   const speakWithTts = useCallback(
     async (text: string, force = false) => {
-      if (!text) return;
+      const signal = getNarrationSignal();
+      if (signal.aborted || !text) return;
       const normalized = String(text).trim();
       if (!normalized) return;
       const now = Date.now();
@@ -590,6 +642,7 @@ export default function TourismAugmentedExperiencePage() {
       try {
         setVoiceStatus(ui.requestingCloudNarration);
         let res = await fetch("/api/speech", {
+          signal: experienceMediaSignal(signal),
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -603,6 +656,7 @@ export default function TourismAugmentedExperiencePage() {
           ttsFailureReason = await res.text().catch(() => "");
           await new Promise(resolve => window.setTimeout(resolve, 120));
           res = await fetch("/api/tts", {
+            signal: experienceMediaSignal(signal),
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -622,6 +676,7 @@ export default function TourismAugmentedExperiencePage() {
           .trim()
           .toLowerCase();
         const blob = await res.blob();
+        if (signal.aborted) return;
         const effectiveMime = String(blob.type || headerMime).toLowerCase();
         if (/audio\/l16|codec=pcm/.test(effectiveMime)) {
           ttsFailureReason = `Unsupported cloud audio format: ${effectiveMime || "unknown"}`;
@@ -653,6 +708,7 @@ export default function TourismAugmentedExperiencePage() {
         lastNarratedTextRef.current = normalized;
         lastNarratedAtRef.current = Date.now();
       } catch {
+        if (signal.aborted) return;
         const quotaExceeded =
           /quota_exceeded|exceeds your quota|insufficient credits|credits remaining/i.test(
             ttsFailureReason
@@ -672,7 +728,12 @@ export default function TourismAugmentedExperiencePage() {
           );
           setVoiceStatus(ui.cloudBlocked);
         }
-        const browserOk = await speakWithBrowserVoice(normalized, force);
+        const browserOk = await speakWithBrowserVoice(
+          normalized,
+          force,
+          signal
+        );
+        if (signal.aborted) return;
         if (!browserOk && force) {
           setVoiceStatus(ui.tapToEnableNarration);
           queueNarrationRetry(normalized);
@@ -681,20 +742,26 @@ export default function TourismAugmentedExperiencePage() {
           lastNarratedAtRef.current = Date.now();
         }
       } finally {
-        cloudTtsRequestInFlightRef.current = false;
-        if (voiceNarrationEnabled && arOverlayEnabled && !isConversationMode) {
-          const activeAudio = ttsAudioRef.current;
-          const cloudStillPlaying = Boolean(
-            activeAudio &&
-              !activeAudio.paused &&
-              activeAudio.currentSrc &&
-              !activeAudio.currentSrc.startsWith("data:")
-          );
-          if (!cloudStillPlaying) {
-            const queued = queuedCloudNarrationRef.current;
-            if (queued) {
-              queuedCloudNarrationRef.current = null;
-              void speakWithTts(queued, false);
+        if (!signal.aborted) {
+          cloudTtsRequestInFlightRef.current = false;
+          if (
+            voiceNarrationEnabled &&
+            arOverlayEnabled &&
+            !isConversationMode
+          ) {
+            const activeAudio = ttsAudioRef.current;
+            const cloudStillPlaying = Boolean(
+              activeAudio &&
+                !activeAudio.paused &&
+                activeAudio.currentSrc &&
+                !activeAudio.currentSrc.startsWith("data:")
+            );
+            if (!cloudStillPlaying) {
+              const queued = queuedCloudNarrationRef.current;
+              if (queued) {
+                queuedCloudNarrationRef.current = null;
+                void speakWithTts(queued, false);
+              }
             }
           }
         }
@@ -1021,6 +1088,9 @@ export default function TourismAugmentedExperiencePage() {
 
   useEffect(() => {
     if (voiceNarrationEnabled) return;
+    cancelNarration();
+    narrationRetryCleanupRef.current?.();
+    pendingNarrationRetryRef.current = null;
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -1029,7 +1099,7 @@ export default function TourismAugmentedExperiencePage() {
     }
     queuedCloudNarrationRef.current = null;
     cloudTtsRequestInFlightRef.current = false;
-  }, [voiceNarrationEnabled]);
+  }, [voiceNarrationEnabled, cancelNarration]);
 
   useEffect(() => {
     if (voiceNarrationEnabled) return;
@@ -1066,6 +1136,8 @@ export default function TourismAugmentedExperiencePage() {
     // Global cleanup for recognition, camera, timers, and TTS on unmount.
     return () => {
       isConversationModeRef.current = false;
+      narrationRetryCleanupRef.current?.();
+      pendingNarrationRetryRef.current = null;
       if (globeTransitionTimerRef.current !== null) {
         window.clearTimeout(globeTransitionTimerRef.current);
         globeTransitionTimerRef.current = null;
@@ -1104,6 +1176,15 @@ export default function TourismAugmentedExperiencePage() {
       recordingStreamRef.current = null;
     };
   }, [clearRecordingTurnTimer]);
+
+  useEffect(() => {
+    queuedCloudNarrationRef.current = null;
+    narrationRetryCleanupRef.current?.();
+    pendingNarrationRetryRef.current = null;
+    cloudTtsRequestInFlightRef.current = false;
+    ttsAudioRef.current?.pause();
+    window.speechSynthesis?.cancel();
+  }, [experienceContext, selectedVoiceGender]);
 
   useEffect(() => {
     if (!selectedPlaceId || isConversationMode) return;
@@ -1152,14 +1233,14 @@ export default function TourismAugmentedExperiencePage() {
   }, [unlockBrowserSpeech]);
 
   useEffect(() => {
-    if (cameraEnabled) return;
+    if (cameraEnabled || prefersReducedMotion) return;
     const timerId = window.setInterval(() => {
       setFallbackImageIndex(
         current => (current + 1) % selectedPreviewImages.length
       );
     }, 4000);
     return () => window.clearInterval(timerId);
-  }, [cameraEnabled, selectedPreviewImages.length]);
+  }, [cameraEnabled, selectedPreviewImages.length, prefersReducedMotion]);
 
   useEffect(() => {
     setFallbackImageIndex(0);
@@ -1190,7 +1271,7 @@ export default function TourismAugmentedExperiencePage() {
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
               {t("tourism.ar.seo.description", {
                 defaultValue:
-                  "Use Onesa AI to explore Zimbabwe destinations with location-aware guidance, camera-assisted previews, and narrated place context designed for mobile visitors and diaspora travelers.",
+                  "Explore Zimbabwe destinations with text and narrated guidance. Camera previews stay on your device; guidance uses your selected destination. This is not live navigation.",
               })}
             </p>
           </div>
@@ -1209,6 +1290,7 @@ export default function TourismAugmentedExperiencePage() {
               <div>
                 <select
                   id="aug-place"
+                  aria-label={ui.selectDestination}
                   className="mt-2 w-full rounded-xl border border-white/15 bg-slate-950 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-zim-gold/60"
                   value={selectedPlaceId}
                   onChange={event => {

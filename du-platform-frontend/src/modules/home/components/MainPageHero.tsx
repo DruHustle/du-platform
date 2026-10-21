@@ -100,7 +100,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
             transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}
             className="mt-6 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
           >
-            {t("home.hero_subtitle")}.
+            {t("home.hero_subtitle")}
           </motion.p>
 
           {/* Scroll Indicator */}
@@ -127,7 +127,7 @@ export default function MainPageHero({ hero }: MainPageProps) {
               }
             >
               <span className="text-[10px] uppercase tracking-[0.5em] font-black text-white drop-shadow-md">
-                Explore
+                {t("home.explore_now")}
               </span>
               <ChevronDown size={28} strokeWidth={1.5} className="text-white" />
             </motion.button>
