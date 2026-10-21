@@ -9,66 +9,11 @@ const memoryFeatureNotifications: Array<{
   created_at: string;
 }> = [];
 
-const memoryNewsletterSubscriptions: Array<{
-  id: number;
-  email: string;
-  created_at: string;
-}> = [];
-
-export async function createNewsletterSubscription(email: string) {
-  const normalizedEmail = email.trim().toLowerCase();
-  if (!normalizedEmail) {
-    throw new Error("Email is required.");
-  }
-
-  if (!db) {
-    const existing = memoryNewsletterSubscriptions.find(
-      (row) => row.email.toLowerCase() === normalizedEmail
-    );
-    if (existing) return { created: false, record: existing };
-
-    const record = {
-      id: memoryNewsletterSubscriptions.length + 1,
-      email: normalizedEmail,
-      created_at: new Date().toISOString(),
-    };
-    memoryNewsletterSubscriptions.push(record);
-    return { created: true, record };
-  }
-
-  try {
-    const [result] = await db.execute<mysql.ResultSetHeader>(
-      "INSERT IGNORE INTO newsletter_subscriptions (email) VALUES (?)",
-      [normalizedEmail]
-    );
-
-    const [rows] = await db.query<mysql.RowDataPacket[]>(
-      "SELECT id, email, created_at FROM newsletter_subscriptions WHERE email = ? LIMIT 1",
-      [normalizedEmail]
-    );
-    return {
-      created: Number(result.affectedRows ?? 0) > 0,
-      record: rows[0] ?? null,
-    };
-  } catch (error) {
-    if (!isDbConnectionError(error)) throw error;
-
-    const existing = memoryNewsletterSubscriptions.find(
-      (row) => row.email.toLowerCase() === normalizedEmail
-    );
-    if (existing) return { created: false, record: existing };
-
-    const record = {
-      id: memoryNewsletterSubscriptions.length + 1,
-      email: normalizedEmail,
-      created_at: new Date().toISOString(),
-    };
-    memoryNewsletterSubscriptions.push(record);
-    return { created: true, record };
-  }
-}
-
-export async function createFeatureNotification(userId: number, email: string, feature: string) {
+export async function createFeatureNotification(
+  userId: number,
+  email: string,
+  feature: string
+) {
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedFeature = feature.trim();
   if (!normalizedEmail || !normalizedFeature) {
@@ -77,7 +22,7 @@ export async function createFeatureNotification(userId: number, email: string, f
 
   if (!db) {
     const existing = memoryFeatureNotifications.find(
-      (row) =>
+      row =>
         row.user_id === userId &&
         row.email.toLowerCase() === normalizedEmail &&
         row.feature === normalizedFeature
@@ -113,7 +58,7 @@ export async function createFeatureNotification(userId: number, email: string, f
     if (!isDbConnectionError(error)) throw error;
 
     const existing = memoryFeatureNotifications.find(
-      (row) =>
+      row =>
         row.user_id === userId &&
         row.email.toLowerCase() === normalizedEmail &&
         row.feature === normalizedFeature
@@ -134,7 +79,9 @@ export async function createFeatureNotification(userId: number, email: string, f
 
 export async function getFeatureNotifications() {
   if (!db) {
-    return [...memoryFeatureNotifications].sort((left, right) => right.id - left.id);
+    return [...memoryFeatureNotifications].sort(
+      (left, right) => right.id - left.id
+    );
   }
 
   try {
@@ -144,6 +91,8 @@ export async function getFeatureNotifications() {
     return rows;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    return [...memoryFeatureNotifications].sort((left, right) => right.id - left.id);
+    return [...memoryFeatureNotifications].sort(
+      (left, right) => right.id - left.id
+    );
   }
 }

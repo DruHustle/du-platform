@@ -402,3 +402,52 @@ The platform integrates with official Zimbabwe government agencies:
 ---
 
 **Supporting Zimbabwe's Vision 2030 through Diaspora Engagement**
+
+## Newsletter workflow
+
+The site footer saves newsletter signups in MySQL. New signups are pending until
+an email link is explicitly confirmed. The database is mandatory: a missing or
+failed database returns an error rather than silently storing signups in memory.
+Existing signup rows remain subscribed during the additive migration. Signing up
+after opting out requires a fresh confirmation. Duplicate requests are normalized
+and deduplicated, and confirmation requests are limited per IP and per address. Existing email-only
+API requests remain supported during and after frontend rollout.
+
+At `/admin`, authorized operators use the **Newsletter** tab to search and filter
+subscribers, unsubscribe an address, save and reopen drafts, preview a message,
+queue a test to their own administrator address, and review/confirm a send to all
+currently subscribed addresses. Draft version checks protect concurrent edits;
+repeating the send request cannot create duplicate campaign recipients. Sending
+freezes the message and audience. Delivery activity reports each queued, accepted,
+failed or skipped email and allows retries within the safe provider window.
+“Accepted” means Resend accepted the request, not proof of inbox delivery.
+
+The backend uses the existing MySQL, `RESEND_API_KEY`, `RESET_EMAIL_PROVIDER=resend`,
+`FROM_EMAIL`/admin sender setting, `APP_BASE_URL` (the public HTTPS frontend), and
+`ADMIN_EMAILS` allowlist. No email credentials belong in the frontend. MySQL schema
+initialization adds subscription lifecycle columns, campaigns and a persistent
+outbox without deleting existing signups. Oracle runs the queue worker; do not run
+it from Vercel or start a second application just for sending. Database advisory
+locking prevents competing workers from claiming the same job.
+
+The worker sends individual messages, includes personal unsubscribe links, checks
+subscription eligibility before sending and retries temporary failures with
+stable Resend idempotency keys. Interrupted work resumes after a five-minute
+lease. Uncertain requests older than 23 hours require provider review instead of
+risking duplicates after Resend’s 24-hour deduplication window. Once a provider
+request is in flight it cannot be recalled. Provider delivery/bounce analytics
+remain in Resend; this dashboard does not claim to track opens or inbox delivery.
+
+Confirmation links expire after 48 hours. Preference tokens travel in URL
+fragments, are removed from browser history after opening, and change state only
+on an explicit POST. `/newsletter` is noindex and excluded from the sitemap.
+Unsubscribe preserves the opt-out record and suppresses pending messages.
+
+Run `pnpm check`, `pnpm test`, `pnpm build` and `pnpm test:seo`. For real database
+and browser regressions, supply `NEWSLETTER_TEST_DATABASE_URL` pointing at a
+**disposable localhost MySQL database whose name ends in `_test`**, then run
+`pnpm test:modules` and `pnpm test:e2e:newsletter`. The latter starts an isolated
+server with test-only configuration and no email worker; provider tests inject a
+fake transport. No real emails are sent. Use `NEWSLETTER_BROWSER_CHANNEL=chromium`
+for Playwright Chromium or leave it unset for locally installed Chrome. CI runs
+both suites with a disposable MySQL service.

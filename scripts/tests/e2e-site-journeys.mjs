@@ -391,8 +391,12 @@ try {
   await page.unroute("**/api/notifications/newsletter");
   await page.route("**/api/notifications/newsletter", route =>
     route.fulfill({
+      status: 202,
       contentType: "application/json",
-      body: JSON.stringify({ success: true, data: { created: true } }),
+      body: JSON.stringify({
+        success: true,
+        data: { requiresConfirmation: true, deliveryPending: false },
+      }),
     })
   );
   await page
@@ -400,7 +404,7 @@ try {
     .click();
   await page
     .getByRole("status")
-    .filter({ hasText: /subscribed/i })
+    .filter({ hasText: /If this address needs confirmation/i })
     .waitFor();
   await page.unroute("**/api/notifications/newsletter");
   pass(
