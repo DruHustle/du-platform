@@ -202,6 +202,26 @@ try {
     .getByRole("button", { name: "Confirm subscription", exact: true })
     .click();
   await page.getByText("Your email is confirmed.").waitFor();
+  assert.equal(
+    (
+      await pool.query("SELECT COUNT(*) AS total FROM users WHERE email=?", [
+        email,
+      ])
+    )[0][0].total,
+    0
+  );
+  assert.equal(
+    (
+      await pool.query(
+        "SELECT COUNT(*) AS total FROM newsletter_deliveries WHERE recipient=?",
+        [email]
+      )
+    )[0][0].total,
+    1
+  );
+  pass(
+    "newsletter confirmation works without a platform account and queues only the confirmation email"
+  );
   pass(
     "email links require an explicit click, scrub their token, and activate the stored subscription"
   );

@@ -38,7 +38,7 @@
     },
     "newsletter": {
       "confirmation_sent": "If this address needs confirmation, we’ll email a link. Already confirmed? You’re on the list.",
-      "delivery_pending": "Signup saved. Email delivery is temporarily unavailable; your confirmation will be sent when it resumes.",
+      "delivery_pending": "Subscription request saved. Email delivery is temporarily unavailable. If no confirmation arrives, try subscribing again later.",
       "consent": "By subscribing, you agree to receive Diaspora Unlocked news and opportunities. Confirm your email to join. Unsubscribe at any time.",
       "privacy": "Privacy policy",
       "title": "Newsletter",

@@ -209,8 +209,9 @@ export default function NewsletterAdmin({
         <div>
           <h2 className="text-2xl font-semibold">Newsletter</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
-            Build your audience and share news from Diaspora Unlocked. Signups,
-            drafts and individual delivery results are saved in the database.
+            Build your audience and share news from Diaspora Unlocked.
+            Subscriptions, drafts and individual delivery results are saved in
+            the database.
           </p>
         </div>
         <Button
@@ -327,14 +328,14 @@ export default function NewsletterAdmin({
             </Button>
           </form>
           <p className="mb-4 text-xs text-slate-400">
-            Only subscribed addresses receive campaigns. Existing signups are
-            preserved; new signups must confirm their email.
+            Only subscribed addresses receive campaigns. Existing subscriptions
+            are preserved; new subscribers must confirm their email.
           </p>
           {!loading && !rows.length ? (
             <p className="py-8 text-slate-300">
               {search || filter !== "all"
                 ? "No subscribers match these filters."
-                : "No signups yet. Subscribers will appear here after using the site’s signup form."}
+                : "No subscriptions yet. Subscribers will appear here after using the newsletter form."}
             </p>
           ) : (
             <ul className="divide-y divide-white/10">
@@ -349,7 +350,7 @@ export default function NewsletterAdmin({
                       {row.status === "pending"
                         ? "Awaiting confirmation"
                         : row.status}{" "}
-                      · Signed up {date(row.created_at)}
+                      · Added {date(row.created_at)}
                     </p>
                   </div>
                   {row.status !== "unsubscribed" && (

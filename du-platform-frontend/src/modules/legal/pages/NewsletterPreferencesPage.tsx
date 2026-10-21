@@ -65,13 +65,14 @@ export default function NewsletterPreferencesPage() {
           ) : !valid ? (
             <p role="alert" className="mt-6 leading-7 text-slate-300">
               Open the link in your newsletter email to confirm or unsubscribe.
-              To request a new confirmation link, sign up using the form below.
+              To request a new confirmation link, subscribe using the newsletter
+              form below.
             </p>
           ) : (
             <>
               <p className="mt-6 leading-7 text-slate-300">
                 {input.action === "unsubscribe"
-                  ? "Select unsubscribe to stop receiving Diaspora Unlocked newsletters. You can join again using the signup form."
+                  ? "Select unsubscribe to stop receiving Diaspora Unlocked newsletters. You can subscribe again using the newsletter form."
                   : "Confirm that you want to receive news and opportunities from Diaspora Unlocked. You can unsubscribe at any time."}
               </p>
               <Button

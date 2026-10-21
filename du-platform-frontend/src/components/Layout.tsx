@@ -339,7 +339,7 @@ export default function Layout({ children }: LayoutProps) {
         message: data?.deliveryPending
           ? tr(
               "footer.newsletter.delivery_pending",
-              "Signup saved. Email delivery is temporarily unavailable; your confirmation will be sent when it resumes."
+              "Subscription request saved. Email delivery is temporarily unavailable. If no confirmation arrives, try subscribing again later."
             )
           : tr(
               "footer.newsletter.confirmation_sent",

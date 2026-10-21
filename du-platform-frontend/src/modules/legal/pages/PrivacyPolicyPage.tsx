@@ -26,11 +26,11 @@ export default function PrivacyPolicy() {
           </p>
           <h2 className="text-xl font-semibold">Newsletter subscriptions</h2>
           <p className="text-white/70">
-            When you subscribe, we store your email address, signup and
-            confirmation dates, subscription status, and newsletter delivery
-            records in our database. Resend processes outgoing email. New
-            subscriptions require email confirmation. You can unsubscribe using
-            the link in any newsletter, or contact the support team for
+            When you subscribe, we store your email address, subscription
+            request and confirmation dates, subscription status, and newsletter
+            delivery records in our database. Resend processes outgoing email.
+            New subscriptions require email confirmation. You can unsubscribe
+            using the link in any newsletter, or contact the support team for
             deletion. We retain an opt-out record to prevent further
             newsletters.
           </p>

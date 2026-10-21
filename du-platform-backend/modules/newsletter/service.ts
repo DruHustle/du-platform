@@ -134,7 +134,7 @@ export class NewsletterService {
       throw new AppError(
         400,
         "NEWSLETTER_LINK_INVALID",
-        "This confirmation link is invalid, expired or already used. You can sign up again in the footer."
+        "This confirmation link is invalid, expired or already used. You can request another confirmation using the newsletter form in the footer."
       );
     return {
       message:
