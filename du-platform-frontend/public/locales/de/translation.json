@@ -771,11 +771,7 @@
       "masuwe": {
         "title": "Masuwe SEZ Bau eines Villenprojekts",
         "description": "Profil einer geplanten Tourismusentwicklung im Raum Victoria Falls.",
-        "highlights": [
-          "SEZ Corridor",
-          "Hospitality Assets",
-          "Tourism Demand"
-        ]
+        "highlights": ["SEZ Corridor", "Hospitality Assets", "Tourism Demand"]
       },
       "leather": {
         "title": "Linkdef Seifenherstellungsprojekt",
@@ -816,11 +812,7 @@
       "solar": {
         "title": "Solgas Energy: Solaranlage und Batteriespeicher",
         "description": "Profil eines Solar- und Batteriespeichervorhabens. Kapazität, Genehmigungen und Finanzierung müssen bestätigt werden.",
-        "highlights": [
-          "Solarstrom",
-          "Battery Storage",
-          "Grid Support"
-        ]
+        "highlights": ["Solarstrom", "Battery Storage", "Grid Support"]
       },
       "beef_dairy": {
         "title": "Agro Strong: Rinder- und Milchwirtschaft",
