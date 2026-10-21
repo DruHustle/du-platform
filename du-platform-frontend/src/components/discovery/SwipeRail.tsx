@@ -50,7 +50,9 @@ export default function SwipeRail({
       const tiles = Array.from(row.children) as HTMLElement[];
       const left = node.scrollLeft;
       const max = Math.max(0, node.scrollWidth - node.clientWidth);
-      const edge = node.getBoundingClientRect().left;
+      const edge =
+        node.getBoundingClientRect().left +
+        parseFloat(getComputedStyle(node).scrollPaddingLeft || "0");
       let index = 1;
       let nearest = Infinity;
       // Report the tile nearest the leading edge, including the final clamped stop.
@@ -89,7 +91,7 @@ export default function SwipeRail({
             tile.getBoundingClientRect().left -
             node.getBoundingClientRect().left +
             node.scrollLeft -
-            2,
+            parseFloat(getComputedStyle(node).scrollPaddingLeft || "0"),
           behavior: "instant",
         });
         measure();
@@ -122,7 +124,7 @@ export default function SwipeRail({
         tile.getBoundingClientRect().left -
         node.getBoundingClientRect().left +
         node.scrollLeft -
-        2
+        parseFloat(getComputedStyle(node).scrollPaddingLeft || "0")
     );
     const next =
       direction > 0

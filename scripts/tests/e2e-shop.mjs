@@ -193,6 +193,89 @@ try {
       0
     );
     const mazoe = products.find(p => p.slug === "mazoe-orange-2l-case-6");
+    const rail = page.locator(".swipe-rail");
+    assert.equal(
+      await rail.count(),
+      1,
+      "Featured products use one swipeable row"
+    );
+    assert.equal(await rail.locator("[data-shop-product-card]").count(), 8);
+    const viewport = rail.locator(".swipe-rail-viewport");
+    await viewport.scrollIntoViewIfNeeded();
+    const bounds = await viewport.boundingBox();
+    const screenWidth = await page.evaluate(
+      () => document.documentElement.clientWidth
+    );
+    assert(
+      Math.abs(bounds.x) <= 1 && Math.abs(bounds.width - screenWidth) <= 1,
+      "Shop rail spans the screen edges"
+    );
+    const tops = await rail
+      .locator("[data-shop-product-card]")
+      .evaluateAll(cards =>
+        cards.map(card => card.getBoundingClientRect().top)
+      );
+    assert(
+      tops.every(top => Math.abs(top - tops[0]) < 1),
+      "Products remain in one row"
+    );
+    await viewport.focus();
+    await viewport.press("End");
+    await page.waitForFunction(
+      el => el.disabled,
+      await rail.getByRole("button", { name: /^Next:/ }).elementHandle()
+    );
+    const last = await rail.locator(".swipe-rail-item").last().boundingBox();
+    assert(
+      last.x >= 0 && last.x + last.width <= screenWidth + 1,
+      "Last product is fully reachable"
+    );
+    const lastProduct = products.find(p => p.slug === "sables-rugby-home-kit");
+    await card(lastProduct.slug)
+      .getByRole("button", { name: /^Add to Cart:/ })
+      .click();
+    assert.deepEqual(await cart(), [
+      { productId: lastProduct.id, quantity: 1 },
+    ]);
+    await card(lastProduct.slug)
+      .getByRole("button", { name: /^Remove one/ })
+      .click();
+    assert.deepEqual(await cart(), []);
+    await viewport.press("Home");
+    await rail.getByRole("button", { name: /^Next:/ }).click();
+    await page.waitForFunction(
+      el => el.scrollLeft > 5,
+      await viewport.elementHandle()
+    );
+    await viewport.focus();
+    await viewport.press("Home");
+    const dragBounds = await viewport.boundingBox();
+    const dragX = Math.min(screenWidth - 30, 280);
+    const dragY = dragBounds.y + 80;
+    await page.mouse.move(dragX, dragY);
+    await page.mouse.down();
+    await page.mouse.move(24, dragY, { steps: 16 });
+    await page.mouse.up();
+    await page.waitForFunction(
+      el => el.scrollLeft > 30,
+      await viewport.elementHandle()
+    );
+    assert.deepEqual(
+      await cart(),
+      [],
+      "Dragging product cards must not add items"
+    );
+    await viewport.focus();
+    await viewport.press("Home");
+    await viewport.evaluate(el => el.blur());
+    await page.waitForFunction(
+      el => el.disabled,
+      await rail.getByRole("button", { name: /^Previous:/ }).elementHandle()
+    );
+    await page.screenshot({ path: `${output}/shop-rail-${width}.png` });
+    pass(
+      `${width}: one edge-to-edge product row; arrows, keyboard, drag and final-product cart controls`
+    );
     assert.equal(
       await card(mazoe.slug)
         .getByRole("button", { name: /^Remove one/ })

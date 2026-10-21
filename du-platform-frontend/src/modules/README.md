@@ -23,7 +23,10 @@ never invents stock. The server remains authoritative for prices and inventory.
 Discovery collections use `DiscoverySection`, `DiscoveryTile`, and `SwipeRail`
 from `components/discovery`. Their light canvas and dark image tiles follow the
 Home page, while `styles/discovery.css` applies only to opted-in sections. Keep
-Home and Shop's established layouts separate. Rails use native touch scrolling,
+Home's established layout unchanged. `discovery-section-layout` keeps headings
+and supporting text contained while letting direct child rails span the screen,
+with Home's 24px/32px leading inset. Shop uses this layout for its single featured
+product row and retains its dark commerce styling. Rails use native touch scrolling,
 explicit previous/next controls, and keyboard navigation; they never autoplay.
 Use `resetKey` when a filter changes the set of cards. `DiscoveryTile.onSelect`
 provides a semantic card button; dialog callers should restore focus to it.

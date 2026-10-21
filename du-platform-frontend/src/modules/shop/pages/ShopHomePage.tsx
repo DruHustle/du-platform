@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { ArrowUpRight, ShoppingBag } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubPageHero from "@/components/SubPageHero";
+import SwipeRail from "@/components/discovery/SwipeRail";
 import {
   SHOP_CATEGORY_CONFIG,
   type ShopSegmentKey,
@@ -55,7 +56,7 @@ export default function Shop() {
         id="collections"
         className="shop-collection-section bg-slate-950"
       >
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="discovery-section-layout">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
             <div className="max-w-2xl">
               <p className="page-eyebrow">{tx("nav.shop", "Shop")}</p>
@@ -84,7 +85,12 @@ export default function Shop() {
             </Link>
           </div>
           <CatalogNotice status={status} onRetry={() => void refresh()} />
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
+          <SwipeRail
+            label={tx(
+              "shop.collections_title",
+              "Zimbabwean favourites, in one place"
+            )}
+          >
             {SHOP_CATEGORY_CONFIG.map(category => {
               const product = products.find(
                 p => p.slug === FEATURED_PRODUCT_BY_SEGMENT[category.key]
@@ -125,7 +131,7 @@ export default function Shop() {
                 />
               );
             })}
-          </div>
+          </SwipeRail>
           <div className="mt-10 flex justify-center">
             <Link
               href="/shop/products?category=all"
