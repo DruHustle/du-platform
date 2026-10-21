@@ -29,6 +29,8 @@ import {
 const MOBILE_BUBBLE_STORAGE_KEY = "onesa-mobile-bubble-position-v3";
 const DESKTOP_BUBBLE_STORAGE_KEY = "onesa-desktop-bubble-position-v2";
 const HIDE_ONESA_BUBBLE_ROUTES = [
+  "/admin",
+  "/newsletter",
   "/onesa-ai-chat",
   "/onesa-ai-tourism-virtual-experience",
   "/onesa-ai-tourism-augmented-experience",

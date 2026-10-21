@@ -37,6 +37,10 @@
       "what_content": "Tinovaka nekushandisa puratifomu inobatanidza vanhu vari kunze kwenyika nezvekushanya, kuisa mari, kutenga, nemazano eAI. Tinoshanda nemasangano nevapi vemasevhisi kutsigira kutora chikamu."
     },
     "newsletter": {
+      "confirmation_sent": "Kana kero iyi ichida kusimbiswa, tichakutumirai chinongedzo neemail. Kana yakatosimbiswa, makatova pachirongwa.",
+      "delivery_pending": "Kunyoresa kwachengetwa. Kutumira email hakusi kushanda pari zvino; email yekusimbisa ichatumirwa kana zvadzoka.",
+      "consent": "Nekunyoresa, munobvuma kugamuchira nhau nemikana kubva kuDiaspora Unlocked. Simbisai email yenyu kuti mupinde. Munogona kurega kugamuchira chero nguva.",
+      "privacy": "Mutemo wezvakavanzika",
       "title": "Tsamba yenhau",
       "description": "Stay updated.",
       "email_placeholder": "Chikero chetsamba yemumhepo",

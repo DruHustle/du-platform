@@ -1,3 +1,4 @@
+import { createNewsletterAdminRouter } from "../../newsletter/routes";
 import { Router } from "express";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";
 import { requireAdminAuth } from "../../../shared/admin";
@@ -8,6 +9,7 @@ export function createAdminModuleRouter() {
   const controller = new AdminController();
 
   router.use(requireJwtAuth, requireAdminAuth);
+  router.use("/newsletter", createNewsletterAdminRouter());
   router.get("/overview", controller.overview);
   router.get("/notification-settings", controller.getNotificationSettings);
   router.put("/notification-settings", controller.updateNotificationSettings);

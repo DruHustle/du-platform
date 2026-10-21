@@ -1,3 +1,4 @@
+import NewsletterAdmin from "../components/NewsletterAdmin";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import Layout from "@/components/Layout";
@@ -53,14 +54,18 @@ type ShopProductRow = {
   is_active: 0 | 1;
 };
 
-type TabKey = "notify" | "ntir" | "stories" | "shop";
+type TabKey = "newsletter" | "notify" | "ntir" | "stories" | "shop";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
-  const tr = (key: string, fallback: string, options?: Record<string, unknown>) =>
-    t(key, { defaultValue: fallback, ...options });
-  const [activeTab, setActiveTab] = useState<TabKey>("notify");
+  const tr = (
+    key: string,
+    fallback: string,
+    options?: Record<string, unknown>
+  ) => t(key, { defaultValue: fallback, ...options });
+  const [activeTab, setActiveTab] = useState<TabKey>("newsletter");
+  const [newsletterDirty, setNewsletterDirty] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notifyRows, setNotifyRows] = useState<NotifyRow[]>([]);
@@ -72,7 +77,12 @@ export default function AdminDashboard() {
     alert_emails: "",
     from_email: "",
   });
-  const [ntirForm, setNtirForm] = useState({ name: "", sector: "", location: "", verification_status: "Pending" });
+  const [ntirForm, setNtirForm] = useState({
+    name: "",
+    sector: "",
+    location: "",
+    verification_status: "Pending",
+  });
   const [storyForm, setStoryForm] = useState({
     title: "",
     category: "",
@@ -102,23 +112,50 @@ export default function AdminDashboard() {
 
   const tabs = useMemo(
     () => [
+      { key: "newsletter" as const, label: "Newsletter", count: null },
       {
         key: "notify" as const,
         label: tr("admin.tabs.notify", "Notify Me"),
         count: notifyRows.length,
         newCount: newNotifyCount,
       },
-      { key: "ntir" as const, label: tr("admin.tabs.ntir", "NTIR"), count: ntirRows.length },
-      { key: "stories" as const, label: tr("admin.tabs.stories", "Impact"), count: storyRows.length },
-      { key: "shop" as const, label: tr("admin.tabs.shop", "Shop Products"), count: shopRows.length },
+      {
+        key: "ntir" as const,
+        label: tr("admin.tabs.ntir", "NTIR"),
+        count: ntirRows.length,
+      },
+      {
+        key: "stories" as const,
+        label: tr("admin.tabs.stories", "Impact"),
+        count: storyRows.length,
+      },
+      {
+        key: "shop" as const,
+        label: tr("admin.tabs.shop", "Shop Products"),
+        count: shopRows.length,
+      },
     ],
-    [newNotifyCount, notifyRows.length, ntirRows.length, storyRows.length, shopRows.length, t]
+    [
+      newNotifyCount,
+      notifyRows.length,
+      ntirRows.length,
+      storyRows.length,
+      shopRows.length,
+      t,
+    ]
   );
 
-  const loadAdminData = async ({ silent = false, detectNewNotify = false }: { silent?: boolean; detectNewNotify?: boolean } = {}) => {
+  const loadAdminData = async ({
+    silent = false,
+    detectNewNotify = false,
+  }: { silent?: boolean; detectNewNotify?: boolean } = {}) => {
     if (!silent) setLoading(true);
-    setError("");
+    if (!detectNewNotify) setError("");
     try {
+      if (!detectNewNotify && activeTab === "newsletter") {
+        await api.get("/admin/overview");
+        return;
+      }
       if (detectNewNotify) {
         const notifyRes = await api.get("/admin/notify-requests");
         const nextNotifyRows: NotifyRow[] = notifyRes.data?.rows ?? [];
@@ -127,27 +164,37 @@ export default function AdminDashboard() {
           if (!notifyIdsRef.current.has(Number(row.id))) freshCount += 1;
         }
         if (freshCount > 0) {
-          setNewNotifyCount((prev) => prev + freshCount);
+          setNewNotifyCount(prev => prev + freshCount);
           toast.success(
             freshCount === 1
-              ? tr("admin.notify.new_received_single", "1 new notify request received.")
-              : tr("admin.notify.new_received_multi", "{{count}} new notify requests received.", { count: freshCount })
+              ? tr(
+                  "admin.notify.new_received_single",
+                  "1 new notify request received."
+                )
+              : tr(
+                  "admin.notify.new_received_multi",
+                  "{{count}} new notify requests received.",
+                  { count: freshCount }
+                )
           );
         }
-        notifyIdsRef.current = new Set(nextNotifyRows.map((row) => Number(row.id)));
+        notifyIdsRef.current = new Set(
+          nextNotifyRows.map(row => Number(row.id))
+        );
         setNotifyRows(nextNotifyRows);
         return;
       }
 
-      const [notifyRes, ntirRes, storiesRes, shopRes, settingsRes] = await Promise.all([
-        api.get("/admin/notify-requests"),
-        api.get("/admin/ntir"),
-        api.get("/admin/impact"),
-        api.get("/admin/shop-products"),
-        api.get("/admin/notification-settings"),
-      ]);
+      const [notifyRes, ntirRes, storiesRes, shopRes, settingsRes] =
+        await Promise.all([
+          api.get("/admin/notify-requests"),
+          api.get("/admin/ntir"),
+          api.get("/admin/impact"),
+          api.get("/admin/shop-products"),
+          api.get("/admin/notification-settings"),
+        ]);
       const nextNotifyRows: NotifyRow[] = notifyRes.data?.rows ?? [];
-      notifyIdsRef.current = new Set(nextNotifyRows.map((row) => Number(row.id)));
+      notifyIdsRef.current = new Set(nextNotifyRows.map(row => Number(row.id)));
       setNotifyRows(nextNotifyRows);
       setNtirRows(ntirRes.data?.rows ?? []);
       setStoryRows(storiesRes.data?.stories ?? []);
@@ -159,10 +206,18 @@ export default function AdminDashboard() {
     } catch (err: any) {
       const status = Number(err?.response?.status ?? 0);
       if (status === 401) {
-        setLocation(`/login?next=${encodeURIComponent("/admin")}`, { replace: true });
+        setLocation(`/login?next=${encodeURIComponent("/admin")}`, {
+          replace: true,
+        });
         return;
       }
-      setError(getApiErrorMessage(err, tr("admin.errors.load", "Unable to load admin data.")));
+      if (!detectNewNotify)
+        setError(
+          getApiErrorMessage(
+            err,
+            tr("admin.errors.load", "Unable to load admin data.")
+          )
+        );
     } finally {
       if (!silent) setLoading(false);
     }
@@ -201,7 +256,12 @@ export default function AdminDashboard() {
       resetShopForm();
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.save_shop", "Unable to save shop product.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr("admin.errors.save_shop", "Unable to save shop product.")
+        )
+      );
     }
   };
 
@@ -228,13 +288,18 @@ export default function AdminDashboard() {
       if (editingShopId === id) resetShopForm();
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.delete_shop", "Unable to delete shop product.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr("admin.errors.delete_shop", "Unable to delete shop product.")
+        )
+      );
     }
   };
 
   useEffect(() => {
     void loadAdminData();
-  }, []);
+  }, [activeTab]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -248,21 +313,39 @@ export default function AdminDashboard() {
     setError("");
     try {
       await api.post("/admin/ntir", ntirForm);
-      setNtirForm({ name: "", sector: "", location: "", verification_status: "Pending" });
+      setNtirForm({
+        name: "",
+        sector: "",
+        location: "",
+        verification_status: "Pending",
+      });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.create_ntir", "Unable to create NTIR entity.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr("admin.errors.create_ntir", "Unable to create NTIR entity.")
+        )
+      );
     }
   };
 
   const toggleNtirStatus = async (row: NtirRow) => {
     setError("");
-    const nextStatus = row.verification_status === "Verified" ? "Pending" : "Verified";
+    const nextStatus =
+      row.verification_status === "Verified" ? "Pending" : "Verified";
     try {
-      await api.put(`/admin/ntir/${row.id}`, { verification_status: nextStatus });
+      await api.put(`/admin/ntir/${row.id}`, {
+        verification_status: nextStatus,
+      });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.update_ntir", "Unable to update NTIR entity.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr("admin.errors.update_ntir", "Unable to update NTIR entity.")
+        )
+      );
     }
   };
 
@@ -286,7 +369,12 @@ export default function AdminDashboard() {
       });
       await loadAdminData();
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.create_story", "Unable to create impact story.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr("admin.errors.create_story", "Unable to create impact story.")
+        )
+      );
     }
   };
 
@@ -302,7 +390,12 @@ export default function AdminDashboard() {
           : tr("admin.stories.toast_hide", "Story set to Don't display.")
       );
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.update_story", "Unable to update story visibility.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr("admin.errors.update_story", "Unable to update story visibility.")
+        )
+      );
     }
   };
 
@@ -311,21 +404,36 @@ export default function AdminDashboard() {
     setError("");
     try {
       const payload = {
-        alert_emails: String(notificationSettingsForm.alert_emails ?? "").trim(),
+        alert_emails: String(
+          notificationSettingsForm.alert_emails ?? ""
+        ).trim(),
         from_email: String(notificationSettingsForm.from_email ?? "").trim(),
       };
       await api.put("/admin/notification-settings", payload);
-      toast.success(tr("admin.notify.settings_saved", "Notification email settings saved."));
+      toast.success(
+        tr("admin.notify.settings_saved", "Notification email settings saved.")
+      );
       await loadAdminData({ silent: true });
     } catch (err: any) {
-      setError(getApiErrorMessage(err, tr("admin.errors.save_notification_settings", "Unable to save notification settings.")));
+      setError(
+        getApiErrorMessage(
+          err,
+          tr(
+            "admin.errors.save_notification_settings",
+            "Unable to save notification settings."
+          )
+        )
+      );
     }
   };
 
   const formatNotifyFeature = (feature: string) => {
     const value = String(feature ?? "");
     if (value.startsWith("shop_restock_")) {
-      const slug = value.slice("shop_restock_".length).replaceAll("_", " ").trim();
+      const slug = value
+        .slice("shop_restock_".length)
+        .replaceAll("_", " ")
+        .trim();
       return slug
         ? tr("admin.notify.feature_restock", "Shop restock: {{slug}}", { slug })
         : tr("admin.notify.feature_restock_fallback", "Shop restock request");
@@ -352,7 +460,7 @@ export default function AdminDashboard() {
           {error ? <p className="text-red-400">{error}</p> : null}
 
           <div className="flex flex-wrap gap-3">
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <Button
                 key={tab.key}
                 variant={activeTab === tab.key ? "default" : "outline"}
@@ -362,11 +470,22 @@ export default function AdminDashboard() {
                     : "border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
                 }
                 onClick={() => {
+                  if (
+                    tab.key !== activeTab &&
+                    newsletterDirty &&
+                    !window.confirm("Discard your unsaved newsletter changes?")
+                  )
+                    return;
                   setActiveTab(tab.key);
                   if (tab.key === "notify") setNewNotifyCount(0);
                 }}
               >
-                {tab.label} <Badge className="ml-2 bg-white/20 text-white border-transparent">{tab.count}</Badge>
+                {tab.label}{" "}
+                {tab.count !== null && (
+                  <Badge className="ml-2 bg-white/20 text-white border-transparent">
+                    {tab.count}
+                  </Badge>
+                )}
                 {"newCount" in tab && tab.newCount ? (
                   <Badge className="ml-2 bg-zim-gold text-zim-black border-transparent">
                     {tab.newCount} {tr("admin.badges.new", "new")}
@@ -379,14 +498,29 @@ export default function AdminDashboard() {
           {newNotifyCount > 0 && activeTab !== "notify" ? (
             <div className="rounded-xl border border-zim-gold/30 bg-zim-gold/10 p-4 text-sm text-zim-gold">
               {newNotifyCount === 1
-                ? tr("admin.notify.new_request_single", "1 new notify request in Admin > Notify Me.")
-                : tr("admin.notify.new_request_multi", "{{count}} new notify requests in Admin > Notify Me.", {
-                    count: newNotifyCount,
-                  })}
+                ? tr(
+                    "admin.notify.new_request_single",
+                    "1 new notify request in Admin > Notify Me."
+                  )
+                : tr(
+                    "admin.notify.new_request_multi",
+                    "{{count}} new notify requests in Admin > Notify Me.",
+                    {
+                      count: newNotifyCount,
+                    }
+                  )}
             </div>
           ) : null}
 
-          {loading ? <p className="text-white/75">{t("common.loading", { defaultValue: "Loading..." })}</p> : null}
+          {loading ? (
+            <p className="text-white/75">
+              {t("common.loading", { defaultValue: "Loading..." })}
+            </p>
+          ) : null}
+
+          {!loading && activeTab === "newsletter" && !error ? (
+            <NewsletterAdmin onDirtyChange={setNewsletterDirty} />
+          ) : null}
 
           {!loading && activeTab === "notify" ? (
             <div className="grid gap-4">
@@ -395,7 +529,10 @@ export default function AdminDashboard() {
                 className="surface-card p-7 space-y-3"
               >
                 <p className="text-white font-black">
-                  {tr("admin.notify.settings_title", "Notification Email Settings")}
+                  {tr(
+                    "admin.notify.settings_title",
+                    "Notification Email Settings"
+                  )}
                 </p>
                 <p className="text-white/70 text-sm">
                   {tr(
@@ -406,18 +543,30 @@ export default function AdminDashboard() {
                 <div className="grid md:grid-cols-2 gap-3">
                   <Input
                     value={notificationSettingsForm.alert_emails}
-                    onChange={(e) =>
-                      setNotificationSettingsForm((prev) => ({ ...prev, alert_emails: e.target.value }))
+                    onChange={e =>
+                      setNotificationSettingsForm(prev => ({
+                        ...prev,
+                        alert_emails: e.target.value,
+                      }))
                     }
-                    placeholder={tr("admin.notify.alert_emails_placeholder", "Alert emails (comma-separated)")}
+                    placeholder={tr(
+                      "admin.notify.alert_emails_placeholder",
+                      "Alert emails (comma-separated)"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={notificationSettingsForm.from_email}
-                    onChange={(e) =>
-                      setNotificationSettingsForm((prev) => ({ ...prev, from_email: e.target.value }))
+                    onChange={e =>
+                      setNotificationSettingsForm(prev => ({
+                        ...prev,
+                        from_email: e.target.value,
+                      }))
                     }
-                    placeholder={tr("admin.notify.from_email_placeholder", "From email")}
+                    placeholder={tr(
+                      "admin.notify.from_email_placeholder",
+                      "From email"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
@@ -429,51 +578,75 @@ export default function AdminDashboard() {
                 </Button>
               </form>
 
-              {notifyRows.map((row) => (
+              {notifyRows.map(row => (
                 <div key={row.id} className="surface-card p-7 text-white">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-black">{row.email}</p>
-                      <p className="text-white/75 text-sm">{formatNotifyFeature(row.feature)}</p>
+                      <p className="text-white/75 text-sm">
+                        {formatNotifyFeature(row.feature)}
+                      </p>
                     </div>
-                    <p className="text-xs text-white/70">{new Date(row.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-white/70">
+                      {new Date(row.created_at).toLocaleString()}
+                    </p>
                   </div>
                 </div>
               ))}
               {notifyRows.length === 0 ? (
-                <p className="text-white/70">{tr("admin.notify.empty", "No notify requests yet.")}</p>
+                <p className="text-white/70">
+                  {tr("admin.notify.empty", "No notify requests yet.")}
+                </p>
               ) : null}
             </div>
           ) : null}
 
           {!loading && activeTab === "ntir" ? (
             <div className="space-y-6">
-              <form onSubmit={submitNtir} className="grid md:grid-cols-4 gap-3 surface-card p-7">
+              <form
+                onSubmit={submitNtir}
+                className="grid md:grid-cols-4 gap-3 surface-card p-7"
+              >
                 <Input
                   value={ntirForm.name}
-                  onChange={(e) => setNtirForm((prev) => ({ ...prev, name: e.target.value }))}
-                  placeholder={tr("admin.ntir.entity_placeholder", "Entity name")}
+                  onChange={e =>
+                    setNtirForm(prev => ({ ...prev, name: e.target.value }))
+                  }
+                  placeholder={tr(
+                    "admin.ntir.entity_placeholder",
+                    "Entity name"
+                  )}
                   className="bg-white/[0.05] border-white/20 text-white"
                 />
                 <Input
                   value={ntirForm.sector}
-                  onChange={(e) => setNtirForm((prev) => ({ ...prev, sector: e.target.value }))}
+                  onChange={e =>
+                    setNtirForm(prev => ({ ...prev, sector: e.target.value }))
+                  }
                   placeholder={tr("admin.ntir.sector_placeholder", "Sector")}
                   className="bg-white/[0.05] border-white/20 text-white"
                 />
                 <Input
                   value={ntirForm.location}
-                  onChange={(e) => setNtirForm((prev) => ({ ...prev, location: e.target.value }))}
-                  placeholder={tr("admin.ntir.location_placeholder", "Location")}
+                  onChange={e =>
+                    setNtirForm(prev => ({ ...prev, location: e.target.value }))
+                  }
+                  placeholder={tr(
+                    "admin.ntir.location_placeholder",
+                    "Location"
+                  )}
                   className="bg-white/[0.05] border-white/20 text-white"
                 />
-                <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
+                <Button
+                  type="submit"
+                  className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest"
+                >
                   {tr("admin.ntir.add_row", "Add NTIR Row")}
                 </Button>
               </form>
 
               <div className="grid gap-4">
-                {ntirRows.map((row) => (
+                {ntirRows.map(row => (
                   <div key={row.id} className="surface-card p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
@@ -500,88 +673,158 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "stories" ? (
             <div className="space-y-6">
-              <form onSubmit={submitStory} className="space-y-3 surface-card p-7">
+              <form
+                onSubmit={submitStory}
+                className="space-y-3 surface-card p-7"
+              >
                 <div className="grid md:grid-cols-3 gap-3">
                   <Input
                     value={storyForm.title}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, title: e.target.value }))}
+                    onChange={e =>
+                      setStoryForm(prev => ({ ...prev, title: e.target.value }))
+                    }
                     placeholder={tr("admin.stories.title_placeholder", "Title")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.category}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, category: e.target.value }))}
-                    placeholder={tr("admin.stories.category_placeholder", "Category")}
+                    onChange={e =>
+                      setStoryForm(prev => ({
+                        ...prev,
+                        category: e.target.value,
+                      }))
+                    }
+                    placeholder={tr(
+                      "admin.stories.category_placeholder",
+                      "Category"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.image}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, image: e.target.value }))}
-                    placeholder={tr("admin.stories.image_placeholder", "Image path or URL")}
+                    onChange={e =>
+                      setStoryForm(prev => ({ ...prev, image: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.stories.image_placeholder",
+                      "Image path or URL"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
                 <div className="grid md:grid-cols-3 gap-3">
                   <Input
                     value={storyForm.author}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, author: e.target.value }))}
-                    placeholder={tr("admin.stories.author_placeholder", "Author")}
+                    onChange={e =>
+                      setStoryForm(prev => ({
+                        ...prev,
+                        author: e.target.value,
+                      }))
+                    }
+                    placeholder={tr(
+                      "admin.stories.author_placeholder",
+                      "Author"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.role}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, role: e.target.value }))}
+                    onChange={e =>
+                      setStoryForm(prev => ({ ...prev, role: e.target.value }))
+                    }
                     placeholder={tr("admin.stories.role_placeholder", "Role")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.revenue}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, revenue: e.target.value }))}
-                    placeholder={tr("admin.stories.revenue_placeholder", "Revenue (e.g. $2.5M)")}
+                    onChange={e =>
+                      setStoryForm(prev => ({
+                        ...prev,
+                        revenue: e.target.value,
+                      }))
+                    }
+                    placeholder={tr(
+                      "admin.stories.revenue_placeholder",
+                      "Revenue (e.g. $2.5M)"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
                 <div className="grid md:grid-cols-2 gap-3">
                   <Input
                     value={storyForm.jobs}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, jobs: e.target.value }))}
-                    placeholder={tr("admin.stories.jobs_placeholder", "Jobs (e.g. 150+)")}
+                    onChange={e =>
+                      setStoryForm(prev => ({ ...prev, jobs: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.stories.jobs_placeholder",
+                      "Jobs (e.g. 150+)"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={storyForm.markets}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, markets: e.target.value }))}
-                    placeholder={tr("admin.stories.markets_placeholder", "Markets (e.g. EU, UK)")}
+                    onChange={e =>
+                      setStoryForm(prev => ({
+                        ...prev,
+                        markets: e.target.value,
+                      }))
+                    }
+                    placeholder={tr(
+                      "admin.stories.markets_placeholder",
+                      "Markets (e.g. EU, UK)"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
                 <Textarea
                   value={storyForm.story}
-                  onChange={(e) => setStoryForm((prev) => ({ ...prev, story: e.target.value }))}
-                  placeholder={tr("admin.stories.story_placeholder", "Story content")}
+                  onChange={e =>
+                    setStoryForm(prev => ({ ...prev, story: e.target.value }))
+                  }
+                  placeholder={tr(
+                    "admin.stories.story_placeholder",
+                    "Story content"
+                  )}
                   className="min-h-[120px] bg-white/[0.05] border-white/20 text-white"
                 />
                 <Textarea
                   value={storyForm.testimonial}
-                  onChange={(e) => setStoryForm((prev) => ({ ...prev, testimonial: e.target.value }))}
-                  placeholder={tr("admin.stories.testimonial_placeholder", "Testimonial")}
+                  onChange={e =>
+                    setStoryForm(prev => ({
+                      ...prev,
+                      testimonial: e.target.value,
+                    }))
+                  }
+                  placeholder={tr(
+                    "admin.stories.testimonial_placeholder",
+                    "Testimonial"
+                  )}
                   className="min-h-[90px] bg-white/[0.05] border-white/20 text-white"
                 />
                 <label className="text-white/80 text-sm flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={storyForm.is_published}
-                    onChange={(e) => setStoryForm((prev) => ({ ...prev, is_published: e.target.checked }))}
+                    onChange={e =>
+                      setStoryForm(prev => ({
+                        ...prev,
+                        is_published: e.target.checked,
+                      }))
+                    }
                   />
                   {tr("admin.stories.display_label", "Display on impact page")}
                 </label>
-                <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
+                <Button
+                  type="submit"
+                  className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest"
+                >
                   {tr("admin.stories.add_story", "Add Impact Story")}
                 </Button>
               </form>
 
               <div className="grid gap-4">
-                {storyRows.map((story) => (
+                {storyRows.map(story => (
                   <div key={story.id} className="surface-card p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
@@ -590,7 +833,13 @@ export default function AdminDashboard() {
                           {story.category} - {story.author}
                         </p>
                       </div>
-                      <Badge className={story.is_published ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
+                      <Badge
+                        className={
+                          story.is_published
+                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                            : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                        }
+                      >
                         {story.is_published
                           ? tr("admin.stories.badge_display", "Display")
                           : tr("admin.stories.badge_hide", "Don't display")}
@@ -614,73 +863,134 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "shop" ? (
             <div className="space-y-6">
-              <form onSubmit={submitShopProduct} className="space-y-3 surface-card p-7">
+              <form
+                onSubmit={submitShopProduct}
+                className="space-y-3 surface-card p-7"
+              >
                 <div className="grid md:grid-cols-3 gap-3">
                   <Input
                     value={shopForm.slug}
-                    onChange={(e) => setShopForm((p) => ({ ...p, slug: e.target.value }))}
+                    onChange={e =>
+                      setShopForm(p => ({ ...p, slug: e.target.value }))
+                    }
                     placeholder={tr("admin.shop.slug_placeholder", "Slug")}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={shopForm.name}
-                    onChange={(e) => setShopForm((p) => ({ ...p, name: e.target.value }))}
-                    placeholder={tr("admin.shop.name_placeholder", "Product name")}
+                    onChange={e =>
+                      setShopForm(p => ({ ...p, name: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.shop.name_placeholder",
+                      "Product name"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={shopForm.image_url}
-                    onChange={(e) => setShopForm((p) => ({ ...p, image_url: e.target.value }))}
-                    placeholder={tr("admin.shop.image_placeholder", "Image URL or path")}
+                    onChange={e =>
+                      setShopForm(p => ({ ...p, image_url: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.shop.image_placeholder",
+                      "Image URL or path"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
                 <div className="grid md:grid-cols-4 gap-3">
                   <Input
                     value={shopForm.category}
-                    onChange={(e) =>
-                      setShopForm((p) => ({ ...p, category: e.target.value as "sports" | "crafts" | "food" }))
+                    onChange={e =>
+                      setShopForm(p => ({
+                        ...p,
+                        category: e.target.value as
+                          | "sports"
+                          | "crafts"
+                          | "food",
+                      }))
                     }
-                    placeholder={tr("admin.shop.category_placeholder", "Category: sports/crafts/food")}
+                    placeholder={tr(
+                      "admin.shop.category_placeholder",
+                      "Category: sports/crafts/food"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={shopForm.price_cents}
-                    onChange={(e) => setShopForm((p) => ({ ...p, price_cents: e.target.value }))}
-                    placeholder={tr("admin.shop.price_placeholder", "Price cents (e.g. 4999)")}
+                    onChange={e =>
+                      setShopForm(p => ({ ...p, price_cents: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.shop.price_placeholder",
+                      "Price cents (e.g. 4999)"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={shopForm.stock_qty}
-                    onChange={(e) => setShopForm((p) => ({ ...p, stock_qty: e.target.value }))}
-                    placeholder={tr("admin.shop.stock_placeholder", "Stock qty")}
+                    onChange={e =>
+                      setShopForm(p => ({ ...p, stock_qty: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.shop.stock_placeholder",
+                      "Stock qty"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                   <Input
                     value={shopForm.currency}
-                    onChange={(e) => setShopForm((p) => ({ ...p, currency: e.target.value }))}
-                    placeholder={tr("admin.shop.currency_placeholder", "Currency")}
+                    onChange={e =>
+                      setShopForm(p => ({ ...p, currency: e.target.value }))
+                    }
+                    placeholder={tr(
+                      "admin.shop.currency_placeholder",
+                      "Currency"
+                    )}
                     className="bg-white/[0.05] border-white/20 text-white"
                   />
                 </div>
                 <Textarea
                   value={shopForm.description}
-                  onChange={(e) => setShopForm((p) => ({ ...p, description: e.target.value }))}
-                  placeholder={tr("admin.shop.description_placeholder", "Description")}
+                  onChange={e =>
+                    setShopForm(p => ({ ...p, description: e.target.value }))
+                  }
+                  placeholder={tr(
+                    "admin.shop.description_placeholder",
+                    "Description"
+                  )}
                   className="min-h-[90px] bg-white/[0.05] border-white/20 text-white"
                 />
                 <div className="flex items-center gap-4">
                   <label className="text-white/80 text-sm flex items-center gap-2">
-                    <input type="checkbox" checked={shopForm.is_active} onChange={(e) => setShopForm((p) => ({ ...p, is_active: e.target.checked }))} />
+                    <input
+                      type="checkbox"
+                      checked={shopForm.is_active}
+                      onChange={e =>
+                        setShopForm(p => ({
+                          ...p,
+                          is_active: e.target.checked,
+                        }))
+                      }
+                    />
                     {tr("admin.shop.display_label", "Display product")}
                   </label>
-                  <Button type="submit" className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest">
+                  <Button
+                    type="submit"
+                    className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest"
+                  >
                     {editingShopId
                       ? tr("admin.shop.update_product", "Update Product")
                       : tr("admin.shop.add_product", "Add Product")}
                   </Button>
                   {editingShopId ? (
-                    <Button type="button" variant="outline" onClick={resetShopForm} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={resetShopForm}
+                      className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
+                    >
                       {tr("admin.shop.cancel_edit", "Cancel Edit")}
                     </Button>
                   ) : null}
@@ -688,26 +998,44 @@ export default function AdminDashboard() {
               </form>
 
               <div className="grid gap-4">
-                {shopRows.map((row) => (
+                {shopRows.map(row => (
                   <div key={row.id} className="surface-card p-7 text-white">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-black">{row.name}</p>
                         <p className="text-white/75 text-sm">
-                          {row.category} | {row.slug} | {row.currency} {(Number(row.price_cents) / 100).toFixed(2)} |{" "}
-                          {tr("admin.shop.stock_label", "Stock")} {row.stock_qty}
+                          {row.category} | {row.slug} | {row.currency}{" "}
+                          {(Number(row.price_cents) / 100).toFixed(2)} |{" "}
+                          {tr("admin.shop.stock_label", "Stock")}{" "}
+                          {row.stock_qty}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className={row.is_active ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}>
+                        <Badge
+                          className={
+                            row.is_active
+                              ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                              : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                          }
+                        >
                           {row.is_active
                             ? tr("admin.shop.badge_display", "Display")
                             : tr("admin.shop.badge_hide", "Don't display")}
                         </Badge>
-                        <Button type="button" variant="outline" onClick={() => editShopProduct(row)} className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => editShopProduct(row)}
+                          className="border-white/20 bg-white/5 text-white hover:bg-white hover:text-zim-black"
+                        >
                           {tr("admin.shop.edit", "Edit")}
                         </Button>
-                        <Button type="button" variant="outline" onClick={() => deleteShopProduct(row.id)} className="border-rose-400/40 bg-rose-500/10 text-rose-200 hover:bg-rose-500 hover:text-white">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => deleteShopProduct(row.id)}
+                          className="border-rose-400/40 bg-rose-500/10 text-rose-200 hover:bg-rose-500 hover:text-white"
+                        >
                           {tr("admin.shop.delete", "Delete")}
                         </Button>
                       </div>
@@ -715,7 +1043,9 @@ export default function AdminDashboard() {
                   </div>
                 ))}
                 {shopRows.length === 0 ? (
-                  <p className="text-white/70">{tr("admin.shop.empty", "No shop products yet.")}</p>
+                  <p className="text-white/70">
+                    {tr("admin.shop.empty", "No shop products yet.")}
+                  </p>
                 ) : null}
               </div>
             </div>
