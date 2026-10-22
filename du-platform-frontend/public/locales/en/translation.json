@@ -1349,22 +1349,10 @@
   "shop": {
     "collections": "Collections",
     "collections_title": "Zimbabwean favourites, in one place",
-    "collections_description": "Find food, crafts and supporter apparel for your household or as a gift. Add items to your cart and send an order request. The team will confirm whether delivery to your destination can be arranged, along with availability and payment instructions.",
+    "collections_description": "A starting point for your basket. Add a featured item or open its category to see more.",
     "explore_shop": "Browse all products",
     "trade_support": "Explore Trade Support",
     "export_readiness": "Export Readiness Guide",
-    "hero": {
-      "badge1": "Products from Zimbabwe",
-      "title1": "Shop Zimbabwe",
-      "subtitle1": "Find familiar flavours and gifts. Build your basket, then request availability and delivery details.",
-      "button1": "Browse Collections",
-      "badge2": "Craft Heritage",
-      "title2": "Handcrafted Excellence",
-      "subtitle2": "From Shona stone sculpture to handwoven baskets, discover products rooted in culture and quality.",
-      "badge3": "Taste of Home",
-      "title3": "Food and Nostalgia",
-      "subtitle3": "Browse familiar food and drink favourites. Confirm product and destination requirements before ordering."
-    },
     "sports_title": "National Sports",
     "sports_desc": "Supporter apparel for Zimbabwe rugby, cricket and football fans.",
     "sports_mech_soccer": "Soccer Kit.",
@@ -1483,7 +1471,8 @@
         "update_stock": "Update to available stock",
         "remove_unavailable": "Remove unavailable items",
         "unavailable": "Some saved items are no longer available. Remove those items to continue.",
-        "item_count": "Items: {{count}}"
+        "item_count": "Items: {{count}}",
+        "short_title": "Cart"
       },
       "totals": {
         "subtotal": "Subtotal",
@@ -1582,7 +1571,16 @@
     },
     "product": "Product",
     "no_description": "No description",
-    "loading": "Loading products..."
+    "loading": "Loading products...",
+    "landing": {
+      "eyebrow": "Shop Zimbabwe",
+      "title": "Familiar flavours.",
+      "highlight": "Thoughtful finds.",
+      "description": "Browse food, crafts and supporter apparel for everyday life or as a gift. Pick a category, find your favourites and build a basket.",
+      "principle": "Your basket becomes an order request. The team confirms availability, delivery and payment before you buy.",
+      "caption": "Food · Crafts · Supporter apparel",
+      "collections_cta": "Explore categories"
+    }
   },
   "notfound": {
     "title": "404",

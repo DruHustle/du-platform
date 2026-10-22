@@ -1287,22 +1287,10 @@
   "shop": {
     "collections": "Amaqoqo (Collections)",
     "collections_title": "Okuthandayo kweZimbabwe endaweni eyodwa",
-    "collections_description": "Thola ukudla, imisebenzi yezandla lezigqoko zabalandeli zekhaya kumbe izipho. Faka enqoleni uthumele isicelo se-oda. Iqembu liqinisekisa ukutholakala, ukuthi ukudiliva endaweni yakho kungenzeka yini, lendlela yokubhadala.",
+    "collections_description": "Indawo yokuqala ukugcwalisa ubhasikidi wakho. Faka into eboniswayo kumbe uvule isigaba sayo ukuze ubone okunye.",
     "explore_shop": "Bona zonke impahla",
     "trade_support": "Hlola Ukusekelwa KweTrade",
     "export_readiness": "Isiqondiso Sokulungela i-Export",
-    "hero": {
-      "badge1": "Impahla yeZimbabwe",
-      "title1": "Thenga iZimbabwe",
-      "subtitle1": "Thola ukudla lezipho ozaziyo. Yakha inqola yakho ucele ulwazi lokutholakala lokudiliva.",
-      "button1": "Buka Amaqoqo",
-      "badge2": "Ifa Lezobuciko",
-      "title2": "Ubungcweti Benziwe Ngezandla",
-      "subtitle2": "Kusukela ku-Shona stone sculpture kuye kumabasket alukiwe ngezandla, thola imikhiqizo egxile emasikweni lasekhwalithini.",
-      "badge3": "Ukunambitheka Kwekhaya",
-      "title3": "Ukudla le-Nostalgia",
-      "subtitle3": "Bona ukudla lokunathwayo ozaziyo. Qinisekisa okufunekayo empahleni lasendaweni yokudiliva ungaka-odi."
-    },
     "sports_title": "Imidlalo yesizwe",
     "sports_desc": "Izigqoko zabalandeli berugby, icricket lebhola leZimbabwe.",
     "sports_mech_soccer": "I-Soccer Kit.",
@@ -1421,7 +1409,8 @@
         "update_stock": "Lungisa inani lihambelane lokukhona",
         "remove_unavailable": "Susa impahla engasatholakali",
         "unavailable": "Enye impahla egciniweyo ayisatholakali. Yisuse ukuze uqhubeke.",
-        "item_count": "Impahla engu-{{count}}"
+        "item_count": "Impahla engu-{{count}}",
+        "short_title": "Ubhasikidi"
       },
       "totals": {
         "subtotal": "Isamba esingaphansi",
@@ -1520,7 +1509,16 @@
     },
     "product": "Umkhiqizo",
     "no_description": "Ayikho incazelo",
-    "loading": "Ilayisha imikhiqizo..."
+    "loading": "Ilayisha imikhiqizo...",
+    "landing": {
+      "eyebrow": "Thenga okweZimbabwe",
+      "title": "Ukunambitheka okwaziyo.",
+      "highlight": "Okukhethwe ngenhliziyo.",
+      "description": "Hlola ukudla, imisebenzi yezandla lezigqoko zabasekeli ongakusebenzisa kumbe ukuphe omunye isipho. Khetha isigaba, thola okuthandayo ugcwalise ubhasikidi wakho.",
+      "principle": "Ubhasikidi wakho uba yisicelo se-oda. Iqembu liqinisekisa ukutholakala, ukuthunyelwa lokubhadala ungakathengi.",
+      "caption": "Ukudla · Imisebenzi yezandla · Izigqoko zabasekeli",
+      "collections_cta": "Hlola izigaba"
+    }
   },
   "notfound": {
     "title": "404 - Ikhasi alitholakali",

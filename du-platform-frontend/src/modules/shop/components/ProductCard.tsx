@@ -68,9 +68,7 @@ export default function ProductCard({
       </div>
       <div className="flex flex-1 flex-col p-3 sm:p-5">
         {category && (
-          <p className="mb-2 text-[11px] font-medium text-slate-400">
-            {category}
-          </p>
+          <p className="mb-2 text-xs font-medium text-slate-400">{category}</p>
         )}
         <h3 className="shop-product-name">{product.name}</h3>
         {description && (
