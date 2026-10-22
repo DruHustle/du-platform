@@ -755,7 +755,7 @@ export default function ShopProducts() {
                   <button
                     type="button"
                     onClick={() => setMobileView("products")}
-                    className="lg:hidden mb-3 flex items-center gap-1.5 text-xs text-white/70 hover:text-white transition-colors"
+                    className="lg:hidden mb-3 flex min-h-11 items-center gap-1.5 text-xs text-white/70 hover:text-white transition-colors"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
                     {t("shop.products.actions.back_to_products", {
@@ -763,7 +763,9 @@ export default function ShopProducts() {
                     })}
                   </button>
                   <form
-                    className="content-panel"
+                    className="content-panel shop-checkout-scroll"
+                    tabIndex={0}
+                    aria-labelledby="shop-cart-title"
                     onSubmit={event => {
                       event.preventDefault();
                       void placeOrder();
@@ -772,7 +774,7 @@ export default function ShopProducts() {
                   >
                     <div className="flex items-center gap-1.5 mb-2">
                       <ShoppingCart className="h-3.5 w-3.5 text-zim-gold" />
-                      <h2 className="cart-panel-title">
+                      <h2 id="shop-cart-title" className="cart-panel-title">
                         {receiptOnly
                           ? t("shop.products.order.received_title")
                           : t("shop.products.cart.title", {

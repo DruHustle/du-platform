@@ -183,8 +183,8 @@ try {
       );
       if (path !== "/") {
         const hero = page.locator(
-          path === "/investment"
-            ? ".investment-hero-media img"
+          ["/investment", "/technology"].includes(path)
+            ? ".discovery-hero-media img"
             : "#sub-page-hero-wrapper img"
         );
         await hero.evaluate(image => image.decode());

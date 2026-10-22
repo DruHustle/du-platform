@@ -180,6 +180,22 @@ shared quantities across shop routes, refresh persistence, cross-tab updates,
 blocked storage, availability retries, and failed/successful checkout at 375,
 768, and 1440 pixels. Reports and screenshots go to `/tmp/du-shop-tests`
 (`SHOP_OUTPUT_DIR` overrides it). CI uses `SHOP_BROWSER_CHANNEL=chromium`.
+Set `SHOP_BROWSER_ENGINE=webkit` to run the same journey in WebKit. The checks
+also verify that mouse and keyboard scrolling stay inside the cart panel and
+do not move the product page, including when reaching the panel's end.
+
+```bash
+pnpm test:e2e:shop:integrated
+```
+
+This additional browser test uses the real local shop HTTP router, validators,
+service and repository with isolated in-memory storage and dry-run emails.
+It verifies catalogue-to-cart-to-request submission, server pricing, saved
+receipts, customer/merchant notification handling, idempotent retries and
+protected order retrieval. It clears database and mail credentials in its own
+process, does not load `.env`, and never connects to a configured service.
+CI runs both browser engines, this integrated workflow and the MySQL shop
+transaction checks against its disposable database before deployment.
 
 ### Swipeable discovery regression tests
 

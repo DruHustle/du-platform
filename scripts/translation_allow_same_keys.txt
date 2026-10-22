@@ -26,10 +26,6 @@ success.stories.stone_sculpture.author
 success.stories.tech_startup.author
 success.stories.tech_startup.role
 success.stories.tourism_lodge.author
-tech.hubs.cities.bulawayo
-tech.hubs.cities.gweru
-tech.hubs.cities.harare
-tech.hubs.cities.mutare
 tourism.attractions.greatzim.name
 tourism.attractions.kariba.name
 tourism.hero.title4

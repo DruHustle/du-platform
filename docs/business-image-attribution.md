@@ -5,8 +5,10 @@ mango assets already used elsewhere in the application. They illustrate the
 sectors; no listed business, photographer or organisation endorses these ideas.
 
 The following two additional photographs are licensed under
-[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Visible credits
-and links to the original files and licence appear on their respective tiles.
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Credits
+and links to the original files, adaptations and licence appear on the
+[public image credits page](../du-platform-frontend/public/licenses/business-images.html),
+linked from the bottom of the Investment and Technology landing pages.
 The optimised image derivatives remain available under that licence.
 
 | Local file in `du-platform-frontend/public/images/pages/investment/` | Photograph / author                         | Source                                                                                     | Changes                                                                                                                                               |

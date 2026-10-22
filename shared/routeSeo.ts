@@ -127,10 +127,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
 
   if (pathname === "/technology") {
     return buildSeo(
-      "Onesa AI and Zimbabwe Technology | Diaspora Unlocked",
-      "Learn how Onesa powers AI help on Diaspora Unlocked. Explore Zimbabwean products, understand project information and plan travel with practical assistance.",
+      "Onesa AI Tools & Practical Technology | Diaspora Unlocked",
+      "Use Onesa chat, draft trip planning, AR destination guidance and 360° demos. Explore practical digital ideas for Zimbabweans at home and abroad.",
       "/technology",
-      "Onesa AI and Zimbabwe Technology"
+      "Onesa AI Tools & Practical Technology"
     );
   }
 

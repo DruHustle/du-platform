@@ -204,137 +204,99 @@
     }
   },
   "tech": {
-    "hero": {
-      "badge1": "Isebenzisa iOnesa",
-      "title1": "Uncedo lweAI oluqondene leZimbabwe",
-      "subtitle1": "IOnesa inika uncedo kuDiaspora Unlocked: buza, hlola impahla uhlele okulandelayo.",
-      "highlight1": "Buza, hlola, hlela",
-      "badge2": "Ukwazi isimo somhlaba",
-      "title2": "Imibuzo yendawo, iziqalo ezicacileyo",
-      "subtitle2": "Ulwazi lweZimbabwe lusiza izimpendulo. Qinisekisa okubalulekileyo kumhlinzeki kumbe emthonjeni osemthethweni.",
-      "highlight2": "Ulwazi lendawo",
-      "badge3": "Hlola amacebo",
-      "title3": "Imibuzo engcono yokucwaninga ibhizimisi",
-      "subtitle3": "Sebenzisa iOnesa ukuchaza amagama lokulungisa imibuzo yephrojekthi. Ayiqinisekisi inzuzo kumbe ukufaneleka kokutshala imali.",
-      "highlight3": "Cwaninga ulolwazi",
-      "badge4": "Imfundo 5.0",
-      "title4": "Ukuvuselelwa Eziklilasini",
-      "subtitle4": "Hlola amacebo okufunda lamakhono edijithali. Le yimibono yomkhakha, ayisiyo inkonzo yekilasi enikwa lapha.",
-      "highlight4": "Amakhono Esikhathi Esizayo",
-      "badge5": "Ukuthuthwa Okuhlakaniphileyo",
-      "title5": "Ubuchwepheshe beLogistics",
-      "subtitle5": "Hlola imibuzo yokusabalalisa lokuthengiselana. Ukulandelela impahla lokuyikhipha emngceleni akwenziwa lapha.",
-      "highlight5": "Amaketane Okuthumela Axhumene",
-      "badge6": "I-Industrial AI",
-      "title6": "I-Tech Emisebenzini Yezezimayini",
-      "subtitle6": "Hlola ukusetshenziswa kwedatha emigodini. Ukuhlola komantshingelane lokuhlaziya komhlaba akutholakali lapha.",
-      "highlight6": "Ukusebenza Ngokuphumelelayo",
-      "badge7": "Ukukhula kwe-Agritech",
-      "title7": "Amahlelo Okuhlakanipha Ekulima",
-      "subtitle7": "Hlola amacebo okulima edijithali. Lapha akunikezwa ukuhlolwa kwezitshalo, umhlabathi kumbe izixwayiso zesimo sezulu ezibukhoma.",
-      "highlight7": "Climate-Smart Agriculture",
-      "badge8": "Abakhi beDiaspora",
-      "title8": "Ithalente le-Tech Ngaphesheya Kwemingcele",
-      "subtitle8": "Sebenzisa ulwazi lwakho lwaphesheya ukuhlola amacebo eZimbabwe. Qala ngolwazi lwamaphrojekthi lemibuzo eluncedo.",
-      "highlight8": "Ukubambisana Komhlaba"
-    },
-    "explore_onesa": "Hlola i-Onesa AI",
-    "onesa_badge": "Hlangana le-Onesa AI",
-    "onesa_title": "Ukukhanyisa indlela yakho",
-    "onesa_meaning": "Onesa kugoqela ukuthi \"khanyisa\" ngesiShona",
-    "onesa_desc2": "Buza iOnesa izincazelo, ulwazi lwempahla lamacebo ohambo, ubusuhlola okubalulekileyo ungakathathi inyathelo.",
-    "onesa_local_edge_title": "Inkundla ebanzi, ukusetshenziswa kwendawo",
-    "onesa_local_edge_desc": "IOnesa yinkundla yeAI enezingxenye ezihlanganisekayo, yokusetshenziswa eEurope lasemhlabeni wonke. IDiaspora Unlocked iyisebenzisa ngolwazi lemisebenzi eqondene leZimbabwe, kuhlanganise izindimi lesimo sendawo.",
-    "diaspora_unlocked_title": "Ezobuchwepheshe ze-Diaspora Unlocked",
-    "diaspora_unlocked_desc": "IDiaspora Unlocked yi-application esebenzisa iOnesa. Ulwazi lwayo lweZimbabwe lusiza ukuhlola impahla, uhambo lamathuba ebhizimisi.",
-    "features_title": "Amandla e-Onesa AI",
-    "features_subtitle": "Sebenzisa ingxoxo ukuthola ulwazi, izincazelo lokuhlela. Qinisekisa okubalulekileyo emthonjeni ofaneleyo.",
-    "cta_title": "Kuyini ofuna ukukuhlola?",
-    "cta_desc": "Qala ingxoxo ngempahla, uhambo kumbe amaphrojekthi eZimbabwe.",
-    "cta_button": "Xoxa leOnesa",
-    "sectors_badge": "Ukuguqulwa kwezingxenye",
-    "sectors_title": "Amacebo obuchwepheshe ngemikhakha",
-    "sectors_subtitle": "Hlola lapho ubuchwepheshe bungasiza khona. La ngamacebo okucwaninga; amathuluzi omsebenzi wezomkhakha awanikezwa lapha.",
-    "sectors": {
-      "mining": {
-        "title": "Ezokumbiwa phansi (Mining)",
-        "desc": "Imibuzo yokusetshenziswa kwedatha emigodini, kuxoxwe lengcwethi kungakathathwa izinqumo zomsebenzi.",
-        "d1": "Cwaninga imithombo yolwazi lwemisika yezimbiwa",
-        "d2": "Lungisa imibuzo yokuphepha lemvelo"
-      },
-      "farming": {
-        "title": "Ukulima kwesimanje",
-        "desc": "Hlola imibuzo yokuhlela ukulima lolwazi oludingwa ngumlimi.",
-        "d1": "Zwisisa amagama lokucatshangelwayo ekuhleleni izitshalo",
-        "d2": "Lungisa imibuzo yengcwethi zokulima zendawo"
-      },
-      "logistics": {
-        "title": "Ezokuthutha ezihlakaniphileyo",
-        "desc": "Cwaninga izindlela zokudiliva lezinyathelo zokuthutha impahla.",
-        "d1": "Lungisa imibuzo yezindlela lezikhathi zokuthutha",
-        "d2": "Hlola okufunekayo emngceleni kwabemthetho abafaneleyo"
-      },
-      "education": {
-        "title": "Imfundo yakusasa",
-        "desc": "Sebenzisa izincazelo zeAI ukuhlola isihloko kumbe ukuhlela okunye ukufunda.",
-        "d1": "Cela ukuchazelwa imiqondo ongayaziyo",
-        "d2": "Thola imibuzo lezihloko zokuqhubeka ufunda"
-      }
-    },
     "chat_with_onesa": "Xoxa no-Onesa",
-    "onesa_matter": {
-      "badge": "Uncedo olusebenzisa iOnesa",
-      "title": "IOnesa inika uncedo lapha",
-      "headline": "Inkundla yeAI yemisebenzi etshiyeneyo, esiza ngemibuzo yakho ngeZimbabwe.",
-      "p1": "IOnesa yinkundla yeAI enezingxenye ezihlanganisekayo, yokusetshenziswa eEurope lasemhlabeni wonke.",
-      "p2": "IDiaspora Unlocked ingenye yama-application asebenzisa iOnesa. Iletha ulwazi lemisebenzi yeZimbabwe ezingxoxweni lasemathuluzini okuhlela lapha.",
-      "p3": "Qala ngombuzo wempahla, indawo kumbe iphrojekthi. Cela incazelo kumbe uhlelo lokuqala ongalulungisa.",
-      "p4": "Uncedo lwezindimi lesimo sendawo luqondene leZimbabwe ku-application le. Alubopheleli inkundla yeOnesa elizweni kumbe emkhakheni owodwa.",
-      "p5": "Izimpendulo zeAI zingasilela kumbe ziphambane. Qinisekisa intengo, ukutholakala lokufunekayo kumhlinzeki kumbe emthonjeni osemthethweni.",
-      "tiles": {
-        "illuminate": {
-          "title": "Inkundla eyodwa, ukusetshenziswa okunengi",
-          "detail": "IOnesa yinkundla yeAI yemisebenzi eEurope lasemhlabeni wonke. IDiaspora Unlocked ingenye yayo."
-        },
-        "africa_centric": {
-          "title": "Uncedo oluqondene leZimbabwe",
-          "detail": "I-application le yengeza ulwazi lweZimbabwe, uncedo lwezindimi lesimo sendawo ukuze ubuze imibuzo eluncedo."
-        },
-        "sovereignty": {
-          "title": "Izinyathelo eziluncedo",
-          "detail": "Thola izincazelo, hlola impahla wenze amacebo ohambo. Sebenzisa izimpendulo njengesiqalo sokuhlola kwakho."
-        },
-        "growth": {
-          "title": "Yenzelwe ukuqhubeka ithuthukiswa",
-          "detail": "Inhloso yikuthuthukisa uncedo ngokuhamba kwesikhathi. Izibonelo ezingezansi yizindawo zokuhlola, hatshi izinkonzo zengcwethi ezikhona lapha."
-        }
-      },
-      "combined": "IOnesa yinkundla yeAI yemisebenzi etshiyeneyo eEurope lasemhlabeni wonke. IDiaspora Unlocked iyisebenzisela ulwazi lweZimbabwe, ukuhlola impahla lokuhlela uhambo.",
-      "read_vision": "Ukuhlangana kweOnesa leDiaspora Unlocked"
+    "restore_chat_bubble": "Bonisa ibhamuza lengxoxo",
+    "landing": {
+      "eyebrow": "Ubuchwepheshe & amathuluzi ansuku zonke",
+      "title": "Ubuchwepheshe obuncedayo.",
+      "highlight": "Ngamandla e-Onesa.",
+      "description": "Buza imibuzo ecacileyo, hlola iZimbabwe njalo uhlele inyathelo elilandelayo, usekhaya loba phesheya. Qala ngamathuluzi atholakala kuDiaspora Unlocked.",
+      "principle": "Buza. Hlola. Hlela.",
+      "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna",
+      "caption": "I-Onesa incedisa emibuzweni yakho ngeZimbabwe.",
+      "tools_cta": "Hlola amathuluzi"
     },
-    "diaspora_use_cases": {
-      "relocation": {
-        "title": "Thola isiqalo",
-        "detail": "Buza ngezindawo, amasiko endawo lemibuzo yokucwaninga ungakavakatsheli kumbe ubuye."
+    "tools": {
+      "title": "Ongakwenza nge-Onesa",
+      "subtitle": "Khetha ithuluzi elihambelana lomsebenzi ofuna ukuwenza. Ngalinye livula ikhasi lalo.",
+      "chat": {
+        "title": "Buza umbuzo",
+        "description": "Thola izincazelo ezilula ngemikhiqizo, izindawo lemibono yebhizimusi. Qhubeka ubuza ukuze impendulo ihambelane lokudingayo.",
+        "cta": "Xoxa le-Onesa",
+        "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna"
       },
-      "investment": {
-        "title": "Zwisisa ulwazi lwamaphrojekthi",
-        "detail": "Cela izincazelo zamagama omkhakha lemibuzo yokubuza umnikazi kumbe umeluleki ozimeleyo."
+      "trip": {
+        "title": "Hlela ukuvakatshela iZimbabwe",
+        "description": "Yakha uhlelo lokuqala ngokwezinsuku, okuthandayo lemali yakho. Qinisekisa izindawo, ezokuhamba lentengo kubanikezeli balezonsizakalo.",
+        "cta": "Hlela uhambo",
+        "image_alt": "Izimpophoma zeVictoria Falls eZimbabwe"
       },
-      "business_intelligence": {
-        "title": "Hlola impahla lamacebo",
-        "detail": "Sebenzisa iOnesa ukuhlola ulwazi lwempahla lokuhlela imibuzo ungakathumeli isicelo."
+      "vr": {
+        "title": "Hlola izibonelo ze360°",
+        "description": "Zama imifanekiso ezungezayo yeSample City ebhalwe njengezibonelo esikrinini, loba ngesigqoko seVR esisekelwayo. Lezi yizibonelo, hatshi ukuvakatshela izindawo zeZimbabwe.",
+        "cta": "Zama isibonelo seVR",
+        "image_alt": "Intaba elamatshe esemfanekisweni wesibonelo seSample City"
       },
-      "collaboration": {
-        "title": "Hlela ukuvakatsha",
-        "detail": "Xoxa ngezindawo lokuthandayo ukwenze uhlelo lokuqala olulezilinganiso zemali."
+      "ar": {
+        "title": "Zama umhlahlandlela wendawo weAR",
+        "description": "Hlola indawo oyikhethileyo ngolwazi lwe-Onesa, ukulandisa ngezwi nxa ufuna, kanye lokubuka ngekhamera oyikhetha ukuyivula.",
+        "cta": "Vula umhlahlandlela weAR",
+        "image_alt": "Imiduli yamatshe lamanxiwa eGreat Zimbabwe"
       }
     },
-    "diaspora_ai": {
-      "title": "Indlela iDiaspora Unlocked Esebenzisa Ngayo i-AI",
-      "subtitle": "Sebenzisa iOnesa ukuthola izincazelo, ukuhlola lokuhlela. Ikusiza ukulungiselela; abahlinzeki baqinisekisa imininingwane."
+    "about": {
+      "title": "Ukuxhumana kwe-Onesa leDiaspora Unlocked",
+      "platform": "IOnesa yinkundla yeAI enezingxenye ezihlanganisekayo, yokusetshenziswa eEurope lasemhlabeni wonke.",
+      "application": "IDiaspora Unlocked ingenye yama-application asebenzisa iOnesa. Iletha ulwazi lemisebenzi yeZimbabwe ezingxoxweni lasemathuluzini okuhlela lapha. Uncedo lwezindimi lesimo sendawo luqondene leZimbabwe ku-application le. Alubopheleli inkundla yeOnesa elizweni kumbe emkhakheni owodwa."
     },
-    "restore_chat_bubble": "Bonisa ibhamuza lengxoxo"
+    "steps": {
+      "title": "Ukusuka embuzweni usiya enyathelweni elincedayo",
+      "subtitle": "Ukwengeza imininingwane kwenza ingxoxo ibe lusizo.",
+      "ask": {
+        "title": "Qala ngenhloso yakho",
+        "description": "Chaza ofuna ukukwenza, indawo lesikhathi. Faka okubalulekileyo okunjengesikhathi kumbe imali olayo."
+      },
+      "organise": {
+        "title": "Cela uhlelo lokusebenza",
+        "description": "Cela incazelo emfutshane, ukuqhathanisa kumbe uhlu lokuhlola. Buza eminye imibuzo ukuze impendulo ihambelane lesimo sakho."
+      },
+      "check": {
+        "title": "Qinisekisa ungakenzi",
+        "description": "Hlola intengo yamanje, ukutholakala lezidingo kubanikezeli kumbe emithonjeni esemthethweni. Hamba lemibuzo elusizo."
+      }
+    },
+    "ideas": {
+      "title": "Izinguquko ezincane zedijithali emabhizimusini ansuku zonke",
+      "subtitle": "Imibono yokuqala yepulazi, isitolo kumbe ibhizimusi lezinsizakalo. Lezi yizindlela zokuhlela umsebenzi, hatshi izinhlelo zobungcwethi ezinikezwa yiDU.",
+      "prompt_label": "Zama ukubuza i-Onesa",
+      "next": "Usulungele ukuxhumanisa umbono wedijithali lebhizimusi? Hlola amaphrojekthi amancane lalokho okumele uqale ukuhlole.",
+      "cta": "Hlola imibono yebhizimusi",
+      "farming": {
+        "title": "Bhala izilimo lokuthengiswayo",
+        "description": "Qala ngomjikelezo owodwa wokulima. Bhala izindleko, izinsuku zokuhlanyela, isivuno lokuthengiswayo ethebuleni elilula elingahlolwa ndawonye lomlimi.",
+        "prompt": "Yiwaphi amakholamu anganginceda ukubhala izindleko lokuthengiswayo emjikelezweni owodwa wemibhida?",
+        "image_alt": "Imibhida emitsha emabhasikitini"
+      },
+      "stock": {
+        "title": "Yazi impahla ekhona",
+        "description": "Bhala impahla engenayo, ethengiswayo lezinsuku zokuthumela. Qathanisa lokhu lempahla ekhona lemali ngaphambi kokwengeza eminye imikhiqizo.",
+        "prompt": "Nginceda ukwenza uhlu olulula lokuhlola impahla lokuthumela kwesitolo esincane.",
+        "image_alt": "Umango owomisiweyo opakishiweyo ovela eZimbabwe"
+      },
+      "jobs": {
+        "title": "Landela imisebenzi lezinto ezisetshenziswayo",
+        "description": "Emsebenzini wokulungisa kumbe ukwakha, vumelanani umsebenzi, libhale impahla lenqubekela phambili elamalanga. Gcinani izinguquko lokuvuma kwekhasimende.",
+        "prompt": "Liphatheleni iphepha elilodwa lomsebenzi weqembu elincane lokulungisa?",
+        "image_alt": "Abasebenzi behlanganisa isakhiwo sophahla lwensimbi eHarare"
+      },
+      "skills": {
+        "title": "Funda ikhono ledijithali elilusizo",
+        "description": "Khetha umsebenzi owodwa wokuzijwayeza, njengethebula, umlayezo ocacileyo wekhasimende kumbe iwebhusayithi elula. Sebenzisa imininingwane yezibonelo lapho ufunda.",
+        "prompt": "Yenza uhlelo lomqali lokufunda ukusebenzisa ithebula ledijithali ukuphatha ibhizimusi elincane.",
+        "image_alt": "Ikilasi elihlomele ukufunda ngedijithali"
+      }
+    },
+    "note": "Izimpendulo zeAI zingasilela kumbe ziphambane. Qinisekisa intengo, ukutholakala lokufunekayo kumhlinzeki kumbe emthonjeni osemthethweni."
   },
   "tourism": {
     "back_to_tourism": "Buyela kuEzokuvakasha",
@@ -735,8 +697,6 @@
         "monitor": "Qathanisa impahla efikisiweyo lama-invoyisi. Hlelani ukuhlola okuzimeleyo lingakabhadaleli isigaba ngasinye."
       },
       "explore": "Hlola leli cebo",
-      "photo_label": "Umfanekiso:",
-      "photo_crop": "Ulungiselelwe ubukhulu; unqunyiwe ekubonisweni.",
       "food": {
         "title": "Ukulungisa lokupakisha ukudla",
         "summary": "Hlola izilimo ezomisiweyo, ukudla ngamaqoqo amancane kumbe impahla yokupakisha kumabhizimusi endawo.",
@@ -1221,7 +1181,8 @@
     "notify_success": "Ukufinyelela Okubalulekile Kukhiyiwe",
     "get_notified": "Cela Ukufinyelela",
     "form_subtitle": "Gcwalisa imininingwane yakho ukuze ujoyine uhlu lokulinda lwe-{{featureName}}",
-    "back": "Emuva"
+    "back": "Emuva",
+    "image_credits": "Imithombo yemifanekiso"
   },
   "pagination": {
     "label": "Pagination",

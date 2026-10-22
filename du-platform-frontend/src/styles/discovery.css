@@ -304,17 +304,6 @@
 .content-page .business-idea-more .business-idea-details {
   margin-top: 8px;
 }
-.content-page main .discovery-tile .business-idea-credit {
-  margin-top: 12px;
-  color: #94a3b8;
-  font-size: 12px;
-  line-height: 1.6;
-}
-.content-page .business-idea-credit a {
-  color: #b8c3d4;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 .content-page .discovery-tile-footer {
   margin-top: 24px;
   padding-top: 20px;
@@ -486,26 +475,26 @@
   }
 }
 
-/* Investment landing: a shared alignment and a clear idea-to-research journey. */
-.content-page .investment-landing {
+/* Shared landing hero and steps keep discovery pages aligned. */
+.content-page :is(.investment-landing, .technology-landing) {
   background: #f8fafb;
   color: #0f172a;
 }
-.content-page .investment-inner {
+.content-page .discovery-inner {
   width: min(calc(100% - 48px), 1232px);
   margin-inline: auto;
 }
-.content-page .investment-hero {
+.content-page .discovery-hero {
   padding: 48px 0;
   background: #0b1322;
   color: #f8fafc;
 }
-.content-page .investment-hero-grid {
+.content-page .discovery-hero-grid {
   display: grid;
   gap: 36px;
   align-items: center;
 }
-.content-page main .investment-eyebrow {
+.content-page main .discovery-eyebrow {
   margin-bottom: 18px;
   color: #facc15;
   font-size: 11px;
@@ -513,7 +502,7 @@
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
-.content-page .investment-hero h1 {
+.content-page .discovery-hero h1 {
   max-width: 18ch;
   color: #f8fafc;
   font-size: clamp(36px, 4.2vw, 60px);
@@ -522,38 +511,38 @@
   line-height: 1.08;
   overflow-wrap: break-word;
 }
-.content-page .investment-hero h1 span {
+.content-page .discovery-hero h1 span {
   display: block;
   margin-top: 8px;
   color: #facc15;
 }
-.content-page main .investment-hero-description {
+.content-page main .discovery-hero-description {
   max-width: 55ch;
   margin-top: 24px;
   color: #cbd5e1;
   font-size: 16px;
   line-height: 1.8;
 }
-.content-page .investment-actions {
+.content-page .discovery-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 28px;
 }
-.content-page main .investment-hero-principle {
+.content-page main .discovery-hero-principle {
   margin-top: 24px;
   color: #94a3b8;
   font-size: 13px;
   line-height: 1.7;
 }
-.content-page .investment-hero-media {
+.content-page .discovery-hero-media {
   position: relative;
   height: 260px;
   overflow: hidden;
   border: 1px solid #334155;
   border-radius: 24px;
 }
-.content-page .investment-hero-media figcaption {
+.content-page .discovery-hero-media figcaption {
   position: absolute;
   inset: auto 0 0;
   padding: 48px 24px 24px;
@@ -572,12 +561,12 @@
 .content-page .investment-landing .business-idea-intro {
   min-height: 5.4em;
 }
-.content-page .investment-plan-grid {
+.content-page .discovery-plan-grid {
   display: grid;
   gap: 28px;
   list-style: none;
 }
-.content-page .investment-step-number {
+.content-page .discovery-step-number {
   display: inline-flex;
   height: 40px;
   width: 40px;
@@ -590,7 +579,7 @@
   font-size: 13px;
   font-weight: 700;
 }
-.content-page .investment-plan-grid h3 {
+.content-page .discovery-plan-grid h3 {
   margin-bottom: 12px;
   color: #0f172a;
   font-size: 18px;
@@ -598,13 +587,13 @@
   letter-spacing: -0.025em;
   line-height: 1.4;
 }
-.content-page .investment-plan-grid p,
-.content-page .investment-plan-action p {
+.content-page .discovery-plan-grid p,
+.content-page .discovery-plan-action p {
   color: #526174;
   font-size: 14px;
   line-height: 1.8;
 }
-.content-page .investment-plan-action {
+.content-page .discovery-plan-action {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -616,7 +605,7 @@
   border-radius: 20px;
   background: white;
 }
-.content-page .investment-plan-action p {
+.content-page .discovery-plan-action p {
   max-width: 65ch;
 }
 .content-page .investment-source-link {
@@ -638,7 +627,7 @@
   outline: 2px solid #facc15;
   outline-offset: 4px;
 }
-.content-page main .investment-note {
+.content-page main .discovery-note {
   max-width: 100ch;
   margin-top: 24px;
   color: #526174;
@@ -646,28 +635,59 @@
   line-height: 1.8;
 }
 @media (min-width: 768px) {
-  .content-page .investment-inner {
+  .content-page .discovery-inner {
     width: min(calc(100% - 64px), 1232px);
   }
-  .content-page .investment-plan-grid {
+  .content-page .discovery-plan-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .content-page .investment-hero-media {
+  .content-page .discovery-hero-media {
     height: 360px;
   }
 }
 @media (min-width: 1024px) {
-  .content-page .investment-hero {
+  .content-page .discovery-hero {
     padding: 144px 0 64px;
   }
-  .content-page .investment-hero-grid {
+  .content-page .discovery-hero-grid {
     grid-template-columns: 1.1fr 1fr;
     gap: 56px;
   }
-  .content-page .investment-hero-media {
+  .content-page .discovery-hero-media {
     height: 416px;
   }
-  .content-page .investment-plan-grid {
+  .content-page .discovery-plan-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.content-page .technology-landing .discovery-plan-grid {
+  grid-template-columns: 1fr;
+}
+.content-page .technology-landing .discovery-tile-heading {
+  min-height: 54px;
+}
+.content-page .technology-landing .technology-prompt {
+  margin-top: 20px;
+  border-top: 1px solid #334155;
+  padding-top: 16px;
+}
+.content-page #technology-industries .discovery-tile-copy > p {
+  min-height: 9em;
+}
+.content-page .technology-prompt dt {
+  margin-bottom: 8px;
+  color: #facc15;
+  font-size: 13px;
+  font-weight: 600;
+}
+.content-page .technology-prompt dd {
+  color: #b8c3d4;
+  font-size: 14px;
+  line-height: 1.8;
+}
+@media (min-width: 768px) {
+  .content-page .technology-landing .discovery-plan-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

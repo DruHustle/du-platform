@@ -204,137 +204,99 @@
     }
   },
   "tech": {
-    "hero": {
-      "badge1": "Mit Onesa",
-      "title1": "KI-Hilfe mit Fokus auf Simbabwe",
-      "subtitle1": "Onesa unterstützt Sie auf Diaspora Unlocked: Stellen Sie Fragen, entdecken Sie Produkte und planen Sie die nächsten Schritte.",
-      "highlight1": "Fragen, entdecken, planen",
-      "badge2": "Kontextuelle Intelligenz",
-      "title2": "Lokale Fragen, klare Einstiegspunkte",
-      "subtitle2": "Inhalte zu Simbabwe geben Antworten Kontext. Prüfen Sie wichtige Angaben beim Anbieter oder einer offiziellen Quelle.",
-      "highlight2": "Lokalisiertes Wissen",
-      "badge3": "Ideen erkunden",
-      "title3": "Bessere Fragen für Ihre Recherche",
-      "subtitle3": "Lassen Sie Begriffe erklären und bereiten Sie Projektfragen vor. Onesa bestätigt keine Renditen und bewertet keine Anlageeignung.",
-      "highlight3": "Mit Kontext recherchieren",
-      "badge4": "Bildung 5.0",
-      "title4": "Innovation in Klassenzimmern",
-      "subtitle4": "Entdecken Sie Ideen für Lernen und digitale Kompetenzen. Diese Branchenthemen sind kein Unterrichtsangebot der Plattform.",
-      "highlight4": "Zukunftskompetenzen",
-      "badge5": "Intelligente Logistik",
-      "title5": "Technologie für Logistik",
-      "subtitle5": "Erkunden Sie Fragen zu Vertrieb und Außenhandel. Sendungsverfolgung und Zollabfertigung werden hier nicht angeboten.",
-      "highlight5": "Vernetzte Lieferketten",
-      "badge6": "Industrielle KI",
-      "title6": "Technologie im Bergbau",
-      "subtitle6": "Erkunden Sie Datenanwendungen im Bergbau. Fachüberwachung und geologische Analysen sind hier nicht verfügbar.",
-      "highlight6": "Operative Effizienz",
-      "badge7": "Agritech-Wachstum",
-      "title7": "Intelligentere Agrarsysteme",
-      "subtitle7": "Entdecken Sie Ideen für digitale Landwirtschaft. Die Website bietet keine Feldüberwachung, Bodentests oder Live-Wetterwarnungen.",
-      "highlight7": "Klimaintelligente Landwirtschaft",
-      "badge8": "Diaspora-Builders",
-      "title8": "Tech-Talente über Grenzen hinweg",
-      "subtitle8": "Nutzen Sie Ihre Auslandserfahrung für Ideen zu Simbabwe. Beginnen Sie mit Projektinformationen und praktischen Fragen.",
-      "highlight8": "Globale Zusammenarbeit"
-    },
-    "explore_onesa": "Onesa AI entdecken",
-    "onesa_badge": "Darf ich vorstellen: Onesa AI",
-    "onesa_title": "Ihren Weg beleuchten",
-    "onesa_meaning": "Onesa bedeutet „beleuchten“ auf Shona",
-    "onesa_desc2": "Fragen Sie Onesa nach Erklärungen, Produktinformationen und Reiseideen. Prüfen Sie wichtige Angaben vor einer Entscheidung.",
-    "onesa_local_edge_title": "Breite Plattform, lokaler Einsatz",
-    "onesa_local_edge_desc": "Onesa ist eine modulare, allgemein einsetzbare KI-Plattform für europäische und internationale Anwendungen. Diaspora Unlocked nutzt sie mit Inhalten und Abläufen zu Simbabwe sowie Sprach- und Kontexthilfe.",
-    "diaspora_unlocked_title": "Diaspora Unlocked Technologie",
-    "diaspora_unlocked_desc": "Diaspora Unlocked ist eine Anwendung auf Basis von Onesa. Inhalte zu Simbabwe helfen beim Entdecken von Produkten, Reisen und Geschäftsmöglichkeiten.",
-    "features_title": "Onesa AI Fähigkeiten",
-    "features_subtitle": "Nutzen Sie den Chat für Informationen, Erklärungen und Planung. Bestätigen Sie wichtige Angaben bei der zuständigen Quelle.",
-    "cta_title": "Was möchten Sie erkunden?",
-    "cta_desc": "Beginnen Sie ein Gespräch über Produkte, Reisen oder Projektinformationen zu Simbabwe.",
-    "cta_button": "Mit Onesa chatten",
-    "sectors_badge": "Sektortransformation",
-    "sectors_title": "Technologieideen nach Branche",
-    "sectors_subtitle": "Entdecken Sie mögliche Einsatzfelder. Dies sind Recherchethemen; spezialisierte Branchenwerkzeuge werden hier nicht angeboten.",
-    "sectors": {
-      "mining": {
-        "title": "Bergbau & Ressourcen",
-        "desc": "Fragen zur Datennutzung im Bergbau, mit fachlicher Beratung vor betrieblichen Entscheidungen.",
-        "d1": "Quellen zu Rohstoffmärkten recherchieren",
-        "d2": "Fragen zu Sicherheit und Umweltauflagen vorbereiten"
-      },
-      "farming": {
-        "title": "Präzisionslandwirtschaft",
-        "desc": "Erkunden Sie Fragen zur Anbauplanung und zum Informationsbedarf von Landwirten.",
-        "d1": "Begriffe und Aspekte der Anbauplanung verstehen",
-        "d2": "Fragen an lokale Agrarfachleute sammeln"
-      },
-      "logistics": {
-        "title": "Intelligente Logistik",
-        "desc": "Recherchieren Sie Lieferwege und praktische Schritte beim Warentransport.",
-        "d1": "Fragen zu Routen und Lieferzeiten vorbereiten",
-        "d2": "Zollanforderungen bei der zuständigen Behörde prüfen"
-      },
-      "education": {
-        "title": "Bildung der Zukunft",
-        "desc": "Nutzen Sie KI-Erklärungen, um ein Thema zu erkunden oder weiteres Lernen zu planen.",
-        "d1": "Unbekannte Begriffe erklären lassen",
-        "d2": "Fragen und Themen zum Weiterlernen sammeln"
-      }
-    },
     "chat_with_onesa": "Chatten Sie mit Onesa",
-    "onesa_matter": {
-      "badge": "Assistenz mit Onesa",
-      "title": "Onesa unterstützt Sie hier",
-      "headline": "Eine vielseitige KI-Plattform für Ihre Fragen zu Simbabwe.",
-      "p1": "Onesa ist eine modulare, allgemein einsetzbare KI-Plattform für europäische und internationale Anwendungen.",
-      "p2": "Diaspora Unlocked ist eine Anwendung auf Basis von Onesa. Sie ergänzt die Gespräche und Planungshilfen dieser Website um Inhalte und Abläufe zu Simbabwe.",
-      "p3": "Beginnen Sie mit einer Frage zu einem Produkt, Reiseziel oder Projekt. Bitten Sie um eine Erklärung oder einen Plan zum Weiterentwickeln.",
-      "p4": "Sprach- und Kontexthilfe gehören zum Simbabwe-Fokus dieser Anwendung. Die Onesa-Plattform ist nicht auf ein Land oder eine Branche beschränkt.",
-      "p5": "KI-Antworten können unvollständig oder fehlerhaft sein. Prüfen Sie Preise, Verfügbarkeit und wichtige Anforderungen bei Anbietern oder offiziellen Quellen.",
-      "tiles": {
-        "illuminate": {
-          "title": "Eine Plattform, viele Anwendungen",
-          "detail": "Onesa ist eine modulare KI-Plattform für europäische und internationale Anwendungen. Diaspora Unlocked ist eine davon."
-        },
-        "africa_centric": {
-          "title": "Hilfe mit Fokus auf Simbabwe",
-          "detail": "Diese Anwendung ergänzt Inhalte zu Simbabwe sowie Sprach- und Kontexthilfe für passendere Fragen."
-        },
-        "sovereignty": {
-          "title": "Praktische nächste Schritte",
-          "detail": "Erhalten Sie Erklärungen, erkunden Sie Produkte und planen Sie Reisen. Nutzen Sie Antworten als Ausgangspunkt für eigene Prüfungen."
-        },
-        "growth": {
-          "title": "Für die Weiterentwicklung",
-          "detail": "Ziel ist eine zunehmend nützliche Assistenz. Die Branchenbeispiele zeigen Recherchefelder, keine hier verfügbaren Fachdienste."
-        }
-      },
-      "combined": "Onesa ist eine modulare, vielseitige KI-Plattform für europäische und internationale Anwendungen. Diaspora Unlocked nutzt sie für Informationen zu Simbabwe, Produktsuche und Reiseplanung.",
-      "read_vision": "Wie Onesa und Diaspora Unlocked zusammengehören"
+    "restore_chat_bubble": "Chat-Blase anzeigen",
+    "landing": {
+      "eyebrow": "Technologie & praktische Werkzeuge",
+      "title": "Technologie, die hilft.",
+      "highlight": "Mit Onesa.",
+      "description": "Stelle klarere Fragen, entdecke Simbabwe und plane deinen nächsten Schritt, ob vor Ort oder im Ausland. Beginne mit den Werkzeugen auf Diaspora Unlocked.",
+      "principle": "Fragen. Entdecken. Planen.",
+      "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft",
+      "caption": "Onesa für deine Fragen zu Simbabwe.",
+      "tools_cta": "Werkzeuge entdecken"
     },
-    "diaspora_use_cases": {
-      "relocation": {
-        "title": "Orientierung finden",
-        "detail": "Fragen Sie nach Orten, lokalen Gepflogenheiten und Recherchethemen vor einem Besuch oder einer Rückkehr."
+    "tools": {
+      "title": "Was du mit Onesa tun kannst",
+      "subtitle": "Wähle das passende Werkzeug für deine Aufgabe. Jedes öffnet einen eigenen Bereich.",
+      "chat": {
+        "title": "Eine Frage stellen",
+        "description": "Erhalte verständliche Erklärungen zu Produkten, Orten und Geschäftsideen. Grenze mit weiteren Fragen ein, was du brauchst.",
+        "cta": "Mit Onesa chatten",
+        "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft"
       },
-      "investment": {
-        "title": "Projektinformationen verstehen",
-        "detail": "Lassen Sie Branchenbegriffe erklären und sammeln Sie Fragen an Projektträger oder unabhängige Beratung."
+      "trip": {
+        "title": "Eine Simbabwe-Reise planen",
+        "description": "Erstelle einen Entwurf passend zu Terminen, Interessen und Budget. Bestätige vorgeschlagene Stationen, Transport und Preise bei den Anbietern.",
+        "cta": "Reise planen",
+        "image_alt": "Die Victoriafälle in Simbabwe"
       },
-      "business_intelligence": {
-        "title": "Produkte und Ideen erkunden",
-        "detail": "Nutzen Sie Onesa für Produktinformationen und zur Vorbereitung einer Anfrage."
+      "vr": {
+        "title": "360°-Demos erkunden",
+        "description": "Erkunde die gekennzeichneten Sample-City-Panoramen am Bildschirm oder mit unterstützter Headset-Steuerung. Es sind Demos und keine Touren zu Reisezielen in Simbabwe.",
+        "cta": "VR-Demo ausprobieren",
+        "image_alt": "Felsiger Hang im Sample-City-Demopanorama"
       },
-      "collaboration": {
-        "title": "Einen Besuch planen",
-        "detail": "Besprechen Sie Ziele und Interessen und erstellen Sie einen Reiseentwurf mit Richtbudgets."
+      "ar": {
+        "title": "Den AR-Reiseführer ausprobieren",
+        "description": "Erkunde ein gewähltes Reiseziel mit Onesas Ortsinformationen, optionaler Sprachausgabe und einer Kameravorschau, die du selbst aktivierst.",
+        "cta": "AR-Reiseführer öffnen",
+        "image_alt": "Steinmauern und Ruinen von Great Zimbabwe"
       }
     },
-    "diaspora_ai": {
-      "title": "Wie Diaspora Unlocked KI einsetzt",
-      "subtitle": "Nutzen Sie Onesa für Erklärungen, Entdeckungen und Planung. Die Assistenz bereitet vor; Anbieter bestätigen die Details."
+    "about": {
+      "title": "Wie Onesa und Diaspora Unlocked zusammengehören",
+      "platform": "Onesa ist eine modulare, allgemein einsetzbare KI-Plattform für europäische und internationale Anwendungen.",
+      "application": "Diaspora Unlocked ist eine Anwendung auf Basis von Onesa. Sie ergänzt die Gespräche und Planungshilfen dieser Website um Inhalte und Abläufe zu Simbabwe. Sprach- und Kontexthilfe gehören zum Simbabwe-Fokus dieser Anwendung. Die Onesa-Plattform ist nicht auf ein Land oder eine Branche beschränkt."
     },
-    "restore_chat_bubble": "Chat-Blase anzeigen"
+    "steps": {
+      "title": "Von der Frage zum nächsten Schritt",
+      "subtitle": "Etwas Kontext macht das Gespräch hilfreicher.",
+      "ask": {
+        "title": "Mit deinem Ziel beginnen",
+        "description": "Beschreibe, was du wo und wann vorhast. Nenne wichtige Rahmenbedingungen, etwa Zeit oder Budget."
+      },
+      "organise": {
+        "title": "Einen Arbeitsplan anfordern",
+        "description": "Bitte um eine kurze Erklärung, einen Vergleich oder eine Checkliste. Passe die Antwort mit Rückfragen an deine Situation an."
+      },
+      "check": {
+        "title": "Vor dem Handeln bestätigen",
+        "description": "Prüfe aktuelle Preise, Verfügbarkeit und Anforderungen bei Anbietern oder offiziellen Stellen. Nimm die hilfreichen Fragen mit."
+      }
+    },
+    "ideas": {
+      "title": "Kleine digitale Verbesserungen im Geschäftsalltag",
+      "subtitle": "Praktische Ansätze für Landwirtschaft, Handel und Dienstleistungen. Sie helfen beim Organisieren der Arbeit; DU stellt dafür keine Spezialsoftware bereit.",
+      "prompt_label": "Frag Onesa zum Beispiel",
+      "next": "Möchtest du eine digitale Idee mit einem Geschäft verbinden? Entdecke kleine Einstiegsprojekte und die nötigen ersten Prüfungen.",
+      "cta": "Geschäftsideen entdecken",
+      "farming": {
+        "title": "Anbau und Verkäufe festhalten",
+        "description": "Beginne mit einem Anbauzyklus. Erfasse Ausgaben, Pflanztermine, Erntemengen und Verkäufe in einer einfachen Tabelle, die ihr gemeinsam prüfen könnt.",
+        "prompt": "Welche Spalten helfen mir, Kosten und Verkäufe eines Gemüse-Anbauzyklus zu erfassen?",
+        "image_alt": "Frisches Gemüse in Körben"
+      },
+      "stock": {
+        "title": "Den Lagerbestand kennen",
+        "description": "Erfasse Wareneingänge, Verkäufe und Liefertermine. Gleiche die Liste mit dem tatsächlichen Bestand und den Einnahmen ab, bevor du das Sortiment erweiterst.",
+        "prompt": "Hilf mir, eine einfache Bestands- und Liefercheckliste für einen kleinen Laden zu erstellen.",
+        "image_alt": "Verpackte getrocknete Mango aus Simbabwe"
+      },
+      "jobs": {
+        "title": "Aufträge und Material verfolgen",
+        "description": "Vereinbare bei Reparatur- oder Bauaufträgen den Umfang. Dokumentiere Material, datierte Fortschritte, Änderungen und die Abnahme durch den Kunden.",
+        "prompt": "Was gehört auf einen einseitigen Arbeitsnachweis für ein kleines Reparaturteam?",
+        "image_alt": "Bauarbeiter montieren eine Dachkonstruktion aus Stahl in Harare"
+      },
+      "skills": {
+        "title": "Eine praktische digitale Fähigkeit lernen",
+        "description": "Übe eine konkrete Aufgabe: eine Tabelle, eine klare Kundennachricht oder eine einfache Website. Nutze beim Lernen Beispieldaten.",
+        "prompt": "Erstelle einen Übungsplan für Anfänger, um ein kleines Geschäft mit einer Tabelle zu verwalten.",
+        "image_alt": "Ein für digitales Lernen ausgestatteter Klassenraum"
+      }
+    },
+    "note": "KI-Antworten können unvollständig oder fehlerhaft sein. Prüfen Sie Preise, Verfügbarkeit und wichtige Anforderungen bei Anbietern oder offiziellen Quellen."
   },
   "tourism": {
     "back_to_tourism": "Zurueck zum Tourismus",
@@ -735,8 +697,6 @@
         "monitor": "Gleichen Sie gelieferte Materialien mit Rechnungen ab. Lassen Sie jeden vereinbarten Bauabschnitt vor der Zahlung unabhängig prüfen."
       },
       "explore": "Diese Idee erkunden",
-      "photo_label": "Foto:",
-      "photo_crop": "Optimiert; zur Anzeige beschnitten.",
       "food": {
         "title": "Lebensmittelverarbeitung & Verpackung",
         "summary": "Erkunden Sie Trockenprodukte, Lebensmittel in kleinen Chargen oder Verpackungen für örtliche Betriebe.",
@@ -1217,7 +1177,8 @@
     "notify_success": "Vorrangiger Zugriff gesperrt",
     "get_notified": "Zugriff anfordern",
     "form_subtitle": "Geben Sie Ihre Daten ein, um sich in die Warteliste für {{featureName}} einzutragen.",
-    "back": "Zurück"
+    "back": "Zurück",
+    "image_credits": "Bildnachweise"
   },
   "pagination": {
     "label": "Pagination",
