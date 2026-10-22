@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { useShopCatalog, type ShopProduct } from "../lib/useShopCatalog";
 import { useShopCart } from "../lib/useShopCart";
+import { useCheckoutPanelHeight } from "../lib/useCheckoutPanelHeight";
 import type { CartItem } from "../lib/cartStore";
 import ProductCard from "../components/ProductCard";
 import QuantityControl from "../components/QuantityControl";
@@ -150,6 +151,7 @@ export default function ShopProducts() {
   const [notifyEmailError, setNotifyEmailError] = useState("");
   const mobileView =
     new URLSearchParams(search).get("cart") === "1" ? "checkout" : "products";
+  const checkoutScrollRef = useCheckoutPanelHeight(mobileView);
   const setMobileView = (view: "products" | "checkout") => {
     const params = new URLSearchParams(search);
     if (view === "checkout") params.set("cart", "1");
@@ -763,6 +765,7 @@ export default function ShopProducts() {
                     })}
                   </button>
                   <form
+                    ref={checkoutScrollRef}
                     className="content-panel shop-checkout-scroll"
                     tabIndex={0}
                     aria-labelledby="shop-cart-title"
