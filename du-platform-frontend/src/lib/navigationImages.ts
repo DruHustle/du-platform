@@ -1,7 +1,7 @@
 const heroImages: Record<string, string> = {
   "/shop": "/images/pages/shop/zimbabwe_shop_hero.webp",
   "/technology": "/images/pages/technology/ai_innovation.webp",
-  "/investment": "/images/pages/investment/rbz_building.webp",
+  "/investment": "/images/pages/investment/horticulture.jpg",
   "/tourism": "/images/pages/tourism/victoria_falls.webp",
 };
 const warmedImages = new Set<string>();

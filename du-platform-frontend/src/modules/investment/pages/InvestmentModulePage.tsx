@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import SwipeRail from "@/components/discovery/SwipeRail";
@@ -6,439 +5,324 @@ import DiscoveryTile from "@/components/discovery/DiscoveryTile";
 import DiscoverySection from "@/components/discovery/DiscoverySection";
 import InstantImage from "@/components/InstantImage";
 import {
-  DollarSign,
-  CheckCircle,
-  Globe,
+  ArrowRight,
   Building,
-  Leaf,
-  Shield,
+  ChevronDown,
   Gem,
-  Repeat,
-  Target,
-  AlertTriangle,
+  Globe,
+  Leaf,
+  Package,
+  Search,
+  Shield,
+  Sun,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import SubPageHero from "@/components/SubPageHero";
 import { Link } from "wouter";
+
+const businessIdeas = [
+  {
+    key: "mining",
+    icon: Gem,
+    image: "/images/pages/investment/minerals_mining.png",
+    source: "https://www.chamines.co.zw/home/MiningAffairs",
+  },
+  {
+    key: "farming",
+    icon: Leaf,
+    image: "/images/pages/investment/horticulture.jpg",
+    source:
+      "https://tradezimbabwe.com/gokwe-chilli-farmers-target-export-markets/",
+  },
+  {
+    key: "construction",
+    icon: Building,
+    image: "/images/pages/investment/harare-construction.webp",
+    photo: {
+      author: "Dariusmutamba",
+      url: "https://commons.wikimedia.org/wiki/File:Construction_in_harare_01.jpg",
+    },
+    source: "https://www.hararecity.co.zw/services/about/building-permits",
+  },
+  {
+    key: "food",
+    icon: Package,
+    image: "/images/pages/shop/food_dried_mango_1.jpg",
+    source:
+      "https://tradezimbabwe.com/afcfta-opens-new-export-opportunities-for-msmes/",
+  },
+  {
+    key: "solar",
+    icon: Sun,
+    image: "/images/pages/investment/zimbabwe-solar-installation.webp",
+    photo: {
+      author: "Mulavu123",
+      url: "https://commons.wikimedia.org/wiki/File:Solar_panel_installation.jpg",
+    },
+    source:
+      "https://www.get-invest.eu/about/country-and-regional-windows/zimbabwe/",
+  },
+];
+const researchPaths = [
+  { key: "projects", icon: Building, href: "/investment/opportunities" },
+  { key: "directory", icon: Search, href: "/ntir" },
+];
+const resources = [
+  { key: "zida", icon: Shield, href: "https://zidainvest.com/" },
+  { key: "zimtrade", icon: Globe, href: "https://tradezimbabwe.com/" },
+  {
+    key: "energy",
+    icon: Sun,
+    href: "https://www.get-invest.eu/about/country-and-regional-windows/zimbabwe/",
+  },
+];
+const actionClass =
+  "h-auto min-h-11 max-w-full whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300";
 
 export default function Investment() {
   const { t } = useTranslation();
-  const heroSlides = useMemo(
-    () => [
-      {
-        image: "/images/pages/investment/rbz_building.webp",
-        badge: t("investment.hero.badge1") || "Explore Zimbabwe",
-        badgeIcon: Shield,
-        title: t("investment.hero.title1") || "Understand the opportunities",
-        titleHighlight: t("investment.hero.highlight1") || "in Zimbabwe",
-        subtitle:
-          t("investment.hero.subtitle1") ||
-          "Read project profiles, compare sectors and prepare questions before taking an investment further.",
-      },
-      {
-        image: "/images/pages/investment/masuwe_sez.png",
-        badge: t("investment.hero.badge2") || "Masuwe SEZ",
-        badgeIcon: Globe,
-        title: t("investment.hero.title2") || "Explore the Masuwe project",
-        titleHighlight: t("investment.hero.highlight2") || "Prime Location",
-        subtitle:
-          t("investment.hero.subtitle2") ||
-          "Read about a tourism and hospitality project in the Victoria Falls area. Confirm current plans with the listed promoter.",
-      },
-      {
-        image: "/images/pages/investment/vfex_logo.png",
-        badge: t("investment.hero.badge3") || "VFEX",
-        badgeIcon: Repeat,
-        title: t("investment.hero.title3") || "Stock Exchange",
-        titleHighlight: t("investment.hero.highlight3") || "Global Access",
-        subtitle:
-          t("investment.hero.subtitle3") ||
-          "Explore Zimbabwe's capital-market landscape. Trading and account opening are handled by licensed providers.",
-      },
-      {
-        image: "/images/pages/investment/horticulture.jpg",
-        badge: t("investment.hero.badge4") || "Horticulture",
-        badgeIcon: Leaf,
-        title: t("investment.hero.title4") || "Horticulture projects",
-        titleHighlight:
-          t("investment.hero.highlight4") || "Agriculture & exports",
-        subtitle:
-          t("investment.hero.subtitle4") ||
-          "Explore agriculture and processing profiles. Check market access, operating costs and project status with the promoter.",
-      },
-      {
-        image: "/images/pages/investment/minerals_mining.png",
-        badge: t("investment.hero.badge5") || "Mining",
-        badgeIcon: Gem,
-        title: t("investment.hero.title5") || "Mineral Wealth",
-        titleHighlight: t("investment.hero.highlight5") || "Strategic Assets",
-        subtitle:
-          t("investment.hero.subtitle5") ||
-          "Gold, Platinum, and Lithium opportunities.",
-      },
-      {
-        image: "/images/pages/shared/manufacturing_factory.jpg",
-        badge: t("investment.hero.badge6") || "Manufacturing Upside",
-        badgeIcon: Building,
-        title: t("investment.hero.title6") || "Value-Added Manufacturing",
-        titleHighlight:
-          t("investment.hero.highlight6") || "Export-Ready Capacity",
-        subtitle:
-          t("investment.hero.subtitle6") ||
-          "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
-      },
-      {
-        image: "/images/pages/tourism/victoria_falls.webp",
-        badge: t("investment.hero.badge7") || "Tourism Capital",
-        badgeIcon: Target,
-        title: t("investment.hero.title7") || "Hospitality Growth Corridors",
-        titleHighlight: t("investment.hero.highlight7") || "Visitor Economy",
-        subtitle:
-          t("investment.hero.subtitle7") ||
-          "Explore hospitality project information near Zimbabwe's visitor destinations.",
-      },
-      {
-        image: "/images/pages/investment/partnership_handshake.png",
-        badge: t("investment.hero.badge8") || "Diaspora Flows",
-        badgeIcon: DollarSign,
-        title: t("investment.hero.title8") || "Research your next step",
-        titleHighlight:
-          t("investment.hero.highlight8") || "Project information",
-        subtitle:
-          t("investment.hero.subtitle8") ||
-          "Use these profiles as a starting point for research and direct enquiries. This site does not pool capital or process investments.",
-      },
-    ],
-    [t]
-  );
-
-  const businessIdeas = [
-    {
-      key: "mining",
-      icon: Gem,
-      source: "https://www.chamines.co.zw/home/MiningAffairs",
-    },
-    {
-      key: "farming",
-      icon: Leaf,
-      source:
-        "https://tradezimbabwe.com/gokwe-chilli-farmers-target-export-markets/",
-    },
-    {
-      key: "construction",
-      icon: Building,
-      source: "https://www.hararecity.co.zw/services/about/building-permits",
-    },
-  ];
-
-  const collectiveModelSteps = [
-    t("investment.collective_model.s1") ||
-      "Browse sector profiles and read what each project describes.",
-    t("investment.collective_model.s2") ||
-      "Prepare questions about ownership, current status, costs and participation terms.",
-    t("investment.collective_model.s3") ||
-      "Request current documents from the promoter and check them with independent advisers.",
-    t("investment.collective_model.s4") ||
-      "Agree any investment directly through the appropriate legal and financial channels, outside this site.",
-  ];
-  const europeFocusAreas = [
-    {
-      title: t("investment.eu_focus.energy.title") || "Green Energy",
-      detail:
-        t("investment.eu_focus.energy.detail") ||
-        "GET.invest Zimbabwe launched in May 2025 with EU and German funding to support clean-energy finance. Check the programme's current eligibility criteria at the source below.",
-    },
-    {
-      title:
-        t("investment.eu_focus.agri.title") || "Agriculture and Value Chains",
-      detail:
-        t("investment.eu_focus.agri.detail") ||
-        "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs.",
-    },
-    {
-      title:
-        t("investment.eu_focus.sme.title") || "Private Sector and SME Finance",
-      detail:
-        t("investment.eu_focus.sme.detail") ||
-        "EIB report, 2 October 2025: €60 million lent to Zimbabwean banks over five years, including €20 million to Stanbic in March 2025. These are external bank programmes.",
-    },
-    {
-      title:
-        t("investment.eu_focus.social.title") ||
-        "Health, Gender, and Social Programs",
-      detail:
-        t("investment.eu_focus.social.detail") ||
-        "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth.",
-    },
-    {
-      title:
-        t("investment.eu_focus.biodiversity.title") ||
-        "Biodiversity and Resilience",
-      detail:
-        t("investment.eu_focus.biodiversity.detail") ||
-        "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development.",
-    },
-    {
-      title:
-        t("investment.eu_focus.gateway.title") ||
-        "Global Gateway Partnership Envelope",
-      detail:
-        t("investment.eu_focus.gateway.detail") ||
-        "The European Commission lists €165 million in grants for its Zimbabwe partnership for 2021–2027. This is a cooperation allocation, not money raised through Diaspora Unlocked.",
-    },
-  ];
-  const europePartners = [
-    "Team Europe",
-    "European Investment Bank (EIB Global)",
-    "PROPARCO",
-    "GIZ / EU Member State Agencies",
-  ];
-  const eibTakeaways = [
-    t("investment.eu_focus.eib_t1") ||
-      "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
-    t("investment.eu_focus.eib_t2") ||
-      "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
-    t("investment.eu_focus.eib_t3") ||
-      "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
-  ];
-
-  const collectiveStepTitles = [
-    t("investment.crowdfunding_steps.browse", {
-      defaultValue: "Read profiles",
-    }),
-    t("investment.crowdfunding_steps.invest", {
-      defaultValue: "Prepare questions",
-    }),
-    t("investment.crowdfunding_steps.track", {
-      defaultValue: "Check documents",
-    }),
-    t("investment.crowdfunding_steps.returns", {
-      defaultValue: "Decide independently",
-    }),
-  ];
   return (
     <Layout>
-      <section id="hero">
-        <SubPageHero heroSlides={heroSlides} />
-      </section>
-      <DiscoverySection
-        id="collective-model"
-        title={t("investment.collective_model.title", {
-          defaultValue: "How to explore an opportunity",
-        })}
-        description={t("investment.collective_model.subtitle", {
-          defaultValue:
-            "Start with information, then check the documents and terms independently before making any commitment.",
-        })}
-      >
-        <SwipeRail
-          label={t("investment.collective_model.title", {
-            defaultValue: "How to explore an opportunity",
-          })}
+      <div className="investment-landing">
+        <section id="hero" className="investment-hero">
+          <div className="investment-inner investment-hero-grid">
+            <div>
+              <p className="investment-eyebrow">
+                {t("investment.landing.eyebrow")}
+              </p>
+              <h1>
+                {t("investment.landing.title")}
+                <span>{t("investment.landing.highlight")}</span>
+              </h1>
+              <p className="investment-hero-description">
+                {t("investment.landing.description")}
+              </p>
+              <div className="investment-actions">
+                <Button asChild className={actionClass}>
+                  <a href="#investment-innovation-opportunities">
+                    {t("investment.landing.ideas_cta")}
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0"
+                    />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
+                >
+                  <a href="#collective-model">
+                    {t("investment.landing.plan_cta")}
+                  </a>
+                </Button>
+              </div>
+              <p className="investment-hero-principle">
+                {t("investment.landing.principle")}
+              </p>
+            </div>
+            <figure className="investment-hero-media">
+              <InstantImage
+                src="/images/pages/investment/horticulture.jpg"
+                alt={t("investment.opportunities.farming.image_alt")}
+                priority
+                wrapperClassName="h-full w-full"
+                className="h-full w-full object-cover"
+              />
+              <figcaption>{t("investment.landing.image_caption")}</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <DiscoverySection
+          id="investment-innovation-opportunities"
+          title={t("investment.opportunities.title")}
+          description={t("investment.opportunities.subtitle")}
         >
-          {collectiveModelSteps.map((item, index) => (
-            <DiscoveryTile
-              key={item}
-              title={collectiveStepTitles[index]}
-              number={index + 1}
-            >
-              <p>{item}</p>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-      </DiscoverySection>
-      <DiscoverySection
-        id="active-projects"
-        title={t("investment.sectors_title", {
-          defaultValue: "Explore project profiles",
-        })}
-        description={t("investment.sectors_subtitle", {
-          defaultValue:
-            "Browse sector ideas and listed promoters. Current availability, financial terms and approvals require independent confirmation.",
-        })}
-      >
-        <div className="discovery-callout">
-          <InstantImage
-            src="/images/pages/investment/rbz_building.webp"
-            alt=""
-            draggable={false}
-            loading="lazy"
-            wrapperClassName="discovery-callout-image bg-slate-900"
-            className="h-full w-full object-cover"
-          />
-          <div className="discovery-callout-content">
-            <p>
-              {t("investment.sectors_info", {
-                defaultValue:
-                  "Read project descriptions and identify questions for the listed promoter. These profiles do not confirm an offer to invest, project availability or financial performance.",
-              })}
-            </p>
-            <Button
-              asChild
-              className="mt-6 bg-zim-gold text-slate-950 hover:bg-yellow-300"
-            >
-              <Link href="/investment/opportunities">
-                {t("investment.sectors_explore", {
-                  defaultValue: "Browse project profiles",
-                })}
+          <SwipeRail label={t("investment.opportunities.title")}>
+            {businessIdeas.map(item => {
+              const title = t(`investment.opportunities.${item.key}.title`);
+              return (
+                <DiscoveryTile
+                  key={item.key}
+                  title={title}
+                  icon={item.icon}
+                  image={item.image}
+                  imageAlt={t(`investment.opportunities.${item.key}.image_alt`)}
+                  footer={
+                    <>
+                      <a
+                        data-business-source
+                        href={item.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="investment-source-link"
+                      >
+                        {t(`investment.opportunities.${item.key}.source`)}
+                      </a>
+                      {item.photo && (
+                        <p className="business-idea-credit">
+                          {t("investment.opportunities.photo_label")}{" "}
+                          <a
+                            href={item.photo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {item.photo.author}
+                          </a>
+                          {" · "}
+                          <a
+                            href="https://creativecommons.org/licenses/by-sa/4.0/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            CC BY-SA 4.0
+                          </a>
+                          {" · "}
+                          {t("investment.opportunities.photo_crop")}
+                        </p>
+                      )}
+                    </>
+                  }
+                >
+                  <p className="business-idea-intro">
+                    {t(`investment.opportunities.${item.key}.summary`)}
+                  </p>
+                  <dl className="business-idea-details business-idea-basics">
+                    {(["start", "budget"] as const).map(field => (
+                      <div key={field}>
+                        <dt>{t(`investment.opportunities.labels.${field}`)}</dt>
+                        <dd>
+                          {t(`investment.opportunities.${item.key}.${field}`)}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <details className="business-idea-more">
+                    <summary
+                      aria-label={`${t("investment.opportunities.explore")}: ${title}`}
+                    >
+                      <span>{t("investment.opportunities.explore")}</span>
+                      <ChevronDown
+                        aria-hidden="true"
+                        className="h-4 w-4 shrink-0"
+                      />
+                    </summary>
+                    <dl className="business-idea-details">
+                      {(
+                        [
+                          "customers",
+                          "income",
+                          "checks",
+                          "improvement",
+                          "monitor",
+                        ] as const
+                      ).map(field => (
+                        <div key={field}>
+                          <dt>
+                            {t(`investment.opportunities.labels.${field}`)}
+                          </dt>
+                          <dd>
+                            {t(`investment.opportunities.${item.key}.${field}`)}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </details>
+                </DiscoveryTile>
+              );
+            })}
+          </SwipeRail>
+        </DiscoverySection>
+
+        <DiscoverySection
+          id="collective-model"
+          title={t("investment.plan.title")}
+          description={t("investment.plan.subtitle")}
+        >
+          <ol className="investment-plan-grid">
+            {["customer", "costs", "agreement", "review"].map((key, index) => (
+              <li key={key}>
+                <span className="investment-step-number" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3>{t(`investment.plan.${key}.title`)}</h3>
+                <p>{t(`investment.plan.${key}.description`)}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="investment-plan-action">
+            <p>{t("investment.plan.checklist_description")}</p>
+            <Button asChild className={actionClass}>
+              <Link href="/regulations#due-diligence-checklist">
+                {t("investment.plan.cta")}
+                <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
               </Link>
             </Button>
           </div>
-        </div>
-      </DiscoverySection>
-      <DiscoverySection
-        id="investment-innovation-opportunities"
-        title={t("investment.opportunities.title")}
-        description={t("investment.opportunities.subtitle")}
-      >
-        <SwipeRail label={t("investment.opportunities.title")}>
-          {businessIdeas.map(item => (
-            <DiscoveryTile
-              key={item.key}
-              title={t(`investment.opportunities.${item.key}.title`)}
-              icon={item.icon}
-              footer={
-                <a
-                  href={item.source}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center text-sm font-semibold text-zim-gold underline underline-offset-4 hover:text-yellow-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold"
-                >
-                  {t(`investment.opportunities.${item.key}.source`)}
-                </a>
-              }
-            >
-              <p>{t(`investment.opportunities.${item.key}.summary`)}</p>
-              <dl className="business-idea-details">
-                {(["start", "budget", "checks"] as const).map(field => (
-                  <div key={field}>
-                    <dt>{t(`investment.opportunities.labels.${field}`)}</dt>
-                    <dd>
-                      {t(`investment.opportunities.${item.key}.${field}`)}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-        <aside className="discovery-support-panel">
-          <h3 className="text-lg font-semibold mb-4">
-            {t("investment.opportunities.plan.title")}
-          </h3>
-          <p className="mb-5 text-sm leading-7">
-            {t("investment.opportunities.plan.intro")}
-          </p>
-          <ul className="space-y-3">
-            {["budget", "people", "agreement", "oversight"].map(item => (
-              <li
-                key={item}
-                className="flex items-start gap-3 text-sm leading-7"
-              >
-                <AlertTriangle
-                  aria-hidden="true"
-                  className="mt-1 h-4 w-4 shrink-0 text-amber-700"
-                />
-                <span>{t(`investment.opportunities.plan.${item}`)}</span>
-              </li>
-            ))}
-          </ul>
-          <Button
-            asChild
-            className="mt-6 h-auto min-h-11 whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
-          >
-            <Link href="/regulations#due-diligence-checklist">
-              {t("investment.opportunities.plan.cta")}
-            </Link>
-          </Button>
-          <p className="mt-5 text-sm leading-7">
-            {t("investment.opportunities.plan.note")}
-          </p>
-        </aside>
-      </DiscoverySection>
-      <DiscoverySection
-        id="eu-partnerships"
-        title={t("investment.eu_focus.title", {
-          defaultValue: "External programmes to research",
-        })}
-        description={t("investment.eu_focus.subtitle", {
-          defaultValue:
-            "European programmes provide useful context for Zimbabwe's economy. Sources checked on 21 October 2026; they do not establish funding or endorsement for projects listed here.",
-        })}
-      >
-        <ul className="discovery-partners mb-6">
-          {europePartners.map(partner => (
-            <li key={partner}>{partner}</li>
-          ))}
-        </ul>
-        <SwipeRail
-          label={t("investment.eu_focus.title", {
-            defaultValue: "External programmes to research",
-          })}
+        </DiscoverySection>
+
+        <DiscoverySection
+          id="active-projects"
+          title={t("investment.research.title")}
+          description={t("investment.research.subtitle")}
         >
-          {europeFocusAreas.map((item, index) => (
-            <DiscoveryTile
-              key={item.title}
-              title={item.title}
-              icon={[Leaf, Building, DollarSign, Shield, Globe, Gem][index]}
-            >
-              <p>{item.detail}</p>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-        <aside className="discovery-support-panel">
-          <h3 className="text-lg font-semibold mb-4">
-            {t("investment.eu_focus.eib_takeaways_title", {
-              defaultValue: "EIB Practical Takeaways for Diaspora Investors",
-            })}
-          </h3>
-          <ul className="space-y-3">
-            {eibTakeaways.map(point => (
-              <li
-                key={point}
-                className="flex items-start gap-3 text-sm leading-7"
+          <SwipeRail label={t("investment.research.title")} wide>
+            {researchPaths.map(item => (
+              <DiscoveryTile
+                key={item.key}
+                icon={item.icon}
+                title={t(`investment.research.${item.key}.title`)}
+                footer={
+                  <Button asChild className={actionClass}>
+                    <Link href={item.href}>
+                      {t(`investment.research.${item.key}.cta`)}
+                      <ArrowRight
+                        aria-hidden="true"
+                        className="h-4 w-4 shrink-0"
+                      />
+                    </Link>
+                  </Button>
+                }
               >
-                <CheckCircle className="mt-1 h-4 w-4 shrink-0 text-amber-700" />
-                <span>{point}</span>
-              </li>
+                <p>{t(`investment.research.${item.key}.description`)}</p>
+              </DiscoveryTile>
             ))}
-          </ul>
-        </aside>
-        <div className="mt-8 flex flex-wrap gap-3 ">
-          <a
-            href="https://www.get-invest.eu/about/country-windows/zimbabwe/"
-            className="max-w-full"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full h-auto min-h-9 max-w-full whitespace-normal py-2 leading-5">
-              {t("investment.eu_focus.source_getinvest") ||
-                "GET.invest Zimbabwe · checked 21 Oct 2026"}
-            </Button>
-          </a>
-          <a
-            href="https://international-partnerships.ec.europa.eu/countries/zimbabwe_en"
-            className="max-w-full"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full h-auto min-h-9 max-w-full whitespace-normal py-2 leading-5">
-              {t("investment.eu_focus.source_eu") ||
-                "European Commission · checked 21 Oct 2026"}
-            </Button>
-          </a>
-          <a
-            href="https://www.eib.org/en/essays/agriculture-africa-affordable-finance-women-zimbabwe-small-business"
-            className="max-w-full"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full h-auto min-h-9 max-w-full whitespace-normal py-2 leading-5">
-              {t("investment.eu_focus.source_eib") || "EIB report · 2 Oct 2025"}
-            </Button>
-          </a>
-        </div>
-      </DiscoverySection>
+          </SwipeRail>
+        </DiscoverySection>
+
+        <DiscoverySection
+          id="eu-partnerships"
+          title={t("investment.resources.title")}
+          description={t("investment.resources.subtitle")}
+        >
+          <SwipeRail label={t("investment.resources.title")}>
+            {resources.map(item => (
+              <DiscoveryTile
+                key={item.key}
+                icon={item.icon}
+                title={t(`investment.resources.${item.key}.title`)}
+                footer={
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="investment-source-link"
+                  >
+                    {t(`investment.resources.${item.key}.cta`)}
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0"
+                    />
+                  </a>
+                }
+              >
+                <p>{t(`investment.resources.${item.key}.description`)}</p>
+              </DiscoveryTile>
+            ))}
+          </SwipeRail>
+          <p className="investment-note">{t("investment.resources.note")}</p>
+        </DiscoverySection>
+      </div>
     </Layout>
   );
 }

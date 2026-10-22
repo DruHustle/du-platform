@@ -117,22 +117,27 @@ try {
         assert(await page.locator("#collective-model h2").isVisible());
         const ideas = page.locator("#investment-innovation-opportunities");
         const cards = ideas.locator("article");
-        assert.equal(await cards.count(), 3);
+        assert.equal(await cards.count(), 5);
         const sources = [
           "www.chamines.co.zw",
           "tradezimbabwe.com",
           "www.hararecity.co.zw",
+          "tradezimbabwe.com",
+          "www.get-invest.eu",
         ];
         for (const [index, card] of (await cards.all()).entries()) {
           // Each idea provides a usable starting plan and a direct primary source,
           // rather than an investment/payment action or an unverified offer.
-          assert.equal(await card.locator("dl dt").count(), 3);
+          assert.equal(
+            await card.locator(".business-idea-basics dt").count(),
+            2
+          );
           assert(
             (await card.locator("dl dd").allTextContents()).every(
               text => text.trim().length > 0
             )
           );
-          const source = card.getByRole("link");
+          const source = card.locator("[data-business-source]");
           assert.equal(
             new URL(await source.getAttribute("href")).hostname,
             sources[index]
@@ -140,8 +145,41 @@ try {
           assert.equal(await source.getAttribute("target"), "_blank");
           assert.match(await source.getAttribute("rel"), /noopener/);
           assert.match(await source.getAttribute("rel"), /noreferrer/);
-          assert.equal(await card.getByRole("button").count(), 0);
+          const photo = card.locator(".discovery-tile-image img");
+          assert(await photo.getAttribute("alt"));
+          assert.equal(await photo.getAttribute("loading"), "lazy");
+          assert.equal(await card.locator("details[open]").count(), 0);
+          assert.equal(await card.locator("details dd").count(), 5);
+          assert.equal(await card.locator("form").count(), 0);
         }
+        assert.equal(
+          await page.locator("#collective-model ol > li").count(),
+          4
+        );
+        for (const [name, id] of [
+          ["Explore business ideas", "investment-innovation-opportunities"],
+          ["Plan your first step", "collective-model"],
+        ]) {
+          await page.getByRole("link", { name, exact: true }).click();
+          await page.waitForFunction(targetId => {
+            const top = document
+              .getElementById(targetId)
+              .getBoundingClientRect().top;
+            return top >= 50 && top <= 90;
+          }, id);
+        }
+        assert.deepEqual(
+          await page
+            .locator(".investment-landing > section")
+            .evaluateAll(sections => sections.map(section => section.id)),
+          [
+            "hero",
+            "investment-innovation-opportunities",
+            "collective-model",
+            "active-projects",
+            "eu-partnerships",
+          ]
+        );
       }
       assert(
         await page.evaluate(
@@ -230,6 +268,27 @@ try {
         }
         const hit = await next.boundingBox();
         assert(hit.width >= 44 && hit.height >= 44);
+      }
+      if (path === "/investment") {
+        const ideas = page.locator("#investment-innovation-opportunities");
+        for (const card of await ideas.locator("article").all()) {
+          const summary = card.locator("summary");
+          await summary.focus();
+          await summary.press("Enter");
+          assert.equal(await card.locator("details[open]").count(), 1);
+          assert(
+            await card
+              .getByText("Customers to approach", { exact: true })
+              .isVisible()
+          );
+          const photo = card.locator(".discovery-tile-image img");
+          await photo.evaluate(image => image.decode());
+          assert(await photo.evaluate(image => image.naturalWidth > 0));
+          await summary.press("Space");
+          assert.equal(await card.locator("details[open]").count(), 0);
+        }
+        await ideas.locator(".swipe-rail-viewport").focus();
+        await page.keyboard.press("Home");
       }
       record({
         width,
@@ -357,7 +416,7 @@ try {
     });
     await page.goto(base + "/investment");
     await page
-      .locator("#investment-innovation-opportunities")
+      .locator("#collective-model")
       .getByRole("link", {
         name: "Open the due diligence checklist",
         exact: true,
@@ -458,6 +517,40 @@ try {
       scenario:
         "four matching companion tiles; static transcript removed; fourth tile opens virtual previews",
     });
+    for (const language of ["de", "sn", "nd"]) {
+      await page.goto(`${base}/investment?lng=${language}`);
+      await page.waitForFunction(
+        expected => document.documentElement.lang === expected,
+        language
+      );
+      const ideas = page.locator("#investment-innovation-opportunities");
+      assert.equal(await ideas.locator("article").count(), 5);
+      const checklist = page.locator(
+        '#collective-model a[href="/regulations#due-diligence-checklist"]'
+      );
+      await checklist.scrollIntoViewIfNeeded();
+      const bounds = await checklist.boundingBox();
+      assert(
+        bounds.x >= 0 && bounds.x + bounds.width <= width + 1,
+        "Translated checklist action stays on screen"
+      );
+      assert(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1
+        ),
+        `${language}/${width}: page overflow`
+      );
+      const summary = ideas.locator("summary").last();
+      await summary.focus();
+      await summary.press("Enter");
+      assert.equal(await ideas.locator("details[open]").count(), 1);
+      await summary.press("Space");
+      assert.equal(await ideas.locator("details[open]").count(), 0);
+      record({
+        width,
+        scenario: `${language}: five ideas, keyboard details and translated checklist fit`,
+      });
+    }
     await context.close();
   }
   assert.deepEqual(errors, []);

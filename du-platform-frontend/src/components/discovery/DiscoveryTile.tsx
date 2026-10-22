@@ -5,6 +5,7 @@ import InstantImage from "@/components/InstantImage";
 type Props = {
   title: string;
   image?: string;
+  imageAlt?: string;
   icon?: LucideIcon;
   children: ReactNode;
   footer?: ReactNode;
@@ -15,6 +16,7 @@ type Props = {
 export default function DiscoveryTile({
   title,
   image,
+  imageAlt = "",
   icon: Icon,
   children,
   footer,
@@ -39,7 +41,7 @@ export default function DiscoveryTile({
         <div className="discovery-tile-image">
           <InstantImage
             src={image}
-            alt=""
+            alt={imageAlt}
             draggable={false}
             loading="lazy"
             fetchPriority="low"

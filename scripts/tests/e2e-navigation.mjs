@@ -182,7 +182,11 @@ try {
         )
       );
       if (path !== "/") {
-        const hero = page.locator("#sub-page-hero-wrapper img");
+        const hero = page.locator(
+          path === "/investment"
+            ? ".investment-hero-media img"
+            : "#sub-page-hero-wrapper img"
+        );
         await hero.evaluate(image => image.decode());
         assert.equal(
           await hero.evaluate(image => getComputedStyle(image).opacity),

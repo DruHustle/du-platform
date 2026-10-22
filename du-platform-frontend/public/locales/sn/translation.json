@@ -685,11 +685,15 @@
   "investment": {
     "opportunities": {
       "title": "Mazano ebhizimisi neutsva",
-      "subtitle": "Uri kufunga kutanga bhizimisi kumusha nemari yawakachengeta here? Ongorora migodhi, kurima nekuvaka nemapurojekiti madiki aunonzwisisa, aunokwanisa kurongera mari uye kutevera uri kunze kwenyika.",
+      "subtitle": "Nzira shanu dzekuferefeta bhizimisi muZimbabwe. Enzanisa chirongwa chidiki nemari yacho, wovhura zano rimwe nerimwe kuti uone vatengi, kuvandudza basa nekutevera uri kunze.",
       "labels": {
         "start": "Tanga nezvidiki",
         "budget": "Rongera mari ye",
-        "checks": "Tanga waongorora"
+        "checks": "Tanga waongorora",
+        "customers": "Vatengi vaungataura navo",
+        "income": "Mari inopinda sei",
+        "improvement": "Kuvandudza kunobatsira",
+        "monitor": "Tevera basa uri kunze kwenyika"
       },
       "mining": {
         "title": "Zvekushandisa nemasevhisi emigodhi",
@@ -697,7 +701,12 @@
         "start": "Edza odha imwe chete yemutengi nemushandi akavimbika ari kumusha. Kugadzirisa kuitwe nevanhu vane hunyanzvi.",
         "budget": "Zvinotengeswa kana maturusi, kutakura, kugadzirisa uye mari yekumirira vatengi vanononoka kubhadhara.",
         "checks": "Simbisa kodzero dzemugodhi, nhoroondo yekubhadhara kwemutengi nekuchengeteka pabasa. Ongorora mvumo inodiwa pabasa rako. Kutenga kana kushandisa mugodhi kunoda ongororo yakasiyana yenyanzvi nemutemo.",
-        "source": "Chamber of Mines: mitemo nezvinodiwa"
+        "source": "Chamber of Mines: mitemo nezvinodiwa",
+        "image_alt": "Rori huru yakatakura matombo pamugodhi",
+        "customers": "Migodhi iri kushanda, zvikwata zvinogadzirisa michina nemakondirakiti ari munzvimbo inokwanisika kusvitsa zvinhu.",
+        "income": "Odha dzezvinhu, kurojesa michina kana kugadzirisa. Verenga kutakura, kusakara kwematurusi nekunonoka kubhadharwa musati mabvumirana mutengo.",
+        "improvement": "Nyora runyorwa rwemapatsi nezvinhu zviripo. Tanga waedza odha kuti uone vatengi usati watenga mimwe michina.",
+        "monitor": "Enzanisa mainivhoisi, magwaro ekugamuchira zvinhu akasainwa nemari yabhadharwa. Nyora mamiriro ematurusi asati arojeswa uye adzoka."
       },
       "farming": {
         "title": "Kurima nekugadzira chikafu",
@@ -705,7 +714,12 @@
         "start": "Tsvaga mutengi uye bvumiranai uwandu nemhando yezvinodiwa usati wabhadhara mwaka mumwe kana boka rimwe rehuku.",
         "budget": "Mbeu kana nhiyo, chikafu chezvipfuwo, mvura, vashandi, hutano hwezvirimwa kana zvipfuwo, kutakura nekurasikirwa.",
         "checks": "Simbisa kodzero dzekushandisa ivhu, mvura yakavimbika nezvibvumirano zvemutengi. Bvunza nyanzvi dzekurima; mamiriro ekunze, zvirwere nezvisingatengeswi zvinogona kupedza mari yemwaka.",
-        "source": "ZimTrade: tsvaga vatengi usati wadyara"
+        "source": "ZimTrade: tsvaga vatengi usati wadyara",
+        "image_alt": "Miriwo mitsva yakarongwa mumatengu",
+        "customers": "Zvitoro zvekudya, vatengesi vemusika, maresitorendi kana mutengi wezvirimwa anogona kutsanangura uwandu nemhando yaanoda.",
+        "income": "Tengesa zvirimwa kana mbesa neodha yakabvumiranwa. Verenga zvarambwa, zvakarasika nemari yekutakura pakuongorora mwaka.",
+        "improvement": "Shandisa karenda yekurima nekushandisa mvura uchibatsirwa nenyanzvi. Edza madiridziro mushure mekuongorora mvura nemutengo.",
+        "monitor": "Kumbira marisiti, mishumo ine mazuva, uremu hwegoho nemarisiti evatengi. Enzanisa zvakakohwewa, zvakatengeswa, zvakarasika nezvakabhadharwa."
       },
       "construction": {
         "title": "Kuvaka nekuvandudza dzimba",
@@ -713,17 +727,41 @@
         "start": "Verenga mari yebasa rimwe rakajeka nenyanzvi, nyorai zvinofanira kuitwa uye bhadharai kana basa raongororwa.",
         "budget": "Zvekuvakisa, maturusi, vashandi, kutakura, kugadzirisazve uye kunonoka kubhadharwa.",
         "checks": "Tarisa mabasa akamboitwa nemuvaki nemvumo inodiwa nekanzuru. Pamapurojekiti evhu kana dzimba, muridzi nemvumo yekuvaka ngazviongororwe nemunhu akazvimirira.",
-        "source": "Harare: mirayiridzo yemvumo yekuvaka"
+        "source": "Harare: mirayiridzo yemvumo yekuvaka",
+        "image_alt": "Vashandi vachisunga simbi dzedenga pachivako muHarare",
+        "customers": "Varidzi vedzimba, vanorojesa dzimba, zvitoro zvidiki nemakondirakiti ane basa rakajeka.",
+        "income": "Ipa mutengo wezvinhu, kurojesa maturusi kana basa. Nyora zvinosanganisirwa nemitengo yekuwedzera basa risati ratanga.",
+        "improvement": "Shandisa runyorwa rwezvekuvakisa rwamunogovana nemifananidzo ine mazuva. Batanidza zvakatengwa nebasa rimwe nerimwe.",
+        "monitor": "Enzanisa zvekuvakisa zvasvitswa nemainivhoisi. Rongai kuongorora kwakazvimirira musati mabhadhara chinhanho chimwe nechimwe."
       },
-      "plan": {
-        "title": "Usati watumira mari",
-        "intro": "Sarudza muyedzo unoenderana nemari yako, nguva nerubatsiro ruri kumusha. Aya mazano ebhizimisi ekuferefeta; tanga waedza kuti vatengi varipo here uye purofiti inogona kuwanikwa munzvimbo yaunosarudza.",
-        "budget": "Kumbira mitengo yazvino yakanyorwa kubva kune vanotengesa. Isa mari yekushandisa kusvikira vatengi vabhadhara nemari yezvisingatarisirwi; siya mari yemusha neyenjodzi yakaparadzana.",
-        "people": "Ongorora wakazvimirira munhu achaita basa, nzvimbo, muridzi, marezinesi nemitero inodiwa. Hukama hwemhuri hahutsivi ongororo iyi.",
-        "agreement": "Nyorai muridzi, mabasa, mishumo, kugovana purofiti nekurasikirwa, uye nzira yekubuda. Shandisai nzira dzekubhadhara dzine humbowo uye bvisai mari kana zvinhanho zvabvumiranwa zvapera.",
-        "oversight": "Nyoreranai zvinotengeswa, zvakasara nemashandisirwo emari. Rongai ongororo dzepanzvimbo dzakazvimirira uye enzanisai mainivhoisi nemarisiti musati mabhadhara chinhanho chinotevera.",
-        "cta": "Vhura runyorwa rwekuongorora usati waisa mari",
-        "note": "Zvinobatsira pakuferefeta zvakaongororwa musi wa22 Gumiguru 2026. DU haiongorori mabhizimisi aya, haibatanidzi mari kana kugadzirisa mari yekudyara. Purofiti haina kuvimbiswa uye unogona kurasikirwa nemari yako."
+      "explore": "Ongorora zano iri",
+      "photo_label": "Mufananidzo:",
+      "photo_crop": "Wakarerutswa; wakachekwa pakuratidzwa.",
+      "food": {
+        "title": "Kugadzira nekuputira chikafu",
+        "summary": "Ongorora kuomesa zvirimwa, chikafu chinogadzirwa zvishoma kana zvekuputira chikafu kumabhizimisi emuno.",
+        "start": "Edza chigadzirwa chimwe nevatengi vashoma, panzvimbo yakachena yakakodzera chikafu uye nenzira yekugadzira kana kuputira inodzokororwa.",
+        "budget": "Zvinobikwa, midziyo yechikafu, zvekuputira, mavara, kuedza mhando, kuchengetera, kutakura nezvakashata kana zvisina kutengeswa.",
+        "checks": "Simbisa zvinodiwa pautano, kubata chikafu nekunyora mavara usati watengesa. Ongorora kuti chikafu chinogara kwenguva yakadii nemachengeterwo; kuomesa kana kusunga chete hakuiti kuti chive chakachengeteka.",
+        "source": "ZimTrade: mabhizimisi madiki mukugadzira",
+        "image_alt": "Mango yakaomeswa yakaputirwa muZimbabwe",
+        "customers": "Zvitoro, vanobikira vanhu nevarimi kana vagadziri vanoda zvekuputira zvakakodzera.",
+        "income": "Tengesa mapoka ezvigadzirwa kana zvekuputira pamutengo wakaverengwa. Sanganisira vashandi, marara, zvinodzoserwa nenguva yekubhadharwa nezvitoro.",
+        "improvement": "Shandisa zviyero zvakafanana pamapaketi uye nyora boka rimwe nerimwe. Bvunza vatengi nezvemhando, mavara nemutengo usati wawedzera basa.",
+        "monitor": "Nyora zvakashandiswa, uwandu hwagadzirwa, zvarambwa nezvatengeswa. Enzanisa chikafu nezvekuputira zvasara nemari yapinda."
+      },
+      "solar": {
+        "title": "Masevhisi ezuva nemvura",
+        "summary": "Ongorora kutengesa midziyo nekuronga kugadzirisa nenyanzvi dzemagetsi ezuva nemvura.",
+        "start": "Tanga nebasa rimwe rekuongorora nekugadzirisa. Nyanzvi ndiyo ngaione zvinodiwa uye iite basa racho.",
+        "budget": "Maturusi, midziyo yekuyedza, mapatsi, kutakura, vashandi vane hunyanzvi nekudzokera kunogadzirisa pasi pewaranti.",
+        "checks": "Ongorora hunyanzvi hwemushandi, zvinodiwa pamidziyo newaranti yakanyorwa. Simbisa mvumo yemabasa emagetsi kana mvura uye nzira yakachengeteka yekusvika pabasa.",
+        "source": "GET.invest: magetsi muZimbabwe",
+        "image_alt": "Kuisa mapaneru emagetsi ezuva padenga muZimbabwe",
+        "customers": "Mhuri, zvitoro zvidiki nemapurazi ane midziyo inoda kuongororwa nenyanzvi kana kugadziriswa.",
+        "income": "Bhadharisa midziyo yakabvumiranwa nebasa rapera. Patsanura mutengo wemidziyo, vashandi nekuzotevera mugwaro remutengo.",
+        "improvement": "Chengeta runyorwa rwemidziyo, mazuva ekugadzirisa, nhamba dzayo newaranti. Bvumiranai nenyanzvi purogiramu yekugadzirisa.",
+        "monitor": "Kumbira magwaro ebasa, kuedza nekugamuchidza, mainivhoisi nekusaina kwemutengi. Ongorora matambudziko anodzokororwa usati watenga zvimwe."
       }
     },
     "economic_snapshot": {
@@ -737,41 +775,6 @@
       "gdp_size": "Saizi yeGDP",
       "economic_scale": "Hukuru hweupfumi",
       "top_growth_sectors": "Zvikamu Zviri Kukura Zvikuru"
-    },
-    "hero": {
-      "badge1": "Ongorora Zimbabwe",
-      "title1": "Nzwisisa mikana",
-      "subtitle1": "Verenga mapurojekiti, enzanisa zvikamu uye gadzirira mibvunzo usati waenderera neinvestment.",
-      "rbz_policy": "Ongorora mitemo",
-      "highlight1": "muZimbabwe",
-      "badge2": "Masuwe SEZ",
-      "title2": "Ongorora purojekiti yeMasuwe",
-      "subtitle2": "Verenga nezvepurojekiti yekushanya munzvimbo yeVictoria Falls. Simbisa hurongwa huripo nemuridzi akanyorwa.",
-      "highlight2": "Nzvimbo Yepamusoro",
-      "badge3": "VFEX",
-      "title3": "Musika wemasheya",
-      "subtitle3": "Ongorora misika yemari yeZimbabwe. Kutengesa nekuvhura account zvinoitwa nevapi vane marezinesi.",
-      "highlight3": "Kusvika Pasi Rese",
-      "badge4": "Kurima Horticulture",
-      "title4": "Mapurojekiti ekurima michero",
-      "subtitle4": "Ongorora kurima nekugadzira. Simbisa misika, mari yekushanda nemamiriro epurojekiti nemuridzi.",
-      "highlight4": "Kurima nekutengesa kunze",
-      "badge5": "Migodhi",
-      "title5": "Upfumi hweZvicherwa",
-      "subtitle5": "Mikana muGoridhe, Platinum, neLithium.",
-      "highlight5": "Zviwanikwa zvakakosha",
-      "badge6": "Manufacturing Upside",
-      "title6": "Value-Added Manufacturing",
-      "highlight6": "Export-Yakagadzirira Capacity",
-      "subtitle6": "Mapurojekiti ekugadzira nekugadzirisa chiedza anogadzira mabasa uye kukwikwidza kwakasimba kwedunhu.",
-      "badge7": "Tourism Capital",
-      "title7": "Hospitality Growth Corridors",
-      "highlight7": "Visitor Economy",
-      "subtitle7": "Ongorora ruzivo rwemapurojekiti ekugamuchira vaenzi pedyo nenzvimbo dzekushanyira muZimbabwe.",
-      "badge8": "Diaspora Inoyerera",
-      "title8": "Tsvakurudza danho rinotevera",
-      "highlight8": "Ruzivo rwemapurojekiti",
-      "subtitle8": "Shandisa mapurojekiti aya sepakutangira kutsvakurudza nekubvunza. Pano hakuunganidzwi mari yevanhu kana kuitwa ma-investment."
     },
     "projects": {
       "masuwe": {
@@ -911,55 +914,6 @@
     "explore_title": "Ongorora Rumwe Ruzivo rweKudyara Mari",
     "explore_subtitle": "Kuti uwane ruzivo rwakazara, shanyirai Zimbabwe Investment and Development Agency (ZIDA).",
     "explore_site": "Shanyira ZIDA",
-    "collective_model": {
-      "title": "Kuongorora mukana",
-      "subtitle": "Tanga neruzivo, woongorora magwaro nemitemo wakazvimirira usati wazvipira.",
-      "s1": "Ona zvikamu uverenge zvinotsanangurwa nepurojekiti imwe neimwe.",
-      "s2": "Gadzirira mibvunzo yevaridzi, mamiriro azvino, mari nemitemo yekupinda.",
-      "s3": "Kumbira magwaro azvino kumuridzi woaongorora nevapangamazano vakazvimirira.",
-      "s4": "Tenderanai nezvekuisa mari nenzira dzakakodzera dzemutemo nedzemari, kunze kwechikuva chino."
-    },
-    "eu_focus": {
-      "title": "Zvirongwa zvekunze zvekutsvakurudza",
-      "subtitle": "Zvirongwa zveEurope zvinopa mamiriro ehupfumi hweZimbabwe. Zvinyorwa zvakaongororwa 21 Gumiguru 2026; hazvisimbisi mari kana kutsigirwa kwemapurojekiti ari pano.",
-      "energy": {
-        "title": "Simba rakasvibira",
-        "detail": "GET.invest Zimbabwe yakatanga muna Chivabvu 2025 nemari yeEU neGermany yekutsigira simba rakachena. Simbisa zvinodiwa pazvino pachinyorwa chiri pasi."
-      },
-      "agri": {
-        "title": "Zvekurima uye Kukosha Cheni",
-        "detail": "Zvirongwa zvemubatanidzwa zveEU zvinoisa pamberi pekurima horticulture uye zviyo zvechinyakare, kurima kwakangwara, kuchinjika kune EU zvinodiwa kunze kwenyika, uye kuwana mari kune agribusiness SMEs."
-      },
-      "sme": {
-        "title": "Private Sector uye SME Finance",
-        "detail": "Chirevo cheEIB, 2 Gumiguru 2025: €60 million yakakweretwa kumabhanga eZimbabwe mumakore mashanu, kusanganisira €20 million kuStanbic munaKurume 2025. Izvi zvirongwa zvemabhanga zvekunze."
-      },
-      "social": {
-        "title": "Hutano, Gender, uye Social Programs",
-        "detail": "Zvirongwa zveTeam Europe zvinosanganisira kuenzana kwevakadzi uye zviito zvekusimudzira vakadzi, nerutsigiro runoshanda senge ruzivo rwemari uye nzira dzekuwana-mari dzevakadzi nevechidiki."
-      },
-      "biodiversity": {
-        "title": "Biodiversity uye Resilience",
-        "detail": "Kudyidzana kunotsigirawo kusiyana-siyana kwezvipenyu uye kusimba kwakabatana nekuchengetedza, kusanganisira nzvimbo dzekuchengetedza miganhu dzinoenderana nekusimudzira hupfumi hwenyika."
-      },
-      "gateway": {
-        "title": "Pakeji yeGlobal Gateway Partnership",
-        "detail": "European Commission inonyora €165 million yemipiro yekudyidzana neZimbabwe ya2021–2027. Iyi imari yekudyidzana, kwete yakaunganidzwa neDiaspora Unlocked."
-      },
-      "eib_takeaways_title": "EIB Inoshanda Yekutora kune Diaspora Investors",
-      "eib_t1": "Mabhizinesi madiki anotungamirwa nevakadzi anowanzo tarisana nekukwanisa kubhadhara uye zvisungo zvechibatiso izvo zvinotadzisa kuwana zvikwereti zvepamutemo.",
-      "eib_t2": "Mari yakasanganiswa uye mitsara yechikwereti yebhangi yemuno inogona kuderedza zvipingamupinyi zvekukwereta zvekurima-zvakabatana maSME.",
-      "eib_t3": "Ruzivo rwemari uye masevhisi ekutsigira bhizinesi anovandudza kugadzirira kwekudyara uye kuita kwechikwereti kumabhizinesi madiki.",
-      "source_getinvest": "GET.invest Zimbabwe · yaongororwa 21 Gumiguru 2026",
-      "source_eu": "European Commission · yaongororwa 21 Gumiguru 2026",
-      "source_eib": "Chirevo cheEIB · 2 Gumiguru 2025"
-    },
-    "crowdfunding_steps": {
-      "browse": "Verenga mapurojekiti",
-      "invest": "Gadzirira mibvunzo",
-      "track": "Ongorora magwaro",
-      "returns": "Sarudza wakazvimirira"
-    },
     "tourism": {
       "snapshot": {
         "title": "Mufananidzo weKushanya weZimbabwe (2026)",
@@ -1171,8 +1125,72 @@
         "title": "Kugadzira Snapshot (2026)"
       }
     },
-    "sectors_explore": "Ona mapurojekiti",
-    "sectors_info": "Verenga tsananguro yepurojekiti ugadzire mibvunzo yemuridzi akanyorwa. Mapurojekiti aya haasimbisi mukana wekuisa mari, kuwanikwa kana mibairo."
+    "landing": {
+      "eyebrow": "Bhizimisi nekudyara mari",
+      "title": "Shandura pfungwa dzako",
+      "highlight": "kuita bhizimisi muZimbabwe.",
+      "description": "Mazano ebhizimisi evaZimbabwe vari kumusha nekunze. Ongorora chirongwa chidiki chekutanga, nzwisisa mari inodiwa uye zvaunofanira kuongorora usati washandisa mari yawakachengeta.",
+      "ideas_cta": "Ongorora mazano ebhizimisi",
+      "plan_cta": "Ronga danho rako rekutanga",
+      "principle": "Tanga nezvidiki. Ziva mutengi wako. Ramba uchitevera.",
+      "image_caption": "Zvinodiwa zuva nezuva. Mazano ekuferefeta."
+    },
+    "plan": {
+      "title": "Chirongwa chako chekutanga mumatanho mana",
+      "subtitle": "Shandura zano rinofadza kuita hurongwa hwaunogona kukurukura nemunhu ari kumusha.",
+      "customer": {
+        "title": "Ziva mutengi",
+        "description": "Bvunza zvinodiwa nevatengi, zvavanototenga nenguva yavanobhadhara. Edza odha kana boka diki rezvigadzirwa usati wawedzera zvinhu."
+      },
+      "costs": {
+        "title": "Verenga mari yese",
+        "description": "Kumbira mitengo yakanyorwa, sanganisira kushandisa, kutakura nemari yezvisingatarisirwi. Chengeta mari yemusha neyenjodzi yakaparadzana."
+      },
+      "agreement": {
+        "title": "Bvumiranai mashandiro",
+        "description": "Ongorora mushandi, muridzi nemvumo wakazvimirira. Nyorai mabasa, mishumo, zvinhanho zvekubhadhara, kugovana purofiti nekurasikirwa, nenzira yekubuda."
+      },
+      "review": {
+        "title": "Ongorora usati wawedzera",
+        "description": "Tevera mari yapinda, yashandiswa, zvinhu zviripo nezvasvitswa. Ongororai nzvimbo nemunhu akazvimirira uye verengai muyedzo wekutanga musati mabhadhara chinhanho chinotevera."
+      },
+      "checklist_description": "Une chirongwa chaicho here? Shandisa runyorwa kuronga mibvunzo nemagwaro aunofanira kukumbira.",
+      "cta": "Vhura runyorwa rwekuongorora usati waisa mari"
+    },
+    "research": {
+      "title": "Ferefeta mapurojekiti nemabhizimisi aripo",
+      "subtitle": "Unoda kutanga nekuongorora chirongwa chiripo here? Apa pane pekutangira kubvunza nekuongorora wakazvimirira.",
+      "projects": {
+        "title": "Runyorwa rwemapurojekiti",
+        "description": "Verenga mashoko evaridzi muminda yekurima, magetsi, kugadzira nezvimwe. Mazhinji mapurojekiti makuru; simbisa mamiriro azvino, hukuru nezvinodiwa kuti upinde nemuridzi.",
+        "cta": "Ongorora mapurojekiti"
+      },
+      "directory": {
+        "title": "Dhairekitori remabhizimisi",
+        "description": "Tsvaga mazita, zvikamu nenzvimbo kuti uronge tsvakurudzo. Runyorwa urwu rwunochengetwa neDU; harusi rejista yepamutemo yenyika kana kurudziro.",
+        "cta": "Tsvaga mudhairekitori"
+      }
+    },
+    "resources": {
+      "title": "Nzvimbo dzinobatsira kuramba uchiferefeta",
+      "subtitle": "Tarisa mashandiro ebhizimisi, kugadzirira misika nezvinodiwa muzvirongwa kubva kuvaridzi vemashoko.",
+      "zida": {
+        "title": "Kutanga bhizimisi · ZIDA",
+        "description": "Ongorora nzira dzebhizimisi, zvinodiwa nemutemo nerubatsiro rwevanoisa mari. Simbisa kunyoresa nemvumo zvinoenderana nechirongwa chako.",
+        "cta": "Shanyira ZIDA"
+      },
+      "zimtrade": {
+        "title": "Misika nezvigadzirwa · ZimTrade",
+        "description": "Ferefeta vatengi, zvinodiwa pazvigadzirwa, zvekuputira nekugadzirira kutengesa kunze. Tanga nenzira yemusika inokwana zvaunokwanisa.",
+        "cta": "Ongorora mashoko eZimTrade"
+      },
+      "energy": {
+        "title": "Magetsi akachena · GET.invest",
+        "description": "Verenga nezverubatsiro rwemabhizimisi emagetsi akachena muZimbabwe. Tarisa zvinodiwa zvino nenguva yekunyorera; rubatsiro harungouyi rwoga.",
+        "cta": "Verenga chirongwa cheZimbabwe"
+      },
+      "note": "DU inopa mashoko ekuferefeta kwako. Hationgorori zvikumbiro zvekuisa mari, hatibatanidzi mari kana kugadzirisa kudyara. Purofiti haina kuvimbiswa uye mari inogona kurasika. Zvinyorwa zvekunze zvakaongororwa musi wa22 Gumiguru 2026."
+    }
   },
   "common": {
     "coming_soon": "Tiri kugadzira nzira dzehungwaru dzakagadzirirwa kushandura mashandiro, mabatiro, nekukura kwamunoita tichishandisa tekinoroji yepamusoro ye-AI.",
