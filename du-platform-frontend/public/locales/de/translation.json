@@ -1283,22 +1283,10 @@
   "shop": {
     "collections": "Kollektionen",
     "collections_title": "Simbabwe-Favoriten an einem Ort",
-    "collections_description": "Finden Sie Lebensmittel, Kunsthandwerk und Fanbekleidung für zu Hause oder als Geschenk. Senden Sie eine Bestellanfrage. Das Team klärt Verfügbarkeit, Liefermöglichkeiten für Ihr Ziel und Zahlungsinformationen.",
+    "collections_description": "Ein Ausgangspunkt für deinen Warenkorb. Füge einen vorgestellten Artikel hinzu oder öffne seine Kategorie für weitere Produkte.",
     "explore_shop": "Alle Produkte ansehen",
     "trade_support": "Handelsunterstützung entdecken",
     "export_readiness": "Export-Reifeleitfaden",
-    "hero": {
-      "badge1": "Produkte aus Simbabwe",
-      "title1": "Simbabwe Shop",
-      "subtitle1": "Entdecken Sie vertraute Geschmäcker und Geschenke. Stellen Sie Ihren Warenkorb zusammen und fragen Sie Verfügbarkeit und Lieferung an.",
-      "button1": "Kollektionen durchsuchen",
-      "badge2": "Handwerkskultur",
-      "title2": "Handgefertigte Exzellenz",
-      "subtitle2": "Von Shona-Steinbildhauerei bis zu handgeflochtenen Körben – entdecken Sie Produkte mit Kultur und Qualität.",
-      "badge3": "Geschmack von Zuhause",
-      "title3": "Essen und Nostalgie",
-      "subtitle3": "Entdecken Sie vertraute Lebensmittel und Getränke. Klären Sie Produkt- und Einfuhranforderungen vor der Bestellung."
-    },
     "sports_title": "Nationaler Sport",
     "sports_desc": "Fanbekleidung für Simbabwes Rugby-, Cricket- und Fußballfans.",
     "sports_mech_soccer": "Fußball-Trikot",
@@ -1417,7 +1405,8 @@
         "update_stock": "An verfügbaren Bestand anpassen",
         "remove_unavailable": "Nicht verfügbare Artikel entfernen",
         "unavailable": "Einige gespeicherte Artikel sind nicht mehr verfügbar. Entfernen Sie diese, um fortzufahren.",
-        "item_count": "{{count}} Artikel"
+        "item_count": "{{count}} Artikel",
+        "short_title": "Warenkorb"
       },
       "totals": {
         "subtotal": "Zwischensumme",
@@ -1516,7 +1505,16 @@
     },
     "product": "Produkt",
     "no_description": "Keine Beschreibung",
-    "loading": "Produkte werden geladen..."
+    "loading": "Produkte werden geladen...",
+    "landing": {
+      "eyebrow": "Simbabwe einkaufen",
+      "title": "Vertraute Aromen.",
+      "highlight": "Besondere Fundstücke.",
+      "description": "Entdecke Lebensmittel, Kunsthandwerk und Fanartikel für den Alltag oder als Geschenk. Wähle eine Kategorie, finde deine Favoriten und stelle deinen Warenkorb zusammen.",
+      "principle": "Dein Warenkorb wird zur Bestellanfrage. Das Team bestätigt Verfügbarkeit, Lieferung und Zahlung, bevor du kaufst.",
+      "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
+      "collections_cta": "Kategorien entdecken"
+    }
   },
   "notfound": {
     "title": "404 - Seite nicht gefunden",

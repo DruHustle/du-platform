@@ -1,9 +1,10 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
-import { ArrowUpRight, ShoppingBag } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ShoppingBag } from "lucide-react";
 import Layout from "@/components/Layout";
-import SubPageHero from "@/components/SubPageHero";
+import DiscoveryHero from "@/components/discovery/DiscoveryHero";
+import DiscoverySection from "@/components/discovery/DiscoverySection";
+import { Button } from "@/components/ui/button";
 import SwipeRail from "@/components/discovery/SwipeRail";
 import {
   SHOP_CATEGORY_CONFIG,
@@ -31,59 +32,54 @@ export default function Shop() {
     t(key, { defaultValue: fallback });
   const { products, status, refresh } = useShopCatalog();
   const { cart, add, removeOne, itemCount } = useShopCart();
-  const heroSlides = useMemo(
-    () => [
-      {
-        image: "/images/pages/shop/zimbabwe_shop_hero.webp",
-        badge: tx("shop.hero.badge1", "Products from Zimbabwe"),
-        badgeIcon: ShoppingBag,
-        title: tx("shop.hero.title1", "Shop Zimbabwe"),
-        subtitle: tx(
-          "shop.hero.subtitle1",
-          "Find familiar flavours and gifts. Build your basket, then request availability and delivery details."
-        ),
-      },
-    ],
-    [t]
-  );
 
   return (
     <Layout>
-      <section id="hero">
-        <SubPageHero heroSlides={heroSlides} />
-      </section>
-      <section
-        id="collections"
-        className="shop-collection-section bg-slate-950"
-      >
-        <div className="discovery-section-layout">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
-            <div className="max-w-2xl">
-              <p className="page-eyebrow">{tx("nav.shop", "Shop")}</p>
-              <h2 className="page-section-title">
-                {tx(
-                  "shop.collections_title",
-                  "Zimbabwean favourites, in one place"
-                )}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-slate-400">
-                {tx(
-                  "shop.collections_description",
-                  "Find food, crafts and supporter apparel for your household or as a gift. Add items to your cart and send an order request. The team will confirm whether delivery to your destination can be arranged, along with availability and payment instructions."
-                )}
-              </p>
-            </div>
+      <div className="shop-landing">
+        <DiscoveryHero
+          eyebrow={t("shop.landing.eyebrow")}
+          title={t("shop.landing.title")}
+          highlight={t("shop.landing.highlight")}
+          description={t("shop.landing.description")}
+          principle={t("shop.landing.principle")}
+          image="/images/pages/shop/zimbabwe_shop_hero.webp"
+          imageAlt={t("home.tiles.shop.image_alt")}
+          caption={t("shop.landing.caption")}
+        >
+          <Button
+            asChild
+            className="h-auto min-h-11 max-w-full whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
+          >
+            <Link href="/shop/products?category=all">
+              {t("shop.explore_shop")}
+              <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
+          >
+            <a href="#collections">{t("shop.landing.collections_cta")}</a>
+          </Button>
+        </DiscoveryHero>
+        <DiscoverySection
+          id="collections"
+          title={t("shop.collections_title")}
+          description={t("shop.collections_description")}
+          action={
             <Link
               href="/shop/products?category=all&cart=1"
               className="shop-cart-link"
             >
-              <ShoppingBag className="h-4 w-4" />
-              {tx("shop.products.cart.short_title", "Cart")}
+              <ShoppingBag aria-hidden="true" className="h-4 w-4" />
+              {t("shop.products.cart.short_title")}
               <span className="shop-cart-count" aria-live="polite">
                 {itemCount}
               </span>
             </Link>
-          </div>
+          }
+        >
           <CatalogNotice status={status} onRetry={() => void refresh()} />
           <SwipeRail
             label={tx(
@@ -117,7 +113,7 @@ export default function Shop() {
                   footer={
                     <Link
                       href={categoryHref}
-                      className="inline-flex min-h-11 items-center gap-1 text-xs font-medium text-slate-300 hover:text-zim-gold"
+                      className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-300 hover:text-zim-gold"
                     >
                       {tx("shop.discover_category", "Discover") +
                         " " +
@@ -132,17 +128,8 @@ export default function Shop() {
               );
             })}
           </SwipeRail>
-          <div className="mt-10 flex justify-center">
-            <Link
-              href="/shop/products?category=all"
-              className="shop-primary-link"
-            >
-              {tx("shop.explore_shop", "Browse all products")}
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </DiscoverySection>
+      </div>
     </Layout>
   );
 }

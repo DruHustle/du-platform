@@ -192,40 +192,7 @@
   line-height: 1.4;
 }
 
-/* A compact, shared editorial hero, separate from the Home hero. */
-.content-page .interior-hero {
-  min-height: 320px;
-}
-.content-page .interior-hero-content {
-  padding-top: 96px;
-  padding-bottom: 40px;
-}
-.content-page .interior-hero h1 {
-  max-width: 25ch;
-  margin-bottom: 16px;
-  font-size: clamp(30px, 4.1vw, 54px);
-  line-height: 1.08;
-  font-weight: 750;
-  letter-spacing: -0.045em;
-}
-.content-page .interior-hero p {
-  max-width: 60ch;
-  font-size: 16px;
-  line-height: 1.65;
-  font-weight: 400;
-  letter-spacing: normal;
-  color: #e2e8f0;
-}
-.content-page .interior-hero .hero-eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-}
-
 /* Commerce cards and controls share the same visual and interaction system. */
-.content-page .shop-collection-section {
-  padding: 32px 0 64px;
-}
 .content-page .shop-products-section {
   padding: 32px 0 96px;
 }
@@ -240,17 +207,20 @@
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--content-border);
-  border-radius: 20px;
-  background: #111b2b;
+  border-radius: 24px;
+  background: #0f172a;
+  box-shadow: 0 8px 20px rgb(15 23 42 / 8%);
 }
 .content-page .shop-product-image {
   position: relative;
   height: clamp(150px, 18vw, 220px);
+  margin: 4px 4px 0;
+  border-radius: 20px;
   overflow: hidden;
   background: #f1f2ef;
 }
 .content-page .shop-product-name {
-  font-size: clamp(13px, 1.15vw, 16px);
+  font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 650;
   line-height: 1.5;
   letter-spacing: -0.015em;
@@ -388,19 +358,12 @@
     max-height: calc(100svh - 8rem);
     max-height: calc(100dvh - 8rem);
   }
-  .content-page .interior-hero-content {
-    padding-top: 144px;
-    padding-bottom: 48px;
-  }
   .content-page main > section.document-section {
     padding-top: 128px;
   }
   .content-page .shop-products-section {
     padding-top: 128px;
     padding-bottom: 64px;
-  }
-  .content-page .shop-collection-section {
-    padding-block: 48px 80px;
   }
 }
 @media (max-width: 639px) {

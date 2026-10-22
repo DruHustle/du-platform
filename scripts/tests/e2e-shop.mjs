@@ -194,6 +194,60 @@ try {
       await page.getByText("How The Shop Works", { exact: true }).count(),
       0
     );
+    assert.equal(
+      await page.locator(".shop-landing .discovery-hero").count(),
+      1
+    );
+    assert.equal(
+      await page
+        .locator('.discovery-hero a[href="/shop/products?category=all"]')
+        .count(),
+      1
+    );
+    await page
+      .getByRole("link", { name: "Explore categories", exact: true })
+      .click();
+    await page.waitForFunction(() => {
+      const top = document
+        .getElementById("collections")
+        .getBoundingClientRect().top;
+      return top >= 50 && top <= 90;
+    });
+    const cartLink = page.locator("#collections .shop-cart-link");
+    assert.doesNotMatch(
+      await cartLink.textContent(),
+      /shop\./,
+      "Cart action must display a translated label"
+    );
+    assert(
+      await cartLink.evaluate(el => {
+        const luminance = color =>
+          color
+            .match(/[\d.]+/g)
+            .slice(0, 3)
+            .map(Number)
+            .map(value => value / 255)
+            .map(value =>
+              value <= 0.04045
+                ? value / 12.92
+                : ((value + 0.055) / 1.055) ** 2.4
+            )
+            .reduce(
+              (sum, value, index) =>
+                sum + value * [0.2126, 0.7152, 0.0722][index],
+              0
+            );
+        const style = getComputedStyle(el),
+          foreground = luminance(style.color),
+          background = luminance(style.backgroundColor);
+        return (
+          (Math.max(foreground, background) + 0.05) /
+            (Math.min(foreground, background) + 0.05) >=
+          4.5
+        );
+      }),
+      "Cart label must have accessible contrast on the discovery section"
+    );
     const mazoe = products.find(p => p.slug === "mazoe-orange-2l-case-6");
     const rail = page.locator(".swipe-rail");
     assert.equal(

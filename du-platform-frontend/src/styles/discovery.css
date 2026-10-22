@@ -36,21 +36,6 @@
   .swipe-rail-track {
   padding-right: 0;
 }
-:is(.content-page, .home-landing)
-  .shop-collection-section
-  :is(.swipe-rail-hint, .swipe-rail-position) {
-  color: #94a3b8;
-}
-:is(.content-page, .home-landing) .shop-collection-section .swipe-rail-arrow {
-  border-color: #334155;
-  background: #111b2b;
-  color: #f8fafc;
-}
-:is(.content-page, .home-landing)
-  .shop-collection-section
-  .swipe-rail-arrow:hover:not(:disabled) {
-  background: #1e293b;
-}
 @media (min-width: 768px) {
   :is(.content-page, .home-landing) .discovery-section-layout {
     --rail-gutter: 32px;
@@ -498,7 +483,13 @@
 }
 
 /* Shared landing hero and steps keep discovery pages aligned. */
-.content-page :is(.investment-landing, .technology-landing, .tourism-landing) {
+.content-page
+  :is(
+    .investment-landing,
+    .technology-landing,
+    .tourism-landing,
+    .shop-landing
+  ) {
   background: #f8fafb;
   color: #0f172a;
 }
@@ -762,4 +753,21 @@
 
 .home-landing #explore-platform {
   scroll-margin-top: 80px;
+}
+
+.content-page .shop-landing .shop-cart-link {
+  border-color: #cbd5e1;
+  background: white;
+  color: #0f172a;
+}
+.content-page .shop-landing .shop-cart-link:hover {
+  background: #e2e8f0;
+}
+.content-page .shop-landing .catalog-notice {
+  border-color: #cbd5e1;
+  background: white;
+  color: #475569;
+}
+.content-page .shop-landing .catalog-notice button {
+  color: #854d0e;
 }

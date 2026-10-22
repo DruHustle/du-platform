@@ -1287,22 +1287,10 @@
   "shop": {
     "collections": "Zvirongwa",
     "collections_title": "Zvaunofarira zveZimbabwe panzvimbo imwe",
-    "collections_description": "Tsvaga zvekudya, mabasa emaoko nembatya dzevatsigiri zvekumba kana zvipo. Isa mudengu wotumira chikumbiro cheodha. Chikwata chinosimbisa kuwanikwa, kana kutumirwa kunzvimbo yako kuchibvira, uye nzira yekubhadhara.",
+    "collections_description": "Pokutangira kuzadza tswanda yako. Wedzera chinhu chiri kuratidzwa kana kuvhura chikamu chacho kuti uone zvimwe.",
     "explore_shop": "Ona zvigadzirwa zvese",
     "trade_support": "Ongorora Rutsigiro rweTrade",
     "export_readiness": "Gwaro reKugadzirira Export",
-    "hero": {
-      "badge1": "Zvigadzirwa zveZimbabwe",
-      "title1": "Shop Zimbabwe",
-      "subtitle1": "Tsvaga zvekudya nezvipo zvaunoziva. Gadzira dengu rako wokumbira ruzivo rwekuwanikwa nekutumirwa.",
-      "button1": "Tarisa Collections",
-      "badge2": "Nhaka yeMabasa emaoko",
-      "title2": "Hunaka Hwakagadzirwa nemaoko",
-      "subtitle2": "Kubva kuShona stone sculpture kusvika kuma basket akarukwa nemaoko, wana zvigadzirwa zvine tsika nehunhu.",
-      "badge3": "Kunaka kweKumba",
-      "title3": "Chikafu neNostalgia",
-      "subtitle3": "Ona zvekudya nezvinwiwa zvaunoziva. Simbisa zvinodiwa pachigadzirwa nekwaunotumira usati waodha."
-    },
     "sports_title": "Mitambo yeNyika",
     "sports_desc": "Mbatya dzevatsigiri verugby, cricket nebhora reZimbabwe.",
     "sports_mech_soccer": "Mbatya dzeSoccer.",
@@ -1421,7 +1409,8 @@
         "update_stock": "Chinja huwandu huenderane nezviripo",
         "remove_unavailable": "Bvisa zvinhu zvisingawanikwi",
         "unavailable": "Zvimwe zvinhu zvakachengetwa hazvichawanikwi. Zvibvise kuti uenderere mberi.",
-        "item_count": "Zvinhu {{count}}"
+        "item_count": "Zvinhu {{count}}",
+        "short_title": "Tswanda"
       },
       "totals": {
         "subtotal": "Subtotal",
@@ -1520,7 +1509,16 @@
     },
     "product": "Product",
     "no_description": "Hapana tsananguro",
-    "loading": "Kurodha zvigadzirwa..."
+    "loading": "Kurodha zvigadzirwa...",
+    "landing": {
+      "eyebrow": "Tenga zveZimbabwe",
+      "title": "Kunaka kwaunoziva.",
+      "highlight": "Zvinhu zvekufadza.",
+      "description": "Ongorora chikafu, mabasa emaoko nembatya dzevatsigiri zvekushandisa kana kupa sechipo. Sarudza chikamu, tsvaga zvaunofarira uye uzadze tswanda yako.",
+      "principle": "Tswanda yako inova chikumbiro cheodha. Chikwata chinosimbisa kuwanikwa, kutumirwa nekubhadhara usati watenga.",
+      "caption": "Chikafu · Mabasa emaoko · Mbatya dzevatsigiri",
+      "collections_cta": "Ongorora zvikamu"
+    }
   },
   "notfound": {
     "title": "404 - Peji harisi kuwanikwa",
