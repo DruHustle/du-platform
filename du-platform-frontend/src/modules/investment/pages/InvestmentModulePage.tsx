@@ -112,41 +112,23 @@ export default function Investment() {
     [t]
   );
 
-  const innovationOpportunityAreas = [
+  const businessIdeas = [
     {
-      title: t("tech.opportunities.ai.title") || "Artificial Intelligence",
-      driver:
-        t("tech.opportunities.ai.driver") ||
-        "Explore how AI could help organise information and answer routine questions.",
+      key: "mining",
+      icon: Gem,
+      source: "https://www.chamines.co.zw/home/MiningAffairs",
     },
     {
-      title: t("tech.opportunities.sme.title") || "SME Digitalization",
-      driver:
-        t("tech.opportunities.sme.driver") ||
-        "Research inventory, payroll and customer-support needs with local businesses.",
+      key: "farming",
+      icon: Leaf,
+      source:
+        "https://tradezimbabwe.com/gokwe-chilli-farmers-target-export-markets/",
     },
     {
-      title: t("tech.opportunities.cybersecurity.title") || "Cybersecurity",
-      driver:
-        t("tech.opportunities.cybersecurity.driver") ||
-        "Consider data protection, access control and staff security training.",
+      key: "construction",
+      icon: Building,
+      source: "https://www.hararecity.co.zw/services/about/building-permits",
     },
-    {
-      title:
-        t("tech.opportunities.ecommerce.title") || "E-commerce & Logistics",
-      driver:
-        t("tech.opportunities.ecommerce.driver") ||
-        "Research stock visibility, delivery coordination and communication with customers.",
-    },
-  ];
-
-  const innovationChallenges = [
-    t("tech.challenges.infrastructure") ||
-      "Infrastructure: check connectivity, power requirements and operating costs.",
-    t("tech.challenges.human_capital") ||
-      "People: assess the skills, staffing and training a project would need.",
-    t("tech.challenges.regulation") ||
-      "Regulation: confirm licensing, tax and approval requirements with qualified advisers.",
   ];
 
   const collectiveModelSteps = [
@@ -306,53 +288,72 @@ export default function Investment() {
       </DiscoverySection>
       <DiscoverySection
         id="investment-innovation-opportunities"
-        title={t("tech.opportunities.title", {
-          defaultValue: "Ideas for business and innovation",
-        })}
-        description={t("investment.opportunities.subtitle", {
-          defaultValue:
-            "Explore these sector themes as a starting point for your own research.",
-        })}
+        title={t("investment.opportunities.title")}
+        description={t("investment.opportunities.subtitle")}
       >
-        <SwipeRail
-          label={t("tech.opportunities.title", {
-            defaultValue: "Ideas for business and innovation",
-          })}
-        >
-          {innovationOpportunityAreas.map((item, index) => (
+        <SwipeRail label={t("investment.opportunities.title")}>
+          {businessIdeas.map(item => (
             <DiscoveryTile
-              key={item.title}
-              title={item.title}
-              image={
-                [
-                  "/images/pages/technology/ai_innovation.webp",
-                  "/images/pages/shared/manufacturing_factory.jpg",
-                  "/images/pages/technology/digital-classroom.jpg",
-                  "/images/pages/shared/export_port_01.jpg",
-                ][index]
+              key={item.key}
+              title={t(`investment.opportunities.${item.key}.title`)}
+              icon={item.icon}
+              footer={
+                <a
+                  href={item.source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center text-sm font-semibold text-zim-gold underline underline-offset-4 hover:text-yellow-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold"
+                >
+                  {t(`investment.opportunities.${item.key}.source`)}
+                </a>
               }
             >
-              <p>{item.driver}</p>
+              <p>{t(`investment.opportunities.${item.key}.summary`)}</p>
+              <dl className="business-idea-details">
+                {(["start", "budget", "checks"] as const).map(field => (
+                  <div key={field}>
+                    <dt>{t(`investment.opportunities.labels.${field}`)}</dt>
+                    <dd>
+                      {t(`investment.opportunities.${item.key}.${field}`)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </DiscoveryTile>
           ))}
         </SwipeRail>
         <aside className="discovery-support-panel">
           <h3 className="text-lg font-semibold mb-4">
-            {t("tech.challenges.title", {
-              defaultValue: "Critical Challenges to Address",
-            })}
+            {t("investment.opportunities.plan.title")}
           </h3>
+          <p className="mb-5 text-sm leading-7">
+            {t("investment.opportunities.plan.intro")}
+          </p>
           <ul className="space-y-3">
-            {innovationChallenges.map(item => (
+            {["budget", "people", "agreement", "oversight"].map(item => (
               <li
                 key={item}
                 className="flex items-start gap-3 text-sm leading-7"
               >
-                <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-700" />
-                <span>{item}</span>
+                <AlertTriangle
+                  aria-hidden="true"
+                  className="mt-1 h-4 w-4 shrink-0 text-amber-700"
+                />
+                <span>{t(`investment.opportunities.plan.${item}`)}</span>
               </li>
             ))}
           </ul>
+          <Button
+            asChild
+            className="mt-6 h-auto min-h-11 whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
+          >
+            <Link href="/regulations#due-diligence-checklist">
+              {t("investment.opportunities.plan.cta")}
+            </Link>
+          </Button>
+          <p className="mt-5 text-sm leading-7">
+            {t("investment.opportunities.plan.note")}
+          </p>
         </aside>
       </DiscoverySection>
       <DiscoverySection

@@ -312,31 +312,6 @@
       "combined": "Onesa chikuva cheAI chezvinangwa zvakasiyana muEurope nepasi rose. Diaspora Unlocked inochishandisa paruzivo rweZimbabwe, zvigadzirwa nekuronga nzendo.",
       "read_vision": "Kubatana kweOnesa neDiaspora Unlocked"
     },
-    "opportunities": {
-      "title": "Mazano ebhizinesi neunyanzvi",
-      "ai": {
-        "title": "Hungwaru hwekugadzira",
-        "driver": "Ongorora kuti AI ingabatsira sei kuronga ruzivo nekupindura mibvunzo inodzokororwa."
-      },
-      "sme": {
-        "title": "Kushandurwa kwemaSME nedhijitari",
-        "driver": "Tsvaga zvinodiwa nemabhizinesi emuno pakutarisira zvinhu, mihoro nerubatsiro rwevatengi."
-      },
-      "cybersecurity": {
-        "title": "Kuchengetedzwa kweCyber",
-        "driver": "Funga nezvekuchengetedza ruzivo, mvumo yekupinda uye kudzidzisa vashandi nezvekuchengeteka."
-      },
-      "ecommerce": {
-        "title": "E-commerce uye Logistics",
-        "driver": "Tsvaga nzira dzekuona zvinhu zviripo, kuronga kutumira nekutaura nevatengi."
-      }
-    },
-    "challenges": {
-      "title": "Matambudziko Akakosha Okugadzirisa",
-      "infrastructure": "Zvivakwa: tarisa internet, magetsi anodiwa nemari yekushandisa.",
-      "human_capital": "Vanhu: ongorora unyanzvi, vashandi nekudzidziswa zvinodiwa neprojekiti.",
-      "regulation": "Mitemo: simbisa marezinesi, mitero nemvumo nenyanzvi dzakakodzera."
-    },
     "diaspora_use_cases": {
       "relocation": {
         "title": "Ziva pekutangira",
@@ -709,7 +684,47 @@
   },
   "investment": {
     "opportunities": {
-      "subtitle": "Shandisa nyaya dzezvikamu izvi sepakutangira kutsvakurudza kwako."
+      "title": "Mazano ebhizimisi neutsva",
+      "subtitle": "Uri kufunga kutanga bhizimisi kumusha nemari yawakachengeta here? Ongorora migodhi, kurima nekuvaka nemapurojekiti madiki aunonzwisisa, aunokwanisa kurongera mari uye kutevera uri kunze kwenyika.",
+      "labels": {
+        "start": "Tanga nezvidiki",
+        "budget": "Rongera mari ye",
+        "checks": "Tanga waongorora"
+      },
+      "mining": {
+        "title": "Zvekushandisa nemasevhisi emigodhi",
+        "summary": "Ongorora kutengesa mbatya dzebasa, kurojesa maturusi kana kugadzirisa pombi dzemvura kumigodhi iri kutoshanda.",
+        "start": "Edza odha imwe chete yemutengi nemushandi akavimbika ari kumusha. Kugadzirisa kuitwe nevanhu vane hunyanzvi.",
+        "budget": "Zvinotengeswa kana maturusi, kutakura, kugadzirisa uye mari yekumirira vatengi vanononoka kubhadhara.",
+        "checks": "Simbisa kodzero dzemugodhi, nhoroondo yekubhadhara kwemutengi nekuchengeteka pabasa. Ongorora mvumo inodiwa pabasa rako. Kutenga kana kushandisa mugodhi kunoda ongororo yakasiyana yenyanzvi nemutemo.",
+        "source": "Chamber of Mines: mitemo nezvinodiwa"
+      },
+      "farming": {
+        "title": "Kurima nekugadzira chikafu",
+        "summary": "Ongorora miriwo, mbesa kana boka rimwe rehuku nemurimi ane ruzivo ari kumusha.",
+        "start": "Tsvaga mutengi uye bvumiranai uwandu nemhando yezvinodiwa usati wabhadhara mwaka mumwe kana boka rimwe rehuku.",
+        "budget": "Mbeu kana nhiyo, chikafu chezvipfuwo, mvura, vashandi, hutano hwezvirimwa kana zvipfuwo, kutakura nekurasikirwa.",
+        "checks": "Simbisa kodzero dzekushandisa ivhu, mvura yakavimbika nezvibvumirano zvemutengi. Bvunza nyanzvi dzekurima; mamiriro ekunze, zvirwere nezvisingatengeswi zvinogona kupedza mari yemwaka.",
+        "source": "ZimTrade: tsvaga vatengi usati wadyara"
+      },
+      "construction": {
+        "title": "Kuvaka nekuvandudza dzimba",
+        "summary": "Ongorora kutengesa zvekuvakisa, kurojesa maturusi kana chikwata chidiki chekugadzirisa nekupedzisa dzimba.",
+        "start": "Verenga mari yebasa rimwe rakajeka nenyanzvi, nyorai zvinofanira kuitwa uye bhadharai kana basa raongororwa.",
+        "budget": "Zvekuvakisa, maturusi, vashandi, kutakura, kugadzirisazve uye kunonoka kubhadharwa.",
+        "checks": "Tarisa mabasa akamboitwa nemuvaki nemvumo inodiwa nekanzuru. Pamapurojekiti evhu kana dzimba, muridzi nemvumo yekuvaka ngazviongororwe nemunhu akazvimirira.",
+        "source": "Harare: mirayiridzo yemvumo yekuvaka"
+      },
+      "plan": {
+        "title": "Usati watumira mari",
+        "intro": "Sarudza muyedzo unoenderana nemari yako, nguva nerubatsiro ruri kumusha. Aya mazano ebhizimisi ekuferefeta; tanga waedza kuti vatengi varipo here uye purofiti inogona kuwanikwa munzvimbo yaunosarudza.",
+        "budget": "Kumbira mitengo yazvino yakanyorwa kubva kune vanotengesa. Isa mari yekushandisa kusvikira vatengi vabhadhara nemari yezvisingatarisirwi; siya mari yemusha neyenjodzi yakaparadzana.",
+        "people": "Ongorora wakazvimirira munhu achaita basa, nzvimbo, muridzi, marezinesi nemitero inodiwa. Hukama hwemhuri hahutsivi ongororo iyi.",
+        "agreement": "Nyorai muridzi, mabasa, mishumo, kugovana purofiti nekurasikirwa, uye nzira yekubuda. Shandisai nzira dzekubhadhara dzine humbowo uye bvisai mari kana zvinhanho zvabvumiranwa zvapera.",
+        "oversight": "Nyoreranai zvinotengeswa, zvakasara nemashandisirwo emari. Rongai ongororo dzepanzvimbo dzakazvimirira uye enzanisai mainivhoisi nemarisiti musati mabhadhara chinhanho chinotevera.",
+        "cta": "Vhura runyorwa rwekuongorora usati waisa mari",
+        "note": "Zvinobatsira pakuferefeta zvakaongororwa musi wa22 Gumiguru 2026. DU haiongorori mabhizimisi aya, haibatanidzi mari kana kugadzirisa mari yekudyara. Purofiti haina kuvimbiswa uye unogona kurasikirwa nemari yako."
+      }
     },
     "economic_snapshot": {
       "title": "Pfupiso Yeupfumi Yevadyari",
@@ -1207,29 +1222,11 @@
     "label": "Breadcrumb",
     "more": "More"
   },
-  "sidebar": {
-    "title": "Sidebar",
-    "description": "Displays the mobile sidebar.",
-    "toggle": "Toggle Sidebar"
-  },
   "globe": {
     "preview_alt": "Globe preview",
     "preview_mode": "Globe preview mode (WebGL unavailable)",
     "music_on": "Music: On",
     "music_off": "Music: Off"
-  },
-  "coming_soon": {
-    "badge": "Coming Soon",
-    "description_saved": "Notify request saved. We will alert you via your account email.",
-    "description_prompt": "Get notified as soon as this feature is available.",
-    "processing": "Processing...",
-    "notify_me": "Notify me",
-    "notified": "Notified",
-    "toast_success_title": "Notify request saved",
-    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
-    "toast_ready": "You will be notified when {{feature}} is ready.",
-    "toast_error_title": "Unable to save notify request",
-    "toast_error_description": "Please try again."
   },
   "admin": {
     "title": "Admin Dashboard",

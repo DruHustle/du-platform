@@ -392,37 +392,18 @@ You should see:
 [E2E] Onesa smoke test passed.
 ```
 
-## Oracle Infrastructure Health Checks
+## Manual Oracle readiness checks
 
-To detect production outages, this repo includes a scheduled GitHub Action:
+The backend keeps these read-only endpoints for release verification and
+troubleshooting:
 
-- Workflow: `.github/workflows/infra-health-check.yml`
-- Frequency: every 15 minutes
-- Probe scripts:
-  - `scripts/keepalive-ping.sh`
-  - `scripts/healthcheck-json.sh`
+- App liveness and deployed commit: `https://du-api.152-70-22-84.sslip.io/api/ping`
+- Database readiness: `https://du-api.152-70-22-84.sslip.io/api/health/db`
+- Onesa readiness: `https://du-api.152-70-22-84.sslip.io/api/ai/ready`
 
-### Setup
-
-1. In GitHub repo settings, add repository variables:
-   - `BACKEND_HEALTH_URL` = `https://du-api.152-70-22-84.sslip.io/api/ping`
-   - `BACKEND_DATABASE_HEALTH_URL` = `https://du-api.152-70-22-84.sslip.io/api/health/db`
-   - `BACKEND_ONESA_HEALTH_URL` = `https://du-api.152-70-22-84.sslip.io/api/ai/ready`
-   - `HEALTHCHECK_ALERT_TO` = destination alert email
-   - `HEALTHCHECK_ALERT_FROM` = sender email identity
-2. Add repository secrets for SMTP:
-   - `HEALTHCHECK_SMTP_SERVER`
-   - `HEALTHCHECK_SMTP_PORT`
-   - `HEALTHCHECK_SMTP_USERNAME`
-   - `HEALTHCHECK_SMTP_PASSWORD`
-3. Ensure GitHub Actions are enabled for the repository.
-4. Optionally run it manually via Actions tab (`Infra Health Check` -> `Run workflow`).
-
-### Local manual ping
-
-```bash
-KEEPALIVE_URL=https://du-api.152-70-22-84.sslip.io/api/ping pnpm keepalive:ping
-```
+The scheduled GitHub infrastructure probes and their email alerts have been
+removed. Docker retains its container health check. See
+[Oracle operations](deploy/oracle/README.md) for release and rollback checks.
 
 ## Strategic Framework Alignment
 

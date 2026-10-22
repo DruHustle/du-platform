@@ -45,26 +45,13 @@ Vercel deployments need these existing repository secrets:
 Use the existing project and account. Keep credentials in GitHub secrets, never
 in source, logs, build artifacts or browser environment variables.
 
-## Oracle monitoring
+## Oracle readiness checks
 
-`.github/workflows/infra-health-check.yml` runs every 15 minutes and supports
-manual dispatch. Configure these repository variables:
-
-| Variable                      | Value                                                |
-| ----------------------------- | ---------------------------------------------------- |
-| `BACKEND_HEALTH_URL`          | `https://du-api.152-70-22-84.sslip.io/api/ping`      |
-| `BACKEND_DATABASE_HEALTH_URL` | `https://du-api.152-70-22-84.sslip.io/api/health/db` |
-| `BACKEND_ONESA_HEALTH_URL`    | `https://du-api.152-70-22-84.sslip.io/api/ai/ready`  |
-
-The database and Onesa URLs can be derived from the app origin when omitted.
-Checks require JSON, app liveness, MySQL connectivity and AI readiness. They do
-not fall back to retired hosting variables or endpoints.
-
-The existing failure-alert job uses `HEALTHCHECK_ALERT_TO` and
-`HEALTHCHECK_ALERT_FROM` as variables or secrets, plus SMTP secrets
-`HEALTHCHECK_SMTP_SERVER`, `HEALTHCHECK_SMTP_PORT`, `HEALTHCHECK_SMTP_USERNAME` and
-`HEALTHCHECK_SMTP_PASSWORD`. `HEALTHCHECK_SMTP_SECURE` is an optional variable.
-The alert only runs when a health job fails.
+There is no scheduled infrastructure-monitoring workflow or automated health
+alert email. Docker retains its container health check, and the API keeps
+`/api/ping`, `/api/health/db` and `/api/ai/ready` for manual release verification
+and troubleshooting. No repository monitoring variables or SMTP alert secrets
+are required. The application's newsletter email configuration is separate.
 
 ## Review and troubleshooting
 
