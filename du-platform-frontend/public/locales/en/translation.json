@@ -204,137 +204,99 @@
     }
   },
   "tech": {
-    "hero": {
-      "badge1": "Powered by Onesa",
-      "title1": "AI help, with Zimbabwe in focus",
-      "subtitle1": "Onesa powers practical assistance on Diaspora Unlocked: ask questions, explore products and plan your next steps.",
-      "highlight1": "Ask, explore, plan",
-      "badge2": "Contextual Intelligence",
-      "title2": "Local questions, clearer starting points",
-      "subtitle2": "Zimbabwe-focused content helps shape answers. Check important details with the relevant provider or official source.",
-      "highlight2": "Localized Knowledge",
-      "badge3": "Explore ideas",
-      "title3": "Better questions for business research",
-      "subtitle3": "Use Onesa to explain unfamiliar terms and prepare questions about a project. It does not verify returns or assess investment suitability.",
-      "highlight3": "Research with context",
-      "badge4": "Education 5.0",
-      "title4": "Innovation in Classrooms",
-      "subtitle4": "Explore ideas for learning and digital skills. These are sector themes, not a classroom service offered here.",
-      "highlight4": "Future Skills",
-      "badge5": "Smart Logistics",
-      "title5": "Technology for Logistics",
-      "subtitle5": "Explore questions about distribution and cross-border trade. Shipment tracking and customs clearance are not provided here.",
-      "highlight5": "Connected Supply Chains",
-      "badge6": "Industrial AI",
-      "title6": "Tech in Mining Operations",
-      "subtitle6": "Explore how data could support mining operations. Specialist monitoring and geological analysis are not available on this site.",
-      "highlight6": "Operational Efficiency",
-      "badge7": "Agritech Growth",
-      "title7": "Smarter Farming Systems",
-      "subtitle7": "Explore digital agriculture ideas. This site does not provide crop monitoring, soil tests or live weather alerts.",
-      "highlight7": "Climate-Smart Agriculture",
-      "badge8": "Diaspora Builders",
-      "title8": "Tech Talent Across Borders",
-      "subtitle8": "Use your experience abroad to explore ideas for Zimbabwe. Start with project information and practical questions.",
-      "highlight8": "Global Collaboration"
-    },
-    "explore_onesa": "Explore Onesa AI",
-    "onesa_badge": "Meet Onesa AI",
-    "onesa_title": "Illuminating your Way",
-    "onesa_meaning": "Onesa means \"illuminate\" in Shona",
-    "onesa_desc2": "Ask Onesa for explanations, product information and travel ideas, then check the details that matter before acting.",
-    "onesa_local_edge_title": "A wider platform, a local application",
-    "onesa_local_edge_desc": "Onesa is a modular, general-purpose AI platform for European and international applications. Diaspora Unlocked uses it with Zimbabwe-focused content and workflows, including language and contextual support.",
-    "diaspora_unlocked_title": "Diaspora Unlocked Technology",
-    "diaspora_unlocked_desc": "Diaspora Unlocked is an application powered by Onesa. Its Zimbabwe-focused content helps you explore products, travel and business opportunities.",
-    "features_title": "Onesa AI Capabilities",
-    "features_subtitle": "Use chat for information, explanations and planning. Confirm important details with the relevant source.",
-    "cta_title": "What would you like to explore?",
-    "cta_desc": "Start a conversation about Zimbabwean products, travel or project information.",
-    "cta_button": "Chat with Onesa",
-    "sectors_badge": "Sector Transformation",
-    "sectors_title": "Technology ideas by sector",
-    "sectors_subtitle": "Explore where technology could help. These are ideas to research; specialist industry tools are not offered here.",
-    "sectors": {
-      "mining": {
-        "title": "Mining & Resources",
-        "desc": "Questions to explore about data use in mining, with specialist advice before operational decisions.",
-        "d1": "Research mineral-market information sources",
-        "d2": "Prepare questions about safety and environmental requirements"
-      },
-      "farming": {
-        "title": "Precision Farming",
-        "desc": "Explore questions about agricultural planning and the information a grower needs.",
-        "d1": "Understand crop-planning terms and considerations",
-        "d2": "Identify questions for local agronomists"
-      },
-      "logistics": {
-        "title": "Smart Logistics",
-        "desc": "Research delivery routes and the practical steps involved in moving goods.",
-        "d1": "Prepare questions about routes and lead times",
-        "d2": "Check customs requirements with the relevant authority"
-      },
-      "education": {
-        "title": "Future Education",
-        "desc": "Use AI explanations to explore a subject or plan further learning.",
-        "d1": "Ask for an explanation of unfamiliar concepts",
-        "d2": "Find questions and topics for further study"
-      }
-    },
     "chat_with_onesa": "Chat with Onesa",
-    "onesa_matter": {
-      "badge": "Onesa-powered assistance",
-      "title": "Onesa powers the assistance here",
-      "headline": "A general-purpose AI platform, applied to your Zimbabwe questions.",
-      "p1": "Onesa is a modular, general-purpose AI platform for European and international applications.",
-      "p2": "Diaspora Unlocked is one application powered by Onesa. It brings Zimbabwe-focused content and workflows into the conversations and planning tools on this site.",
-      "p3": "Start with a question about a product, a destination or a project. Ask for an explanation or a starting plan you can refine.",
-      "p4": "Language and local context support belong to this application's Zimbabwe focus. They do not limit the wider Onesa platform to one country or industry.",
-      "p5": "AI answers can be incomplete or mistaken. Check prices, availability, requirements and important decisions with the relevant provider or official source.",
-      "tiles": {
-        "illuminate": {
-          "title": "One platform, many applications",
-          "detail": "Onesa is a modular AI platform for European and international applications. Diaspora Unlocked is one of them."
-        },
-        "africa_centric": {
-          "title": "Zimbabwe-focused help",
-          "detail": "This application adds Zimbabwean content, language support and local context to help you ask more relevant questions."
-        },
-        "sovereignty": {
-          "title": "Practical next steps",
-          "detail": "Get explanations, explore products and draft travel ideas. Use the answers as a starting point for your own checks."
-        },
-        "growth": {
-          "title": "Built to develop further",
-          "detail": "The aim is to make assistance more useful over time. Industry examples below show areas to explore, not specialist services already available here."
-        }
-      },
-      "combined": "Onesa is a modular, general-purpose AI platform for European and international applications. Diaspora Unlocked uses it for Zimbabwe-focused information, product discovery and travel planning.",
-      "read_vision": "How Onesa and Diaspora Unlocked fit together"
+    "restore_chat_bubble": "Show chat bubble",
+    "landing": {
+      "eyebrow": "Technology & everyday tools",
+      "title": "Useful technology.",
+      "highlight": "Powered by Onesa.",
+      "description": "Ask clearer questions, explore Zimbabwe and organise your next step, whether you are at home or abroad. Start with the tools available on Diaspora Unlocked.",
+      "principle": "Ask. Explore. Make a plan.",
+      "image_alt": "Illustration of a woman with elephants in a savannah landscape",
+      "caption": "Onesa, applied to your Zimbabwe questions.",
+      "tools_cta": "Explore the tools"
     },
-    "diaspora_use_cases": {
-      "relocation": {
-        "title": "Find your bearings",
-        "detail": "Ask about places, local customs and practical questions to research before a visit or return."
+    "tools": {
+      "title": "What you can do with Onesa",
+      "subtitle": "Choose a tool for the task you have in mind. Each opens its own experience.",
+      "chat": {
+        "title": "Ask a question",
+        "description": "Get plain-language explanations about products, places and business ideas. Use follow-up questions to narrow down what you need.",
+        "cta": "Chat with Onesa",
+        "image_alt": "Illustration of a woman with elephants in a savannah landscape"
       },
-      "investment": {
-        "title": "Understand project information",
-        "detail": "Ask for plain-language explanations of sector terms and questions to take to a promoter or independent adviser."
+      "trip": {
+        "title": "Plan a Zimbabwe visit",
+        "description": "Build a draft around your dates, interests and budget. Confirm suggested stops, transport and prices with the relevant providers.",
+        "cta": "Plan a trip",
+        "image_alt": "Victoria Falls in Zimbabwe"
       },
-      "business_intelligence": {
-        "title": "Explore products and ideas",
-        "detail": "Use Onesa to explore product information and organise questions before sending an enquiry."
+      "vr": {
+        "title": "Explore 360° demos",
+        "description": "Try the labelled Sample City panoramic scenes on screen, or use headset controls where supported. These are demonstrations, rather than Zimbabwe destination tours.",
+        "cta": "Try the VR demo",
+        "image_alt": "Rocky hillside in the Sample City panoramic demonstration"
       },
-      "collaboration": {
-        "title": "Plan a visit",
-        "detail": "Discuss destinations and interests, then turn them into a draft itinerary with indicative budgets."
+      "ar": {
+        "title": "Try the AR destination guide",
+        "description": "Explore a selected destination with Onesa’s place guidance, optional narration and a camera preview that you choose to enable.",
+        "cta": "Open the AR guide",
+        "image_alt": "Stone walls and ruins at Great Zimbabwe"
       }
     },
-    "diaspora_ai": {
-      "title": "How Diaspora Unlocked Uses AI",
-      "subtitle": "Use Onesa for explanations, discovery and planning across this platform. It helps you prepare; providers confirm the details."
+    "about": {
+      "title": "How Onesa and Diaspora Unlocked fit together",
+      "platform": "Onesa is a modular, general-purpose AI platform for European and international applications.",
+      "application": "Diaspora Unlocked is one application powered by Onesa. It brings Zimbabwe-focused content and workflows into the conversations and planning tools on this site. Language and local context support belong to this application's Zimbabwe focus. They do not limit the wider Onesa platform to one country or industry."
     },
-    "restore_chat_bubble": "Show chat bubble"
+    "steps": {
+      "title": "From a question to a useful next step",
+      "subtitle": "A little context helps make the conversation more useful.",
+      "ask": {
+        "title": "Start with your goal",
+        "description": "Say what you want to do, where and when. Include the constraints that matter, such as your available time or budget."
+      },
+      "organise": {
+        "title": "Ask for a working plan",
+        "description": "Request a short explanation, comparison or checklist. Refine the answer with follow-up questions that fit your situation."
+      },
+      "check": {
+        "title": "Confirm before acting",
+        "description": "Check current prices, availability and requirements with providers or official sources. Take the useful questions with you."
+      }
+    },
+    "ideas": {
+      "title": "Small digital improvements for everyday businesses",
+      "subtitle": "Practical starting ideas for a farm, shop or service business. These are ways to organise work, rather than specialist software provided by DU.",
+      "prompt_label": "Try asking Onesa",
+      "next": "Ready to connect a digital idea to a business? Explore small starting projects and the checks to make first.",
+      "cta": "Explore business ideas",
+      "farming": {
+        "title": "Keep a crop and sales record",
+        "description": "Start with one growing cycle. Record input spending, planting dates, harvest quantities and sales in a simple sheet that you and your grower can review.",
+        "prompt": "What columns would help me track the costs and sales of one vegetable-growing cycle?",
+        "image_alt": "Fresh vegetables displayed in baskets"
+      },
+      "stock": {
+        "title": "Know what is in stock",
+        "description": "Keep an item list with stock received, sales and delivery dates. Reconcile it with physical stock and cash before adding more products.",
+        "prompt": "Help me make a simple stock and delivery checklist for a small shop.",
+        "image_alt": "Packaged dried mango from Zimbabwe"
+      },
+      "jobs": {
+        "title": "Track jobs and materials",
+        "description": "For a repair or building job, agree the scope, record materials and use dated progress updates. Keep a clear record of changes and customer sign-off.",
+        "prompt": "What should a one-page job sheet include for a small repairs team?",
+        "image_alt": "Construction workers assembling a steel roof structure in Harare"
+      },
+      "skills": {
+        "title": "Build a useful digital skill",
+        "description": "Choose one task to practise, such as a spreadsheet, a clear customer message or a basic website. Use sample information while learning.",
+        "prompt": "Make a beginner practice plan for using a spreadsheet to manage a small business.",
+        "image_alt": "A classroom equipped for digital learning"
+      }
+    },
+    "note": "AI answers can be incomplete or mistaken. Check prices, availability, requirements and important decisions with the relevant provider or official source."
   },
   "tourism": {
     "back_to_tourism": "Back to Tourism",
@@ -735,8 +697,6 @@
         "monitor": "Check materials delivered against invoices. Arrange independent inspections before releasing each agreed stage payment."
       },
       "explore": "Explore this idea",
-      "photo_label": "Photo:",
-      "photo_crop": "Optimised; cropped for display.",
       "food": {
         "title": "Food processing & packaging",
         "summary": "Explore dried produce, small-batch foods or packaging supplies for local food businesses.",
@@ -1283,7 +1243,8 @@
     "notify_success": "Priority Access Locked",
     "get_notified": "Request Access",
     "form_subtitle": "Fill in your details to join the waiting list for {{featureName}}",
-    "back": "Back"
+    "back": "Back",
+    "image_credits": "Image credits"
   },
   "pagination": {
     "label": "Pagination",

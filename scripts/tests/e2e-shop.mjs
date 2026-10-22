@@ -4,7 +4,7 @@ import { calculateShopShippingCents } from "../../shared/shopCheckout.ts";
 import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
-import { chromium } from "playwright";
+import { chromium, webkit } from "playwright";
 
 // Serve the production build without loading .env or contacting any service.
 const root = resolve("dist/public");
@@ -46,8 +46,9 @@ await new Promise(done => server.listen(0, "127.0.0.1", done));
 const base =
   process.env.SHOP_BASE_URL || `http://127.0.0.1:${server.address().port}`;
 const channel = process.env.SHOP_BROWSER_CHANNEL || "chrome";
-const browser = await chromium.launch({
-  channel: channel === "chromium" ? undefined : channel,
+const engine = process.env.SHOP_BROWSER_ENGINE === "webkit" ? webkit : chromium;
+const browser = await engine.launch({
+  ...(engine === chromium && channel !== "chromium" ? { channel } : {}),
   headless: true,
 });
 const products = getPublicShopSeedProducts().map(product => ({
@@ -268,11 +269,11 @@ try {
     );
     await viewport.focus();
     await viewport.press("Home");
-    await viewport.evaluate(el => el.blur());
     await page.waitForFunction(
       el => el.disabled,
       await rail.getByRole("button", { name: /^Previous:/ }).elementHandle()
     );
+    await viewport.evaluate(el => el.blur());
     await page.screenshot({ path: `${output}/shop-rail-${width}.png` });
     pass(
       `${width}: one edge-to-edge product row; arrows, keyboard, drag and final-product cart controls`
@@ -377,6 +378,59 @@ try {
     // Checkout is fully mocked; no orders, email, or production writes occur.
     if (width < 1024)
       await page.getByRole("button", { name: "Checkout", exact: true }).click();
+    const checkoutPanel = page.getByRole("form", {
+      name: "Cart & order request",
+      exact: true,
+    });
+    await page
+      .locator("#shop-cart-checkout")
+      .evaluate(element =>
+        element.scrollIntoView({ block: "start", behavior: "instant" })
+      );
+    const pageScroll = await page.evaluate(() => scrollY);
+    await checkoutPanel.hover();
+    await page.mouse.wheel(0, 400);
+    await page.waitForFunction(
+      element => element.scrollTop > 100,
+      await checkoutPanel.elementHandle()
+    );
+    assert.equal(
+      await page.evaluate(() => scrollY),
+      pageScroll,
+      "Scrolling the checkout panel must leave the product page stationary"
+    );
+    await checkoutPanel.evaluate(element => {
+      element.scrollTop = element.scrollHeight;
+    });
+    await page.mouse.wheel(0, 400);
+    await page.waitForTimeout(150);
+    assert.equal(
+      await page.evaluate(() => scrollY),
+      pageScroll,
+      "Reaching the end of checkout must not chain scrolling to the page"
+    );
+    const sendRequest = checkoutPanel.getByRole("button", {
+      name: "Send order request",
+      exact: true,
+    });
+    assert(await sendRequest.isVisible());
+    const submitBounds = await sendRequest.boundingBox();
+    assert(submitBounds.y >= 56 && submitBounds.y + submitBounds.height <= 900);
+    await checkoutPanel.evaluate(element => {
+      element.scrollTop = 0;
+    });
+    await checkoutPanel.focus();
+    await page.keyboard.press("PageDown");
+    await page.waitForFunction(
+      element => element.scrollTop > 50,
+      await checkoutPanel.elementHandle()
+    );
+    assert.equal(await page.evaluate(() => scrollY), pageScroll);
+    pass(`${width}px checkout scrolls independently with mouse and keyboard`);
+    await checkoutPanel.evaluate(element => {
+      element.scrollTop = 0;
+    });
+    await page.screenshot({ path: `${output}/cart-panel-${width}.png` });
     assert.equal(
       await page.locator("#shop-payment-dummy_gateway").count(),
       0,
@@ -483,6 +537,44 @@ try {
       `${width}px item click, +/−, shared cart, all products, inventory, reload, notify dialog, validation, lost-response retry, receipt reload, support handoff and checkout navigation`
     );
     await t.context.close();
+  }
+  for (const width of [375, 1440]) {
+    const short = await setup(width);
+    await short.context.addInitScript(() =>
+      localStorage.setItem("shop_cart_v1", '[{"productId":1,"quantity":1}]')
+    );
+    await short.page.setViewportSize({ width, height: 600 });
+    await short.page.goto(`${base}/shop/products?cart=1`);
+    const panel = short.page.getByRole("form", {
+      name: "Cart & order request",
+      exact: true,
+    });
+    await panel.waitFor();
+    await short.page
+      .locator("#shop-cart-checkout")
+      .evaluate(element =>
+        element.scrollIntoView({ block: "start", behavior: "instant" })
+      );
+    const y = await short.page.evaluate(() => scrollY);
+    await panel.hover();
+    await short.page.mouse.wheel(0, 1000);
+    await short.page.waitForFunction(
+      element => element.scrollTop > 100,
+      await panel.elementHandle()
+    );
+    assert.equal(await short.page.evaluate(() => scrollY), y);
+    const button = panel.getByRole("button", {
+      name: "Send order request",
+      exact: true,
+    });
+    await button.scrollIntoViewIfNeeded();
+    const bounds = await button.boundingBox();
+    assert(bounds.y >= 56 && bounds.y + bounds.height <= 600);
+    await short.page.screenshot({ path: `${output}/cart-short-${width}.png` });
+    pass(
+      `${width}×600px checkout remains scrollable and its submit button reachable`
+    );
+    await short.context.close();
   }
   const t = await setup(375, { failCatalog: true });
   await t.page.goto(`${base}/shop`);

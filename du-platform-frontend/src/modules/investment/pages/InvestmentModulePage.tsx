@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import SwipeRail from "@/components/discovery/SwipeRail";
 import DiscoveryTile from "@/components/discovery/DiscoveryTile";
 import DiscoverySection from "@/components/discovery/DiscoverySection";
-import InstantImage from "@/components/InstantImage";
+import DiscoveryHero from "@/components/discovery/DiscoveryHero";
 import {
   ArrowRight,
   Building,
@@ -37,10 +37,6 @@ const businessIdeas = [
     key: "construction",
     icon: Building,
     image: "/images/pages/investment/harare-construction.webp",
-    photo: {
-      author: "Dariusmutamba",
-      url: "https://commons.wikimedia.org/wiki/File:Construction_in_harare_01.jpg",
-    },
     source: "https://www.hararecity.co.zw/services/about/building-permits",
   },
   {
@@ -54,10 +50,6 @@ const businessIdeas = [
     key: "solar",
     icon: Sun,
     image: "/images/pages/investment/zimbabwe-solar-installation.webp",
-    photo: {
-      author: "Mulavu123",
-      url: "https://commons.wikimedia.org/wiki/File:Solar_panel_installation.jpg",
-    },
     source:
       "https://www.get-invest.eu/about/country-and-regional-windows/zimbabwe/",
   },
@@ -83,55 +75,30 @@ export default function Investment() {
   return (
     <Layout>
       <div className="investment-landing">
-        <section id="hero" className="investment-hero">
-          <div className="investment-inner investment-hero-grid">
-            <div>
-              <p className="investment-eyebrow">
-                {t("investment.landing.eyebrow")}
-              </p>
-              <h1>
-                {t("investment.landing.title")}
-                <span>{t("investment.landing.highlight")}</span>
-              </h1>
-              <p className="investment-hero-description">
-                {t("investment.landing.description")}
-              </p>
-              <div className="investment-actions">
-                <Button asChild className={actionClass}>
-                  <a href="#investment-innovation-opportunities">
-                    {t("investment.landing.ideas_cta")}
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="h-4 w-4 shrink-0"
-                    />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
-                >
-                  <a href="#collective-model">
-                    {t("investment.landing.plan_cta")}
-                  </a>
-                </Button>
-              </div>
-              <p className="investment-hero-principle">
-                {t("investment.landing.principle")}
-              </p>
-            </div>
-            <figure className="investment-hero-media">
-              <InstantImage
-                src="/images/pages/investment/horticulture.jpg"
-                alt={t("investment.opportunities.farming.image_alt")}
-                priority
-                wrapperClassName="h-full w-full"
-                className="h-full w-full object-cover"
-              />
-              <figcaption>{t("investment.landing.image_caption")}</figcaption>
-            </figure>
-          </div>
-        </section>
+        <DiscoveryHero
+          eyebrow={t("investment.landing.eyebrow")}
+          title={t("investment.landing.title")}
+          highlight={t("investment.landing.highlight")}
+          description={t("investment.landing.description")}
+          principle={t("investment.landing.principle")}
+          image="/images/pages/investment/horticulture.jpg"
+          imageAlt={t("investment.opportunities.farming.image_alt")}
+          caption={t("investment.landing.image_caption")}
+        >
+          <Button asChild className={actionClass}>
+            <a href="#investment-innovation-opportunities">
+              {t("investment.landing.ideas_cta")}
+              <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
+          >
+            <a href="#collective-model">{t("investment.landing.plan_cta")}</a>
+          </Button>
+        </DiscoveryHero>
 
         <DiscoverySection
           id="investment-innovation-opportunities"
@@ -149,39 +116,15 @@ export default function Investment() {
                   image={item.image}
                   imageAlt={t(`investment.opportunities.${item.key}.image_alt`)}
                   footer={
-                    <>
-                      <a
-                        data-business-source
-                        href={item.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="investment-source-link"
-                      >
-                        {t(`investment.opportunities.${item.key}.source`)}
-                      </a>
-                      {item.photo && (
-                        <p className="business-idea-credit">
-                          {t("investment.opportunities.photo_label")}{" "}
-                          <a
-                            href={item.photo.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {item.photo.author}
-                          </a>
-                          {" · "}
-                          <a
-                            href="https://creativecommons.org/licenses/by-sa/4.0/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            CC BY-SA 4.0
-                          </a>
-                          {" · "}
-                          {t("investment.opportunities.photo_crop")}
-                        </p>
-                      )}
-                    </>
+                    <a
+                      data-business-source
+                      href={item.source}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="investment-source-link"
+                    >
+                      {t(`investment.opportunities.${item.key}.source`)}
+                    </a>
                   }
                 >
                   <p className="business-idea-intro">
@@ -239,10 +182,10 @@ export default function Investment() {
           title={t("investment.plan.title")}
           description={t("investment.plan.subtitle")}
         >
-          <ol className="investment-plan-grid">
+          <ol className="discovery-plan-grid">
             {["customer", "costs", "agreement", "review"].map((key, index) => (
               <li key={key}>
-                <span className="investment-step-number" aria-hidden="true">
+                <span className="discovery-step-number" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3>{t(`investment.plan.${key}.title`)}</h3>
@@ -250,7 +193,7 @@ export default function Investment() {
               </li>
             ))}
           </ol>
-          <div className="investment-plan-action">
+          <div className="discovery-plan-action">
             <p>{t("investment.plan.checklist_description")}</p>
             <Button asChild className={actionClass}>
               <Link href="/regulations#due-diligence-checklist">
@@ -320,7 +263,15 @@ export default function Investment() {
               </DiscoveryTile>
             ))}
           </SwipeRail>
-          <p className="investment-note">{t("investment.resources.note")}</p>
+          <p className="discovery-note">
+            {t("investment.resources.note")}{" "}
+            <a
+              href="/licenses/business-images.html"
+              className="underline underline-offset-4 hover:text-slate-950"
+            >
+              {t("common.image_credits")}
+            </a>
+          </p>
         </DiscoverySection>
       </div>
     </Layout>

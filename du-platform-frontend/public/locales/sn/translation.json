@@ -204,137 +204,99 @@
     }
   },
   "tech": {
-    "hero": {
-      "badge1": "Inoshandisa Onesa",
-      "title1": "Rubatsiro rweAI rwakanangana neZimbabwe",
-      "subtitle1": "Onesa inopa rubatsiro paDiaspora Unlocked: bvunza, ona zvigadzirwa uye ronga zvinotevera.",
-      "highlight1": "Bvunza, ongorora, ronga",
-      "badge2": "Ungwaru hweMamiriro eZvinhu",
-      "title2": "Mibvunzo yemuno, pekutangira pakajeka",
-      "subtitle2": "Ruzivo rweZimbabwe runobatsira mhinduro. Simbisa zvakakosha nemupi werubatsiro kana kwazvinobva zviri pamutemo.",
-      "highlight2": "Ruzivo rweMunharaunda",
-      "badge3": "Ongorora mazano",
-      "title3": "Mibvunzo iri nani yekutsvakurudza bhizimisi",
-      "subtitle3": "Shandisa Onesa kutsanangura mazwi nekugadzirira mibvunzo yepurojekiti. Haisimbisi mibairo kana kukukodzera kweinvestment.",
-      "highlight3": "Tsvakurudza uine ruzivo",
-      "badge4": "Dzidzo 5.0",
-      "title4": "Hunyanzvi Mumakirasi",
-      "subtitle4": "Ongorora mazano ekudzidza nehunyanzvi hwedhijitari. Idzi inyaya dzechikamu, kwete basa rekirasi rinopiwa pano.",
-      "highlight4": "Hunyanzvi Hweramangwana",
-      "badge5": "Kutakurwa Kwakangwara",
-      "title5": "Tekinoroji yeLogistics",
-      "subtitle5": "Ongorora mibvunzo yekugovera nekutengeserana. Kutevera mitoro nekubvisa pacustoms hazviitwi pano.",
-      "highlight5": "Nzira Dzekutakura Dzakabatana",
-      "badge6": "Industrial AI",
-      "title6": "Tekinoroji muMabasa eMigodhi",
-      "subtitle6": "Ongorora mashandiro edata mumigodhi. Kuongorora migodhi nekutarisa michina kwenyanzvi hazviwanikwi pano.",
-      "highlight6": "Kushanda Kwakanaka",
-      "badge7": "Kukura kweAgritech",
-      "title7": "Masisitimu Akangwara Ekurima",
-      "subtitle7": "Ongorora mazano ekurima kwedhijitari. Pano hapapiwi kutariswa kwezvirimwa, kuongororwa kwevhu kana yambiro yemamiriro ekunze yepanguva iyoyo.",
-      "highlight7": "Climate-Smart Agriculture",
-      "badge8": "Vavaki veDiaspora",
-      "title8": "Tarenda reTekinoroji Mhiri kweMiganhu",
-      "subtitle8": "Shandisa ruzivo rwako rwekunze kuongorora mazano eZimbabwe. Tanga neruzivo rwemapurojekiti nemibvunzo inobatsira.",
-      "highlight8": "Kubatana Kwepasi Rose"
-    },
-    "explore_onesa": "Ongorora Onesa AI",
-    "onesa_badge": "Sangana neOnesa AI",
-    "onesa_title": "Kujekesa Gwara rako",
-    "onesa_meaning": "Onesa zvinoreva 'kupa chiedza' muchiShona",
-    "onesa_desc2": "Bvunza Onesa tsananguro, ruzivo rwezvigadzirwa nemazano enzendo, wozosimbisa zvakakosha usati waita.",
-    "onesa_local_edge_title": "Chikuva chakafara, mashandisirwo emuno",
-    "onesa_local_edge_desc": "Onesa chikuva cheAI chine zvikamu zvinosanganiswa, chekushandisa muEurope nepasi rose. Diaspora Unlocked inochishandisa neruzivo nemabasa akanangana neZimbabwe, kusanganisira mitauro nemamiriro emuno.",
-    "diaspora_unlocked_title": "Tekinoroji yeDiaspora Unlocked",
-    "diaspora_unlocked_desc": "Diaspora Unlocked iapplication inoshandisa Onesa. Ruzivo rwayo rweZimbabwe runokubatsira kuona zvigadzirwa, nzendo nemikana yebhizimisi.",
-    "features_title": "Zvinogona kuitwa neOnesa AI",
-    "features_subtitle": "Shandisa chat kuwana ruzivo, tsananguro nekuronga. Simbisa zvakakosha nekwazvinobva.",
-    "cta_title": "Chii chaunoda kuziva?",
-    "cta_desc": "Tanga hurukuro pamusoro pezvigadzirwa, nzendo kana mapurojekiti eZimbabwe.",
-    "cta_button": "Taura naOnesa",
-    "sectors_badge": "Kushandura Zvikamu",
-    "sectors_title": "Mazano etekinoroji nechikamu",
-    "sectors_subtitle": "Ongorora panogona kubatsira tekinoroji. Aya mazano ekutsvakurudza; maturusi enyanzvi dzezvikamu haapiwi pano.",
-    "sectors": {
-      "mining": {
-        "title": "Migodhi neZviwanikwa",
-        "desc": "Mibvunzo yekushandiswa kwedata mumigodhi, uchibvunza nyanzvi usati wasarudza zvekuita.",
-        "d1": "Tsvakurudza kunobva ruzivo rwemisika yezvicherwa",
-        "d2": "Gadzirira mibvunzo yekuchengeteka nezvakatipoteredza"
-      },
-      "farming": {
-        "title": "Kurima Kwemazuvano",
-        "desc": "Ongorora mibvunzo yekuronga kurima neruzivo runodiwa nemurimi.",
-        "d1": "Nzwisisa mazwi nezvinofungwa pakuronga zvirimwa",
-        "d2": "Gadzira mibvunzo yenyanzvi dzekurima dzemuno"
-      },
-      "logistics": {
-        "title": "Kutakura Zvinhu neUngwaru",
-        "desc": "Tsvakurudza nzira dzekutumira nematanho ekufambisa zvinhu.",
-        "d1": "Gadzirira mibvunzo yenzira nenguva yekutumira",
-        "d2": "Simbisa zvinodiwa pacustoms nevane masimba"
-      },
-      "education": {
-        "title": "Dzidzo yeRamangwana",
-        "desc": "Shandisa tsananguro dzeAI kudzidza nyaya kana kuronga kumwe kudzidza.",
-        "d1": "Kumbira tsananguro yezvinhu zvausingazivi",
-        "d2": "Tsvaga mibvunzo nenyaya dzekuwedzera kudzidza"
-      }
-    },
     "chat_with_onesa": "Taura naOnesa",
-    "onesa_matter": {
-      "badge": "Rubatsiro runoshandisa Onesa",
-      "title": "Onesa ndiyo inopa rubatsiro pano",
-      "headline": "Chikuva cheAI chekushandisa kwakasiyana, chinokubatsira pamibvunzo yeZimbabwe.",
-      "p1": "Onesa chikuva cheAI chine zvikamu zvinosanganiswa, chekushandisa muEurope nepasi rose.",
-      "p2": "Diaspora Unlocked imwe yeapplication dzinoshandisa Onesa. Inounza ruzivo nemabasa eZimbabwe muhurukuro nematurusi ekuronga pano.",
-      "p3": "Tanga nemubvunzo wechigadzirwa, nzvimbo kana purojekiti. Kumbira tsananguro kana hurongwa hwekutanga hwaunogona kugadzirisa.",
-      "p4": "Rubatsiro rwemitauro nemamiriro emuno ndezvekutarisa kweapplication iyi paZimbabwe. Hazvigumiri chikuva cheOnesa kunyika kana chikamu chimwe.",
-      "p5": "Mhinduro dzeAI dzinogona kusakwana kana kukanganisa. Simbisa mitengo, kuwanikwa nezvinodiwa nemupi kana kwazvinobva zviri pamutemo.",
-      "tiles": {
-        "illuminate": {
-          "title": "Chikuva chimwe, mashandisirwo mazhinji",
-          "detail": "Onesa chikuva cheAI chezvinangwa zvakasiyana muEurope nepasi rose. Diaspora Unlocked ndechimwe chazvo."
-        },
-        "africa_centric": {
-          "title": "Rubatsiro rwakanangana neZimbabwe",
-          "detail": "Application iyi inowedzera ruzivo rweZimbabwe, rubatsiro rwemitauro nemamiriro emuno kuti ubvunze mibvunzo inobatsira."
-        },
-        "sovereignty": {
-          "title": "Matanho anobatsira",
-          "detail": "Wana tsananguro, ona zvigadzirwa uye gadzira mazano enzendo. Shandisa mhinduro sepakutangira kuongorora kwako."
-        },
-        "growth": {
-          "title": "Inoramba ichivandudzwa",
-          "detail": "Chinangwa kuvandudza rubatsiro nekufamba kwenguva. Mienzaniso iri pasi inyaya dzekuongorora, kwete mabasa enyanzvi aripo pano."
-        }
-      },
-      "combined": "Onesa chikuva cheAI chezvinangwa zvakasiyana muEurope nepasi rose. Diaspora Unlocked inochishandisa paruzivo rweZimbabwe, zvigadzirwa nekuronga nzendo.",
-      "read_vision": "Kubatana kweOnesa neDiaspora Unlocked"
+    "restore_chat_bubble": "Ratidza chat bubble",
+    "landing": {
+      "eyebrow": "Tekinoroji & zvishandiso zvezuva nezuva",
+      "title": "Tekinoroji inobatsira.",
+      "highlight": "Ichishandisa Onesa.",
+      "description": "Bvunza zvakajeka, ongorora Zimbabwe uye ronga danho rako rinotevera, uri kumusha kana kunze kwenyika. Tanga nezvishandiso zviri paDiaspora Unlocked.",
+      "principle": "Bvunza. Ongorora. Ronga.",
+      "image_alt": "Mufananidzo wemukadzi nenzou musango resavanna",
+      "caption": "Onesa ichibatsira pamibvunzo yako yeZimbabwe.",
+      "tools_cta": "Ongorora zvishandiso"
     },
-    "diaspora_use_cases": {
-      "relocation": {
-        "title": "Ziva pekutangira",
-        "detail": "Bvunza nezvenzvimbo, tsika dzemuno nemibvunzo yekutsvakurudza usati washanya kana kudzokera."
+    "tools": {
+      "title": "Zvaunogona kuita neOnesa",
+      "subtitle": "Sarudza chishandiso chinoenderana nebasa raunoda kuita. Chimwe nechimwe chinovhura peji racho.",
+      "chat": {
+        "title": "Bvunza mubvunzo",
+        "description": "Wana tsananguro dziri nyore dzezvigadzirwa, nzvimbo nemazano ebhizinesi. Ramba uchibvunza kuti uwane zvinoenderana nezvaunoda.",
+        "cta": "Taura neOnesa",
+        "image_alt": "Mufananidzo wemukadzi nenzou musango resavanna"
       },
-      "investment": {
-        "title": "Nzwisisa ruzivo rwemapurojekiti",
-        "detail": "Kumbira tsananguro yemazwi echikamu nemibvunzo yaunobvunza muridzi kana chipangamazano akazvimirira."
+      "trip": {
+        "title": "Ronga kushanya kuZimbabwe",
+        "description": "Gadzira hurongwa hwekutanga hunoenderana nemazuva, zvaunofarira nemari yako. Simbisa nzvimbo, zvekufambisa nemitengo nevanopa mabasa acho.",
+        "cta": "Ronga rwendo",
+        "image_alt": "Mapopoma eVictoria Falls muZimbabwe"
       },
-      "business_intelligence": {
-        "title": "Ongorora zvigadzirwa nemazano",
-        "detail": "Shandisa Onesa kuongorora ruzivo rwezvigadzirwa nekuronga mibvunzo usati wabvunza."
+      "vr": {
+        "title": "Ongorora mienzaniso ye360°",
+        "description": "Edza mifananidzo yakatenderedza yeSample City yakanyorwa semuenzaniso pachikirini, kana nemudziyo weVR unotsigirwa. Iyi mienzaniso, kwete kushanya kunzvimbo dzeZimbabwe.",
+        "cta": "Edza muenzaniso weVR",
+        "image_alt": "Chikomo chine matombo chiri mumufananidzo wemuenzaniso weSample City"
       },
-      "collaboration": {
-        "title": "Ronga kushanya",
-        "detail": "Taura nezvenzvimbo nezvaunofarira, wozvigadzira kuva hurongwa hwekutanga nemari inofungidzirwa."
+      "ar": {
+        "title": "Edza gwara renzvimbo reAR",
+        "description": "Ongorora nzvimbo yawasarudza neruzivo rweOnesa, rondedzero yezwi kana uchida, uye kutarisa nekamera yaunosarudza kubatidza.",
+        "cta": "Vhura gwara reAR",
+        "image_alt": "Masvingo ematombo nematongo eGreat Zimbabwe"
       }
     },
-    "diaspora_ai": {
-      "title": "Mashandisirwo eAI neDiaspora Unlocked",
-      "subtitle": "Shandisa Onesa patsananguro, kuongorora nekuronga pachikuva. Inokubatsira kugadzirira; vanopa mabasa ndivo vanosimbisa."
+    "about": {
+      "title": "Kubatana kweOnesa neDiaspora Unlocked",
+      "platform": "Onesa chikuva cheAI chine zvikamu zvinosanganiswa, chekushandisa muEurope nepasi rose.",
+      "application": "Diaspora Unlocked imwe yeapplication dzinoshandisa Onesa. Inounza ruzivo nemabasa eZimbabwe muhurukuro nematurusi ekuronga pano. Rubatsiro rwemitauro nemamiriro emuno ndezvekutarisa kweapplication iyi paZimbabwe. Hazvigumiri chikuva cheOnesa kunyika kana chikamu chimwe."
     },
-    "restore_chat_bubble": "Ratidza chat bubble"
+    "steps": {
+      "title": "Kubva pamubvunzo kuenda padanho rinobatsira",
+      "subtitle": "Kupa mamwe mashoko kunoita kuti hurukuro ibatsire.",
+      "ask": {
+        "title": "Tanga nechinangwa chako",
+        "description": "Taura zvaunoda kuita, kupi uye rini. Sanganisira zvinokutadzisa kana zvinokosha, zvakaita senguva nemari yauinayo."
+      },
+      "organise": {
+        "title": "Kumbira hurongwa hwekushanda",
+        "description": "Kumbira tsananguro pfupi, kuenzanisa kana rondedzero yekutarisa. Bvunza mimwe mibvunzo kuti mhinduro ienderane nemamiriro ako."
+      },
+      "check": {
+        "title": "Simbisa usati waita",
+        "description": "Tarisa mitengo yazvino, kuwanikwa nezvinodiwa nevanopa mabasa kana masangano epamutemo. Shandisa mibvunzo inobatsira pakuita izvi."
+      }
+    },
+    "ideas": {
+      "title": "Shanduko diki dzedhijitari kumabhizinesi ezuva nezuva",
+      "subtitle": "Mazano ekutanga epurazi, chitoro kana bhizinesi remabasa. Idzi inzira dzekuronga basa, kwete mapurogiramu ehunyanzvi anopiwa neDU.",
+      "prompt_label": "Edza kubvunza Onesa",
+      "next": "Wagadzirira kubatanidza zano redhijitari nebhizinesi? Ongorora zvirongwa zvidiki nezvaunofanira kutanga watarisa.",
+      "cta": "Ongorora mazano ebhizinesi",
+      "farming": {
+        "title": "Nyora zvirimwa nezvinotengeswa",
+        "description": "Tanga nechikamu chimwe chekurima. Nyora mari yezvekushandisa, mazuva ekudyara, goho nezvinotengeswa patafura iri nyore yamunogona kuongorora nemurimi.",
+        "prompt": "Ndeapi makoramu angandibatsira kunyora mari nezvinotengeswa pachikamu chimwe chekurima miriwo?",
+        "image_alt": "Miriwo mitsva iri mumatengu"
+      },
+      "stock": {
+        "title": "Ziva zvinhu zviri muchitoro",
+        "description": "Nyora zvinhu zvinopinda, zvinotengeswa nemazuva ekutumira. Enzanisa zvakanyorwa nezvinhu zviripo nemari usati wawedzera zvigadzirwa.",
+        "prompt": "Ndibatsire kugadzira rondedzero iri nyore yekutarisa zvinhu nekutumira zvechitoro chidiki.",
+        "image_alt": "Mango dzakaomeswa dzakaiswa mumapakeji dzinobva kuZimbabwe"
+      },
+      "jobs": {
+        "title": "Tevedzera mabasa nezvinhu zvinoshandiswa",
+        "description": "Pakugadzirisa kana kuvaka, bvumiranai basa, nyorai zvinhu zvinoshandiswa uye kufambira mberi nemazuva. Chengetai shanduko nekubvumirwa kwebasa nemutengi.",
+        "prompt": "Pepa rimwe rebasa rechikwata chidiki chekugadzirisa rinofanira kunge riine chii?",
+        "image_alt": "Vashandi vachisunga simbi dzedenga pachivako muHarare"
+      },
+      "skills": {
+        "title": "Dzidza unyanzvi hwedhijitari hunobatsira",
+        "description": "Sarudza basa rimwe rekudzidzira, setafura yemari, meseji yakajeka kumutengi kana webhusaiti iri nyore. Dzidza uchishandisa mashoko emuenzaniso.",
+        "prompt": "Gadzira hurongwa hweanotanga kudzidza kushandisa tafura yedhijitari kutungamirira bhizinesi diki.",
+        "image_alt": "Kirasi ine zvishandiso zvekudzidza nedhijitari"
+      }
+    },
+    "note": "Mhinduro dzeAI dzinogona kusakwana kana kukanganisa. Simbisa mitengo, kuwanikwa nezvinodiwa nemupi kana kwazvinobva zviri pamutemo."
   },
   "tourism": {
     "back_to_tourism": "Dzokera kuUshanyi",
@@ -735,8 +697,6 @@
         "monitor": "Enzanisa zvekuvakisa zvasvitswa nemainivhoisi. Rongai kuongorora kwakazvimirira musati mabhadhara chinhanho chimwe nechimwe."
       },
       "explore": "Ongorora zano iri",
-      "photo_label": "Mufananidzo:",
-      "photo_crop": "Wakarerutswa; wakachekwa pakuratidzwa.",
       "food": {
         "title": "Kugadzira nekuputira chikafu",
         "summary": "Ongorora kuomesa zvirimwa, chikafu chinogadzirwa zvishoma kana zvekuputira chikafu kumabhizimisi emuno.",
@@ -1221,7 +1181,8 @@
     "notify_success": "Kuwana Kukosha Kwakakiyiwa",
     "get_notified": "Kumbira Kuwana",
     "form_subtitle": "Zadza ruzivo rwako kuti ubatanidze vakamirira {{featureName}}",
-    "back": "Dzokera"
+    "back": "Dzokera",
+    "image_credits": "Kunobva mifananidzo"
   },
   "pagination": {
     "label": "Pagination",

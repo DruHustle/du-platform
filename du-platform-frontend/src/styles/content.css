@@ -340,6 +340,18 @@
 .content-page #shop-cart-checkout > .content-panel {
   padding: 20px;
 }
+.content-page .shop-checkout-scroll {
+  max-height: calc(100svh - 11rem - env(safe-area-inset-bottom));
+  max-height: calc(100dvh - 11rem - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scroll-padding-block: 20px;
+}
+.content-page .shop-checkout-scroll:focus-visible {
+  outline: 2px solid var(--color-zim-gold);
+  outline-offset: 4px;
+}
 .content-page #shop-cart-checkout .cart-panel-title {
   color: #f8fafc;
   font-size: 18px;
@@ -372,6 +384,10 @@
 }
 
 @media (min-width: 1024px) {
+  .content-page .shop-checkout-scroll {
+    max-height: calc(100svh - 8rem);
+    max-height: calc(100dvh - 8rem);
+  }
   .content-page .interior-hero-content {
     padding-top: 144px;
     padding-bottom: 48px;

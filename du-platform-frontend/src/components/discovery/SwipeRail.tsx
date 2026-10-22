@@ -140,11 +140,11 @@ export default function SwipeRail({
   const endDrag = (event: PointerEvent<HTMLDivElement>) => {
     const node = viewport.current;
     if (!node || drag.current?.id !== event.pointerId) return;
+    drag.current = null;
     if (node.hasPointerCapture(event.pointerId))
       node.releasePointerCapture(event.pointerId);
     node.style.removeProperty("scroll-snap-type");
     delete node.dataset.dragging;
-    drag.current = null;
   };
 
   if (!items.length) return null;
@@ -285,11 +285,7 @@ export default function SwipeRail({
         }}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
-        onLostPointerCapture={() => {
-          drag.current = null;
-          viewport.current?.style.removeProperty("scroll-snap-type");
-          if (viewport.current) delete viewport.current.dataset.dragging;
-        }}
+        onLostPointerCapture={endDrag}
       >
         <div ref={track} role="list" className="swipe-rail-track">
           {items.map((item, index) => (

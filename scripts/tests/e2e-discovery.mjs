@@ -92,6 +92,41 @@ try {
     ]) {
       await page.goto(base + path);
       await page.locator(".swipe-rail").first().waitFor();
+      if (path === "/technology") {
+        const tools = page.locator("#onesa-intro");
+        assert.equal(await tools.locator("article").count(), 4);
+        assert.deepEqual(
+          await tools
+            .locator("article a")
+            .evaluateAll(links => links.map(link => link.getAttribute("href"))),
+          [
+            "/onesa-ai-chat",
+            "/onesa-ai-book-trip",
+            "/onesa-ai-tourism-virtual-experience",
+            "/onesa-ai-tourism-augmented-experience",
+          ]
+        );
+        assert.match(await tools.textContent(), /Sample City/);
+        assert.equal(
+          await page.locator("#technology-diaspora-use-cases ol > li").count(),
+          3
+        );
+        const about = page.locator("#technology-onesa-vision details");
+        await about.locator("summary").focus();
+        await page.keyboard.press("Enter");
+        assert((await about.getAttribute("open")) !== null);
+        assert.match(await about.textContent(), /Onesa.*platform/);
+        await page.keyboard.press("Space");
+        await page
+          .getByRole("link", { name: "Explore the tools", exact: true })
+          .click();
+        await page.waitForFunction(() => {
+          const top = document
+            .getElementById("onesa-intro")
+            .getBoundingClientRect().top;
+          return top >= 50 && top <= 90;
+        });
+      }
       if (path === "/tourism") {
         assert.equal(await page.locator("#plan-visit").count(), 0);
         assert.equal(
@@ -118,6 +153,29 @@ try {
         const ideas = page.locator("#investment-innovation-opportunities");
         const cards = ideas.locator("article");
         assert.equal(await cards.count(), 5);
+        assert.doesNotMatch(
+          await ideas.textContent(),
+          /Dariusmutamba|Mulavu123|CC BY-SA|Optimised; cropped for display/
+        );
+        const creditsLink = page.getByRole("link", {
+          name: "Image credits",
+          exact: true,
+        });
+        const creditsResponse = await context.request.get(
+          base + (await creditsLink.getAttribute("href"))
+        );
+        assert.equal(creditsResponse.status(), 200);
+        const credits = await creditsResponse.text();
+        for (const requiredCredit of [
+          "Dariusmutamba",
+          "Mulavu123",
+          "https://creativecommons.org/licenses/by-sa/4.0/",
+          "Construction_in_harare_01.jpg",
+          "Solar_panel_installation.jpg",
+          "cropped responsively",
+        ]) {
+          assert(credits.includes(requiredCredit));
+        }
         const sources = [
           "www.chamines.co.zw",
           "tradezimbabwe.com",
@@ -299,6 +357,24 @@ try {
       await page.screenshot({
         path: `${output}/${path.slice(1).replaceAll("/", "_")}-${width}.png`,
       });
+      if (path === "/technology") {
+        for (const [href, selector] of [
+          ["/onesa-ai-chat", "main textarea"],
+          ["/onesa-ai-book-trip", "main form"],
+          ["/onesa-ai-tourism-virtual-experience", "#vr-destination"],
+          ["/onesa-ai-tourism-augmented-experience", "#aug-place"],
+        ]) {
+          await page.goto(base + "/technology");
+          await page.locator(`#onesa-intro a[href="${href}"]`).click();
+          await page.waitForURL(base + href);
+          await page.locator(selector).first().waitFor();
+        }
+        record({
+          width,
+          scenario:
+            "Technology opens Onesa chat, trip planning, VR demos and the AR guide",
+        });
+      }
     }
     await page.goto(base + "/tourism");
     const rail = page.locator(".swipe-rail").first();
@@ -549,6 +625,26 @@ try {
       record({
         width,
         scenario: `${language}: five ideas, keyboard details and translated checklist fit`,
+      });
+      await page.goto(`${base}/technology?lng=${language}`);
+      await page.waitForFunction(
+        expected => document.documentElement.lang === expected,
+        language
+      );
+      assert.equal(await page.locator("#onesa-intro article").count(), 4);
+      assert.equal(
+        await page.locator("#technology-industries article").count(),
+        4
+      );
+      assert(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1
+        ),
+        `${language}/${width}: Technology page overflow`
+      );
+      record({
+        width,
+        scenario: `${language}: translated Technology tools and ideas fit`,
       });
     }
     await context.close();

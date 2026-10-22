@@ -107,6 +107,21 @@ jobs:
         env:
           SHOP_BROWSER_CHANNEL: chromium
 
+      - name: Shop integrated HTTP browser workflow
+        run: pnpm test:e2e:shop:integrated
+        env:
+          SHOP_BROWSER_CHANNEL: chromium
+
+      - name: Shop MySQL transaction regressions
+        run: node --import tsx scripts/tests/shop-database.mjs
+        env:
+          SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
+
+      - name: Shop WebKit cart regression tests
+        run: pnpm test:e2e:shop
+        env:
+          SHOP_BROWSER_ENGINE: webkit
+
       - name: Swipeable discovery regression tests
         run: pnpm test:e2e:discovery
         env:
