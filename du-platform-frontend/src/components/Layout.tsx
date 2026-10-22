@@ -1267,11 +1267,11 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           {/* Bottom Bar: Maintain horizontal flex on desktop, vertical on mobile */}
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px]">
+          <div className="border-t border-white/10 pt-8 flex flex-col flex-wrap md:flex-row justify-between items-center gap-6 text-[10px]">
             <p className="text-slate-500 font-medium">
               © 2026 {t("brand")}. {t("all_rights_reserved")}
             </p>
-            <div className="flex gap-6">
+            <div className="flex max-w-full flex-wrap justify-center gap-x-6 gap-y-3">
               <Link
                 href="/privacy-policy"
                 className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold"
