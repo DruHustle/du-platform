@@ -16,8 +16,7 @@ const buttonVariants = cva(
           "border bg-transparent shadow-xs hover:bg-accent dark:bg-transparent dark:border-input dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent dark:hover:bg-accent/50",
+        ghost: "hover:bg-accent dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -52,20 +51,27 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button";
   const normalizedClassName = typeof className === "string" ? className : "";
-  const isIconButton = size === "icon" || size === "icon-sm" || size === "icon-lg";
+  const isIconButton =
+    size === "icon" || size === "icon-sm" || size === "icon-lg";
   const isUtilityVariant = variant === "ghost" || variant === "link";
   const standardWidthClass =
-    !isIconButton && !isUtilityVariant && !hasExplicitWidthClass(normalizedClassName)
+    !isIconButton &&
+    !isUtilityVariant &&
+    !hasExplicitWidthClass(normalizedClassName)
       ? "sm:min-w-[11rem]"
       : "";
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size }), standardWidthClass, className)}
+      className={cn(
+        buttonVariants({ variant, size }),
+        standardWidthClass,
+        className
+      )}
       {...props}
     />
   );
 }
 
-export { Button, buttonVariants };
+export { Button };

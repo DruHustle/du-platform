@@ -282,31 +282,6 @@
       }
     },
     "chat_with_onesa": "Xoxa no-Onesa",
-    "opportunities": {
-      "title": "Amacebo ebhizimusi lokusungula",
-      "ai": {
-        "title": "Ukuhlakanipha okungekhona okwangempela",
-        "driver": "Hlola ukuthi iAI ingancedisa njani ukuhlela ulwazi lokuphendula imibuzo ephindwayo."
-      },
-      "sme": {
-        "title": "I-SME Digitalization",
-        "driver": "Cwaninga amabhizimusi endawo ngezidingo zempahla, iholo loncedo lwamakhasimende."
-      },
-      "cybersecurity": {
-        "title": "I-Cybersecurity",
-        "driver": "Cabanga ngokuvikela ulwazi, amalungelo okungena lokuqeqetsha abasebenzi ngezokuphepha."
-      },
-      "ecommerce": {
-        "title": "E-commerce kanye Logistics",
-        "driver": "Cwaninga ukubonakala kwempahla, ukuhlelwa kokulethwa lokuxhumana lamakhasimende."
-      }
-    },
-    "challenges": {
-      "title": "Izinselele Ezibalulekile Okuzobhekana Nazo",
-      "infrastructure": "Ingqalasizinda: hlola i-inthanethi, amandla adingekayo lezindleko zokusebenza.",
-      "human_capital": "Abantu: hlola amakhono, abasebenzi lokuqeqetshwa okudingwa yiphrojekthi.",
-      "regulation": "Imithetho: qinisekisa amalayisensi, imithelo lemvumo lezingcitshi ezifaneleyo."
-    },
     "onesa_matter": {
       "badge": "Uncedo olusebenzisa iOnesa",
       "title": "IOnesa inika uncedo lapha",
@@ -709,7 +684,47 @@
   },
   "investment": {
     "opportunities": {
-      "subtitle": "Sebenzisa izihloko zemikhakha le njengesiqalo sokucwaninga kwakho."
+      "title": "Amacebo ebhizimusi lokuqamba okutsha",
+      "subtitle": "Ucabanga ukuqala ibhizimusi ekhaya ngemali oyilondolozileyo? Hlola ezemigodi, ezokulima lezokwakha ngamaphrojekthi amancane owazwisisayo, ongawahlelela imali futhi uwalandelele ukwamanye amazwe.",
+      "labels": {
+        "start": "Qala ngokuncane",
+        "budget": "Hlelela izindleko",
+        "checks": "Qala uhlole"
+      },
+      "mining": {
+        "title": "Impahla lezinsiza zemigodi",
+        "summary": "Hlola ukuthengisa impahla zokusebenza, ukuqhatshisa amathuluzi kumbe ukulungisa amaphampu emigodini esebenzayo.",
+        "start": "Linga nge-oda elilodwa lekhasimende lomuntu othembekileyo ekhaya. Ukulungisa kwenziwe ngabantu abaqeqetshiweyo.",
+        "budget": "Impahla kumbe amathuluzi, ukuthutha, ukulungisa lemali yokulinda amakhasimende aphuza ukubhadala.",
+        "checks": "Qinisekisa amalungelo emayini, imbali yokubhadala yekhasimende lokuphepha emsebenzini. Hlola imvumo zomsebenzi wakho. Ukuba lomayini kumbe ukuwusebenzisa kudinga ukuhlolwa okwehlukileyo kwezobuciko lomthetho.",
+        "source": "Chamber of Mines: imithetho lezibopho"
+      },
+      "farming": {
+        "title": "Ukulima lokukhiqiza ukudla",
+        "summary": "Hlola imibhida, izithombo kumbe iqembu elilodwa lenkukhu lomlimi ololwazi ekhaya.",
+        "start": "Thola umthengi livumelane ngobunengi langekhwalithi lingakabhadaleli isizini esisodwa kumbe iqembu elilodwa.",
+        "budget": "Inhlanyelo kumbe amatshiyane, ukudla kwezifuyo, amanzi, abasebenzi, impilo yezilimo kumbe yezifuyo, ukuthutha lokulahlekelwa.",
+        "checks": "Qinisekisa amalungelo okusebenzisa umhlaba, amanzi athembekileyo lemibandela yomthengi. Cela iseluleko kwezokulima; isimo somkhathi, izifo lokungathengiseki kungaqeda imali yesizini.",
+        "source": "ZimTrade: thola abathengi ungakahlanyeli"
+      },
+      "construction": {
+        "title": "Ukwakha lokuthuthukisa izindlu",
+        "summary": "Hlola ukuthengisa impahla yokwakha, ukuqhatshisa amathuluzi kumbe iqembu elincane lokulungisa lokuphelelisa izindlu.",
+        "start": "Bala izindleko zomsebenzi owodwa ocacileyo labantu abaqeqetshiweyo, libhale okumele kwenziwe futhi libhadale umsebenzi usuhloliwe.",
+        "budget": "Impahla, amathuluzi, abasebenzi, ukuthutha, ukuphinda kulungiswe lokuphuza ukubhadalwa ngamakhasimende.",
+        "checks": "Hlola imisebenzi eyake yenziwa ngumakhi lemvumo ezifunwa likhansili. Kumaphrojekthi omhlaba kumbe ezindlu, ubunikazi lemvumo zokwakha kuhlolwe ngumuntu ozimeleyo.",
+        "source": "Harare: iziqondiso zemvumo yokwakha"
+      },
+      "plan": {
+        "title": "Ungakathumeli imali",
+        "intro": "Khetha umsebenzi wokulinga ofanele imali yakho, isikhathi loncedo olusekhaya. La ngamacebo okuchwayisisa; qala uhlole isidingo samakhasimende lenzuzo endaweni oyikhethileyo.",
+        "budget": "Cela intengo zamanje ezibhaliweyo kubathengisi. Faka izindleko zokusebenza kuze kubhadale amakhasimende lemali yokungalindelekanga; hlukanisa imali yekhaya leyokuphuthumayo.",
+        "people": "Hlola ngokuzimela umqhubi, indawo, ubunikazi, amalayisensi lezibopho zemithelo. Ubuhlobo bemuli abuthathi indawo yalokhu kuhlola.",
+        "agreement": "Bhalani ubunikazi, imisebenzi, imibiko, ukwabelana inzuzo lokulahlekelwa, lendlela yokuphuma. Sebenzisani ukubhadala okulobufakazi futhi likhiphe imali ngezinyathelo elivumelane ngazo.",
+        "oversight": "Bhalani ukuthengisa, impahla esele lezindleko endaweni eliyabelanayo. Hlelani ukuhlolwa kwendawo okuzimeleyo liqhathanise ama-invoyisi lamarisithi lingakabhadaleli isigaba esilandelayo.",
+        "cta": "Vula uhlu lokuhlola ungakafaki imali",
+        "note": "Imithombo yokuchwayisisa ihlolwe ngomhlaka 22 Mfumfu 2026. I-DU ayiqinisekisi amabhizimusi la, ayiqoqi imali ndawonye futhi ayiphathi ukutshalwa kwemali. Inzuzo ayiqinisekiswanga njalo imali yakho ingalahleka."
+      }
     },
     "economic_snapshot": {
       "title": "Isifinyezo Somnotho Sabatshali Mali",
@@ -1207,29 +1222,11 @@
     "label": "Breadcrumb",
     "more": "More"
   },
-  "sidebar": {
-    "title": "Sidebar",
-    "description": "Displays the mobile sidebar.",
-    "toggle": "Toggle Sidebar"
-  },
   "globe": {
     "preview_alt": "Globe preview",
     "preview_mode": "Globe preview mode (WebGL unavailable)",
     "music_on": "Music: On",
     "music_off": "Music: Off"
-  },
-  "coming_soon": {
-    "badge": "Coming Soon",
-    "description_saved": "Notify request saved. We will alert you via your account email.",
-    "description_prompt": "Get notified as soon as this feature is available.",
-    "processing": "Processing...",
-    "notify_me": "Notify me",
-    "notified": "Notified",
-    "toast_success_title": "Notify request saved",
-    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
-    "toast_ready": "You will be notified when {{feature}} is ready.",
-    "toast_error_title": "Unable to save notify request",
-    "toast_error_description": "Please try again."
   },
   "admin": {
     "title": "Admin Dashboard",

@@ -292,6 +292,17 @@ try {
       !chunks.some(path => /VirtualExperience|InteractiveGlobe/.test(path)),
       "Navigation downloaded the 3D experience"
     );
+    await page.goto(base + "/coming-soon?lng=en#chat");
+    await page.waitForURL("**/onesa-ai-chat?lng=en#chat");
+    await page
+      .getByRole("textbox", { name: "Message to Onesa", exact: true })
+      .waitFor();
+    assert.equal(await page.getByRole("dialog").count(), 0);
+    record({
+      width,
+      scenario:
+        "retired coming-soon URL opens live chat and preserves query/hash",
+    });
     await context.close();
   }
   assert.deepEqual(errors, []);

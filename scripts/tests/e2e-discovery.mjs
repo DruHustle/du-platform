@@ -115,6 +115,33 @@ try {
           0
         );
         assert(await page.locator("#collective-model h2").isVisible());
+        const ideas = page.locator("#investment-innovation-opportunities");
+        const cards = ideas.locator("article");
+        assert.equal(await cards.count(), 3);
+        const sources = [
+          "www.chamines.co.zw",
+          "tradezimbabwe.com",
+          "www.hararecity.co.zw",
+        ];
+        for (const [index, card] of (await cards.all()).entries()) {
+          // Each idea provides a usable starting plan and a direct primary source,
+          // rather than an investment/payment action or an unverified offer.
+          assert.equal(await card.locator("dl dt").count(), 3);
+          assert(
+            (await card.locator("dl dd").allTextContents()).every(
+              text => text.trim().length > 0
+            )
+          );
+          const source = card.getByRole("link");
+          assert.equal(
+            new URL(await source.getAttribute("href")).hostname,
+            sources[index]
+          );
+          assert.equal(await source.getAttribute("target"), "_blank");
+          assert.match(await source.getAttribute("rel"), /noopener/);
+          assert.match(await source.getAttribute("rel"), /noreferrer/);
+          assert.equal(await card.getByRole("button").count(), 0);
+        }
       }
       assert(
         await page.evaluate(
@@ -328,7 +355,15 @@ try {
       scenario:
         "project filtering resets position; empty recovery and detail navigation work",
     });
-    await page.goto(base + "/regulations#due-diligence-checklist");
+    await page.goto(base + "/investment");
+    await page
+      .locator("#investment-innovation-opportunities")
+      .getByRole("link", {
+        name: "Open the due diligence checklist",
+        exact: true,
+      })
+      .click();
+    await page.waitForURL("**/regulations#due-diligence-checklist");
     await page.locator("#due-diligence-checklist").waitFor();
     await page.waitForFunction(() => {
       const tile = document

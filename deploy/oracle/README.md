@@ -51,8 +51,9 @@ joins each application's private ingress network. Network declarations are
 persisted in its Compose file; validate before a graceful Caddy reload.
 No new public application ports or firewall rules are required.
 
-GitHub health checks use `BACKEND_HEALTH_URL`, `BACKEND_DATABASE_HEALTH_URL` and
-`BACKEND_ONESA_HEALTH_URL`. Monitoring has no retired-host fallback.
+Docker retains its container health check. Use the readiness endpoints above
+for manual release verification; scheduled GitHub probes and health alert emails
+have been removed.
 Oracle container releases are manual, independent from Vercel releases. Keep the
 former Render service suspended with automatic deployments disabled.
 

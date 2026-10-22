@@ -67,6 +67,7 @@ const setup = async (width, options = {}) => {
   const context = await browser.newContext({
     viewport: { width, height: 900 },
     reducedMotion: "reduce",
+    colorScheme: "dark",
   });
   contexts.push(context);
   await context.addInitScript(() =>
@@ -357,6 +358,22 @@ try {
     await dialog.waitFor();
     await page.keyboard.press("Escape");
     await dialog.waitFor({ state: "hidden" });
+    await card("shona-stone-sculpture")
+      .getByRole("button", { name: /Notify Me/i })
+      .click();
+    await dialog.locator("input[type=email]").fill("test@example.test");
+    await dialog
+      .getByRole("button", { name: "Notify Me", exact: true })
+      .click();
+    await dialog.waitFor({ state: "hidden" });
+    await page.locator("[data-sonner-toast]").waitFor();
+    // Notifications follow the app theme even when the OS prefers dark mode.
+    assert.equal(
+      await page
+        .locator("[data-sonner-toaster]")
+        .getAttribute("data-sonner-theme"),
+      "light"
+    );
     // Checkout is fully mocked; no orders, email, or production writes occur.
     if (width < 1024)
       await page.getByRole("button", { name: "Checkout", exact: true }).click();

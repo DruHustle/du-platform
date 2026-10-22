@@ -259,6 +259,21 @@
 .content-page .discovery-tile-copy ul {
   margin-top: 16px;
 }
+.content-page .business-idea-details {
+  margin-top: 20px;
+  display: grid;
+  gap: 16px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.content-page .business-idea-details dt {
+  color: #f8fafc;
+  font-weight: 600;
+}
+.content-page .business-idea-details dd {
+  margin: 4px 0 0;
+  color: #b8c3d4;
+}
 .content-page .discovery-tile-footer {
   margin-top: 24px;
   padding-top: 20px;

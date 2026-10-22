@@ -312,31 +312,6 @@
       "combined": "Onesa ist eine modulare, vielseitige KI-Plattform für europäische und internationale Anwendungen. Diaspora Unlocked nutzt sie für Informationen zu Simbabwe, Produktsuche und Reiseplanung.",
       "read_vision": "Wie Onesa und Diaspora Unlocked zusammengehören"
     },
-    "opportunities": {
-      "title": "Ideen für Wirtschaft und Innovation",
-      "ai": {
-        "title": "Künstliche Intelligenz",
-        "driver": "Prüfen Sie, wie KI Informationen ordnen und Routinefragen beantworten könnte."
-      },
-      "sme": {
-        "title": "KMU-Digitalisierung",
-        "driver": "Ermitteln Sie mit lokalen Betrieben den Bedarf bei Lagerverwaltung, Lohnabrechnung und Kundenbetreuung."
-      },
-      "cybersecurity": {
-        "title": "Cybersicherheit",
-        "driver": "Berücksichtigen Sie Datenschutz, Zugriffskontrollen und Sicherheitsschulungen."
-      },
-      "ecommerce": {
-        "title": "E-Commerce und Logistik",
-        "driver": "Untersuchen Sie Bestandsübersicht, Lieferkoordination und Kundenkommunikation."
-      }
-    },
-    "challenges": {
-      "title": "Kritische Herausforderungen, die es zu bewältigen gilt",
-      "infrastructure": "Infrastruktur: Prüfen Sie Internetanbindung, Strombedarf und Betriebskosten.",
-      "human_capital": "Personal: Ermitteln Sie benötigte Kompetenzen, Stellen und Schulungen.",
-      "regulation": "Regulierung: Klären Sie Genehmigungen, Steuern und Zulassungen mit Fachleuten."
-    },
     "diaspora_use_cases": {
       "relocation": {
         "title": "Orientierung finden",
@@ -709,7 +684,47 @@
   },
   "investment": {
     "opportunities": {
-      "subtitle": "Nutzen Sie diese Branchenthemen als Ausgangspunkt für eigene Recherchen."
+      "title": "Ideen für Unternehmen und Innovation",
+      "subtitle": "Sie möchten mit Ihren Ersparnissen ein Geschäft in Simbabwe aufbauen? Erkunden Sie Bergbau, Landwirtschaft und Bau mit kleinen Vorhaben, die Sie verstehen, kalkulieren und aus dem Ausland begleiten können.",
+      "labels": {
+        "start": "Klein anfangen",
+        "budget": "Kosten einplanen",
+        "checks": "Zuerst prüfen"
+      },
+      "mining": {
+        "title": "Bergbau: Ausrüstung & Dienstleistungen",
+        "summary": "Prüfen Sie Arbeitskleidung, Werkzeugverleih oder Pumpenreparaturen für etablierte Bergbaubetriebe.",
+        "start": "Testen Sie einen Kundenauftrag mit einem verlässlichen Partner vor Ort. Reparaturen gehören in qualifizierte Hände.",
+        "budget": "Waren oder Werkzeuge, Transport, Wartung und Rücklagen für verspätete Kundenzahlungen.",
+        "checks": "Prüfen Sie Bergbaurechte, Zahlungsverhalten und Arbeitssicherheit des Kunden sowie Genehmigungen für Ihre Tätigkeit. Ein eigener Minenbetrieb erfordert eine gesonderte technische und rechtliche Prüfung.",
+        "source": "Bergbaukammer: Gesetze & Pflichten"
+      },
+      "farming": {
+        "title": "Landwirtschaft & Lebensmittel",
+        "summary": "Erkunden Sie Gemüse, Jungpflanzen oder eine Geflügelcharge mit einem erfahrenen Betrieb vor Ort.",
+        "start": "Klären Sie Abnehmer, Menge und Qualitätsanforderungen, bevor Sie einen Anbauzyklus oder eine Charge finanzieren.",
+        "budget": "Saatgut oder Küken, Futter, Wasser, Arbeit, Pflanzen- oder Tiergesundheit, Lieferung und Verluste.",
+        "checks": "Prüfen Sie Landnutzungsrechte, verlässliche Wasserversorgung und Abnahmebedingungen. Holen Sie landwirtschaftlichen Rat ein: Wetter, Krankheiten und unverkaufte Ware können die Einnahmen eines Zyklus aufzehren.",
+        "source": "ZimTrade: Käufer vor der Aussaat finden"
+      },
+      "construction": {
+        "title": "Bau & Hausrenovierung",
+        "summary": "Prüfen Sie Baustoffhandel, Werkzeugverleih oder ein kleines Team für Reparatur- und Ausbauarbeiten.",
+        "start": "Kalkulieren Sie einen klar begrenzten Auftrag mit Fachkräften, schriftlichem Leistungsumfang und Zahlungen nach geprüften Baufortschritten.",
+        "budget": "Material, Werkzeuge, Arbeit, Lieferung, Nachbesserungen und verspätete Kundenzahlungen.",
+        "checks": "Prüfen Sie Referenzen und örtliche Genehmigungspflichten. Lassen Sie bei Grundstücks- oder Immobilienvorhaben Eigentum und Baugenehmigungen unabhängig prüfen.",
+        "source": "Harare: Hinweise zu Baugenehmigungen"
+      },
+      "plan": {
+        "title": "Bevor Sie Geld überweisen",
+        "intro": "Wählen Sie ein Pilotvorhaben passend zu Ersparnissen, Zeit und Unterstützung vor Ort. Diese Geschäftsideen müssen Sie prüfen; Nachfrage und Rentabilität sind am gewählten Standort zu testen.",
+        "budget": "Holen Sie aktuelle schriftliche Angebote ein. Planen Sie Betriebskosten bis zum Zahlungseingang und eine Reserve für Rückschläge ein; halten Sie Haushaltsgeld und Notfallrücklagen getrennt.",
+        "people": "Prüfen Sie Betreiber, Standort, Eigentum, nötige Genehmigungen und Steuerpflichten unabhängig. Verwandtschaft ersetzt diese Prüfung nicht.",
+        "agreement": "Halten Sie Eigentum, Aufgaben, Berichte, Gewinn- und Verlustverteilung sowie Ausstieg schriftlich fest. Zahlen Sie nachvollziehbar und geben Sie Mittel nach vereinbarten Meilensteinen frei.",
+        "oversight": "Dokumentieren Sie Umsatz, Bestände und Ausgaben gemeinsam. Lassen Sie den Standort unabhängig prüfen und gleichen Sie Rechnungen und Belege vor der nächsten Finanzierung ab.",
+        "cta": "Checkliste zur Sorgfaltsprüfung öffnen",
+        "note": "Recherchequellen geprüft am 22. Oktober 2026. DU überprüft diese Unternehmen nicht, bündelt kein Kapital und wickelt keine Investitionen ab. Erträge sind ungewiss; Ihr Kapital ist gefährdet."
+      }
     },
     "economic_snapshot": {
       "title": "Wirtschaftlicher Investoren-Überblick",
@@ -1203,29 +1218,11 @@
     "label": "Breadcrumb",
     "more": "More"
   },
-  "sidebar": {
-    "title": "Sidebar",
-    "description": "Displays the mobile sidebar.",
-    "toggle": "Toggle Sidebar"
-  },
   "globe": {
     "preview_alt": "Globe preview",
     "preview_mode": "Globe preview mode (WebGL unavailable)",
     "music_on": "Music: On",
     "music_off": "Music: Off"
-  },
-  "coming_soon": {
-    "badge": "Coming Soon",
-    "description_saved": "Notify request saved. We will alert you via your account email.",
-    "description_prompt": "Get notified as soon as this feature is available.",
-    "processing": "Processing...",
-    "notify_me": "Notify me",
-    "notified": "Notified",
-    "toast_success_title": "Notify request saved",
-    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
-    "toast_ready": "You will be notified when {{feature}} is ready.",
-    "toast_error_title": "Unable to save notify request",
-    "toast_error_description": "Please try again."
   },
   "admin": {
     "title": "Admin Dashboard",

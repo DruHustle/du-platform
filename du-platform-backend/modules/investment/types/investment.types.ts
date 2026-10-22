@@ -1,1 +1,0 @@
-export type InvestmentModuleTag = "investment";

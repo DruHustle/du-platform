@@ -15,6 +15,12 @@ Active domains are home, tourism, investment, technology, shop, authentication,
 legal content, search, Onesa AI, and administration. The UI supports English,
 German, Shona, and Ndebele through locale files in `public/locales/`.
 
+The shared UI directory contains components used by the application, rather than
+an unused component catalogue. `contexts/ThemeContext.tsx` owns the application
+theme, including toast notifications. Add dependencies when a route or shared
+component needs them; keep the root manifest and lockfile in sync when retiring
+components.
+
 ## Backend
 
 `du-platform-backend/server.ts` installs core middleware, system endpoints, domain

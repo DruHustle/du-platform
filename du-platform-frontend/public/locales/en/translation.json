@@ -281,31 +281,6 @@
         "d2": "Find questions and topics for further study"
       }
     },
-    "opportunities": {
-      "title": "Ideas for business and innovation",
-      "ai": {
-        "title": "Artificial Intelligence",
-        "driver": "Explore how AI could help organise information and answer routine questions."
-      },
-      "sme": {
-        "title": "SME Digitalization",
-        "driver": "Research inventory, payroll and customer-support needs with local businesses."
-      },
-      "cybersecurity": {
-        "title": "Cybersecurity",
-        "driver": "Consider data protection, access control and staff security training."
-      },
-      "ecommerce": {
-        "title": "E-commerce and Logistics",
-        "driver": "Research stock visibility, delivery coordination and communication with customers."
-      }
-    },
-    "challenges": {
-      "title": "Critical Challenges to Address",
-      "infrastructure": "Infrastructure: check connectivity, power requirements and operating costs.",
-      "human_capital": "People: assess the skills, staffing and training a project would need.",
-      "regulation": "Regulation: confirm licensing, tax and approval requirements with qualified advisers."
-    },
     "chat_with_onesa": "Chat with Onesa",
     "onesa_matter": {
       "badge": "Onesa-powered assistance",
@@ -709,7 +684,47 @@
   },
   "investment": {
     "opportunities": {
-      "subtitle": "Explore these sector themes as a starting point for your own research."
+      "title": "Ideas for business and innovation",
+      "subtitle": "Thinking of building a business back home with your savings? Explore mining, farming and construction through small projects you can understand, budget for and follow from abroad.",
+      "labels": {
+        "start": "Start small",
+        "budget": "Budget for",
+        "checks": "Check first"
+      },
+      "mining": {
+        "title": "Mining supplies & services",
+        "summary": "Investigate workwear supply, tool hire or pump repairs for established mining operators.",
+        "start": "Test one customer order with a reliable local operator. Use qualified technicians for repairs.",
+        "budget": "Stock or tools, transport, maintenance and cash to cover late customer payments.",
+        "checks": "Verify the customer’s mining title, payment history and site safety. Confirm permits for your activity. Owning or operating a mine needs a separate technical and legal assessment.",
+        "source": "Chamber of Mines: laws & obligations"
+      },
+      "farming": {
+        "title": "Farming & food production",
+        "summary": "Explore vegetables, seedlings or a poultry batch with an experienced local grower.",
+        "start": "Agree a buyer, quantity and quality requirements before funding one growing cycle or batch.",
+        "budget": "Seed or chicks, feed, water, labour, crop or animal health, delivery and losses.",
+        "checks": "Verify land-use rights, reliable water and the buyer’s terms. Get local agricultural advice; weather, disease and unsold produce can wipe out a cycle’s income.",
+        "source": "ZimTrade: finding buyers before planting"
+      },
+      "construction": {
+        "title": "Construction & home improvements",
+        "summary": "Research building-material supply, tool hire or a small repairs and finishing team.",
+        "start": "Cost one defined job with qualified tradespeople, a written scope and payments tied to inspected work.",
+        "budget": "Materials, tools, labour, delivery, rework and delays in customer payment.",
+        "checks": "Check contractor references and the local council’s approval requirements. For any land or property project, have ownership and building permissions checked independently.",
+        "source": "Harare: building permit guidance"
+      },
+      "plan": {
+        "title": "Before you send money",
+        "intro": "Choose a pilot that fits your savings, available time and local support. These are business ideas to investigate; demand and profitability must be tested in your chosen area.",
+        "budget": "Get current written supplier quotes. Include running costs until customers pay and a reserve for setbacks; keep household and emergency savings separate.",
+        "people": "Independently check the operator, site, ownership, relevant licences and tax obligations. Family connections do not replace these checks.",
+        "agreement": "Put ownership, responsibilities, reporting, profit and loss sharing, and exit terms in writing. Use traceable payments and release money against agreed milestones.",
+        "oversight": "Track sales, stock and spending in a shared record. Arrange independent site checks and reconcile invoices and receipts before funding the next stage.",
+        "cta": "Open the due diligence checklist",
+        "note": "Research starting points checked 22 October 2026. DU does not verify these businesses, pool money or process investments. Returns are uncertain and your capital is at risk."
+      }
     },
     "economic_snapshot": {
       "title": "Investor Economic Snapshot",
@@ -1269,29 +1284,11 @@
     "label": "Breadcrumb",
     "more": "More"
   },
-  "sidebar": {
-    "title": "Sidebar",
-    "description": "Displays the mobile sidebar.",
-    "toggle": "Toggle Sidebar"
-  },
   "globe": {
     "preview_alt": "Globe preview",
     "preview_mode": "Globe preview mode (WebGL unavailable)",
     "music_on": "Music: On",
     "music_off": "Music: Off"
-  },
-  "coming_soon": {
-    "badge": "Coming Soon",
-    "description_saved": "Notify request saved. We will alert you via your account email.",
-    "description_prompt": "Get notified as soon as this feature is available.",
-    "processing": "Processing...",
-    "notify_me": "Notify me",
-    "notified": "Notified",
-    "toast_success_title": "Notify request saved",
-    "toast_already_on_list": "You are already on the notify list for {{feature}}.",
-    "toast_ready": "You will be notified when {{feature}} is ready.",
-    "toast_error_title": "Unable to save notify request",
-    "toast_error_description": "Please try again."
   },
   "admin": {
     "title": "Admin Dashboard",
