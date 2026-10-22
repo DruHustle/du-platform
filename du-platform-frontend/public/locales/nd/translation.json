@@ -181,27 +181,37 @@
         "title": "Thenga",
         "description": "Thola ukudla, imisebenzi yezandla lezigqoko zabalandeli zeZimbabwe zekhaya kumbe izipho.",
         "detail": "Faka okufunayo enqoleni uthumele isicelo se-oda. Qala uqinisekise ukutholakala, ukudiliva lokubhadala leqembu.",
-        "stats": "Bona impahla"
+        "stats": "Bona impahla",
+        "image_alt": "Imithunzi yendlulamithi lezihlahla zomunga ekutshoneni kwelanga"
       },
       "technology": {
         "title": "Ubuchwepheshe",
         "description": "Yazi iOnesa, inkundla yeAI enika uncedo kuDiaspora Unlocked.",
         "detail": "Buza ngeZimbabwe, hlola amacebo uthole uncedo ngempahla, amathuba lezinhlelo zohambo.",
-        "stats": "Onesa AI"
+        "stats": "Onesa AI",
+        "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna"
       },
       "investment": {
         "title": "Investment",
-        "description": "Hlola amaphrofayili amaphrojekthi ezokuvakasha, ezokulima, ezokukhiqiza, ezobuchwepheshe lamandla.",
-        "detail": "Funda ngesimo sephrojekthi ulungise imibuzo kubanikazi. Imigomo yemali lokutholakala kudinga ukuqinisekiswa okuzimeleyo.",
-        "stats": "Bona amaphrofayili"
+        "description": "Hlola imibono yamabhizimusi ekulimeni, ekwakheni, emisebenzini esekela izimayini lasekuthengiseni kwansuku zonke.",
+        "detail": "Qala ngombono ongawenelisa, zwisisa izindleko lobungozi, uqinisekise imininingwane ungakafaki imali.",
+        "stats": "Hlola imibono yebhizimusi",
+        "image_alt": "Imibhida emitsha emabhasikitini"
       },
       "tourism": {
         "title": "Ezokuvakasha",
         "description": "Yazi impophoma, inyamazana zeganga, amagugu lezindawo zokuvakatshela eZimbabwe.",
         "detail": "Qathanisa izindawo, bona izibonelo zohambo wenze uhlelo lokuqala lohambo ngeOnesa.",
-        "stats": "Thola lapho ofuna ukuya khona"
+        "stats": "Thola lapho ofuna ukuya khona",
+        "image_alt": "Izimpophoma zeVictoria Falls lendawo eluhlaza ezizungezileyo eZimbabwe"
       }
-    }
+    },
+    "discovery": {
+      "title": "Hlola iZimbabwe ngendlela yakho.",
+      "description": "Thola okwekhaya, umbono webhizimusi ongawucwaninga kumbe indawo ongayivakatshela. Qala ngalokho okukuthandayo."
+    },
+    "hero_pause": "Misa imifanekiso",
+    "hero_resume": "Qhubeka ngemifanekiso"
   },
   "tech": {
     "chat_with_onesa": "Xoxa no-Onesa",
@@ -300,41 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Buyela kuEzokuvakasha",
-    "hero": {
-      "badge1": "Vakashela iZimbabwe",
-      "title1": "Hlela",
-      "subtitle1": "Qathanisa impophoma, inyamazana zeganga lezindawo zamagugu, ukwenze uhlelo lohambo.",
-      "highlight1": "uhambo lwakho lweZimbabwe",
-      "badge2": "Amagugu amasiko",
-      "title2": "Hlola amagugu aphilayo",
-      "subtitle2": "Bona izindawo zomlando lamasiko zokuhlanganisa lokuvakatshela imuli lokubuka izindawo.",
-      "highlight2": "Izimpande zasendulo",
-      "badge3": "Uhambo lwentshisekelo",
-      "title3": "Izinyamazana le-Safari",
-      "subtitle3": "Ukuhlangana okungenakulibaleka eziqiwini zelizwe ezinhle kakhulu.",
-      "highlight3": "Imvelo emsulwa",
-      "badge4": "Indawo yomlando",
-      "title4": "IZimbabwe Enkulu",
-      "subtitle4": "Izinsalela zamatshe zasendulo ezibonisa impucuko yase-Africa yasendulo.",
-      "badge5": "Indawo yentshisekelo",
-      "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Zibonele intuthu iduma eVitoria Falls.",
-      "plan_journey": "Hlela uhambo lwakho",
-      "watch_exp": "Bukela okwenzakalayo",
-      "book_trip": "Bhuka Uhambo",
-      "virtual_center": "I-Virtual Reality",
-      "local_guide_ar": "Umhlahlandlela wendawo",
-      "badge6": "I-UNESCO Wilderness",
-      "title6": "Mana Pools Experience",
-      "subtitle6": "Amathafa adla imifula, uhambo lokuhamba ngezinyawo, kanye nokubukwa kwezilwane zasendle okuphambili kwenye yezindawo ezimangalisayo zase-Afrika.",
-      "badge7": "Amapaki Esizwe",
-      "title7": "Hwange Wildlife Corridor",
-      "subtitle7": "Isiqiwu esikhulu kunazo zonke eZimbabwe, esaziwa ngomhlambi wezindlovu kanye namandla okusafari aqinile.",
-      "badge8": "Ichibi & Leisure",
-      "title8": "I-Kariba Adventure Tourism",
-      "subtitle8": "Izikebhe zasendlini, ukudoba kwezemidlalo, kanye nohambo lwemikhumbi olunendawo enhle luyaqhubeka nokuheha izivakashi zesifunda nezamazwe ngamazwe."
-    },
-    "attractions_title": "Izindawo okumele uzivakashele",
+    "attractions_title": "Qala ngendawo ongayivakatshela",
     "attractions": {
       "vicfalls": {
         "name": "I-Victoria Falls",
@@ -427,8 +403,8 @@
         }
       }
     },
-    "other_attractions_title": "Ezinye izindawo ezimangalisayo",
-    "other_attractions_subtitle": "Ngaphandle kwezindawo eziveleleyo, iZimbabwe inezinhlobonhlobo zezindawo lezinyamazana elizweni lonke.",
+    "other_attractions_title": "Qhubeka uhlola",
+    "other_attractions_subtitle": "Bona amachibi, uhambe ezintabeni uvakatshele lezindawo zenyamazana ezithuleyo. Qathanisa izindawo ungakakhethi indlela.",
     "other_attractions": {
       "hwange": {
         "name": "Hwange National Park",
@@ -498,7 +474,6 @@
       "img_alt": "Isikhokhelo se-Onesa AI",
       "title": "Isiqalo sokuvakatsha kwakho",
       "subtitle": "Buza ngezindawo, amasiko lamacebo ohambo. IOnesa isiza ukulungisa imibuzo lohlelo lokuqala; abahlinzeki baqinisekisa intengo lamabhukhingi.",
-      "companion_title": "Hlola izindawo wenze uhlelo lokuqala lohambo",
       "companion_subtitle": "Xoxa ngokuthandayo, qathanisa izindawo uhlele indlela. Qinisekisa izikhathi zokuvula, ezokuthutha lokutholakala ungakahambi.",
       "virtual_preview": {
         "title": "Hlola izindawo ngeVR",
@@ -601,7 +576,12 @@
         "increase_infants": "Khulisa izingane",
         "nearest_airport_hint": "Isikhumulo esiseduze esiphakanyisiweyo; qinisekisa izindlela lendiza yakho"
       },
-      "personalized_experience": "Bona izindawo ezihambelana lokuthandayo, ubusulungisa uhlelo ngolwazi lwamanje lwabahlinzeki."
+      "image_alts": {
+        "chat": "Umfanekiso wowesifazane lendlovu endaweni yesavanna",
+        "ar": "Imiduli yamatshe lamanxiwa eGreat Zimbabwe",
+        "trip": "Izimpophoma zeVictoria Falls eZimbabwe",
+        "vr": "Intaba elamatshe esemfanekisweni wesibonelo seSample City"
+      }
     },
     "cta_title": "Kuyini ofuna ukukuhlola?",
     "cta_button": "Xhumana lochwepheshe",
@@ -629,7 +609,8 @@
       "p3_between": "kungaba yingxenye yohambo, kusukela kusadza lemibhida ukuya ezindaweni zekhofi lokudla eceleni kwechibi.",
       "cultural_tourism": "Ezokuvakasha kwamasiko",
       "p3_after_cultural": "kwengeza izindawo zamagugu, umculo, izibaza lamasiko. Kuhlanganise lezindawo zezinyamazana ngokuthandayo, ubusuqinisekisa amalungiselelo okuvakatshela endaweni.",
-      "virtual_experience_center_cta": "Bona izibonelo zezindawo"
+      "virtual_experience_center_cta": "Bona izibonelo zezindawo",
+      "read_more": "Okunye ngokuhamba eZimbabwe"
     },
     "ar": {
       "seo": {
@@ -642,6 +623,18 @@
         "title": "Uhambo lweVirtual",
         "description": "Zama iDolobho Lokubonisa elilemifanekiso ezungezileyo, izindawo ezimqoka kanye lokulandisa ongakukhetha. Uhambo lwevirtual ezindaweni zeZimbabwe alukatholakali."
       }
+    },
+    "landing": {
+      "eyebrow": "Hlola iZimbabwe",
+      "title": "Bona okunengi kwe",
+      "highlight": "Zimbabwe.",
+      "description": "Okwelanga, impelaviki kumbe uhambo oluya ekhaya. Hlola izimpophoma, inyamazana lamagugu, uhlele ngokwesikhathi sakho lalokho okuthandayo.",
+      "principle": "Imibono ekuncedisa ukuhlela. Qinisekisa ukungena, amanani lokubhukha ngqo labahlinzeki.",
+      "image_alt": "Izimpophoma zeVictoria Falls lendawo eluhlaza ezizungezileyo eZimbabwe",
+      "caption": "Victoria Falls · Zimbabwe",
+      "destinations_cta": "Hlola izindawo",
+      "destinations_description": "Vula indawo ukuze ubone okuqakathekileyo, ongakwenza, iziqondiso zesikhathi somnyaka lemithombo yokucwaninga.",
+      "back_to_destinations": "Buyela ezindaweni"
     }
   },
   "investment": {

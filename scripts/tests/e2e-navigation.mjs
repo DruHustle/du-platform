@@ -183,7 +183,7 @@ try {
       );
       if (path !== "/") {
         const hero = page.locator(
-          ["/investment", "/technology"].includes(path)
+          ["/investment", "/technology", "/tourism"].includes(path)
             ? ".discovery-hero-media img"
             : "#sub-page-hero-wrapper img"
         );

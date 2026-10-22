@@ -181,27 +181,37 @@
         "title": "Shop",
         "description": "Tsvaga zvekudya, mabasa emaoko nembatya dzevatsigiri zveZimbabwe zvekumba kana zvipo.",
         "detail": "Isa zvaunoda mudengu wotumira chikumbiro cheodha. Tanga wasimbisa kuwanikwa, kutumirwa nekubhadhara nechikwata.",
-        "stats": "Ona zvigadzirwa"
+        "stats": "Ona zvigadzirwa",
+        "image_alt": "Mumvuri wetwiza nemiti yemuunga pakunyura kwezuva"
       },
       "technology": {
         "title": "Vadivelu Comedy Technology",
         "description": "Ziva Onesa, chikuva cheAI chinopa rubatsiro paDiaspora Unlocked.",
         "detail": "Bvunza nezveZimbabwe, ongorora mazano uye uwane rubatsiro pazvigadzirwa, mikana nenzendo.",
-        "stats": "Onesa AI"
+        "stats": "Onesa AI",
+        "image_alt": "Mufananidzo wemukadzi nenzou musango resavanna"
       },
       "investment": {
         "title": "Investment",
-        "description": "Ongorora mapurojekiti ekushanya, kurima, kugadzira, tekinoroji nesimba.",
-        "detail": "Verenga mamiriro epurojekiti uye gadzira mibvunzo yevaridzi. Zvemari nekuwanikwa zvinoda kusimbiswa kwakazvimirira.",
-        "stats": "Ona mapurojekiti"
+        "description": "Ongorora pfungwa dzemabhizinesi mukurima, kuvaka, mabasa anotsigira migodhi nekutengeserana kwezuva nezuva.",
+        "detail": "Tanga nepfungwa yaunokwanisa, nzwisisa mari nenjodzi, uye simbisa zvakadzama usati waisa mari.",
+        "stats": "Ongorora pfungwa dzebhizinesi",
+        "image_alt": "Miriwo mitsva iri mumatengu"
       },
       "tourism": {
         "title": "Tourism",
         "description": "Ziva mapopoma, mhuka dzesango, nhaka nenzvimbo dzekushanyira muZimbabwe.",
         "detail": "Enzanisa nzvimbo, ona mienzaniso yezvauchashanyira uye gadzira hurongwa hwekutanga hwerwendo naOnesa.",
-        "stats": "Tsvaga kwaunoda kuenda"
+        "stats": "Tsvaga kwaunoda kuenda",
+        "image_alt": "Mapopoma eVictoria Falls nenzvimbo yakasvibira yakaapoteredza muZimbabwe"
       }
-    }
+    },
+    "discovery": {
+      "title": "Ongorora Zimbabwe nenzira yako.",
+      "description": "Tsvaga zvinhu zvepamba, pfungwa yebhizinesi yekutsvakurudza kana nzvimbo yekushanyira. Tanga nezvinokufadza."
+    },
+    "hero_pause": "Misa mifananidzo",
+    "hero_resume": "Enderera nemifananidzo"
   },
   "tech": {
     "chat_with_onesa": "Taura naOnesa",
@@ -300,41 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Dzokera kuUshanyi",
-    "hero": {
-      "badge1": "Shanyira Zimbabwe",
-      "title1": "Ronga",
-      "subtitle1": "Enzanisa mapopoma, mhuka dzesango nenzvimbo dzenhaka, wozvironga kuva rwendo.",
-      "highlight1": "rwendo rwako rweZimbabwe",
-      "badge2": "Nhaka yeTsika",
-      "title2": "Ongorora nhaka inorarama",
-      "subtitle2": "Ona nzvimbo dzenhoroondo netsika dzekusanganisa nekushanyira mhuri nekuona nzvimbo.",
-      "highlight2": "Midzi yeKare",
-      "badge3": "Kufara muSango",
-      "title3": "Mhuka neSafari",
-      "subtitle3": "Kusangana nemhuka mumasango asina kumbobatwa.",
-      "highlight3": "Sango remusikirwo",
-      "badge4": "Nzvimbo yenhoroondo",
-      "title4": "Great Zimbabwe",
-      "subtitle4": "Masvingo amabwe anoratidza budiriro yeAfrica yekare.",
-      "badge5": "Pakati peKufara",
-      "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Zvionere utsi hunotinhira paVictoria Falls.",
-      "plan_journey": "Ronga Rwendo Rwako",
-      "watch_exp": "Ona Zviri Kuitika",
-      "book_trip": "Bhuka Rwendo",
-      "virtual_center": "Virtual Reality",
-      "local_guide_ar": "Mutungamiriri wenzvimbo",
-      "badge6": "UNESCO Wilderness",
-      "title6": "Mana Pools Experience",
-      "subtitle6": "Mapani ane rwizi, mafambiro ekufamba, uye kuona mhuka dzesango dzepamusoro mune imwe yenzvimbo dzinoyevedza dzeAfrica.",
-      "badge7": "National Parks",
-      "title7": "Hwange Wildlife Corridor",
-      "subtitle7": "Zimbabwe's largest national park, inozivikanwa nekufudza nzou uye yakasimba safari inokwanisa.",
-      "badge8": "Lake & Leisure",
-      "title8": "Kariba Adventure Tourism",
-      "subtitle8": "Zvikepe zvepamba, hove dzemitambo, uye rwendo rwekushanya zvinoyevedza zvinoramba zvichikwezva vashanyi vedunhu nevekunze."
-    },
-    "attractions_title": "Nzvimbo dzinofanirwa Kushanyirwa",
+    "attractions_title": "Tanga nenzvimbo yekushanyira",
     "attractions": {
       "vicfalls": {
         "name": "Mapopoma eVhitori",
@@ -427,8 +403,8 @@
         }
       }
     },
-    "other_attractions_title": "Dzimwe Nzvimbo dzinoshamisa",
-    "other_attractions_subtitle": "Kunze kwenzvimbo dzinozivikanwa, Zimbabwe ine sango nemhuka zvakasiyana-siyana.",
+    "other_attractions_title": "Ramba uchiongorora",
+    "other_attractions_subtitle": "Wanawo maonero emadziva, kufamba mumakomo nenzvimbo dzakanyarara dzemhuka. Enzanisa nzvimbo usati wasarudza nzira.",
     "other_attractions": {
       "hwange": {
         "name": "Sango reHwange",
@@ -498,7 +474,6 @@
       "img_alt": "Onesa AI Gwara",
       "title": "Pekutangira kushanya kwako",
       "subtitle": "Bvunza nezvenzvimbo, tsika nemazano enzendo. Onesa inobatsira kugadzira mibvunzo nehurongwa; vanopa mabasa vanosimbisa mitengo nebookings.",
-      "companion_title": "Ongorora nzvimbo ugadzire hurongwa hwekutanga",
       "companion_subtitle": "Taura zvaunofarira, enzanisa nzvimbo uye ronga nzira. Simbisa nguva dzekuvhura, zvifambiso nekuwanikwa usati wafamba.",
       "virtual_preview": {
         "title": "Ongorora nzvimbo muVR",
@@ -601,7 +576,12 @@
         "increase_infants": "Wedzera vacheche",
         "nearest_airport_hint": "Nhandare iri pedyo inokurudzirwa; simbisa nzira nendege yako"
       },
-      "personalized_experience": "Ona nzvimbo dzinoenderana nezvaunofarira, wozogadzirisa hurongwa neruzivo rwazvino rwevanopa mabasa."
+      "image_alts": {
+        "chat": "Mufananidzo wemukadzi nenzou musango resavanna",
+        "ar": "Masvingo ematombo nematongo eGreat Zimbabwe",
+        "trip": "Mapopoma eVictoria Falls muZimbabwe",
+        "vr": "Chikomo chine matombo chiri mumufananidzo wemuenzaniso weSample City"
+      }
     },
     "cta_title": "Chii chaunoda kuongorora?",
     "cta_button": "Taura neNyanzvi",
@@ -629,7 +609,8 @@
       "p3_between": "kunogona kuiswa murwendo, kubva kusadza nemuriwo kusvika kunzvimbo dzekofi nezvekudya pedyo nedhamu.",
       "cultural_tourism": "Cultural tourism",
       "p3_after_cultural": "kunowedzera nzvimbo dzenhaka, mimhanzi, zvivezwa netsika. Sanganisa izvi nenzvimbo dzemhuka zvinoenderana nezvaunoda, wozosimbisa kushanya nemuno.",
-      "virtual_experience_center_cta": "Ona mienzaniso yenzvimbo"
+      "virtual_experience_center_cta": "Ona mienzaniso yenzvimbo",
+      "read_more": "Zvimwe nezvekufamba muZimbabwe"
     },
     "ar": {
       "seo": {
@@ -642,6 +623,18 @@
         "title": "Kushanya kweVirtual",
         "description": "Edza Guta Rekuyedza rine mifananidzo yakatenderedza, nzvimbo dzinonakidza uye rondedzero yezwi yaungasarudza. Kushanya kwevirtual kunzvimbo dzeZimbabwe hakusati kwawanikwa."
       }
+    },
+    "landing": {
+      "eyebrow": "Ongorora Zimbabwe",
+      "title": "Ona zvimwe zve",
+      "highlight": "Zimbabwe.",
+      "description": "Kwezuva rimwe, kupera kwevhiki kana rwendo rwekudzokera kumusha. Ongorora mapopoma, mhuka nenhaka, woronga zvinoenderana nenguva yako nezvaunofarira.",
+      "principle": "Pfungwa dzekukubatsira kuronga. Simbisa kupinda, mitengo nekubhuka zvakananga nevanopa mabasa.",
+      "image_alt": "Mapopoma eVictoria Falls nenzvimbo yakasvibira yakaapoteredza muZimbabwe",
+      "caption": "Victoria Falls · Zimbabwe",
+      "destinations_cta": "Ongorora nzvimbo",
+      "destinations_description": "Vhura nzvimbo kuti uone zvinokosha, zvekuita, mazano emwaka nemanyuko ekutsvakurudza.",
+      "back_to_destinations": "Dzokera kunzvimbo"
     }
   },
   "investment": {

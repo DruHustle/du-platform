@@ -181,27 +181,37 @@
         "title": "Geschäft",
         "description": "Finden Sie Lebensmittel, Kunsthandwerk und Fanbekleidung aus Simbabwe für zu Hause oder als Geschenk.",
         "detail": "Stellen Sie einen Warenkorb zusammen und senden Sie eine Bestellanfrage. Klären Sie Verfügbarkeit, Lieferung und Zahlung vor dem Kauf mit dem Team.",
-        "stats": "Produkte ansehen"
+        "stats": "Produkte ansehen",
+        "image_alt": "Giraffen und Akazien als Silhouetten im Sonnenuntergang"
       },
       "technology": {
         "title": "Technologie",
         "description": "Lernen Sie Onesa kennen, die KI-Plattform hinter der Assistenz auf Diaspora Unlocked.",
         "detail": "Stellen Sie Fragen zu Simbabwe und erhalten Sie Hilfe bei Produkten, Geschäftsideen und Reiseplänen.",
-        "stats": "Onesa KI"
+        "stats": "Onesa KI",
+        "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft"
       },
       "investment": {
         "title": "Investition",
-        "description": "Entdecken Sie Projektprofile aus Tourismus, Landwirtschaft, Industrie, Technologie und Energie.",
-        "detail": "Lesen Sie Hintergründe und sammeln Sie Fragen an Projektträger. Finanzierungskonditionen und Verfügbarkeit müssen unabhängig bestätigt werden.",
-        "stats": "Projektprofile ansehen"
+        "description": "Entdecke praktische Geschäftsideen in Landwirtschaft, Bau, Bergbaudienstleistungen und Handel.",
+        "detail": "Beginne mit einer überschaubaren Idee, verstehe Kosten und Risiken und prüfe die Details, bevor du Geld investierst.",
+        "stats": "Geschäftsideen entdecken",
+        "image_alt": "Frisches Gemüse in Körben"
       },
       "tourism": {
         "title": "Tourismus",
         "description": "Entdecken Sie Wasserfälle, Wildtiere, Kulturerbestätten und Reiseziele in Simbabwe.",
         "detail": "Vergleichen Sie Reiseziele, sehen Sie virtuelle Vorschauen und erstellen Sie mit Onesa einen unverbindlichen Reiseplan.",
-        "stats": "Reiseziel finden"
+        "stats": "Reiseziel finden",
+        "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe"
       }
-    }
+    },
+    "discovery": {
+      "title": "Entdecke Simbabwe auf deine Art.",
+      "description": "Finde etwas für dein Zuhause, eine Geschäftsidee zum Recherchieren oder ein Reiseziel. Beginne dort, wo dein Interesse liegt."
+    },
+    "hero_pause": "Bilder pausieren",
+    "hero_resume": "Bilder fortsetzen"
   },
   "tech": {
     "chat_with_onesa": "Chatten Sie mit Onesa",
@@ -300,41 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Zurueck zum Tourismus",
-    "hero": {
-      "badge1": "Besuchen Sie Simbabwe",
-      "title1": "Planen Sie",
-      "subtitle1": "Vergleichen Sie Wasserfälle, Wildtiere und Kulturerbestätten und machen Sie aus Ihren Interessen einen Reiseplan.",
-      "highlight1": "Ihre Simbabwe-Reise",
-      "badge2": "Kulturelles Erbe",
-      "title2": "Lebendiges Erbe entdecken",
-      "subtitle2": "Entdecken Sie historische Orte und Kulturangebote für Familienbesuche und Besichtigungen.",
-      "highlight2": "Uralte Wurzeln",
-      "badge3": "Abenteuer",
-      "title3": "Wildtiere & Safari",
-      "subtitle3": "Unvergessliche Begegnungen in unberührten Nationalparks.",
-      "highlight3": "Unberührte Natur",
-      "badge4": "Historische Stätte",
-      "title4": "Groß-Simbabwe",
-      "subtitle4": "Antike Ruinen, die die mittelalterliche afrikanische Zivilisation zeigen.",
-      "badge5": "Abenteuer-Hub",
-      "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Erleben Sie den „Donnernden Rauch“ an den Victoriafällen.",
-      "plan_journey": "Reise planen",
-      "watch_exp": "Erlebnis ansehen",
-      "book_trip": "Reise buchen",
-      "virtual_center": "Virtuelle Realität",
-      "local_guide_ar": "Lokaler Führer",
-      "badge6": "UNESCO-Wildnis",
-      "title6": "Mana-Pools-Erlebnis",
-      "subtitle6": "Von Flüssen gespeiste Ebenen, Wandersafaris und erstklassige Tierbeobachtungen in einer der symbolträchtigsten Landschaften Afrikas.",
-      "badge7": "Nationalparks",
-      "title7": "Hwange Wildlife Corridor",
-      "subtitle7": "Simbabwes größter Nationalpark, bekannt für Elefantenherden und großes Safari-Potenzial.",
-      "badge8": "See & Freizeit",
-      "title8": "Kariba-Abenteuertourismus",
-      "subtitle8": "Hausboote, Sportfischen und malerische Kreuzfahrten ziehen weiterhin regionale und internationale Besucher an."
-    },
-    "attractions_title": "Top-Reiseziele",
+    "attractions_title": "Beginne mit einem Reiseziel",
     "attractions": {
       "vicfalls": {
         "name": "Victoriafälle",
@@ -427,8 +403,8 @@
         }
       }
     },
-    "other_attractions_title": "Weitere unglaubliche Ziele",
-    "other_attractions_subtitle": "Jenseits der Klassiker bietet Simbabwe vielfältige Landschaften und Wildtiererlebnisse.",
+    "other_attractions_title": "Weiter entdecken",
+    "other_attractions_subtitle": "Entdecke Seeblicke, Wanderungen im Hochland und ruhigere Wildtiergebiete. Vergleiche Orte, bevor du deine Route wählst.",
     "other_attractions": {
       "hwange": {
         "name": "Hwange-Nationalpark",
@@ -498,7 +474,6 @@
       "img_alt": "Onesa KI-Leitfaden",
       "title": "Ein Ausgangspunkt für Ihren Besuch",
       "subtitle": "Fragen Sie nach Zielen, lokalen Gepflogenheiten und Reiseideen. Onesa hilft bei Fragen und Reiseentwürfen; Anbieter bestätigen Preise und Buchungen.",
-      "companion_title": "Reiseziele erkunden und einen Reiseplan entwerfen",
       "companion_subtitle": "Besprechen Sie Interessen, vergleichen Sie Orte und planen Sie eine Route. Klären Sie Öffnungszeiten, Verkehr und Verfügbarkeit vor der Reise direkt.",
       "virtual_preview": {
         "title": "Interaktive Vorschauen",
@@ -601,7 +576,12 @@
         "increase_infants": "Säuglinge erhöhen",
         "nearest_airport_hint": "Vorgeschlagener Flughafen; Flugverbindungen bei der Fluggesellschaft prüfen"
       },
-      "personalized_experience": "Entdecken Sie passende Orte und verfeinern Sie den Plan mit aktuellen Anbieterinformationen."
+      "image_alts": {
+        "chat": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft",
+        "ar": "Steinmauern und Ruinen von Great Zimbabwe",
+        "trip": "Die Victoriafälle in Simbabwe",
+        "vr": "Felsiger Hang im Sample-City-Demopanorama"
+      }
     },
     "cta_title": "Was möchten Sie entdecken?",
     "cta_button": "Mit einem Experten sprechen",
@@ -629,7 +609,8 @@
       "p3_between": "kann Ihren Reiseplan bereichern: von Sadza und lokalen Beilagen bis zu Kaffeeanbaugebieten und Essen am See.",
       "cultural_tourism": "Kulturtourismus",
       "p3_after_cultural": "ergänzt Kulturerbestätten, Musik, Skulpturen und lokale Traditionen. Kombinieren Sie diese mit Wildtierzielen und klären Sie Besuchsmöglichkeiten vor Ort.",
-      "virtual_experience_center_cta": "Virtuelle Vorschauen ansehen"
+      "virtual_experience_center_cta": "Virtuelle Vorschauen ansehen",
+      "read_more": "Mehr über Reisen in Simbabwe"
     },
     "ar": {
       "seo": {
@@ -642,6 +623,18 @@
         "title": "Virtuelles Tourismuserlebnis",
         "description": "Testen Sie eine Demo-Stadt mit Panoramabildern, Sehenswürdigkeiten und optionaler Sprachausgabe. Virtuelle Touren zu Zielen in Simbabwe sind noch nicht verfügbar."
       }
+    },
+    "landing": {
+      "eyebrow": "Simbabwe entdecken",
+      "title": "Entdecke mehr von",
+      "highlight": "Simbabwe.",
+      "description": "Für einen Tag, ein Wochenende oder eine Reise nach Hause. Entdecke Wasserfälle, Tierwelt und Kulturerbe und plane nach deiner Zeit und deinen Interessen.",
+      "principle": "Ideen für deine Planung. Bestätige Zugang, Preise und Buchungen direkt bei den Anbietern.",
+      "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe",
+      "caption": "Victoriafälle · Simbabwe",
+      "destinations_cta": "Reiseziele entdecken",
+      "destinations_description": "Öffne ein Reiseziel für Höhepunkte, Aktivitäten, saisonale Hinweise und Quellen für deine Recherche.",
+      "back_to_destinations": "Zurück zu den Reisezielen"
     }
   },
   "investment": {

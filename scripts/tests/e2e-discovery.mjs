@@ -84,6 +84,7 @@ try {
         failures.push(r.url());
     });
     for (const path of [
+      "/",
       "/technology",
       "/investment",
       "/tourism",
@@ -92,6 +93,44 @@ try {
     ]) {
       await page.goto(base + path);
       await page.locator(".swipe-rail").first().waitFor();
+      if (path === "/") {
+        assert.equal(await page.locator("#home-hero-logo img").count(), 1);
+        assert.equal(await page.locator("main h1.sr-only").count(), 1);
+        assert.equal(
+          await page
+            .getByRole("button", { name: "Pause photos", exact: true })
+            .count(),
+          0,
+          "Reduced motion uses a static hero"
+        );
+        const cards = page.locator("#explore-platform article");
+        assert.equal(await cards.count(), 4);
+        assert.deepEqual(
+          await cards
+            .locator("a")
+            .evaluateAll(links => links.map(link => link.getAttribute("href"))),
+          ["/shop", "/technology", "/investment", "/tourism"]
+        );
+        assert(
+          await cards
+            .locator("p")
+            .evaluateAll(nodes =>
+              nodes.every(
+                node => parseFloat(getComputedStyle(node).fontSize) >= 14
+              )
+            ),
+          "Home card copy must remain readable"
+        );
+        await page
+          .getByRole("button", { name: "Explore the platform", exact: true })
+          .click();
+        await page.waitForFunction(() => {
+          const top = document
+            .getElementById("explore-platform")
+            .getBoundingClientRect().top;
+          return top >= 50 && top <= 90;
+        });
+      }
       if (path === "/technology") {
         const tools = page.locator("#onesa-intro");
         assert.equal(await tools.locator("article").count(), 4);
@@ -128,6 +167,24 @@ try {
         });
       }
       if (path === "/tourism") {
+        await page
+          .getByRole("link", { name: "Explore destinations", exact: true })
+          .click();
+        await page.waitForFunction(() => {
+          const top = document
+            .getElementById("attractions")
+            .getBoundingClientRect().top;
+          return top >= 50 && top <= 90;
+        });
+        assert.equal(
+          await page
+            .locator(
+              '#attractions header a[href="/onesa-ai-tourism-virtual-experience"]'
+            )
+            .count(),
+          0,
+          "A non-Zimbabwe VR demo must not be presented as the primary destination action"
+        );
         assert.equal(await page.locator("#plan-visit").count(), 0);
         assert.equal(
           await page
@@ -257,7 +314,7 @@ try {
       const rails = page.locator(".swipe-rail");
       for (const rail of await rails.all()) {
         const viewport = rail.locator(".swipe-rail-viewport");
-        if (["/technology", "/investment", "/tourism"].includes(path)) {
+        if (["/", "/technology", "/investment", "/tourism"].includes(path)) {
           const bounds = await viewport.boundingBox();
           const screenWidth = await page.evaluate(
             () => document.documentElement.clientWidth
@@ -355,7 +412,7 @@ try {
       });
       await rails.first().scrollIntoViewIfNeeded();
       await page.screenshot({
-        path: `${output}/${path.slice(1).replaceAll("/", "_")}-${width}.png`,
+        path: `${output}/${path === "/" ? "home" : path.slice(1).replaceAll("/", "_")}-${width}.png`,
       });
       if (path === "/technology") {
         for (const [href, selector] of [
@@ -376,6 +433,13 @@ try {
         });
       }
     }
+    for (const href of ["/shop", "/technology", "/investment", "/tourism"]) {
+      await page.goto(base + "/");
+      await page.locator(`#explore-platform a[href="${href}"]`).click();
+      await page.waitForURL(base + href);
+      await page.locator("main h1").waitFor();
+    }
+    record({ width, scenario: "Home cards open all four module routes" });
     await page.goto(base + "/tourism");
     const rail = page.locator(".swipe-rail").first();
     const viewport = rail.locator(".swipe-rail-viewport");
@@ -409,6 +473,27 @@ try {
     await dialog
       .getByRole("heading", { name: "Victoria Falls", exact: true })
       .waitFor();
+    assert.equal(
+      await dialog.locator("a button, button a").count(),
+      0,
+      "Destination sources must not nest interactive controls"
+    );
+    assert.equal(
+      await dialog.locator('a[href="/onesa-ai-book-trip"]').count(),
+      1
+    );
+    await page.waitForFunction(
+      el => {
+        const bounds = el.getBoundingClientRect();
+        return bounds.width >= 44 && bounds.height >= 44;
+      },
+      await dialog.locator('[data-slot="dialog-close"]').elementHandle()
+    );
+    const dialogBounds = await dialog.boundingBox();
+    assert(
+      dialogBounds.x >= 15 && dialogBounds.x + dialogBounds.width <= width - 15,
+      "Destination dialogs keep a comfortable inset from both screen edges"
+    );
     await page.keyboard.press("Escape");
     await dialog.waitFor({ state: "hidden" });
     await page.waitForFunction(
@@ -646,9 +731,84 @@ try {
         width,
         scenario: `${language}: translated Technology tools and ideas fit`,
       });
+      for (const route of ["/", "/tourism"]) {
+        await page.goto(`${base}${route}?lng=${language}`);
+        await page.waitForFunction(
+          expected => document.documentElement.lang === expected,
+          language
+        );
+        await page.locator(".swipe-rail").first().waitFor();
+        assert(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth + 1
+          ),
+          `${language}/${width}: ${route} overflow`
+        );
+        assert.equal(
+          await page
+            .locator(
+              route === "/"
+                ? "#explore-platform article"
+                : "#tourism-onesa-tools article"
+            )
+            .count(),
+          4
+        );
+        record({
+          width,
+          scenario: `${language}: translated ${route === "/" ? "Home" : "Tourism"} fits`,
+        });
+      }
     }
     await context.close();
   }
+  // The rotating Home photos can be paused without disabling reduced-motion support.
+  const motionContext = await browser.newContext({
+    viewport: { width: 375, height: 900 },
+    reducedMotion: "no-preference",
+  });
+  await motionContext.addInitScript(() => {
+    localStorage.setItem("du_cookie_consent_v1", "rejected");
+    localStorage.setItem("i18nextLng", "en");
+  });
+  await motionContext.route("**/*", route => {
+    const url = new URL(route.request().url());
+    if (url.pathname.startsWith("/api/"))
+      return route.fulfill({ json: { user: null } });
+    if (url.origin !== new URL(base).origin) return route.abort();
+    return route.continue();
+  });
+  page = await motionContext.newPage();
+  await page.clock.install();
+  await page.goto(base);
+  const pause = page.getByRole("button", { name: "Pause photos", exact: true });
+  await pause.click();
+  const background = () =>
+    page
+      .locator('#main-page-hero-wrapper img[aria-hidden="true"]')
+      .last()
+      .getAttribute("src");
+  const firstPhoto = await background();
+  await page.clock.runFor(18000);
+  assert.equal(
+    await background(),
+    firstPhoto,
+    "Paused Home photos must stay still"
+  );
+  await page
+    .getByRole("button", { name: "Resume photos", exact: true })
+    .click();
+  await page.clock.runFor(10000);
+  assert.notEqual(
+    await background(),
+    firstPhoto,
+    "Home photos resume on request"
+  );
+  await motionContext.close();
+  record({
+    scenario:
+      "Home photo rotation pauses and resumes; reduced motion keeps a static photo",
+  });
   assert.deepEqual(errors, []);
   assert.deepEqual(failures, []);
   record({ scenario: "zero runtime errors or unexpected network failures" });
