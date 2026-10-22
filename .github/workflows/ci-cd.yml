@@ -79,7 +79,13 @@ jobs:
         run: pnpm test:seo
 
       - name: Install browsers for regression tests
-        run: pnpm exec playwright install --with-deps chromium webkit
+        run: |
+          # Avoid the runner's Azure mirror, which repeatedly throttled browser dependencies.
+          # Keep Ubuntu's signed repositories and every browser test unchanged.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
+          fi
+          pnpm exec playwright install --with-deps chromium webkit
 
       - name: Newsletter database and admin workflow regression tests
         run: pnpm test:e2e:newsletter
