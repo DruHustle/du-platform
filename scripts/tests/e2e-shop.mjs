@@ -251,29 +251,32 @@ try {
     );
     await viewport.focus();
     await viewport.press("Home");
-    const dragBounds = await viewport.boundingBox();
-    const dragX = Math.min(screenWidth - 30, 280);
-    const dragY = dragBounds.y + 80;
-    await page.mouse.move(dragX, dragY);
-    await page.mouse.down();
-    await page.mouse.move(24, dragY, { steps: 16 });
-    await page.mouse.up();
-    await page.waitForFunction(
-      el => el.scrollLeft > 30,
-      await viewport.elementHandle()
-    );
-    assert.deepEqual(
-      await cart(),
-      [],
-      "Dragging product cards must not add items"
-    );
-    await viewport.focus();
-    await viewport.press("Home");
-    await page.waitForFunction(
-      el => el.disabled,
-      await rail.getByRole("button", { name: /^Previous:/ }).elementHandle()
-    );
-    await viewport.evaluate(el => el.blur());
+    // Repeat the immediate drag-to-Home handoff to catch pending WebKit snap races.
+    for (let gesture = 0; gesture < 3; gesture++) {
+      const dragBounds = await viewport.boundingBox();
+      const dragX = Math.min(screenWidth - 30, 280);
+      const dragY = dragBounds.y + 80;
+      await page.mouse.move(dragX, dragY);
+      await page.mouse.down();
+      await page.mouse.move(24, dragY, { steps: 16 });
+      await page.mouse.up();
+      await page.waitForFunction(
+        el => el.scrollLeft > 30,
+        await viewport.elementHandle()
+      );
+      assert.deepEqual(
+        await cart(),
+        [],
+        "Dragging product cards must not add items"
+      );
+      await viewport.focus();
+      await viewport.press("Home");
+      await page.waitForFunction(
+        el => el.disabled,
+        await rail.getByRole("button", { name: /^Previous:/ }).elementHandle()
+      );
+      await viewport.evaluate(el => el.blur());
+    }
     await page.screenshot({ path: `${output}/shop-rail-${width}.png` });
     pass(
       `${width}: one edge-to-edge product row; arrows, keyboard, drag and final-product cart controls`
@@ -388,7 +391,7 @@ try {
         element.scrollIntoView({ block: "start", behavior: "instant" })
       );
     const pageScroll = await page.evaluate(() => scrollY);
-    await checkoutPanel.hover();
+    await checkoutPanel.hover({ position: { x: 16, y: 16 } });
     await page.mouse.wheel(0, 400);
     await page.waitForFunction(
       element => element.scrollTop > 100,
@@ -550,13 +553,40 @@ try {
       exact: true,
     });
     await panel.waitFor();
+    await short.page.waitForFunction(
+      element => {
+        const bounds = element.getBoundingClientRect();
+        return bounds.top >= 56 && bounds.bottom <= innerHeight;
+      },
+      await panel.elementHandle()
+    );
+    const initialBounds = await panel.boundingBox();
+    assert(
+      initialBounds.y >= 56 && initialBounds.y + initialBounds.height <= 600,
+      "Checkout must fit below the page heading before the surrounding page scrolls"
+    );
+    const initialPageScroll = await short.page.evaluate(() => scrollY);
+    await panel.hover({ position: { x: 16, y: 16 } });
+    await short.page.mouse.wheel(0, 400);
+    await short.page.waitForFunction(
+      element => element.scrollTop > 100,
+      await panel.elementHandle()
+    );
+    assert.equal(await short.page.evaluate(() => scrollY), initialPageScroll);
     await short.page
       .locator("#shop-cart-checkout")
       .evaluate(element =>
         element.scrollIntoView({ block: "start", behavior: "instant" })
       );
+    await panel.hover({ position: { x: 16, y: 16 } });
+    // Let the viewport-height observer settle after programmatic positioning.
+    await short.page.evaluate(
+      () =>
+        new Promise(resolve =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve))
+        )
+    );
     const y = await short.page.evaluate(() => scrollY);
-    await panel.hover();
     await short.page.mouse.wheel(0, 1000);
     await short.page.waitForFunction(
       element => element.scrollTop > 100,

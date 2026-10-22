@@ -37,6 +37,7 @@ export default function SwipeRail({
     active: boolean;
   } | null>(null);
   const suppressClick = useRef(false);
+  const keyboardSnapFrame = useRef(0);
   const [position, setPosition] = useState(initial);
   const items = Children.toArray(children);
 
@@ -112,6 +113,8 @@ export default function SwipeRail({
       window.removeEventListener("hashchange", revealHash);
       observer.disconnect();
       if (frame) cancelAnimationFrame(frame);
+      cancelAnimationFrame(keyboardSnapFrame.current);
+      node.style.removeProperty("scroll-snap-type");
     };
   }, [items.length, resetKey]);
 
@@ -226,9 +229,16 @@ export default function SwipeRail({
             (event.key === "Home" || event.key === "End")
           ) {
             event.preventDefault();
-            event.currentTarget.scrollTo({
-              left: event.key === "Home" ? 0 : event.currentTarget.scrollWidth,
-              behavior: "instant",
+            const node = event.currentTarget;
+            const left = event.key === "Home" ? 0 : node.scrollWidth;
+            // Cancel WebKit's pending drag snap before an explicit keyboard stop.
+            cancelAnimationFrame(keyboardSnapFrame.current);
+            node.style.scrollSnapType = "none";
+            node.scrollTo({ left, behavior: "instant" });
+            keyboardSnapFrame.current = requestAnimationFrame(() => {
+              keyboardSnapFrame.current = 0;
+              node.style.removeProperty("scroll-snap-type");
+              node.scrollTo({ left, behavior: "instant" });
             });
           }
         }}
