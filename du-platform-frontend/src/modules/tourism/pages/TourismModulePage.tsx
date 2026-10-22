@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef } from "react";
 import Layout from "@/components/Layout";
 import SwipeRail from "@/components/discovery/SwipeRail";
 import DiscoveryTile from "@/components/discovery/DiscoveryTile";
@@ -13,20 +13,14 @@ import {
 } from "@/components/ui/dialog";
 import {
   Plus,
+  ArrowRight,
   Camera,
   Calendar,
-  Shield,
-  Award,
   Brain,
-  Globe,
-  Building2,
-  Car,
   Globe2,
-  Dog,
-  TrendingUp,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import SubPageHero from "@/components/SubPageHero";
+import DiscoveryHero from "@/components/discovery/DiscoveryHero";
 import { Link } from "wouter";
 
 type Attraction = {
@@ -58,85 +52,6 @@ export default function Tourism() {
       ? (value as string[])
       : fallback;
   };
-
-  const heroSlides = useMemo(
-    () => [
-      {
-        image: "/images/pages/tourism/victoria_falls.webp",
-        badge: t("tourism.hero.badge1") || "Visit Zimbabwe",
-        badgeIcon: Globe,
-        title: t("tourism.hero.title1") || "Find your",
-        titleHighlight: t("tourism.hero.highlight1") || "Zimbabwe journey",
-        subtitle:
-          t("tourism.hero.subtitle1") ||
-          "Compare waterfalls, wildlife and heritage destinations, then turn your interests into a trip plan.",
-      },
-      {
-        image: "/images/pages/shop/zimbabwe_shop_hero.webp",
-        badge: t("tourism.hero.badge2") || "Cultural Heritage",
-        badgeIcon: Award,
-        title: t("tourism.hero.title2") || "Explore living heritage",
-        subtitle:
-          t("tourism.hero.subtitle2") ||
-          "Explore historical places and cultural experiences to include alongside family visits and sightseeing.",
-      },
-      {
-        image: "/images/pages/tourism/african-elephant.jpg",
-        badge: t("tourism.hero.badge3") || "Adventure",
-        badgeIcon: Car,
-        title: t("tourism.hero.title3") || "Wildlife & Safari",
-        subtitle:
-          t("tourism.hero.subtitle3") ||
-          "Unforgettable encounters in pristine national parks.",
-      },
-      {
-        image: "/images/pages/tourism/great_zimbabwe.jpeg",
-        badge: t("tourism.hero.badge4") || "Historical Site",
-        badgeIcon: Building2,
-        title: t("tourism.hero.title4") || "Great Zimbabwe",
-        subtitle:
-          t("tourism.hero.subtitle4") ||
-          "Ancient stone ruins showcasing medieval African civilization.",
-      },
-      {
-        image: "/images/pages/tourism/cheetah.png",
-        badge: t("tourism.hero.badge3") || "Adventure",
-        badgeIcon: Dog,
-        title: t("tourism.hero.title3") || "Wildlife & Safari",
-        subtitle:
-          t("tourism.hero.subtitle3") ||
-          "Unforgettable encounters in pristine national parks.",
-      },
-      {
-        image: "/images/pages/tourism/mana_pools.jpg",
-        badge: t("tourism.hero.badge6") || "UNESCO Wilderness",
-        badgeIcon: Globe2,
-        title: t("tourism.hero.title6") || "Mana Pools Experience",
-        subtitle:
-          t("tourism.hero.subtitle6") ||
-          "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
-      },
-      {
-        image: "/images/pages/tourism/dest_hwange.png",
-        badge: t("tourism.hero.badge7") || "National Parks",
-        badgeIcon: Shield,
-        title: t("tourism.hero.title7") || "Hwange Wildlife Corridor",
-        subtitle:
-          t("tourism.hero.subtitle7") ||
-          "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
-      },
-      {
-        image: "/images/pages/tourism/kariba_sunset.jpg",
-        badge: t("tourism.hero.badge8") || "Lake & Leisure",
-        badgeIcon: TrendingUp,
-        title: t("tourism.hero.title8") || "Kariba Adventure Tourism",
-        subtitle:
-          t("tourism.hero.subtitle8") ||
-          "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors.",
-      },
-    ],
-    [t]
-  );
 
   const attractions: Attraction[] = [
     {
@@ -523,16 +438,18 @@ export default function Tourism() {
 
   const onesaTouristFeatures = [
     {
+      key: "chat",
       icon: Brain,
       title: t("tourism.onesa.guide.title") || "Local Insights",
       description:
         t("tourism.onesa.guide.desc") ||
         "Ask about local etiquette, food and places to research before you travel.",
-      image: "/images/pages/technology/zim_think.jpg",
+      image: "/images/pages/technology/ai_innovation.webp",
       href: "/onesa-ai-chat",
       cta: t("tourism.onesa.cta.chat", { defaultValue: "Chat with Onesa" }),
     },
     {
+      key: "ar",
       icon: Camera,
       title: t("tourism.onesa.navigate.title") || "Augmented Reality Guide",
       description:
@@ -545,6 +462,7 @@ export default function Tourism() {
       }),
     },
     {
+      key: "trip",
       icon: Calendar,
       title: t("tourism.onesa.plan.title") || "Custom Itineraries",
       description:
@@ -555,6 +473,7 @@ export default function Tourism() {
       cta: t("tourism.onesa.cta.plan_trip", { defaultValue: "Plan your trip" }),
     },
     {
+      key: "vr",
       icon: Globe2,
       title: t("tourism.onesa.virtual_preview.title", {
         defaultValue: "Interactive previews",
@@ -563,7 +482,7 @@ export default function Tourism() {
         defaultValue:
           "Try the Sample City demo with panoramic scenes and optional headset support. Zimbabwe destination tours are not available yet.",
       }),
-      image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
+      image: "/images/pages/technology/virtual-demo-preview.webp",
       href: "/onesa-ai-tourism-virtual-experience",
       cta: t("tourism.intro.virtual_experience_center_cta", {
         defaultValue: "Explore virtual previews",
@@ -573,190 +492,197 @@ export default function Tourism() {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section id="hero">
-        <SubPageHero heroSlides={heroSlides} />
-      </section>
-
-      <DiscoverySection
-        id="attractions"
-        title={t("tourism.attractions_title", {
-          defaultValue: "Must-Visit Destinations",
-        })}
-        action={
+      <div className="tourism-landing">
+        <DiscoveryHero
+          eyebrow={t("tourism.landing.eyebrow")}
+          title={t("tourism.landing.title")}
+          highlight={t("tourism.landing.highlight")}
+          description={t("tourism.landing.description")}
+          principle={t("tourism.landing.principle")}
+          image="/images/pages/tourism/victoria_falls.webp"
+          imageAlt={t("tourism.landing.image_alt")}
+          caption={t("tourism.landing.caption")}
+        >
           <Button
             asChild
-            className="bg-zim-gold text-slate-950 hover:bg-yellow-300"
+            className="h-auto min-h-11 max-w-full whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
           >
-            <Link href="/onesa-ai-tourism-virtual-experience">
-              {t("tourism.intro.virtual_experience_center_cta", {
-                defaultValue: "Explore virtual previews",
-              })}
+            <a href="#attractions">
+              {t("tourism.landing.destinations_cta")}
+              <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
+          >
+            <Link href="/onesa-ai-book-trip">
+              {t("tourism.onesa.cta.plan_trip")}
             </Link>
           </Button>
-        }
-      >
-        <SwipeRail
-          label={t("tourism.attractions_title", {
+        </DiscoveryHero>
+
+        <DiscoverySection
+          id="attractions"
+          title={t("tourism.attractions_title", {
             defaultValue: "Must-Visit Destinations",
           })}
+          description={t("tourism.landing.destinations_description")}
         >
-          {attractions.map(attraction => (
-            <DiscoveryTile
-              key={attraction.name}
-              onSelect={event =>
-                openAttraction(attraction, event.currentTarget)
-              }
-              title={attraction.name}
-              image={attraction.image}
-              footer={
-                <span className="discovery-tile-link">
-                  <span>
-                    {t("tourism.attraction_card.tap_for_details", {
-                      defaultValue: "Tap for more details",
-                    })}
+          <SwipeRail
+            label={t("tourism.attractions_title", {
+              defaultValue: "Must-Visit Destinations",
+            })}
+          >
+            {attractions.map(attraction => (
+              <DiscoveryTile
+                key={attraction.name}
+                onSelect={event =>
+                  openAttraction(attraction, event.currentTarget)
+                }
+                title={attraction.name}
+                image={attraction.image}
+                footer={
+                  <span className="discovery-tile-link">
+                    <span>
+                      {t("tourism.attraction_card.tap_for_details", {
+                        defaultValue: "Tap for more details",
+                      })}
+                    </span>
+                    <span className="discovery-tile-plus">
+                      <Plus aria-hidden="true" />
+                    </span>
                   </span>
-                  <span className="discovery-tile-plus">
-                    <Plus aria-hidden="true" />
-                  </span>
-                </span>
-              }
-            >
-              <ul className="discovery-tags">
-                {attraction.highlights.map(highlight => (
-                  <li key={highlight}>{highlight}</li>
-                ))}
-              </ul>
-              <p className="mt-4 line-clamp-3">{attraction.summary}</p>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-        <div className="discovery-introduction">
-          <details className="editorial-details mt-5">
-            <summary>
-              {t("tourism.intro.read_more", {
-                defaultValue: "More about travelling in Zimbabwe",
-              })}
-            </summary>
-            <div className="mt-4 space-y-4">
-              <p className="text-sm leading-7">
-                {t("tourism.intro.p1", {
-                  defaultValue:
-                    "Start with the places that interest you: waterfalls, stone cities, wildlife parks or lake landscapes. Open a destination card for highlights, visit ideas and links to further information.",
+                }
+              >
+                <ul className="discovery-tags">
+                  {attraction.highlights.map(highlight => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+                <p className="mt-4 line-clamp-3">{attraction.summary}</p>
+              </DiscoveryTile>
+            ))}
+          </SwipeRail>
+          <div className="discovery-introduction">
+            <details className="editorial-details mt-5">
+              <summary>
+                {t("tourism.intro.read_more", {
+                  defaultValue: "More about travelling in Zimbabwe",
                 })}
-              </p>
-              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
-                {t("tourism.intro.p2_before_ar") ||
-                  "Explore a destination with Onesa's"}{" "}
-                <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.local_guide_ar") ||
-                    "camera and location guide"}
-                </span>{" "}
-                {t("tourism.intro.p2_after_ar") ||
-                  "for place information and optional narration. Camera and location access are optional. The virtual experience offers interactive previews you can explore before travelling."}
-              </p>
-              <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
-                {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
-                <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.gastronomy_tourism") ||
-                    "gastronomy tourism"}
-                </span>{" "}
-                {t("tourism.intro.p3_between") ||
-                  "can be part of your itinerary, from sadza and local relishes to coffee-growing areas and lakeside food experiences."}{" "}
-                <span className="text-zim-gold font-semibold">
-                  {t("tourism.intro.cultural_tourism") || "Cultural tourism"}
-                </span>{" "}
-                {t("tourism.intro.p3_after_cultural") ||
-                  "adds heritage sites, music, sculpture and community traditions to the journey. Combine these with wildlife destinations to suit your interests, then confirm current visitor arrangements locally."}
-              </p>
-            </div>
-          </details>
-        </div>
-      </DiscoverySection>
-      <DiscoverySection
-        title={t("tourism.other_attractions_title", {
-          defaultValue: "Other Incredible Destinations",
-        })}
-        description={t("tourism.other_attractions_subtitle", {
-          defaultValue:
-            "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.",
-        })}
-      >
-        <SwipeRail
-          label={t("tourism.other_attractions_title", {
+              </summary>
+              <div className="mt-4 space-y-4">
+                <p className="text-sm leading-7">
+                  {t("tourism.intro.p1", {
+                    defaultValue:
+                      "Start with the places that interest you: waterfalls, stone cities, wildlife parks or lake landscapes. Open a destination card for highlights, visit ideas and links to further information.",
+                  })}
+                </p>
+                <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
+                  {t("tourism.intro.p2_before_ar") ||
+                    "Explore a destination with Onesa's"}{" "}
+                  <span className="text-zim-gold font-semibold">
+                    {t("tourism.intro.local_guide_ar") ||
+                      "camera and location guide"}
+                  </span>{" "}
+                  {t("tourism.intro.p2_after_ar") ||
+                    "for place information and optional narration. Camera and location access are optional. The virtual experience offers interactive previews you can explore before travelling."}
+                </p>
+                <p className="mt-3 text-left text-sm text-white/75 font-light leading-relaxed">
+                  {t("tourism.intro.p3_before_gastro") || "Zimbabwe's"}{" "}
+                  <span className="text-zim-gold font-semibold">
+                    {t("tourism.intro.gastronomy_tourism") ||
+                      "gastronomy tourism"}
+                  </span>{" "}
+                  {t("tourism.intro.p3_between") ||
+                    "can be part of your itinerary, from sadza and local relishes to coffee-growing areas and lakeside food experiences."}{" "}
+                  <span className="text-zim-gold font-semibold">
+                    {t("tourism.intro.cultural_tourism") || "Cultural tourism"}
+                  </span>{" "}
+                  {t("tourism.intro.p3_after_cultural") ||
+                    "adds heritage sites, music, sculpture and community traditions to the journey. Combine these with wildlife destinations to suit your interests, then confirm current visitor arrangements locally."}
+                </p>
+              </div>
+            </details>
+          </div>
+        </DiscoverySection>
+        <DiscoverySection
+          title={t("tourism.other_attractions_title", {
             defaultValue: "Other Incredible Destinations",
           })}
-        >
-          {otherAttractions.map(dest => (
-            <DiscoveryTile
-              key={dest.name}
-              onSelect={event => openAttraction(dest, event.currentTarget)}
-              title={dest.name}
-              image={dest.image}
-              footer={
-                <span className="discovery-tile-link">
-                  <span>
-                    {t("tourism.attraction_card.tap_for_details", {
-                      defaultValue: "Tap for more details",
-                    })}
-                  </span>
-                  <span className="discovery-tile-plus">
-                    <Plus aria-hidden="true" />
-                  </span>
-                </span>
-              }
-            >
-              <p className="line-clamp-3">{dest.summary}</p>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-      </DiscoverySection>
-
-      <DiscoverySection
-        title={t("tourism.onesa.badge", { defaultValue: "Onesa AI Companion" })}
-        description={t("tourism.onesa.companion_subtitle", {
-          defaultValue:
-            "Discuss your interests, compare places and plan a route. Check opening hours, transport and availability directly before travelling.",
-        })}
-      >
-        <div className="discovery-introduction space-y-3">
-          <p className="text-base leading-7">
-            {t("tourism.onesa.companion_title", {
-              defaultValue: "Explore destinations and build a draft itinerary",
-            })}
-          </p>
-          <p className="text-sm leading-7">
-            {t("tourism.onesa.personalized_experience", {
-              defaultValue:
-                "Explore places that match your interests, then refine the plan with current information from providers.",
-            })}
-          </p>
-        </div>
-        <SwipeRail
-          label={t("tourism.onesa.badge", {
-            defaultValue: "Onesa AI Companion",
+          description={t("tourism.other_attractions_subtitle", {
+            defaultValue:
+              "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.",
           })}
         >
-          {onesaTouristFeatures.map(feature => (
-            <DiscoveryTile
-              key={feature.title}
-              title={feature.title}
-              icon={feature.icon}
-              image={feature.image}
-              footer={
-                <Button
-                  asChild
-                  className="w-full bg-zim-gold text-slate-950 hover:bg-yellow-300"
-                >
-                  <Link href={feature.href}>{feature.cta}</Link>
-                </Button>
-              }
-            >
-              <p>{feature.description}</p>
-            </DiscoveryTile>
-          ))}
-        </SwipeRail>
-      </DiscoverySection>
+          <SwipeRail
+            label={t("tourism.other_attractions_title", {
+              defaultValue: "Other Incredible Destinations",
+            })}
+          >
+            {otherAttractions.map(dest => (
+              <DiscoveryTile
+                key={dest.name}
+                onSelect={event => openAttraction(dest, event.currentTarget)}
+                title={dest.name}
+                image={dest.image}
+                footer={
+                  <span className="discovery-tile-link">
+                    <span>
+                      {t("tourism.attraction_card.tap_for_details", {
+                        defaultValue: "Tap for more details",
+                      })}
+                    </span>
+                    <span className="discovery-tile-plus">
+                      <Plus aria-hidden="true" />
+                    </span>
+                  </span>
+                }
+              >
+                <p className="line-clamp-3">{dest.summary}</p>
+              </DiscoveryTile>
+            ))}
+          </SwipeRail>
+        </DiscoverySection>
+
+        <DiscoverySection
+          id="tourism-onesa-tools"
+          title={t("tourism.onesa.badge", {
+            defaultValue: "Onesa AI Companion",
+          })}
+          description={t("tourism.onesa.companion_subtitle", {
+            defaultValue:
+              "Discuss your interests, compare places and plan a route. Check opening hours, transport and availability directly before travelling.",
+          })}
+        >
+          <SwipeRail
+            label={t("tourism.onesa.badge", {
+              defaultValue: "Onesa AI Companion",
+            })}
+          >
+            {onesaTouristFeatures.map(feature => (
+              <DiscoveryTile
+                key={feature.title}
+                title={feature.title}
+                icon={feature.icon}
+                image={feature.image}
+                imageAlt={t(`tourism.onesa.image_alts.${feature.key}`)}
+                footer={
+                  <Button
+                    asChild
+                    className="h-auto min-h-11 w-full whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
+                  >
+                    <Link href={feature.href}>{feature.cta}</Link>
+                  </Button>
+                }
+              >
+                <p>{feature.description}</p>
+              </DiscoveryTile>
+            ))}
+          </SwipeRail>
+        </DiscoverySection>
+      </div>
 
       <Dialog
         open={Boolean(selectedAttraction)}
@@ -769,15 +695,15 @@ export default function Tourism() {
               attractionTrigger.current.focus({ preventScroll: true });
             }
           }}
-          className="max-w-3xl mx-auto max-h-[85vh] overflow-y-auto bg-slate-950 border-white/10 text-white"
+          className="w-[calc(100%_-_2rem)] max-w-3xl mx-auto max-h-[85dvh] overflow-y-auto overscroll-contain bg-slate-950 border-white/10 text-white [&_[data-slot=dialog-close]]:min-h-11 [&_[data-slot=dialog-close]]:min-w-11 [&_[data-slot=dialog-close]]:flex [&_[data-slot=dialog-close]]:items-center [&_[data-slot=dialog-close]]:justify-center"
         >
           {selectedAttraction ? (
             <>
               <DialogHeader>
-                <DialogTitle className="text-lg font-black tracking-tight">
+                <DialogTitle className="pr-12 text-left text-xl font-semibold tracking-tight">
                   {selectedAttraction.name}
                 </DialogTitle>
-                <DialogDescription className="text-white/70">
+                <DialogDescription className="text-left text-sm leading-7 text-white/70">
                   {selectedAttraction.summary}
                 </DialogDescription>
               </DialogHeader>
@@ -786,14 +712,15 @@ export default function Tourism() {
                 <img
                   src={selectedAttraction.image}
                   alt={selectedAttraction.name}
+                  decoding="async"
                   className="w-full h-56 object-cover rounded-2xl border border-white/10"
                 />
 
                 <div>
-                  <h4 className="text-sm font-black uppercase tracking-widest text-zim-gold mb-2">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold mb-2">
                     {t("tourism.attraction_dialog.quick_facts") ||
                       "Quick Facts"}
-                  </h4>
+                  </h3>
                   <ul className="space-y-2">
                     {selectedAttraction.quickFacts.map(fact => (
                       <li
@@ -807,9 +734,9 @@ export default function Tourism() {
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-black uppercase tracking-widest text-zim-gold mb-2">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold mb-2">
                     {t("tourism.attraction_dialog.what_to_do") || "What To Do"}
-                  </h4>
+                  </h3>
                   <ul className="space-y-2">
                     {selectedAttraction.experiences.map(exp => (
                       <li
@@ -833,27 +760,45 @@ export default function Tourism() {
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-black uppercase tracking-widest text-zim-gold mb-2">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-zim-gold mb-2">
                     {t("tourism.attraction_dialog.official_sources") ||
                       "Official Sources"}
-                  </h4>
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedAttraction.sourceLinks.map(link => (
-                      <a
+                      <Button
                         key={link.url}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        asChild
+                        variant="outline"
+                        className="h-auto min-h-11 whitespace-normal border-white/20 bg-transparent text-white hover:bg-white hover:text-slate-950"
                       >
-                        <Button
-                          variant="outline"
-                          className="border-white/20 text-white hover:bg-white hover:text-zim-black font-black uppercase tracking-widest text-[10px] rounded-full"
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {link.label}
-                        </Button>
-                      </a>
+                        </a>
+                      </Button>
                     ))}
                   </div>
+                </div>
+                <div className="flex flex-wrap gap-3 border-t border-white/10 pt-5">
+                  <Button
+                    asChild
+                    className="h-auto min-h-11 whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
+                  >
+                    <Link href="/onesa-ai-book-trip">
+                      {t("tourism.onesa.cta.plan_trip")}
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-auto min-h-11 whitespace-normal border-white/20 bg-transparent text-white hover:bg-slate-800 hover:text-white"
+                    onClick={() => setSelectedAttraction(null)}
+                  >
+                    {t("tourism.landing.back_to_destinations")}
+                  </Button>
                 </div>
               </div>
             </>

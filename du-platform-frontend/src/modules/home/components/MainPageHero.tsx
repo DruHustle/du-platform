@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Pause, Play } from "lucide-react";
 import InstantImage, { preloadImages } from "@/components/InstantImage";
 
 // Section 1: Hero Configuration
@@ -12,9 +12,15 @@ interface HeroContent {
 
 interface MainPageProps {
   hero: HeroContent;
+  paused: boolean;
+  onTogglePause: () => void;
 }
 
-export default function MainPageHero({ hero }: MainPageProps) {
+export default function MainPageHero({
+  hero,
+  paused,
+  onTogglePause,
+}: MainPageProps) {
   const { t } = useTranslation();
   const prefersReducedMotion = useReducedMotion();
 
@@ -26,10 +32,14 @@ export default function MainPageHero({ hero }: MainPageProps) {
       ];
 
     preloadImages(
-      [currentImage, nextImage, "/images/brand/diaspora_unlocked.png"],
+      [
+        currentImage,
+        ...(!prefersReducedMotion && !paused ? [nextImage] : []),
+        "/images/brand/diaspora_unlocked.png",
+      ],
       2
     );
-  }, [hero.currentBgIndex, hero.heroBackgrounds]);
+  }, [hero.currentBgIndex, hero.heroBackgrounds, paused, prefersReducedMotion]);
 
   return (
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
@@ -120,9 +130,9 @@ export default function MainPageHero({ hero }: MainPageProps) {
               }
               className="flex flex-col items-center gap-2 cursor-pointer border-0 bg-transparent text-white"
               onClick={() =>
-                window.scrollTo({
-                  top: window.innerHeight,
-                  behavior: prefersReducedMotion ? "auto" : "smooth",
+                document.getElementById("explore-platform")?.scrollIntoView({
+                  behavior: prefersReducedMotion ? "instant" : "smooth",
+                  block: "start",
                 })
               }
             >
@@ -133,6 +143,21 @@ export default function MainPageHero({ hero }: MainPageProps) {
             </motion.button>
           </motion.div>
         </div>
+
+        {!prefersReducedMotion && (
+          <button
+            type="button"
+            onClick={onTogglePause}
+            className="absolute bottom-6 left-6 z-20 inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 bg-slate-950/80 px-4 text-xs font-medium text-white hover:bg-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold md:left-8"
+          >
+            {paused ? (
+              <Play size={16} aria-hidden="true" />
+            ) : (
+              <Pause size={16} aria-hidden="true" />
+            )}
+            {t(paused ? "home.hero_resume" : "home.hero_pause")}
+          </button>
+        )}
 
         {/* REFINED INNER VIGNETTE: Reduced from 0.8 to 0.4 for less "muddy" edges */}
         <div className="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_0_20vw_rgba(0,0,0,0.4)]" />

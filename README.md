@@ -207,7 +207,8 @@ pnpm test:e2e:discovery
 Runs without configured services using a temporary static server and mocked API
 responses. At 375, 768, and 1440 pixels, it checks every discovery rail's final
 tile, keyboard and arrow controls, mouse dragging, native touch swipes, attraction
-dialog focus restoration, and project filtering/navigation. Screenshots and
+dialog focus restoration, Home module navigation and photo pause/resume,
+translated Home/Technology/Tourism layouts, and project filtering/navigation. Screenshots and
 reports go to `/tmp/du-discovery-tests` (`DISCOVERY_OUTPUT_DIR` overrides it).
 CI uses `DISCOVERY_BROWSER_CHANNEL=chromium`.
 

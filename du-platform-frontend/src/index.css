@@ -1701,15 +1701,6 @@
   background: oklch(0.35 0.08 150 / 60%);
 }
 
-.home-tiles-scroll {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.home-tiles-scroll::-webkit-scrollbar {
-  display: none;
-}
-
 .tile-scroll-rail {
   scrollbar-width: none;
   -ms-overflow-style: none;

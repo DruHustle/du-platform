@@ -28,8 +28,6 @@ success.stories.tech_startup.role
 success.stories.tourism_lodge.author
 tourism.attractions.greatzim.name
 tourism.attractions.kariba.name
-tourism.hero.title4
-tourism.hero.title5
 tourism.onesa.name
 tourism.other_attractions.eastern_highlands.name
 tourism.other_attractions.gonarezhou.h1

@@ -181,27 +181,37 @@
         "title": "Shop",
         "description": "Find Zimbabwean food, crafts and supporter apparel for your home or as a gift.",
         "detail": "Build a basket and send an order request. Confirm availability, delivery and payment with the team before buying.",
-        "stats": "Browse products"
+        "stats": "Browse products",
+        "image_alt": "Giraffes and acacia trees silhouetted at sunset"
       },
       "technology": {
         "title": "Technology",
         "description": "Meet Onesa, the AI platform powering assistance on Diaspora Unlocked.",
         "detail": "Ask questions about Zimbabwe, explore ideas and get help with products, opportunities and travel plans.",
-        "stats": "Onesa AI"
+        "stats": "Onesa AI",
+        "image_alt": "Illustration of a woman with elephants in a savannah landscape"
       },
       "investment": {
         "title": "Investment",
-        "description": "Explore project profiles across tourism, agriculture, manufacturing, technology and energy.",
-        "detail": "Read the background and identify questions for project promoters. Funding terms and availability need independent confirmation.",
-        "stats": "Explore project profiles"
+        "description": "Explore practical business ideas in farming, construction, mining services and everyday trade.",
+        "detail": "Start with a manageable idea, understand the costs and risks, and check the details before committing money.",
+        "stats": "Explore business ideas",
+        "image_alt": "Fresh vegetables displayed in baskets"
       },
       "tourism": {
         "title": "Tourism",
         "description": "Discover waterfalls, wildlife, heritage sites and places to explore across Zimbabwe.",
         "detail": "Compare destinations, preview virtual experiences and create an indicative trip plan with Onesa.",
-        "stats": "Find your next destination"
+        "stats": "Find your next destination",
+        "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe"
       }
-    }
+    },
+    "discovery": {
+      "title": "Explore Zimbabwe, your way.",
+      "description": "Find something for home, a business idea to research or a place to visit. Start wherever your interests take you."
+    },
+    "hero_pause": "Pause photos",
+    "hero_resume": "Resume photos"
   },
   "tech": {
     "chat_with_onesa": "Chat with Onesa",
@@ -300,41 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Back to Tourism",
-    "hero": {
-      "badge1": "Visit Zimbabwe",
-      "title1": "Find your",
-      "subtitle1": "Compare waterfalls, wildlife and heritage destinations, then turn your interests into a trip plan.",
-      "highlight1": "Zimbabwe journey",
-      "badge2": "Cultural Heritage",
-      "title2": "Explore living heritage",
-      "subtitle2": "Explore historical places and cultural experiences to include alongside family visits and sightseeing.",
-      "highlight2": "Ancient Roots",
-      "badge3": "Adventure",
-      "title3": "Wildlife & Safari",
-      "subtitle3": "Unforgettable encounters in pristine national parks.",
-      "highlight3": "Pristine Nature",
-      "badge4": "Historical Site",
-      "title4": "Great Zimbabwe",
-      "subtitle4": "Ancient stone ruins showcasing medieval African civilization.",
-      "badge5": "Adventure Hub",
-      "title5": "Mosi-oa-Tunya",
-      "subtitle5": "Experience the smoke that thunders in Victoria Falls.",
-      "plan_journey": "Plan Your Journey",
-      "watch_exp": "Watch Experience",
-      "book_trip": "Book Trip",
-      "virtual_center": "Virtual Reality",
-      "local_guide_ar": "Local guide",
-      "badge6": "UNESCO Wilderness",
-      "title6": "Mana Pools Experience",
-      "subtitle6": "River-fed plains, walking safaris, and premium wildlife viewing in one of Africa's iconic landscapes.",
-      "badge7": "National Parks",
-      "title7": "Hwange Wildlife Corridor",
-      "subtitle7": "Zimbabwe's largest national park, known for elephant herds and strong safari potential.",
-      "badge8": "Lake & Leisure",
-      "title8": "Kariba Adventure Tourism",
-      "subtitle8": "Houseboats, sport fishing, and scenic cruises continue to attract regional and international visitors."
-    },
-    "attractions_title": "Must-Visit Destinations",
+    "attractions_title": "Start with a destination",
     "attractions": {
       "vicfalls": {
         "name": "Victoria Falls",
@@ -427,8 +403,8 @@
         }
       }
     },
-    "other_attractions_title": "Other Incredible Destinations",
-    "other_attractions_subtitle": "Beyond the iconic landmarks, Zimbabwe offers diverse landscapes and wildlife experiences across the country.",
+    "other_attractions_title": "Keep exploring",
+    "other_attractions_subtitle": "Make room for lake views, highland walks and quieter wildlife destinations. Compare places before choosing your route.",
     "other_attractions": {
       "hwange": {
         "name": "Hwange National Park",
@@ -498,7 +474,6 @@
       "img_alt": "Onesa AI Guide",
       "title": "A starting point for your visit",
       "subtitle": "Ask about destinations, local customs and travel ideas. Onesa helps you prepare questions and a draft plan; providers confirm prices and bookings.",
-      "companion_title": "Explore destinations and build a draft itinerary",
       "companion_subtitle": "Discuss your interests, compare places and plan a route. Check opening hours, transport and availability directly before travelling.",
       "virtual_preview": {
         "title": "Interactive previews",
@@ -601,7 +576,12 @@
         "increase_infants": "Increase infants",
         "nearest_airport_hint": "Suggested nearby airport; confirm routes with your airline"
       },
-      "personalized_experience": "Explore places that match your interests, then refine the plan with current information from providers."
+      "image_alts": {
+        "chat": "Illustration of a woman with elephants in a savannah landscape",
+        "ar": "Stone walls and ruins at Great Zimbabwe",
+        "trip": "Victoria Falls in Zimbabwe",
+        "vr": "Rocky hillside in the Sample City panoramic demonstration"
+      }
     },
     "cta_title": "What would you like to explore?",
     "cta_button": "Connect with an Expert",
@@ -629,7 +609,8 @@
       "p3_between": "can be part of your itinerary, from sadza and local relishes to coffee-growing areas and lakeside food experiences.",
       "cultural_tourism": "Cultural tourism",
       "p3_after_cultural": "adds heritage sites, music, sculpture and community traditions to the journey. Combine these with wildlife destinations to suit your interests, then confirm current visitor arrangements locally.",
-      "virtual_experience_center_cta": "Explore virtual previews"
+      "virtual_experience_center_cta": "Explore virtual previews",
+      "read_more": "More about travelling in Zimbabwe"
     },
     "ar": {
       "seo": {
@@ -642,6 +623,18 @@
         "title": "Zimbabwe Virtual Tourism Experience",
         "description": "Try a Sample City demonstration with panoramic scenes, points of interest and optional narration. Zimbabwe destination tours are not available yet."
       }
+    },
+    "landing": {
+      "eyebrow": "Explore Zimbabwe",
+      "title": "See more of",
+      "highlight": "Zimbabwe.",
+      "description": "For a day, a weekend or a journey home. Explore waterfalls, wildlife and heritage, then build a plan around your time and interests.",
+      "principle": "Ideas to help you plan. Confirm access, prices and bookings directly with providers.",
+      "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe",
+      "caption": "Victoria Falls · Zimbabwe",
+      "destinations_cta": "Explore destinations",
+      "destinations_description": "Open a destination for highlights, things to do, seasonal guidance and sources to help with your research.",
+      "back_to_destinations": "Back to destinations"
     }
   },
   "investment": {
