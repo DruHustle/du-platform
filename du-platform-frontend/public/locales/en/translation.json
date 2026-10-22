@@ -685,11 +685,15 @@
   "investment": {
     "opportunities": {
       "title": "Ideas for business and innovation",
-      "subtitle": "Thinking of building a business back home with your savings? Explore mining, farming and construction through small projects you can understand, budget for and follow from abroad.",
+      "subtitle": "Five ways to explore a business in Zimbabwe. Compare a small starting project and its costs, then open each idea for customers, practical improvements and ways to oversee the work.",
       "labels": {
         "start": "Start small",
         "budget": "Budget for",
-        "checks": "Check first"
+        "checks": "Check first",
+        "customers": "Customers to approach",
+        "income": "How money comes in",
+        "improvement": "A practical improvement",
+        "monitor": "Follow progress from abroad"
       },
       "mining": {
         "title": "Mining supplies & services",
@@ -697,7 +701,12 @@
         "start": "Test one customer order with a reliable local operator. Use qualified technicians for repairs.",
         "budget": "Stock or tools, transport, maintenance and cash to cover late customer payments.",
         "checks": "Verify the customer’s mining title, payment history and site safety. Confirm permits for your activity. Owning or operating a mine needs a separate technical and legal assessment.",
-        "source": "Chamber of Mines: laws & obligations"
+        "source": "Chamber of Mines: laws & obligations",
+        "image_alt": "Haul truck carrying rock at a mine",
+        "customers": "Established mining operators, maintenance teams and contractors within a workable delivery area.",
+        "income": "Supply orders, equipment hire or repair charges. Check transport, wear and payment delays before agreeing a price.",
+        "improvement": "Keep a simple parts and stock list. Test demand with orders before buying more equipment.",
+        "monitor": "Match purchase invoices, signed delivery notes and customer payments. Record tool condition before and after each hire."
       },
       "farming": {
         "title": "Farming & food production",
@@ -705,7 +714,12 @@
         "start": "Agree a buyer, quantity and quality requirements before funding one growing cycle or batch.",
         "budget": "Seed or chicks, feed, water, labour, crop or animal health, delivery and losses.",
         "checks": "Verify land-use rights, reliable water and the buyer’s terms. Get local agricultural advice; weather, disease and unsold produce can wipe out a cycle’s income.",
-        "source": "ZimTrade: finding buyers before planting"
+        "source": "ZimTrade: finding buyers before planting",
+        "image_alt": "Fresh vegetables displayed in baskets",
+        "customers": "Local grocers, market traders, restaurants or an established produce buyer who can specify quantity and quality.",
+        "income": "Sell produce or seedlings against an agreed order. Count rejected goods, losses and delivery costs when reviewing the cycle.",
+        "improvement": "Use a crop and water-use calendar with local agricultural advice. Try suitable irrigation only after checking water supply and cost.",
+        "monitor": "Request input receipts, dated crop updates, harvest weights and buyer receipts. Compare what was harvested, sold, lost and paid for."
       },
       "construction": {
         "title": "Construction & home improvements",
@@ -713,17 +727,41 @@
         "start": "Cost one defined job with qualified tradespeople, a written scope and payments tied to inspected work.",
         "budget": "Materials, tools, labour, delivery, rework and delays in customer payment.",
         "checks": "Check contractor references and the local council’s approval requirements. For any land or property project, have ownership and building permissions checked independently.",
-        "source": "Harare: building permit guidance"
+        "source": "Harare: building permit guidance",
+        "image_alt": "Construction workers assembling a steel roof structure in Harare",
+        "customers": "Homeowners, landlords, small shops and local contractors with a clearly defined job.",
+        "income": "Quote a supply order, tool hire or labour package. Specify what is included and price changes before extra work starts.",
+        "improvement": "Use a shared materials list and dated progress photos. Group purchases by job to make spending easier to reconcile.",
+        "monitor": "Check materials delivered against invoices. Arrange independent inspections before releasing each agreed stage payment."
       },
-      "plan": {
-        "title": "Before you send money",
-        "intro": "Choose a pilot that fits your savings, available time and local support. These are business ideas to investigate; demand and profitability must be tested in your chosen area.",
-        "budget": "Get current written supplier quotes. Include running costs until customers pay and a reserve for setbacks; keep household and emergency savings separate.",
-        "people": "Independently check the operator, site, ownership, relevant licences and tax obligations. Family connections do not replace these checks.",
-        "agreement": "Put ownership, responsibilities, reporting, profit and loss sharing, and exit terms in writing. Use traceable payments and release money against agreed milestones.",
-        "oversight": "Track sales, stock and spending in a shared record. Arrange independent site checks and reconcile invoices and receipts before funding the next stage.",
-        "cta": "Open the due diligence checklist",
-        "note": "Research starting points checked 22 October 2026. DU does not verify these businesses, pool money or process investments. Returns are uncertain and your capital is at risk."
+      "explore": "Explore this idea",
+      "photo_label": "Photo:",
+      "photo_crop": "Optimised; cropped for display.",
+      "food": {
+        "title": "Food processing & packaging",
+        "summary": "Explore dried produce, small-batch foods or packaging supplies for local food businesses.",
+        "start": "Test one product with a few buyers, using suitable food-safe premises and a repeatable recipe or packing process.",
+        "budget": "Ingredients, food-safe equipment, packaging, labels, testing, storage, delivery and spoiled or unsold stock.",
+        "checks": "Confirm local health, food-handling and labelling requirements before selling. Validate shelf life and storage; do not assume drying or sealing makes food safe.",
+        "source": "ZimTrade: small business value chains",
+        "image_alt": "Packaged dried mango from Zimbabwe",
+        "customers": "Local shops, caterers and growers or processors needing suitable packs for their products.",
+        "income": "Sell costed batches or packaging orders. Include labour, waste, returns and retailer payment terms in the margin calculation.",
+        "improvement": "Use consistent pack sizes and batch records. Gather buyer feedback on quality, labelling and price before expanding.",
+        "monitor": "Record batch inputs, quantities produced, rejects and sales. Reconcile food and packaging stock with cash received."
+      },
+      "solar": {
+        "title": "Solar & water services",
+        "summary": "Explore equipment supply and maintenance coordination with qualified solar and water-service technicians.",
+        "start": "Begin with one assessed maintenance job. Let a qualified technician specify and carry out the work.",
+        "budget": "Tools, test equipment, spares, transport, technical labour and warranty call-backs.",
+        "checks": "Check installer credentials, product specifications and written warranties. Confirm the local approvals needed for electrical or water work and safe site access.",
+        "source": "GET.invest: Zimbabwe energy context",
+        "image_alt": "Solar panel installation on a roof in Zimbabwe",
+        "customers": "Households, small shops and farms with existing systems that need a technical assessment or maintenance.",
+        "income": "Charge for agreed equipment and completed services. Separate supply, labour and aftercare costs in the quote.",
+        "improvement": "Keep an equipment register with service dates, serial numbers and warranties. Agree a maintenance schedule with the technician.",
+        "monitor": "Request job sheets, test and handover records, supplier invoices and customer sign-off. Check recurring faults before funding more stock."
       }
     },
     "economic_snapshot": {
@@ -737,41 +775,6 @@
       "gdp_size": "GDP Size",
       "economic_scale": "Economic scale",
       "top_growth_sectors": "Top Growth Sectors"
-    },
-    "hero": {
-      "badge1": "Explore Zimbabwe",
-      "title1": "Understand the opportunities",
-      "subtitle1": "Read project profiles, compare sectors and prepare questions before taking an investment further.",
-      "rbz_policy": "Explore policies",
-      "highlight1": "in Zimbabwe",
-      "badge2": "Masuwe SEZ",
-      "title2": "Explore the Masuwe project",
-      "subtitle2": "Read about a tourism and hospitality project in the Victoria Falls area. Confirm current plans with the listed promoter.",
-      "highlight2": "Prime Location",
-      "badge3": "VFEX",
-      "title3": "Stock Exchange",
-      "subtitle3": "Explore Zimbabwe's capital-market landscape. Trading and account opening are handled by licensed providers.",
-      "highlight3": "Global Access",
-      "badge4": "Horticulture",
-      "title4": "Horticulture projects",
-      "subtitle4": "Explore agriculture and processing profiles. Check market access, operating costs and project status with the promoter.",
-      "highlight4": "Agriculture & exports",
-      "badge5": "Mining",
-      "title5": "Mineral Wealth",
-      "subtitle5": "Gold, Platinum, and Lithium opportunities.",
-      "highlight5": "Strategic Assets",
-      "badge6": "Manufacturing Upside",
-      "title6": "Value-Added Manufacturing",
-      "highlight6": "Export-Ready Capacity",
-      "subtitle6": "Light manufacturing and processing projects create jobs and stronger regional competitiveness.",
-      "badge7": "Tourism Capital",
-      "title7": "Hospitality Growth Corridors",
-      "highlight7": "Visitor Economy",
-      "subtitle7": "Explore hospitality project information near Zimbabwe's visitor destinations.",
-      "badge8": "Diaspora Flows",
-      "title8": "Research your next step",
-      "highlight8": "Project information",
-      "subtitle8": "Use these profiles as a starting point for research and direct enquiries. This site does not pool capital or process investments."
     },
     "projects": {
       "masuwe": {
@@ -900,49 +903,6 @@
     },
     "sectors_title": "Explore project profiles",
     "sectors_subtitle": "Browse sector ideas and listed promoters. Current availability, financial terms and approvals require independent confirmation.",
-    "collective_model": {
-      "title": "How to explore an opportunity",
-      "subtitle": "Start with information, then check the documents and terms independently before making any commitment.",
-      "s1": "Browse sector profiles and read what each project describes.",
-      "s2": "Prepare questions about ownership, current status, costs and participation terms.",
-      "s3": "Request current documents from the promoter and check them with independent advisers.",
-      "s4": "Agree any investment directly through the appropriate legal and financial channels, outside this site."
-    },
-    "eu_focus": {
-      "title": "External programmes to research",
-      "subtitle": "European programmes provide useful context for Zimbabwe's economy. Sources checked on 21 October 2026; they do not establish funding or endorsement for projects listed here.",
-      "energy": {
-        "title": "Green Energy",
-        "detail": "GET.invest Zimbabwe launched in May 2025 with EU and German funding to support clean-energy finance. Check the programme's current eligibility criteria at the source below."
-      },
-      "agri": {
-        "title": "Agriculture and Value Chains",
-        "detail": "EU partnership programmes prioritise horticulture and traditional grains, climate-smart agriculture, adaptation to EU export requirements, and finance access for agribusiness SMEs."
-      },
-      "sme": {
-        "title": "Private Sector and SME Finance",
-        "detail": "EIB report, 2 October 2025: €60 million lent to Zimbabwean banks over five years, including €20 million to Stanbic in March 2025. These are external bank programmes."
-      },
-      "social": {
-        "title": "Health, Gender, and Social Programs",
-        "detail": "Team Europe programmes include gender equality and women empowerment actions, with practical support such as financial-literacy and access-to-finance pathways for women and youth."
-      },
-      "biodiversity": {
-        "title": "Biodiversity and Resilience",
-        "detail": "Partnerships also support biodiversity and conservation-linked resilience, including trans-frontier conservation areas relevant to sustainable local economic development."
-      },
-      "gateway": {
-        "title": "Global Gateway Partnership Envelope",
-        "detail": "The European Commission lists €165 million in grants for its Zimbabwe partnership for 2021–2027. This is a cooperation allocation, not money raised through Diaspora Unlocked."
-      },
-      "eib_takeaways_title": "EIB Practical Takeaways for Diaspora Investors",
-      "eib_t1": "Women-led small businesses often face affordability and collateral constraints that limit access to formal credit.",
-      "eib_t2": "Blended finance and local-bank credit lines can lower borrowing barriers for agriculture-linked SMEs.",
-      "eib_t3": "Financial literacy and enterprise support services improve investment readiness and loan performance for small businesses.",
-      "source_getinvest": "GET.invest Zimbabwe · checked 21 Oct 2026",
-      "source_eu": "European Commission · checked 21 Oct 2026",
-      "source_eib": "EIB report · 2 Oct 2025"
-    },
     "cta_title": "Ready to Invest?",
     "cta_subtitle": "Our investment team can help you identify the right opportunities and guide you through the process.",
     "cta_button": "Connect with an Expert",
@@ -950,12 +910,6 @@
     "explore_title": "Explore More Invest Information",
     "explore_subtitle": " For comprehensive investment information and official guidelines, visit the Zimbabwe Investment and Development Agency.",
     "explore_site": "Visit ZIDA",
-    "crowdfunding_steps": {
-      "browse": "Read profiles",
-      "invest": "Prepare questions",
-      "track": "Check documents",
-      "returns": "Decide independently"
-    },
     "tourism": {
       "snapshot": {
         "title": "Zimbabwe Tourism Snapshot (2026)",
@@ -1167,8 +1121,72 @@
         "title": "Manufacturing Snapshot (2026)"
       }
     },
-    "sectors_explore": "Browse project profiles",
-    "sectors_info": "Read project descriptions and identify questions for the listed promoter. These profiles do not confirm an offer to invest, project availability or financial performance."
+    "landing": {
+      "eyebrow": "Business & investment",
+      "title": "Put your ideas to work.",
+      "highlight": "In Zimbabwe.",
+      "description": "Practical business ideas for Zimbabweans at home and abroad. Explore a manageable first project, understand its costs and decide what to check before using your savings.",
+      "ideas_cta": "Explore business ideas",
+      "plan_cta": "Plan your first step",
+      "principle": "Start small. Know your customer. Stay involved.",
+      "image_caption": "Everyday needs. Ideas worth exploring."
+    },
+    "plan": {
+      "title": "Your first project, in four steps",
+      "subtitle": "Turn an interesting idea into a plan you can discuss with someone on the ground.",
+      "customer": {
+        "title": "Know the customer",
+        "description": "Ask what buyers need, what they already pay for and when they pay. Test an order or a small batch before committing to more stock."
+      },
+      "costs": {
+        "title": "Cost the whole project",
+        "description": "Get written quotes and include running costs, transport and a reserve for setbacks. Keep household and emergency savings separate."
+      },
+      "agreement": {
+        "title": "Agree how it will work",
+        "description": "Check the operator, ownership and relevant permissions independently. Write down roles, reporting, payment milestones, profit and loss sharing, and exit terms."
+      },
+      "review": {
+        "title": "Review before you grow",
+        "description": "Track cash received, expenses, stock and delivery. Use independent site checks and reconcile the first pilot before funding the next stage."
+      },
+      "checklist_description": "Have a specific project in mind? Use the checklist to prepare questions and decide which documents to request.",
+      "cta": "Open the due diligence checklist"
+    },
+    "research": {
+      "title": "Research existing projects and businesses",
+      "subtitle": "Prefer to explore an existing venture? These are starting points for enquiries and independent checks.",
+      "projects": {
+        "title": "Project catalogue",
+        "description": "Read promoter profiles across agriculture, energy, manufacturing and other sectors. Many describe larger projects; confirm current status, scale and participation requirements directly with the promoter.",
+        "cta": "Browse project profiles"
+      },
+      "directory": {
+        "title": "Business directory",
+        "description": "Search business names, sectors and locations to prepare your research. This is a directory maintained by DU, rather than an official national register or a recommendation.",
+        "cta": "Search the directory"
+      }
+    },
+    "resources": {
+      "title": "Useful places to continue your research",
+      "subtitle": "Go to the source for business procedures, market preparation and programme eligibility.",
+      "zida": {
+        "title": "Business setup · ZIDA",
+        "description": "Explore business procedures, legal requirements and investor services. Confirm which registrations and approvals apply to your own project.",
+        "cta": "Visit ZIDA"
+      },
+      "zimtrade": {
+        "title": "Markets & products · ZimTrade",
+        "description": "Research buyers, product requirements, packaging and export readiness. Start with a route to market that matches your capacity.",
+        "cta": "Explore ZimTrade resources"
+      },
+      "energy": {
+        "title": "Clean energy · GET.invest",
+        "description": "Read about support for clean-energy businesses in Zimbabwe. Check the programme’s current eligibility and application route; support is not automatic.",
+        "cta": "Read the Zimbabwe programme"
+      },
+      "note": "DU provides information for your own research. We do not verify offers, pool capital or process investments. Returns are uncertain and capital can be lost. External resources checked 22 October 2026."
+    }
   },
   "regulations": {
     "badge": "Compliance Hub",

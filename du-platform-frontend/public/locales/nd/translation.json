@@ -685,11 +685,15 @@
   "investment": {
     "opportunities": {
       "title": "Amacebo ebhizimusi lokuqamba okutsha",
-      "subtitle": "Ucabanga ukuqala ibhizimusi ekhaya ngemali oyilondolozileyo? Hlola ezemigodi, ezokulima lezokwakha ngamaphrojekthi amancane owazwisisayo, ongawahlelela imali futhi uwalandelele ukwamanye amazwe.",
+      "subtitle": "Izindlela ezinhlanu zokuhlola ibhizimusi eZimbabwe. Qathanisa iphrojekthi encane lezindleko zayo, uvule icebo ngalinye ukubona amakhasimende, ukuthuthukisa lokulandelela ukwamanye amazwe.",
       "labels": {
         "start": "Qala ngokuncane",
         "budget": "Hlelela izindleko",
-        "checks": "Qala uhlole"
+        "checks": "Qala uhlole",
+        "customers": "Amakhasimende ongakhuluma lawo",
+        "income": "Imali ingena njani",
+        "improvement": "Ukuthuthukisa okuluncedo",
+        "monitor": "Landela umsebenzi ukwamanye amazwe"
       },
       "mining": {
         "title": "Impahla lezinsiza zemigodi",
@@ -697,7 +701,12 @@
         "start": "Linga nge-oda elilodwa lekhasimende lomuntu othembekileyo ekhaya. Ukulungisa kwenziwe ngabantu abaqeqetshiweyo.",
         "budget": "Impahla kumbe amathuluzi, ukuthutha, ukulungisa lemali yokulinda amakhasimende aphuza ukubhadala.",
         "checks": "Qinisekisa amalungelo emayini, imbali yokubhadala yekhasimende lokuphepha emsebenzini. Hlola imvumo zomsebenzi wakho. Ukuba lomayini kumbe ukuwusebenzisa kudinga ukuhlolwa okwehlukileyo kwezobuciko lomthetho.",
-        "source": "Chamber of Mines: imithetho lezibopho"
+        "source": "Chamber of Mines: imithetho lezibopho",
+        "image_alt": "Iloli enkulu ethwele amatshe emgodini",
+        "customers": "Imigodi esebenzayo, amaqembu okulungisa labosonkontileka endaweni ongafikisa kuyo impahla.",
+        "income": "Ama-oda empahla, ukuqhatshisa imishini kumbe ukulungisa. Bala ukuthutha, ukuguga kwamathuluzi lokuphuza ukubhadalwa lingakavumelani ngentengo.",
+        "improvement": "Gcina uhlu olulula lwamaphathi lempahla ekhona. Qala uhlole ama-oda ungakathengi eminye imishini.",
+        "monitor": "Qathanisa ama-invoyisi, amaphepha okusayina ukwamukela impahla lemali ebhadalweyo. Bhala isimo samathuluzi engakaqhatshiswa lalapho ebuyayo."
       },
       "farming": {
         "title": "Ukulima lokukhiqiza ukudla",
@@ -705,7 +714,12 @@
         "start": "Thola umthengi livumelane ngobunengi langekhwalithi lingakabhadaleli isizini esisodwa kumbe iqembu elilodwa.",
         "budget": "Inhlanyelo kumbe amatshiyane, ukudla kwezifuyo, amanzi, abasebenzi, impilo yezilimo kumbe yezifuyo, ukuthutha lokulahlekelwa.",
         "checks": "Qinisekisa amalungelo okusebenzisa umhlaba, amanzi athembekileyo lemibandela yomthengi. Cela iseluleko kwezokulima; isimo somkhathi, izifo lokungathengiseki kungaqeda imali yesizini.",
-        "source": "ZimTrade: thola abathengi ungakahlanyeli"
+        "source": "ZimTrade: thola abathengi ungakahlanyeli",
+        "image_alt": "Imibhida emitsha etshengiswe ezitsheni",
+        "customers": "Izitolo zokudla, abathengisi bemisika, izindawo zokudlela kumbe umthengi wezilimo ochaza ubunengi lekhwalithi.",
+        "income": "Thengisa izilimo kumbe izithombo nge-oda elivumelanweyo. Bala okwaliweyo, okulahlekileyo lezindleko zokuthutha ekuhloleni isizini.",
+        "improvement": "Sebenzisa ikhalenda lokulima lokusebenzisa amanzi leseluleko sezokulima. Hlola amanzi lezindleko ungakazami indlela yokuthelela.",
+        "monitor": "Cela amarisithi, imibiko elezinsuku, isisindo sesivuno lamarisithi abathengi. Qathanisa okuvunweyo, okuthengisiweyo, okulahlekileyo lokubhadalweyo."
       },
       "construction": {
         "title": "Ukwakha lokuthuthukisa izindlu",
@@ -713,17 +727,41 @@
         "start": "Bala izindleko zomsebenzi owodwa ocacileyo labantu abaqeqetshiweyo, libhale okumele kwenziwe futhi libhadale umsebenzi usuhloliwe.",
         "budget": "Impahla, amathuluzi, abasebenzi, ukuthutha, ukuphinda kulungiswe lokuphuza ukubhadalwa ngamakhasimende.",
         "checks": "Hlola imisebenzi eyake yenziwa ngumakhi lemvumo ezifunwa likhansili. Kumaphrojekthi omhlaba kumbe ezindlu, ubunikazi lemvumo zokwakha kuhlolwe ngumuntu ozimeleyo.",
-        "source": "Harare: iziqondiso zemvumo yokwakha"
+        "source": "Harare: iziqondiso zemvumo yokwakha",
+        "image_alt": "Abasebenzi behlanganisa isakhiwo sophahla lwensimbi eHarare",
+        "customers": "Abanikazi bezindlu, abaqhatshisa izindlu, izitolo ezincane labosonkontileka abalomsebenzi ocacileyo.",
+        "income": "Beka intengo ye-oda, ukuqhatshisa amathuluzi kumbe umsebenzi. Bhala okufakiweyo lentengo yokwengeza umsebenzi ungakaqali.",
+        "improvement": "Sebenzisa uhlu lwempahla eliyabelanayo lemifanekiso elezinsuku. Hlanganisa okuthengiweyo lomsebenzi ngamunye.",
+        "monitor": "Qathanisa impahla efikisiweyo lama-invoyisi. Hlelani ukuhlola okuzimeleyo lingakabhadaleli isigaba ngasinye."
       },
-      "plan": {
-        "title": "Ungakathumeli imali",
-        "intro": "Khetha umsebenzi wokulinga ofanele imali yakho, isikhathi loncedo olusekhaya. La ngamacebo okuchwayisisa; qala uhlole isidingo samakhasimende lenzuzo endaweni oyikhethileyo.",
-        "budget": "Cela intengo zamanje ezibhaliweyo kubathengisi. Faka izindleko zokusebenza kuze kubhadale amakhasimende lemali yokungalindelekanga; hlukanisa imali yekhaya leyokuphuthumayo.",
-        "people": "Hlola ngokuzimela umqhubi, indawo, ubunikazi, amalayisensi lezibopho zemithelo. Ubuhlobo bemuli abuthathi indawo yalokhu kuhlola.",
-        "agreement": "Bhalani ubunikazi, imisebenzi, imibiko, ukwabelana inzuzo lokulahlekelwa, lendlela yokuphuma. Sebenzisani ukubhadala okulobufakazi futhi likhiphe imali ngezinyathelo elivumelane ngazo.",
-        "oversight": "Bhalani ukuthengisa, impahla esele lezindleko endaweni eliyabelanayo. Hlelani ukuhlolwa kwendawo okuzimeleyo liqhathanise ama-invoyisi lamarisithi lingakabhadaleli isigaba esilandelayo.",
-        "cta": "Vula uhlu lokuhlola ungakafaki imali",
-        "note": "Imithombo yokuchwayisisa ihlolwe ngomhlaka 22 Mfumfu 2026. I-DU ayiqinisekisi amabhizimusi la, ayiqoqi imali ndawonye futhi ayiphathi ukutshalwa kwemali. Inzuzo ayiqinisekiswanga njalo imali yakho ingalahleka."
+      "explore": "Hlola leli cebo",
+      "photo_label": "Umfanekiso:",
+      "photo_crop": "Ulungiselelwe ubukhulu; unqunyiwe ekubonisweni.",
+      "food": {
+        "title": "Ukulungisa lokupakisha ukudla",
+        "summary": "Hlola izilimo ezomisiweyo, ukudla ngamaqoqo amancane kumbe impahla yokupakisha kumabhizimusi endawo.",
+        "start": "Linga umkhiqizo owodwa labathengi abalutshwana, endaweni ehlanzekileyo efanele ukudla langendlela yokulungisa kumbe yokupakisha ephindekayo.",
+        "budget": "Okuphekiwayo, amathuluzi afanele ukudla, impahla yokupakisha, amalebula, ukuhlola, ukugcina, ukuthutha lokonakeleyo kumbe okungathengiswanga.",
+        "checks": "Qinisekisa izimfuneko zempilo, ukubamba ukudla lamalebula ungakathengisi. Hlola ukuthi ukudla kuhlala isikhathi esingakanani lokugcinwa kwakho; ukomisa kumbe ukuvala kuphela akuqinisekisi ukuphepha.",
+        "source": "ZimTrade: amabhizimusi amancane ekukhiqizeni",
+        "image_alt": "Umango owomisiweyo opakishiweyo eZimbabwe",
+        "customers": "Izitolo, abapheki labalimi kumbe abalungisa ukudla abafuna ukupakisha okufaneleyo.",
+        "income": "Thengisa amaqoqo kumbe ama-oda okupakisha ngentengo ebaliweyo. Faka umsebenzi, okulahlwayo, okubuyiswayo lesikhathi sokubhadalwa yizitolo.",
+        "improvement": "Sebenzisa ubukhulu bamaphakethe obufanayo lamarekhodi eqoqo ngalinye. Cela imibono ngekhwalithi, amalebula lentengo ungakakhulisi.",
+        "monitor": "Bhala okusetshenzisiweyo, ubunengi obukhiqiziweyo, okwaliweyo lokuthengisiweyo. Qathanisa ukudla lempahla esele lemali engenileyo."
+      },
+      "solar": {
+        "title": "Izinsiza zelanga lamanzi",
+        "summary": "Hlola ukuthengisa impahla lokuhlela ukulungisa labochwepheshe bezamandla elanga lamanzi.",
+        "start": "Qala ngomsebenzi owodwa osuhlolwe yingcwethi. Umuntu oqeqetshiweyo kabeke okufunekayo njalo enze umsebenzi.",
+        "budget": "Amathuluzi, impahla yokuhlola, amaphathi, ukuthutha, umsebenzi wezingcwethi lokubuyela ukulungisa ngaphansi kwewaranti.",
+        "checks": "Hlola ukuqeqetshwa, izimfuneko zempahla lewaranti ebhaliweyo. Qinisekisa imvumo zomsebenzi kagesi kumbe wamanzi lokufika okuphephileyo endaweni.",
+        "source": "GET.invest: ezamandla eZimbabwe",
+        "image_alt": "Ukufakwa kwamaphaneli elanga ophahleni eZimbabwe",
+        "customers": "Imizi, izitolo ezincane lamapulazi alempahla efuna ukuhlolwa yingcwethi kumbe ukulungiswa.",
+        "income": "Bhadalisa impahla elivumelane ngayo lomsebenzi ophelileyo. Hlukanisa impahla, umsebenzi lokulandelela ekhoteshini.",
+        "improvement": "Gcina uhlu lwempahla olulezinsuku zokulungisa, inombolo zayo lewaranti. Vumelanani ngohlelo lokulungisa lengcwethi.",
+        "monitor": "Cela amaphepha omsebenzi, ukuhlolwa lokunikezwa, ama-invoyisi lokusayina kwekhasimende. Hlola amaphutha aphindayo ungakathengi okunye."
       }
     },
     "economic_snapshot": {
@@ -737,41 +775,6 @@
       "gdp_size": "Ubukhulu beGDP",
       "economic_scale": "Ubukhulu bomnotho",
       "top_growth_sectors": "Izingxenye Ezikhula Kakhulu"
-    },
-    "hero": {
-      "badge1": "Hlola iZimbabwe",
-      "title1": "Zwisisa amathuba",
-      "subtitle1": "Funda amaphrofayili, qathanisa imikhakha ulungise imibuzo ungakaqhubeki lokutshala imali.",
-      "rbz_policy": "Hlola izinqubomgomo",
-      "highlight1": "eZimbabwe",
-      "badge2": "Masuwe SEZ",
-      "title2": "Hlola iphrojekthi yeMasuwe",
-      "subtitle2": "Funda ngephrojekthi yezokuvakasha endaweni yeVictoria Falls. Qinisekisa izinhlelo zamanje lomnikazi obhaliweyo.",
-      "highlight2": "Indawo ephambili",
-      "badge3": "I-VFEX",
-      "title3": "Isitoko semali (Stock Exchange)",
-      "subtitle3": "Hlola imakethe yemali yeZimbabwe. Ukuthengisa lokuvula i-akhawunti kwenziwa ngabahlinzeki abalamalayisensi.",
-      "highlight3": "Ukungena emhlabeni jikelele",
-      "badge4": "I-Horticulture",
-      "title4": "Amaphrojekthi okulima izithelo",
-      "subtitle4": "Hlola ezokulima lokucubungula. Qinisekisa izimakethe, izindleko lokuma kwephrojekthi lomnikazi.",
-      "highlight4": "Ukulima lokuthengisa phandle",
-      "badge5": "Ezokumbiwa phansi",
-      "title5": "Ingcebo yezokumbiwa",
-      "subtitle5": "Amathuba egolide, i-Platinum, le-Lithium.",
-      "highlight5": "Impahla eqakathekileyo",
-      "badge6": "Ukukhiqiza I-Upside",
-      "title6": "Ukukhiqiza Okungeziwe Kwevalue",
-      "highlight6": "Amandla Okulungele Ukuthekelisa",
-      "subtitle6": "Amaphrojekthi amancane okukhiqiza nokucubungula adala amathuba emisebenzi kanye nokuncintisana okuqinile kwesifunda.",
-      "badge7": "Tourism Capital",
-      "title7": "I-Hospitality Growth Corridors",
-      "highlight7": "Umnotho Wezivakashi",
-      "subtitle7": "Hlola ulwazi lwamaphrojekthi ezokwamukela izivakatshi eduze kwezindawo zokuvakatshela eZimbabwe.",
-      "badge8": "I-Diaspora Iyageleza",
-      "title8": "Cwaninga inyathelo elilandelayo",
-      "highlight8": "Ulwazi lwamaphrojekthi",
-      "subtitle8": "Sebenzisa amaphrofayili njengesiqalo sokucwaninga lokubuza. Lapha akuqoqwa mali yabantu kumbe kwenziwe ukutshala imali."
     },
     "projects": {
       "masuwe": {
@@ -911,55 +914,6 @@
     "explore_title": "Hlola eminye imininingwane yokutshala imali",
     "explore_subtitle": "Ukuze uthole imininingwane ebanzi, vakashela i-Zimbabwe Investment and Development Agency (ZIDA).",
     "explore_site": "Vakashela i-ZIDA",
-    "collective_model": {
-      "title": "Indlela yokuhlola ithuba",
-      "subtitle": "Qala ngolwazi, ubusuhlola amadokhumenti lemigomo ngokuzimela ungakazibophezeli.",
-      "s1": "Bona imikhakha ufunde okuchazwa yiphrojekthi ngayinye.",
-      "s2": "Lungisa imibuzo yobunikazi, isimo samanje, izindleko lemigomo yokungena.",
-      "s3": "Cela amadokhumenti amanje kumnikazi uwahlole labeluleki abazimeleyo.",
-      "s4": "Vumelanani ngokutshala imali ngezindlela ezifaneleyo zomthetho lezemali, ngaphandle kwenkundla le."
-    },
-    "eu_focus": {
-      "title": "Izinhlelo zangaphandle zokucwaninga",
-      "subtitle": "Izinhlelo zeEurope zinika isimo somnotho weZimbabwe. Imithombo ihlolwe ngo21 Mfumfu 2026; ayiqinisekisi imali kumbe ukusekelwa kwamaphrojekthi alapha.",
-      "energy": {
-        "title": "Amandla Aluhlaza",
-        "detail": "IGET.invest Zimbabwe yaqala ngoNkwenkwezi 2025 ngemali yeEU leGermany yokusekela amandla ahlanzekileyo. Hlola imigomo yamanje emthonjeni ongezansi."
-      },
-      "agri": {
-        "title": "Ezolimo kanye namaketanga eValue",
-        "detail": "Izinhlelo zobambiswano ze-EU zibeka phambili ukulima kwezitshalo nezinhlamvu zendabuko, ezolimo ezihlakaniphile ngesimo sezulu, ukuzivumelanisa nezimfuneko zokuthekelisa ze-EU, kanye nokufinyelela ngezimali kwama-SME ebhizinisi lezolimo."
-      },
-      "sme": {
-        "title": "Umkhakha Ozimele kanye Nezezimali ze-SME",
-        "detail": "Umbiko weEIB, 2 Mfumfu 2025: €60 million yabolekwa amabhanga eZimbabwe eminyakeni emihlanu, kuhlanganise €20 million kuStanbic ngoMbimbitho 2025. Lezi yizinhlelo zamabhanga zangaphandle."
-      },
-      "social": {
-        "title": "Ezempilo, Ubulili, kanye Nezinhlelo Zomphakathi",
-        "detail": "Izinhlelo zethimba laseYurophu zihlanganisa ukulingana ngokobulili kanye nezenzo zokuhlomisa abesifazane, ngokusekelwa okungokoqobo okufana nokufunda ngezimali nezindlela zokufinyelela ezezimali kwabesifazane nentsha."
-      },
-      "biodiversity": {
-        "title": "Izinhlobonhlobo Zezinto Eziphilayo Nokuqina",
-        "detail": "Ubambiswano luphinde lusekele ukuhlukahluka kwemvelo kanye nokuqina okuxhumene nokongiwa kwemvelo, okuhlanganisa nezindawo zokongiwa kwemingcele ezihambisana nentuthuko yomnotho wendawo esimeme."
-      },
-      "gateway": {
-        "title": "I-Global Gateway Partnership Envelope",
-        "detail": "IEuropean Commission ibhala €165 million yeminikelo yobudlelwano leZimbabwe ka2021–2027. Le yimali yobudlelwano, hatshi eqoqwe ngeDiaspora Unlocked."
-      },
-      "eib_takeaways_title": "I-EIB Practical Takeaways yabatshalizimali beDiaspora",
-      "eib_t1": "Amabhizinisi amancane aholwa ngabesifazane ngokuvamile abhekana nokungakwazi ukukhokhela izindleko kanye nezingqinamba ezibambisanayo ezibeka umkhawulo ekufinyeleleni isikweletu esisemthethweni.",
-      "eib_t2": "Izimali ezihlanganisiwe kanye nemigqa yezikweletu yamabhange endawo angehlisa izithiyo zokuboleka kuma-SME axhumene nezolimo.",
-      "eib_t3": "Ukufunda ngezezimali kanye nezinsizakalo zokweseka amabhizinisi zithuthukisa ukulungela ukutshalwa kwezimali kanye nokusebenza kwemalimboleko kumabhizinisi amancane.",
-      "source_getinvest": "GET.invest Zimbabwe · ihlolwe 21 Mfumfu 2026",
-      "source_eu": "European Commission · ihlolwe 21 Mfumfu 2026",
-      "source_eib": "Umbiko weEIB · 2 Mfumfu 2025"
-    },
-    "crowdfunding_steps": {
-      "browse": "Funda amaphrofayili",
-      "invest": "Lungisa imibuzo",
-      "track": "Hlola amadokhumenti",
-      "returns": "Khetha ngokuzimela"
-    },
     "tourism": {
       "snapshot": {
         "title": "Isithombe se-Zimbabwe Tourism (2026)",
@@ -1171,8 +1125,72 @@
         "title": "Isifinyezo Sokukhiqiza (2026)"
       }
     },
-    "sectors_explore": "Bona amaphrofayili",
-    "sectors_info": "Funda izincazelo zephrojekthi ulungise imibuzo yomnikazi obhaliweyo. Amaphrofayili awaqinisekisi ukunikezwa kokutshala imali, ukutholakala kumbe inzuzo."
+    "landing": {
+      "eyebrow": "Amabhizimusi lokutshalwa kwemali",
+      "title": "Sebenzisa amacebo akho.",
+      "highlight": "EZimbabwe.",
+      "description": "Amacebo ebhizimusi kubantu beZimbabwe abasekhaya labakwamanye amazwe. Hlola iphrojekthi encane yokuqala, uzwisise izindleko njalo uqale uhlole ungakasebenzisi imali oyilondolozileyo.",
+      "ideas_cta": "Hlola amacebo ebhizimusi",
+      "plan_cta": "Hlela inyathelo lakho lokuqala",
+      "principle": "Qala ngokuncane. Yazi ikhasimende. Hlala ulandelela.",
+      "image_caption": "Izidingo zansuku zonke. Amacebo okuhlola."
+    },
+    "plan": {
+      "title": "Iphrojekthi yakho yokuqala ngamanyathelo amane",
+      "subtitle": "Guqula icebo elithokozisayo libe luhlelo ongaxoxa ngalo lomuntu osekhaya.",
+      "customer": {
+        "title": "Yazi ikhasimende",
+        "description": "Buza ukuthi abathengi bafunani, bathengani njalo babhadala nini. Linga i-oda kumbe iqoqo elincane ungakathengi impahla enengi."
+      },
+      "costs": {
+        "title": "Bala zonke izindleko",
+        "description": "Cela amakhotheshini abhaliweyo, ufake ukusebenza, ukuthutha lemali yokungalindelekanga. Hlukanisa imali yekhaya leyokuphuthumayo."
+      },
+      "agreement": {
+        "title": "Vumelanani ngokusebenza",
+        "description": "Hlola umqhubi, ubunikazi lemvumo ngokuzimela. Bhalani imisebenzi, imibiko, izigaba zokubhadala, ukwabelana inzuzo lokulahlekelwa, lendlela yokuphuma."
+      },
+      "review": {
+        "title": "Hlola ungakakhulisi",
+        "description": "Landela imali engenileyo, izindleko, impahla lokufikiswa. Sebenzisa ukuhlolwa kwendawo okuzimeleyo liqede ukubala okokuqala lingakabhadaleli okulandelayo."
+      },
+      "checklist_description": "Ulephrojekthi ethile yini? Sebenzisa uhlu ukuhlela imibuzo lamaphepha okufanele uwacele.",
+      "cta": "Vula uhlu lokuhlola ungakafaki imali"
+    },
+    "research": {
+      "title": "Chwayisisa amaphrojekthi lamabhizimusi akhona",
+      "subtitle": "Ufuna ukuhlola umsebenzi osukhona yini? Lezi zindawo zokuqalisa imibuzo lokuhlola okuzimeleyo.",
+      "projects": {
+        "title": "Ikhathalogu yamaphrojekthi",
+        "description": "Bala imibhalo yabanikazi kwezokulima, amandla, ukukhiqiza lezinye izigaba. Amanengi ngamaphrojekthi amakhulu; qinisekisa isimo, ubukhulu lezimfuneko zokungena kumnikazi.",
+        "cta": "Hlola amaphrojekthi"
+      },
+      "directory": {
+        "title": "Uhlu lwamabhizimusi",
+        "description": "Dinga amabizo, izigaba lezindawo ukuze uhlele ukuchwayisisa. Lolu luhlu olugcinwa yi-DU; alusilo irejista esemthethweni yelizwe kumbe isincomo.",
+        "cta": "Dinga ohlwini"
+      }
+    },
+    "resources": {
+      "title": "Izindawo eziluncedo zokuqhubeka uchwayisisa",
+      "subtitle": "Hlola izindlela zebhizimusi, ukulungiselela imisika lezimfuneko zezinhlelo emthonjeni.",
+      "zida": {
+        "title": "Ukuqala ibhizimusi · ZIDA",
+        "description": "Hlola izindlela zebhizimusi, izimfuneko zomthetho lezinsiza zabatshala imali. Qinisekisa ukubhalisa lemvumo ezidingwa yiphrojekthi yakho.",
+        "cta": "Vakashela i-ZIDA"
+      },
+      "zimtrade": {
+        "title": "Imisika lemikhiqizo · ZimTrade",
+        "description": "Chwayisisa abathengi, izimfuneko zemikhiqizo, ukupakisha lokulungiselela ukuthengisa ngaphandle. Qala ngendlela yokuthengisa efanele amandla akho.",
+        "cta": "Hlola imithombo ye-ZimTrade"
+      },
+      "energy": {
+        "title": "Amandla ahlanzekileyo · GET.invest",
+        "description": "Bala ngosizo lwamabhizimusi amandla ahlanzekileyo eZimbabwe. Hlola izimfuneko zamanje lendlela yokufaka isicelo; usizo aluzizeli lodwa.",
+        "cta": "Bala uhlelo lweZimbabwe"
+      },
+      "note": "I-DU inika ulwazi lokuchwayisisa kwakho. Asiqinisekisi izicelo zokutshalwa kwemali, asiqoqi imali ndawonye njalo asiphathi ukutshalwa kwayo. Inzuzo ayiqinisekiswanga futhi imali ingalahleka. Imithombo yangaphandle ihlolwe ngomhlaka 22 Mfumfu 2026."
+    }
   },
   "common": {
     "coming_soon": "Sidingida amacebo akhaliphileyo ahloselwe ukuntshintsha indlela elixhumana ngayo, elisebenza ngayo, lelokukhula kwenu sisebenzisa ithekinoji ye-AI ethuthukileyo.",

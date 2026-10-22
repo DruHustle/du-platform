@@ -9,8 +9,6 @@ data.regional_breakdown.other_countries.population
 data.regional_breakdown.south_africa.population
 data.regional_breakdown.united_kingdom.population
 data.regional_breakdown.united_states.population
-investment.hero.badge2
-investment.hero.badge3
 investment.projects.apparel.title
 investment.projects.fintech.title
 investment.projects.masuwe.title

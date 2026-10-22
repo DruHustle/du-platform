@@ -685,11 +685,15 @@
   "investment": {
     "opportunities": {
       "title": "Ideen für Unternehmen und Innovation",
-      "subtitle": "Sie möchten mit Ihren Ersparnissen ein Geschäft in Simbabwe aufbauen? Erkunden Sie Bergbau, Landwirtschaft und Bau mit kleinen Vorhaben, die Sie verstehen, kalkulieren und aus dem Ausland begleiten können.",
+      "subtitle": "Fünf Ansätze für ein Geschäft in Simbabwe. Vergleichen Sie ein kleines Startvorhaben und seine Kosten. Öffnen Sie jede Idee für Kunden, Verbesserungen und die Begleitung aus dem Ausland.",
       "labels": {
         "start": "Klein anfangen",
         "budget": "Kosten einplanen",
-        "checks": "Zuerst prüfen"
+        "checks": "Zuerst prüfen",
+        "customers": "Mögliche Kunden",
+        "income": "Wie Einnahmen entstehen",
+        "improvement": "Eine praktische Verbesserung",
+        "monitor": "Fortschritt aus dem Ausland verfolgen"
       },
       "mining": {
         "title": "Bergbau: Ausrüstung & Dienstleistungen",
@@ -697,7 +701,12 @@
         "start": "Testen Sie einen Kundenauftrag mit einem verlässlichen Partner vor Ort. Reparaturen gehören in qualifizierte Hände.",
         "budget": "Waren oder Werkzeuge, Transport, Wartung und Rücklagen für verspätete Kundenzahlungen.",
         "checks": "Prüfen Sie Bergbaurechte, Zahlungsverhalten und Arbeitssicherheit des Kunden sowie Genehmigungen für Ihre Tätigkeit. Ein eigener Minenbetrieb erfordert eine gesonderte technische und rechtliche Prüfung.",
-        "source": "Bergbaukammer: Gesetze & Pflichten"
+        "source": "Bergbaukammer: Gesetze & Pflichten",
+        "image_alt": "Muldenkipper mit Gestein in einem Bergwerk",
+        "customers": "Etablierte Bergbaubetriebe, Wartungsteams und Auftragnehmer in einem erreichbaren Liefergebiet.",
+        "income": "Lieferaufträge, Gerätevermietung oder Reparaturen. Berücksichtigen Sie Transport, Verschleiß und verspätete Zahlungen vor der Preisvereinbarung.",
+        "improvement": "Führen Sie eine einfache Teile- und Bestandsliste. Testen Sie die Nachfrage mit Aufträgen vor weiteren Gerätekäufen.",
+        "monitor": "Gleichen Sie Einkaufsrechnungen, unterschriebene Lieferscheine und Zahlungen ab. Dokumentieren Sie den Zustand vermieteter Werkzeuge vor und nach der Nutzung."
       },
       "farming": {
         "title": "Landwirtschaft & Lebensmittel",
@@ -705,7 +714,12 @@
         "start": "Klären Sie Abnehmer, Menge und Qualitätsanforderungen, bevor Sie einen Anbauzyklus oder eine Charge finanzieren.",
         "budget": "Saatgut oder Küken, Futter, Wasser, Arbeit, Pflanzen- oder Tiergesundheit, Lieferung und Verluste.",
         "checks": "Prüfen Sie Landnutzungsrechte, verlässliche Wasserversorgung und Abnahmebedingungen. Holen Sie landwirtschaftlichen Rat ein: Wetter, Krankheiten und unverkaufte Ware können die Einnahmen eines Zyklus aufzehren.",
-        "source": "ZimTrade: Käufer vor der Aussaat finden"
+        "source": "ZimTrade: Käufer vor der Aussaat finden",
+        "image_alt": "Frisches Gemüse in Körben",
+        "customers": "Örtliche Lebensmittelhändler, Marktverkäufer, Restaurants oder etablierte Abnehmer mit klaren Mengen- und Qualitätsvorgaben.",
+        "income": "Verkaufen Sie Erzeugnisse oder Jungpflanzen nach vereinbartem Auftrag. Rechnen Sie Ausschuss, Verluste und Lieferkosten in die Auswertung ein.",
+        "improvement": "Nutzen Sie einen Anbau- und Bewässerungsplan mit landwirtschaftlicher Beratung. Prüfen Sie Wasserverfügbarkeit und Kosten vor einem Bewässerungsversuch.",
+        "monitor": "Fordern Sie Belege, datierte Anbauberichte, Erntegewichte und Verkaufsbelege an. Vergleichen Sie Ernte, Verkauf, Verluste und bezahlte Mengen."
       },
       "construction": {
         "title": "Bau & Hausrenovierung",
@@ -713,17 +727,41 @@
         "start": "Kalkulieren Sie einen klar begrenzten Auftrag mit Fachkräften, schriftlichem Leistungsumfang und Zahlungen nach geprüften Baufortschritten.",
         "budget": "Material, Werkzeuge, Arbeit, Lieferung, Nachbesserungen und verspätete Kundenzahlungen.",
         "checks": "Prüfen Sie Referenzen und örtliche Genehmigungspflichten. Lassen Sie bei Grundstücks- oder Immobilienvorhaben Eigentum und Baugenehmigungen unabhängig prüfen.",
-        "source": "Harare: Hinweise zu Baugenehmigungen"
+        "source": "Harare: Hinweise zu Baugenehmigungen",
+        "image_alt": "Bauarbeiter montieren eine Dachkonstruktion aus Stahl in Harare",
+        "customers": "Hausbesitzer, Vermieter, kleine Geschäfte und örtliche Bauunternehmen mit einem klar begrenzten Auftrag.",
+        "income": "Kalkulieren Sie eine Lieferung, Werkzeugmiete oder Arbeitsleistung. Legen Sie Leistungsumfang und Preise für Zusatzarbeiten vorher fest.",
+        "improvement": "Nutzen Sie gemeinsame Materiallisten und datierte Fortschrittsfotos. Ordnen Sie Einkäufe dem jeweiligen Auftrag zu.",
+        "monitor": "Gleichen Sie gelieferte Materialien mit Rechnungen ab. Lassen Sie jeden vereinbarten Bauabschnitt vor der Zahlung unabhängig prüfen."
       },
-      "plan": {
-        "title": "Bevor Sie Geld überweisen",
-        "intro": "Wählen Sie ein Pilotvorhaben passend zu Ersparnissen, Zeit und Unterstützung vor Ort. Diese Geschäftsideen müssen Sie prüfen; Nachfrage und Rentabilität sind am gewählten Standort zu testen.",
-        "budget": "Holen Sie aktuelle schriftliche Angebote ein. Planen Sie Betriebskosten bis zum Zahlungseingang und eine Reserve für Rückschläge ein; halten Sie Haushaltsgeld und Notfallrücklagen getrennt.",
-        "people": "Prüfen Sie Betreiber, Standort, Eigentum, nötige Genehmigungen und Steuerpflichten unabhängig. Verwandtschaft ersetzt diese Prüfung nicht.",
-        "agreement": "Halten Sie Eigentum, Aufgaben, Berichte, Gewinn- und Verlustverteilung sowie Ausstieg schriftlich fest. Zahlen Sie nachvollziehbar und geben Sie Mittel nach vereinbarten Meilensteinen frei.",
-        "oversight": "Dokumentieren Sie Umsatz, Bestände und Ausgaben gemeinsam. Lassen Sie den Standort unabhängig prüfen und gleichen Sie Rechnungen und Belege vor der nächsten Finanzierung ab.",
-        "cta": "Checkliste zur Sorgfaltsprüfung öffnen",
-        "note": "Recherchequellen geprüft am 22. Oktober 2026. DU überprüft diese Unternehmen nicht, bündelt kein Kapital und wickelt keine Investitionen ab. Erträge sind ungewiss; Ihr Kapital ist gefährdet."
+      "explore": "Diese Idee erkunden",
+      "photo_label": "Foto:",
+      "photo_crop": "Optimiert; zur Anzeige beschnitten.",
+      "food": {
+        "title": "Lebensmittelverarbeitung & Verpackung",
+        "summary": "Erkunden Sie Trockenprodukte, Lebensmittel in kleinen Chargen oder Verpackungen für örtliche Betriebe.",
+        "start": "Testen Sie ein Produkt mit wenigen Abnehmern, geeigneten hygienischen Räumen und einem wiederholbaren Rezept oder Verpackungsverfahren.",
+        "budget": "Zutaten, lebensmittelgeeignete Geräte, Verpackung, Etiketten, Prüfungen, Lagerung, Lieferung und verdorbene oder unverkaufte Ware.",
+        "checks": "Klären Sie Hygiene-, Lebensmittel- und Kennzeichnungsvorschriften vor dem Verkauf. Prüfen Sie Haltbarkeit und Lagerung; Trocknen oder Versiegeln allein garantiert keine Sicherheit.",
+        "source": "ZimTrade: Wertschöpfung für Kleinbetriebe",
+        "image_alt": "Verpackte getrocknete Mango aus Simbabwe",
+        "customers": "Örtliche Geschäfte, Caterer sowie Erzeuger und Verarbeiter, die geeignete Verpackungen benötigen.",
+        "income": "Verkaufen Sie kalkulierte Chargen oder Verpackungsaufträge. Berücksichtigen Sie Arbeit, Ausschuss, Rückgaben und Zahlungsfristen der Händler.",
+        "improvement": "Nutzen Sie einheitliche Packungsgrößen und Chargenaufzeichnungen. Holen Sie Rückmeldungen zu Qualität, Etiketten und Preisen vor einer Erweiterung ein.",
+        "monitor": "Dokumentieren Sie Zutaten, erzeugte Mengen, Ausschuss und Verkäufe. Gleichen Sie Lebensmittel- und Verpackungsbestände mit Zahlungseingängen ab."
+      },
+      "solar": {
+        "title": "Solar- & Wasserdienstleistungen",
+        "summary": "Erkunden Sie Ausrüstungslieferung und Wartungskoordination mit qualifizierten Solar- und Wassertechnikern.",
+        "start": "Beginnen Sie mit einem fachlich bewerteten Wartungsauftrag. Eine qualifizierte Fachkraft legt die Arbeiten fest und führt sie aus.",
+        "budget": "Werkzeuge, Prüfgeräte, Ersatzteile, Transport, Facharbeit und Nachbesserungen im Rahmen der Garantie.",
+        "checks": "Prüfen Sie Qualifikationen, Produktspezifikationen und schriftliche Garantien. Klären Sie örtliche Genehmigungen für Elektro- oder Wasserarbeiten und sicheren Zugang zum Einsatzort.",
+        "source": "GET.invest: Energiesektor in Simbabwe",
+        "image_alt": "Installation von Solarmodulen auf einem Dach in Simbabwe",
+        "customers": "Haushalte, kleine Geschäfte und Höfe mit bestehenden Anlagen, die eine fachliche Prüfung oder Wartung benötigen.",
+        "income": "Berechnen Sie vereinbarte Ausrüstung und erledigte Leistungen. Trennen Sie Lieferung, Arbeit und Nachbetreuung im Angebot.",
+        "improvement": "Führen Sie ein Anlagenverzeichnis mit Wartungsterminen, Seriennummern und Garantien. Vereinbaren Sie einen Wartungsplan mit der Fachkraft.",
+        "monitor": "Fordern Sie Arbeits-, Prüf- und Übergabeberichte, Lieferantenrechnungen und Kundenabnahmen an. Prüfen Sie wiederkehrende Störungen vor weiteren Einkäufen."
       }
     },
     "economic_snapshot": {
@@ -737,41 +775,6 @@
       "gdp_size": "BIP-Größe",
       "economic_scale": "Wirtschaftliche Größenordnung",
       "top_growth_sectors": "Sektoren mit höchstem Wachstum"
-    },
-    "hero": {
-      "badge1": "Simbabwe erkunden",
-      "title1": "Möglichkeiten verstehen",
-      "subtitle1": "Lesen Sie Projektprofile, vergleichen Sie Branchen und bereiten Sie Fragen für weitere Schritte vor.",
-      "rbz_policy": "Richtlinien erkunden",
-      "highlight1": "in Simbabwe",
-      "badge2": "Masuwe SWZ",
-      "title2": "Das Masuwe-Projekt erkunden",
-      "subtitle2": "Lesen Sie über ein Tourismusprojekt bei Victoria Falls. Bestätigen Sie aktuelle Pläne beim aufgeführten Projektträger.",
-      "highlight2": "Top-Lage",
-      "badge3": "VFEX",
-      "title3": "Börse",
-      "subtitle3": "Erkunden Sie Simbabwes Kapitalmarkt. Handel und Kontoeröffnung erfolgen über zugelassene Anbieter.",
-      "highlight3": "Globaler Zugang",
-      "badge4": "Gartenbau",
-      "title4": "Gartenbauprojekte",
-      "subtitle4": "Erkunden Sie Landwirtschafts- und Verarbeitungsprofile. Klären Sie Marktzugang, Kosten und Projektstatus beim Träger.",
-      "highlight4": "Landwirtschaft & Export",
-      "badge5": "Bergbau",
-      "title5": "Mineralreichtum",
-      "subtitle5": "Gold-, Platin- und Lithium-Chancen.",
-      "highlight5": "Strategische Assets",
-      "badge6": "Vorteile im verarbeitenden Gewerbe",
-      "title6": "Wertschöpfende Fertigung",
-      "highlight6": "Exportfähige Kapazität",
-      "subtitle6": "Leichte Fertigungs- und Verarbeitungsprojekte schaffen Arbeitsplätze und stärken die regionale Wettbewerbsfähigkeit.",
-      "badge7": "Tourismushauptstadt",
-      "title7": "Wachstumskorridore im Gastgewerbe",
-      "highlight7": "Besucherwirtschaft",
-      "subtitle7": "Entdecken Sie Informationen zu Tourismusprojekten nahe Simbabwes Reisezielen.",
-      "badge8": "Diasporaströme",
-      "title8": "Den nächsten Schritt recherchieren",
-      "highlight8": "Projektinformationen",
-      "subtitle8": "Nutzen Sie Profile für Recherche und direkte Anfragen. Diese Website bündelt kein Kapital und wickelt keine Anlagen ab."
     },
     "projects": {
       "masuwe": {
@@ -907,55 +910,6 @@
     "explore_title": "Weitere Investitionsinfos",
     "explore_subtitle": "Für offizielle Richtlinien besuchen Sie die Zimbabwe Investment and Development Agency.",
     "explore_site": "ZIDA besuchen",
-    "collective_model": {
-      "title": "So erkunden Sie eine Möglichkeit",
-      "subtitle": "Beginnen Sie mit Informationen und prüfen Sie Unterlagen und Bedingungen unabhängig, bevor Sie eine Verpflichtung eingehen.",
-      "s1": "Lesen Sie Branchenprofile und die Beschreibung jedes Projekts.",
-      "s2": "Bereiten Sie Fragen zu Eigentum, Status, Kosten und Beteiligungsbedingungen vor.",
-      "s3": "Fordern Sie aktuelle Unterlagen vom Träger an und prüfen Sie diese mit unabhängiger Beratung.",
-      "s4": "Vereinbaren Sie Anlagen direkt über geeignete rechtliche und finanzielle Stellen außerhalb dieser Website."
-    },
-    "eu_focus": {
-      "title": "Externe Programme recherchieren",
-      "subtitle": "Europäische Programme geben wirtschaftlichen Kontext. Quellen geprüft am 21. Oktober 2026; daraus folgt keine Finanzierung oder Unterstützung der hier gelisteten Projekte.",
-      "energy": {
-        "title": "Grüne Energie",
-        "detail": "GET.invest Zimbabwe startete im Mai 2025 mit EU- und deutscher Förderung für saubere Energie. Aktuelle Teilnahmebedingungen finden Sie in der Quelle unten."
-      },
-      "agri": {
-        "title": "Landwirtschaft und Wertschöpfungsketten",
-        "detail": "EU-Partnerschaftsprogramme legen Wert auf Gartenbau und traditionelles Getreide, eine klimafreundliche Landwirtschaft, die Anpassung an EU-Exportanforderungen und den Zugang zu Finanzmitteln für KMU in der Agrarindustrie."
-      },
-      "sme": {
-        "title": "Privatsektor und KMU-Finanzierung",
-        "detail": "EIB-Bericht vom 2. Oktober 2025: 60 Mio. Euro an Krediten an Banken in Simbabwe über fünf Jahre, darunter 20 Mio. Euro an Stanbic im März 2025. Dies sind externe Bankprogramme."
-      },
-      "social": {
-        "title": "Gesundheits-, Gender- und Sozialprogramme",
-        "detail": "Die Programme von Team Europe umfassen Maßnahmen zur Gleichstellung der Geschlechter und zur Stärkung der Rolle der Frau sowie praktische Unterstützung wie Finanzkompetenz und Zugangswege zu Finanzmitteln für Frauen und Jugendliche."
-      },
-      "biodiversity": {
-        "title": "Biodiversität und Resilienz",
-        "detail": "Partnerschaften unterstützen auch die biologische Vielfalt und die mit dem Naturschutz verbundene Widerstandsfähigkeit, einschließlich grenzüberschreitender Naturschutzgebiete, die für eine nachhaltige lokale Wirtschaftsentwicklung relevant sind."
-      },
-      "gateway": {
-        "title": "Umschlag der Global Gateway-Partnerschaft",
-        "detail": "Die Europäische Kommission nennt 165 Mio. Euro an Zuschüssen für die Partnerschaft mit Simbabwe 2021–2027. Dies ist eine Kooperationszuweisung, kein über Diaspora Unlocked eingeworbenes Kapital."
-      },
-      "eib_takeaways_title": "Praktische Erkenntnisse der EIB für Investoren aus der Diaspora",
-      "eib_t1": "Von Frauen geführte Kleinunternehmen sind häufig mit Erschwinglichkeits- und Sicherheitenbeschränkungen konfrontiert, die den Zugang zu formellen Krediten einschränken.",
-      "eib_t2": "Mischfinanzierungen und Kreditlinien lokaler Banken können die Kreditbarrieren für mit der Landwirtschaft verbundene KMU senken.",
-      "eib_t3": "Finanzkompetenz und Unternehmensunterstützungsdienste verbessern die Investitionsbereitschaft und Kreditwürdigkeit kleiner Unternehmen.",
-      "source_getinvest": "GET.invest Zimbabwe · geprüft 21.10.2026",
-      "source_eu": "Europäische Kommission · geprüft 21.10.2026",
-      "source_eib": "EIB-Bericht · 02.10.2025"
-    },
-    "crowdfunding_steps": {
-      "browse": "Profile lesen",
-      "invest": "Fragen vorbereiten",
-      "track": "Unterlagen prüfen",
-      "returns": "Unabhängig entscheiden"
-    },
     "tourism": {
       "snapshot": {
         "title": "Simbabwe Tourismus-Schnappschuss (2026)",
@@ -1167,8 +1121,72 @@
         "title": "Fertigungsschnappschuss (2026)"
       }
     },
-    "sectors_explore": "Projektprofile ansehen",
-    "sectors_info": "Lesen Sie Projektbeschreibungen und sammeln Sie Fragen an den aufgeführten Träger. Die Profile bestätigen weder ein Anlageangebot noch Verfügbarkeit oder finanzielle Ergebnisse."
+    "landing": {
+      "eyebrow": "Unternehmen & Investitionen",
+      "title": "Geben Sie Ihren Ideen Raum.",
+      "highlight": "In Simbabwe.",
+      "description": "Praktische Geschäftsideen für Menschen in Simbabwe und im Ausland. Erkunden Sie ein überschaubares erstes Vorhaben, verstehen Sie die Kosten und klären Sie nötige Prüfungen vor dem Einsatz Ihrer Ersparnisse.",
+      "ideas_cta": "Geschäftsideen erkunden",
+      "plan_cta": "Den ersten Schritt planen",
+      "principle": "Klein anfangen. Kunden verstehen. Beteiligt bleiben.",
+      "image_caption": "Alltäglicher Bedarf. Ideen zum Weiterdenken."
+    },
+    "plan": {
+      "title": "Ihr erstes Vorhaben in vier Schritten",
+      "subtitle": "Machen Sie aus einer interessanten Idee einen Plan, den Sie mit jemandem vor Ort besprechen können.",
+      "customer": {
+        "title": "Kunden verstehen",
+        "description": "Fragen Sie nach Bedarf, bisherigen Käufen und Zahlungsfristen. Testen Sie einen Auftrag oder eine kleine Charge vor größeren Bestellungen."
+      },
+      "costs": {
+        "title": "Alle Kosten einplanen",
+        "description": "Holen Sie schriftliche Angebote ein und berücksichtigen Sie Betrieb, Transport und eine Reserve. Halten Sie Haushaltsgeld und Notfallrücklagen getrennt."
+      },
+      "agreement": {
+        "title": "Zusammenarbeit festlegen",
+        "description": "Prüfen Sie Betreiber, Eigentum und Genehmigungen unabhängig. Halten Sie Aufgaben, Berichte, Zahlungen, Gewinn- und Verlustverteilung sowie Ausstieg schriftlich fest."
+      },
+      "review": {
+        "title": "Vor dem Wachstum prüfen",
+        "description": "Verfolgen Sie Einnahmen, Ausgaben, Bestände und Lieferungen. Lassen Sie den Standort unabhängig prüfen und rechnen Sie den ersten Versuch vor der nächsten Finanzierung ab."
+      },
+      "checklist_description": "Haben Sie ein konkretes Vorhaben? Nutzen Sie die Checkliste für Fragen und benötigte Unterlagen.",
+      "cta": "Checkliste zur Sorgfaltsprüfung öffnen"
+    },
+    "research": {
+      "title": "Bestehende Projekte und Betriebe recherchieren",
+      "subtitle": "Sie möchten ein bestehendes Vorhaben erkunden? Hier finden Sie Ausgangspunkte für Anfragen und unabhängige Prüfungen.",
+      "projects": {
+        "title": "Projektkatalog",
+        "description": "Lesen Sie Profile aus Landwirtschaft, Energie, Produktion und weiteren Branchen. Viele betreffen größere Projekte; klären Sie Status, Umfang und Teilnahmebedingungen direkt mit dem Projektträger.",
+        "cta": "Projektprofile durchsuchen"
+      },
+      "directory": {
+        "title": "Unternehmensverzeichnis",
+        "description": "Suchen Sie Namen, Branchen und Standorte für Ihre Recherche. Das Verzeichnis wird von DU gepflegt; es ist weder ein amtliches Register noch eine Empfehlung.",
+        "cta": "Verzeichnis durchsuchen"
+      }
+    },
+    "resources": {
+      "title": "Nützliche Quellen für Ihre Recherche",
+      "subtitle": "Prüfen Sie Verfahren, Marktvorbereitung und Teilnahmebedingungen direkt an der Quelle.",
+      "zida": {
+        "title": "Gründung · ZIDA",
+        "description": "Erkunden Sie Geschäftsverfahren, rechtliche Anforderungen und Investorenservices. Klären Sie die Registrierungen und Genehmigungen für Ihr eigenes Vorhaben.",
+        "cta": "ZIDA besuchen"
+      },
+      "zimtrade": {
+        "title": "Märkte & Produkte · ZimTrade",
+        "description": "Recherchieren Sie Käufer, Produktanforderungen, Verpackung und Exportvorbereitung. Wählen Sie einen Marktzugang passend zu Ihrer Kapazität.",
+        "cta": "ZimTrade-Ressourcen erkunden"
+      },
+      "energy": {
+        "title": "Saubere Energie · GET.invest",
+        "description": "Informieren Sie sich über Unterstützung für Energieunternehmen in Simbabwe. Prüfen Sie aktuelle Kriterien und Antragswege; Unterstützung erfolgt nicht automatisch.",
+        "cta": "Programm für Simbabwe lesen"
+      },
+      "note": "DU stellt Informationen für eigene Recherchen bereit. Wir prüfen keine Angebote, bündeln kein Kapital und wickeln keine Investitionen ab. Erträge sind ungewiss; Kapitalverluste sind möglich. Externe Quellen geprüft am 22. Oktober 2026."
+    }
   },
   "common": {
     "coming_soon": "Wir entwickeln intelligente Lösungen, die mithilfe fortschrittlicher KI-Technologie die Art und Weise verändern, wie Sie sich vernetzen, arbeiten und wachsen.",

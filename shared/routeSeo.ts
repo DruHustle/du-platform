@@ -86,10 +86,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
 
   if (pathname === "/investment") {
     return buildSeo(
-      "Zimbabwe Investment Opportunities | Diaspora Unlocked",
-      "Review Zimbabwe investment themes, sector opportunities, and diaspora participation pathways across hospitality, agriculture, manufacturing, technology, and infrastructure.",
+      "Zimbabwe Business & Investment Ideas | Diaspora Unlocked",
+      "Explore practical business ideas in Zimbabwe, plan a small first project, and research existing projects and business requirements from home or abroad.",
       "/investment",
-      "Zimbabwe Investment Opportunities"
+      "Zimbabwe Business & Investment Ideas"
     );
   }
 
