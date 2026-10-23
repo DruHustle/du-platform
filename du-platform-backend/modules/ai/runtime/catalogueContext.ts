@@ -83,7 +83,7 @@ export function asksAboutCatalogue(prompt: string, history: History = []) {
   )
     return false;
   if (
-    Object.values(fieldPatterns).some(pattern => pattern?.test(prompt)) ||
+    requestedFields(prompt).length ||
     /\b(available|verfügbar|zviripo|kukhona|price|preis)\b/i.test(prompt)
   )
     return true;
@@ -103,6 +103,22 @@ const normalize = (text: string) =>
     .replace(/(\d)([a-z])/g, "$1 $2")
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+// Recognize the same public field names customers see in each supported locale,
+// including multiword Shona/Ndebele labels rather than only English keywords.
+function requestedFields(prompt: string) {
+  const query = ` ${normalize(prompt)} `;
+  return Object.entries(fieldPatterns)
+    .filter(
+      ([field, pattern]) =>
+        pattern!.test(prompt) ||
+        Object.values(answerCopy).some(locale =>
+          query.includes(
+            ` ${normalize(locale.fields[field as keyof typeof locale.fields])} `
+          )
+        )
+    )
+    .map(([field]) => field as keyof ProductDetails);
+}
 const commonNameWords = new Set(
   "the a an of and with zimbabwe zimbabwean home world cup kit set pack case bottle single traditional product products".split(
     " "
@@ -115,6 +131,9 @@ const genericWords = new Set(
 );
 const followUpWords = new Set([
   ...Array.from(genericWords),
+  ...Object.values(answerCopy).flatMap(locale =>
+    Object.values(locale.fields).flatMap(label => normalize(label).split(" "))
+  ),
   ..."does contain contains that those this one them has sizes size small medium large xl xxl variants variant options origin provenance supplier sourcing manufacturer producer delivery eligibility materials material storage handling volume quantity net weight capacity pack from where made in hat haben und das diese deren welche herkunft grossen lagerung zvacho icho chii uye mune yakhona lokho izithako ko futhi".split(
     " "
   ),
@@ -200,9 +219,7 @@ export async function catalogueReply(
       .split(" ")
       .every(w => genericWords.has(w));
     if (!named.length && !generic) return `${l.none}\n\n${l.note}`;
-    const requested = Object.entries(fieldPatterns)
-      .filter(([, pattern]) => pattern!.test(prompt))
-      .map(([field]) => field as keyof ProductDetails);
+    const requested = requestedFields(prompt);
     if (!named.length && requested.length)
       return `${facts.choose}\n\n[${facts.information}](/shop/products)`;
     const availableOnly =
