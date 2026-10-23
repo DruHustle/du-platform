@@ -1,3 +1,4 @@
+import { initializeShopPilot } from "./modules/shop/pilotSchema";
 import { initializeAdminAccounts } from "./modules/admin/bootstrap";
 import { initializeNewsletterDatabase } from "./modules/newsletter/schema";
 import mysql from "mysql2/promise";
@@ -375,6 +376,7 @@ export async function initializeDatabase(): Promise<void> {
       }
     }
 
+    await initializeShopPilot(db);
     await initializeNewsletterDatabase(db);
 
     await syncNtirSeedData();

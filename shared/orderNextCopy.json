@@ -1,0 +1,50 @@
+{
+  "en": {
+    "request_received": "The shop will review stock and your delivery destination.",
+    "under_review": "A final quote is being prepared. No payment is due yet.",
+    "quote_sent": "Review the final quote before accepting. Stock is checked again when payment is recorded.",
+    "quote_accepted": "Contact the shop to arrange the agreed assisted payment.",
+    "payment_confirmed": "Payment recorded; dispatch is being prepared.",
+    "dispatched": "Use the carrier and tracking reference for delivery enquiries.",
+    "delivered": "Delivery recorded. Contact the shop with any concerns.",
+    "cancelled": "Request cancelled. Contact the shop about any refund.",
+    "expired": "This quote has expired. Request a revised quote.",
+    "payment_issue": "Payment has been recorded, but availability needs review. Contact the shop to agree fulfilment or a refund; do not pay again."
+  },
+  "de": {
+    "request_received": "Der Shop prüft Bestand und Lieferziel.",
+    "under_review": "Das endgültige Angebot wird vorbereitet. Noch keine Zahlung fällig.",
+    "quote_sent": "Das endgültige Angebot vor Annahme prüfen. Der Bestand wird bei Zahlungserfassung erneut geprüft.",
+    "quote_accepted": "Kontaktieren Sie den Shop für die vereinbarte Zahlung.",
+    "payment_confirmed": "Zahlung erfasst; der Versand wird vorbereitet.",
+    "dispatched": "Für Lieferanfragen Versanddienst und Sendungsnummer verwenden.",
+    "delivered": "Zustellung erfasst. Bei Problemen den Shop kontaktieren.",
+    "cancelled": "Anfrage storniert. Für Erstattungen den Shop kontaktieren.",
+    "expired": "Dieses Angebot ist abgelaufen. Neues Angebot anfordern.",
+    "payment_issue": "Die Zahlung wurde erfasst, aber die Verfügbarkeit muss geprüft werden. Lieferung oder Erstattung mit dem Shop klären; nicht erneut zahlen."
+  },
+  "sn": {
+    "request_received": "Chitoro chichaongorora huwandu huripo nekero.",
+    "under_review": "Mutengo wekupedzisira uri kugadzirirwa. Usabhadhara pari zvino.",
+    "quote_sent": "Ongorora mutengo usati wabvuma. Huwandu hunoongororwa zvakare kana mari yanyorwa.",
+    "quote_accepted": "Bata chitoro kuronga kubhadhara kwamabvumirana.",
+    "payment_confirmed": "Mari yanyorwa; kutumira kuri kugadzirirwa.",
+    "dispatched": "Shandisa mutakuri nenhamba yekutevera kubvunza nezvekutumira.",
+    "delivered": "Kusvika kwanyorwa. Bata chitoro kana paine dambudziko.",
+    "cancelled": "Chikumbiro chakanzurwa. Bata chitoro nezvekudzorerwa kwemari.",
+    "expired": "Nguva yemutengo yapera. Kumbira mutengo mutsva.",
+    "payment_issue": "Mari yanyorwa asi kuwanikwa kwechigadzirwa kunoda kuongororwa. Bata chitoro kuronga kutumira kana kudzorerwa kwemari; usabhadhara zvakare."
+  },
+  "nd": {
+    "request_received": "Isitolo sizahlola impahla ekhona lekheli.",
+    "under_review": "Intengo yokucina iyalungiswa. Ungakabhadali khathesi.",
+    "quote_sent": "Hlola intengo ungakamukeli. Impahla ihlolwa futhi lapho kubhalwa imali.",
+    "quote_accepted": "Thinta isitolo ukuhlela ukubhadala elivumelene ngakho.",
+    "payment_confirmed": "Imali ibhaliwe; ukuthumela kuyalungiswa.",
+    "dispatched": "Sebenzisa umthwali lenombolo yokulandelela ukubuza ngokuthumela.",
+    "delivered": "Ukufika kubhaliwe. Thinta isitolo nxa kulohlupho.",
+    "cancelled": "Isicelo sikhanseliwe. Thinta isitolo ngokubuyiselwa kwemali.",
+    "expired": "Isikhathi sentengo siphelile. Cela intengo entsha.",
+    "payment_issue": "Imali ibhaliwe kodwa impahla ekhona idinga ukuhlolwa. Thinta isitolo ukuvumelana ngokuthumela kumbe ukubuyiselwa kwemali; ungabhadali futhi."
+  }
+}

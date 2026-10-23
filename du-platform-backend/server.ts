@@ -1,3 +1,4 @@
+import { startOrderNotificationWorker } from "./modules/shop/orderNotifications";
 import { startNewsletterWorker } from "./modules/newsletter/worker";
 import compression from "compression";
 import express from "express";
@@ -275,8 +276,10 @@ export async function startServer() {
     );
   }
 
+  const stopOrderWorker = startOrderNotificationWorker();
   const stopNewsletterWorker = startNewsletterWorker();
   server.once("close", stopNewsletterWorker);
+  server.once("close", stopOrderWorker);
 
   console.log(`Server running on http://localhost:${activePort}/`);
   return { app, server, port: activePort };
