@@ -1,3 +1,4 @@
+import { isShopCurrency } from "@shared/shopCurrency";
 import { safeSessionStorage } from "@/lib/browserStorage";
 
 export type OrderReceipt = {
@@ -31,7 +32,7 @@ export function isOrderReceipt(value: unknown): value is OrderReceipt {
       ["awaiting_payment", "paid", "failed"].includes(order.status) &&
       ["manual_assisted", "dummy_gateway"].includes(order.paymentMethod) &&
       /^[a-f0-9]{64}$/.test(order.manageToken) &&
-      order.currency === "EUR" &&
+      isShopCurrency(order.currency) &&
       [order.subtotalCents, order.shippingCents, order.totalCents].every(
         amount => Number.isSafeInteger(amount) && amount >= 0
       ) &&

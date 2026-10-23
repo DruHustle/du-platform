@@ -6,6 +6,7 @@ import { AdminController } from "../controllers/adminController";
 
 export function createAdminModuleRouter() {
   const router = Router();
+  router.use((_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
   const controller = new AdminController();
 
   router.use(requireJwtAuth, requireAdminAuth);

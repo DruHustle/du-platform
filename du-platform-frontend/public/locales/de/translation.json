@@ -1260,12 +1260,10 @@
       "toast_hide": "Geschichte wird ausgeblendet."
     },
     "shop": {
-      "slug_placeholder": "URL-Kennung",
+      "slug_placeholder": "Produkt-URL-Kennung",
       "name_placeholder": "Produktname",
       "image_placeholder": "Bild-URL oder Pfad",
-      "category_placeholder": "Kategorie: sports/crafts/food",
-      "price_placeholder": "Preis in Cent (z. B. 4999)",
-      "stock_placeholder": "Lagerbestand",
+      "stock_placeholder": "Verfügbare Menge",
       "currency_placeholder": "Währung",
       "description_placeholder": "Beschreibung",
       "display_label": "Produkt anzeigen",
@@ -1277,8 +1275,27 @@
       "badge_hide": "Ausblenden",
       "edit": "Bearbeiten",
       "delete": "Löschen",
-      "empty": "Noch keine Produkte vorhanden."
-    }
+      "empty": "Noch keine Produkte vorhanden.",
+      "price_label": "Preis ({{currency}})",
+      "invalid_price": "Geben Sie einen positiven Preis mit höchstens zwei Nachkommastellen ein.",
+      "saved": "Produkt gespeichert. Der Shop-Katalog wurde aktualisiert.",
+      "deleted": "Produkt gelöscht.",
+      "saving": "Wird gespeichert…",
+      "discard": "Nicht gespeicherte Produktänderungen verwerfen?",
+      "confirm_delete": "„{{name}}“ löschen? Produkte mit Bestellhistorie müssen stattdessen ausgeblendet werden.",
+      "category_label": "Kategorie",
+      "search": "Produkt suchen",
+      "help": "Verwalten Sie Produkte, Preise, Bestand und Sichtbarkeit. Preise verwenden die unten gewählte Währung. Neue Produkte sind zunächst ausgeblendet; geben Sie nur bestätigte Bestände frei. Bilder können eine HTTPS-URL oder ein Bildpfad der Website sein.",
+      "categories": {
+        "sports": "Kleidung & Sport",
+        "crafts": "Kunst & Handwerk",
+        "food": "Lebensmittel",
+        "beverage": "Getränke"
+      }
+    },
+    "login_title": "Admin-Anmeldung",
+    "login_subtitle": "Melden Sie sich mit Ihrem autorisierten Administratorkonto an. Zum ersten Mal hier? Bestätigen Sie Ihre E-Mail über „Passwort vergessen“ und legen Sie Ihr Passwort fest.",
+    "access_denied": "Dieses Konto benötigt Administratorrechte und eine bestätigte E-Mail-Adresse. Verwenden Sie für eine autorisierte Admin-Adresse „Passwort vergessen“ und melden Sie sich danach erneut an."
   },
   "shop": {
     "collections": "Kollektionen",
@@ -1514,6 +1531,13 @@
       "principle": "Die Lieferung wird über DHL organisiert. Nennen Sie Ihr Ziel; das Team bestätigt Verfügbarkeit, Endkosten und Zahlungsanweisungen, bevor Sie bezahlen.",
       "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
       "collections_cta": "Kategorien entdecken"
+    },
+    "currency": {
+      "label": "Shop-Währung",
+      "EUR": "EUR · Europa",
+      "USD": "USD · Simbabwe",
+      "ZAR": "ZAR · Südafrika",
+      "note": "Preise sind Schätzwerte. Endgültige Produktpreise und DHL-Versandkosten werden vor der Zahlung bestätigt. Referenzumrechnung: 15. Oktober 2026."
     }
   },
   "notfound": {

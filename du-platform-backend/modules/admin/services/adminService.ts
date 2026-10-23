@@ -1,3 +1,4 @@
+import { isShopCurrency } from "../../../../shared/shopCurrency";
 import {
   ADMIN_SETTING_NOTIFY_ALERT_EMAILS,
   ADMIN_SETTING_NOTIFY_FROM_EMAIL,
@@ -16,6 +17,67 @@ export class AdminServiceError extends Error {
     super(message);
     this.name = "AdminServiceError";
   }
+}
+
+function validateProductFields(
+  input: Partial<{
+    slug: string;
+    name: string;
+    description: string;
+    image_url: string;
+    currency: string;
+    stock_qty: number;
+    is_active: unknown;
+  }>
+) {
+  const fail = (message: string): never => {
+    throw new AdminServiceError("VALIDATION_FAILED", 400, message);
+  };
+  if (
+    input.slug !== undefined &&
+    !/^[a-z0-9][a-z0-9_-]{0,159}$/.test(input.slug)
+  )
+    fail(
+      "Use a product URL key with lowercase letters, numbers, hyphens or underscores."
+    );
+  if (
+    input.name !== undefined &&
+    (!input.name.trim() || input.name.length > 255)
+  )
+    fail("Product name is required (up to 255 characters).");
+  if (
+    input.description !== undefined &&
+    (!input.description.trim() || input.description.length > 10000)
+  )
+    fail("Description is required (up to 10000 characters).");
+  if (input.image_url !== undefined) {
+    const image = input.image_url;
+    let valid = /^\/(?!\/)[^\s\\]+$/.test(image);
+    try {
+      const url = new URL(image);
+      valid = url.protocol === "https:" && !url.username && !url.password;
+    } catch {
+      /* Local image paths are also supported. */
+    }
+    if (!valid || image.length > 500)
+      fail(
+        "Use a local image path or an HTTPS image URL (up to 500 characters)."
+      );
+  }
+  if (input.currency !== undefined && !isShopCurrency(input.currency))
+    fail("Currency must be EUR, USD or ZAR.");
+  if (
+    input.stock_qty !== undefined &&
+    (!Number.isSafeInteger(input.stock_qty) ||
+      input.stock_qty < 0 ||
+      input.stock_qty > 2_147_483_647)
+  )
+    fail("Stock must be a whole number, zero or greater.");
+  if (
+    input.is_active !== undefined &&
+    ![0, 1, true, false].includes(input.is_active as number | boolean)
+  )
+    fail("Visibility must be true or false.");
 }
 
 export class AdminService {
@@ -300,13 +362,20 @@ export class AdminService {
   }) {
     const slug = String(input.slug ?? "").trim();
     const name = String(input.name ?? "").trim();
-    const category = String(input.category ?? "").trim().toLowerCase();
+    const category = String(input.category ?? "")
+      .trim()
+      .toLowerCase();
     const description = String(input.description ?? "").trim();
     const image_url = String(input.image_url ?? "").trim();
     const price_cents = Number(input.price_cents ?? 0);
-    const currency = String(input.currency ?? "EUR").trim().toUpperCase();
-    const stock_qty = Math.max(0, Math.floor(Number(input.stock_qty ?? 0)));
-    const is_active = input.is_active === 0 || input.is_active === false ? (0 as const) : (1 as const);
+    const currency = String(input.currency ?? "EUR")
+      .trim()
+      .toUpperCase();
+    const stock_qty = Number(input.stock_qty ?? 0);
+    const is_active =
+      input.is_active === 0 || input.is_active === false
+        ? (0 as const)
+        : (1 as const);
 
     if (!slug || !name || !description || !image_url) {
       throw new AdminServiceError(
@@ -315,22 +384,39 @@ export class AdminService {
         "Slug, name, description and image are required."
       );
     }
-    if (!["sports", "crafts", "food"].includes(category)) {
+    if (!["sports", "crafts", "food", "beverage"].includes(category)) {
       throw new AdminServiceError(
         "VALIDATION_FAILED",
         400,
-        "Category must be sports, crafts, or food."
+        "Category must be sports, crafts, food, or beverage."
       );
     }
-    if (!Number.isFinite(price_cents) || price_cents <= 0) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Price must be greater than zero.");
+    if (
+      !Number.isSafeInteger(price_cents) ||
+      price_cents <= 0 ||
+      price_cents > 2_147_483_647
+    ) {
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Price must be greater than zero."
+      );
     }
 
+    validateProductFields({
+      slug,
+      name,
+      description,
+      image_url,
+      currency,
+      stock_qty,
+      is_active: input.is_active,
+    });
     return {
       row: await this.repository.createShopProduct({
         slug,
         name,
-        category: category as "sports" | "crafts" | "food",
+        category: category as "sports" | "crafts" | "food" | "beverage",
         description,
         image_url,
         price_cents: Math.floor(price_cents),
@@ -356,34 +442,63 @@ export class AdminService {
     },
     updatedByEmail: string
   ) {
-    if (!Number.isFinite(id)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Invalid product id.");
-    }
-
-    const rawCategory =
-      input.category !== undefined ? String(input.category).trim().toLowerCase() : undefined;
-    if (rawCategory !== undefined && !["sports", "crafts", "food"].includes(rawCategory)) {
+    if (!Number.isSafeInteger(id) || id <= 0) {
       throw new AdminServiceError(
         "VALIDATION_FAILED",
         400,
-        "Category must be sports, crafts, or food."
+        "Invalid product id."
       );
     }
 
-    const rawPrice = input.price_cents !== undefined ? Number(input.price_cents) : undefined;
-    if (rawPrice !== undefined && (!Number.isFinite(rawPrice) || rawPrice <= 0)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Price must be greater than zero.");
+    const rawCategory =
+      input.category !== undefined
+        ? String(input.category).trim().toLowerCase()
+        : undefined;
+    if (
+      rawCategory !== undefined &&
+      !["sports", "crafts", "food", "beverage"].includes(rawCategory)
+    ) {
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Category must be sports, crafts, food, or beverage."
+      );
     }
 
-    const rawStock = input.stock_qty !== undefined ? Number(input.stock_qty) : undefined;
-    if (rawStock !== undefined && (!Number.isFinite(rawStock) || rawStock < 0)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Stock must be zero or greater.");
+    const rawPrice =
+      input.price_cents !== undefined ? Number(input.price_cents) : undefined;
+    if (
+      rawPrice !== undefined &&
+      (!Number.isSafeInteger(rawPrice) ||
+        rawPrice <= 0 ||
+        rawPrice > 2_147_483_647)
+    ) {
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Price must be greater than zero."
+      );
+    }
+
+    const rawStock =
+      input.stock_qty !== undefined ? Number(input.stock_qty) : undefined;
+    if (
+      rawStock !== undefined &&
+      (!Number.isSafeInteger(rawStock) ||
+        rawStock < 0 ||
+        rawStock > 2_147_483_647)
+    ) {
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Stock must be zero or greater."
+      );
     }
 
     const payload: Partial<{
       slug: string;
       name: string;
-      category: "sports" | "crafts" | "food";
+      category: "sports" | "crafts" | "food" | "beverage";
       description: string;
       image_url: string;
       price_cents: number;
@@ -394,19 +509,33 @@ export class AdminService {
 
     if (input.slug !== undefined) payload.slug = String(input.slug).trim();
     if (input.name !== undefined) payload.name = String(input.name).trim();
-    if (input.description !== undefined) payload.description = String(input.description).trim();
-    if (input.image_url !== undefined) payload.image_url = String(input.image_url).trim();
-    if (rawCategory !== undefined) payload.category = rawCategory as "sports" | "crafts" | "food";
+    if (input.description !== undefined)
+      payload.description = String(input.description).trim();
+    if (input.image_url !== undefined)
+      payload.image_url = String(input.image_url).trim();
+    if (rawCategory !== undefined)
+      payload.category = rawCategory as
+        | "sports"
+        | "crafts"
+        | "food"
+        | "beverage";
     if (rawPrice !== undefined) payload.price_cents = Math.floor(rawPrice);
-    if (input.currency !== undefined) payload.currency = String(input.currency).trim().toUpperCase();
+    if (input.currency !== undefined)
+      payload.currency = String(input.currency).trim().toUpperCase();
     if (rawStock !== undefined) payload.stock_qty = Math.floor(rawStock);
     if (input.is_active !== undefined) {
-      payload.is_active = input.is_active === 0 || input.is_active === false ? 0 : 1;
+      payload.is_active =
+        input.is_active === 0 || input.is_active === false ? 0 : 1;
     }
 
+    validateProductFields({ ...payload, is_active: input.is_active });
     const beforeRow = await this.repository.getShopProductById(Math.floor(id));
-    const row = await this.repository.updateShopProduct(Math.floor(id), payload);
-    if (!row) throw new AdminServiceError("NOT_FOUND", 404, "Product not found.");
+    const row = await this.repository.updateShopProduct(
+      Math.floor(id),
+      payload
+    );
+    if (!row)
+      throw new AdminServiceError("NOT_FOUND", 404, "Product not found.");
 
     const prevStock = Number((beforeRow as any)?.stock_qty ?? 0);
     const nextStock = Number((row as any)?.stock_qty ?? 0);
@@ -424,12 +553,17 @@ export class AdminService {
   }
 
   async deleteShopProduct(id: number) {
-    if (!Number.isFinite(id)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Invalid product id.");
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Invalid product id."
+      );
     }
 
     const deleted = await this.repository.deleteShopProduct(Math.floor(id));
-    if (!deleted) throw new AdminServiceError("NOT_FOUND", 404, "Product not found.");
+    if (!deleted)
+      throw new AdminServiceError("NOT_FOUND", 404, "Product not found.");
     return { ok: true };
   }
 }

@@ -1264,12 +1264,10 @@
       "toast_hide": "Indaba ayizukuvezwa."
     },
     "shop": {
-      "slug_placeholder": "Isikhombi se-URL",
+      "slug_placeholder": "Ukhiye wekheli lento",
       "name_placeholder": "Ibizo lempahla",
       "image_placeholder": "I-URL kumbe indlela yesithombe",
-      "category_placeholder": "Uhlobo: sports/crafts/food",
-      "price_placeholder": "Intengo ngamasenti (isib. 4999)",
-      "stock_placeholder": "Inani elikhona",
+      "stock_placeholder": "Ubunengi obukhona",
       "currency_placeholder": "Uhlobo lwemali",
       "description_placeholder": "Ingcazelo",
       "display_label": "Veza impahla",
@@ -1281,8 +1279,27 @@
       "badge_hide": "Ungavezi",
       "edit": "Lungisani",
       "delete": "Susani",
-      "empty": "Akukabi lempahla yesitolo."
-    }
+      "empty": "Akukabi lempahla yesitolo.",
+      "price_label": "Intengo ({{currency}})",
+      "invalid_price": "Faka intengo edlula uziro elamadijithi angedluli amabili ngemva kwedesimali.",
+      "saved": "Into igciniwe. Uhlu lwesitolo selulungisiwe.",
+      "deleted": "Into isusiwe.",
+      "saving": "Kuyagcinwa…",
+      "discard": "Lahla inguquko zento ezingakagcinwa yini?",
+      "confirm_delete": "Susa “{{name}}” yini? Izinto esezake zacelwa ngabathengi kumele zifihlwe kulokususwa.",
+      "category_label": "Isigaba",
+      "search": "Dinga into",
+      "help": "Faka kumbe ulungise izinto, intengo, ubunengi lokubonakala. Intengo isebenzisa imali ekhethwe ngezansi. Izinto ezintsha ziqala zifihlwe; veza kuphela ubunengi obuqinisekisiweyo. Imifanekiso ingaba likheli leHTTPS kumbe indlela yomfanekiso wesayithi.",
+      "categories": {
+        "sports": "Izigqoko lemidlalo",
+        "crafts": "Ubuciko lemisebenzi yezandla",
+        "food": "Ukudla",
+        "beverage": "Okunathwayo"
+      }
+    },
+    "login_title": "Ukungena komphathi",
+    "login_subtitle": "Ngena nge-akhawunti yakho yomphathi evunyelweyo. Kungokokuqala yini? Sebenzisa Ukhohlwe Iphasiwedi ukuqinisekisa i-imeyili yakho lokukhetha iphasiwedi.",
+    "access_denied": "I-akhawunti le idinga imvumo yomphathi le-imeyili eqinisekisiweyo. Nxa i-imeyili yakho ivunyelwe, sebenzisa Ukhohlwe Iphasiwedi uphinde ungene."
   },
   "shop": {
     "collections": "Amaqoqo (Collections)",
@@ -1518,6 +1535,13 @@
       "principle": "Ukudiliva kuhlelwa ngeDHL. Sitsheleni indawo yenu; iqembu liqinisekisa ukutholakala kwenkonzo, izindleko zokucina lendlela yokubhadala lingakabhadali.",
       "caption": "Ukudla · Imisebenzi yezandla · Izigqoko zabasekeli",
       "collections_cta": "Hlola izigaba"
+    },
+    "currency": {
+      "label": "Imali yesitolo",
+      "EUR": "EUR · EYurophu",
+      "USD": "USD · EZimbabwe",
+      "ZAR": "ZAR · EMzansi Afrika",
+      "note": "Amanani la ayizilinganiso; intengo yokucina yezinto lokuhambisa ngeDHL kuqinisekiswa ungakabhadali. Ukuguqulwa kwemali kusekelwe kumhlaka 15 Mfumfu 2026."
     }
   },
   "notfound": {

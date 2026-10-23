@@ -1,3 +1,8 @@
+import {
+  convertShopCents,
+  SHOP_PRICING_REVISION,
+  type ShopCurrency,
+} from "../../../shared/shopCurrency";
 import { customerLanguage } from "../../../shared/customerLanguage";
 import crypto from "crypto";
 import {
@@ -486,8 +491,11 @@ export async function createShopOrder(payload: {
   paymentMethod: ShopPaymentMethod;
   items: Array<{ productId: number; quantity: number }>;
   requestToken?: string;
+  currency?: ShopCurrency;
+  pricingRevision?: string;
 }) {
   payload = shopOrderRequestSchema.parse(payload);
+  const currency = payload.currency ?? "EUR";
   const customerName = payload.customerName.trim();
   const customerEmail = payload.customerEmail.trim().toLowerCase();
   const shippingCountry = payload.shippingCountry.trim();
@@ -563,6 +571,7 @@ export async function createShopOrder(payload: {
       stored.shipping_country !== shippingCountry ||
       stored.shipping_city !== shippingCity ||
       stored.shipping_address !== shippingAddress ||
+      existing.currency !== currency ||
       existing.deliverySpeed !== deliverySpeed ||
       existing.paymentMethod !== paymentMethod ||
       !sameItems
@@ -577,6 +586,16 @@ export async function createShopOrder(payload: {
     const existing = await replay();
     if (existing) return existing;
   }
+
+  if (
+    (payload.pricingRevision &&
+      payload.pricingRevision !== SHOP_PRICING_REVISION) ||
+    (currency !== "EUR" && !payload.pricingRevision)
+  )
+    throw new ShopRequestError(
+      "Prices have changed. Refresh the shop before submitting your request.",
+      409
+    );
 
   if (!db && !isMemoryFallbackEnabled()) {
     throw new ShopRequestError(
@@ -599,18 +618,31 @@ export async function createShopOrder(payload: {
         throw new ShopRequestError("A product is unavailable.");
       if (product.stock_qty < item.quantity)
         throw new ShopRequestError(`Insufficient stock for ${product.name}.`);
-      return { product, quantity: item.quantity };
+      return {
+        product: {
+          ...product,
+          id: Number(product.id),
+          name: String(product.name),
+          price_cents: convertShopCents(
+            Number(product.price_cents),
+            product.currency,
+            currency
+          ),
+          currency,
+        },
+        baseUnitPriceCents: convertShopCents(
+          Number(product.price_cents),
+          product.currency,
+          "EUR"
+        ),
+        quantity: item.quantity,
+      };
     });
 
     const subtotalCents = selectedProducts.reduce(
       (sum, entry) => sum + entry.product.price_cents * entry.quantity,
       0
     );
-    if (selectedProducts.some(entry => entry.product.currency !== "EUR")) {
-      throw new ShopRequestError(
-        "These products cannot be combined in a EUR order request. Please contact the shop."
-      );
-    }
     if (
       !Number.isSafeInteger(subtotalCents) ||
       subtotalCents < 0 ||
@@ -620,12 +652,20 @@ export async function createShopOrder(payload: {
         "The order total is too large. Please contact the shop."
       );
     }
-    const shippingCents = calculateShopShippingCents(
-      subtotalCents,
-      deliverySpeed
+    const baseSubtotalCents = selectedProducts.reduce(
+      (sum, entry) => sum + entry.baseUnitPriceCents * entry.quantity,
+      0
+    );
+    const shippingCents = convertShopCents(
+      calculateShopShippingCents(baseSubtotalCents, deliverySpeed),
+      "EUR",
+      currency
     );
     const totalCents = subtotalCents + shippingCents;
-    const currency = selectedProducts[0]?.product.currency ?? "EUR";
+    if (totalCents > 2_147_483_647)
+      throw new ShopRequestError(
+        "The order total is too large. Please contact the shop."
+      );
 
     const orderId = memoryShopOrders.length + 1;
     const now = new Date().toISOString();
@@ -710,18 +750,31 @@ export async function createShopOrder(payload: {
           `Insufficient stock for ${String(product.name)}.`
         );
       }
-      return { product, quantity: item.quantity };
+      return {
+        product: {
+          ...product,
+          id: Number(product.id),
+          name: String(product.name),
+          price_cents: convertShopCents(
+            Number(product.price_cents),
+            product.currency,
+            currency
+          ),
+          currency,
+        },
+        baseUnitPriceCents: convertShopCents(
+          Number(product.price_cents),
+          product.currency,
+          "EUR"
+        ),
+        quantity: item.quantity,
+      };
     });
 
     const subtotalCents = selectedProducts.reduce(
       (sum, entry) => sum + Number(entry.product.price_cents) * entry.quantity,
       0
     );
-    if (selectedProducts.some(entry => entry.product.currency !== "EUR")) {
-      throw new ShopRequestError(
-        "These products cannot be combined in a EUR order request. Please contact the shop."
-      );
-    }
     if (
       !Number.isSafeInteger(subtotalCents) ||
       subtotalCents < 0 ||
@@ -731,12 +784,20 @@ export async function createShopOrder(payload: {
         "The order total is too large. Please contact the shop."
       );
     }
-    const shippingCents = calculateShopShippingCents(
-      subtotalCents,
-      deliverySpeed
+    const baseSubtotalCents = selectedProducts.reduce(
+      (sum, entry) => sum + entry.baseUnitPriceCents * entry.quantity,
+      0
+    );
+    const shippingCents = convertShopCents(
+      calculateShopShippingCents(baseSubtotalCents, deliverySpeed),
+      "EUR",
+      currency
     );
     const totalCents = subtotalCents + shippingCents;
-    const currency = String(selectedProducts[0]?.product.currency ?? "EUR");
+    if (totalCents > 2_147_483_647)
+      throw new ShopRequestError(
+        "The order total is too large. Please contact the shop."
+      );
 
     const [orderResult] = await connection.execute<mysql.ResultSetHeader>(
       `
@@ -1106,7 +1167,7 @@ export async function getShopProductById(id: number) {
 export async function createShopProductAdmin(payload: {
   slug: string;
   name: string;
-  category: "sports" | "crafts" | "food";
+  category: "sports" | "crafts" | "food" | "beverage";
   description: string;
   image_url: string;
   price_cents: number;
@@ -1165,7 +1226,7 @@ export async function updateShopProductAdmin(
   payload: Partial<{
     slug: string;
     name: string;
-    category: "sports" | "crafts" | "food";
+    category: "sports" | "crafts" | "food" | "beverage";
     description: string;
     image_url: string;
     price_cents: number;

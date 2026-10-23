@@ -66,6 +66,8 @@ export function isLoginLocked(emailKey: string): {
 }
 
 type MemoryUser = {
+  email_verified_at?: string | null;
+  auth_version?: number;
   id: number;
   full_name: string;
   email: string;
@@ -184,19 +186,27 @@ export async function createUser(
 export async function updateUserPassword(userId: number, passwordHash: string) {
   if (!db) {
     const user = memoryUsers.find(entry => entry.id === userId);
-    if (user) user.password_hash = passwordHash;
+    if (user) {
+      user.password_hash = passwordHash;
+      user.email_verified_at = new Date().toISOString();
+      user.auth_version = (user.auth_version ?? 0) + 1;
+    }
     return;
   }
 
   try {
-    await db.execute("UPDATE users SET password_hash = ? WHERE id = ?", [
-      passwordHash,
-      userId,
-    ]);
+    await db.execute(
+      "UPDATE users SET password_hash = ?, email_verified_at = CURRENT_TIMESTAMP, auth_version = auth_version + 1 WHERE id = ?",
+      [passwordHash, userId]
+    );
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
     const user = memoryUsers.find(entry => entry.id === userId);
-    if (user) user.password_hash = passwordHash;
+    if (user) {
+      user.password_hash = passwordHash;
+      user.email_verified_at = new Date().toISOString();
+      user.auth_version = (user.auth_version ?? 0) + 1;
+    }
   }
 }
 

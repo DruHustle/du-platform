@@ -1,8 +1,9 @@
+import { initializeAdminAccounts } from "./modules/admin/bootstrap";
 import { initializeNewsletterDatabase } from "./modules/newsletter/schema";
 import mysql from "mysql2/promise";
 import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
 import { ntirSeedEntities } from "./shared/persistence/investmentStore";
-import { shopSeedProducts } from "./shared/persistence/shopStore";
+import { synchronizeShopCatalog } from "./modules/shop/catalogSeed";
 
 async function syncNtirSeedData(): Promise<void> {
   if (!db) return;
@@ -95,41 +96,6 @@ async function withDatabaseInitializationLock<T>(
   }
 }
 
-async function syncShopProductsSeedData(): Promise<void> {
-  if (!db) return;
-  for (const product of shopSeedProducts) {
-    await db.execute(
-      `
-      INSERT INTO shop_products (slug, name, category, description, image_url, price_cents, currency, stock_qty, is_active)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE
-        name = VALUES(name),
-        category = VALUES(category),
-        description = VALUES(description),
-        image_url = VALUES(image_url),
-        price_cents = VALUES(price_cents),
-        currency = VALUES(currency),
-        is_active = VALUES(is_active),
-        stock_qty = CASE
-          WHEN shop_products.stock_qty <= 0 THEN VALUES(stock_qty)
-          ELSE shop_products.stock_qty
-        END
-      `,
-      [
-        product.slug,
-        product.name,
-        product.category,
-        product.description,
-        product.image_url,
-        product.price_cents,
-        product.currency,
-        product.stock_qty,
-        product.is_active,
-      ]
-    );
-  }
-}
-
 export async function initializeDatabase(): Promise<void> {
   if (!db) {
     if (isMemoryFallbackEnabled()) return;
@@ -150,6 +116,18 @@ export async function initializeDatabase(): Promise<void> {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+    for (const column of [
+      "email_verified_at TIMESTAMP NULL DEFAULT NULL",
+      "auth_version INT NOT NULL DEFAULT 0",
+    ]) {
+      try {
+        await db.execute(`ALTER TABLE users ADD COLUMN ${column}`);
+      } catch (error) {
+        if ((error as { code?: string }).code !== "ER_DUP_FIELDNAME")
+          throw error;
+      }
+    }
 
     await db.execute(`
     CREATE TABLE IF NOT EXISTS ntir_entities (
@@ -401,6 +379,7 @@ export async function initializeDatabase(): Promise<void> {
 
     await syncNtirSeedData();
     await syncAdminSettingsSeedData();
-    await syncShopProductsSeedData();
+    await synchronizeShopCatalog(db);
+    await initializeAdminAccounts(db);
   });
 }

@@ -1,3 +1,4 @@
+import { isAdminEmail } from "../../../shared/adminIdentity";
 import { issueAccessTokenForUser } from "../../../shared/authSession";
 import { sendResetEmail } from "../../../shared/email";
 import { hashPassword, verifyPassword } from "../../../shared/passwords";
@@ -45,7 +46,7 @@ export class AuthService {
       .trim()
       .toLowerCase();
     const existing = await this.repository.findByEmail(normalizedEmail);
-    if (existing) {
+    if (existing || isAdminEmail(normalizedEmail)) {
       throw new AuthServiceError(
         "AUTH_EMAIL_EXISTS",
         409,
@@ -81,6 +82,7 @@ export class AuthService {
           id: Number(user.id),
           email: String(user.email ?? ""),
           full_name: String(user.full_name ?? ""),
+          auth_version: 0,
         }),
       },
     };
@@ -129,6 +131,7 @@ export class AuthService {
           id: Number(user.id),
           email: String(user.email ?? ""),
           full_name: String(user.full_name ?? ""),
+          auth_version: Number(user.auth_version ?? 0),
         }),
       },
     };
@@ -219,6 +222,7 @@ export class AuthService {
         id: Number(user.id ?? 0),
         email: String(user.email ?? ""),
         full_name: String(user.full_name ?? ""),
+        auth_version: Number(user.auth_version ?? 0),
       }),
     };
   }

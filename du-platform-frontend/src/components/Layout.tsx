@@ -1278,6 +1278,12 @@ export default function Layout({ children }: LayoutProps) {
             </p>
             <div className="flex max-w-full flex-wrap justify-center gap-x-6 gap-y-3">
               <Link
+                href="/admin"
+                className="inline-flex min-h-11 items-center text-slate-400 hover:text-white transition-colors uppercase tracking-widest font-bold"
+              >
+                {tr("nav.admin", "Admin")}
+              </Link>
+              <Link
                 href="/privacy-policy"
                 className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold"
               >

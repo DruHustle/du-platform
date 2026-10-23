@@ -47,7 +47,8 @@
     "test:e2e:discovery": "node scripts/tests/e2e-discovery.mjs",
     "test:e2e:vr:music": "node scripts/tests/e2e-vr-music.mjs",
     "test:e2e:shop:integrated": "node --import tsx scripts/tests/e2e-shop-integrated.mjs",
-    "test:deploy": "node --test scripts/tests/oracle-deploy.test.mjs && PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/oracle-release-worker.test.py"
+    "test:deploy": "node --test scripts/tests/oracle-deploy.test.mjs && PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/oracle-release-worker.test.py",
+    "test:e2e:shop:admin": "node scripts/tests/e2e-shop-admin.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

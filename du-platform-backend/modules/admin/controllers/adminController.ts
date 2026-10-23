@@ -16,6 +16,28 @@ export class AdminController {
       return res.status(err.status).json(error(err.code, err.message));
     }
 
+    if (fallbackCode.startsWith("SHOP_PRODUCT") && (err as { code?: string })?.code === "ER_DUP_ENTRY")
+      return res
+        .status(409)
+        .json(
+          error(
+            "SHOP_PRODUCT_EXISTS",
+            "This product URL key is already in use. Choose another key."
+          )
+        );
+    if (
+      fallbackCode.startsWith("SHOP_PRODUCT") && ["ER_ROW_IS_REFERENCED_2", "ER_ROW_IS_REFERENCED"].includes(
+        String((err as { code?: string })?.code)
+      )
+    )
+      return res
+        .status(409)
+        .json(
+          error(
+            "SHOP_PRODUCT_IN_USE",
+            "This product has order history. Hide it instead of deleting it."
+          )
+        );
     return res.status(500).json(error(fallbackCode, fallbackMessage));
   }
 

@@ -1,3 +1,6 @@
+import { convertShopCents, SHOP_PRICING_REVISION } from "@shared/shopCurrency";
+import { useShopCurrency } from "../lib/useShopCurrency";
+import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import { customerLanguage } from "@shared/customerLanguage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
@@ -85,6 +88,8 @@ function normalizeProductCategory(raw: unknown): ProductCategory {
 
 export default function ShopProducts() {
   const { t, i18n } = useTranslation();
+  const { currency } = useShopCurrency();
+  const money = (cents: number) => formatMoney(cents, currency);
   const [pathname, setLocation] = useLocation();
   const search = useSearch();
   const location = `${pathname}${search ? `?${search}` : ""}`;
@@ -292,7 +297,9 @@ export default function ShopProducts() {
         return {
           item,
           product,
-          lineTotal: product.price_cents * item.quantity,
+          lineTotal:
+            convertShopCents(product.price_cents, product.currency, currency) *
+            item.quantity,
         };
       })
       .filter(Boolean) as Array<{
@@ -300,7 +307,7 @@ export default function ShopProducts() {
       product: ShopProduct;
       lineTotal: number;
     }>;
-  }, [cart, productsById]);
+  }, [cart, productsById, currency]);
 
   const getLocalizedProductDescription = (product: ShopProduct) =>
     t(`shop.products.descriptions.${product.slug}`, {
@@ -308,9 +315,17 @@ export default function ShopProducts() {
     });
 
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
-  const shippingCents = calculateShopShippingCents(
-    subtotalCents,
-    deliverySpeed
+  const baseSubtotalCents = cartRows.reduce(
+    (sum, row) =>
+      sum +
+      convertShopCents(row.product.price_cents, row.product.currency, "EUR") *
+        row.item.quantity,
+    0
+  );
+  const shippingCents = convertShopCents(
+    calculateShopShippingCents(baseSubtotalCents, deliverySpeed),
+    "EUR",
+    currency
   );
   const totalCents = subtotalCents + shippingCents;
   const whatsappNumber = normalizeWhatsAppPhone(
@@ -335,15 +350,12 @@ export default function ShopProducts() {
       t("shop.products.whatsapp.order_items", { defaultValue: "Order Items:" }),
       ...cartRows.map(
         row =>
-          `- ${row.product.name} x${row.item.quantity} (${formatMoney(
-            row.product.price_cents,
-            row.product.currency
-          )} ${t("shop.products.whatsapp.each", { defaultValue: "each" })})`
+          `- ${row.product.name} x${row.item.quantity} (${money(convertShopCents(row.product.price_cents, row.product.currency, currency))} ${t("shop.products.whatsapp.each", { defaultValue: "each" })})`
       ),
       "",
-      `${t("shop.products.totals.subtotal", { defaultValue: "Subtotal" })}: ${formatMoney(subtotalCents)}`,
-      `${t("shop.products.totals.shipping", { defaultValue: "Delivery allowance (estimate)" })}: ${formatMoney(shippingCents)}`,
-      `${t("shop.products.totals.total", { defaultValue: "Estimated total" })}: ${formatMoney(totalCents)}`,
+      `${t("shop.products.totals.subtotal", { defaultValue: "Subtotal" })}: ${money(subtotalCents)}`,
+      `${t("shop.products.totals.shipping", { defaultValue: "Delivery allowance (estimate)" })}: ${money(shippingCents)}`,
+      `${t("shop.products.totals.total", { defaultValue: "Estimated total" })}: ${money(totalCents)}`,
       `${t("shop.products.delivery_speed.label", { defaultValue: "Delivery preference" })}: ${
         deliverySpeed === "express"
           ? t("shop.products.delivery_speed.express", {
@@ -485,6 +497,8 @@ export default function ShopProducts() {
     setPlacingOrder(true);
     try {
       const parsed = shopOrderRequestSchema.safeParse({
+        currency,
+        pricingRevision: SHOP_PRICING_REVISION,
         language: customerLanguage(i18n.resolvedLanguage ?? i18n.language),
         customerName: effectiveCustomerName,
         customerEmail: effectiveCustomerEmail,
@@ -584,15 +598,18 @@ export default function ShopProducts() {
                     })}
                   </p>
                 </div>
-                <Link
-                  href="/shop"
-                  className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-300 hover:text-zim-gold"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  {t("shop.products.back_to_shop", {
-                    defaultValue: "Back to Shop",
-                  })}
-                </Link>
+                <div className="flex flex-wrap items-center gap-3">
+                  <ShopCurrencySelect compact disabled={placingOrder} />
+                  <Link
+                    href="/shop"
+                    className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-300 hover:text-zim-gold"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    {t("shop.products.back_to_shop", {
+                      defaultValue: "Back to Shop",
+                    })}
+                  </Link>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -800,6 +817,10 @@ export default function ShopProducts() {
                       </span>
                     </div>
 
+                    <p className="mb-4 text-xs leading-5 text-slate-400">
+                      {t("shop.currency.note")}
+                    </p>
+
                     {!receiptOnly && (
                       <>
                         {cart.length > 0 && (
@@ -896,10 +917,7 @@ export default function ShopProducts() {
                                     onRemove={() => removeOne(row.product.id)}
                                   />
                                   <p className="text-[11px] text-zim-gold font-black">
-                                    {formatMoney(
-                                      row.lineTotal,
-                                      row.product.currency
-                                    )}
+                                    {money(row.lineTotal)}
                                   </p>
                                 </div>
                               </div>
@@ -914,7 +932,7 @@ export default function ShopProducts() {
                                 defaultValue: "Subtotal",
                               })}
                             </span>
-                            <span>{formatMoney(subtotalCents)}</span>
+                            <span>{money(subtotalCents)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>
@@ -922,7 +940,7 @@ export default function ShopProducts() {
                                 defaultValue: "Delivery allowance (estimate)",
                               })}
                             </span>
-                            <span>{formatMoney(shippingCents)}</span>
+                            <span>{money(shippingCents)}</span>
                           </div>
                           <div className="flex justify-between text-white font-black text-[11px]">
                             <span>
@@ -930,7 +948,7 @@ export default function ShopProducts() {
                                 defaultValue: "Estimated total",
                               })}
                             </span>
-                            <span>{formatMoney(totalCents)}</span>
+                            <span>{money(totalCents)}</span>
                           </div>
                         </div>
                       </>
@@ -1133,7 +1151,7 @@ export default function ShopProducts() {
                                     defaultValue: "Express delivery request",
                                   }
                                 ),
-                                hint: `${t("shop.products.delivery_speed.express_hint", { defaultValue: "Availability and timing confirmed after review" })} (+${formatMoney(800)})`,
+                                hint: `${t("shop.products.delivery_speed.express_hint", { defaultValue: "Availability and timing confirmed after review" })} (+${money(convertShopCents(800, "EUR", currency))})`,
                               },
                             ].map(option => (
                               <label
@@ -1501,7 +1519,7 @@ export default function ShopProducts() {
               <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />
               <span className="text-xs text-white/80 truncate">
                 {cartItemCount > 0
-                  ? `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${formatMoney(totalCents)}`
+                  ? `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${money(totalCents)}`
                   : t("shop.products.cart.empty_short", {
                       defaultValue: "Your cart is empty",
                     })}
