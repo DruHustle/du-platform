@@ -7,7 +7,7 @@ export async function queueOrderNotification(
   publicMessage = ""
 ) {
   const [rows] = await c.query<RowDataPacket[]>(
-    `SELECT o.order_ref,o.customer_email,o.customer_name,o.shipping_address,o.shipping_city,o.shipping_country,o.currency,o.total_cents,q.total_cents AS quote_total,q.currency AS quote_currency,q.items AS quote_items,COALESCE(q.shipping_cents,o.shipping_cents) AS shipping_cents,q.valid_until,q.version AS quote_version,w.carrier,w.tracking,w.refund_cents FROM shop_orders o LEFT JOIN shop_order_workflows w ON w.order_id=o.id LEFT JOIN shop_quotes q ON q.order_id=o.id AND q.version=w.quote_version WHERE o.id=?`,
+    `SELECT o.order_ref,o.customer_email,o.customer_name,o.shipping_address,o.shipping_city,o.shipping_country,o.currency,o.total_cents,q.total_cents AS quote_total,q.currency AS quote_currency,q.items AS quote_items,COALESCE(q.shipping_cents,o.shipping_cents) AS shipping_cents,q.valid_until,q.version AS quote_version,w.carrier,w.tracking,w.refund_cents,w.postal_code,w.customer_notes FROM shop_orders o LEFT JOIN shop_order_workflows w ON w.order_id=o.id LEFT JOIN shop_quotes q ON q.order_id=o.id AND q.version=w.quote_version WHERE o.id=?`,
     [orderId]
   );
   const [items] = await c.query<RowDataPacket[]>(
@@ -18,6 +18,16 @@ export async function queueOrderNotification(
     ...rows[0],
     items: rows[0].quote_items ? JSON.parse(rows[0].quote_items) : items,
     public_message: publicMessage,
+    ...(key.endsWith(":refund")
+      ? {
+          refund: (
+            await c.query<RowDataPacket[]>(
+              "SELECT amount_cents,currency,created_at FROM shop_order_refunds WHERE order_id=? ORDER BY id DESC LIMIT 1",
+              [orderId]
+            )
+          )[0][0],
+        }
+      : {}),
   };
   const data = JSON.stringify(snapshot);
   await c.execute(

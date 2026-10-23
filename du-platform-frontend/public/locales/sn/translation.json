@@ -2064,6 +2064,12 @@
     "trip_invalid": "Tarisa mazuva ako upe nzvimbo imwe neimwe zuva rimwe, pamwe nemazuva ekusvika nekubva.",
     "shop_hero_alt": "Mabhasikiti akarukwa ari mukatalogi yezvigadzirwa",
     "discard_changes": "Rasa zvachinjwa zvisati zvachengetwa here?",
-    "privacy_whatsapp": "Kusarudza WhatsApp kunovhura sevhisi yeMeta nemashoko echikumbiro akatoiswa. Ongorora mashoko acho usati washandisa; kutumira meseji idanho rakasiyana. Maemail nefoni zvinovhura maapp amunosarudza."
+    "privacy_whatsapp": "Kusarudza WhatsApp kunovhura sevhisi yeMeta nemashoko echikumbiro akatoiswa. Ongorora mashoko acho usati washandisa; kutumira meseji idanho rakasiyana. Maemail nefoni zvinovhura maapp amunosarudza.",
+    "legacy_quote_details": "Mutengo uyu wekare hauna sarudzo dzechigadzirwa dzakasimbiswa. Bvunza chitoro usati waenderera.",
+    "refund_remaining": "Mari yakabhadharwa yasara mushure mekudzorerwa",
+    "legacy_refund_notice": "Imwe mari yakadzorerwa yakanyorwa pasati pava nemarekodhi akaparadzana. Bvunza chitoro kuti zvienzaniswe.",
+    "command_recovered": "Chiito chakachengetwa. Ongorora mamiriro azvino usati waenderera.",
+    "command_unconfirmed": "Mhinduro haina kusimbiswa. Ongorora mamiriro kana kudzokorora chiito chisina kuchinjwa; usatumira chimwe chikumbiro chemari.",
+    "command_changed": "Chikumbiro chachinja. Ongorora mamiriro azvino usati waenderera."
   }
 }
