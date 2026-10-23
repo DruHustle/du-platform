@@ -356,6 +356,7 @@ export default function ShopProducts() {
           `- ${row.product.name} x${row.item.quantity} (${money(convertShopCents(row.product.price_cents, row.product.currency, currency))} ${t("shop.products.whatsapp.each", { defaultValue: "each" })})`
       ),
       "",
+      `${t("shop.currency.label")}: ${currency}`,
       `${t("shop.products.totals.subtotal", { defaultValue: "Subtotal" })}: ${money(subtotalCents)}`,
       `${t("shop.products.totals.shipping", { defaultValue: "Delivery allowance (estimate)" })}: ${money(shippingCents)}`,
       `${t("shop.products.totals.total", { defaultValue: "Estimated total" })}: ${money(totalCents)}`,
@@ -377,6 +378,8 @@ export default function ShopProducts() {
       `${t("shop.products.fields.country", { defaultValue: "Country" })}: ${shippingCountry || "-"}`,
       `${t("shop.products.fields.city", { defaultValue: "City" })}: ${shippingCity || "-"}`,
       `${t("shop.products.fields.address", { defaultValue: "Address" })}: ${shippingAddress || "-"}`,
+      `${t("pilot.postal_code")}: ${postalCode || "-"}`,
+      `${t("pilot.requested_options")}: ${customerNotes || "-"}`,
       "",
       t("shop.products.whatsapp.outro", {
         defaultValue:
@@ -394,6 +397,12 @@ export default function ShopProducts() {
     shippingCountry,
     shippingCity,
     shippingAddress,
+    postalCode,
+    customerNotes,
+    currency,
+    t,
+    i18n.resolvedLanguage,
+    i18n.language,
     deliverySpeed,
     whatsappNumber,
   ]);

@@ -47,6 +47,29 @@ export async function initializeShopPilot(pool: Pool) {
     action VARCHAR(40) NOT NULL, actor VARCHAR(254) NOT NULL, note TEXT NOT NULL,
     public_message TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY order_command (order_id, request_id), FOREIGN KEY (order_id) REFERENCES shop_orders(id) ON DELETE CASCADE)`);
+  await pool.execute(`CREATE TABLE IF NOT EXISTS shop_order_refunds (
+    id INT AUTO_INCREMENT PRIMARY KEY, order_id INT NOT NULL, command_id VARCHAR(80) NOT NULL,
+    amount_cents INT NOT NULL, currency VARCHAR(3) NOT NULL,
+    external_reference VARCHAR(255) NOT NULL, reference_provider VARCHAR(80) NOT NULL,
+    reference_hash CHAR(64) NOT NULL, actor VARCHAR(254) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY refund_command (order_id,command_id),
+    UNIQUE KEY refund_reference (order_id,reference_provider,reference_hash),
+    FOREIGN KEY (order_id) REFERENCES shop_orders(id) ON DELETE CASCADE)`);
+  // An aggregate is not evidence of individual refunds. Preserve the original
+  // last-known reference separately; never manufacture historical ledger rows.
+  await pool.execute(`CREATE TABLE IF NOT EXISTS shop_refund_legacy_balances (
+    order_id INT PRIMARY KEY, amount_cents INT NOT NULL, currency VARCHAR(3) NOT NULL,
+    last_known_reference VARCHAR(255) NOT NULL,
+    captured_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES shop_orders(id) ON DELETE CASCADE)`);
+  await pool.execute(`INSERT IGNORE INTO shop_refund_legacy_balances
+    (order_id,amount_cents,currency,last_known_reference)
+    SELECT w.order_id,w.refund_cents-COALESCE(r.total,0),COALESCE(q.currency,o.currency),w.refund_reference
+    FROM shop_order_workflows w JOIN shop_orders o ON o.id=w.order_id
+    LEFT JOIN shop_quotes q ON q.order_id=w.order_id AND q.version=w.quote_version
+    LEFT JOIN (SELECT order_id,SUM(amount_cents) AS total FROM shop_order_refunds GROUP BY order_id) r ON r.order_id=w.order_id
+    WHERE w.refund_cents>COALESCE(r.total,0)`);
   try {
     await pool.execute(
       "ALTER TABLE shop_order_events ADD COLUMN request_hash CHAR(64) NOT NULL DEFAULT ''"

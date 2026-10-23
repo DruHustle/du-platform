@@ -2064,6 +2064,12 @@
     "trip_invalid": "Hlola izinsuku zakho unike indawo ngayinye usuku olulodwa, kanye lezinsuku zokufika lokusuka.",
     "shop_hero_alt": "Amabhasikithi alukiweyo asekhathalogini yemikhiqizo",
     "discard_changes": "Lahla izinguquko ezingakagcinwa yini?",
-    "privacy_whatsapp": "Ukukhetha iWhatsApp kuvula insiza yeMeta lemininingwane yesicelo esifakiwe. Hlola ulwazi ungakayisebenzisi; ukuthumela umlayezo linyathelo elihlukileyo. Izixhumanisi ze-imeyili lefoni zivula ama-app owakhethayo."
+    "privacy_whatsapp": "Ukukhetha iWhatsApp kuvula insiza yeMeta lemininingwane yesicelo esifakiwe. Hlola ulwazi ungakayisebenzisi; ukuthumela umlayezo linyathelo elihlukileyo. Izixhumanisi ze-imeyili lefoni zivula ama-app owakhethayo.",
+    "legacy_quote_details": "Le ntengo endala ayilakho okukhethiweyo kwempahla okuqinisekisiweyo. Buza isitolo ungakaqhubeki.",
+    "refund_remaining": "Imali ebhadaliweyo esele ngemva kokubuyiselwa",
+    "legacy_refund_notice": "Enye imali ebuyiselweyo yabhalwa kungakabi lamarekhodi ngamanye. Xhumana lesitolo ukuze kuqondaniswe.",
+    "command_recovered": "Isenzo sigciniwe. Hlola isimo samanje ungakaqhubeki.",
+    "command_unconfirmed": "Impendulo ayiqinisekiswanga. Hlola isimo kumbe uphinde isenzo esingatshintshwanga; ungathumeli esinye isicelo semali.",
+    "command_changed": "Isicelo sesitshintshile. Hlola isimo samanje ungakaqhubeki."
   }
 }

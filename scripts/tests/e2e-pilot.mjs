@@ -241,17 +241,31 @@ try {
   await adminPage.waitForURL("**/admin");
   await adminPage.getByRole("button", { name: "Orders", exact: true }).click();
   await adminPage.getByRole("button").filter({ hasText: ref }).click();
+  const loseAdminActions = new Set(["payment_confirmed", "refund"]);
+  await adminPage.route("**/api/admin/orders/*/commands", async route => {
+    const body = route.request().postDataJSON();
+    if (!loseAdminActions.has(body.action)) return route.continue();
+    loseAdminActions.delete(body.action);
+    assert.equal((await route.fetch()).status(), 200);
+    await route.abort("failed");
+  });
   const action = adminPage.getByLabel("Action", { exact: true });
-  const saveAction = async value => {
+  const saveAction = async (value, lost = false) => {
     await action.selectOption(value);
     const response = adminPage.waitForResponse(r =>
-      r.url().endsWith("/commands")
+      lost
+        ? r.request().method() === "GET" &&
+          r.url().endsWith(`/admin/orders/${ref}`)
+        : r.url().endsWith("/commands")
     );
     await adminPage
       .getByRole("button", { name: "Save action", exact: true })
       .click();
     assert.equal((await response).status(), 200);
-    await action.waitFor();
+    await adminPage.waitForFunction(
+      () =>
+        document.querySelector('select[aria-label="Action"]')?.value === "note"
+    );
     await page
       .getByRole("button", { name: "Refresh status", exact: true })
       .click();
@@ -260,23 +274,66 @@ try {
   await action.selectOption("quote_sent");
   await adminPage.getByLabel(/Unit price:/).fill("4.85");
   await adminPage
+    .getByLabel(/Confirmed item details:/)
+    .fill("Fixture sealed pack, agreed with customer");
+  await adminPage
     .getByLabel("Confirmed delivery charge", { exact: true })
     .fill("6.50");
   await adminPage
     .getByLabel("Valid until (local time)", { exact: true })
     .fill(new Date(Date.now() + 86400000).toISOString().slice(0, 16));
   await saveAction("quote_sent");
+  const acceptanceRequests = [];
+  let failAcceptanceResponse = true,
+    failReconciliation = false;
+  await page.route("**/api/shop/orders/*/accept-quote", async route => {
+    acceptanceRequests.push(route.request().postDataJSON());
+    if (!failAcceptanceResponse) return route.continue();
+    failAcceptanceResponse = false;
+    assert.equal((await route.fetch()).status(), 200);
+    failReconciliation = true;
+    await route.abort("failed");
+  });
+  await page.route("**/api/shop/orders/*/workflow", async route => {
+    if (!failReconciliation) return route.continue();
+    failReconciliation = false;
+    await route.abort("failed");
+  });
+  await page
+    .getByRole("button", { name: "Accept this quote", exact: true })
+    .click();
+  await page
+    .getByRole("alert")
+    .filter({ hasText: "The response could not be confirmed" })
+    .waitFor();
   await page
     .getByRole("button", { name: "Accept this quote", exact: true })
     .click();
   await page.getByText("Quote accepted", { exact: true }).waitFor();
+  assert.equal(acceptanceRequests.length, 2);
+  assert.equal(
+    acceptanceRequests[0].requestId,
+    acceptanceRequests[1].requestId
+  );
+  pass(
+    "Lost quote-acceptance response and failed reconciliation retry reuse one command ID"
+  );
   // Reload the latest version after a customer action; stale admin commands must fail closed.
   await adminPage.getByRole("button").filter({ hasText: ref }).click();
   await action.selectOption("payment_confirmed");
   await adminPage
     .getByLabel("Received payment reference", { exact: true })
     .fill("LOCAL-RECEIVED");
-  await saveAction("payment_confirmed");
+  await saveAction("payment_confirmed", true);
+  await adminPage
+    .getByText(
+      "The response was lost, but the action was saved. The current order is shown.",
+      { exact: true }
+    )
+    .waitFor();
+  pass(
+    "Lost payment-confirmation response is reconciled before another action; stock consumed once"
+  );
   await action.selectOption("dispatched");
   await adminPage.getByLabel("Carrier", { exact: true }).fill("DHL");
   await adminPage
@@ -298,6 +355,56 @@ try {
   assert.equal(stock.stock_qty, 1);
   pass(
     "Admin review → final quote → secure customer acceptance → actual payment reference → dispatch/tracking → delivery; original estimate preserved"
+  );
+  for (const [amount, reference, lost] of [
+    ["2.00", "LOCAL-REFUND-A", true],
+    ["3.00", "LOCAL-REFUND-B", false],
+  ]) {
+    await action.selectOption("refund");
+    await adminPage
+      .getByLabel("Actual refund amount", { exact: true })
+      .fill(amount);
+    await adminPage
+      .getByLabel("Refund reference", { exact: true })
+      .fill(reference);
+    await adminPage
+      .getByLabel("Refund payment channel / provider", { exact: true })
+      .fill("fixture bank");
+    await saveAction("refund", lost);
+  }
+  const refunded = (await call(`/admin/orders/${ref}`, "GET", undefined, token))
+    .body.data;
+  assert.equal(refunded.refunds.length, 2);
+  assert.equal(refunded.state.refundCents, 500);
+  assert.equal(refunded.state.remainingPaidCents, 635);
+  assert.equal(
+    refunded.history.filter(e => e.action === "quote_accepted").length,
+    1
+  );
+  assert.equal(
+    refunded.history.filter(e => e.action === "payment_confirmed").length,
+    1
+  );
+  assert.equal(
+    refunded.notifications.filter(n => n.event_key.endsWith(":refund")).length,
+    2
+  );
+  const customerRefund = (
+    await call(
+      `/shop/orders/${ref}/workflow`,
+      "GET",
+      undefined,
+      undefined,
+      order.manageToken
+    )
+  ).body.data;
+  assert.equal(customerRefund.refunds.length, 2);
+  assert(!JSON.stringify(customerRefund).includes("LOCAL-REFUND"));
+  await page
+    .getByText("Paid balance remaining after refunds", { exact: false })
+    .waitFor();
+  pass(
+    "Two partial refunds retain individual records and paid balance; a lost response creates no duplicate ledger entry or notification"
   );
   await page.screenshot({
     path: output + "/customer-delivered-390.png",

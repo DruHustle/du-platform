@@ -2060,6 +2060,12 @@
     "trip_invalid": "Prüfen Sie die Daten und planen Sie mindestens einen Tag je Ziel sowie An- und Abreisetage ein.",
     "shop_hero_alt": "Geflochtene Körbe aus dem Produktkatalog",
     "discard_changes": "Nicht gespeicherte Änderungen verwerfen?",
-    "privacy_whatsapp": "Die WhatsApp-Übergabe öffnet den Dienst von Meta mit vorausgefüllten Anfragedaten. Prüfen Sie die Informationen vorher; das Absenden einer Nachricht ist ein eigener Schritt. E-Mail- und Telefonlinks öffnen Ihre gewählten Anwendungen."
+    "privacy_whatsapp": "Die WhatsApp-Übergabe öffnet den Dienst von Meta mit vorausgefüllten Anfragedaten. Prüfen Sie die Informationen vorher; das Absenden einer Nachricht ist ein eigener Schritt. E-Mail- und Telefonlinks öffnen Ihre gewählten Anwendungen.",
+    "legacy_quote_details": "Dieses ältere Angebot enthält keine bestätigten Artikeloptionen. Bitte vor dem Fortfahren mit dem Shop klären.",
+    "refund_remaining": "Verbleibender gezahlter Betrag nach Erstattungen",
+    "legacy_refund_notice": "Ein Teil der Erstattungssumme stammt aus der Zeit vor den Einzelbelegen. Bitte mit dem Shop abstimmen.",
+    "command_recovered": "Die Aktion wurde gespeichert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
+    "command_unconfirmed": "Die Antwort konnte nicht bestätigt werden. Prüfen Sie den Status oder wiederholen Sie die unveränderte Aktion; keine weitere Zahlungsanfrage senden.",
+    "command_changed": "Die Anfrage hat sich geändert. Prüfen Sie vor dem Fortfahren den aktuellen Status."
   }
 }
