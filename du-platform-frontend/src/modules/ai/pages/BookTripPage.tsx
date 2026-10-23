@@ -1,3 +1,5 @@
+import { createTripPlanPdf } from "../lib/tripPlanPdf";
+import { buildClientFallbackPlan } from "../lib/fallbackTripPlan";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -41,132 +43,6 @@ function formatDateForInput(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-function escapePdfText(value: string): string {
-  return value
-    .replace(/\\/g, "\\\\")
-    .replace(/\(/g, "\\(")
-    .replace(/\)/g, "\\)");
-}
-
-function createSimplePdf(lines: string[]): Uint8Array {
-  const safeLines = lines.slice(0, 250);
-  const content = ["BT", "/F1 10 Tf", "50 780 Td", "14 TL"];
-  safeLines.forEach((line, index) => {
-    const text = escapePdfText(line);
-    content.push(`(${text}) Tj`);
-    if (index < safeLines.length - 1) content.push("T*");
-  });
-  content.push("ET");
-  const stream = content.join("\n");
-
-  const objects = [
-    "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj",
-    "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj",
-    "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj",
-    "4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj",
-    `5 0 obj << /Length ${stream.length} >> stream\n${stream}\nendstream endobj`,
-  ];
-
-  let pdf = "%PDF-1.4\n";
-  const offsets: number[] = [0];
-  objects.forEach(obj => {
-    offsets.push(pdf.length);
-    pdf += `${obj}\n`;
-  });
-  const xrefPosition = pdf.length;
-  pdf += `xref\n0 ${objects.length + 1}\n`;
-  pdf += "0000000000 65535 f \n";
-  offsets.slice(1).forEach(offset => {
-    pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
-  });
-  pdf += `trailer << /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefPosition}\n%%EOF`;
-
-  return new TextEncoder().encode(pdf);
-}
-
-function buildClientFallbackPlan(params: {
-  departureAirport: string;
-  arrivalAttraction: string;
-  arrivalAirport: string;
-  comfort: string;
-  budget: string;
-  days: number;
-  travelers: number;
-}): PlanResult {
-  const nights = Math.max(1, params.days);
-  const budgetMult =
-    params.budget === "high" ? 1.35 : params.budget === "low" ? 0.85 : 1;
-  const comfortMult =
-    params.comfort === "premium" ? 1.4 : params.comfort === "budget" ? 0.8 : 1;
-  const flightsCost = Math.round(750 * budgetMult * params.travelers);
-  const hotelsCost = Math.round(120 * comfortMult * nights * params.travelers);
-  const carCost = Math.round(55 * comfortMult * nights);
-  const experiencesCost = Math.round(
-    70 * params.travelers * Math.min(4, nights)
-  );
-  const total = flightsCost + hotelsCost + carCost + experiencesCost;
-
-  return {
-    summary: `${nights}-day Zimbabwe plan around ${params.arrivalAttraction}, optimized for ${params.budget} budget and ${params.comfort} comfort.`,
-    optimizedFor: "Balanced seasonal value, comfort, and total cost.",
-    estimatedTotalUsd: total,
-    flights: {
-      route: `${params.departureAirport} -> ${params.arrivalAirport}`,
-      cabin: params.comfort === "premium" ? "Business" : "Economy Flex",
-      estimatedCostUsd: flightsCost,
-      rationale: "Estimated from route, comfort profile, and traveler count.",
-    },
-    hotels: {
-      area: `${params.arrivalAttraction} corridor`,
-      style:
-        params.comfort === "premium"
-          ? "4-5 star mix"
-          : params.comfort === "budget"
-            ? "2-3 star lodges"
-            : "3-4 star mix",
-      estimatedCostUsd: hotelsCost,
-      rationale: "Nightly stay estimate aligned with comfort preference.",
-    },
-    carHire: {
-      vehicleClass:
-        params.comfort === "premium" ? "Premium SUV" : "Standard SUV",
-      estimatedCostUsd: carCost,
-      rationale: "Daily local transport estimate for flexible routing.",
-    },
-    experiences: [
-      {
-        name: "Guided local highlights tour",
-        location: params.arrivalAttraction,
-        estimatedCostUsd: Math.round(90 * params.travelers),
-        rationale:
-          "Core orientation experience near your selected destination.",
-      },
-      {
-        name: "Cultural and food experience",
-        location: "Harare/Bulawayo hubs",
-        estimatedCostUsd: Math.round(60 * params.travelers),
-        rationale: "Local culture and cuisine aligned with visitor demand.",
-      },
-    ],
-    itinerary: Array.from({ length: nights }, (_v, i) => ({
-      day: i + 1,
-      title:
-        i === 0
-          ? "Arrival and check-in"
-          : i === nights - 1
-            ? "Departure"
-            : `Day ${i + 1} highlights`,
-      details:
-        i === 0
-          ? `Arrive via ${params.arrivalAirport}, transfer to ${params.arrivalAttraction}, and settle in.`
-          : i === nights - 1
-            ? "Final activities and airport transfer."
-            : "Guided experiences, local dining, and flexible exploration.",
-      estimatedDailyCostUsd: Math.round(total / nights),
-    })),
-  };
 }
 
 export default function BookTripPage() {
@@ -562,6 +438,7 @@ export default function BookTripPage() {
     } catch {
       if (request.signal.aborted) return;
       const fallbackPlan = buildClientFallbackPlan({
+        language: i18n.resolvedLanguage ?? i18n.language ?? "en",
         departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
         arrivalAttraction: selectedArrival.label,
         arrivalAirport: selectedArrival.nearestAirport,
@@ -630,12 +507,12 @@ export default function BookTripPage() {
     );
     result.itinerary.forEach(day => {
       lines.push(
-        `Day ${day.day}: ${day.title} - USD ${day.estimatedDailyCostUsd}`
+        `${t("tourism.onesa.trip_planner.day")} ${day.day}: ${day.title} - USD ${day.estimatedDailyCostUsd}`
       );
       lines.push(`  ${day.details}`);
     });
 
-    const bytes = createSimplePdf(lines);
+    const bytes = createTripPlanPdf(lines);
     const blob = new Blob([bytes], { type: "application/pdf" });
     const link = document.createElement("a");
     const fileNameBase = (
@@ -666,11 +543,11 @@ export default function BookTripPage() {
               </h1>
               <p className="section-subtitle-compact">
                 {t("tourism.onesa.trip_planner.subtitle") ||
-                  "Create a draft itinerary with indicative budgets for flights, stays, transport and experiences, based on your dates and preferences."}
+                  "Create a draft itinerary and indicative budgets for flights, stays, transport and activities. Use it to compare ideas and prepare questions for providers."}
               </p>
               <p className="text-xs text-white/70 mt-3">
                 {t("tourism.onesa.trip_planner.booking_focus") ||
-                  "This planner does not check live prices or availability and does not make bookings. Confirm costs and arrangements directly with providers."}
+                  "Budgets are estimates, not quotes. If Onesa is unavailable, you will see a sample plan using preset allowances. This planner does not check live availability or make bookings."}
               </p>
             </div>
 
@@ -1033,12 +910,12 @@ export default function BookTripPage() {
           <div className="container relative z-10 px-6 mx-auto">
             <div className="content-panel editorial-panel p-8 md:p-10">
               <div className="flex flex-wrap items-center gap-3 mb-5">
-                <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
+                <Badge className="max-w-full whitespace-normal bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
                   {source === "ai"
                     ? t("tourism.onesa.trip_planner.ai_optimized") ||
                       "AI-generated draft"
                     : t("tourism.onesa.trip_planner.fallback_plan") ||
-                      "Sample plan with calculated estimates"}
+                      "Sample plan · preset budget allowances"}
                 </Badge>
                 <span className="text-white/70 text-xs">
                   {result.optimizedFor}

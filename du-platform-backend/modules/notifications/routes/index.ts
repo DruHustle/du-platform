@@ -22,7 +22,7 @@ export function createNotificationsModuleRouter() {
       try {
         const input = parseNewsletter(subscriptionSchema, req.body);
         new NewsletterService()
-          .subscribe(input.email)
+          .subscribe(input.email, input.language)
           .then(data => res.status(202).json(ok(data)))
           .catch(next);
       } catch (error) {

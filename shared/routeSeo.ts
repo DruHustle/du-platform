@@ -109,7 +109,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
         investmentProjectRoutes[slug as keyof typeof investmentProjectRoutes];
       return buildSeo(
         `${projectName} | Diaspora Unlocked`,
-        `Review the ${projectName} opportunity on Diaspora Unlocked, as a starting point for research. Confirm scope, availability, financial terms and approvals independently.`,
+        `Review the ${projectName} project profile on Diaspora Unlocked as a starting point for research. Confirm scope, availability, financial terms and approvals independently.`,
         pathname,
         projectName
       );
@@ -137,7 +137,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/tourism") {
     return buildSeo(
       "Zimbabwe Tourism and Trip Planning | Diaspora Unlocked",
-      "Discover Zimbabwe attractions, safari and heritage destinations, and diaspora-ready trip planning tools with guided itinerary and experience support.",
+      "Compare Zimbabwe destinations and create a draft itinerary with indicative budgets. Explore the AR guide and Sample City VR demo; arrange bookings directly with providers.",
       "/tourism",
       "Zimbabwe Tourism and Trip Planning"
     );
@@ -163,10 +163,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
 
   if (pathname === "/onesa-ai-tourism-virtual-experience") {
     return buildSeo(
-      "Zimbabwe Virtual Tourism Experience | Onesa AI",
-      "Try a Sample City demonstration with panoramic scenes, points of interest and optional narration. Zimbabwe destination tours are not available yet.",
+      "360° VR Demo | Onesa AI",
+      "Explore the Sample City panoramic demo with scene controls and optional narration. This is a demonstration, not a Zimbabwe destination tour.",
       "/onesa-ai-tourism-virtual-experience",
-      "Zimbabwe Virtual Tourism Experience"
+      "360° VR Demo"
     );
   }
 
@@ -182,7 +182,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/login") {
     return buildSeo(
       "Sign In | Diaspora Unlocked",
-      "Secure sign-in page for existing Diaspora Unlocked users.",
+      "Sign in to an existing Diaspora Unlocked account. Browsing and order requests do not require an account.",
       "/login",
       "Sign In",
       "noindex,follow"
@@ -260,8 +260,8 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       ? `Search results for ${searchQuery} | Diaspora Unlocked`
       : "Search Diaspora Unlocked";
     const description = searchQuery
-      ? `Review search results for ${searchQuery} across Diaspora Unlocked modules, guides, and service pathways.`
-      : "Search across Diaspora Unlocked modules, guides, and service pathways.";
+      ? `Review search results for ${searchQuery} across Diaspora Unlocked products, destinations, project information and guides.`
+      : "Search across Diaspora Unlocked products, destinations, project information and guides.";
     return buildSeo(
       title,
       description,

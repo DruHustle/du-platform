@@ -1,3 +1,8 @@
+import {
+  CUSTOMER_LANGUAGES,
+  customerLanguage,
+} from "../../../shared/customerLanguage";
+import { emailText } from "../../../shared/customerEmailCopy";
 import type {
   Pool,
   PoolConnection,
@@ -65,7 +70,8 @@ export class NewsletterService {
     );
     return result.insertId;
   }
-  async subscribe(email: string) {
+  async subscribe(email: string, requestedLanguage: string = "en") {
+    const language = customerLanguage(requestedLanguage);
     this.pool();
     const sender = await newsletterSender();
     const from = sender.from;
@@ -91,20 +97,24 @@ export class NewsletterService {
       );
       const token = newsletterToken();
       await connection.execute(
-        `UPDATE newsletter_subscriptions SET status = 'pending', consent_at = NOW(), confirmation_hash = ?, confirmation_expires_at = DATE_ADD(NOW(), INTERVAL 48 HOUR), last_confirmation_at = NOW(), unsubscribe_token = COALESCE(unsubscribe_token, ?) WHERE id = ?`,
-        [hashNewsletterToken(token), newsletterToken(), row.id]
+        `UPDATE newsletter_subscriptions SET status = 'pending', consent_at = NOW(), confirmation_hash = ?, confirmation_expires_at = DATE_ADD(NOW(), INTERVAL 48 HOUR), last_confirmation_at = NOW(), unsubscribe_token = COALESCE(unsubscribe_token, ?), language = ? WHERE id = ?`,
+        [hashNewsletterToken(token), newsletterToken(), language, row.id]
       );
-      const url = preferenceLink("confirm", token);
+      const url = preferenceLink("confirm", token, language);
       const content = renderNewsletter(
-        "Confirm your newsletter subscription",
-        `Please confirm that you want to receive news and opportunities from Diaspora Unlocked.\n\nConfirm your email: ${url}\n\nThis link expires in 48 hours. If you did not request this, ignore this email.`,
+        emailText(language, "confirm_title"),
+        [
+          emailText(language, "confirm_intro"),
+          emailText(language, "confirm_link", { url }),
+          emailText(language, "confirm_expiry"),
+        ].join("\n\n"),
         undefined,
-        "You requested email updates from Diaspora Unlocked. No newsletters will be sent until you confirm."
+        emailText(language, "confirm_footer"),
+        language
       );
-      // Include a real clickable link while escaping all other content.
       content.html = content.html.replace(
         "<hr ",
-        `<p><a href="${url}" style="display:inline-block;padding:12px 20px;background:#facc15;color:#0f172a;border-radius:8px">Confirm subscription</a></p><hr `
+        `<p><a href="${url}" style="display:inline-block;padding:12px 20px;background:#facc15;color:#0f172a;border-radius:8px">${emailText(language, "confirm_button")}</a></p><hr `
       );
       await this.enqueue(connection, {
         subscriptionId: row.id,
@@ -112,7 +122,7 @@ export class NewsletterService {
         payload: {
           from,
           to: email,
-          subject: "Confirm your Diaspora Unlocked subscription",
+          subject: emailText(language, "confirm_subject"),
           ...content,
         },
       });
@@ -304,29 +314,36 @@ export class NewsletterService {
         `UPDATE newsletter_subscriptions SET unsubscribe_token = LOWER(HEX(RANDOM_BYTES(24))) WHERE status = 'subscribed' AND unsubscribe_token IS NULL`
       );
       const marker = newsletterToken();
-      const content = renderNewsletter(
-        campaign.subject,
-        campaign.body,
-        preferenceLink("unsubscribe", marker)
-      );
-      const [textBefore, textAfter] = content.text.split(marker);
-      const [htmlBefore, htmlAfter] = content.html.split(marker);
-      // Snapshot the entire eligible audience in one atomic database operation.
-      const [result] = await connection.execute<ResultSetHeader>(
-        `INSERT INTO newsletter_deliveries (campaign_id, subscription_id, kind, recipient, payload)
-        SELECT ?, id, 'campaign', email, JSON_OBJECT('from', ?, 'to', email, 'subject', ?, 'text', CONCAT(?, unsubscribe_token, ?), 'html', CONCAT(?, unsubscribe_token, ?))
-        FROM newsletter_subscriptions WHERE status = 'subscribed'`,
-        [
-          id,
-          from,
+      let queuedCount = 0;
+      for (const language of CUSTOMER_LANGUAGES) {
+        const content = renderNewsletter(
           campaign.subject,
-          textBefore,
-          textAfter,
-          htmlBefore,
-          htmlAfter,
-        ]
-      );
-      if (!result.affectedRows)
+          campaign.body,
+          preferenceLink("unsubscribe", marker, language),
+          undefined,
+          language
+        );
+        const [textBefore, textAfter] = content.text.split(marker);
+        const [htmlBefore, htmlAfter] = content.html.split(marker);
+        // Snapshot each language in the same transaction; delivery payloads stay immutable.
+        const [result] = await connection.execute<ResultSetHeader>(
+          `INSERT INTO newsletter_deliveries (campaign_id, subscription_id, kind, recipient, payload)
+        SELECT ?, id, 'campaign', email, JSON_OBJECT('from', ?, 'to', email, 'subject', ?, 'text', CONCAT(?, unsubscribe_token, ?), 'html', CONCAT(?, unsubscribe_token, ?))
+        FROM newsletter_subscriptions WHERE status = 'subscribed' AND language = ?`,
+          [
+            id,
+            from,
+            campaign.subject,
+            textBefore,
+            textAfter,
+            htmlBefore,
+            htmlAfter,
+            language,
+          ]
+        );
+        queuedCount += result.affectedRows;
+      }
+      if (!queuedCount)
         throw new AppError(
           409,
           "NEWSLETTER_NO_SUBSCRIBERS",
@@ -338,7 +355,7 @@ export class NewsletterService {
       );
       return {
         message: "Campaign queued for subscribed addresses.",
-        recipients: result.affectedRows,
+        recipients: queuedCount,
       };
     });
   }

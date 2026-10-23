@@ -6,6 +6,7 @@ export async function initializeNewsletterDatabase(pool: Pool) {
     id BIGINT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
   const columns = {
+    language: "VARCHAR(2) NOT NULL DEFAULT 'en'",
     status: "VARCHAR(20) NOT NULL DEFAULT 'subscribed'",
     consent_at: "DATETIME NULL",
     confirmed_at: "DATETIME NULL",

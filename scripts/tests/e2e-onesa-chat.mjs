@@ -61,10 +61,21 @@ try {
       page.setDefaultTimeout(10_000);
       page.on("pageerror", error => errors.push(error.message));
       const requests = [];
+      let healthReady = false,
+        healthRequests = 0,
+        releaseHealth;
+      const initialHealth = new Promise(resolve => {
+        releaseHealth = resolve;
+      });
       let respond = async route =>
         route.fulfill({ json: { reply: "I am Onesa.", truncated: false } });
       await context.route("**/*", async route => {
         const url = new URL(route.request().url());
+        if (url.pathname === "/api/ai/ready") {
+          healthRequests += 1;
+          if (healthRequests === 1) await initialHealth;
+          return route.fulfill({ json: { ready: healthReady } });
+        }
         if (url.pathname === "/api/ai/chat") {
           requests.push(route.request().postDataJSON());
           return respond(route);
@@ -99,6 +110,17 @@ try {
       const send = scope.getByRole("button", { name: "Send", exact: true });
       const conversation = scope.getByRole("log");
       await conversation.waitFor();
+      await scope.getByText("Checking…", { exact: true }).waitFor();
+      releaseHealth();
+      await scope.getByText("Offline", { exact: true }).waitFor();
+      healthReady = true;
+      await page.evaluate(() => window.dispatchEvent(new Event("online")));
+      await scope.getByText("Online", { exact: true }).waitFor();
+      assert.equal(
+        healthRequests,
+        2,
+        "Reconnection must bypass a cached failure without waiting 15 seconds"
+      );
       assert(
         (await conversation.textContent()).trim().length > 0,
         "Opening chat must show an introductory assistant message"
@@ -263,7 +285,7 @@ try {
       );
       await context.close();
       console.log(
-        `PASS ${engine} ${width}px ${surface}: welcome, single submit, blocks incomplete answers, failed input, retry cooldown, clean history, IME`
+        `PASS ${engine} ${width}px ${surface}: checking, offline recovery, welcome, single submit, blocks incomplete answers, failed input, retry cooldown, clean history, IME`
       );
     }
   }

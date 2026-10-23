@@ -89,6 +89,15 @@ export async function checkOnesaHealth(
   return formatStatus(onesaHealthCache?.online ?? online);
 }
 
+// Reconnection should retry a failed check immediately while keeping healthy
+// cached results and in-flight requests shared by both chat views.
+export function invalidateOfflineOnesaHealth() {
+  if (onesaHealthCache?.online === false) {
+    onesaHealthVersion += 1;
+    onesaHealthCache = null;
+  }
+}
+
 export function clearOnesaHealthCache() {
   onesaHealthVersion += 1;
   onesaHealthCache = null;

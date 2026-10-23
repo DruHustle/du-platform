@@ -178,7 +178,10 @@ export default function SearchResults() {
                                   result.category}
                               </Badge>
                               <h2 className="text-xl font-semibold">
-                                {result.title}
+                                {result.href === "/ntir" &&
+                                result.title === "NTIR Database"
+                                  ? t("investment.ntir.title")
+                                  : result.title}
                               </h2>
                             </div>
                           </CardHeader>

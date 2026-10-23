@@ -127,3 +127,55 @@ describe("Onesa public chat route", () => {
     expect(onChatSuccess).not.toHaveBeenCalled();
   });
 });
+
+describe("localized fallback trip plans", () => {
+  async function plan(language: string, providerFailure = false) {
+    const routes = new Map<string, Function>();
+    registerOnesaAIRoutes(
+      { post: (path, fn) => routes.set(path, fn), get: vi.fn() },
+      {
+        ...getOnesaRouteDeps(),
+        getOnesaReadiness: vi.fn(async () => ({ ready: providerFailure })),
+        generateOnesaReply: vi.fn(async () => {
+          throw new Error("Fixture provider outage");
+        }),
+      }
+    );
+    const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+    await routes.get("/api/ai/trip-plan")!(
+      {
+        body: {
+          language,
+          origin: "Berlin",
+          arrivalAttraction: "Victoria Falls",
+          days: 5,
+          travelers: 2,
+          budget: "high",
+          comfort: "premium",
+        },
+      },
+      res
+    );
+    return res.json.mock.calls[0][0];
+  }
+  it.each(["de", "sn", "nd"])(
+    "keeps %s prose in fallback responses and preserves numeric results",
+    async language => {
+      const en = await plan("en");
+      const localized = await plan(language);
+      expect(localized.source).toBe("fallback");
+      expect(localized.plan.estimatedTotalUsd).toBe(en.plan.estimatedTotalUsd);
+      expect(localized.plan.flights.estimatedCostUsd).toBe(
+        en.plan.flights.estimatedCostUsd
+      );
+      expect(localized.plan.summary).not.toBe(en.plan.summary);
+      expect(localized.plan.experiences[0].name).not.toBe(
+        en.plan.experiences[0].name
+      );
+      expect(localized.plan.itinerary[0].details).not.toBe(
+        en.plan.itinerary[0].details
+      );
+      expect((await plan(language, true)).plan).toEqual(localized.plan);
+    }
+  );
+});

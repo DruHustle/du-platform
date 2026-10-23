@@ -1,0 +1,32 @@
+import { afterEach, expect, it, vi } from "vitest";
+import { watchOnesaRecovery } from "./onesaRecovery";
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
+it("recovers on reconnect and tab return, pauses hidden polling and cleans up", () => {
+  vi.useFakeTimers();
+  const win = new EventTarget();
+  const doc = Object.assign(new EventTarget(), { visibilityState: "visible" });
+  vi.stubGlobal("window", Object.assign(win, { setInterval, clearInterval }));
+  vi.stubGlobal("document", doc);
+  const check = vi.fn(async () => true);
+  const stop = watchOnesaRecovery(check);
+  expect(check).toHaveBeenCalledTimes(1);
+  win.dispatchEvent(new Event("online"));
+  win.dispatchEvent(new Event("focus"));
+  expect(check).toHaveBeenCalledTimes(3);
+  doc.visibilityState = "hidden";
+  vi.advanceTimersByTime(60_000);
+  expect(check).toHaveBeenCalledTimes(3);
+  doc.visibilityState = "visible";
+  doc.dispatchEvent(new Event("visibilitychange"));
+  vi.advanceTimersByTime(30_000);
+  expect(check).toHaveBeenCalledTimes(5);
+  stop();
+  win.dispatchEvent(new Event("online"));
+  win.dispatchEvent(new Event("focus"));
+  doc.dispatchEvent(new Event("visibilitychange"));
+  vi.advanceTimersByTime(60_000);
+  expect(check).toHaveBeenCalledTimes(5);
+});

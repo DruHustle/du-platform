@@ -1,3 +1,4 @@
+import { watchOnesaRecovery } from "../lib/onesaRecovery";
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -21,13 +22,13 @@ export default function ChatPage() {
     defaultValue: "Onesa online",
   });
   const genericContactError = t("onesa.error_unable_contact", {
-    defaultValue: "Onesa is currently unavailable. AI mode is off",
+    defaultValue: "Onesa is unavailable right now. Please try again later.",
   });
   const rateLimitedError = t("onesa.error_rate_limited", {
     defaultValue: "Onesa is busy right now. Please try again in a few seconds.",
   });
   const backendUnreachableStatus = t("onesa.status_backend_unreachable", {
-    defaultValue: "Onesa is currently unavailable. AI mode is off",
+    defaultValue: "Onesa is unavailable right now. Please try again later.",
   });
   const backLabel = t("common.back", { defaultValue: "Back" });
 
@@ -48,7 +49,7 @@ export default function ChatPage() {
     number | null
   >(null);
   const [status, setStatus] = useState("");
-  const [isOnline, setIsOnline] = useState(false);
+  const [isOnline, setIsOnline] = useState<boolean | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const requestInFlightRef = useRef(false);
   const healthCheckVersionRef = useRef(0);
@@ -95,14 +96,10 @@ export default function ChatPage() {
   }, [backendUnreachableStatus]);
 
   useEffect(() => {
-    let mounted = true;
-    const runHealthCheck = async () => {
-      if (!mounted) return;
-      await checkHealth();
-    };
-    void runHealthCheck();
+    const stop = watchOnesaRecovery(checkHealth);
     return () => {
-      mounted = false;
+      stop();
+      healthCheckVersionRef.current += 1;
     };
   }, [checkHealth]);
 
@@ -238,20 +235,32 @@ export default function ChatPage() {
                   className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${
                     isOnline
                       ? "border border-emerald-300/40 bg-emerald-500/15 text-emerald-300"
-                      : "border border-red-300/40 bg-red-500/15 text-red-300"
+                      : isOnline === null
+                        ? "border border-white/20 bg-white/10 text-white/70"
+                        : "border border-red-300/40 bg-red-500/15 text-red-300"
                   }`}
-                  aria-label={onlineAria}
+                  aria-label={
+                    isOnline === null
+                      ? t("onesa.checking_text")
+                      : isOnline
+                        ? onlineAria
+                        : t("onesa.offline_text")
+                  }
                 >
                   <span
                     className={`h-2 w-2 rounded-full ${
                       isOnline
                         ? "bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]"
-                        : "bg-red-400"
+                        : isOnline === null
+                          ? "bg-slate-400"
+                          : "bg-red-400"
                     }`}
                   />
-                  {isOnline
-                    ? t("onesa.online_text", { defaultValue: "Online" })
-                    : t("onesa.offline_text", { defaultValue: "Offline" })}
+                  {isOnline === null
+                    ? t("onesa.checking_text")
+                    : isOnline
+                      ? t("onesa.online_text", { defaultValue: "Online" })
+                      : t("onesa.offline_text", { defaultValue: "Offline" })}
                 </span>
               </div>
 

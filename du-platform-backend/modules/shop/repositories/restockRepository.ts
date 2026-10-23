@@ -2,6 +2,7 @@ import { createShopRestockNotification } from "../../../shared/persistence/shopS
 
 export class RestockRepository {
   create(payload: {
+    language?: string;
     productId?: number | null;
     productSlug: string;
     productName: string;

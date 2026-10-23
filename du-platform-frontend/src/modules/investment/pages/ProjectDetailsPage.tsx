@@ -291,7 +291,7 @@ export default function ProjectDetails() {
               <p className="text-white/75 mt-2">
                 {tr(
                   "investment.project_details.not_found_desc",
-                  "The selected project ID does not exist."
+                  "This project profile is unavailable. Return to the project catalogue to explore other entries."
                 )}
               </p>
             </div>

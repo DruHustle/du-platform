@@ -1890,13 +1890,13 @@ export default function TourismVirtualExperiencePage() {
             </p>
             <h1 className="page-title mt-3">
               {t("tourism.vr.seo.title", {
-                defaultValue: "Zimbabwe Virtual Tourism Experience",
+                defaultValue: "360° VR Demo",
               })}
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
               {t("tourism.vr.seo.description", {
                 defaultValue:
-                  "Try a Sample City demonstration with panoramic scenes, points of interest and optional narration. Zimbabwe destination tours are not available yet.",
+                  "Explore the Sample City panoramic demo with scene controls and optional narration. This is a demonstration, not a Zimbabwe destination tour.",
               })}
             </p>
           </div>

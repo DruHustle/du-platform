@@ -8,7 +8,7 @@ const BASE_DESTINATIONS: VirtualDestination[] = [
     image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
     vibe: "Clifftop + Coastal View",
     summary:
-      "Sample City is a VR demo scene showing how the experience works: pick a destination, move between 360 stages using hotspots, and listen through Narration or Conversation mode. Once Zimbabwe destination image data is uploaded, the same flow will run on those real locations.",
+      "Sample City is a demonstration, not a Zimbabwe destination tour. Look around, move between the three scenes and try narration or a conversation with Onesa.",
     experiences: [],
     coordinates: "-33.9249, 18.4241",
     locationHighlights: [
@@ -22,7 +22,7 @@ const BASE_DESTINATIONS: VirtualDestination[] = [
         title: "Clifftop Vista",
         image: "/images/pages/tourism/vr-walk/vf_360_01.jpg",
         caption:
-          "Orientation stage for testing the core controls: look around, zoom, and inspect points of interest.",
+          "Look around, use the zoom controls and open a blue point for more information.",
         hotspots: [{ targetId: "vf360_2", label: "To Rock Arch View", position: [5, -1, -4] }],
         pointsOfInterest: [
           { id: "vf360_1_poi_1", label: "Ridge Edge", position: [2.1, -0.8, -5.4] },
@@ -33,7 +33,7 @@ const BASE_DESTINATIONS: VirtualDestination[] = [
         id: "vf360_2",
         title: "Rock Arch View",
         image: "/images/pages/tourism/vr-walk/vf_360_02.jpg",
-        caption: "Interaction stage for moving between scenes with hotspots while testing guided narration behavior.",
+        caption: "Use a gold ring to move to another scene, or try the narration controls.",
         hotspots: [
           { targetId: "vf360_3", label: "To Summit Panorama", position: [4.8, -1, -3.7] },
           { targetId: "vf360_1", label: "Back to Clifftop Vista", position: [-5, -1, 4] },
@@ -48,7 +48,7 @@ const BASE_DESTINATIONS: VirtualDestination[] = [
         title: "Summit Panorama",
         image: "/images/pages/tourism/vr-walk/vf_360_03.jpg",
         caption:
-          "Final stage showing the complete VR tour loop before production Zimbabwe destination media is connected.",
+          "Explore the panorama, open a point for information or return to the first scene.",
         hotspots: [{ targetId: "vf360_1", label: "Back to Clifftop Vista", position: [-4.8, -1, 3.8] }],
         pointsOfInterest: [
           { id: "vf360_3_poi_1", label: "Panorama Crest", position: [1.3, -0.8, -5.8] },
@@ -75,7 +75,7 @@ const DESTINATION_LOCALE_OVERRIDES: Partial<Record<UiLanguage, DestinationLocale
     name: "Guta Rekuyedza",
     vibe: "Pamusoro pegomo + Muono wemahombekombe",
     summary:
-      "Guta Rekuyedza inzvimbo yekuratidza mashandiro eVR: sarudza nzvimbo, famba pakati pema360 stages uchishandisa hotspots, uye shandisa Narration kana Conversation mode. Kana mifananidzo yenzvimbo dzekushanya dzeZimbabwe yaiswa, mashandiro aya achashanda panzvimbo chaidzo.",
+      "Guta Rekuyedza muenzaniso, kwete rwendo rwenzvimbo yekushanyira muZimbabwe. Tarisa-tarisa, famba pakati pemifananidzo mitatu uye edza kurondedzerwa kana kutaura naOnesa.",
     locationHighlights: [
       "Hotspot navigation pakati pema360 stages",
       "Point-of-interest kubaya nekuona ruzivo",
@@ -83,9 +83,9 @@ const DESTINATION_LOCALE_OVERRIDES: Partial<Record<UiLanguage, DestinationLocale
     ],
     stageTitles: ["Muono wePamusoro", "Muono weRock Arch", "Muono Wakafara"],
     stageCaptions: [
-      "Stage yekutanga yekuyedza ma-control: tarisa-tarisa, zoom, uye bvunza point of interest.",
-      "Stage yekudyidzana yekufamba pakati pezviitiko uchishandisa hotspots uye kuyedza narration.",
-      "Stage yekupedzisira inoratidza kutenderera kwakazara kweVR tisati tabatanidza media yeZimbabwe.",
+      "Tarisa-tarisa, shandisa zvekuswededza mufananidzo uye vhura poindi yebhuruu kuti uwane ruzivo.",
+      "Shandisa mhete yegoridhe kuenda kune mumwe mufananidzo, kana kuedza zvekurondedzera.",
+      "Ongorora mufananidzo wakafara, vhura poindi yeruzivo kana kudzokera kumufananidzo wekutanga.",
     ],
     hotspotLabels: [
       ["Kuenda kuMuono weRock Arch"],
@@ -102,7 +102,7 @@ const DESTINATION_LOCALE_OVERRIDES: Partial<Record<UiLanguage, DestinationLocale
     name: "Idolobho Lokubonisa",
     vibe: "Phezu kwedwala + Ukubona ugu",
     summary:
-      "Idolobho Lokubonisa yindawo ye-VR demo etshengisa indlela i-experience esebenza ngayo: khetha indawo, hamba phakathi kwama-360 stage usebenzisa ama-hotspot, njalo ulalele nge-Narration kumbe i-Conversation mode. Nxa imifanekiso yezindawo zaseZimbabwe isifakiwe, indlela efanayo izasebenza kulezo zindawo zangempela.",
+      "Idolobho Lokubonisa yisibonelo, hatshi uhambo lwendawo yokuvakatshela eZimbabwe. Khangela indawo yonke, hamba phakathi kwezigcawu ezintathu uzame ukulandiselwa kumbe ukuxoxa loOnesa.",
     locationHighlights: [
       "Ukuhamba ngama-hotspot phakathi kwama-360 stage",
       "Ukuchofoza point-of-interest kanye lokubona ulwazi",
@@ -110,9 +110,9 @@ const DESTINATION_LOCALE_OVERRIDES: Partial<Record<UiLanguage, DestinationLocale
     ],
     stageTitles: ["Ukubona Phezulu", "Ukubona i-Rock Arch", "Ukubona Okubanzi"],
     stageCaptions: [
-      "Isigaba sokuqala sokuhlola ama-control: khangela indawo yonke, sondeza, njalo uvule ama-point of interest.",
-      "Isigaba sokuhamba phakathi kwezigameko usebenzisa ama-hotspot lokuhlola indlela indatshana eqondisa ngayo.",
-      "Isigaba sokucina esitshengisa umjikelezo opheleleyo we-VR singakafaki media yangempela yaseZimbabwe.",
+      "Khangela indawo yonke, sebenzisa amathuluzi okusondeza uvule iphoyinti eliluhlaza ukuze uthole ulwazi.",
+      "Sebenzisa iringi yegolide ukuya kwesinye isigcawu, kumbe uzame amathuluzi okulandisa.",
+      "Hlola umfanekiso obanzi, vula iphoyinti ukuze uthole ulwazi kumbe ubuyele esigcawini sokuqala.",
     ],
     hotspotLabels: [
       ["Yiya ku-Rock Arch View"],
@@ -129,7 +129,7 @@ const DESTINATION_LOCALE_OVERRIDES: Partial<Record<UiLanguage, DestinationLocale
     name: "Demo-Stadt",
     vibe: "Klippenblick + Kuestenpanorama",
     summary:
-      "Demo-Stadt ist eine VR-Demoszene, die zeigt, wie das Erlebnis funktioniert: Ziel auswaehlen, sich mit Hotspots zwischen 360-Grad-Szenen bewegen und per Narration oder Conversation Mode fuehren lassen. Sobald echtes Bildmaterial aus Zimbabwe verfuegbar ist, laeuft derselbe Ablauf mit diesen realen Orten.",
+      "Sample City ist eine Demonstration, keine Tour durch ein simbabwisches Reiseziel. Sieh dich um, wechsle zwischen den drei Szenen und probiere das Vorlesen oder ein Gespräch mit Onesa aus.",
     locationHighlights: [
       "Hotspot-Navigation zwischen 360-Grad-Szenen",
       "Point-of-Interest-Klick mit Info-Overlay",
@@ -137,9 +137,9 @@ const DESTINATION_LOCALE_OVERRIDES: Partial<Record<UiLanguage, DestinationLocale
     ],
     stageTitles: ["Klippenblick", "Felsbogen-Blick", "Gipfelpanorama"],
     stageCaptions: [
-      "Orientierungsszene zum Testen der Grundsteuerung: umsehen, zoomen und Sehenswuerdigkeiten ansehen.",
-      "Interaktive Szene zum Wechseln zwischen Blickpunkten per Hotspot und zum Testen der gefuehrten Erzaehlung.",
-      "Abschlussszene, die den kompletten VR-Rundgang zeigt, bevor echtes Medienmaterial aus Zimbabwe angebunden wird.",
+      "Sieh dich um, nutze den Zoom und öffne einen blauen Punkt für weitere Informationen.",
+      "Wechsle über einen goldenen Ring zur nächsten Szene oder probiere die Vorlesefunktion aus.",
+      "Erkunde das Panorama, öffne einen Punkt für Informationen oder kehre zur ersten Szene zurück.",
     ],
     hotspotLabels: [
       ["Zum Felsbogen-Blick"],

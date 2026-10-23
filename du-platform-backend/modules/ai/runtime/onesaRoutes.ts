@@ -1,3 +1,4 @@
+import { tripText } from "../../../../shared/tripPlanCopy";
 import type express from "express";
 import { IncompleteOnesaReplyError } from "./replyCompletion";
 
@@ -232,19 +233,20 @@ function tryParseJsonObject(input: string): Record<string, any> | null {
   }
 }
 
-function buildFallbackTripPlan(payload: TripPlanPayload): TripPlanResult {
+function buildFallbackTripPlan(payload: TripPlanPayload, language: string): TripPlanResult {
+  const text = (key: Parameters<typeof tripText>[1], values?: Record<string, string | number>) => tripText(language, key, values);
   const seasonMultiplier = payload.season === "dry" ? 1.2 : payload.season === "green" ? 0.9 : 1.0;
   const flightBaseByBudget: Record<TripPlanPayload["budget"], number> = { low: 620, medium: 910, high: 1380 };
   const hotelNightByComfort: Record<TripPlanPayload["comfort"], number> = { budget: 85, standard: 150, premium: 260 };
   const carDayByComfort: Record<TripPlanPayload["comfort"], number> = { budget: 42, standard: 65, premium: 110 };
 
   const experiencesCatalog = [
-    { tag: "wildlife", name: "Hwange Guided Safari", location: "Hwange", cost: 120 },
-    { tag: "culture", name: "Mbare Cultural Food Walk", location: "Harare", cost: 45 },
-    { tag: "adventure", name: "Zambezi Whitewater Rafting", location: "Victoria Falls", cost: 145 },
-    { tag: "history", name: "Great Zimbabwe Guided Tour", location: "Masvingo", cost: 60 },
-    { tag: "nature", name: "Eastern Highlands Hike", location: "Nyanga", cost: 55 },
-    { tag: "food", name: "Harare Local Dining Circuit", location: "Harare", cost: 50 },
+    { tag: "wildlife", name: text("safari"), location: "Hwange", cost: 120 },
+    { tag: "culture", name: text("mbare"), location: "Harare", cost: 45 },
+    { tag: "adventure", name: text("rafting"), location: "Victoria Falls", cost: 145 },
+    { tag: "history", name: text("great_zimbabwe"), location: "Masvingo", cost: 60 },
+    { tag: "nature", name: text("walking"), location: "Nyanga", cost: 55 },
+    { tag: "food", name: text("harare_food"), location: "Harare", cost: 50 },
   ];
 
   const selectedExperiences = experiencesCatalog
@@ -268,51 +270,51 @@ function buildFallbackTripPlan(payload: TripPlanPayload): TripPlanResult {
       day,
       title:
         day === 1
-          ? `Arrival for ${payload.arrivalAttraction}`
+          ? text("arrival_place", {place: payload.arrivalAttraction})
           : day === payload.days
-            ? "Departure Day"
+            ? text("departure")
             : exp.name,
       details:
         day === 1
-          ? `Arrive from ${payload.departureAirport} to ${payload.arrivalAirport}, then transfer to ${payload.arrivalAttraction} area and settle in with a light orientation walk.`
+          ? text("arrival_server", {from: payload.departureAirport, airport: payload.arrivalAirport, place: payload.arrivalAttraction})
           : day === payload.days
-            ? "Final breakfast, optional short activity, and airport transfer."
-            : `Focus on ${exp.name} in ${exp.location}, with timing optimized for ${payload.season} season conditions.`,
+            ? text("return")
+            : text("research_server", {activity: exp.name, place: exp.location, season: text(payload.season)}),
       estimatedDailyCostUsd: dayCost,
     };
   });
 
   return {
-    summary: `A ${payload.days}-day Zimbabwe itinerary for ${payload.arrivalAttraction} from ${payload.startDate || "your selected dates"} to ${payload.endDate || "return date"}, tuned for ${payload.season} season with ${payload.comfort} comfort and ${payload.budget} budget priorities.`,
-    optimizedFor: "Balanced between seasonal value, comfort level, and total trip cost.",
+    summary: text("summary_server", {days: payload.days, place: payload.arrivalAttraction, start: payload.startDate || text("selected_dates"), end: payload.endDate || text("return_date"), season: text(payload.season), comfort: text(payload.comfort), budget: text(payload.budget)}),
+    optimizedFor: text("allowances"),
     estimatedTotalUsd: total,
     flights: {
       route: `${payload.departureAirport} → ${payload.arrivalAirport}${payload.multiCity && payload.multiCityCities.length > 0 ? ` (${payload.multiCityCities.join(" • ")})` : ""}`,
-      cabin: payload.comfort === "premium" ? "Business + flexible fares" : payload.comfort === "standard" ? "Economy Flex" : "Economy Saver",
+      cabin: payload.comfort === "premium" ? text("premium_cabin") : payload.comfort === "standard" ? text("standard_cabin") : text("budget_cabin"),
       estimatedCostUsd: flightsCost,
-      rationale: "Flight estimate includes seasonal fare multiplier and passenger count.",
+      rationale: text("flight_server"),
     },
     hotels: {
       area:
         payload.multiCity && payload.multiCityCities.length > 0
           ? `${payload.arrivalCity} + ${payload.multiCityCities.join(" + ")}`
           : payload.interests.includes("wildlife")
-            ? "Victoria Falls + Hwange corridor"
-            : `${payload.arrivalCity} + destination hubs`,
-      style: payload.comfort === "premium" ? "4-5 star mix" : payload.comfort === "standard" ? "3-4 star mix" : "2-3 star value lodges",
+            ? text("corridor", {place: "Victoria Falls + Hwange"})
+            : text("hubs", {place: payload.arrivalCity}),
+      style: payload.comfort === "premium" ? text("premium_stay") : payload.comfort === "standard" ? text("standard_stay") : text("budget_stay"),
       estimatedCostUsd: hotelsCost,
-      rationale: "Hotel budget calculated per night, per traveler, aligned to comfort profile.",
+      rationale: text("hotel_server"),
     },
     carHire: {
-      vehicleClass: payload.comfort === "premium" ? "Premium SUV" : payload.comfort === "standard" ? "Standard SUV" : "Compact crossover",
+      vehicleClass: payload.comfort === "premium" ? text("premium_suv") : payload.comfort === "standard" ? text("standard_suv") : text("compact"),
       estimatedCostUsd: carCost,
-      rationale: "Daily rental estimate includes route flexibility for major tourism corridors.",
+      rationale: text("car"),
     },
     experiences: fallbackExperiences.map((item) => ({
       name: item.name,
       location: item.location,
       estimatedCostUsd: Math.round(item.cost * payload.travelers),
-      rationale: "Selected from your interest profile and seasonal suitability.",
+      rationale: text("activity_server"),
     })),
     itinerary,
   };
@@ -570,7 +572,7 @@ export function registerOnesaAIRoutes(
   app.post(tripPlanPath, async (req: express.Request, res: express.Response) => {
     const payload = normalizeTripPlanPayload(req.body ?? {});
     const requestedLanguage = typeof req.body?.language === "string" ? req.body.language : "en";
-    const fallbackPlan = buildFallbackTripPlan(payload);
+    const fallbackPlan = buildFallbackTripPlan(payload, requestedLanguage);
 
     try {
       const readiness = await deps.getOnesaReadiness();

@@ -1,3 +1,4 @@
+import { emailText } from "../../shared/customerEmailCopy";
 import axios from "axios";
 import { getAdminSetting } from "./persistence/settingsStore";
 import { getShopRestockNotificationsBySlug } from "./persistence/shopStore";
@@ -158,34 +159,33 @@ export async function notifyRestockSubscribersAndAdmins(input: {
   try {
     const fromEmail = await getNotifyFromEmail();
     const rows = await getShopRestockNotificationsBySlug(productSlug);
-    const uniqueEmails = Array.from(
-      new Set(
-        rows
-          .map((row: any) =>
-            String(row?.email ?? "")
-              .trim()
-              .toLowerCase()
-          )
-          .filter(email => isValidEmail(email))
-      )
-    );
-
-    if (uniqueEmails.length > 0) {
-      const subject = escSubject(`${input.productName} is back in stock`);
-      const safeName = escapeEmailHtml(input.productName);
-      const html = `<p>Hello,</p>
-<p><strong>${safeName}</strong> is now back in stock on the Zimbabwe Shop.</p>
-<p>Return to the shop to send an order request and confirm delivery and payment details.</p>
-<p>Thank you.</p>`;
-      const text = `${input.productName} is now back in stock on the Zimbabwe Shop. Return to the shop to send an order request and confirm delivery and payment details.`;
-
-      await sendEmailMessage({
-        to: uniqueEmails,
-        subject,
-        html,
-        text,
-        from: fromEmail,
+    const recipients = new Map<string, string>();
+    for (const row of rows) {
+      const email = String(row.email ?? "")
+        .trim()
+        .toLowerCase();
+      if (isValidEmail(email))
+        recipients.set(email, String(row.language ?? "en"));
+    }
+    const uniqueEmails = Array.from(recipients.keys());
+    // Send separately: recipients must never see other subscribers' addresses.
+    for (const [email, language] of Array.from(recipients.entries())) {
+      const subject = escSubject(
+        emailText(language, "stock_subject", { product: input.productName })
+      );
+      const text = emailText(language, "stock_available", {
+        product: input.productName,
       });
+      await sendEmailMessageSafe(
+        {
+          to: email,
+          subject,
+          text,
+          html: `<p>${escapeEmailHtml(text)}</p>`,
+          from: fromEmail,
+        },
+        "shop-restock:availability"
+      );
     }
 
     const adminEmails = await getNotifyAlertEmails();

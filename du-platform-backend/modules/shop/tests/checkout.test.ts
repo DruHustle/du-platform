@@ -246,3 +246,23 @@ describe("checkout reliability", () => {
     }
   });
 });
+
+it.each([
+  ["de", "Bestellanfrage"],
+  ["sn", "Chikumbiro cheodha"],
+  ["nd", "Isicelo se-oda"],
+])(
+  "uses %s for customer receipts without changing order amounts",
+  async (language, label) => {
+    const { order } = await new ShopService().createOrder({
+      ...payload(),
+      language,
+    });
+    const receipt = vi.mocked(sendEmailMessageSafe).mock.calls[0][0];
+    expect(receipt.subject).toContain(label);
+    expect(receipt.text).toContain(order.orderRef);
+    expect(receipt.text).toContain((order.totalCents / 100).toFixed(2));
+    expect(receipt.text).not.toContain("Your order request is saved");
+    expect(order.status).toBe("awaiting_payment");
+  }
+);

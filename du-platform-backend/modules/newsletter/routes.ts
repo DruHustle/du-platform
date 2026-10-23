@@ -1,3 +1,4 @@
+import { CUSTOMER_LANGUAGES } from "../../../shared/customerLanguage";
 import {
   Router,
   type Request,
@@ -12,6 +13,7 @@ import { AppError } from "../../core/errorHandler";
 import { NewsletterService } from "./service";
 
 export const subscriptionSchema = z.object({
+  language: z.enum(CUSTOMER_LANGUAGES).default("en"),
   email: z.string().trim().toLowerCase().email().max(255),
   // Email-only requests from previously deployed signup forms remain supported.
   consent: z.literal(true).optional(),

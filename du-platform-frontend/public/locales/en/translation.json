@@ -32,17 +32,17 @@
       "values_label": "Our Values",
       "values_content": "Clear information, useful guidance and honest explanations of what is available.",
       "who_label": "Who we are",
-      "who_content": "Diaspora Unlocked is a digital platform for Zimbabweans abroad and anyone exploring Zimbabwe.",
+      "who_content": "Diaspora Unlocked connects people in Zimbabwe and abroad with products, travel information, business ideas and practical AI assistance.",
       "what_label": "What we do",
-      "what_content": "Browse products, plan a visit, research project profiles and ask Onesa for help. Product orders are reviewed with you before payment and delivery are agreed."
+      "what_content": "Build a basket and request an order, research a business idea, draft a trip plan or ask Onesa a question. Explore the sections to choose your next step."
     },
     "newsletter": {
-      "confirmation_sent": "If this address needs confirmation, we’ll email a link. Already confirmed? You’re on the list.",
+      "confirmation_sent": "Check your email for a confirmation link. If you have already confirmed, you are on the list.",
       "delivery_pending": "Subscription request saved. Email delivery is temporarily unavailable. If no confirmation arrives, try subscribing again later.",
-      "consent": "By subscribing, you agree to receive Diaspora Unlocked news and opportunities. Confirm your email to join. Unsubscribe at any time.",
+      "consent": "Confirm your email to receive Diaspora Unlocked news and opportunities. Unsubscribe at any time. This does not create a platform account.",
       "privacy": "Privacy policy",
       "title": "Newsletter",
-      "description": "News and updates by email.",
+      "description": "Zimbabwean products, travel ideas and platform news by email.",
       "email_placeholder": "Email address",
       "subscribe_aria": "Subscribe to newsletter",
       "already_subscribed": "This email is already subscribed to the newsletter.",
@@ -186,9 +186,9 @@
       },
       "technology": {
         "title": "Technology",
-        "description": "Meet Onesa, the AI platform powering assistance on Diaspora Unlocked.",
-        "detail": "Ask questions about Zimbabwe, explore ideas and get help with products, opportunities and travel plans.",
-        "stats": "Onesa AI",
+        "description": "Use Onesa to ask questions about Zimbabwean products, places and business ideas.",
+        "detail": "Compare options, prepare a checklist or draft a trip plan. Important details still need checking with providers.",
+        "stats": "Explore AI tools",
         "image_alt": "Illustration of a woman with elephants in a savannah landscape"
       },
       "investment": {
@@ -201,14 +201,14 @@
       "tourism": {
         "title": "Tourism",
         "description": "Discover waterfalls, wildlife, heritage sites and places to explore across Zimbabwe.",
-        "detail": "Compare destinations, preview virtual experiences and create an indicative trip plan with Onesa.",
+        "detail": "Compare destinations, try the AR guide and create a draft itinerary with Onesa.",
         "stats": "Find your next destination",
         "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe"
       }
     },
     "discovery": {
       "title": "Explore Zimbabwe, your way.",
-      "description": "Find something for home, a business idea to research or a place to visit. Start wherever your interests take you."
+      "description": "Browse Zimbabwean products, research business ideas, plan a visit or ask Onesa for help. Find a starting point, wherever you live."
     },
     "hero_pause": "Pause photos",
     "hero_resume": "Resume photos"
@@ -218,17 +218,17 @@
     "restore_chat_bubble": "Show chat bubble",
     "landing": {
       "eyebrow": "Technology & everyday tools",
-      "title": "Useful technology.",
+      "title": "AI help for everyday plans.",
       "highlight": "Powered by Onesa.",
-      "description": "Ask clearer questions, explore Zimbabwe and organise your next step, whether you are at home or abroad. Start with the tools available on Diaspora Unlocked.",
-      "principle": "Ask. Explore. Make a plan.",
+      "description": "Ask about Zimbabwean products, business ideas or travel. Use Onesa to compare options, organise your questions and draft a plan.",
+      "principle": "Start with a question. Leave with a clearer next step.",
       "image_alt": "Illustration of a woman with elephants in a savannah landscape",
       "caption": "Onesa, applied to your Zimbabwe questions.",
       "tools_cta": "Explore the tools"
     },
     "tools": {
       "title": "What you can do with Onesa",
-      "subtitle": "Choose a tool for the task you have in mind. Each opens its own experience.",
+      "subtitle": "Ask a question, draft a trip plan or explore the AR guide and VR demo.",
       "chat": {
         "title": "Ask a question",
         "description": "Get plain-language explanations about products, places and business ideas. Use follow-up questions to narrow down what you need.",
@@ -257,7 +257,7 @@
     "about": {
       "title": "How Onesa and Diaspora Unlocked fit together",
       "platform": "Onesa is a modular, general-purpose AI platform for European and international applications.",
-      "application": "Diaspora Unlocked is one application powered by Onesa. It brings Zimbabwe-focused content and workflows into the conversations and planning tools on this site. Language and local context support belong to this application's Zimbabwe focus. They do not limit the wider Onesa platform to one country or industry."
+      "application": "Diaspora Unlocked uses Onesa for Zimbabwe-focused questions and planning. Zimbabwean content and language support are part of this application; the wider Onesa platform serves many countries and industries."
     },
     "steps": {
       "title": "From a question to a useful next step",
@@ -476,7 +476,7 @@
       "subtitle": "Ask about destinations, local customs and travel ideas. Onesa helps you prepare questions and a draft plan; providers confirm prices and bookings.",
       "companion_subtitle": "Discuss your interests, compare places and plan a route. Check opening hours, transport and availability directly before travelling.",
       "virtual_preview": {
-        "title": "Interactive previews",
+        "title": "Try the 360° demo",
         "desc": "Try the Sample City demo with panoramic scenes and optional headset support. Zimbabwe destination tours are not available yet."
       },
       "guide": {
@@ -488,8 +488,8 @@
         "desc": "Explore destinations with a camera preview, Onesa’s place guidance and optional narration."
       },
       "plan": {
-        "title": "Custom Itineraries",
-        "desc": "Create a draft itinerary based on your interests, dates and travel preferences."
+        "title": "Draft a trip plan",
+        "desc": "Turn your dates, interests and preferences into an itinerary with indicative budgets. Book directly with providers after checking the details."
       },
       "plan_trip_cta": "Plan trip with Onesa",
       "cta": {
@@ -500,7 +500,7 @@
       "trip_planner": {
         "badge": "Onesa AI Travel",
         "title": "Plan your Zimbabwe trip",
-        "subtitle": "Create a draft itinerary with indicative budgets for flights, stays, transport and experiences, based on your dates and preferences.",
+        "subtitle": "Create a draft itinerary and indicative budgets for flights, stays, transport and activities. Use it to compare ideas and prepare questions for providers.",
         "origin": "Departure city",
         "season": "Season",
         "budget": "Budget profile",
@@ -517,7 +517,7 @@
         "generating": "Generating...",
         "generate": "Generate trip plan",
         "ai_optimized": "AI-generated draft",
-        "fallback_plan": "Sample plan with calculated estimates",
+        "fallback_plan": "Sample plan · preset budget allowances",
         "estimated_total": "Indicative budget (USD)",
         "flights": "Flight estimate",
         "hotels": "Stay estimate",
@@ -549,7 +549,7 @@
           "history": "History",
           "nature": "Nature"
         },
-        "booking_focus": "This planner does not check live prices or availability and does not make bookings. Confirm costs and arrangements directly with providers.",
+        "booking_focus": "Budgets are estimates, not quotes. If Onesa is unavailable, you will see a sample plan using preset allowances. This planner does not check live availability or make bookings.",
         "download_pdf": "Download PDF",
         "pdf_title": "Onesa Trip Plan",
         "pdf_filename": "onesa-trip-plan",
@@ -620,15 +620,15 @@
     },
     "vr": {
       "seo": {
-        "title": "Zimbabwe Virtual Tourism Experience",
-        "description": "Try a Sample City demonstration with panoramic scenes, points of interest and optional narration. Zimbabwe destination tours are not available yet."
+        "title": "360° VR Demo",
+        "description": "Explore the Sample City panoramic demo with scene controls and optional narration. This is a demonstration, not a Zimbabwe destination tour."
       }
     },
     "landing": {
       "eyebrow": "Explore Zimbabwe",
       "title": "See more of",
       "highlight": "Zimbabwe.",
-      "description": "For a day, a weekend or a journey home. Explore waterfalls, wildlife and heritage, then build a plan around your time and interests.",
+      "description": "Find a day trip, weekend escape or places to visit on your next journey home. Compare destinations and draft an itinerary with Onesa.",
       "principle": "Ideas to help you plan. Confirm access, prices and bookings directly with providers.",
       "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe",
       "caption": "Victoria Falls · Zimbabwe",
@@ -848,14 +848,14 @@
     "ntir": {
       "back": "Back to Investment",
       "title": "NTIR business directory",
-      "subtitle": "Search business records maintained by Diaspora Unlocked, with bundled entries available when search cannot be reached. NTIR is a platform directory, not an official national register or independent verification service.",
-      "placeholder": "Search by entity, sector, or location",
+      "subtitle": "Search the business directory maintained by Diaspora Unlocked by name, sector or location. Entries are research starting points, not official registration or independent verification.",
+      "placeholder": "Name, sector or place",
       "search": "Search",
-      "empty": "No entities found.",
+      "empty": "No directory entries match your search. Try a business name, sector or location.",
       "service_unavailable": "Search is unavailable. Showing the directory entries included with the site."
     },
     "sectors_title": "Explore project profiles",
-    "sectors_subtitle": "Browse sector ideas and listed promoters. Current availability, financial terms and approvals require independent confirmation.",
+    "sectors_subtitle": "Read project descriptions and listed promoter details by sector. These profiles support research; DU does not accept investments or confirm participation terms.",
     "cta_title": "Ready to Invest?",
     "cta_subtitle": "Our investment team can help you identify the right opportunities and guide you through the process.",
     "cta_button": "Connect with an Expert",
@@ -911,7 +911,7 @@
     "project_details": {
       "back": "Back to Investment",
       "not_found_title": "Project not found",
-      "not_found_desc": "The selected project ID does not exist.",
+      "not_found_desc": "This project profile is unavailable. Return to the project catalogue to explore other entries.",
       "badge": "Project Details",
       "responsible_company": "Listed promoter",
       "highlights": "Questions to explore",
@@ -1372,7 +1372,7 @@
       "cereals": {
         "title": "Cereals & Breakfast",
         "description": "Cerevita blends and everyday breakfast staples.",
-        "detail": "Trusted breakfast staples and pantry basics selected for repeat household orders, family bundles, and familiar routines from home."
+        "detail": "Breakfast cereals and pantry staples for everyday meals and sharing."
       },
       "sauces_spices": {
         "title": "Sauces & Spices",
@@ -1382,7 +1382,7 @@
       "snacks": {
         "title": "Snacks & Treats",
         "description": "Maputi, biscuits, and nostalgic grab-and-go bites.",
-        "detail": "Comfort snacks and quick treats chosen for sharing, care packages, and nostalgia-driven orders that travel well across households."
+        "detail": "Biscuits, maputi and savoury snacks for sharing or adding to a gift basket. Delivery suitability is confirmed with the shop."
       },
       "oils_spreads": {
         "title": "Cooking Oils & Spreads",
@@ -1396,8 +1396,8 @@
       },
       "crafts": {
         "title": "Arts & Crafts",
-        "description": "Authentic artisan pieces rooted in Zimbabwean heritage.",
-        "detail": "Handmade heritage pieces with artisan story, gift appeal, and display value for homes, offices, and diaspora collections."
+        "description": "Stone sculpture, baskets and beaded accessories.",
+        "detail": "Explore decorative pieces and gifts for your home, friends or family."
       },
       "apparel": {
         "title": "Sports Apparel",
@@ -1406,8 +1406,8 @@
       }
     },
     "products": {
-      "title": "Shop Products",
-      "subtitle": "Add products to your cart and send an order request. Availability, delivery and payment are confirmed with you before the order goes ahead.",
+      "title": "Product catalogue",
+      "subtitle": "Build your basket and send an order request. Before you pay, the team confirms stock, DHL delivery to your destination and final costs.",
       "back_to_shop": "Back to Shop",
       "default_country": "Germany",
       "filters": {
@@ -1415,8 +1415,8 @@
         "sports": "Sports",
         "crafts": "Arts & Crafts",
         "food": "Food & Nostalgia",
-        "all_segments": "All Segments",
-        "select_segment": "Select Segment"
+        "all_segments": "All product types",
+        "select_segment": "Choose a product type"
       },
       "loading": "Loading products...",
       "empty_state": "No products available in this category yet.",
@@ -1425,16 +1425,16 @@
         "chevrons-world-cup-jersey": "National cricket fan jersey.",
         "warriors-football-kit": "Zimbabwe football supporters kit.",
         "shona-stone-sculpture": "Carved stone sculpture.",
-        "binga-basket": "Handwoven basket made by local artisans.",
+        "binga-basket": "Handwoven basket.",
         "beaded-jewelry-set": "Traditional beaded necklace and bracelet set.",
         "mazoe-variety-pack": "Classic Zimbabwe cordial selection.",
-        "cerevita-corn-banana-500g": "Nutritious instant cereal favorite.",
+        "cerevita-corn-banana-500g": "Corn and banana breakfast cereal, 500g.",
         "mazoe-raspberry-2l-case-6": "Bulk case pack for family and gifting.",
         "mazoe-orange-2l-case-6": "Orange cordial in a case of six 2L bottles.",
         "mazoe-orange-2l": "Single bottle orange cordial.",
         "pfuko-maheu-traditional-500ml-case-12": "Traditional maheu in a value case pack.",
-        "pfuko-maheu-traditional-500ml-1": "Traditional maheu in a value case pack.",
-        "cascade-orange-400ml-case-6": "Cascade Orange is the perfect adventure for a Dairy Fruit Mix drink.",
+        "pfuko-maheu-traditional-500ml-1": "Traditional maheu, single 500ml bottle.",
+        "cascade-orange-400ml-case-6": "Orange dairy fruit drink in a case of six bottles.",
         "kariba-kapenta-matemba-100g": "Dried kapenta, 100g.",
         "royco-usavi-beef-75g": "Flavor blend for local stews and gravies.",
         "colcom-pork-pie-100g": "Ready-to-eat savory pie.",
@@ -1476,7 +1476,7 @@
       },
       "totals": {
         "subtotal": "Subtotal",
-        "shipping": "Estimated delivery",
+        "shipping": "Delivery allowance (estimate)",
         "total": "Estimated total"
       },
       "guest_checkout": {
@@ -1518,10 +1518,10 @@
       "order": {
         "reference": "Request reference",
         "status": "Status",
-        "manual_follow_up": "Request received. Payment has not been taken and delivery is not yet confirmed. Contact us with your reference to agree availability, delivery costs and payment instructions.",
+        "manual_follow_up": "Your request is saved. No payment has been taken and delivery is not confirmed. Contact the shop with your reference to agree the details.",
         "next_title": "What happens next",
         "next_reference": "Keep your request reference. It identifies your enquiry; it is not a payment receipt.",
-        "next_review": "Contact the team to confirm products, your delivery destination and final costs.",
+        "next_review": "Contact the team with your reference to confirm products, DHL delivery availability and the final cost.",
         "next_delivery": "Payment confirmation and dispatch are separate steps agreed with the team.",
         "status_awaiting_payment": "Request received — payment not confirmed",
         "status_paid": "Payment recorded — dispatch confirmed separately",
@@ -1535,7 +1535,7 @@
       "notes": {
         "guest_checkout": "No account needed to send an order request.",
         "logged_in_checkout": "Your request uses the contact details above.",
-        "supported_methods": "Availability, final delivery costs and payment instructions are agreed after review.",
+        "supported_methods": "No payment is taken here. DHL service availability and the final delivery cost are confirmed for your destination. The allowance shown is a planning estimate, not a DHL quote.",
         "supported_methods_dev": "Supported methods: assisted checkout in production, plus dummy payment simulation in dev and test."
       },
       "errors": {
@@ -1548,20 +1548,20 @@
         "intro": "Hello, I would like to request these products from Diaspora Unlocked.",
         "order_items": "Order Items:",
         "customer_details": "Customer Details:",
-        "outro": "Please confirm availability and payment instructions.",
+        "outro": "Please confirm stock, DHL delivery to my destination, final costs and payment instructions.",
         "each": "each"
       },
       "notify": {
         "cta": "Notify Me",
         "saving": "Saving...",
-        "saved": "We'll notify you when this product is available.",
-        "saved_short": "Notify Saved",
+        "saved": "Stock alert saved. We will email you when this product returns.",
+        "saved_short": "Stock alert saved",
         "dialog_title": "Notify me when it is back in stock",
         "dialog_description": "is currently unavailable. Enter your email address and we will let you know when stock returns.",
         "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",
-        "failed": "Unable to save notify request right now.",
+        "failed": "We could not save your stock alert. Please try again.",
         "toast_title": "Stock alert saved",
         "toast_detail": "We will email you when {{name}} is back in stock."
       },
@@ -1574,10 +1574,10 @@
     "loading": "Loading products...",
     "landing": {
       "eyebrow": "Shop Zimbabwe",
-      "title": "Familiar flavours.",
-      "highlight": "Thoughtful finds.",
-      "description": "Browse food, crafts and supporter apparel for everyday life or as a gift. Pick a category, find your favourites and build a basket.",
-      "principle": "Your basket becomes an order request. The team confirms availability, delivery and payment before you buy.",
+      "title": "Food, crafts and more.",
+      "highlight": "A connection to Zimbabwe.",
+      "description": "Find familiar flavours, gifts and supporter apparel for people in Zimbabwe and abroad. Add items to your basket and send an order request.",
+      "principle": "Delivery is arranged through DHL. Tell us your destination; the team confirms service availability, final costs and payment instructions before you pay.",
       "caption": "Food · Crafts · Supporter apparel",
       "collections_cta": "Explore categories"
     }
@@ -1600,8 +1600,8 @@
     "welcome": "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?",
     "status_prefix": "Onesa status",
     "status_offline": "Offline",
-    "status_backend_unreachable": "Onesa is currently unavailable. AI mode is off",
-    "error_unable_contact": "Onesa is currently unavailable. AI mode is off",
+    "status_backend_unreachable": "Onesa is unavailable right now. Please try again later.",
+    "error_unable_contact": "Onesa is unavailable right now. Please try again.",
     "online_indicator_aria": "Onesa online",
     "online_text": "Online",
     "error_timeout": "Onesa request timed out. Please try again.",
@@ -1609,7 +1609,8 @@
     "error_rate_limited": "Onesa is busy right now. Please try again in a few seconds.",
     "message_label": "Message to Onesa",
     "response_incomplete": "This answer was cut short. Ask Onesa to continue.",
-    "error_incomplete": "Onesa couldn't finish this answer. Please try again or ask for a shorter answer."
+    "error_incomplete": "Onesa couldn't finish this answer. Please try again or ask for a shorter answer.",
+    "checking_text": "Checking…"
   },
   "logout": "Logout",
   "legal": {
@@ -1659,7 +1660,7 @@
     "results": {
       "title_with_query": "Search Results for \"{{query}}\"",
       "title_default": "Search Diaspora Unlocked",
-      "summary_fallback": "Explore related opportunities on Diaspora Unlocked.",
+      "summary_fallback": "Open this page to explore its information and next steps.",
       "view_details": "View Details"
     },
     "no_results": {
@@ -1672,7 +1673,7 @@
     "failed": "Search is unavailable right now. Please try again.",
     "retry": "Try again",
     "prompt": "Search for tourism, investment, shopping, or Onesa AI.",
-    "description": "Search services and information."
+    "description": "Find products, destinations, business ideas and Onesa tools."
   },
   "error_boundary": {
     "unexpected": "An unexpected error occurred.",
@@ -1944,6 +1945,9 @@
     "unsubscribe": "Unsubscribe",
     "confirm": "Confirm subscription",
     "return_home": "Return home",
-    "error": "Unable to update your newsletter preferences. Please try again."
+    "error": "Unable to update your newsletter preferences. Please try again.",
+    "confirmed": "Your email is confirmed. You’re subscribed to Diaspora Unlocked.",
+    "unsubscribed": "You’re unsubscribed. You won’t receive future newsletters.",
+    "link_expired": "This link is invalid, expired or already used. Request a new confirmation using the newsletter form below."
   }
 }

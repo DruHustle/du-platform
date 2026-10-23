@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { api } from "@/lib/api";
 import {
   checkOnesaHealth,
+  invalidateOfflineOnesaHealth,
   clearOnesaHealthCache,
   sendOnesaChatMessage,
   requestOnesaTripPlan,
@@ -162,4 +163,16 @@ describe("trip request cancellation", () => {
       { signal: request.signal, timeout: 240000 }
     );
   });
+});
+
+it("retries cached offline status immediately after reconnect without discarding a healthy result", async () => {
+  get
+    .mockResolvedValueOnce({ data: { ready: false } })
+    .mockResolvedValueOnce({ data: { ready: true } });
+  expect((await checkOnesaHealth("Offline")).online).toBe(false);
+  invalidateOfflineOnesaHealth();
+  expect((await checkOnesaHealth("Offline")).online).toBe(true);
+  invalidateOfflineOnesaHealth();
+  expect((await checkOnesaHealth("Offline")).online).toBe(true);
+  expect(get).toHaveBeenCalledTimes(2);
 });
