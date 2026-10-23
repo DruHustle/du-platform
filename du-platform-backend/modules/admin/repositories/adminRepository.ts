@@ -102,7 +102,7 @@ export class AdminRepository {
   createShopProduct(payload: {
     slug: string;
     name: string;
-    category: "sports" | "crafts" | "food";
+    category: "sports" | "crafts" | "food" | "beverage";
     description: string;
     image_url: string;
     price_cents: number;
@@ -118,7 +118,7 @@ export class AdminRepository {
     payload: Partial<{
       slug: string;
       name: string;
-      category: "sports" | "crafts" | "food";
+      category: "sports" | "crafts" | "food" | "beverage";
       description: string;
       image_url: string;
       price_cents: number;

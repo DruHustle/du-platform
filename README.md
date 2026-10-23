@@ -491,3 +491,9 @@ server with test-only configuration and no email worker; provider tests inject a
 fake transport. No real emails are sent. Use `NEWSLETTER_BROWSER_CHANNEL=chromium`
 for Playwright Chromium or leave it unset for locally installed Chrome. CI runs
 both suites with a disposable MySQL service.
+
+## Shop administration and regional pricing
+
+See [the pricing review and admin guide](docs/shop-pricing-and-admin.md) for the
+retail benchmarks, EUR/USD/ZAR workflow, secure first-time admin setup, persistent
+product management and isolated database/browser regression checks.

@@ -1,3 +1,4 @@
+import type { ShopCurrency } from "../../../../shared/shopCurrency";
 import { emailText } from "../../../../shared/customerEmailCopy";
 import { customerLanguage } from "../../../../shared/customerLanguage";
 import {
@@ -155,6 +156,8 @@ export class ShopService {
 
   async createOrder(payload: {
     language?: string;
+    currency?: ShopCurrency;
+    pricingRevision?: string;
     customerName: string;
     customerEmail: string;
     shippingCountry: string;

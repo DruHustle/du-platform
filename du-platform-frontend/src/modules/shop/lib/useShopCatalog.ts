@@ -1,3 +1,4 @@
+import { isShopCurrency } from "@shared/shopCurrency";
 import { useEffect, useSyncExternalStore } from "react";
 import { getPublicShopSeedProducts } from "@shared/shopCatalog";
 import { api } from "@/lib/api";
@@ -43,7 +44,7 @@ export function validateShopProducts(value: unknown): ShopProduct[] {
       typeof p.category !== "string" ||
       typeof p.image_url !== "string" ||
       typeof p.currency !== "string" ||
-      !/^[A-Z]{3}$/.test(p.currency) ||
+      !isShopCurrency(p.currency) ||
       !Number.isSafeInteger(p.price_cents) ||
       p.price_cents < 0 ||
       !Number.isSafeInteger(p.stock_qty) ||

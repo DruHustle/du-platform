@@ -1326,12 +1326,10 @@
       "toast_hide": "Story set to Don't display."
     },
     "shop": {
-      "slug_placeholder": "Slug",
+      "slug_placeholder": "Product URL key",
       "name_placeholder": "Product name",
       "image_placeholder": "Image URL or path",
-      "category_placeholder": "Category: sports/crafts/food",
-      "price_placeholder": "Price cents (e.g. 4999)",
-      "stock_placeholder": "Stock qty",
+      "stock_placeholder": "Available quantity",
       "currency_placeholder": "Currency",
       "description_placeholder": "Description",
       "display_label": "Display product",
@@ -1343,8 +1341,27 @@
       "badge_hide": "Don't display",
       "edit": "Edit",
       "delete": "Delete",
-      "empty": "No shop products yet."
-    }
+      "empty": "No shop products yet.",
+      "price_label": "Price ({{currency}})",
+      "invalid_price": "Enter a positive price with up to two decimal places.",
+      "saved": "Product saved. The shop catalogue has been updated.",
+      "deleted": "Product deleted.",
+      "saving": "Saving…",
+      "discard": "Discard unsaved product changes?",
+      "confirm_delete": "Delete “{{name}}”? Products with order history must be hidden instead.",
+      "category_label": "Category",
+      "search": "Find a product",
+      "help": "Add or edit products, prices, stock and visibility. Prices use the currency selected below. New products start hidden; only confirmed stock should be made available. Images accept an HTTPS URL or a site image path.",
+      "categories": {
+        "sports": "Apparel & sport",
+        "crafts": "Arts & crafts",
+        "food": "Food",
+        "beverage": "Drinks"
+      }
+    },
+    "login_title": "Admin sign in",
+    "login_subtitle": "Sign in with your authorised administrator account. First time here? Use Forgot Password to verify your email and choose your password.",
+    "access_denied": "This account needs administrator permission and verified email access. For an authorised admin email, use Forgot Password, then sign in again."
   },
   "shop": {
     "collections": "Collections",
@@ -1580,6 +1597,13 @@
       "principle": "Delivery is arranged through DHL. Tell us your destination; the team confirms service availability, final costs and payment instructions before you pay.",
       "caption": "Food · Crafts · Supporter apparel",
       "collections_cta": "Explore categories"
+    },
+    "currency": {
+      "label": "Shop currency",
+      "EUR": "EUR · Europe",
+      "USD": "USD · Zimbabwe",
+      "ZAR": "ZAR · South Africa",
+      "note": "Prices are estimates; final product and DHL delivery costs are confirmed before payment. Reference conversion: 15 October 2026."
     }
   },
   "notfound": {

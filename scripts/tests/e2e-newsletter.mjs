@@ -19,7 +19,7 @@ await readFile("dist/public/index.html");
 const adminEmail = `newsletter-admin-${Date.now()}@example.com`;
 const email = `newsletter-reader-${Date.now()}@example.com`;
 const pool = mysql.createPool(databaseUrl);
-const serverCode = `import {initializeDatabase} from './du-platform-backend/db.ts';import {db} from './du-platform-backend/shared/databaseRuntime.ts';import {createModularServer} from './du-platform-backend/server.ts';import {createServer} from 'node:http';import path from 'node:path';await initializeDatabase();const server=createServer();await new Promise(done=>server.listen(0,'127.0.0.1',done));process.env.APP_BASE_URL='http://127.0.0.1:'+server.address().port;const app=createModularServer({backend:{db,serverStartedAt:Date.now()},staticPath:path.resolve('dist/public')});server.on('request',app);console.log('TEST_URL='+process.env.APP_BASE_URL);process.on('SIGTERM',()=>{server.close();void db?.end().then(()=>process.exit(0));});`;
+const serverCode = `import {initializeDatabase} from './du-platform-backend/db.ts';import {db} from './du-platform-backend/shared/databaseRuntime.ts';import {createModularServer} from './du-platform-backend/server.ts';import {createServer} from 'node:http';import path from 'node:path';await initializeDatabase();const {hashPassword}=await import('./du-platform-backend/shared/passwords.ts');await db.execute('UPDATE users SET password_hash=?,email_verified_at=CURRENT_TIMESTAMP WHERE email=?',[await hashPassword('StrongNewsletter!2026'),process.env.ADMIN_EMAILS]);const server=createServer();await new Promise(done=>server.listen(0,'127.0.0.1',done));process.env.APP_BASE_URL='http://127.0.0.1:'+server.address().port;const app=createModularServer({backend:{db,serverStartedAt:Date.now()},staticPath:path.resolve('dist/public')});server.on('request',app);console.log('TEST_URL='+process.env.APP_BASE_URL);process.on('SIGTERM',()=>{server.close();void db?.end().then(()=>process.exit(0));});`;
 const env = Object.fromEntries(
   ["PATH", "HOME", "TMPDIR", "SystemRoot"]
     .filter(key => process.env[key])
@@ -91,13 +91,13 @@ try {
     };
   };
   const account = async address => {
-    const res = await request("/auth/register", {
+    const res = await request(address === adminEmail ? "/auth/login" : "/auth/register", {
       email: address,
       fullName: "Newsletter Test",
       password: "StrongNewsletter!2026",
       confirmPassword: "StrongNewsletter!2026",
     });
-    assert.equal(res.status, 201, JSON.stringify(res.body));
+    assert.equal(res.status, address === adminEmail ? 200 : 201, JSON.stringify(res.body));
     return res;
   };
   const admin = await account(adminEmail),

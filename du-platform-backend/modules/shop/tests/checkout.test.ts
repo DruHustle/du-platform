@@ -97,7 +97,7 @@ describe("checkout reliability", () => {
       (await getShopOrderByRef(first.orderRef, first.manageToken))?.items
     ).toHaveLength(1);
   });
-  it("checks combined stock and refuses mixed-currency or overflowing totals", async () => {
+  it("checks stock, converts supported catalogue currencies and refuses overflowing totals", async () => {
     await expect(
       createShopOrder({ ...payload(), items: [{ productId: 1, quantity: 4 }] })
     ).rejects.toThrow("Insufficient stock");
@@ -105,7 +105,8 @@ describe("checkout reliability", () => {
       price = shopSeedProducts[0].price_cents;
     try {
       shopSeedProducts[0].currency = "USD";
-      await expect(createShopOrder(payload())).rejects.toThrow("EUR order");
+      shopSeedProducts[0].price_cents = 11208;
+      expect((await createShopOrder(payload())).subtotalCents).toBe(20000);
       shopSeedProducts[0].currency = "EUR";
       shopSeedProducts[0].price_cents = 2_147_483_647;
       await expect(createShopOrder(payload())).rejects.toThrow("too large");

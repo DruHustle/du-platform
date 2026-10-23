@@ -12,6 +12,7 @@ import {
 } from "@/lib/shopCategories";
 import { useShopCart } from "../lib/useShopCart";
 import { useShopCatalog } from "../lib/useShopCatalog";
+import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import ProductCard from "../components/ProductCard";
 import CatalogNotice from "../components/CatalogNotice";
 
@@ -80,6 +81,9 @@ export default function Shop() {
             </Link>
           }
         >
+          <div className="mb-6">
+            <ShopCurrencySelect />
+          </div>
           <CatalogNotice status={status} onRetry={() => void refresh()} />
           <SwipeRail
             label={tx(

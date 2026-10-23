@@ -72,6 +72,7 @@ export function issueAccessTokenForUser(user: {
   id: number;
   email?: string | null;
   full_name?: string | null;
+  auth_version?: number;
 }) {
   const ttl = Math.max(60, Number(process.env.JWT_EXPIRES_IN_SECONDS ?? "3600"));
   return createJwtToken(
@@ -80,6 +81,7 @@ export function issueAccessTokenForUser(user: {
       email: user.email ? String(user.email) : undefined,
       name: user.full_name ? String(user.full_name) : undefined,
       scope: "user",
+      av: Number(user.auth_version ?? 0),
     },
     {
       expiresInSeconds: ttl,

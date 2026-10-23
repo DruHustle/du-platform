@@ -1,3 +1,5 @@
+import { convertShopCents } from "@shared/shopCurrency";
+import { useShopCurrency } from "../lib/useShopCurrency";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import InstantImage from "@/components/InstantImage";
@@ -28,6 +30,7 @@ export default function ProductCard({
   footer,
 }: Props) {
   const { t } = useTranslation();
+  const { currency } = useShopCurrency();
   const canAdd = available && product.stock_qty > quantity;
   return (
     <article
@@ -78,7 +81,10 @@ export default function ProductCard({
         )}
         <div className="mt-auto pt-4">
           <p className="mb-3 text-sm font-semibold text-white tabular-nums">
-            {formatShopMoney(product.price_cents, product.currency)}
+            {formatShopMoney(
+              convertShopCents(product.price_cents, product.currency, currency),
+              currency
+            )}
           </p>
           <div className="relative z-20 flex justify-end">
             <QuantityControl

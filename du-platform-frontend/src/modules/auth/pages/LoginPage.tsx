@@ -31,6 +31,7 @@ export default function Login() {
   const params = new URLSearchParams(window.location.search);
   const nextParam = params.get("next");
   const nextPath = safeRedirectPath(nextParam);
+  const adminLogin = nextPath === "/admin";
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -93,7 +94,7 @@ export default function Login() {
         >
           <div className="content-panel auth-panel relative p-8 md:p-10 space-y-7">
             <button
-              onClick={() => setLocation(nextPath)}
+              onClick={() => setLocation(adminLogin ? "/" : nextPath)}
               className="absolute top-5 right-5 min-h-11 min-w-11 flex items-center justify-center p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-zim-gold hover:bg-white/10 transition-all z-50 group"
               aria-label={t("auth.cancel_login", {
                 defaultValue: "Cancel login",
@@ -104,12 +105,14 @@ export default function Login() {
 
             <div className="text-center space-y-2">
               <h1 className="auth-title text-white">
-                {returningUser
-                  ? t("auth.welcome_back") || "Welcome Back"
-                  : t("auth.login") || "Sign In"}
+                {adminLogin
+                  ? t("admin.login_title")
+                  : returningUser
+                    ? t("auth.welcome_back") || "Welcome Back"
+                    : t("auth.login") || "Sign In"}
               </h1>
               <p className="text-sm font-light leading-relaxed text-white/75">
-                {t("auth.login_subtitle")}
+                {t(adminLogin ? "admin.login_subtitle" : "auth.login_subtitle")}
               </p>
             </div>
 
@@ -241,17 +244,19 @@ export default function Login() {
               </Button>
             </form>
 
-            <div className="text-center pt-4 border-t border-white/10">
-              <p className="text-xs text-white/70">
-                {t("auth.no_account") || "Don't have an account?"}{" "}
-                <Link
-                  href="/register"
-                  className="text-zim-gold font-bold hover:underline"
-                >
-                  {t("auth.register_now") || "Create Account"}
-                </Link>
-              </p>
-            </div>
+            {!adminLogin && (
+              <div className="text-center pt-4 border-t border-white/10">
+                <p className="text-xs text-white/70">
+                  {t("auth.no_account") || "Don't have an account?"}{" "}
+                  <Link
+                    href="/register"
+                    className="text-zim-gold font-bold hover:underline"
+                  >
+                    {t("auth.register_now") || "Create Account"}
+                  </Link>
+                </p>
+              </div>
+            )}
           </div>
         </motion.div>
       </section>

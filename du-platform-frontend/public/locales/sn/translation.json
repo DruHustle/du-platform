@@ -1264,11 +1264,9 @@
       "toast_hide": "Nyaya yasarudzwa kusaratidzwa."
     },
     "shop": {
-      "slug_placeholder": "Chiratidzo cheURL",
+      "slug_placeholder": "Kiyi yekero yechigadzirwa",
       "name_placeholder": "Zita rechigadzirwa",
       "image_placeholder": "URL kana nzira yemufananidzo",
-      "category_placeholder": "Rudzi: sports/crafts/food",
-      "price_placeholder": "Mutengo mumasendi (semuenzaniso 4999)",
       "stock_placeholder": "Huwandu huripo",
       "currency_placeholder": "Rudzi rwemari",
       "description_placeholder": "Tsananguro",
@@ -1281,8 +1279,27 @@
       "badge_hide": "Musaratidze",
       "edit": "Gadzirisai",
       "delete": "Bvisai",
-      "empty": "Hapana zvigadzirwa zvemuchitoro parizvino."
-    }
+      "empty": "Hapana zvigadzirwa zvemuchitoro parizvino.",
+      "price_label": "Mutengo ({{currency}})",
+      "invalid_price": "Isa mutengo unopfuura zero une manhamba asingapfuuri maviri mushure medesimari.",
+      "saved": "Chigadzirwa chachengetwa. Rondedzero yechitoro yagadziridzwa.",
+      "deleted": "Chigadzirwa chadzimwa.",
+      "saving": "Zviri kuchengetwa…",
+      "discard": "Rasa shanduko dzechigadzirwa dzisati dzachengetwa here?",
+      "confirm_delete": "Dzima “{{name}}” here? Zvigadzirwa zvakambokumbirwa nevatengi zvinofanira kuvanzwa pane kudzimwa.",
+      "category_label": "Chikamu",
+      "search": "Tsvaga chigadzirwa",
+      "help": "Wedzera kana gadzirisa zvigadzirwa, mitengo, huwandu nekuonekwa. Mitengo inoshandisa mari yakasarudzwa pazasi. Zvigadzirwa zvitsva zvinotanga zvakavanzwa; ratidza huwandu hwakasimbiswa chete. Mifananidzo inogona kuva kero yeHTTPS kana nzira yemufananidzo wepasaiti.",
+      "categories": {
+        "sports": "Zvipfeko nemitambo",
+        "crafts": "Unyanzvi nemabasa emaoko",
+        "food": "Chikafu",
+        "beverage": "Zvinwiwa"
+      }
+    },
+    "login_title": "Kupinda kwemutungamiriri",
+    "login_subtitle": "Pinda neakaundi yako ine mvumo yekutungamirira. Uri kupinda kekutanga here? Shandisa Wakanganwa Pasiwedhi kusimbisa email yako uye kusarudza pasiwedhi.",
+    "access_denied": "Akaundi iyi inoda mvumo yekutungamirira uye email yakasimbiswa. Kana email yako ine mvumo, shandisa Wakanganwa Pasiwedhi wozopinda zvakare."
   },
   "shop": {
     "collections": "Zvirongwa",
@@ -1518,6 +1535,13 @@
       "principle": "Kuendeswa kwezvinhu kunorongwa neDHL. Tiudzei kwamunoda kuendeserwa; timu inosimbisa kuwanikwa kwebasa, mari yekupedzisira nemirayiridzo yekubhadhara musati mabhadhara.",
       "caption": "Chikafu · Mabasa emaoko · Mbatya dzevatsigiri",
       "collections_cta": "Ongorora zvikamu"
+    },
+    "currency": {
+      "label": "Mari yechitoro",
+      "EUR": "EUR · KuEurope",
+      "USD": "USD · MuZimbabwe",
+      "ZAR": "ZAR · MuSouth Africa",
+      "note": "Mitengo iyi ndeyekufungidzira; mutengo wekupedzisira wezvinhu nekuendeswa neDHL zvinosimbiswa usati wabhadhara. Kushandurwa kwemari kunobva pa15 Gumiguru 2026."
     }
   },
   "notfound": {
