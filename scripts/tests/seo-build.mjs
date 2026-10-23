@@ -18,8 +18,12 @@ assert.equal(config.trailingSlash, false);
 assert.deepEqual(config.rewrites, [
   {
     source: "/api/:path*",
-    destination: "https://du-api.152-70-22-84.sslip.io/api/:path*",
+    destination:
+      process.env.VERCEL_ENV === "preview"
+        ? "/preview-api-unavailable.json"
+        : "https://du-api.152-70-22-84.sslip.io/api/:path*",
   },
+  { source: "/shop/product/:slug", destination: "/shop/products" },
 ]);
 const entryAssets = [
   ...fs
@@ -70,7 +74,13 @@ const expectedLocations = [];
 for (const pathname of paths) {
   const file = pathname === "/" ? "index.html" : `${pathname.slice(1)}.html`;
   const html = fs.readFileSync(path.join(root, file), "utf8");
-  const seo = resolveRouteSeo({ pathname });
+  const products = JSON.parse(
+    fs.readFileSync(path.join(root, "catalogue-index.json"), "utf8")
+  );
+  const seo = resolveRouteSeo({
+    pathname,
+    product: products.find(p => pathname === `/shop/product/${p.slug}`),
+  });
   const canonical = resolveCanonicalUrl(origin, seo.canonicalPath);
   assert.equal(
     [...html.matchAll(/<link\b[^>]*rel="canonical"[^>]*>/gi)].length,
@@ -130,3 +140,67 @@ assert(
 console.log(
   `PASS ${paths.length} route documents; ${locations.length} canonical sitemap URLs; robots and static-hosting configuration`
 );
+
+for (const route of [
+  "/",
+  "/shop",
+  "/shop/products",
+  "/tourism",
+  "/investment",
+  "/technology",
+]) {
+  const html = fs.readFileSync(
+    path.join(root, route === "/" ? "index.html" : route.slice(1) + ".html"),
+    "utf8"
+  );
+  assert(
+    html.includes("public-preview"),
+    `${route} needs substantive initial content`
+  );
+  assert(
+    !html.includes("Loading Diaspora Unlocked"),
+    `${route} must not contain the loading shell`
+  );
+  assert(
+    html.includes("assisted order request") ||
+      html.includes("Sample trip budgets") ||
+      html.includes("research starting points") ||
+      html.includes("cannot book a trip")
+  );
+}
+
+assert(
+  !fs
+    .readFileSync(path.join(root, "index.html"), "utf8")
+    .includes("fonts.googleapis.com"),
+  "Font styles must not block rendering on a third party"
+);
+for (const family of ["inter", "montserrat"]) {
+  assert(
+    fs.existsSync(path.join(root, "fonts", `${family}-OFL.txt`)),
+    "Preserve font redistribution notices"
+  );
+  assert(
+    fs.existsSync(path.join(root, "fonts", `${family}-latin.woff2`)),
+    "Ship the actual brand fonts"
+  );
+}
+
+assert(
+  fs
+    .readFileSync(path.join(root, "shop/order-status.html"), "utf8")
+    .includes('name="du-order-status-version" content="1"'),
+  "Publish the frontend compatibility marker before customer email links are released"
+);
+
+for (const route of ["legal-notice", "delivery-and-returns"]) {
+  const html = fs.readFileSync(path.join(root, route + ".html"), "utf8");
+  assert(
+    html.includes("DRAFT") && html.includes("info@diasporaunlocked.com"),
+    "Draft policies must be readable in initial HTML"
+  );
+  assert(
+    html.includes('content="noindex,follow"'),
+    "Unapproved policy drafts stay noindex"
+  );
+}

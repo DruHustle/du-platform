@@ -1,0 +1,8 @@
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "PREVIEW_API_DISABLED",
+    "message": "This preview has no isolated backend. Service actions are disabled; production data is protected."
+  }
+}

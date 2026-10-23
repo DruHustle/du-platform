@@ -1,3 +1,4 @@
+import { renderOrderEmail } from "../orderNotifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("../../../shared/databaseRuntime", () => ({
   db: null,
@@ -46,6 +47,17 @@ afterEach(() => {
   shopSeedProducts[0].stock_qty = original;
 });
 describe("checkout reliability", () => {
+  it("refuses ephemeral production orders even if memory fallback was enabled", async () => {
+    const before = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    try {
+      await expect(createShopOrder(payload())).rejects.toMatchObject({
+        status: 503,
+      });
+    } finally {
+      process.env.NODE_ENV = before;
+    }
+  });
   it("rejects duplicate product rows, malformed identity and unsafe quantities", () => {
     const valid = payload();
     expect(shopOrderRequestSchema.safeParse(valid).success).toBe(true);
@@ -115,7 +127,7 @@ describe("checkout reliability", () => {
       shopSeedProducts[0].price_cents = price;
     }
   });
-  it("sends customer and merchant receipts once and escapes submitted markup", async () => {
+  it("defers email to the durable worker and escapes receipt content", async () => {
     const service = new ShopService();
     const input = {
       ...payload(),
@@ -123,10 +135,26 @@ describe("checkout reliability", () => {
     };
     const first = await service.createOrder(input);
     await service.createOrder(input);
-    expect(sendEmailMessageSafe).toHaveBeenCalledTimes(2);
-    const customer = vi.mocked(sendEmailMessageSafe).mock.calls[0][0];
-    const merchant = vi.mocked(sendEmailMessageSafe).mock.calls[1][0];
-    expect(customer.text).toContain(first.order.orderRef);
+    expect(sendEmailMessageSafe).not.toHaveBeenCalled();
+    const row = {
+      order_ref: first.order.orderRef,
+      total_cents: first.order.totalCents,
+      currency: first.order.currency,
+      language: "en",
+      event_key: "request_received:operator",
+      customer_name: input.customerName,
+      customer_email: input.customerEmail,
+      shipping_address: input.shippingAddress,
+      shipping_city: input.shippingCity,
+      shipping_country: input.shippingCountry,
+    };
+    const merchant = renderOrderEmail(
+      row,
+      "shop@example.test",
+      "",
+      "merchant@example.test"
+    );
+    expect(merchant.text).toContain(first.order.orderRef);
     expect(merchant.html).not.toContain("<img");
     expect(merchant.html).toContain("&lt;img");
     expect(merchant.text).not.toContain(input.requestToken);
@@ -136,10 +164,7 @@ describe("checkout reliability", () => {
       new Error("Mock email outage")
     );
     const { order } = await new ShopService().createOrder(payload());
-    expect(sendEmailMessageSafe).toHaveBeenCalledTimes(2);
-    expect(vi.mocked(sendEmailMessageSafe).mock.calls[1][0].to).toEqual([
-      "merchant@example.test",
-    ]);
+    expect(sendEmailMessageSafe).not.toHaveBeenCalled();
     expect(
       await getShopOrderByRef(order.orderRef, order.manageToken)
     ).not.toBeNull();
@@ -259,7 +284,17 @@ it.each([
       ...payload(),
       language,
     });
-    const receipt = vi.mocked(sendEmailMessageSafe).mock.calls[0][0];
+    const receipt = renderOrderEmail(
+      {
+        order_ref: order.orderRef,
+        total_cents: order.totalCents,
+        currency: order.currency,
+        language,
+        event_key: "request_received",
+        customer_email: "customer@example.test",
+      },
+      "shop@example.test"
+    );
     expect(receipt.subject).toContain(label);
     expect(receipt.text).toContain(order.orderRef);
     expect(receipt.text).toContain((order.totalCents / 100).toFixed(2));

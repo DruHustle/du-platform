@@ -88,6 +88,29 @@ export function registerCoreMiddleware(app: Express) {
   }
   const connectSrc = connectSrcOrigins;
 
+  // Preview/browser test deployments may never write to the production API,
+  // even through anonymous routes that do not use session cookies.
+  app.use((req, res, next) => {
+    const origin = String(req.headers.origin || "");
+    if (
+      isProduction &&
+      !["GET", "HEAD", "OPTIONS"].includes(req.method) &&
+      (process.env.DU_DEPLOYMENT_ENV === "preview" ||
+        /^https:\/\/[^/]+\.vercel\.app$/i.test(origin) ||
+        req.headers["x-du-test-environment"])
+    ) {
+      return res.status(403).json({
+        success: false,
+        data: null,
+        error: {
+          code: "PREVIEW_WRITE_BLOCKED",
+          message:
+            "Production writes are disabled from previews and test clients.",
+        },
+      });
+    }
+    next();
+  });
   app.disable("x-powered-by");
   app.set("trust proxy", resolveTrustProxySetting());
 
@@ -158,10 +181,10 @@ export function registerCoreMiddleware(app: Express) {
       [
         "default-src 'self'",
         "script-src 'self'",
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: blob: https:",
         "media-src 'self' blob: data:",
-        "font-src 'self' data: https://fonts.gstatic.com",
+        "font-src 'self' data:",
         `connect-src ${connectSrc.join(" ")}`,
         "object-src 'none'",
         "frame-ancestors 'none'",

@@ -5,6 +5,7 @@ export const PUBLIC_SITE_ORIGIN = "https://www.diasporaunlocked.com";
 export type RouteSeoInput = {
   pathname: string;
   search?: string;
+  product?: { slug: string; name: string; description: string };
 };
 
 export type RouteSeo = {
@@ -66,6 +67,36 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
+  if (pathname === "/shop/order-status")
+    return buildSeo(
+      "Private request status | Diaspora Unlocked",
+      "View your assisted order request securely.",
+      pathname,
+      "Request status",
+      "noindex,nofollow"
+    );
+  if (["/legal-notice", "/delivery-and-returns"].includes(pathname))
+    return buildSeo(
+      "Operator and pilot procedures | Diaspora Unlocked",
+      "Operator details and draft delivery, payment, cancellation and returns procedures.",
+      pathname,
+      "Operator and pilot procedures",
+      "noindex,follow"
+    );
+  if (input.product && pathname === `/shop/product/${input.product.slug}`)
+    return buildSeo(
+      `${input.product.name} | Shop | Diaspora Unlocked`,
+      input.product.description,
+      pathname,
+      input.product.name
+    );
+  if (pathname.startsWith("/shop/product/"))
+    return buildSeo(
+      "Product information | Diaspora Unlocked",
+      "Product details, indicative pricing and availability. Confirm the final quote, delivery and assisted payment with the shop.",
+      pathname,
+      "Product information"
+    );
   if (pathname === "/shop") {
     return buildSeo(
       "Shop Zimbabwe Products | Diaspora Unlocked",

@@ -1,6 +1,23 @@
+import { TOURISM_SEARCH_DESTINATIONS } from "../../../../shared/tourismSearch";
 import { SearchRepository } from "../repositories/searchRepository";
 
 const ROUTE_INDEX = [
+  ...TOURISM_SEARCH_DESTINATIONS.map(({ title, id, aliases }) => ({
+    title,
+    href: `/tourism#${id}`,
+    category: "Destination",
+    tags: ["travel", "destination", ...aliases],
+  })),
+  ...[
+    ["Apparel", "sports", "jersey clothing rugby cricket"],
+    ["Arts and crafts", "crafts", "sculpture basket gifts"],
+    ["Food and drinks", "food", "beverages groceries juice cordial"],
+  ].map(([title, category, aliases]) => ({
+    title,
+    href: `/shop/products?category=${category}`,
+    category: "Collection",
+    tags: aliases.split(" "),
+  })),
   {
     title: "Shop",
     href: "/shop",
@@ -61,15 +78,35 @@ export class SearchService {
         String(value).toLowerCase().includes(normalizedQuery)
       )
     );
-    const ntirMatches = (await this.repository.searchNtir(normalizedQuery))
-      .slice(0, 10)
-      .map((row: any) => ({
-        title: row.name,
-        href: "/ntir",
-        category: "NTIR",
-        summary: `${row.sector} - ${row.location}`,
+    const [entities, products] = await Promise.all([
+      this.repository.searchNtir(normalizedQuery),
+      this.repository.publishedProducts(),
+    ]);
+    const productMatches = products
+      .filter(
+        (p: any) =>
+          Number(p.is_active) === 1 &&
+          `${p.name} ${p.description} ${p.category} ${p.slug.replace(/[-_]/g, " ")}`
+            .toLowerCase()
+            .includes(normalizedQuery)
+      )
+      .sort(
+        (a: any, b: any) => Number(b.stock_qty > 0) - Number(a.stock_qty > 0)
+      )
+      .slice(0, 30)
+      .map((p: any) => ({
+        title: p.name,
+        href: `/shop/products?product=${encodeURIComponent(p.slug)}`,
+        category: "Product",
+        summary: `${p.description} · ${p.stock_qty > 0 ? "Available now" : "Currently unavailable"}`,
       }));
-    const results = [...routeMatches, ...ntirMatches];
+    const ntirMatches = entities.slice(0, 10).map((row: any) => ({
+      title: row.name,
+      href: `/ntir?q=${encodeURIComponent(row.name)}`,
+      category: "NTIR",
+      summary: `${row.sector} - ${row.location}`,
+    }));
+    const results = [...productMatches, ...routeMatches, ...ntirMatches];
     return {
       query: normalizedQuery,
       count: results.length,

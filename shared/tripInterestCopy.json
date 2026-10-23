@@ -1,0 +1,34 @@
+{
+  "en": {
+    "wildlife": "Wildlife",
+    "culture": "Culture",
+    "adventure": "Adventure",
+    "food": "Food",
+    "history": "History",
+    "nature": "Nature"
+  },
+  "de": {
+    "wildlife": "Tierwelt",
+    "culture": "Kultur",
+    "adventure": "Abenteuer",
+    "food": "Essen",
+    "history": "Geschichte",
+    "nature": "Natur"
+  },
+  "sn": {
+    "wildlife": "Mhuka dzesango",
+    "culture": "Tsika",
+    "adventure": "Kushanya kwechiitiko",
+    "food": "Chikafu",
+    "history": "Nhoroondo",
+    "nature": "Zvisikwa"
+  },
+  "nd": {
+    "wildlife": "Izilwane zendle",
+    "culture": "Amasiko",
+    "adventure": "Uhambo lwe-adventure",
+    "food": "Ukudla",
+    "history": "Umlando",
+    "nature": "Imvelo"
+  }
+}

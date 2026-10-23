@@ -11,7 +11,14 @@ const input = {
 };
 it("localizes offline plans without changing allowances or itinerary length", () => {
   const english = buildClientFallbackPlan({ ...input, language: "en" });
-  expect(english.estimatedTotalUsd).toBe(4650);
+  expect(english.nights).toBe(4);
+  expect(english.estimatedTotalUsd).toBe(
+    english.flights.estimatedCostUsd +
+      english.hotels.estimatedCostUsd +
+      english.carHire.estimatedCostUsd +
+      english.experiences.reduce((n, e) => n + e.estimatedCostUsd, 0) +
+      (english.contingencyUsd ?? 0)
+  );
   for (const language of ["de", "sn", "nd"]) {
     const plan = buildClientFallbackPlan({ ...input, language });
     expect(plan.estimatedTotalUsd).toBe(english.estimatedTotalUsd);

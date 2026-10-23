@@ -310,12 +310,15 @@ try {
     (await readFile(`${output}/trip-plan.pdf`)).subarray(0, 4).toString(),
     "%PDF"
   );
-  await page.route("**/api/ai/trip-plan", route =>
-    route.fulfill({
-      contentType: "application/json",
-      body: JSON.stringify({ source: "ai", plan: plan.plan }),
-    })
-  );
+  await page.route("**/api/ai/trip-plan", async route => {
+    // Build a valid fixture for the actual form dates, route and party. A plan
+    // from the independent API smoke request is correctly rejected now.
+    const request = route.request().postDataJSON();
+    const response = await api("/ai/trip-plan", request);
+    assert.equal(response.status, 200);
+    const matching = await response.json();
+    await route.fulfill({ json: { source: "ai", plan: matching.plan } });
+  });
   await page.getByRole("button", { name: /generate trip plan/i }).click();
   await expectText(/ai-generated draft/i);
   await page.unroute("**/api/ai/trip-plan");
@@ -360,14 +363,17 @@ try {
     0
   );
   await page.unroute("**/api/ai/trip-plan");
-  await page.route("**/api/ai/trip-plan", route =>
-    route.fulfill({
+  await page.route("**/api/ai/trip-plan", async route => {
+    const response = await api("/ai/trip-plan", route.request().postDataJSON());
+    assert.equal(response.status, 200);
+    const matching = await response.json();
+    await route.fulfill({
       json: {
         source: "ai",
-        plan: { ...plan.plan, summary: "Updated trip response" },
+        plan: { ...matching.plan, summary: "Updated trip response" },
       },
-    })
-  );
+    });
+  });
   await page.getByRole("button", { name: /generate trip plan/i }).click();
   await expectText("Updated trip response");
   await page.unroute("**/api/ai/trip-plan");

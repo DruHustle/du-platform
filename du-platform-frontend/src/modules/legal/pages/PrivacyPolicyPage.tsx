@@ -24,16 +24,23 @@ export default function PrivacyPolicy() {
               "Your data is processed under applicable data-protection rules and is not sold to third parties."
             )}
           </p>
-          <h2 className="text-xl font-semibold">Newsletter subscriptions</h2>
-          <p className="text-white/70">
-            When you subscribe, we store your email address, subscription
-            request and confirmation dates, subscription status, and newsletter
-            delivery records in our database. Resend processes outgoing email.
-            New subscriptions require email confirmation. You can unsubscribe
-            using the link in any newsletter, or contact the support team for
-            deletion. We retain an opt-out record to prevent further
-            newsletters.
+          <p className="rounded-xl border border-amber-300/40 p-4">
+            {t("pilot.draft_notice")}
           </p>
+          {[
+            "privacy_flows",
+            "privacy_whatsapp",
+            "privacy_ai",
+            "privacy_controls",
+            "privacy_retention",
+          ].map(key => (
+            <p key={key} className="text-white/80">
+              {t(`pilot.${key}`)}
+            </p>
+          ))}
+          <a href="/legal-notice" className="text-zim-gold underline">
+            {t("pilot.operator_title")}
+          </a>
           <p className="text-white/70">
             {tr(
               "legal.privacy.p3",

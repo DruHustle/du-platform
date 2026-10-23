@@ -1,3 +1,4 @@
+import { getShopCurrency } from "@/modules/shop/lib/useShopCurrency";
 import { api } from "@/lib/api";
 
 export type OnesaChatMessage = {
@@ -117,6 +118,7 @@ export async function sendOnesaChatMessage(input: {
         content: message.content,
       })),
       language: input.language,
+      currency: getShopCurrency(),
     },
     {
       timeout: ONESA_CHAT_TIMEOUT_MS,

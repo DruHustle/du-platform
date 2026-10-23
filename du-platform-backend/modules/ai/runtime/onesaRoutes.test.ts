@@ -75,6 +75,23 @@ describe("Onesa public chat route", () => {
     expect(generateOnesaReply).not.toHaveBeenCalled();
   });
 
+  it("adds only the controlled public site index for platform capability questions", async () => {
+    await chat({
+      language: "en",
+      messages: [
+        {
+          role: "user",
+          content: "Where can I open the augmented reality tour on this site?",
+        },
+      ],
+    });
+    const context = generateOnesaReply.mock.calls[0][0][0];
+    expect(context.role).toBe("system");
+    expect(context.content).toContain("/onesa-ai-tourism-augmented-experience");
+    expect(context.content).toContain(
+      "cannot book travel, accept payments or confirm delivery"
+    );
+  });
   it("limits the provider history to the most recent 20 messages", async () => {
     const messages = Array.from({ length: 25 }, (_, i) => ({
       role: "user",

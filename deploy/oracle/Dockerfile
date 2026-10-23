@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim AS build
 WORKDIR /app
 RUN corepack enable
 COPY . .
-RUN pnpm install --frozen-lockfile && pnpm build && pnpm prune --prod
+RUN pnpm install --frozen-lockfile && DU_CATALOGUE_STRATEGY=omit pnpm build && pnpm prune --prod
 FROM node:22-bookworm-slim
 ARG APP_REVISION
 LABEL org.opencontainers.image.revision=$APP_REVISION

@@ -1,3 +1,6 @@
+import { createResearchRouter } from "../../investment/researchRoutes";
+import { createProductDetailsRouter } from "../../shop/productDetailsRoutes";
+import { createOrderAdminRouter } from "../../shop/orderAdminRoutes";
 import { createNewsletterAdminRouter } from "../../newsletter/routes";
 import { Router } from "express";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";
@@ -6,10 +9,16 @@ import { AdminController } from "../controllers/adminController";
 
 export function createAdminModuleRouter() {
   const router = Router();
-  router.use((_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
+  router.use((_req, res, next) => {
+    res.setHeader("Cache-Control", "no-store");
+    next();
+  });
   const controller = new AdminController();
 
   router.use(requireJwtAuth, requireAdminAuth);
+  router.use("/shop-products", createProductDetailsRouter(true));
+  router.use("/research", createResearchRouter(true));
+  router.use("/orders", createOrderAdminRouter());
   router.use("/newsletter", createNewsletterAdminRouter());
   router.get("/overview", controller.overview);
   router.get("/notification-settings", controller.getNotificationSettings);
