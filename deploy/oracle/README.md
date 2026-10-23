@@ -22,9 +22,10 @@ A push to `main` runs `.github/workflows/ci-cd.yml`:
 
 1. Build and Test validates types, dependencies, unit/database tests, the build
    and browser journeys. Failed checks prevent both production deployments.
-2. Deploy to Oracle sends `git archive` of the tested commit over pinned SSH.
-   The VM builds the image natively for ARM64 and releases only DU's `app`
-   service. Runtime secrets remain in `/opt/du-platform/compose.runtime.json`.
+2. Deploy to Oracle waits for the outbound release worker on the VM. Every five
+   minutes it checks the public GitHub API for this repository's active main push
+   run, successful Build and Test jobs, and the active Oracle wait step. It fetches
+   that exact commit and builds/releases only DU's `app` service, natively for ARM64.
 3. Deploy to Vercel publishes the frontend only after Oracle succeeds. Both jobs
    check the expected backend commit through Oracle and the frontend API proxy;
    the frontend job also verifies live canonical pages and browser API routing.
@@ -33,21 +34,40 @@ GitHub Pages is not used. Vercel's independent Git deploys are disabled so that
 CI remains the deployment gate. Main releases are serialized, not cancelled
 halfway through a deployment. Preview deployments remain frontend-only.
 
-The dedicated key is stored in `ORACLE_SSH_PRIVATE_KEY`; `ORACLE_KNOWN_HOSTS`
-pins the VM's public host key. The VM's `authorized_keys` entry uses `restrict`
-and a forced `/usr/local/bin/du-platform-ci-entry` command. It accepts only
-`du-deploy <40-character SHA>` and cannot provide a shell, PTY or forwarding.
-The root-owned `/usr/local/sbin/du-platform-deploy` corresponds to
-`deploy/oracle/deploy.sh`. Changes to these privileged entrypoints require a
-separate reviewed installation; ordinary application releases cannot replace
-these host scripts.
+## Outbound release worker
 
-The release script locks deployment, builds without extracting source on the
-host, checks the image revision, privately backs up both manifests, updates only
-DU's image and `APP_REVISION`, then waits for container health. It checks database
-readiness, the published commit and Onesa readiness. Failure after switching
-manifests restores the previous DU manifests and image. Sibling stacks are not
-restarted. Backups contain runtime configuration and remain root-readable only.
+The VM's SSH ingress remains restricted to the operator's IP. GitHub-hosted
+runners cannot connect directly. `du-platform-release.timer` invokes
+`du-platform-release.service` every five minutes using a dedicated `du-release`
+user. The worker needs no GitHub credential, inbound port or SSH deployment key.
+It does not run GitHub Actions jobs on the VM or accept webhook commands.
+
+The root-owned worker in `/usr/local/lib/du-platform-release/poll-release.py`
+accepts only the repository's own main push runs with successful CI checks and
+an active `Wait for verified Oracle release` step. Forks, pull requests,
+unvalidated commits and failed checks cannot trigger deployment. It fetches the
+exact tested commit into a bare repository under `/var/lib/du-platform-release`;
+no checked-out hooks or source scripts run on the host.
+
+The service user is not in the Docker group and has no general sudo permission.
+Its sole sudo grant is `/usr/local/sbin/du-platform-deploy`, which validates a
+full SHA and receives source as a Docker build context on stdin. Application
+runtime secrets stay root-readable in `/opt/du-platform/compose.runtime.json`.
+Worker and privileged release scripts are installed separately after review;
+ordinary application commits cannot overwrite these host scripts.
+
+The release script locks deployment, checks the image revision, privately backs
+up both manifests, updates only DU's image and `APP_REVISION`, then waits for
+container health. It verifies database readiness, the published commit and
+Onesa readiness. Failure after switching manifests restores the previous DU
+manifests and image. Sibling stacks are not restarted. Backups contain runtime
+configuration and remain root-readable only. The CI wait times out rather than
+publishing Vercel against an unverified backend.
+
+Inspect the worker with `systemctl status du-platform-release.timer` and
+`journalctl -u du-platform-release.service`. A manual `systemctl start du-platform-release.service` only checks for an
+eligible, waiting CI release;
+it does not bypass validation.
 
 ## Manual recovery
 

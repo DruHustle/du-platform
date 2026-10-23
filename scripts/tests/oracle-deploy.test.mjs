@@ -102,17 +102,12 @@ for (const fail of [false, true])
       await rm(fixture, { recursive: true, force: true });
     }
   });
-test("Oracle CI entry rejects shell commands and malformed SHAs", () => {
-  for (const command of [
-    "uname -a",
-    "du-deploy main",
-    "du-deploy " + revision + "; id",
-    "",
-  ]) {
-    const result = spawnSync("bash", ["deploy/oracle/ci-entry.sh"], {
+test("Oracle release rejects malformed revisions before any host changes", () => {
+  for (const revision of ["main", "uname -a", "a".repeat(40) + "; id", ""]) {
+    const result = spawnSync("bash", ["deploy/oracle/deploy.sh", revision], {
       encoding: "utf8",
-      env: { ...process.env, SSH_ORIGINAL_COMMAND: command },
     });
     assert.equal(result.status, 2);
+    assert.match(result.stderr, /full commit SHA is required/);
   }
 });

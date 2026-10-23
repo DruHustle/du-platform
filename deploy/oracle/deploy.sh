@@ -7,6 +7,9 @@ revision=${1:-}
 [[ $(uname -m) == aarch64 ]] || { echo 'Expected the ARM64 Oracle VM.' >&2; exit 2; }
 root=/opt/du-platform
 cd "$root"
+# Keep Docker's client state writable inside the service's restricted filesystem.
+export DOCKER_CONFIG="$root/.docker-ci"
+mkdir -p "$DOCKER_CONFIG"
 exec 9>/var/lock/du-platform-deploy.lock
 flock -w 900 9
 image="du-platform:oracle-$revision"
