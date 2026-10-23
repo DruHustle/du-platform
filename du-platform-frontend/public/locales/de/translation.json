@@ -2066,6 +2066,10 @@
     "legacy_refund_notice": "Ein Teil der Erstattungssumme stammt aus der Zeit vor den Einzelbelegen. Bitte mit dem Shop abstimmen.",
     "command_recovered": "Die Aktion wurde gespeichert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
     "command_unconfirmed": "Die Antwort konnte nicht bestätigt werden. Prüfen Sie den Status oder wiederholen Sie die unveränderte Aktion; keine weitere Zahlungsanfrage senden.",
-    "command_changed": "Die Anfrage hat sich geändert. Prüfen Sie vor dem Fortfahren den aktuellen Status."
+    "command_changed": "Die Anfrage hat sich geändert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
+    "readiness_prelaunch": "Vor dem Start — gewerbliche Freigabe unbestätigt",
+    "readiness_limited": "Begrenzter Europa-Pilot",
+    "readiness_pending_note": "Geschäftliche Abläufe und Produktangaben werden noch vervollständigt. Anfragen sind möglich. Genauen Artikel, endgültige schriftliche Bedingungen und Lieferung vor Angebotsannahme oder Zahlung bestätigen lassen.",
+    "readiness_pilot_note": "Nur ausdrücklich freigegebene Zielländer und Produkte gehören zum Pilot. Der Shop bestätigt Artikel, DHL-Lieferung und endgültige Bedingungen einzeln."
   }
 }

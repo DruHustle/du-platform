@@ -2070,6 +2070,10 @@
     "legacy_refund_notice": "Imwe mari yakadzorerwa yakanyorwa pasati pava nemarekodhi akaparadzana. Bvunza chitoro kuti zvienzaniswe.",
     "command_recovered": "Chiito chakachengetwa. Ongorora mamiriro azvino usati waenderera.",
     "command_unconfirmed": "Mhinduro haina kusimbiswa. Ongorora mamiriro kana kudzokorora chiito chisina kuchinjwa; usatumira chimwe chikumbiro chemari.",
-    "command_changed": "Chikumbiro chachinja. Ongorora mamiriro azvino usati waenderera."
+    "command_changed": "Chikumbiro chachinja. Ongorora mamiriro azvino usati waenderera.",
+    "readiness_prelaunch": "Pasati patangwa — kugadzirira kutengesa hakusati kwasimbiswa",
+    "readiness_limited": "Kuyedza kushoma muEurope",
+    "readiness_pending_note": "Maitiro ekutengesa nemashoko ezvigadzirwa achiri kupedziswa. Unogona kutumira mubvunzo. Simbisa chigadzirwa chaicho, zvibvumirano zvakanyorwa nekutumira usati wabvuma mutengo kana kubhadhara.",
+    "readiness_pilot_note": "Nyika nezvigadzirwa zvakatenderwa pachena chete zviri mukuyedza. Chitoro chinosimbisa chigadzirwa, DHL nezvibvumirano pachikumbiro chimwe nechimwe."
   }
 }

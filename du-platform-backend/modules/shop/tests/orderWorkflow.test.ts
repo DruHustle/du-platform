@@ -1,6 +1,10 @@
 import { beforeAll, afterAll, describe, expect, it, vi } from "vitest";
 import mysql, { type Pool } from "mysql2/promise";
 import crypto from "node:crypto";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 let pool: Pool | null = null;
 vi.mock("../../../shared/databaseRuntime", () => ({
@@ -598,6 +602,64 @@ test("assisted-order transactional workflow", () => {
       ((await readOrderWorkspace(order.orderRef)) as any).refunds
     ).toHaveLength(2);
   });
+  it("pauses new commercial quotes in prelaunch while preserving existing paid-order recovery, refunds and fulfilment", async () => {
+    const paid = await paidRequest(),
+      fresh = await request();
+    await applyOrderCommand(
+      fresh.order.orderRef,
+      command(0, "under_review"),
+      "admin@example.test"
+    );
+    const previous = process.env.SHOP_COMMERCIAL_MODE;
+    process.env.SHOP_COMMERCIAL_MODE = "prelaunch";
+    try {
+      await expect(
+        applyOrderCommand(
+          fresh.order.orderRef,
+          command(1, "quote_sent", {
+            quote: {
+              currency: "EUR",
+              unitPrices: [100],
+              fulfilmentDetails: ["Fixture confirmed pack"],
+              shippingCents: 0,
+              validUntil: new Date(Date.now() + 86400000).toISOString(),
+            },
+          }),
+          "admin@example.test"
+        )
+      ).rejects.toMatchObject({ status: 409 });
+      expect(
+        ((await readOrderWorkspace(fresh.order.orderRef)) as any).quotes
+      ).toHaveLength(0);
+      await applyOrderCommand(
+        paid.order.orderRef,
+        command(4, "refund", {
+          refundCents: 100,
+          refundReference: "PRELAUNCH-RETURN",
+        }),
+        "admin@example.test"
+      );
+      await applyOrderCommand(
+        paid.order.orderRef,
+        command(5, "dispatched", {
+          carrier: "DHL",
+          tracking: "PRELAUNCH-EXISTING",
+        }),
+        "admin@example.test"
+      );
+      expect(
+        (
+          (await readOrderWorkspace(
+            paid.order.orderRef,
+            paid.order.manageToken
+          )) as any
+        ).stage
+      ).toBe("dispatched");
+    } finally {
+      if (previous === undefined) delete process.env.SHOP_COMMERCIAL_MODE;
+      else process.env.SHOP_COMMERCIAL_MODE = previous;
+    }
+  });
   it("scopes duplicate external references to the order and payment channel, not globally", async () => {
     const { order } = await paidRequest();
     await applyOrderCommand(
@@ -642,6 +704,79 @@ test("assisted-order transactional workflow", () => {
     expect(
       ((await readOrderWorkspace(order.orderRef)) as any).state.refundCents
     ).toBe(200);
+  });
+  it("checks current approved pilot stock before quoting without reserving inventory", async () => {
+    await pool!.execute("UPDATE shop_products SET stock_qty=3 WHERE id=?", [
+      productId,
+    ]);
+    const { order } = await request();
+    await applyOrderCommand(
+      order.orderRef,
+      command(0, "under_review"),
+      "admin@example.test"
+    );
+    const directory = await mkdtemp(path.join(tmpdir(), "du-quote-approval-")),
+      file = path.join(directory, "approval.json");
+    const originalMode = process.env.SHOP_COMMERCIAL_MODE,
+      originalFile = process.env.SHOP_PILOT_APPROVAL_FILE;
+    await writeFile(
+      file,
+      JSON.stringify({
+        version: 1,
+        market: "Europe",
+        currency: "EUR",
+        reviewedAt: new Date(Date.now() - 60000).toISOString(),
+        validUntil: new Date(Date.now() + 86400000).toISOString(),
+        approvedBy: "fixture@example.test",
+        destinationCountries: [{ code: "DE", names: ["Germany"] }],
+        approvedProductIds: [productId],
+        checks: Object.fromEntries(
+          SHOP_READINESS_CHECKS.map(key => [
+            key,
+            { approved: true, evidence: "fixture-only" },
+          ])
+        ),
+      }),
+      { mode: 0o600 }
+    );
+    process.env.SHOP_COMMERCIAL_MODE = "pilot";
+    process.env.SHOP_PILOT_APPROVAL_FILE = file;
+    const cmd = command(1, "quote_sent", {
+      quote: {
+        currency: "EUR",
+        unitPrices: [1234],
+        fulfilmentDetails: ["Fixture exact pack"],
+        shippingCents: 600,
+        validUntil: new Date(Date.now() + 86400000).toISOString(),
+      },
+    });
+    try {
+      await pool!.execute("UPDATE shop_products SET stock_qty=0 WHERE id=?", [
+        productId,
+      ]);
+      await expect(
+        applyOrderCommand(order.orderRef, cmd, "admin@example.test")
+      ).rejects.toMatchObject({ status: 409 });
+      expect(
+        ((await readOrderWorkspace(order.orderRef)) as any).quotes
+      ).toHaveLength(0);
+      await pool!.execute("UPDATE shop_products SET stock_qty=3 WHERE id=?", [
+        productId,
+      ]);
+      await applyOrderCommand(order.orderRef, cmd, "admin@example.test");
+      const [[product]] = await pool!.query<any[]>(
+        "SELECT stock_qty FROM shop_products WHERE id=?",
+        [productId]
+      );
+      expect(product.stock_qty).toBe(3);
+    } finally {
+      if (originalMode === undefined) delete process.env.SHOP_COMMERCIAL_MODE;
+      else process.env.SHOP_COMMERCIAL_MODE = originalMode;
+      if (originalFile === undefined)
+        delete process.env.SHOP_PILOT_APPROVAL_FILE;
+      else process.env.SHOP_PILOT_APPROVAL_FILE = originalFile;
+      await rm(directory, { recursive: true, force: true });
+    }
   });
   it("serializes concurrent refunds, preserves stock, and keeps the total within the paid amount", async () => {
     const { order } = await paidRequest();

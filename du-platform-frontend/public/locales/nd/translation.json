@@ -2070,6 +2070,10 @@
     "legacy_refund_notice": "Enye imali ebuyiselweyo yabhalwa kungakabi lamarekhodi ngamanye. Xhumana lesitolo ukuze kuqondaniswe.",
     "command_recovered": "Isenzo sigciniwe. Hlola isimo samanje ungakaqhubeki.",
     "command_unconfirmed": "Impendulo ayiqinisekiswanga. Hlola isimo kumbe uphinde isenzo esingatshintshwanga; ungathumeli esinye isicelo semali.",
-    "command_changed": "Isicelo sesitshintshile. Hlola isimo samanje ungakaqhubeki."
+    "command_changed": "Isicelo sesitshintshile. Hlola isimo samanje ungakaqhubeki.",
+    "readiness_prelaunch": "Kungakaqalwa — ukulungela ukuthengisa akuqinisekiswanga",
+    "readiness_limited": "Ukuzama okulinganiselweyo eEurope",
+    "readiness_pending_note": "Izinqubo zokuthengisa lemininingwane yempahla kusalungiswa. Ungathumela umbuzo. Qinisekisa impahla eqondileyo, izivumelwano ezibhaliweyo lokuthumela ungakamukeli intengo kumbe ubhadale.",
+    "readiness_pilot_note": "Amazwe lemikhiqizo evunywe ngokusobala kuphela kungaphakathi kokuzama. Isitolo siqinisekisa impahla, iDHL lezivumelwano esicelweni ngasinye."
   }
 }
