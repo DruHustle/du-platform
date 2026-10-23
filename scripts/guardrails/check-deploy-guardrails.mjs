@@ -76,4 +76,20 @@ if (!/vercel\s+deploy[^\n]*--prod/.test(source)) {
   fail("Missing production deploy command with `--prod`.");
 }
 
+if (
+  !source.includes("deploy-oracle-production:") ||
+  !source.includes("needs: [build-and-test, deploy-oracle-production]")
+) {
+  fail(
+    "Production must release the tested Oracle backend before deploying Vercel."
+  );
+}
+if (
+  !source.includes("StrictHostKeyChecking=yes") ||
+  !source.includes("scripts/tests/verify-backend-release.mjs")
+) {
+  fail(
+    "Oracle deployment must pin its host key and verify the published commit."
+  );
+}
 console.log("[guardrails:deploy] OK");
