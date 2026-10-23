@@ -1413,6 +1413,7 @@
       "actions": {
         "buy": "Faka enqoleni",
         "add_to_cart": "Engeza ekalishini",
+        "checkout": "Hlola inqola",
         "creating_order": "Kuthunyelwa isicelo…",
         "place_order": "Thumela isicelo se-oda",
         "order_whatsapp": "Buza nge-oda kuWhatsApp",
