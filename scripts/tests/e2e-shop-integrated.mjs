@@ -147,11 +147,10 @@ try {
   );
   assert.equal(
     emailLogs.length,
-    2,
-    "Customer and merchant receipts reach the dry-run email adapter"
+    0,
+    "The memory fixture must not bypass the durable database outbox"
   );
-  assert(emailLogs.some(line => line.includes("customer@example.test")));
-  assert(emailLogs.some(line => line.includes("merchant@example.test")));
+
   const replay = await context.request.post(base + "/api/shop/orders", {
     data: submitted,
   });
@@ -159,8 +158,8 @@ try {
   assert.equal((await replay.json()).data.order.orderRef, order.orderRef);
   assert.equal(
     emailLogs.length,
-    2,
-    "Retrying must not duplicate receipt emails"
+    0,
+    "Retrying must not send synchronous receipt emails"
   );
   const unauthorised = await context.request.get(
     base + "/api/shop/orders/" + order.orderRef
@@ -184,7 +183,7 @@ try {
   await page.screenshot({ path: output + "/receipt.png" });
   assert.deepEqual(errors, []);
   originalLog(
-    "PASS real shop HTTP workflow: catalogue, shared cart, request validation, server pricing, saved receipt, dry-run customer/merchant emails, idempotent retry and protected order retrieval"
+    "PASS real shop HTTP workflow: catalogue, shared cart, request validation, server pricing, saved receipt, deferred notifications (durable worker covered by disposable MySQL tests), idempotent retry and protected order retrieval"
   );
 } finally {
   console.log = originalLog;
