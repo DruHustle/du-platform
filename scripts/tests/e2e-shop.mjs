@@ -457,8 +457,10 @@ try {
         element.scrollIntoView({ block: "start", behavior: "instant" })
       );
     if (width >= 1024) {
-      const pageScroll = await page.evaluate(() => scrollY);
       await checkoutPanel.hover({ position: { x: 16, y: 16 } });
+      // Hover may scroll the target into view (notably in Linux WebKit).
+      // Measure only the subsequent wheel/keyboard actions, after positioning.
+      const pageScroll = await page.evaluate(() => scrollY);
       await page.mouse.wheel(0, 400);
       await page.waitForFunction(
         element => element.scrollTop > 100,

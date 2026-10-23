@@ -87,6 +87,12 @@ remains outstanding.
   network failures. Checkout also exercised 375 pixels. Home, product, cart,
   customer/operator and Tourism screenshots were inspected in both engines;
   the logo retains its visual appearance and the cart submit remains reachable.
+- The first CI run exposed a scroll-test setup issue in Linux WebKit: the page
+  baseline was captured before Playwright hover positioning, which may itself
+  scroll the target into view. Capture the baseline after positioning; all strict
+  wheel, end-of-panel scroll-chaining and keyboard assertions remain unchanged.
+  Both complete local browser suites passed again. Required CI and isolated
+  preview results are attached to the PR before delivery.
 - Existing protected admin/regional-price/restart workflows: **11 scenarios**;
   newsletter/database/admin: **15 scenarios**; controlled AI-provider HTTP:
   **20 scenarios**. No real provider delivery or customer send occurred.
