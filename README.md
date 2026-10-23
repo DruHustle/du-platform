@@ -497,3 +497,31 @@ both suites with a disposable MySQL service.
 See [the pricing review and admin guide](docs/shop-pricing-and-admin.md) for the
 retail benchmarks, EUR/USD/ZAR workflow, secure first-time admin setup, persistent
 product management and isolated database/browser regression checks.
+
+## Assisted-order pilot
+
+See [the audit and launch dependencies](docs/audits/assisted-order-pilot.md) and
+[operator, migration, backup and rollback procedures](docs/assisted-order-operations.md).
+The protected `/admin` area includes orders, catalogue specifications and research
+handoffs. Guest requests and newsletter confirmation remain independent of
+platform registration. Checkout is an assisted request; it does not charge money.
+
+For service-free checks, run `pnpm check`, `pnpm test:frontend`,
+`pnpm test:deploy`, `pnpm translations:check`, then build using an explicit local
+catalogue fixture:
+
+```sh
+node --import tsx scripts/create-catalogue-fixture.mjs /tmp/du-catalogue.json
+DU_PUBLIC_CATALOGUE_FILE=/tmp/du-catalogue.json pnpm build
+pnpm test:seo
+pnpm test:e2e:pilot:layout
+```
+
+Full transaction and browser tests additionally require a disposable localhost
+MySQL database ending in `_test`; set `SHOP_TEST_DATABASE_URL` and
+`NEWSLETTER_TEST_DATABASE_URL` to that database, then run `pnpm test`,
+`pnpm test:e2e:pilot` and `PILOT_BROWSER=webkit pnpm test:e2e:pilot`.
+These tests use mock providers and temporary records, not live customer emails.
+Use Node 22+ and `pnpm install --frozen-lockfile`. `pnpm dev` runs the local app;
+its frontend normally opens at `https://localhost:3000` with a local backend proxy.
+PR previews intentionally have no production API access.

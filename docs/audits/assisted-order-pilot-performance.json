@@ -1,0 +1,201 @@
+{
+  "baseline": "44374ee36f35db1523f505bd4900fe8e8676a1dd",
+  "date": "2026-10-23",
+  "method": {
+    "browser": "Playwright bundled Chromium",
+    "viewport": [390, 844],
+    "cpuThrottle": 4,
+    "latencyMs": 100,
+    "downloadBytesPerSecond": 200000,
+    "uploadBytesPerSecond": 100000,
+    "samplesPerRoute": 3,
+    "observationMsAfterLoad": 6500,
+    "cache": "cold browser contexts; normal caching within each visit",
+    "servers": "identical local HTTPS servers, gzip text and fixed public catalogue API fixture",
+    "limits": "Local lab only; no concurrent builds/tests; not Lighthouse or field data. Early interception runs discarded because routing disabled browser cache."
+  },
+  "before": [
+    {
+      "path": "/",
+      "run": 1,
+      "lcp": 3668,
+      "fcp": 824,
+      "domContentLoaded": 3440,
+      "transferBytes": 1116471,
+      "requests": 10,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/",
+      "run": 2,
+      "lcp": 3496,
+      "fcp": 752,
+      "domContentLoaded": 3351,
+      "transferBytes": 1116471,
+      "requests": 10,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/",
+      "run": 3,
+      "lcp": 3520,
+      "fcp": 756,
+      "domContentLoaded": 3358,
+      "transferBytes": 1116471,
+      "requests": 10,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/shop",
+      "run": 1,
+      "lcp": 6972,
+      "fcp": 760,
+      "domContentLoaded": 3353,
+      "transferBytes": 1593032,
+      "requests": 12,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/shop",
+      "run": 2,
+      "lcp": 6960,
+      "fcp": 760,
+      "domContentLoaded": 3364,
+      "transferBytes": 1593032,
+      "requests": 12,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/shop",
+      "run": 3,
+      "lcp": 6956,
+      "fcp": 764,
+      "domContentLoaded": 3353,
+      "transferBytes": 1593032,
+      "requests": 12,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/tourism",
+      "run": 1,
+      "lcp": 3536,
+      "fcp": 748,
+      "domContentLoaded": 3344,
+      "transferBytes": 1656054,
+      "requests": 9,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/tourism",
+      "run": 2,
+      "lcp": 3576,
+      "fcp": 756,
+      "domContentLoaded": 3365,
+      "transferBytes": 1656054,
+      "requests": 9,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    },
+    {
+      "path": "/tourism",
+      "run": 3,
+      "lcp": 3548,
+      "fcp": 748,
+      "domContentLoaded": 3349,
+      "transferBytes": 1656054,
+      "requests": 9,
+      "initialScripts": ["https://127.0.0.1:4186/assets/index-C6Fq5vxr.js"]
+    }
+  ],
+  "after": [
+    {
+      "path": "/",
+      "run": 1,
+      "lcp": 3956,
+      "fcp": 772,
+      "domContentLoaded": 3811,
+      "transferBytes": 1145355,
+      "requests": 12,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/",
+      "run": 2,
+      "lcp": 3960,
+      "fcp": 768,
+      "domContentLoaded": 3805,
+      "transferBytes": 1145355,
+      "requests": 12,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/",
+      "run": 3,
+      "lcp": 3952,
+      "fcp": 780,
+      "domContentLoaded": 3804,
+      "transferBytes": 1145355,
+      "requests": 12,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/shop",
+      "run": 1,
+      "lcp": 2716,
+      "fcp": 656,
+      "domContentLoaded": 2524,
+      "transferBytes": 1179289,
+      "requests": 14,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/shop",
+      "run": 2,
+      "lcp": 2724,
+      "fcp": 648,
+      "domContentLoaded": 2527,
+      "transferBytes": 1179289,
+      "requests": 14,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/shop",
+      "run": 3,
+      "lcp": 2744,
+      "fcp": 652,
+      "domContentLoaded": 2525,
+      "transferBytes": 1179289,
+      "requests": 14,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/tourism",
+      "run": 1,
+      "lcp": 3208,
+      "fcp": 640,
+      "domContentLoaded": 3010,
+      "transferBytes": 1745756,
+      "requests": 11,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/tourism",
+      "run": 2,
+      "lcp": 3204,
+      "fcp": 648,
+      "domContentLoaded": 3023,
+      "transferBytes": 1745756,
+      "requests": 11,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    },
+    {
+      "path": "/tourism",
+      "run": 3,
+      "lcp": 3212,
+      "fcp": 648,
+      "domContentLoaded": 3025,
+      "transferBytes": 1745756,
+      "requests": 11,
+      "initialScripts": ["https://127.0.0.1:4187/assets/index-Dk5XHhtp.js"]
+    }
+  ]
+}

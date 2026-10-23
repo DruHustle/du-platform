@@ -225,8 +225,14 @@ try {
     "PASS MySQL: persisted restock language; eight concurrent retries create one order; private access; changed payload rejected; manual payment protected; authoritative totals; admin/payment cache invalidation including a delayed-query race; concurrent dummy confirmations deduct once; exhausted stock rejected."
   );
 } finally {
-  for (const ref of createdRefs)
+  for (const ref of createdRefs) {
+    // Legacy test schemas may predate the cascading order foreign key.
+    await db.execute(
+      "DELETE i FROM shop_order_items i JOIN shop_orders o ON o.id=i.order_id WHERE o.order_ref=?",
+      [ref]
+    );
     await db.execute("DELETE FROM shop_orders WHERE order_ref=?", [ref]);
+  }
   if (product) {
     await db.execute(
       "DELETE FROM shop_restock_notifications WHERE product_slug=?",

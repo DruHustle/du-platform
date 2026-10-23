@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { buildSampleTripPlan } from "../../shared/tripPlanning.ts";
 import { mkdir, writeFile } from "node:fs/promises";
 import express from "express";
 import { getOnesaRouteDeps } from "../../du-platform-backend/modules/ai/runtime/onesaRuntime.ts";
@@ -281,42 +282,19 @@ try {
   pass("provider retry delays cannot overrun the overall chat time budget");
 
   configure();
-  const plan = {
-    summary: "A complete Zimbabwe travel plan.",
-    optimizedFor: "Culture and nature",
-    estimatedTotalUsd: 1500,
-    flights: {
-      route: "Berlin to Harare",
-      cabin: "Economy",
-      estimatedCostUsd: 700,
-      rationale: "Route fixture.",
-    },
-    hotels: {
-      area: "Harare",
-      style: "Standard",
-      estimatedCostUsd: 300,
-      rationale: "Hotel fixture.",
-    },
-    carHire: {
-      vehicleClass: "SUV",
-      estimatedCostUsd: 300,
-      rationale: "Car fixture.",
-    },
-    experiences: [
-      {
-        name: "Museum",
-        location: "Harare",
-        estimatedCostUsd: 20,
-        rationale: "Culture fixture.",
-      },
-    ],
-    itinerary: Array.from({ length: 3 }, (_, i) => ({
-      day: i + 1,
-      title: `Day ${i + 1}`,
-      details: complete,
-      estimatedDailyCostUsd: 60,
-    })),
-  };
+  const plan = buildSampleTripPlan({
+    language: "en",
+    departureAirport: "Berlin Brandenburg Airport (BER)",
+    arrivalAirport: "Victoria Falls International Airport (VFA)",
+    arrivalAttraction: "Victoria Falls",
+    comfort: "standard",
+    budget: "medium",
+    days: 3,
+    travelers: 1,
+    interests: ["wildlife", "culture"],
+    tripType: "round_trip",
+  });
+  plan.itinerary = plan.itinerary.map(day => ({ ...day, details: complete }));
   respond = () => ({ text: JSON.stringify(plan), reason: "stop" });
   const planned = await api("/trip-plan", {
     origin: "Berlin",

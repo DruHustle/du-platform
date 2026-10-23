@@ -1,6 +1,6 @@
 import { CUSTOMER_LANGUAGES } from "./customerLanguage";
 import { SHOP_CURRENCIES } from "./shopCurrency";
-import { z } from "zod";
+import { z } from "./validation";
 
 // Shared constraints match the persisted order fields. Prices are always read
 // from the server catalogue, never accepted from a checkout request.
@@ -24,6 +24,9 @@ export const shopOrderRequestSchema = z.object({
   customerName: z.string().trim().min(2).max(120),
   customerEmail: z.string().trim().toLowerCase().email().max(254),
   shippingCountry: z.string().trim().min(2).max(120),
+  analyticsConsent: z.boolean().default(false),
+  customerNotes: z.string().trim().max(1000).default(""),
+  postalCode: z.string().trim().max(30).default(""),
   shippingCity: z.string().trim().min(2).max(120),
   shippingAddress: z.string().trim().min(5).max(400),
   deliverySpeed: z.enum(["normal", "express"]).default("normal"),

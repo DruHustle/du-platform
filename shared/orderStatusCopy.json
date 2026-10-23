@@ -1,0 +1,42 @@
+{
+  "en": {
+    "request_received": "Request received",
+    "under_review": "Under review",
+    "quote_sent": "Quote sent",
+    "quote_accepted": "Quote accepted",
+    "payment_confirmed": "Payment confirmed",
+    "dispatched": "Dispatched",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "de": {
+    "request_received": "Anfrage erhalten",
+    "under_review": "In Prüfung",
+    "quote_sent": "Angebot versandt",
+    "quote_accepted": "Angebot angenommen",
+    "payment_confirmed": "Zahlung bestätigt",
+    "dispatched": "Versandt",
+    "delivered": "Zugestellt",
+    "cancelled": "Storniert"
+  },
+  "sn": {
+    "request_received": "Chikumbiro chagamuchirwa",
+    "under_review": "Chiri kuongororwa",
+    "quote_sent": "Mutengo watumirwa",
+    "quote_accepted": "Mutengo wagamuchirwa",
+    "payment_confirmed": "Mari yasimbiswa",
+    "dispatched": "Zvatumirwa",
+    "delivered": "Zvasvika",
+    "cancelled": "Chakanzurwa"
+  },
+  "nd": {
+    "request_received": "Isicelo sitholakele",
+    "under_review": "Siyahlolwa",
+    "quote_sent": "Intengo ithunyelwe",
+    "quote_accepted": "Intengo yamukelwe",
+    "payment_confirmed": "Imali iqinisekisiwe",
+    "dispatched": "Kuthunyelwe",
+    "delivered": "Kufikile",
+    "cancelled": "Kukhanseliwe"
+  }
+}

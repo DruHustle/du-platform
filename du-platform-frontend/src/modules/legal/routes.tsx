@@ -1,6 +1,11 @@
 import { createLazyRoute } from "../core/routing";
 
 export const legalRoutes = [
+  createLazyRoute("/legal-notice", () => import("./pages/PilotPoliciesPage")),
+  createLazyRoute(
+    "/delivery-and-returns",
+    () => import("./pages/PilotPoliciesPage")
+  ),
   createLazyRoute(
     "/newsletter",
     () => import("./pages/NewsletterPreferencesPage")
