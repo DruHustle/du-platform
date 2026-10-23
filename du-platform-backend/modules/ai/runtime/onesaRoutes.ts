@@ -1,4 +1,10 @@
-import { tripText } from "../../../../shared/tripPlanCopy";
+import { PUBLIC_SITE_ACTIONS } from "../../../../shared/publicSiteInfo";
+import { asksAboutCatalogue, catalogueReply } from "./catalogueContext";
+import {
+  buildSampleTripPlan,
+  validateTripPlan,
+  type PlanResult as TripPlanResult,
+} from "../../../../shared/tripPlanning";
 import type express from "express";
 import { IncompleteOnesaReplyError } from "./replyCompletion";
 
@@ -8,6 +14,7 @@ type ChatMessage = {
 };
 
 type TripPlanPayload = {
+  tripType?: string;
   origin: string;
   arrivalCity: string;
   departureAirport: string;
@@ -47,36 +54,75 @@ const AIRPORT_BY_CITY: Record<string, { label: string; iata: string }> = {
   johannesburg: { label: "O.R. Tambo International Airport", iata: "JNB" },
   "cape town": { label: "Cape Town International Airport", iata: "CPT" },
   durban: { label: "King Shaka International Airport", iata: "DUR" },
-  gqeberha: { label: "Chief Dawid Stuurman International Airport", iata: "PLZ" },
+  gqeberha: {
+    label: "Chief Dawid Stuurman International Airport",
+    iata: "PLZ",
+  },
   nairobi: { label: "Jomo Kenyatta International Airport", iata: "NBO" },
   harare: { label: "Robert Gabriel Mugabe International Airport", iata: "HRE" },
-  bulawayo: { label: "Joshua Mqabuko Nkomo International Airport", iata: "BUQ" },
-  "victoria falls": { label: "Victoria Falls International Airport", iata: "VFA" },
+  bulawayo: {
+    label: "Joshua Mqabuko Nkomo International Airport",
+    iata: "BUQ",
+  },
+  "victoria falls": {
+    label: "Victoria Falls International Airport",
+    iata: "VFA",
+  },
 };
 
-const ARRIVAL_AIRPORT_BY_ATTRACTION: Array<{ match: string[]; airport: string }> = [
-  { match: ["victoria falls"], airport: "Victoria Falls International Airport (VFA)" },
+const ARRIVAL_AIRPORT_BY_ATTRACTION: Array<{
+  match: string[];
+  airport: string;
+}> = [
+  {
+    match: ["victoria falls"],
+    airport: "Victoria Falls International Airport (VFA)",
+  },
   { match: ["hwange"], airport: "Victoria Falls International Airport (VFA)" },
-  { match: ["matobo", "bulawayo"], airport: "Joshua Mqabuko Nkomo International Airport (BUQ)" },
-  { match: ["great zimbabwe", "masvingo"], airport: "Joshua Mqabuko Nkomo International Airport (BUQ)" },
-  { match: ["nyanga", "eastern highlands", "mutare"], airport: "Robert Gabriel Mugabe International Airport (HRE)" },
-  { match: ["mana pools", "kariba"], airport: "Robert Gabriel Mugabe International Airport (HRE)" },
-  { match: ["gonarezhou"], airport: "Robert Gabriel Mugabe International Airport (HRE)" },
-  { match: ["harare"], airport: "Robert Gabriel Mugabe International Airport (HRE)" },
+  {
+    match: ["matobo", "bulawayo"],
+    airport: "Joshua Mqabuko Nkomo International Airport (BUQ)",
+  },
+  {
+    match: ["great zimbabwe", "masvingo"],
+    airport: "Joshua Mqabuko Nkomo International Airport (BUQ)",
+  },
+  {
+    match: ["nyanga", "eastern highlands", "mutare"],
+    airport: "Robert Gabriel Mugabe International Airport (HRE)",
+  },
+  {
+    match: ["mana pools", "kariba"],
+    airport: "Robert Gabriel Mugabe International Airport (HRE)",
+  },
+  {
+    match: ["gonarezhou"],
+    airport: "Robert Gabriel Mugabe International Airport (HRE)",
+  },
+  {
+    match: ["harare"],
+    airport: "Robert Gabriel Mugabe International Airport (HRE)",
+  },
 ];
 
-function inferDepartureAirport(originCity: string, providedDepartureAirport: string): string {
-  if (providedDepartureAirport.trim().length > 0) return providedDepartureAirport.trim();
+function inferDepartureAirport(
+  originCity: string,
+  providedDepartureAirport: string
+): string {
+  if (providedDepartureAirport.trim().length > 0)
+    return providedDepartureAirport.trim();
   const normalized = originCity.trim().toLowerCase();
-  const hit = Object.entries(AIRPORT_BY_CITY).find(([city]) => normalized.includes(city));
+  const hit = Object.entries(AIRPORT_BY_CITY).find(([city]) =>
+    normalized.includes(city)
+  );
   if (!hit) return `${originCity} Airport`;
   return `${hit[1].label} (${hit[1].iata})`;
 }
 
 function inferArrivalAirport(arrivalAttraction: string): string {
   const normalized = arrivalAttraction.trim().toLowerCase();
-  const hit = ARRIVAL_AIRPORT_BY_ATTRACTION.find((candidate) =>
-    candidate.match.some((token) => normalized.includes(token))
+  const hit = ARRIVAL_AIRPORT_BY_ATTRACTION.find(candidate =>
+    candidate.match.some(token => normalized.includes(token))
   );
   return hit?.airport ?? "Robert Gabriel Mugabe International Airport (HRE)";
 }
@@ -90,50 +136,21 @@ function inferSeasonFromDate(startDate: string): "dry" | "green" | "shoulder" {
   return "green";
 }
 
-type TripPlanResult = {
-  summary: string;
-  optimizedFor: string;
-  estimatedTotalUsd: number;
-  flights: {
-    route: string;
-    cabin: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  };
-  hotels: {
-    area: string;
-    style: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  };
-  carHire: {
-    vehicleClass: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  };
-  experiences: Array<{
-    name: string;
-    location: string;
-    estimatedCostUsd: number;
-    rationale: string;
-  }>;
-  itinerary: Array<{
-    day: number;
-    title: string;
-    details: string;
-    estimatedDailyCostUsd: number;
-  }>;
-};
-
 type OnesaReplyResult = {
   reply: string;
   truncated: boolean;
 };
 
 export type OnesaRouteDeps = {
-  generateOnesaReply: (messages: ChatMessage[], requestedLanguage?: string) => Promise<OnesaReplyResult>;
+  generateOnesaReply: (
+    messages: ChatMessage[],
+    requestedLanguage?: string
+  ) => Promise<OnesaReplyResult>;
   normalizeOnesaLanguage: (value: unknown) => "en" | "sn" | "nd" | "de";
-  enforceOnesaIdentityGuard: (reply: string, language: "en" | "sn" | "nd" | "de") => string;
+  enforceOnesaIdentityGuard: (
+    reply: string,
+    language: "en" | "sn" | "nd" | "de"
+  ) => string;
   getOnesaHealth: () => Promise<any>;
   getOnesaReadiness: () => Promise<any>;
   getUpstreamStatus: (error: any) => number;
@@ -164,23 +181,47 @@ function normalizeTripPlanPayload(raw: any): TripPlanPayload {
     const text = String(value ?? "").trim();
     return text.length > 0 ? text.slice(0, 120) : fallback;
   };
-  const toEnum = <T extends string>(value: unknown, allowed: T[], fallback: T): T => {
-    const text = String(value ?? "").trim().toLowerCase() as T;
+  const toEnum = <T extends string>(
+    value: unknown,
+    allowed: T[],
+    fallback: T
+  ): T => {
+    const text = String(value ?? "")
+      .trim()
+      .toLowerCase() as T;
     return allowed.includes(text) ? text : fallback;
   };
-  const toInt = (value: unknown, min: number, max: number, fallback: number) => {
+  const toInt = (
+    value: unknown,
+    min: number,
+    max: number,
+    fallback: number
+  ) => {
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) return fallback;
     return Math.max(min, Math.min(max, Math.floor(parsed)));
   };
 
   const interestsRaw = Array.isArray(raw?.interests) ? raw.interests : [];
-  const interestWhitelist = new Set(["wildlife", "culture", "adventure", "food", "history", "nature"]);
+  const interestWhitelist = new Set([
+    "wildlife",
+    "culture",
+    "adventure",
+    "food",
+    "history",
+    "nature",
+  ]);
   const interests = interestsRaw
-    .map((value: unknown) => String(value ?? "").trim().toLowerCase())
+    .map((value: unknown) =>
+      String(value ?? "")
+        .trim()
+        .toLowerCase()
+    )
     .filter((value: string) => interestWhitelist.has(value))
     .slice(0, 6);
-  const multiCityCitiesRaw = Array.isArray(raw?.multiCityCities) ? raw.multiCityCities : [];
+  const multiCityCitiesRaw = Array.isArray(raw?.multiCityCities)
+    ? raw.multiCityCities
+    : [];
   const multiCityCities = multiCityCitiesRaw
     .map((value: unknown) => String(value ?? "").trim())
     .filter(Boolean)
@@ -190,11 +231,22 @@ function normalizeTripPlanPayload(raw: any): TripPlanPayload {
   const season = inferSeasonFromDate(startDate);
 
   const origin = toText(raw?.departureAirportCity ?? raw?.origin, "Berlin");
-  const arrivalAttraction = toText(raw?.arrivalAttraction ?? raw?.arrivalCity, "Victoria Falls");
-  const departureAirport = inferDepartureAirport(origin, toText(raw?.departureAirport, ""));
+  const arrivalAttraction = toText(
+    raw?.arrivalAttraction ?? raw?.arrivalCity,
+    "Victoria Falls"
+  );
+  const departureAirport = inferDepartureAirport(
+    origin,
+    toText(raw?.departureAirport, "")
+  );
   const arrivalAirport = inferArrivalAirport(arrivalAttraction);
 
   return {
+    tripType: toEnum(
+      raw?.tripType,
+      ["one_way", "round_trip", "multi_trip"],
+      "round_trip"
+    ),
     origin,
     arrivalCity: arrivalAttraction,
     departureAirport,
@@ -206,8 +258,12 @@ function normalizeTripPlanPayload(raw: any): TripPlanPayload {
     multiCityCities,
     season,
     budget: toEnum(raw?.budget, ["low", "medium", "high"], "medium"),
-    comfort: toEnum(raw?.comfort, ["budget", "standard", "premium"], "standard"),
-    days: toInt(raw?.days, 3, 14, 7),
+    comfort: toEnum(
+      raw?.comfort,
+      ["budget", "standard", "premium"],
+      "standard"
+    ),
+    days: toInt(raw?.days, 1, 60, 7),
     travelers: toInt(raw?.travelers, 1, 70, 2),
     interests: interests.length > 0 ? interests : ["wildlife", "culture"],
   };
@@ -218,7 +274,9 @@ function tryParseJsonObject(input: string): Record<string, any> | null {
   if (!text) return null;
   try {
     const parsed = JSON.parse(text);
-    return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, any>) : null;
+    return typeof parsed === "object" && parsed !== null
+      ? (parsed as Record<string, any>)
+      : null;
   } catch {
     const start = text.indexOf("{");
     const end = text.lastIndexOf("}");
@@ -226,168 +284,31 @@ function tryParseJsonObject(input: string): Record<string, any> | null {
     const candidate = text.slice(start, end + 1);
     try {
       const parsed = JSON.parse(candidate);
-      return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, any>) : null;
+      return typeof parsed === "object" && parsed !== null
+        ? (parsed as Record<string, any>)
+        : null;
     } catch {
       return null;
     }
   }
 }
 
-function buildFallbackTripPlan(payload: TripPlanPayload, language: string): TripPlanResult {
-  const text = (key: Parameters<typeof tripText>[1], values?: Record<string, string | number>) => tripText(language, key, values);
-  const seasonMultiplier = payload.season === "dry" ? 1.2 : payload.season === "green" ? 0.9 : 1.0;
-  const flightBaseByBudget: Record<TripPlanPayload["budget"], number> = { low: 620, medium: 910, high: 1380 };
-  const hotelNightByComfort: Record<TripPlanPayload["comfort"], number> = { budget: 85, standard: 150, premium: 260 };
-  const carDayByComfort: Record<TripPlanPayload["comfort"], number> = { budget: 42, standard: 65, premium: 110 };
-
-  const experiencesCatalog = [
-    { tag: "wildlife", name: text("safari"), location: "Hwange", cost: 120 },
-    { tag: "culture", name: text("mbare"), location: "Harare", cost: 45 },
-    { tag: "adventure", name: text("rafting"), location: "Victoria Falls", cost: 145 },
-    { tag: "history", name: text("great_zimbabwe"), location: "Masvingo", cost: 60 },
-    { tag: "nature", name: text("walking"), location: "Nyanga", cost: 55 },
-    { tag: "food", name: text("harare_food"), location: "Harare", cost: 50 },
-  ];
-
-  const selectedExperiences = experiencesCatalog
-    .filter((item) => payload.interests.includes(item.tag))
-    .slice(0, Math.min(4, payload.days));
-  const fallbackExperiences = selectedExperiences.length > 0 ? selectedExperiences : experiencesCatalog.slice(0, 3);
-
-  const flightsCost = Math.round(flightBaseByBudget[payload.budget] * seasonMultiplier * payload.travelers);
-  const hotelsCost = Math.round(hotelNightByComfort[payload.comfort] * payload.days * payload.travelers);
-  const carCost = Math.round(carDayByComfort[payload.comfort] * payload.days);
-  const experiencesCost = fallbackExperiences.reduce((sum, item) => sum + item.cost * payload.travelers, 0);
-  const buffer = Math.round((flightsCost + hotelsCost + carCost + experiencesCost) * 0.12);
-  const total = flightsCost + hotelsCost + carCost + experiencesCost + buffer;
-
-  const itinerary = Array.from({ length: payload.days }, (_unused, idx) => {
-    const day = idx + 1;
-    const exp = fallbackExperiences[idx % fallbackExperiences.length];
-    const transferCost = day === 1 || day === payload.days ? 60 : 35;
-    const dayCost = Math.round(exp.cost * payload.travelers + hotelNightByComfort[payload.comfort] * payload.travelers + transferCost);
-    return {
-      day,
-      title:
-        day === 1
-          ? text("arrival_place", {place: payload.arrivalAttraction})
-          : day === payload.days
-            ? text("departure")
-            : exp.name,
-      details:
-        day === 1
-          ? text("arrival_server", {from: payload.departureAirport, airport: payload.arrivalAirport, place: payload.arrivalAttraction})
-          : day === payload.days
-            ? text("return")
-            : text("research_server", {activity: exp.name, place: exp.location, season: text(payload.season)}),
-      estimatedDailyCostUsd: dayCost,
-    };
-  });
-
-  return {
-    summary: text("summary_server", {days: payload.days, place: payload.arrivalAttraction, start: payload.startDate || text("selected_dates"), end: payload.endDate || text("return_date"), season: text(payload.season), comfort: text(payload.comfort), budget: text(payload.budget)}),
-    optimizedFor: text("allowances"),
-    estimatedTotalUsd: total,
-    flights: {
-      route: `${payload.departureAirport} → ${payload.arrivalAirport}${payload.multiCity && payload.multiCityCities.length > 0 ? ` (${payload.multiCityCities.join(" • ")})` : ""}`,
-      cabin: payload.comfort === "premium" ? text("premium_cabin") : payload.comfort === "standard" ? text("standard_cabin") : text("budget_cabin"),
-      estimatedCostUsd: flightsCost,
-      rationale: text("flight_server"),
-    },
-    hotels: {
-      area:
-        payload.multiCity && payload.multiCityCities.length > 0
-          ? `${payload.arrivalCity} + ${payload.multiCityCities.join(" + ")}`
-          : payload.interests.includes("wildlife")
-            ? text("corridor", {place: "Victoria Falls + Hwange"})
-            : text("hubs", {place: payload.arrivalCity}),
-      style: payload.comfort === "premium" ? text("premium_stay") : payload.comfort === "standard" ? text("standard_stay") : text("budget_stay"),
-      estimatedCostUsd: hotelsCost,
-      rationale: text("hotel_server"),
-    },
-    carHire: {
-      vehicleClass: payload.comfort === "premium" ? text("premium_suv") : payload.comfort === "standard" ? text("standard_suv") : text("compact"),
-      estimatedCostUsd: carCost,
-      rationale: text("car"),
-    },
-    experiences: fallbackExperiences.map((item) => ({
-      name: item.name,
-      location: item.location,
-      estimatedCostUsd: Math.round(item.cost * payload.travelers),
-      rationale: text("activity_server"),
-    })),
-    itinerary,
-  };
-}
-
-function coerceTripPlanFromAiPayload(raw: Record<string, any>, fallback: TripPlanResult): TripPlanResult | null {
-  const summary = typeof raw?.summary === "string" ? raw.summary.trim() : "";
-  const optimizedFor = typeof raw?.optimizedFor === "string" ? raw.optimizedFor.trim() : "";
-  const estimatedTotalUsd = Number(raw?.estimatedTotalUsd);
-  const flights = raw?.flights;
-  const hotels = raw?.hotels;
-  const carHire = raw?.carHire;
-  const experiences = Array.isArray(raw?.experiences) ? raw.experiences : [];
-  const itinerary = Array.isArray(raw?.itinerary) ? raw.itinerary : [];
-  if (!summary || !optimizedFor || !Number.isFinite(estimatedTotalUsd)) return null;
-  if (!flights || !hotels || !carHire || experiences.length === 0 || itinerary.length === 0) return null;
-
-  return {
-    summary,
-    optimizedFor,
-    estimatedTotalUsd: Math.max(0, Math.round(estimatedTotalUsd)),
-    flights: {
-      route: typeof flights.route === "string" ? flights.route : fallback.flights.route,
-      cabin: typeof flights.cabin === "string" ? flights.cabin : fallback.flights.cabin,
-      estimatedCostUsd: Math.max(0, Math.round(Number(flights.estimatedCostUsd) || fallback.flights.estimatedCostUsd)),
-      rationale: typeof flights.rationale === "string" ? flights.rationale : fallback.flights.rationale,
-    },
-    hotels: {
-      area: typeof hotels.area === "string" ? hotels.area : fallback.hotels.area,
-      style: typeof hotels.style === "string" ? hotels.style : fallback.hotels.style,
-      estimatedCostUsd: Math.max(0, Math.round(Number(hotels.estimatedCostUsd) || fallback.hotels.estimatedCostUsd)),
-      rationale: typeof hotels.rationale === "string" ? hotels.rationale : fallback.hotels.rationale,
-    },
-    carHire: {
-      vehicleClass: typeof carHire.vehicleClass === "string" ? carHire.vehicleClass : fallback.carHire.vehicleClass,
-      estimatedCostUsd: Math.max(0, Math.round(Number(carHire.estimatedCostUsd) || fallback.carHire.estimatedCostUsd)),
-      rationale: typeof carHire.rationale === "string" ? carHire.rationale : fallback.carHire.rationale,
-    },
-    experiences: experiences.slice(0, 6).map((item: any, idx: number) => ({
-      name: typeof item?.name === "string" ? item.name : fallback.experiences[idx % fallback.experiences.length].name,
-      location:
-        typeof item?.location === "string"
-          ? item.location
-          : fallback.experiences[idx % fallback.experiences.length].location,
-      estimatedCostUsd: Math.max(
-        0,
-        Math.round(Number(item?.estimatedCostUsd) || fallback.experiences[idx % fallback.experiences.length].estimatedCostUsd)
-      ),
-      rationale:
-        typeof item?.rationale === "string"
-          ? item.rationale
-          : fallback.experiences[idx % fallback.experiences.length].rationale,
-    })),
-    itinerary: itinerary.slice(0, 14).map((item: any, idx: number) => ({
-      day: Math.max(1, Math.round(Number(item?.day) || idx + 1)),
-      title: typeof item?.title === "string" ? item.title : fallback.itinerary[idx % fallback.itinerary.length].title,
-      details:
-        typeof item?.details === "string"
-          ? item.details
-          : fallback.itinerary[idx % fallback.itinerary.length].details,
-      estimatedDailyCostUsd: Math.max(
-        0,
-        Math.round(Number(item?.estimatedDailyCostUsd) || fallback.itinerary[idx % fallback.itinerary.length].estimatedDailyCostUsd)
-      ),
-    })),
-  };
+function buildFallbackTripPlan(
+  payload: TripPlanPayload,
+  language: string
+): TripPlanResult {
+  return buildSampleTripPlan({ ...payload, language });
 }
 
 function normalizeMountedPath(prefix: string, path: string): string {
-  const normalizedPrefix = String(prefix ?? "").trim().replace(/\/+$/, "");
+  const normalizedPrefix = String(prefix ?? "")
+    .trim()
+    .replace(/\/+$/, "");
   const normalizedPath = String(path ?? "").trim();
   if (!normalizedPrefix) {
-    return normalizedPath.startsWith("/") ? normalizedPath : `/${normalizedPath}`;
+    return normalizedPath.startsWith("/")
+      ? normalizedPath
+      : `/${normalizedPath}`;
   }
 
   if (!normalizedPath) return normalizedPrefix;
@@ -403,7 +324,10 @@ export function registerOnesaAIRoutes(
   options: RouteRegistrationOptions = {}
 ) {
   const prefix = normalizeMountedPath(options.prefix ?? "/api/ai", "");
-  const worldPath = normalizeMountedPath(prefix, options.worldPath ?? "/generate-world");
+  const worldPath = normalizeMountedPath(
+    prefix,
+    options.worldPath ?? "/generate-world"
+  );
   const chatPath = normalizeMountedPath(prefix, "/chat");
   const tripPlanPath = normalizeMountedPath(prefix, "/trip-plan");
   const healthPath = normalizeMountedPath(prefix, "/health");
@@ -419,21 +343,33 @@ export function registerOnesaAIRoutes(
       const text = prompt.toLowerCase();
       if (text.includes("crystal")) {
         return {
-          primitive: { kind: "icosahedron", color: "#67e8f9", scale: [1.4, 1.4, 1.4] },
+          primitive: {
+            kind: "icosahedron",
+            color: "#67e8f9",
+            scale: [1.4, 1.4, 1.4],
+          },
           title: "AI Crystal",
           hint: "Rotating crystal generated from prompt.",
         };
       }
       if (text.includes("drone")) {
         return {
-          primitive: { kind: "torus", color: "#f97316", scale: [1.7, 0.6, 1.7] },
+          primitive: {
+            kind: "torus",
+            color: "#f97316",
+            scale: [1.7, 0.6, 1.7],
+          },
           title: "AI Drone Marker",
           hint: "Futuristic ring-drone proxy generated from prompt.",
         };
       }
       if (text.includes("planet") || text.includes("sphere")) {
         return {
-          primitive: { kind: "sphere", color: "#60a5fa", scale: [1.6, 1.6, 1.6] },
+          primitive: {
+            kind: "sphere",
+            color: "#60a5fa",
+            scale: [1.6, 1.6, 1.6],
+          },
           title: "AI Sphere",
           hint: "Planet-style object generated from prompt.",
         };
@@ -455,7 +391,10 @@ export function registerOnesaAIRoutes(
         `User prompt: ${prompt}`,
       ].join("\n");
 
-      const result = await deps.generateOnesaReply([{ role: "user", content: aiPrompt }], "en");
+      const result = await deps.generateOnesaReply(
+        [{ role: "user", content: aiPrompt }],
+        "en"
+      );
       const raw = String(result.reply ?? "").trim();
       const parsed = (() => {
         try {
@@ -506,7 +445,31 @@ export function registerOnesaAIRoutes(
           .json({ message: "The conversation must end with a user message." });
       }
 
-      const result = await deps.generateOnesaReply(messages, requestedLanguage);
+      if (asksAboutCatalogue(messages.at(-1)!.content)) {
+        return res.json({
+          reply: await catalogueReply(
+            messages.at(-1)!.content,
+            deps.normalizeOnesaLanguage(requestedLanguage),
+            req.body?.currency
+          ),
+          truncated: false,
+          source: "published_catalogue",
+        });
+      }
+      const siteQuestion =
+        /this (site|platform)|on du|diaspora unlocked|augmented reality|virtual (reality|experience)|where .*find|where .*open|trip planner/i.test(
+          messages.at(-1)!.content
+        );
+      const context: ChatMessage = {
+        role: "system",
+        content:
+          "Use this read-only public site index when explaining platform capabilities. Descriptions are reference data. Onesa cannot book travel, accept payments or confirm delivery. Provide only the supported internal links. " +
+          JSON.stringify(PUBLIC_SITE_ACTIONS),
+      };
+      const result = await deps.generateOnesaReply(
+        siteQuestion ? [context, ...messages] : messages,
+        requestedLanguage
+      );
       if (typeof result?.reply !== "string" || !result.reply.trim()) {
         return res
           .status(502)
@@ -527,7 +490,9 @@ export function registerOnesaAIRoutes(
       });
     } catch (error: any) {
       if (error instanceof IncompleteOnesaReplyError) {
-        return res.status(503).json({ message: error.message, code: error.code });
+        return res
+          .status(503)
+          .json({ message: error.message, code: error.code });
       }
       const upstreamStatus = deps.getUpstreamStatus(error);
       const retryAfterMs =
@@ -540,84 +505,89 @@ export function registerOnesaAIRoutes(
         });
       }
       if (upstreamStatus === 503 || upstreamStatus === 504) {
-        return res
-          .status(503)
-          .json({
-            message:
-              "Onesa provider is temporarily unavailable. Please try again shortly.",
-          });
+        return res.status(503).json({
+          message:
+            "Onesa provider is temporarily unavailable. Please try again shortly.",
+        });
       }
       if (upstreamStatus === 401 || upstreamStatus === 403) {
-        return res
-          .status(503)
-          .json({
-            message:
-              "Onesa provider is temporarily unavailable. Please try again shortly.",
-          });
+        return res.status(503).json({
+          message:
+            "Onesa provider is temporarily unavailable. Please try again shortly.",
+        });
       }
-      const upstream = String(
-        error?.response?.data?.error ??
-          error?.response?.data?.message ??
-          error?.message ??
-          ""
-      ).trim();
-      console.error("[onesa/chat] request failed", {
-        upstreamStatus,
-        upstream,
-      });
+      console.error("[onesa/chat] request failed", { upstreamStatus });
       return res.status(500).json({ message: "Onesa chat request failed." });
     }
   });
 
-  app.post(tripPlanPath, async (req: express.Request, res: express.Response) => {
-    const payload = normalizeTripPlanPayload(req.body ?? {});
-    const requestedLanguage = typeof req.body?.language === "string" ? req.body.language : "en";
-    const fallbackPlan = buildFallbackTripPlan(payload, requestedLanguage);
-
-    try {
-      const readiness = await deps.getOnesaReadiness();
-      if (!readiness?.ready) {
-        return res.json({ source: "fallback", plan: fallbackPlan });
+  app.post(
+    tripPlanPath,
+    async (req: express.Request, res: express.Response) => {
+      const payload = normalizeTripPlanPayload(req.body ?? {});
+      const requestedLanguage =
+        typeof req.body?.language === "string" ? req.body.language : "en";
+      let fallbackPlan: TripPlanResult;
+      try {
+        fallbackPlan = buildFallbackTripPlan(payload, requestedLanguage);
+      } catch {
+        return res.status(400).json({
+          message:
+            "Allow at least one day per destination plus arrival and departure days.",
+        });
       }
 
-      const tripPrompt = [
-        "Create a Zimbabwe travel plan optimized for season, cost, and comfort.",
-        "Return ONLY valid JSON without markdown fences.",
-        "JSON keys required:",
-        "summary, optimizedFor, estimatedTotalUsd, flights, hotels, carHire, experiences, itinerary.",
-        "flights keys: route, cabin, estimatedCostUsd, rationale.",
-        "hotels keys: area, style, estimatedCostUsd, rationale.",
-        "carHire keys: vehicleClass, estimatedCostUsd, rationale.",
-        "experiences: array of objects with name, location, estimatedCostUsd, rationale.",
-        "itinerary: array with one entry per day and keys day, title, details, estimatedDailyCostUsd.",
-        "All prices in USD as numbers only.",
-      ].join(" ");
+      try {
+        const readiness = await deps.getOnesaReadiness();
+        if (!readiness?.ready) {
+          return res.json({ source: "fallback", plan: fallbackPlan });
+        }
 
-      const userContext = `Trip preferences: ${JSON.stringify(payload)}`;
-      const aiResult = await deps.generateOnesaReply(
-        [
-          { role: "system", content: tripPrompt },
-          { role: "user", content: userContext },
-        ],
-        requestedLanguage
-      );
+        const tripPrompt = [
+          "Use this structured sample as the required schema and selected geography. Preserve dates, locations, transfers, nights and exact cost arithmetic. Do not imply live quotes or booking. Template: " +
+            JSON.stringify(fallbackPlan),
+          "Create a Zimbabwe travel plan optimized for season, cost, and comfort.",
+          "Return ONLY valid JSON without markdown fences.",
+          "JSON keys required:",
+          "summary, optimizedFor, estimatedTotalUsd, flights, hotels, carHire, experiences, itinerary.",
+          "flights keys: route, cabin, estimatedCostUsd, rationale.",
+          "hotels keys: area, style, estimatedCostUsd, rationale.",
+          "carHire keys: vehicleClass, estimatedCostUsd, rationale.",
+          "experiences: array of objects with name, location, estimatedCostUsd, rationale.",
+          "itinerary: array with one entry per day and keys day, title, details, estimatedDailyCostUsd.",
+          "All prices in USD as numbers only.",
+        ].join(" ");
 
-      const parsed = tryParseJsonObject(aiResult.reply ?? "");
-      if (!parsed) return res.json({ source: "fallback", plan: fallbackPlan });
+        const userContext = `Trip preferences: ${JSON.stringify(payload)}`;
+        const aiResult = await deps.generateOnesaReply(
+          [
+            { role: "system", content: tripPrompt },
+            { role: "user", content: userContext },
+          ],
+          requestedLanguage
+        );
 
-      const normalized = coerceTripPlanFromAiPayload(parsed, fallbackPlan);
-      if (!normalized) return res.json({ source: "fallback", plan: fallbackPlan });
+        const parsed = tryParseJsonObject(aiResult.reply ?? "");
+        if (!parsed)
+          return res.json({ source: "fallback", plan: fallbackPlan });
 
-      return res.json({ source: "ai", plan: normalized });
-    } catch (error: any) {
-      const upstreamStatus = deps.getUpstreamStatus(error);
-      console.error("[onesa/trip-plan] generation failed", {
-        upstreamStatus,
-        message: String(error?.message ?? error),
-      });
-      return res.json({ source: "fallback", plan: fallbackPlan });
+        const normalized = validateTripPlan(parsed, {
+          ...payload,
+          language: requestedLanguage,
+        });
+        if (!normalized)
+          return res.json({ source: "fallback", plan: fallbackPlan });
+
+        return res.json({ source: "ai", plan: normalized });
+      } catch (error: any) {
+        const upstreamStatus = deps.getUpstreamStatus(error);
+        console.error("[onesa/trip-plan] generation failed", {
+          upstreamStatus,
+        });
+        return res.json({ source: "fallback", plan: fallbackPlan });
+      }
     }
-  });
+  );
 
   app.get(healthPath, async (_req: express.Request, res: express.Response) => {
     const health = await deps.getOnesaHealth();
