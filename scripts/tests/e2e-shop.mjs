@@ -444,7 +444,9 @@ try {
     );
     // Checkout is fully mocked; no orders, email, or production writes occur.
     if (width < 1024)
-      await page.getByRole("button", { name: "Checkout", exact: true }).click();
+      await page
+        .getByRole("button", { name: "Review basket", exact: true })
+        .click();
     const checkoutPanel = page.getByRole("form", {
       name: "Cart & order request",
       exact: true,
