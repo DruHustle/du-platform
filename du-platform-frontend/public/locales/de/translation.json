@@ -1409,6 +1409,7 @@
       "actions": {
         "buy": "In den Warenkorb",
         "add_to_cart": "in den Warenkorb legen",
+        "checkout": "Warenkorb prüfen",
         "creating_order": "Anfrage wird gesendet…",
         "place_order": "Bestellanfrage senden",
         "order_whatsapp": "Bestellung per WhatsApp anfragen",

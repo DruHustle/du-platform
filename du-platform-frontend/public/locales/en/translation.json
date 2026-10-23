@@ -1475,6 +1475,7 @@
       "actions": {
         "buy": "Add to cart",
         "add_to_cart": "Add to Cart",
+        "checkout": "Review basket",
         "creating_order": "Sending request…",
         "place_order": "Send order request",
         "order_whatsapp": "Ask about this order on WhatsApp",
