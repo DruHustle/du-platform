@@ -249,7 +249,7 @@ export default function InvestmentOpportunitiesPage() {
               </div>
               <p className="text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed">
                 {t("investment.sectors_subtitle") ||
-                  "Browse sector ideas and listed promoters. Current availability, financial terms and approvals require independent confirmation."}
+                  "Read project descriptions and listed promoter details by sector. These profiles support research; DU does not accept investments or confirm participation terms."}
               </p>
               <div className="flex flex-wrap gap-2 mt-8">
                 {[

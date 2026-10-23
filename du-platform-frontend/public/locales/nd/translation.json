@@ -13,7 +13,7 @@
   "my_investments": "Ukutshala kwami kwemali",
   "settings": "Izisetho",
   "search_placeholder": "Dingisisa ngezokuthunyelwa ngaphandle, ukutshala imali, ezokuvakasha...",
-  "search_title": "Search",
+  "search_title": "Dinga",
   "search_button": "Dinga",
   "explore": "Hlolisisa",
   "all_rights_reserved": "Wonke amalungelo agodliwe.",
@@ -32,17 +32,17 @@
       "values_label": "Amanani Ethu",
       "values_content": "Ulwazi olucacileyo, uncedo oluluncedo lokuchaza iqiniso lokukhona.",
       "who_label": "Singobani",
-      "who_content": "IDiaspora Unlocked yinkundla yabantu beZimbabwe abaphesheya labo bonke abafuna ukwazi iZimbabwe.",
+      "who_content": "IDiaspora Unlocked ixhumanisa abantu abaseZimbabwe labangaphandle ngemikhiqizo, ulwazi lokuhamba, imibono yebhizimusi loncedo lweAI.",
       "what_label": "Esikwenzayo",
-      "what_content": "Bona impahla, hlela uhambo, cwaninga amaphrofayili ubuze iOnesa. Izicelo zama-oda ziyahlolwa lingakavumelani ngokubhadala lokudiliva."
+      "what_content": "Gcwalisa ubhasikidi uthumele isicelo se-oda, cwaninga umbono webhizimusi, bhala uhlelo lohambo kumbe ubuze uOnesa. Khetha inyathelo lakho elilandelayo ezigabeni ezikhona."
     },
     "newsletter": {
-      "confirmation_sent": "Nxa ikheli leli lidinga ukuqinisekiswa, sizathumela isixhumanisi nge-imeyili. Nxa seliqinisekisiwe, selisohlwini.",
+      "confirmation_sent": "Khangela i-imeyili yakho ukuze uthole isixhumanisi sokuqinisekisa. Nxa usuqinisekisile, ususohlwini.",
       "delivery_pending": "Ukubhalisa kulondoloziwe. Ukuthumela ama-imeyili akusebenzi okwamanje; umlayezo wokuqinisekisa uzathunyelwa nxa sekusebenza.",
-      "consent": "Ngokubhalisa, uyavuma ukwamukela izindaba lamathuba avela kuDiaspora Unlocked. Qinisekisa i-imeyili yakho ukuze ujoyine. Ungazikhipha loba nini.",
+      "consent": "Qinisekisa i-imeyili yakho ukuze uthole izindaba lamathuba eDiaspora Unlocked. Ungazikhipha loba nini. Lokhu akuvuli i-akhawunti yenkundla.",
       "privacy": "Umgomo wobumfihlo",
       "title": "Iphephandaba",
-      "description": "Izindaba lezintsha nge-imeyili.",
+      "description": "Imikhiqizo yaseZimbabwe, imibono yokuhamba lezindaba zenkundla nge-imeyili.",
       "email_placeholder": "Ikheli le-imeyili",
       "subscribe_aria": "Bhalisela iphephandaba",
       "already_subscribed": "Le imeyili isivele ibhaliselwe i-newsletter.",
@@ -53,7 +53,7 @@
       "options_title": "Izinketho Zokuxhumana",
       "call": "Shaya ucingo",
       "whatsapp": "WhatsApp",
-      "location_berlin": "Berlin, Germany",
+      "location_berlin": "EBerlin, eJalimane",
       "social": "Okomphakathi",
       "twitter": "Twitter",
       "linkedin": "I-LinkedIn",
@@ -78,8 +78,8 @@
     "no_account": "Haula i-akhawunti?",
     "register_now": "Bhalisa khonamanje",
     "close": "Vala",
-    "cancel_login": "Cancel login",
-    "cancel_registration": "Cancel registration",
+    "cancel_login": "Yekelani ukungena",
+    "cancel_registration": "Yekelani ukubhalisa",
     "forgot": {
       "title": "Setha kabusha Iphasiwedi",
       "subtitle": "Faka i-imeyili ye-akhawunti yakho futhi sizokuthumela imiyalelo yokusetha kabusha.",
@@ -146,7 +146,7 @@
     "technology_industries_desc": "Hlola amacebo lemibuzo yobuchwepheshe ngemikhakha",
     "payments": "Izinkokhelo",
     "discover": "Zitholele",
-    "admin": "Admin",
+    "admin": "Abaphathi",
     "close_menu": "Vala imenyu",
     "language_hint": "Sebenzisa isithonjana sembulunga ukuze ushintshe ulimi.",
     "open_menu": "Vula imenyu",
@@ -186,13 +186,13 @@
       },
       "technology": {
         "title": "Ubuchwepheshe",
-        "description": "Yazi iOnesa, inkundla yeAI enika uncedo kuDiaspora Unlocked.",
-        "detail": "Buza ngeZimbabwe, hlola amacebo uthole uncedo ngempahla, amathuba lezinhlelo zohambo.",
-        "stats": "Onesa AI",
+        "description": "Buza uOnesa ngemikhiqizo, izindawo lemibono yebhizimusi eZimbabwe.",
+        "detail": "Qathanisa ongakukhetha, lungisa uhlu lokuhlola kumbe ubhale uhlelo lohambo. Qinisekisa imininingwane eqakathekileyo labahlinzeki.",
+        "stats": "Hlola amathuluzi eAI",
         "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna"
       },
       "investment": {
-        "title": "Investment",
+        "title": "Ukutshalwa kwemali",
         "description": "Hlola imibono yamabhizimusi ekulimeni, ekwakheni, emisebenzini esekela izimayini lasekuthengiseni kwansuku zonke.",
         "detail": "Qala ngombono ongawenelisa, zwisisa izindleko lobungozi, uqinisekise imininingwane ungakafaki imali.",
         "stats": "Hlola imibono yebhizimusi",
@@ -201,14 +201,14 @@
       "tourism": {
         "title": "Ezokuvakasha",
         "description": "Yazi impophoma, inyamazana zeganga, amagugu lezindawo zokuvakatshela eZimbabwe.",
-        "detail": "Qathanisa izindawo, bona izibonelo zohambo wenze uhlelo lokuqala lohambo ngeOnesa.",
+        "detail": "Qathanisa izindawo, zama umhlahlandlela weAR njalo ubhale uhlelo lohambo loOnesa.",
         "stats": "Thola lapho ofuna ukuya khona",
         "image_alt": "Izimpophoma zeVictoria Falls lendawo eluhlaza ezizungezileyo eZimbabwe"
       }
     },
     "discovery": {
       "title": "Hlola iZimbabwe ngendlela yakho.",
-      "description": "Thola okwekhaya, umbono webhizimusi ongawucwaninga kumbe indawo ongayivakatshela. Qala ngalokho okukuthandayo."
+      "description": "Hlola imikhiqizo yaseZimbabwe, cwaninga imibono yebhizimusi, hlela ukuvakatshela kumbe ubuze uOnesa. Thola indawo yokuqala, loba ngaphi lapho ohlala khona."
     },
     "hero_pause": "Misa imifanekiso",
     "hero_resume": "Qhubeka ngemifanekiso"
@@ -218,17 +218,17 @@
     "restore_chat_bubble": "Bonisa ibhamuza lengxoxo",
     "landing": {
       "eyebrow": "Ubuchwepheshe & amathuluzi ansuku zonke",
-      "title": "Ubuchwepheshe obuncedayo.",
+      "title": "Uncedo lweAI ekuhleleni.",
       "highlight": "Ngamandla e-Onesa.",
-      "description": "Buza imibuzo ecacileyo, hlola iZimbabwe njalo uhlele inyathelo elilandelayo, usekhaya loba phesheya. Qala ngamathuluzi atholakala kuDiaspora Unlocked.",
-      "principle": "Buza. Hlola. Hlela.",
+      "description": "Buza ngemikhiqizo yaseZimbabwe, imibono yebhizimusi kumbe ukuhamba. Sebenzisa uOnesa ukuqathanisa ongakukhetha, ukuhlela imibuzo yakho lokubhala uhlelo.",
+      "principle": "Qala ngombuzo. Thola inyathelo elilandelayo elicacileyo.",
       "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna",
       "caption": "I-Onesa incedisa emibuzweni yakho ngeZimbabwe.",
       "tools_cta": "Hlola amathuluzi"
     },
     "tools": {
       "title": "Ongakwenza nge-Onesa",
-      "subtitle": "Khetha ithuluzi elihambelana lomsebenzi ofuna ukuwenza. Ngalinye livula ikhasi lalo.",
+      "subtitle": "Buza umbuzo, bhala uhlelo lohambo kumbe uhlole umhlahlandlela weAR ledemo yeVR.",
       "chat": {
         "title": "Buza umbuzo",
         "description": "Thola izincazelo ezilula ngemikhiqizo, izindawo lemibono yebhizimusi. Qhubeka ubuza ukuze impendulo ihambelane lokudingayo.",
@@ -257,7 +257,7 @@
     "about": {
       "title": "Ukuxhumana kwe-Onesa leDiaspora Unlocked",
       "platform": "IOnesa yinkundla yeAI enezingxenye ezihlanganisekayo, yokusetshenziswa eEurope lasemhlabeni wonke.",
-      "application": "IDiaspora Unlocked ingenye yama-application asebenzisa iOnesa. Iletha ulwazi lemisebenzi yeZimbabwe ezingxoxweni lasemathuluzini okuhlela lapha. Uncedo lwezindimi lesimo sendawo luqondene leZimbabwe ku-application le. Alubopheleli inkundla yeOnesa elizweni kumbe emkhakheni owodwa."
+      "application": "IDiaspora Unlocked isebenzisa uOnesa emibuzweni lekuhleleni okuphathelene leZimbabwe. Ulwazi lweZimbabwe lokusekelwa kwezindimi ngokwalolu hlelo; inkundla yeOnesa isebenzela amazwe lezimboni ezinengi."
     },
     "steps": {
       "title": "Ukusuka embuzweni usiya enyathelweni elincedayo",
@@ -476,7 +476,7 @@
       "subtitle": "Buza ngezindawo, amasiko lamacebo ohambo. IOnesa isiza ukulungisa imibuzo lohlelo lokuqala; abahlinzeki baqinisekisa intengo lamabhukhingi.",
       "companion_subtitle": "Xoxa ngokuthandayo, qathanisa izindawo uhlele indlela. Qinisekisa izikhathi zokuvula, ezokuthutha lokutholakala ungakahambi.",
       "virtual_preview": {
-        "title": "Hlola izindawo ngeVR",
+        "title": "Zama idemo ye360°",
         "desc": "Zama isibonelo seSample City esilemifanekiso ezungezayo. Ungasebenzisa ledivayisi yeVR. Uhambo lwezindawo zeZimbabwe alukatholakali."
       },
       "guide": {
@@ -488,8 +488,8 @@
         "desc": "Hlola izindawo ngekhamera yakho, ulwazi lukaOnesa kanye lokulandisa ongakukhetha."
       },
       "plan": {
-        "title": "Izinhlelo ezenziwe wena",
-        "desc": "Yenza uhlelo lokuqala olulandela okuthandayo, amalanga lezifiso zakho."
+        "title": "Bhala uhlelo lohambo",
+        "desc": "Sebenzisa amalanga akho, okuthandayo lokukhethayo ukubhala uhlelo olulezilinganiso zebhajethi. Hlola imininingwane ubhukhe ngqo labahlinzeki."
       },
       "plan_trip_cta": "Hlela uhambo loOnesa",
       "cta": {
@@ -500,7 +500,7 @@
       "trip_planner": {
         "badge": "Onesa AI Uhambo",
         "title": "Hlela uhambo lwakho lweZimbabwe",
-        "subtitle": "Yenza uhlelo lokuqala ngezilinganiso zemali yezindiza, indawo zokuhlala, ezokuthutha lokokwenza, ngamalanga lezifiso zakho.",
+        "subtitle": "Bhala uhlelo lohambo lezilinganiso zebhajethi yezindiza, indawo yokuhlala, izithuthi lokuzilibazisa. Qathanisa imibono ulungise imibuzo yabahlinzeki.",
         "origin": "Idolobha lokusuka",
         "season": "Isizini",
         "budget": "Iphrofayili yebhajethi",
@@ -517,7 +517,7 @@
         "generating": "Kuyakhiwa...",
         "generate": "Yakha uhlelo lohambo",
         "ai_optimized": "Uhlelo olwenziwe ngeAI",
-        "fallback_plan": "Isibonelo sohlelo ngezilinganiso ezibaliweyo",
+        "fallback_plan": "Uhlelo lwesibonelo · izilinganiso zebhajethi ezibekiweyo",
         "estimated_total": "Isilinganiso semali (USD)",
         "flights": "Isilinganiso sendiza",
         "hotels": "Isilinganiso sendawo yokuhlala",
@@ -549,7 +549,7 @@
           "history": "Umlando",
           "nature": "Imvelo"
         },
-        "booking_focus": "Umhleli lo kahloli intengo ezibukhoma kumbe ukutholakala futhi kenzi amabhukhingi. Qinisekisa izindleko lamalungiselelo labahlinzeki.",
+        "booking_focus": "Amabhajethi yizilinganiso, hatshi amanani aqinisekisiweyo. Nxa uOnesa engatholakali, uzabona uhlelo lwesibonelo olulezilinganiso ezibekiweyo. Lolu hlelo aluhloli ukutholakala kwakhathesi kumbe ukubhukha.",
         "download_pdf": "Landa i-PDF",
         "pdf_title": "Uhlelo Lohambo lwe-Onesa",
         "pdf_filename": "onesa-uhlelo-lohambo",
@@ -620,15 +620,15 @@
     },
     "vr": {
       "seo": {
-        "title": "Uhambo lweVirtual",
-        "description": "Zama iDolobho Lokubonisa elilemifanekiso ezungezileyo, izindawo ezimqoka kanye lokulandisa ongakukhetha. Uhambo lwevirtual ezindaweni zeZimbabwe alukatholakali."
+        "title": "Idemo yeVR ye360°",
+        "description": "Hlola idemo yeSample City ngamathuluzi okuhamba phakathi kwezigcawu lokukhetha ukulandiselwa. Lesi yisibonelo, hatshi uhambo lwendawo yokuvakatshela eZimbabwe."
       }
     },
     "landing": {
       "eyebrow": "Hlola iZimbabwe",
       "title": "Bona okunengi kwe",
       "highlight": "Zimbabwe.",
-      "description": "Okwelanga, impelaviki kumbe uhambo oluya ekhaya. Hlola izimpophoma, inyamazana lamagugu, uhlele ngokwesikhathi sakho lalokho okuthandayo.",
+      "description": "Thola uhambo lwelanga, olwempelaviki kumbe izindawo ongazivakatshela nxa ubuyela ekhaya. Qathanisa izindawo ubhale uhlelo loOnesa.",
       "principle": "Imibono ekuncedisa ukuhlela. Qinisekisa ukungena, amanani lokubhukha ngqo labahlinzeki.",
       "image_alt": "Izimpophoma zeVictoria Falls lendawo eluhlaza ezizungezileyo eZimbabwe",
       "caption": "Victoria Falls · Zimbabwe",
@@ -850,16 +850,16 @@
       }
     },
     "ntir": {
-      "back": "Back to Investment",
+      "back": "Buyelani koKutshalwa kwemali",
       "title": "Uhlu lwamabhizimisi lweNTIR",
-      "subtitle": "Dinga amarekhodi amabhizimisi agcinwa yiDiaspora Unlocked; nxa ukudinga kungatholakali kulamarekhodi afakwe ngaphambili. INTIR ayisilo rejista kahulumende kumbe inkonzo yokuhlola ezimeleyo.",
-      "placeholder": "Search by entity, sector, or location",
-      "search": "Search",
-      "empty": "No entities found.",
+      "subtitle": "Dinga ohlwini lwamabhizimusi olugcinwa yiDiaspora Unlocked ngebizo, isigaba kumbe indawo. Okubhaliweyo yindawo yokuqala ucwaningo, hatshi ukubhaliswa okusemthethweni kumbe ukuqinisekiswa okuzimeleyo.",
+      "placeholder": "Ibizo, isigaba, indawo",
+      "search": "Dinga",
+      "empty": "Akukho okubhaliweyo okufanana lokudingayo. Zama ibizo lebhizimusi, isigaba kumbe indawo.",
       "service_unavailable": "Ukudinga akutholakali. Kuboniswa amarekhodi ohlu afakwe enkundleni."
     },
     "sectors_title": "Hlola amaphrofayili amaphrojekthi",
-    "sectors_subtitle": "Bona amacebo emikhakha labanikazi ababhaliweyo. Ukutholakala, imigomo yemali lezimvumo kudinga ukuqinisekiswa okuzimeleyo.",
+    "sectors_subtitle": "Bala izincazelo zamaphrojekthi lemininingwane yabakhokheli abaqanjiweyo ngesigaba. Lokhu ngokokucwaninga; iDU ayamukeli ukutshalwa kwemali kumbe ukuqinisekisa imibandela yokuhlanganyela.",
     "cta_title": "Usulungele ukutshala imali?",
     "cta_subtitle": "Ithimba lethu lokutshala imali lingakusiza ekutholeni amathuba afaneleyo.",
     "cta_button": "Xhumana lochwepheshe",
@@ -915,7 +915,7 @@
     "project_details": {
       "back": "Buyela ku-Investment",
       "not_found_title": "Iphrojekthi ayitholakali",
-      "not_found_desc": "I-ID yephrojekthi ekhethiwe ayikho.",
+      "not_found_desc": "Ulwazi lwephrojekthi le alutholakali. Buyela ohlwini lwamaphrojekthi ukuze ubone okunye.",
       "badge": "Imininingwane Yephrojekthi",
       "responsible_company": "Umnikazi obhaliweyo",
       "highlights": "Imibuzo yokuhlola",
@@ -1155,11 +1155,11 @@
     "view_all": "Buka Konke",
     "back_to_top": "Buyela Phezulu",
     "loading": "Iyalowuda...",
-    "loading_label": "Loading",
+    "loading_label": "Kuyavulwa",
     "error": "Kube lephutha",
     "success": "Kuphumelele!",
     "verified": "Iqinisekisiwe",
-    "pending": "Pending",
+    "pending": "Kulindelwe",
     "target": "Okudingwayo",
     "raised": "Okuhlanganisiweyo",
     "investors": "Abatshali mali",
@@ -1178,110 +1178,110 @@
     "image_credits": "Imithombo yemifanekiso"
   },
   "pagination": {
-    "label": "Pagination",
-    "previous": "Previous",
-    "next": "Next",
-    "go_previous": "Go to previous page",
-    "go_next": "Go to next page",
-    "more_pages": "More pages"
+    "label": "Ukuhamba emakhasini",
+    "previous": "Okwedlulileyo",
+    "next": "Okulandelayo",
+    "go_previous": "Yana ekhasini elidlulileyo",
+    "go_next": "Yana ekhasini elilandelayo",
+    "more_pages": "Amanye amakhasi"
   },
   "carousel": {
-    "previous_slide": "Previous slide",
-    "next_slide": "Next slide",
-    "go_to_slide": "Go to slide {{index}}"
+    "previous_slide": "Isithombe esidlulileyo",
+    "next_slide": "Isithombe esilandelayo",
+    "go_to_slide": "Yana esithombeni {{index}}"
   },
   "breadcrumb": {
-    "label": "Breadcrumb",
-    "more": "More"
+    "label": "Indlela yamakhasi",
+    "more": "Okunye"
   },
   "globe": {
-    "preview_alt": "Globe preview",
-    "preview_mode": "Globe preview mode (WebGL unavailable)",
-    "music_on": "Music: On",
-    "music_off": "Music: Off"
+    "preview_alt": "Ukubuka imbulunga",
+    "preview_mode": "Ukubuka imbulunga (i-WebGL ayitholakali)",
+    "music_on": "Umculo: Uvuliwe",
+    "music_off": "Umculo: Uvaliwe"
   },
   "admin": {
-    "title": "Admin Dashboard",
-    "subtitle": "Manage notifications, visibility (display / don't display), and pricing.",
+    "title": "Ikhasi labaphathi",
+    "subtitle": "Phathani izaziso, okubonakalayo lentengo.",
     "tabs": {
-      "notify": "Notify Me",
+      "notify": "Ngazisweni",
       "ntir": "NTIR",
-      "stories": "Impact",
-      "shop": "Shop Products"
+      "stories": "Inguquko",
+      "shop": "Impahla yesitolo"
     },
     "badges": {
-      "new": "new"
+      "new": "okutsha"
     },
     "notify": {
-      "new_request_single": "1 new notify request in Admin > Notify Me.",
-      "new_request_multi": "{{count}} new notify requests in Admin > Notify Me.",
-      "new_received_single": "1 new notify request received.",
-      "new_received_multi": "{{count}} new notify requests received.",
-      "settings_title": "Notification Email Settings",
-      "settings_description": "Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.",
-      "alert_emails_placeholder": "Alert emails (comma-separated)",
-      "from_email_placeholder": "From email",
-      "save_settings": "Save Email Settings",
-      "settings_saved": "Notification email settings saved.",
-      "feature_restock": "Shop restock: {{slug}}",
-      "feature_restock_fallback": "Shop restock request",
-      "empty": "No notify requests yet."
+      "new_request_single": "Kulesicelo esitsha esisodwa kuBaphathi > Ngazisweni.",
+      "new_request_multi": "Kulezicelo ezintsha ezingu-{{count}} kuBaphathi > Ngazisweni.",
+      "new_received_single": "Kwamukelwe isicelo esitsha esisodwa.",
+      "new_received_multi": "Kwamukelwe izicelo ezintsha ezingu-{{count}}.",
+      "settings_title": "Izilungiselelo ze-imeyili zezaziso",
+      "settings_description": "Lungisani lapho okuthunyelwa khona izaziso ze`Ngazisweni` le-imeyili yomthumeli.",
+      "alert_emails_placeholder": "Ama-imeyili ezaziso (ehlukaniswe ngamakhoma)",
+      "from_email_placeholder": "I-imeyili yomthumeli",
+      "save_settings": "Gcinani izilungiselelo ze-imeyili",
+      "settings_saved": "Izilungiselelo ze-imeyili zezaziso zigciniwe.",
+      "feature_restock": "Sekukhona esitolo: {{slug}}",
+      "feature_restock_fallback": "Isicelo sempahla ezabuya esitolo",
+      "empty": "Akukabi lezicelo zezaziso."
     },
     "errors": {
-      "load": "Unable to load admin data.",
-      "save_shop": "Unable to save shop product.",
-      "delete_shop": "Unable to delete shop product.",
-      "create_ntir": "Unable to create NTIR entity.",
-      "update_ntir": "Unable to update NTIR entity.",
-      "create_story": "Unable to create impact story.",
-      "update_story": "Unable to update story visibility.",
-      "save_notification_settings": "Unable to save notification settings."
+      "load": "Kwehlulekile ukuveza imininingwane yabaphathi.",
+      "save_shop": "Kwehlulekile ukugcina impahla.",
+      "delete_shop": "Kwehlulekile ukususa impahla.",
+      "create_ntir": "Kwehlulekile ukwengeza imininingwane ye-NTIR.",
+      "update_ntir": "Kwehlulekile ukulungisa imininingwane ye-NTIR.",
+      "create_story": "Kwehlulekile ukwengeza indaba yenguquko.",
+      "update_story": "Kwehlulekile ukutshintsha ukubonakala kwendaba.",
+      "save_notification_settings": "Kwehlulekile ukugcina izilungiselelo zezaziso."
     },
     "ntir": {
-      "entity_placeholder": "Entity name",
-      "sector_placeholder": "Sector",
-      "location_placeholder": "Location",
-      "add_row": "Add NTIR Row"
+      "entity_placeholder": "Ibizo lenkampani",
+      "sector_placeholder": "Isigaba",
+      "location_placeholder": "Indawo",
+      "add_row": "Ngezani ku-NTIR"
     },
     "stories": {
-      "title_placeholder": "Title",
-      "category_placeholder": "Category",
-      "image_placeholder": "Image path or URL",
-      "author_placeholder": "Author",
-      "role_placeholder": "Role",
-      "revenue_placeholder": "Revenue (e.g. $2.5M)",
-      "jobs_placeholder": "Jobs (e.g. 150+)",
-      "markets_placeholder": "Markets (e.g. EU, UK)",
-      "story_placeholder": "Story content",
-      "testimonial_placeholder": "Testimonial",
-      "display_label": "Display on impact page",
-      "add_story": "Add Impact Story",
-      "badge_display": "Display",
-      "badge_hide": "Don't display",
-      "set_display": "Set Display",
-      "set_hide": "Set Don't display",
-      "toast_display": "Story set to Display.",
-      "toast_hide": "Story set to Don't display."
+      "title_placeholder": "Isihloko",
+      "category_placeholder": "Uhlobo",
+      "image_placeholder": "Indlela yesithombe kumbe i-URL",
+      "author_placeholder": "Umlobi",
+      "role_placeholder": "Umsebenzi",
+      "revenue_placeholder": "Imali engenayo (isib. $2.5M)",
+      "jobs_placeholder": "Imisebenzi (isib. 150+)",
+      "markets_placeholder": "Imisika (isib. EU, UK)",
+      "story_placeholder": "Okuqukethwe yindaba",
+      "testimonial_placeholder": "Ubufakazi",
+      "display_label": "Veza ekhasini lenguquko",
+      "add_story": "Ngezani indaba yenguquko",
+      "badge_display": "Veza",
+      "badge_hide": "Ungavezi",
+      "set_display": "Khethani ukuveza",
+      "set_hide": "Khethani ukungavezi",
+      "toast_display": "Indaba izavezwa.",
+      "toast_hide": "Indaba ayizukuvezwa."
     },
     "shop": {
-      "slug_placeholder": "Slug",
-      "name_placeholder": "Product name",
-      "image_placeholder": "Image URL or path",
-      "category_placeholder": "Category: sports/crafts/food",
-      "price_placeholder": "Price cents (e.g. 4999)",
-      "stock_placeholder": "Stock qty",
-      "currency_placeholder": "Currency",
-      "description_placeholder": "Description",
-      "display_label": "Display product",
-      "update_product": "Update Product",
-      "add_product": "Add Product",
-      "cancel_edit": "Cancel Edit",
-      "stock_label": "Stock",
-      "badge_display": "Display",
-      "badge_hide": "Don't display",
-      "edit": "Edit",
-      "delete": "Delete",
-      "empty": "No shop products yet."
+      "slug_placeholder": "Isikhombi se-URL",
+      "name_placeholder": "Ibizo lempahla",
+      "image_placeholder": "I-URL kumbe indlela yesithombe",
+      "category_placeholder": "Uhlobo: sports/crafts/food",
+      "price_placeholder": "Intengo ngamasenti (isib. 4999)",
+      "stock_placeholder": "Inani elikhona",
+      "currency_placeholder": "Uhlobo lwemali",
+      "description_placeholder": "Ingcazelo",
+      "display_label": "Veza impahla",
+      "update_product": "Lungisani impahla",
+      "add_product": "Ngezani impahla",
+      "cancel_edit": "Yekelani ukulungisa",
+      "stock_label": "Okukhona",
+      "badge_display": "Veza",
+      "badge_hide": "Ungavezi",
+      "edit": "Lungisani",
+      "delete": "Susani",
+      "empty": "Akukabi lempahla yesitolo."
     }
   },
   "shop": {
@@ -1310,7 +1310,7 @@
       "cereals": {
         "title": "Okusanhlamvu & Ukudla kwasekuseni",
         "description": "Izingxube ze-Cerevita kanye nokudla kwasekuseni kwansuku zonke.",
-        "detail": "Izidlo zasekuseni ezithenjwayo nezinto eziyisisekelo zokudla ezikhethelwe ukuphinda ama-oda omndeni, izinyanda zomndeni, nezinqubo ezijwayelekile zasekhaya."
+        "detail": "Amabele okudla ekuseni lokudla okugcinwayo okwansuku zonke lokwabelana."
       },
       "sauces_spices": {
         "title": "Amasoso nezinongo",
@@ -1320,7 +1320,7 @@
       "snacks": {
         "title": "Ukudla okulula kanye Nokudla",
         "description": "I-Maputi, amabhisikidi, kanye ne-nostalgic grab-and-go bites.",
-        "detail": "Ukudla okulula okunethezeka nokuphatha okusheshayo okukhethelwe ukwabelana, amaphakheji okunakekela, nama-oda aqhutshwa yi-nostalgia ahamba kahle kuyo yonke imizi."
+        "detail": "Amabhisikiti, amaputi lokudla okuncane okwabelana kumbe ukufaka kubhasikidi wezipho. Isitolo siqinisekisa ukuthi ukuthunyelwa kuyafaneleka."
       },
       "oils_spreads": {
         "title": "Amafutha Okupheka & Ukusabalala",
@@ -1334,8 +1334,8 @@
       },
       "crafts": {
         "title": "Ubuciko Nezandla",
-        "description": "Izingcezu zengcweti zangempela ezigxile kumagugu aseZimbabwe.",
-        "detail": "Izingcezu zamagugu enziwe ngezandla ezinendaba yengcweti, isipho esikhangayo, nevelu yokubonisa yamakhaya, amahhovisi, namaqoqo avela ngaphandle."
+        "description": "Izithombe zamatshe, amabhasikidi lezinto zobuhlalu.",
+        "detail": "Hlola izinto zokucecisa lezipho zekhaya, abangane kumbe imuli."
       },
       "apparel": {
         "title": "Izingubo Zezemidlalo",
@@ -1344,8 +1344,8 @@
       }
     },
     "products": {
-      "title": "Thenga Imikhiqizo",
-      "subtitle": "Faka impahla enqoleni uthumele isicelo se-oda. Ukutholakala, ukudiliva lokubhadala kuqinisekiswa lawe i-oda lingakaqhubeki.",
+      "title": "Uhlu lwemikhiqizo",
+      "subtitle": "Hlanganisani impahla enliyifunayo lithumele isicelo se-oda. Lingakabhadali, iqembu liqinisekisa impahla, ukudiliva ngeDHL endaweni yenu lezindleko zokucina.",
       "back_to_shop": "Buyela Esitolo",
       "default_country": "EJalimane",
       "filters": {
@@ -1353,8 +1353,8 @@
         "sports": "Ezemidlalo",
         "crafts": "Ubuciko Nezandla",
         "food": "Ukudla & Nostalgia",
-        "all_segments": "Zonke Izigaba",
-        "select_segment": "Khetha i-Segment"
+        "all_segments": "Zonke izinhlobo zemikhiqizo",
+        "select_segment": "Khetha uhlobo lomkhiqizo"
       },
       "loading": "Ilayisha imikhiqizo...",
       "empty_state": "Ayikho imikhiqizo etholakalayo kulesi sigaba okwamanje.",
@@ -1363,16 +1363,16 @@
         "chevrons-world-cup-jersey": "Ijezi labalandeli bekhilikithi likazwelonke.",
         "warriors-football-kit": "Ikhithi yabalandeli bebhola leZimbabwe.",
         "shona-stone-sculpture": "Isibaza selitshe.",
-        "binga-basket": "Ubhasikidi owelukiwe ngesandla owenziwe izingcweti zendawo.",
+        "binga-basket": "Ubhasikidi owelukwe ngezandla.",
         "beaded-jewelry-set": "Umgexo wobuhlalu bendabuko nesethi yesongo.",
         "mazoe-variety-pack": "Ukukhetha okuhle kwe-Classic Zimbabwe.",
-        "cerevita-corn-banana-500g": "Intandokazi ye-cereal esheshayo enomsoco.",
+        "cerevita-corn-banana-500g": "Ukudla kwasekuseni komumbu lebhanana, 500g.",
         "mazoe-raspberry-2l-case-6": "Iphakethe lamacala amaningi omndeni kanye nezipho.",
         "mazoe-orange-2l-case-6": "Isinathwa se-orange ebhokisini lamabhodlela ayisithupha e2L.",
         "mazoe-orange-2l": "Ibhodlela elilodwa elinombala osawolintshi.",
         "pfuko-maheu-traditional-500ml-case-12": "I-maheu yosiko kuphekhi yekesi yenani.",
-        "pfuko-maheu-traditional-500ml-1": "I-maheu yosiko kuphekhi yekesi yenani.",
-        "cascade-orange-400ml-case-6": "I-Cascade Orange iyi-adventure ephelele yesiphuzo se-Dairy Fruit Mix.",
+        "pfuko-maheu-traditional-500ml-1": "Amaheu esintu, ibhodlela elilodwa le500ml.",
+        "cascade-orange-400ml-case-6": "Isinathwa sochago lesithelo se-orenji emabhodleleni ayisithupha.",
         "kariba-kapenta-matemba-100g": "Ikapenta eyomisiweyo, 100g.",
         "royco-usavi-beef-75g": "I-flavour blend yesitshulu sendawo kanye nama-gravies.",
         "colcom-pork-pie-100g": "Uphaya osulungele ukudliwa.",
@@ -1414,7 +1414,7 @@
       },
       "totals": {
         "subtotal": "Isamba esingaphansi",
-        "shipping": "Isilinganiso sokudiliva",
+        "shipping": "Imali yokuthumela (isilinganiso)",
         "total": "Isilinganiso semali yonke"
       },
       "guest_checkout": {
@@ -1456,10 +1456,10 @@
       "order": {
         "reference": "Inombolo yesicelo",
         "status": "Isimo",
-        "manual_follow_up": "Isicelo samukelwe. Akukabhadalwa njalo ukudiliva akukaqinisekiswa. Sixhumane ngenombolo yakho ukuze siqinisekise ukutholakala, imali yokudiliva lendlela yokubhadala.",
+        "manual_follow_up": "Isicelo sakho sigciniwe. Akuthathwanga mali njalo ukuthunyelwa akukaqinisekiswa. Xhumana lesitolo ngenombolo yakho ukuze livumelane ngemininingwane.",
         "next_title": "Okulandelayo",
         "next_reference": "Gcina inombolo yesicelo. Ayisilo risiti yokubhadala.",
-        "next_review": "Xhumana leqembu uqinisekise impahla, indawo yokudiliva lemali yokucina.",
+        "next_review": "Xhumanani leqembu ngesikhombi senu ukuqinisekisa impahla, ukutholakala kokudiliva ngeDHL lezindleko zokucina.",
         "next_delivery": "Ukuqinisekisa ukubhadala lokuthumela yizinyathelo ezitshiyeneyo ezivunyelwana leqembu.",
         "status_awaiting_payment": "Isicelo samukelwe — ukubhadala akukaqinisekiswa",
         "status_paid": "Ukubhadala kubhaliwe — ukuthumela kuqinisekiswa ngokwehlukana",
@@ -1473,7 +1473,7 @@
       "notes": {
         "guest_checkout": "Akudingeki i-akhawunti ukuthumela isicelo se-oda.",
         "logged_in_checkout": "Isicelo sakho sisebenzisa imininingwane ephezulu.",
-        "supported_methods": "Ukutholakala, imali yokudiliva yokucina lendlela yokubhadala kuvunyelwana ngemva kokuhlola.",
+        "supported_methods": "Akuthathwa mali lapha. Ukutholakala kwenkonzo yeDHL lezindleko zokudiliva kuqinisekiswa ngendawo yenu. Imali evezwayo yisilinganiso sokuhlela, ayisiyo ntengo evela kuDHL.",
         "supported_methods_dev": "Izindlela ezisekelwayo: assisted checkout ku-production, kanye le-dummy payment simulation ku-dev lo-test."
       },
       "errors": {
@@ -1486,20 +1486,20 @@
         "intro": "Salibonani, ngifuna ukucela impahla le kuDiaspora Unlocked.",
         "order_items": "Oda Izinto:",
         "customer_details": "Imininingwane Yekhasimende:",
-        "outro": "Sicela uqinisekise ukutholakala nemiyalelo yokukhokha.",
+        "outro": "Qinisekisani impahla, ukudiliva ngeDHL endaweni yami, izindleko zokucina lendlela yokubhadala.",
         "each": "ngamunye"
       },
       "notify": {
         "cta": "Ngazise",
         "saving": "Iyalondoloza...",
-        "saved": "Sizokwazisa uma lo mkhiqizo usutholakala.",
-        "saved_short": "Isaziso Silondoloziwe",
+        "saved": "Isicelo sesaziso sesitoko sigciniwe. Sizakuthumela i-imeyili nxa umkhiqizo usubuyile.",
+        "saved_short": "Isaziso sesitoko sigciniwe",
         "dialog_title": "Ngazisa nxa sekubuye kwaba khona esitokweni",
         "dialog_description": "akutholakali okwamanje. Faka i-email yakho bese sizakwazisa nxa isitokwe sesibuyile.",
         "enter_email_prompt": "Faka ikheli lakho le-imeyili ukuze waziswe uma lo mkhiqizo usubuyile esitokweni:",
         "invalid_email": "Ngicela ufake ikheli le-imeyili elilungile.",
         "login_required": "Sicela ungene ngemvume ukuze unike amandla izaziso zesitoko.",
-        "failed": "Ayikwazi ukulondoloza isicelo sesaziso njengamanje.",
+        "failed": "Asenelisanga ukugcina isicelo sakho sesaziso sesitoko. Zama futhi.",
         "toast_title": "Isicelo sokwaziswa sigciniwe",
         "toast_detail": "Sizakuthumela i-imeyili nxa {{name}} isitholakala futhi."
       },
@@ -1512,10 +1512,10 @@
     "loading": "Ilayisha imikhiqizo...",
     "landing": {
       "eyebrow": "Thenga okweZimbabwe",
-      "title": "Ukunambitheka okwaziyo.",
-      "highlight": "Okukhethwe ngenhliziyo.",
-      "description": "Hlola ukudla, imisebenzi yezandla lezigqoko zabasekeli ongakusebenzisa kumbe ukuphe omunye isipho. Khetha isigaba, thola okuthandayo ugcwalise ubhasikidi wakho.",
-      "principle": "Ubhasikidi wakho uba yisicelo se-oda. Iqembu liqinisekisa ukutholakala, ukuthunyelwa lokubhadala ungakathengi.",
+      "title": "Ukudla, imisebenzi yezandla lokunye.",
+      "highlight": "Ukuxhumana leZimbabwe.",
+      "description": "Thola ukunambitheka okwaziyo, izipho lezigqoko zabasekeli okwabantu abaseZimbabwe labangaphandle. Faka izinto kubhasikidi uthumele isicelo se-oda.",
+      "principle": "Ukudiliva kuhlelwa ngeDHL. Sitsheleni indawo yenu; iqembu liqinisekisa ukutholakala kwenkonzo, izindleko zokucina lendlela yokubhadala lingakabhadali.",
       "caption": "Ukudla · Imisebenzi yezandla · Izigqoko zabasekeli",
       "collections_cta": "Hlola izigaba"
     }
@@ -1596,7 +1596,7 @@
   "onesa": {
     "badge": "Onesa AI umsekeli",
     "brand": "Onesa",
-    "assistant_alt": "Onesa AI assistant",
+    "assistant_alt": "Umsizi we-AI u-Onesa",
     "title": "Xoxa le-Onesa AI",
     "send": "Thumela",
     "thinking": "Iyacabanga...",
@@ -1604,8 +1604,8 @@
     "welcome": "Ngingakusiza ukuhlola impahla yeZimbabwe, amacebo ohambo lolwazi lwamaphrojekthi. Kuyini ofuna ukukwazi?",
     "status_prefix": "Isimo se-Onesa",
     "status_offline": "Ayikho online",
-    "status_backend_unreachable": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
-    "error_unable_contact": "I-Onesa ayitholakali okwamanje. Sicela uphinde uzame maduze.",
+    "status_backend_unreachable": "UOnesa katholakali khathesi. Zama futhi ngemva kwesikhathi.",
+    "error_unable_contact": "UOnesa katholakali khathesi. Zama futhi.",
     "online_indicator_aria": "Onesa iku-online",
     "online_text": "Ku-inthanethi",
     "error_timeout": "Isicelo se-Onesa siphelelwe yisikhathi. Zama njalo.",
@@ -1613,7 +1613,8 @@
     "error_rate_limited": "U-Onesa umatasatasa njengamanje. Sicela uzame futhi emizuzwaneni embalwa.",
     "message_label": "Umlayezo ku-Onesa",
     "response_incomplete": "Impendulo le inqunyuliwe. Cela u-Onesa ukuthi aqhubeke.",
-    "error_incomplete": "U-Onesa wehlulekile ukuqedisa impendulo le. Sicela uzame njalo kumbe ucele impendulo emfutshane."
+    "error_incomplete": "U-Onesa wehlulekile ukuqedisa impendulo le. Sicela uzame njalo kumbe ucele impendulo emfutshane.",
+    "checking_text": "Kuyahlolwa…"
   },
   "logout": "Phuma",
   "legal": {
@@ -1654,7 +1655,7 @@
   "search": {
     "categories": {
       "tourism": "Ezokuvakasha",
-      "investment": "Investment",
+      "investment": "Ukutshalwa kwemali",
       "technology": "Ubuchwepheshe",
       "impact": "Umthelela",
       "ntir": "I-NTIR",
@@ -1663,7 +1664,7 @@
     "results": {
       "title_with_query": "Imiphumela yosesho ye-\"{{query}}\"",
       "title_default": "Sesha i-Diaspora Unlocked",
-      "summary_fallback": "Hlola amathuba ahlobene ku-Diaspora Unlocked.",
+      "summary_fallback": "Vula leli khasi ukuze uthole ulwazi lamanyathelo alandelayo.",
       "view_details": "Buka Imininingwane"
     },
     "no_results": {
@@ -1676,7 +1677,7 @@
     "failed": "Ukudinga akutholakali okwamanje. Sicela uzame futhi.",
     "retry": "Zama futhi",
     "prompt": "Dinga ezokuvakasha, ukutshala imali, ukuthenga, kumbe i-Onesa AI.",
-    "description": "Dinga amasevisi lolwazi."
+    "description": "Thola imikhiqizo, izindawo zokuvakatshela, imibono yebhizimusi lamathuluzi eOnesa."
   },
   "error_boundary": {
     "unexpected": "Kwenzeke iphutha elingalindelekile.",
@@ -1702,7 +1703,7 @@
       "highlight2": "Impumelelo",
       "highlight3": "Uhwebo",
       "highlight4": "Ukukhula Komphakathi",
-      "highlight5": "Investment",
+      "highlight5": "Ukutshalwa kwemali",
       "subtitle1": "Izibonelo zangempela zokuthi izizalwane zeZimbabwe ezihlala kwamanye amazwe zenza umehluko obonakalayo.",
       "subtitle2": "Ibonisa amabhizinisi ahamba phambili agqugquzelwa ubungcweti be-diaspora kanye nokutshalwa kwezimali.",
       "subtitle3": "Kuqhakanjiswa izinhlelo eziletha amasiko eZimbabwe emhlabeni jikelele.",
@@ -1751,7 +1752,7 @@
       },
       "macadamia_nut": {
         "author": "Umnikeli akaqinisekiswanga",
-        "category": "Investment",
+        "category": "Ukutshalwa kwemali",
         "role": "Imininingwane idinga ukuqinisekiswa",
         "story": "Akula mphumela oqinisekiswe ngokuzimela ngesibonelo lesi.",
         "testimonial": "Akula bufakazi bomsebenzisi obuqinisekisiweyo.",
@@ -1767,7 +1768,7 @@
       },
       "tech_startup": {
         "author": "Umnikeli akaqinisekiswanga",
-        "category": "Investment",
+        "category": "Ukutshalwa kwemali",
         "role": "Imininingwane idinga ukuqinisekiswa",
         "story": "Akula mphumela oqinisekiswe ngokuzimela ngesibonelo lesi.",
         "testimonial": "Akula bufakazi bomsebenzisi obuqinisekisiweyo.",
@@ -1775,7 +1776,7 @@
       },
       "tourism_lodge": {
         "author": "Umnikeli akaqinisekiswanga",
-        "category": "Investment",
+        "category": "Ukutshalwa kwemali",
         "role": "Imininingwane idinga ukuqinisekiswa",
         "story": "Akula mphumela oqinisekiswe ngokuzimela ngesibonelo lesi.",
         "testimonial": "Akula bufakazi bomsebenzisi obuqinisekisiweyo.",
@@ -1948,6 +1949,9 @@
     "unsubscribe": "Yekela ukubhalisa",
     "confirm": "Qinisekisa ukubhalisa",
     "return_home": "Buyela ekhaya",
-    "error": "Sehlulekile ukulungisa izifiso zakho zephephandaba. Sicela uzame futhi."
+    "error": "Sehlulekile ukulungisa izifiso zakho zephephandaba. Sicela uzame futhi.",
+    "confirmed": "I-imeyili yenu isiqinisekisiwe. Selibhalisele iDiaspora Unlocked.",
+    "unsubscribed": "Seliyekele ukubhalisela. Alisayikwamukela ezinye incwadi zezindaba.",
+    "link_expired": "Ilinki le ayisebenzi, isiphelelwe kumbe isisetshenzisiwe. Celani enye ngefomu lencwadi yezindaba elingezansi."
   }
 }

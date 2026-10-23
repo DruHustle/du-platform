@@ -1,3 +1,4 @@
+import { customerLanguage } from "../../../shared/customerLanguage";
 import crypto from "crypto";
 import {
   shopOrderRequestSchema,
@@ -158,6 +159,7 @@ const memoryShopOrders: ShopOrder[] = [];
 const memoryShopOrderItems: ShopOrderItem[] = [];
 const memoryShopRestockNotifications: Array<{
   id: number;
+  language: string;
   product_id: number | null;
   product_slug: string;
   product_name: string;
@@ -178,6 +180,7 @@ function getMemoryProductById(productId: number) {
 }
 
 export async function createShopRestockNotification(payload: {
+  language?: string;
   productId?: number | null;
   productSlug: string;
   productName: string;
@@ -207,6 +210,7 @@ export async function createShopRestockNotification(payload: {
 
     const record = {
       id: memoryShopRestockNotifications.length + 1,
+      language: customerLanguage(payload.language),
       product_id: productId,
       product_slug: productSlug,
       product_name: productName,
@@ -220,14 +224,20 @@ export async function createShopRestockNotification(payload: {
   try {
     const [result] = await db.execute<mysql.ResultSetHeader>(
       `
-      INSERT IGNORE INTO shop_restock_notifications (product_id, product_slug, product_name, email)
-      VALUES (?, ?, ?, ?)
+      INSERT IGNORE INTO shop_restock_notifications (product_id, product_slug, product_name, email, language)
+      VALUES (?, ?, ?, ?, ?)
       `,
-      [productId, productSlug, productName, email]
+      [
+        productId,
+        productSlug,
+        productName,
+        email,
+        customerLanguage(payload.language),
+      ]
     );
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       `
-      SELECT id, product_id, product_slug, product_name, email, created_at
+      SELECT id, product_id, product_slug, product_name, email, language, created_at
       FROM shop_restock_notifications
       WHERE product_slug = ? AND email = ?
       LIMIT 1
@@ -247,6 +257,7 @@ export async function createShopRestockNotification(payload: {
 
     const record = {
       id: memoryShopRestockNotifications.length + 1,
+      language: customerLanguage(payload.language),
       product_id: productId,
       product_slug: productSlug,
       product_name: productName,
@@ -268,7 +279,7 @@ export async function getShopRestockNotifications() {
   try {
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       `
-      SELECT id, product_id, product_slug, product_name, email, created_at
+      SELECT id, product_id, product_slug, product_name, email, language, created_at
       FROM shop_restock_notifications
       ORDER BY id DESC
       LIMIT 1000
@@ -298,7 +309,7 @@ export async function getShopRestockNotificationsBySlug(productSlug: string) {
   try {
     const [rows] = await db.query<mysql.RowDataPacket[]>(
       `
-      SELECT id, product_id, product_slug, product_name, email, created_at
+      SELECT id, product_id, product_slug, product_name, email, language, created_at
       FROM shop_restock_notifications
       WHERE product_slug = ?
       ORDER BY id DESC

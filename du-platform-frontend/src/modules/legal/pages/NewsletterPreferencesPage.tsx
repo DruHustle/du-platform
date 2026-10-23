@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { api, getApiErrorMessage } from "@/lib/api";
+import { api } from "@/lib/api";
 
 export default function NewsletterPreferencesPage() {
   const { t } = useTranslation();
@@ -33,12 +33,24 @@ export default function NewsletterPreferencesPage() {
     setBusy(true);
     setError("");
     try {
-      const { data } = await api.post(`/newsletter/${input.action}`, {
+      await api.post(`/newsletter/${input.action}`, {
         token: input.token,
       });
-      setDone(data.message);
-    } catch (err) {
-      setError(getApiErrorMessage(err, t("newsletter_preferences.error")));
+      setDone(
+        t(
+          input.action === "confirm"
+            ? "newsletter_preferences.confirmed"
+            : "newsletter_preferences.unsubscribed"
+        )
+      );
+    } catch (err: any) {
+      setError(
+        t(
+          err?.response?.status === 400
+            ? "newsletter_preferences.link_expired"
+            : "newsletter_preferences.error"
+        )
+      );
     } finally {
       setBusy(false);
     }

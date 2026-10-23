@@ -1,3 +1,4 @@
+import { customerLanguage } from "@shared/customerLanguage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import {
@@ -83,7 +84,7 @@ function normalizeProductCategory(raw: unknown): ProductCategory {
 }
 
 export default function ShopProducts() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [pathname, setLocation] = useLocation();
   const search = useSearch();
   const location = `${pathname}${search ? `?${search}` : ""}`;
@@ -341,7 +342,7 @@ export default function ShopProducts() {
       ),
       "",
       `${t("shop.products.totals.subtotal", { defaultValue: "Subtotal" })}: ${formatMoney(subtotalCents)}`,
-      `${t("shop.products.totals.shipping", { defaultValue: "Estimated delivery" })}: ${formatMoney(shippingCents)}`,
+      `${t("shop.products.totals.shipping", { defaultValue: "Delivery allowance (estimate)" })}: ${formatMoney(shippingCents)}`,
       `${t("shop.products.totals.total", { defaultValue: "Estimated total" })}: ${formatMoney(totalCents)}`,
       `${t("shop.products.delivery_speed.label", { defaultValue: "Delivery preference" })}: ${
         deliverySpeed === "express"
@@ -363,7 +364,8 @@ export default function ShopProducts() {
       `${t("shop.products.fields.address", { defaultValue: "Address" })}: ${shippingAddress || "-"}`,
       "",
       t("shop.products.whatsapp.outro", {
-        defaultValue: "Please confirm availability and payment instructions.",
+        defaultValue:
+          "Please confirm stock, DHL delivery to my destination, final costs and payment instructions.",
       }),
     ];
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
@@ -418,6 +420,7 @@ export default function ShopProducts() {
     setNotifyMessage("");
     try {
       const { data } = await api.post("/shop/restock-notifications", {
+        language: customerLanguage(i18n.resolvedLanguage ?? i18n.language),
         productId: notifyDialogProduct.id,
         productSlug: notifyDialogProduct.slug,
         productName: notifyDialogProduct.name,
@@ -426,7 +429,8 @@ export default function ShopProducts() {
       const message = String(
         data?.message ??
           t("shop.products.notify.saved", {
-            defaultValue: "We'll notify you when this product is available.",
+            defaultValue:
+              "Stock alert saved. We will email you when this product returns.",
           })
       );
       setNotifyMessage(message);
@@ -444,7 +448,8 @@ export default function ShopProducts() {
         String(
           error?.response?.data?.message ??
             t("shop.products.notify.failed", {
-              defaultValue: "Unable to save notify request right now.",
+              defaultValue:
+                "We could not save your stock alert. Please try again.",
             })
         )
       );
@@ -480,6 +485,7 @@ export default function ShopProducts() {
     setPlacingOrder(true);
     try {
       const parsed = shopOrderRequestSchema.safeParse({
+        language: customerLanguage(i18n.resolvedLanguage ?? i18n.language),
         customerName: effectiveCustomerName,
         customerEmail: effectiveCustomerEmail,
         shippingCountry,
@@ -574,7 +580,7 @@ export default function ShopProducts() {
                   <p className="text-sm text-white/75 mt-3 max-w-2xl">
                     {t("shop.products.subtitle", {
                       defaultValue:
-                        "Add products to your cart and send an order request. Availability, delivery and payment are confirmed with you before the order goes ahead.",
+                        "Build your basket and send an order request. Before you pay, the team confirms stock, DHL delivery to your destination and final costs.",
                     })}
                   </p>
                 </div>
@@ -913,7 +919,7 @@ export default function ShopProducts() {
                           <div className="flex justify-between">
                             <span>
                               {t("shop.products.totals.shipping", {
-                                defaultValue: "Estimated delivery",
+                                defaultValue: "Delivery allowance (estimate)",
                               })}
                             </span>
                             <span>{formatMoney(shippingCents)}</span>
@@ -1317,7 +1323,7 @@ export default function ShopProducts() {
                             <p className="mt-2.5 text-[11px] text-white/80">
                               {t("shop.products.order.manual_follow_up", {
                                 defaultValue:
-                                  "Request received. Payment has not been taken and delivery is not yet confirmed. Contact us with your reference to agree availability, delivery costs and payment instructions.",
+                                  "Your request is saved. No payment has been taken and delivery is not confirmed. Contact the shop with your reference to agree the details.",
                               })}
                             </p>
                           )}
@@ -1398,7 +1404,7 @@ export default function ShopProducts() {
                               })
                             : t("shop.products.notes.supported_methods", {
                                 defaultValue:
-                                  "Availability, final delivery costs and payment instructions are agreed after review.",
+                                  "No payment is taken here. DHL service availability and the final delivery cost are confirmed for your destination. The allowance shown is a planning estimate, not a DHL quote.",
                               })}
                         </span>
                       </div>

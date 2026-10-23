@@ -208,7 +208,7 @@ export default function NTIRSearchPage() {
             <p className="text-sm text-white/70 mt-2">
               {t("investment.ntir.subtitle", {
                 defaultValue:
-                  "Search business records maintained by Diaspora Unlocked, with bundled entries available when search cannot be reached. NTIR is a platform directory, not an official national register or independent verification service.",
+                  "Search the business directory maintained by Diaspora Unlocked by name, sector or location. Entries are research starting points, not official registration or independent verification.",
               })}
             </p>
           </div>
@@ -223,12 +223,12 @@ export default function NTIRSearchPage() {
             <Input
               id="ntir-search"
               aria-label={t("investment.ntir.placeholder", {
-                defaultValue: "Search by entity, sector, or location",
+                defaultValue: "Name, sector or place",
               })}
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder={t("investment.ntir.placeholder", {
-                defaultValue: "Search by entity, sector, or location",
+                defaultValue: "Name, sector or place",
               })}
               className="bg-white/[0.05] border-white/20 text-white"
             />
@@ -274,7 +274,8 @@ export default function NTIRSearchPage() {
             {!loading && results.length === 0 ? (
               <p className="text-white/70">
                 {t("investment.ntir.empty", {
-                  defaultValue: "No entities found.",
+                  defaultValue:
+                    "No directory entries match your search. Try a business name, sector or location.",
                 })}
               </p>
             ) : null}

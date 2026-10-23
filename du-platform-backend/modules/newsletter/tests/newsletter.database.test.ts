@@ -337,4 +337,41 @@ describe.skipIf(!url)("newsletter MySQL integration", () => {
       )[0].status
     ).toBe("skipped");
   });
+  it("persists language and queues private localized confirmations and campaign footers", async () => {
+    const languages = ["en", "de", "sn", "nd"];
+    for (const language of languages) {
+      const email = `${language}@example.com`;
+      await service.subscribe(email, language);
+      const [row] = await query(
+        "SELECT language, status FROM newsletter_subscriptions WHERE email = ?",
+        [email]
+      );
+      expect(row).toMatchObject({ language, status: "pending" });
+      const [delivery] = await query(
+        "SELECT payload FROM newsletter_deliveries WHERE recipient = ?",
+        [email]
+      );
+      const message = JSON.parse(delivery.payload);
+      expect(message.html).toContain(`lang="${language}"`);
+      if (language !== "en")
+        expect(message.text).not.toContain("Please confirm that you want");
+      await service.confirm(await token(email));
+    }
+    const result = await service.queueCampaign(await campaign(), 1);
+    expect(result.recipients).toBe(4);
+    const deliveries = await query(
+      "SELECT recipient, payload FROM newsletter_deliveries WHERE kind = 'campaign'"
+    );
+    expect(deliveries).toHaveLength(4);
+    for (const delivery of deliveries) {
+      const language = delivery.recipient.split("@")[0];
+      const message = JSON.parse(delivery.payload);
+      expect(message.to).toBe(delivery.recipient);
+      expect(message.html).toContain(`lang="${language}"`);
+      // The editor's approved content remains verbatim; only the service footer is localized.
+      expect(message.text).toContain("Real opportunities.");
+      if (language !== "en")
+        expect(message.text).not.toContain("You received this email because");
+    }
+  });
 });

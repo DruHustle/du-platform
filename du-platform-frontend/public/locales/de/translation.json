@@ -13,7 +13,7 @@
   "my_investments": "Meine Investitionen",
   "settings": "Einstellungen",
   "search_placeholder": "Suche nach Exporten, Investitionen, Tourismus...",
-  "search_title": "Search",
+  "search_title": "Suche",
   "search_button": "Suchen",
   "explore": "Entdecken",
   "all_rights_reserved": "Alle Rechte vorbehalten.",
@@ -32,17 +32,17 @@
       "values_label": "Unsere Werte",
       "values_content": "Klare Informationen, nützliche Orientierung und ehrliche Angaben zum aktuellen Angebot.",
       "who_label": "Wer wir sind",
-      "who_content": "Diaspora Unlocked ist eine digitale Plattform für Menschen im Ausland und alle, die Simbabwe entdecken möchten.",
+      "who_content": "Diaspora Unlocked verbindet Menschen in Simbabwe und im Ausland mit Produkten, Reiseinformationen, Geschäftsideen und praktischer KI-Unterstützung.",
       "what_label": "Was wir tun",
-      "what_content": "Produkte ansehen, Reisen planen, Projektprofile recherchieren und Onesa fragen. Bestellanfragen werden geprüft, bevor Zahlung und Lieferung vereinbart werden."
+      "what_content": "Stelle einen Warenkorb zusammen und frage eine Bestellung an, recherchiere eine Geschäftsidee, entwirf einen Reiseplan oder frage Onesa. Wähle deinen nächsten Schritt in den einzelnen Bereichen."
     },
     "newsletter": {
-      "confirmation_sent": "Falls diese Adresse bestätigt werden muss, senden wir einen Link per E-Mail. Bereits bestätigt? Dann stehen Sie auf der Liste.",
+      "confirmation_sent": "Prüfe deine E-Mails auf einen Bestätigungslink. Hast du bereits bestätigt, stehst du auf der Liste.",
       "delivery_pending": "Anmeldung gespeichert. Der E-Mail-Versand ist vorübergehend nicht verfügbar. Ihre Bestätigung wird gesendet, sobald er wieder funktioniert.",
-      "consent": "Mit der Anmeldung stimmen Sie zu, Neuigkeiten und Angebote von Diaspora Unlocked zu erhalten. Bestätigen Sie Ihre E-Mail-Adresse. Eine Abmeldung ist jederzeit möglich.",
+      "consent": "Bestätige deine E-Mail-Adresse für Neuigkeiten und Möglichkeiten von Diaspora Unlocked. Du kannst dich jederzeit abmelden. Dadurch wird kein Plattformkonto angelegt.",
       "privacy": "Datenschutzerklärung",
       "title": "Newsletter",
-      "description": "Neuigkeiten per E-Mail.",
+      "description": "Simbabwische Produkte, Reiseideen und Plattformneuigkeiten per E-Mail.",
       "email_placeholder": "E-Mail-Adresse",
       "subscribe_aria": "Newsletter abonnieren",
       "already_subscribed": "Diese E-Mail ist bereits für den Newsletter abonniert.",
@@ -78,8 +78,8 @@
     "no_account": "Haben Sie noch kein Konto?",
     "register_now": "Jetzt registrieren",
     "close": "Schließen",
-    "cancel_login": "Cancel login",
-    "cancel_registration": "Cancel registration",
+    "cancel_login": "Anmeldung abbrechen",
+    "cancel_registration": "Registrierung abbrechen",
     "forgot": {
       "title": "Passwort zurücksetzen",
       "subtitle": "Geben Sie die E-Mail-Adresse Ihres Kontos ein und wir senden Ihnen Anweisungen zum Zurücksetzen.",
@@ -146,7 +146,7 @@
     "technology_industries_desc": "Technologieideen und Fragen nach Branche",
     "payments": "Zahlungen",
     "discover": "Entdecken",
-    "admin": "Admin",
+    "admin": "Verwaltung",
     "close_menu": "Menü schließen",
     "language_hint": "Verwenden Sie das Globussymbol, um die Sprache zu ändern.",
     "open_menu": "Menü öffnen",
@@ -186,9 +186,9 @@
       },
       "technology": {
         "title": "Technologie",
-        "description": "Lernen Sie Onesa kennen, die KI-Plattform hinter der Assistenz auf Diaspora Unlocked.",
-        "detail": "Stellen Sie Fragen zu Simbabwe und erhalten Sie Hilfe bei Produkten, Geschäftsideen und Reiseplänen.",
-        "stats": "Onesa KI",
+        "description": "Frage Onesa nach simbabwischen Produkten, Orten und Geschäftsideen.",
+        "detail": "Vergleiche Möglichkeiten, erstelle eine Checkliste oder entwirf einen Reiseplan. Wichtige Details bestätigst du bei den Anbietern.",
+        "stats": "KI-Werkzeuge entdecken",
         "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft"
       },
       "investment": {
@@ -201,14 +201,14 @@
       "tourism": {
         "title": "Tourismus",
         "description": "Entdecken Sie Wasserfälle, Wildtiere, Kulturerbestätten und Reiseziele in Simbabwe.",
-        "detail": "Vergleichen Sie Reiseziele, sehen Sie virtuelle Vorschauen und erstellen Sie mit Onesa einen unverbindlichen Reiseplan.",
+        "detail": "Vergleiche Reiseziele, probiere den AR-Guide und entwirf mit Onesa eine Reiseroute.",
         "stats": "Reiseziel finden",
         "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe"
       }
     },
     "discovery": {
       "title": "Entdecke Simbabwe auf deine Art.",
-      "description": "Finde etwas für dein Zuhause, eine Geschäftsidee zum Recherchieren oder ein Reiseziel. Beginne dort, wo dein Interesse liegt."
+      "description": "Entdecke simbabwische Produkte, recherchiere Geschäftsideen, plane einen Besuch oder frage Onesa. Finde deinen Einstieg, wo auch immer du lebst."
     },
     "hero_pause": "Bilder pausieren",
     "hero_resume": "Bilder fortsetzen"
@@ -218,17 +218,17 @@
     "restore_chat_bubble": "Chat-Blase anzeigen",
     "landing": {
       "eyebrow": "Technologie & praktische Werkzeuge",
-      "title": "Technologie, die hilft.",
+      "title": "KI-Hilfe für alltägliche Pläne.",
       "highlight": "Mit Onesa.",
-      "description": "Stelle klarere Fragen, entdecke Simbabwe und plane deinen nächsten Schritt, ob vor Ort oder im Ausland. Beginne mit den Werkzeugen auf Diaspora Unlocked.",
-      "principle": "Fragen. Entdecken. Planen.",
+      "description": "Frage nach simbabwischen Produkten, Geschäftsideen oder Reisen. Vergleiche mit Onesa Möglichkeiten, ordne deine Fragen und entwirf einen Plan.",
+      "principle": "Beginne mit einer Frage. Finde einen klareren nächsten Schritt.",
       "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft",
       "caption": "Onesa für deine Fragen zu Simbabwe.",
       "tools_cta": "Werkzeuge entdecken"
     },
     "tools": {
       "title": "Was du mit Onesa tun kannst",
-      "subtitle": "Wähle das passende Werkzeug für deine Aufgabe. Jedes öffnet einen eigenen Bereich.",
+      "subtitle": "Stelle eine Frage, entwirf einen Reiseplan oder erkunde den AR-Guide und die VR-Demo.",
       "chat": {
         "title": "Eine Frage stellen",
         "description": "Erhalte verständliche Erklärungen zu Produkten, Orten und Geschäftsideen. Grenze mit weiteren Fragen ein, was du brauchst.",
@@ -257,7 +257,7 @@
     "about": {
       "title": "Wie Onesa und Diaspora Unlocked zusammengehören",
       "platform": "Onesa ist eine modulare, allgemein einsetzbare KI-Plattform für europäische und internationale Anwendungen.",
-      "application": "Diaspora Unlocked ist eine Anwendung auf Basis von Onesa. Sie ergänzt die Gespräche und Planungshilfen dieser Website um Inhalte und Abläufe zu Simbabwe. Sprach- und Kontexthilfe gehören zum Simbabwe-Fokus dieser Anwendung. Die Onesa-Plattform ist nicht auf ein Land oder eine Branche beschränkt."
+      "application": "Diaspora Unlocked nutzt Onesa für Fragen und Planung mit Simbabwe-Bezug. Simbabwische Inhalte und Sprachunterstützung gehören zu dieser Anwendung; die Onesa-Plattform bedient viele Länder und Branchen."
     },
     "steps": {
       "title": "Von der Frage zum nächsten Schritt",
@@ -476,7 +476,7 @@
       "subtitle": "Fragen Sie nach Zielen, lokalen Gepflogenheiten und Reiseideen. Onesa hilft bei Fragen und Reiseentwürfen; Anbieter bestätigen Preise und Buchungen.",
       "companion_subtitle": "Besprechen Sie Interessen, vergleichen Sie Orte und planen Sie eine Route. Klären Sie Öffnungszeiten, Verkehr und Verfügbarkeit vor der Reise direkt.",
       "virtual_preview": {
-        "title": "Interaktive Vorschauen",
+        "title": "360°-Demo ausprobieren",
         "desc": "Probiere die Sample-City-Demo mit Panoramaszenen und optionaler VR-Brille aus. Touren zu Reisezielen in Simbabwe sind noch nicht verfügbar."
       },
       "guide": {
@@ -488,8 +488,8 @@
         "desc": "Erkunden Sie Reiseziele mit Kameravorschau, Ortshinweisen von Onesa und optionaler Erzählung."
       },
       "plan": {
-        "title": "Individuelle Reisepläne",
-        "desc": "Erstellen Sie einen Reiseentwurf nach Interessen, Reisedaten und Vorlieben."
+        "title": "Reiseplan entwerfen",
+        "desc": "Erhalte aus deinen Daten, Interessen und Vorlieben eine Reiseroute mit ungefähren Budgets. Prüfe die Details und buche direkt bei den Anbietern."
       },
       "plan_trip_cta": "Reise mit Onesa planen",
       "cta": {
@@ -500,7 +500,7 @@
       "trip_planner": {
         "badge": "Onesa AI Reise",
         "title": "Ihre Reise nach Simbabwe planen",
-        "subtitle": "Erstellen Sie einen Reiseentwurf mit Richtbudgets für Flüge, Unterkünfte, Verkehr und Erlebnisse nach Ihren Reisedaten und Vorlieben.",
+        "subtitle": "Entwirf eine Reiseroute mit ungefähren Budgets für Flüge, Unterkünfte, Transport und Aktivitäten. Vergleiche Ideen und bereite Fragen an Anbieter vor.",
         "origin": "Abflugstadt",
         "season": "Saison",
         "budget": "Budgetprofil",
@@ -517,7 +517,7 @@
         "generating": "Wird erstellt...",
         "generate": "Reiseplan erstellen",
         "ai_optimized": "KI-Reiseentwurf",
-        "fallback_plan": "Beispielplan mit berechneten Schätzwerten",
+        "fallback_plan": "Beispielplan · pauschale Budgetansätze",
         "estimated_total": "Richtbudget (USD)",
         "flights": "Flugschätzung",
         "hotels": "Unterkunftsschätzung",
@@ -549,7 +549,7 @@
           "history": "Geschichte",
           "nature": "Natur"
         },
-        "booking_focus": "Der Planer prüft keine Live-Preise oder Verfügbarkeit und nimmt keine Buchungen vor. Klären Sie Kosten und Leistungen direkt mit Anbietern.",
+        "booking_focus": "Budgets sind Schätzungen, keine Angebote. Ist Onesa nicht verfügbar, erscheint ein Beispielplan mit pauschalen Ansätzen. Der Planer prüft keine aktuelle Verfügbarkeit und nimmt keine Buchungen vor.",
         "download_pdf": "PDF herunterladen",
         "pdf_title": "Onesa Reiseplan",
         "pdf_filename": "onesa-reiseplan",
@@ -620,15 +620,15 @@
     },
     "vr": {
       "seo": {
-        "title": "Virtuelles Tourismuserlebnis",
-        "description": "Testen Sie eine Demo-Stadt mit Panoramabildern, Sehenswürdigkeiten und optionaler Sprachausgabe. Virtuelle Touren zu Zielen in Simbabwe sind noch nicht verfügbar."
+        "title": "360°-VR-Demo",
+        "description": "Erkunde die Sample-City-Panorama-Demo mit Szenensteuerung und optionalem Vorlesen. Dies ist eine Demonstration, keine Tour durch ein simbabwisches Reiseziel."
       }
     },
     "landing": {
       "eyebrow": "Simbabwe entdecken",
       "title": "Entdecke mehr von",
       "highlight": "Simbabwe.",
-      "description": "Für einen Tag, ein Wochenende oder eine Reise nach Hause. Entdecke Wasserfälle, Tierwelt und Kulturerbe und plane nach deiner Zeit und deinen Interessen.",
+      "description": "Finde einen Tagesausflug, ein Wochenende fern vom Alltag oder Orte für deine nächste Heimreise. Vergleiche Ziele und entwirf mit Onesa eine Reiseroute.",
       "principle": "Ideen für deine Planung. Bestätige Zugang, Preise und Buchungen direkt bei den Anbietern.",
       "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe",
       "caption": "Victoriafälle · Simbabwe",
@@ -846,16 +846,16 @@
       }
     },
     "ntir": {
-      "back": "Back to Investment",
-      "title": "NTIR-Unternehmensverzeichnis",
-      "subtitle": "Durchsuchen Sie von Diaspora Unlocked gepflegte Unternehmensdaten; bei Ausfall stehen hinterlegte Einträge bereit. NTIR ist kein amtliches Register und kein unabhängiger Prüfdienst.",
-      "placeholder": "Search by entity, sector, or location",
-      "search": "Search",
-      "empty": "No entities found.",
+      "back": "Zurück zu Investitionen",
+      "title": "NTIR-Firmenverzeichnis",
+      "subtitle": "Durchsuche das von Diaspora Unlocked gepflegte Unternehmensverzeichnis nach Name, Branche oder Ort. Einträge sind Rechercheansätze, keine amtliche Registrierung oder unabhängige Prüfung.",
+      "placeholder": "Name, Branche, Ort",
+      "search": "Suchen",
+      "empty": "Keine passenden Verzeichniseinträge. Versuche einen Unternehmensnamen, eine Branche oder einen Ort.",
       "service_unavailable": "Suche nicht verfügbar. Hinterlegte Verzeichniseinträge werden angezeigt."
     },
     "sectors_title": "Projektprofile erkunden",
-    "sectors_subtitle": "Erkunden Sie Branchenideen und aufgeführte Projektträger. Verfügbarkeit, Finanzkonditionen und Genehmigungen müssen unabhängig bestätigt werden.",
+    "sectors_subtitle": "Lies Projektbeschreibungen und Angaben zu genannten Projektträgern nach Branche. Die Profile dienen der Recherche; DU nimmt keine Investitionen an und bestätigt keine Teilnahmebedingungen.",
     "cta_title": "Bereit zum Investieren?",
     "cta_subtitle": "Unser Investment-Team hilft Ihnen, die richtigen Gelegenheiten zu finden.",
     "cta_button": "Mit einem Experten sprechen",
@@ -911,7 +911,7 @@
     "project_details": {
       "back": "Zurück zur Investition",
       "not_found_title": "Projekt nicht gefunden",
-      "not_found_desc": "Die ausgewählte Projekt-ID existiert nicht.",
+      "not_found_desc": "Dieses Projektprofil ist nicht verfügbar. Kehre zum Projektkatalog zurück, um andere Einträge zu erkunden.",
       "badge": "Projektdetails",
       "responsible_company": "Aufgeführter Projektträger",
       "highlights": "Fragen zur Recherche",
@@ -1151,11 +1151,11 @@
     "view_all": "Alle ansehen",
     "back_to_top": "Nach oben",
     "loading": "Lädt...",
-    "loading_label": "Loading",
+    "loading_label": "Wird geladen",
     "error": "Ein Fehler ist aufgetreten",
     "success": "Erfolg!",
     "verified": "Verifiziert",
-    "pending": "Pending",
+    "pending": "Ausstehend",
     "target": "Ziel",
     "raised": "Gesammelt",
     "investors": "Investoren",
@@ -1174,110 +1174,110 @@
     "image_credits": "Bildnachweise"
   },
   "pagination": {
-    "label": "Pagination",
-    "previous": "Previous",
-    "next": "Next",
-    "go_previous": "Go to previous page",
-    "go_next": "Go to next page",
-    "more_pages": "More pages"
+    "label": "Seitennavigation",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "go_previous": "Zur vorherigen Seite",
+    "go_next": "Zur nächsten Seite",
+    "more_pages": "Weitere Seiten"
   },
   "carousel": {
-    "previous_slide": "Previous slide",
-    "next_slide": "Next slide",
-    "go_to_slide": "Go to slide {{index}}"
+    "previous_slide": "Vorherige Folie",
+    "next_slide": "Nächste Folie",
+    "go_to_slide": "Zu Folie {{index}}"
   },
   "breadcrumb": {
-    "label": "Breadcrumb",
-    "more": "More"
+    "label": "Navigationspfad",
+    "more": "Mehr"
   },
   "globe": {
-    "preview_alt": "Globe preview",
-    "preview_mode": "Globe preview mode (WebGL unavailable)",
-    "music_on": "Music: On",
-    "music_off": "Music: Off"
+    "preview_alt": "Globus-Vorschau",
+    "preview_mode": "Globus-Vorschau (WebGL nicht verfügbar)",
+    "music_on": "Musik: An",
+    "music_off": "Musik: Aus"
   },
   "admin": {
-    "title": "Admin Dashboard",
-    "subtitle": "Manage notifications, visibility (display / don't display), and pricing.",
+    "title": "Verwaltung",
+    "subtitle": "Benachrichtigungen, Sichtbarkeit und Preise verwalten.",
     "tabs": {
-      "notify": "Notify Me",
+      "notify": "Benachrichtigen",
       "ntir": "NTIR",
-      "stories": "Impact",
-      "shop": "Shop Products"
+      "stories": "Wirkung",
+      "shop": "Shop-Produkte"
     },
     "badges": {
-      "new": "new"
+      "new": "neu"
     },
     "notify": {
-      "new_request_single": "1 new notify request in Admin > Notify Me.",
-      "new_request_multi": "{{count}} new notify requests in Admin > Notify Me.",
-      "new_received_single": "1 new notify request received.",
-      "new_received_multi": "{{count}} new notify requests received.",
-      "settings_title": "Notification Email Settings",
-      "settings_description": "Configure where `Notify Me` alerts are sent and the sender email used for outgoing notifications.",
-      "alert_emails_placeholder": "Alert emails (comma-separated)",
-      "from_email_placeholder": "From email",
-      "save_settings": "Save Email Settings",
-      "settings_saved": "Notification email settings saved.",
-      "feature_restock": "Shop restock: {{slug}}",
-      "feature_restock_fallback": "Shop restock request",
-      "empty": "No notify requests yet."
+      "new_request_single": "1 neue Benachrichtigungsanfrage unter Verwaltung > Benachrichtigungen.",
+      "new_request_multi": "{{count}} neue Benachrichtigungsanfragen unter Verwaltung > Benachrichtigungen.",
+      "new_received_single": "1 neue Benachrichtigungsanfrage erhalten.",
+      "new_received_multi": "{{count}} neue Benachrichtigungsanfragen erhalten.",
+      "settings_title": "E-Mail-Einstellungen für Benachrichtigungen",
+      "settings_description": "Empfänger und Absenderadresse für Benachrichtigungen festlegen.",
+      "alert_emails_placeholder": "Empfängeradressen (durch Kommas getrennt)",
+      "from_email_placeholder": "Absenderadresse",
+      "save_settings": "E-Mail-Einstellungen speichern",
+      "settings_saved": "E-Mail-Einstellungen gespeichert.",
+      "feature_restock": "Wieder auf Lager: {{slug}}",
+      "feature_restock_fallback": "Anfrage zur Warenverfügbarkeit",
+      "empty": "Noch keine Benachrichtigungsanfragen."
     },
     "errors": {
-      "load": "Unable to load admin data.",
-      "save_shop": "Unable to save shop product.",
-      "delete_shop": "Unable to delete shop product.",
-      "create_ntir": "Unable to create NTIR entity.",
-      "update_ntir": "Unable to update NTIR entity.",
-      "create_story": "Unable to create impact story.",
-      "update_story": "Unable to update story visibility.",
-      "save_notification_settings": "Unable to save notification settings."
+      "load": "Verwaltungsdaten konnten nicht geladen werden.",
+      "save_shop": "Produkt konnte nicht gespeichert werden.",
+      "delete_shop": "Produkt konnte nicht gelöscht werden.",
+      "create_ntir": "NTIR-Eintrag konnte nicht erstellt werden.",
+      "update_ntir": "NTIR-Eintrag konnte nicht aktualisiert werden.",
+      "create_story": "Wirkungsgeschichte konnte nicht erstellt werden.",
+      "update_story": "Sichtbarkeit konnte nicht geändert werden.",
+      "save_notification_settings": "Benachrichtigungseinstellungen konnten nicht gespeichert werden."
     },
     "ntir": {
-      "entity_placeholder": "Entity name",
-      "sector_placeholder": "Sector",
-      "location_placeholder": "Location",
-      "add_row": "Add NTIR Row"
+      "entity_placeholder": "Name des Unternehmens",
+      "sector_placeholder": "Branche",
+      "location_placeholder": "Standort",
+      "add_row": "NTIR-Eintrag hinzufügen"
     },
     "stories": {
-      "title_placeholder": "Title",
-      "category_placeholder": "Category",
-      "image_placeholder": "Image path or URL",
-      "author_placeholder": "Author",
-      "role_placeholder": "Role",
-      "revenue_placeholder": "Revenue (e.g. $2.5M)",
-      "jobs_placeholder": "Jobs (e.g. 150+)",
-      "markets_placeholder": "Markets (e.g. EU, UK)",
-      "story_placeholder": "Story content",
-      "testimonial_placeholder": "Testimonial",
-      "display_label": "Display on impact page",
-      "add_story": "Add Impact Story",
-      "badge_display": "Display",
-      "badge_hide": "Don't display",
-      "set_display": "Set Display",
-      "set_hide": "Set Don't display",
-      "toast_display": "Story set to Display.",
-      "toast_hide": "Story set to Don't display."
+      "title_placeholder": "Titel",
+      "category_placeholder": "Kategorie",
+      "image_placeholder": "Bildpfad oder URL",
+      "author_placeholder": "Autor",
+      "role_placeholder": "Rolle",
+      "revenue_placeholder": "Umsatz (z. B. 2,5 Mio. $)",
+      "jobs_placeholder": "Arbeitsplätze (z. B. 150+)",
+      "markets_placeholder": "Märkte (z. B. EU, UK)",
+      "story_placeholder": "Inhalt der Geschichte",
+      "testimonial_placeholder": "Erfahrungsbericht",
+      "display_label": "Auf der Wirkungsseite anzeigen",
+      "add_story": "Wirkungsgeschichte hinzufügen",
+      "badge_display": "Anzeigen",
+      "badge_hide": "Ausblenden",
+      "set_display": "Einblenden",
+      "set_hide": "Ausblenden festlegen",
+      "toast_display": "Geschichte wird angezeigt.",
+      "toast_hide": "Geschichte wird ausgeblendet."
     },
     "shop": {
-      "slug_placeholder": "Slug",
-      "name_placeholder": "Product name",
-      "image_placeholder": "Image URL or path",
-      "category_placeholder": "Category: sports/crafts/food",
-      "price_placeholder": "Price cents (e.g. 4999)",
-      "stock_placeholder": "Stock qty",
-      "currency_placeholder": "Currency",
-      "description_placeholder": "Description",
-      "display_label": "Display product",
-      "update_product": "Update Product",
-      "add_product": "Add Product",
-      "cancel_edit": "Cancel Edit",
-      "stock_label": "Stock",
-      "badge_display": "Display",
-      "badge_hide": "Don't display",
-      "edit": "Edit",
-      "delete": "Delete",
-      "empty": "No shop products yet."
+      "slug_placeholder": "URL-Kennung",
+      "name_placeholder": "Produktname",
+      "image_placeholder": "Bild-URL oder Pfad",
+      "category_placeholder": "Kategorie: sports/crafts/food",
+      "price_placeholder": "Preis in Cent (z. B. 4999)",
+      "stock_placeholder": "Lagerbestand",
+      "currency_placeholder": "Währung",
+      "description_placeholder": "Beschreibung",
+      "display_label": "Produkt anzeigen",
+      "update_product": "Produkt aktualisieren",
+      "add_product": "Produkt hinzufügen",
+      "cancel_edit": "Bearbeitung abbrechen",
+      "stock_label": "Bestand",
+      "badge_display": "Anzeigen",
+      "badge_hide": "Ausblenden",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "empty": "Noch keine Produkte vorhanden."
     }
   },
   "shop": {
@@ -1306,7 +1306,7 @@
       "cereals": {
         "title": "Müsli und Frühstück",
         "description": "Cerevita-Mischungen und Grundnahrungsmittel für das tägliche Frühstück.",
-        "detail": "Bewährte Frühstücks- und Vorratsgrundnahrungsmittel, ausgewählt für wiederholte Haushaltsbestellungen, Familienpakete und vertraute Routinen von zu Hause."
+        "detail": "Frühstückszerealien und Vorräte für den Alltag und zum Teilen."
       },
       "sauces_spices": {
         "title": "Saucen und Gewürze",
@@ -1316,7 +1316,7 @@
       "snacks": {
         "title": "Snacks und Leckereien",
         "description": "Maputi, Kekse und nostalgische Häppchen zum Mitnehmen.",
-        "detail": "Wohlfühlsnacks und schnelle Leckereien zum Teilen, Care-Pakete und nostalgische Bestellungen, die sich gut in den Haushalten verbreiten."
+        "detail": "Kekse, Maputi und herzhafte Snacks zum Teilen oder für einen Geschenkkorb. Der Shop bestätigt, ob sie geliefert werden können."
       },
       "oils_spreads": {
         "title": "Speiseöle und Aufstriche",
@@ -1330,8 +1330,8 @@
       },
       "crafts": {
         "title": "Kunst und Handwerk",
-        "description": "Authentische Kunsthandwerksstücke, die im simbabwischen Erbe verwurzelt sind.",
-        "detail": "Handgefertigte historische Stücke mit handwerklicher Geschichte, Geschenkattraktivität und Ausstellungswert für Zuhause, Büros und Diaspora-Sammlungen."
+        "description": "Steinskulpturen, Körbe und Perlenaccessoires.",
+        "detail": "Entdecke dekorative Stücke und Geschenke für dein Zuhause, Freunde oder Familie."
       },
       "apparel": {
         "title": "Sportbekleidung",
@@ -1340,8 +1340,8 @@
       }
     },
     "products": {
-      "title": "Shop-Produkte",
-      "subtitle": "Legen Sie Produkte in den Warenkorb und senden Sie eine Bestellanfrage. Verfügbarkeit, Lieferung und Zahlung werden vor der Bestellung mit Ihnen geklärt.",
+      "title": "Produktkatalog",
+      "subtitle": "Stellen Sie Ihren Warenkorb zusammen und senden Sie eine Bestellanfrage. Vor der Zahlung bestätigt das Team Bestand, DHL-Lieferung an Ihr Ziel und Endkosten.",
       "back_to_shop": "Zurück zum Shop",
       "default_country": "Deutschland",
       "filters": {
@@ -1349,8 +1349,8 @@
         "sports": "Sport",
         "crafts": "Kunst und Handwerk",
         "food": "Essen & Nostalgie",
-        "all_segments": "Alle Segmente",
-        "select_segment": "Segment auswählen"
+        "all_segments": "Alle Produktarten",
+        "select_segment": "Produktart wählen"
       },
       "loading": "Produkte werden geladen...",
       "empty_state": "In dieser Kategorie sind noch keine Produkte verfügbar.",
@@ -1359,16 +1359,16 @@
         "chevrons-world-cup-jersey": "Nationales Cricket-Fantrikot.",
         "warriors-football-kit": "Ausrüstung für simbabwische Fußballfans.",
         "shona-stone-sculpture": "Steinskulptur.",
-        "binga-basket": "Handgeflochtener Korb, hergestellt von lokalen Kunsthandwerkern.",
+        "binga-basket": "Handgeflochtener Korb.",
         "beaded-jewelry-set": "Traditionelles Set aus Halskette und Armband aus Perlen.",
         "mazoe-variety-pack": "Klassische simbabwische Auswahl an herzlichen Getränken.",
-        "cerevita-corn-banana-500g": "Nahrhafter Instant-Müsli-Favorit.",
+        "cerevita-corn-banana-500g": "Frühstückszerealien mit Mais und Banane, 500 g.",
         "mazoe-raspberry-2l-case-6": "Großpackung für die Familie und zum Verschenken.",
         "mazoe-orange-2l-case-6": "Orangensirup im Karton mit sechs 2-Liter-Flaschen.",
         "mazoe-orange-2l": "Eine Flasche Orangenlikör.",
         "pfuko-maheu-traditional-500ml-case-12": "Traditionelles Maheu in einer günstigen Verpackung.",
-        "pfuko-maheu-traditional-500ml-1": "Traditionelles Maheu in einer günstigen Verpackung.",
-        "cascade-orange-400ml-case-6": "Cascade Orange ist das perfekte Abenteuer für ein Dairy Fruit Mix-Getränk.",
+        "pfuko-maheu-traditional-500ml-1": "Traditioneller Maheu, einzelne 500-ml-Flasche.",
+        "cascade-orange-400ml-case-6": "Orangen-Milchfruchtgetränk im Karton mit sechs Flaschen.",
         "kariba-kapenta-matemba-100g": "Getrockneter Kapenta, 100 g.",
         "royco-usavi-beef-75g": "Geschmacksmischung für lokale Eintöpfe und Soßen.",
         "colcom-pork-pie-100g": "Verzehrfertiger herzhafter Kuchen.",
@@ -1410,7 +1410,7 @@
       },
       "totals": {
         "subtotal": "Zwischensumme",
-        "shipping": "Geschätzte Lieferung",
+        "shipping": "Lieferkostenansatz (Schätzung)",
         "total": "Geschätzte Gesamtsumme"
       },
       "guest_checkout": {
@@ -1451,11 +1451,11 @@
       },
       "order": {
         "reference": "Anfragenummer",
-        "status": "Status",
-        "manual_follow_up": "Anfrage eingegangen. Es wurde nichts bezahlt; die Lieferung ist noch nicht bestätigt. Klären Sie mit Ihrer Anfragenummer Verfügbarkeit, Lieferkosten und Zahlung.",
+        "status": "Stand",
+        "manual_follow_up": "Deine Anfrage ist gespeichert. Es wurde keine Zahlung eingezogen und die Lieferung ist noch nicht bestätigt. Kontaktiere den Shop mit deiner Referenz, um die Details abzustimmen.",
         "next_title": "So geht es weiter",
         "next_reference": "Bewahren Sie Ihre Anfragenummer auf. Sie ist kein Zahlungsbeleg.",
-        "next_review": "Klären Sie Produkte, Lieferziel und endgültige Kosten mit dem Team.",
+        "next_review": "Kontaktieren Sie das Team mit Ihrer Referenz, um Produkte, DHL-Verfügbarkeit und Endkosten zu bestätigen.",
         "next_delivery": "Zahlungsbestätigung und Versand sind separate Schritte, die mit dem Team vereinbart werden.",
         "status_awaiting_payment": "Anfrage eingegangen — Zahlung nicht bestätigt",
         "status_paid": "Zahlung erfasst — Versand wird separat bestätigt",
@@ -1469,7 +1469,7 @@
       "notes": {
         "guest_checkout": "Für eine Bestellanfrage ist kein Konto nötig.",
         "logged_in_checkout": "Ihre Anfrage verwendet die obigen Kontaktdaten.",
-        "supported_methods": "Verfügbarkeit, endgültige Lieferkosten und Zahlung werden nach Prüfung geklärt.",
+        "supported_methods": "Hier wird nichts bezahlt. DHL-Verfügbarkeit und endgültige Lieferkosten werden für Ihr Ziel bestätigt. Das angezeigte Budget ist eine Planungsschätzung, kein DHL-Angebot.",
         "supported_methods_dev": "Unterstuetzte Methoden: begleiteter Checkout in Produktion sowie Dummy-Zahlungssimulation in Entwicklung und Test."
       },
       "errors": {
@@ -1482,20 +1482,20 @@
         "intro": "Hallo, ich möchte diese Produkte bei Diaspora Unlocked anfragen.",
         "order_items": "Bestellartikel:",
         "customer_details": "Kundendaten:",
-        "outro": "Bitte bestätigen Sie die Verfügbarkeit und Zahlungsanweisungen.",
+        "outro": "Bitte bestätigen Sie Bestand, DHL-Lieferung an mein Ziel, Endkosten und Zahlungsanweisungen.",
         "each": "jede"
       },
       "notify": {
         "cta": "Benachrichtigen Sie mich",
         "saving": "Sparen...",
-        "saved": "Wir benachrichtigen Sie, sobald dieses Produkt verfügbar ist.",
-        "saved_short": "Gespeichert benachrichtigen",
+        "saved": "Bestandsbenachrichtigung gespeichert. Wir senden dir eine E-Mail, sobald das Produkt wieder verfügbar ist.",
+        "saved_short": "Bestandsbenachrichtigung gespeichert",
         "dialog_title": "Benachrichtige mich, wenn es wieder auf Lager ist",
         "dialog_description": "ist derzeit nicht verfuegbar. Geben Sie Ihre E-Mail-Adresse ein und wir informieren Sie, sobald der Bestand zurueck ist.",
         "enter_email_prompt": "Geben Sie Ihre E-Mail-Adresse ein, um benachrichtigt zu werden, wenn dieses Produkt wieder auf Lager ist:",
         "invalid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "login_required": "Bitte melden Sie sich an, um Bestandsbenachrichtigungen zu aktivieren.",
-        "failed": "Die Benachrichtigungsanfrage kann derzeit nicht gespeichert werden.",
+        "failed": "Deine Bestandsbenachrichtigung konnte nicht gespeichert werden. Bitte versuche es erneut.",
         "toast_title": "Bestandsbenachrichtigung gespeichert",
         "toast_detail": "Wir informieren Sie per E-Mail, sobald {{name}} wieder verfügbar ist."
       },
@@ -1508,10 +1508,10 @@
     "loading": "Produkte werden geladen...",
     "landing": {
       "eyebrow": "Simbabwe einkaufen",
-      "title": "Vertraute Aromen.",
-      "highlight": "Besondere Fundstücke.",
-      "description": "Entdecke Lebensmittel, Kunsthandwerk und Fanartikel für den Alltag oder als Geschenk. Wähle eine Kategorie, finde deine Favoriten und stelle deinen Warenkorb zusammen.",
-      "principle": "Dein Warenkorb wird zur Bestellanfrage. Das Team bestätigt Verfügbarkeit, Lieferung und Zahlung, bevor du kaufst.",
+      "title": "Essen, Kunsthandwerk und mehr.",
+      "highlight": "Eine Verbindung zu Simbabwe.",
+      "description": "Finde vertraute Aromen, Geschenke und Fanartikel für Menschen in Simbabwe und im Ausland. Lege Artikel in den Warenkorb und sende eine Bestellanfrage.",
+      "principle": "Die Lieferung wird über DHL organisiert. Nennen Sie Ihr Ziel; das Team bestätigt Verfügbarkeit, Endkosten und Zahlungsanweisungen, bevor Sie bezahlen.",
       "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
       "collections_cta": "Kategorien entdecken"
     }
@@ -1592,7 +1592,7 @@
   "onesa": {
     "badge": "Onesa KI",
     "brand": "Onesa",
-    "assistant_alt": "Onesa AI assistant",
+    "assistant_alt": "Onesa KI-Assistent",
     "title": "Mit Onesa AI chatten",
     "send": "Senden",
     "thinking": "Überlegt...",
@@ -1600,8 +1600,8 @@
     "welcome": "Ich helfe bei Produkten, Reiseideen und Projektinformationen zu Simbabwe. Was möchten Sie wissen?",
     "status_prefix": "Onesa-Status",
     "status_offline": "Nicht verbunden",
-    "status_backend_unreachable": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
-    "error_unable_contact": "Onesa ist derzeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut.",
+    "status_backend_unreachable": "Onesa ist gerade nicht verfügbar. Bitte versuche es später erneut.",
+    "error_unable_contact": "Onesa ist gerade nicht verfügbar. Bitte versuche es erneut.",
     "online_indicator_aria": "Onesa ist online",
     "online_text": "Verbunden",
     "error_timeout": "Die Onesa-Anfrage ist abgelaufen. Bitte versuchen Sie es erneut.",
@@ -1609,7 +1609,8 @@
     "error_rate_limited": "Onesa ist gerade beschäftigt. Bitte versuchen Sie es in ein paar Sekunden noch einmal.",
     "message_label": "Nachricht an Onesa",
     "response_incomplete": "Diese Antwort wurde abgeschnitten. Bitten Sie Onesa, fortzufahren.",
-    "error_incomplete": "Onesa konnte diese Antwort nicht abschließen. Bitte versuchen Sie es erneut oder bitten Sie um eine kürzere Antwort."
+    "error_incomplete": "Onesa konnte diese Antwort nicht abschließen. Bitte versuchen Sie es erneut oder bitten Sie um eine kürzere Antwort.",
+    "checking_text": "Verbindung wird geprüft…"
   },
   "logout": "Abmelden",
   "legal": {
@@ -1659,7 +1660,7 @@
     "results": {
       "title_with_query": "Suchergebnisse für „{{query}}“",
       "title_default": "Suche nach Diaspora freigeschaltet",
-      "summary_fallback": "Entdecken Sie verwandte Möglichkeiten auf Diaspora Unlocked.",
+      "summary_fallback": "Öffne diese Seite für Informationen und mögliche nächste Schritte.",
       "view_details": "Details anzeigen"
     },
     "no_results": {
@@ -1672,7 +1673,7 @@
     "failed": "Die Suche ist derzeit nicht verfügbar. Bitte versuchen Sie es erneut.",
     "retry": "Erneut versuchen",
     "prompt": "Suchen Sie nach Tourismus, Investitionen, Einkauf oder Onesa AI.",
-    "description": "Dienste und Informationen durchsuchen."
+    "description": "Finde Produkte, Reiseziele, Geschäftsideen und Onesa-Werkzeuge."
   },
   "error_boundary": {
     "unexpected": "Es ist ein unerwarteter Fehler aufgetreten.",
@@ -1690,7 +1691,7 @@
     "cta_title": "Arbeiten Sie mit uns zusammen",
     "hero": {
       "badge1": "Wirkungsgeschichten",
-      "badge2": "Innovation",
+      "badge2": "Neuerungen",
       "badge3": "Kultureller Austausch",
       "badge4": "Nachhaltige Entwicklung",
       "badge5": "Ressourcenmobilisierung",
@@ -1723,7 +1724,7 @@
       },
       "honey_export": {
         "author": "Beitragende Person nicht bestätigt",
-        "category": "Export",
+        "category": "Ausfuhr",
         "role": "Angaben müssen bestätigt werden",
         "story": "Für dieses Beispiel liegt kein unabhängig belegtes Ergebnis vor.",
         "testimonial": "Keine geprüfte Kundenstimme verfügbar.",
@@ -1731,7 +1732,7 @@
       },
       "horticulture_breakthrough": {
         "author": "Beitragende Person nicht bestätigt",
-        "category": "Export",
+        "category": "Ausfuhr",
         "role": "Angaben müssen bestätigt werden",
         "story": "Für dieses Beispiel liegt kein unabhängig belegtes Ergebnis vor.",
         "testimonial": "Keine geprüfte Kundenstimme verfügbar.",
@@ -1739,7 +1740,7 @@
       },
       "leather_goods": {
         "author": "Beitragende Person nicht bestätigt",
-        "category": "Export",
+        "category": "Ausfuhr",
         "role": "Angaben müssen bestätigt werden",
         "story": "Für dieses Beispiel liegt kein unabhängig belegtes Ergebnis vor.",
         "testimonial": "Keine geprüfte Kundenstimme verfügbar.",
@@ -1944,6 +1945,9 @@
     "unsubscribe": "Abmelden",
     "confirm": "Abonnement bestätigen",
     "return_home": "Zur Startseite",
-    "error": "Ihre Newsletter-Einstellungen konnten nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+    "error": "Ihre Newsletter-Einstellungen konnten nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "confirmed": "Ihre E-Mail-Adresse ist bestätigt. Sie haben Diaspora Unlocked abonniert.",
+    "unsubscribed": "Sie sind abgemeldet und erhalten keine weiteren Newsletter.",
+    "link_expired": "Dieser Link ist ungültig, abgelaufen oder bereits verwendet. Fordern Sie über das Newsletter-Formular unten eine neue Bestätigung an."
   }
 }

@@ -168,7 +168,9 @@ try {
   await page
     .getByRole("button", { name: "Subscribe to newsletter", exact: true })
     .click();
-  await page.getByText("If this address needs confirmation,").waitFor();
+  await page
+    .getByText("Check your email for a confirmation link.", { exact: false })
+    .waitFor();
   const [subscribers] = await pool.query(
     "SELECT id,status FROM newsletter_subscriptions WHERE email=?",
     [email]

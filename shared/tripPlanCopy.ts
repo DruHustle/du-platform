@@ -1,0 +1,321 @@
+import { customerLanguage } from "./customerLanguage";
+
+const copy = {
+  allowances: {
+    en: "Sample planning allowances, not provider quotes.",
+    de: "Beispielbudgets, keine Anbieterangebote.",
+    sn: "Mari yemuenzaniso yekuronga, haisi mitengo yevanopa mabasa.",
+    nd: "Imali eyisibonelo yokuhlela, ayisizo izilinganiso zabahlinzeki.",
+  },
+  summary_client: {
+    en: "{{days}}-day Zimbabwe plan around {{place}}, using preset allowances for {{budget}} budget and {{comfort}} comfort.",
+    de: "{{days}}-Tage-Plan für Simbabwe rund um {{place}}, mit Beispielbudgets: {{budget}}, Komfort: {{comfort}}.",
+    sn: "Hurongwa hwemazuva {{days}} muZimbabwe pedyo ne{{place}}, nemari yemuenzaniso: {{budget}}, kugadzikana: {{comfort}}.",
+    nd: "Uhlelo lwamalanga angu-{{days}} eZimbabwe eduze le-{{place}}, ngemali eyisibonelo: {{budget}}, ukunethezeka: {{comfort}}.",
+  },
+  summary_server: {
+    en: "A {{days}}-day Zimbabwe itinerary for {{place}} from {{start}} to {{end}}, using preset allowances for {{season}} season, {{comfort}} comfort and {{budget}} budget preferences.",
+    de: "{{days}}-Tage-Reiseplan für Simbabwe mit Ziel {{place}}, von {{start}} bis {{end}}, mit Beispielbudgets. Reisezeit: {{season}}, Komfort: {{comfort}}, Budget: {{budget}}.",
+    sn: "Hurongwa hwemazuva {{days}} muZimbabwe ku{{place}}, kubva {{start}} kusvika {{end}}, nemari yemuenzaniso. Mwaka: {{season}}, kugadzikana: {{comfort}}, bhajeti: {{budget}}.",
+    nd: "Uhlelo lwamalanga angu-{{days}} eZimbabwe e-{{place}}, kusukela {{start}} kusiya {{end}}, ngemali eyisibonelo. Isikhathi: {{season}}, ukunethezeka: {{comfort}}, imali: {{budget}}.",
+  },
+  premium_cabin: {
+    en: "Premium cabin idea",
+    de: "Idee für eine Premium-Kabine",
+    sn: "Pfungwa yekabhini yepamusoro",
+    nd: "Icebo lekhabethe eliphezulu",
+  },
+  economy_cabin: {
+    en: "Economy cabin idea",
+    de: "Idee für die Economy-Klasse",
+    sn: "Pfungwa yekabhini yeEconomy",
+    nd: "Icebo lekhabethe le-Economy",
+  },
+  standard_cabin: {
+    en: "Standard cabin idea",
+    de: "Idee für eine Standardkabine",
+    sn: "Pfungwa yekabhini yakajairika",
+    nd: "Icebo lekhabethe elijwayelekileyo",
+  },
+  budget_cabin: {
+    en: "Budget cabin idea",
+    de: "Idee für eine günstige Kabine",
+    sn: "Pfungwa yekabhini isingadhuri",
+    nd: "Icebo lekhabethe elingaduli",
+  },
+  flight_client: {
+    en: "Preset flight allowance multiplied by traveler count; no fares have been checked.",
+    de: "Beispielbudget für Flüge pro Reisendem; Flugpreise wurden nicht geprüft.",
+    sn: "Mari yemuenzaniso yendege yakapetwa nehuwandu hwevafambi; mitengo haisati yaongororwa.",
+    nd: "Imali eyisibonelo yendizamtshina iphindwe ngenani labahambi; intengo ayihlolwanga.",
+  },
+  flight_server: {
+    en: "Preset flight allowance adjusted for the selected season, budget and passenger count; no fares have been checked.",
+    de: "Beispielbudget für Flüge nach Reisezeit, Budget und Personenzahl; Flugpreise wurden nicht geprüft.",
+    sn: "Mari yemuenzaniso yendege inoenderana nemwaka, bhajeti nevafambi; mitengo haisati yaongororwa.",
+    nd: "Imali eyisibonelo yendizamtshina ilandela isikhathi, imali lenani labahambi; intengo ayihlolwanga.",
+  },
+  corridor: {
+    en: "{{place}} corridor",
+    de: "Region {{place}}",
+    sn: "Nzvimbo ye{{place}}",
+    nd: "Indawo ye-{{place}}",
+  },
+  hubs: {
+    en: "{{place}} + destination hubs",
+    de: "{{place}} und weitere Reiseziele",
+    sn: "{{place}} nedzimwe nzvimbo dzekushanya",
+    nd: "{{place}} lezinye indawo zokuvakatshela",
+  },
+  premium_stay: {
+    en: "Premium stay ideas",
+    de: "Ideen für gehobene Unterkünfte",
+    sn: "Pfungwa dzekugara kwepamusoro",
+    nd: "Amacebo okuhlala okunethezeka",
+  },
+  standard_stay: {
+    en: "Standard stay ideas",
+    de: "Ideen für Unterkünfte mit mittlerem Komfort",
+    sn: "Pfungwa dzekugara kwakajairika",
+    nd: "Amacebo okuhlala okujwayelekileyo",
+  },
+  budget_stay: {
+    en: "Budget stay ideas",
+    de: "Ideen für günstige Unterkünfte",
+    sn: "Pfungwa dzekugara kusingadhuri",
+    nd: "Amacebo okuhlala okungaduli",
+  },
+  hotel_client: {
+    en: "Preset nightly allowance for your comfort preference, not a hotel quote.",
+    de: "Beispielbudget pro Nacht für den gewünschten Komfort, kein Hotelangebot.",
+    sn: "Mari yemuenzaniso yehusiku maererano nekugadzikana kwamunosarudza, haisi mutengo wehotera.",
+    nd: "Imali eyisibonelo yobusuku ngokunethezeka elikukhethayo, ayisiyo ntengo yehotela.",
+  },
+  hotel_server: {
+    en: "Preset nightly allowance per traveler for your comfort preference, not a hotel quote.",
+    de: "Beispielbudget pro Nacht und Person für den gewünschten Komfort, kein Hotelangebot.",
+    sn: "Mari yemuenzaniso yehusiku pamufambi maererano nekugadzikana kwamunosarudza, haisi mutengo wehotera.",
+    nd: "Imali eyisibonelo yobusuku kumhambi ngokunethezeka elikukhethayo, ayisiyo ntengo yehotela.",
+  },
+  premium_suv: {
+    en: "Premium SUV",
+    de: "Gehobener SUV",
+    sn: "SUV yepamusoro",
+    nd: "I-SUV enethezekileyo",
+  },
+  standard_suv: {
+    en: "Standard SUV",
+    de: "SUV der Mittelklasse",
+    sn: "SUV yakajairika",
+    nd: "I-SUV ejwayelekileyo",
+  },
+  compact: {
+    en: "Compact crossover",
+    de: "Kompakter Crossover",
+    sn: "Mota diki yeCrossover",
+    nd: "Imota encane ye-Crossover",
+  },
+  car: {
+    en: "Preset daily transport allowance, not a vehicle hire quote.",
+    de: "Beispielbudget für den täglichen Transport, kein Mietwagenangebot.",
+    sn: "Mari yemuenzaniso yekufamba pazuva, haisi mutengo wekurenda mota.",
+    nd: "Imali eyisibonelo yokuhamba ngelanga, ayisiyo ntengo yokuqhatsha imota.",
+  },
+  sightseeing: {
+    en: "Local sightseeing ideas",
+    de: "Ideen für Ausflüge vor Ort",
+    sn: "Pfungwa dzekuona nzvimbo dzemunharaunda",
+    nd: "Amacebo okubuka indawo eziseduze",
+  },
+  food_culture: {
+    en: "Food and culture ideas",
+    de: "Ideen zu Essen und Kultur",
+    sn: "Pfungwa dzechikafu netsika",
+    nd: "Amacebo okudla lamasiko",
+  },
+  activity_client: {
+    en: "An activity idea to research with local providers; availability is not checked.",
+    de: "Idee zum Recherchieren bei lokalen Anbietern; Verfügbarkeit nicht geprüft.",
+    sn: "Pfungwa yekuongorora nevanopa mabasa vemunharaunda; kuwanikwa hakusati kwaongororwa.",
+    nd: "Icebo lokuhlola labahlinzeki bendawo; ukutholakala akukahlolwa.",
+  },
+  food_client: {
+    en: "A food and culture idea to research with local providers.",
+    de: "Idee zu Essen und Kultur zum Recherchieren bei lokalen Anbietern.",
+    sn: "Pfungwa yechikafu netsika yekuongorora nevanopa mabasa vemunharaunda.",
+    nd: "Icebo lokudla lamasiko lokuhlola labahlinzeki bendawo.",
+  },
+  activity_server: {
+    en: "An activity idea matching your interests; check access, prices and availability with providers.",
+    de: "Idee passend zu Ihren Interessen; Zugang, Preise und Verfügbarkeit bei Anbietern prüfen.",
+    sn: "Pfungwa inoenderana nezvamunofarira; bvunzai vanopa mabasa nezvekupinda, mitengo nekuwanikwa.",
+    nd: "Icebo elihambelana lezifiso zenu; buzani abahlinzeki ngokungena, intengo lokutholakala.",
+  },
+  arrival: {
+    en: "Plan your arrival",
+    de: "Ankunft planen",
+    sn: "Rongai kusvika kwenyu",
+    nd: "Hlelani ukufika kwenu",
+  },
+  arrival_place: {
+    en: "Plan your arrival for {{place}}",
+    de: "Ankunft in {{place}} planen",
+    sn: "Rongai kusvika ku{{place}}",
+    nd: "Hlelani ukufika e-{{place}}",
+  },
+  departure: {
+    en: "Departure",
+    de: "Abreise",
+    sn: "Kubva",
+    nd: "Ukusuka",
+  },
+  highlights: {
+    en: "Day {{day}} highlights",
+    de: "Ideen für Tag {{day}}",
+    sn: "Pfungwa dzezuva {{day}}",
+    nd: "Amacebo elanga {{day}}",
+  },
+  arrival_client: {
+    en: "Consider arriving via {{airport}}. Check transport to {{place}} before travelling.",
+    de: "Erwägen Sie die Anreise über {{airport}}. Transport nach {{place}} vor der Reise prüfen.",
+    sn: "Fungai kusvika ne{{airport}}. Ongororai zvekufamba ku{{place}} musati mafamba.",
+    nd: "Cabangani ukufika nge-{{airport}}. Hlolani ezokuhamba e-{{place}} lingakahambi.",
+  },
+  arrival_server: {
+    en: "Consider travel from {{from}} via {{airport}}. Check routes and transport to {{place}} with providers.",
+    de: "Erwägen Sie die Anreise von {{from}} über {{airport}}. Routen und Transport nach {{place}} bei Anbietern prüfen.",
+    sn: "Fungai kufamba kubva {{from}} ne{{airport}}. Bvunzai vanopa mabasa nezvenzira nekufamba ku{{place}}.",
+    nd: "Cabangani ukuhamba kusukela {{from}} nge-{{airport}}. Buzani abahlinzeki ngemizila lokuhamba e-{{place}}.",
+  },
+  return: {
+    en: "Allow time for your return journey; confirm transport arrangements.",
+    de: "Zeit für die Rückreise einplanen und Transport bestätigen.",
+    sn: "Siyai nguva yekudzoka; simbisisai zvekufamba.",
+    nd: "Tshiyani isikhathi sokubuyela; qinisekisani ezokuhamba.",
+  },
+  research_client: {
+    en: "Research activities, places to eat and transport; confirm arrangements with providers.",
+    de: "Aktivitäten, Restaurants und Transport recherchieren; Vereinbarungen mit Anbietern bestätigen.",
+    sn: "Ongororai zvekuita, kwekudya nekufamba; simbisisai nevanopa mabasa.",
+    nd: "Hlolani okokwenza, indawo zokudla lezokuhamba; qinisekisani labahlinzeki.",
+  },
+  research_server: {
+    en: "Research {{activity}} in {{place}}. Check access, timing and availability for the {{season}} season with local providers.",
+    de: "{{activity}} in {{place}} recherchieren. Zugang, Zeiten und Verfügbarkeit zur Reisezeit {{season}} bei lokalen Anbietern prüfen.",
+    sn: "Ongororai {{activity}} ku{{place}}. Bvunzai vanopa mabasa vemunharaunda nezvekupinda, nguva nekuwanikwa mumwaka we{{season}}.",
+    nd: "Hlolani {{activity}} e-{{place}}. Buzani abahlinzeki bendawo ngokungena, izikhathi lokutholakala ngesikhathi se-{{season}}.",
+  },
+  safari: {
+    en: "Safari ideas in Hwange",
+    de: "Safari-Ideen in Hwange",
+    sn: "Pfungwa dzesafari muHwange",
+    nd: "Amacebo e-safari eHwange",
+  },
+  mbare: {
+    en: "Food and culture ideas in Mbare",
+    de: "Ideen zu Essen und Kultur in Mbare",
+    sn: "Pfungwa dzechikafu netsika muMbare",
+    nd: "Amacebo okudla lamasiko eMbare",
+  },
+  rafting: {
+    en: "Rafting ideas on the Zambezi",
+    de: "Rafting-Ideen auf dem Sambesi",
+    sn: "Pfungwa dzekukwasva paZambezi",
+    nd: "Amacebo okuhamba ngezikepe kuZambezi",
+  },
+  great_zimbabwe: {
+    en: "Visiting Great Zimbabwe",
+    de: "Besuch von Great Zimbabwe",
+    sn: "Kushanyira Great Zimbabwe",
+    nd: "Ukuvakatshela iGreat Zimbabwe",
+  },
+  walking: {
+    en: "Walking ideas in the Eastern Highlands",
+    de: "Wanderideen in den Eastern Highlands",
+    sn: "Pfungwa dzekufamba netsoka muEastern Highlands",
+    nd: "Amacebo okuhamba ngezinyawo eEastern Highlands",
+  },
+  harare_food: {
+    en: "Places to eat in Harare",
+    de: "Restaurants in Harare",
+    sn: "Nzvimbo dzekudyira muHarare",
+    nd: "Indawo zokudla eHarare",
+  },
+  selected_dates: {
+    en: "your selected dates",
+    de: "Ihren gewählten Daten",
+    sn: "mazuva amakasarudza",
+    nd: "amalanga eliwakhethileyo",
+  },
+  return_date: {
+    en: "return date",
+    de: "Rückreisedatum",
+    sn: "zuva rekudzoka",
+    nd: "ilanga lokubuyela",
+  },
+  low: {
+    en: "low",
+    de: "niedrig",
+    sn: "diki",
+    nd: "encane",
+  },
+  medium: {
+    en: "medium",
+    de: "mittel",
+    sn: "yepakati",
+    nd: "ephakathi",
+  },
+  high: {
+    en: "high",
+    de: "hoch",
+    sn: "yepamusoro",
+    nd: "ephezulu",
+  },
+  budget: {
+    en: "budget",
+    de: "einfach",
+    sn: "usingadhuri",
+    nd: "okungaduli",
+  },
+  standard: {
+    en: "standard",
+    de: "mittel",
+    sn: "kwakajairika",
+    nd: "okujwayelekileyo",
+  },
+  premium: {
+    en: "premium",
+    de: "gehoben",
+    sn: "kwepamusoro",
+    nd: "okunethezeka",
+  },
+  dry: {
+    en: "dry",
+    de: "Trockenzeit",
+    sn: "wakaoma",
+    nd: "esomile",
+  },
+  green: {
+    en: "green",
+    de: "Regenzeit",
+    sn: "wemvura",
+    nd: "sezulu",
+  },
+  shoulder: {
+    en: "shoulder",
+    de: "Übergangszeit",
+    sn: "wekushanduka",
+    nd: "sokutshintsha",
+  },
+} as const;
+
+export function tripText(
+  language: unknown,
+  key: keyof typeof copy,
+  values: Record<string, string | number> = {}
+): string {
+  return copy[key][customerLanguage(language)].replace(
+    /{{(\w+)}}/g,
+    (_, name: string) => String(values[name] ?? "")
+  );
+}

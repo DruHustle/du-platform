@@ -1,3 +1,4 @@
+import { CUSTOMER_LANGUAGES } from "./customerLanguage";
 import { z } from "zod";
 
 // Shared constraints match the persisted order fields. Prices are always read
@@ -16,6 +17,7 @@ export const shopOrderRequestSchema = z.object({
       items => new Set(items.map(item => item.productId)).size === items.length,
       "Each product must appear only once."
     ),
+  language: z.enum(CUSTOMER_LANGUAGES).default("en"),
   customerName: z.string().trim().min(2).max(120),
   customerEmail: z.string().trim().toLowerCase().email().max(254),
   shippingCountry: z.string().trim().min(2).max(120),

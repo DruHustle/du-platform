@@ -36,6 +36,18 @@ try {
     stock_qty: 3,
     is_active: 1,
   });
+  const restock = await shop.createShopRestockNotification({
+    productId: product.id,
+    productSlug: product.slug,
+    productName: product.name,
+    email: "stock@example.test",
+    language: "de",
+  });
+  assert.equal(restock.created, true);
+  assert.equal(
+    (await shop.getShopRestockNotificationsBySlug(product.slug))[0].language,
+    "de"
+  );
   const payload = {
     customerName: "Local Test",
     customerEmail: "checkout@example.test",
@@ -210,11 +222,17 @@ try {
     /Insufficient stock/
   );
   console.log(
-    "PASS MySQL: eight concurrent retries create one order; private access; changed payload rejected; manual payment protected; authoritative totals; admin/payment cache invalidation including a delayed-query race; concurrent dummy confirmations deduct once; exhausted stock rejected."
+    "PASS MySQL: persisted restock language; eight concurrent retries create one order; private access; changed payload rejected; manual payment protected; authoritative totals; admin/payment cache invalidation including a delayed-query race; concurrent dummy confirmations deduct once; exhausted stock rejected."
   );
 } finally {
   for (const ref of createdRefs)
     await db.execute("DELETE FROM shop_orders WHERE order_ref=?", [ref]);
-  if (product) await shop.deleteShopProductAdmin(product.id);
+  if (product) {
+    await db.execute(
+      "DELETE FROM shop_restock_notifications WHERE product_slug=?",
+      [product.slug]
+    );
+    await shop.deleteShopProductAdmin(product.id);
+  }
   await db?.end();
 }

@@ -214,6 +214,15 @@ export async function initializeDatabase(): Promise<void> {
     )
   `);
 
+    // Additive, restart-safe upgrade; existing recipients keep English.
+    try {
+      await db.execute(
+        "ALTER TABLE shop_restock_notifications ADD COLUMN language VARCHAR(2) NOT NULL DEFAULT 'en'"
+      );
+    } catch (error: any) {
+      if (error.code !== "ER_DUP_FIELDNAME") throw error;
+    }
+
     await db.execute(`
     CREATE TABLE IF NOT EXISTS success_stories (
       id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,3 +1,5 @@
+import { emailText } from "../../../../shared/customerEmailCopy";
+import { customerLanguage } from "../../../../shared/customerLanguage";
 import {
   getNotifyAlertEmails,
   getNotifyFromEmail,
@@ -53,6 +55,7 @@ export class ShopService {
   }
 
   async createRestockNotification(payload: {
+    language?: string;
     productId?: number | null;
     productSlug: string;
     productName: string;
@@ -75,6 +78,7 @@ export class ShopService {
       email: payload.email.trim().toLowerCase(),
     };
     const result = await this.restocks.create({
+      language: customerLanguage(payload.language),
       productId:
         payload.productId == null || !Number.isFinite(Number(payload.productId))
           ? null
@@ -93,12 +97,14 @@ export class ShopService {
         const safeSlug = escHtml(payload.productSlug);
         const safeEmail = escHtml(payload.email);
         const userSubject = escSubject(
-          `Notify request received: ${payload.productName}`
+          emailText(payload.language, "stock_saved_subject", {
+            product: payload.productName,
+          })
         );
-        const userHtml = `<p>Hello,</p>
-<p>Your notify request for <strong>${safeName}</strong> has been saved.</p>
-<p>We will email you when stock is available.</p>`;
-        const userText = `Your notify request for ${payload.productName} has been saved. We will email you when stock is available.`;
+        const userText = emailText(payload.language, "stock_saved", {
+          product: payload.productName,
+        });
+        const userHtml = `<p>${escHtml(userText)}</p>`;
         await sendEmailMessageSafe(
           {
             to: payload.email,
@@ -141,13 +147,14 @@ export class ShopService {
     return {
       created: result.created,
       message: result.created
-        ? "Notify request saved. We will email you when stock is available."
+        ? "Stock alert saved. We will email you when this product is back in stock."
         : "You are already subscribed for this product.",
       record: result.record,
     };
   }
 
   async createOrder(payload: {
+    language?: string;
     customerName: string;
     customerEmail: string;
     shippingCountry: string;
@@ -165,22 +172,28 @@ export class ShopService {
       try {
         const from = await getNotifyFromEmail();
         const summary = [
-          `Order request: ${order.orderRef}`,
+          emailText(payload.language, "order_ref", { ref: order.orderRef }),
           ...order.items.map(
             item =>
               `${item.productName} x${item.quantity}: ${(item.lineTotalCents / 100).toFixed(2)} ${order.currency}`
           ),
-          `Estimated delivery: ${(order.shippingCents / 100).toFixed(2)} ${order.currency}`,
-          `Estimated total: ${(order.totalCents / 100).toFixed(2)} ${order.currency}`,
-          "Request received. No payment has been taken. Availability, delivery and payment instructions must be agreed with the shop.",
-          "Contact: info@diasporaunlocked.com",
+          emailText(payload.language, "delivery", {
+            amount: `${(order.shippingCents / 100).toFixed(2)} ${order.currency}`,
+          }),
+          emailText(payload.language, "total", {
+            amount: `${(order.totalCents / 100).toFixed(2)} ${order.currency}`,
+          }),
+          emailText(payload.language, "order_next"),
+          emailText(payload.language, "contact"),
         ].join("\n");
         const notifications = await Promise.allSettled([
           sendEmailMessageSafe(
             {
               to: payload.customerEmail,
               from,
-              subject: `Order request received: ${order.orderRef}`,
+              subject: emailText(payload.language, "order_subject", {
+                ref: order.orderRef,
+              }),
               text: summary,
               html: `<p>${escHtml(summary).replace(/\n/g, "<br>")}</p>`,
             },

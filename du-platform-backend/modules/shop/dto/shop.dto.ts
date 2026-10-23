@@ -1,3 +1,4 @@
+import { CUSTOMER_LANGUAGES } from "../../../../shared/customerLanguage";
 import { z } from "zod";
 
 export const listProductsQuerySchema = z.object({
@@ -7,6 +8,7 @@ export const listProductsQuerySchema = z.object({
 export { shopOrderRequestSchema as createOrderSchema } from "../../../../shared/shopCheckout";
 
 export const restockNotificationSchema = z.object({
+  language: z.enum(CUSTOMER_LANGUAGES).default("en"),
   productId: z.coerce.number().int().positive().optional(),
   productSlug: z.string().trim().min(1).max(255),
   productName: z.string().trim().min(1).max(255),

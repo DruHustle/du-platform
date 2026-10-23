@@ -1,3 +1,4 @@
+import { customerLanguage } from "@shared/customerLanguage";
 import { Link, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -330,6 +331,7 @@ export default function Layout({ children }: LayoutProps) {
       setNewsletterFeedback(null);
 
       const { data } = await api.post("/notifications/newsletter", {
+        language: customerLanguage(i18n.resolvedLanguage ?? i18n.language),
         email: newsletterEmail.trim(),
         consent: true,
       });
@@ -343,7 +345,7 @@ export default function Layout({ children }: LayoutProps) {
             )
           : tr(
               "footer.newsletter.confirmation_sent",
-              "If this address needs confirmation, we’ll email a link. Already confirmed? You’re on the list."
+              "Check your email for a confirmation link. If you have already confirmed, you are on the list."
             ),
       });
       setNewsletterEmail("");
@@ -511,7 +513,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.who_label", { defaultValue: "Who we are" }),
       content: t("footer.about.who_content", {
         defaultValue:
-          "Diaspora Unlocked is a digital platform for Zimbabweans abroad and anyone exploring Zimbabwe.",
+          "Diaspora Unlocked connects people in Zimbabwe and abroad with products, travel information, business ideas and practical AI assistance.",
       }),
     },
     {
@@ -519,7 +521,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.what_label", { defaultValue: "What we do" }),
       content: t("footer.about.what_content", {
         defaultValue:
-          "Browse products, plan a visit, research project profiles and ask Onesa for help. Product orders are reviewed with you before payment and delivery are agreed.",
+          "Build a basket and request an order, research a business idea, draft a trip plan or ask Onesa a question. Explore the sections to choose your next step.",
       }),
     },
   ];
@@ -770,7 +772,10 @@ export default function Layout({ children }: LayoutProps) {
             {tr("search.results.title_default", "Search Diaspora Unlocked")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            {tr("search.description", "Search services and information.")}
+            {tr(
+              "search.description",
+              "Find products, destinations, business ideas and Onesa tools."
+            )}
           </DialogDescription>
           <form onSubmit={handleSearch} className="relative group mt-4">
             <input
@@ -1092,7 +1097,7 @@ export default function Layout({ children }: LayoutProps) {
                 <p className="text-sm text-slate-500">
                   {tr(
                     "footer.newsletter.description",
-                    "News and updates by email."
+                    "Zimbabwean products, travel ideas and platform news by email."
                   )}
                 </p>
                 <form
@@ -1131,7 +1136,7 @@ export default function Layout({ children }: LayoutProps) {
                 <p className="text-xs leading-5 text-slate-400">
                   {tr(
                     "footer.newsletter.consent",
-                    "By subscribing, you agree to receive Diaspora Unlocked news and opportunities. Confirm your email to join. Unsubscribe at any time."
+                    "Confirm your email to receive Diaspora Unlocked news and opportunities. Unsubscribe at any time. This does not create a platform account."
                   )}{" "}
                   <Link
                     href="/privacy-policy"

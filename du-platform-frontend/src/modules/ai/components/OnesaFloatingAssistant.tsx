@@ -1,3 +1,4 @@
+import { watchOnesaRecovery } from "../lib/onesaRecovery";
 import {
   useCallback,
   useEffect,
@@ -93,7 +94,7 @@ export default function OnesaFloatingAssistant() {
   const [onesaLoading, setOnesaLoading] = useState(false);
   const [onesaError, setOnesaError] = useState("");
   const [onesaStatus, setOnesaStatus] = useState("");
-  const [onesaIsOnline, setOnesaIsOnline] = useState(false);
+  const [onesaIsOnline, setOnesaIsOnline] = useState<boolean | null>(null);
   const [onesaRetryAfterSecondsRemaining, setOnesaRetryAfterSecondsRemaining] =
     useState<number | null>(null);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
@@ -325,8 +326,8 @@ export default function OnesaFloatingAssistant() {
     const version = ++healthCheckVersionRef.current;
     const backendUnreachableStatus =
       t("onesa.status_backend_unreachable", {
-        defaultValue: "Onesa is currently unavailable. AI mode is off",
-      }) || "Onesa is currently unavailable. AI mode is off";
+        defaultValue: "Onesa is unavailable right now. Please try again later.",
+      }) || "Onesa is unavailable right now. Please try again later.";
     const health = await checkOnesaHealth(backendUnreachableStatus);
     if (version === healthCheckVersionRef.current) {
       setOnesaIsOnline(health.online);
@@ -337,7 +338,11 @@ export default function OnesaFloatingAssistant() {
 
   useEffect(() => {
     if (!isOnesaChatOpen) return;
-    void checkOnesaPopupHealth();
+    const stop = watchOnesaRecovery(checkOnesaPopupHealth);
+    return () => {
+      stop();
+      healthCheckVersionRef.current += 1;
+    };
   }, [isOnesaChatOpen, checkOnesaPopupHealth]);
 
   useEffect(() => {
@@ -417,8 +422,9 @@ export default function OnesaFloatingAssistant() {
         }) || "Onesa is busy right now. Please try again in a few seconds.";
       const genericContactError =
         t("onesa.error_unable_contact", {
-          defaultValue: "Onesa is currently unavailable. AI mode is off",
-        }) || "Onesa is currently unavailable. AI mode is off";
+          defaultValue:
+            "Onesa is unavailable right now. Please try again later.",
+        }) || "Onesa is unavailable right now. Please try again later.";
       const timeoutMessage =
         err?.code === "ECONNABORTED"
           ? t("onesa.error_timeout", {
@@ -825,21 +831,29 @@ export default function OnesaFloatingAssistant() {
                           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${
                             onesaIsOnline
                               ? "border border-emerald-300/40 bg-emerald-500/15 text-emerald-300"
-                              : "border border-red-300/40 bg-red-500/15 text-red-300"
+                              : onesaIsOnline === null
+                                ? "border border-white/20 bg-white/10 text-white/70"
+                                : "border border-red-300/40 bg-red-500/15 text-red-300"
                           }`}
                         >
                           <span
                             className={`h-2 w-2 rounded-full ${
                               onesaIsOnline
                                 ? "bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]"
-                                : "bg-red-400"
+                                : onesaIsOnline === null
+                                  ? "bg-slate-400"
+                                  : "bg-red-400"
                             }`}
                           />
-                          {onesaIsOnline
-                            ? t("onesa.online_text", { defaultValue: "Online" })
-                            : t("onesa.offline_text", {
-                                defaultValue: "Offline",
-                              })}
+                          {onesaIsOnline === null
+                            ? t("onesa.checking_text")
+                            : onesaIsOnline
+                              ? t("onesa.online_text", {
+                                  defaultValue: "Online",
+                                })
+                              : t("onesa.offline_text", {
+                                  defaultValue: "Offline",
+                                })}
                         </span>
                         <Button
                           type="button"

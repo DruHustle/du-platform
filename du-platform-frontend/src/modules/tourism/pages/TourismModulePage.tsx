@@ -464,10 +464,10 @@ export default function Tourism() {
     {
       key: "trip",
       icon: Calendar,
-      title: t("tourism.onesa.plan.title") || "Custom Itineraries",
+      title: t("tourism.onesa.plan.title") || "Draft a trip plan",
       description:
         t("tourism.onesa.plan.desc") ||
-        "Create a draft itinerary based on your interests, dates and travel preferences.",
+        "Turn your dates, interests and preferences into an itinerary with indicative budgets. Book directly with providers after checking the details.",
       image: "/images/pages/tourism/victoria_falls.webp",
       href: "/onesa-ai-book-trip",
       cta: t("tourism.onesa.cta.plan_trip", { defaultValue: "Plan your trip" }),
@@ -476,7 +476,7 @@ export default function Tourism() {
       key: "vr",
       icon: Globe2,
       title: t("tourism.onesa.virtual_preview.title", {
-        defaultValue: "Interactive previews",
+        defaultValue: "Try the 360° demo",
       }),
       description: t("tourism.onesa.virtual_preview.desc", {
         defaultValue:
