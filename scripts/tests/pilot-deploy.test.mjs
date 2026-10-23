@@ -24,12 +24,14 @@ test("previews cannot proxy requests to production and are noindex", async () =>
       )
     );
     const workflow = await fs.readFile(".github/workflows/ci-cd.yml", "utf8");
+    const previewJob = workflow.slice(
+      workflow.indexOf("deploy-vercel-preview:")
+    );
+    const prepareIndex = previewJob.indexOf("node scripts/prepare-preview.mjs");
+    const deployIndex = previewJob.indexOf("vercel deploy --yes");
     assert(
-      workflow.indexOf("node scripts/prepare-preview.mjs") <
-        workflow.indexOf(
-          "run: vercel deploy --yes",
-          workflow.indexOf("deploy-vercel-preview:")
-        )
+      prepareIndex >= 0 && deployIndex > prepareIndex,
+      "Preview isolation must run before the deploy command, including captured-URL commands"
     );
     assert(!workflow.includes("self-hosted"));
     assert(workflow.includes("run: node scripts/tests/pilot-preview.mjs"));

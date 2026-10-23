@@ -443,6 +443,16 @@ test("assisted-order transactional workflow", () => {
     )) as any;
     expect(status.paymentReviewRequired).toBe(true);
     expect(status.stage).toBe("quote_accepted");
+    await expect(
+      applyOrderCommand(
+        order.orderRef,
+        command(4, "under_review"),
+        "admin@example.test"
+      )
+    ).rejects.toMatchObject({ status: 409 });
+    expect(
+      ((await readOrderWorkspace(order.orderRef)) as any).quotes
+    ).toHaveLength(1);
     await applyOrderCommand(
       order.orderRef,
       command(4, "refund", {

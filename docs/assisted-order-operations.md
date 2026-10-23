@@ -33,7 +33,7 @@ and only once. Concurrent confirmations cannot oversell.
 If payment actually arrived but stock is no longer available, record the
 payment/stock issue and its real reference; it does not consume stock or pretend
 fulfilment succeeded. Resolve availability or record the actual refund.
-Refunds are records of money returned externally, not instructions to a provider.
+Received payment locks the agreed quote and currency, including during a stock issue. Resolve fulfilment or refund/cancel; use a new request for a different agreement. Refunds are records of money returned externally, not instructions to a provider.
 Do not record money that has not moved. Fully refunded orders cannot consume
 stock or dispatch. Record carrier/tracking on dispatch and delivery on completion.
 Cancellation requires a reason and an explicit stock decision. Only restock goods
