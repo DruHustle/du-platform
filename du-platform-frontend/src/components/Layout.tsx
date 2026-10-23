@@ -565,7 +565,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="relative inline-flex h-10 w-10 items-center justify-center">
                   <span className="pointer-events-none absolute inset-0 rounded-[0.95rem] border border-white/25 lg:border-white/30 bg-slate-950/30 lg:bg-white/15 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)] lg:shadow-[0_12px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]" />
                   <img
-                    src="/images/brand/diaspora_unlocked.png"
+                    src="/images/brand/diaspora_unlocked_336.webp"
                     alt="Logo"
                     className="relative h-[2.35rem] w-[2.35rem] scale-[1.12] object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)] lg:h-[2.35rem] lg:w-[2.35rem] lg:scale-[1.12] lg:drop-shadow-[0_7px_14px_rgba(0,0,0,0.55)]"
                   />
@@ -963,7 +963,7 @@ export default function Layout({ children }: LayoutProps) {
                         <House className="h-5 w-5" strokeWidth={2} />
                       ) : (
                         <img
-                          src="/images/brand/diaspora_unlocked.png"
+                          src="/images/brand/diaspora_unlocked_336.webp"
                           alt={item.name}
                           className="h-5 w-5 object-contain"
                         />
