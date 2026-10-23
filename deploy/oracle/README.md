@@ -16,32 +16,52 @@ not send visitors to the retained, suspended Render service. Build and live SEO
 checks also inspect the actual browser entry bundle for that retired origin;
 checking the proxy's health endpoint alone does not verify client routing.
 
-## Build and update
+## Automatic releases from main
 
-Run the repository's tests, typecheck, build and SEO checks first. Build a
-`linux/arm64` image from a clean checkout of the tested commit using
-`docker build --platform linux/arm64 --build-arg APP_REVISION=<sha> -f deploy/oracle/Dockerfile -t du-platform:oracle-<sha> .`.
-Exclude `.env*`, `.git`, `node_modules`, build output and private files from the
-build context. Never build secrets into an image. Transfer with `docker save`
-and load with `sudo docker load` on the VM; verify the archive checksum.
+A push to `main` runs `.github/workflows/ci-cd.yml`:
 
-The installed `compose.yaml` pins the tested image. Back it up before changing
-that image to the new tag. `compose.runtime.json` is a private mode-600 override
-containing the production environment copied from the former Render service,
-including the unchanged managed MySQL connection, multiline CA and signing keys.
-Use literal JSON strings and escape every `$` as `$$` for Compose interpolation.
-Do not commit the override or print `docker compose config` output.
-Set `NODE_ENV=production`, `PORT=10000`, `TRUST_PROXY=1`, and
-`APP_REVISION=<source-sha>` (also embedded by the Dockerfile). `/api/ping`
-continues reporting that value in its existing `commit` field.
+1. Build and Test validates types, dependencies, unit/database tests, the build
+   and browser journeys. Failed checks prevent both production deployments.
+2. Deploy to Oracle sends `git archive` of the tested commit over pinned SSH.
+   The VM builds the image natively for ARM64 and releases only DU's `app`
+   service. Runtime secrets remain in `/opt/du-platform/compose.runtime.json`.
+3. Deploy to Vercel publishes the frontend only after Oracle succeeds. Both jobs
+   check the expected backend commit through Oracle and the frontend API proxy;
+   the frontend job also verifies live canonical pages and browser API routing.
 
-From `/opt/du-platform`, validate with
-`sudo docker compose -f compose.yaml -f compose.runtime.json config --quiet`,
-then run `sudo docker compose -f compose.yaml -f compose.runtime.json up -d --wait`.
-If using the repository template directly, set `APP_IMAGE` to the tested tag.
-Check `/api/ping` for the expected commit and `/api/health/db` for database
-readiness, then verify the same endpoints through the frontend `/api` proxy.
-Run `pnpm test:seo:live` after a frontend release. Do not restart sibling stacks.
+GitHub Pages is not used. Vercel's independent Git deploys are disabled so that
+CI remains the deployment gate. Main releases are serialized, not cancelled
+halfway through a deployment. Preview deployments remain frontend-only.
+
+The dedicated key is stored in `ORACLE_SSH_PRIVATE_KEY`; `ORACLE_KNOWN_HOSTS`
+pins the VM's public host key. The VM's `authorized_keys` entry uses `restrict`
+and a forced `/usr/local/bin/du-platform-ci-entry` command. It accepts only
+`du-deploy <40-character SHA>` and cannot provide a shell, PTY or forwarding.
+The root-owned `/usr/local/sbin/du-platform-deploy` corresponds to
+`deploy/oracle/deploy.sh`. Changes to these privileged entrypoints require a
+separate reviewed installation; ordinary application releases cannot replace
+these host scripts.
+
+The release script locks deployment, builds without extracting source on the
+host, checks the image revision, privately backs up both manifests, updates only
+DU's image and `APP_REVISION`, then waits for container health. It checks database
+readiness, the published commit and Onesa readiness. Failure after switching
+manifests restores the previous DU manifests and image. Sibling stacks are not
+restarted. Backups contain runtime configuration and remain root-readable only.
+
+## Manual recovery
+
+Run repository checks before any manual release. Build a `linux/arm64` image
+using `deploy/oracle/Dockerfile` with `APP_REVISION` set to the tested SHA. Never
+include private configuration in a build context. Preserve the previous image
+and both Compose manifests before an update. Validate Compose with
+`config --quiet`, then use `up -d --no-deps --wait app` with both files.
+
+The installed manifests are JSON despite the `compose.yaml` extension. Keep
+multiline CA/signing keys and literal `$$` Compose escaping intact; never print
+`docker compose config` or commit the runtime override. Production uses
+`NODE_ENV=production`, `PORT=10000`, `TRUST_PROXY=1`. Verify `/api/ping`,
+`/api/health/db` and `/api/ai/ready` directly and through the frontend after release.
 
 ## Ingress and monitoring
 
@@ -54,7 +74,7 @@ No new public application ports or firewall rules are required.
 Docker retains its container health check. Use the readiness endpoints above
 for manual release verification; scheduled GitHub probes and health alert emails
 have been removed.
-Oracle container releases are manual, independent from Vercel releases. Keep the
+Oracle container releases run through CI before Vercel production releases. Keep the
 former Render service suspended with automatic deployments disabled.
 
 Onesa's secondary cloud provider uses `ONESA_GROQ_AI_BASE_URL`,

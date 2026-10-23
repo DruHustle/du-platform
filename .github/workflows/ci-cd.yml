@@ -58,6 +58,9 @@ jobs:
       - name: Type check
         run: pnpm check
 
+      - name: Oracle deployment safety regressions
+        run: pnpm test:deploy
+
       - name: Module tests
         run: pnpm test:modules
         env:
@@ -141,12 +144,51 @@ jobs:
         env:
           VR_MUSIC_BROWSER_ENGINE: webkit
 
+  # Native ARM64 build and release on the shared Oracle VM, scoped to DU only.
+  deploy-oracle-production:
+    name: Deploy to Oracle (Production)
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout tested commit
+        uses: actions/checkout@v5
+
+      - name: Configure restricted Oracle deploy identity
+        env:
+          ORACLE_KEY: ${{ secrets.ORACLE_SSH_PRIVATE_KEY }}
+          ORACLE_HOST_KEYS: ${{ secrets.ORACLE_KNOWN_HOSTS }}
+        run: |
+          test -n "$ORACLE_KEY"
+          test -n "$ORACLE_HOST_KEYS"
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$ORACLE_KEY" > ~/.ssh/du_oracle_deploy
+          printf '%s\n' "$ORACLE_HOST_KEYS" > ~/.ssh/known_hosts
+
+      - name: Build and release tested source on Oracle
+        run: |
+          set -euo pipefail
+          git archive --format=tar.gz "$GITHUB_SHA" | ssh -i ~/.ssh/du_oracle_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=6 ubuntu@152.70.22.84 "du-deploy $GITHUB_SHA"
+
+      - name: Verify Oracle and public API release
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: node scripts/tests/verify-backend-release.mjs
+
+      - name: Remove ephemeral deploy identity
+        if: always()
+        run: rm -f ~/.ssh/du_oracle_deploy
+
   # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
   #    On failure, rolls back to the last successful Vercel production deployment.
   deploy-vercel-production:
     name: Deploy to Vercel (Production)
-    needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success'
+    needs: [build-and-test, deploy-oracle-production]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success' && needs.deploy-oracle-production.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -168,10 +210,15 @@ jobs:
       - name: Verify published browser API routing and canonical pages
         run: node scripts/tests/seo-live.mjs
 
+      - name: Verify matching Oracle release through the deployed frontend
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: node scripts/tests/verify-backend-release.mjs
+
       - name: Rollback on deployment failure
-        if: failure() && steps.vercel_deploy.conclusion == 'failure'
+        if: failure() && (steps.vercel_deploy.conclusion == 'failure' || steps.vercel_deploy.conclusion == 'success')
         run: |
-          echo "Deployment failed — rolling back to last successful production deployment."
+          echo "Deployment or verification failed — rolling back to the previous production deployment."
           vercel rollback --token=${{ secrets.VERCEL_TOKEN }} --yes
           echo "Rollback complete."
 

@@ -46,7 +46,8 @@
     "test:e2e:newsletter": "node scripts/tests/e2e-newsletter.mjs",
     "test:e2e:discovery": "node scripts/tests/e2e-discovery.mjs",
     "test:e2e:vr:music": "node scripts/tests/e2e-vr-music.mjs",
-    "test:e2e:shop:integrated": "node --import tsx scripts/tests/e2e-shop-integrated.mjs"
+    "test:e2e:shop:integrated": "node --import tsx scripts/tests/e2e-shop-integrated.mjs",
+    "test:deploy": "node --test scripts/tests/oracle-deploy.test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
