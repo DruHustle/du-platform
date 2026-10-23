@@ -202,6 +202,11 @@ try {
           `${language} ${width} ${path} horizontal overflow`
         );
         if (path === "/" && width < 1024) {
+          assert.equal(
+            await page.locator("#home-hero-logo img").getAttribute("src"),
+            "/images/brand/diaspora_unlocked_336.webp",
+            "Keep the oversized master out of the critical Home render path"
+          );
           const contrast = await page
             .locator('nav a[title][href="/shop"]')
             .first()

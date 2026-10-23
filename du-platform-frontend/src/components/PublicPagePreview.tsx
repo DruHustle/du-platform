@@ -91,7 +91,7 @@ export function PublicPagePreview({
           }}
         >
           <img
-            src="/images/brand/diaspora_unlocked.png"
+            src="/images/brand/diaspora_unlocked_336.webp"
             alt="Diaspora Unlocked"
             width="112"
             height="112"
