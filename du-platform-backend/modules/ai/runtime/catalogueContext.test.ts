@@ -172,6 +172,21 @@ it("resolves follow-ups from user-selected product context, ignoring assistant c
     userHistory
   );
   expect(shorthand).toContain("Allergens: Fixture milk");
+  for (const [language, prompt] of [
+    ["sn", "Ko zviri mukati?"],
+    ["nd", "Futhi okungaphakathi?"],
+  ]) {
+    const nativeFollowUp = await catalogueReply(
+      prompt,
+      language,
+      "EUR",
+      retrieve,
+      details,
+      userHistory
+    );
+    expect(nativeFollowUp).toContain("Fixture water");
+    expect(nativeFollowUp).not.toMatch(/Binga|Raspberry/);
+  }
   const missing = await catalogueReply(
     "And its sizes, variants, origin, supplier and delivery eligibility?",
     "en",
@@ -211,13 +226,13 @@ it.each([
   ],
   [
     "sn",
-    "Mazoe Orange 2L ingredients and allergens?",
+    "Mazoe Orange 2L: zviri mukati uye zvinokonzera kusawirirana nemuviri?",
     "Zviri mukati",
     "Zvinokonzera",
   ],
   [
     "nd",
-    "Mazoe Orange 2L ingredients and allergens?",
+    "Mazoe Orange 2L: okungaphakathi lokubangela ukungezwani komzimba?",
     "Okungaphakathi",
     "Okubangela",
   ],
@@ -260,6 +275,8 @@ it("acknowledges detail retrieval failure while retaining known stock, and exclu
 });
 it("routes product follow-ups to controlled retrieval without stealing stock-market or travel questions", () => {
   expect(asksAboutCatalogue("Is Fanta available?")).toBe(true);
+  expect(asksAboutCatalogue("Zviri mukati?")).toBe(true);
+  expect(asksAboutCatalogue("Okungaphakathi?")).toBe(true);
   expect(
     asksAboutCatalogue("What are its ingredients?", [
       { role: "user", content: "Mazoe Orange 2L" },
