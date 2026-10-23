@@ -6,34 +6,55 @@ assert(
   base.protocol === "https:" && base.hostname.endsWith(".vercel.app"),
   "Only a Vercel preview URL is allowed"
 );
-function read(pathname) {
+async function read(pathname) {
   let raw;
-  try {
-    raw = execFileSync(
-      "vercel",
-      [
-        "curl",
-        pathname,
-        "--deployment",
-        base.origin,
-        ...(process.env.VERCEL_TOKEN
-          ? ["--token", process.env.VERCEL_TOKEN]
-          : []),
-        "--",
-        "--silent",
-        "--show-error",
-        "--include",
-        "--max-time",
-        "30",
-      ],
-      {
-        encoding: "utf8",
-        maxBuffer: 4 * 1024 * 1024,
-        stdio: ["ignore", "pipe", "pipe"],
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      raw = execFileSync(
+        "vercel",
+        [
+          "curl",
+          pathname,
+          "--deployment",
+          base.origin,
+          "--scope",
+          process.env.VERCEL_SCOPE || "druhustles-projects",
+          // Vercel reads VERCEL_TOKEN from the inherited environment. Its
+          // native curl parser forwards an explicit --token to system curl.
+          "--",
+          "--silent",
+          "--show-error",
+          "--include",
+          "--max-time",
+          "30",
+        ],
+        {
+          encoding: "utf8",
+          maxBuffer: 4 * 1024 * 1024,
+          stdio: ["ignore", "pipe", "pipe"],
+        }
+      );
+      break;
+    } catch (error) {
+      if (attempt < 2) {
+        await new Promise(done => setTimeout(done, 2000));
+        continue;
       }
-    );
-  } catch {
-    throw new Error(`Protected preview request failed: ${pathname}`);
+      // Keep diagnostics useful without printing a command, token or bypass header.
+      const detail = String(error.stderr || "")
+        .split(/\r?\n/)
+        .filter(
+          line =>
+            /\berror:/i.test(line) &&
+            !/authorization|x-vercel-protection-bypass/i.test(line)
+        )
+        .join(" ")
+        .replace(/[A-Za-z0-9_.-]{30,}/g, "[redacted]")
+        .slice(0, 500);
+      throw new Error(
+        `Protected preview request failed: ${pathname}. ${detail}`
+      );
+    }
   }
   let status, headers;
   while (raw.startsWith("HTTP/")) {
@@ -61,7 +82,7 @@ for (const pathname of [
   "/delivery-and-returns",
   "/shop/order-status",
 ]) {
-  const { body, headers } = read(pathname);
+  const { body, headers } = await read(pathname);
   assert(/content-security-policy:[^\r\n]*script-src 'self'/i.test(headers));
   assert(
     body.includes(
@@ -78,7 +99,7 @@ for (const pathname of [
     );
   console.log(`PASS preview HTML, CSP, noindex ${pathname}`);
 }
-const { body } = read("/api/shop/products");
+const { body } = await read("/api/shop/products");
 assert.equal(JSON.parse(body).error.code, "PREVIEW_API_DISABLED");
 console.log(
   "PASS preview API returns local unavailable response; production is not proxied"

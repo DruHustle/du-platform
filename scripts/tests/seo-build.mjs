@@ -192,3 +192,15 @@ assert(
     .includes('name="du-order-status-version" content="1"'),
   "Publish the frontend compatibility marker before customer email links are released"
 );
+
+for (const route of ["legal-notice", "delivery-and-returns"]) {
+  const html = fs.readFileSync(path.join(root, route + ".html"), "utf8");
+  assert(
+    html.includes("DRAFT") && html.includes("info@diasporaunlocked.com"),
+    "Draft policies must be readable in initial HTML"
+  );
+  assert(
+    html.includes('content="noindex,follow"'),
+    "Unapproved policy drafts stay noindex"
+  );
+}

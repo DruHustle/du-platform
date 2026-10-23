@@ -1,4 +1,5 @@
 import React from "react";
+import english from "../../public/locales/en/translation.json";
 import { resolveRouteSeo } from "../../../shared/routeSeo";
 type Product = {
   slug: string;
@@ -43,7 +44,10 @@ export function PublicPagePreview({
   products?: Product[];
 }) {
   const seo = resolveRouteSeo({ pathname });
-  if (seo.robots.startsWith("noindex")) return null;
+  const draftPolicy = ["/legal-notice", "/delivery-and-returns"].includes(
+    pathname
+  );
+  if (seo.robots.startsWith("noindex") && !draftPolicy) return null;
   const product = products.find(p => pathname === `/shop/product/${p.slug}`);
   const selected =
     pathname === "/"
@@ -104,6 +108,19 @@ export function PublicPagePreview({
         <h1>{product?.name || seo.bodyHeading}</h1>
       )}
       <p>{product?.description || seo.description}</p>
+      {draftPolicy && (
+        <section>
+          <p role="note">{english.pilot.draft_notice}</p>
+          <h2>{english.pilot.operator_title}</h2>
+          <p>{english.pilot.operator_summary}</p>
+          <p>{english.pilot.operator_missing}</p>
+          <h2>{english.pilot.procedures_title}</h2>
+          <p>{english.pilot.delivery_draft}</p>
+          <p>{english.pilot.payment_draft}</p>
+          <p>{english.pilot.returns_draft}</p>
+          <p>{english.pilot.complaints}</p>
+        </section>
+      )}
       {product && (
         <section>
           <img
