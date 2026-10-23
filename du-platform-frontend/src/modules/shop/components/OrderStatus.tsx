@@ -3,6 +3,7 @@ import { api, getApiErrorMessage } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { formatShopMoney } from "../lib/formatShopMoney";
+import PilotReadinessNotice from "./PilotReadinessNotice";
 import {
   prepareOrderCommand,
   reconcileOrderCommand,
@@ -121,6 +122,7 @@ export default function OrderStatus({
           )}
           {quote && (
             <div className="space-y-2 rounded-lg border border-zim-gold/40 p-3">
+              <PilotReadinessNotice />
               <h4>
                 {t("pilot.final_quote")} · {quote.version}
               </h4>

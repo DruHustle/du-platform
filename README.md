@@ -525,3 +525,23 @@ These tests use mock providers and temporary records, not live customer emails.
 Use Node 22+ and `pnpm install --frozen-lockfile`. `pnpm dev` runs the local app;
 its frontend normally opens at `https://localhost:3000` with a local backend proxy.
 PR previews intentionally have no production API access.
+
+The [Europe pilot checklist and owner-input template](docs/pilot-launch-readiness.md)
+describe explicit readiness modes, required approvals, the bounded assortment
+plan and measures. Production modes are not changed by editing the example JSON.
+Use [the operating runbook](docs/assisted-order-operations.md) for refunds,
+ambiguous-response recovery and migration/rollback limitations.
+
+For reproducible local performance comparison, build a clean baseline and the
+review branch using the same saved public catalogue response, then run without
+concurrent builds or browser suites:
+
+```sh
+node scripts/tests/pilot-performance.mjs \
+  --before=/tmp/du-baseline/dist/public --after=dist/public \
+  --catalogue=/tmp/du-public-catalogue.json --out=/tmp/du-performance.json \
+  --before-revision=BASELINE_SHA --after-revision=REVIEW_SHA
+```
+
+The script uses local HTTPS/API fixtures and three paired cold visits per route.
+These are controlled lab measurements, not field Core Web Vitals.

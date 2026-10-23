@@ -6,6 +6,7 @@ import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
 import { convertShopCents, SHOP_PRICING_REVISION } from "@shared/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
+import PilotReadinessNotice from "../components/PilotReadinessNotice";
 import { customerLanguage } from "@shared/customerLanguage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
@@ -857,6 +858,7 @@ export default function ShopProducts() {
                       </span>
                     </div>
 
+                    {!receiptOnly && <PilotReadinessNotice />}
                     <p className="mb-4 text-xs leading-5 text-slate-400">
                       {t("shop.currency.note")}
                     </p>

@@ -1,4 +1,5 @@
 import { useAdminDraft } from "./useAdminDraft";
+import PilotReadinessNotice from "@/modules/shop/components/PilotReadinessNotice";
 import { useEffect, useState } from "react";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -160,6 +161,7 @@ export default function OrderAdmin({
   return (
     <section className="space-y-5" aria-label="Order management">
       <h2 className="text-2xl font-semibold">Assisted orders</h2>
+      <PilotReadinessNotice operator />
       <details className="rounded-xl border border-white/15 p-4">
         <summary className="cursor-pointer">
           Consented funnel totals (last 30 days)

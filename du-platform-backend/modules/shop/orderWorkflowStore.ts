@@ -1,4 +1,5 @@
 import { queueOrderNotification } from "./orderOutboxStore";
+import { assertQuoteReadiness } from "./shopReadiness";
 import { recordShopFunnel } from "./funnel";
 import type { PoolConnection, RowDataPacket } from "mysql2/promise";
 import { db } from "../../shared/databaseRuntime";
@@ -294,6 +295,25 @@ export async function applyOrderCommand(
     );
     const quote = quotes[0];
     if (cmd.action === "quote_sent") {
+      const readiness = await assertQuoteReadiness(
+        order.shipping_country,
+        items.map(item => Number(item.product_id)),
+        cmd.quote?.currency || ""
+      );
+      if (readiness.commercialReady)
+        for (const item of [...items].sort(
+          (a, b) => a.product_id - b.product_id
+        )) {
+          const [[product]] = await c.query<RowDataPacket[]>(
+            "SELECT stock_qty,is_active FROM shop_products WHERE id=? FOR UPDATE",
+            [item.product_id]
+          );
+          if (!product?.is_active || product.stock_qty < item.quantity)
+            throw new ShopRequestError(
+              "This item is not currently available for the approved pilot. Reconfirm the request before quoting; enquiries do not reserve stock.",
+              409
+            );
+        }
       const q = cmd.quote;
       if (
         !q ||
