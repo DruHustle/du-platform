@@ -1,3 +1,4 @@
+import { tourismDestinationAnchor } from "@shared/tourismSearch";
 import { useState, useRef } from "react";
 import Layout from "@/components/Layout";
 import SwipeRail from "@/components/discovery/SwipeRail";
@@ -538,6 +539,7 @@ export default function Tourism() {
             {attractions.map(attraction => (
               <DiscoveryTile
                 key={attraction.name}
+                id={tourismDestinationAnchor(attraction.image)}
                 onSelect={event =>
                   openAttraction(attraction, event.currentTarget)
                 }
@@ -624,6 +626,7 @@ export default function Tourism() {
             {otherAttractions.map(dest => (
               <DiscoveryTile
                 key={dest.name}
+                id={tourismDestinationAnchor(dest.image)}
                 onSelect={event => openAttraction(dest, event.currentTarget)}
                 title={dest.name}
                 image={dest.image}

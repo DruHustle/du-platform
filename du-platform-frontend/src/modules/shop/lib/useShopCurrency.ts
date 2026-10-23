@@ -45,3 +45,7 @@ export function useShopCurrency() {
     setCurrency: setShopCurrency,
   };
 }
+
+export function getShopCurrency() {
+  return currency;
+}

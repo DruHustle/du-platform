@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -113,6 +114,15 @@ export default function MainPageHero({
             {t("home.hero_subtitle")}
           </motion.p>
 
+          <p className="mt-3 max-w-xl text-sm leading-6 text-white/90">
+            {t("pilot.home_purpose")}
+          </p>
+          <Link
+            href="/shop/products"
+            className="mt-5 inline-flex min-h-11 items-center rounded-full bg-zim-gold px-6 py-3 text-sm font-semibold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            {t("pilot.browse_products")}
+          </Link>
           {/* Scroll Indicator */}
           <motion.div
             initial={false}

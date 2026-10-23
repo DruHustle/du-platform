@@ -33,9 +33,6 @@ import {
   Compass,
   Brain,
   ChevronRight,
-  Twitter,
-  Linkedin,
-  Instagram,
 } from "lucide-react";
 import {
   useState,
@@ -257,7 +254,7 @@ export default function Layout({ children }: LayoutProps) {
       icon: Brain,
     },
     {
-      name: tr("nav.discover", "Discover"),
+      name: tr("nav.tourism", "Tourism"),
       href: "/tourism",
       matchPaths: ["/tourism"],
       icon: Compass,
@@ -955,7 +952,7 @@ export default function Layout({ children }: LayoutProps) {
                     aria-current={active ? "page" : undefined}
                     aria-label={item.name}
                     title={item.name}
-                    className={`flex min-h-11 flex-1 items-center justify-center transition-colors ${
+                    className={`flex min-h-11 min-w-0 flex-1 flex-col gap-0.5 items-center justify-center transition-colors ${
                       active
                         ? "text-yellow-400"
                         : "text-white/60 hover:text-white"
@@ -974,7 +971,9 @@ export default function Layout({ children }: LayoutProps) {
                     ) : (
                       <Icon className="h-5 w-5" strokeWidth={2} />
                     )}
-                    <span className="sr-only">{item.name}</span>
+                    <span className="max-w-full whitespace-nowrap text-[8px] min-[360px]:text-[9px] font-semibold">
+                      {item.name}
+                    </span>
                   </Link>
                 );
               })}
@@ -1252,25 +1251,20 @@ export default function Layout({ children }: LayoutProps) {
                     {tr("footer.contact.location_berlin", "Berlin, Germany")}
                   </span>
                 </li>
-                <li className="pt-2 text-white text-[10px] font-black uppercase tracking-widest">
-                  {tr("footer.contact.social", "Social")}
-                </li>
-                <li className="flex items-start gap-3">
-                  <Twitter className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>{tr("footer.contact.twitter", "Twitter")}</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Linkedin className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>{tr("footer.contact.linkedin", "LinkedIn")}</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Instagram className="h-4 w-4 shrink-0 text-yellow-400" />
-                  <span>{tr("footer.contact.instagram", "Instagram")}</span>
-                </li>
               </ul>
             </div>
           </div>
 
+          <nav
+            aria-label={t("pilot.operator_title")}
+            className="mb-6 flex flex-wrap gap-5 text-xs text-white/80 underline underline-offset-4"
+          >
+            <Link href="/legal-notice">{t("pilot.operator_title")}</Link>
+            <Link href="/delivery-and-returns">
+              {t("pilot.procedures_title")}
+            </Link>
+            <Link href="/cookie-settings">{t("cookies.consent.settings")}</Link>
+          </nav>
           {/* Bottom Bar: Maintain horizontal flex on desktop, vertical on mobile */}
           <div className="border-t border-white/10 pt-8 flex flex-col flex-wrap md:flex-row justify-between items-center gap-6 text-[10px]">
             <p className="text-slate-500 font-medium">

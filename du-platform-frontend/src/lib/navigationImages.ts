@@ -1,5 +1,5 @@
 const heroImages: Record<string, string> = {
-  "/shop": "/images/pages/shop/zimbabwe_shop_hero.webp",
+  "/shop": "/images/pages/shop/crafts_binga_baskets_01.jpg",
   "/technology": "/images/pages/technology/ai_innovation.webp",
   "/investment": "/images/pages/investment/horticulture.jpg",
   "/tourism": "/images/pages/tourism/victoria_falls.webp",

@@ -41,6 +41,7 @@ describe("Onesa chat requests", () => {
           ...input.messages,
         ],
         language: "en",
+        currency: "EUR",
       },
       { timeout: 180_000 }
     );

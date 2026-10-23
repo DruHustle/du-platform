@@ -25,6 +25,8 @@
   display: none;
 }
 .content-page main .page-title {
+  overflow-wrap: anywhere;
+  hyphens: auto;
   font-size: clamp(28px, 3.6vw, 44px);
   font-weight: 750;
   line-height: 1.13;
@@ -169,6 +171,8 @@
   padding: clamp(24px, 5vw, 40px);
 }
 .content-page main .auth-title {
+  overflow-wrap: anywhere;
+  hyphens: auto;
   font-size: 28px;
   line-height: 1.2;
   font-weight: 750;
@@ -390,4 +394,20 @@
     :is(.shop-card-add-target, .shop-cart-link, .shop-primary-link) {
     transition: none;
   }
+}
+
+/* On mobile the page is the scroll container; desktop keeps the requested
+   independent cart pane. This also works with zoom and the software keyboard. */
+@media (max-width: 1023px) {
+  .content-page .shop-checkout-scroll {
+    max-height: none;
+    overflow-y: visible;
+    overscroll-behavior-y: auto;
+    scrollbar-gutter: auto;
+  }
+}
+
+.content-page #shop-cart-checkout button,
+.content-page #shop-cart-checkout a[role="button"] {
+  min-height: 44px;
 }

@@ -27,6 +27,15 @@ describe("cookie preferences", () => {
     expect(getCookieConsent()).toBe("accepted");
     const event = { type: "pageview" };
     expect(filterOptionalTelemetry(event)).toBe(event);
+    expect(
+      filterOptionalTelemetry({
+        type: "pageview",
+        url: "https://www.diasporaunlocked.com/search?q=private@example.test#access=secret",
+      })
+    ).toEqual({
+      type: "pageview",
+      url: "https://www.diasporaunlocked.com/search",
+    });
     setCookieConsent("rejected");
     expect(filterOptionalTelemetry(event)).toBeNull();
     expect(dispatchEvent).toHaveBeenCalledTimes(3);
