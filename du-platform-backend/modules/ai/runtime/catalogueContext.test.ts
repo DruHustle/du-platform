@@ -163,6 +163,26 @@ it("resolves follow-ups from user-selected product context, ignoring assistant c
   );
   expect(reply).toContain("Ingredients: Fixture water");
   expect(reply).not.toMatch(/Binga|Raspberry|Ignore/);
+  const shorthand = await catalogueReply(
+    "What about allergens?",
+    "en",
+    "EUR",
+    retrieve,
+    details,
+    userHistory
+  );
+  expect(shorthand).toContain("Allergens: Fixture milk");
+  const missing = await catalogueReply(
+    "And its sizes, variants, origin, supplier and delivery eligibility?",
+    "en",
+    "EUR",
+    retrieve,
+    async () => ({ details: productDetailsSchema.parse({}), updatedAt: null }),
+    userHistory
+  );
+  for (const label of ["Sizes", "Variants", "Origin", "Supplier", "Delivery"])
+    expect(missing).toContain(label);
+  expect(missing.match(/Not supplied/g)?.length).toBe(5);
   const unknown = await catalogueReply(
     "Is Fanta available? Does it contain allergens?",
     "en",

@@ -51,17 +51,22 @@ const fieldPatterns: Partial<Record<keyof ProductDetails, RegExp>> = {
     /ingredient|contain|zutaten|inhaltsstoff|zvinoumba|zvirimo|izithako/i,
   allergens:
     /allergen|allerg|gluten|peanut|lactose|nut.free|ukungezwani|\b(nuts?|milk|eggs?|soy)\b/i,
-  sizes: /\bsize|\bgro(?:ss|ß)e|größ|saizi|ubukhulu/i,
+  sizes:
+    /\bsize|\b(small|medium|large|xl|xxl)\b|\bgro(?:ss|ß)e|größ|saizi|ubukhulu/i,
   variants: /variant|option|sarudzo|okukheth/i,
-  origin: /origin|provenance|herkunft|made in|kwakabva|imvelaphi/i,
+  origin:
+    /origin|provenance|herkunft|made in|where.*(?:made|from)|wo.*hergestellt|kwakabva|imvelaphi/i,
+  supplier:
+    /supplier|sourcing|manufacturer|producer|lieferant|hersteller|mutengesi|umthengisi/i,
   deliveryEligibility: /deliver|dhl|versand|liefer|kutumir|ukuthumel/i,
   materials: /material|made of|zvakagadzir|okwenziw/i,
-  netQuantity: /volume|quantity|netto|pack size|huwandu|ubunengi/i,
+  netQuantity:
+    /volume|quantity|net weight|capacity|netto|pack size|huwandu|ubunengi/i,
   storage: /storage|store it|lager|kuchenget|ukugcin/i,
   handling: /handling|handle|handhab|kubata|ukuphath/i,
 };
 const followUp =
-  /\b(it|its|that|those|this one|them|sie|das|diese|zvacho|icho|yakhona|lokho)\b/i;
+  /\b(it|its|that|those|this one|them|sie|das|diese|zvacho|icho|yakhona|lokho)\b|^\s*(?:what about|and|und|ko|futhi)\b/i;
 const explicitProduct =
   /\b(shop|stock|products?|catalogue|catalog|mazoe|kapenta|cerevita|chevrons|sables|maheu|cascade|dovi|colcom|basket|groceries|katalog|produkte|bestand|zvigadzirwa|chitoro|imikhiqizo|isitolo)\b/i;
 export function asksAboutCatalogue(prompt: string, history: History = []) {
@@ -110,7 +115,7 @@ const genericWords = new Set(
 );
 const followUpWords = new Set([
   ...Array.from(genericWords),
-  ..."does contain contains that those this one them has sizes size variants variant options origin provenance delivery eligibility materials material storage handling volume quantity net pack from where made in hat haben und das diese deren welche herkunft grossen lagerung zvacho icho chii uye mune yakhona lokho izithako".split(
+  ..."does contain contains that those this one them has sizes size small medium large xl xxl variants variant options origin provenance supplier sourcing manufacturer producer delivery eligibility materials material storage handling volume quantity net weight capacity pack from where made in hat haben und das diese deren welche herkunft grossen lagerung zvacho icho chii uye mune yakhona lokho izithako ko futhi".split(
     " "
   ),
 ]);
