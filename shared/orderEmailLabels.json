@@ -4,27 +4,43 @@
     "valid_until": "Valid until",
     "delivery_charge": "Confirmed delivery charge",
     "refund_recorded": "Refund recorded",
-    "total": "Total"
+    "total": "Total",
+    "fulfilment_details": "Confirmed item details",
+    "refund_amount": "This refund amount",
+    "postal_code": "Postal code",
+    "customer_notes": "Requested options / delivery notes"
   },
   "de": {
     "final_quote": "Endgültiges Angebot",
     "valid_until": "Gültig bis",
     "delivery_charge": "Bestätigte Versandkosten",
     "refund_recorded": "Erstattung erfasst",
-    "total": "Gesamt"
+    "total": "Gesamt",
+    "fulfilment_details": "Bestätigte Artikeldetails",
+    "refund_amount": "Betrag dieser Erstattung",
+    "postal_code": "Postleitzahl",
+    "customer_notes": "Gewünschte Optionen / Lieferhinweise"
   },
   "sn": {
     "final_quote": "Mutengo wekupedzisira",
     "valid_until": "Inoshanda kusvika",
     "delivery_charge": "Mari yekutumira yasimbiswa",
     "refund_recorded": "Kudzorerwa kwemari kwanyorwa",
-    "total": "Zvose"
+    "total": "Zvose",
+    "fulfilment_details": "Zvinhu zvakasimbiswa zvechigadzirwa",
+    "refund_amount": "Mari yadzorerwa panguva ino",
+    "postal_code": "Kodhi yeposvo",
+    "customer_notes": "Sarudzo dzakumbirwa / mashoko ekutumira"
   },
   "nd": {
     "final_quote": "Intengo yokucina",
     "valid_until": "Isebenza kuze kube",
     "delivery_charge": "Indleko zokuthumela eziqinisekisiweyo",
     "refund_recorded": "Ukubuyiselwa kwemali kubhaliwe",
-    "total": "Konke"
+    "total": "Konke",
+    "fulfilment_details": "Imininingwane yempahla eqinisekisiweyo",
+    "refund_amount": "Imali ebuyiselwe kulokhu",
+    "postal_code": "Ikhodi yeposi",
+    "customer_notes": "Okuceliweyo / amanothi okuthumela"
   }
 }

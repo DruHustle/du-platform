@@ -457,8 +457,10 @@ try {
         element.scrollIntoView({ block: "start", behavior: "instant" })
       );
     if (width >= 1024) {
-      const pageScroll = await page.evaluate(() => scrollY);
       await checkoutPanel.hover({ position: { x: 16, y: 16 } });
+      // Hover may scroll the target into view (notably in Linux WebKit).
+      // Measure only the subsequent wheel/keyboard actions, after positioning.
+      const pageScroll = await page.evaluate(() => scrollY);
       await page.mouse.wheel(0, 400);
       await page.waitForFunction(
         element => element.scrollTop > 100,
@@ -543,6 +545,62 @@ try {
     await page
       .getByLabel("Shipping Address", { exact: true })
       .fill("Local mock address");
+    await page
+      .getByLabel("Postal code (where applicable)", { exact: true })
+      .fill("10115");
+    await page
+      .getByLabel("Requested size / variant or delivery notes (optional)", {
+        exact: true,
+      })
+      .fill("Fixture size M & navy; reception");
+    const handoff = page.locator('main a[href^="https://wa.me/"]').first();
+    const handoffText = async () =>
+      new URL(await handoff.getAttribute("href")).searchParams.get("text");
+    assert((await handoffText()).includes("10115"));
+    assert((await handoffText()).includes("Fixture size M & navy; reception"));
+    await page
+      .getByLabel("Postal code (where applicable)", { exact: true })
+      .fill("10117");
+    await page
+      .getByLabel("Requested size / variant or delivery notes (optional)", {
+        exact: true,
+      })
+      .fill("Fixture size L & green");
+    assert((await handoffText()).includes("10117"));
+    assert((await handoffText()).includes("Fixture size L & green"));
+    assert(!(await handoffText()).includes("Fixture size M"));
+    assert(!/manageToken|access=|requestToken/.test(await handoffText()));
+    if (width === 375) {
+      await page
+        .getByLabel("Shop currency", { exact: true })
+        .selectOption("USD");
+      assert((await handoffText()).includes("USD"));
+      await page
+        .getByLabel("Shop currency", { exact: true })
+        .selectOption("EUR");
+      const german = JSON.parse(
+        await readFile(
+          "du-platform-frontend/public/locales/de/translation.json",
+          "utf8"
+        )
+      );
+      await page
+        .getByRole("button", { name: "Open menu", exact: true })
+        .click();
+      await page.getByRole("button", { name: /Deutsch/ }).click();
+      await page.waitForFunction(() => document.documentElement.lang === "de");
+      assert(
+        (await handoffText()).includes(german.shop.products.whatsapp.intro)
+      );
+      await page
+        .getByRole("button", { name: german.nav.open_menu, exact: true })
+        .click();
+      await page.getByRole("button", { name: /English/ }).click();
+      await page.waitForFunction(() => document.documentElement.lang === "en");
+    }
+    pass(
+      `${width}px WhatsApp handoff snapshots postal code, requested options, currency and current language without private grants`
+    );
     // Native form constraints block malformed identity and support Enter submission.
     await page.getByLabel("Email Address", { exact: true }).fill("invalid");
     await page

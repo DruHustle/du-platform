@@ -1,4 +1,5 @@
 import { queueOrderNotification } from "./orderOutboxStore";
+import { assertQuoteReadiness } from "./shopReadiness";
 import { recordShopFunnel } from "./funnel";
 import type { PoolConnection, RowDataPacket } from "mysql2/promise";
 import { db } from "../../shared/databaseRuntime";
@@ -75,6 +76,8 @@ export async function readOrderWorkspace(ref: string, token?: string) {
       [events],
       [notifications],
       [snapshots],
+      [refunds],
+      [legacyRefunds],
     ] = await Promise.all([
       p.query<RowDataPacket[]>(
         "SELECT * FROM shop_order_workflows WHERE order_id = ?",
@@ -89,7 +92,7 @@ export async function readOrderWorkspace(ref: string, token?: string) {
         [order.id]
       ),
       p.query<RowDataPacket[]>(
-        `SELECT ${token === undefined ? "*" : "action, public_message, created_at"} FROM shop_order_events WHERE order_id = ? ORDER BY id`,
+        `SELECT ${token === undefined ? "*" : "action, public_message, created_at, CASE WHEN actor='customer' THEN request_id ELSE NULL END AS command_id"} FROM shop_order_events WHERE order_id = ? ORDER BY id`,
         [order.id]
       ),
       token === undefined
@@ -100,6 +103,14 @@ export async function readOrderWorkspace(ref: string, token?: string) {
         : Promise.resolve([[]] as any),
       p.query<RowDataPacket[]>(
         "SELECT items FROM shop_order_snapshots WHERE order_id = ?",
+        [order.id]
+      ),
+      p.query<RowDataPacket[]>(
+        "SELECT * FROM shop_order_refunds WHERE order_id=? ORDER BY id",
+        [order.id]
+      ),
+      p.query<RowDataPacket[]>(
+        "SELECT * FROM shop_refund_legacy_balances WHERE order_id=?",
         [order.id]
       ),
     ]);
@@ -130,6 +141,19 @@ export async function readOrderWorkspace(ref: string, token?: string) {
       carrier: state.carrier || "",
       tracking: state.tracking || "",
       refundCents: state.refund_cents || 0,
+      refundCurrency: quote?.currency || order.currency,
+      remainingPaidCents:
+        state.payment_reference && quote
+          ? Math.max(
+              0,
+              Number(quote.total_cents) - Number(state.refund_cents || 0)
+            )
+          : null,
+      unreconciledRefundCents: Math.max(
+        0,
+        Number(state.refund_cents || 0) -
+          refunds.reduce((sum, r) => sum + Number(r.amount_cents), 0)
+      ),
       nextAction: orderNextAction(stage, Boolean(quote?.expired)),
     };
     const parsedQuotes = quotes.map(q => ({
@@ -139,6 +163,11 @@ export async function readOrderWorkspace(ref: string, token?: string) {
     if (token !== undefined)
       return {
         ...publicState,
+        refunds: refunds.map(r => ({
+          amountCents: r.amount_cents,
+          currency: r.currency,
+          createdAt: r.created_at,
+        })),
         quotes: parsedQuotes,
         estimate: {
           currency: order.currency,
@@ -169,6 +198,8 @@ export async function readOrderWorkspace(ref: string, token?: string) {
       quotes: parsedQuotes,
       history: events,
       notifications,
+      refunds,
+      legacyRefundBalance: legacyRefunds[0] || null,
     };
   } finally {
     try {
@@ -264,15 +295,35 @@ export async function applyOrderCommand(
     );
     const quote = quotes[0];
     if (cmd.action === "quote_sent") {
+      const readiness = await assertQuoteReadiness(
+        order.shipping_country,
+        items.map(item => Number(item.product_id)),
+        cmd.quote?.currency || ""
+      );
+      if (readiness.commercialReady)
+        for (const item of [...items].sort(
+          (a, b) => a.product_id - b.product_id
+        )) {
+          const [[product]] = await c.query<RowDataPacket[]>(
+            "SELECT stock_qty,is_active FROM shop_products WHERE id=? FOR UPDATE",
+            [item.product_id]
+          );
+          if (!product?.is_active || product.stock_qty < item.quantity)
+            throw new ShopRequestError(
+              "This item is not currently available for the approved pilot. Reconfirm the request before quoting; enquiries do not reserve stock.",
+              409
+            );
+        }
       const q = cmd.quote;
       if (
         !q ||
         q.unitPrices.length !== items.length ||
+        q.fulfilmentDetails?.length !== items.length ||
         new Date(q.validUntil).getTime() <= Date.now() ||
         new Date(q.validUntil).getTime() > Date.now() + 90 * 86400000
       )
         throw new ShopRequestError(
-          "Provide a future quote validity date (within 90 days) and a price for each item."
+          "Provide a future quote validity date (within 90 days), a price and confirmed fulfilment details for each item."
         );
       const snapshot = items.map((item, i) => ({
         productId: item.product_id,
@@ -280,6 +331,7 @@ export async function applyOrderCommand(
         quantity: item.quantity,
         unitPriceCents: q.unitPrices[i],
         lineTotalCents: q.unitPrices[i] * item.quantity,
+        fulfilmentDetails: q.fulfilmentDetails![i],
       }));
       const total = snapshot.reduce(
         (n, item) => n + item.lineTotalCents,
@@ -427,8 +479,39 @@ export async function applyOrderCommand(
         throw new ShopRequestError(
           "Record an actual refund reference and amount within the paid quote total."
         );
+      const [legacy] = await c.query<RowDataPacket[]>(
+        "SELECT order_id FROM shop_refund_legacy_balances WHERE order_id=? AND BINARY last_known_reference=BINARY ?",
+        [order.id, cmd.refundReference]
+      );
+      if (legacy.length)
+        throw new ShopRequestError(
+          "This reference matches an unreconciled historical refund. Reconcile it before recording another refund.",
+          409
+        );
       state.refund_cents += cmd.refundCents;
       state.refund_reference = cmd.refundReference;
+      try {
+        await c.execute(
+          "INSERT INTO shop_order_refunds (order_id,command_id,amount_cents,currency,external_reference,reference_provider,reference_hash,actor) VALUES (?,?,?,?,?,?,?,?)",
+          [
+            order.id,
+            cmd.requestId,
+            cmd.refundCents,
+            quote.currency,
+            cmd.refundReference,
+            (cmd.refundProvider || "manual").toLowerCase(),
+            sha256(cmd.refundReference),
+            actor,
+          ]
+        );
+      } catch (err: any) {
+        if (err.code === "ER_DUP_ENTRY")
+          throw new ShopRequestError(
+            "This refund reference is already recorded for this order and payment channel. Reconcile the existing record before another refund.",
+            409
+          );
+        throw err;
+      }
     }
     if (cmd.action === "assign") {
       if (!cmd.assignedTo)

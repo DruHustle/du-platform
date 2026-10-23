@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { registerOnesaAIRoutes, type OnesaRouteDeps } from "./onesaRoutes";
 import { getOnesaRouteDeps } from "./onesaRuntime";
+import * as catalogue from "./catalogueContext";
 
 describe("Onesa public chat route", () => {
   const generateOnesaReply = vi.fn();
@@ -142,6 +143,43 @@ describe("Onesa public chat route", () => {
       code: "ONESA_INCOMPLETE_REPLY",
     });
     expect(onChatSuccess).not.toHaveBeenCalled();
+  });
+  it("routes multi-part product questions and follow-ups through read-only catalogue retrieval with user history", async () => {
+    const spy = vi
+      .spyOn(catalogue, "catalogueReply")
+      .mockResolvedValue(
+        "Published fixture ingredients and allergen uncertainty."
+      );
+    try {
+      const history = [
+        { role: "user", content: "Is Mazoe Orange 2L available?" },
+        { role: "assistant", content: "A previous answer." },
+      ];
+      const res = await chat({
+        language: "de",
+        currency: "EUR",
+        messages: [
+          ...history,
+          { role: "user", content: "What are its ingredients and allergens?" },
+        ],
+      });
+      expect(spy).toHaveBeenCalledWith(
+        "What are its ingredients and allergens?",
+        "de",
+        "EUR",
+        undefined,
+        undefined,
+        history
+      );
+      expect(generateOnesaReply).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith({
+        reply: "Published fixture ingredients and allergen uncertainty.",
+        truncated: false,
+        source: "published_catalogue",
+      });
+    } finally {
+      spy.mockRestore();
+    }
   });
 });
 

@@ -39,7 +39,7 @@ export function renderOrderEmail(
     ...(Array.isArray(row.items)
       ? row.items.map(
           (item: any) =>
-            `${item.productName ?? item.product_name} × ${item.quantity}: ${((item.lineTotalCents ?? item.line_total_cents) / 100).toFixed(2)} ${row.quote_currency ?? row.currency}`
+            `${item.productName ?? item.product_name} × ${item.quantity}: ${((item.lineTotalCents ?? item.line_total_cents) / 100).toFixed(2)} ${row.quote_currency ?? row.currency}${item.fulfilmentDetails ? `\n${labels.fulfilment_details}: ${item.fulfilmentDetails}` : ""}`
         )
       : []),
     ...(!isInitial && row.quote_version
@@ -67,6 +67,11 @@ export function renderOrderEmail(
     row.refund_cents
       ? `${labels.refund_recorded}: ${(row.refund_cents / 100).toFixed(2)} ${row.quote_currency ?? row.currency}`
       : "",
+    row.refund
+      ? `${labels.refund_amount}: ${(row.refund.amount_cents / 100).toFixed(2)} ${row.refund.currency}`
+      : "",
+    row.postal_code ? `${labels.postal_code}: ${row.postal_code}` : "",
+    row.customer_notes ? `${labels.customer_notes}: ${row.customer_notes}` : "",
     row.public_message || "",
     link,
     String(row.event_key).endsWith(":operator")

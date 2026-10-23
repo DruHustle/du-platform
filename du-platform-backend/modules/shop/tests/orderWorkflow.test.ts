@@ -1,6 +1,10 @@
 import { beforeAll, afterAll, describe, expect, it, vi } from "vitest";
 import mysql, { type Pool } from "mysql2/promise";
 import crypto from "node:crypto";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 let pool: Pool | null = null;
 vi.mock("../../../shared/databaseRuntime", () => ({
@@ -30,6 +34,7 @@ const refs: string[] = [];
 const payload = () => ({
   language: "de",
   postalCode: "10115",
+  customerNotes: "Fixture requested sealed pack; confirm before quoting",
   customerName: "Pilot Fixture",
   customerEmail: "fixture@example.test",
   shippingCountry: "Germany",
@@ -63,12 +68,32 @@ async function quote(ref: string) {
       quote: {
         currency: "EUR",
         unitPrices: [1234],
+        fulfilmentDetails: ["Fixture sealed pack; customer confirmed"],
         shippingCents: 600,
         validUntil: new Date(Date.now() + 86400000).toISOString(),
       },
     }),
     "admin@example.test"
   );
+}
+async function paidRequest() {
+  await pool!.execute("UPDATE shop_products SET stock_qty=30 WHERE id=?", [
+    productId,
+  ]);
+  const result = await request();
+  await quote(result.order.orderRef);
+  await applyOrderCommand(
+    result.order.orderRef,
+    command(2, "quote_accepted"),
+    "customer",
+    result.order.manageToken
+  );
+  await applyOrderCommand(
+    result.order.orderRef,
+    command(3, "payment_confirmed", { paymentReference: "FIXTURE-PAID" }),
+    "admin@example.test"
+  );
+  return result;
 }
 test("assisted-order transactional workflow", () => {
   beforeAll(async () => {
@@ -78,7 +103,7 @@ test("assisted-order transactional workflow", () => {
       !parsed.pathname.endsWith("_test")
     )
       throw new Error("Disposable localhost *_test database required");
-    pool = mysql.createPool(url!);
+    pool = mysql.createPool({ uri: url!, timezone: "Z" });
     // Own base tables support running this regression independently; never run against live data.
     await pool.execute(
       `CREATE TABLE IF NOT EXISTS shop_products (id INT PRIMARY KEY AUTO_INCREMENT,slug VARCHAR(160) UNIQUE,name VARCHAR(255),category VARCHAR(60),description TEXT,image_url VARCHAR(500),price_cents INT,currency VARCHAR(10),stock_qty INT,is_active TINYINT,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`
@@ -513,5 +538,456 @@ test("assisted-order transactional workflow", () => {
     detail = (await readOrderWorkspace(order.orderRef)) as any;
     expect(detail.notifications[0].status).toBe("sent");
     expect(send).toHaveBeenCalledTimes(1);
+  });
+  it("keeps two partial refunds immutable, replays safely, redacts private reconciliation data and rejects over-refunds", async () => {
+    const { order } = await paidRequest();
+    const first = command(4, "refund", {
+      refundCents: 400,
+      refundReference: "PARTIAL-ONE",
+      refundProvider: "Bank",
+    });
+    await applyOrderCommand(order.orderRef, first, "admin@example.test");
+    await applyOrderCommand(order.orderRef, first, "admin@example.test");
+    await applyOrderCommand(
+      order.orderRef,
+      command(5, "refund", {
+        refundCents: 500,
+        refundReference: "PARTIAL-TWO",
+        refundProvider: "Bank",
+      }),
+      "admin@example.test"
+    );
+    const workspace: any = await readOrderWorkspace(order.orderRef);
+    expect(
+      workspace.refunds.map((r: any) => [
+        r.amount_cents,
+        r.currency,
+        r.external_reference,
+        r.reference_provider,
+        r.actor,
+      ])
+    ).toEqual([
+      [400, "EUR", "PARTIAL-ONE", "bank", "admin@example.test"],
+      [500, "EUR", "PARTIAL-TWO", "bank", "admin@example.test"],
+    ]);
+    expect(workspace.refunds[0].command_id).toBe(first.requestId);
+    expect(workspace.refunds[0].created_at).toBeInstanceOf(Date);
+    expect(workspace.state.refundCents).toBe(900);
+    expect(workspace.state.remainingPaidCents).toBe(934);
+    expect(workspace.state.unreconciledRefundCents).toBe(0);
+    expect(
+      workspace.history.filter((e: any) => e.action === "refund")
+    ).toHaveLength(2);
+    expect(
+      workspace.notifications.filter((n: any) =>
+        n.event_key.endsWith(":refund")
+      )
+    ).toHaveLength(2);
+    const customer: any = await readOrderWorkspace(
+      order.orderRef,
+      order.manageToken
+    );
+    expect(customer.refunds.map((r: any) => r.amountCents)).toEqual([400, 500]);
+    expect(JSON.stringify(customer)).not.toMatch(
+      /PARTIAL-ONE|PARTIAL-TWO|admin@example/
+    );
+    await expect(
+      applyOrderCommand(
+        order.orderRef,
+        command(6, "refund", { refundCents: 1000, refundReference: "OVER" }),
+        "admin@example.test"
+      )
+    ).rejects.toThrow("within the paid quote total");
+    expect(
+      ((await readOrderWorkspace(order.orderRef)) as any).refunds
+    ).toHaveLength(2);
+  });
+  it("pauses new commercial quotes in prelaunch while preserving existing paid-order recovery, refunds and fulfilment", async () => {
+    const paid = await paidRequest(),
+      fresh = await request();
+    await applyOrderCommand(
+      fresh.order.orderRef,
+      command(0, "under_review"),
+      "admin@example.test"
+    );
+    const previous = process.env.SHOP_COMMERCIAL_MODE;
+    process.env.SHOP_COMMERCIAL_MODE = "prelaunch";
+    try {
+      await expect(
+        applyOrderCommand(
+          fresh.order.orderRef,
+          command(1, "quote_sent", {
+            quote: {
+              currency: "EUR",
+              unitPrices: [100],
+              fulfilmentDetails: ["Fixture confirmed pack"],
+              shippingCents: 0,
+              validUntil: new Date(Date.now() + 86400000).toISOString(),
+            },
+          }),
+          "admin@example.test"
+        )
+      ).rejects.toMatchObject({ status: 409 });
+      expect(
+        ((await readOrderWorkspace(fresh.order.orderRef)) as any).quotes
+      ).toHaveLength(0);
+      await applyOrderCommand(
+        paid.order.orderRef,
+        command(4, "refund", {
+          refundCents: 100,
+          refundReference: "PRELAUNCH-RETURN",
+        }),
+        "admin@example.test"
+      );
+      await applyOrderCommand(
+        paid.order.orderRef,
+        command(5, "dispatched", {
+          carrier: "DHL",
+          tracking: "PRELAUNCH-EXISTING",
+        }),
+        "admin@example.test"
+      );
+      expect(
+        (
+          (await readOrderWorkspace(
+            paid.order.orderRef,
+            paid.order.manageToken
+          )) as any
+        ).stage
+      ).toBe("dispatched");
+    } finally {
+      if (previous === undefined) delete process.env.SHOP_COMMERCIAL_MODE;
+      else process.env.SHOP_COMMERCIAL_MODE = previous;
+    }
+  });
+  it("scopes duplicate external references to the order and payment channel, not globally", async () => {
+    const { order } = await paidRequest();
+    await applyOrderCommand(
+      order.orderRef,
+      command(4, "refund", {
+        refundCents: 100,
+        refundReference: "SHARED-EXTERNAL",
+        refundProvider: "bank",
+      }),
+      "admin@example.test"
+    );
+    await applyOrderCommand(
+      order.orderRef,
+      command(5, "refund", {
+        refundCents: 100,
+        refundReference: "SHARED-EXTERNAL",
+        refundProvider: "cash",
+      }),
+      "admin@example.test"
+    );
+    await expect(
+      applyOrderCommand(
+        order.orderRef,
+        command(6, "refund", {
+          refundCents: 100,
+          refundReference: "SHARED-EXTERNAL",
+          refundProvider: " BANK ",
+        }),
+        "admin@example.test"
+      )
+    ).rejects.toMatchObject({ status: 409 });
+    const other = await paidRequest();
+    await applyOrderCommand(
+      other.order.orderRef,
+      command(4, "refund", {
+        refundCents: 100,
+        refundReference: "SHARED-EXTERNAL",
+        refundProvider: "bank",
+      }),
+      "admin@example.test"
+    );
+    expect(
+      ((await readOrderWorkspace(order.orderRef)) as any).state.refundCents
+    ).toBe(200);
+  });
+  it("checks current approved pilot stock before quoting without reserving inventory", async () => {
+    await pool!.execute("UPDATE shop_products SET stock_qty=3 WHERE id=?", [
+      productId,
+    ]);
+    const { order } = await request();
+    await applyOrderCommand(
+      order.orderRef,
+      command(0, "under_review"),
+      "admin@example.test"
+    );
+    const directory = await mkdtemp(path.join(tmpdir(), "du-quote-approval-")),
+      file = path.join(directory, "approval.json");
+    const originalMode = process.env.SHOP_COMMERCIAL_MODE,
+      originalFile = process.env.SHOP_PILOT_APPROVAL_FILE;
+    await writeFile(
+      file,
+      JSON.stringify({
+        version: 1,
+        market: "Europe",
+        currency: "EUR",
+        reviewedAt: new Date(Date.now() - 60000).toISOString(),
+        validUntil: new Date(Date.now() + 86400000).toISOString(),
+        approvedBy: "fixture@example.test",
+        destinationCountries: [{ code: "DE", names: ["Germany"] }],
+        approvedProductIds: [productId],
+        checks: Object.fromEntries(
+          SHOP_READINESS_CHECKS.map(key => [
+            key,
+            { approved: true, evidence: "fixture-only" },
+          ])
+        ),
+      }),
+      { mode: 0o600 }
+    );
+    process.env.SHOP_COMMERCIAL_MODE = "pilot";
+    process.env.SHOP_PILOT_APPROVAL_FILE = file;
+    const cmd = command(1, "quote_sent", {
+      quote: {
+        currency: "EUR",
+        unitPrices: [1234],
+        fulfilmentDetails: ["Fixture exact pack"],
+        shippingCents: 600,
+        validUntil: new Date(Date.now() + 86400000).toISOString(),
+      },
+    });
+    try {
+      await pool!.execute("UPDATE shop_products SET stock_qty=0 WHERE id=?", [
+        productId,
+      ]);
+      await expect(
+        applyOrderCommand(order.orderRef, cmd, "admin@example.test")
+      ).rejects.toMatchObject({ status: 409 });
+      expect(
+        ((await readOrderWorkspace(order.orderRef)) as any).quotes
+      ).toHaveLength(0);
+      await pool!.execute("UPDATE shop_products SET stock_qty=3 WHERE id=?", [
+        productId,
+      ]);
+      await applyOrderCommand(order.orderRef, cmd, "admin@example.test");
+      const [[product]] = await pool!.query<any[]>(
+        "SELECT stock_qty FROM shop_products WHERE id=?",
+        [productId]
+      );
+      expect(product.stock_qty).toBe(3);
+    } finally {
+      if (originalMode === undefined) delete process.env.SHOP_COMMERCIAL_MODE;
+      else process.env.SHOP_COMMERCIAL_MODE = originalMode;
+      if (originalFile === undefined)
+        delete process.env.SHOP_PILOT_APPROVAL_FILE;
+      else process.env.SHOP_PILOT_APPROVAL_FILE = originalFile;
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+  it("serializes concurrent refunds, preserves stock, and keeps the total within the paid amount", async () => {
+    const { order } = await paidRequest();
+    const commands = ["A", "B"].map(reference =>
+      command(4, "refund", { refundCents: 1100, refundReference: reference })
+    );
+    const result = await Promise.allSettled(
+      commands.map(cmd =>
+        applyOrderCommand(order.orderRef, cmd, "admin@example.test")
+      )
+    );
+    expect(result.filter(r => r.status === "fulfilled")).toHaveLength(1);
+    expect(
+      (result.find(r => r.status === "rejected") as PromiseRejectedResult)
+        .reason.status
+    ).toBe(409);
+    const won = result[0].status === "fulfilled" ? commands[0] : commands[1];
+    await applyOrderCommand(order.orderRef, won, "admin@example.test");
+    await expect(
+      applyOrderCommand(
+        order.orderRef,
+        command(5, "refund", { refundCents: 1100, refundReference: "NEXT" }),
+        "admin@example.test"
+      )
+    ).rejects.toThrow("within the paid quote total");
+    const workspace: any = await readOrderWorkspace(order.orderRef);
+    expect(workspace.refunds).toHaveLength(1);
+    expect(workspace.state.refundCents).toBe(1100);
+    const [[product]] = await pool!.query<any[]>(
+      "SELECT stock_qty FROM shop_products WHERE id=?",
+      [productId]
+    );
+    expect(product.stock_qty).toBe(29);
+  });
+  it("rolls back ledger, balance and event when refund notification intent fails", async () => {
+    const { order } = await paidRequest();
+    const before: any = await readOrderWorkspace(order.orderRef);
+    await pool!.query(
+      "CREATE TRIGGER du_refund_outbox_failure BEFORE INSERT ON shop_order_notifications FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='refund outbox fixture failure'"
+    );
+    try {
+      await expect(
+        applyOrderCommand(
+          order.orderRef,
+          command(4, "refund", {
+            refundCents: 100,
+            refundReference: "ROLLED-BACK",
+          }),
+          "admin@example.test"
+        )
+      ).rejects.toThrow("refund outbox fixture failure");
+    } finally {
+      await pool!.query("DROP TRIGGER du_refund_outbox_failure");
+    }
+    const after: any = await readOrderWorkspace(order.orderRef);
+    expect(after.refunds).toHaveLength(0);
+    expect(after.state.refundCents).toBe(0);
+    expect(after.state.version).toBe(4);
+    expect(after.history).toHaveLength(before.history.length);
+    expect(after.notifications).toHaveLength(before.notifications.length);
+  });
+  it("preserves legacy aggregates and last-known references across migration without fabricating ledger records", async () => {
+    const { order } = await paidRequest();
+    await pool!.execute(
+      "UPDATE shop_order_workflows SET refund_cents=250,refund_reference='LEGACY-LAST-KNOWN' WHERE order_id=(SELECT id FROM shop_orders WHERE order_ref=?)",
+      [order.orderRef]
+    );
+    await initializeShopPilot(pool!);
+    let workspace: any = await readOrderWorkspace(order.orderRef);
+    expect(workspace.refunds).toHaveLength(0);
+    expect(workspace.state.unreconciledRefundCents).toBe(250);
+    expect(workspace.legacyRefundBalance).toMatchObject({
+      amount_cents: 250,
+      last_known_reference: "LEGACY-LAST-KNOWN",
+      currency: "EUR",
+    });
+    await expect(
+      applyOrderCommand(
+        order.orderRef,
+        command(4, "refund", {
+          refundCents: 100,
+          refundReference: "LEGACY-LAST-KNOWN",
+        }),
+        "admin@example.test"
+      )
+    ).rejects.toMatchObject({ status: 409 });
+    await applyOrderCommand(
+      order.orderRef,
+      command(4, "refund", {
+        refundCents: 100,
+        refundReference: "NEW-RECORDED",
+      }),
+      "admin@example.test"
+    );
+    await initializeShopPilot(pool!);
+    workspace = await readOrderWorkspace(order.orderRef);
+    expect(workspace.state.refundCents).toBe(350);
+    expect(workspace.state.unreconciledRefundCents).toBe(250);
+    expect(workspace.refunds).toHaveLength(1);
+    expect(workspace.legacyRefundBalance.last_known_reference).toBe(
+      "LEGACY-LAST-KNOWN"
+    );
+  });
+  it("freezes postal code, requested notes, exact quote details and individual refund amounts into notifications", async () => {
+    await pool!.execute("UPDATE shop_order_notifications SET status='sent'");
+    const { order } = await paidRequest();
+    await applyOrderCommand(
+      order.orderRef,
+      command(4, "refund", {
+        refundCents: 200,
+        refundReference: "PRIVATE-REF",
+      }),
+      "admin@example.test"
+    );
+    await pool!.execute(
+      "UPDATE shop_order_workflows SET postal_code='CHANGED',customer_notes='CHANGED' WHERE order_id=(SELECT id FROM shop_orders WHERE order_ref=?)",
+      [order.orderRef]
+    );
+    const send = vi.fn().mockResolvedValue("mock-provider-only");
+    await processOrderNotifications(pool!, send, 8);
+    const operator = send.mock.calls
+      .map(c => c[0])
+      .find(mail => Array.isArray(mail.to));
+    expect(operator.text).toContain("10115");
+    expect(operator.text).toContain("Fixture requested sealed pack");
+    expect(operator.text).not.toContain("CHANGED");
+    const quoteMail = send.mock.calls
+      .map(c => c[0])
+      .find(mail =>
+        mail.text.includes("Fixture sealed pack; customer confirmed")
+      );
+    expect(quoteMail).toBeTruthy();
+    const refundMail = send.mock.calls
+      .map(c => c[0])
+      .find(mail => mail.text.includes("2.00 EUR"));
+    expect(refundMail).toBeTruthy();
+    expect(refundMail.text).not.toContain("PRIVATE-REF");
+  });
+  it("requires explicit details on new quote lines, preserves accepted details after catalogue edits, and reads legacy quotes", async () => {
+    const { order } = await request();
+    await applyOrderCommand(
+      order.orderRef,
+      command(0, "under_review"),
+      "admin@example.test"
+    );
+    const proposal = {
+      currency: "EUR",
+      unitPrices: [1234],
+      shippingCents: 600,
+      validUntil: new Date(Date.now() + 86400000).toISOString(),
+    };
+    await expect(
+      applyOrderCommand(
+        order.orderRef,
+        command(1, "quote_sent", { quote: proposal }),
+        "admin@example.test"
+      )
+    ).rejects.toThrow("confirmed fulfilment details");
+    await applyOrderCommand(
+      order.orderRef,
+      command(1, "quote_sent", {
+        quote: {
+          ...proposal,
+          fulfilmentDetails: ["Fixture agreed exact sealed pack"],
+        },
+      }),
+      "admin@example.test"
+    );
+    await applyOrderCommand(
+      order.orderRef,
+      command(2, "quote_accepted"),
+      "customer",
+      order.manageToken
+    );
+    await updateShopProductAdmin(productId, {
+      name: "Edited later",
+      description: "Later description",
+      price_cents: 2222,
+    });
+    const status: any = await readOrderWorkspace(
+      order.orderRef,
+      order.manageToken
+    );
+    expect(status.quotes[0].items[0]).toMatchObject({
+      productName: "Fixture Mazoe",
+      fulfilmentDetails: "Fixture agreed exact sealed pack",
+      unitPriceCents: 1234,
+    });
+    const legacy = await request();
+    await quote(legacy.order.orderRef);
+    const workspace: any = await readOrderWorkspace(legacy.order.orderRef);
+    const oldItems = workspace.quotes[0].items.map(
+      ({ fulfilmentDetails, ...item }: any) => item
+    );
+    await pool!.execute("UPDATE shop_quotes SET items=? WHERE order_id=?", [
+      JSON.stringify(oldItems),
+      workspace.order.id,
+    ]);
+    await applyOrderCommand(
+      legacy.order.orderRef,
+      command(2, "quote_accepted"),
+      "customer",
+      legacy.order.manageToken
+    );
+    expect(
+      (
+        (await readOrderWorkspace(
+          legacy.order.orderRef,
+          legacy.order.manageToken
+        )) as any
+      ).stage
+    ).toBe("quote_accepted");
   });
 });

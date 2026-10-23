@@ -445,12 +445,15 @@ export function registerOnesaAIRoutes(
           .json({ message: "The conversation must end with a user message." });
       }
 
-      if (asksAboutCatalogue(messages.at(-1)!.content)) {
+      if (asksAboutCatalogue(messages.at(-1)!.content, messages.slice(0, -1))) {
         return res.json({
           reply: await catalogueReply(
             messages.at(-1)!.content,
             deps.normalizeOnesaLanguage(requestedLanguage),
-            req.body?.currency
+            req.body?.currency,
+            undefined,
+            undefined,
+            messages.slice(0, -1)
           ),
           truncated: false,
           source: "published_catalogue",

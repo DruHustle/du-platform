@@ -2060,6 +2060,16 @@
     "trip_invalid": "Check your dates and allow at least one day per destination plus arrival and departure days.",
     "shop_hero_alt": "Woven baskets shown in the product catalogue",
     "discard_changes": "Discard unsaved changes?",
-    "privacy_whatsapp": "Choosing the WhatsApp handoff opens Meta’s service with prefilled request details. Review the information before using it; sending a chat message is a separate action. Email and telephone links open your chosen applications."
+    "privacy_whatsapp": "Choosing the WhatsApp handoff opens Meta’s service with prefilled request details. Review the information before using it; sending a chat message is a separate action. Email and telephone links open your chosen applications.",
+    "legacy_quote_details": "This older quote has no confirmed item options. Ask the shop to confirm them before proceeding.",
+    "refund_remaining": "Paid balance remaining after refunds",
+    "legacy_refund_notice": "Part of the refund total predates individual records. Contact the shop for reconciliation.",
+    "command_recovered": "The action was saved. Review the current status before continuing.",
+    "command_unconfirmed": "The response could not be confirmed. Check current status or retry the unchanged action; do not submit another financial request.",
+    "command_changed": "The request changed. Review the current status before continuing.",
+    "readiness_prelaunch": "Prelaunch — commercial readiness unconfirmed",
+    "readiness_limited": "Limited Europe pilot",
+    "readiness_pending_note": "Commercial procedures and product facts are still being completed. You may send an enquiry. Confirm the exact item, final written terms and delivery before accepting a quote or paying.",
+    "readiness_pilot_note": "Only explicitly approved destination countries and products are in the pilot. The shop confirms each item, DHL delivery and final terms individually."
   }
 }

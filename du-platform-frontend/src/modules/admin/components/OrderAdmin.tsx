@@ -1,4 +1,5 @@
 import { useAdminDraft } from "./useAdminDraft";
+import PilotReadinessNotice from "@/modules/shop/components/PilotReadinessNotice";
 import { useEffect, useState } from "react";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,10 @@ import {
   type OrderStage,
 } from "@shared/orderWorkflow";
 import { formatShopMoney } from "@/modules/shop/lib/formatShopMoney";
+import {
+  prepareOrderCommand,
+  reconcileOrderCommand,
+} from "@/modules/shop/lib/orderCommandAttempt";
 
 export default function OrderAdmin({
   onDirtyChange,
@@ -23,6 +28,7 @@ export default function OrderAdmin({
     [stage, setStage] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState("");
   const [metrics, setMetrics] = useState<any[]>([]);
   const [action, setAction] = useState("note"),
     [note, setNote] = useState(""),
@@ -51,6 +57,14 @@ export default function OrderAdmin({
         `/admin/orders/${encodeURIComponent(ref)}`
       );
       setDetail(data);
+      const recovered = reconcileOrderCommand(`admin:${ref}`, data);
+      setNotice(
+        recovered === "applied"
+          ? "The previous action was saved. Review the current order before continuing."
+          : recovered
+            ? "A previous response was unconfirmed. Review the current order and retry unchanged details if needed."
+            : ""
+      );
       setDirty(false);
       setAction("note");
       setNote("");
@@ -67,9 +81,9 @@ export default function OrderAdmin({
     const fields = new FormData(event.currentTarget);
     setBusy(true);
     setError("");
+    setNotice("");
     try {
       const payload: any = {
-        requestId: crypto.randomUUID(),
         version: detail.state.version,
         action,
         note,
@@ -84,6 +98,9 @@ export default function OrderAdmin({
           unitPrices: detail.items.map((_: any, i: number) =>
             Math.round(Number(fields.get(`price${i}`)) * 100)
           ),
+          fulfilmentDetails: detail.items.map((_: any, i: number) =>
+            String(fields.get(`fulfilment${i}`) || "")
+          ),
         };
       if (action === "payment_confirmed" || action === "payment_issue")
         payload.paymentReference = fields.get("paymentReference");
@@ -96,11 +113,13 @@ export default function OrderAdmin({
       if (action === "refund") {
         payload.refundCents = Math.round(Number(fields.get("refund")) * 100);
         payload.refundReference = fields.get("refundReference");
+        payload.refundProvider = fields.get("refundProvider");
       }
       const { data } = await api.post(
         `/admin/orders/${encodeURIComponent(detail.order.order_ref)}/commands`,
-        payload
+        await prepareOrderCommand(`admin:${detail.order.order_ref}`, payload)
       );
+      reconcileOrderCommand(`admin:${detail.order.order_ref}`, data);
       setDetail(data);
       setDirty(false);
       setNote("");
@@ -108,7 +127,33 @@ export default function OrderAdmin({
       setAction("note");
       await load();
     } catch (e) {
-      setError(getApiErrorMessage(e));
+      try {
+        const { data } = await api.get(
+          `/admin/orders/${encodeURIComponent(detail.order.order_ref)}`
+        );
+        const recovered = reconcileOrderCommand(
+          `admin:${detail.order.order_ref}`,
+          data
+        );
+        setDetail(data);
+        if (recovered === "applied") {
+          setNotice(
+            "The response was lost, but the action was saved. The current order is shown."
+          );
+          setDirty(false);
+          setAction("note");
+          setNote("");
+          setPublicMessage("");
+          await load();
+        } else
+          setError(
+            `${getApiErrorMessage(e)} ${recovered === "changed" ? "The order changed. Review the current state before another action." : "The response is unconfirmed. Retry unchanged details to reuse the same command; do not record the payment or refund again as a new action."}`
+          );
+      } catch {
+        setError(
+          `${getApiErrorMessage(e)} Current status could not be checked. Retry unchanged details; do not record another financial or fulfilment action until reconciled.`
+        );
+      }
     } finally {
       setBusy(false);
     }
@@ -116,6 +161,7 @@ export default function OrderAdmin({
   return (
     <section className="space-y-5" aria-label="Order management">
       <h2 className="text-2xl font-semibold">Assisted orders</h2>
+      <PilotReadinessNotice operator />
       <details className="rounded-xl border border-white/15 p-4">
         <summary className="cursor-pointer">
           Consented funnel totals (last 30 days)
@@ -182,6 +228,11 @@ export default function OrderAdmin({
       {error && (
         <p role="alert" className="text-rose-300">
           {error}
+        </p>
+      )}
+      {notice && (
+        <p role="status" className="text-zim-gold">
+          {notice}
         </p>
       )}
       <div className="grid gap-5 xl:grid-cols-[minmax(15rem,1fr)_minmax(0,2fr)]">
@@ -274,6 +325,10 @@ export default function OrderAdmin({
                     <p key={item.productId}>
                       {item.productName} × {item.quantity}:{" "}
                       {formatShopMoney(item.lineTotalCents, quote.currency)}
+                      <span className="block whitespace-pre-wrap text-sm text-white/75">
+                        {item.fulfilmentDetails ||
+                          "Legacy quote: exact item options were not captured. Confirm with the customer before fulfilment."}
+                      </span>
                     </p>
                   ))}
                 </div>
@@ -351,17 +406,35 @@ export default function OrderAdmin({
                     </select>
                   </label>
                   {detail.items.map((item: any, i: number) => (
-                    <label className="block" key={item.id}>
-                      Unit price: {item.product_name} (quantity {item.quantity})
-                      <Input
-                        type="number"
-                        name={`price${i}`}
-                        required
-                        min="0"
-                        step="0.01"
-                        defaultValue={(item.unit_price_cents / 100).toFixed(2)}
-                      />
-                    </label>
+                    <div className="space-y-2" key={item.id}>
+                      <label className="block">
+                        Unit price: {item.product_name} (quantity{" "}
+                        {item.quantity})
+                        <Input
+                          type="number"
+                          name={`price${i}`}
+                          required
+                          min="0"
+                          step="0.01"
+                          defaultValue={(item.unit_price_cents / 100).toFixed(
+                            2
+                          )}
+                        />
+                      </label>
+                      <label className="block">
+                        Confirmed item details: {item.product_name}
+                        <Textarea
+                          name={`fulfilment${i}`}
+                          required
+                          maxLength={1000}
+                          placeholder="Confirm the exact size, variant or fixed pack with the customer; do not infer availability."
+                          defaultValue={
+                            detail.quotes.at(-1)?.items[i]?.fulfilmentDetails ||
+                            ""
+                          }
+                        />
+                      </label>
+                    </div>
                   ))}
                   <label className="block">
                     Confirmed delivery charge
@@ -436,6 +509,15 @@ export default function OrderAdmin({
                     Refund reference
                     <Input name="refundReference" required maxLength={255} />
                   </label>
+                  <label className="block">
+                    Refund payment channel / provider
+                    <Input
+                      name="refundProvider"
+                      required
+                      maxLength={80}
+                      placeholder="Use the same channel name as your reconciliation records"
+                    />
+                  </label>
                 </>
               )}
               <label className="block">
@@ -464,6 +546,52 @@ export default function OrderAdmin({
                 {busy ? "Saving…" : "Save action"}
               </Button>
             </form>
+            <h4 className="font-semibold">Refund reconciliation</h4>
+            <p>
+              Refunds recorded:{" "}
+              {formatShopMoney(
+                detail.state.refundCents,
+                detail.state.refundCurrency
+              )}{" "}
+              · Paid balance remaining after refunds:{" "}
+              {detail.state.remainingPaidCents === null
+                ? "Not established; reconcile the legacy paid amount"
+                : formatShopMoney(
+                    detail.state.remainingPaidCents,
+                    detail.state.refundCurrency
+                  )}
+            </p>
+            {detail.state.unreconciledRefundCents > 0 && (
+              <p role="note" className="text-amber-300">
+                Historical balance requiring reconciliation:{" "}
+                {formatShopMoney(
+                  detail.state.unreconciledRefundCents,
+                  detail.state.refundCurrency
+                )}
+                . Individual amounts and references were not preserved by the
+                old workflow. Last known legacy reference:{" "}
+                {detail.legacyRefundBalance?.last_known_reference ||
+                  "not available"}
+                . This reference does not itemize the balance.
+              </p>
+            )}
+            {detail.refunds?.map((refund: any) => (
+              <div
+                key={refund.id}
+                className="break-words rounded border border-white/15 p-3 text-sm"
+              >
+                <p>
+                  {formatShopMoney(refund.amount_cents, refund.currency)} ·{" "}
+                  {new Date(refund.created_at).toLocaleString()}
+                </p>
+                <p>
+                  {refund.reference_provider}: {refund.external_reference}
+                </p>
+                <p>
+                  Recorded by {refund.actor} · Command {refund.command_id}
+                </p>
+              </div>
+            ))}
             <h4 className="font-semibold">Audit history</h4>
             {detail.history.map((e: any) => (
               <div

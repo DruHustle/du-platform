@@ -3,7 +3,10 @@
 This extends the existing assisted-payment shop. It does not collect payment,
 book travel, create sellers or guarantee DHL coverage. Commercial procedures are
 labelled drafts until the owner supplies and approves the inputs in
-[the audit](audits/assisted-order-pilot.md).
+[the audit](audits/assisted-order-pilot.md). Use the
+[Europe launch checklist and owner-input template](pilot-launch-readiness.md)
+before approving commercial operation. Readiness modes are an explicit
+operational choice; this review does not activate them in production.
 
 ## Operator workflow
 
@@ -17,7 +20,13 @@ In **Shop Products**, preserve the owner's basic catalogue fields. Product
 information supports verified specifications, variants, supplier/origin facts,
 handling restrictions, source URLs and photographs. Information does not create
 variant-level inventory; collect the requested variant in checkout notes and
-confirm it before quoting. In **Research**, add primary sources, an actual
+confirm exact size/variant/pack or other essential details **per quote line**.
+New quotes require these details; they are frozen in the immutable revision and
+shown before acceptance and in email. Old quotes remain readable and recoverable
+with an explicit missing-detail notice. Existing integrations issuing new quotes
+must supply `quote.fulfilmentDetails`, one nonempty string per ordered item.
+Refresh older admin clients before issuing a revised quote.
+In **Research**, add primary sources, an actual
 review date and confirmed contact details before selecting a reviewed status.
 
 In **Orders**, search the reference/customer or filter stage, assign the enquiry,
@@ -36,6 +45,19 @@ fulfilment succeeded. Resolve availability or record the actual refund.
 Received payment locks the agreed quote and currency, including during a stock issue. Resolve fulfilment or refund/cancel; use a new request for a different agreement. Refunds are records of money returned externally, not instructions to a provider.
 Do not record money that has not moved. Fully refunded orders cannot consume
 stock or dispatch. Record carrier/tracking on dispatch and delivery on completion.
+
+Each refund now has an immutable amount/currency, external reference, payment
+channel/provider, actor, timestamp and command ID. Use a consistent channel name:
+references are deduplicated within that order and channel, not globally across
+unrelated orders/providers. Provider labels are case-insensitive; external
+references preserve their case. The ledger, aggregate, event and notification
+intent commit together. The workspace shows each record and the paid balance
+remaining after refunds; this is not a claim that a further refund is due.
+Customer status exposes amounts/currencies/dates, not operator identity, provider
+references or private notes. Old aggregate balances are marked for reconciliation;
+the captured last-known legacy reference does not itemize the balance. A new
+refund matching that unreconciled historical reference is blocked for review.
+No historical individual records are fabricated.
 Cancellation requires a reason and an explicit stock decision. Only restock goods
 physically checked as available; a later checked return can be restocked once.
 This pilot supports whole-order restocking, not partial returns by variant.
@@ -48,6 +70,16 @@ A receipt is stored in the browser for recovery. Email grants are stripped from
 the URL before rendering/telemetry and kept only in that tab's session storage.
 Treat the private link as a credential; don't paste it into tickets or analytics.
 
+After an ambiguous command response, the UI reads current server state before
+encouraging another action. It retains the same command ID for the same unresolved
+payload, including across a tab refresh when session storage is available. Only
+a digest and non-secret command metadata are stored, not payment/refund references
+or form notes. Changed payloads use new IDs and stale versions still fail. A saved
+event reconciles the lost response without repeating inventory or notifications.
+If both the response and status read fail, retry unchanged details; do not record
+the same money again as a new action. Check the visible ledger and external bank
+records if uncertainty remains.
+
 ## Notifications and measurement
 
 Order changes commit their notification intent in the same database transaction.
@@ -55,6 +87,9 @@ The existing application process polls the durable order outbox. No subscription
 to the newsletter is implied. Customer messages use the submitted language;
 operator initial-request alerts use configured recipients. Inspect failures in
 the order workspace. There are at most five automatic attempts with backoff.
+Postal code and requested options/notes are captured in immutable message
+snapshots, including operator alerts. WhatsApp handoffs use the current form
+values, currency and language; they never add internal notes or access grants.
 Manual retry requires existing admin authorization, an audit event and the safe
 provider window. Resend idempotency keys and frozen encrypted payloads reduce
 duplicates; provider acceptance does not prove inbox delivery or exactly-once
@@ -125,6 +160,11 @@ point with the owner/provider. Startup runs the existing global schema lock and
 creates additive workflow, quote, event, notification, snapshot, product-details,
 research and funnel tables/indexes. Repeated startup preserves data. Existing
 catalogue fields, stock, prices and historical receipts are not rewritten.
+The reliability pass adds `shop_order_refunds` and
+`shop_refund_legacy_balances`. Startup captures an existing unitemized balance and
+its last-known reference once, without fabricating individual refunds. The UI
+computes unreconciled amounts from the aggregate minus itemized records. Keep the
+tables and original balances when rolling forward or restarting.
 Legacy orders without workflow state remain readable; paid legacy orders are
 recognized as already consumed. Reconcile an old paid record manually before
 recording new quote/refund operations; do not deduct it again.
@@ -145,6 +185,10 @@ changes committed, then forward-fix to a compatible backend. Rolling back to the
 old synchronous-mail code can also leave new requests without durable email.
 Database rollback is a separate incident requiring write freeze, captured current
 data and reconciliation, not an automatic part of image rollback.
+An application predating the refund ledger can change aggregates without
+preserving individual records. Freeze financial mutations before such a rollback
+and reconcile any gap before resuming; prefer a compatible forward fix. Do not
+drop the additive ledger to make an old binary look current.
 
 ## Backup and restoration procedure
 

@@ -36,7 +36,7 @@ export default function MainPageHero({
       [
         currentImage,
         ...(!prefersReducedMotion && !paused ? [nextImage] : []),
-        "/images/brand/diaspora_unlocked.png",
+        "/images/brand/diaspora_unlocked_336.webp",
       ],
       2
     );
@@ -92,7 +92,7 @@ export default function MainPageHero({
             <div className="relative inline-flex h-20 w-20 items-center justify-center md:h-28 md:w-28">
               <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
               <InstantImage
-                src="/images/brand/diaspora_unlocked.png"
+                src="/images/brand/diaspora_unlocked_336.webp"
                 alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
                 priority
                 wrapperClassName="relative overflow-visible bg-transparent"
