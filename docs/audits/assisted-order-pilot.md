@@ -1,7 +1,10 @@
 # Assisted-order pilot remediation
 
-Baseline: `44374ee36f35db1523f505bd4900fe8e8676a1dd`, 23 October 2026.
-Branch: `fix/assisted-order-pilot`. Work does not change production catalogue data.
+Original audit baseline: `44374ee36f35db1523f505bd4900fe8e8676a1dd`, 23 October 2026.
+The first pass below is historical evidence from `fix/assisted-order-pilot`.
+PRs #132 and #133 subsequently merged; production and protected main were
+rechecked at `82e704cee123a088ea2c391676315db950aef0d4` on 23 October 2026.
+No production catalogue edits were performed in either audit pass.
 
 ## Verified baseline and priorities
 
@@ -41,12 +44,12 @@ Baseline backend/database/AI health and CI/deployment were already working and w
 - Layout: **160 Chromium route/locale/width checks** (10 routes × 4 languages × 4 widths), **40 WebKit checks**, keyboard skip links and a 200% text zoom case. Widths: 320, 390, 768, 1440. Reports contain zero uncaught runtime errors, CSP violations or unexpected network failures. Important home/shop/legal and customer/operator screenshots were inspected; translated long headings and populated textarea labels were corrected. Final screenshot review measured 4.1:1 mobile-label contrast over Home; a darker translucent bar and brighter labels address this, with a runtime check requiring at least 4.5:1 over a white hero backdrop.
 - Offline/device suite: **31 scenarios passed**, including malformed/stale AI results, PDF output, synthetic camera/microphone streams, permission denial and cleanup, AR destination races, VR fallback, Quest 3 emulated stereo rendering/two controllers, tracked input, exit/reentry and navigation cleanup. This does not establish physical headset/camera compatibility.
 - Initial HTML/SEO: **67 documents and 56 canonical sitemap URLs** verified with the real public 28-product snapshot. Private pages remain noindex. CI uses an explicit seed fixture instead; production Vercel forbids that override.
-- Docker image built locally using the backend strategy without a live catalogue dependency. Existing deployment shell/worker failure/rollback fixtures and new preview/CSP/build-context guards passed. Read-only SSH confirmed the installed deploy script matches the repository, the outbound timer is active and DU's production Docker image is still the baseline.
+- Docker image built locally using the backend strategy without a live catalogue dependency. Existing deployment shell/worker failure/rollback fixtures and new preview/CSP/build-context guards passed. At that original pre-release inspection, read-only SSH confirmed the installed deploy script matched the repository, the outbound timer was active and DU's production Docker image was then the original baseline. This is historical evidence; see the current release status below.
 - Local logical backup/restore: **26 tables, 125 rows**, identical schema and row hashes after import into a separate disposable database; temporary restore/dump removed. This tests the procedure, **not production Aiven backup configuration or production recovery**.
 
 Additional regressions passed: Onesa HTTP/provider suite **20 scenarios**, full-page and popup chat at mobile/desktop in **Chromium and WebKit**, navigation/keyboard/history, four-language swipeable discovery, and VR music toggles in both engines.
 
-### Mobile performance
+### First-pass mobile performance (historical)
 
 Three cold-context samples per route, 390×844, 4× CPU slowdown, 100ms latency, 200,000 B/s down / 100,000 B/s up, identical local HTTPS/gzip/cache rules and a fixed public catalogue API snapshot. Observe paints for 6.5 seconds after load; no builds or other browser suites ran concurrently. Compare the exact clean baseline build against the updated functional build (entry `index-Dk5XHhtp.js`), before the final mobile-navigation contrast-only adjustment. No performance claim is made for that later styling adjustment. These are local lab measurements, not Lighthouse scores, field Core Web Vitals or claims about real carrier/provider latency.
 
@@ -62,7 +65,9 @@ Home's LCP regression is recorded, not hidden: self-hosted fonts and earlier sub
 
 ### Review and release status
 
-The requested review branch is pushed as a PR; deployed-preview and CI verification results are recorded in the delivery report. This task does not authorize a new production release. Production remains on the baseline unless separately approved. Preview service actions intentionally remain disabled; isolated full-stack journeys were verified locally. See [the operator/rollback/backup runbook](../assisted-order-operations.md).
+The first remediation merged through [PR #132](https://github.com/DruHustle/du-platform/pull/132) and [PR #133](https://github.com/DruHustle/du-platform/pull/133). [Production CI run 39997013134](https://github.com/DruHustle/du-platform/actions/runs/39997013134) completed successfully. Read-only `/api/ping` and the GitHub main branch were rechecked at `82e704cee123a088ea2c391676315db950aef0d4` during the follow-up pass. Production no longer runs the original `44374ee` baseline.
+
+The current follow-up is on `fix/pilot-reconciliation-readiness`; it is not merged or production-deployed. Its request authorizes a review branch/PR, with a separate authorization required for a production release. Preview service actions intentionally remain disabled; isolated full-stack journeys are verified locally. See [the operator/rollback/backup runbook](../assisted-order-operations.md) and [the follow-up evidence](pilot-reliability-readiness.md).
 
 ## Commercial launch inputs
 
