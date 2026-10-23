@@ -35,6 +35,11 @@ export function readSiteRoutes(root = process.cwd()) {
         );
         for (const id of Object.keys(projects))
           paths.add(`/investment/projects/${id}`);
+      } else if (route === "/shop/product/:slug") {
+        const index = path.join(root, "dist/public/catalogue-index.json");
+        if (fs.existsSync(index))
+          for (const p of JSON.parse(fs.readFileSync(index, "utf8")))
+            paths.add(`/shop/product/${p.slug}`);
       } else if (route.includes(":")) {
         throw new Error(
           `Add static document coverage for dynamic route ${route}`

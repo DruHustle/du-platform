@@ -9,3 +9,10 @@ private
 .vercel
 playwright-report
 test-results
+# Local credentials, certificates and agent state never enter image build context.
+.cert
+.aws
+.codex
+.agents
+*.log
+**/*.log

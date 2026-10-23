@@ -64,6 +64,7 @@ jobs:
       - name: Module tests
         run: pnpm test:modules
         env:
+          SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
           NEWSLETTER_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Frontend tests
@@ -75,8 +76,13 @@ jobs:
       - name: Guardrails (Build Safety)
         run: pnpm guardrails
 
-      - name: Build project
-        run: pnpm build
+      - name: Validate translations
+        run: pnpm translations:check
+
+      - name: Build project with isolated catalogue fixture
+        run: |
+          node --import tsx scripts/create-catalogue-fixture.mjs "$RUNNER_TEMP/du-catalogue.json"
+          DU_PUBLIC_CATALOGUE_FILE="$RUNNER_TEMP/du-catalogue.json" pnpm build
 
       - name: Initial HTML and canonical SEO regression checks
         run: pnpm test:seo
@@ -124,6 +130,20 @@ jobs:
       - name: Shop MySQL transaction regressions
         run: node --import tsx scripts/tests/shop-database.mjs
         env:
+          SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
+
+      - name: Responsive public pages and frontend CSP
+        run: pnpm test:e2e:pilot:layout
+
+      - name: Assisted-order pilot Chromium journey
+        run: pnpm test:e2e:pilot
+        env:
+          SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
+
+      - name: Assisted-order pilot WebKit journey
+        run: pnpm test:e2e:pilot
+        env:
+          PILOT_BROWSER: webkit
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Protected shop admin and regional checkout regressions
@@ -230,8 +250,20 @@ jobs:
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Isolate preview from production data
+        run: node scripts/prepare-preview.mjs
+
       - name: Deploy to Vercel Preview
-        run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }}
+        id: preview_deploy
+        run: |
+          url=$(vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Verify isolated preview
+        env:
+          PILOT_PREVIEW_URL: ${{ steps.preview_deploy.outputs.url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: node scripts/tests/pilot-preview.mjs
 
   # 4) Non-blocking formatting visibility; does not gate deployment.
   code-quality:

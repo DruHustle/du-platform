@@ -140,6 +140,16 @@ const setup = async (width, options = {}) => {
       }
       return route.fulfill({ json: { order: savedOrders.get(key) } });
     }
+    if (url.pathname.endsWith("/workflow"))
+      return route.fulfill({
+        json: {
+          stage: "request_received",
+          version: 0,
+          quotes: [],
+          history: [],
+          quoteExpired: false,
+        },
+      });
     if (url.pathname === "/api/shop/restock-notifications")
       return route.fulfill({ json: { message: "Notification saved" } });
     if (url.pathname.startsWith("/api/"))
@@ -444,49 +454,78 @@ try {
       .evaluate(element =>
         element.scrollIntoView({ block: "start", behavior: "instant" })
       );
-    const pageScroll = await page.evaluate(() => scrollY);
-    await checkoutPanel.hover({ position: { x: 16, y: 16 } });
-    await page.mouse.wheel(0, 400);
-    await page.waitForFunction(
-      element => element.scrollTop > 100,
-      await checkoutPanel.elementHandle()
-    );
-    assert.equal(
-      await page.evaluate(() => scrollY),
-      pageScroll,
-      "Scrolling the checkout panel must leave the product page stationary"
-    );
-    await checkoutPanel.evaluate(element => {
-      element.scrollTop = element.scrollHeight;
-    });
-    await page.mouse.wheel(0, 400);
-    await page.waitForTimeout(150);
-    assert.equal(
-      await page.evaluate(() => scrollY),
-      pageScroll,
-      "Reaching the end of checkout must not chain scrolling to the page"
-    );
-    const sendRequest = checkoutPanel.getByRole("button", {
-      name: "Send order request",
-      exact: true,
-    });
-    assert(await sendRequest.isVisible());
-    const submitBounds = await sendRequest.boundingBox();
-    assert(submitBounds.y >= 56 && submitBounds.y + submitBounds.height <= 900);
-    await checkoutPanel.evaluate(element => {
-      element.scrollTop = 0;
-    });
-    await checkoutPanel.focus();
-    await page.keyboard.press("PageDown");
-    await page.waitForFunction(
-      element => element.scrollTop > 50,
-      await checkoutPanel.elementHandle()
-    );
-    assert.equal(await page.evaluate(() => scrollY), pageScroll);
-    pass(`${width}px checkout scrolls independently with mouse and keyboard`);
-    await checkoutPanel.evaluate(element => {
-      element.scrollTop = 0;
-    });
+    if (width >= 1024) {
+      const pageScroll = await page.evaluate(() => scrollY);
+      await checkoutPanel.hover({ position: { x: 16, y: 16 } });
+      await page.mouse.wheel(0, 400);
+      await page.waitForFunction(
+        element => element.scrollTop > 100,
+        await checkoutPanel.elementHandle()
+      );
+      assert.equal(
+        await page.evaluate(() => scrollY),
+        pageScroll,
+        "Scrolling the checkout panel must leave the product page stationary"
+      );
+      await checkoutPanel.evaluate(element => {
+        element.scrollTop = element.scrollHeight;
+      });
+      await page.mouse.wheel(0, 400);
+      await page.waitForTimeout(150);
+      assert.equal(
+        await page.evaluate(() => scrollY),
+        pageScroll,
+        "Reaching the end of checkout must not chain scrolling to the page"
+      );
+      const sendRequest = checkoutPanel.getByRole("button", {
+        name: "Send order request",
+        exact: true,
+      });
+      assert(await sendRequest.isVisible());
+      const submitBounds = await sendRequest.boundingBox();
+      assert(
+        submitBounds.y >= 56 && submitBounds.y + submitBounds.height <= 900
+      );
+      await checkoutPanel.evaluate(element => {
+        element.scrollTop = 0;
+      });
+      await checkoutPanel.focus();
+      await page.keyboard.press("PageDown");
+      await page.waitForFunction(
+        element => element.scrollTop > 50,
+        await checkoutPanel.elementHandle()
+      );
+      assert.equal(await page.evaluate(() => scrollY), pageScroll);
+      pass(`${width}px checkout scrolls independently with mouse and keyboard`);
+      await checkoutPanel.evaluate(element => {
+        element.scrollTop = 0;
+      });
+    } else {
+      assert.equal(
+        await checkoutPanel.evaluate(
+          element => getComputedStyle(element).overflowY
+        ),
+        "visible"
+      );
+      const sendRequest = checkoutPanel.getByRole("button", {
+        name: "Send order request",
+        exact: true,
+      });
+      await sendRequest.scrollIntoViewIfNeeded();
+      const bounds = await sendRequest.boundingBox();
+      assert(bounds.y >= 56 && bounds.y + bounds.height <= 900);
+      await checkoutPanel.locator("input").first().focus();
+      await page.keyboard.press("PageDown");
+      assert.equal(
+        await checkoutPanel.evaluate(element => element.scrollTop),
+        0,
+        "Mobile must scroll the page, without a nested form scroller"
+      );
+      pass(
+        `${width}px checkout scrolls naturally with reachable submit controls`
+      );
+      await checkoutPanel.scrollIntoViewIfNeeded();
+    }
     await page.screenshot({ path: `${output}/cart-panel-${width}.png` });
     assert.equal(
       await page.locator("#shop-payment-dummy_gateway").count(),
@@ -607,46 +646,53 @@ try {
       exact: true,
     });
     await panel.waitFor();
-    await short.page.waitForFunction(
-      element => {
-        const bounds = element.getBoundingClientRect();
-        return bounds.top >= 56 && bounds.bottom <= innerHeight;
-      },
-      await panel.elementHandle()
-    );
-    const initialBounds = await panel.boundingBox();
-    assert(
-      initialBounds.y >= 56 && initialBounds.y + initialBounds.height <= 600,
-      "Checkout must fit below the page heading before the surrounding page scrolls"
-    );
-    const initialPageScroll = await short.page.evaluate(() => scrollY);
-    await panel.hover({ position: { x: 16, y: 16 } });
-    await short.page.mouse.wheel(0, 400);
-    await short.page.waitForFunction(
-      element => element.scrollTop > 100,
-      await panel.elementHandle()
-    );
-    assert.equal(await short.page.evaluate(() => scrollY), initialPageScroll);
-    await short.page
-      .locator("#shop-cart-checkout")
-      .evaluate(element =>
-        element.scrollIntoView({ block: "start", behavior: "instant" })
+    if (width >= 1024) {
+      await short.page.waitForFunction(
+        element => {
+          const bounds = element.getBoundingClientRect();
+          return bounds.top >= 56 && bounds.bottom <= innerHeight;
+        },
+        await panel.elementHandle()
       );
-    await panel.hover({ position: { x: 16, y: 16 } });
-    // Let the viewport-height observer settle after programmatic positioning.
-    await short.page.evaluate(
-      () =>
-        new Promise(resolve =>
-          requestAnimationFrame(() => requestAnimationFrame(resolve))
-        )
-    );
-    const y = await short.page.evaluate(() => scrollY);
-    await short.page.mouse.wheel(0, 1000);
-    await short.page.waitForFunction(
-      element => element.scrollTop > 100,
-      await panel.elementHandle()
-    );
-    assert.equal(await short.page.evaluate(() => scrollY), y);
+      const initialBounds = await panel.boundingBox();
+      assert(
+        initialBounds.y >= 56 && initialBounds.y + initialBounds.height <= 600,
+        "Checkout must fit below the page heading before the surrounding page scrolls"
+      );
+      const initialPageScroll = await short.page.evaluate(() => scrollY);
+      await panel.hover({ position: { x: 16, y: 16 } });
+      await short.page.mouse.wheel(0, 400);
+      await short.page.waitForFunction(
+        element => element.scrollTop > 100,
+        await panel.elementHandle()
+      );
+      assert.equal(await short.page.evaluate(() => scrollY), initialPageScroll);
+      await short.page
+        .locator("#shop-cart-checkout")
+        .evaluate(element =>
+          element.scrollIntoView({ block: "start", behavior: "instant" })
+        );
+      await panel.hover({ position: { x: 16, y: 16 } });
+      // Let the viewport-height observer settle after programmatic positioning.
+      await short.page.evaluate(
+        () =>
+          new Promise(resolve =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          )
+      );
+      const y = await short.page.evaluate(() => scrollY);
+      await short.page.mouse.wheel(0, 1000);
+      await short.page.waitForFunction(
+        element => element.scrollTop > 100,
+        await panel.elementHandle()
+      );
+      assert.equal(await short.page.evaluate(() => scrollY), y);
+    } else {
+      assert.equal(
+        await panel.evaluate(element => getComputedStyle(element).overflowY),
+        "visible"
+      );
+    }
     const button = panel.getByRole("button", {
       name: "Send order request",
       exact: true,
