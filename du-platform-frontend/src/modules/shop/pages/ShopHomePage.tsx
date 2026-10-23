@@ -1,3 +1,4 @@
+import { matchesShopSegment } from "../lib/shopContent";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 import { ArrowRight, ArrowUpRight, ShoppingBag } from "lucide-react";
@@ -43,8 +44,8 @@ export default function Shop() {
           highlight={t("shop.landing.highlight")}
           description={t("shop.landing.description")}
           principle={t("shop.landing.principle")}
-          image="/images/pages/shop/zimbabwe_shop_hero.webp"
-          imageAlt={t("home.tiles.shop.image_alt")}
+          image="/images/pages/shop/crafts_binga_baskets_01.jpg"
+          imageAlt={t("pilot.shop_hero_alt")}
           caption={t("shop.landing.caption")}
         >
           <Button
@@ -92,9 +93,16 @@ export default function Shop() {
             )}
           >
             {SHOP_CATEGORY_CONFIG.map(category => {
-              const product = products.find(
+              const preferred = products.find(
                 p => p.slug === FEATURED_PRODUCT_BY_SEGMENT[category.key]
               );
+              const product =
+                preferred && preferred.stock_qty > 0
+                  ? preferred
+                  : (products.find(
+                      p =>
+                        p.stock_qty > 0 && matchesShopSegment(p, category.key)
+                    ) ?? preferred);
               if (!product) return null;
               const quantity =
                 cart.find(item => item.productId === product.id)?.quantity || 0;

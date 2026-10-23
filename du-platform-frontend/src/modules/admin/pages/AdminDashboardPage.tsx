@@ -1,3 +1,6 @@
+import ResearchAdmin from "../components/ResearchAdmin";
+import ProductDetailsAdmin from "../components/ProductDetailsAdmin";
+import OrderAdmin from "../components/OrderAdmin";
 import ShopAdmin, { type AdminShopProduct } from "../components/ShopAdmin";
 import NewsletterAdmin from "../components/NewsletterAdmin";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -42,7 +45,14 @@ type SuccessStoryRow = {
   created_at: string;
 };
 
-type TabKey = "newsletter" | "notify" | "ntir" | "stories" | "shop";
+type TabKey =
+  | "research"
+  | "orders"
+  | "newsletter"
+  | "notify"
+  | "ntir"
+  | "stories"
+  | "shop";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -86,11 +96,14 @@ export default function AdminDashboard() {
     is_published: true,
   });
   const [shopDirty, setShopDirty] = useState(false);
+  const [workspaceDirty, setWorkspaceDirty] = useState(false);
   const notifyIdsRef = useRef<Set<number>>(new Set());
   const notifyInitializedRef = useRef(false);
 
   const tabs = useMemo(
     () => [
+      { key: "research" as const, label: "Research", count: null },
+      { key: "orders" as const, label: "Orders", count: null },
       { key: "newsletter" as const, label: "Newsletter", count: null },
       {
         key: "notify" as const,
@@ -131,7 +144,12 @@ export default function AdminDashboard() {
     if (!silent) setLoading(true);
     if (!detectNewNotify) setError("");
     try {
-      if (!detectNewNotify && activeTab === "newsletter") {
+      if (
+        !detectNewNotify &&
+        (activeTab === "newsletter" ||
+          activeTab === "orders" ||
+          activeTab === "research")
+      ) {
         await api.get("/admin/overview");
         return;
       }
@@ -384,11 +402,13 @@ export default function AdminDashboard() {
                 onClick={() => {
                   if (
                     tab.key !== activeTab &&
-                    (newsletterDirty || shopDirty) &&
+                    (newsletterDirty || shopDirty || workspaceDirty) &&
                     !window.confirm(
-                      shopDirty
-                        ? t("admin.shop.discard")
-                        : "Discard your unsaved newsletter changes?"
+                      workspaceDirty
+                        ? t("pilot.discard_changes")
+                        : shopDirty
+                          ? t("admin.shop.discard")
+                          : "Discard your unsaved newsletter changes?"
                     )
                   )
                     return;
@@ -440,6 +460,18 @@ export default function AdminDashboard() {
             </p>
           ) : null}
 
+          {!loading && legacyDataLoaded && activeTab === "shop" ? (
+            <ProductDetailsAdmin
+              products={shopRows}
+              onDirtyChange={setWorkspaceDirty}
+            />
+          ) : null}
+          {!loading && activeTab === "research" && !error ? (
+            <ResearchAdmin onDirtyChange={setWorkspaceDirty} />
+          ) : null}
+          {!loading && activeTab === "orders" && !error ? (
+            <OrderAdmin onDirtyChange={setWorkspaceDirty} />
+          ) : null}
           {!loading && activeTab === "newsletter" && !error ? (
             <NewsletterAdmin onDirtyChange={setNewsletterDirty} />
           ) : null}

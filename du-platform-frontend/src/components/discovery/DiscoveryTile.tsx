@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import InstantImage from "@/components/InstantImage";
 
 type Props = {
+  id?: string;
   title: string;
   image?: string;
   imageAlt?: string;
@@ -14,6 +15,7 @@ type Props = {
   onSelect?: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 export default function DiscoveryTile({
+  id,
   title,
   image,
   imageAlt = "",
@@ -27,6 +29,7 @@ export default function DiscoveryTile({
   const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <article
+      id={id}
       className={`discovery-tile${image ? " discovery-tile-with-image" : ""}`}
     >
       {onSelect && (

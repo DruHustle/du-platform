@@ -18,7 +18,7 @@ const modules = [
   {
     key: "shop",
     href: "/shop",
-    image: "/images/pages/shop/zimbabwe_shop_hero.webp",
+    image: "/images/pages/shop/crafts_binga_baskets_01.jpg",
     icon: ShoppingBag,
   },
   {

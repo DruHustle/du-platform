@@ -1,0 +1,163 @@
+import { useEffect, useState } from "react";
+import { Link, useRoute } from "wouter";
+import Layout from "@/components/Layout";
+import { useShopCatalog } from "../lib/useShopCatalog";
+import { useShopCart } from "../lib/useShopCart";
+import { useShopCurrency } from "../lib/useShopCurrency";
+import { convertShopCents } from "@shared/shopCurrency";
+import { formatShopMoney } from "../lib/formatShopMoney";
+import { api } from "@/lib/api";
+import { useTranslation } from "react-i18next";
+import QuantityControl from "../components/QuantityControl";
+import CatalogNotice from "../components/CatalogNotice";
+import type { ProductDetails } from "@shared/productDetails";
+export default function ProductPage() {
+  const [, params] = useRoute("/shop/product/:slug");
+  const { products, status, refresh } = useShopCatalog();
+  const product = products.find(p => p.slug === params?.slug);
+  const { cart, add, removeOne } = useShopCart();
+  const { currency } = useShopCurrency();
+  const { t } = useTranslation();
+  const [details, setDetails] = useState<ProductDetails | null>(null),
+    [failed, setFailed] = useState(false);
+  useEffect(() => {
+    const c = new AbortController();
+    setDetails(null);
+    setFailed(false);
+    if (product && status === "ready")
+      api
+        .get(`/shop/products/${product.id}/details`, { signal: c.signal })
+        .then(({ data }) => setDetails(data.details))
+        .catch(() => {
+          if (!c.signal.aborted) setFailed(true);
+        });
+    return () => c.abort();
+  }, [product?.id, status]);
+  useEffect(() => {
+    if (status !== "ready") return;
+    if (product) {
+      document.title = `${product.name} | Shop | Diaspora Unlocked`;
+      document
+        .querySelector('meta[name="description"]')
+        ?.setAttribute("content", product.description);
+    } else
+      document
+        .querySelector('meta[name="robots"]')
+        ?.setAttribute("content", "noindex,follow");
+  }, [product, status]);
+  return (
+    <Layout>
+      <section className="document-section min-h-screen bg-slate-950 text-white">
+        <div className="container space-y-6">
+          <Link href="/shop/products" className="text-zim-gold underline">
+            {t("pilot.browse_products")}
+          </Link>
+          <CatalogNotice status={status} onRetry={() => void refresh()} />
+          {product ? (
+            <>
+              <div className="grid gap-8 md:grid-cols-2">
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="aspect-square max-h-[32rem] w-full rounded-2xl bg-white/5 object-contain p-5"
+                />
+                <div className="space-y-5">
+                  <h1 className="page-title">{product.name}</h1>
+                  <p>{product.description}</p>
+                  <p className="text-xl font-semibold">
+                    {formatShopMoney(
+                      convertShopCents(
+                        product.price_cents,
+                        product.currency,
+                        currency
+                      ),
+                      currency
+                    )}
+                  </p>
+                  <p>
+                    {t(
+                      product.stock_qty > 0
+                        ? "pilot.available_now"
+                        : "shop.products.stock.out"
+                    )}
+                  </p>
+                  <QuantityControl
+                    name={product.name}
+                    quantity={
+                      cart.find(i => i.productId === product.id)?.quantity || 0
+                    }
+                    limit={product.stock_qty}
+                    disabled={status !== "ready"}
+                    onAdd={() => add(product.id, product.stock_qty)}
+                    onRemove={() => removeOne(product.id)}
+                  />
+                  <Link
+                    className="inline-flex min-h-11 items-center rounded-full bg-zim-gold px-5 font-semibold text-black"
+                    href="/shop/products?cart=1"
+                  >
+                    {t("shop.products.actions.checkout")}
+                  </Link>
+                  <p className="text-sm text-white/65">
+                    {t("shop.products.notes.supported_methods")}
+                  </p>
+                </div>
+              </div>
+              <h2 className="text-2xl font-semibold">
+                {t("pilot.product_details")}
+              </h2>
+              {failed ||
+              !details ||
+              !Object.values(details).some(v =>
+                Array.isArray(v) ? v.length : v
+              ) ? (
+                <p>{t("pilot.missing_details")}</p>
+              ) : (
+                <dl className="grid gap-5 sm:grid-cols-2">
+                  {Object.entries(details)
+                    .filter(([, v]) => (Array.isArray(v) ? v.length : v))
+                    .map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="rounded-xl border border-white/15 p-4"
+                      >
+                        <dt className="font-semibold">
+                          {t(`pilot.details.${key}`)}
+                        </dt>
+                        <dd className="mt-2 whitespace-pre-wrap break-words text-white/75">
+                          {Array.isArray(value)
+                            ? value.map((url: string) =>
+                                key === "photos" ? (
+                                  <img
+                                    key={url}
+                                    src={url}
+                                    alt={product.name}
+                                    loading="lazy"
+                                    className="my-3 max-h-80 w-full object-contain"
+                                  />
+                                ) : (
+                                  <a
+                                    key={url}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block underline"
+                                  >
+                                    {url}
+                                  </a>
+                                )
+                              )
+                            : value}
+                        </dd>
+                      </div>
+                    ))}
+                </dl>
+              )}
+            </>
+          ) : status === "ready" ? (
+            <h1 className="page-title">{t("search.no_results.title")}</h1>
+          ) : null}
+        </div>
+      </section>
+    </Layout>
+  );
+}

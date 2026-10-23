@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { convertShopCents } from "@shared/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import type { ReactNode } from "react";
@@ -59,8 +60,7 @@ export default function ProductCard({
           className="h-full w-full object-contain p-3 md:p-6"
           onError={event => {
             event.currentTarget.onerror = null;
-            event.currentTarget.src =
-              "/images/pages/shop/zimbabwe_shop_hero.webp";
+            event.currentTarget.src = "/images/brand/diaspora_unlocked.png";
           }}
         />
         {available && product.stock_qty === 0 && (
@@ -96,6 +96,12 @@ export default function ProductCard({
               onRemove={onRemove}
             />
           </div>
+          <Link
+            href={`/shop/product/${encodeURIComponent(product.slug)}`}
+            className="relative z-20 mt-3 inline-flex min-h-11 items-center text-xs text-zim-gold underline underline-offset-4"
+          >
+            {t("pilot.product_details")}
+          </Link>
           {footer && <div className="relative z-20 mt-3">{footer}</div>}
         </div>
       </div>

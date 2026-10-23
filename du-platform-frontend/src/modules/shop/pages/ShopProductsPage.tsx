@@ -1,3 +1,7 @@
+import { Textarea } from "@/components/ui/textarea";
+import { getCookieConsent } from "@/lib/cookieConsent";
+import { trackShopFunnel } from "../lib/shopFunnel";
+import OrderStatus from "../components/OrderStatus";
 import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
 import { convertShopCents, SHOP_PRICING_REVISION } from "@shared/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
@@ -14,7 +18,6 @@ import {
   MessageCircle,
   Mail,
   Package,
-  Clock,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -138,6 +141,8 @@ export default function ShopProducts() {
   const [customerEmail, setCustomerEmail] = useState("");
   const [shippingCountry, setShippingCountry] = useState("");
   const [shippingCity, setShippingCity] = useState("");
+  const [customerNotes, setCustomerNotes] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [deliverySpeed, setDeliverySpeed] = useState<DeliverySpeed>("normal");
   const [paymentMethod, setPaymentMethod] =
@@ -255,18 +260,25 @@ export default function ShopProducts() {
     }
   }, [paymentMethod, supportsDummyGateway]);
 
+  const availableOnly = new URLSearchParams(search).get("available") === "1";
+  const selectedProduct = new URLSearchParams(search).get("product");
   const products = useMemo(
     () =>
       allProducts.filter(product => {
         const normalized = normalizeProductCategory(product.category);
         return (
           (category === "all" || normalized === category) &&
-          matchesShopSegment(product, segment)
+          matchesShopSegment(product, segment) &&
+          (!availableOnly || product.stock_qty > 0) &&
+          (!selectedProduct || product.slug === selectedProduct)
         );
       }),
-    [allProducts, category, segment]
+    [allProducts, category, segment, availableOnly, selectedProduct]
   );
 
+  useEffect(() => {
+    if (catalogStatus === "ready") trackShopFunnel("product_discovery");
+  }, [catalogStatus]);
   const availableSegments = useMemo(
     () =>
       SHOP_CATEGORY_CONFIG.filter(
@@ -494,6 +506,9 @@ export default function ShopProducts() {
         customerName: effectiveCustomerName,
         customerEmail: effectiveCustomerEmail,
         shippingCountry,
+        postalCode,
+        customerNotes,
+        analyticsConsent: getCookieConsent() === "accepted",
         shippingCity,
         shippingAddress,
         deliverySpeed,
@@ -641,7 +656,9 @@ export default function ShopProducts() {
                           onClick={() => {
                             setCategory(tab.key);
                             setSegment("");
-                            setLocation(`/shop/products?category=${tab.key}`);
+                            setLocation(
+                              `/shop/products?category=${tab.key}${availableOnly ? "&available=1" : ""}`
+                            );
                           }}
                           className={`rounded-full px-5 py-2 h-auto text-[10px] font-black uppercase tracking-[0.2em] ${
                             category === tab.key
@@ -664,7 +681,9 @@ export default function ShopProducts() {
                           const query = nextSegment
                             ? `/shop/products?category=${category}&segment=${nextSegment}`
                             : `/shop/products?category=${category}`;
-                          setLocation(query);
+                          setLocation(
+                            `${query}${availableOnly ? "&available=1" : ""}`
+                          );
                         }}
                         className="w-full rounded-full border border-zim-gold bg-zim-gold px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-black outline-none focus:border-zim-gold sm:border-white/20 sm:bg-white/10 sm:text-white"
                       >
@@ -687,6 +706,21 @@ export default function ShopProducts() {
                     </div>
                   </div>
 
+                  <label className="mb-4 flex min-h-11 items-center gap-3 text-sm text-white">
+                    <input
+                      type="checkbox"
+                      checked={availableOnly}
+                      onChange={event => {
+                        const params = new URLSearchParams(search);
+                        if (event.target.checked) params.set("available", "1");
+                        else params.delete("available");
+                        setLocation(`/shop/products?${params}`);
+                      }}
+                    />
+                    {t("pilot.available_now", {
+                      defaultValue: "Available now",
+                    })}
+                  </label>
                   <CatalogNotice
                     status={catalogStatus}
                     onRetry={() => void refreshCatalog()}
@@ -704,12 +738,18 @@ export default function ShopProducts() {
                             })}
                           </p>
                           <p className="text-white/45 text-xs mt-1">
-                            {category !== "all" || segment
+                            {category !== "all" ||
+                            segment ||
+                            availableOnly ||
+                            selectedProduct
                               ? t("shop.products.filter_hint")
                               : t("shop.products.empty_hint")}
                           </p>
                         </div>
-                        {(category !== "all" || segment) && (
+                        {(category !== "all" ||
+                          segment ||
+                          availableOnly ||
+                          selectedProduct) && (
                           <Button
                             type="button"
                             onClick={() => {
@@ -869,7 +909,7 @@ export default function ShopProducts() {
                                 key={row.product.id}
                                 className="shop-cart-row"
                               >
-                                <p className="text-[11px] font-bold text-white break-words">
+                                <p className="text-sm font-bold text-white break-words">
                                   {row.product.name}
                                 </p>
                                 {catalogStatus === "ready" &&
@@ -907,7 +947,7 @@ export default function ShopProducts() {
                                     onAdd={() => addToCart(row.product)}
                                     onRemove={() => removeOne(row.product.id)}
                                   />
-                                  <p className="text-[11px] text-zim-gold font-black">
+                                  <p className="text-sm text-zim-gold font-black">
                                     {money(row.lineTotal)}
                                   </p>
                                 </div>
@@ -933,7 +973,7 @@ export default function ShopProducts() {
                             </span>
                             <span>{money(shippingCents)}</span>
                           </div>
-                          <div className="flex justify-between text-white font-black text-[11px]">
+                          <div className="flex justify-between text-white font-black text-sm">
                             <span>
                               {t("shop.products.totals.total", {
                                 defaultValue: "Estimated total",
@@ -947,7 +987,7 @@ export default function ShopProducts() {
                     <div className="mt-3 border-t border-white/10 pt-2.5">
                       {!receiptOnly && (
                         <>
-                          <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
+                          <h3 className="text-xs font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
                             {isAuthenticated
                               ? t("shop.products.checkout.title", {
                                   defaultValue: "Your order request",
@@ -958,7 +998,7 @@ export default function ShopProducts() {
                           </h3>
 
                           {isAuthenticated ? (
-                            <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-[11px] text-white/75">
+                            <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-sm text-white/75">
                               {t("shop.products.checkout.logged_in_as", {
                                 defaultValue: "Signed in as",
                               })}{" "}
@@ -974,7 +1014,7 @@ export default function ShopProducts() {
                                 <div className="space-y-1">
                                   <Label
                                     htmlFor="shop-customer-name"
-                                    className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                    className="text-xs uppercase tracking-[0.14em] text-white/70"
                                   >
                                     {t("shop.products.fields.full_name", {
                                       defaultValue: "Full Name",
@@ -1002,7 +1042,7 @@ export default function ShopProducts() {
                                 <div className="space-y-1">
                                   <Label
                                     htmlFor="shop-customer-email"
-                                    className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                    className="text-xs uppercase tracking-[0.14em] text-white/70"
                                   >
                                     {t("shop.products.fields.email_address", {
                                       defaultValue: "Email Address",
@@ -1032,7 +1072,7 @@ export default function ShopProducts() {
                             <div className="space-y-1">
                               <Label
                                 htmlFor="shop-shipping-country"
-                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                className="text-xs uppercase tracking-[0.14em] text-white/70"
                               >
                                 {t("shop.products.fields.country", {
                                   defaultValue: "Country",
@@ -1059,7 +1099,7 @@ export default function ShopProducts() {
                             <div className="space-y-1">
                               <Label
                                 htmlFor="shop-shipping-city"
-                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                className="text-xs uppercase tracking-[0.14em] text-white/70"
                               >
                                 {t("shop.products.fields.city", {
                                   defaultValue: "City",
@@ -1082,9 +1122,34 @@ export default function ShopProducts() {
                               />
                             </div>
                             <div className="space-y-1">
+                              <Label htmlFor="shop-customer-notes">
+                                {t("pilot.requested_options")}
+                              </Label>
+                              <Textarea
+                                id="shop-customer-notes"
+                                value={customerNotes}
+                                disabled={placingOrder}
+                                maxLength={1000}
+                                onChange={e => setCustomerNotes(e.target.value)}
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label htmlFor="shop-postal-code">
+                                {t("pilot.postal_code")}
+                              </Label>
+                              <Input
+                                id="shop-postal-code"
+                                autoComplete="postal-code"
+                                maxLength={30}
+                                disabled={placingOrder}
+                                value={postalCode}
+                                onChange={e => setPostalCode(e.target.value)}
+                              />
+                            </div>
+                            <div className="space-y-1">
                               <Label
                                 htmlFor="shop-shipping-address"
-                                className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+                                className="text-xs uppercase tracking-[0.14em] text-white/70"
                               >
                                 {t("shop.products.fields.shipping_address", {
                                   defaultValue: "Shipping Address",
@@ -1112,7 +1177,7 @@ export default function ShopProducts() {
                           </div>
 
                           <div className="mt-2.5 space-y-1">
-                            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/70">
                               {t("shop.products.delivery_speed.label", {
                                 defaultValue: "Delivery preference",
                               })}
@@ -1148,7 +1213,7 @@ export default function ShopProducts() {
                               <label
                                 key={option.value}
                                 htmlFor={`shop-delivery-${option.value}`}
-                                className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/85"
+                                className="flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-sm text-white/85"
                               >
                                 <span className="flex items-center gap-1">
                                   <input
@@ -1163,7 +1228,7 @@ export default function ShopProducts() {
                                   />
                                   {option.label}
                                 </span>
-                                <span className="text-[10px] text-white/70">
+                                <span className="text-xs text-white/70">
                                   {option.hint}
                                 </span>
                               </label>
@@ -1171,7 +1236,7 @@ export default function ShopProducts() {
                           </div>
 
                           <div className="mt-2.5 space-y-1">
-                            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/70">
                               {t("shop.products.payment_methods.label", {
                                 defaultValue: "Order support",
                               })}
@@ -1199,7 +1264,7 @@ export default function ShopProducts() {
                               <label
                                 key={option.value}
                                 htmlFor={`shop-payment-${option.value}`}
-                                className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[11px] text-white/80"
+                                className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-sm text-white/80"
                               >
                                 <input
                                   id={`shop-payment-${option.value}`}
@@ -1218,18 +1283,12 @@ export default function ShopProducts() {
                         </>
                       )}
                       {checkoutError ? (
-                        <p
-                          role="alert"
-                          className="mt-2 text-[11px] text-rose-300"
-                        >
+                        <p role="alert" className="mt-2 text-sm text-rose-300">
                           {checkoutError}
                         </p>
                       ) : null}
                       {notifyMessage ? (
-                        <p
-                          role="status"
-                          className="mt-2 text-[11px] text-white/75"
-                        >
+                        <p role="status" className="mt-2 text-sm text-white/75">
                           {notifyMessage}
                         </p>
                       ) : null}
@@ -1243,7 +1302,7 @@ export default function ShopProducts() {
                               catalogStatus !== "ready" ||
                               cart.length === 0
                             }
-                            className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-[9px] uppercase tracking-[0.14em] disabled:opacity-70"
+                            className="mt-2.5 w-full rounded-full px-4 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 font-black text-xs uppercase tracking-[0.14em] disabled:opacity-70"
                           >
                             {placingOrder ? (
                               <>
@@ -1262,7 +1321,7 @@ export default function ShopProducts() {
                             asChild
                             type="button"
                             variant="outline"
-                            className="mt-1.5 w-full rounded-full px-4 py-1.5 h-auto border-[#25D366] bg-[#25D366] text-white hover:bg-[#1ebe5d] hover:border-[#1ebe5d] disabled:opacity-40 font-black text-[9px] uppercase tracking-[0.14em]"
+                            className="mt-1.5 w-full rounded-full px-4 py-1.5 h-auto border-[#25D366] bg-[#25D366] text-white hover:bg-[#1ebe5d] hover:border-[#1ebe5d] disabled:opacity-40 font-black text-xs uppercase tracking-[0.14em]"
                           >
                             <a
                               href={whatsappOrderHref || undefined}
@@ -1295,17 +1354,21 @@ export default function ShopProducts() {
                               defaultValue: "Request reference",
                             })}
                             :{" "}
-                            <span className="font-black">{order.orderRef}</span>
+                            <span className="break-all font-black">
+                              {order.orderRef}
+                            </span>
                           </p>
-                          <p className="text-[11px] text-white/70 mt-1">
-                            {t("shop.products.order.status", {
-                              defaultValue: "Status",
-                            })}
-                            :{" "}
-                            {t(`shop.products.order.status_${order.status}`, {
-                              defaultValue: "Request status unavailable",
-                            })}
-                          </p>
+                          {order.paymentMethod === "dummy_gateway" && (
+                            <p className="text-sm text-white/70 mt-1">
+                              {t("shop.products.order.status", {
+                                defaultValue: "Status",
+                              })}
+                              :{" "}
+                              {t(`shop.products.order.status_${order.status}`, {
+                                defaultValue: "Request status unavailable",
+                              })}
+                            </p>
+                          )}
                           {order.paymentMethod === "dummy_gateway" ? (
                             <Button
                               type="button"
@@ -1314,7 +1377,7 @@ export default function ShopProducts() {
                                 confirmingPayment ||
                                 String(order.status) === "paid"
                               }
-                              className="mt-2.5 w-full rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-50 font-black text-[9px] uppercase tracking-[0.14em]"
+                              className="mt-2.5 w-full rounded-full px-5 py-1.5 h-auto bg-zim-gold text-black hover:bg-zim-gold/90 disabled:opacity-50 font-black text-xs uppercase tracking-[0.14em]"
                             >
                               {String(order.status) === "paid"
                                 ? t(
@@ -1328,14 +1391,7 @@ export default function ShopProducts() {
                                       "shop.products.payment_methods.dummy_gateway_short"
                                     ) || "Confirm Dummy Payment"}
                             </Button>
-                          ) : (
-                            <p className="mt-2.5 text-[11px] text-white/80">
-                              {t("shop.products.order.manual_follow_up", {
-                                defaultValue:
-                                  "Your request is saved. No payment has been taken and delivery is not confirmed. Contact the shop with your reference to agree the details.",
-                              })}
-                            </p>
-                          )}
+                          ) : null}
                           {order.items?.map(item => (
                             <p
                               key={item.productId}
@@ -1363,29 +1419,13 @@ export default function ShopProducts() {
                               {t("shop.products.order.contact_whatsapp")}
                             </a>
                           </div>
-                          {/* What happens next */}
-                          <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2">
-                            <p className="text-[9px] font-black uppercase tracking-[0.14em] text-white/40 flex items-center gap-1.5">
-                              <Clock className="h-3 w-3" />{" "}
-                              {t("shop.products.order.next_title")}
-                            </p>
-                            <div className="space-y-2">
-                              {[
-                                t("shop.products.order.next_reference"),
-                                t("shop.products.order.next_review"),
-                                t("shop.products.order.next_delivery"),
-                              ].map((text, i) => (
-                                <div key={i} className="flex items-start gap-2">
-                                  <span className="shrink-0 h-4 w-4 rounded-full bg-zim-gold/15 border border-zim-gold/30 text-zim-gold text-[9px] font-black flex items-center justify-center mt-0.5">
-                                    {i + 1}
-                                  </span>
-                                  <p className="text-[10px] text-white/55 leading-relaxed">
-                                    {text}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
+                          {order.manageToken && (
+                            <OrderStatus
+                              orderRef={order.orderRef}
+                              token={order.manageToken}
+                              showEstimate={false}
+                            />
+                          )}
                         </div>
                       )}
 
@@ -1450,7 +1490,7 @@ export default function ShopProducts() {
           <div className="space-y-2">
             <Label
               htmlFor="restock-email"
-              className="text-[10px] uppercase tracking-[0.14em] text-white/70"
+              className="text-xs uppercase tracking-[0.14em] text-white/70"
             >
               {t("shop.products.fields.email_address", {
                 defaultValue: "Email Address",
@@ -1470,7 +1510,7 @@ export default function ShopProducts() {
               />
             </div>
             {notifyEmailError ? (
-              <p className="text-[11px] text-rose-300" role="alert">
+              <p className="text-sm text-rose-300" role="alert">
                 {notifyEmailError}
               </p>
             ) : null}

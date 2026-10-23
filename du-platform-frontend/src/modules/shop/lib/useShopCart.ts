@@ -1,3 +1,4 @@
+import { trackShopFunnel } from "./shopFunnel";
 import { useSyncExternalStore } from "react";
 import { CART_STORAGE_KEY, createCartStore } from "./cartStore";
 
@@ -30,7 +31,11 @@ export function useShopCart() {
   );
   return {
     cart,
-    add: store.add,
+    add: (productId: number, limit: number) => {
+      const changed = store.add(productId, limit);
+      if (changed) trackShopFunnel("basket_add");
+      return changed;
+    },
     removeOne: store.removeOne,
     clear: store.clear,
     consume: store.consume,

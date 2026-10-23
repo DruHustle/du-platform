@@ -16,7 +16,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { tripPlanSchema, type PlanResult } from "@/modules/ai/lib/tripPlan";
+import { validateTripPlan, type PlanResult } from "@/modules/ai/lib/tripPlan";
 
 type Interest =
   | "wildlife"
@@ -340,7 +340,7 @@ export default function BookTripPage() {
 
   const selectedInterestSet = useMemo(() => new Set(interests), [interests]);
   const computedTripDays = useMemo(() => {
-    if (!startDate || !endDate) return days;
+    if (tripType === "one_way" || !startDate || !endDate) return days;
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()))
@@ -348,7 +348,7 @@ export default function BookTripPage() {
     const diffMs = end.getTime() - start.getTime();
     const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000)) + 1;
     return Math.max(1, Math.min(60, diffDays));
-  }, [startDate, endDate, days]);
+  }, [startDate, endDate, days, tripType]);
 
   const toggleInterest = (value: Interest) => {
     setInterests(prev => {
@@ -402,6 +402,37 @@ export default function BookTripPage() {
       Math.min(70, normalizedAdults + normalizedInfants)
     );
     try {
+      buildClientFallbackPlan({
+        language: i18n.resolvedLanguage || "en",
+        departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
+        arrivalAirport: selectedArrival.nearestAirport,
+        arrivalAttraction: selectedArrival.label,
+        comfort,
+        budget,
+        days: computedTripDays,
+        travelers: totalTravelers,
+        startDate,
+        endDate,
+        tripType,
+        multiCity: tripType === "multi_trip",
+        multiCityCities: multiCityInput
+          .split(",")
+          .map(v => v.trim())
+          .filter(Boolean),
+        interests,
+      });
+    } catch {
+      setError(
+        t("pilot.trip_invalid", {
+          defaultValue:
+            "Check your dates and allow at least one day per destination plus arrival and departure days.",
+        })
+      );
+      setLoading(false);
+      planRequest.current = null;
+      return;
+    }
+    try {
       const { data } = await requestOnesaTripPlan(
         {
           origin: selectedDeparture.city,
@@ -432,7 +463,26 @@ export default function BookTripPage() {
         { timeout: 240000, signal: request.signal }
       );
       if (request.signal.aborted) return;
-      const plan = tripPlanSchema.parse(data?.plan);
+      const plan = validateTripPlan(data?.plan, {
+        language: i18n.resolvedLanguage ?? "en",
+        departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
+        arrivalAirport: selectedArrival.nearestAirport,
+        arrivalAttraction: selectedArrival.label,
+        comfort,
+        budget,
+        days: computedTripDays,
+        travelers: totalTravelers,
+        startDate,
+        endDate,
+        tripType,
+        multiCity: tripType === "multi_trip",
+        multiCityCities: multiCityInput
+          .split(",")
+          .map(v => v.trim())
+          .filter(Boolean),
+        interests,
+      });
+      if (!plan) throw new Error("Invalid trip plan");
       setResult(plan);
       setSource(data?.source === "ai" ? "ai" : "fallback");
     } catch {
@@ -442,6 +492,15 @@ export default function BookTripPage() {
         departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
         arrivalAttraction: selectedArrival.label,
         arrivalAirport: selectedArrival.nearestAirport,
+        startDate,
+        endDate,
+        tripType,
+        multiCity: tripType === "multi_trip",
+        multiCityCities: multiCityInput
+          .split(",")
+          .map(v => v.trim())
+          .filter(Boolean),
+        interests,
         comfort,
         budget,
         days: Math.max(1, Math.min(60, Number(computedTripDays) || 7)),
@@ -479,6 +538,7 @@ export default function BookTripPage() {
     lines.push(
       `${t("tourism.onesa.trip_planner.optimized_for") || "Planning preferences"}: ${result.optimizedFor}`
     );
+    lines.push(`${t("pilot.contingency")}: USD ${result.contingencyUsd ?? 0}`);
     lines.push(
       `${t("tourism.onesa.trip_planner.estimated_total") || "Indicative budget (USD)"}: USD ${result.estimatedTotalUsd}`
     );
@@ -507,7 +567,7 @@ export default function BookTripPage() {
     );
     result.itinerary.forEach(day => {
       lines.push(
-        `${t("tourism.onesa.trip_planner.day")} ${day.day}: ${day.title} - USD ${day.estimatedDailyCostUsd}`
+        `${t("tourism.onesa.trip_planner.day")} ${day.day} ${day.date || ""} · ${day.location || ""}: ${day.title} - USD ${day.estimatedDailyCostUsd}`
       );
       lines.push(`  ${day.details}`);
     });
@@ -919,6 +979,12 @@ export default function BookTripPage() {
                 </Badge>
                 <span className="text-white/70 text-xs">
                   {result.optimizedFor}
+                  <span className="mt-2 block">
+                    {t("pilot.contingency", {
+                      defaultValue: "Contingency allowance",
+                    })}
+                    : USD {result.contingencyUsd ?? 0}
+                  </span>
                 </span>
                 <Button
                   type="button"
@@ -1031,6 +1097,9 @@ export default function BookTripPage() {
                         {(t("tourism.onesa.trip_planner.day") || "Day") +
                           " " +
                           dayPlan.day}
+                      </p>
+                      <p className="text-xs text-white/70">
+                        {dayPlan.date} · {dayPlan.location}
                       </p>
                       <p className="text-white font-bold text-sm mt-1">
                         {dayPlan.title}

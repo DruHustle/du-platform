@@ -219,6 +219,14 @@ export default function SearchResults() {
                     `We couldn't find anything matching "{{query}}". Try searching for broader terms like "Investment", "Tourism", or "Onesa".`
                   ).replace("{{query}}", query)}
                 </p>
+                <div className="mt-5 flex flex-wrap justify-center gap-5 text-zim-gold underline">
+                  <Link href="/shop/products">
+                    {t("pilot.browse_products")}
+                  </Link>
+                  <Link href="/tourism">
+                    {t("nav.tourism", { defaultValue: "Tourism" })}
+                  </Link>
+                </div>
                 <Button
                   asChild
                   className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black"

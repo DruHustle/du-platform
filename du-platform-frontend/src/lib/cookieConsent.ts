@@ -1,3 +1,5 @@
+import { readOrderReceipt } from "@/modules/shop/lib/checkoutSession";
+import { getOrderAccessGrant } from "@/modules/shop/lib/orderAccess";
 import { useSyncExternalStore } from "react";
 
 export type CookieConsent = "accepted" | "rejected" | null;
@@ -24,6 +26,25 @@ export function setCookieConsent(consent: Exclude<CookieConsent, null>) {
     // Keep the preference for this visit when browser storage is unavailable.
   }
   window.dispatchEvent(new Event(CHANGE_EVENT));
+  if (consent === "rejected") {
+    const receipt = readOrderReceipt();
+    const grant = getOrderAccessGrant();
+    const ref = grant?.orderRef ?? receipt?.orderRef,
+      token = grant?.token ?? receipt?.manageToken;
+    if (ref && token)
+      void fetch(
+        `/api/shop/orders/${encodeURIComponent(ref)}/analytics-consent`,
+        {
+          method: "POST",
+          credentials: "omit",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Order-Access-Token": token,
+          },
+          body: JSON.stringify({ consent: false }),
+        }
+      ).catch(() => {});
+  }
 }
 
 function subscribe(onChange: () => void) {
@@ -42,5 +63,15 @@ export function useCookieConsent() {
 // SDK scripts may remain installed after their React components unmount.
 // Check the current preference for every event so revocation also stops them.
 export function filterOptionalTelemetry<T>(event: T): T | null {
-  return getCookieConsent() === "accepted" ? event : null;
+  if (getCookieConsent() !== "accepted") return null;
+  if (
+    event &&
+    typeof event === "object" &&
+    "url" in event &&
+    typeof event.url === "string"
+  ) {
+    // Searches and private status fragments must never enter optional SDK data.
+    return { ...event, url: event.url.split(/[?#]/, 1)[0] } as T;
+  }
+  return event;
 }

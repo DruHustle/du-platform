@@ -1,3 +1,4 @@
+import ResearchHandoff from "../components/ResearchHandoff";
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
@@ -5,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft, Search } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { useTranslation } from "react-i18next";
 
 type NTIREntity = {
+  research_profile?: unknown;
   id: number;
   name: string;
   sector: string;
@@ -143,7 +145,9 @@ function searchFallbackEntities(query: string): NTIREntity[] {
 
 export default function NTIRSearchPage() {
   const { t } = useTranslation();
-  const [query, setQuery] = useState("");
+  const search = useSearch();
+  const routeQuery = new URLSearchParams(search).get("q") ?? "";
+  const [query, setQuery] = useState(routeQuery);
   const [results, setResults] = useState<NTIREntity[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -182,9 +186,10 @@ export default function NTIRSearchPage() {
   };
 
   useEffect(() => {
-    void runSearch("");
+    setQuery(routeQuery);
+    void runSearch(routeQuery);
     return () => requestRef.current?.abort();
-  }, []);
+  }, [routeQuery]);
 
   return (
     <Layout>
@@ -269,6 +274,11 @@ export default function NTIRSearchPage() {
                   </Badge>
                 </div>
                 <p className="text-white/70 !text-[11px] mt-3">{row.sector}</p>
+                <ResearchHandoff
+                  kind="ntir"
+                  subjectKey={String(row.id)}
+                  initialProfile={row.research_profile ?? null}
+                />
               </div>
             ))}
             {!loading && results.length === 0 ? (

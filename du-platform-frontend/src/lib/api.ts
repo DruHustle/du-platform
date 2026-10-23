@@ -16,6 +16,9 @@ let refreshPromise: Promise<string> | null = null;
 let accessToken = "";
 
 function resolveApiBaseUrl() {
+  // Deployed browsers always use the host's controlled API rewrite. Preview
+  // isolation must not be bypassed by a stale dashboard environment override.
+  if (import.meta.env.PROD) return "/api";
   const raw = String(import.meta.env.VITE_API_URL ?? "").trim();
   if (!raw) return "/api";
 

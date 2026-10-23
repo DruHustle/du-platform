@@ -1,3 +1,4 @@
+import ResearchHandoff from "../components/ResearchHandoff";
 import Layout from "@/components/Layout";
 import investmentProjectRoutes from "@shared/investmentProjectRoutes.json";
 import { Badge } from "@/components/ui/badge";
@@ -297,6 +298,7 @@ export default function ProjectDetails() {
             </div>
           ) : (
             <>
+              <ResearchHandoff kind="project" subjectKey={params?.id || ""} />
               <div className="content-panel editorial-panel p-8 md:p-10 text-white">
                 <Badge className="mb-4 bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase text-[10px] tracking-widest font-black">
                   {tr("investment.project_details.badge", "Project Details")}

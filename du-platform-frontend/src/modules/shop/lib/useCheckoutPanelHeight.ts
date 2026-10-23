@@ -12,6 +12,10 @@ export function useCheckoutPanelHeight(view: string) {
     const measure = () => {
       frame = 0;
       if (!active || !panel.getClientRects().length) return;
+      if (window.innerWidth < 1024) {
+        panel.style.maxHeight = "none";
+        return;
+      }
       const bottom = viewport
         ? viewport.offsetTop + viewport.height
         : window.innerHeight;
