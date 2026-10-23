@@ -1,0 +1,30 @@
+{
+  "en": {
+    "final_quote": "Final quote",
+    "valid_until": "Valid until",
+    "delivery_charge": "Confirmed delivery charge",
+    "refund_recorded": "Refund recorded",
+    "total": "Total"
+  },
+  "de": {
+    "final_quote": "Endgültiges Angebot",
+    "valid_until": "Gültig bis",
+    "delivery_charge": "Bestätigte Versandkosten",
+    "refund_recorded": "Erstattung erfasst",
+    "total": "Gesamt"
+  },
+  "sn": {
+    "final_quote": "Mutengo wekupedzisira",
+    "valid_until": "Inoshanda kusvika",
+    "delivery_charge": "Mari yekutumira yasimbiswa",
+    "refund_recorded": "Kudzorerwa kwemari kwanyorwa",
+    "total": "Zvose"
+  },
+  "nd": {
+    "final_quote": "Intengo yokucina",
+    "valid_until": "Isebenza kuze kube",
+    "delivery_charge": "Indleko zokuthumela eziqinisekisiweyo",
+    "refund_recorded": "Ukubuyiselwa kwemali kubhaliwe",
+    "total": "Konke"
+  }
+}

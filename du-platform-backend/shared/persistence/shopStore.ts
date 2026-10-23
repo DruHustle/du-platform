@@ -1,3 +1,6 @@
+import { recordShopFunnel } from "../../modules/shop/funnel";
+import { sealOrderAccess } from "../../modules/shop/orderAccess";
+import { queueOrderNotification } from "../../modules/shop/orderOutboxStore";
 import {
   convertShopCents,
   SHOP_PRICING_REVISION,
@@ -59,6 +62,9 @@ type ShopOrder = {
   order_ref: string;
   customer_name: string;
   customer_email: string;
+  postal_code?: string;
+  customer_notes?: string;
+  language?: string;
   shipping_country: string;
   shipping_city: string;
   shipping_address: string;
@@ -112,7 +118,9 @@ function isValidEmailAddress(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function normalizeShopCategory(raw: unknown): "sports" | "crafts" | "food" {
+function normalizeShopCategory(
+  raw: unknown
+): "sports" | "crafts" | "food" | "beverage" {
   const value = String(raw ?? "")
     .trim()
     .toLowerCase();
@@ -124,7 +132,7 @@ function normalizeShopCategory(raw: unknown): "sports" | "crafts" | "food" {
     value === "drink" ||
     value === "drinks"
   )
-    return "food";
+    return "beverage";
   return "food";
 }
 
@@ -332,7 +340,7 @@ export async function getShopRestockNotificationsBySlug(productSlug: string) {
 }
 
 let shopProductsCacheVersion = 0;
-function invalidateShopProductsCache() {
+export function invalidateShopProductsCache() {
   shopProductsCacheVersion += 1;
   shopProductsCache.clear();
 }
@@ -393,7 +401,9 @@ export async function listShopProducts(
       if (product.is_active !== 1) return false;
       if (
         categoryFilter &&
-        normalizeShopCategory(product.category) !== categoryFilter
+        (normalizeShopCategory(product.category) === "beverage"
+          ? "food"
+          : normalizeShopCategory(product.category)) !== categoryFilter
       )
         return false;
       return true;
@@ -465,7 +475,9 @@ export async function listShopProducts(
       if (product.is_active !== 1) return false;
       if (
         categoryFilter &&
-        normalizeShopCategory(product.category) !== categoryFilter
+        (normalizeShopCategory(product.category) === "beverage"
+          ? "food"
+          : normalizeShopCategory(product.category)) !== categoryFilter
       )
         return false;
       return true;
@@ -482,6 +494,10 @@ export async function listShopProducts(
 }
 
 export async function createShopOrder(payload: {
+  language?: string;
+  analyticsConsent?: boolean;
+  customerNotes?: string;
+  postalCode?: string;
   customerName: string;
   customerEmail: string;
   shippingCountry: string;
@@ -548,7 +564,7 @@ export async function createShopOrder(payload: {
     const stored = db
       ? (
           await db.query<mysql.RowDataPacket[]>(
-            "SELECT customer_name, customer_email, shipping_country, shipping_city, shipping_address FROM shop_orders WHERE order_ref = ? AND manage_token_hash = ? LIMIT 1",
+            "SELECT o.customer_name,o.customer_email,o.shipping_country,o.shipping_city,o.shipping_address,w.postal_code,w.customer_notes,w.language FROM shop_orders o LEFT JOIN shop_order_workflows w ON w.order_id=o.id WHERE o.order_ref = ? AND o.manage_token_hash = ? LIMIT 1",
             [orderRef, accessGrant.tokenHash]
           )
         )[0][0]
@@ -571,6 +587,11 @@ export async function createShopOrder(payload: {
       stored.shipping_country !== shippingCountry ||
       stored.shipping_city !== shippingCity ||
       stored.shipping_address !== shippingAddress ||
+      String(stored.postal_code ?? "") !== String(payload.postalCode ?? "") ||
+      String(stored.customer_notes ?? "") !==
+        String(payload.customerNotes ?? "") ||
+      customerLanguage(stored.language) !==
+        customerLanguage(payload.language) ||
       existing.currency !== currency ||
       existing.deliverySpeed !== deliverySpeed ||
       existing.paymentMethod !== paymentMethod ||
@@ -597,7 +618,11 @@ export async function createShopOrder(payload: {
       409
     );
 
-  if (!db && !isMemoryFallbackEnabled()) {
+  if (
+    !db &&
+    ((process.env.NODE_ENV ?? "development").toLowerCase() === "production" ||
+      !isMemoryFallbackEnabled())
+  ) {
     throw new ShopRequestError(
       "Order requests are temporarily unavailable. Please contact the shop.",
       503
@@ -623,6 +648,8 @@ export async function createShopOrder(payload: {
           ...product,
           id: Number(product.id),
           name: String(product.name),
+          description: String(product.description),
+          image_url: String(product.image_url),
           price_cents: convertShopCents(
             Number(product.price_cents),
             product.currency,
@@ -674,6 +701,9 @@ export async function createShopOrder(payload: {
       order_ref: orderRef,
       customer_name: customerName,
       customer_email: customerEmail,
+      postal_code: payload.postalCode ?? "",
+      customer_notes: payload.customerNotes ?? "",
+      language: customerLanguage(payload.language),
       shipping_country: shippingCountry,
       shipping_city: shippingCity,
       shipping_address: shippingAddress,
@@ -755,6 +785,8 @@ export async function createShopOrder(payload: {
           ...product,
           id: Number(product.id),
           name: String(product.name),
+          description: String(product.description),
+          image_url: String(product.image_url),
           price_cents: convertShopCents(
             Number(product.price_cents),
             product.currency,
@@ -841,6 +873,42 @@ export async function createShopOrder(payload: {
       );
     }
 
+    await connection.execute(
+      "INSERT INTO shop_order_workflows (order_id, language, postal_code, access_grant, analytics_consent, customer_notes) VALUES (?, ?, ?, ?, ?, ?)",
+      [
+        orderId,
+        customerLanguage(payload.language),
+        payload.postalCode ?? "",
+        sealOrderAccess(accessGrant.token),
+        payload.analyticsConsent ?? false,
+        payload.customerNotes ?? "",
+      ]
+    );
+    await connection.execute(
+      "INSERT INTO shop_order_snapshots (order_id, items) VALUES (?, ?)",
+      [
+        orderId,
+        JSON.stringify(
+          selectedProducts.map(({ product, quantity }) => ({
+            productId: product.id,
+            name: product.name,
+            description: product.description,
+            imageUrl: product.image_url,
+            quantity,
+            unitPriceCents: product.price_cents,
+            currency,
+          }))
+        ),
+      ]
+    );
+    if (payload.analyticsConsent)
+      await recordShopFunnel(connection, "request_saved");
+    await queueOrderNotification(
+      connection,
+      orderId,
+      "request_received",
+      customerLanguage(payload.language)
+    );
     await connection.commit();
     return {
       orderRef,
@@ -1057,6 +1125,10 @@ export async function confirmShopOrderPayment(
         SET status = 'paid', payment_reference = ?, updated_at = NOW()
         WHERE id = ?
         `,
+        [paymentRef, Number(existing.id)]
+      );
+      await connection.execute(
+        "UPDATE shop_order_workflows SET stage='payment_confirmed',inventory_consumed=TRUE,payment_reference=?,version=version+1 WHERE order_id=?",
         [paymentRef, Number(existing.id)]
       );
     }
