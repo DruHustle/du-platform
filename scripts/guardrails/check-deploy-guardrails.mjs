@@ -85,11 +85,9 @@ if (
   );
 }
 if (
-  !source.includes("StrictHostKeyChecking=yes") ||
+  !source.includes("Wait for verified Oracle release") ||
   !source.includes("scripts/tests/verify-backend-release.mjs")
 ) {
-  fail(
-    "Oracle deployment must pin its host key and verify the published commit."
-  );
+  fail("Oracle deployment must wait for and verify the published commit.");
 }
 console.log("[guardrails:deploy] OK");

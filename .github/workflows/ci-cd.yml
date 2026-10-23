@@ -157,31 +157,15 @@ jobs:
       - name: Checkout tested commit
         uses: actions/checkout@v5
 
-      - name: Configure restricted Oracle deploy identity
+      - name: Wait for verified Oracle release
         env:
-          ORACLE_KEY: ${{ secrets.ORACLE_SSH_PRIVATE_KEY }}
-          ORACLE_HOST_KEYS: ${{ secrets.ORACLE_KNOWN_HOSTS }}
-        run: |
-          test -n "$ORACLE_KEY"
-          test -n "$ORACLE_HOST_KEYS"
-          umask 077
-          mkdir -p ~/.ssh
-          printf '%s\n' "$ORACLE_KEY" > ~/.ssh/du_oracle_deploy
-          printf '%s\n' "$ORACLE_HOST_KEYS" > ~/.ssh/known_hosts
-
-      - name: Build and release tested source on Oracle
-        run: |
-          set -euo pipefail
-          git archive --format=tar.gz "$GITHUB_SHA" | ssh -i ~/.ssh/du_oracle_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=6 ubuntu@152.70.22.84 "du-deploy $GITHUB_SHA"
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: node scripts/tests/wait-for-oracle-release.mjs
 
       - name: Verify Oracle and public API release
         env:
           EXPECTED_REVISION: ${{ github.sha }}
         run: node scripts/tests/verify-backend-release.mjs
-
-      - name: Remove ephemeral deploy identity
-        if: always()
-        run: rm -f ~/.ssh/du_oracle_deploy
 
   # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
   #    On failure, rolls back to the last successful Vercel production deployment.

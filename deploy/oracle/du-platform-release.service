@@ -1,0 +1,21 @@
+[Unit]
+Description=Release tested DU main commits from GitHub Actions
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=du-release
+Group=du-release
+ExecStart=/usr/bin/python3 /usr/local/lib/du-platform-release/poll-release.py
+TimeoutStartSec=20min
+UMask=0077
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/du-platform-release /opt/du-platform /run/lock

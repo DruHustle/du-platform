@@ -1,0 +1,11 @@
+[Unit]
+Description=Check GitHub for tested DU releases every five minutes
+
+[Timer]
+OnBootSec=45s
+OnUnitInactiveSec=5min
+RandomizedDelaySec=5s
+Unit=du-platform-release.service
+
+[Install]
+WantedBy=timers.target
