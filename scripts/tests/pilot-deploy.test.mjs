@@ -97,3 +97,54 @@ test("Docker build context excludes local credentials and certificate keys", asy
       `Missing private context exclusion: ${entry}`
     );
 });
+test("preview verification keeps credentials in the environment, never system-curl flags", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "du-preview-cli-"));
+  try {
+    const executable = path.join(dir, "vercel");
+    await fs.writeFile(
+      executable,
+      `#!/usr/bin/env node
+const fs=require('node:fs');
+const args=process.argv.slice(2);
+if(args[0]!=='curl'||args.includes('--token')||process.env.VERCEL_TOKEN!=='fixture-preview-token')process.exit(2);
+const route=args[1];
+fs.appendFileSync(process.env.PREVIEW_CLI_CALLS,route+'\\n');
+const body=route.startsWith('/api/')?JSON.stringify({error:{code:'PREVIEW_API_DISABLED'}}):'<main class="public-preview"><a href="https://www.diasporaunlocked.com'+route+'">Page</a></main><meta name="du-order-status-version" content="1">';
+process.stdout.write('HTTP/2 200\\r\\nx-robots-tag: noindex, nofollow\\r\\ncontent-security-policy: script-src \\'self\\'\\r\\n\\r\\n'+body);
+`,
+      { mode: 0o700 }
+    );
+    const { spawnSync } = await import("node:child_process");
+    const calls = path.join(dir, "calls");
+    const env = {
+      ...process.env,
+      PATH: dir + path.delimiter + process.env.PATH,
+      VERCEL_TOKEN: "fixture-preview-token",
+      PREVIEW_CLI_CALLS: calls,
+      PILOT_PREVIEW_URL: "https://isolated-fixture.vercel.app",
+    };
+    const verified = spawnSync(
+      process.execPath,
+      ["scripts/tests/pilot-preview.mjs"],
+      { env, encoding: "utf8" }
+    );
+    assert.equal(verified.status, 0, verified.stderr);
+    assert.equal(
+      (await fs.readFile(calls, "utf8")).trim().split("\n").length,
+      10
+    );
+    await fs.unlink(calls);
+    const refused = spawnSync(
+      process.execPath,
+      ["scripts/tests/pilot-preview.mjs"],
+      {
+        env: { ...env, PILOT_PREVIEW_URL: "https://www.diasporaunlocked.com" },
+        encoding: "utf8",
+      }
+    );
+    assert.notEqual(refused.status, 0);
+    await assert.rejects(fs.access(calls));
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});
