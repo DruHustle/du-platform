@@ -175,6 +175,57 @@ try {
           ),
           `${language} ${width} ${path} horizontal overflow`
         );
+        if (path === "/" && width < 1024) {
+          const contrast = await page
+            .locator('nav a[title][href="/shop"]')
+            .first()
+            .evaluate(link => {
+              const bar = link.closest("nav").parentElement;
+              const canvas = document.createElement("canvas");
+              canvas.width = canvas.height = 1;
+              const ctx = canvas.getContext("2d");
+              const paintBackground = () => {
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, 1, 1);
+                ctx.fillStyle = getComputedStyle(bar).backgroundColor;
+                ctx.fillRect(0, 0, 1, 1);
+              };
+              const luminance = rgb =>
+                rgb
+                  .slice(0, 3)
+                  .map(v => v / 255)
+                  .map(v =>
+                    v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+                  )
+                  .reduce(
+                    (sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i],
+                    0
+                  );
+              // A white hero is the worst backdrop for the translucent bar.
+              return Math.min(
+                ...Array.from(link.closest("nav").querySelectorAll("a")).map(
+                  item => {
+                    paintBackground();
+                    const bg = luminance(
+                      Array.from(ctx.getImageData(0, 0, 1, 1).data)
+                    );
+                    ctx.fillStyle = getComputedStyle(item).color;
+                    ctx.fillRect(0, 0, 1, 1);
+                    const fg = luminance(
+                      Array.from(ctx.getImageData(0, 0, 1, 1).data)
+                    );
+                    return (
+                      (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05)
+                    );
+                  }
+                )
+              );
+            });
+          assert(
+            contrast >= 4.5,
+            `Mobile navigation labels need 4.5:1 contrast over every hero (${contrast})`
+          );
+        }
         const clips = await page
           .locator(
             "main h1,main h2,main h3,main p,main dt,main dd,main button,main label"

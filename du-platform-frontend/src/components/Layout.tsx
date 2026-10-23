@@ -934,7 +934,7 @@ export default function Layout({ children }: LayoutProps) {
           <div
             className={`flex h-[calc(3.5rem+env(safe-area-inset-top))] items-end border-b border-white/10 px-1 pt-[env(safe-area-inset-top)] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] ${
               useHomeCompactTransparentNav
-                ? "bg-white/[0.08]"
+                ? "bg-slate-950/80"
                 : "bg-slate-900/95"
             }`}
           >
@@ -955,7 +955,7 @@ export default function Layout({ children }: LayoutProps) {
                     className={`flex min-h-11 min-w-0 flex-1 flex-col gap-0.5 items-center justify-center transition-colors ${
                       active
                         ? "text-yellow-400"
-                        : "text-white/60 hover:text-white"
+                        : "text-white/80 hover:text-white"
                     }`}
                   >
                     {item.href === "/" ? (
