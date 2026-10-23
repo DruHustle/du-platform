@@ -1,3 +1,4 @@
+import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
 import { convertShopCents, SHOP_PRICING_REVISION } from "@shared/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
@@ -254,23 +255,13 @@ export default function ShopProducts() {
     }
   }, [paymentMethod, supportsDummyGateway]);
 
-  const matchesSegment = (product: ShopProduct, activeSegment: string) => {
-    if (!activeSegment) return true;
-    const haystack = `${product.name} ${product.description}`.toLowerCase();
-    const segmentConfig = SHOP_CATEGORY_CONFIG.find(
-      item => item.key === activeSegment
-    );
-    const keywords = segmentConfig?.keywords ?? [activeSegment];
-    return keywords.some(keyword => haystack.includes(keyword));
-  };
-
   const products = useMemo(
     () =>
       allProducts.filter(product => {
         const normalized = normalizeProductCategory(product.category);
         return (
           (category === "all" || normalized === category) &&
-          matchesSegment(product, segment)
+          matchesShopSegment(product, segment)
         );
       }),
     [allProducts, category, segment]
@@ -310,9 +301,9 @@ export default function ShopProducts() {
   }, [cart, productsById, currency]);
 
   const getLocalizedProductDescription = (product: ShopProduct) =>
-    t(`shop.products.descriptions.${product.slug}`, {
-      defaultValue: product.description,
-    });
+    shopProductDescription(product, (key, fallback) =>
+      t(key, { defaultValue: fallback })
+    );
 
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
   const baseSubtotalCents = cartRows.reduce(
