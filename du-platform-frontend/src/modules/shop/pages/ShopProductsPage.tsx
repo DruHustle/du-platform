@@ -1565,7 +1565,7 @@ export default function ShopProducts() {
               {receiptOnly
                 ? t("shop.products.order.view_request")
                 : t("shop.products.actions.checkout", {
-                    defaultValue: "Checkout",
+                    defaultValue: "Review basket",
                   })}
             </Button>
           </div>

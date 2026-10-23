@@ -157,7 +157,9 @@ try {
   await page.waitForURL(/product=/);
   const card = page.locator(`[data-shop-product-card="${product.slug}"]`);
   await card.getByRole("button", { name: /^Add to Cart:/ }).click();
-  await page.getByRole("button", { name: "Checkout", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Review basket", exact: true })
+    .click();
   await page
     .getByLabel("Full Name", { exact: true })
     .fill("Pilot Browser Fixture");
@@ -361,7 +363,12 @@ try {
       exact: true,
     })
     .waitFor();
-  assert((await page.getByRole("link", { name: /Checkout/i }).count()) > 0);
+  assert.equal(
+    await page
+      .getByRole("link", { name: "Review basket", exact: true })
+      .count(),
+    1
+  );
   pass(
     "Addressable product information displays verified fixture details and a checkout next step"
   );
