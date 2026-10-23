@@ -234,6 +234,14 @@ export async function applyOrderCommand(
         "Order changed. Reload before continuing.",
         409
       );
+    if (
+      state.payment_reference &&
+      ["under_review", "quote_sent"].includes(cmd.action)
+    )
+      throw new ShopRequestError(
+        "A received payment locks the agreed quote. Resolve fulfilment or record a refund and cancellation before a new request.",
+        409
+      );
     const auxiliary = [
       "note",
       "assign",
