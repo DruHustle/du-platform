@@ -1413,6 +1413,7 @@
       "actions": {
         "buy": "Isa mudengu",
         "add_to_cart": "Wedzera kuCart",
+        "checkout": "Ongorora dengu",
         "creating_order": "Kutumira chikumbiro…",
         "place_order": "Tumira chikumbiro cheodha",
         "order_whatsapp": "Bvunza nezveodha paWhatsApp",

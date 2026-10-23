@@ -90,6 +90,7 @@ const paths = [
   "/",
   "/shop",
   "/shop/products",
+  "/shop/product/sables-rugby-home-kit",
   "/technology",
   "/investment",
   "/tourism",
@@ -147,6 +148,12 @@ try {
         return route.continue();
       });
       const page = await context.newPage();
+      const translations = JSON.parse(
+        await fs.readFile(
+          `du-platform-frontend/public/locales/${language}/translation.json`,
+          "utf8"
+        )
+      );
       page.setDefaultTimeout(15000);
       page.on("pageerror", e =>
         errors.push({ language, width, message: e.message })
@@ -169,6 +176,25 @@ try {
         await page.locator("main h1").waitFor({ state: "attached" });
         await page.evaluate(() => document.fonts.ready);
         await page.waitForTimeout(100);
+        if (path === "/shop/product/sables-rugby-home-kit") {
+          const basketLabel = translations.shop.products.actions.checkout;
+          assert.equal(typeof basketLabel, "string");
+          const basket = page.getByRole("link", {
+            name: basketLabel,
+            exact: true,
+          });
+          await basket.waitFor({ state: "visible" });
+          assert.equal(
+            await basket.getAttribute("href"),
+            "/shop/products?cart=1"
+          );
+          assert(
+            !(await page.locator("main").innerText()).includes(
+              "shop.products.actions."
+            ),
+            "Product actions must show translated labels rather than resource keys"
+          );
+        }
         assert(
           await page.evaluate(
             () => document.documentElement.scrollWidth <= innerWidth + 1
@@ -269,6 +295,7 @@ try {
             "/",
             "/shop",
             "/shop/products",
+            "/shop/product/sables-rugby-home-kit",
             "/tourism",
             "/legal-notice",
           ].includes(path)

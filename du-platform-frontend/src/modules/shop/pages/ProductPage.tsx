@@ -81,22 +81,25 @@ export default function ProductPage() {
                         : "shop.products.stock.out"
                     )}
                   </p>
-                  <QuantityControl
-                    name={product.name}
-                    quantity={
-                      cart.find(i => i.productId === product.id)?.quantity || 0
-                    }
-                    limit={product.stock_qty}
-                    disabled={status !== "ready"}
-                    onAdd={() => add(product.id, product.stock_qty)}
-                    onRemove={() => removeOne(product.id)}
-                  />
-                  <Link
-                    className="inline-flex min-h-11 items-center rounded-full bg-zim-gold px-5 font-semibold text-black"
-                    href="/shop/products?cart=1"
-                  >
-                    {t("shop.products.actions.checkout")}
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <QuantityControl
+                      name={product.name}
+                      quantity={
+                        cart.find(i => i.productId === product.id)?.quantity ||
+                        0
+                      }
+                      limit={product.stock_qty}
+                      disabled={status !== "ready"}
+                      onAdd={() => add(product.id, product.stock_qty)}
+                      onRemove={() => removeOne(product.id)}
+                    />
+                    <Link
+                      className="inline-flex min-h-11 items-center rounded-full bg-zim-gold px-5 font-semibold text-black"
+                      href="/shop/products?cart=1"
+                    >
+                      {t("shop.products.actions.checkout")}
+                    </Link>
+                  </div>
                   <p className="text-sm text-white/65">
                     {t("shop.products.notes.supported_methods")}
                   </p>
