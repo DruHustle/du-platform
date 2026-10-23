@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { publicShopReadiness } from "../shopReadiness";
 import { db } from "../../../shared/databaseRuntime";
 import { recordShopFunnel } from "../funnel";
 import { sha256 } from "../../../shared/persistence/authStore";
@@ -18,6 +19,10 @@ import {
 export function createShopModuleRouter() {
   const router = Router();
   const controller = new ShopController();
+  router.get("/readiness", async (_req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+    res.json(ok(await publicShopReadiness()));
+  });
 
   router.use("/products", createProductDetailsRouter());
   router.post(

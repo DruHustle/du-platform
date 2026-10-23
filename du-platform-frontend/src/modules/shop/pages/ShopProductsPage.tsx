@@ -6,6 +6,7 @@ import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
 import { convertShopCents, SHOP_PRICING_REVISION } from "@shared/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
+import PilotReadinessNotice from "../components/PilotReadinessNotice";
 import { customerLanguage } from "@shared/customerLanguage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
@@ -356,6 +357,7 @@ export default function ShopProducts() {
           `- ${row.product.name} x${row.item.quantity} (${money(convertShopCents(row.product.price_cents, row.product.currency, currency))} ${t("shop.products.whatsapp.each", { defaultValue: "each" })})`
       ),
       "",
+      `${t("shop.currency.label")}: ${currency}`,
       `${t("shop.products.totals.subtotal", { defaultValue: "Subtotal" })}: ${money(subtotalCents)}`,
       `${t("shop.products.totals.shipping", { defaultValue: "Delivery allowance (estimate)" })}: ${money(shippingCents)}`,
       `${t("shop.products.totals.total", { defaultValue: "Estimated total" })}: ${money(totalCents)}`,
@@ -377,6 +379,8 @@ export default function ShopProducts() {
       `${t("shop.products.fields.country", { defaultValue: "Country" })}: ${shippingCountry || "-"}`,
       `${t("shop.products.fields.city", { defaultValue: "City" })}: ${shippingCity || "-"}`,
       `${t("shop.products.fields.address", { defaultValue: "Address" })}: ${shippingAddress || "-"}`,
+      `${t("pilot.postal_code")}: ${postalCode || "-"}`,
+      `${t("pilot.requested_options")}: ${customerNotes || "-"}`,
       "",
       t("shop.products.whatsapp.outro", {
         defaultValue:
@@ -394,6 +398,12 @@ export default function ShopProducts() {
     shippingCountry,
     shippingCity,
     shippingAddress,
+    postalCode,
+    customerNotes,
+    currency,
+    t,
+    i18n.resolvedLanguage,
+    i18n.language,
     deliverySpeed,
     whatsappNumber,
   ]);
@@ -848,6 +858,7 @@ export default function ShopProducts() {
                       </span>
                     </div>
 
+                    {!receiptOnly && <PilotReadinessNotice />}
                     <p className="mb-4 text-xs leading-5 text-slate-400">
                       {t("shop.currency.note")}
                     </p>

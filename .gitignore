@@ -101,3 +101,4 @@ Thumbs.db
 
 # Private Oracle runtime environment overrides
 /deploy/oracle/compose.runtime*.json
+/config/shop-pilot-approval.json

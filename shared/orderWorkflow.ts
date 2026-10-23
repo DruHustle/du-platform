@@ -30,6 +30,7 @@ export const orderCommandSchema = z.object({
   restock: z.boolean().optional(),
   refundCents: z.number().int().positive().max(2147483647).optional(),
   refundReference: z.string().trim().min(1).max(255).optional(),
+  refundProvider: z.string().trim().min(1).max(80).optional(),
   quote: z
     .object({
       currency: z.enum(["EUR", "USD", "ZAR"]),
@@ -37,6 +38,11 @@ export const orderCommandSchema = z.object({
         .array(z.number().int().nonnegative().max(100000000))
         .min(1)
         .max(200),
+      fulfilmentDetails: z
+        .array(z.string().trim().min(1).max(1000))
+        .min(1)
+        .max(200)
+        .optional(),
       shippingCents: z.number().int().nonnegative().max(100000000),
       validUntil: z.string().datetime(),
     })

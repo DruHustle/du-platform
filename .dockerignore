@@ -16,3 +16,4 @@ test-results
 .agents
 *.log
 **/*.log
+**/shop-pilot-approval.json

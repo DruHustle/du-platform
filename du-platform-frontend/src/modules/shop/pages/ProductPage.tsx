@@ -10,6 +10,7 @@ import { api } from "@/lib/api";
 import { useTranslation } from "react-i18next";
 import QuantityControl from "../components/QuantityControl";
 import CatalogNotice from "../components/CatalogNotice";
+import PilotReadinessNotice from "../components/PilotReadinessNotice";
 import type { ProductDetails } from "@shared/productDetails";
 export default function ProductPage() {
   const [, params] = useRoute("/shop/product/:slug");
@@ -81,6 +82,7 @@ export default function ProductPage() {
                         : "shop.products.stock.out"
                     )}
                   </p>
+                  <PilotReadinessNotice />
                   <div className="flex flex-wrap items-center gap-3">
                     <QuantityControl
                       name={product.name}

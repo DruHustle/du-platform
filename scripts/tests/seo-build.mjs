@@ -10,6 +10,16 @@ import {
 } from "../../shared/routeSeo.ts";
 
 const root = path.resolve("dist/public");
+const homeHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
+assert(
+  homeHtml.includes("/images/brand/diaspora_unlocked_336.webp"),
+  "Initial Home HTML must use the display-sized brand image"
+);
+assert(
+  fs.statSync(path.join(root, "images/brand/diaspora_unlocked_336.webp"))
+    .size <= 32768,
+  "The critical brand image must stay within its measured 32 KiB budget"
+);
 const { paths, redirects } = readSiteRoutes();
 assert(paths.includes("/admin"), "Preserve the protected admin document route");
 const config = JSON.parse(fs.readFileSync("vercel.json", "utf8"));

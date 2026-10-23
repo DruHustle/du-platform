@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "market": "Europe",
+  "currency": "EUR",
+  "reviewedAt": null,
+  "validUntil": null,
+  "approvedBy": null,
+  "destinationCountries": [],
+  "approvedProductIds": [],
+  "checks": {
+    "operator_identity": { "approved": false, "evidence": "" },
+    "procedures": { "approved": false, "evidence": "" },
+    "delivery": { "approved": false, "evidence": "" },
+    "product_facts": { "approved": false, "evidence": "" },
+    "unit_economics": { "approved": false, "evidence": "" },
+    "backup_restore": { "approved": false, "evidence": "" },
+    "transactional_email": { "approved": false, "evidence": "" }
+  }
+}
