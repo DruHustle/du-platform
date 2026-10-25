@@ -189,7 +189,7 @@ export class ProductInterestService extends NewsletterService {
   }
   async demand(from: string, to: string) {
     const [rows] = await this.pool().query<RowDataPacket[]>(
-      `SELECT product_id,product_slug,MAX(product_name) AS product_name, COUNT(*) AS total, SUM(status='pending') AS pending, SUM(status='confirmed') AS confirmed, SUM(status='cancelled') AS cancelled, SUM(status='notified') AS notified, SUM(status='legacy') AS legacy, SUM(confirmed_at IS NOT NULL) AS confirmed_unique FROM shop_restock_notifications WHERE consent_at>=? AND consent_at<DATE_ADD(?,INTERVAL 1 DAY) GROUP BY product_id,product_slug ORDER BY confirmed_unique DESC,total DESC,product_slug`,
+      `SELECT product_id,product_slug,MAX(product_name) AS product_name, COUNT(*) AS total, SUM(status='pending' AND confirmation_expires_at IS NOT NULL AND confirmation_expires_at>NOW()) AS pending, SUM(status='pending' AND (confirmation_expires_at IS NULL OR confirmation_expires_at<=NOW())) AS expired, SUM(status='confirmed') AS confirmed, SUM(status='cancelled') AS cancelled, SUM(status='notified') AS notified, SUM(status='legacy') AS legacy, SUM(confirmed_at IS NOT NULL) AS confirmed_unique FROM shop_restock_notifications WHERE consent_at>=? AND consent_at<DATE_ADD(?,INTERVAL 1 DAY) GROUP BY product_id,product_slug ORDER BY confirmed DESC,confirmed_unique DESC,total DESC,product_slug`,
       [from, to]
     );
     const [deliveries] = await this.pool().query<RowDataPacket[]>(

@@ -570,7 +570,10 @@ try {
         .catch(() => {});
       await writeFile(
         `${output}/failure-${i}.txt`,
-        await page.locator("body").innerText()
+        await page
+          .locator("body")
+          .innerText()
+          .catch(() => "Page unavailable during failure capture")
       ).catch(() => {});
     }
   await writeFile(output + "/server.log", logs);

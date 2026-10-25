@@ -137,11 +137,7 @@ export function PublicPagePreview({
             {(product.price_cents / 100).toFixed(2)} {product.currency} ·
             indicative catalogue price
           </p>
-          <p>
-            Check current availability in the live catalogue. Product
-            specifications and delivery eligibility must be confirmed before
-            accepting a quote.
-          </p>
+          <p>{english.pilot.readiness_pending_note}</p>
           <a
             href={`/shop/product/${encodeURIComponent(product.slug)}#interest`}
           >

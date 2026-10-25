@@ -13,7 +13,10 @@ import { useTranslation } from "react-i18next";
 import QuantityControl from "../components/QuantityControl";
 import CatalogNotice from "../components/CatalogNotice";
 import PilotReadinessNotice from "../components/PilotReadinessNotice";
-import type { ProductDetails } from "@shared/productDetails";
+import {
+  productDetailsSchema,
+  type ProductDetails,
+} from "@shared/productDetails";
 export default function ProductPage() {
   const [, params] = useRoute("/shop/product/:slug");
   const { products, status, refresh, readiness } = useShopCatalog();
@@ -21,24 +24,47 @@ export default function ProductPage() {
   const { cart, add, removeOne } = useShopCart();
   const { currency } = useShopCurrency();
   const { t } = useTranslation();
-  const [details, setDetails] = useState<ProductDetails | null>(null),
-    [failed, setFailed] = useState(false);
+  const [information, setInformation] = useState<{
+    id: number;
+    state: "loading" | "ready" | "failed" | "unavailable";
+    details?: ProductDetails;
+  } | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const details =
+    information?.id === product?.id ? information?.details : undefined;
+  const informationState =
+    information?.id === product?.id ? information?.state : "loading";
   useEffect(() => {
     const c = new AbortController();
-    setDetails(null);
-    setFailed(false);
-    if (product && status === "ready")
+    if (product && status === "ready") {
+      const id = product.id;
+      setInformation({ id, state: "loading" });
       api
-        .get(`/shop/products/${product.id}/details`, { signal: c.signal })
-        .then(({ data }) => setDetails(data.details))
-        .catch(() => {
-          if (!c.signal.aborted) setFailed(true);
+        .get(`/shop/products/${id}/details`, { signal: c.signal })
+        .then(({ data }) => {
+          if (!c.signal.aborted)
+            setInformation({
+              id,
+              state: "ready",
+              details: productDetailsSchema.parse(data.details),
+            });
+        })
+        .catch(error => {
+          if (!c.signal.aborted)
+            setInformation({
+              id,
+              state: error?.response?.status === 404 ? "unavailable" : "failed",
+            });
         });
+    }
     return () => c.abort();
-  }, [product?.id, status]);
+  }, [product?.id, status, attempt]);
   useEffect(() => {
     if (status !== "ready") return;
-    if (product) {
+    if (product && informationState !== "unavailable") {
+      document
+        .querySelector('meta[name="robots"]')
+        ?.setAttribute("content", "index,follow");
       document.title = `${product.name} | Shop | Diaspora Unlocked`;
       document
         .querySelector('meta[name="description"]')
@@ -47,7 +73,7 @@ export default function ProductPage() {
       document
         .querySelector('meta[name="robots"]')
         ?.setAttribute("content", "noindex,follow");
-  }, [product, status]);
+  }, [product, status, informationState]);
   return (
     <Layout>
       <section className="document-section min-h-screen bg-slate-950 text-white">
@@ -56,7 +82,7 @@ export default function ProductPage() {
             {t("pilot.browse_products")}
           </Link>
           <CatalogNotice status={status} onRetry={() => void refresh()} />
-          {product ? (
+          {product && informationState !== "unavailable" ? (
             <>
               <div className="grid gap-8 md:grid-cols-2">
                 <img
@@ -76,6 +102,9 @@ export default function ProductPage() {
                       ),
                       currency
                     )}
+                    <span className="ml-2 text-sm font-normal text-white/65">
+                      {t("product_interest.indicative_price")}
+                    </span>
                   </p>
                   <p>
                     {t(
@@ -108,24 +137,35 @@ export default function ProductPage() {
                   ) : (
                     <div id="interest" className="max-w-sm scroll-mt-28">
                       <ProductInterest product={product} />
-                      <p className="mt-3 text-sm text-white/65">
-                        {t("product_interest.scope")}
-                      </p>
                     </div>
                   )}
-                  <p className="text-sm text-white/65">
-                    {t("shop.products.notes.supported_methods")}
-                  </p>
+                  {canRequestProduct(readiness, product) && (
+                    <p className="text-sm text-white/65">
+                      {t("product_interest.quote_note")}
+                    </p>
+                  )}
                 </div>
               </div>
               <h2 className="text-2xl font-semibold">
                 {t("pilot.product_details")}
               </h2>
-              {failed ||
-              !details ||
-              !Object.values(details).some(v =>
-                Array.isArray(v) ? v.length : v
-              ) ? (
+              {informationState === "loading" ? (
+                <p role="status">{t("pilot.details_loading")}</p>
+              ) : informationState === "failed" ? (
+                <div role="alert" className="space-y-3">
+                  <p>{t("pilot.details_failed")}</p>
+                  <button
+                    type="button"
+                    className="min-h-11 text-zim-gold underline"
+                    onClick={() => setAttempt(n => n + 1)}
+                  >
+                    {t("pilot.details_retry")}
+                  </button>
+                </div>
+              ) : !details ||
+                !Object.values(details).some(v =>
+                  Array.isArray(v) ? v.length : v
+                ) ? (
                 <p>{t("pilot.missing_details")}</p>
               ) : (
                 <dl className="grid gap-5 sm:grid-cols-2">
@@ -170,7 +210,7 @@ export default function ProductPage() {
               )}
             </>
           ) : status === "ready" ? (
-            <h1 className="page-title">{t("search.no_results.title")}</h1>
+            <h1 className="page-title">{t("pilot.product_unavailable")}</h1>
           ) : null}
         </div>
       </section>
