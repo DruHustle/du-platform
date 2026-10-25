@@ -1,0 +1,31 @@
+{
+  "timestampUtc": "20261025T135439Z",
+  "source": "production Aiven read-only logical snapshot",
+  "image": "mysql@sha256:76f0358884cb92d9a086d24e5671c38048d3fef40f2588703d73eb55392d6b69",
+  "tables": 37,
+  "rows": 131,
+  "sourceStableDuringDump": true,
+  "schemaAndRowHashesMatch": true,
+  "schemaSha256": "9337d1d8af42c9cd27eea629553ac9238287e9dd94ec760897ebc7821920b994",
+  "rowsSha256": "baaed951f18f10240997b9e73adf4be8e6aca1465364fac0c574b34d11b58b06",
+  "isolatedNetwork": "none",
+  "restoredTransactionRollback": true,
+  "encryptedArchiveRoundTrip": true,
+  "archiveBytes": 10308,
+  "liveWrites": false,
+  "providerPitrRestoreTested": false,
+  "applicationRecoveryTested": true,
+  "applicationChecks": {
+    "restoredApplicationJourney": true,
+    "orderReplay": true,
+    "privateAccess": true,
+    "customerCannotRecordPayment": true,
+    "paymentReplaySingleStockDeduction": true,
+    "refundReplaySingleLedgerEntry": true,
+    "deliveryTransition": true,
+    "newsletterConfirmOnceAndUnsubscribe": true,
+    "providerWorkersStarted": false,
+    "externalNetwork": false,
+    "productionWrites": false
+  }
+}

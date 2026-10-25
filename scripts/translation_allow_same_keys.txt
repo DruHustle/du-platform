@@ -67,3 +67,6 @@ tourism.other_attractions.hwange.source
 tourism.other_attractions.mana_pools.source
 tourism.other_attractions.matobo.source
 tourism.other_attractions.nyanga.source
+
+# Product/brand name remains unchanged across languages.
+brand

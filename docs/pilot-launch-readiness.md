@@ -1,28 +1,49 @@
 # Europe assisted-order pilot: owner inputs and launch gate
 
-Owner-selected target: **Europe**, with **EUR** quotes. This is an intended market,
-not confirmed continent-wide coverage. Approve named destination countries and
-the shipment origin first; do not treat Europe, the EU, EEA, UK and other European
-destinations as interchangeable shipping or regulatory jurisdictions.
+Owner-selected target: **the 27 EU member countries**, with **EUR** quotes and
+**shipment from Germany via DHL**. Country scope is owner intent; individual
+addresses, carrier services and product eligibility still require verification.
+Europe, the EU, EEA, UK and other European destinations are not interchangeable.
 
-The brand is Diaspora Unlocked; Germany and existing site contact details were
-confirmed. The contracting operator's complete identity/address and commercial
-procedures remain unapproved. The live legal/delivery pages are **drafts**.
+Owner-confirmed operator: **Onesa UG trading as Diaspora Unlocked**. The corrected
+business/returns address is **Steinhofweg 47, 69123 Heidelberg, Germany**. This
+supersedes the earlier sole-trader description and street number 17. Public
+company information identifies Onesa UG (haftungsbeschränkt), Andrew Gotora,
+Amtsgericht Mannheim HRB 757830; confirm the current register record and any
+applicable tax identifiers before final commercial approval. Existing public
+contact: info@diasporaunlocked.com and +49 151 47416152.
+
+The owner has authorised activation, but no completed approval record is installed.
+The legal/delivery pages and [commercial procedure draft](pilot-commercial-procedures.md)
+remain **drafts**, and production remains `observe` / report-only. Card payments
+are not implemented or available: the owner confirmed there is no Stripe account.
+Stripe is the recommended provider; onboarding and the actual payment process must
+be completed before offering card payment.
+
+The owner subsequently confirmed **no items are currently held in stock**. The
+eight positive live catalogue counts listed below are database values, not real
+inventory. A narrowly scoped production correction to zero was prepared for
+owner approval. Repository seed values already start at zero. Until real stock
+and costs are verified, retain catalogue browsing and the existing stock-interest
+workflow; do not approve products or issue commercial delivery promises.
+
+Production recovery and authorised mailbox checks were completed on 25 October
+2026; see [the operational evidence](audits/pilot-operational-acceptance.md).
 
 ## Approval checklist and owner-input template
 
 For each row, record the actual input, reviewer, review date, evidence reference
 and explicit approval. Blank or unverified facts remain **NOT READY**.
 
-| Check                 | Owner inputs and evidence required                                                                                                                                                                                                            | Current evidence                                                          |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `operator_identity`   | Full contracting person/entity name; legal form; serviceable postal address; representative; applicable registration/tax identifiers; customer contact                                                                                        | Brand, Germany and site contacts only; incomplete                         |
-| `procedures`          | Approved quote/contract formation; payment method and reconciliation; cancellation/withdrawal process and applicable exceptions; returns address/costs; refund timing and complaints                                                          | Drafts only; no approved commercial terms                                 |
-| `delivery`            | Actual shipment origin; individually named destination countries; DHL account/service and quotation procedure; weight/dimensions; packaging; customs/tax/import responsibilities; prohibited/restricted items; tracking and delivery promises | DHL named; coverage, origin, service and restrictions unconfirmed         |
-| `product_facts`       | Physical stock count and location; verified sizes/variants/net quantity/materials/ingredients/allergens; sourcing and supplier evidence; label/photos; destination eligibility per SKU                                                        | Published catalogue and editable details; missing facts are not approvals |
-| `unit_economics`      | Supplier cost/currency/invoice; packaging; handling; actual carrier quote; payment fees; duties/taxes responsibility; FX date; damage/returns allowance; approved final price and contribution                                                | Owner catalogue prices retained; no verified margins                      |
-| `backup_restore`      | Production Aiven plan/current backup status and retention; latest recoverable point; approved isolated restore target; schema/row comparison and application recovery; queue/retry reconciliation; date/reviewer                              | Local disposable restore drill only; production evidence outstanding      |
-| `transactional_email` | Explicitly designated test recipients; sender/domain authorization; provider acceptance, private-link recovery, quote/refund content and inbox checks; duplicate/retry review; date/reviewer                                                  | Mock-provider tests only; no actual recipient acceptance performed        |
+| Check                 | Owner inputs and evidence required                                                                                                                                                                                                            | Current evidence                                                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `operator_identity`   | Full contracting person/entity name; legal form; serviceable postal address; representative; applicable registration/tax identifiers; customer contact                                                                                        | Onesa UG and corrected address supplied; register/tax review remains                                                         |
+| `procedures`          | Approved quote/contract formation; payment method and reconciliation; cancellation/withdrawal process and applicable exceptions; returns address/costs; refund timing and complaints                                                          | Drafts only; no approved commercial terms                                                                                    |
+| `delivery`            | Actual shipment origin; individually named destination countries; DHL account/service and quotation procedure; weight/dimensions; packaging; customs/tax/import responsibilities; prohibited/restricted items; tracking and delivery promises | Germany → EU27 via DHL confirmed; exact services, rates and product restrictions unverified                                  |
+| `product_facts`       | Physical stock count and location; verified sizes/variants/net quantity/materials/ingredients/allergens; sourcing and supplier evidence; label/photos; destination eligibility per SKU                                                        | Published catalogue and editable details; missing facts are not approvals                                                    |
+| `unit_economics`      | Supplier cost/currency/invoice; packaging; handling; actual carrier quote; payment fees; duties/taxes responsibility; FX date; damage/returns allowance; approved final price and contribution                                                | Owner catalogue prices retained; no verified margins                                                                         |
+| `backup_restore`      | Production Aiven plan/current backup status and retention; latest recoverable point; approved isolated restore target; schema/row comparison and application recovery; queue/retry reconciliation; date/reviewer                              | Production logical restore and application probe passed, 25 October 2026; provider PITR not exercised                        |
+| `transactional_email` | Explicitly designated test recipients; sender/domain authorization; provider acceptance, private-link recovery, quote/refund content and inbox checks; duplicate/retry review; date/reviewer                                                  | Three labelled samples accepted and owner-confirmed at info@diasporaunlocked.com; live private-link inbox flow not exercised |
 
 Copy [the deliberately unapproved JSON template](../config/shop-pilot-approval.example.json)
 to a private operational location. Fill actual dates, approver, country codes and
@@ -37,7 +58,7 @@ test only with mock email providers and `example.test` recipients.
 
 ## Explicit readiness configuration
 
-No production environment, operating mode or account was changed in this pass.
+The production application environment and readiness mode remain unchanged. An encrypted logical backup and redacted recovery evidence were created on Oracle; the disposable restore resources were removed.
 The implementation proposes these owner-controlled settings:
 
 | `SHOP_COMMERCIAL_MODE` | Effect                                                                                                                                                                                                                                                         |
@@ -69,11 +90,15 @@ of legal compliance, carrier eligibility or physical inventory.
 
 ## Proposed bounded pilot
 
-Start only after the checklist is approved. Use one delivery corridor within the
-Europe target: an explicitly approved shipment origin and **one named destination
-country** from the allowlist. The owner has selected Europe, not a verified list
-of eligible countries; that corridor remains an owner input. Expand to another
-European country only after its DHL, product and procedure checks are recorded.
+Start only after the checklist is approved. The owner selected Germany → EU27.
+Approve each actual product/service/address combination rather than treating a
+country code as carrier eligibility. A small initial Germany corridor is an
+optional operational recommendation, not a replacement for the owner's EU scope.
+
+EU27 codes: AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LT,
+LU, MT, NL, PL, PT, RO, SK, SI, ES, SE. Record accepted country-name aliases in
+the private approval file. Special territories require their own carrier and tax
+checks; a country code alone does not establish coverage.
 
 Proposed cap: four weeks, 20 qualified enquiries and at most 10 paid orders, with
 manual review of every quote. These are proposed experiment limits, not sales

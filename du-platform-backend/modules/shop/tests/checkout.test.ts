@@ -47,6 +47,26 @@ afterEach(() => {
   shopSeedProducts[0].stock_qty = original;
 });
 describe("checkout reliability", () => {
+  it("rejects an oversized basket before walking any item fields", () => {
+    let visited = 0;
+    const item = {
+      get productId() {
+        visited++;
+        return -1;
+      },
+      quantity: 0,
+    };
+    const result = shopOrderRequestSchema.safeParse({
+      ...payload(),
+      items: Array(201).fill(item),
+    });
+    expect(result.success).toBe(false);
+    expect(visited).toBe(0);
+    if (!result.success)
+      expect(result.error.issues).toMatchObject([
+        { code: "too_big", path: ["items"] },
+      ]);
+  });
   it("refuses ephemeral production orders even if memory fallback was enabled", async () => {
     const before = process.env.NODE_ENV;
     process.env.NODE_ENV = "production";

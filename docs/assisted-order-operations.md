@@ -8,6 +8,11 @@ labelled drafts until the owner supplies and approves the inputs in
 before approving commercial operation. Readiness modes are an explicit
 operational choice; this review does not activate them in production.
 
+Current owner inputs and actual production logical recovery/mailbox evidence are
+recorded in [the 25 October acceptance report](audits/pilot-operational-acceptance.md).
+The operator is Onesa UG trading as Diaspora Unlocked; dispatch is intended from
+Germany to EU27 via DHL. Card payment remains unavailable pending merchant setup.
+
 ## Operator workflow
 
 Use `/login?next=%2Fadmin` with an existing verified account whose email is in
@@ -195,9 +200,10 @@ drop the additive ledger to make an old binary look current.
 Production uses managed MySQL. Obtain the actual Aiven service plan, current
 backup status, retention and an approved isolated restore target from the owner.
 Aiven documents daily full backups and binlog recovery, with retention depending
-on the plan; this repository does not verify the tenant's configured schedule or
-successful recovery. Oracle manifest backups contain runtime credentials and
-are not database backups.
+on the plan. The 25 October console observation and successful production-data
+logical restore are recorded in the acceptance report; provider PITR and a
+contractual retention guarantee were not verified. Oracle manifest backups
+contain runtime credentials and are not database backups.
 
 For an approved logical backup, use the matching MySQL client, TLS/CA and private
 credential handling. Do not print connection strings/passwords. Use
@@ -227,6 +233,41 @@ The script refuses remote/non-test databases, dumps only the selected disposable
 database, imports a new temporary database, compares every table's schema/row
 hash and removes the temporary database/dump. The successful local drill is
 reported in the audit; it does not establish a tested production restore.
+
+The separate **Oracle production-data drill** reads the configured DU database,
+compares surrounding exports for changes, restores into a disposable MySQL
+container with `--network none`, and runs the real application probe in that same
+isolated network namespace. It never starts email/AI workers or supplies provider
+keys. It writes only synthetic data to the restored database, retains an
+encrypted original backup, and removes plaintext files and drill containers.
+It does not replace the live database or restart DU/sibling services.
+
+Run only as an explicitly authorised operational exercise, outside migrations
+or schema changes. Review the source and allow roughly 1 GB of temporary memory
+plus image/dump disk space. Bundle the probe from the revision being verified:
+
+```sh
+pnpm exec esbuild scripts/operations/restored-application.ts \
+  --bundle --platform=node --packages=external --format=esm \
+  --outfile=/tmp/du-restored-application.mjs
+scp deploy/oracle/verify-recovery.sh /tmp/du-restored-application.mjs \
+  ubuntu@152.70.22.84:/tmp/
+ssh ubuntu@152.70.22.84 \
+  'sudo bash /tmp/verify-recovery.sh /tmp/du-restored-application.mjs'
+```
+
+The script uses the currently running DU image and a pinned official MySQL image.
+It refuses to run without root and an explicit probe file. The probe requires a
+loopback `du_restore_test` database, test mode and no production URL/email key.
+The authenticated readiness query avoids confusing MySQL's temporary bootstrap
+server with its fully initialised server.
+
+Archive and redacted report: `/var/backups/du-platform`, root-only. Passphrase:
+`/etc/du-platform-recovery/backup-passphrase`, root-only and separate from archives.
+Arrange an independently secured off-host archive/key copy before relying on this
+backup for complete Oracle host loss. Never commit either or print their contents.
+The script does not schedule backups, prune old ones, rotate keys or verify Aiven
+PITR; managed provider backups remain a separate recovery layer.
 
 References: [MySQL mysqldump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html),
 [Aiven MySQL backups](https://aiven.io/docs/products/mysql/concepts/mysql-backups),
