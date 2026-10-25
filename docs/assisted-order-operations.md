@@ -421,8 +421,9 @@ Python puller/configuration in `DiasporaUnlocked/.mac-pull`. Launch at login, ho
 due checks and the 03:15 local calendar check provide catch-up while awake/connected.
 The default is one successful snapshot/pull per 24 hours; this is not a promise
 that a sleeping/offline Mac backs up at 03:15. Failures retry at the next check.
-`intervalHours` in the non-secret config accepts 1–168 hours. The lock prevents
-overlap with manual runs. The visible `DiasporaUnlocked/BACKUP-STATUS.json` preserves last success while
+`intervalHours` in the non-secret config accepts 1–168 hours. The Mac lock prevents
+overlap with manual runs. Oracle snapshots also take the existing release lock,
+so a concurrent release causes a safe failed attempt and later retry. The visible `DiasporaUnlocked/BACKUP-STATUS.json` preserves last success while
 reporting a newer failure; only redacted stage codes are logged.
 
 Inspect status or request an immediate snapshot/pull:

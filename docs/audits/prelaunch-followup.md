@@ -86,6 +86,10 @@ Changed files pass formatting. The repository-wide formatting command still repo
 82 pre-existing files outside this change; its existing non-blocking CI behavior
 is preserved rather than hiding warnings or mass-formatting unrelated code.
 
+The snapshot shares the existing Oracle release lock. An actual lock-contention
+probe verifies that it refuses to run during a release without altering archives;
+the daily pull retries later. This prevents mixed image/schema revision evidence.
+
 No database migration is needed for this follow-up. Rollback keeps all current
 interest/consent/outbox columns and enforced prelaunch; prefer forward fixes. Mac
 pull scheduling is independent of application release. To pause it deliberately,
