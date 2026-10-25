@@ -34,7 +34,7 @@
       "who_label": "Wer wir sind",
       "who_content": "Diaspora Unlocked verbindet Menschen in Simbabwe und im Ausland mit Produkten, Reiseinformationen, Geschäftsideen und praktischer KI-Unterstützung.",
       "what_label": "Was wir tun",
-      "what_content": "Stelle einen Warenkorb zusammen und frage eine Bestellung an, recherchiere eine Geschäftsidee, entwirf einen Reiseplan oder frage Onesa. Wähle deinen nächsten Schritt in den einzelnen Bereichen."
+      "what_content": "Produkte entdecken und Interesse anmelden, eine Geschäftsidee recherchieren, eine Reise planen oder Onesa fragen. Produktinteresse ist keine Bestellung oder Zahlung."
     },
     "newsletter": {
       "confirmation_sent": "Prüfe deine E-Mails auf einen Bestätigungslink. Hast du bereits bestätigt, stehst du auf der Liste.",
@@ -180,7 +180,7 @@
       "shop": {
         "title": "Geschäft",
         "description": "Finden Sie Lebensmittel, Kunsthandwerk und Fanbekleidung aus Simbabwe für zu Hause oder als Geschenk.",
-        "detail": "Stellen Sie einen Warenkorb zusammen und senden Sie eine Bestellanfrage. Klären Sie Verfügbarkeit, Lieferung und Zahlung vor dem Kauf mit dem Team.",
+        "detail": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
         "stats": "Produkte ansehen",
         "image_alt": "Giraffen und Akazien als Silhouetten im Sonnenuntergang"
       },
@@ -1300,7 +1300,7 @@
   "shop": {
     "collections": "Kollektionen",
     "collections_title": "Simbabwe-Favoriten an einem Ort",
-    "collections_description": "Ein Ausgangspunkt für deinen Warenkorb. Füge einen vorgestellten Artikel hinzu oder öffne seine Kategorie für weitere Produkte.",
+    "collections_description": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
     "explore_shop": "Alle Produkte ansehen",
     "trade_support": "Handelsunterstützung entdecken",
     "export_readiness": "Export-Reifeleitfaden",
@@ -1338,7 +1338,7 @@
       "oils_spreads": {
         "title": "Speiseöle und Aufstriche",
         "description": "Alltägliche Speiseöle und das Nötigste für die Vorratskammer.",
-        "detail": "Praktische Utensilien für die Vorratskammer, die wiederholtes Kochen, Auffüllen von Bestellungen und einfaches Zusammenstellen von Körben für alltägliche Mahlzeiten unterstützen."
+        "detail": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet."
       },
       "proteins": {
         "title": "Protein & Speisekammer",
@@ -1358,7 +1358,7 @@
     },
     "products": {
       "title": "Produktkatalog",
-      "subtitle": "Stellen Sie Ihren Warenkorb zusammen und senden Sie eine Bestellanfrage. Vor der Zahlung bestätigt das Team Bestand, DHL-Lieferung an Ihr Ziel und Endkosten.",
+      "subtitle": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
       "back_to_shop": "Zurück zum Shop",
       "default_country": "Deutschland",
       "filters": {
@@ -1403,7 +1403,7 @@
       },
       "stock": {
         "in": "Auf Lager",
-        "out": "Ausverkauft",
+        "out": "Nicht bestellbar",
         "out_message": "Derzeit nicht verfügbar. Hinterlassen Sie Ihre E-Mail für eine Bestandsmeldung."
       },
       "actions": {
@@ -1419,7 +1419,7 @@
       },
       "cart": {
         "title": "Warenkorb & Bestellanfrage",
-        "empty": "Ihr Warenkorb ist leer. Fügen Sie Produkte für eine Bestellanfrage hinzu.",
+        "empty": "Ihr Warenkorb ist leer. Entdecken Sie Produkte im Katalog.",
         "update_stock": "An verfügbaren Bestand anpassen",
         "remove_unavailable": "Nicht verfügbare Artikel entfernen",
         "unavailable": "Einige gespeicherte Artikel sind nicht mehr verfügbar. Entfernen Sie diese, um fortzufahren.",
@@ -1494,7 +1494,8 @@
         "empty_cart": "Ihr Warenkorb ist leer.",
         "complete_fields": "Ergänzen Sie Kontakt- und Lieferdaten, um die Anfrage zu senden.",
         "unable_place_order": "Ihre Anfrage konnte nicht gespeichert werden. Versuchen Sie es erneut oder kontaktieren Sie uns per WhatsApp.",
-        "unable_confirm_payment": "Die Zahlung kann nicht bestätigt werden."
+        "unable_confirm_payment": "Die Zahlung kann nicht bestätigt werden.",
+        "availability_changed": "Ihr gespeicherter Warenkorb bleibt erhalten. Einige Artikel sind nicht verfügbar oder überschreiten den Bestand. Bitte vor einer Bestellanfrage prüfen oder entfernen."
       },
       "whatsapp": {
         "intro": "Hallo, ich möchte diese Produkte bei Diaspora Unlocked anfragen.",
@@ -1504,18 +1505,18 @@
         "each": "jede"
       },
       "notify": {
-        "cta": "Benachrichtigen Sie mich",
+        "cta": "Interesse anmelden",
         "saving": "Sparen...",
-        "saved": "Bestandsbenachrichtigung gespeichert. Wir senden dir eine E-Mail, sobald das Produkt wieder verfügbar ist.",
+        "saved": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
         "saved_short": "Bestandsbenachrichtigung gespeichert",
-        "dialog_title": "Benachrichtige mich, wenn es wieder auf Lager ist",
-        "dialog_description": "ist derzeit nicht verfuegbar. Geben Sie Ihre E-Mail-Adresse ein und wir informieren Sie, sobald der Bestand zurueck ist.",
-        "enter_email_prompt": "Geben Sie Ihre E-Mail-Adresse ein, um benachrichtigt zu werden, wenn dieses Produkt wieder auf Lager ist:",
+        "dialog_title": "Interesse anmelden",
+        "dialog_description": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
+        "enter_email_prompt": "Interesse anmelden",
         "invalid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "login_required": "Bitte melden Sie sich an, um Bestandsbenachrichtigungen zu aktivieren.",
         "failed": "Deine Bestandsbenachrichtigung konnte nicht gespeichert werden. Bitte versuche es erneut.",
-        "toast_title": "Bestandsbenachrichtigung gespeichert",
-        "toast_detail": "Wir informieren Sie per E-Mail, sobald {{name}} wieder verfügbar ist."
+        "toast_title": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
+        "toast_detail": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter."
       },
       "filter_hint": "Versuchen Sie andere Filter, um Produkte zu finden.",
       "empty_hint": "Hier sind noch keine Produkte gelistet.",
@@ -1528,7 +1529,7 @@
       "eyebrow": "Simbabwe einkaufen",
       "title": "Essen, Kunsthandwerk und mehr.",
       "highlight": "Eine Verbindung zu Simbabwe.",
-      "description": "Finde vertraute Aromen, Geschenke und Fanartikel für Menschen in Simbabwe und im Ausland. Lege Artikel in den Warenkorb und sende eine Bestellanfrage.",
+      "description": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
       "principle": "Die Lieferung wird über DHL organisiert. Nennen Sie Ihr Ziel; das Team bestätigt Verfügbarkeit, Endkosten und Zahlungsanweisungen, bevor Sie bezahlen.",
       "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
       "collections_cta": "Kategorien entdecken"
@@ -2069,10 +2070,39 @@
     "command_changed": "Die Anfrage hat sich geändert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
     "readiness_prelaunch": "Vor dem Start — gewerbliche Freigabe unbestätigt",
     "readiness_limited": "Begrenzter Europa-Pilot",
-    "readiness_pending_note": "Geschäftliche Abläufe und Produktangaben werden noch vervollständigt. Anfragen sind möglich. Genauen Artikel, endgültige schriftliche Bedingungen und Lieferung vor Angebotsannahme oder Zahlung bestätigen lassen.",
+    "readiness_pending_note": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet. Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
     "readiness_pilot_note": "Nur ausdrücklich freigegebene Zielländer und Produkte gehören zum Pilot. Der Shop bestätigt Artikel, DHL-Lieferung und endgültige Bedingungen einzeln.",
     "operator_details_title": "Betreiberangaben",
     "delivery_title": "Lieferung und Zahlung",
     "returns_title": "Stornierung und Rückgabe"
+  },
+  "product_interest": {
+    "action": "Interesse anmelden",
+    "scope": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
+    "email": "E-Mail-Adresse",
+    "submit": "Bestätigungslink per E-Mail senden",
+    "close": "Schließen",
+    "received": "Falls eine Bestätigung nötig ist, senden wir einen Link. Bitte auch im Spamordner nachsehen.",
+    "error": "Die Anfrage konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    "invalid_email": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "title": "Produktinteresse",
+    "confirm_subject": "Produktinteresse bestätigen",
+    "confirm_body": "Bestätigen Sie Ihre E-Mail-Adresse, um einmalig über die Verfügbarkeit dieses Produkts informiert zu werden.",
+    "expiry": "Der Bestätigungslink ist 48 Stunden gültig. Ignorieren Sie diese E-Mail, wenn Sie die Anfrage nicht gestellt haben.",
+    "available_subject": "Produkt für eine Anfrage verfügbar",
+    "available_body": "Dieses Produkt ist derzeit für eine betreute Bestellanfrage verfügbar. Aktuellen Bestand und Bedingungen finden Sie auf der Produktseite; diese Nachricht reserviert keine Ware.",
+    "cancel": "Produktbenachrichtigung abbestellen",
+    "confirm": "Produktinteresse bestätigen",
+    "confirmed": "E-Mail bestätigt. Wir benachrichtigen Sie einmalig, wenn das Produkt freigegeben und verfügbar ist. Verfügbarkeit ist nicht garantiert.",
+    "cancelled": "Diese Produktbenachrichtigung ist abbestellt. Newsletter-Einstellungen bleiben unverändert.",
+    "invalid_link": "Dieser Link ist ungültig, abgelaufen oder bereits verwendet. Fordern Sie auf der Produktseite einen neuen an.",
+    "updating": "Wird aktualisiert…",
+    "available_empty": "Noch sind keine Produkte bestellbar. Entdecken Sie den Katalog und melden Sie unverbindlich Interesse an.",
+    "prelaunch": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
+    "saved_notice": "Ihr gespeicherter Warenkorb bleibt erhalten. Einige Artikel sind nicht verfügbar oder überschreiten den Bestand. Bitte vor einer Bestellanfrage prüfen oder entfernen.",
+    "remove_unavailable": "Nicht verfügbare Artikel entfernen",
+    "price_note": "Angezeigte Preise sind Richtwerte. Prüfen Sie die aktuellen Produktinformationen vor einer Bestellanfrage.",
+    "view_product": "Produkt ansehen",
+    "privacy_notes": "Produktbenachrichtigungen speichern E-Mail-Adresse, gewähltes Produkt, Einwilligung, Bestätigungs-/Abmeldestatus und Versandhistorie in MySQL. Sie sind unabhängig vom Newsletter und optionaler Analyse. Abmelden können Sie sich über den Link in der Produkt-E-Mail; Berichtigung oder Löschung: info@diasporaunlocked.com."
   }
 }

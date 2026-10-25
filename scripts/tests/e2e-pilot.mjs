@@ -1,7 +1,8 @@
+import { createShopApprovalFixture } from "./shop-readiness-fixture.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 import mysql from "mysql2/promise";
 import { chromium, webkit } from "playwright";
 const databaseUrl = process.env.SHOP_TEST_DATABASE_URL;
@@ -23,12 +24,14 @@ const env = Object.fromEntries(
     .filter(key => process.env[key])
     .map(key => [key, process.env[key]])
 );
+const approval = await createShopApprovalFixture([1]);
 const child = spawn(
   process.execPath,
   ["--import", "tsx", "--input-type=module", "-e", serverCode],
   {
     env: {
       ...env,
+      ...approval.env,
       NODE_ENV: "test",
       DATABASE_URL: databaseUrl,
       JWT_SECRET: "local-pilot-only-no-real-credentials",
@@ -105,6 +108,14 @@ try {
   );
   assert.equal(create.status, 201, JSON.stringify(create.body));
   product = create.body.data.row;
+  const fixture = JSON.parse(
+    await readFile(approval.env.SHOP_PILOT_APPROVAL_FILE, "utf8")
+  );
+  fixture.approvedProductIds = [product.id];
+  await writeFile(
+    approval.env.SHOP_PILOT_APPROVAL_FILE,
+    JSON.stringify(fixture)
+  );
   assert.equal(
     (
       await call(
@@ -524,6 +535,7 @@ try {
       .catch(() => {});
   }
   await pool.end();
+  await approval.close();
   if (child.exitCode === null) {
     const ended = once(child, "exit");
     child.kill("SIGTERM");

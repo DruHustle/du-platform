@@ -172,7 +172,7 @@ for (const route of [
     `${route} must not contain the loading shell`
   );
   assert(
-    html.includes("assisted order request") ||
+    html.includes("one-time availability alert") ||
       html.includes("Sample trip budgets") ||
       html.includes("research starting points") ||
       html.includes("cannot book a trip")

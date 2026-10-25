@@ -34,7 +34,7 @@
       "who_label": "Who we are",
       "who_content": "Diaspora Unlocked connects people in Zimbabwe and abroad with products, travel information, business ideas and practical AI assistance.",
       "what_label": "What we do",
-      "what_content": "Build a basket and request an order, research a business idea, draft a trip plan or ask Onesa a question. Explore the sections to choose your next step."
+      "what_content": "Browse products and register interest, research a business idea, draft a trip plan or ask Onesa a question. Product interest is not an order or payment."
     },
     "newsletter": {
       "confirmation_sent": "Check your email for a confirmation link. If you have already confirmed, you are on the list.",
@@ -180,7 +180,7 @@
       "shop": {
         "title": "Shop",
         "description": "Find Zimbabwean food, crafts and supporter apparel for your home or as a gift.",
-        "detail": "Build a basket and send an order request. Confirm availability, delivery and payment with the team before buying.",
+        "detail": "Browse products and register interest — no order or payment. Sales are not open yet.",
         "stats": "Browse products",
         "image_alt": "Giraffes and acacia trees silhouetted at sunset"
       },
@@ -1366,7 +1366,7 @@
   "shop": {
     "collections": "Collections",
     "collections_title": "Zimbabwean favourites, in one place",
-    "collections_description": "A starting point for your basket. Add a featured item or open its category to see more.",
+    "collections_description": "Browse products and register interest — no order or payment. Sales are not open yet.",
     "explore_shop": "Browse all products",
     "trade_support": "Explore Trade Support",
     "export_readiness": "Export Readiness Guide",
@@ -1404,7 +1404,7 @@
       "oils_spreads": {
         "title": "Cooking Oils & Spreads",
         "description": "Everyday cooking oils and pantry spread essentials.",
-        "detail": "Practical pantry essentials that support repeat cooking needs, top-up orders, and easy basket building for everyday meals."
+        "detail": "Browse products and register interest — no order or payment. Sales are not open yet."
       },
       "proteins": {
         "title": "Protein & Pantry",
@@ -1424,7 +1424,7 @@
     },
     "products": {
       "title": "Product catalogue",
-      "subtitle": "Build your basket and send an order request. Before you pay, the team confirms stock, DHL delivery to your destination and final costs.",
+      "subtitle": "Browse products and register interest — no order or payment. Sales are not open yet.",
       "back_to_shop": "Back to Shop",
       "default_country": "Germany",
       "filters": {
@@ -1469,7 +1469,7 @@
       },
       "stock": {
         "in": "In Stock",
-        "out": "Out of Stock",
+        "out": "Not available to order",
         "out_message": "Currently unavailable. Leave your email for a stock update."
       },
       "actions": {
@@ -1485,7 +1485,7 @@
       },
       "cart": {
         "title": "Cart & order request",
-        "empty": "Your cart is empty. Add products to start an order request.",
+        "empty": "Your basket is empty. Browse the catalogue to explore products.",
         "update_stock": "Update to available stock",
         "remove_unavailable": "Remove unavailable items",
         "unavailable": "Some saved items are no longer available. Remove those items to continue.",
@@ -1560,7 +1560,8 @@
         "empty_cart": "Your cart is empty.",
         "complete_fields": "Complete your contact and delivery details to send the request.",
         "unable_place_order": "Your request could not be saved. Try again, or contact us on WhatsApp.",
-        "unable_confirm_payment": "Unable to confirm payment."
+        "unable_confirm_payment": "Unable to confirm payment.",
+        "availability_changed": "Your saved basket is kept. Some items are unavailable or exceed current stock. Review or remove them before requesting an order."
       },
       "whatsapp": {
         "intro": "Hello, I would like to request these products from Diaspora Unlocked.",
@@ -1570,18 +1571,18 @@
         "each": "each"
       },
       "notify": {
-        "cta": "Notify Me",
+        "cta": "Register interest",
         "saving": "Saving...",
-        "saved": "Stock alert saved. We will email you when this product returns.",
+        "saved": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
         "saved_short": "Stock alert saved",
-        "dialog_title": "Notify me when it is back in stock",
-        "dialog_description": "is currently unavailable. Enter your email address and we will let you know when stock returns.",
-        "enter_email_prompt": "Enter your email address to be notified when this product is back in stock:",
+        "dialog_title": "Register interest",
+        "dialog_description": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
+        "enter_email_prompt": "Register interest",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",
         "failed": "We could not save your stock alert. Please try again.",
-        "toast_title": "Stock alert saved",
-        "toast_detail": "We will email you when {{name}} is back in stock."
+        "toast_title": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
+        "toast_detail": "One-time product alert — no order, reservation or payment. Separate from our newsletter."
       },
       "filter_hint": "Try different filters to find products.",
       "empty_hint": "No products are listed here yet.",
@@ -1594,7 +1595,7 @@
       "eyebrow": "Shop Zimbabwe",
       "title": "Food, crafts and more.",
       "highlight": "A connection to Zimbabwe.",
-      "description": "Find familiar flavours, gifts and supporter apparel for people in Zimbabwe and abroad. Add items to your basket and send an order request.",
+      "description": "Browse products and register interest — no order or payment. Sales are not open yet.",
       "principle": "Delivery is arranged through DHL. Tell us your destination; the team confirms service availability, final costs and payment instructions before you pay.",
       "caption": "Food · Crafts · Supporter apparel",
       "collections_cta": "Explore categories"
@@ -2069,10 +2070,39 @@
     "command_changed": "The request changed. Review the current status before continuing.",
     "readiness_prelaunch": "Prelaunch — commercial readiness unconfirmed",
     "readiness_limited": "Limited Europe pilot",
-    "readiness_pending_note": "Commercial procedures and product facts are still being completed. You may send an enquiry. Confirm the exact item, final written terms and delivery before accepting a quote or paying.",
+    "readiness_pending_note": "Browse products and register interest — no order or payment. Sales are not open yet. One-time product alert — no order, reservation or payment. Separate from our newsletter.",
     "readiness_pilot_note": "Only explicitly approved destination countries and products are in the pilot. The shop confirms each item, DHL delivery and final terms individually.",
     "operator_details_title": "Operator details",
     "delivery_title": "Delivery and payment",
     "returns_title": "Cancellation and returns"
+  },
+  "product_interest": {
+    "action": "Register interest",
+    "scope": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
+    "email": "Email address",
+    "submit": "Email me a confirmation link",
+    "close": "Close",
+    "received": "If confirmation is needed, we will email a link. Please check your inbox and spam folder.",
+    "error": "We could not save your request. Please try again.",
+    "invalid_email": "Enter a valid email address.",
+    "title": "Product interest",
+    "confirm_subject": "Confirm your product interest",
+    "confirm_body": "Confirm that this email belongs to you to receive one availability alert for this product.",
+    "expiry": "This confirmation link expires in 48 hours. Ignore this email if you did not request it.",
+    "available_subject": "Product available to request",
+    "available_body": "This product is currently available for an assisted order request. Check the product page for current stock and terms; this alert does not reserve goods.",
+    "cancel": "Cancel this product alert",
+    "confirm": "Confirm product interest",
+    "confirmed": "Email confirmed. We will send one alert if this product becomes eligible and available. Stock is not guaranteed.",
+    "cancelled": "This product alert is cancelled. Newsletter preferences are unchanged.",
+    "invalid_link": "This link is invalid, expired or already used. Request a new link from the product page.",
+    "updating": "Updating…",
+    "available_empty": "Nothing is available to order yet. Browse the catalogue and register interest without placing an order.",
+    "prelaunch": "Browse products and register interest — no order or payment. Sales are not open yet.",
+    "saved_notice": "Your saved basket is kept. Some items are unavailable or exceed current stock. Review or remove them before requesting an order.",
+    "remove_unavailable": "Remove unavailable items",
+    "price_note": "Displayed prices are indicative. Check current product information before making an order request.",
+    "view_product": "View product",
+    "privacy_notes": "Product alerts store your email, selected product, consent and confirmation/cancellation status, and delivery history in MySQL. They are separate from newsletter subscriptions and optional analytics. Cancel using your product email link; contact info@diasporaunlocked.com for correction or deletion requests."
   }
 }
