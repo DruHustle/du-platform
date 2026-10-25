@@ -33,28 +33,39 @@ pw=secrets.token_hex(32);(p/'client'/'restore-password').write_text(pw);(p/'clie
 PY
 database=$(cat "$work/database")
 client=(docker run --rm --user 0:0 --memory 256m --cpus 0.5 --mount "type=bind,src=$work/client,dst=/run/du-client,readonly" --entrypoint mysqldump "$image" --defaults-extra-file=/run/du-client/source.cnf --single-transaction --quick --no-tablespaces --set-gtid-purged=OFF --hex-blob --column-statistics=0 --skip-comments)
-"${client[@]}" --compact --no-create-info --skip-extended-insert --order-by-primary "$database" > "$work/before.sql"
-"${client[@]}" --routines --events --triggers "$database" > "$work/backup.sql"
-"${client[@]}" --compact --no-create-info --skip-extended-insert --order-by-primary "$database" > "$work/after.sql"
-cmp -s "$work/before.sql" "$work/after.sql" || { echo 'Source changed during backup; retry required.' >&2; exit 1; }
-"${client[@]}" --compact --no-data "$database" > "$work/source-schema.sql"
-python3 - "$work/source-schema.sql" <<'PY'
-import pathlib,re,sys
-schema=pathlib.Path(sys.argv[1]).read_text()
-tables=schema.count('CREATE TABLE ')
-assert tables > 0 and len(re.findall(r'ENGINE=InnoDB\b', schema)) == tables, 'Transactional InnoDB tables required'
+# Stream directly to encryption/fingerprints: no plaintext SQL dump files.
+install -d -m 700 /etc/du-platform-recovery /var/backups/du-platform
+key=/etc/du-platform-recovery/backup-passphrase
+if [ ! -f "$key" ]; then head -c 48 /dev/urandom | base64 > "$key"; chmod 600 "$key"; fi
+cat > "$work/fingerprint.py" <<'PYHASH'
+import sys,hashlib,json,re
+h=hashlib.sha256();rows=tables=innodb=0
+for line in sys.stdin.buffer:
+ h.update(line);rows+=line.startswith(b'INSERT INTO ');tables+=line.startswith(b'CREATE TABLE ');innodb+=len(re.findall(rb'ENGINE=InnoDB\b',line))
+print(json.dumps({'sha256':h.hexdigest(),'rows':rows,'tables':tables,'innodb':innodb},sort_keys=True))
+PYHASH
+"${client[@]}" --compact --no-data "$database" | python3 "$work/fingerprint.py" > "$work/source-schema.json"
+python3 - "$work/source-schema.json" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1]));assert r['tables']>0 and r['tables']==r['innodb'],'Transactional InnoDB tables required'
 PY
+"${client[@]}" --compact --no-create-info --skip-extended-insert --order-by-primary "$database" | python3 "$work/fingerprint.py" > "$work/before.json"
+"${client[@]}" --routines --events --triggers "$database" | gpg --batch --no-symkey-cache --pinentry-mode loopback --passphrase-file "$key" --symmetric --cipher-algo AES256 --output "$work/backup.sql.gpg"
+"${client[@]}" --compact --no-create-info --skip-extended-insert --order-by-primary "$database" | python3 "$work/fingerprint.py" > "$work/after.json"
+"${client[@]}" --compact --no-data "$database" | python3 "$work/fingerprint.py" > "$work/after-schema.json"
+cmp -s "$work/before.json" "$work/after.json" || { echo 'Source changed during backup; retry required.' >&2; exit 1; }
+cmp -s "$work/source-schema.json" "$work/after-schema.json" || { echo 'Source schema changed during backup; retry required.' >&2; exit 1; }
 docker run -d --name "$restore" --network none --memory 768m --cpus 1 --mount "type=bind,src=$work/client,dst=/run/du-client,readonly" -e MYSQL_ROOT_PASSWORD_FILE=/run/du-client/restore-password -e MYSQL_DATABASE=du_restore_test "$image" --skip-log-bin --event-scheduler=OFF --innodb-buffer-pool-size=64M --max-connections=10 >/dev/null
 for n in $(seq 1 60); do
  if docker exec "$restore" mysql --defaults-extra-file=/run/du-client/restore.cnf -N -B -e "SELECT 1" >/dev/null 2>&1; then break; fi
  sleep 1
 done
 docker exec "$restore" mysql --defaults-extra-file=/run/du-client/restore.cnf -N -B -e 'SELECT 1' >/dev/null
-docker exec -i "$restore" mysql --defaults-extra-file=/run/du-client/restore.cnf du_restore_test < "$work/backup.sql"
-docker exec "$restore" mysqldump --defaults-extra-file=/run/du-client/restore.cnf --single-transaction --quick --no-tablespaces --set-gtid-purged=OFF --hex-blob --column-statistics=0 --skip-comments --compact --no-create-info --skip-extended-insert --order-by-primary du_restore_test > "$work/restored-data.sql"
-docker exec "$restore" mysqldump --defaults-extra-file=/run/du-client/restore.cnf --single-transaction --quick --no-tablespaces --set-gtid-purged=OFF --hex-blob --column-statistics=0 --skip-comments --compact --no-data du_restore_test > "$work/restored-schema.sql"
-cmp -s "$work/before.sql" "$work/restored-data.sql" || { echo 'Restored row comparison failed.' >&2; exit 1; }
-cmp -s "$work/source-schema.sql" "$work/restored-schema.sql" || { echo 'Restored schema comparison failed.' >&2; exit 1; }
+gpg --batch --no-symkey-cache --pinentry-mode loopback --passphrase-file "$key" --decrypt "$work/backup.sql.gpg" 2>/dev/null | docker exec -i "$restore" mysql --defaults-extra-file=/run/du-client/restore.cnf du_restore_test
+docker exec "$restore" mysqldump --defaults-extra-file=/run/du-client/restore.cnf --single-transaction --quick --no-tablespaces --set-gtid-purged=OFF --hex-blob --column-statistics=0 --skip-comments --compact --no-create-info --skip-extended-insert --order-by-primary du_restore_test | python3 "$work/fingerprint.py" > "$work/restored-data.json"
+docker exec "$restore" mysqldump --defaults-extra-file=/run/du-client/restore.cnf --single-transaction --quick --no-tablespaces --set-gtid-purged=OFF --hex-blob --column-statistics=0 --skip-comments --compact --no-data du_restore_test | python3 "$work/fingerprint.py" > "$work/restored-schema.json"
+cmp -s "$work/before.json" "$work/restored-data.json" || { echo 'Restored row comparison failed.' >&2; exit 1; }
+cmp -s "$work/source-schema.json" "$work/restored-schema.json" || { echo 'Restored schema comparison failed.' >&2; exit 1; }
 # Verify a write and rollback in the restored database only; the live database is read-only throughout.
 docker exec "$restore" mysql --defaults-extra-file=/run/du-client/restore.cnf du_restore_test -N -B -e 'CREATE TABLE du_recovery_probe (id INT PRIMARY KEY) ENGINE=InnoDB; START TRANSACTION; INSERT INTO du_recovery_probe VALUES (1); ROLLBACK; SELECT COUNT(*) FROM du_recovery_probe; DROP TABLE du_recovery_probe;' > "$work/probe-count"
 test "$(cat "$work/probe-count")" = 0
@@ -67,16 +78,14 @@ p=pathlib.Path(sys.argv[1]);password=(p/'client'/'restore-password').read_text()
 PYENV
 docker run --rm --name "${restore}-app" --network "container:$restore" --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges --memory 256m --cpus 0.5 --env-file "$work/app.env" --mount "type=bind,src=$work/app.mjs,dst=/app/du-restored-app.mjs,readonly" --entrypoint node "$source_image" /app/du-restored-app.mjs > "$work/app-report.json"
 cat "$work/app-report.json"
-install -d -m 700 /etc/du-platform-recovery /var/backups/du-platform
-key=/etc/du-platform-recovery/backup-passphrase
-if [ ! -f "$key" ]; then head -c 48 /dev/urandom | base64 > "$key"; chmod 600 "$key"; fi
 stamp=$(date -u +%Y%m%dT%H%M%SZ)
 archive="/var/backups/du-platform/$stamp.sql.gpg"
-gpg --batch --yes --pinentry-mode loopback --passphrase-file "$key" --symmetric --cipher-algo AES256 --output "$archive" "$work/backup.sql"
-gpg --batch --pinentry-mode loopback --passphrase-file "$key" --decrypt "$archive" 2>/dev/null | cmp -s - "$work/backup.sql"
-python3 - "$work" "$stamp" "$archive" <<'PY'
+test ! -e "$archive"
+install -m 600 "$work/backup.sql.gpg" "$archive"
+revision=$(docker exec du-platform-app-1 node -e 'process.stdout.write(process.env.APP_REVISION||"unknown")')
+python3 - "$work" "$stamp" "$archive" "$revision" <<'PY'
 import pathlib,hashlib,json,sys
-p=pathlib.Path(sys.argv[1]);data=p.joinpath('before.sql').read_bytes();schema=p.joinpath('source-schema.sql').read_bytes()
-r={'timestampUtc':sys.argv[2],'source':'production Aiven read-only logical snapshot','image':'mysql@sha256:76f0358884cb92d9a086d24e5671c38048d3fef40f2588703d73eb55392d6b69','tables':schema.count(b'CREATE TABLE '),'rows':sum(l.startswith(b'INSERT INTO ') for l in data.splitlines()),'sourceStableDuringDump':True,'schemaAndRowHashesMatch':True,'schemaSha256':hashlib.sha256(schema).hexdigest(),'rowsSha256':hashlib.sha256(data).hexdigest(),'isolatedNetwork':'none','restoredTransactionRollback':True,'encryptedArchiveRoundTrip':True,'archiveBytes':pathlib.Path(sys.argv[3]).stat().st_size,'liveWrites':False,'providerPitrRestoreTested':False,'applicationRecoveryTested':True,'applicationChecks':json.loads(p.joinpath('app-report.json').read_text())}
+p=pathlib.Path(sys.argv[1]);data=json.loads(p.joinpath('before.json').read_text());schema=json.loads(p.joinpath('source-schema.json').read_text())
+r={'timestampUtc':sys.argv[2],'sourceRevision':sys.argv[4],'source':'production Aiven read-only logical snapshot','image':'mysql@sha256:76f0358884cb92d9a086d24e5671c38048d3fef40f2588703d73eb55392d6b69','tables':schema['tables'],'rows':data['rows'],'sourceStableDuringDump':True,'schemaAndRowHashesMatch':True,'schemaSha256':schema['sha256'],'rowsSha256':data['sha256'],'isolatedNetwork':'none','restoredTransactionRollback':True,'encryptedArchiveRoundTrip':True,'plaintextDumpWritten':False,'archiveBytes':pathlib.Path(sys.argv[3]).stat().st_size,'archiveSha256':hashlib.sha256(pathlib.Path(sys.argv[3]).read_bytes()).hexdigest(),'liveWrites':False,'providerPitrRestoreTested':False,'applicationRecoveryTested':True,'applicationChecks':json.loads(p.joinpath('app-report.json').read_text())}
 out=json.dumps(r,indent=2);pathlib.Path('/var/backups/du-platform/'+sys.argv[2]+'.report.json').write_text(out+'\n');print(out)
 PY

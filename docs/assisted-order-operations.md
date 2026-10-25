@@ -238,8 +238,10 @@ The separate **Oracle production-data drill** reads the configured DU database,
 compares surrounding exports for changes, restores into a disposable MySQL
 container with `--network none`, and runs the real application probe in that same
 isolated network namespace. It never starts email/AI workers or supplies provider
-keys. It writes only synthetic data to the restored database, retains an
-encrypted original backup, and removes plaintext files and drill containers.
+keys. It writes only synthetic data to the restored database. SQL streams directly
+through GPG and the isolated restore pipe; no plaintext SQL dump is written.
+Only non-secret fingerprints/counts and private temporary client configuration
+are stored during the drill; cleanup removes the configuration and drill containers.
 It does not replace the live database or restart DU/sibling services.
 
 Run only as an explicitly authorised operational exercise, outside migrations
@@ -266,8 +268,9 @@ Archive and redacted report: `/var/backups/du-platform`, root-only. Passphrase:
 `/etc/du-platform-recovery/backup-passphrase`, root-only and separate from archives.
 Arrange an independently secured off-host archive/key copy before relying on this
 backup for complete Oracle host loss. Never commit either or print their contents.
-The script does not schedule backups, prune old ones, rotate keys or verify Aiven
-PITR; managed provider backups remain a separate recovery layer.
+The script does not itself schedule backups, prune old ones, rotate keys or verify
+Aiven PITR. The owner-authorized Mac pull below requests a fresh verified snapshot
+when due; managed provider backups remain a separate recovery layer.
 
 References: [MySQL mysqldump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html),
 [Aiven MySQL backups](https://aiven.io/docs/products/mysql/concepts/mysql-backups),
@@ -319,9 +322,11 @@ the private runtime environment if using an image predating this image default.
 Do not restore an old database over new consent or orders. No approval placeholder
 or merchant keys are added by this release.
 
-## Independent recovery custody — prepared, destination still required
+## Independent recovery custody — archive destination approved, key custody pending
 
-The actual logical restore passed; the archive/key currently remain on Oracle.
+The actual logical restore passed. Five existing encrypted archives were copied
+to the approved actual Mac destination with source/download SHA-256 verification
+on 25 October 2026. Oracle originals remain; keys were not copied alongside them.
 The controlled custody test recovers persisted encrypted grants and queued payloads
 with the retained runtime key, and rejects the wrong key. This is local synthetic
 proof, not a verified off-host transfer, provider PITR or complete host-loss drill.
@@ -336,8 +341,12 @@ key. Private temporary plaintext is removed; existing packages cannot be overwri
 Manifests include checksums and recipient fingerprint, no secrets. Never run this
 on a newly selected cloud service or publish either package.
 
-Required external input: the owner's approved private archive destination and an
-independently secured key destination/custodian with its verified public GPG key.
+The approved archive destination is the owner's actual Mac at
+`/Users/andrewgotora/Software Development/Backups/DiasporaUnlocked`. Custodian:
+Andrew Gotora. Do not request a cloud bucket or treat proposed cloud storage as
+approved. Required input: the separate encrypted USB/secure custody identifier,
+independent unlock/recovery arrangements and Andrew's public GPG key location plus
+full fingerprint, verified directly before encrypting recovery material.
 After approval, transfer each package separately, compare remote checksums, and
 have the custodian perform an isolated restore with workers held and the retained
 key material. Record receipts, access/recovery owners, retention and deletion
@@ -370,3 +379,71 @@ existing protected-main Oracle → Vercel workflow, not a local `pnpm dev` actio
 Initial request currency is a converted planning estimate. Product/destination
 eligibility still applies; the final approved pilot quote remains EUR. Regional
 display preferences do not bypass that final-quote restriction.
+
+## Daily actual-Mac snapshot and encrypted pull
+
+The three operations have separate evidence:
+
+1. **Snapshot creation:** `deploy/oracle/verify-recovery.sh` reads production over
+   verified TLS using InnoDB single-transaction dumps. It fingerprints schema/rows
+   before and after, rejects source changes, streams directly through AES-256 GPG
+   encryption and preserves the existing passphrase. No plaintext SQL dump is written.
+2. **Restoration:** decrypt only into the isolated MySQL container (`--network none`,
+   event scheduler off). Compare schema/row fingerprints, test rollback and the
+   held-worker application probe. No production write or external integration is
+   permitted. The fixture proves retained-key grant/payload recovery, not that a
+   separate key custodian can recover production keys.
+3. **Transfer/checksum:** the actual Darwin Mac requests a fresh verified snapshot
+   over existing authenticated SSH (`BatchMode=yes`, `StrictHostKeyChecking=yes`),
+   downloads encrypted bytes to a private staging directory, verifies size/SHA-256
+   and source stability, independently runs macOS `shasum`, then atomically publishes
+   a dated directory. Previous copies and Oracle archives are never mirrored/deleted.
+
+The root-owned Oracle adapter is `/usr/local/sbin/du-platform-mac-backup`, with
+`create`, `inventory` and strictly named encrypted-archive `read` operations. Its
+versioned source is `deploy/oracle/mac-backup.sh`; its installed recovery script
+and bundled probe are under `/usr/local/lib/du-platform-recovery`. Install updates
+explicitly from reviewed source; ordinary application deploys do not replace these
+operational files. The existing SSH identity is reused; no new key, credential,
+firewall rule or sudo grant is created.
+
+The owner-authorized installer runs **on the actual Mac**:
+
+```sh
+python3 scripts/operations/install-mac-backup.py \
+  --destination '/Users/andrewgotora/Software Development/Backups/DiasporaUnlocked' \
+  --interval-hours 24
+```
+
+It installs the user LaunchAgent
+`~/Library/LaunchAgents/com.diasporaunlocked.backup-pull.plist` and a copy of the
+Python puller/configuration in `DiasporaUnlocked/.mac-pull`. Launch at login, hourly
+due checks and the 03:15 local calendar check provide catch-up while awake/connected.
+The default is one successful snapshot/pull per 24 hours; this is not a promise
+that a sleeping/offline Mac backs up at 03:15. Failures retry at the next check.
+`intervalHours` in the non-secret config accepts 1–168 hours. The lock prevents
+overlap with manual runs. The visible `DiasporaUnlocked/BACKUP-STATUS.json` preserves last success while
+reporting a newer failure; only redacted stage codes are logged.
+
+Inspect status or request an immediate snapshot/pull:
+
+```sh
+python3 '/Users/andrewgotora/Software Development/Backups/DiasporaUnlocked/.mac-pull/mac-backup-pull.py' \
+  --config '/Users/andrewgotora/Software Development/Backups/DiasporaUnlocked/.mac-pull/config.json' --status
+# Same command with --force instead of --status requests a fresh snapshot now.
+```
+
+Each dated directory contains only encrypted SQL, SHA256SUMS, a non-secret transfer
+manifest, snapshot recovery report and instructions. Directories/files are 0700/0600.
+The earlier five-archive transfer remains intact. No automatic archive deletion is
+introduced; retention/cadence changes require explicit operational review.
+
+**Pending key custody, consolidated:** Andrew identifies the separate encrypted USB
+device/volume and secure storage identifier plus an unlock/recovery path independent
+of Oracle and the archive folder; supplies the public GPG key location/full
+fingerprint; verifies the fingerprint directly; separately packages the retained SQL
+passphrase and runtime JWT key for that recipient; verifies USB unlock/decryption;
+then completes an approved isolated restore with workers held until reconciliation.
+Never put private keys, passwords or recovery secrets in chat, Git, logs, these
+instructions or the Mac archive folder. No device/fingerprint or full host-loss
+recovery result is invented.
