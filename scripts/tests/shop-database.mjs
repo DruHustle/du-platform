@@ -36,18 +36,34 @@ try {
     stock_qty: 3,
     is_active: 1,
   });
-  const restock = await shop.createShopRestockNotification({
+  const { ProductInterestService } = await import(
+    "../../du-platform-backend/modules/shop/interestService.ts"
+  );
+  const interestService = new ProductInterestService(db);
+  const interestInput = {
     productId: product.id,
     productSlug: product.slug,
-    productName: product.name,
     email: "stock@example.test",
     language: "de",
-  });
-  assert.equal(restock.created, true);
-  assert.equal(
-    (await shop.getShopRestockNotificationsBySlug(product.slug))[0].language,
-    "de"
+  };
+  const restock = await interestService.register(interestInput);
+  assert.equal(restock.requiresConfirmation, true);
+  assert.deepEqual(await interestService.register(interestInput), restock);
+  const [[interest]] = await db.query(
+    "SELECT language,status FROM shop_restock_notifications WHERE product_id=? AND email=?",
+    [product.id, interestInput.email]
   );
+  assert.equal(interest.language, "de");
+  assert.equal(interest.status, "pending");
+  const [jobs] = await db.query(
+    "SELECT d.kind,d.status,d.attempts,d.payload FROM newsletter_deliveries d JOIN shop_restock_notifications i ON i.id=d.interest_id WHERE i.product_id=? AND i.email=?",
+    [product.id, interestInput.email]
+  );
+  assert.equal(jobs.length, 1);
+  assert.equal(jobs[0].kind, "interest_confirm");
+  assert.equal(jobs[0].status, "pending");
+  assert.equal(jobs[0].attempts, 0);
+  assert(JSON.parse(jobs[0].payload).html.includes('lang="de"'));
   const payload = {
     customerName: "Local Test",
     customerEmail: "checkout@example.test",
@@ -222,7 +238,7 @@ try {
     /Insufficient stock/
   );
   console.log(
-    "PASS MySQL: persisted restock language; eight concurrent retries create one order; private access; changed payload rejected; manual payment protected; authoritative totals; admin/payment cache invalidation including a delayed-query race; concurrent dummy confirmations deduct once; exhausted stock rejected."
+    "PASS MySQL: persisted product-interest language and one durable confirmation intent; eight concurrent retries create one order; private access; changed payload rejected; manual payment protected; authoritative totals; admin/payment cache invalidation including a delayed-query race; concurrent dummy confirmations deduct once; exhausted stock rejected."
   );
 } finally {
   for (const ref of createdRefs) {
@@ -234,6 +250,10 @@ try {
     await db.execute("DELETE FROM shop_orders WHERE order_ref=?", [ref]);
   }
   if (product) {
+    await db.execute(
+      "DELETE d FROM newsletter_deliveries d JOIN shop_restock_notifications i ON i.id=d.interest_id WHERE i.product_id=?",
+      [product.id]
+    );
     await db.execute(
       "DELETE FROM shop_restock_notifications WHERE product_slug=?",
       [product.slug]
