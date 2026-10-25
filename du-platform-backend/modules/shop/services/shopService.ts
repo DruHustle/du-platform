@@ -1,4 +1,7 @@
-import { publicShopReadiness, assertQuoteReadiness } from "../shopReadiness";
+import {
+  publicShopReadiness,
+  assertOrderRequestReadiness,
+} from "../shopReadiness";
 import type { ShopCurrency } from "../../../../shared/shopCurrency";
 import { OrderRepository } from "../repositories/orderRepository";
 import { PaymentRepository } from "../repositories/paymentRepository";
@@ -92,10 +95,9 @@ export class ShopService {
     items: Array<{ productId: number; quantity: number }>;
     requestToken?: string;
   }) {
-    await assertQuoteReadiness(
+    await assertOrderRequestReadiness(
       payload.shippingCountry,
-      payload.items.map(item => item.productId),
-      payload.currency || "EUR"
+      payload.items.map(item => item.productId)
     );
     const order = await this.orders.create(payload);
     return { order };

@@ -366,3 +366,7 @@ only `du_restore_test`, refuses an existing database, and checks persisted encry
 grants/payloads plus held workers. `pnpm test:recovery:custody` uses synthetic files,
 a temporary GPG recipient and no network transfer. Production deployment is the
 existing protected-main Oracle → Vercel workflow, not a local `pnpm dev` action.
+
+Initial request currency is a converted planning estimate. Product/destination
+eligibility still applies; the final approved pilot quote remains EUR. Regional
+display preferences do not bypass that final-quote restriction.
