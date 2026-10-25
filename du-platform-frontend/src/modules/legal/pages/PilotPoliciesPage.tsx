@@ -23,9 +23,11 @@ export default function PilotPoliciesPage() {
           </p>
           <section id="operator" className="space-y-3">
             <h2 className="text-xl font-semibold">
-              {t("pilot.operator_title")}
+              {t("pilot.operator_details_title")}
             </h2>
-            <p>{t("pilot.operator_summary")}</p>
+            <address className="not-italic break-words">
+              {t("pilot.operator_summary")}
+            </address>
             <p>{t("pilot.operator_missing")}</p>
             <a
               href="mailto:info@diasporaunlocked.com"
@@ -36,14 +38,14 @@ export default function PilotPoliciesPage() {
           </section>
           <section id="delivery" className="space-y-3">
             <h2 className="text-xl font-semibold">
-              {t("pilot.procedures_title")}
+              {t("pilot.delivery_title")}
             </h2>
             <p>{t("pilot.delivery_draft")}</p>
             <p>{t("pilot.payment_draft")}</p>
           </section>
           <section id="returns" className="space-y-3">
             <h2 className="text-xl font-semibold">
-              {t("pilot.procedures_title")}
+              {t("pilot.returns_title")}
             </h2>
             <p>{t("pilot.returns_draft")}</p>
             <p>{t("pilot.complaints")}</p>

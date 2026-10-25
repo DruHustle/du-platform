@@ -22,7 +22,8 @@ jobs:
   # 1) Baseline quality gate — ALL deployment jobs are blocked until this passes.
   build-and-test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    # Playwright 1.58 supports this release; ubuntu-latest can advance ahead of it.
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         node-version: [22.x]
