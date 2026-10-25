@@ -751,9 +751,11 @@ export default function ShopProducts() {
                       <h2 id="shop-cart-title" className="cart-panel-title">
                         {receiptOnly
                           ? t("shop.products.order.received_title")
-                          : t("shop.products.cart.title", {
-                              defaultValue: "Cart & order request",
-                            })}
+                          : !canCheckout
+                            ? t("product_interest.saved_basket")
+                            : t("shop.products.cart.title", {
+                                defaultValue: "Cart & order request",
+                              })}
                       </h2>
                       <span
                         className="shop-cart-count"
@@ -771,9 +773,11 @@ export default function ShopProducts() {
                         {t("product_interest.saved_notice")}
                       </p>
                     )}
-                    <p className="mb-4 text-xs leading-5 text-slate-400">
-                      {t("shop.currency.note")}
-                    </p>
+                    {(canCheckout || receiptOnly) && (
+                      <p className="mb-4 text-xs leading-5 text-slate-400">
+                        {t("shop.currency.note")}
+                      </p>
+                    )}
 
                     {!receiptOnly && (
                       <>
@@ -822,10 +826,12 @@ export default function ShopProducts() {
                           <p className="cart-empty text-slate-300">
                             {cart.length > 0
                               ? t("product_interest.saved_notice")
-                              : t("shop.products.cart.empty", {
-                                  defaultValue:
-                                    "Your cart is empty. Add products to start an order request.",
-                                })}
+                              : !readiness?.commercialReady
+                                ? t("product_interest.saved_empty")
+                                : t("shop.products.cart.empty", {
+                                    defaultValue:
+                                      "Your cart is empty. Add products to start an order request.",
+                                  })}
                           </p>
                         ) : (
                           <div className="space-y-1.5">
@@ -859,7 +865,11 @@ export default function ShopProducts() {
                                           )
                                         }
                                       >
-                                        {t("shop.products.cart.update_stock")}
+                                        {t(
+                                          row.product.stock_qty === 0
+                                            ? "product_interest.remove_item"
+                                            : "shop.products.cart.update_stock"
+                                        )}
                                       </button>
                                     </p>
                                   )}
@@ -880,8 +890,11 @@ export default function ShopProducts() {
                                     onAdd={() => addToCart(row.product)}
                                     onRemove={() => removeOne(row.product.id)}
                                   />
-                                  <p className="text-sm text-zim-gold font-black">
+                                  <p className="text-right text-sm text-zim-gold font-black">
                                     {money(row.lineTotal)}
+                                    <span className="block text-xs font-normal text-slate-400">
+                                      {t("product_interest.indicative_price")}
+                                    </span>
                                   </p>
                                 </div>
                               </div>
@@ -1394,11 +1407,7 @@ export default function ShopProducts() {
                             </span>
                           </div>
                         </>
-                      ) : (
-                        <p className="mt-4 text-xs leading-5 text-slate-400">
-                          {t("product_interest.scope")}
-                        </p>
-                      )}
+                      ) : null}
                     </div>
                   </form>
                 </div>
@@ -1409,15 +1418,22 @@ export default function ShopProducts() {
       </section>
       {mobileView === "products" && (
         <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-          <div className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3">
+          <div
+            data-mobile-basket-summary
+            className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3"
+          >
             <div className="flex items-center gap-2 min-w-0">
               <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />
               <span className="text-xs text-white/80 truncate">
                 {cartItemCount > 0
-                  ? `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${money(totalCents)}`
-                  : t("shop.products.cart.empty_short", {
-                      defaultValue: "Your cart is empty",
-                    })}
+                  ? canCheckout
+                    ? `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${money(totalCents)}`
+                    : `${t("product_interest.saved_basket")} · ${t("shop.products.cart.item_count", { count: cartItemCount })}`
+                  : !readiness?.commercialReady
+                    ? t("product_interest.saved_empty")
+                    : t("shop.products.cart.empty_short", {
+                        defaultValue: "Your cart is empty",
+                      })}
               </span>
             </div>
             <Button
