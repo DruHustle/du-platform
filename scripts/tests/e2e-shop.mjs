@@ -778,12 +778,19 @@ try {
   await t.page
     .getByRole("button", { name: "Try again", exact: true })
     .waitFor();
-  assert(
-    await t
-      .card("sables-rugby-home-kit")
-      .getByRole("button", { name: /^Add to Cart:/ })
-      .isDisabled()
+  const unavailable = t.card("sables-rugby-home-kit");
+  assert.equal(
+    await unavailable.getByRole("button", { name: /^Add to Cart:/ }).count(),
+    0
   );
+  assert(await unavailable.locator(".shop-card-add-target").isDisabled());
+  assert(
+    await unavailable
+      .getByRole("button", { name: "Register interest", exact: true })
+      .isVisible()
+  );
+  assert.equal(await unavailable.getAttribute("data-stock-state"), "unknown");
+  assert.deepEqual(await t.cart(), []);
   t.recover();
   await t.page.getByRole("button", { name: "Try again", exact: true }).click();
   await t.page.waitForFunction(() =>

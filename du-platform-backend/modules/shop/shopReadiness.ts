@@ -65,7 +65,7 @@ export async function assertQuoteReadiness(
   if (state.mode === "observe") return state;
   if (!state.commercialReady || !approval)
     throw new ShopRequestError(
-      "New final quotes are paused until the commercial pilot readiness checks are approved. Existing requests and fulfilment remain recoverable.",
+      "New commercial requests and final quotes are paused until the commercial pilot readiness checks are approved. Existing requests and fulfilment remain recoverable.",
       409
     );
   const normalized = (value: string) =>
@@ -83,4 +83,13 @@ export async function assertQuoteReadiness(
       409
     );
   return state;
+}
+
+// Initial requests contain a converted planning estimate. EUR is required for
+// the final quote, not the customer's display preference. Scope still applies.
+export async function assertOrderRequestReadiness(
+  country: string,
+  productIds: number[]
+) {
+  return assertQuoteReadiness(country, productIds, "EUR");
 }

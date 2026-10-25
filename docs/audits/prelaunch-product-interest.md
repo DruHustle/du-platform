@@ -53,7 +53,7 @@ the exact commit, deployment URLs and post-release checks. Do not interpret a
 prepared branch or passing fixture as production deployment.
 
 - Frontend/backend types and strict four-language translations pass.
-- 293 backend tests pass with disposable MySQL, no skips. Twelve new confirmed-
+- 294 backend tests pass with disposable MySQL, no skips. Twelve new confirmed-
   interest regressions cover duplicate/legacy/expiry/cancellation/provider outage,
   stable retry keys, prelaunch, withdrawal and one-time delivery.
 - 106 frontend tests plus seven Node checks pass.
@@ -105,3 +105,7 @@ operation, never automatic image rollback.
 Next milestone: **validated demand → verified sourcing/costs → payment sandbox and
 operational acceptance → bounded paid pilot**. No stock purchases, seller
 onboarding, split payouts or escrow are introduced.
+
+Initial request currency is a converted planning estimate. Product/destination
+eligibility still applies; the final approved pilot quote remains EUR. Regional
+display preferences do not bypass that final-quote restriction.

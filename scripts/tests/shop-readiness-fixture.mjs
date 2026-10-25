@@ -27,6 +27,7 @@ export async function createShopApprovalFixture(ids) {
       destinationCountries: [
         { code: "DE", names: ["Germany"] },
         { code: "ZW", names: ["Zimbabwe"] },
+        { code: "ZA", names: ["South Africa"] },
       ],
       approvedProductIds: ids,
       checks: Object.fromEntries(
