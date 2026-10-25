@@ -9,6 +9,9 @@ if [ "$(id -u)" != 0 ] || [ "$#" != 1 ] || [ ! -f "$1" ]; then
 fi
 exec 9>/run/lock/du-platform-recovery.lock
 flock -n 9 || { echo 'Another DU recovery drill is running.' >&2; exit 1; }
+# Use the existing release lock too: never mix schema/image revisions during a snapshot.
+exec 8>/var/lock/du-platform-deploy.lock
+flock -n 8 || { echo 'DU release is running; snapshot will retry later.' >&2; exit 1; }
 probe=$(realpath "$1")
 source_image=$(docker inspect --format '{{.Image}}' du-platform-app-1)
 image='mysql@sha256:76f0358884cb92d9a086d24e5671c38048d3fef40f2588703d73eb55392d6b69'
