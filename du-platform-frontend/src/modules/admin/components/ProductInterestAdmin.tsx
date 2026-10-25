@@ -86,7 +86,26 @@ export default function ProductInterestAdmin() {
             {data.legacy} legacy records retained without automatic confirmation
             or delivery.
           </p>
-          <div className="min-w-0 max-w-full overflow-x-auto">
+          <div
+            role="region"
+            aria-label="Product interest counts"
+            tabIndex={0}
+            onKeyDown={event => {
+              if (
+                event.target !== event.currentTarget ||
+                event.altKey ||
+                event.ctrlKey ||
+                event.metaKey ||
+                event.shiftKey ||
+                !["ArrowLeft", "ArrowRight"].includes(event.key)
+              )
+                return;
+              event.preventDefault();
+              event.currentTarget.scrollLeft +=
+                event.key === "ArrowRight" ? 80 : -80;
+            }}
+            className="min-w-0 max-w-full overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zim-gold"
+          >
             <table className="w-full text-left text-sm">
               <caption className="sr-only">
                 Product interest by confirmation status
