@@ -1,3 +1,5 @@
+import ProductInterest from "../components/ProductInterest";
+import { canRequestProduct } from "../lib/useShopCatalog";
 import { useEffect, useState } from "react";
 import { Link, useRoute } from "wouter";
 import Layout from "@/components/Layout";
@@ -14,7 +16,7 @@ import PilotReadinessNotice from "../components/PilotReadinessNotice";
 import type { ProductDetails } from "@shared/productDetails";
 export default function ProductPage() {
   const [, params] = useRoute("/shop/product/:slug");
-  const { products, status, refresh } = useShopCatalog();
+  const { products, status, refresh, readiness } = useShopCatalog();
   const product = products.find(p => p.slug === params?.slug);
   const { cart, add, removeOne } = useShopCart();
   const { currency } = useShopCurrency();
@@ -77,31 +79,40 @@ export default function ProductPage() {
                   </p>
                   <p>
                     {t(
-                      product.stock_qty > 0
+                      canRequestProduct(readiness, product)
                         ? "pilot.available_now"
                         : "shop.products.stock.out"
                     )}
                   </p>
                   <PilotReadinessNotice />
-                  <div className="flex flex-wrap items-center gap-3">
-                    <QuantityControl
-                      name={product.name}
-                      quantity={
-                        cart.find(i => i.productId === product.id)?.quantity ||
-                        0
-                      }
-                      limit={product.stock_qty}
-                      disabled={status !== "ready"}
-                      onAdd={() => add(product.id, product.stock_qty)}
-                      onRemove={() => removeOne(product.id)}
-                    />
-                    <Link
-                      className="inline-flex min-h-11 items-center rounded-full bg-zim-gold px-5 font-semibold text-black"
-                      href="/shop/products?cart=1"
-                    >
-                      {t("shop.products.actions.checkout")}
-                    </Link>
-                  </div>
+                  {canRequestProduct(readiness, product) ? (
+                    <div className="flex flex-wrap items-center gap-3">
+                      <QuantityControl
+                        name={product.name}
+                        quantity={
+                          cart.find(i => i.productId === product.id)
+                            ?.quantity || 0
+                        }
+                        limit={product.stock_qty}
+                        disabled={status !== "ready"}
+                        onAdd={() => add(product.id, product.stock_qty)}
+                        onRemove={() => removeOne(product.id)}
+                      />
+                      <Link
+                        className="inline-flex min-h-11 items-center rounded-full bg-zim-gold px-5 font-semibold text-black"
+                        href="/shop/products?cart=1"
+                      >
+                        {t("shop.products.actions.checkout")}
+                      </Link>
+                    </div>
+                  ) : (
+                    <div id="interest" className="max-w-sm scroll-mt-28">
+                      <ProductInterest product={product} />
+                      <p className="mt-3 text-sm text-white/65">
+                        {t("product_interest.scope")}
+                      </p>
+                    </div>
+                  )}
                   <p className="text-sm text-white/65">
                     {t("shop.products.notes.supported_methods")}
                   </p>

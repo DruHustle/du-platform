@@ -63,7 +63,7 @@ chmod 644 "$work/app.mjs"
 python3 - "$work" <<'PYENV'
 import pathlib,sys,secrets
 p=pathlib.Path(sys.argv[1]);password=(p/'client'/'restore-password').read_text()
-(p/'app.env').write_text('NODE_ENV=test\nMYSQL_HOST=127.0.0.1\nMYSQL_PORT=3306\nMYSQL_USER=root\nMYSQL_DATABASE=du_restore_test\nMYSQL_PASSWORD='+password+'\nJWT_SECRET='+secrets.token_hex(48)+'\nAPP_BASE_URL=https://restore.example.test\nFROM_EMAIL=fixture@example.test\nADMIN_EMAILS=recovery@example.test\nSHOP_COMMERCIAL_MODE=observe\n')
+(p/'app.env').write_text('RECOVERY_MODE=true\nOUTBOUND_MESSAGES_PAUSED=true\nNODE_ENV=test\nMYSQL_HOST=127.0.0.1\nMYSQL_PORT=3306\nMYSQL_USER=root\nMYSQL_DATABASE=du_restore_test\nMYSQL_PASSWORD='+password+'\nJWT_SECRET='+secrets.token_hex(48)+'\nAPP_BASE_URL=https://restore.example.test\nFROM_EMAIL=fixture@example.test\nADMIN_EMAILS=recovery@example.test\nSHOP_COMMERCIAL_MODE=observe\n')
 PYENV
 docker run --rm --name "${restore}-app" --network "container:$restore" --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges --memory 256m --cpus 0.5 --env-file "$work/app.env" --mount "type=bind,src=$work/app.mjs,dst=/app/du-restored-app.mjs,readonly" --entrypoint node "$source_image" /app/du-restored-app.mjs > "$work/app-report.json"
 cat "$work/app-report.json"

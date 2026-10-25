@@ -43,4 +43,5 @@ export type PublicShopReadiness = {
   commercialReady: boolean;
   missing: string[];
   destinationCountries: string[];
+  approvedProductIds?: number[];
 };

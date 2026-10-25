@@ -1,3 +1,4 @@
+import { createShopApprovalFixture } from "./shop-readiness-fixture.mjs";
 import assert from "node:assert/strict";
 import express from "express";
 import { chromium } from "playwright";
@@ -38,6 +39,8 @@ const product = shopSeedProducts.find(
 );
 assert(product);
 product.stock_qty = 3;
+const approval = await createShopApprovalFixture([product.id]);
+Object.assign(process.env, approval.env);
 const app = express();
 app.use(express.json());
 app.use("/api/shop", createShopModuleRouter());
@@ -188,5 +191,6 @@ try {
 } finally {
   console.log = originalLog;
   await browser.close();
+  await approval.close();
   await new Promise(done => server.close(done));
 }

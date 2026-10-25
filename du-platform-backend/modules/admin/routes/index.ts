@@ -1,3 +1,4 @@
+import { createInterestRouter } from "../../shop/interestRoutes";
 import { createResearchRouter } from "../../investment/researchRoutes";
 import { createProductDetailsRouter } from "../../shop/productDetailsRoutes";
 import { createOrderAdminRouter } from "../../shop/orderAdminRoutes";
@@ -19,6 +20,7 @@ export function createAdminModuleRouter() {
   router.use("/shop-products", createProductDetailsRouter(true));
   router.use("/research", createResearchRouter(true));
   router.use("/orders", createOrderAdminRouter());
+  router.use("/product-interest", createInterestRouter(true));
   router.use("/newsletter", createNewsletterAdminRouter());
   router.get("/overview", controller.overview);
   router.get("/notification-settings", controller.getNotificationSettings);

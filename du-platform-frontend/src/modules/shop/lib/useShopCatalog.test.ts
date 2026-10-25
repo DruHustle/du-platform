@@ -61,3 +61,17 @@ describe("shared catalog requests", () => {
     await expect(refreshShopCatalog(true)).resolves.toBeUndefined();
   });
 });
+
+it("requires explicit product-level commercial eligibility for order controls",async()=>{
+ const {canRequestProduct}=await import("./useShopCatalog");
+ const product={...getPublicShopSeedProducts()[0],stock_qty:1};
+ const ready={mode:"pilot",enforcement:"enforced",commercialReady:true,missing:[],approvedProductIds:[product.id],destinationCountries:["DE"]} as const;
+ const state={...ready,approvedProductIds:[product.id],destinationCountries:["DE"],missing:[]};
+ expect(canRequestProduct(state,product)).toBe(true);
+ expect(canRequestProduct(null,product)).toBe(false);
+ expect(canRequestProduct({...state,mode:"observe"},product)).toBe(false);
+ expect(canRequestProduct({...state,mode:"prelaunch"},product)).toBe(false);
+ expect(canRequestProduct({...state,commercialReady:false},product)).toBe(false);
+ expect(canRequestProduct({...state,approvedProductIds:[]},product)).toBe(false);
+ expect(canRequestProduct(state,{...product,stock_qty:0})).toBe(false);
+});

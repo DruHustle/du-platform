@@ -67,6 +67,14 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
+  if (pathname === "/shop/interest")
+    return buildSeo(
+      "Product interest | Diaspora Unlocked",
+      "Confirm or cancel a one-time product alert.",
+      pathname,
+      "Product interest",
+      "noindex,nofollow"
+    );
   if (pathname === "/shop/order-status")
     return buildSeo(
       "Private request status | Diaspora Unlocked",
@@ -93,7 +101,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname.startsWith("/shop/product/"))
     return buildSeo(
       "Product information | Diaspora Unlocked",
-      "Product details, indicative pricing and availability. Confirm the final quote, delivery and assisted payment with the shop.",
+      "Product details and indicative prices. Register interest for a one-time availability alert with no order, reservation or payment.",
       pathname,
       "Product information"
     );
@@ -109,7 +117,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/shop/products") {
     return buildSeo(
       "Zimbabwe Product Catalogue | Diaspora Unlocked",
-      "Browse the Zimbabwean product catalogue and send an assisted order request. The team confirms product availability, delivery options and payment instructions.",
+      "Browse Zimbabwean products and register interest for a one-time availability alert. No order, reservation or payment; sales are not open yet.",
       "/shop/products",
       "Zimbabwe Product Catalogue"
     );

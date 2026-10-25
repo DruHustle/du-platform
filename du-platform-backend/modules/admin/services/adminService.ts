@@ -3,7 +3,6 @@ import {
   ADMIN_SETTING_NOTIFY_ALERT_EMAILS,
   ADMIN_SETTING_NOTIFY_FROM_EMAIL,
   isValidEmail,
-  notifyRestockSubscribersAndAdmins,
   parseCsvEmails,
 } from "../../../shared/email";
 import { AdminRepository } from "../repositories/adminRepository";
@@ -119,7 +118,10 @@ export class AdminService {
     };
   }
 
-  async updateNotificationSettings(input: { alert_emails?: string; from_email?: string }) {
+  async updateNotificationSettings(input: {
+    alert_emails?: string;
+    from_email?: string;
+  }) {
     const alertEmails = String(input.alert_emails ?? "").trim();
     const fromEmail = String(input.from_email ?? "").trim();
     const parsedAlertEmails = parseCsvEmails(alertEmails);
@@ -128,19 +130,31 @@ export class AdminService {
       parsedAlertEmails.length !==
         alertEmails
           .split(",")
-          .map((item) => item.trim())
+          .map(item => item.trim())
           .filter(Boolean).length;
 
     if (hasInvalidAlertEmail) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "One or more alert emails are invalid.");
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "One or more alert emails are invalid."
+      );
     }
     if (fromEmail.length > 0 && !isValidEmail(fromEmail)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "From email is invalid.");
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "From email is invalid."
+      );
     }
 
     const joinedEmails = parsedAlertEmails.join(", ");
     if (joinedEmails.length > 5000) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Email list exceeds maximum allowed length.");
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Email list exceeds maximum allowed length."
+      );
     }
 
     await Promise.all([
@@ -148,7 +162,10 @@ export class AdminService {
         ADMIN_SETTING_NOTIFY_ALERT_EMAILS,
         joinedEmails
       ),
-      this.repository.upsertNotificationSetting(ADMIN_SETTING_NOTIFY_FROM_EMAIL, fromEmail),
+      this.repository.upsertNotificationSetting(
+        ADMIN_SETTING_NOTIFY_FROM_EMAIL,
+        fromEmail
+      ),
     ]);
 
     return {
@@ -201,7 +218,9 @@ export class AdminService {
     const sector = String(input.sector ?? "").trim();
     const location = String(input.location ?? "").trim();
     const verificationStatus =
-      String(input.verification_status ?? "Pending").trim() === "Verified" ? "Verified" : "Pending";
+      String(input.verification_status ?? "Pending").trim() === "Verified"
+        ? "Verified"
+        : "Pending";
 
     if (!name || !sector || !location) {
       throw new AdminServiceError(
@@ -212,7 +231,12 @@ export class AdminService {
     }
 
     return {
-      row: await this.repository.createNtirEntry(name, sector, location, verificationStatus),
+      row: await this.repository.createNtirEntry(
+        name,
+        sector,
+        location,
+        verificationStatus
+      ),
     };
   }
 
@@ -226,13 +250,21 @@ export class AdminService {
     }
   ) {
     if (!Number.isFinite(id)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Invalid entity id.");
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Invalid entity id."
+      );
     }
 
     const payload = {
       ...(input.name !== undefined ? { name: String(input.name).trim() } : {}),
-      ...(input.sector !== undefined ? { sector: String(input.sector).trim() } : {}),
-      ...(input.location !== undefined ? { location: String(input.location).trim() } : {}),
+      ...(input.sector !== undefined
+        ? { sector: String(input.sector).trim() }
+        : {}),
+      ...(input.location !== undefined
+        ? { location: String(input.location).trim() }
+        : {}),
       ...(input.verification_status !== undefined
         ? {
             verification_status:
@@ -244,7 +276,8 @@ export class AdminService {
     };
 
     const row = await this.repository.updateNtirEntry(Math.floor(id), payload);
-    if (!row) throw new AdminServiceError("NOT_FOUND", 404, "NTIR entity not found.");
+    if (!row)
+      throw new AdminServiceError("NOT_FOUND", 404, "NTIR entity not found.");
     return { row };
   }
 
@@ -280,7 +313,12 @@ export class AdminService {
       is_published: input.is_published === false ? (0 as const) : (1 as const),
     };
 
-    if (!payload.title || !payload.category || !payload.story || !payload.author) {
+    if (
+      !payload.title ||
+      !payload.category ||
+      !payload.story ||
+      !payload.author
+    ) {
       throw new AdminServiceError(
         "VALIDATION_FAILED",
         400,
@@ -308,7 +346,11 @@ export class AdminService {
     }
   ) {
     if (!Number.isFinite(id)) {
-      throw new AdminServiceError("VALIDATION_FAILED", 400, "Invalid story id.");
+      throw new AdminServiceError(
+        "VALIDATION_FAILED",
+        400,
+        "Invalid story id."
+      );
     }
 
     const payload: {
@@ -326,21 +368,31 @@ export class AdminService {
     } = {};
 
     if (input.title !== undefined) payload.title = String(input.title).trim();
-    if (input.category !== undefined) payload.category = String(input.category).trim();
+    if (input.category !== undefined)
+      payload.category = String(input.category).trim();
     if (input.image !== undefined) payload.image = String(input.image).trim();
     if (input.story !== undefined) payload.story = String(input.story).trim();
-    if (input.testimonial !== undefined) payload.testimonial = String(input.testimonial).trim();
-    if (input.author !== undefined) payload.author = String(input.author).trim();
+    if (input.testimonial !== undefined)
+      payload.testimonial = String(input.testimonial).trim();
+    if (input.author !== undefined)
+      payload.author = String(input.author).trim();
     if (input.role !== undefined) payload.role = String(input.role).trim();
-    if (input.revenue !== undefined) payload.revenue = String(input.revenue).trim();
+    if (input.revenue !== undefined)
+      payload.revenue = String(input.revenue).trim();
     if (input.jobs !== undefined) payload.jobs = String(input.jobs).trim();
-    if (input.markets !== undefined) payload.markets = String(input.markets).trim();
+    if (input.markets !== undefined)
+      payload.markets = String(input.markets).trim();
     if (input.is_published !== undefined) {
-      payload.is_published = input.is_published === 0 || input.is_published === false ? 0 : 1;
+      payload.is_published =
+        input.is_published === 0 || input.is_published === false ? 0 : 1;
     }
 
-    const story = await this.repository.updateImpactStory(Math.floor(id), payload);
-    if (!story) throw new AdminServiceError("NOT_FOUND", 404, "Impact story not found.");
+    const story = await this.repository.updateImpactStory(
+      Math.floor(id),
+      payload
+    );
+    if (!story)
+      throw new AdminServiceError("NOT_FOUND", 404, "Impact story not found.");
     return { story };
   }
 
@@ -440,7 +492,7 @@ export class AdminService {
       stock_qty?: number;
       is_active?: unknown;
     },
-    updatedByEmail: string
+    _updatedByEmail: string
   ) {
     if (!Number.isSafeInteger(id) || id <= 0) {
       throw new AdminServiceError(
@@ -529,25 +581,12 @@ export class AdminService {
     }
 
     validateProductFields({ ...payload, is_active: input.is_active });
-    const beforeRow = await this.repository.getShopProductById(Math.floor(id));
     const row = await this.repository.updateShopProduct(
       Math.floor(id),
       payload
     );
     if (!row)
       throw new AdminServiceError("NOT_FOUND", 404, "Product not found.");
-
-    const prevStock = Number((beforeRow as any)?.stock_qty ?? 0);
-    const nextStock = Number((row as any)?.stock_qty ?? 0);
-    if (prevStock <= 0 && nextStock > 0) {
-      await notifyRestockSubscribersAndAdmins({
-        productId: Number((row as any)?.id ?? id),
-        productName: String((row as any)?.name ?? ""),
-        productSlug: String((row as any)?.slug ?? ""),
-        stockQty: Math.max(0, Math.floor(nextStock)),
-        updatedByEmail: String(updatedByEmail ?? ""),
-      });
-    }
 
     return { row };
   }

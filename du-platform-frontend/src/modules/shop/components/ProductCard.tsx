@@ -1,3 +1,5 @@
+import ProductInterest from "./ProductInterest";
+import { canRequestProduct, useShopCatalog } from "../lib/useShopCatalog";
 import { Link } from "wouter";
 import { convertShopCents } from "@shared/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
@@ -32,7 +34,9 @@ export default function ProductCard({
 }: Props) {
   const { t } = useTranslation();
   const { currency } = useShopCurrency();
-  const canAdd = available && product.stock_qty > quantity;
+  const { readiness } = useShopCatalog();
+  const eligible = available && canRequestProduct(readiness, product);
+  const canAdd = eligible && product.stock_qty > quantity;
   return (
     <article
       data-shop-product-card={product.slug}
@@ -86,16 +90,20 @@ export default function ProductCard({
               currency
             )}
           </p>
-          <div className="relative z-20 flex justify-end">
-            <QuantityControl
-              name={product.name}
-              quantity={quantity}
-              limit={product.stock_qty}
-              disabled={!available}
-              onAdd={onAdd}
-              onRemove={onRemove}
-            />
-          </div>
+          {eligible ? (
+            <div className="relative z-20 flex justify-end">
+              <QuantityControl
+                name={product.name}
+                quantity={quantity}
+                limit={product.stock_qty}
+                disabled={!eligible}
+                onAdd={onAdd}
+                onRemove={onRemove}
+              />
+            </div>
+          ) : (
+            <ProductInterest product={product} />
+          )}
           <Link
             href={`/shop/product/${encodeURIComponent(product.slug)}`}
             className="relative z-20 mt-3 inline-flex min-h-11 items-center text-xs text-zim-gold underline underline-offset-4"

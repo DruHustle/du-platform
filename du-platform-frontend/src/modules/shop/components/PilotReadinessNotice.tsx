@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
-import type { PublicShopReadiness } from "@shared/shopReadiness";
+import { useShopCatalog } from "../lib/useShopCatalog";
 
 export default function PilotReadinessNotice({
   operator = false,
@@ -10,17 +8,7 @@ export default function PilotReadinessNotice({
   operator?: boolean;
 }) {
   const { t } = useTranslation();
-  const [status, setStatus] = useState<PublicShopReadiness | null>(null);
-  useEffect(() => {
-    const abort = new AbortController();
-    void api
-      .get("/shop/readiness", { signal: abort.signal })
-      .then(({ data }) => {
-        if (!abort.signal.aborted) setStatus(data);
-      })
-      .catch(() => {});
-    return () => abort.abort();
-  }, []);
+  const { readiness: status } = useShopCatalog();
   return (
     <aside
       role="note"

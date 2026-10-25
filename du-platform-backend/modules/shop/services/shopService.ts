@@ -1,26 +1,8 @@
-import type { ShopCurrency } from "../../../../shared/shopCurrency";
-import { emailText } from "../../../../shared/customerEmailCopy";
-import { customerLanguage } from "../../../../shared/customerLanguage";
 import {
-  getNotifyAlertEmails,
-  getNotifyFromEmail,
-  sendEmailMessageSafe,
-} from "../../../shared/email";
-
-function escHtml(str: string): string {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function escSubject(str: string): string {
-  return String(str ?? "")
-    .replace(/[\r\n]/g, " ")
-    .trim();
-}
+  publicShopReadiness,
+  assertOrderRequestReadiness,
+} from "../shopReadiness";
+import type { ShopCurrency } from "../../../../shared/shopCurrency";
 import { OrderRepository } from "../repositories/orderRepository";
 import { PaymentRepository } from "../repositories/paymentRepository";
 import { ProductRepository } from "../repositories/productRepository";
@@ -48,6 +30,7 @@ export class ShopService {
   async listProducts(category?: string) {
     const result = await this.products.list(category);
     return {
+      readiness: await publicShopReadiness(),
       count: result.products.length,
       products: result.products,
       source: result.source,
@@ -78,8 +61,8 @@ export class ShopService {
       productName: product.name,
       email: payload.email.trim().toLowerCase(),
     };
-    const result = await this.restocks.create({
-      language: customerLanguage(payload.language),
+    await this.restocks.create({
+      language: payload.language,
       productId:
         payload.productId == null || !Number.isFinite(Number(payload.productId))
           ? null
@@ -91,66 +74,10 @@ export class ShopService {
         .toLowerCase(),
     });
 
-    if (result.created) {
-      try {
-        const fromEmail = await getNotifyFromEmail();
-        const safeName = escHtml(payload.productName);
-        const safeSlug = escHtml(payload.productSlug);
-        const safeEmail = escHtml(payload.email);
-        const userSubject = escSubject(
-          emailText(payload.language, "stock_saved_subject", {
-            product: payload.productName,
-          })
-        );
-        const userText = emailText(payload.language, "stock_saved", {
-          product: payload.productName,
-        });
-        const userHtml = `<p>${escHtml(userText)}</p>`;
-        await sendEmailMessageSafe(
-          {
-            to: payload.email,
-            subject: userSubject,
-            html: userHtml,
-            text: userText,
-            from: fromEmail,
-          },
-          "shop-restock-notifications:user-confirmation"
-        );
-
-        const alertEmails = await getNotifyAlertEmails();
-        if (alertEmails.length > 0) {
-          const adminSubject = escSubject(
-            `New shop notify request: ${payload.productName}`
-          );
-          const adminHtml = `<p><strong>New shop restock notify request</strong></p>
-<p>Product: ${safeName}</p>
-<p>Slug: ${safeSlug}</p>
-<p>Subscriber email: ${safeEmail}</p>`;
-          const adminText = `New shop restock notify request. Product: ${payload.productName}. Slug: ${payload.productSlug}. Subscriber email: ${payload.email}.`;
-          await sendEmailMessageSafe(
-            {
-              to: alertEmails,
-              subject: adminSubject,
-              html: adminHtml,
-              text: adminText,
-              from: fromEmail,
-            },
-            "shop-restock-notifications:admin-alert"
-          );
-        }
-      } catch {
-        console.error("[shop-restock] Saved request; notification failed", {
-          productSlug: payload.productSlug,
-        });
-      }
-    }
-
     return {
-      created: result.created,
-      message: result.created
-        ? "Stock alert saved. We will email you when this product is back in stock."
-        : "You are already subscribed for this product.",
-      record: result.record,
+      requiresConfirmation: true,
+      message:
+        "If confirmation is needed, an email link will be sent. No order or payment is created.",
     };
   }
 
@@ -168,6 +95,10 @@ export class ShopService {
     items: Array<{ productId: number; quantity: number }>;
     requestToken?: string;
   }) {
+    await assertOrderRequestReadiness(
+      payload.shippingCountry,
+      payload.items.map(item => item.productId)
+    );
     const order = await this.orders.create(payload);
     return { order };
   }
