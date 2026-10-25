@@ -34,7 +34,7 @@ export default function ProductInterestAdmin() {
     void load();
   }, []);
   return (
-    <section className="surface-card space-y-5 p-5 sm:p-7">
+    <section className="surface-card min-w-0 max-w-full space-y-5 p-5 sm:p-7">
       <h2 className="text-xl font-semibold">Product interest</h2>
       <p className="text-sm text-slate-300">
         One-time, confirmed product alerts, separate from newsletter consent.
@@ -53,7 +53,7 @@ export default function ProductInterestAdmin() {
         }}
         className="flex flex-wrap items-end gap-3"
       >
-        <label className="text-sm">
+        <label className="min-w-0 flex-1 basis-44 text-sm">
           From (UTC)
           <Input
             type="date"
@@ -62,7 +62,7 @@ export default function ProductInterestAdmin() {
             onChange={e => setFrom(e.target.value)}
           />
         </label>
-        <label className="text-sm">
+        <label className="min-w-0 flex-1 basis-44 text-sm">
           Through (UTC)
           <Input
             type="date"
@@ -83,7 +83,7 @@ export default function ProductInterestAdmin() {
             {data.legacy} legacy records retained without automatic confirmation
             or delivery.
           </p>
-          <div className="overflow-x-auto">
+          <div className="min-w-0 max-w-full overflow-x-auto">
             <table className="w-full text-left text-sm">
               <caption className="sr-only">
                 Product interest by confirmation status

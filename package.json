@@ -50,7 +50,10 @@
     "test:deploy": "node --test scripts/tests/oracle-deploy.test.mjs && PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/oracle-release-worker.test.py && node --test scripts/tests/pilot-deploy.test.mjs",
     "test:e2e:shop:admin": "node scripts/tests/e2e-shop-admin.mjs",
     "test:e2e:pilot": "node scripts/tests/e2e-pilot.mjs",
-    "test:e2e:pilot:layout": "node --import tsx scripts/tests/e2e-pilot-layout.mjs"
+    "test:e2e:pilot:layout": "node --import tsx scripts/tests/e2e-pilot-layout.mjs",
+    "test:e2e:prelaunch": "node --import tsx scripts/tests/e2e-prelaunch.mjs",
+    "test:recovery:custody": "node scripts/tests/recovery-custody.mjs",
+    "test:recovery:application": "node scripts/tests/restored-application.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

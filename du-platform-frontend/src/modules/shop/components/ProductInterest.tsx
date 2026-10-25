@@ -28,6 +28,8 @@ export default function ProductInterest({
     [error, setError] = useState("");
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    // Portal events still bubble through a containing checkout form.
+    event.stopPropagation();
     if (busy) return;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setError(t("product_interest.invalid_email"));
@@ -74,7 +76,10 @@ export default function ProductInterest({
               {t("product_interest.action")}: {product.name}
             </DialogTitle>
             <DialogDescription className="text-slate-300">
-              {t("product_interest.scope")} {" "}<Link href="/privacy-policy" className="underline">{t("privacy_policy")}</Link>
+              {t("product_interest.scope")}{" "}
+              <Link href="/privacy-policy" className="underline">
+                {t("privacy_policy")}
+              </Link>
             </DialogDescription>
           </DialogHeader>
           {done ? (

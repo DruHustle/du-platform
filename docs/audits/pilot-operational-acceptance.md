@@ -1,5 +1,8 @@
 # Pilot operational acceptance — 25 October 2026
 
+Historical evidence snapshot. See [the current prelaunch release](prelaunch-product-interest.md)
+for completed stock correction, confirmed interest, enforced prelaunch and custody work.
+
 Scope: owner-authorised launch preparation, read-only production database backup,
 isolated recovery, and explicitly authorised synthetic email examples. No live
 orders, payments, refunds, stock edits or newsletter subscriptions were created.
@@ -24,8 +27,8 @@ The existing live workflow remains assisted payment only.
 
 The owner later confirmed **no items are currently held**. Read-only inspection
 found no recorded shop orders, but eight positive catalogue counts (IDs 1, 2, 5,
-7, 8, 15, 21, 22). A conditional correction to zero was prepared for explicit
-production-data approval. The repository already seeds zero stock and preserves
+7, 8, 15, 21, 22). The owner approved a conditional correction to zero, completed at 16:21 UTC on
+25 October. All 28 published API/frontend counts were then verified as zero. The repository already seeds zero stock and preserves
 owner stock edits across releases. Do not treat those old database counts as
 proof of inventory or enable commercial offers from them.
 

@@ -15,17 +15,20 @@ contact: info@diasporaunlocked.com and +49 151 47416152.
 
 The owner has authorised activation, but no completed approval record is installed.
 The legal/delivery pages and [commercial procedure draft](pilot-commercial-procedures.md)
-remain **drafts**, and production remains `observe` / report-only. Card payments
+remain **drafts**. This release selects enforced `prelaunch` through the Oracle
+Docker image default; verify the live mode at `/api/shop/readiness`. The reviewed
+production baseline was `4f80906` in `observe`; it is a historical snapshot. Card payments
 are not implemented or available: the owner confirmed there is no Stripe account.
 Stripe is the recommended provider; onboarding and the actual payment process must
 be completed before offering card payment.
 
 The owner subsequently confirmed **no items are currently held in stock**. The
-eight positive live catalogue counts listed below are database values, not real
-inventory. A narrowly scoped production correction to zero was prepared for
-owner approval. Repository seed values already start at zero. Until real stock
-and costs are verified, retain catalogue browsing and the existing stock-interest
-workflow; do not approve products or issue commercial delivery promises.
+eight formerly positive catalogue counts were explicitly approved and corrected to
+zero on 25 October 2026 at 16:21 UTC. All 28 published products were verified at
+zero in the API and rebuilt frontend snapshot. This release does not reset stock.
+Until physical stock and costs are verified, use confirmed one-time product
+interest, not commercial delivery promises. See the [demand experiment and sourcing
+worksheet](product-demand-sourcing.md).
 
 Production recovery and authorised mailbox checks were completed on 25 October
 2026; see [the operational evidence](audits/pilot-operational-acceptance.md).
@@ -58,13 +61,17 @@ test only with mock email providers and `example.test` recipients.
 
 ## Explicit readiness configuration
 
-The production application environment and readiness mode remain unchanged. An encrypted logical backup and redacted recovery evidence were created on Oracle; the disposable restore resources were removed.
-The implementation proposes these owner-controlled settings:
+The Oracle image explicitly sets `SHOP_COMMERCIAL_MODE=prelaunch` in this release.
+A read-only pre-release check found no orders or issued quotes; none were cancelled.
+No approval file is installed. An explicit host environment override takes precedence
+over image defaults; verify the published mode after deployment. The current host
+had no such override. Owner-controlled modes remain (processes outside the Oracle image still default
+to observe unless explicitly configured):
 
 | `SHOP_COMMERCIAL_MODE` | Effect                                                                                                                                                                                                                                                         |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| unset / `observe`      | Compatibility/report-only. Existing assisted enquiries and quotes remain possible. Customer/operator notices disclose that readiness is unconfirmed. **This is not commercial launch approval.**                                                               |
-| `prelaunch`            | Enforced pause on **new final quotes**. Enquiries remain research requests. Previously issued quotes remain recoverable/acceptable; existing paid orders, refunds, cancellation, tracking and fulfilment continue.                                             |
+| `observe`              | Compatibility/report-only. Existing assisted enquiries and quotes remain possible. Customer/operator notices disclose that readiness is unconfirmed. **This is not commercial launch approval.**                                                               |
+| `prelaunch`            | Enforced pause on **new order requests and new final quotes**. Product interest remains available. Previously issued quotes remain recoverable/acceptable; existing paid orders, refunds, cancellation, tracking and fulfilment continue.                      |
 | `pilot`                | New quotes require a valid current approval file and match its explicit destination-country names/codes, product IDs and EUR currency. Current publication/stock is checked when quoting, and inventory is still consumed only on actual payment confirmation. |
 
 Set `SHOP_PILOT_APPROVAL_FILE` to the privately mounted approval JSON. Its dates
@@ -72,10 +79,10 @@ must be current and ordered; every prerequisite needs approval and evidence.
 Invalid/missing/oversized files, expired/future approvals and misspelled modes
 fail closed for new quotes in enforced mode. Files are reread when checking a
 quote, so revocation does not require an application restart. The public readiness
-API exposes status/check names and approved country codes, not approver identity,
+API exposes status/check names, approved product IDs and country codes, not approver identity,
 evidence references, paths or private operator records.
 
-Changing to enforced prelaunch/pilot is a **separate operational decision**.
+Enforced prelaunch is authorized for this release. Moving to pilot remains an explicit operational decision.
 After explicit approval, add the mode and a read-only private file mount to DU's
 existing Oracle runtime configuration. Keep the file readable only by the DU
 runtime user/group. Do not bake it into Docker images or commit it. Do not change

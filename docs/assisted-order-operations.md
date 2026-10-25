@@ -5,8 +5,8 @@ book travel, create sellers or guarantee DHL coverage. Commercial procedures are
 labelled drafts until the owner supplies and approves the inputs in
 [the audit](audits/assisted-order-pilot.md). Use the
 [Europe launch checklist and owner-input template](pilot-launch-readiness.md)
-before approving commercial operation. Readiness modes are an explicit
-operational choice; this review does not activate them in production.
+before approving commercial operation. This release deliberately selects enforced
+prelaunch; commercial pilot/card activation remains unavailable.
 
 Current owner inputs and actual production logical recovery/mailbox evidence are
 recorded in [the 25 October acceptance report](audits/pilot-operational-acceptance.md).
@@ -272,3 +272,97 @@ PITR; managed provider backups remain a separate recovery layer.
 References: [MySQL mysqldump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html),
 [Aiven MySQL backups](https://aiven.io/docs/products/mysql/concepts/mysql-backups),
 [Oracle release runbook](../deploy/oracle/README.md).
+
+## Confirmed product-interest release
+
+The owner-approved eight stock corrections completed on 25 October 2026; all 28
+published products remain at zero. No inventory is rewritten by this release.
+The Oracle Docker image now defaults to enforced `prelaunch`: new order requests
+and new quotes are paused. Historical status, acceptance of an existing legitimate
+quote, cancellation, refund and fulfilment remain accessible. The pre-release
+read-only inspection found zero orders and zero issued quotes.
+
+`shop_restock_notifications` gains additive confirmation/cancellation/generation
+fields. Existing rows default to **legacy** and remain dormant. An explicit new
+request creates a pending confirmation intent in the existing
+`newsletter_deliveries` queue, in the same transaction as consent. No bulk migration
+messages, newsletter consent or accounts are created. The unique email/product row
+and generation/intent index deduplicate concurrent requests and stock edits.
+Confirmation is one-use, expires after 48 hours and is throttled to one new link
+per hour. Cancellation is scoped to that product/registration generation. Links
+use fragments, explicit confirmation buttons and noindex pages; tokens are removed
+from browser history before rendering the preference controls.
+
+The existing worker sweeps confirmed demand in batches of 50 and uses the existing
+five-attempt backoff/23-hour safe provider window. Availability needs actual stock,
+publication, current approved pilot mode and an approved product ID, checked again
+under row locks immediately before provider delivery. A withdrawn product waits
+without using a provider attempt. Cancellation and delivery serialize on the
+interest row: provider acceptance that completes first cannot be recalled.
+Stable outbox/provider keys protect interrupted commits; they do not prove exactly
+once or inbox delivery. A notification is **one-time**, marked notified on provider
+acceptance. In Admin → Notify Me inspect counts/dates/confirmation and delivery
+states; existing Newsletter delivery controls permit only safe failed-job retry.
+
+The queue lock is scoped to the database so isolated test/restored databases do not
+block the live queue. Both queue processors and worker entry points refuse to send
+when `RECOVERY_MODE=true` or `OUTBOUND_MESSAGES_PAUSED=true`. Keep both set during
+restore reconciliation; remove the recovery marker and explicitly release the
+hold only after checking accepted provider IDs, pending jobs, grants and inventory.
+Never automatically replay a restored queue.
+
+Rollback: preserve all additive columns, generations and delivery intents. Prefer
+a compatible forward fix. Before reverting to code with synchronous stock mail,
+freeze stock/admin mutations and disable outbound delivery: that old code does not
+understand confirmation or cancellation. Retain enforced `prelaunch` explicitly in
+the private runtime environment if using an image predating this image default.
+Do not restore an old database over new consent or orders. No approval placeholder
+or merchant keys are added by this release.
+
+## Independent recovery custody — prepared, destination still required
+
+The actual logical restore passed; the archive/key currently remain on Oracle.
+The controlled custody test recovers persisted encrypted grants and queued payloads
+with the retained runtime key, and rejects the wrong key. This is local synthetic
+proof, not a verified off-host transfer, provider PITR or complete host-loss drill.
+
+`python3 scripts/operations/prepare-recovery-custody.py --help` documents a local,
+network-free packaging operation. Inputs are a verified `.sql.gpg` archive, its
+mode-0600 passphrase file, a mode-0600 JSON file containing only the retained
+`JWT_SECRET`, the approved custodian's **public** GPG key, and separate mode-0700
+archive/key output directories. The archive is checked before packaging. The key
+bundle is encrypted for that recipient and includes both SQL passphrase and runtime
+key. Private temporary plaintext is removed; existing packages cannot be overwritten.
+Manifests include checksums and recipient fingerprint, no secrets. Never run this
+on a newly selected cloud service or publish either package.
+
+Required external input: the owner's approved private archive destination and an
+independently secured key destination/custodian with its verified public GPG key.
+After approval, transfer each package separately, compare remote checksums, and
+have the custodian perform an isolated restore with workers held and the retained
+key material. Record receipts, access/recovery owners, retention and deletion
+policy. Test archive plus key availability independently of Oracle before claiming
+full host-loss recovery. Do not rotate the JWT key until outstanding grants and
+payloads have been migrated or the old key is retained securely.
+
+Local proof: `pnpm test:recovery:custody`. Database/application proof: the existing
+network-isolated recovery drill, now including persisted grant/payload decryption,
+wrong-key rejection and enforced worker hold. See the [current audit](audits/prelaunch-product-interest.md).
+
+## Local review of this release
+
+Use Node 22+ and `pnpm install --frozen-lockfile`, then `pnpm dev`; the script prints
+the local web URL (port 3000) and backend status. Use a disposable localhost MySQL
+`*_test` database for persistent product-interest/admin tests. Never point these
+fixtures at an application database. Without a configured database, interest
+registration fails visibly rather than claiming that an in-memory signup is saved.
+
+`SHOP_TEST_DATABASE_URL` and `NEWSLETTER_TEST_DATABASE_URL` select disposable test
+storage for `pnpm test:modules`. `pnpm test:e2e:prelaunch` runs both browser engines
+at three widths with synthetic records and mock delivery. `pnpm test:e2e:pilot`
+uses an isolated synthetic approval file to preserve assisted-order regression
+coverage; it cannot activate production. `pnpm test:recovery:application` creates
+only `du_restore_test`, refuses an existing database, and checks persisted encrypted
+grants/payloads plus held workers. `pnpm test:recovery:custody` uses synthetic files,
+a temporary GPG recipient and no network transfer. Production deployment is the
+existing protected-main Oracle → Vercel workflow, not a local `pnpm dev` action.
