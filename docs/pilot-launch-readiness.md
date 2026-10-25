@@ -20,6 +20,13 @@ are not implemented or available: the owner confirmed there is no Stripe account
 Stripe is the recommended provider; onboarding and the actual payment process must
 be completed before offering card payment.
 
+The owner subsequently confirmed **no items are currently held in stock**. The
+eight positive live catalogue counts listed below are database values, not real
+inventory. A narrowly scoped production correction to zero was prepared for
+owner approval. Repository seed values already start at zero. Until real stock
+and costs are verified, retain catalogue browsing and the existing stock-interest
+workflow; do not approve products or issue commercial delivery promises.
+
 Production recovery and authorised mailbox checks were completed on 25 October
 2026; see [the operational evidence](audits/pilot-operational-acceptance.md).
 
