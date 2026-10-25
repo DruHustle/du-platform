@@ -1,3 +1,4 @@
+import { readyShop } from "./shop-readiness-fixture.mjs";
 import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
 import assert from "node:assert/strict";
 import { calculateShopShippingCents } from "../../shared/shopCheckout.ts";
@@ -92,7 +93,9 @@ const setup = async (width, options = {}) => {
       return route.fulfill(
         failCatalog
           ? { status: 503, json: { message: "Unavailable" } }
-          : { json: { products } }
+          : {
+              json: { products, readiness: readyShop(products.map(p => p.id)) },
+            }
       );
     }
     if (url.pathname === "/api/shop/orders") {
@@ -400,7 +403,7 @@ try {
         .locator("[data-shop-product-card]")
         .getByRole("button", { name: /^Add to Cart:/ })
         .count(),
-      28
+      27
     );
     const rugby = card("sables-rugby-home-kit");
     for (let i = 0; i < 3; i++)
@@ -414,34 +417,38 @@ try {
     assert.equal((await cart())[0].quantity, 3);
     await rugby.getByRole("button", { name: /^Remove one/ }).click();
     assert.equal((await cart())[0].quantity, 2);
-    assert(
+    assert.equal(
       await card("shona-stone-sculpture")
         .getByRole("button", { name: /^Add to Cart:/ })
-        .isDisabled()
+        .count(),
+      0
     );
     await card("shona-stone-sculpture")
-      .getByRole("button", { name: /Notify Me/i })
+      .getByRole("button", { name: "Register interest", exact: true })
       .click();
     const dialog = page.getByRole("dialog");
     await dialog.waitFor();
     await page.keyboard.press("Escape");
     await dialog.waitFor({ state: "hidden" });
     await card("shona-stone-sculpture")
-      .getByRole("button", { name: /Notify Me/i })
+      .getByRole("button", { name: "Register interest", exact: true })
       .click();
+    await dialog
+      .getByRole("button", {
+        name: "Email me a confirmation link",
+        exact: true,
+      })
+      .click();
+    assert(await dialog.getByRole("alert").isVisible());
     await dialog.locator("input[type=email]").fill("test@example.test");
     await dialog
-      .getByRole("button", { name: "Notify Me", exact: true })
+      .getByRole("button", {
+        name: "Email me a confirmation link",
+        exact: true,
+      })
       .click();
-    await dialog.waitFor({ state: "hidden" });
-    await page.locator("[data-sonner-toast]").waitFor();
-    // Notifications follow the app theme even when the OS prefers dark mode.
-    assert.equal(
-      await page
-        .locator("[data-sonner-toaster]")
-        .getAttribute("data-sonner-theme"),
-      "light"
-    );
+    await dialog.getByRole("status").waitFor();
+    await dialog.getByRole("button", { name: "Close", exact: true }).click();
     // Checkout is fully mocked; no orders, email, or production writes occur.
     if (width < 1024)
       await page

@@ -1,3 +1,4 @@
+import { readyShop } from "./shop-readiness-fixture.mjs";
 import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
 import { createServer } from "node:https";
 import { execFileSync } from "node:child_process";
@@ -10,6 +11,7 @@ const engine = process.env.PILOT_BROWSER || "chromium",
   out = process.env.PILOT_LAYOUT_OUTPUT_DIR || "/tmp/du-pilot-layout-" + engine;
 await fs.mkdir(out, { recursive: true });
 const catalogue = {
+  readiness: readyShop(getPublicShopSeedProducts().map(p => p.id)),
   products: getPublicShopSeedProducts().map(p => ({ ...p, stock_qty: 3 })),
 };
 const config = JSON.parse(await fs.readFile("vercel.json", "utf8"));

@@ -43,6 +43,7 @@ const HIDE_ONESA_BUBBLE_ROUTES = [
   "/shop/products",
   "/shop/order-status",
   "/newsletter",
+  "/shop/interest",
   "/onesa-ai-chat",
   "/onesa-ai-tourism-virtual-experience",
   "/onesa-ai-tourism-augmented-experience",

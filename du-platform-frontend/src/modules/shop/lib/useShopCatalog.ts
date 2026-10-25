@@ -1,3 +1,4 @@
+import type { PublicShopReadiness } from "@shared/shopReadiness";
 import { isShopCurrency } from "@shared/shopCurrency";
 import { useEffect, useSyncExternalStore } from "react";
 import { getPublicShopSeedProducts } from "@shared/shopCatalog";
@@ -6,11 +7,13 @@ import { api } from "@/lib/api";
 export type ShopProduct = ReturnType<typeof getPublicShopSeedProducts>[number];
 type Catalog = {
   products: ShopProduct[];
+  readiness: PublicShopReadiness | null;
   status: "loading" | "ready" | "error";
   updatedAt: number;
 };
 let catalog: Catalog = {
   products: getPublicShopSeedProducts(),
+  readiness: null,
   status: "loading",
   updatedAt: 0,
 };
@@ -69,7 +72,12 @@ export function refreshShopCatalog(force = false): Promise<void> {
     .get("/shop/products", { timeout: 15_000 })
     .then(({ data }) => {
       const products = validateShopProducts(data?.products);
-      publish({ products, status: "ready", updatedAt: Date.now() });
+      publish({
+        products,
+        readiness: data?.readiness ?? null,
+        status: "ready",
+        updatedAt: Date.now(),
+      });
     })
     .catch(() => {
       publish({ ...catalog, status: "error", updatedAt: Date.now() });
@@ -85,4 +93,16 @@ export function useShopCatalog() {
     void refreshShopCatalog();
   }, []);
   return { ...snapshot, refresh: () => refreshShopCatalog(true) };
+}
+
+export function canRequestProduct(
+  readiness: PublicShopReadiness | null,
+  product: ShopProduct
+) {
+  return (
+    readiness?.commercialReady === true &&
+    readiness.mode === "pilot" && readiness.enforcement === "enforced" &&
+    Array.isArray(readiness.approvedProductIds) && readiness.approvedProductIds.includes(product.id) &&
+    product.stock_qty > 0
+  );
 }

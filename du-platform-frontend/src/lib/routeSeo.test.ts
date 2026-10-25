@@ -51,6 +51,14 @@ describe("canonical URL policy", () => {
     expect(seo.robots).toBe("noindex,nofollow");
   });
 
+  it("keeps product-interest preference links private and out of indexing", () => {
+    const seo = resolveRouteSeo({
+      pathname: "/shop/interest",
+      search: "?lng=de",
+    });
+    expect(seo.robots).toBe("noindex,nofollow");
+    expect(seo.canonicalPath).toBe("/shop/interest");
+  });
   it("updates initial HTML metadata consistently and escapes search text", () => {
     const template =
       '<title>Home</title><meta name="description" content="Home"><meta name="robots" content="index,follow"><meta property="og:title" content="Home"><meta property="og:url" content="https://diasporaunlocked.com/"><link rel="canonical" href="https://diasporaunlocked.com/"><h1 class="seo-h1">Home</h1>';
