@@ -1,3 +1,5 @@
+import interestCopy from "../../../../shared/productInterestCopy.json";
+import { publicShopReadiness } from "../../shop/shopReadiness";
 import { readPublishedProductDetails } from "../../shop/productDetailsStore";
 import answerCopy from "../../../../shared/catalogueAnswerCopy.json";
 import type { ProductDetails } from "../../../../shared/productDetails";
@@ -11,7 +13,6 @@ const copy = {
     intro: "From the published DU catalogue (availability can change):",
     out: "currently unavailable",
     stock: "available now",
-    note: "Displayed prices are indicative. Add products to your basket and send an order request; the shop confirms the final quote, DHL delivery and assisted payment. I cannot book, take payment or confirm delivery.",
     failed:
       "I cannot retrieve the current catalogue. Please check [the shop](/shop/products); I cannot confirm stock or prices right now.",
     none: "No published product matches that request. Browse [the catalogue](/shop/products).",
@@ -21,7 +22,6 @@ const copy = {
       "Aus dem veröffentlichten DU-Katalog (Verfügbarkeit kann sich ändern):",
     out: "derzeit nicht verfügbar",
     stock: "jetzt verfügbar",
-    note: "Angezeigte Preise sind Richtwerte. Produkte in den Warenkorb legen und Anfrage senden; der Shop bestätigt Endpreis, DHL-Lieferung und Zahlung. Ich kann weder buchen noch Zahlungen oder Lieferungen bestätigen.",
     failed:
       "Der aktuelle Katalog ist nicht abrufbar. Bitte [den Shop](/shop/products) prüfen; Bestand und Preise sind derzeit nicht bestätigbar.",
     none: "Kein veröffentlichtes Produkt passt. [Katalog ansehen](/shop/products).",
@@ -30,7 +30,6 @@ const copy = {
     intro: "Kubva mukatalogi yeDU yakaburitswa (huwandu hunogona kuchinja):",
     out: "hachipo pari zvino",
     stock: "chiripo iye zvino",
-    note: "Mitengo ndeyekuronga. Isa mubhasikiti wotumira chikumbiro; chitoro chinosimbisa mutengo wekupedzisira, DHL nekubhadhara. Handikwanisi kubhuka, kutora mari kana kusimbisa kutumira.",
     failed:
       "Handikwanisi kuwana katalogi yazvino. Ona [chitoro](/shop/products); handisimbisi huwandu kana mitengo pari zvino.",
     none: "Hapana chigadzirwa chakaburitswa chaenderana nazvo. Ona [katalogi](/shop/products).",
@@ -39,7 +38,6 @@ const copy = {
     intro: "Kuvela kukhathalogi yeDU ebekiweyo (impahla ingatshintsha):",
     out: "akukho khathesi",
     stock: "kukhona khathesi",
-    note: "Intengo ngeyokuhlela. Faka ebhasikithini uthumele isicelo; isitolo siqinisekisa intengo yokucina, iDHL lokubhadala. Angikwazi ukubhukha, ukuthatha imali kumbe ukuqinisekisa ukuthumela.",
     failed:
       "Angikwazi ukuthola ikhathalogi yamanje. Bona [isitolo](/shop/products); angiqinisekisi impahla kumbe intengo khathesi.",
     none: "Akulamkhiqizo obekiweyo ofana lesicelo. Bona [ikhathalogi](/shop/products).",
@@ -197,6 +195,8 @@ export async function catalogueReply(
   history: History = []
 ) {
   const l = copy[language as keyof typeof copy] || copy.en;
+  const interest =
+    interestCopy[language as keyof typeof interestCopy] || interestCopy.en;
   const facts =
     answerCopy[language as keyof typeof answerCopy] || answerCopy.en;
   try {
@@ -218,7 +218,7 @@ export async function catalogueReply(
     const generic = normalize(prompt)
       .split(" ")
       .every(w => genericWords.has(w));
-    if (!named.length && !generic) return `${l.none}\n\n${l.note}`;
+    if (!named.length && !generic) return `${l.none}\n\n${interest.scope}`;
     const requested = requestedFields(prompt);
     if (!named.length && requested.length)
       return `${facts.choose}\n\n[${facts.information}](/shop/products)`;
@@ -231,13 +231,22 @@ export async function catalogueReply(
       .slice()
       .sort((a, b) => Number(b.stock_qty > 0) - Number(a.stock_qty > 0))
       .slice(0, 8);
-    if (!selected.length) return `${l.none}\n\n${l.note}`;
+    if (!selected.length) return `${l.none}\n\n${interest.scope}`;
+    const readiness = await publicShopReadiness();
+    const eligible = (p: any) =>
+      readiness.commercialReady &&
+      readiness.approvedProductIds?.includes(p.id) &&
+      p.stock_qty > 0;
     const target = isShopCurrency(currency) ? currency : "EUR";
     const blocks = await Promise.all(
       selected.map(async p => {
         const lines = [
-          `- [${plain(p.name)}](/shop/products?product=${encodeURIComponent(p.slug)}) · ${(convertShopCents(p.price_cents, p.currency, target) / 100).toFixed(2)} ${target} · ${p.stock_qty > 0 ? l.stock : l.out}`,
+          `- [${plain(p.name)}](/shop/products?product=${encodeURIComponent(p.slug)}) · ${(convertShopCents(p.price_cents, p.currency, target) / 100).toFixed(2)} ${target} · ${eligible(p) ? l.stock : l.out}`,
         ];
+        if (!eligible(p))
+          lines.push(
+            `[${interest.action}](/shop/product/${encodeURIComponent(p.slug)}#interest) — ${interest.scope}`
+          );
         if (requested.length) {
           let details: ProductDetails | undefined,
             failed = false;
@@ -266,7 +275,7 @@ export async function catalogueReply(
     );
     const visible = blocks.filter(Boolean);
     if (!visible.length) return l.none;
-    return `${l.intro}${named.length > 1 ? ` ${facts.choose}` : ""}\n\n${visible.join("\n\n")}\n\n${l.note}`;
+    return `${l.intro}${named.length > 1 ? ` ${facts.choose}` : ""}\n\n${visible.join("\n\n")}\n\n${interest.price_note}\n\n${interest.scope}`;
   } catch {
     return l.failed;
   }

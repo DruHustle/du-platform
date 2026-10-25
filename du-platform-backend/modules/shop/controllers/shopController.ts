@@ -1,3 +1,4 @@
+import { AppError } from "../../../core/errorHandler";
 import { ShopRequestError } from "../../../shared/persistence/shopStore";
 import type express from "express";
 import { ShopService, ShopServiceError } from "../services/shopService";
@@ -29,6 +30,8 @@ export class ShopController {
     fallbackCode: string,
     fallbackMessage: string
   ) {
+    if (err instanceof AppError)
+      return res.status(err.statusCode).json(error(err.code, err.message));
     if (err instanceof ShopServiceError) {
       return res.status(err.status).json(error(err.code, err.message));
     }

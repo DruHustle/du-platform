@@ -1,3 +1,4 @@
+import { createInterestRouter } from "../interestRoutes";
 import { z } from "zod";
 import { publicShopReadiness } from "../shopReadiness";
 import { db } from "../../../shared/databaseRuntime";
@@ -24,6 +25,7 @@ export function createShopModuleRouter() {
     res.json(ok(await publicShopReadiness()));
   });
 
+  router.use("/interest", createInterestRouter());
   router.use("/products", createProductDetailsRouter());
   router.post(
     "/funnel",
