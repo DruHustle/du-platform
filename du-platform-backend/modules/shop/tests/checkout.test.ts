@@ -190,7 +190,10 @@ describe("checkout reliability", () => {
     ).not.toBeNull();
   });
   it("uses catalogue content for restock emails and rejects unknown products", async () => {
-    const service = new ShopService();
+    const create = vi.fn(async () => ({ requiresConfirmation: true }));
+    const service = new ShopService(undefined, undefined, undefined, {
+      create,
+    } as any);
     const product = shopSeedProducts[0];
     await service.createRestockNotification({
       productId: product.id,
@@ -198,12 +201,11 @@ describe("checkout reliability", () => {
       productName: "Untrusted promotional message",
       email: "restock@example.test",
     });
-    expect(vi.mocked(sendEmailMessageSafe).mock.calls[0][0].text).toContain(
-      product.name
-    );
-    expect(vi.mocked(sendEmailMessageSafe).mock.calls[0][0].text).not.toContain(
-      "Untrusted"
-    );
+    expect(create.mock.calls[0][0]).toMatchObject({
+      productName: product.name,
+      productSlug: product.slug,
+    });
+    expect(sendEmailMessageSafe).not.toHaveBeenCalled();
     await expect(
       service.createRestockNotification({
         productSlug: "unknown",
@@ -212,19 +214,17 @@ describe("checkout reliability", () => {
       })
     ).rejects.toThrow("Product not found");
   });
-  it("does not report a saved restock request as failed during an email outage", async () => {
-    vi.mocked(sendEmailMessageSafe).mockRejectedValueOnce(
-      new Error("Local provider outage")
-    );
+  it("refuses to lose product-interest consent in a memory fallback", async () => {
     const product = shopSeedProducts[0];
-    const result = await new ShopService().createRestockNotification({
-      productId: product.id,
-      productSlug: product.slug,
-      productName: product.name,
-      email: "outage@example.test",
-    });
-    expect(result.created).toBe(true);
-    expect(result.record.product_slug).toBe(product.slug);
+    await expect(
+      new ShopService().createRestockNotification({
+        productId: product.id,
+        productSlug: product.slug,
+        productName: product.name,
+        email: "outage@example.test",
+      })
+    ).rejects.toMatchObject({ statusCode: 503 });
+    expect(sendEmailMessageSafe).not.toHaveBeenCalled();
   });
   it("does not expose database or provider internals in public error responses", async () => {
     const createOrder = vi

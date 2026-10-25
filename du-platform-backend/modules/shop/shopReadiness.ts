@@ -40,6 +40,10 @@ async function load(env: NodeJS.ProcessEnv = process.env, now = Date.now()) {
     enforcement: mode === "observe" ? "report_only" : "enforced",
     commercialReady: mode === "pilot" && missing.length === 0,
     missing: Array.from(new Set(missing)),
+    approvedProductIds:
+      mode === "pilot" && missing.length === 0
+        ? approval!.approvedProductIds
+        : [],
     destinationCountries:
       mode === "pilot" && missing.length === 0
         ? approval!.destinationCountries.map(c => c.code)
@@ -56,8 +60,8 @@ export async function assertQuoteReadiness(
   currency: string
 ) {
   const { state, approval } = await load();
-  // Compatibility is deliberate. Deployment does not activate a new operating
-  // mode; the owner must separately approve/configure enforced prelaunch or pilot.
+  // Observe is explicit compatibility only. The production image deliberately
+  // defaults to enforced prelaunch; pilot still requires a valid approval record.
   if (state.mode === "observe") return state;
   if (!state.commercialReady || !approval)
     throw new ShopRequestError(

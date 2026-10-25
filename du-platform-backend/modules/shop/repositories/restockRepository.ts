@@ -1,4 +1,4 @@
-import { createShopRestockNotification } from "../../../shared/persistence/shopStore";
+import { ProductInterestService } from "../interestService";
 
 export class RestockRepository {
   create(payload: {
@@ -8,6 +8,6 @@ export class RestockRepository {
     productName: string;
     email: string;
   }) {
-    return createShopRestockNotification(payload);
+    return new ProductInterestService().register(payload);
   }
 }

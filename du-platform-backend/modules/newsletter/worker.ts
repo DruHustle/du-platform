@@ -1,3 +1,8 @@
+import { outboundMessagesPaused } from "../../shared/outboundMessages";
+import {
+  ProductInterestService,
+  deliverProductInterest,
+} from "../shop/interestService";
 import type { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import { db } from "../../shared/databaseRuntime";
 import {
@@ -29,11 +34,12 @@ export async function processNewsletterBatch(
   send = sendNewsletterEmail,
   limit = 8
 ) {
+  if (outboundMessagesPaused()) return;
   const connection = await pool.getConnection();
   let locked = false;
   try {
     const [locks] = await connection.query<RowDataPacket[]>(
-      "SELECT GET_LOCK('du_newsletter_delivery', 0) AS acquired"
+      "SELECT GET_LOCK(CONCAT('du_newsletter_delivery:', LEFT(SHA2(DATABASE(),256),32)), 0) AS acquired"
     );
     if (!Number(locks[0].acquired)) return;
     locked = true;
@@ -78,14 +84,18 @@ export async function processNewsletterBatch(
         }
       }
       try {
-        const providerId = await send(
-          JSON.parse(row.payload) as NewsletterEmail,
-          `du-newsletter/${row.id}`
-        );
-        await connection.execute(
-          `UPDATE newsletter_deliveries SET status = 'sent', accepted_at = NOW(), provider_id = ?, locked_at = NULL, error_message = NULL WHERE id = ?`,
-          [providerId, row.id]
-        );
+        if (row.interest_id) {
+          await deliverProductInterest(connection, row, send);
+        } else {
+          const providerId = await send(
+            JSON.parse(row.payload) as NewsletterEmail,
+            `du-newsletter/${row.id}`
+          );
+          await connection.execute(
+            `UPDATE newsletter_deliveries SET status = 'sent', accepted_at = NOW(), provider_id = ?, locked_at = NULL, error_message = NULL WHERE id = ?`,
+            [providerId, row.id]
+          );
+        }
       } catch (error) {
         const failure = deliveryFailure(error, Number(row.attempts) + 1);
         await connection.execute(
@@ -107,7 +117,9 @@ export async function processNewsletterBatch(
   } finally {
     if (locked)
       await connection
-        .query("SELECT RELEASE_LOCK('du_newsletter_delivery')")
+        .query(
+          "SELECT RELEASE_LOCK(CONCAT('du_newsletter_delivery:', LEFT(SHA2(DATABASE(),256),32)))"
+        )
         .catch(() => {});
     connection.release();
   }
@@ -119,7 +131,11 @@ export function startNewsletterWorker(pool: Pool | null = db) {
     if (running) return;
     running = true;
     try {
-      if ((await newsletterSender()).ready) await processNewsletterBatch(pool);
+      if (outboundMessagesPaused()) return;
+      if ((await newsletterSender()).ready) {
+        await new ProductInterestService(pool).queueAvailable();
+        await processNewsletterBatch(pool);
+      }
     } catch {
       console.error(
         "[newsletter] Delivery queue unavailable; saved deliveries will resume automatically."

@@ -170,15 +170,6 @@ export const shopSeedProducts: ShopProduct[] = cloneShopSeedProducts();
 
 const memoryShopOrders: ShopOrder[] = [];
 const memoryShopOrderItems: ShopOrderItem[] = [];
-const memoryShopRestockNotifications: Array<{
-  id: number;
-  language: string;
-  product_id: number | null;
-  product_slug: string;
-  product_name: string;
-  email: string;
-  created_at: string;
-}> = [];
 const shopProductsCache = new Map<
   string,
   { expiresAt: number; source: ShopProductsSource; products: any[] }
@@ -192,101 +183,9 @@ function getMemoryProductById(productId: number) {
   return shopSeedProducts.find(product => product.id === productId);
 }
 
-export async function createShopRestockNotification(payload: {
-  language?: string;
-  productId?: number | null;
-  productSlug: string;
-  productName: string;
-  email: string;
-}) {
-  const productSlug = String(payload.productSlug ?? "")
-    .trim()
-    .toLowerCase();
-  const productName = String(payload.productName ?? "").trim();
-  const email = String(payload.email ?? "")
-    .trim()
-    .toLowerCase();
-  const productId =
-    payload.productId == null || !Number.isFinite(Number(payload.productId))
-      ? null
-      : Math.max(1, Math.floor(Number(payload.productId)));
-
-  if (!productSlug || !productName || !email) {
-    throw new ShopRequestError("Product and email are required.");
-  }
-
-  if (!db) {
-    const existing = memoryShopRestockNotifications.find(
-      row => row.product_slug === productSlug && row.email === email
-    );
-    if (existing) return { created: false, record: existing };
-
-    const record = {
-      id: memoryShopRestockNotifications.length + 1,
-      language: customerLanguage(payload.language),
-      product_id: productId,
-      product_slug: productSlug,
-      product_name: productName,
-      email,
-      created_at: new Date().toISOString(),
-    };
-    memoryShopRestockNotifications.push(record);
-    return { created: true, record };
-  }
-
-  try {
-    const [result] = await db.execute<mysql.ResultSetHeader>(
-      `
-      INSERT IGNORE INTO shop_restock_notifications (product_id, product_slug, product_name, email, language)
-      VALUES (?, ?, ?, ?, ?)
-      `,
-      [
-        productId,
-        productSlug,
-        productName,
-        email,
-        customerLanguage(payload.language),
-      ]
-    );
-    const [rows] = await db.query<mysql.RowDataPacket[]>(
-      `
-      SELECT id, product_id, product_slug, product_name, email, language, created_at
-      FROM shop_restock_notifications
-      WHERE product_slug = ? AND email = ?
-      LIMIT 1
-      `,
-      [productSlug, email]
-    );
-    return {
-      created: Number(result.affectedRows ?? 0) > 0,
-      record: rows[0] ?? null,
-    };
-  } catch (error) {
-    if (!isDbConnectionError(error)) throw error;
-    const existing = memoryShopRestockNotifications.find(
-      row => row.product_slug === productSlug && row.email === email
-    );
-    if (existing) return { created: false, record: existing };
-
-    const record = {
-      id: memoryShopRestockNotifications.length + 1,
-      language: customerLanguage(payload.language),
-      product_id: productId,
-      product_slug: productSlug,
-      product_name: productName,
-      email,
-      created_at: new Date().toISOString(),
-    };
-    memoryShopRestockNotifications.push(record);
-    return { created: true, record };
-  }
-}
-
 export async function getShopRestockNotifications() {
   if (!db) {
-    return [...memoryShopRestockNotifications].sort(
-      (left, right) => right.id - left.id
-    );
+    return [];
   }
 
   try {
@@ -301,41 +200,7 @@ export async function getShopRestockNotifications() {
     return rows;
   } catch (error) {
     if (!isDbConnectionError(error)) throw error;
-    return [...memoryShopRestockNotifications].sort(
-      (left, right) => right.id - left.id
-    );
-  }
-}
-
-export async function getShopRestockNotificationsBySlug(productSlug: string) {
-  const slug = String(productSlug ?? "")
-    .trim()
-    .toLowerCase();
-  if (!slug) return [];
-
-  if (!db) {
-    return memoryShopRestockNotifications
-      .filter(row => row.product_slug === slug)
-      .sort((left, right) => right.id - left.id);
-  }
-
-  try {
-    const [rows] = await db.query<mysql.RowDataPacket[]>(
-      `
-      SELECT id, product_id, product_slug, product_name, email, language, created_at
-      FROM shop_restock_notifications
-      WHERE product_slug = ?
-      ORDER BY id DESC
-      LIMIT 1000
-      `,
-      [slug]
-    );
-    return rows;
-  } catch (error) {
-    if (!isDbConnectionError(error)) throw error;
-    return memoryShopRestockNotifications
-      .filter(row => row.product_slug === slug)
-      .sort((left, right) => right.id - left.id);
+    return [];
   }
 }
 
