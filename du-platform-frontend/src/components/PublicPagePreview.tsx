@@ -111,12 +111,15 @@ export function PublicPagePreview({
       {draftPolicy && (
         <section>
           <p role="note">{english.pilot.draft_notice}</p>
-          <h2>{english.pilot.operator_title}</h2>
-          <p>{english.pilot.operator_summary}</p>
+          <h2>{english.pilot.operator_details_title}</h2>
+          <address style={{ fontStyle: "normal" }}>
+            {english.pilot.operator_summary}
+          </address>
           <p>{english.pilot.operator_missing}</p>
-          <h2>{english.pilot.procedures_title}</h2>
+          <h2>{english.pilot.delivery_title}</h2>
           <p>{english.pilot.delivery_draft}</p>
           <p>{english.pilot.payment_draft}</p>
+          <h2>{english.pilot.returns_title}</h2>
           <p>{english.pilot.returns_draft}</p>
           <p>{english.pilot.complaints}</p>
         </section>

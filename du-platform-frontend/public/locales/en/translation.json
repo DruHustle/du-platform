@@ -53,11 +53,11 @@
       "options_title": "Contact Options",
       "call": "Call",
       "whatsapp": "WhatsApp",
-      "location_berlin": "Berlin, Germany",
       "social": "Social",
       "twitter": "Twitter",
       "linkedin": "LinkedIn",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "location": "Heidelberg, Germany"
     }
   },
   "auth": {
@@ -1996,12 +1996,12 @@
     "missing_details": "These details have not yet been supplied. Ask the shop before accepting a quote.",
     "operator_title": "Operator / legal notice",
     "procedures_title": "Delivery, payment and returns",
-    "draft_notice": "DRAFT — proposed pilot procedures. Owner approval and complete operator details are required before commercial launch.",
-    "operator_summary": "Diaspora Unlocked · Germany. Contact: info@diasporaunlocked.com · +49 151 47416152.",
-    "operator_missing": "The contracting operator’s full legal name, serviceable postal address, legal form and any applicable registration / tax details have not yet been confirmed. Onesa is the technology provider, not an identified contracting seller.",
-    "delivery_draft": "Proposed: review every request against stock, product restrictions and DHL service availability for the exact address. Country selection does not confirm coverage. Obtain the carrier quotation, delivery estimate and any applicable charges before issuing a time-limited final quote. The basket delivery allowance is a planning estimate only.",
-    "payment_draft": "Proposed: review the final quote and payment instructions directly with the shop. No payment is taken on this site. Record only actual received payments with a reference; dispatch after payment and product checks. Quote acceptance is a workflow acknowledgement; the final contract formation and payment procedure must be approved before launch.",
-    "returns_draft": "Proposed: contact the shop with the request reference to request cancellation, report a problem or arrange a return. The operator must approve and publish the return address, applicable withdrawal information/form, return-cost responsibility, exceptions and refund procedure before accepting commercial orders. This draft does not limit statutory consumer rights.",
+    "draft_notice": "DRAFT — operator details and shipment origin have been supplied. Final delivery, payment and returns procedures still require approval before commercial launch.",
+    "operator_summary": "Onesa UG (haftungsbeschränkt), trading as Diaspora Unlocked. Steinhofweg 47, 69123 Heidelberg, Germany. Contact: info@diasporaunlocked.com · +49 151 47416152.",
+    "operator_missing": "Represented by Andrew Gotora. Commercial register: Amtsgericht Mannheim, HRB 757830. Applicable tax details and the final commercial procedures remain under review.",
+    "delivery_draft": "Pilot scope: dispatch from Germany to the 27 EU member countries using DHL. Each request still requires stock, product-restriction and DHL service checks for the exact address. Obtain the carrier quotation, delivery estimate and applicable charges before issuing a time-limited final quote. The basket delivery allowance is a planning estimate only.",
+    "payment_draft": "Proposed: review the final quote and payment instructions directly with the shop. Card payment through Stripe is planned but is not available yet; no payment is taken on this site. Record only actual received payments with a reference; dispatch after payment and product checks. Contract formation and payment procedures must be approved before launch.",
+    "returns_draft": "Proposed returns contact: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Germany; info@diasporaunlocked.com. Contact the shop with your request reference to cancel, report a problem or arrange a return. Withdrawal information/form, return-cost responsibility, applicable exceptions and refund procedures must be approved and published before commercial orders are accepted. Statutory consumer rights remain unaffected.",
     "complaints": "For complaints, cancellation or privacy requests, email info@diasporaunlocked.com with your reference. Do not email payment-card details.",
     "privacy_flows": "Order requests store contact and address details, product/price snapshots, quotes, status history and email delivery records in the MySQL database hosted by Aiven. The API runs on Oracle and the frontend on Vercel. Resend processes transactional and confirmed newsletter emails. Order communications do not subscribe you to newsletters.",
     "privacy_ai": "Onesa sends the conversation and selected trip preferences to configured AI providers: Google Gemini, with Groq, Anthropic and Cerebras fallback targets. Do not submit sensitive or payment information. AR camera processing is local; camera frames are not uploaded by the AR feature. Provider contracts, retention and international-transfer arrangements require operator review before commercial launch.",
@@ -2070,6 +2070,9 @@
     "readiness_prelaunch": "Prelaunch — commercial readiness unconfirmed",
     "readiness_limited": "Limited Europe pilot",
     "readiness_pending_note": "Commercial procedures and product facts are still being completed. You may send an enquiry. Confirm the exact item, final written terms and delivery before accepting a quote or paying.",
-    "readiness_pilot_note": "Only explicitly approved destination countries and products are in the pilot. The shop confirms each item, DHL delivery and final terms individually."
+    "readiness_pilot_note": "Only explicitly approved destination countries and products are in the pilot. The shop confirms each item, DHL delivery and final terms individually.",
+    "operator_details_title": "Operator details",
+    "delivery_title": "Delivery and payment",
+    "returns_title": "Cancellation and returns"
   }
 }
