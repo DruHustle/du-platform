@@ -37,30 +37,6 @@ const copy = {
     sn: "Tibatei: info@diasporaunlocked.com",
     nd: "Xhumanani lathi: info@diasporaunlocked.com",
   },
-  stock_saved_subject: {
-    en: "Stock alert saved: {{product}}",
-    de: "Warenbenachrichtigung gespeichert: {{product}}",
-    sn: "Chiziviso chezviripo chachengetwa: {{product}}",
-    nd: "Isaziso sempahla sigciniwe: {{product}}",
-  },
-  stock_saved: {
-    en: "Your stock alert for {{product}} has been saved. We will email you when stock is available.",
-    de: "Ihre Benachrichtigung für {{product}} wurde gespeichert. Wir informieren Sie per E-Mail, sobald der Artikel verfügbar ist.",
-    sn: "Chiziviso chenyu che{{product}} chachengetwa. Tichakutumirai imeri kana zvavepo.",
-    nd: "Isaziso senu se-{{product}} sigciniwe. Sizalithumelela i-imeyili nxa sekukhona.",
-  },
-  stock_subject: {
-    en: "{{product}} is back in stock",
-    de: "{{product}} ist wieder verfügbar",
-    sn: "{{product}} zvadzoka muchitoro",
-    nd: "{{product}} sekukhona esitolo",
-  },
-  stock_available: {
-    en: "{{product}} is now back in stock on the Zimbabwe Shop. Return to the shop to send an order request and confirm delivery and payment details.",
-    de: "{{product}} ist im Zimbabwe-Shop wieder verfügbar. Senden Sie im Shop eine Bestellanfrage und bestätigen Sie Liefer- und Zahlungsdetails.",
-    sn: "{{product}} zvadzoka muZimbabwe Shop. Dzokerai kuchitoro kuti mutumire chikumbiro cheodha uye musimbise kuendeswa nekubhadhara.",
-    nd: "{{product}} sekukhona eZimbabwe Shop. Buyelani esitolo ukuthumela isicelo se-oda liqinisekise ukudiliva lokubhadala.",
-  },
   confirm_subject: {
     en: "Confirm your Diaspora Unlocked subscription",
     de: "Ihre Anmeldung bei Diaspora Unlocked bestätigen",

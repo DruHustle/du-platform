@@ -40,6 +40,10 @@ async function load(env: NodeJS.ProcessEnv = process.env, now = Date.now()) {
     enforcement: mode === "observe" ? "report_only" : "enforced",
     commercialReady: mode === "pilot" && missing.length === 0,
     missing: Array.from(new Set(missing)),
+    approvedProductIds:
+      mode === "pilot" && missing.length === 0
+        ? approval!.approvedProductIds
+        : [],
     destinationCountries:
       mode === "pilot" && missing.length === 0
         ? approval!.destinationCountries.map(c => c.code)
@@ -56,12 +60,12 @@ export async function assertQuoteReadiness(
   currency: string
 ) {
   const { state, approval } = await load();
-  // Compatibility is deliberate. Deployment does not activate a new operating
-  // mode; the owner must separately approve/configure enforced prelaunch or pilot.
+  // Observe is explicit compatibility only. The production image deliberately
+  // defaults to enforced prelaunch; pilot still requires a valid approval record.
   if (state.mode === "observe") return state;
   if (!state.commercialReady || !approval)
     throw new ShopRequestError(
-      "New final quotes are paused until the commercial pilot readiness checks are approved. Existing requests and fulfilment remain recoverable.",
+      "New commercial requests and final quotes are paused until the commercial pilot readiness checks are approved. Existing requests and fulfilment remain recoverable.",
       409
     );
   const normalized = (value: string) =>
@@ -79,4 +83,13 @@ export async function assertQuoteReadiness(
       409
     );
   return state;
+}
+
+// Initial requests contain a converted planning estimate. EUR is required for
+// the final quote, not the customer's display preference. Scope still applies.
+export async function assertOrderRequestReadiness(
+  country: string,
+  productIds: number[]
+) {
+  return assertQuoteReadiness(country, productIds, "EUR");
 }

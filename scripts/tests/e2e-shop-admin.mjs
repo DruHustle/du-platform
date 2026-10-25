@@ -1,7 +1,8 @@
+import { createShopApprovalFixture } from "./shop-readiness-fixture.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 import mysql from "mysql2/promise";
 import { chromium, webkit } from "playwright";
 
@@ -49,6 +50,7 @@ const waitFor = async predicate => {
     await new Promise(done => setTimeout(done, 100));
   }
 };
+const approval = await createShopApprovalFixture([1]);
 const startServer = async () => {
   logs = "";
   child = spawn(
@@ -57,6 +59,7 @@ const startServer = async () => {
     {
       env: {
         ...environment,
+        ...approval.env,
         NODE_ENV: "test",
         DATABASE_URL: databaseUrl,
         JWT_SECRET: "local-shop-admin-test-only-no-real-credential",
@@ -315,6 +318,14 @@ try {
   pass("duplicate URL keys and unsafe or invalid product fields fail safely");
   // Repeat real guest checkout with each currency; no provider credentials are
   // inherited and receipt emails use an isolated provider mock.
+  const approved = JSON.parse(
+    await readFile(approval.env.SHOP_PILOT_APPROVAL_FILE, "utf8")
+  );
+  approved.approvedProductIds = [product.id];
+  await writeFile(
+    approval.env.SHOP_PILOT_APPROVAL_FILE,
+    JSON.stringify(approved)
+  );
   for (const [currency, unitPrice, shipping] of [
     ["EUR", 525, 1200],
     ["USD", 588, 1345],
@@ -536,6 +547,7 @@ try {
   await browser?.close();
   await stopServer();
   await pool.end();
+  await approval.close();
   await writeFile(
     output + "/report.json",
     JSON.stringify({ checks, errors }, null, 2)

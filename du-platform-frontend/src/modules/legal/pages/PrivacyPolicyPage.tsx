@@ -38,6 +38,7 @@ export default function PrivacyPolicy() {
               {t(`pilot.${key}`)}
             </p>
           ))}
+          <p className="text-white/80">{t("product_interest.privacy_notes")}</p>
           <a href="/legal-notice" className="text-zim-gold underline">
             {t("pilot.operator_title")}
           </a>

@@ -15,7 +15,7 @@ const sections = [
     title: "Zimbabwean products",
     href: "/shop/products",
     description:
-      "Browse food, drinks, crafts and supporter apparel. Add available products to a basket and send an assisted order request. The shop checks availability and your delivery destination before issuing a final quote; no payment is taken on the website.",
+      "Browse food, drinks, crafts and supporter apparel. Register interest for a one-time availability alert — no order, reservation or payment. Confirm your email separately from the newsletter. Sales are not open yet.",
   },
   {
     title: "Travel research",
@@ -143,9 +143,9 @@ export function PublicPagePreview({
             accepting a quote.
           </p>
           <a
-            href={`/shop/products?product=${encodeURIComponent(product.slug)}`}
+            href={`/shop/product/${encodeURIComponent(product.slug)}#interest`}
           >
-            View in the catalogue
+            Register interest — no order or payment
           </a>
         </section>
       )}

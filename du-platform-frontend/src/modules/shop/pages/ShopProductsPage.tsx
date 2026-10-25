@@ -1,3 +1,5 @@
+import ProductInterest from "../components/ProductInterest";
+import { canRequestProduct } from "../lib/useShopCatalog";
 import { Textarea } from "@/components/ui/textarea";
 import { getCookieConsent } from "@/lib/cookieConsent";
 import { trackShopFunnel } from "../lib/shopFunnel";
@@ -17,7 +19,6 @@ import {
   ShieldCheck,
   Loader2,
   MessageCircle,
-  Mail,
   Package,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -32,14 +33,6 @@ import QuantityControl from "../components/QuantityControl";
 import CatalogNotice from "../components/CatalogNotice";
 import { formatShopMoney as formatMoney } from "../lib/formatShopMoney";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
@@ -127,6 +120,7 @@ export default function ShopProducts() {
     products: allProducts,
     status: catalogStatus,
     refresh: refreshCatalog,
+    readiness,
   } = useShopCatalog();
   const {
     cart,
@@ -154,14 +148,6 @@ export default function ShopProducts() {
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [order, setOrder] = useState<PlacedOrder | null>(readOrderReceipt);
-  const [notifyState, setNotifyState] = useState<
-    Record<number, "idle" | "saving" | "saved">
-  >({});
-  const [notifyMessage, setNotifyMessage] = useState("");
-  const [notifyDialogProduct, setNotifyDialogProduct] =
-    useState<ShopProduct | null>(null);
-  const [notifyEmailInput, setNotifyEmailInput] = useState("");
-  const [notifyEmailError, setNotifyEmailError] = useState("");
   const mobileView =
     new URLSearchParams(search).get("cart") === "1" ? "checkout" : "products";
   const checkoutScrollRef = useCheckoutPanelHeight(mobileView);
@@ -205,7 +191,7 @@ export default function ShopProducts() {
     if (!targetProduct) return;
 
     processedAddToCartQueryRef.current = location;
-    if (targetProduct.stock_qty <= 0) {
+    if (!canRequestProduct(readiness, targetProduct)) {
       toast.error(
         t("shop.products.stock.out_message", {
           defaultValue:
@@ -270,7 +256,7 @@ export default function ShopProducts() {
         return (
           (category === "all" || normalized === category) &&
           matchesShopSegment(product, segment) &&
-          (!availableOnly || product.stock_qty > 0) &&
+          (!availableOnly || canRequestProduct(readiness, product)) &&
           (!selectedProduct || product.slug === selectedProduct)
         );
       }),
@@ -317,6 +303,15 @@ export default function ShopProducts() {
     shopProductDescription(product, (key, fallback) =>
       t(key, { defaultValue: fallback })
     );
+
+  const invalidBasket =
+    cartRows.length !== cart.length ||
+    cartRows.some(row => row.item.quantity > row.product.stock_qty);
+  const canCheckout =
+    catalogStatus === "ready" &&
+    cart.length > 0 &&
+    !invalidBasket &&
+    cartRows.every(row => canRequestProduct(readiness, row.product));
 
   const subtotalCents = cartRows.reduce((sum, row) => sum + row.lineTotal, 0);
   const baseSubtotalCents = cartRows.reduce(
@@ -410,6 +405,7 @@ export default function ShopProducts() {
 
   const addToCart = (product: ShopProduct) => {
     if (
+      canRequestProduct(readiness, product) &&
       catalogStatus === "ready" &&
       addToSharedCart(product.id, product.stock_qty)
     ) {
@@ -417,73 +413,8 @@ export default function ShopProducts() {
     }
   };
 
-  const openNotifyDialog = (product: ShopProduct) => {
-    if (notifyState[product.id] === "saving") return;
-    setNotifyDialogProduct(product);
-    setNotifyEmailInput(String(customerEmail ?? "").trim());
-    setNotifyEmailError("");
-  };
-
-  const submitNotifyRequest = async () => {
-    if (!notifyDialogProduct) return;
-
-    const email = String(notifyEmailInput ?? "")
-      .trim()
-      .toLowerCase();
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!validEmail) {
-      setNotifyEmailError(
-        t("shop.products.notify.invalid_email", {
-          defaultValue: "Please enter a valid email address.",
-        })
-      );
-      return;
-    }
-
-    setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "saving" }));
-    setNotifyEmailError("");
-    setNotifyMessage("");
-    try {
-      const { data } = await api.post("/shop/restock-notifications", {
-        language: customerLanguage(i18n.resolvedLanguage ?? i18n.language),
-        productId: notifyDialogProduct.id,
-        productSlug: notifyDialogProduct.slug,
-        productName: notifyDialogProduct.name,
-        email,
-      });
-      const message = String(
-        data?.message ??
-          t("shop.products.notify.saved", {
-            defaultValue:
-              "Stock alert saved. We will email you when this product returns.",
-          })
-      );
-      setNotifyMessage(message);
-      setCustomerEmail(email);
-      setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "saved" }));
-      setNotifyDialogProduct(null);
-      toast.success(t("shop.products.notify.toast_title"), {
-        description: t("shop.products.notify.toast_detail", {
-          name: notifyDialogProduct.name,
-        }),
-        duration: 4000,
-      });
-    } catch (error: any) {
-      setNotifyEmailError(
-        String(
-          error?.response?.data?.message ??
-            t("shop.products.notify.failed", {
-              defaultValue:
-                "We could not save your stock alert. Please try again.",
-            })
-        )
-      );
-      setNotifyState(prev => ({ ...prev, [notifyDialogProduct.id]: "idle" }));
-    }
-  };
-
   const placeOrder = async () => {
-    if (submittingRef.current) return;
+    if (submittingRef.current || !canCheckout) return;
     setCheckoutError("");
     if (cartRows.length === 0) {
       setCheckoutError(
@@ -748,12 +679,11 @@ export default function ShopProducts() {
                             })}
                           </p>
                           <p className="text-white/45 text-xs mt-1">
-                            {category !== "all" ||
-                            segment ||
-                            availableOnly ||
-                            selectedProduct
-                              ? t("shop.products.filter_hint")
-                              : t("shop.products.empty_hint")}
+                            {availableOnly
+                              ? t("product_interest.available_empty")
+                              : category !== "all" || segment || selectedProduct
+                                ? t("shop.products.filter_hint")
+                                : t("shop.products.empty_hint")}
                           </p>
                         </div>
                         {(category !== "all" ||
@@ -786,29 +716,6 @@ export default function ShopProducts() {
                         onAdd={() => addToCart(product)}
                         onRemove={() => removeOne(product.id)}
                         description={getLocalizedProductDescription(product)}
-                        footer={
-                          catalogStatus === "ready" &&
-                          product.stock_qty <= 0 ? (
-                            <Button
-                              type="button"
-                              disabled={notifyState[product.id] === "saving"}
-                              onClick={() => openNotifyDialog(product)}
-                              className="h-auto min-h-11 w-full whitespace-normal rounded-full border border-white/20 bg-transparent px-2 py-2 text-xs font-medium text-white hover:bg-white/10"
-                            >
-                              {notifyState[product.id] === "saving"
-                                ? t("shop.products.notify.saving", {
-                                    defaultValue: "Saving...",
-                                  })
-                                : notifyState[product.id] === "saved"
-                                  ? t("shop.products.notify.saved_short", {
-                                      defaultValue: "Notify Saved",
-                                    })
-                                  : t("shop.products.notify.cta", {
-                                      defaultValue: "Notify Me",
-                                    })}
-                            </Button>
-                          ) : undefined
-                        }
                       />
                     ))}
                   </div>
@@ -859,6 +766,11 @@ export default function ShopProducts() {
                     </div>
 
                     {!receiptOnly && <PilotReadinessNotice />}
+                    {!receiptOnly && invalidBasket && (
+                      <p role="alert" className="mb-4 text-sm text-amber-200">
+                        {t("product_interest.saved_notice")}
+                      </p>
+                    )}
                     <p className="mb-4 text-xs leading-5 text-slate-400">
                       {t("shop.currency.note")}
                     </p>
@@ -908,10 +820,12 @@ export default function ShopProducts() {
                           )}
                         {cartRows.length === 0 ? (
                           <p className="cart-empty text-slate-300">
-                            {t("shop.products.cart.empty", {
-                              defaultValue:
-                                "Your cart is empty. Add products to start an order request.",
-                            })}
+                            {cart.length > 0
+                              ? t("product_interest.saved_notice")
+                              : t("shop.products.cart.empty", {
+                                  defaultValue:
+                                    "Your cart is empty. Add products to start an order request.",
+                                })}
                           </p>
                         ) : (
                           <div className="space-y-1.5">
@@ -949,12 +863,20 @@ export default function ShopProducts() {
                                       </button>
                                     </p>
                                   )}
+                                {!canRequestProduct(readiness, row.product) && (
+                                  <div className="my-3">
+                                    <ProductInterest product={row.product} />
+                                  </div>
+                                )}
                                 <div className="shop-cart-row-controls">
                                   <QuantityControl
                                     name={row.product.name}
                                     quantity={row.item.quantity}
                                     limit={row.product.stock_qty}
-                                    disabled={catalogStatus !== "ready"}
+                                    disabled={
+                                      catalogStatus !== "ready" ||
+                                      !canRequestProduct(readiness, row.product)
+                                    }
                                     onAdd={() => addToCart(row.product)}
                                     onRemove={() => removeOne(row.product.id)}
                                   />
@@ -967,36 +889,38 @@ export default function ShopProducts() {
                           </div>
                         )}
 
-                        <div className="cart-totals mt-5 border-t border-white/10 pt-4 text-slate-300 space-y-2">
-                          <div className="flex justify-between">
-                            <span>
-                              {t("shop.products.totals.subtotal", {
-                                defaultValue: "Subtotal",
-                              })}
-                            </span>
-                            <span>{money(subtotalCents)}</span>
+                        {canCheckout && (
+                          <div className="cart-totals mt-5 border-t border-white/10 pt-4 text-slate-300 space-y-2">
+                            <div className="flex justify-between">
+                              <span>
+                                {t("shop.products.totals.subtotal", {
+                                  defaultValue: "Subtotal",
+                                })}
+                              </span>
+                              <span>{money(subtotalCents)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>
+                                {t("shop.products.totals.shipping", {
+                                  defaultValue: "Delivery allowance (estimate)",
+                                })}
+                              </span>
+                              <span>{money(shippingCents)}</span>
+                            </div>
+                            <div className="flex justify-between text-white font-black text-sm">
+                              <span>
+                                {t("shop.products.totals.total", {
+                                  defaultValue: "Estimated total",
+                                })}
+                              </span>
+                              <span>{money(totalCents)}</span>
+                            </div>
                           </div>
-                          <div className="flex justify-between">
-                            <span>
-                              {t("shop.products.totals.shipping", {
-                                defaultValue: "Delivery allowance (estimate)",
-                              })}
-                            </span>
-                            <span>{money(shippingCents)}</span>
-                          </div>
-                          <div className="flex justify-between text-white font-black text-sm">
-                            <span>
-                              {t("shop.products.totals.total", {
-                                defaultValue: "Estimated total",
-                              })}
-                            </span>
-                            <span>{money(totalCents)}</span>
-                          </div>
-                        </div>
+                        )}
                       </>
                     )}
                     <div className="mt-3 border-t border-white/10 pt-2.5">
-                      {!receiptOnly && (
+                      {!receiptOnly && canCheckout && (
                         <>
                           <h3 className="text-xs font-black uppercase tracking-[0.14em] text-zim-gold mb-1.5">
                             {isAuthenticated
@@ -1298,17 +1222,13 @@ export default function ShopProducts() {
                           {checkoutError}
                         </p>
                       ) : null}
-                      {notifyMessage ? (
-                        <p role="status" className="mt-2 text-sm text-white/75">
-                          {notifyMessage}
-                        </p>
-                      ) : null}
 
-                      {(!order || cart.length > 0) && (
+                      {(!order || cart.length > 0) && canCheckout && (
                         <>
                           <Button
                             type="submit"
                             disabled={
+                              !canCheckout ||
                               placingOrder ||
                               catalogStatus !== "ready" ||
                               cart.length === 0
@@ -1440,34 +1360,45 @@ export default function ShopProducts() {
                         </div>
                       )}
 
-                      <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-white/70">
-                        <ShieldCheck className="h-3.5 w-3.5 text-zim-gold" />
-                        <span>
-                          {isAuthenticated
-                            ? t("shop.products.notes.logged_in_checkout", {
-                                defaultValue:
-                                  "Your request uses the contact details above.",
-                              })
-                            : t("shop.products.notes.guest_checkout", {
-                                defaultValue:
-                                  "No account needed to send an order request.",
-                              })}
-                        </span>
-                      </div>
-                      <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/70">
-                        <CreditCard className="h-3.5 w-3.5 text-zim-gold" />
-                        <span>
-                          {supportsDummyGateway
-                            ? t("shop.products.notes.supported_methods_dev", {
-                                defaultValue:
-                                  "Supported methods: assisted checkout in production, plus dummy payment simulation in dev/test.",
-                              })
-                            : t("shop.products.notes.supported_methods", {
-                                defaultValue:
-                                  "No payment is taken here. DHL service availability and the final delivery cost are confirmed for your destination. The allowance shown is a planning estimate, not a DHL quote.",
-                              })}
-                        </span>
-                      </div>
+                      {canCheckout || receiptOnly ? (
+                        <>
+                          <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-white/70">
+                            <ShieldCheck className="h-3.5 w-3.5 text-zim-gold" />
+                            <span>
+                              {isAuthenticated
+                                ? t("shop.products.notes.logged_in_checkout", {
+                                    defaultValue:
+                                      "Your request uses the contact details above.",
+                                  })
+                                : t("shop.products.notes.guest_checkout", {
+                                    defaultValue:
+                                      "No account needed to send an order request.",
+                                  })}
+                            </span>
+                          </div>
+                          <div className="mt-1 flex items-center gap-1.5 text-[10px] text-white/70">
+                            <CreditCard className="h-3.5 w-3.5 text-zim-gold" />
+                            <span>
+                              {supportsDummyGateway
+                                ? t(
+                                    "shop.products.notes.supported_methods_dev",
+                                    {
+                                      defaultValue:
+                                        "Supported methods: assisted checkout in production, plus dummy payment simulation in dev/test.",
+                                    }
+                                  )
+                                : t("shop.products.notes.supported_methods", {
+                                    defaultValue:
+                                      "No payment is taken here. DHL service availability and the final delivery cost are confirmed for your destination. The allowance shown is a planning estimate, not a DHL quote.",
+                                  })}
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <p className="mt-4 text-xs leading-5 text-slate-400">
+                          {t("product_interest.scope")}
+                        </p>
+                      )}
                     </div>
                   </form>
                 </div>
@@ -1476,84 +1407,6 @@ export default function ShopProducts() {
           </div>
         </div>
       </section>
-      <Dialog
-        open={Boolean(notifyDialogProduct)}
-        onOpenChange={open => {
-          if (!open) {
-            setNotifyDialogProduct(null);
-            setNotifyEmailError("");
-          }
-        }}
-      >
-        <DialogContent className="border-white/10 bg-slate-950 text-white sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-white">
-              {t("shop.products.notify.dialog_title", {
-                defaultValue: "Notify me when it is back in stock",
-              })}
-            </DialogTitle>
-            <DialogDescription className="text-white/70">
-              {notifyDialogProduct
-                ? `${notifyDialogProduct.name} ${t("shop.products.notify.dialog_description", { defaultValue: "is currently unavailable. Enter your email address and we will let you know when stock returns." })}`
-                : ""}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-2">
-            <Label
-              htmlFor="restock-email"
-              className="text-xs uppercase tracking-[0.14em] text-white/70"
-            >
-              {t("shop.products.fields.email_address", {
-                defaultValue: "Email Address",
-              })}
-            </Label>
-            <div className="relative">
-              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
-              <Input
-                id="restock-email"
-                type="email"
-                value={notifyEmailInput}
-                onChange={event => setNotifyEmailInput(event.target.value)}
-                placeholder={t("shop.products.fields.email_address", {
-                  defaultValue: "Email Address",
-                })}
-                className="border-white/20 bg-white/[0.04] pl-9 text-white placeholder:text-white/60"
-              />
-            </div>
-            {notifyEmailError ? (
-              <p className="text-sm text-rose-300" role="alert">
-                {notifyEmailError}
-              </p>
-            ) : null}
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setNotifyDialogProduct(null)}
-              className="border-white/20 bg-transparent text-white hover:bg-white hover:text-black"
-            >
-              {t("cancel", { defaultValue: "Cancel" })}
-            </Button>
-            <Button
-              type="button"
-              onClick={submitNotifyRequest}
-              disabled={
-                !notifyDialogProduct ||
-                notifyState[notifyDialogProduct.id] === "saving"
-              }
-              className="bg-zim-gold text-black hover:bg-white"
-            >
-              {notifyDialogProduct &&
-              notifyState[notifyDialogProduct.id] === "saving"
-                ? t("shop.products.notify.saving", {
-                    defaultValue: "Saving...",
-                  })
-                : t("shop.products.notify.cta", { defaultValue: "Notify Me" })}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
       {mobileView === "products" && (
         <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
           <div className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3">

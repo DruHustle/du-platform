@@ -1,3 +1,4 @@
+import ProductInterestAdmin from "../components/ProductInterestAdmin";
 import ResearchAdmin from "../components/ResearchAdmin";
 import ProductDetailsAdmin from "../components/ProductDetailsAdmin";
 import OrderAdmin from "../components/OrderAdmin";
@@ -478,6 +479,7 @@ export default function AdminDashboard() {
 
           {!loading && activeTab === "notify" ? (
             <div className="grid gap-4">
+              <ProductInterestAdmin />
               <form
                 onSubmit={saveNotificationSettings}
                 className="surface-card p-7 space-y-3"

@@ -34,7 +34,7 @@
       "who_label": "Tiri Vanani",
       "who_content": "Diaspora Unlocked inobatanidza vanhu vari muZimbabwe nevari kunze nezvigadzirwa, ruzivo rwekufamba, pfungwa dzebhizinesi nerubatsiro rweAI.",
       "what_label": "Zvatinoita",
-      "what_content": "Zadza tswanda utumire chikumbiro cheodha, tsvakurudza pfungwa yebhizinesi, gadzira hurongwa hwerwendo kana kubvunza Onesa. Sarudza danho rako rinotevera muzvikamu zviripo."
+      "what_content": "Tarisa zvigadzirwa uye ratidza kufarira, tsvakurudza zano rebhizimisi, ronga rwendo kana kubvunza Onesa. Kufarira chigadzirwa hakusi kuodha kana kubhadhara."
     },
     "newsletter": {
       "confirmation_sent": "Tarisa email yako kuti uwane chinongedzo chekusimbisa. Kana wakatosimbisa, uri parunyoro.",
@@ -180,7 +180,7 @@
       "shop": {
         "title": "Chitoro",
         "description": "Tsvaga zvekudya, mabasa emaoko nembatya dzevatsigiri zveZimbabwe zvekumba kana zvipo.",
-        "detail": "Isa zvaunoda mudengu wotumira chikumbiro cheodha. Tanga wasimbisa kuwanikwa, kutumirwa nekubhadhara nechikwata.",
+        "detail": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa.",
         "stats": "Ona zvigadzirwa",
         "image_alt": "Mumvuri wetwiza nemiti yemuunga pakunyura kwezuva"
       },
@@ -1304,7 +1304,7 @@
   "shop": {
     "collections": "Zvirongwa",
     "collections_title": "Zvaunofarira zveZimbabwe panzvimbo imwe",
-    "collections_description": "Pokutangira kuzadza tswanda yako. Wedzera chinhu chiri kuratidzwa kana kuvhura chikamu chacho kuti uone zvimwe.",
+    "collections_description": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa.",
     "explore_shop": "Ona zvigadzirwa zvese",
     "trade_support": "Ongorora Rutsigiro rweTrade",
     "export_readiness": "Gwaro reKugadzirira Export",
@@ -1342,7 +1342,7 @@
       "oils_spreads": {
         "title": "Kubikira Mafuta & Kupararira",
         "description": "Mazuva ese ekubikisa mafuta uye pantry zvinoparadzira zvakakosha.",
-        "detail": "Inoshanda pantry yakakosha inotsigira kudzokorora zvinodiwa zvekubikira, kumusoro-kumusoro maodha, uye nyore kuvaka tswanda kwechikafu chemazuva ese."
+        "detail": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa."
       },
       "proteins": {
         "title": "Mapuroteni nezvekudya",
@@ -1362,7 +1362,7 @@
     },
     "products": {
       "title": "Rondedzero yezvigadzirwa",
-      "subtitle": "Unganidzai zvamunoda mutumire chikumbiro cheodha. Musati mabhadhara, timu inosimbisa zviripo, kuendeswa neDHL kwamuri nemari yekupedzisira.",
+      "subtitle": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa.",
       "back_to_shop": "Dzokerai kuchitoro",
       "default_country": "Jerimani",
       "filters": {
@@ -1407,7 +1407,7 @@
       },
       "stock": {
         "in": "Mudura",
-        "out": "Kupererwa nedura",
+        "out": "Hachigoni kuodhwa parizvino",
         "out_message": "Hachipo parizvino. Siya email yako kuti uziviswe kana chawanikwa."
       },
       "actions": {
@@ -1423,7 +1423,7 @@
       },
       "cart": {
         "title": "Dengu nechikumbiro cheodha",
-        "empty": "Dengu rako harina chinhu. Isa zvigadzirwa kuti utange chikumbiro cheodha.",
+        "empty": "Bhasikiti rako harina chinhu. Tarisa zvigadzirwa mukatalogi.",
         "update_stock": "Chinja huwandu huenderane nezviripo",
         "remove_unavailable": "Bvisa zvinhu zvisingawanikwi",
         "unavailable": "Zvimwe zvinhu zvakachengetwa hazvichawanikwi. Zvibvise kuti uenderere mberi.",
@@ -1498,7 +1498,8 @@
         "empty_cart": "Ngoro yako haina chinhu.",
         "complete_fields": "Zadza mashoko ako nekwekutumira kuti utumire chikumbiro.",
         "unable_place_order": "Chikumbiro hachina kuchengetwa. Edza zvakare kana kutibata paWhatsApp.",
-        "unable_confirm_payment": "Hatina kutsigira kubhadhara."
+        "unable_confirm_payment": "Hatina kutsigira kubhadhara.",
+        "availability_changed": "Bhasikiti rako rakachengetwa. Zvimwe zvinhu hazvipo kana huwandu hwapfuura huripo. Zviongorore kana kuzvibvisa usati wakumbira odha."
       },
       "whatsapp": {
         "intro": "Mhoroi, ndinoda kukumbira zvigadzirwa izvi paDiaspora Unlocked.",
@@ -1508,18 +1509,18 @@
         "each": "chimwe nechimwe"
       },
       "notify": {
-        "cta": "Ndizivisei",
+        "cta": "Ratidza kufarira",
         "saving": "Kuchengeta...",
-        "saved": "Chikumbiro chenhau dzezvinhu chachengetwa. Tichakutumira email kana chigadzirwa ichi chadzoka.",
+        "saved": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
         "saved_short": "Chikumbiro chenhau chachengetwa",
-        "dialog_title": "Ndizivisei kana chadzoka mustock",
-        "dialog_description": "hachisi kuwanikwa parizvino. Isa email address yako uye tichakuzivisai kana stock yadzoka.",
-        "enter_email_prompt": "Isa yako email kero kuti uziviswe kana chigadzirwa ichi chadzoka mustock:",
+        "dialog_title": "Ratidza kufarira",
+        "dialog_description": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
+        "enter_email_prompt": "Ratidza kufarira",
         "invalid_email": "Ndokumbira uise kero yeimeri inoshanda.",
         "login_required": "Ndokumbira upinde mukati kuti uvhure zviziviso zvestock.",
         "failed": "Hatina kukwanisa kuchengetedza chikumbiro chako chenhau dzezvinhu. Edza zvakare.",
-        "toast_title": "Chikumbiro chekuziviswa chachengetwa",
-        "toast_detail": "Tichakutumirai email kana {{name}} yava kuwanikwa zvakare."
+        "toast_title": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
+        "toast_detail": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau."
       },
       "filter_hint": "Edza mamwe masefa kuti uwane zvigadzirwa.",
       "empty_hint": "Hapasati pave nezvigadzirwa zvakanyorwa pano.",
@@ -1532,7 +1533,7 @@
       "eyebrow": "Tenga zveZimbabwe",
       "title": "Chikafu, mabasa emaoko nezvimwe.",
       "highlight": "Kubatana neZimbabwe.",
-      "description": "Tsvaga zvinonaka zvaunoziva, zvipo nembatya dzevatsigiri zvevanhu vari muZimbabwe nekunze. Isa zvinhu mutswanda utumire chikumbiro cheodha.",
+      "description": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa.",
       "principle": "Kuendeswa kwezvinhu kunorongwa neDHL. Tiudzei kwamunoda kuendeserwa; timu inosimbisa kuwanikwa kwebasa, mari yekupedzisira nemirayiridzo yekubhadhara musati mabhadhara.",
       "caption": "Chikafu · Mabasa emaoko · Mbatya dzevatsigiri",
       "collections_cta": "Ongorora zvikamu"
@@ -2073,10 +2074,39 @@
     "command_changed": "Chikumbiro chachinja. Ongorora mamiriro azvino usati waenderera.",
     "readiness_prelaunch": "Pasati patangwa — kugadzirira kutengesa hakusati kwasimbiswa",
     "readiness_limited": "Kuyedza kushoma muEurope",
-    "readiness_pending_note": "Maitiro ekutengesa nemashoko ezvigadzirwa achiri kupedziswa. Unogona kutumira mubvunzo. Simbisa chigadzirwa chaicho, zvibvumirano zvakanyorwa nekutumira usati wabvuma mutengo kana kubhadhara.",
+    "readiness_pending_note": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa. Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
     "readiness_pilot_note": "Nyika nezvigadzirwa zvakatenderwa pachena chete zviri mukuyedza. Chitoro chinosimbisa chigadzirwa, DHL nezvibvumirano pachikumbiro chimwe nechimwe.",
     "operator_details_title": "Mashoko emuridzi",
     "delivery_title": "Kutumira nekubhadhara",
     "returns_title": "Kukanzura nekudzorera"
+  },
+  "product_interest": {
+    "action": "Ratidza kufarira",
+    "scope": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
+    "email": "Kero yeemail",
+    "submit": "Nditumirei link yekusimbisa neemail",
+    "close": "Vhara",
+    "received": "Kana kusimbisa kuchidiwa, tichatumira link neemail. Tarisawo mu spam.",
+    "error": "Hatina kukwanisa kuchengeta chikumbiro. Edzazve.",
+    "invalid_email": "Isa kero yeemail yakarurama.",
+    "title": "Kufarira chigadzirwa",
+    "confirm_subject": "Simbisa kufarira chigadzirwa",
+    "confirm_body": "Simbisa kuti email iyi ndeyako kuti ugamuchire chiziviso chimwe chete kana chigadzirwa ichi chavepo.",
+    "expiry": "Link iyi inopera mumaawa 48. Rega email iyi kana usina kuita chikumbiro.",
+    "available_subject": "Chigadzirwa chavepo chekukumbira",
+    "available_body": "Chigadzirwa ichi chavepo chekukumbira odha inobatsirwa. Tarisa peji yechigadzirwa kuti uone huwandu nemitemo yazvino; chiziviso ichi hachikuchengeteri zvinhu.",
+    "cancel": "Kanzura chiziviso chechigadzirwa ichi",
+    "confirm": "Simbisa kufarira chigadzirwa",
+    "confirmed": "Email yasimbiswa. Tichatumira chiziviso chimwe kana chigadzirwa chabvumirwa kutengeswa uye chavepo. Kuvapo hakuna kuvimbiswa.",
+    "cancelled": "Chiziviso chechigadzirwa ichi chakanzurwa. Zvaunosarudza patsamba yenhau hazvina kuchinja.",
+    "invalid_link": "Link iyi haisi kushanda, yapera kana yakatoshandiswa. Kumbira imwe papeji yechigadzirwa.",
+    "updating": "Tiri kugadzirisa…",
+    "available_empty": "Hapana zvigadzirwa zvinogona kuodhwa parizvino. Tarisa katalogi uye ratidza kufarira pasina kuodha.",
+    "prelaunch": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa.",
+    "saved_notice": "Bhasikiti rako rakachengetwa. Zvimwe zvinhu hazvipo kana huwandu hwapfuura huripo. Zviongorore kana kuzvibvisa usati wakumbira odha.",
+    "remove_unavailable": "Bvisa zvinhu zvisipo",
+    "price_note": "Mitengo ndeyekuronga. Tarisa ruzivo rwechigadzirwa rwazvino usati wakumbira odha.",
+    "view_product": "Ona chigadzirwa",
+    "privacy_notes": "Zviziviso zvechigadzirwa zvinochengeta email yako, chigadzirwa chawasarudza, mvumo, mamiriro ekusimbisa kana kukanzura uye nhoroondo yekutumira muMySQL. Zvakasiyana netsamba yenhau nekuongorora kwekusarudza. Kanzura nelink yeemail yechigadzirwa; kumbira kugadzirisa kana kudzima pa info@diasporaunlocked.com."
   }
 }

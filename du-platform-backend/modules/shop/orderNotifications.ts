@@ -1,3 +1,4 @@
+import { outboundMessagesPaused } from "../../shared/outboundMessages";
 import { ORDER_STATUS_PAGE_MARKER } from "../../../shared/orderStatusProtocol";
 import nextCopy from "../../../shared/orderNextCopy.json";
 import emailLabels from "../../../shared/orderEmailLabels.json";
@@ -120,6 +121,7 @@ export async function processOrderNotifications(
     ? customerStatusFrontendReady
     : null
 ) {
+  if (outboundMessagesPaused()) return;
   const c = await pool.getConnection();
   let locked = false;
   let frontendAvailable: boolean | undefined;
@@ -228,7 +230,7 @@ export function startOrderNotificationWorker(pool: Pool | null = db) {
   if (!pool) return () => {};
   let running = false;
   const tick = async () => {
-    if (running) return;
+    if (running || outboundMessagesPaused()) return;
     running = true;
     try {
       await processOrderNotifications(pool);

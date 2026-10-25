@@ -1,0 +1,201 @@
+{
+  "baseline": "4f80906f49d9bb7aad1f930887d87ce0b6c66cf7",
+  "updated": "prelaunch-interest working tree",
+  "date": "2026-10-25T21:36:00.224Z",
+  "method": {
+    "browser": "Playwright bundled Chromium",
+    "viewport": [390, 844],
+    "cpuThrottle": 4,
+    "latencyMs": 100,
+    "downloadBytesPerSecond": 200000,
+    "uploadBytesPerSecond": 100000,
+    "samplesPerRoute": 3,
+    "observationMsAfterLoad": 6500,
+    "cache": "cold contexts; normal within-visit caching; no request interception",
+    "order": "paired before/after visits per route and repetition",
+    "servers": "local HTTPS with identical gzip/cache/CSP and saved public API fixtures",
+    "limits": "Local lab only; not Lighthouse or field Core Web Vitals. Run without concurrent builds/browser suites."
+  },
+  "samples": [
+    {
+      "variant": "before",
+      "path": "/",
+      "run": 1,
+      "lcp": 3552,
+      "lcpUrl": "/images/brand/diaspora_unlocked_336.webp",
+      "fcp": 912,
+      "domContentLoaded": 3303,
+      "requests": 12
+    },
+    {
+      "variant": "after",
+      "path": "/",
+      "run": 1,
+      "lcp": 3356,
+      "lcpUrl": "/images/brand/diaspora_unlocked_336.webp",
+      "fcp": 788,
+      "domContentLoaded": 3202,
+      "requests": 12
+    },
+    {
+      "variant": "before",
+      "path": "/",
+      "run": 2,
+      "lcp": 3336,
+      "lcpUrl": "/images/brand/diaspora_unlocked_336.webp",
+      "fcp": 776,
+      "domContentLoaded": 3180,
+      "requests": 12
+    },
+    {
+      "variant": "after",
+      "path": "/",
+      "run": 2,
+      "lcp": 3444,
+      "lcpUrl": "/images/brand/diaspora_unlocked_336.webp",
+      "fcp": 792,
+      "domContentLoaded": 3224,
+      "requests": 12
+    },
+    {
+      "variant": "before",
+      "path": "/",
+      "run": 3,
+      "lcp": 3376,
+      "lcpUrl": "/images/brand/diaspora_unlocked_336.webp",
+      "fcp": 780,
+      "domContentLoaded": 3203,
+      "requests": 12
+    },
+    {
+      "variant": "after",
+      "path": "/",
+      "run": 3,
+      "lcp": 3492,
+      "lcpUrl": "/images/brand/diaspora_unlocked_336.webp",
+      "fcp": 824,
+      "domContentLoaded": 3241,
+      "requests": 12
+    },
+    {
+      "variant": "before",
+      "path": "/shop",
+      "run": 1,
+      "lcp": 2900,
+      "lcpUrl": "/images/pages/shop/crafts_binga_baskets_01.jpg",
+      "fcp": 684,
+      "domContentLoaded": 2584,
+      "requests": 14
+    },
+    {
+      "variant": "after",
+      "path": "/shop",
+      "run": 1,
+      "lcp": 2900,
+      "lcpUrl": "/images/pages/shop/crafts_binga_baskets_01.jpg",
+      "fcp": 696,
+      "domContentLoaded": 2595,
+      "requests": 14
+    },
+    {
+      "variant": "before",
+      "path": "/shop",
+      "run": 2,
+      "lcp": 2900,
+      "lcpUrl": "/images/pages/shop/crafts_binga_baskets_01.jpg",
+      "fcp": 672,
+      "domContentLoaded": 2584,
+      "requests": 14
+    },
+    {
+      "variant": "after",
+      "path": "/shop",
+      "run": 2,
+      "lcp": 2980,
+      "lcpUrl": "/images/pages/shop/crafts_binga_baskets_01.jpg",
+      "fcp": 672,
+      "domContentLoaded": 2611,
+      "requests": 14
+    },
+    {
+      "variant": "before",
+      "path": "/shop",
+      "run": 3,
+      "lcp": 2796,
+      "lcpUrl": "/images/pages/shop/crafts_binga_baskets_01.jpg",
+      "fcp": 688,
+      "domContentLoaded": 2569,
+      "requests": 14
+    },
+    {
+      "variant": "after",
+      "path": "/shop",
+      "run": 3,
+      "lcp": 2836,
+      "lcpUrl": "/images/pages/shop/crafts_binga_baskets_01.jpg",
+      "fcp": 660,
+      "domContentLoaded": 2560,
+      "requests": 14
+    },
+    {
+      "variant": "before",
+      "path": "/tourism",
+      "run": 1,
+      "lcp": 3328,
+      "lcpUrl": "/images/pages/tourism/victoria_falls.webp",
+      "fcp": 672,
+      "domContentLoaded": 3073,
+      "requests": 11
+    },
+    {
+      "variant": "after",
+      "path": "/tourism",
+      "run": 1,
+      "lcp": 3272,
+      "lcpUrl": "/images/pages/tourism/victoria_falls.webp",
+      "fcp": 664,
+      "domContentLoaded": 3062,
+      "requests": 11
+    },
+    {
+      "variant": "before",
+      "path": "/tourism",
+      "run": 2,
+      "lcp": 3228,
+      "lcpUrl": "/images/pages/tourism/victoria_falls.webp",
+      "fcp": 664,
+      "domContentLoaded": 3038,
+      "requests": 11
+    },
+    {
+      "variant": "after",
+      "path": "/tourism",
+      "run": 2,
+      "lcp": 3244,
+      "lcpUrl": "/images/pages/tourism/victoria_falls.webp",
+      "fcp": 656,
+      "domContentLoaded": 3054,
+      "requests": 11
+    },
+    {
+      "variant": "before",
+      "path": "/tourism",
+      "run": 3,
+      "lcp": 3236,
+      "lcpUrl": "/images/pages/tourism/victoria_falls.webp",
+      "fcp": 664,
+      "domContentLoaded": 3050,
+      "requests": 11
+    },
+    {
+      "variant": "after",
+      "path": "/tourism",
+      "run": 3,
+      "lcp": 3264,
+      "lcpUrl": "/images/pages/tourism/victoria_falls.webp",
+      "fcp": 664,
+      "domContentLoaded": 3054,
+      "requests": 11
+    }
+  ]
+}

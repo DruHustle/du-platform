@@ -1,7 +1,8 @@
+import { createShopApprovalFixture } from "./shop-readiness-fixture.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 import mysql from "mysql2/promise";
 import { chromium, webkit } from "playwright";
 const databaseUrl = process.env.SHOP_TEST_DATABASE_URL;
@@ -23,12 +24,14 @@ const env = Object.fromEntries(
     .filter(key => process.env[key])
     .map(key => [key, process.env[key]])
 );
+const approval = await createShopApprovalFixture([1]);
 const child = spawn(
   process.execPath,
   ["--import", "tsx", "--input-type=module", "-e", serverCode],
   {
     env: {
       ...env,
+      ...approval.env,
       NODE_ENV: "test",
       DATABASE_URL: databaseUrl,
       JWT_SECRET: "local-pilot-only-no-real-credentials",
@@ -44,7 +47,8 @@ let logs = "",
   browser,
   ref,
   product,
-  adminId;
+  adminId,
+  interestId;
 const checks = [],
   errors = [],
   network = [];
@@ -105,6 +109,14 @@ try {
   );
   assert.equal(create.status, 201, JSON.stringify(create.body));
   product = create.body.data.row;
+  const fixture = JSON.parse(
+    await readFile(approval.env.SHOP_PILOT_APPROVAL_FILE, "utf8")
+  );
+  fixture.approvedProductIds = [product.id];
+  await writeFile(
+    approval.env.SHOP_PILOT_APPROVAL_FILE,
+    JSON.stringify(fixture)
+  );
   assert.equal(
     (
       await call(
@@ -410,6 +422,12 @@ try {
     path: output + "/customer-delivered-390.png",
     fullPage: true,
   });
+  assert(
+    await adminPage.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth + 1
+    ),
+    "Product-interest admin must fit a mobile viewport"
+  );
   await adminPage.screenshot({
     path: output + "/operator-delivered-390.png",
     fullPage: true,
@@ -479,6 +497,64 @@ try {
   pass(
     "Addressable product information displays verified fixture details and a checkout next step"
   );
+  const demandEmail = `interest-${Date.now()}@example.test`;
+  const demandPayload = {
+    productId: product.id,
+    productSlug: product.slug,
+    productName: product.name,
+    email: demandEmail,
+    language: "en",
+  };
+  const firstInterest = await call(
+    "/shop/restock-notifications",
+    "POST",
+    demandPayload
+  );
+  assert.equal(firstInterest.status, 200);
+  assert.deepEqual(
+    (await call("/shop/restock-notifications", "POST", demandPayload)).body,
+    firstInterest.body
+  );
+  const [[interestJob]] = await pool.query(
+    "SELECT id,interest_id,payload FROM newsletter_deliveries WHERE recipient=? AND kind='interest_confirm' ORDER BY id DESC LIMIT 1",
+    [demandEmail]
+  );
+  interestId = interestJob.interest_id;
+  const interestToken = JSON.parse(interestJob.payload).text.match(
+    /action=confirm&token=([a-f0-9]{48})/
+  )[1];
+  assert.equal(
+    (await call("/shop/interest/confirm", "POST", { token: interestToken }))
+      .status,
+    200
+  );
+  const demand = await call("/admin/product-interest", "GET", undefined, token);
+  const demandRow = demand.body.data.rows.find(
+    r => r.product_id === product.id
+  );
+  assert.equal(Number(demandRow.confirmed_unique), 1);
+  assert.equal(Number(demandRow.confirmed), 1);
+  await pool.execute(
+    "UPDATE newsletter_deliveries SET status='failed',attempts=5,error_message='Synthetic provider outage' WHERE id=?",
+    [interestJob.id]
+  );
+  await adminPage.getByRole("button", { name: /^Notify Me/ }).click();
+  await adminPage
+    .getByRole("heading", { name: "Product interest", exact: true })
+    .waitFor();
+  await adminPage
+    .getByText("Synthetic provider outage", { exact: false })
+    .waitFor();
+  assert(
+    await adminPage.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth + 1
+    ),
+    "Product-interest admin must fit a mobile viewport"
+  );
+  await adminPage.screenshot({ path: `${output}/product-interest-admin.png` });
+  pass(
+    "Protected product-interest workspace shows confirmed unique demand and failed delivery without duplicate registrations"
+  );
   await page.waitForLoadState("networkidle");
   assert.deepEqual(errors, []);
   assert.deepEqual(network, []);
@@ -513,6 +589,15 @@ try {
       await pool.execute("DELETE FROM shop_orders WHERE id=?", [row.id]);
     }
   }
+  if (interestId) {
+    await pool.execute(
+      "DELETE FROM newsletter_deliveries WHERE interest_id=?",
+      [interestId]
+    );
+    await pool.execute("DELETE FROM shop_restock_notifications WHERE id=?", [
+      interestId,
+    ]);
+  }
   if (product)
     await pool.execute("DELETE FROM shop_products WHERE id=?", [product.id]);
   if (adminId) {
@@ -524,6 +609,7 @@ try {
       .catch(() => {});
   }
   await pool.end();
+  await approval.close();
   if (child.exitCode === null) {
     const ended = once(child, "exit");
     child.kill("SIGTERM");

@@ -34,7 +34,7 @@
       "who_label": "Singobani",
       "who_content": "IDiaspora Unlocked ixhumanisa abantu abaseZimbabwe labangaphandle ngemikhiqizo, ulwazi lokuhamba, imibono yebhizimusi loncedo lweAI.",
       "what_label": "Esikwenzayo",
-      "what_content": "Gcwalisa ubhasikidi uthumele isicelo se-oda, cwaninga umbono webhizimusi, bhala uhlelo lohambo kumbe ubuze uOnesa. Khetha inyathelo lakho elilandelayo ezigabeni ezikhona."
+      "what_content": "Khangela imikhiqizo utshengise intshisekelo, cwaninga ibhizimusi, hlela uhambo kumbe ubuze u-Onesa. Intshisekelo yomkhiqizo ayisilo oda kumbe ukukhokha."
     },
     "newsletter": {
       "confirmation_sent": "Khangela i-imeyili yakho ukuze uthole isixhumanisi sokuqinisekisa. Nxa usuqinisekisile, ususohlwini.",
@@ -180,7 +180,7 @@
       "shop": {
         "title": "Thenga",
         "description": "Thola ukudla, imisebenzi yezandla lezigqoko zabalandeli zeZimbabwe zekhaya kumbe izipho.",
-        "detail": "Faka okufunayo enqoleni uthumele isicelo se-oda. Qala uqinisekise ukutholakala, ukudiliva lokubhadala leqembu.",
+        "detail": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa.",
         "stats": "Bona impahla",
         "image_alt": "Imithunzi yendlulamithi lezihlahla zomunga ekutshoneni kwelanga"
       },
@@ -1304,7 +1304,7 @@
   "shop": {
     "collections": "Amaqoqo (Collections)",
     "collections_title": "Okuthandayo kweZimbabwe endaweni eyodwa",
-    "collections_description": "Indawo yokuqala ukugcwalisa ubhasikidi wakho. Faka into eboniswayo kumbe uvule isigaba sayo ukuze ubone okunye.",
+    "collections_description": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa.",
     "explore_shop": "Bona zonke impahla",
     "trade_support": "Hlola Ukusekelwa KweTrade",
     "export_readiness": "Isiqondiso Sokulungela i-Export",
@@ -1342,7 +1342,7 @@
       "oils_spreads": {
         "title": "Amafutha Okupheka & Ukusabalala",
         "description": "Amafutha okupheka nsuku zonke kanye ne-pantry isakaza izinto ezibalulekile.",
-        "detail": "I-pantry ebalulekile esebenzayo esekela izidingo zokupheka eziphindayo, ama-oda wokugcwalisa, nokwakha ubhasikidi okulula kokudla kwansuku zonke."
+        "detail": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa."
       },
       "proteins": {
         "title": "Amaprotheni & Pantry",
@@ -1362,7 +1362,7 @@
     },
     "products": {
       "title": "Uhlu lwemikhiqizo",
-      "subtitle": "Hlanganisani impahla enliyifunayo lithumele isicelo se-oda. Lingakabhadali, iqembu liqinisekisa impahla, ukudiliva ngeDHL endaweni yenu lezindleko zokucina.",
+      "subtitle": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa.",
       "back_to_shop": "Buyela Esitolo",
       "default_country": "EJalimane",
       "filters": {
@@ -1407,7 +1407,7 @@
       },
       "stock": {
         "in": "Kukhona kusitoki",
-        "out": "Kuphelile",
+        "out": "Awukwazi uku-oda okwamanje",
         "out_message": "Akukho okwamanje. Tshiya i-imeyili yakho ukuze waziswe nxa sekukhona."
       },
       "actions": {
@@ -1423,7 +1423,7 @@
       },
       "cart": {
         "title": "Inqola lesicelo se-oda",
-        "empty": "Inqola yakho ayilalutho. Faka impahla ukuze uqale isicelo se-oda.",
+        "empty": "Ibhasikiti lakho alilalutho. Khangela imikhiqizo ekhathalogini.",
         "update_stock": "Lungisa inani lihambelane lokukhona",
         "remove_unavailable": "Susa impahla engasatholakali",
         "unavailable": "Enye impahla egciniweyo ayisatholakali. Yisuse ukuze uqhubeke.",
@@ -1498,7 +1498,8 @@
         "empty_cart": "Inqola yakho ayinalutho.",
         "complete_fields": "Gcwalisa imininingwane yokuxhumana leyokudiliva ukuze uthumele isicelo.",
         "unable_place_order": "Isicelo asigcinwanga. Zama futhi kumbe sixhumane kuWhatsApp.",
-        "unable_confirm_payment": "Ayikwazi ukuqinisekisa inkokhelo."
+        "unable_confirm_payment": "Ayikwazi ukuqinisekisa inkokhelo.",
+        "availability_changed": "Ibhasikiti lakho ligciniwe. Ezinye izinto azikho kumbe inani lidlula ezikhona. Zihlole kumbe uzisuse ungakaceli i-oda."
       },
       "whatsapp": {
         "intro": "Salibonani, ngifuna ukucela impahla le kuDiaspora Unlocked.",
@@ -1508,18 +1509,18 @@
         "each": "ngamunye"
       },
       "notify": {
-        "cta": "Ngazise",
+        "cta": "Tshengisa intshisekelo",
         "saving": "Iyalondoloza...",
-        "saved": "Isicelo sesaziso sesitoko sigciniwe. Sizakuthumela i-imeyili nxa umkhiqizo usubuyile.",
+        "saved": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
         "saved_short": "Isaziso sesitoko sigciniwe",
-        "dialog_title": "Ngazisa nxa sekubuye kwaba khona esitokweni",
-        "dialog_description": "akutholakali okwamanje. Faka i-email yakho bese sizakwazisa nxa isitokwe sesibuyile.",
-        "enter_email_prompt": "Faka ikheli lakho le-imeyili ukuze waziswe uma lo mkhiqizo usubuyile esitokweni:",
+        "dialog_title": "Tshengisa intshisekelo",
+        "dialog_description": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
+        "enter_email_prompt": "Tshengisa intshisekelo",
         "invalid_email": "Ngicela ufake ikheli le-imeyili elilungile.",
         "login_required": "Sicela ungene ngemvume ukuze unike amandla izaziso zesitoko.",
         "failed": "Asenelisanga ukugcina isicelo sakho sesaziso sesitoko. Zama futhi.",
-        "toast_title": "Isicelo sokwaziswa sigciniwe",
-        "toast_detail": "Sizakuthumela i-imeyili nxa {{name}} isitholakala futhi."
+        "toast_title": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
+        "toast_detail": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba."
       },
       "filter_hint": "Zama ezinye izihlungi ukuze uthole impahla.",
       "empty_hint": "Akukabi lampahla ebhalwe lapha.",
@@ -1532,7 +1533,7 @@
       "eyebrow": "Thenga okweZimbabwe",
       "title": "Ukudla, imisebenzi yezandla lokunye.",
       "highlight": "Ukuxhumana leZimbabwe.",
-      "description": "Thola ukunambitheka okwaziyo, izipho lezigqoko zabasekeli okwabantu abaseZimbabwe labangaphandle. Faka izinto kubhasikidi uthumele isicelo se-oda.",
+      "description": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa.",
       "principle": "Ukudiliva kuhlelwa ngeDHL. Sitsheleni indawo yenu; iqembu liqinisekisa ukutholakala kwenkonzo, izindleko zokucina lendlela yokubhadala lingakabhadali.",
       "caption": "Ukudla · Imisebenzi yezandla · Izigqoko zabasekeli",
       "collections_cta": "Hlola izigaba"
@@ -2073,10 +2074,39 @@
     "command_changed": "Isicelo sesitshintshile. Hlola isimo samanje ungakaqhubeki.",
     "readiness_prelaunch": "Kungakaqalwa — ukulungela ukuthengisa akuqinisekiswanga",
     "readiness_limited": "Ukuzama okulinganiselweyo eEurope",
-    "readiness_pending_note": "Izinqubo zokuthengisa lemininingwane yempahla kusalungiswa. Ungathumela umbuzo. Qinisekisa impahla eqondileyo, izivumelwano ezibhaliweyo lokuthumela ungakamukeli intengo kumbe ubhadale.",
+    "readiness_pending_note": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa. Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
     "readiness_pilot_note": "Amazwe lemikhiqizo evunywe ngokusobala kuphela kungaphakathi kokuzama. Isitolo siqinisekisa impahla, iDHL lezivumelwano esicelweni ngasinye.",
     "operator_details_title": "Imininingwane yomnikazi",
     "delivery_title": "Ukuthumela lokubhadala",
     "returns_title": "Ukukhansela lokubuyisela"
+  },
+  "product_interest": {
+    "action": "Tshengisa intshisekelo",
+    "scope": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
+    "email": "Ikheli le-imeyili",
+    "submit": "Ngithumele ilinki yokuqinisekisa nge-imeyili",
+    "close": "Vala",
+    "received": "Nxa ukuqinisekisa kudingeka, sizathumela ilinki nge-imeyili. Khangela lasefoldeni ye-spam.",
+    "error": "Sehlulekile ukugcina isicelo. Zama njalo.",
+    "invalid_email": "Faka ikheli le-imeyili eliqondileyo.",
+    "title": "Intshisekelo yomkhiqizo",
+    "confirm_subject": "Qinisekisa intshisekelo yomkhiqizo",
+    "confirm_body": "Qinisekisa ukuthi i-imeyili le ngeyakho ukuze uthole isaziso esisodwa nxa umkhiqizo lo usukhona.",
+    "expiry": "Ilinki le iphela ngemva kwamahola angu-48. Yekela i-imeyili le nxa ungasicelanga.",
+    "available_subject": "Umkhiqizo usukhona ukuthi ucelwe",
+    "available_body": "Umkhiqizo lo usukhona ukucela i-oda elincediswayo. Khangela ikhasi lomkhiqizo ukuze ubone inani lemibandela yamanje; isaziso lesi asikugcini impahla.",
+    "cancel": "Yesula isaziso somkhiqizo lo",
+    "confirm": "Qinisekisa intshisekelo yomkhiqizo",
+    "confirmed": "I-imeyili iqinisekisiwe. Sizathumela isaziso esisodwa nxa umkhiqizo uvunyelwe ukuthengiswa njalo usukhona. Ukubakhona akuqinisekiswanga.",
+    "cancelled": "Isaziso somkhiqizo lo sesiyesuliwe. Okukhethayo encwadini yezindaba akuntshintshanga.",
+    "invalid_link": "Ilinki le ayisebenzi, isiphelile kumbe isisetshenzisiwe. Cela entsha ekhasini lomkhiqizo.",
+    "updating": "Siyalungisa…",
+    "available_empty": "Akula mikhiqizo enga-odwa okwamanje. Khangela ikhathalogu utshengise intshisekelo ungafakanga i-oda.",
+    "prelaunch": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa.",
+    "saved_notice": "Ibhasikiti lakho ligciniwe. Ezinye izinto azikho kumbe inani lidlula ezikhona. Zihlole kumbe uzisuse ungakaceli i-oda.",
+    "remove_unavailable": "Susa izinto ezingekhoyo",
+    "price_note": "Intengo ngeyokuhlela. Khangela ulwazi lomkhiqizo lwamanje ungakaceli i-oda.",
+    "view_product": "Bona umkhiqizo",
+    "privacy_notes": "Izaziso zomkhiqizo zigcina i-imeyili yakho, umkhiqizo owukhethileyo, imvumo, isimo sokuqinisekisa kumbe ukwesula lembali yokuthumela kuMySQL. Zehlukile lencwadi yezindaba lokuhlaziya kokuzikhethela. Yesula ngelinki eku-imeyili yomkhiqizo; cela ukulungisa kumbe ukususa ku info@diasporaunlocked.com."
   }
 }

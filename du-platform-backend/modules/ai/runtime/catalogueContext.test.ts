@@ -94,7 +94,8 @@ it("answers stock, price, ingredients and allergens for the exact product withou
     details
   );
   expect(reply).toContain("4.85 EUR");
-  expect(reply).toContain("available now");
+  expect(reply).toContain("Register interest");
+  expect(reply).toContain("currently unavailable");
   expect(reply).toContain("Ingredients: Fixture water");
   expect(reply).toContain("Allergens: Fixture milk");
   expect(reply).toContain("/shop/product/mazoe-orange-2l");

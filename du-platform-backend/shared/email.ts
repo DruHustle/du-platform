@@ -1,7 +1,5 @@
-import { emailText } from "../../shared/customerEmailCopy";
 import axios from "axios";
 import { getAdminSetting } from "./persistence/settingsStore";
-import { getShopRestockNotificationsBySlug } from "./persistence/shopStore";
 
 export const ADMIN_SETTING_NOTIFY_ALERT_EMAILS = "notify_alert_emails";
 export const ADMIN_SETTING_NOTIFY_FROM_EMAIL = "notify_from_email";
@@ -140,82 +138,4 @@ export async function sendResetEmail(to: string, resetUrl: string) {
     subject: "Reset your Diaspora Unlocked password",
     html: `<p>We received a request to reset your password.</p><p><a href="${escapeEmailHtml(resetUrl)}">Reset Password</a></p><p>If you did not request this, ignore this email.</p>`,
   });
-}
-
-export async function notifyRestockSubscribersAndAdmins(input: {
-  productId: number;
-  productName: string;
-  productSlug: string;
-  stockQty: number;
-  updatedByEmail: string;
-}) {
-  if ((process.env.NODE_ENV ?? "development") !== "production") return;
-
-  const productSlug = String(input.productSlug ?? "")
-    .trim()
-    .toLowerCase();
-  if (!productSlug) return;
-
-  try {
-    const fromEmail = await getNotifyFromEmail();
-    const rows = await getShopRestockNotificationsBySlug(productSlug);
-    const recipients = new Map<string, string>();
-    for (const row of rows) {
-      const email = String(row.email ?? "")
-        .trim()
-        .toLowerCase();
-      if (isValidEmail(email))
-        recipients.set(email, String(row.language ?? "en"));
-    }
-    const uniqueEmails = Array.from(recipients.keys());
-    // Send separately: recipients must never see other subscribers' addresses.
-    for (const [email, language] of Array.from(recipients.entries())) {
-      const subject = escSubject(
-        emailText(language, "stock_subject", { product: input.productName })
-      );
-      const text = emailText(language, "stock_available", {
-        product: input.productName,
-      });
-      await sendEmailMessageSafe(
-        {
-          to: email,
-          subject,
-          text,
-          html: `<p>${escapeEmailHtml(text)}</p>`,
-          from: fromEmail,
-        },
-        "shop-restock:availability"
-      );
-    }
-
-    const adminEmails = await getNotifyAlertEmails();
-    if (adminEmails.length > 0) {
-      const subject = escSubject(`Restock alert: ${input.productName}`);
-      const safeName = escapeEmailHtml(input.productName);
-      const safeSlug = escapeEmailHtml(productSlug);
-      const safeEditor = escapeEmailHtml(input.updatedByEmail);
-      const safeQty = Number(input.stockQty);
-      const html = `<p><strong>Restock detected.</strong></p>
-<p>Product: ${safeName}</p>
-<p>Slug: ${safeSlug}</p>
-<p>Current stock: ${safeQty}</p>
-<p>Stock alerts attempted: ${uniqueEmails.length}</p>
-<p>Action: please review Admin &gt; Notify Me and send any additional manual communication if needed.</p>
-<p>Updated by: ${safeEditor}</p>`;
-      const text = `Restock detected for ${input.productName} (${productSlug}). Current stock: ${input.stockQty}. Stock alerts attempted: ${uniqueEmails.length}. Action: review Admin > Notify Me and send any additional manual communication if needed. Updated by: ${input.updatedByEmail}`;
-
-      await sendEmailMessage({
-        to: adminEmails,
-        subject,
-        html,
-        text,
-        from: fromEmail,
-      });
-    }
-  } catch (error: any) {
-    console.error("[shop/restock-notify] failed", {
-      productSlug,
-      message: String(error?.message ?? error),
-    });
-  }
 }
