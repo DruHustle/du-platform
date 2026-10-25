@@ -163,3 +163,17 @@ funnel. Agree numerical success thresholds only after real costs and DHL service
 windows are known. Review every failed delivery/refund and every negative-margin
 order; expand only with recorded owner approval. Defer open seller onboarding,
 split payouts, escrow and broader marketplace expansion.
+
+## Focused follow-up evidence — 26 October 2026
+
+The confirmed-interest release was verified at `c65bc3ac` on main and production.
+Customer basket totals/copy, product-information states and active/expired demand
+reporting are corrected in the [follow-up audit](audits/prelaunch-followup.md).
+No commercial mode, approval scope, stock or payment activation is changed.
+
+The approved actual-Mac archive destination now has a tested daily snapshot/pull
+LaunchAgent, visible success/failure status, verified fresh encrypted download and
+an Oracle isolated restore of the current schema. Archive transfer is complete;
+separate USB key custody/verified recipient and independent key recovery remain
+pending. See the [updated operational runbook](assisted-order-operations.md).
+This evidence does not establish provider PITR or complete host-loss recovery.
