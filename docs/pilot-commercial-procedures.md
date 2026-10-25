@@ -16,6 +16,15 @@ drafts. Do not collect payment until the outstanding facts below are resolved.
 - Shop and newsletter use separate workflows. Neither requires a platform
   account; an order does not subscribe a customer to the newsletter.
 
+## Prelaunch demand collection
+
+Sales are paused in enforced prelaunch. Product interest requires email ownership
+confirmation and offers one availability alert, with scoped cancellation. It does
+not create an order, reserve stock, collect payment or subscribe to the newsletter.
+The owner-confirmed zero physical inventory is reflected in all 28 catalogue rows.
+Use the [demand/sourcing worksheet](product-demand-sourcing.md) before approving products.
+The commercial procedure below describes a future approved pilot.
+
 ## Enquiry, quote and contract
 
 1. Treat the basket submission as a request. It does not charge money, reserve

@@ -1,3 +1,9 @@
+import {
+  openOrderAccess,
+  sealOrderAccess,
+} from "../../du-platform-backend/modules/shop/orderAccess";
+import { processOrderNotifications } from "../../du-platform-backend/modules/shop/orderNotifications";
+import { processNewsletterBatch } from "../../du-platform-backend/modules/newsletter/worker";
 // Runs only inside the network-isolated production-backup recovery drill.
 import assert from "node:assert/strict";
 import { randomUUID, randomBytes } from "node:crypto";
@@ -52,6 +58,44 @@ try {
   };
   const order: any = await createShopOrder(payload);
   assert.equal(((await createShopOrder(payload)) as any).replayed, true);
+  // Controlled persisted ciphertext: recovery requires the retained runtime key.
+  const [grants]: any = await db.query(
+    "SELECT w.order_id,w.access_grant FROM shop_order_workflows w JOIN shop_orders o ON o.id=w.order_id WHERE o.order_ref=?",
+    [order.orderRef]
+  );
+  assert.equal(openOrderAccess(grants[0].access_grant), order.manageToken);
+  const queuedMail = JSON.stringify({
+    to: actor,
+    from: actor,
+    subject: "Synthetic recovery",
+    text: "No real email",
+    html: "<p>Fixture</p>",
+  });
+  const sealedPayload = sealOrderAccess(queuedMail);
+  await db.execute(
+    "UPDATE shop_order_notifications SET payload=? WHERE order_id=?",
+    [sealedPayload, grants[0].order_id]
+  );
+  const retainedKey = process.env.JWT_SECRET!;
+  process.env.JWT_SECRET = randomBytes(48).toString("hex");
+  assert.throws(() => openOrderAccess(grants[0].access_grant));
+  assert.throws(() => openOrderAccess(sealedPayload));
+  process.env.JWT_SECRET = retainedKey;
+  const [jobs]: any = await db.query(
+    "SELECT payload FROM shop_order_notifications WHERE order_id=? LIMIT 1",
+    [grants[0].order_id]
+  );
+  assert.equal(openOrderAccess(jobs[0].payload), queuedMail);
+  let calls = 0;
+  const forbiddenSender = async () => {
+    calls++;
+    throw new Error("Recovery must not send");
+  };
+  process.env.RECOVERY_MODE = "true";
+  await processOrderNotifications(db, forbiddenSender);
+  await processNewsletterBatch(db, forbiddenSender);
+  assert.equal(calls, 0);
+
   await assert.rejects(() => readOrderWorkspace(order.orderRef, "invalid"), {
     status: 404,
   });
@@ -141,6 +185,9 @@ try {
   console.log(
     JSON.stringify({
       restoredApplicationJourney: true,
+      encryptedGrantAndQueuedPayloadRecovery: true,
+      wrongKeyRejected: true,
+      restoredWorkersHeldForReconciliation: true,
       orderReplay: true,
       privateAccess: true,
       customerCannotRecordPayment: true,

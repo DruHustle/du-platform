@@ -148,3 +148,12 @@ process.stdout.write('HTTP/2 200\\r\\nx-robots-tag: noindex, nofollow\\r\\nconte
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("Oracle release explicitly defaults to enforced prelaunch without an approval placeholder", async () => {
+  const docker = await fs.readFile("deploy/oracle/Dockerfile", "utf8");
+  assert(docker.includes("SHOP_COMMERCIAL_MODE=prelaunch"));
+  assert(!docker.includes("SHOP_PILOT_APPROVAL_FILE="));
+  const workflow = await fs.readFile(".github/workflows/ci-cd.yml", "utf8");
+  assert(workflow.includes("pnpm test:e2e:prelaunch"));
+  assert(workflow.includes("pnpm test:recovery:custody"));
+});
