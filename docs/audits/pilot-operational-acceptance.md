@@ -22,6 +22,28 @@ the published German fees and hosted payment options. No merchant onboarding,
 agreement, keys, gateway integration or financial transaction was performed.
 The existing live workflow remains assisted payment only.
 
+The owner later confirmed **no items are currently held**. Read-only inspection
+found no recorded shop orders, but eight positive catalogue counts (IDs 1, 2, 5,
+7, 8, 15, 21, 22). A conditional correction to zero was prepared for explicit
+production-data approval. The repository already seeds zero stock and preserves
+owner stock edits across releases. Do not treat those old database counts as
+proof of inventory or enable commercial offers from them.
+
+## Dependency security findings
+
+Required CI identified two high-severity dependency advisories after the earlier
+baseline: [Zod oversized collection validation](https://github.com/colinhacks/zod/pull/6652)
+and [body-parser compressed trailing bytes](https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828).
+Zod was updated to 4.6.7 (minimum 4.6.6), and the compatible body-parser 1.x line
+to 1.20.9 through a targeted override. Unrelated resolutions remain unchanged;
+the existing production audit is retained.
+
+Bounded local regressions verify that an oversized checkout basket is rejected
+before visiting item fields, and that the real core middleware survives delayed
+compressed trailing bytes and handles a subsequent request. The latter runs in a
+disposable child process with no application services or production endpoints.
+Production dependency audit reports no known vulnerabilities after the update.
+
 ## Production database recovery evidence
 
 Read the authenticated Aiven service overview for DU's running `zigd-platform-db`
