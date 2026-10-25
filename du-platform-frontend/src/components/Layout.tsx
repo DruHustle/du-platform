@@ -1248,7 +1248,7 @@ export default function Layout({ children }: LayoutProps) {
                 <li className="flex items-start gap-3 opacity-90">
                   <MapPin className="h-4 w-4 shrink-0 text-yellow-400" />
                   <span>
-                    {tr("footer.contact.location_berlin", "Berlin, Germany")}
+                    {tr("footer.contact.location", "Heidelberg, Germany")}
                   </span>
                 </li>
               </ul>

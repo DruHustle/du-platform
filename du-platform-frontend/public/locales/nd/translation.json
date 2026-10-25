@@ -1,5 +1,5 @@
 {
-  "brand": "I-Diaspora Ivuliwe",
+  "brand": "Diaspora Unlocked",
   "tagline": "Ipulatifomu yeZimbabwe Global Diaspora",
   "about": "Mayelana",
   "about_us": "IDiaspora Unlocked ixhumanisa abaseZimbabwe abaphesheya labanye abathanda iZimbabwe lempahla, ulwazi lohambo, amathuba ebhizimisi loncedo lweAI.",
@@ -53,11 +53,11 @@
       "options_title": "Izinketho Zokuxhumana",
       "call": "Shaya ucingo",
       "whatsapp": "WhatsApp",
-      "location_berlin": "EBerlin, eJalimane",
       "social": "Okomphakathi",
       "twitter": "Twitter",
       "linkedin": "I-LinkedIn",
-      "instagram": "I-Instagram"
+      "instagram": "I-Instagram",
+      "location": "EHeidelberg, eJalimane"
     }
   },
   "auth": {
@@ -2000,12 +2000,12 @@
     "missing_details": "Lolulwazi alukaphiwa. Buza isitolo ungakamukeli intengo.",
     "operator_title": "Umnikazi / ulwazi lomthetho",
     "procedures_title": "Ukuthumela, ukubhadala lokubuyisela",
-    "draft_notice": "UHLAKA — izindlela eziphakanyisiweyo zokuhlola. Imvumo yomnikazi lemininingwane yakhe epheleleyo kuyadingeka kungakaqalwa ukuthengisa.",
-    "operator_summary": "Diaspora Unlocked · Germany. Thintana: info@diasporaunlocked.com · +49 151 47416152.",
-    "operator_missing": "Ibizo elipheleleyo lomthengisi, ikheli leposi, uhlobo lwebhizimisi lemininingwane yokubhalisa kumbe yentela akukaqinisekiswa. Onesa inika ubuchwepheshe; kayikakhonjwa njengomthengisi.",
-    "delivery_draft": "Okuphakanyisiweyo: hlola isicelo ngasinye, impahla ekhona, imigoqo lokuthi iDHL iyafika yini ekhelini eliqondileyo. Ukukhetha ilizwe akuqinisekisi ukuthumela. Thola intengo yokuthumela, isikhathi esilinganisiweyo lezinye izindleko kungakakhitshwa intengo yokucina elesikhathi. Imali esebhasikithini ngeyokuhlela kuphela.",
-    "payment_draft": "Okuphakanyisiweyo: qinisekisa intengo yokucina lendlela yokubhadala lesitolo. Akulamali ethathwayo lapha. Bhala imali etholakeleyo kuphela lenombolo yayo; thumela ngemva kokuhlola imali lomkhiqizo. Ukwamukela intengo linyathelo lenqubo; isivumelwano lokubhadala kumele kuvunywe kungakaqalwa ukuthengisa.",
-    "returns_draft": "Okuphakanyisiweyo: thinta isitolo lenombolo yesicelo ukukhansela, ukubika uhlupho kumbe ukubuyisela. Umnikazi kumele abeke ikheli lokubuyisela, ulwazi lefomu lokuhoxa, okhokhela ukuthumela, okungavunyelwayo lendlela yokubuyisela imali kungakaqalwa ukuthengisa. Loluhlaka alwehlisi amalungelo omthengi asemthethweni.",
+    "draft_notice": "UHLAKA — imininingwane yomnikazi lelizwe okusuka kulo impahla sekuphiwe. Izinqubo zokuthumela, ukubhadala lokubuyisela zokucina zisafuna ukuvunywa kungakaqalwa ukuthengisa.",
+    "operator_summary": "Onesa UG (haftungsbeschränkt), isebenzisa ibizo lokuthengisa elithi Diaspora Unlocked. Steinhofweg 47, 69123 Heidelberg, Germany. Thintana: info@diasporaunlocked.com · +49 151 47416152.",
+    "operator_missing": "Imelwe nguAndrew Gotora. Irejista yamankampani: Amtsgericht Mannheim, HRB 757830. Imininingwane yomthelo esebenzayo lezinqubo zokuthengisa zokucina zisahlolwa.",
+    "delivery_draft": "Uhlelo lokuzama: ukuthumela kusuka eGermany kusiyamazwe angu-27 angamalunga eEU ngeDHL. Isicelo ngasinye sisafuna ukuhlolwa kwempahla ekhona, imigoqo yomkhiqizo lokuthi iDHL iyafika yini ekhelini eliqondileyo. Thola intengo yokuthumela, isikhathi esilinganisiweyo lezinye izindleko kungakakhitshwa intengo yokucina elesikhathi. Imali esebhasikithini ngeyokuhlela kuphela.",
+    "payment_draft": "Okuphakanyisiweyo: qinisekisa intengo yokucina lendlela yokubhadala lesitolo. Ukubhadala ngekhadi ngeStripe kuyahlelwa kodwa akukatholakali; akulamali ethathwayo lapha. Bhala imali etholakeleyo kuphela lenombolo yayo; thumela ngemva kokuhlola imali lomkhiqizo. Izinqubo zesivumelwano lokubhadala kumele zivunywe kungakaqalwa ukuthengisa.",
+    "returns_draft": "Ikheli lokubuyisela eliphakanyisiweyo: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Germany; info@diasporaunlocked.com. Thinta isitolo lenombolo yesicelo ukukhansela, ukubika uhlupho kumbe ukuhlela ukubuyisela. Ulwazi lefomu lokuhoxa, okhokhela ukuthumela, okungavunyelwayo okusebenzayo lendlela yokubuyisela imali kumele kuvunywe futhi kubekwe kungakamukelwa ama-oda okuthengisa. Amalungelo omthengi asemthethweni awatshintshwa.",
     "complaints": "Izikhalazo, ukukhansela kumbe ubumfihlo: info@diasporaunlocked.com lenombolo yesicelo. Ungathumeli imininingwane yekhadi lokubhadala.",
     "privacy_flows": "Izicelo zigcina igama, i-imeyili, ikheli, imikhiqizo lentengo ngesikhathi sesicelo, amanani okucina, imbali lokuthunyelwa kwe-imeyili kuMySQL eAiven. I-API ikuOracle, ikhasi likuVercel. Resend ithumela i-imeyili yama-oda lezindaba eziqinisekisiweyo. Isicelo se-oda asikubhalisi kuzindaba.",
     "privacy_ai": "Onesa ithumela ingxoxo lezifiso zohambo kuGoogle Gemini; Groq, Anthropic leCerebras zingasetshenziswa nxa kudingeka. Ungafaki imininingwane eyimfihlo kumbe yokubhadala. Izithombe zekhamera yeAR zisetshenziswa emshinini kuphela; azithunyelwa yiAR. Umnikazi kumele ahlole izivumelwano, ukugcinwa lokudluliselwa kwamanye amazwe kungakaqalwa ukuthengisa.",
@@ -2074,6 +2074,9 @@
     "readiness_prelaunch": "Kungakaqalwa — ukulungela ukuthengisa akuqinisekiswanga",
     "readiness_limited": "Ukuzama okulinganiselweyo eEurope",
     "readiness_pending_note": "Izinqubo zokuthengisa lemininingwane yempahla kusalungiswa. Ungathumela umbuzo. Qinisekisa impahla eqondileyo, izivumelwano ezibhaliweyo lokuthumela ungakamukeli intengo kumbe ubhadale.",
-    "readiness_pilot_note": "Amazwe lemikhiqizo evunywe ngokusobala kuphela kungaphakathi kokuzama. Isitolo siqinisekisa impahla, iDHL lezivumelwano esicelweni ngasinye."
+    "readiness_pilot_note": "Amazwe lemikhiqizo evunywe ngokusobala kuphela kungaphakathi kokuzama. Isitolo siqinisekisa impahla, iDHL lezivumelwano esicelweni ngasinye.",
+    "operator_details_title": "Imininingwane yomnikazi",
+    "delivery_title": "Ukuthumela lokubhadala",
+    "returns_title": "Ukukhansela lokubuyisela"
   }
 }

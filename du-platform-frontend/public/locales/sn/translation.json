@@ -1,5 +1,5 @@
 {
-  "brand": "Diaspora Yakavhurwa",
+  "brand": "Diaspora Unlocked",
   "tagline": "Dandira reZimbabwe neVana vari Kunze kweNyika",
   "about": "Nezvedu",
   "about_us": "Diaspora Unlocked inobatanidza veZimbabwe vari kunze nevamwe vanofarira Zimbabwe nezvigadzirwa, ruzivo rwenzendo, mikana yebhizimisi nerubatsiro rweAI.",
@@ -53,11 +53,11 @@
       "options_title": "Nzira dzekutibata",
       "call": "Fonai",
       "whatsapp": "WhatsApp",
-      "location_berlin": "Berlin, Jerimani",
       "social": "Pasocial media",
       "twitter": "Twitter",
       "linkedin": "LinkedIn",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "location": "Heidelberg, Jerimani"
     }
   },
   "auth": {
@@ -2000,12 +2000,12 @@
     "missing_details": "Mashoko aya haasati apiwa. Bvunza chitoro usati wagamuchira mutengo.",
     "operator_title": "Muridzi / mashoko epamutemo",
     "procedures_title": "Kutumira, kubhadhara nekudzorera",
-    "draft_notice": "GWARO REKUTANGA — nzira dzakarongwa dzekuedza. Muridzi anofanira kubvumira nekuzadza mashoko ake kutengeserana kusati kwatanga.",
-    "operator_summary": "Diaspora Unlocked · Germany. Bata: info@diasporaunlocked.com · +49 151 47416152.",
-    "operator_missing": "Zita rakazara remuridzi anotengesa, kero yepositi, chimiro chebhizimisi nemashoko ekunyoresa kana emitero hazvisati zvasimbiswa. Onesa inopa tekinoroji; haisati yazivikanwa semutengesi.",
-    "delivery_draft": "Zvarongwa: ongorora chikumbiro chega chega, huwandu huripo, zvirambidzo nechikwaniso cheDHL kukero chaiyo. Kusarudza nyika hakusimbisi kutumira. Wana mutengo wekutumira, nguva inofungidzirwa nemimwe mari usati wapa mutengo wekupedzisira une nguva. Mari iri mubhasikiti ndeyekuronga chete.",
-    "payment_draft": "Zvarongwa: simbisa mutengo wekupedzisira nemirayiridzo yekubhadhara nechitoro. Hapana mari inotorwa pano. Nyora mari yagamuchirwa chete nenhamba yayo; tumira mushure mekuongorora mari nechigadzirwa. Kugamuchira mutengo idanho rehurongwa; chibvumirano nekubhadhara zvinofanira kubvumirwa kutengesa kusati kwatanga.",
-    "returns_draft": "Zvarongwa: bata chitoro nenhamba yechikumbiro kuti ukumbire kukanzura, utaure dambudziko kana kudzorera. Muridzi anofanira kuburitsa kero yekudzorera, mashoko nefomu rekukanzura, anobhadhara kutumira, zvinosiyiwa nemaitiro ekudzorera mari kutengesa kusati kwatanga. Gwaro iri haribvisi kodzero dzemutengi dziri mumutemo.",
+    "draft_notice": "GWARO REKUTANGA — mashoko emuridzi nenyika inotumirwa zvinhu zvapiwa. Maitiro ekupedzisira ekutumira, kubhadhara nekudzorera achiri kuda kubvumirwa kutengesa kusati kwatanga.",
+    "operator_summary": "Onesa UG (haftungsbeschränkt), ichishandisa zita rekutengeserana Diaspora Unlocked. Steinhofweg 47, 69123 Heidelberg, Germany. Bata: info@diasporaunlocked.com · +49 151 47416152.",
+    "operator_missing": "Inomiririrwa naAndrew Gotora. Rejista yemakambani: Amtsgericht Mannheim, HRB 757830. Mashoko emutero anoshanda nemaitiro ekupedzisira ekutengesa zvichiri kuongororwa.",
+    "delivery_draft": "Chirongwa chekuyedza: kutumira kubva kuGermany kunyika 27 dziri muEU neDHL. Chikumbiro chega chega chichiri kuda kuongororwa huwandu huripo, zvirambidzo zvechigadzirwa nekuti DHL inosvika here pakero chaiyo. Wana mutengo wekutumira, nguva inofungidzirwa nemimwe mari usati wapa mutengo wekupedzisira une nguva. Mari iri mubhasikiti ndeyekuronga chete.",
+    "payment_draft": "Zvarongwa: simbisa mutengo wekupedzisira nemirayiridzo yekubhadhara nechitoro. Kubhadhara nekadhi kuburikidza neStripe kuri kurongwa asi hakusati kwawanikwa; hapana mari inotorwa pano. Nyora mari yagamuchirwa chete nenhamba yayo; tumira mushure mekuongorora mari nechigadzirwa. Maitiro echibvumirano nekubhadhara anofanira kubvumirwa kutengesa kusati kwatanga.",
+    "returns_draft": "Kero iri kurongwa yekudzorera: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Germany; info@diasporaunlocked.com. Bata chitoro nenhamba yechikumbiro kuti ukumbire kukanzura, utaure dambudziko kana kuronga kudzosa zvinhu. Mashoko nefomu rekukanzura, anobhadhara kutumira, zvinosiyiwa zvinoshanda nemaitiro ekudzorera mari zvinofanira kubvumirwa nekuburitswa kutengeserana kusati kwagamuchirwa. Kodzero dzemutengi dziri mumutemo hadzichinjwi.",
     "complaints": "Zvichemo, kukanzura kana kuvanzika: info@diasporaunlocked.com nenhamba yechikumbiro. Usatumira mashoko ekadhi rekubhadhara.",
     "privacy_flows": "Zvikumbiro zvinochengeta zita, email, kero, zvigadzirwa nemitengo panguva yechikumbiro, mitengo yekupedzisira, nhoroondo nekutumirwa kweemail muMySQL iri paAiven. API iri paOracle uye peji riri paVercel. Resend inotumira email dzeodha netsamba dzakasimbiswa. Kukumbira odha hakukunyoresi kutsamba dzenhau.",
     "privacy_ai": "Onesa inotumira hurukuro nezvaunoda murwendo kuGoogle Gemini; Groq, Anthropic neCerebras dzinogona kushandiswa kana zvichidiwa. Usaisa mashoko akavanzika kana ekubhadhara. Mifananidzo yekamera yeAR inogadziriswa pamudziyo; haitumirwi neAR. Muridzi anofanira kuongorora zvibvumirano, kuchengetwa nekuendeswa kwemashoko kune dzimwe nyika kutengesa kusati kwatanga.",
@@ -2074,6 +2074,9 @@
     "readiness_prelaunch": "Pasati patangwa — kugadzirira kutengesa hakusati kwasimbiswa",
     "readiness_limited": "Kuyedza kushoma muEurope",
     "readiness_pending_note": "Maitiro ekutengesa nemashoko ezvigadzirwa achiri kupedziswa. Unogona kutumira mubvunzo. Simbisa chigadzirwa chaicho, zvibvumirano zvakanyorwa nekutumira usati wabvuma mutengo kana kubhadhara.",
-    "readiness_pilot_note": "Nyika nezvigadzirwa zvakatenderwa pachena chete zviri mukuyedza. Chitoro chinosimbisa chigadzirwa, DHL nezvibvumirano pachikumbiro chimwe nechimwe."
+    "readiness_pilot_note": "Nyika nezvigadzirwa zvakatenderwa pachena chete zviri mukuyedza. Chitoro chinosimbisa chigadzirwa, DHL nezvibvumirano pachikumbiro chimwe nechimwe.",
+    "operator_details_title": "Mashoko emuridzi",
+    "delivery_title": "Kutumira nekubhadhara",
+    "returns_title": "Kukanzura nekudzorera"
   }
 }

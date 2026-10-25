@@ -1,5 +1,5 @@
 {
-  "brand": "Diaspora erschliesen",
+  "brand": "Diaspora Unlocked",
   "tagline": "Globale Plattform für die Simbabwische Diaspora",
   "about": "Über uns",
   "about_us": "Diaspora Unlocked verbindet Menschen im Ausland und alle mit Interesse an Simbabwe mit Produkten, Reiseinformationen, Geschäftsmöglichkeiten und KI-Assistenz.",
@@ -53,11 +53,11 @@
       "options_title": "Kontaktoptionen",
       "call": "Anruf",
       "whatsapp": "WhatsApp",
-      "location_berlin": "Berlin, Deutschland",
       "social": "Sozial",
       "twitter": "Twitter",
       "linkedin": "LinkedIn",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "location": "Heidelberg, Deutschland"
     }
   },
   "auth": {
@@ -1996,12 +1996,12 @@
     "missing_details": "Diese Angaben fehlen noch. Fragen Sie vor Annahme eines Angebots beim Shop nach.",
     "operator_title": "Betreiber / Impressum",
     "procedures_title": "Lieferung, Zahlung und Rückgabe",
-    "draft_notice": "ENTWURF – vorgeschlagene Pilotabläufe. Vor dem Verkaufsstart sind die Zustimmung des Betreibers und vollständige Betreiberangaben erforderlich.",
-    "operator_summary": "Diaspora Unlocked · Deutschland. Kontakt: info@diasporaunlocked.com · +49 151 47416152.",
-    "operator_missing": "Vollständiger Name des Vertragspartners, ladungsfähige Anschrift, Rechtsform und gegebenenfalls Register- und Steuerangaben sind noch nicht bestätigt. Onesa liefert Technologie und ist nicht als Verkäufer benannt.",
-    "delivery_draft": "Vorschlag: Jede Anfrage auf Bestand, Produktbeschränkungen und DHL-Verfügbarkeit an der genauen Adresse prüfen. Die Länderauswahl bestätigt keine Zustellung. Versandangebot, Lieferzeit und weitere Kosten vor einem befristeten endgültigen Angebot einholen. Der Warenkorb zeigt lediglich einen Planungsbetrag.",
-    "payment_draft": "Vorschlag: Endgültiges Angebot und Zahlungsanweisung direkt mit dem Shop prüfen. Die Website zieht kein Geld ein. Nur tatsächlich eingegangene Zahlungen mit Referenz erfassen; nach Zahlung und Warenprüfung versenden. Die Angebotsannahme bestätigt einen Prozessschritt; Vertragsschluss und Zahlung müssen vor Verkaufsstart genehmigt werden.",
-    "returns_draft": "Vorschlag: Für Stornierungen, Probleme oder Rückgaben den Shop mit der Referenz kontaktieren. Vor Verkaufsstart muss der Betreiber Rücksendeanschrift, Widerrufsinformationen und Formular, Kostentragung, Ausnahmen und Erstattungsverfahren veröffentlichen. Gesetzliche Verbraucherrechte bleiben unberührt.",
+    "draft_notice": "ENTWURF — Betreiberangaben und Versandursprung wurden mitgeteilt. Endgültige Versand-, Zahlungs- und Rückgabeverfahren müssen vor Verkaufsstart noch freigegeben werden.",
+    "operator_summary": "Onesa UG (haftungsbeschränkt), unter der Geschäftsbezeichnung Diaspora Unlocked. Steinhofweg 47, 69123 Heidelberg, Deutschland. Kontakt: info@diasporaunlocked.com · +49 151 47416152.",
+    "operator_missing": "Vertreten durch Andrew Gotora. Handelsregister: Amtsgericht Mannheim, HRB 757830. Anwendbare Steuerangaben und die endgültigen Verkaufsverfahren werden noch geprüft.",
+    "delivery_draft": "Pilotumfang: Versand aus Deutschland in die 27 EU-Mitgliedstaaten mit DHL. Jede Anfrage erfordert weiterhin die Prüfung von Bestand, Produktbeschränkungen und DHL-Verfügbarkeit für die genaue Anschrift. Versandangebot, Lieferzeit und anfallende Kosten vor einem befristeten endgültigen Angebot einholen. Der Warenkorb zeigt lediglich einen Planungsbetrag.",
+    "payment_draft": "Vorschlag: Endgültiges Angebot und Zahlungsanweisung direkt mit dem Shop prüfen. Kartenzahlung über Stripe ist geplant, aber noch nicht verfügbar; die Website zieht kein Geld ein. Nur tatsächlich eingegangene Zahlungen mit Referenz erfassen; nach Zahlung und Warenprüfung versenden. Vertragsschluss und Zahlung müssen vor Verkaufsstart freigegeben werden.",
+    "returns_draft": "Vorgeschlagener Rücksendekontakt: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Deutschland; info@diasporaunlocked.com. Für Stornierungen, Probleme oder Rückgaben den Shop mit der Referenz kontaktieren. Widerrufsinformationen und Formular, Kostentragung, anwendbare Ausnahmen und Erstattungsverfahren müssen vor Annahme kommerzieller Bestellungen freigegeben und veröffentlicht werden. Gesetzliche Verbraucherrechte bleiben unberührt.",
     "complaints": "Beschwerden, Stornierungen oder Datenschutzanfragen: info@diasporaunlocked.com mit Referenz. Keine Zahlungskartendaten senden.",
     "privacy_flows": "Bestellanfragen speichern Kontakt- und Adressdaten, Produkt- und Preisstände, Angebote, Statusverlauf und E-Mail-Versanddaten in einer MySQL-Datenbank bei Aiven. Die API läuft auf Oracle, das Frontend auf Vercel. Resend versendet Transaktionsmails und bestätigte Newsletter. Eine Bestellanfrage ist kein Newsletter-Abonnement.",
     "privacy_ai": "Onesa sendet Gespräche und Reisepräferenzen an konfigurierte KI-Anbieter: Google Gemini sowie Groq, Anthropic und Cerebras als Ausweichziele. Keine sensiblen oder Zahlungsdaten eingeben. AR-Kamerabilder werden lokal verarbeitet und von dieser Funktion nicht hochgeladen. Verträge, Aufbewahrung und internationale Übermittlungen sind vor Verkaufsstart zu prüfen.",
@@ -2070,6 +2070,9 @@
     "readiness_prelaunch": "Vor dem Start — gewerbliche Freigabe unbestätigt",
     "readiness_limited": "Begrenzter Europa-Pilot",
     "readiness_pending_note": "Geschäftliche Abläufe und Produktangaben werden noch vervollständigt. Anfragen sind möglich. Genauen Artikel, endgültige schriftliche Bedingungen und Lieferung vor Angebotsannahme oder Zahlung bestätigen lassen.",
-    "readiness_pilot_note": "Nur ausdrücklich freigegebene Zielländer und Produkte gehören zum Pilot. Der Shop bestätigt Artikel, DHL-Lieferung und endgültige Bedingungen einzeln."
+    "readiness_pilot_note": "Nur ausdrücklich freigegebene Zielländer und Produkte gehören zum Pilot. Der Shop bestätigt Artikel, DHL-Lieferung und endgültige Bedingungen einzeln.",
+    "operator_details_title": "Betreiberangaben",
+    "delivery_title": "Lieferung und Zahlung",
+    "returns_title": "Stornierung und Rückgabe"
   }
 }
