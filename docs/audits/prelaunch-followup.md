@@ -27,7 +27,8 @@ The PR/CI release record carries the eventual merge SHA and post-release checks.
   48-hour boundary it becomes expired. Active confirmed/waiting sorts first and is
   distinct from cancelled, notified and historically confirmed counts. Latest consent
   date filtering, unique email/product rows, generation-scoped confirmation/cancellation
-  and bounded durable retries are preserved. Reporting sends/deletes nothing.
+  and bounded durable retries are preserved. The expanded counts table supports
+  horizontal keyboard scrolling in a labelled, visibly focused region. Reporting sends/deletes nothing.
 - **High recovery residual:** a verified old Mac copy was not a fresh or recurring
   backup. The reviewed procedure now streams SQL directly into GPG and restores only
   inside a network-isolated, held-worker drill. No plaintext SQL dump file is written.

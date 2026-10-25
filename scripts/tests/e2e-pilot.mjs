@@ -551,6 +551,17 @@ try {
     ),
     "Product-interest admin must fit a mobile viewport"
   );
+  const counts = adminPage.getByRole("region", {
+    name: "Product interest counts",
+    exact: true,
+  });
+  await counts.focus();
+  await adminPage.keyboard.press("ArrowRight");
+  await adminPage.waitForFunction(
+    () =>
+      (document.querySelector('[aria-label="Product interest counts"]')
+        ?.scrollLeft || 0) > 0
+  );
   await adminPage.screenshot({ path: `${output}/product-interest-admin.png` });
   pass(
     "Protected product-interest workspace shows confirmed unique demand and failed delivery without duplicate registrations"
