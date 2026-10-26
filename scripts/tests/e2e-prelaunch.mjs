@@ -203,9 +203,11 @@ try {
           );
           assert.deepEqual(errors, []);
           const actionKey =
-            state === "low" || state === "zero"
-              ? locale.shop.products.cart.update_stock
-              : locale.shop.products.cart.remove_unavailable;
+            state === "zero"
+              ? locale.product_interest.remove_item
+              : state === "low"
+                ? locale.shop.products.cart.update_stock
+                : locale.shop.products.cart.remove_unavailable;
           await cart
             .getByRole("button", { name: actionKey, exact: true })
             .click();

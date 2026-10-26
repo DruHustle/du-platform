@@ -1553,7 +1553,7 @@
       "notes": {
         "guest_checkout": "No account needed to send an order request.",
         "logged_in_checkout": "Your request uses the contact details above.",
-        "supported_methods": "No payment is taken here. DHL service availability and the final delivery cost are confirmed for your destination. The allowance shown is a planning estimate, not a DHL quote.",
+        "supported_methods": "No payment is taken here. Delivery and the final price are confirmed in an individual quote before payment.",
         "supported_methods_dev": "Supported methods: assisted checkout in production, plus dummy payment simulation in dev and test."
       },
       "errors": {
@@ -1994,7 +1994,7 @@
     "postal_code": "Postal code (where applicable)",
     "contingency": "Contingency allowance",
     "product_details": "Product information",
-    "missing_details": "These details have not yet been supplied. Ask the shop before accepting a quote.",
+    "missing_details": "Product information has not been supplied yet. We will not infer missing specifications.",
     "operator_title": "Operator / legal notice",
     "procedures_title": "Delivery, payment and returns",
     "draft_notice": "DRAFT — operator details and shipment origin have been supplied. Final delivery, payment and returns procedures still require approval before commercial launch.",
@@ -2068,17 +2068,21 @@
     "command_recovered": "The action was saved. Review the current status before continuing.",
     "command_unconfirmed": "The response could not be confirmed. Check current status or retry the unchanged action; do not submit another financial request.",
     "command_changed": "The request changed. Review the current status before continuing.",
-    "readiness_prelaunch": "Prelaunch — commercial readiness unconfirmed",
+    "readiness_prelaunch": "We’re preparing the shop",
     "readiness_limited": "Limited Europe pilot",
-    "readiness_pending_note": "Browse products and register interest — no order or payment. Sales are not open yet. One-time product alert — no order, reservation or payment. Separate from our newsletter.",
+    "readiness_pending_note": "Register your interest to hear when products become available. No order or payment.",
     "readiness_pilot_note": "Only explicitly approved destination countries and products are in the pilot. The shop confirms each item, DHL delivery and final terms individually.",
     "operator_details_title": "Operator details",
     "delivery_title": "Delivery and payment",
-    "returns_title": "Cancellation and returns"
+    "returns_title": "Cancellation and returns",
+    "details_loading": "Loading product information…",
+    "details_failed": "Product information could not be loaded. Please try again.",
+    "details_retry": "Retry product information",
+    "product_unavailable": "This product is no longer available in the catalogue."
   },
   "product_interest": {
     "action": "Register interest",
-    "scope": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
+    "scope": "Confirm your email to receive one availability alert for this product. Cancel using the link in the email. No order, reservation or payment; separate from our newsletter.",
     "email": "Email address",
     "submit": "Email me a confirmation link",
     "close": "Close",
@@ -2099,10 +2103,15 @@
     "updating": "Updating…",
     "available_empty": "Nothing is available to order yet. Browse the catalogue and register interest without placing an order.",
     "prelaunch": "Browse products and register interest — no order or payment. Sales are not open yet.",
-    "saved_notice": "Your saved basket is kept. Some items are unavailable or exceed current stock. Review or remove them before requesting an order.",
+    "saved_notice": "Your choices are kept. Some saved items are unavailable or exceed current stock. Review or remove them.",
     "remove_unavailable": "Remove unavailable items",
     "price_note": "Displayed prices are indicative. Check current product information before making an order request.",
     "view_product": "View product",
-    "privacy_notes": "Product alerts store your email, selected product, consent and confirmation/cancellation status, and delivery history in MySQL. They are separate from newsletter subscriptions and optional analytics. Cancel using your product email link; contact info@diasporaunlocked.com for correction or deletion requests."
+    "privacy_notes": "Product alerts store your email, selected product, consent and confirmation/cancellation status, and delivery history in MySQL. They are separate from newsletter subscriptions and optional analytics. Cancel using your product email link; contact info@diasporaunlocked.com for correction or deletion requests.",
+    "saved_basket": "Saved basket",
+    "remove_item": "Remove item",
+    "indicative_price": "Indicative price",
+    "quote_note": "Delivery and the final price are confirmed in an individual quote before payment.",
+    "saved_empty": "No saved items. Browse products and register interest."
   }
 }

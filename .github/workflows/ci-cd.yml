@@ -76,6 +76,11 @@ jobs:
       - name: Synthetic encrypted recovery custody
         run: pnpm test:recovery:custody
 
+      - name: Mac backup safety and scheduling regressions
+        run: |
+          pnpm test:backup:mac
+          bash -n deploy/oracle/verify-recovery.sh deploy/oracle/mac-backup.sh
+
       - name: Frontend tests
         run: pnpm test:frontend
 
@@ -104,6 +109,9 @@ jobs:
             sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
           fi
           pnpm exec playwright install --with-deps chromium webkit
+
+      - name: Focused basket pricing and product information journeys
+        run: pnpm test:e2e:shop:followup
 
       - name: Prelaunch and confirmed product-interest browser journeys
         run: pnpm test:e2e:prelaunch

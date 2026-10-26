@@ -1487,7 +1487,7 @@
       "notes": {
         "guest_checkout": "Für eine Bestellanfrage ist kein Konto nötig.",
         "logged_in_checkout": "Ihre Anfrage verwendet die obigen Kontaktdaten.",
-        "supported_methods": "Hier wird nichts bezahlt. DHL-Verfügbarkeit und endgültige Lieferkosten werden für Ihr Ziel bestätigt. Das angezeigte Budget ist eine Planungsschätzung, kein DHL-Angebot.",
+        "supported_methods": "Hier erfolgt keine Zahlung. Versand und Endpreis werden vor der Zahlung in einem individuellen Angebot bestätigt.",
         "supported_methods_dev": "Unterstuetzte Methoden: begleiteter Checkout in Produktion sowie Dummy-Zahlungssimulation in Entwicklung und Test."
       },
       "errors": {
@@ -1994,7 +1994,7 @@
     "postal_code": "Postleitzahl (falls zutreffend)",
     "contingency": "Reservebetrag",
     "product_details": "Produktinformationen",
-    "missing_details": "Diese Angaben fehlen noch. Fragen Sie vor Annahme eines Angebots beim Shop nach.",
+    "missing_details": "Produktangaben wurden noch nicht bereitgestellt. Fehlende Angaben werden nicht ergänzt oder vermutet.",
     "operator_title": "Betreiber / Impressum",
     "procedures_title": "Lieferung, Zahlung und Rückgabe",
     "draft_notice": "ENTWURF — Betreiberangaben und Versandursprung wurden mitgeteilt. Endgültige Versand-, Zahlungs- und Rückgabeverfahren müssen vor Verkaufsstart noch freigegeben werden.",
@@ -2068,17 +2068,21 @@
     "command_recovered": "Die Aktion wurde gespeichert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
     "command_unconfirmed": "Die Antwort konnte nicht bestätigt werden. Prüfen Sie den Status oder wiederholen Sie die unveränderte Aktion; keine weitere Zahlungsanfrage senden.",
     "command_changed": "Die Anfrage hat sich geändert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
-    "readiness_prelaunch": "Vor dem Start — gewerbliche Freigabe unbestätigt",
+    "readiness_prelaunch": "Wir bereiten den Shop vor",
     "readiness_limited": "Begrenzter Europa-Pilot",
-    "readiness_pending_note": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet. Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
+    "readiness_pending_note": "Melden Sie Interesse an, um von der Verfügbarkeit zu erfahren. Keine Bestellung oder Zahlung.",
     "readiness_pilot_note": "Nur ausdrücklich freigegebene Zielländer und Produkte gehören zum Pilot. Der Shop bestätigt Artikel, DHL-Lieferung und endgültige Bedingungen einzeln.",
     "operator_details_title": "Betreiberangaben",
     "delivery_title": "Lieferung und Zahlung",
-    "returns_title": "Stornierung und Rückgabe"
+    "returns_title": "Stornierung und Rückgabe",
+    "details_loading": "Produktinformationen werden geladen…",
+    "details_failed": "Produktinformationen konnten nicht geladen werden. Bitte erneut versuchen.",
+    "details_retry": "Produktinformationen erneut laden",
+    "product_unavailable": "Dieses Produkt ist nicht mehr im Katalog verfügbar."
   },
   "product_interest": {
     "action": "Interesse anmelden",
-    "scope": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
+    "scope": "Bestätigen Sie Ihre E-Mail für eine einmalige Verfügbarkeitsnachricht zu diesem Produkt. Abmelden ist über den Link in der E-Mail möglich. Keine Bestellung, Reservierung oder Zahlung; unabhängig vom Newsletter.",
     "email": "E-Mail-Adresse",
     "submit": "Bestätigungslink per E-Mail senden",
     "close": "Schließen",
@@ -2099,10 +2103,15 @@
     "updating": "Wird aktualisiert…",
     "available_empty": "Noch sind keine Produkte bestellbar. Entdecken Sie den Katalog und melden Sie unverbindlich Interesse an.",
     "prelaunch": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
-    "saved_notice": "Ihr gespeicherter Warenkorb bleibt erhalten. Einige Artikel sind nicht verfügbar oder überschreiten den Bestand. Bitte vor einer Bestellanfrage prüfen oder entfernen.",
+    "saved_notice": "Ihre Auswahl bleibt gespeichert. Einige Artikel sind nicht verfügbar oder überschreiten den Bestand. Bitte prüfen oder entfernen.",
     "remove_unavailable": "Nicht verfügbare Artikel entfernen",
     "price_note": "Angezeigte Preise sind Richtwerte. Prüfen Sie die aktuellen Produktinformationen vor einer Bestellanfrage.",
     "view_product": "Produkt ansehen",
-    "privacy_notes": "Produktbenachrichtigungen speichern E-Mail-Adresse, gewähltes Produkt, Einwilligung, Bestätigungs-/Abmeldestatus und Versandhistorie in MySQL. Sie sind unabhängig vom Newsletter und optionaler Analyse. Abmelden können Sie sich über den Link in der Produkt-E-Mail; Berichtigung oder Löschung: info@diasporaunlocked.com."
+    "privacy_notes": "Produktbenachrichtigungen speichern E-Mail-Adresse, gewähltes Produkt, Einwilligung, Bestätigungs-/Abmeldestatus und Versandhistorie in MySQL. Sie sind unabhängig vom Newsletter und optionaler Analyse. Abmelden können Sie sich über den Link in der Produkt-E-Mail; Berichtigung oder Löschung: info@diasporaunlocked.com.",
+    "saved_basket": "Gespeicherter Warenkorb",
+    "remove_item": "Artikel entfernen",
+    "indicative_price": "Richtpreis",
+    "quote_note": "Versand und Endpreis werden vor der Zahlung in einem individuellen Angebot bestätigt.",
+    "saved_empty": "Keine gespeicherten Artikel. Produkte entdecken und Interesse anmelden."
   }
 }
