@@ -517,6 +517,14 @@ scripts. Prefer a compatible forward fix. Keep additive tables and don't revert 
 synchronous handlers or an incompatible reset page, revive consumed tokens, reset
 provider clocks or replay old data over newer enquiries/consent/orders.
 
+For the **first separately authorized cutover**, set the existing outbound hold
+before releasing the outbox-capable backend. Keep it through both Oracle and Vercel
+deployment, live verification and automatic rollback checks. Only after the whole
+release succeeds should the operator reconcile and release the hold. If the frontend
+rolls back, keep the hold and forward-fix; do not send fragment links to an older
+page. Existing query links remain supported by the new page. This setup is an
+explicit production operation, not performed by publishing the PR.
+
 Use an isolated localhost MySQL `*_test` database and `pnpm test:e2e:transactional`
 for the HTTP/browser workflow. It sanitizes provider configuration and uses only
 synthetic records/injected delivery. `pnpm test:modules` includes transaction,
