@@ -83,7 +83,7 @@
     "forgot": {
       "title": "Passwort zurücksetzen",
       "subtitle": "Geben Sie die E-Mail-Adresse Ihres Kontos ein und wir senden Ihnen Anweisungen zum Zurücksetzen.",
-      "request_sent": "Wenn diese E-Mail vorhanden ist, wurde ein Link zum Zurücksetzen gesendet.",
+      "request_sent": "Falls diese Adresse zu einem Konto gehört, kann eine E-Mail zum Zurücksetzen folgen. Versuchen Sie es später erneut, wenn sie nicht ankommt.",
       "request_error": "Anfrage kann nicht gesendet werden.",
       "send_reset_link": "Link zum Zurücksetzen senden",
       "submitting": "Einreichen...",
@@ -2113,5 +2113,23 @@
     "indicative_price": "Richtpreis",
     "quote_note": "Versand und Endpreis werden vor der Zahlung in einem individuellen Angebot bestätigt.",
     "saved_empty": "Keine gespeicherten Artikel. Produkte entdecken und Interesse anmelden."
+  },
+  "contact_enquiry": {
+    "open": "Nachricht senden",
+    "title": "Kontakt zum Team",
+    "scope": "Ihre Anfrage wird gespeichert, bevor wir den Empfang bestätigen. Servicenachrichten sind von Newsletter-Abonnements getrennt.",
+    "name": "Ihr Name",
+    "email": "E-Mail-Adresse",
+    "phone": "Telefon (optional)",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "submit": "Anfrage speichern",
+    "saving": "Wird gespeichert…",
+    "received": "Ihre Anfrage wurde empfangen und gespeichert. E-Mail-Annahme und Zustellung werden getrennt erfasst.",
+    "reference": "Referenz",
+    "new": "Neue Anfrage beginnen",
+    "failed": "Wir konnten die Speicherung nicht bestätigen. Ihre Nachricht bleibt erhalten. Wiederholen Sie die unveränderte Anfrage oder beginnen Sie ausdrücklich eine neue.",
+    "changed": "Diese ungeklärte Anfrage gehört zu Ihrer vorherigen Nachricht. Wiederholen Sie diese unverändert oder beginnen Sie eine neue Anfrage.",
+    "privacy": "Wir speichern Ihre Anfrage, Sprache und Benachrichtigungsverlauf in unserer Datenbank, damit das Team antworten kann. Dies ist keine Marketing-Anmeldung. Für Berichtigung oder Löschung wenden Sie sich an info@diasporaunlocked.com."
   }
 }

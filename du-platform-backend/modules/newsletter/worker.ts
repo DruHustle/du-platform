@@ -3,7 +3,13 @@ import {
   ProductInterestService,
   deliverProductInterest,
 } from "../shop/interestService";
-import type { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
+import type {
+  Pool,
+  PoolConnection,
+  RowDataPacket,
+  ResultSetHeader,
+} from "mysql2/promise";
+import { hashNewsletterToken } from "./content";
 import { db } from "../../shared/databaseRuntime";
 import {
   sendNewsletterEmail,
@@ -28,6 +34,55 @@ export function deliveryFailure(error: any, attempts: number) {
       : "Email provider could not confirm acceptance.",
     delaySeconds: Math.min(3600, 30 * 2 ** attempts),
   };
+}
+
+async function deliverSubscription(
+  connection: PoolConnection,
+  job: RowDataPacket,
+  send: (email: NewsletterEmail, key: string) => Promise<string>
+) {
+  await connection.beginTransaction();
+  try {
+    // Serialize provider acceptance with opt-out and replacement confirmations,
+    // just as product-interest deliveries do. No send starts after opt-out commits.
+    const [rows] = await connection.query<RowDataPacket[]>(
+      "SELECT status, confirmation_hash, confirmation_expires_at > NOW() AS confirmation_valid FROM newsletter_subscriptions WHERE id = ? FOR UPDATE",
+      [job.subscription_id]
+    );
+    const subscriber = rows[0];
+    const payload = JSON.parse(job.payload) as NewsletterEmail;
+    // Existing durable payloads already contain the exact confirmation token.
+    // Check its hash too: a reclaimed processing job may belong to an older
+    // signup even when the current subscription is pending with a valid expiry.
+    const token =
+      job.kind === "confirmation"
+        ? payload.text.match(/token=([a-f0-9]{48})(?![a-f0-9])/)?.[1]
+        : undefined;
+    const eligible =
+      subscriber &&
+      ((job.kind === "campaign" && subscriber.status === "subscribed") ||
+        (job.kind === "confirmation" &&
+          subscriber.status === "pending" &&
+          subscriber.confirmation_valid &&
+          token &&
+          hashNewsletterToken(token) === subscriber.confirmation_hash));
+    if (!eligible) {
+      await connection.execute(
+        "UPDATE newsletter_deliveries SET status = 'skipped', locked_at = NULL, error_message = 'Subscription or confirmation is no longer eligible.' WHERE id = ?",
+        [job.id]
+      );
+    } else {
+      const providerId = await send(payload, `du-newsletter/${job.id}`);
+      await connection.execute(
+        "UPDATE newsletter_deliveries SET status = 'sent', accepted_at = NOW(), provider_id = ?, locked_at = NULL, error_message = NULL WHERE id = ?",
+        [providerId, job.id]
+      );
+    }
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  }
 }
 export async function processNewsletterBatch(
   pool: Pool,
@@ -64,28 +119,11 @@ export async function processNewsletterBatch(
         );
         continue;
       }
-      if (row.subscription_id) {
-        const [subscriptions] = await connection.query<RowDataPacket[]>(
-          `SELECT status, confirmation_expires_at > NOW() AS confirmation_valid FROM newsletter_subscriptions WHERE id = ?`,
-          [row.subscription_id]
-        );
-        const subscriber = subscriptions[0];
-        if (
-          !subscriber ||
-          (row.kind === "campaign" && subscriber.status !== "subscribed") ||
-          (row.kind === "confirmation" &&
-            (subscriber.status !== "pending" || !subscriber.confirmation_valid))
-        ) {
-          await connection.execute(
-            `UPDATE newsletter_deliveries SET status = 'skipped', error_message = 'Subscription is no longer eligible.' WHERE id = ?`,
-            [row.id]
-          );
-          continue;
-        }
-      }
       try {
         if (row.interest_id) {
           await deliverProductInterest(connection, row, send);
+        } else if (row.subscription_id) {
+          await deliverSubscription(connection, row, send);
         } else {
           const providerId = await send(
             JSON.parse(row.payload) as NewsletterEmail,

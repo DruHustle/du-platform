@@ -83,7 +83,7 @@
     "forgot": {
       "title": "Reset Password",
       "subtitle": "Enter your account email and we will send reset instructions.",
-      "request_sent": "If this email exists, a reset link has been sent.",
+      "request_sent": "If this address matches an account, a reset email may follow. Try again later if it does not arrive.",
       "request_error": "Unable to submit request.",
       "send_reset_link": "Send Reset Link",
       "submitting": "Submitting...",
@@ -2113,5 +2113,23 @@
     "indicative_price": "Indicative price",
     "quote_note": "Delivery and the final price are confirmed in an individual quote before payment.",
     "saved_empty": "No saved items. Browse products and register interest."
+  },
+  "contact_enquiry": {
+    "open": "Send a message",
+    "title": "Contact the team",
+    "scope": "Your enquiry is saved before we confirm receipt. Service emails are separate from newsletter subscriptions.",
+    "name": "Name",
+    "email": "Email address",
+    "phone": "Phone (optional)",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Save enquiry",
+    "saving": "Saving…",
+    "received": "Your enquiry has been received and saved. Email acceptance and delivery are tracked separately.",
+    "reference": "Reference",
+    "new": "Start a new enquiry",
+    "failed": "We could not confirm that your enquiry was saved. Your message is kept. Retry unchanged, or explicitly start a new enquiry.",
+    "changed": "This unresolved request belongs to your previous message. Retry it unchanged, or start a new enquiry.",
+    "privacy": "We store your enquiry, language and notification history in our database so the team can respond. This does not subscribe you to marketing. Contact info@diasporaunlocked.com for correction or deletion requests."
   }
 }

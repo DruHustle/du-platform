@@ -2,8 +2,10 @@ import { z } from "zod";
 
 export const contactInquirySchema = z.object({
   name: z.string().trim().min(1).max(120),
-  email: z.string().trim().email(),
-  phone: z.string().trim().max(30).optional(),
+  requestId: z.string().uuid(),
+  language: z.enum(["en", "de", "sn", "nd"]).default("en"),
+  email: z.string().trim().max(254).email().toLowerCase(),
+  phone: z.string().trim().max(30).default(""),
   subject: z.string().trim().min(1).max(200),
   message: z.string().trim().min(1).max(4000),
   module: z
@@ -16,5 +18,5 @@ export const contactInquirySchema = z.object({
       "data",
       "success",
     ])
-    .optional(),
+    .default("general"),
 });

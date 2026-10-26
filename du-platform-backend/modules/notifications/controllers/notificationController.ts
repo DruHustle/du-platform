@@ -1,4 +1,5 @@
 import type express from "express";
+import { AppError } from "../../../core/errorHandler";
 import { error, ok } from "../../../shared/responseFormatter";
 import {
   NotificationService,
@@ -27,6 +28,8 @@ export class NotificationController {
         )
       );
     } catch (err) {
+      if (err instanceof AppError)
+        return res.status(err.statusCode).json(error(err.code, err.message));
       if (err instanceof NotificationServiceError) {
         return res.status(err.status).json(error(err.code, err.message));
       }
@@ -42,19 +45,22 @@ export class NotificationController {
     req: express.Request,
     res: express.Response
   ) => {
+    res.setHeader("Cache-Control", "no-store");
     try {
       const data = await this.service.createContactInquiry(req.body);
       return res.status(201).json(ok(data));
     } catch (err) {
+      if (err instanceof AppError && err.statusCode === 409)
+        return res.status(409).json(error(err.code, err.message));
       if (err instanceof NotificationServiceError) {
         return res.status(err.status).json(error(err.code, err.message));
       }
       return res
-        .status(500)
+        .status(503)
         .json(
           error(
             "CONTACT_INQUIRY_FAILED",
-            "Unable to send your message. Please try again."
+            "Your enquiry could not be confirmed as saved. Keep your message and retry with the same request ID."
           )
         );
     }

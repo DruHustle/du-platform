@@ -14,7 +14,11 @@ import { useTranslation } from "react-i18next";
 
 function getTokenFromUrl() {
   const searchParams = new URLSearchParams(window.location.search);
-  return searchParams.get("token") ?? "";
+  return (
+    new URLSearchParams(window.location.hash.slice(1)).get("token") ??
+    searchParams.get("token") ??
+    ""
+  );
 }
 
 export default function ResetPassword() {
@@ -29,6 +33,9 @@ export default function ResetPassword() {
     // Keep legacy email links working, then remove the bearer token from history.
     const url = new URL(window.location.href);
     url.searchParams.delete("token");
+    const fragment = new URLSearchParams(url.hash.slice(1));
+    fragment.delete("token");
+    url.hash = fragment.toString();
     window.history.replaceState(
       window.history.state,
       "",

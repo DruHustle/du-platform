@@ -1,6 +1,5 @@
 import { isAdminEmail } from "../../../shared/adminIdentity";
 import { issueAccessTokenForUser } from "../../../shared/authSession";
-import { sendResetEmail } from "../../../shared/email";
 import { hashPassword, verifyPassword } from "../../../shared/passwords";
 import { isUserEmailConflictError } from "../../../utils/dbErrors";
 import { AuthRepository } from "../repositories/authRepository";
@@ -8,10 +7,11 @@ import {
   clearLoginFailures,
   isLoginLocked,
   recordLoginFailure,
+  AuthVersionChangedError,
 } from "../../../shared/persistence/authStore";
 
-// Minimum response time for forgotPassword regardless of whether the email
-// exists — prevents user enumeration via response latency.
+// Avoid an immediate response for unknown addresses. This floor is not a
+// constant-time guarantee: database lookup/persistence can take longer.
 const FORGOT_PASSWORD_MIN_MS = 500;
 
 export class AuthServiceError extends Error {
@@ -72,7 +72,7 @@ export class AuthService {
       throw err;
     }
 
-    const session = await this.repository.createSession(Number(user.id));
+    const session = await this.repository.createSession(Number(user.id), 0);
     return {
       sessionToken: session.token,
       payload: {
@@ -121,7 +121,21 @@ export class AuthService {
     }
 
     clearLoginFailures(normalizedEmail);
-    const session = await this.repository.createSession(Number(user.id));
+    let session: Awaited<ReturnType<AuthRepository["createSession"]>>;
+    try {
+      session = await this.repository.createSession(
+        Number(user.id),
+        Number(user.auth_version ?? 0)
+      );
+    } catch (error) {
+      if (error instanceof AuthVersionChangedError)
+        throw new AuthServiceError(
+          "AUTH_INVALID_CREDENTIALS",
+          401,
+          "Credentials changed. Please sign in again."
+        );
+      throw error;
+    }
     return {
       sessionToken: session.token,
       payload: {
@@ -144,27 +158,26 @@ export class AuthService {
     return { message: "Logged out." };
   }
 
-  async forgotPassword(input: { email: string }) {
+  async forgotPassword(input: { email: string; language?: string }) {
     const normalizedEmail = String(input.email ?? "")
       .trim()
       .toLowerCase();
     const start = Date.now();
 
-    const user = await this.repository.findByEmail(normalizedEmail);
-
-    if (user) {
-      const tokenData = await this.repository.createPasswordResetToken(
-        Number(user.id)
-      );
-      const appBaseUrl =
-        process.env.APP_BASE_URL ??
-        `http://localhost:${process.env.NODE_ENV === "production" ? 3000 : 5000}`;
-      const resetUrl = `${appBaseUrl}/reset-password?token=${encodeURIComponent(tokenData.token)}`;
-      await sendResetEmail(String(user.email ?? ""), resetUrl);
+    try {
+      const user = await this.repository.findByEmail(normalizedEmail);
+      if (user)
+        await this.repository.queuePasswordReset(
+          Number(user.id),
+          input.language
+        );
+    } catch {
+      // Neutral even during storage failure; no account, token or SQL/provider
+      // exception is logged. The request never calls the email provider.
+      console.error("[auth] Password reset request could not be saved.");
     }
 
-    // Equalize response time regardless of whether the email exists so callers
-    // cannot enumerate valid accounts via response latency.
+    // Apply the same minimum delay to existing and unknown addresses.
     const elapsed = Date.now() - start;
     if (elapsed < FORGOT_PASSWORD_MIN_MS) {
       await new Promise<void>(resolve =>
@@ -172,14 +185,19 @@ export class AuthService {
       );
     }
 
-    return { message: "If this email exists, a reset link has been sent." };
+    return {
+      message:
+        "If this address matches an account, a reset email may follow. Try again later if it does not arrive.",
+    };
   }
 
   async resetPassword(input: { token: string; password: string }) {
-    const resetToken = await this.repository.consumePasswordResetToken(
-      String(input.token ?? "")
+    // Hash before taking database locks or consuming the one-time token.
+    const reset = await this.repository.resetPasswordWithToken(
+      String(input.token ?? ""),
+      await hashPassword(String(input.password ?? ""))
     );
-    if (!resetToken) {
+    if (!reset) {
       throw new AuthServiceError(
         "AUTH_INVALID_RESET_TOKEN",
         400,
@@ -187,20 +205,6 @@ export class AuthService {
       );
     }
 
-    const userId = Number(resetToken.user_id);
-    await this.repository.updateUserPassword(
-      userId,
-      await hashPassword(String(input.password ?? ""))
-    );
-    try {
-      await this.repository.deleteAllSessionsForUserStrict(userId);
-    } catch {
-      throw new AuthServiceError(
-        "AUTH_SESSION_INVALIDATION_FAILED",
-        503,
-        "Password was updated, but active sessions could not be invalidated. Please retry once the session store is available."
-      );
-    }
     return { message: "Password reset successful. Please sign in." };
   }
 
