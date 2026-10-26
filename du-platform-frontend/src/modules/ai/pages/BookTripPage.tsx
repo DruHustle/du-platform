@@ -294,8 +294,6 @@ export default function BookTripPage() {
     i18n.language,
     i18n.resolvedLanguage,
   ]);
-  const startDateInputRef = useRef<HTMLInputElement | null>(null);
-  const endDateInputRef = useRef<HTMLInputElement | null>(null);
   const adultCount = Number(adultPassengers) || 0;
   const infantCount = Number(infantPassengers) || 0;
   const selectedDeparture =
@@ -358,16 +356,6 @@ export default function BookTripPage() {
       }
       return [...prev, value];
     });
-  };
-
-  const openDatePicker = (input: HTMLInputElement | null) => {
-    if (!input) return;
-    if ("showPicker" in input && typeof input.showPicker === "function") {
-      input.showPicker();
-      return;
-    }
-    input.focus();
-    input.click();
   };
 
   const adjustPassengerCount = (
@@ -601,7 +589,7 @@ export default function BookTripPage() {
                 {t("tourism.onesa.trip_planner.title") ||
                   "Plan your Zimbabwe trip"}
               </h1>
-              <p className="section-subtitle-compact">
+              <p className="mt-4 text-sm leading-7 text-slate-300">
                 {t("tourism.onesa.trip_planner.subtitle") ||
                   "Create a draft itinerary and indicative budgets for flights, stays, transport and activities. Use it to compare ideas and prepare questions for providers."}
               </p>
@@ -725,11 +713,9 @@ export default function BookTripPage() {
 
               <div className="text-sm text-white/80">
                 {t("tourism.onesa.trip_planner.passengers") || "Passengers"}
-                <div className="mt-2 grid grid-cols-2 gap-3">
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
-                    <span
-                      className={`text-xs transition-all duration-200 ${adultPassengers ? "text-white/70" : "text-white/70"}`}
-                    >
+                    <span className="text-sm text-slate-300">
                       {adultCount}{" "}
                       {adultCount === 1
                         ? t("tourism.onesa.trip_planner.adult") || "Adult"
@@ -738,12 +724,13 @@ export default function BookTripPage() {
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
+                        disabled={adultCount <= 1}
                         onClick={() =>
                           setAdultPassengers(prev =>
                             adjustPassengerCount(prev, -1, 1, 50)
                           )
                         }
-                        className="h-6 w-6 rounded-md border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors"
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
                         aria-label={
                           t("tourism.onesa.trip_planner.decrease_adults") ||
                           "Decrease adults"
@@ -753,12 +740,13 @@ export default function BookTripPage() {
                       </button>
                       <button
                         type="button"
+                        disabled={adultCount >= 50}
                         onClick={() =>
                           setAdultPassengers(prev =>
                             adjustPassengerCount(prev, 1, 1, 50)
                           )
                         }
-                        className="h-6 w-6 rounded-md border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors"
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
                         aria-label={
                           t("tourism.onesa.trip_planner.increase_adults") ||
                           "Increase adults"
@@ -769,9 +757,7 @@ export default function BookTripPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
-                    <span
-                      className={`text-xs transition-all duration-200 ${infantPassengers ? "text-white/70" : "text-white/70"}`}
-                    >
+                    <span className="text-sm text-slate-300">
                       {infantCount}{" "}
                       {infantCount === 1
                         ? t("tourism.onesa.trip_planner.infant") || "Infant"
@@ -780,12 +766,13 @@ export default function BookTripPage() {
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
+                        disabled={infantCount <= 0}
                         onClick={() =>
                           setInfantPassengers(prev =>
                             adjustPassengerCount(prev, -1, 0, 20)
                           )
                         }
-                        className="h-6 w-6 rounded-md border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors"
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
                         aria-label={
                           t("tourism.onesa.trip_planner.decrease_infants") ||
                           "Decrease infants"
@@ -795,12 +782,13 @@ export default function BookTripPage() {
                       </button>
                       <button
                         type="button"
+                        disabled={infantCount >= 20}
                         onClick={() =>
                           setInfantPassengers(prev =>
                             adjustPassengerCount(prev, 1, 0, 20)
                           )
                         }
-                        className="h-6 w-6 rounded-md border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors"
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
                         aria-label={
                           t("tourism.onesa.trip_planner.increase_infants") ||
                           "Increase infants"
@@ -816,57 +804,29 @@ export default function BookTripPage() {
               <div className="text-sm text-white/80 grid grid-cols-1 xl:grid-cols-2 gap-3">
                 <label className="block text-sm text-white/80">
                   {t("tourism.onesa.trip_planner.start_date") || "Start date"}
-                  <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 focus-within:border-zim-gold/60">
+                  <div className="mt-2">
                     <input
-                      ref={startDateInputRef}
                       type="date"
                       required
                       value={startDate}
                       onChange={e => setStartDate(e.target.value)}
-                      onClick={() => openDatePicker(startDateInputRef.current)}
-                      className="w-full bg-transparent text-white outline-none"
+                      className="w-full min-w-0 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white"
                     />
-                    <button
-                      type="button"
-                      aria-label={
-                        t(
-                          "tourism.onesa.trip_planner.open_start_date_picker"
-                        ) || "Open start date calendar"
-                      }
-                      onClick={() => openDatePicker(startDateInputRef.current)}
-                      className="rounded-lg border border-white/20 p-1.5 text-white/80 hover:text-zim-gold hover:border-zim-gold/50 transition-colors"
-                    >
-                      <Calendar className="h-4 w-4" />
-                    </button>
                   </div>
                 </label>
 
                 {tripType !== "one_way" ? (
                   <label className="block text-sm text-white/80">
                     {t("tourism.onesa.trip_planner.end_date") || "End date"}
-                    <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 focus-within:border-zim-gold/60">
+                    <div className="mt-2">
                       <input
-                        ref={endDateInputRef}
                         type="date"
                         required
                         min={startDate}
                         value={endDate}
                         onChange={e => setEndDate(e.target.value)}
-                        onClick={() => openDatePicker(endDateInputRef.current)}
-                        className="w-full bg-transparent text-white outline-none"
+                        className="w-full min-w-0 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white"
                       />
-                      <button
-                        type="button"
-                        aria-label={
-                          t(
-                            "tourism.onesa.trip_planner.open_end_date_picker"
-                          ) || "Open return date calendar"
-                        }
-                        onClick={() => openDatePicker(endDateInputRef.current)}
-                        className="rounded-lg border border-white/20 p-1.5 text-white/80 hover:text-zim-gold hover:border-zim-gold/50 transition-colors"
-                      >
-                        <Calendar className="h-4 w-4" />
-                      </button>
                     </div>
                   </label>
                 ) : (
@@ -927,7 +887,8 @@ export default function BookTripPage() {
                         key={option.value}
                         type="button"
                         onClick={() => toggleInterest(option.value)}
-                        className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-wider transition-colors ${
+                        aria-pressed={active}
+                        className={`min-h-11 rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
                           active
                             ? "border-zim-gold/50 bg-zim-gold/15 text-zim-gold"
                             : "border-white/20 bg-white/[0.03] text-white/70 hover:text-white"

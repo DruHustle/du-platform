@@ -170,7 +170,7 @@ export default function Register() {
               <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
             </button>
 
-            <div className="text-center space-y-2">
+            <div className="auth-heading text-center space-y-2">
               <h1 className="auth-title text-white">
                 {t("auth.register", { defaultValue: "Create Account" })}
               </h1>

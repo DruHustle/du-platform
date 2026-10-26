@@ -30,3 +30,23 @@ product row and retains its dark commerce styling. Rails use native touch scroll
 explicit previous/next controls, and keyboard navigation; they never autoplay.
 Use `resetKey` when a filter changes the set of cards. `DiscoveryTile.onSelect`
 provides a semantic card button; dialog callers should restore focus to it.
+
+Shared controls use `styles/content.css` in interior pages and in the
+`du-dialog` portal surface. Keep field defaults low in specificity (`:where`)
+so an explicit light surface can set its own colors. Interior primary actions
+use the existing gold token; outline actions remain secondary. Long button
+labels wrap, controls have a 44px minimum height, and icon buttons expose their
+size with `data-size`. Native date fields use the browser's calendar and the
+dark color scheme rather than a second calendar button.
+
+Use `status-page-shell` with a nested `content-panel editorial-panel` for short
+confirmation/preference pages. Do not apply panel padding to `.container`;
+that element owns responsive gutters. Portaled menus use
+`data-placement="menu"` for their available-height limit. Prefer the existing
+Radix menu primitive for keyboard navigation, Escape dismissal and focus return.
+
+`pnpm build` then `pnpm test:e2e:ui` checks public routes and synthetic admin
+views at 375, 768 and 1440 pixels without services. Set `UI_BROWSER=webkit` for
+the second engine and `UI_OUTPUT_DIR` to select a screenshot/report directory.
+All API responses in this suite are local fixtures; it never submits enquiries,
+product alerts, campaigns, orders or authentication changes.

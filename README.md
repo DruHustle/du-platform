@@ -27,9 +27,9 @@ Visitors can use the platform to:
 
 ### 🖼️ Dynamic Visual Experience
 
-- Enhanced hero carousels with 5+ unique, high-quality images per page.
-- Auto-playing carousels with interactive indicators and smooth transitions.
-- Fully translated captions and badges for every slide.
+- A single Victoria Falls photograph on Home, preserving the established branding.
+- Edge-to-edge product, destination, technology and business-idea rails with native swiping, keyboard navigation and explicit controls.
+- Shared responsive surfaces, form controls and scrollable dialogs across interior pages.
 
 ### ✈️ Tourism Information
 

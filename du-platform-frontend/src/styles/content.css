@@ -1,8 +1,16 @@
 /* Interior-page system. The Home page deliberately keeps its existing design. */
-.content-page {
+.content-page,
+.du-dialog {
   --content-border: rgb(255 255 255 / 9%);
   --content-surface: #101929;
   --content-muted: #a3afc2;
+  --primary: var(--color-zim-gold);
+  --primary-foreground: #0f172a;
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  --ring: var(--color-zim-gold);
+  --input: #334155;
+  color-scheme: dark;
   color: #e2e8f0;
 }
 .content-page main .container {
@@ -26,7 +34,7 @@
 }
 .content-page main .page-title {
   overflow-wrap: anywhere;
-  hyphens: auto;
+  hyphens: manual;
   font-size: clamp(28px, 3.6vw, 44px);
   font-weight: 750;
   line-height: 1.13;
@@ -55,18 +63,22 @@
   letter-spacing: -0.025em;
   text-transform: none;
 }
-.content-page main [data-slot="button"] {
+:is(.content-page main, .du-dialog) [data-slot="button"] {
   min-height: 44px;
   min-width: 0;
+  height: auto;
+  padding-block: 10px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
   border-radius: 12px;
   font-size: 13px;
   font-weight: 650;
   letter-spacing: normal;
   text-transform: none;
 }
-.content-page
-  main
-  :is(input:not([type="radio"]):not([type="checkbox"]), select, textarea) {
+:is(.content-page main, .du-dialog)
+  :where(input:not([type="radio"]):not([type="checkbox"]), select, textarea) {
   min-height: 46px;
   border-radius: 12px;
   border-color: rgb(255 255 255 / 16%);
@@ -75,15 +87,15 @@
   line-height: 1.5;
   color: #f1f5f9;
 }
-.content-page main :is(input, textarea)::placeholder {
+:is(.content-page main, .du-dialog) :is(input, textarea)::placeholder {
   color: #7f8da4;
 }
-.content-page main :is(input, select, textarea):focus-visible {
+:is(.content-page main, .du-dialog) :is(input, select, textarea):focus-visible {
   border-color: var(--color-zim-gold);
   outline: 2px solid rgb(250 204 21 / 25%);
   outline-offset: 2px;
 }
-.content-page main label {
+:is(.content-page main, .du-dialog) label {
   font-size: 13px;
   line-height: 1.5;
   font-weight: 500;
@@ -371,9 +383,8 @@
   }
 }
 @media (max-width: 639px) {
-  .content-page
-    main
-    :is(input:not([type="radio"]):not([type="checkbox"]), select, textarea) {
+  :is(.content-page main, .du-dialog)
+    :where(input:not([type="radio"]):not([type="checkbox"]), select, textarea) {
     font-size: 16px;
   }
   .content-page main .content-panel {
@@ -410,4 +421,76 @@
 .content-page #shop-cart-checkout button,
 .content-page #shop-cart-checkout a[role="button"] {
   min-height: 44px;
+}
+
+/* Portals sit outside Layout: give forms, close controls and long content the
+   same readable dark surface and keyboard treatment as interior pages. */
+.du-dialog {
+  --background: #101929;
+  --muted-foreground: #a3afc2;
+  max-height: calc(100svh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-color: rgb(255 255 255 / 16%);
+  border-radius: 20px;
+}
+.du-dialog [data-slot="dialog-title"]:not(.sr-only) {
+  overflow-wrap: anywhere;
+  font-size: 20px;
+  line-height: 1.4;
+}
+.du-dialog [data-slot="dialog-description"] {
+  line-height: 1.75;
+}
+.du-dialog [data-slot="dialog-close"]:focus-visible {
+  outline: 2px solid var(--color-zim-gold);
+  outline-offset: 2px;
+}
+:is(.content-page main, .du-dialog) [data-size^="icon"] {
+  min-width: 44px;
+  padding: 0;
+}
+:is(.content-page main, .du-dialog)
+  :is(input, select, textarea)[aria-invalid="true"] {
+  border-color: #fb7185;
+}
+.content-page main .status-page-shell {
+  max-width: 680px;
+}
+.content-page main .auth-heading {
+  padding-top: 44px;
+}
+.content-page main .auth-panel .auth-title {
+  font-size: clamp(24px, 3vw, 28px);
+}
+.content-page main .document-content > section {
+  padding-block: 24px;
+  border-top: 1px solid var(--content-border);
+}
+.content-page main .document-content > section > h2 {
+  margin-bottom: 16px;
+}
+
+.du-dialog:has([data-slot="dialog-close"])
+  [data-slot="dialog-title"]:not(.sr-only) {
+  padding-right: 36px;
+}
+.du-dialog[data-placement="menu"] {
+  max-height: calc(100svh - 5rem - env(safe-area-inset-top));
+  max-height: calc(100dvh - 5rem - env(safe-area-inset-top));
+}
+
+/* WebKit native menulists ignore min-height. Preserve native selection while
+   drawing the closed control consistently; NativeSelect already owns its icon. */
+:is(.content-page main, .du-dialog) select:not([data-slot="native-select"]) {
+  appearance: none;
+  padding-inline: 12px 38px;
+  background-image: var(
+    --select-chevron,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+  );
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
 }

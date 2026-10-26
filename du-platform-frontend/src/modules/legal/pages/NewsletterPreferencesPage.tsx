@@ -58,54 +58,56 @@ export default function NewsletterPreferencesPage() {
   return (
     <Layout>
       <section className="document-section min-h-[65vh]">
-        <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-slate-900 p-6 sm:p-10 text-white">
-          <p className="text-xs font-semibold uppercase tracking-widest text-zim-gold">
-            {t("newsletter_preferences.brand")}
-          </p>
-          <h1 className="mt-4 text-3xl font-semibold">
-            {input.action === "unsubscribe"
-              ? t("newsletter_preferences.manage_title")
-              : t("newsletter_preferences.confirm_title")}
-          </h1>
-          {done ? (
-            <p role="status" className="mt-6 leading-7 text-emerald-200">
-              {done}
+        <div className="container status-page-shell">
+          <div className="content-panel editorial-panel text-white">
+            <p className="text-xs font-semibold uppercase tracking-widest text-zim-gold">
+              {t("newsletter_preferences.brand")}
             </p>
-          ) : !valid ? (
-            <p role="alert" className="mt-6 leading-7 text-slate-300">
-              {t("newsletter_preferences.invalid_link")}
-            </p>
-          ) : (
-            <>
-              <p className="mt-6 leading-7 text-slate-300">
-                {input.action === "unsubscribe"
-                  ? t("newsletter_preferences.unsubscribe_help")
-                  : t("newsletter_preferences.confirm_help")}
+            <h1 className="page-title mt-4">
+              {input.action === "unsubscribe"
+                ? t("newsletter_preferences.manage_title")
+                : t("newsletter_preferences.confirm_title")}
+            </h1>
+            {done ? (
+              <p role="status" className="mt-6 leading-7 text-emerald-200">
+                {done}
               </p>
-              <Button
-                className="mt-6 bg-zim-gold text-slate-950 hover:bg-yellow-300"
-                onClick={submit}
-                disabled={busy}
-              >
-                {busy
-                  ? t("newsletter_preferences.updating")
-                  : input.action === "unsubscribe"
-                    ? t("newsletter_preferences.unsubscribe")
-                    : t("newsletter_preferences.confirm")}
-              </Button>
-            </>
-          )}
-          {error && (
-            <p role="alert" className="mt-5 text-rose-200">
-              {error}
-            </p>
-          )}
-          <Link
-            href="/"
-            className="mt-8 inline-flex min-h-11 items-center text-sm text-zim-gold underline"
-          >
-            {t("newsletter_preferences.return_home")}
-          </Link>
+            ) : !valid ? (
+              <p role="alert" className="mt-6 leading-7 text-slate-300">
+                {t("newsletter_preferences.invalid_link")}
+              </p>
+            ) : (
+              <>
+                <p className="mt-6 leading-7 text-slate-300">
+                  {input.action === "unsubscribe"
+                    ? t("newsletter_preferences.unsubscribe_help")
+                    : t("newsletter_preferences.confirm_help")}
+                </p>
+                <Button
+                  className="mt-6 bg-zim-gold text-slate-950 hover:bg-yellow-300"
+                  onClick={submit}
+                  disabled={busy}
+                >
+                  {busy
+                    ? t("newsletter_preferences.updating")
+                    : input.action === "unsubscribe"
+                      ? t("newsletter_preferences.unsubscribe")
+                      : t("newsletter_preferences.confirm")}
+                </Button>
+              </>
+            )}
+            {error && (
+              <p role="alert" className="mt-5 text-rose-200">
+                {error}
+              </p>
+            )}
+            <Link
+              href="/"
+              className="mt-8 inline-flex min-h-11 items-center text-sm text-zim-gold underline"
+            >
+              {t("newsletter_preferences.return_home")}
+            </Link>
+          </div>
         </div>
       </section>
     </Layout>

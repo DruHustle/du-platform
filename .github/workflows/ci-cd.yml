@@ -188,6 +188,9 @@ jobs:
         env:
           DISCOVERY_BROWSER_CHANNEL: chromium
 
+      - name: Site-wide UI consistency and accessible dialog regressions
+        run: pnpm test:e2e:ui
+
       - name: VR music toggle regression tests
         run: pnpm test:e2e:vr:music
 

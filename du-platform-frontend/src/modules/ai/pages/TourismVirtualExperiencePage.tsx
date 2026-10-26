@@ -75,7 +75,7 @@ export default function TourismVirtualExperiencePage() {
     defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Tourism" })}`,
   });
   const backToTourismButtonClass =
-    "mb-4 inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 transition-colors hover:text-zim-gold";
+    "mb-4 inline-flex min-h-11 items-center text-sm font-semibold text-slate-300 transition-colors hover:text-zim-gold";
   const speechLanguageCode = useMemo(
     () => getSpeechLanguageCode(uiLanguage),
     [uiLanguage]
@@ -1878,13 +1878,13 @@ export default function TourismVirtualExperiencePage() {
       </p>
       <audio ref={ttsAudioRef} preload="auto" style={{ display: "none" }} />
       {/* Page shell */}
-      <section className="pt-28 pb-15 md:pt-32 bg-slate-950 relative overflow-hidden">
+      <section className="document-section bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <Link href="/tourism" className={backToTourismButtonClass}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             {backToTourismLabel}
           </Link>
-          <div className="content-panel mb-6 max-w-4xl p-5 md:p-6">
+          <div className="content-panel mb-6 p-5 md:p-6">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-zim-gold">
               {t("tourism.vr.seo.badge", { defaultValue: "Onesa AI Tourism" })}
             </p>

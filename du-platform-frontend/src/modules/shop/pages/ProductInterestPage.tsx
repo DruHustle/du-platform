@@ -64,47 +64,47 @@ export default function ProductInterestPage() {
   return (
     <Layout>
       <section className="document-section min-h-[65vh]">
-        <div className="container max-w-xl space-y-6 rounded-2xl border border-white/15 bg-slate-900 p-6 text-white sm:p-10">
-          <h1 className="text-3xl font-semibold">
-            {t("product_interest.title")}
-          </h1>
-          <p>{t("product_interest.scope")}</p>
-          {done ? (
-            <p role="status" className="text-emerald-200">
-              {t(
-                input.action === "confirm"
-                  ? "product_interest.confirmed"
-                  : "product_interest.cancelled"
-              )}
-            </p>
-          ) : !valid ? (
-            <p role="alert">{t("product_interest.invalid_link")}</p>
-          ) : (
-            <Button
-              onClick={submit}
-              disabled={busy}
-              className="min-h-11 whitespace-normal bg-zim-gold text-black"
+        <div className="container status-page-shell">
+          <div className="content-panel editorial-panel space-y-6 text-white">
+            <h1 className="page-title">{t("product_interest.title")}</h1>
+            <p>{t("product_interest.scope")}</p>
+            {done ? (
+              <p role="status" className="text-emerald-200">
+                {t(
+                  input.action === "confirm"
+                    ? "product_interest.confirmed"
+                    : "product_interest.cancelled"
+                )}
+              </p>
+            ) : !valid ? (
+              <p role="alert">{t("product_interest.invalid_link")}</p>
+            ) : (
+              <Button
+                onClick={submit}
+                disabled={busy}
+                className="min-h-11 whitespace-normal bg-zim-gold text-black"
+              >
+                {t(
+                  busy
+                    ? "product_interest.updating"
+                    : input.action === "confirm"
+                      ? "product_interest.confirm"
+                      : "product_interest.cancel"
+                )}
+              </Button>
+            )}
+            {error && (
+              <p role="alert" className="text-rose-200">
+                {error}
+              </p>
+            )}
+            <Link
+              href="/shop/products"
+              className="inline-flex min-h-11 items-center text-zim-gold underline"
             >
-              {t(
-                busy
-                  ? "product_interest.updating"
-                  : input.action === "confirm"
-                    ? "product_interest.confirm"
-                    : "product_interest.cancel"
-              )}
-            </Button>
-          )}
-          {error && (
-            <p role="alert" className="text-rose-200">
-              {error}
-            </p>
-          )}
-          <Link
-            href="/shop/products"
-            className="inline-flex min-h-11 items-center text-zim-gold underline"
-          >
-            {t("pilot.browse_products")}
-          </Link>
+              {t("pilot.browse_products")}
+            </Link>
+          </div>
         </div>
       </section>
     </Layout>

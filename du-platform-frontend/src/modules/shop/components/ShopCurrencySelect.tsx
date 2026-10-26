@@ -16,7 +16,7 @@ export default function ShopCurrencySelect({
   const { currency, setCurrency } = useShopCurrency();
   return (
     <div
-      className={`flex max-w-full flex-col gap-2 text-sm text-slate-300 ${compact ? "w-44" : ""}`}
+      className={`shop-currency-control flex max-w-full flex-col gap-2 text-sm text-slate-300 ${compact ? "w-44" : ""}`}
     >
       <label htmlFor={id} className={compact ? "sr-only" : undefined}>
         {t("shop.currency.label")}
