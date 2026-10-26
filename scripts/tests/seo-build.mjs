@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import { PASSWORD_RESET_PAGE_MARKER } from "../../shared/passwordResetProtocol.ts";
 import { readSiteRoutes } from "../lib/site-routes.mjs";
 import { assertActiveFrontendApi } from "../lib/frontend-api-origin.mjs";
 import {
@@ -10,6 +11,12 @@ import {
 } from "../../shared/routeSeo.ts";
 
 const root = path.resolve("dist/public");
+assert(
+  fs
+    .readFileSync(path.join(root, "reset-password.html"), "utf8")
+    .includes(PASSWORD_RESET_PAGE_MARKER),
+  "Reset page must advertise private fragment-link compatibility"
+);
 const homeHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
 assert(
   homeHtml.includes("/images/brand/diaspora_unlocked_336.webp"),

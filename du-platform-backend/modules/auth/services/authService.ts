@@ -1,6 +1,5 @@
 import { isAdminEmail } from "../../../shared/adminIdentity";
 import { issueAccessTokenForUser } from "../../../shared/authSession";
-import { sendResetEmail } from "../../../shared/email";
 import { hashPassword, verifyPassword } from "../../../shared/passwords";
 import { isUserEmailConflictError } from "../../../utils/dbErrors";
 import { AuthRepository } from "../repositories/authRepository";
@@ -12,7 +11,7 @@ import {
 } from "../../../shared/persistence/authStore";
 
 // Avoid an immediate response for unknown addresses. This floor is not a
-// constant-time guarantee: synchronous provider requests can take longer.
+// constant-time guarantee: database lookup/persistence can take longer.
 const FORGOT_PASSWORD_MIN_MS = 500;
 
 export class AuthServiceError extends Error {
@@ -159,29 +158,23 @@ export class AuthService {
     return { message: "Logged out." };
   }
 
-  async forgotPassword(input: { email: string }) {
+  async forgotPassword(input: { email: string; language?: string }) {
     const normalizedEmail = String(input.email ?? "")
       .trim()
       .toLowerCase();
     const start = Date.now();
 
-    const user = await this.repository.findByEmail(normalizedEmail);
-
-    if (user) {
-      const tokenData = await this.repository.createPasswordResetToken(
-        Number(user.id)
-      );
-      const appBaseUrl =
-        process.env.APP_BASE_URL ??
-        `http://localhost:${process.env.NODE_ENV === "production" ? 3000 : 5000}`;
-      const resetUrl = `${appBaseUrl}/reset-password?token=${encodeURIComponent(tokenData.token)}`;
-      try {
-        await sendResetEmail(String(user.email ?? ""), resetUrl);
-      } catch {
-        // Never disclose account existence through a provider failure, and do
-        // not log provider errors that may embed addresses, tokens or headers.
-        console.error("[auth] Password reset email could not be delivered.");
-      }
+    try {
+      const user = await this.repository.findByEmail(normalizedEmail);
+      if (user)
+        await this.repository.queuePasswordReset(
+          Number(user.id),
+          input.language
+        );
+    } catch {
+      // Neutral even during storage failure; no account, token or SQL/provider
+      // exception is logged. The request never calls the email provider.
+      console.error("[auth] Password reset request could not be saved.");
     }
 
     // Apply the same minimum delay to existing and unknown addresses.
@@ -192,7 +185,10 @@ export class AuthService {
       );
     }
 
-    return { message: "If this email exists, a reset link has been sent." };
+    return {
+      message:
+        "If this address matches an account, a reset email may follow. Try again later if it does not arrive.",
+    };
   }
 
   async resetPassword(input: { token: string; password: string }) {

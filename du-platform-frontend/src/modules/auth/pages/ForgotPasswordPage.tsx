@@ -9,15 +9,14 @@ import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function ForgotPassword() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const tr = (key: string, fallback: string) =>
     t(key, { defaultValue: fallback });
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const authHeadingClass =
-    "auth-title text-white";
+  const authHeadingClass = "auth-title text-white";
   const authSubtitleClass = "text-sm font-light leading-relaxed text-white/75";
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -27,13 +26,15 @@ export default function ForgotPassword() {
     setStatus("");
     setLoading(true);
     try {
-      const { data } = await api.post("/auth/forgot-password", { email });
+      await api.post("/auth/forgot-password", {
+        email,
+        language: i18n.resolvedLanguage?.split("-")[0] || "en",
+      });
       setStatus(
-        data.message ??
-          tr(
-            "auth.forgot.request_sent",
-            "If this email exists, a reset link has been sent."
-          )
+        tr(
+          "auth.forgot.request_sent",
+          "If this address matches an account, a reset email may follow. Try again later if it does not arrive."
+        )
       );
       setEmail("");
     } catch (err: any) {

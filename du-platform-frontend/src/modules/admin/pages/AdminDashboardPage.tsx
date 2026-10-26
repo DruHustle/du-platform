@@ -1,4 +1,5 @@
 import ProductInterestAdmin from "../components/ProductInterestAdmin";
+import ServiceInbox from "../components/ServiceInbox";
 import ResearchAdmin from "../components/ResearchAdmin";
 import ProductDetailsAdmin from "../components/ProductDetailsAdmin";
 import OrderAdmin from "../components/OrderAdmin";
@@ -47,6 +48,7 @@ type SuccessStoryRow = {
 };
 
 type TabKey =
+  | "service"
   | "research"
   | "orders"
   | "newsletter"
@@ -103,6 +105,7 @@ export default function AdminDashboard() {
 
   const tabs = useMemo(
     () => [
+      { key: "service" as const, label: "Service inbox", count: null },
       { key: "research" as const, label: "Research", count: null },
       { key: "orders" as const, label: "Orders", count: null },
       { key: "newsletter" as const, label: "Newsletter", count: null },
@@ -148,6 +151,7 @@ export default function AdminDashboard() {
       if (
         !detectNewNotify &&
         (activeTab === "newsletter" ||
+          activeTab === "service" ||
           activeTab === "orders" ||
           activeTab === "research")
       ) {
@@ -472,6 +476,9 @@ export default function AdminDashboard() {
           ) : null}
           {!loading && activeTab === "orders" && !error ? (
             <OrderAdmin onDirtyChange={setWorkspaceDirty} />
+          ) : null}
+          {!loading && activeTab === "service" && !error ? (
+            <ServiceInbox />
           ) : null}
           {!loading && activeTab === "newsletter" && !error ? (
             <NewsletterAdmin onDirtyChange={setNewsletterDirty} />

@@ -1,0 +1,38 @@
+{
+  "en": {
+    "contact_subject": "Your enquiry was received",
+    "contact_body": "Your enquiry has been saved for the Diaspora Unlocked team. This receipt confirms storage, not email delivery or a booking.",
+    "reference": "Reference",
+    "service_footer": "This service message does not subscribe you to our newsletter.",
+    "reset_subject": "Reset your Diaspora Unlocked password",
+    "reset_body": "Use the link below to reset your password. It expires 30 minutes after your request. Ignore this message if you did not request it.",
+    "reset_footer": "A new password invalidates older reset links and sessions. This is not a newsletter subscription."
+  },
+  "de": {
+    "contact_subject": "Ihre Anfrage wurde empfangen",
+    "contact_body": "Ihre Anfrage wurde für das Team von Diaspora Unlocked gespeichert. Diese Bestätigung betrifft die Speicherung, nicht die E-Mail-Zustellung oder eine Buchung.",
+    "reference": "Referenz",
+    "service_footer": "Diese Servicenachricht meldet Sie nicht für unseren Newsletter an.",
+    "reset_subject": "Ihr Passwort bei Diaspora Unlocked zurücksetzen",
+    "reset_body": "Mit dem folgenden Link können Sie Ihr Passwort zurücksetzen. Er läuft 30 Minuten nach Ihrer Anfrage ab. Ignorieren Sie diese Nachricht, wenn Sie sie nicht angefordert haben.",
+    "reset_footer": "Ein neues Passwort macht ältere Rücksetzlinks und Sitzungen ungültig. Dies ist keine Newsletter-Anmeldung."
+  },
+  "sn": {
+    "contact_subject": "Mubvunzo wenyu wagamuchirwa",
+    "contact_body": "Mubvunzo wenyu wachengeterwa chikwata cheDiaspora Unlocked. Izvi zvinoratidza kuchengetwa kwawo, kwete kusvitswa kweemail kana kubhuka.",
+    "reference": "Nhamba yemubvunzo",
+    "service_footer": "Meseji iyi haikunyoresi kutsamba dzedu dzenhau.",
+    "reset_subject": "Gadzirisai patsva pasiwedhi yeDiaspora Unlocked",
+    "reset_body": "Shandisai chinongedzo chiri pazasi kugadzirisa pasiwedhi yenyu. Chinopera maminitsi 30 kubva pamakumbira. Regai meseji iyi kana musina kukumbira.",
+    "reset_footer": "Pasiwedhi itsva inodzima zvinongedzo zvekare nezvikamu zvamakanga mapinda. Hakusi kunyoresa kutsamba dzenhau."
+  },
+  "nd": {
+    "contact_subject": "Umbuzo wenu wamukelwe",
+    "contact_body": "Umbuzo wenu ugcinelwe iqembu leDiaspora Unlocked. Lokhu kuqinisekisa ukugcinwa kwawo, hatshi ukufika kwe-imeyili kumbe ukubhukha.",
+    "reference": "Inombolo yombuzo",
+    "service_footer": "Lo umlayezo wenkonzo awulibhalisi encwadini yethu yezindaba.",
+    "reset_subject": "Tshintshani iphaswedi yeDiaspora Unlocked",
+    "reset_body": "Sebenzisani isixhumanisi esingezansi ukutshintsha iphaswedi. Siphelelwa yisikhathi ngemizuzu engu-30 ngemva kwesicelo. Lingawunaki lo umlayezo nxa lingawucelanga.",
+    "reset_footer": "Iphaswedi entsha yenza izixhumanisi zakudala lokungena kwakudala kungasebenzi. Lokhu akusikubhalisela incwadi yezindaba."
+  }
+}

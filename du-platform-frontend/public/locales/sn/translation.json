@@ -83,7 +83,7 @@
     "forgot": {
       "title": "Gadzirisazve pasiwedhi",
       "subtitle": "Isa email yako kuti tikutumire link yekugadzirisazve pasiwedhi.",
-      "request_sent": "Kana email yako iripo, watumirwa link yekugadzirisazve pasiwedhi.",
+      "request_sent": "Kana kero iyi iine akaundi, email yekugadzirisa pasiwedhi inogona kuuya. Edzai zvakare gare gare kana isina kusvika.",
       "request_error": "Hatina kukwanisa kutumira link yekugadzirisazve pari zvino.",
       "send_reset_link": "Tumira link yekugadzirisazve",
       "submitting": "Kuri kutumirwa...",
@@ -2117,5 +2117,23 @@
     "indicative_price": "Mutengo wekufungidzira",
     "quote_note": "Kuendeswa nemutengo wekupedzisira zvinosimbiswa mumutengo waunopiwa wega usati wabhadhara.",
     "saved_empty": "Hapana zvinhu zvakachengetwa. Tarisa zvigadzirwa uye ratidza kufarira."
+  },
+  "contact_enquiry": {
+    "open": "Tumirai meseji",
+    "title": "Batai chikwata",
+    "scope": "Mubvunzo wenyu unochengetwa tisati tasimbisa kuugamuchira. Maemail ebasa akasiyana netsamba dzenhau.",
+    "name": "Zita",
+    "email": "Kero yeemail",
+    "phone": "Runhare (kana muchida)",
+    "subject": "Musoro",
+    "message": "Meseji",
+    "submit": "Chengetai mubvunzo",
+    "saving": "Tiri kuchengetedza…",
+    "received": "Mubvunzo wenyu wagamuchirwa uye wachengetwa. Kugamuchirwa neanotumira email nekusvitswa kwayo zvinoongororwa zvakasiyana.",
+    "reference": "Nhamba yemubvunzo",
+    "new": "Tangai mubvunzo mutsva",
+    "failed": "Hatina kukwanisa kusimbisa kuchengetwa kwemubvunzo. Meseji yenyu yasara. Edzai zvakare musina kuichinja kana kutanga mubvunzo mutsva nemaune.",
+    "changed": "Chikumbiro ichi chisina kusimbiswa ndechemeseji yenyu yekutanga. Edzai musina kuichinja kana kutanga mubvunzo mutsva.",
+    "privacy": "Tinochengeta mubvunzo, mutauro nenhoroondo yezviziviso mudhatabhesi kuti chikwata chipindure. Izvi hazvikunyoresi kushambadziro. Kumbirai kugadzirisa kana kudzima pa info@diasporaunlocked.com."
   }
 }

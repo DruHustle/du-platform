@@ -131,7 +131,7 @@ process.stdout.write('HTTP/2 200\\r\\nx-robots-tag: noindex, nofollow\\r\\nconte
     assert.equal(verified.status, 0, verified.stderr);
     assert.equal(
       (await fs.readFile(calls, "utf8")).trim().split("\n").length,
-      10
+      13
     );
     await fs.unlink(calls);
     const refused = spawnSync(
