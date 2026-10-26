@@ -1,79 +1,27 @@
-import { Link } from "wouter";
-import { useEffect } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, Pause, Play } from "lucide-react";
-import InstantImage, { preloadImages } from "@/components/InstantImage";
+import { ChevronDown } from "lucide-react";
+import InstantImage from "@/components/InstantImage";
 
-// Section 1: Hero Configuration
-interface HeroContent {
-  currentBgIndex: number;
-  heroBackgrounds: string[];
-}
-
-interface MainPageProps {
-  hero: HeroContent;
-  paused: boolean;
-  onTogglePause: () => void;
-}
-
-export default function MainPageHero({
-  hero,
-  paused,
-  onTogglePause,
-}: MainPageProps) {
+export default function MainPageHero() {
   const { t } = useTranslation();
   const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const currentImage = hero.heroBackgrounds[hero.currentBgIndex];
-    const nextImage =
-      hero.heroBackgrounds[
-        (hero.currentBgIndex + 1) % hero.heroBackgrounds.length
-      ];
-
-    preloadImages(
-      [
-        currentImage,
-        ...(!prefersReducedMotion && !paused ? [nextImage] : []),
-        "/images/brand/diaspora_unlocked_336.webp",
-      ],
-      2
-    );
-  }, [hero.currentBgIndex, hero.heroBackgrounds, paused, prefersReducedMotion]);
 
   return (
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
       {/* SECTION 1: CINEMATIC HERO */}
       <section className="relative min-h-[max(40rem,100svh)] py-28 w-full flex items-center justify-center overflow-hidden bg-slate-950">
-        <AnimatePresence mode="sync" initial={false}>
-          <motion.div
-            key={hero.currentBgIndex}
-            initial={prefersReducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={
-              prefersReducedMotion
-                ? { opacity: 0 }
-                : { opacity: 0, filter: "blur(8px)" }
-            }
-            transition={
-              prefersReducedMotion
-                ? { duration: 0.15 }
-                : { opacity: { duration: 0.9 } }
-            }
-            className="absolute inset-0 z-0"
-          >
-            <InstantImage
-              src={hero.heroBackgrounds[hero.currentBgIndex]}
-              alt=""
-              aria-hidden="true"
-              priority
-              fetchPriority={hero.currentBgIndex === 0 ? "high" : "auto"}
-              wrapperClassName="absolute inset-0 h-full w-full bg-slate-900"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </motion.div>
-        </AnimatePresence>
+        <div className="absolute inset-0 z-0">
+          <InstantImage
+            src="/images/pages/tourism/victoria_falls.webp"
+            alt=""
+            aria-hidden="true"
+            priority
+            fetchPriority="high"
+            wrapperClassName="absolute inset-0 h-full w-full bg-slate-900"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
 
         <div
           className="absolute inset-0 z-10 bg-slate-950/35"
@@ -117,12 +65,6 @@ export default function MainPageHero({
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/90">
             {t("pilot.home_purpose")}
           </p>
-          <Link
-            href="/shop/products"
-            className="mt-5 inline-flex min-h-11 items-center rounded-full bg-zim-gold px-6 py-3 text-sm font-semibold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-          >
-            {t("pilot.browse_products")}
-          </Link>
           {/* Scroll Indicator */}
           <motion.div
             initial={false}
@@ -130,15 +72,9 @@ export default function MainPageHero({
             transition={{ delay: 1.8, duration: 1, type: "spring" }}
             className="mt-12 md:mt-16"
           >
-            <motion.button
+            <button
               type="button"
-              animate={prefersReducedMotion ? undefined : { y: [0, 12, 0] }}
-              transition={
-                prefersReducedMotion
-                  ? undefined
-                  : { duration: 2, repeat: Infinity, ease: "easeInOut" }
-              }
-              className="flex flex-col items-center gap-2 cursor-pointer border-0 bg-transparent text-white"
+              className="flex min-h-11 flex-col items-center gap-2 rounded cursor-pointer border-0 bg-transparent text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold"
               onClick={() =>
                 document.getElementById("explore-platform")?.scrollIntoView({
                   behavior: prefersReducedMotion ? "instant" : "smooth",
@@ -149,25 +85,25 @@ export default function MainPageHero({
               <span className="text-[10px] uppercase tracking-[0.5em] font-black text-white drop-shadow-md">
                 {t("home.explore_now")}
               </span>
-              <ChevronDown size={28} strokeWidth={1.5} className="text-white" />
-            </motion.button>
+              <motion.span
+                aria-hidden="true"
+                className="inline-flex"
+                animate={prefersReducedMotion ? undefined : { y: [0, 12, 0] }}
+                transition={
+                  prefersReducedMotion
+                    ? undefined
+                    : { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                }
+              >
+                <ChevronDown
+                  size={28}
+                  strokeWidth={1.5}
+                  className="text-white"
+                />
+              </motion.span>
+            </button>
           </motion.div>
         </div>
-
-        {!prefersReducedMotion && (
-          <button
-            type="button"
-            onClick={onTogglePause}
-            className="absolute bottom-6 left-6 z-20 inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 bg-slate-950/80 px-4 text-xs font-medium text-white hover:bg-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold md:left-8"
-          >
-            {paused ? (
-              <Play size={16} aria-hidden="true" />
-            ) : (
-              <Pause size={16} aria-hidden="true" />
-            )}
-            {t(paused ? "home.hero_resume" : "home.hero_pause")}
-          </button>
-        )}
 
         {/* REFINED INNER VIGNETTE: Reduced from 0.8 to 0.4 for less "muddy" edges */}
         <div className="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_0_20vw_rgba(0,0,0,0.4)]" />

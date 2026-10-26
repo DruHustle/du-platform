@@ -1,7 +1,5 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
-import { useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, Brain, Landmark, MapPin, ShoppingBag } from "lucide-react";
 import MainPageHero from "@/modules/home/components/MainPageHero";
@@ -9,11 +7,6 @@ import SwipeRail from "@/components/discovery/SwipeRail";
 import DiscoveryTile from "@/components/discovery/DiscoveryTile";
 import DiscoverySection from "@/components/discovery/DiscoverySection";
 
-const heroBackgrounds = [
-  "/images/pages/tourism/victoria_falls.webp",
-  "/images/pages/tourism/great_zimbabwe.jpeg",
-  "/images/pages/tourism/kariba_sunset.jpg",
-];
 const modules = [
   {
     key: "shop",
@@ -42,26 +35,11 @@ const modules = [
 ];
 
 export default function Home() {
-  const prefersReducedMotion = useReducedMotion();
   const { t } = useTranslation();
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
-  const [heroPaused, setHeroPaused] = useState(false);
-  useEffect(() => {
-    if (prefersReducedMotion || heroPaused) return;
-    const timer = setInterval(() => {
-      if (document.visibilityState === "visible")
-        setCurrentBgIndex(index => (index + 1) % heroBackgrounds.length);
-    }, 9000);
-    return () => clearInterval(timer);
-  }, [heroPaused, prefersReducedMotion]);
 
   return (
     <Layout>
-      <MainPageHero
-        hero={{ currentBgIndex, heroBackgrounds }}
-        paused={heroPaused}
-        onTogglePause={() => setHeroPaused(paused => !paused)}
-      />
+      <MainPageHero />
       <div className="home-landing">
         <DiscoverySection
           id="explore-platform"
