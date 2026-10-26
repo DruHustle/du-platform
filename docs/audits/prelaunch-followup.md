@@ -115,3 +115,18 @@ supplier, item/variant/label, packaging, dimensions/weight, DHL eligibility/rate
 merchant/tax and contribution evidence. Counts are research signals, not sales or
 purchase authority. Then payment sandbox/operational acceptance precedes a bounded
 paid pilot. No stock purchase or supplier commitment is made here.
+
+## Mobile count visibility follow-up
+
+After PR #137 merged, a final German screenshot at 375px showed the descriptive
+“Saved basket” prefix consuming the ellipsis before the item count. The summary
+now puts the count first; the optional basket label may truncate after it. The
+full saved-basket heading and valid pilot calculations remain unchanged. A DOM
+bounds assertion verifies the entire count is visible at 320/375 in all four
+languages, Chromium and WebKit. The focused suite now passes 96 scenarios; types
+and production build pass. Screenshots at 320/375 were inspected. This changes
+no database, consent, historical totals, backup configuration or commercial mode.
+The same screenshot review found long Ndebele navigation labels drawing over
+neighboring links at 320px. Labels now truncate within each existing link; icons,
+font sizes, full accessible names and titles remain unchanged. The small follow-up
+uses the same protected CI/release process.

@@ -971,7 +971,7 @@ export default function Layout({ children }: LayoutProps) {
                     ) : (
                       <Icon className="h-5 w-5" strokeWidth={2} />
                     )}
-                    <span className="max-w-full whitespace-nowrap text-[8px] min-[360px]:text-[9px] font-semibold">
+                    <span className="max-w-full truncate text-[8px] min-[360px]:text-[9px] font-semibold">
                       {item.name}
                     </span>
                   </Link>
