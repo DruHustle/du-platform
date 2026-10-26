@@ -36,12 +36,13 @@ export const registerSchema = z
   });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim().max(254).email(),
+  language: z.enum(["en", "de", "sn", "nd"]).optional(),
 });
 
 export const resetPasswordSchema = z
   .object({
-    token: z.string().trim().min(1),
+    token: z.string().trim().min(1).max(256),
     password: passwordSchema,
     confirmPassword: z.string().min(1).max(255).optional(),
   })

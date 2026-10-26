@@ -99,8 +99,15 @@ for (const pathname of [
     );
   console.log(`PASS preview HTML, CSP, noindex ${pathname}`);
 }
-const { body } = await read("/api/shop/products");
-assert.equal(JSON.parse(body).error.code, "PREVIEW_API_DISABLED");
+for (const route of [
+  "/api/shop/products",
+  "/api/admin/service-inbox",
+  "/api/notifications/contact",
+  "/api/auth/forgot-password",
+]) {
+  const { body } = await read(route);
+  assert.equal(JSON.parse(body).error.code, "PREVIEW_API_DISABLED");
+}
 console.log(
   "PASS preview API returns local unavailable response; production is not proxied"
 );

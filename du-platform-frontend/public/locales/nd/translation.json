@@ -83,7 +83,7 @@
     "forgot": {
       "title": "Setha kabusha Iphasiwedi",
       "subtitle": "Faka i-imeyili ye-akhawunti yakho futhi sizokuthumela imiyalelo yokusetha kabusha.",
-      "request_sent": "Uma le imeyili ikhona, isixhumanisi sokusetha kabusha sithunyelwe.",
+      "request_sent": "Nxa leli kheli lile-akhawunti, i-imeyili yokutshintsha iphaswedi ingalandela. Zamani futhi ngemva kwesikhathi nxa ingafikanga.",
       "request_error": "Ayikwazi ukuhambisa isicelo.",
       "send_reset_link": "Thumela Isixhumanisi Sokusetha Kabusha",
       "submitting": "Iyahambisa...",
@@ -2117,5 +2117,23 @@
     "indicative_price": "Intengo elinganisiweyo",
     "quote_note": "Ukuhambisa lentengo yokucina kuqinisekiswa esicelweni sentengo esiqondene lawe ungakabhadali.",
     "saved_empty": "Akula zinto ezigciniweyo. Khangela imikhiqizo utshengise intshisekelo."
+  },
+  "contact_enquiry": {
+    "open": "Thumelani umlayezo",
+    "title": "Xhumanani leqembu",
+    "scope": "Umbuzo wenu uyagcinwa singakaqinisekisi ukuwamukela. Ama-imeyili enkonzo ahlukile encwadini yezindaba.",
+    "name": "Ibizo",
+    "email": "Ikheli le-imeyili",
+    "phone": "Ucingo (nxa lithanda)",
+    "subject": "Isihloko",
+    "message": "Umlayezo",
+    "submit": "Gcinani umbuzo",
+    "saving": "Kuyagcinwa…",
+    "received": "Umbuzo wenu wamukelwe wagcinwa. Ukwamukelwa lokufika kwe-imeyili kulandelwa ngokwehlukana.",
+    "reference": "Inombolo yombuzo",
+    "new": "Qalisani umbuzo omutsha",
+    "failed": "Asenelisanga ukuqinisekisa ukugcinwa kombuzo. Umlayezo wenu usagciniwe. Phindani lingawutshintshanga kumbe liqalise umbuzo omutsha ngabomo.",
+    "changed": "Isicelo esingakaqinisekiswa ngesomlayezo wenu wangaphambili. Phindani lingawutshintshanga kumbe liqalise umbuzo omutsha.",
+    "privacy": "Sigcina umbuzo, ulimi lembali yezaziso kudhatabhesi ukuze iqembu liphendule. Lokhu akulibhalisi kwezokukhangisa. Cela ukulungiswa kumbe ukucitshwa ku info@diasporaunlocked.com."
   }
 }

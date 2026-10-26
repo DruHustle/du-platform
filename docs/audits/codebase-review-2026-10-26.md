@@ -57,7 +57,10 @@ record, inventory, payment, subscription or email was created or changed.
    must now occur exactly once in the itinerary, rather than merely not occurring
    more than once. The existing sample/fallback generation remains unchanged.
 
-## Validation
+## Historical initial-review validation
+
+These results describe the initial review source published as
+`73bfd18cb92d31aa3f7f0b6ed2a5d9c4fa69f2ce`; they are not the latest results.
 
 - **323 backend tests passed, no skips**, using isolated localhost MySQL 8.0.46.
   The new password-reset suite creates its own disposable database and also
@@ -80,16 +83,16 @@ record, inventory, payment, subscription or email was created or changed.
 - Local Chromium/WebKit installation could not complete because the download
   endpoint returned invalid/truncated archives. The local GPG custody test could
   not start its agent because Unix sockets are disallowed in this environment.
-  Neither check was weakened. The existing GitHub-hosted CI includes both browser
-  engines and the GPG custody test. Fresh CI remains pending branch publication:
-  automatic approval review rejected the public GitHub push because this request
-  did not explicitly authorize publishing the changes. No new PR or deployment
-  is claimed; all source fixes are committed locally.
+  Neither check was weakened. Publication was initially blocked by automatic
+  approval review, then explicitly authorized by the owner. PR #140 was opened
+  at the published commit above; its original GitHub-hosted CI and isolated preview
+  passed. The publication-blocked note is historical, not a current blocker.
 
 ## Compatibility, release and remaining work
 
-No schema migration, stock correction, token/key rotation, readiness change or
-new provider is introduced. Existing encrypted grants, quotes, refunds and
+The initial review introduced no schema migration, stock correction, token/key
+rotation, readiness change or new provider. The additive service-message migration
+in the follow-up below supersedes the initial no-migration statement. Existing encrypted grants, quotes, refunds and
 notification payloads retain their formats. Failed password-reset transactions
 leave the original token retryable; successful resets intentionally invalidate
 all older reset links and sessions. Older JWTs without a valid version must sign
@@ -99,16 +102,101 @@ Release through protected main and the existing CI/deployment workflow. A rollba
 does not require reverting database data, but restores the defects above; prefer
 a forward fix. Do not revive consumed reset links or replay accepted emails.
 
-Contact and password-reset email still use synchronous delivery; this change
-does not claim a durable contact inbox or exactly-once delivery. Provider timeouts
-can leave acceptance uncertain. The password-reset response has a minimum delay,
-not a constant-time guarantee. A future unified transactional outbox should retain
-neutral responses, existing provider keys and per-message eligibility checks.
+## Durable service-message follow-up
+
+Contact enquiries, password-reset email and new feature acknowledgements now use
+an encrypted transactional outbox, separate from newsletter marketing, product
+alerts and order notifications. The existing MySQL transaction/queue patterns,
+AES-GCM runtime-key encryption, provider adapter and recovery holds are reused.
+No new dependency, provider, marketing consent or historical backfill is added.
+
+- Contact receipt plus operator/customer intents commit together. A required UUID
+  binds one immutable normalized message; same-ID retries return the same receipt,
+  changed payloads return 409, and a deliberate new UUID permits a new enquiry.
+  Provider failure cannot erase a received enquiry. The four-language footer dialog
+  preserves failed drafts, retains only opaque retry ID/digest in tab storage, and
+  requires an explicit new intent before changing an unresolved submission.
+- Reset tokens and encrypted email snapshots commit together. HTTP responses are
+  neutral for known/unknown accounts and never wait on the external provider.
+  The minimum response floor is not perfect timing indistinguishability. The
+  existing 30-minute token lifetime is unchanged. User/token locks and current
+  version/email checks suppress expired, consumed or invalidated credentials
+  immediately before sending. Existing atomic reset/session/login protections remain.
+- Reset links use a private fragment, consumed and stripped by the frontend;
+  legacy query links still work. A static compatibility marker holds new reset
+  mail while Oracle precedes its compatible frontend. Waiting never extends TTL.
+- Immutable final provider payloads and keys survive rejection, lost responses,
+  interrupted workers and database failure after provider acceptance. Unconfigured
+  operator routing can be bound once before any provider attempt. The first-attempt
+  clock is durable before sending; at most five automatic attempts occur, with
+  replay stopped at 23 hours (inside the documented provider window). Manual retry
+  retains the same key, payload and clock. Expired/uncertain jobs require operator
+  reconciliation or closure without resending. Closure never recalls accepted mail.
+- Admin → Service inbox shows durably received enquiries and separate sanitized
+  delivery metadata. Existing verified/current-version admin guards protect it.
+  It supports bounded paging, authorized retry, cancellation of queued messages,
+  and recording verified provider acceptance. Reset tokens, hashes, recipients and
+  private links are omitted from reset delivery listings. Provider keys contain
+  opaque IDs, not reset secrets. Received, provider-accepted and inbox-delivered
+  remain distinct; provider acceptance is not a delivery guarantee.
+- Both outbound flags apply at worker and actual provider boundaries. Recovery
+  tests include a persisted encrypted service message and held queue. Restored
+  queues remain paused until reconciliation; no automatic replay is authorized.
+
+### Current verification
+
+Local supported-Mac verification passes 350 backend tests with no skips, 109
+frontend tests plus seven Node checks, and 31 Chromium/WebKit transactional
+customer/operator scenarios. The new scenarios cover three widths and four
+languages, lost HTTP responses, unchanged retry IDs, changed-payload rejection,
+protected inbox actions, provider reconciliation, failed loads, reset-fragment
+and legacy-link consumption, JWT/session revocation and normal cookie refresh/logout.
+Types, strict translations, production build, guardrails and synthetic GPG custody
+pass. The restored-application probe verifies the new encrypted held queue as well
+as existing order, payment, refund, private-access and newsletter behavior.
+
+One local full-suite attempt timed out during fixture initialization while a
+production build was running concurrently. The normal parallel suite passed after
+the build completed; no tests were skipped and no assertions or timeouts were weakened.
+CI for the latest published head is recorded on [PR #140](https://github.com/DruHustle/du-platform/pull/140).
+Additional responsive, historical-order, preview and release-safety results belong
+in that current CI record; the earlier 323/106 totals remain historical.
+
+### Migration, compatibility and rollback
+
+Startup adds `contact_enquiries` and `transactional_messages` with `CREATE TABLE IF
+NOT EXISTS` under the existing migration lock. There is no historical enquiry or
+email backfill. Contact clients must generate a UUID `requestId` before first POST
+and reuse it unchanged after uncertain responses. Calls without a UUID now receive
+400; this necessary contract change prevents unsafe unidentified retries. The new
+frontend supplies it. Customer response success means `received: true`, not sent.
+
+Keep both new tables, all existing auth-version/consent fields, runtime keys and
+queued payloads on rollback. Prefer a compatible forward fix. Do not reinstate a
+synchronous contact/reset handler or an old frontend that cannot consume already
+issued fragment links. Pause outbound workers and reconcile first; never restore
+an old database over new enquiries, consent or orders. During the next separately
+authorized release, refresh the installed recovery probe from reviewed source and
+verify both deployment and current-schema recovery. No production migration or
+operational script installation is performed by publication of this PR.
+
+### Publication and remaining owner inputs
+
+This follow-up is authorized for the public branch/PR only. Production merge,
+deployment and commercial activation require separate explicit authorization.
+Existing main/live deployment remains the baseline until that authorization.
+
+Actual-Mac archive checks verified existing encrypted copies, manifests, last-success
+status and the installed scheduler. The normal due check reported not due. Detailed
+archive paths/checksums and operational evidence remain in the private local
+handover, rather than the public PR. This is archive-transfer evidence, not
+independent key recovery. Separate encrypted USB custody/unlock arrangements and
+verified public recipient/fingerprint remain pending; runtime keys are preserved.
 
 Commercial inputs remain owner work: verified physical stock and product facts,
 supplier/packaging/delivery costs, finalized commercial procedures and payment
-acceptance. Keep the existing demand-validation experiment and prelaunch mode.
-Independent key custody/recipient verification remains pending. The approved Mac
-archive destination is unchanged; this Linux review environment cannot independently
-attest to Mac backup freshness, installed scheduling or USB custody. Do not create
-a Mac path here or describe CI recovery as full host-loss recovery.
+acceptance. Continue the existing 28-day demand experiment and sourcing worksheet;
+no purchases, supplier commitments or activation occur. Manual provider reconciliation
+requires an operator's verified provider record; this change does not add delivery
+webhooks or guarantee inbox arrival. Native-speaker review remains useful for
+customer-facing Shona/Ndebele copy.

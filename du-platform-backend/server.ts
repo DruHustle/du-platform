@@ -1,4 +1,5 @@
 import { startOrderNotificationWorker } from "./modules/shop/orderNotifications";
+import { startTransactionalWorker } from "./modules/notifications/transactionalWorker";
 import { startNewsletterWorker } from "./modules/newsletter/worker";
 import compression from "compression";
 import express from "express";
@@ -278,6 +279,8 @@ export async function startServer() {
 
   const stopOrderWorker = startOrderNotificationWorker();
   const stopNewsletterWorker = startNewsletterWorker();
+  const stopTransactionalMessages = startTransactionalWorker();
+  server.once("close", stopTransactionalMessages);
   server.once("close", stopNewsletterWorker);
   server.once("close", stopOrderWorker);
 

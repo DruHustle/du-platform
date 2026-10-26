@@ -1,4 +1,5 @@
 import { customerLanguage } from "@shared/customerLanguage";
+import ContactEnquiry from "./ContactEnquiry";
 import { Link, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -1165,6 +1166,9 @@ export default function Layout({ children }: LayoutProps) {
                 {t("contact")}
               </h3>
               <ul className="text-slate-400 space-y-3 text-xs">
+                <li>
+                  <ContactEnquiry />
+                </li>
                 <li className="flex items-start gap-3">
                   <Mail className="h-4 w-4 shrink-0 text-yellow-400" />
                   <a

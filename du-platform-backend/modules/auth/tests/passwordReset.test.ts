@@ -1,7 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthService } from "../services/authService";
 import { sendResetEmail } from "../../../shared/email";
-vi.mock("../../../shared/email", () => ({ sendResetEmail: vi.fn() }));
+vi.mock("../../../shared/email", async original => ({
+  ...(await original<typeof import("../../../shared/email")>()),
+  sendResetEmail: vi.fn(),
+}));
 afterEach(() => vi.restoreAllMocks());
 
 describe("password reset service", () => {
@@ -41,9 +44,9 @@ describe("password reset service", () => {
         .fn()
         .mockResolvedValueOnce({ id: 1, email: "fixture@example.test" })
         .mockResolvedValueOnce(null),
-      createPasswordResetToken: vi
+      queuePasswordReset: vi
         .fn()
-        .mockResolvedValue({ token: "private-reset-token" }),
+        .mockRejectedValue(new Error("private-storage-secret")),
     };
     const service = new AuthService(repository as any);
     const responses = await Promise.all([
@@ -51,6 +54,7 @@ describe("password reset service", () => {
       service.forgotPassword({ email: "missing@example.test" }),
     ]);
     expect(responses[0]).toEqual(responses[1]);
+    expect(sendResetEmail).not.toHaveBeenCalled();
     expect(JSON.stringify(log.mock.calls)).not.toMatch(/private-|@/);
   });
 });

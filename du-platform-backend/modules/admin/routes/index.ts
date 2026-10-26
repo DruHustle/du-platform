@@ -1,4 +1,5 @@
 import { createInterestRouter } from "../../shop/interestRoutes";
+import { createTransactionalAdminRouter } from "../../notifications/operatorRoutes";
 import { createResearchRouter } from "../../investment/researchRoutes";
 import { createProductDetailsRouter } from "../../shop/productDetailsRoutes";
 import { createOrderAdminRouter } from "../../shop/orderAdminRoutes";
@@ -17,6 +18,7 @@ export function createAdminModuleRouter() {
   const controller = new AdminController();
 
   router.use(requireJwtAuth, requireAdminAuth);
+  router.use("/service-inbox", createTransactionalAdminRouter());
   router.use("/shop-products", createProductDetailsRouter(true));
   router.use("/research", createResearchRouter(true));
   router.use("/orders", createOrderAdminRouter());

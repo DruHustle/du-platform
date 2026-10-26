@@ -1,92 +1,72 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-vi.mock("../../../shared/email", async importOriginal => ({
-  ...(await importOriginal<typeof import("../../../shared/email")>()),
-  getNotifyFromEmail: vi.fn(async () => "support@example.com"),
-  getNotifyAlertEmails: vi.fn(async () => ["admin@example.com"]),
-  sendEmailMessageSafe: vi.fn(async () => true),
-}));
-import {
-  getNotifyAlertEmails,
-  sendEmailMessageSafe,
-} from "../../../shared/email";
 import { NotificationService } from "../services/notificationService";
+import { randomUUID } from "node:crypto";
 
-describe("notification HTML", () => {
-  beforeEach(() => {
-    vi.mocked(sendEmailMessageSafe).mockReset().mockResolvedValue(true);
-    vi.mocked(getNotifyAlertEmails).mockResolvedValue(["admin@example.com"]);
-  });
-
+describe("durable notification boundary", () => {
+  const repository = {
+    findUserById: vi.fn(async () => ({ id: 1, email: "fixture@example.test" })),
+    createFeatureNotification: vi.fn(),
+    createContactInquiry: vi.fn(),
+  };
+  const service = new NotificationService(repository as any);
   const contact = {
+    requestId: randomUUID(),
     name: "Fixture",
-    email: "fixture@example.test",
+    email: "FIXTURE@example.test",
     subject: "Question",
     message: "Synthetic message",
+    language: "de",
   };
-  it("rejects undelivered contact enquiries without sending a false customer acknowledgement", async () => {
-    vi.mocked(sendEmailMessageSafe).mockResolvedValueOnce(false);
-    await expect(
-      new NotificationService().createContactInquiry(contact)
-    ).rejects.toMatchObject({
-      status: 503,
-      code: "CONTACT_INQUIRY_UNAVAILABLE",
+  beforeEach(() => {
+    vi.clearAllMocks();
+    repository.createContactInquiry.mockResolvedValue({
+      received: true,
+      requestId: contact.requestId,
     });
-    expect(sendEmailMessageSafe).toHaveBeenCalledOnce();
+    repository.createFeatureNotification.mockResolvedValue({ created: true });
   });
-  it("rejects contact enquiries when no operator destination exists", async () => {
-    vi.mocked(getNotifyAlertEmails).mockResolvedValue([]);
-    await expect(
-      new NotificationService().createContactInquiry(contact)
-    ).rejects.toMatchObject({ status: 503 });
-    expect(sendEmailMessageSafe).not.toHaveBeenCalled();
-  });
-  it("retains successful operator acceptance when only the customer acknowledgement fails", async () => {
-    vi.mocked(sendEmailMessageSafe)
-      .mockResolvedValueOnce(true)
-      .mockResolvedValueOnce(false);
-    await expect(
-      new NotificationService().createContactInquiry(contact)
-    ).resolves.toHaveProperty("message");
-    expect(sendEmailMessageSafe).toHaveBeenCalledTimes(2);
-  });
-
-  it("escapes contact fields while preserving message line breaks", async () => {
-    const service = new NotificationService();
-    await service.createContactInquiry({
-      name: '<img src=x onerror="alert(1)">',
-      email: "test@example.com",
-      subject: "<strong>Offer</strong>",
-      message: "<script>alert(1)</script>\nSecond line",
-      phone: "<b>123</b>",
+  it("returns a durable receipt rather than claiming provider delivery", async () => {
+    expect(await service.createContactInquiry(contact)).toEqual({
+      received: true,
+      requestId: contact.requestId,
     });
-    const bodies = vi
-      .mocked(sendEmailMessageSafe)
-      .mock.calls.map(([payload]) => payload.html || "");
-    expect(bodies).toHaveLength(2);
-    for (const html of bodies) {
-      expect(html).not.toContain("<img");
-      expect(html).not.toContain("<script>");
-      expect(html).toContain("&lt;img");
-    }
-    expect(bodies[0]).toContain(
-      "&lt;script&gt;alert(1)&lt;/script&gt;<br>Second line"
+    expect(repository.createContactInquiry).toHaveBeenCalledWith({
+      ...contact,
+      email: "fixture@example.test",
+      phone: "",
+      module: "general",
+    });
+  });
+  it("does not claim success when durable storage fails", async () => {
+    repository.createContactInquiry.mockRejectedValueOnce(
+      new Error("Synthetic storage failure")
     );
-    expect(bodies[0]).toContain("&lt;b&gt;123&lt;/b&gt;");
+    await expect(service.createContactInquiry(contact)).rejects.toThrow(
+      "Synthetic storage failure"
+    );
   });
-
-  it("escapes feature names in both user and admin email bodies", async () => {
-    const repository = {
-      findUserById: vi.fn(async () => ({ id: 1, email: "test@example.com" })),
-      createFeatureNotification: vi.fn(async () => ({ created: true })),
-    };
-    const service = new NotificationService(repository as any);
-    await service.createFeatureNotification(
+  it("rejects oversized input before persistence", async () => {
+    await expect(
+      service.createContactInquiry({ ...contact, message: "x".repeat(4001) })
+    ).rejects.toThrow();
+    expect(repository.createContactInquiry).not.toHaveBeenCalled();
+  });
+  it("passes one bounded feature request to durable persistence", async () => {
+    await service.createFeatureNotification(1, "  synthetic_feature  ");
+    expect(repository.createFeatureNotification).toHaveBeenCalledWith(
       1,
-      '<a href="https://evil.example">Click here</a>'
+      "fixture@example.test",
+      "synthetic_feature"
     );
-    for (const [payload] of vi.mocked(sendEmailMessageSafe).mock.calls) {
-      expect(payload.html).not.toContain('<a href="https://evil.example">');
-      expect(payload.html).toContain("&lt;a href=");
-    }
+  });
+  it("does not store an unbounded feature or an unknown account", async () => {
+    await expect(
+      service.createFeatureNotification(1, "x".repeat(121))
+    ).rejects.toMatchObject({ status: 400 });
+    repository.findUserById.mockResolvedValueOnce(null as any);
+    await expect(
+      service.createFeatureNotification(1, "feature")
+    ).rejects.toMatchObject({ status: 401 });
+    expect(repository.createFeatureNotification).not.toHaveBeenCalled();
   });
 });

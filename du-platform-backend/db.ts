@@ -1,4 +1,5 @@
 import { initializeProductInterest } from "./modules/shop/interestSchema";
+import { initializeTransactionalMessages } from "./modules/notifications/schema";
 import { initializeShopPilot } from "./modules/shop/pilotSchema";
 import { initializeAdminAccounts } from "./modules/admin/bootstrap";
 import { initializeNewsletterDatabase } from "./modules/newsletter/schema";
@@ -380,6 +381,7 @@ export async function initializeDatabase(): Promise<void> {
     await initializeShopPilot(db);
     await initializeNewsletterDatabase(db);
     await initializeProductInterest(db);
+    await initializeTransactionalMessages(db);
 
     await syncNtirSeedData();
     await syncAdminSettingsSeedData();

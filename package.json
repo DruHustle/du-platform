@@ -44,6 +44,7 @@
     "test:e2e:navigation": "node scripts/tests/e2e-navigation.mjs",
     "test:e2e:shop": "node --import tsx scripts/tests/e2e-shop.mjs",
     "test:e2e:newsletter": "node scripts/tests/e2e-newsletter.mjs",
+    "test:e2e:transactional": "node --import tsx scripts/tests/e2e-transactional.mjs",
     "test:e2e:discovery": "node scripts/tests/e2e-discovery.mjs",
     "test:e2e:vr:music": "node scripts/tests/e2e-vr-music.mjs",
     "test:e2e:shop:integrated": "node --import tsx scripts/tests/e2e-shop-integrated.mjs",
