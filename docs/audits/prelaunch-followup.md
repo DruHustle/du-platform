@@ -75,6 +75,9 @@ configuration, manual pull, installation and pending USB custody steps.
   prelaunch zero/positive stock, unavailable and partially invalid baskets, valid
   pilot arithmetic, explicit removal, slow/empty/populated/failed/retried information,
   withdrawn products and stale navigation responses. Screenshots are reviewed.
+- The full 176-case responsive/CSP/keyboard matrix passes at 320/390/768/1440
+  across four languages. CI caught a new inline price-label overflow at 320px;
+  block-level wrapping below the price fixes it without changing typography.
 - Ten Mac safety tests cover overlap, offline recovery, corruption/source mutation,
   stale snapshots, existing-copy preservation, symlink/non-Mac rejection, pinned SSH,
   paths containing spaces and launch scheduling. Actual LaunchAgent and shasum
