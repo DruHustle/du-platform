@@ -102,7 +102,6 @@ export function PublicPagePreview({
           <p>
             Discover products, travel research and practical business ideas.
           </p>
-          <a href="/shop/products">Browse products</a>
         </header>
       ) : (
         <h1>{product?.name || seo.bodyHeading}</h1>
