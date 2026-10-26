@@ -69,7 +69,7 @@ try {
             "utf8"
           )
         );
-        for (const width of [375, 1440])
+        for (const width of [320, 375, 1440])
           for (const state of [
             "prelaunch-zero",
             "prelaunch-positive",
@@ -77,6 +77,7 @@ try {
             "pilot-partial",
             "pilot-valid",
           ]) {
+            if (width === 320 && state !== "prelaunch-zero") continue;
             const valid = state === "pilot-valid",
               products = [
                 {
@@ -127,7 +128,7 @@ try {
               base + "/shop/products?category=all&lng=" + language
             );
             await page.locator("[data-shop-product-card]").first().waitFor();
-            if (width === 375) {
+            if (width < 1024) {
               const summary = page.locator("[data-mobile-basket-summary]");
               await summary.waitFor();
               if (valid) assert((await summary.innerText()).includes("€56.60"));
@@ -139,6 +140,23 @@ try {
                 );
                 assert(!/[€$]|56[.,]60/.test(await summary.innerText()));
               }
+              if (!valid) {
+                const count = summary.locator("[data-mobile-basket-count]");
+                assert(
+                  await count.evaluate(e => {
+                    const item = e.getBoundingClientRect(),
+                      line = e.parentElement.getBoundingClientRect();
+                    return (
+                      item.left >= line.left && item.right <= line.right + 1
+                    );
+                  }),
+                  "Saved-item count must be visible before the truncated label"
+                );
+              }
+              if (state === "prelaunch-zero" && width < 1024)
+                await page.screenshot({
+                  path: `${out}/${engine}-${language}-${width}-summary.png`,
+                });
               await summary.getByRole("button").click();
             }
             const cart = page.locator("#shop-cart-checkout");
