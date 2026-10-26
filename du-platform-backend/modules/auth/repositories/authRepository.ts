@@ -9,9 +9,13 @@ import {
   findUserByEmail,
   findUserById,
   updateUserPassword,
+  resetPasswordWithToken,
 } from "../../../shared/persistence/authStore";
 
 export class AuthRepository {
+  resetPasswordWithToken(token: string, passwordHash: string) {
+    return resetPasswordWithToken(token, passwordHash);
+  }
   findByEmail(email: string) {
     return findUserByEmail(email);
   }
@@ -24,8 +28,8 @@ export class AuthRepository {
     return createUser(fullName, email, passwordHash);
   }
 
-  createSession(userId: number) {
-    return createSession(userId);
+  createSession(userId: number, authVersion?: number) {
+    return createSession(userId, undefined, authVersion);
   }
 
   deleteSession(token: string) {

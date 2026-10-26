@@ -333,7 +333,7 @@ export function validateTripPlan(
             `${d.title} ${d.details}`
               .toLowerCase()
               .includes(e.name.toLowerCase())
-        ).length > 1
+        ).length !== 1
     )
   )
     return null;

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getAdminSetting } from "./persistence/settingsStore";
+import { outboundMessagesPaused } from "./outboundMessages";
 
 export const ADMIN_SETTING_NOTIFY_ALERT_EMAILS = "notify_alert_emails";
 export const ADMIN_SETTING_NOTIFY_FROM_EMAIL = "notify_from_email";
@@ -48,11 +49,14 @@ export async function sendEmailMessage(payload: {
   text?: string;
   from?: string;
 }) {
+  if (outboundMessagesPaused())
+    throw new Error("Outbound messages are paused.");
   const recipients = (Array.isArray(payload.to) ? payload.to : [payload.to])
     .map(value => String(value ?? "").trim())
     .filter(Boolean);
 
-  if (recipients.length === 0) return;
+  if (recipients.length === 0)
+    throw new Error("Email recipients are not configured.");
 
   const provider = String(process.env.RESET_EMAIL_PROVIDER ?? "resend")
     .trim()
@@ -64,13 +68,10 @@ export async function sendEmailMessage(payload: {
   if (provider === "resend") {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      console.log(
-        `[email:dry-run] to=${recipients.join(",")} subject=${payload.subject}`
-      );
-      return;
+      throw new Error("Email provider is not configured.");
     }
 
-    await axios.post(
+    const response = await axios.post(
       "https://api.resend.com/emails",
       {
         from,
@@ -87,12 +88,12 @@ export async function sendEmailMessage(payload: {
         },
       }
     );
+    if (!response?.data?.id)
+      throw new Error("Email provider did not confirm acceptance.");
     return;
   }
 
-  console.log(
-    `[email:unsupported-provider:${provider}] to=${recipients.join(",")}`
-  );
+  throw new Error("Email provider is not supported.");
 }
 
 export async function sendEmailMessageSafe(
@@ -108,11 +109,10 @@ export async function sendEmailMessageSafe(
   try {
     await sendEmailMessage(payload);
     return true;
-  } catch (error: any) {
-    console.error(`[email] failed in ${context}`, {
-      message: String(error?.message ?? error),
-      subject: escSubject(payload.subject),
-    });
+  } catch {
+    // Provider exceptions may include credentials and message bodies. Context
+    // is an internal call-site label, never a customer subject or address.
+    console.error(`[email] delivery failed in ${context}`);
     return false;
   }
 }

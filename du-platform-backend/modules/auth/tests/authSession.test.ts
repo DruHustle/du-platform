@@ -22,4 +22,15 @@ describe("session cookie parsing", () => {
       } as express.Request)
     ).toBe("opaque-session");
   });
+
+  it.each(["Bearer jwt.access.token", "Bearer ", "Basic invalid", ""])(
+    "never falls back to a session cookie after explicit authorization %s",
+    authorization => {
+      expect(
+        resolveSessionToken({
+          headers: { authorization, cookie: "du_session=valid-cookie" },
+        } as express.Request)
+      ).toBeNull();
+    }
+  );
 });

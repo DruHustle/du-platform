@@ -114,6 +114,13 @@ export class NotificationService {
     const safeModule = String(input.module ?? "general").trim();
 
     const alertEmails = await getNotifyAlertEmails();
+    if (!alertEmails.length) {
+      throw new NotificationServiceError(
+        "CONTACT_INQUIRY_UNAVAILABLE",
+        503,
+        "We could not send your message. Please try again later."
+      );
+    }
     if (alertEmails.length > 0) {
       const adminSubject = `New contact inquiry: ${safeSubject}`;
       const adminHtml = `<p><strong>New contact inquiry via ${escapeEmailHtml(safeModule)} module</strong></p>
@@ -124,7 +131,7 @@ ${safePhone ? `<p>Phone: ${escapeEmailHtml(safePhone)}</p>` : ""}
 <p>Message:</p>
 <blockquote>${escapeEmailHtml(safeMessage).replace(/\n/g, "<br>")}</blockquote>`;
       const adminText = `New contact inquiry (${safeModule})\nName: ${safeName}\nEmail: ${safeEmail}${safePhone ? `\nPhone: ${safePhone}` : ""}\nSubject: ${safeSubject}\nMessage:\n${safeMessage}`;
-      await sendEmailMessageSafe(
+      const accepted = await sendEmailMessageSafe(
         {
           to: alertEmails,
           subject: adminSubject,
@@ -134,6 +141,13 @@ ${safePhone ? `<p>Phone: ${escapeEmailHtml(safePhone)}</p>` : ""}
         },
         "contact-inquiry:admin-alert"
       );
+      if (!accepted) {
+        throw new NotificationServiceError(
+          "CONTACT_INQUIRY_UNAVAILABLE",
+          503,
+          "We could not confirm delivery of your message. Please try again later."
+        );
+      }
     }
 
     const confirmSubject = "We received your message";
