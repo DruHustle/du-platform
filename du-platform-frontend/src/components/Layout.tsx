@@ -44,7 +44,7 @@ import {
   type FormEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   api,
   clearAuthToken,
@@ -132,8 +132,6 @@ export default function Layout({ children }: LayoutProps) {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [phoneActionOpen, setPhoneActionOpen] = useState(false);
-  const [showWhatsIcon, setShowWhatsIcon] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
   const [newsletterFeedback, setNewsletterFeedback] = useState<{
@@ -181,14 +179,6 @@ export default function Layout({ children }: LayoutProps) {
         window.cancelAnimationFrame(rafId);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    // Footer contact icon alternates between call/WhatsApp affordances.
-    const timer = setInterval(() => {
-      setShowWhatsIcon(prev => !prev);
-    }, 1800);
-    return () => clearInterval(timer);
   }, []);
 
   // Sync mobile menu close with route changes
@@ -792,6 +782,7 @@ export default function Layout({ children }: LayoutProps) {
 
       <Dialog open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
         <DialogContent
+          data-placement="menu"
           className="lg:hidden top-[calc(4rem+env(safe-area-inset-top))] left-auto right-3 w-[min(20rem,calc(100vw-1.5rem))] translate-x-0 translate-y-0 max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl border-white/10 bg-slate-900 p-2 pt-10 text-white"
           aria-describedby={undefined}
           onCloseAutoFocus={event => {
@@ -1040,7 +1031,7 @@ export default function Layout({ children }: LayoutProps) {
       </Dialog>
 
       {/* Footer */}
-      <footer className="bg-slate-950 pt-20 pb-28 lg:pb-12">
+      <footer className="site-footer bg-slate-950 pt-14 pb-12">
         <div className="container mx-auto px-6">
           {/* Footer information and contact grid */}
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 mb-12 lg:grid-cols-[0.8fr_0.8fr_1.25fr_1.15fr]">
@@ -1178,76 +1169,47 @@ export default function Layout({ children }: LayoutProps) {
                     info@diasporaunlocked.com
                   </a>
                 </li>
-                <li className="relative">
-                  <button
-                    onClick={() => setPhoneActionOpen(prev => !prev)}
-                    className="flex items-start gap-3 text-left text-slate-400 hover:text-white transition-colors"
-                  >
-                    <span className="relative h-4 w-4 shrink-0">
-                      <AnimatePresence mode="wait" initial={false}>
-                        {showWhatsIcon ? (
-                          <motion.span
-                            key="wa"
-                            initial={{ opacity: 0, scale: 0.7, rotate: -20 }}
-                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                            exit={{ opacity: 0, scale: 0.7, rotate: 20 }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute inset-0 text-green-400"
-                          >
-                            <MessageCircle className="h-4 w-4" />
-                          </motion.span>
-                        ) : (
-                          <motion.span
-                            key="call"
-                            initial={{ opacity: 0, scale: 0.7, rotate: 20 }}
-                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                            exit={{ opacity: 0, scale: 0.7, rotate: -20 }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute inset-0 text-yellow-400"
-                          >
-                            <Phone className="h-4 w-4" />
-                          </motion.span>
-                        )}
-                      </AnimatePresence>
-                    </span>
-                    <span className="break-all">+49 151 474 16152</span>
-                  </button>
-                  <AnimatePresence>
-                    {phoneActionOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                        transition={{ duration: 0.18 }}
-                        className="absolute right-0 mt-2 w-[min(14rem,calc(100vw-2rem))] rounded-xl border border-white/15 bg-slate-900/95 backdrop-blur-xl p-3 shadow-2xl z-[120]"
+                <li>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        className="flex min-h-11 items-center gap-3 text-left text-slate-400 hover:text-white transition-colors"
                       >
-                        <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
-                          {tr(
-                            "footer.contact.options_title",
-                            "Contact Options"
-                          )}
-                        </p>
-                        <div className="flex flex-col gap-2">
-                          <a
-                            href="tel:+4915147416152"
-                            className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs text-white hover:bg-white hover:text-slate-900 transition-colors"
-                          >
-                            <Phone className="h-3.5 w-3.5 shrink-0" />
-                            {tr("footer.contact.call", "Call")}
-                          </a>
-                          <a
-                            href="https://wa.me/+4915147416152"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-lg border border-green-400/30 bg-green-500/15 px-3 py-2 text-xs text-green-300 hover:bg-green-500 hover:text-white transition-colors"
-                          >
-                            <MessageCircle className="h-3.5 w-3.5 shrink-0" />
-                            {tr("footer.contact.whatsapp", "WhatsApp")}
-                          </a>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        <Phone className="h-4 w-4 shrink-0 text-yellow-400" />
+                        <span>+49 151 474 16152</span>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      side="top"
+                      align="start"
+                      className="z-[260] w-56 rounded-xl border-white/15 bg-slate-900 p-2 text-white shadow-2xl"
+                    >
+                      <DropdownMenuLabel className="px-3 py-2 text-xs font-semibold text-slate-300">
+                        {tr("footer.contact.options_title", "Contact Options")}
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem asChild>
+                        <a
+                          href="tel:+4915147416152"
+                          className="min-h-11 gap-3 rounded-lg px-3 focus:bg-white/10 focus:text-white"
+                        >
+                          <Phone className="h-4 w-4" />
+                          {tr("footer.contact.call", "Call")}
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a
+                          href="https://wa.me/+4915147416152"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="min-h-11 gap-3 rounded-lg px-3 text-green-300 focus:bg-white/10 focus:text-green-200"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                          {tr("footer.contact.whatsapp", "WhatsApp")}
+                        </a>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </li>
                 <li className="flex items-start gap-3 opacity-90">
                   <MapPin className="h-4 w-4 shrink-0 text-yellow-400" />
@@ -1261,7 +1223,7 @@ export default function Layout({ children }: LayoutProps) {
 
           <nav
             aria-label={t("pilot.operator_title")}
-            className="mb-6 flex flex-wrap gap-5 text-xs text-white/80 underline underline-offset-4"
+            className="mb-6 flex flex-wrap gap-x-5 gap-y-1 text-xs text-white/80 underline underline-offset-4"
           >
             <Link href="/legal-notice">{t("pilot.operator_title")}</Link>
             <Link href="/delivery-and-returns">
@@ -1271,10 +1233,10 @@ export default function Layout({ children }: LayoutProps) {
           </nav>
           {/* Bottom Bar: Maintain horizontal flex on desktop, vertical on mobile */}
           <div className="border-t border-white/10 pt-8 flex flex-col flex-wrap md:flex-row justify-between items-center gap-6 text-[10px]">
-            <p className="text-slate-500 font-medium">
+            <p className="text-slate-400 text-xs font-medium">
               © 2026 {t("brand")}. {t("all_rights_reserved")}
             </p>
-            <div className="flex max-w-full flex-wrap justify-center gap-x-6 gap-y-3">
+            <div className="footer-bottom-links flex max-w-full flex-wrap justify-center gap-x-6 gap-y-3">
               <Link
                 href="/admin"
                 className="inline-flex min-h-11 items-center text-slate-400 hover:text-white transition-colors uppercase tracking-widest font-bold"

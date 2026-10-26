@@ -771,3 +771,34 @@
 .content-page .shop-landing .catalog-notice button {
   color: #854d0e;
 }
+
+/* Currency preferences live on a light canvas, unlike the dark catalogue.
+   Keep the whole control in that surface's palette, including the chevron. */
+.content-page .shop-landing .shop-currency-control {
+  max-width: 560px;
+}
+.content-page .shop-landing .shop-currency-control label {
+  color: #334155;
+}
+.content-page .shop-landing .shop-currency-control p {
+  color: #526174;
+}
+.content-page .shop-landing .shop-currency-control select {
+  color-scheme: light;
+  border-color: #94a3b8;
+  background: #fff;
+  color: #0f172a;
+}
+.content-page .shop-landing .shop-currency-control svg {
+  color: #475569;
+}
+.content-page .discovery-listing select {
+  color-scheme: light;
+  border-color: #94a3b8;
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-color: white;
+  color: #0f172a;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}

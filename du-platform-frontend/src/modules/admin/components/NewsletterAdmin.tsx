@@ -290,7 +290,7 @@ export default function NewsletterAdmin({
         <section className={panel}>
           <h3 className="text-lg font-semibold">Subscriber list</h3>
           <form
-            className="my-5 flex flex-wrap items-end gap-3"
+            className="my-5 grid grid-cols-1 items-end gap-3 md:grid-cols-[minmax(0,1fr)_minmax(11rem,auto)_auto]"
             onSubmit={event => {
               event.preventDefault();
               setSearch(searchInput.trim());
@@ -310,7 +310,7 @@ export default function NewsletterAdmin({
             <label className="text-sm">
               Status
               <select
-                className="mt-2 block h-11 max-w-full rounded-md border border-white/20 bg-slate-950 px-3"
+                className="mt-2 block h-11 w-full max-w-full rounded-md border border-white/20 bg-slate-950 px-3"
                 value={filter}
                 onChange={event => {
                   setFilter(event.target.value);

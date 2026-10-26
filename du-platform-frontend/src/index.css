@@ -547,25 +547,6 @@
     @apply text-sm text-white/75 max-w-3xl mx-auto font-light leading-relaxed mt-4;
   }
 
-  .section-title-compact {
-    font-size: 1.25rem !important;
-    line-height: 1.75rem !important;
-    font-weight: 900 !important;
-    letter-spacing: -0.025em !important;
-    color: rgb(255 255 255) !important;
-  }
-
-  .section-subtitle-compact {
-    font-size: 0.875rem !important;
-    line-height: 1.625 !important;
-    font-weight: 300 !important;
-    color: rgb(255 255 255 / 0.75) !important;
-    max-width: 48rem !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    margin-top: 1rem !important;
-  }
-
   /* Scoped outer tile finish (apply explicitly via className="outer-glass-panel"). */
   .outer-glass-panel {
     position: relative;
@@ -1837,4 +1818,34 @@
     font-size: 0.8em;
     color: #666;
   }
+}
+
+/* Shared footer controls line up and stay comfortable to use on touch screens. */
+.site-footer {
+  border-top: 1px solid rgb(255 255 255 / 9%);
+}
+.site-footer > .container {
+  max-width: 1280px;
+}
+.site-footer :is(ul a, ul button, nav a, .footer-bottom-links a) {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+.site-footer ul {
+  font-size: 13px;
+}
+.site-footer :is(ul, nav) {
+  line-height: 1.6;
+}
+.site-footer .footer-bottom-links {
+  align-items: center;
+}
+.site-footer :is(input, button):focus-visible {
+  outline: 2px solid var(--color-zim-gold);
+  outline-offset: 3px;
+}
+
+.site-footer li:has(> a[href^="mailto:"]) {
+  align-items: center;
 }

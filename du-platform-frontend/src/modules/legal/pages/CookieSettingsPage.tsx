@@ -21,9 +21,9 @@ export default function CookieSettings() {
   return (
     <Layout>
       <section className="document-section bg-slate-950 min-h-[70vh]">
-        <div className="container px-6 mx-auto max-w-3xl">
+        <div className="container document-content">
           <div className="content-panel editorial-panel p-8 md:p-10">
-            <h1 className="page-title">
+            <h1 className="page-title mb-5">
               {tr("cookies.settings.title", "Cookie settings")}
             </h1>
             <p className=" leading-relaxed mb-6">
