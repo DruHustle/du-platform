@@ -343,7 +343,7 @@ export default function InvestmentOpportunitiesPage() {
                   footer={
                     <Button
                       asChild
-                      className="w-full bg-white text-slate-950 hover:bg-slate-200"
+                      className="w-full bg-zim-gold text-slate-950 hover:bg-yellow-300"
                     >
                       <Link href={`/investment/projects/${p.id}`}>
                         {t("investment.project_card.view_details", {
