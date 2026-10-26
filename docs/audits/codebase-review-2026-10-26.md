@@ -187,11 +187,17 @@ if the frontend rolls back. The marker gate additionally prevents sending links
 while the compatible page is unavailable. Do not downgrade the frontend after
 issuing new fragment links.
 
-### Publication and remaining owner inputs
+### Historical publication boundary and remaining owner inputs
 
-This follow-up is authorized for the public branch/PR only. Production merge,
+At the time of the follow-up review, authorization covered the public branch/PR only. Production merge,
 deployment and commercial activation require separate explicit authorization.
-Existing main/live deployment remains the baseline until that authorization.
+The owner subsequently authorized the controlled release: PR #140 merged as
+`90c13ae7ed8906c4c43113f7d2c50ba6d810ae3d`, and
+[production CI](https://github.com/DruHustle/du-platform/actions/runs/40382879817)
+passed. Oracle and Vercel served that revision; the held cutover, additive migration,
+live browser checks, queue reconciliation and updated restored-application probe
+passed before the temporary outbound hold was released. Commercial activation
+remained disabled. Detailed operational evidence stays in the private handover.
 
 Actual-Mac archive checks verified existing encrypted copies, manifests, last-success
 status and the installed scheduler. The normal due check reported not due. Detailed
@@ -207,3 +213,24 @@ no purchases, supplier commitments or activation occur. Manual provider reconcil
 requires an operator's verified provider record; this change does not add delivery
 webhooks or guarantee inbox arrival. Native-speaker review remains useful for
 customer-facing Shona/Ndebele copy.
+
+## Home refinement review
+
+The next review starts from the deployed PR #140 source. Home now uses one eager,
+high-priority Victoria Falls background; the carousel interval, state, transition
+layers and pause/resume controls are removed. The hero's “Browse products” action
+is removed from both the interactive and initial HTML views. Brand mark, typography,
+tagline and module navigation remain intact.
+
+Browser inspection also found that the entire exploration button continuously
+moved with its arrow. The button now remains stationary with a visible keyboard
+focus outline; only the decorative arrow animates, respecting reduced motion.
+The existing navigation regression covers mouse and keyboard activation at three
+widths. Both-engine local inspection also checks a static background beyond the
+former rotation interval without requesting the old slideshow destinations.
+
+The owner confirmed no stock, payment account or DHL account and explicitly deferred
+separate recovery-key custody. These are deferred owner prerequisites, not passed
+commercial/recovery checks. Prelaunch enforcement and the existing encrypted backup
+schedule remain unchanged. This frontend release changes no API, schema, runtime
+credential or provider; protected main and the full existing CI remain the release gate.

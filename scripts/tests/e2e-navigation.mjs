@@ -112,6 +112,48 @@ try {
       .locator("main img")
       .first()
       .evaluate(image => image.decode().catch(() => {}));
+    const homeHero = page.locator("#main-page-hero-wrapper");
+    assert.equal(
+      await homeHero
+        .getByRole("link", { name: "Browse products", exact: true })
+        .count(),
+      0
+    );
+    assert.equal(
+      await homeHero.getByRole("button", { name: /pause|resume/i }).count(),
+      0
+    );
+    assert.equal(
+      await homeHero.locator('img[aria-hidden="true"]').getAttribute("src"),
+      "/images/pages/tourism/victoria_falls.webp"
+    );
+    // A moving decorative arrow must not move the mouse/keyboard hit target.
+    const explore = homeHero.getByRole("button", {
+      name: "Explore the platform",
+      exact: true,
+    });
+    await explore.click();
+    await page.waitForFunction(() => {
+      const section = document.getElementById("explore-platform");
+      return section && section.getBoundingClientRect().top < innerHeight / 2;
+    });
+    // Start keyboard activation independently of the previous native smooth scroll.
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await explore.waitFor();
+    await explore.focus();
+    await explore.press("Enter");
+    await page.waitForFunction(
+      () =>
+        document.getElementById("explore-platform").getBoundingClientRect()
+          .top <
+        innerHeight / 2
+    );
+    await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
+    record({
+      width,
+      scenario:
+        "static Victoria Falls hero and stationary mouse/keyboard exploration control",
+    });
     slowScripts = true;
 
     for (const path of [
