@@ -89,7 +89,7 @@ export default function ProductCard({
               convertShopCents(product.price_cents, product.currency, currency),
               currency
             )}
-            <span className="ml-2 text-xs font-normal text-slate-400">
+            <span className="mt-1 block break-words text-xs font-normal text-slate-400">
               {t("product_interest.indicative_price")}
             </span>
           </p>
