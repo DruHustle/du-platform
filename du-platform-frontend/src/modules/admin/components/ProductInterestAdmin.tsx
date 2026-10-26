@@ -15,6 +15,8 @@ export default function ProductInterestAdmin() {
   async function load() {
     setBusy(true);
     setError("");
+    setData(null);
+    setReadiness(null);
     try {
       const [{ data: result }, { data: state }] = await Promise.all([
         api.get("/admin/product-interest", { params: { from, to } }),
@@ -61,6 +63,7 @@ export default function ProductInterestAdmin() {
           <Input
             type="date"
             required
+            disabled={busy}
             value={from}
             onChange={e => setFrom(e.target.value)}
           />
@@ -70,6 +73,7 @@ export default function ProductInterestAdmin() {
           <Input
             type="date"
             required
+            disabled={busy}
             value={to}
             min={from}
             onChange={e => setTo(e.target.value)}
@@ -79,9 +83,13 @@ export default function ProductInterestAdmin() {
           {busy ? "Loading…" : "Review range"}
         </Button>
       </form>
+      {busy && <p role="status">Loading product interest…</p>}
       {error && <p role="alert">{error}</p>}
       {data && (
         <>
+          <p className="text-sm text-slate-300">
+            Showing consent dates {data.from} through {data.to} (UTC).
+          </p>
           <p className="text-sm text-slate-300">
             {data.legacy} legacy records retained without automatic confirmation
             or delivery.
@@ -151,7 +159,7 @@ export default function ProductInterestAdmin() {
               <p className="p-3">No product interest in this date range.</p>
             )}
           </div>
-          <h3 className="font-semibold">Recent delivery intents</h3>
+          <h3 className="font-semibold">Recent delivery intents (all dates)</h3>
           <p className="text-sm text-slate-300">
             Sent means provider accepted, not inbox delivery. Failed deliveries
             use the existing Newsletter delivery queue and its bounded retry
