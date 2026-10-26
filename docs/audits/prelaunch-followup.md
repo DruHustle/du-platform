@@ -57,9 +57,9 @@ exit 0. Default interval is 24 hours; login/hourly/calendar due checks provide
 catch-up while awake and connected. This is not an unattended always-on host.
 
 The runbook distinguishes snapshot creation, isolated restoration, transfer and
-checksum evidence. Post-release fresh-snapshot/deployed-revision evidence belongs
-in the PR release handover, rather than treating this pre-release timestamp as a
-newer snapshot. See [operations](../assisted-order-operations.md) for status,
+checksum evidence. Post-release fresh-snapshot/deployed-revision evidence is kept
+in the private local owner handover; this pre-release timestamp remains historical.
+See [operations](../assisted-order-operations.md) for status,
 configuration, manual pull, installation and pending USB custody steps.
 
 ## Verification and release
@@ -130,3 +130,20 @@ The same screenshot review found long Ndebele navigation labels drawing over
 neighboring links at 320px. Labels now truncate within each existing link; icons,
 font sizes, full accessible names and titles remain unchanged. The small follow-up
 uses the same protected CI/release process.
+
+## Final code review: report range states
+
+A follow-up review found that a failed date-range request could leave the previous
+range's counts displayed under newly selected dates. Product-interest reporting now
+clears results before loading, disables date edits while the request is in flight,
+shows an accessible loading status, and labels successful results with the dates
+returned by the server. A failed request shows an error with no stale counts;
+reviewing the range again can recover to the genuine empty state. Recent delivery
+intents explicitly say they cover all dates, as their endpoint returns the latest
+100 independently of the consent filter.
+
+The historical assisted-order browser suite now holds a range response, checks
+loading and locked controls, injects a synthetic failure, then retries against the
+real disposable API with an empty date range. This regression fails against the
+previous build because the old table remains visible. The change uses the existing
+protected admin routes and does not alter reporting queries or customer records.

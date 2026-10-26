@@ -566,6 +566,65 @@ try {
   pass(
     "Protected product-interest workspace shows confirmed unique demand and failed delivery without duplicate registrations"
   );
+  // A failed range change must never leave the previous range's counts visible.
+  await adminPage.getByLabel("From (UTC)").fill("2020-01-01");
+  await adminPage.getByLabel("Through (UTC)").fill("2020-01-02");
+  let releaseRange, rangeStarted;
+  const heldRange = new Promise(resolve => (releaseRange = resolve));
+  const rangeRequest = new Promise(resolve => (rangeStarted = resolve));
+  const rangePattern = "**/api/admin/product-interest?*";
+  await adminPage.route(rangePattern, async route => {
+    rangeStarted();
+    await heldRange;
+    await route.fulfill({ status: 503, json: { message: "Synthetic outage" } });
+  });
+  await adminPage.getByRole("button", { name: "Review range" }).click();
+  await rangeRequest;
+  try {
+    assert.equal(
+      await counts.count(),
+      0,
+      "Previous counts must clear while loading"
+    );
+    assert(await adminPage.getByLabel("From (UTC)").isDisabled());
+    assert(await adminPage.getByLabel("Through (UTC)").isDisabled());
+    await adminPage
+      .getByRole("status")
+      .getByText("Loading product interest…")
+      .waitFor();
+  } finally {
+    releaseRange();
+  }
+  await adminPage
+    .getByRole("alert")
+    .getByText(/Product interest could not be loaded/)
+    .waitFor();
+  assert.equal(
+    await counts.count(),
+    0,
+    "Failed requests must not show stale counts"
+  );
+  await adminPage.screenshot({
+    path: `${output}/product-interest-range-error.png`,
+  });
+  assert(await adminPage.getByLabel("From (UTC)").isEnabled());
+  await adminPage.unroute(rangePattern);
+  await adminPage.getByRole("button", { name: "Review range" }).click();
+  await adminPage
+    .getByText("Showing consent dates 2020-01-01 through 2020-01-02 (UTC).", {
+      exact: true,
+    })
+    .waitFor();
+  await adminPage
+    .getByText("No product interest in this date range.", { exact: true })
+    .waitFor();
+  assert.equal(await counts.locator("tbody tr").count(), 0);
+  await adminPage.screenshot({
+    path: `${output}/product-interest-range-empty.png`,
+  });
+  pass(
+    "Product-interest range loading, failure and empty retry cannot reuse stale counts"
+  );
   await page.waitForLoadState("networkidle");
   assert.deepEqual(errors, []);
   assert.deepEqual(network, []);
