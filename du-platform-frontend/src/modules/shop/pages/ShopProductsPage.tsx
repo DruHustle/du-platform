@@ -1425,15 +1425,26 @@ export default function ShopProducts() {
             <div className="flex items-center gap-2 min-w-0">
               <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />
               <span className="text-xs text-white/80 truncate">
-                {cartItemCount > 0
-                  ? canCheckout
-                    ? `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${money(totalCents)}`
-                    : `${t("product_interest.saved_basket")} · ${t("shop.products.cart.item_count", { count: cartItemCount })}`
-                  : !readiness?.commercialReady
-                    ? t("product_interest.saved_empty")
-                    : t("shop.products.cart.empty_short", {
-                        defaultValue: "Your cart is empty",
-                      })}
+                {cartItemCount > 0 ? (
+                  canCheckout ? (
+                    `${t("shop.products.cart.item_count", { count: cartItemCount })} · ${money(totalCents)}`
+                  ) : (
+                    <>
+                      <span data-mobile-basket-count>
+                        {t("shop.products.cart.item_count", {
+                          count: cartItemCount,
+                        })}
+                      </span>
+                      {` · ${t("product_interest.saved_basket")}`}
+                    </>
+                  )
+                ) : !readiness?.commercialReady ? (
+                  t("product_interest.saved_empty")
+                ) : (
+                  t("shop.products.cart.empty_short", {
+                    defaultValue: "Your cart is empty",
+                  })
+                )}
               </span>
             </div>
             <Button
