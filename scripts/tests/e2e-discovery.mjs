@@ -762,53 +762,58 @@ try {
     }
     await context.close();
   }
-  // The rotating Home photos can be paused without disabling reduced-motion support.
-  const motionContext = await browser.newContext({
-    viewport: { width: 375, height: 900 },
-    reducedMotion: "no-preference",
-  });
-  await motionContext.addInitScript(() => {
-    localStorage.setItem("du_cookie_consent_v1", "rejected");
-    localStorage.setItem("i18nextLng", "en");
-  });
-  await motionContext.route("**/*", route => {
-    const url = new URL(route.request().url());
-    if (url.pathname.startsWith("/api/"))
-      return route.fulfill({ json: { user: null } });
-    if (url.origin !== new URL(base).origin) return route.abort();
-    return route.continue();
-  });
-  page = await motionContext.newPage();
-  await page.clock.install();
-  await page.goto(base);
-  const pause = page.getByRole("button", { name: "Pause photos", exact: true });
-  await pause.click();
-  const background = () =>
-    page
-      .locator('#main-page-hero-wrapper img[aria-hidden="true"]')
-      .last()
-      .getAttribute("src");
-  const firstPhoto = await background();
-  await page.clock.runFor(18000);
-  assert.equal(
-    await background(),
-    firstPhoto,
-    "Paused Home photos must stay still"
-  );
-  await page
-    .getByRole("button", { name: "Resume photos", exact: true })
-    .click();
-  await page.clock.runFor(10000);
-  assert.notEqual(
-    await background(),
-    firstPhoto,
-    "Home photos resume on request"
-  );
-  await motionContext.close();
-  record({
-    scenario:
-      "Home photo rotation pauses and resumes; reduced motion keeps a static photo",
-  });
+  // Home uses one static photo regardless of motion preference.
+  for (const reducedMotion of ["no-preference", "reduce"]) {
+    const motionContext = await browser.newContext({
+      viewport: { width: 375, height: 900 },
+      reducedMotion,
+    });
+    await motionContext.addInitScript(() => {
+      localStorage.setItem("du_cookie_consent_v1", "rejected");
+      localStorage.setItem("i18nextLng", "en");
+    });
+    const requestedImages = [];
+    await motionContext.route("**/*", route => {
+      const url = new URL(route.request().url());
+      if (url.pathname.startsWith("/api/"))
+        return route.fulfill({ json: { user: null } });
+      if (url.origin !== new URL(base).origin) return route.abort();
+      if (route.request().resourceType() === "image")
+        requestedImages.push(url.pathname);
+      return route.continue();
+    });
+    page = await motionContext.newPage();
+    page.on("pageerror", error => errors.push(error.message));
+    await page.clock.install();
+    await page.goto(base);
+    const hero = page.locator("#main-page-hero-wrapper");
+    const background = hero.locator('img[aria-hidden="true"]');
+    await background.waitFor();
+    assert.equal(await background.count(), 1);
+    assert.equal(
+      await background.getAttribute("src"),
+      "/images/pages/tourism/victoria_falls.webp"
+    );
+    assert.equal(
+      await hero.getByRole("button", { name: /pause|resume/i }).count(),
+      0
+    );
+    await page.clock.runFor(18000);
+    assert.equal(await background.count(), 1);
+    assert.equal(
+      await background.getAttribute("src"),
+      "/images/pages/tourism/victoria_falls.webp",
+      "Home must stay on Victoria Falls beyond the former rotation interval"
+    );
+    assert(
+      !requestedImages.some(path => /great_zimbabwe|kariba_sunset/.test(path)),
+      "Home must not preload retired slideshow images"
+    );
+    await motionContext.close();
+    record({
+      scenario: `Home remains static with ${reducedMotion}; no slideshow controls or unused photo requests`,
+    });
+  }
   assert.deepEqual(errors, []);
   assert.deepEqual(failures, []);
   record({ scenario: "zero runtime errors or unexpected network failures" });
