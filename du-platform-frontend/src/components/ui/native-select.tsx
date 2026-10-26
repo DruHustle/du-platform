@@ -13,6 +13,7 @@ export function NativeSelect({
     <div className="relative min-w-0">
       <select
         {...props}
+        data-slot="native-select"
         className={cn(
           "min-h-11 w-full appearance-none rounded-lg border border-slate-600 bg-slate-900 py-2 pl-3 pr-9 text-white focus-visible:outline-2 focus-visible:outline-zim-gold disabled:opacity-60",
           className
