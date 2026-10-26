@@ -1491,7 +1491,7 @@
       "notes": {
         "guest_checkout": "Akudingeki i-akhawunti ukuthumela isicelo se-oda.",
         "logged_in_checkout": "Isicelo sakho sisebenzisa imininingwane ephezulu.",
-        "supported_methods": "Akuthathwa mali lapha. Ukutholakala kwenkonzo yeDHL lezindleko zokudiliva kuqinisekiswa ngendawo yenu. Imali evezwayo yisilinganiso sokuhlela, ayisiyo ntengo evela kuDHL.",
+        "supported_methods": "Akukhokhwa lapha. Ukuhambisa lentengo yokucina kuqinisekiswa esicelweni sentengo esiqondene lawe ungakabhadali.",
         "supported_methods_dev": "Izindlela ezisekelwayo: assisted checkout ku-production, kanye le-dummy payment simulation ku-dev lo-test."
       },
       "errors": {
@@ -1998,7 +1998,7 @@
     "postal_code": "Ikhodi yeposi (lapho idingeka)",
     "contingency": "Imali egcinelwe okungalindelwanga",
     "product_details": "Ulwazi lomkhiqizo",
-    "missing_details": "Lolulwazi alukaphiwa. Buza isitolo ungakamukeli intengo.",
+    "missing_details": "Ulwazi lomkhiqizo alukaphiwa. Kasisoze siqagele ulwazi olungekho.",
     "operator_title": "Umnikazi / ulwazi lomthetho",
     "procedures_title": "Ukuthumela, ukubhadala lokubuyisela",
     "draft_notice": "UHLAKA — imininingwane yomnikazi lelizwe okusuka kulo impahla sekuphiwe. Izinqubo zokuthumela, ukubhadala lokubuyisela zokucina zisafuna ukuvunywa kungakaqalwa ukuthengisa.",
@@ -2072,17 +2072,21 @@
     "command_recovered": "Isenzo sigciniwe. Hlola isimo samanje ungakaqhubeki.",
     "command_unconfirmed": "Impendulo ayiqinisekiswanga. Hlola isimo kumbe uphinde isenzo esingatshintshwanga; ungathumeli esinye isicelo semali.",
     "command_changed": "Isicelo sesitshintshile. Hlola isimo samanje ungakaqhubeki.",
-    "readiness_prelaunch": "Kungakaqalwa — ukulungela ukuthengisa akuqinisekiswanga",
+    "readiness_prelaunch": "Silungiselela isitolo",
     "readiness_limited": "Ukuzama okulinganiselweyo eEurope",
-    "readiness_pending_note": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa. Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
+    "readiness_pending_note": "Tshengisa intshisekelo ukuze uzwe nxa imikhiqizo isikhona. Akula oda kumbe ukukhokha.",
     "readiness_pilot_note": "Amazwe lemikhiqizo evunywe ngokusobala kuphela kungaphakathi kokuzama. Isitolo siqinisekisa impahla, iDHL lezivumelwano esicelweni ngasinye.",
     "operator_details_title": "Imininingwane yomnikazi",
     "delivery_title": "Ukuthumela lokubhadala",
-    "returns_title": "Ukukhansela lokubuyisela"
+    "returns_title": "Ukukhansela lokubuyisela",
+    "details_loading": "Sithatha ulwazi lomkhiqizo…",
+    "details_failed": "Ulwazi lomkhiqizo alutholakalanga. Zama njalo.",
+    "details_retry": "Zama ukuthatha ulwazi lomkhiqizo njalo",
+    "product_unavailable": "Umkhiqizo lo awusatholakali kukhathalogu."
   },
   "product_interest": {
     "action": "Tshengisa intshisekelo",
-    "scope": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
+    "scope": "Qinisekisa i-imeyili yakho ukuze uthole isaziso esisodwa nxa umkhiqizo lo usukhona. Yesula ngelinki eku-imeyili. Akula oda, kugcinelwa impahla kumbe ukukhokha; kwehlukile lencwadi yezindaba.",
     "email": "Ikheli le-imeyili",
     "submit": "Ngithumele ilinki yokuqinisekisa nge-imeyili",
     "close": "Vala",
@@ -2103,10 +2107,15 @@
     "updating": "Siyalungisa…",
     "available_empty": "Akula mikhiqizo enga-odwa okwamanje. Khangela ikhathalogu utshengise intshisekelo ungafakanga i-oda.",
     "prelaunch": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa.",
-    "saved_notice": "Ibhasikiti lakho ligciniwe. Ezinye izinto azikho kumbe inani lidlula ezikhona. Zihlole kumbe uzisuse ungakaceli i-oda.",
+    "saved_notice": "Okukhethileyo kugciniwe. Ezinye izinto azikho kumbe inani lidlula ezikhona. Zihlole kumbe uzisuse.",
     "remove_unavailable": "Susa izinto ezingekhoyo",
     "price_note": "Intengo ngeyokuhlela. Khangela ulwazi lomkhiqizo lwamanje ungakaceli i-oda.",
     "view_product": "Bona umkhiqizo",
-    "privacy_notes": "Izaziso zomkhiqizo zigcina i-imeyili yakho, umkhiqizo owukhethileyo, imvumo, isimo sokuqinisekisa kumbe ukwesula lembali yokuthumela kuMySQL. Zehlukile lencwadi yezindaba lokuhlaziya kokuzikhethela. Yesula ngelinki eku-imeyili yomkhiqizo; cela ukulungisa kumbe ukususa ku info@diasporaunlocked.com."
+    "privacy_notes": "Izaziso zomkhiqizo zigcina i-imeyili yakho, umkhiqizo owukhethileyo, imvumo, isimo sokuqinisekisa kumbe ukwesula lembali yokuthumela kuMySQL. Zehlukile lencwadi yezindaba lokuhlaziya kokuzikhethela. Yesula ngelinki eku-imeyili yomkhiqizo; cela ukulungisa kumbe ukususa ku info@diasporaunlocked.com.",
+    "saved_basket": "Ibhasikiti eligciniweyo",
+    "remove_item": "Susa into",
+    "indicative_price": "Intengo elinganisiweyo",
+    "quote_note": "Ukuhambisa lentengo yokucina kuqinisekiswa esicelweni sentengo esiqondene lawe ungakabhadali.",
+    "saved_empty": "Akula zinto ezigciniweyo. Khangela imikhiqizo utshengise intshisekelo."
   }
 }

@@ -6,15 +6,18 @@ remains the intended corridor, subject to each product/service/address check.
 
 Use **Admin → Notify Me → Product interest** to review a bounded 28-day experiment,
 with a weekly review. These are proposed experiment choices, not forecasts:
-shortlist at most five products with the highest confirmed unique interest;
-consider three confirmed email/product pairs a reason to investigate a supplier,
+shortlist at most five products with the highest active confirmed / waiting interest;
+consider three active confirmed email/product pairs a reason to investigate a supplier,
 not a reason to buy stock. Review cancellations and notify failures alongside
 interest. Stop or revise the experiment if confirmation rates are poor, the facts
 cannot be verified, or actual landed costs do not support a viable offer.
 
 The date filter uses the latest explicit product consent date (UTC). One row per
 email/product is counted, including a later confirmed-and-cancelled row in
-“confirmed unique”; “confirmed / waiting” counts only currently active demand.
+“historically confirmed unique”; “confirmed / waiting” counts only currently active demand.
+Pending counts only unexpired 48-hour confirmations using server time; expired
+requests are shown separately and never count as active demand. Explicit
+re-registration renews consent/generation; reporting never resends or deletes records.
 Retries and page views never add demand. Legacy unconfirmed records are retained
 separately and excluded from confirmed demand. No full address, account, variant
 or quantity is collected at this stage. Product alerts do not subscribe anyone

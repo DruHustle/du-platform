@@ -89,6 +89,9 @@ export default function ProductCard({
               convertShopCents(product.price_cents, product.currency, currency),
               currency
             )}
+            <span className="mt-1 block break-words text-xs font-normal text-slate-400">
+              {t("product_interest.indicative_price")}
+            </span>
           </p>
           {eligible ? (
             <div className="relative z-20 flex justify-end">

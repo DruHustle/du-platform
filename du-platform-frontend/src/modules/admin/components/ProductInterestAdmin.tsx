@@ -38,8 +38,11 @@ export default function ProductInterestAdmin() {
       <h2 className="text-xl font-semibold">Product interest</h2>
       <p className="text-sm text-slate-300">
         One-time, confirmed product alerts, separate from newsletter consent.
-        Counts are unique email/product pairs in the selected consent date
-        range, not orders, reservations or sales. Retries do not add demand.
+        Active confirmed / waiting is current demand; historically confirmed
+        includes cancelled and notified requests. Pending excludes expired links
+        (48 hours, server time). Counts are unique email/product pairs in the
+        selected consent date range, not orders, reservations or sales. Retries
+        do not add demand.
       </p>
       <p className="text-sm text-amber-200">
         Commercial mode: {readiness?.mode || "unconfirmed"} ·{" "}
@@ -83,7 +86,26 @@ export default function ProductInterestAdmin() {
             {data.legacy} legacy records retained without automatic confirmation
             or delivery.
           </p>
-          <div className="min-w-0 max-w-full overflow-x-auto">
+          <div
+            role="region"
+            aria-label="Product interest counts"
+            tabIndex={0}
+            onKeyDown={event => {
+              if (
+                event.target !== event.currentTarget ||
+                event.altKey ||
+                event.ctrlKey ||
+                event.metaKey ||
+                event.shiftKey ||
+                !["ArrowLeft", "ArrowRight"].includes(event.key)
+              )
+                return;
+              event.preventDefault();
+              event.currentTarget.scrollLeft +=
+                event.key === "ArrowRight" ? 80 : -80;
+            }}
+            className="min-w-0 max-w-full overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zim-gold"
+          >
             <table className="w-full text-left text-sm">
               <caption className="sr-only">
                 Product interest by confirmation status
@@ -92,8 +114,9 @@ export default function ProductInterestAdmin() {
                 <tr>
                   {[
                     "Product",
-                    "Confirmed unique",
-                    "Pending",
+                    "Historically confirmed unique",
+                    "Pending confirmation",
+                    "Expired",
                     "Confirmed / waiting",
                     "Cancelled",
                     "Notified",
@@ -111,6 +134,7 @@ export default function ProductInterestAdmin() {
                       r.product_name,
                       r.confirmed_unique,
                       r.pending,
+                      r.expired,
                       r.confirmed,
                       r.cancelled,
                       r.notified,

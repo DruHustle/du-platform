@@ -137,6 +137,97 @@ describe.skipIf(!url)(
       }
       if (dir) await rm(dir, { recursive: true, force: true });
     });
+    it("separates pending from expired at the exact 48-hour server boundary without sending", async () => {
+      await register();
+      const [row] = await query(
+        "SELECT UNIX_TIMESTAMP(confirmation_expires_at) AS expiry, TIMESTAMPDIFF(SECOND,last_confirmation_at,confirmation_expires_at) AS lifetime FROM shop_restock_notifications"
+      );
+      expect(row.lifetime).toBe(48 * 3600);
+      const c = await pool!.getConnection();
+      try {
+        const reporting = new ProductInterestService({
+          query: c.query.bind(c),
+        } as unknown as Pool);
+        for (const [offset, pending, expired] of [
+          [-1, 1, 0],
+          [0, 0, 1],
+          [1, 0, 1],
+        ]) {
+          await c.query("SET timestamp=?", [Number(row.expiry) + offset]);
+          const data = await reporting.demand("2020-01-01", "2037-01-01");
+          expect(Number(data.rows[0].pending)).toBe(pending);
+          expect(Number(data.rows[0].expired)).toBe(expired);
+          expect(Number(data.rows[0].confirmed)).toBe(0);
+        }
+      } finally {
+        await c.query("SET timestamp=0");
+        c.release();
+      }
+      expect(await jobs()).toHaveLength(1);
+      expect((await jobs())[0].status).toBe("pending");
+    });
+    it("re-registers an expired request once and separates current demand, cancellation and consent dates", async () => {
+      await register();
+      const oldToken = await confirmToken();
+      const [old] = await query(
+        "SELECT cancel_token FROM shop_restock_notifications"
+      );
+      await pool!.execute(
+        "UPDATE shop_restock_notifications SET confirmation_expires_at=DATE_SUB(NOW(),INTERVAL 1 SECOND),last_confirmation_at=DATE_SUB(NOW(),INTERVAL 49 HOUR),consent_at='2020-01-01'"
+      );
+      await Promise.all(Array.from({ length: 6 }, () => register()));
+      const rows = await query("SELECT * FROM shop_restock_notifications");
+      expect(rows).toHaveLength(1);
+      expect(rows[0].generation).toBe(2);
+      expect((await jobs()).filter(j => j.status === "pending")).toHaveLength(
+        1
+      );
+      expect((await jobs()).filter(j => j.status === "skipped")).toHaveLength(
+        1
+      );
+      await expect(service.confirm(oldToken)).rejects.toMatchObject({
+        statusCode: 400,
+      });
+      await expect(service.cancel(old.cancel_token)).rejects.toMatchObject({
+        statusCode: 400,
+      });
+      const token = JSON.parse((await jobs())[1].payload).text.match(
+        /action=confirm&token=([a-f0-9]{48})/
+      )[1];
+      await service.confirm(token);
+      expect(
+        (await service.demand("2020-01-01", "2020-01-01")).rows
+      ).toHaveLength(0);
+      let result = await service.demand("2020-01-01", "2037-01-01");
+      expect(Number(result.rows[0].confirmed)).toBe(1);
+      expect(Number(result.rows[0].confirmed_unique)).toBe(1);
+      await service.cancel(rows[0].cancel_token);
+      result = await service.demand("2020-01-01", "2037-01-01");
+      expect(Number(result.rows[0].confirmed)).toBe(0);
+      expect(Number(result.rows[0].cancelled)).toBe(1);
+      expect(Number(result.rows[0].confirmed_unique)).toBe(1);
+      expect(Number(result.rows[0].pending)).toBe(0);
+      expect(Number(result.rows[0].expired)).toBe(0);
+    });
+    it("filters consent dates inclusively through the end of the selected UTC day", async () => {
+      for (const [email, date, status] of [
+        ["start@example.test", "2026-10-01 00:00:00", "pending"],
+        ["end@example.test", "2026-10-01 23:59:59", "confirmed"],
+        ["before@example.test", "2026-09-30 23:59:59", "confirmed"],
+        ["after@example.test", "2026-10-02 00:00:00", "confirmed"],
+      ]) {
+        await pool!.execute(
+          "INSERT INTO shop_restock_notifications(product_id,product_slug,product_name,email,status,consent_at,confirmation_expires_at,confirmed_at) VALUES (?,'interest-fixture','Fixture',?,?,?,DATE_ADD(NOW(),INTERVAL 48 HOUR),IF(?='confirmed',NOW(),NULL))",
+          [productId, email, status, date, status]
+        );
+      }
+      const result = await service.demand("2026-10-01", "2026-10-01");
+      expect(Number(result.rows[0].total)).toBe(2);
+      expect(Number(result.rows[0].pending)).toBe(1);
+      expect(Number(result.rows[0].confirmed)).toBe(1);
+      expect(Number(result.rows[0].confirmed_unique)).toBe(1);
+      expect(await jobs()).toHaveLength(0);
+    });
     it("keeps legacy records dormant through repeated migration", async () => {
       await pool!.execute(
         "INSERT INTO shop_restock_notifications(product_id,product_slug,product_name,email) VALUES (?,'interest-fixture','Fixture','legacy@example.test')",
