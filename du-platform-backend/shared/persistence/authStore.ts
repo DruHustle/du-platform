@@ -210,12 +210,27 @@ export async function updateUserPassword(userId: number, passwordHash: string) {
   }
 }
 
-export async function createSession(userId: number, ttlHours = 24 * 7) {
+export class AuthVersionChangedError extends Error {
+  constructor() {
+    super("Account credentials changed. Please sign in again.");
+  }
+}
+
+export async function createSession(
+  userId: number,
+  ttlHours = 24 * 7,
+  expectedAuthVersion?: number
+) {
   const token = crypto.randomBytes(48).toString("hex");
   const tokenHash = sha256(token);
   const expiresAt = new Date(Date.now() + ttlHours * 60 * 60 * 1000);
 
   if (!db) {
+    if (expectedAuthVersion !== undefined) {
+      const user = memoryUsers.find(entry => entry.id === userId);
+      if (!user || (user.auth_version ?? 0) !== expectedAuthVersion)
+        throw new AuthVersionChangedError();
+    }
     memoryAuthSessions.push({
       token_hash: tokenHash,
       user_id: userId,
@@ -223,11 +238,37 @@ export async function createSession(userId: number, ttlHours = 24 * 7) {
     });
   } else {
     try {
-      await db.execute(
-        "INSERT INTO auth_sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
-        [tokenHash, userId, expiresAt]
-      );
+      if (expectedAuthVersion !== undefined) {
+        const connection = await db.getConnection();
+        try {
+          await connection.beginTransaction();
+          const [rows] = await connection.query<mysql.RowDataPacket[]>(
+            "SELECT auth_version FROM users WHERE id = ? FOR UPDATE",
+            [userId]
+          );
+          if (
+            !rows.length ||
+            Number(rows[0].auth_version) !== expectedAuthVersion
+          )
+            throw new AuthVersionChangedError();
+          await connection.execute(
+            "INSERT INTO auth_sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
+            [tokenHash, userId, expiresAt]
+          );
+          await connection.commit();
+        } catch (error) {
+          await connection.rollback();
+          throw error;
+        } finally {
+          connection.release();
+        }
+      } else
+        await db.execute(
+          "INSERT INTO auth_sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
+          [tokenHash, userId, expiresAt]
+        );
     } catch (error) {
+      if (expectedAuthVersion !== undefined) throw error;
       if (!isDbConnectionError(error)) throw error;
       memoryAuthSessions.push({
         token_hash: tokenHash,
@@ -412,5 +453,90 @@ export async function consumePasswordResetToken(rawToken: string) {
     if (new Date(row.expires_at).getTime() < Date.now()) return null;
     row.used_at = new Date().toISOString();
     return row;
+  }
+}
+
+/** Commit the password, token invalidation and session revocation together. */
+export async function resetPasswordWithToken(
+  rawToken: string,
+  passwordHash: string
+) {
+  const tokenHash = sha256(rawToken);
+  if (!db) {
+    const token = memoryPasswordResetTokens.find(
+      entry => entry.token_hash === tokenHash
+    );
+    if (
+      !token ||
+      token.used_at ||
+      new Date(token.expires_at).getTime() <= Date.now()
+    )
+      return false;
+    const user = memoryUsers.find(entry => entry.id === token.user_id);
+    if (!user) return false;
+    const now = new Date().toISOString();
+    user.password_hash = passwordHash;
+    user.email_verified_at = now;
+    user.auth_version = (user.auth_version ?? 0) + 1;
+    for (const entry of memoryPasswordResetTokens) {
+      if (entry.user_id === user.id && !entry.used_at) entry.used_at = now;
+    }
+    for (let i = memoryAuthSessions.length - 1; i >= 0; i--) {
+      if (memoryAuthSessions[i].user_id === user.id)
+        memoryAuthSessions.splice(i, 1);
+    }
+    clearLoginFailures(user.email);
+    return true;
+  }
+
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+    const [tokens] = await connection.query<mysql.RowDataPacket[]>(
+      "SELECT user_id FROM password_reset_tokens WHERE token_hash = ? LIMIT 1",
+      [tokenHash]
+    );
+    if (!tokens.length) {
+      await connection.rollback();
+      return false;
+    }
+    const userId = Number(tokens[0].user_id);
+    // Lock the user first so different reset tokens for one account serialize
+    // without acquiring token locks in opposite orders.
+    const [users] = await connection.query<mysql.RowDataPacket[]>(
+      "SELECT id, email FROM users WHERE id = ? FOR UPDATE",
+      [userId]
+    );
+    if (!users.length) {
+      await connection.rollback();
+      return false;
+    }
+    const [consumed] = await connection.execute<mysql.ResultSetHeader>(
+      "UPDATE password_reset_tokens SET used_at = NOW() WHERE token_hash = ? AND used_at IS NULL AND expires_at > NOW()",
+      [tokenHash]
+    );
+    if (!consumed.affectedRows) {
+      await connection.rollback();
+      return false;
+    }
+    await connection.execute(
+      "UPDATE users SET password_hash = ?, email_verified_at = CURRENT_TIMESTAMP, auth_version = auth_version + 1 WHERE id = ?",
+      [passwordHash, userId]
+    );
+    await connection.execute(
+      "UPDATE password_reset_tokens SET used_at = NOW() WHERE user_id = ? AND used_at IS NULL",
+      [userId]
+    );
+    await connection.execute("DELETE FROM auth_sessions WHERE user_id = ?", [
+      userId,
+    ]);
+    await connection.commit();
+    clearLoginFailures(String(users[0].email));
+    return true;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
   }
 }

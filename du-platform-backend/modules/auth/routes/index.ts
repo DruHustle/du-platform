@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { rateLimiter } from "../../../core/rateLimiter";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";
+import { requireCurrentUser } from "../../../middleware/currentUser";
 import { AuthController } from "../controllers/authController";
 import {
   validateForgotPassword,
@@ -62,6 +63,7 @@ export function createAuthModuleRouter() {
   router.get(
     "/me",
     requireJwtAuth,
+    requireCurrentUser,
     rateLimiter({
       keyPrefix: "api:auth:me",
       windowMs: 60_000,

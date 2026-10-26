@@ -448,3 +448,87 @@ then completes an approved isolated restore with workers held until reconciliati
 Never put private keys, passwords or recovery secrets in chat, Git, logs, these
 instructions or the Mac archive folder. No device/fingerprint or full host-loss
 recovery result is invented.
+
+## Durable service enquiries and account recovery
+
+The service inbox/outbox is separate from marketing subscriptions, product-interest
+consent and assisted-order notifications. It reuses the existing MySQL, encrypted
+payload, provider and recovery-hold patterns. Receipt never subscribes anyone to
+marketing. No historical contact enquiries or acknowledgement messages are created.
+
+Startup adds `contact_enquiries` and `transactional_messages` additively and safely
+on restart. Contact details and queued email snapshots use the retained runtime
+key; preserve it alongside the existing order grant/payload recovery material.
+There is no new credential or provider. Missing persistent storage returns a
+visible failure; missing email configuration does not discard a saved enquiry.
+
+**Customer receipt:** `/api/notifications/contact` requires a client-generated UUID
+`requestId`, bounded enquiry fields and optional `language` (`en/de/sn/nd`, default
+English). The updated footer dialog supplies that ID before the first request.
+Reuse the same ID and normalized payload after a lost response. Reusing it with a
+changed payload returns 409. A deliberate new enquiry gets a new UUID, even when
+its text matches an earlier message. Clients that omit the UUID now get 400; update
+external callers before cutover. Success is `received: true` plus the reference,
+not a claim that email was accepted or delivered. The form keeps failed drafts;
+only opaque ID/digest metadata is retained in tab storage, not contact fields.
+
+**Protected operations:** Admin → Service inbox lists 25 received enquiries and
+50 delivery records per page. Existing verified/current-version admin authorization
+protects all reads/actions. Operator and customer notifications have separate
+statuses. A provider-accepted status means the provider accepted the request,
+not inbox delivery. Raw reset tokens/private links/payloads are never listed;
+opaque provider reconciliation keys are available without disclosing reset hashes.
+Retry/closure/reconciliation actions record the acting administrator.
+
+The provider retains idempotency keys for 24 hours; this worker conservatively stops
+replay at 23 hours after its durable first-attempt timestamp. It uses the same final
+payload and key on every retry and permits at most five automatic attempts. Routing
+for an initially unconfigured operator can be bound once, before first provider use.
+Manual retry never resets the attempt count or clock. Outside the replay window,
+review the provider's verified record, then record acceptance with its reference or
+close without resending. Do not blindly create a replacement. Closing an uncertain
+message does not recall an already accepted email. This is not exactly-once or
+inbox-delivery proof. See [Resend idempotency keys](https://resend.com/changelog/idempotency-keys).
+
+**Password recovery:** the HTTP endpoint atomically saves a reset token and encrypted
+email intent, then returns the same neutral response for known/unknown accounts.
+No provider request occurs on that response path. Its response floor is not a
+constant-time guarantee. The token still expires 30 minutes after creation; retries
+and deployment waits do not renew it. The worker locks/checks the user, auth version,
+email and unused/unexpired token immediately before sending. Password changes,
+all-link invalidation and session revocation keep the existing atomic lock ordering.
+A user must request a new link after expiry; an operator retry cannot revive it.
+
+New reset links use `#token=…`, consumed and removed by the frontend. Existing query
+links remain supported. A version marker on the static reset page holds new reset
+mail until the compatible frontend is available during Oracle → Vercel cutover.
+Keep that frontend compatible for the lifetime of already-issued links. Feature
+acknowledgements are likewise queued only with a new persisted feature request;
+existing requests are never backfilled or resent automatically.
+
+**Recovery and rollback:** both `RECOVERY_MODE=true` and
+`OUTBOUND_MESSAGES_PAUSED=true` hold this worker and the actual provider entry point.
+The restored-application probe includes encrypted service payloads and verifies
+that no provider runs. Restore both new tables and the retained runtime key, keep
+queues held, inspect first-attempt age/acceptance uncertainty and reconcile before
+releasing the hold. Refresh the installed reviewed recovery probe during a separately
+authorized release; ordinary application deployments do not install operational
+scripts. Prefer a compatible forward fix. Keep additive tables and don't revert to
+synchronous handlers or an incompatible reset page, revive consumed tokens, reset
+provider clocks or replay old data over newer enquiries/consent/orders.
+
+For the **first separately authorized cutover**, set the existing outbound hold
+before releasing the outbox-capable backend. Keep it through both Oracle and Vercel
+deployment, live verification and automatic rollback checks. Only after the whole
+release succeeds should the operator reconcile and release the hold. If the frontend
+rolls back, keep the hold and forward-fix; do not send fragment links to an older
+page. Existing query links remain supported by the new page. This setup is an
+explicit production operation, not performed by publishing the PR.
+
+Use an isolated localhost MySQL `*_test` database and `pnpm test:e2e:transactional`
+for the HTTP/browser workflow. It sanitizes provider configuration and uses only
+synthetic records/injected delivery. `pnpm test:modules` includes transaction,
+concurrency, interrupted-provider/worker, cancellation, eligibility and replay
+regressions. Existing CI retains both browser engines, held-worker/GPG tests,
+SEO/CSP and isolated preview protection. Publication of PR #140 does not authorize
+production merging, migration, deployment or commercial activation.

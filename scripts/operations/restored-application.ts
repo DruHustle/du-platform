@@ -4,6 +4,7 @@ import {
 } from "../../du-platform-backend/modules/shop/orderAccess";
 import { processOrderNotifications } from "../../du-platform-backend/modules/shop/orderNotifications";
 import { processNewsletterBatch } from "../../du-platform-backend/modules/newsletter/worker";
+import { processTransactionalMessages } from "../../du-platform-backend/modules/notifications/transactionalWorker";
 // Runs only inside the network-isolated production-backup recovery drill.
 import assert from "node:assert/strict";
 import { randomUUID, randomBytes } from "node:crypto";
@@ -92,8 +93,24 @@ try {
     throw new Error("Recovery must not send");
   };
   process.env.RECOVERY_MODE = "true";
+  const serviceKey = `recovery/${randomBytes(16).toString("hex")}`;
+  await db.execute(
+    "INSERT INTO transactional_messages(intent_key,kind,entity_id,encrypted_payload) VALUES (?,'contact_ack','synthetic-recovery',?)",
+    [serviceKey, sealedPayload]
+  );
   await processOrderNotifications(db, forbiddenSender);
   await processNewsletterBatch(db, forbiddenSender);
+  await processTransactionalMessages(db, forbiddenSender);
+  const [serviceJobs]: any = await db.query(
+    "SELECT status,attempts,encrypted_payload FROM transactional_messages WHERE intent_key=?",
+    [serviceKey]
+  );
+  assert.equal(serviceJobs[0].status, "pending");
+  assert.equal(serviceJobs[0].attempts, 0);
+  assert.equal(openOrderAccess(serviceJobs[0].encrypted_payload), queuedMail);
+  await db.execute("DELETE FROM transactional_messages WHERE intent_key=?", [
+    serviceKey,
+  ]);
   assert.equal(calls, 0);
 
   await assert.rejects(() => readOrderWorkspace(order.orderRef, "invalid"), {

@@ -103,3 +103,9 @@ it("rejects repeated priced activities and prose that silently adds distant dest
   q.itinerary[3].details = "Visit Harare today";
   expect(validateTripPlan(q, input)).toBeNull();
 });
+
+it("rejects an activity charge that is not scheduled anywhere", () => {
+  const p = buildSampleTripPlan(input);
+  p.experiences[0].name = "Unscheduled private tour";
+  expect(validateTripPlan(p, input)).toBeNull();
+});

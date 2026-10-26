@@ -4,6 +4,7 @@ import { ok } from "../../../shared/responseFormatter";
 import { Router } from "express";
 import { rateLimiter } from "../../../core/rateLimiter";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";
+import { requireCurrentUser } from "../../../middleware/currentUser";
 import { NotificationController } from "../controllers/notificationController";
 import { validateContactInquiry } from "../validators";
 
@@ -34,6 +35,7 @@ export function createNotificationsModuleRouter() {
   router.post(
     "/features",
     requireJwtAuth,
+    requireCurrentUser,
     rateLimiter({
       keyPrefix: "api:notifications:features",
       windowMs: 60_000,
