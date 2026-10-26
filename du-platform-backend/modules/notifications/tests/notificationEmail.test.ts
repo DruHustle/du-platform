@@ -5,11 +5,50 @@ vi.mock("../../../shared/email", async importOriginal => ({
   getNotifyAlertEmails: vi.fn(async () => ["admin@example.com"]),
   sendEmailMessageSafe: vi.fn(async () => true),
 }));
-import { sendEmailMessageSafe } from "../../../shared/email";
+import {
+  getNotifyAlertEmails,
+  sendEmailMessageSafe,
+} from "../../../shared/email";
 import { NotificationService } from "../services/notificationService";
 
 describe("notification HTML", () => {
-  beforeEach(() => vi.mocked(sendEmailMessageSafe).mockClear());
+  beforeEach(() => {
+    vi.mocked(sendEmailMessageSafe).mockReset().mockResolvedValue(true);
+    vi.mocked(getNotifyAlertEmails).mockResolvedValue(["admin@example.com"]);
+  });
+
+  const contact = {
+    name: "Fixture",
+    email: "fixture@example.test",
+    subject: "Question",
+    message: "Synthetic message",
+  };
+  it("rejects undelivered contact enquiries without sending a false customer acknowledgement", async () => {
+    vi.mocked(sendEmailMessageSafe).mockResolvedValueOnce(false);
+    await expect(
+      new NotificationService().createContactInquiry(contact)
+    ).rejects.toMatchObject({
+      status: 503,
+      code: "CONTACT_INQUIRY_UNAVAILABLE",
+    });
+    expect(sendEmailMessageSafe).toHaveBeenCalledOnce();
+  });
+  it("rejects contact enquiries when no operator destination exists", async () => {
+    vi.mocked(getNotifyAlertEmails).mockResolvedValue([]);
+    await expect(
+      new NotificationService().createContactInquiry(contact)
+    ).rejects.toMatchObject({ status: 503 });
+    expect(sendEmailMessageSafe).not.toHaveBeenCalled();
+  });
+  it("retains successful operator acceptance when only the customer acknowledgement fails", async () => {
+    vi.mocked(sendEmailMessageSafe)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(false);
+    await expect(
+      new NotificationService().createContactInquiry(contact)
+    ).resolves.toHaveProperty("message");
+    expect(sendEmailMessageSafe).toHaveBeenCalledTimes(2);
+  });
 
   it("escapes contact fields while preserving message line breaks", async () => {
     const service = new NotificationService();

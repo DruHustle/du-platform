@@ -1,5 +1,9 @@
 import type express from "express";
-import { deleteSession, findUserById, getSession } from "./persistence/authStore";
+import {
+  deleteSession,
+  findUserById,
+  getSession,
+} from "./persistence/authStore";
 import { createJwtToken } from "../utils/jwt";
 
 export const SESSION_COOKIE = "du_session";
@@ -7,7 +11,7 @@ function getCookie(req: express.Request, key: string): string | null {
   const raw = req.headers.cookie;
   if (!raw) return null;
 
-  const entries = raw.split(";").map((value) => value.trim());
+  const entries = raw.split(";").map(value => value.trim());
   for (const entry of entries) {
     const [cookieKey, ...cookieValue] = entry.split("=");
     if (cookieKey === key) {
@@ -41,9 +45,12 @@ export function clearSessionCookie(res: express.Response) {
 
 export function resolveSessionToken(req: express.Request): string | null {
   const authHeader = String(req.headers.authorization ?? "").trim();
-  if (authHeader.startsWith("Bearer ")) {
+  if (req.headers.authorization !== undefined) {
+    // An explicit credential must never fall back to the ambient cookie. Core
+    // CSRF middleware exempts bearer requests on the basis of that credential.
+    if (!authHeader.startsWith("Bearer ")) return null;
     const bearerToken = authHeader.slice("Bearer ".length).trim();
-    if (bearerToken && !bearerToken.includes(".")) return bearerToken;
+    return bearerToken && !bearerToken.includes(".") ? bearerToken : null;
   }
 
   return getCookie(req, SESSION_COOKIE);
@@ -74,7 +81,10 @@ export function issueAccessTokenForUser(user: {
   full_name?: string | null;
   auth_version?: number;
 }) {
-  const ttl = Math.max(60, Number(process.env.JWT_EXPIRES_IN_SECONDS ?? "3600"));
+  const ttl = Math.max(
+    60,
+    Number(process.env.JWT_EXPIRES_IN_SECONDS ?? "3600")
+  );
   return createJwtToken(
     {
       sub: Number(user.id),

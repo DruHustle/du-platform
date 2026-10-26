@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AppError } from "../../core/errorHandler";
 import { getNotifyFromEmail, isValidEmail } from "../../shared/email";
+import { outboundMessagesPaused } from "../../shared/outboundMessages";
 
 export type NewsletterEmail = {
   from: string;
@@ -33,6 +34,8 @@ export async function sendNewsletterEmail(
   payload: NewsletterEmail,
   key: string
 ): Promise<string> {
+  if (outboundMessagesPaused())
+    throw new Error("Outbound messages are paused.");
   if (!process.env.RESEND_API_KEY)
     throw new Error("Email delivery is not configured.");
   const { data } = await axios.post("https://api.resend.com/emails", payload, {

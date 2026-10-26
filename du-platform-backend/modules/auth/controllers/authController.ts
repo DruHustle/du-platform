@@ -29,7 +29,7 @@ export class AuthController {
         ? String(err.message).trim()
         : fallbackMessage;
 
-    console.error(`[auth] unexpected ${fallbackCode}`, err);
+    console.error(`[auth] unexpected ${fallbackCode}`);
     return res.status(500).json(error(fallbackCode, unexpectedMessage));
   }
 

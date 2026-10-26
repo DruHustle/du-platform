@@ -337,6 +337,79 @@ describe.skipIf(!url)("newsletter MySQL integration", () => {
       )[0].status
     ).toBe("skipped");
   });
+  it("skips a reclaimed confirmation from an earlier signup generation", async () => {
+    await service.subscribe("stale@example.com");
+    const oldToken = await token("stale@example.com");
+    await pool.execute(
+      "UPDATE newsletter_deliveries SET status='processing',locked_at=DATE_SUB(NOW(),INTERVAL 10 MINUTE)"
+    );
+    await pool.execute(
+      "UPDATE newsletter_subscriptions SET last_confirmation_at=DATE_SUB(NOW(),INTERVAL 2 HOUR)"
+    );
+    await service.subscribe("stale@example.com");
+    const freshToken = await token("stale@example.com");
+    expect(freshToken).not.toBe(oldToken);
+    const send = vi.fn(async () => "synthetic-provider-id");
+    await processNewsletterBatch(pool, send, 2);
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0][0].text).toContain(freshToken);
+    const rows = await query(
+      "SELECT status FROM newsletter_deliveries ORDER BY id"
+    );
+    expect(rows.map(r => r.status)).toEqual(["skipped", "sent"]);
+  });
+  it("serializes opt-out with in-flight provider acceptance", async () => {
+    await subscribe("serial@example.com");
+    await pool.execute(
+      "UPDATE newsletter_deliveries SET status='skipped' WHERE kind='confirmation'"
+    );
+    await service.queueCampaign(await campaign(), 1);
+    const [subscriber] = await query(
+      "SELECT unsubscribe_token FROM newsletter_subscriptions"
+    );
+    let releaseSend!: () => void;
+    let sendStarted!: () => void;
+    const started = new Promise<void>(resolve => {
+      sendStarted = resolve;
+    });
+    const gate = new Promise<void>(resolve => {
+      releaseSend = resolve;
+    });
+    const send = vi.fn(async () => {
+      sendStarted();
+      await gate;
+      return "synthetic-provider-id";
+    });
+    const delivery = processNewsletterBatch(pool, send, 1);
+    await started;
+    // A nonblocking locking read provides deterministic proof that the worker
+    // holds the subscription row across provider acceptance.
+    const observer = await pool.getConnection();
+    try {
+      await observer.beginTransaction();
+      let rowLocked = false;
+      try {
+        await observer.query(
+          "SELECT id FROM newsletter_subscriptions FOR UPDATE NOWAIT"
+        );
+      } catch (error: any) {
+        if (error.code !== "ER_LOCK_NOWAIT") throw error;
+        rowLocked = true;
+      }
+      expect(rowLocked).toBe(true);
+    } finally {
+      await observer.rollback();
+      observer.release();
+      releaseSend();
+    }
+    await delivery;
+    await service.unsubscribe(subscriber.unsubscribe_token);
+    await processNewsletterBatch(pool, send, 1);
+    expect(send).toHaveBeenCalledOnce();
+    expect(
+      (await query("SELECT status FROM newsletter_subscriptions"))[0].status
+    ).toBe("unsubscribed");
+  });
   it("persists language and queues private localized confirmations and campaign footers", async () => {
     const languages = ["en", "de", "sn", "nd"];
     for (const language of languages) {
