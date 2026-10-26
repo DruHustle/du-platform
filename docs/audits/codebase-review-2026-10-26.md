@@ -180,6 +180,13 @@ authorized release, refresh the installed recovery probe from reviewed source an
 verify both deployment and current-schema recovery. No production migration or
 operational script installation is performed by publication of this PR.
 
+The first separately authorized production cutover must retain the existing
+outbound hold through both deployments, live checks and automatic rollback checks.
+Reconcile and release the hold only after the complete release succeeds; keep it
+if the frontend rolls back. The marker gate additionally prevents sending links
+while the compatible page is unavailable. Do not downgrade the frontend after
+issuing new fragment links.
+
 ### Publication and remaining owner inputs
 
 This follow-up is authorized for the public branch/PR only. Production merge,
