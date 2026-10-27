@@ -1,5 +1,12 @@
 import { api } from "@/lib/api";
-import { savedTravelSchema, type SavedTravel } from "@shared/travel";
+import {
+  savedTravelSchema,
+  travelResultsSchema,
+  travelQuoteSchema,
+  type SavedTravel,
+  type TravelCriteria,
+  type TravelQuote,
+} from "@shared/travel";
 import { z } from "@shared/validation";
 
 const savedTravelListSchema = z
@@ -20,4 +27,31 @@ export async function loadSavedTravel(): Promise<SavedTravel[]> {
   const parsed = savedTravelListSchema.safeParse(response.data);
   if (!parsed.success) throw new Error("TRAVEL_INVALID_RESPONSE");
   return parsed.data;
+}
+export async function searchTravel(
+  category: "flights" | "stays",
+  criteria: TravelCriteria,
+  signal: AbortSignal
+) {
+  const response = await api.post(
+    "/travel/search",
+    { category, criteria },
+    { signal, timeout: 30000 }
+  );
+  const parsed = travelResultsSchema.parse(response.data);
+  if (parsed.category !== category) throw new Error("TRAVEL_INVALID_RESPONSE");
+  return parsed;
+}
+export async function revalidateTravelQuote(
+  quote: TravelQuote,
+  signal: AbortSignal
+) {
+  const response = await api.post("/travel/revalidate", quote, {
+    signal,
+    timeout: 30000,
+  });
+  return z
+    .object({ quote: travelQuoteSchema, changed: z.boolean() })
+    .strict()
+    .parse(response.data);
 }

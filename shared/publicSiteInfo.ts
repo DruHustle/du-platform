@@ -9,7 +9,8 @@ export const PUBLIC_SITE_ACTIONS = [
   {
     title: "Travel Southern Africa",
     href: "/travel",
-    summary: "Destination research and planning information.",
+    summary:
+      "Public flight and hotel searches, regional guides and private trip planning. Booking takes place with suppliers; hotel price completeness must be confirmed.",
   },
   {
     title: "Trip planner",

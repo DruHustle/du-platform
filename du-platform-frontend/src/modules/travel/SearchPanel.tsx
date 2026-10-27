@@ -11,6 +11,7 @@ import {
 } from "@shared/travel";
 import { useTravelDraft, updateDraft, travelEvent } from "./store";
 import { Button } from "@/components/ui/button";
+import SupplierResults from "./SupplierResults";
 
 export function LocationField({
   label,
@@ -125,15 +126,18 @@ export default function SearchPanel({
   const [reviewed, setReviewed] = useState<TravelCriteria | null>(null);
   const [copied, setCopied] = useState(false);
   const [notice, setNotice] = useState("");
+  function resetReview() {
+    setError("");
+    setNotice("");
+    setReviewed(null);
+    setCopied(false);
+  }
   function set<K extends keyof TravelCriteria>(
     key: K,
     value: TravelCriteria[K]
   ) {
     updateDraft(d => ({ ...d, criteria: { ...d.criteria, [key]: value } }));
-    setError("");
-    setNotice("");
-    setReviewed(null);
-    setCopied(false);
+    resetReview();
   }
   function submit(e: FormEvent) {
     e.preventDefault();
@@ -170,7 +174,7 @@ export default function SearchPanel({
         : category === "stays"
           ? v.destination
           : `${v.pickup} ${v.pickupTime} → ${v.dropoff} ${v.dropoffTime}`;
-    return `${t(`travel.${category}`)}: ${place}; ${v.departure} — ${category === "flights" && v.tripType === "one-way" ? t("travel.one-way") : v.returnDate}; ${t("travel.adults")}: ${v.adults}; ${t("travel.child-ages")}: ${v.childAges.join(", ") || "—"}; ${category === "stays" ? `${t("travel.rooms")}: ${v.rooms}; ` : ""}${v.currency}`;
+    return `${t(`travel.${category}`)}: ${place}; ${v.departure} — ${category === "flights" && v.tripType === "one-way" ? t("travel.one-way") : v.returnDate}; ${t("travel.adults")}: ${v.adults}; ${t("travel.child-ages")}: ${v.childAges.join(", ") || "—"}; ${category === "stays" ? `${t("travel.rooms")}: ${v.rooms}; ` : ""}${category === "flights" ? `${t("travel.live.flex-days")}: ±${v.flightFlexDays ?? 0}; ` : ""}${v.currency}`;
   };
   return (
     <section
@@ -207,7 +211,7 @@ export default function SearchPanel({
                   dropoff: v,
                 },
               }));
-              setReviewed(null);
+              resetReview();
             }}
           />
         )}
@@ -230,6 +234,22 @@ export default function SearchPanel({
           "departure",
           "date",
           category === "stays" ? "check-in" : "departure"
+        )}
+        {category === "flights" && (
+          <label>
+            {t("travel.live.flex-days")}
+            <select
+              value={c.flightFlexDays ?? 0}
+              onChange={e => set("flightFlexDays", Number(e.target.value))}
+            >
+              <option value="0">{t("travel.live.exact-dates")}</option>
+              {[1, 2, 3].map(days => (
+                <option key={days} value={days}>
+                  {t("travel.live.flex-range", { days })}
+                </option>
+              ))}
+            </select>
+          </label>
         )}
         {(category !== "flights" || c.tripType === "return") &&
           field(
@@ -295,6 +315,24 @@ export default function SearchPanel({
         {category === "stays" && (
           <>
             <label>
+              {t("travel.live.nationality")}
+              <input
+                value={c.guestNationality ?? ""}
+                maxLength={2}
+                minLength={2}
+                pattern="[A-Z]{2}"
+                required
+                autoCapitalize="characters"
+                onChange={e =>
+                  set("guestNationality", e.target.value.toUpperCase())
+                }
+                aria-describedby="travel-nationality-note"
+              />
+            </label>
+            <p id="travel-nationality-note" className="travel-form-note">
+              {t("travel.live.nationality-note")}
+            </p>
+            <label>
               {t("travel.rooms")}
               <input
                 type="number"
@@ -340,7 +378,13 @@ export default function SearchPanel({
             ))}
           </select>
         </label>
-        <p className="travel-form-note">{t("travel.unsupported-options")}</p>
+        <p className="travel-form-note">
+          {t(
+            category === "flights"
+              ? "travel.live.airports-note"
+              : "travel.unsupported-options"
+          )}
+        </p>
         {error && (
           <p role="alert" className="travel-form-note">
             {error}
@@ -350,10 +394,17 @@ export default function SearchPanel({
       </form>
       {notice && <p role="status">{notice}</p>}
       {reviewed && (
-        <div className="travel-review surface-card" role="status">
-          <h3>{t("travel.search-ready")}</h3>
+        <div className="travel-review surface-card">
+          <h3 role="status">{t("travel.search-ready")}</h3>
           <p>{searchBrief(reviewed)}</p>
-          <p>{t("travel.no-results")}</p>
+          {category === "car-hire" && <p>{t("travel.no-results")}</p>}
+          {category !== "car-hire" && (
+            <SupplierResults
+              key={JSON.stringify(reviewed)}
+              category={category}
+              criteria={reviewed}
+            />
+          )}
           <div className="travel-actions">
             <Button
               variant="outline"
@@ -384,7 +435,7 @@ export default function SearchPanel({
             >
               {t(copied ? "travel.copied" : "travel.copy-search")}
             </Button>
-            <Button asChild>
+            <Button variant="outline" asChild>
               <a
                 href={providerResources[category]}
                 target="_blank"

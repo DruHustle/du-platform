@@ -178,11 +178,11 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   const travelPages: Record<string, [string, string]> = {
     "/travel/flights": [
       "Flights to Southern Africa",
-      "Prepare flight searches with exact airports, dates and travellers. Live supplier fares are not connected.",
+      "Search Kiwi.com flights to, from and within Southern Africa. Review supplier-reported amounts, flight details and conditions, then keep options in your trip.",
     ],
     "/travel/stays": [
       "Stays in Southern Africa",
-      "Plan accommodation searches with dates, rooms and child ages. Confirm prices and occupancy directly with providers.",
+      "Search Pilot stays by dates, rooms and travellers. Review reported prices and confirm full-stay costs, room terms and availability with the provider.",
     ],
     "/travel/car-hire": [
       "Car Hire in Southern Africa",
@@ -212,7 +212,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/travel") {
     return buildSeo(
       "Travel Southern Africa | Diaspora Unlocked",
-      "Plan Southern African journeys, explore Zimbabwe, keep private trips and review flights, stays and car-hire search criteria. Live supplier comparison is not connected.",
+      "Explore Southern Africa, search flights and stays, and keep private trips and planning allowances. Book directly with providers; car hire uses a public search handoff.",
       "/travel",
       "Travel Southern Africa"
     );
