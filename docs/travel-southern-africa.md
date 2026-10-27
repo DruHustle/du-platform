@@ -176,7 +176,7 @@ local expertise have been copied into the guide.
 | `/onesa-ai-tourism-augmented-experince`  | `/travel/augmented-experience` |
 
 Each maps directly, including misspellings, `.html` and trailing-slash variants: no chain. Eighteen legacy URL forms are covered. Express and Vite dev/preview
-return HTTP 308 and preserve query strings; Vercel declares permanent redirects.
+return HTTP 308 and preserve query strings. Vercel uses explicit legacy redirects before explicit slash/HTML normalization and checked HTML rewrites. Native clean-URL normalization ran first and caused chains in the first live release; it is now replaced with equivalent explicit rules that retain static pages, API proxying and dynamic-product fallback.
 Fragments are retained by browser redirect behavior and client compatibility
 routes. Existing destination and Onesa anchors remain in the landing page.
 
@@ -273,4 +273,4 @@ Actual Vite preview verification: **45 checks** covering all eighteen old URL fo
 
 PR: [#143](https://github.com/DruHustle/du-platform/pull/143). Its full normal CI gate runs on every pushed commit. Main merges run the Oracle and Vercel production release gates. The PR checks are authoritative for the final pushed revision.
 
-Live supplier integration is locally verified as documented above. No production deployment is claimed.
+The initial main release reached Oracle and Vercel. Live validation identified Vercel normalization chains and an alias-propagation race; the follow-up release corrects routing order, retries the unchanged strict SEO checks within a bounded propagation window, and records an explicit previous deployment target for rollback. Final production evidence is recorded in the PR/release handover.

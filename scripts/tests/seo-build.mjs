@@ -30,8 +30,26 @@ assert(
 const { paths, redirects } = readSiteRoutes();
 assert(paths.includes("/admin"), "Preserve the protected admin document route");
 const config = JSON.parse(fs.readFileSync("vercel.json", "utf8"));
-assert.equal(config.cleanUrls, true);
-assert.equal(config.trailingSlash, false);
+// Native normalization precedes custom redirects on Vercel and creates legacy
+// Travel chains. Explicit rules preserve clean public URLs after legacy aliases.
+assert.equal(config.cleanUrls, false);
+assert.equal(config.trailingSlash, undefined);
+assert(
+  config.redirects.some(
+    r =>
+      r.source === "/:path([^/].*).html" &&
+      r.destination === "/:path" &&
+      r.permanent
+  )
+);
+assert(
+  config.redirects.some(
+    r =>
+      r.source === "/:path([^/].*)/" &&
+      r.destination === "/:path" &&
+      r.permanent
+  )
+);
 assert.deepEqual(config.rewrites, [
   {
     source: "/api/:path*",
@@ -40,7 +58,8 @@ assert.deepEqual(config.rewrites, [
         ? "/preview-api-unavailable.json"
         : "https://du-api.152-70-22-84.sslip.io/api/:path*",
   },
-  { source: "/shop/product/:slug", destination: "/shop/products" },
+  { source: "/:path([^/.][^.]*)", destination: "/:path.html" },
+  { source: "/shop/product/:slug", destination: "/shop/products.html" },
 ]);
 const entryAssets = [
   ...fs

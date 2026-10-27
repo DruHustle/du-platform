@@ -245,17 +245,23 @@ jobs:
         uses: pnpm/action-setup@v4
 
       - name: Install Vercel CLI
-        run: pnpm add -g vercel@latest
+        run: pnpm add -g vercel@65.4.0
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Record current production target for rollback
+        id: previous_production
+        run: |
+          vercel inspect https://www.diasporaunlocked.com --json --token=${{ secrets.VERCEL_TOKEN }} > "$RUNNER_TEMP/du-previous-deployment.json"
+          node scripts/vercel-previous-target.mjs "$RUNNER_TEMP/du-previous-deployment.json" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Vercel Production
         id: vercel_deploy
         run: vercel deploy --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Verify published browser API routing and canonical pages
-        run: node scripts/tests/seo-live.mjs
+        run: node scripts/tests/verify-published-site.mjs
 
       - name: Verify matching Oracle release through the deployed frontend
         env:
@@ -266,7 +272,8 @@ jobs:
         if: failure() && (steps.vercel_deploy.conclusion == 'failure' || steps.vercel_deploy.conclusion == 'success')
         run: |
           echo "Deployment or verification failed — rolling back to the previous production deployment."
-          vercel rollback --token=${{ secrets.VERCEL_TOKEN }} --yes
+          vercel rollback "${{ steps.previous_production.outputs.deployment }}" --token=${{ secrets.VERCEL_TOKEN }} --yes
+          vercel rollback status --token=${{ secrets.VERCEL_TOKEN }}
           echo "Rollback complete."
 
   # 3) Preview deploys for pull requests — only if build-and-test passed.
@@ -284,7 +291,7 @@ jobs:
         uses: pnpm/action-setup@v4
 
       - name: Install Vercel CLI
-        run: pnpm add -g vercel@latest
+        run: pnpm add -g vercel@65.4.0
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
