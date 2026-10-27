@@ -59,7 +59,14 @@ try {
     let savedRecords = [];
     const page = await context.newPage();
     lastPage = page;
-    page.on("pageerror", e => errors.push(e.message));
+    page.on("pageerror", e => {
+      errors.push(e.message);
+      console.error("Travel page error:", {
+        width,
+        url: page.url(),
+        error: e.stack || e.message,
+      });
+    });
     // No credentials or production services. APIs unrelated to this journey use
     // deterministic read-only fixtures; Travel endpoints remain the actual server.
     await page.route("**/api/**", async r => {
@@ -796,12 +803,17 @@ try {
   assert.deepEqual(errors, []);
 } catch (e) {
   failure = String(e.stack || e);
-  if (lastPage) {
-    await lastPage.screenshot({
-      path: `${output}/failure.png`,
-      fullPage: true,
-    });
-    await writeFile(`${output}/failure.html`, await lastPage.content());
+  console.error(JSON.stringify({ engine, checks, errors, failure }, null, 2));
+  if (lastPage && !lastPage.isClosed()) {
+    try {
+      await lastPage.screenshot({
+        path: `${output}/failure.png`,
+        fullPage: true,
+      });
+      await writeFile(`${output}/failure.html`, await lastPage.content());
+    } catch (captureError) {
+      console.error("Travel failure capture failed:", String(captureError));
+    }
   }
 } finally {
   await browser.close();

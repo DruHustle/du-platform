@@ -1,3 +1,4 @@
+import { initializeWeather } from "./modules/weather/cache";
 import { initializeTravel } from "./modules/travel/schema";
 import { initializeProductInterest } from "./modules/shop/interestSchema";
 import { initializeTransactionalMessages } from "./modules/notifications/schema";
@@ -380,6 +381,7 @@ export async function initializeDatabase(): Promise<void> {
     }
 
     await initializeTravel(db);
+    await initializeWeather(db);
     await initializeShopPilot(db);
     await initializeNewsletterDatabase(db);
     await initializeProductInterest(db);

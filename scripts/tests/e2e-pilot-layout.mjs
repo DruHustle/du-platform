@@ -96,6 +96,7 @@ const paths = [
   "/technology",
   "/investment",
   "/travel",
+  "/travel/weather",
   "/travel/planner",
   "/legal-notice",
   "/privacy-policy",

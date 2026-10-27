@@ -191,6 +191,12 @@ jobs:
       - name: Site-wide UI consistency and accessible dialog regressions
         run: pnpm test:e2e:ui
 
+      - name: Weather location and forecast browser workflows
+        run: pnpm test:e2e:weather
+
+      - name: Browser appearance preferences and Travel navigation
+        run: pnpm test:e2e:theme
+
       - name: Travel journey Chromium
         run: pnpm test:e2e:travel
 
@@ -206,6 +212,20 @@ jobs:
         run: pnpm test:e2e:vr:music
         env:
           VR_MUSIC_BROWSER_ENGINE: webkit
+
+      - name: Preserve browser failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failure-diagnostics
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            /tmp/du-travel-*/report.json
+            /tmp/du-travel-*/failure.png
+            /tmp/du-travel-*/failure.html
+            /tmp/du-weather-review/report.json
+            /tmp/du-theme-review/report.json
 
   # Native ARM64 build and release on the shared Oracle VM, scoped to DU only.
   deploy-oracle-production:

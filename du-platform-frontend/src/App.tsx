@@ -77,7 +77,7 @@ function App() {
   return (
     <ErrorBoundary>
       <MotionConfig reducedMotion="user">
-        <ThemeProvider defaultTheme="light">
+        <ThemeProvider>
           <Toaster />
           <CookieConsent />
           <NavigationRouter>

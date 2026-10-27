@@ -1,0 +1,35 @@
+/* Editorial surfaces follow the visitor's appearance preference. Photo cards,
+   immersive experiences and brand navigation retain their dark palette. */
+:root {
+  color-scheme: light;
+  --page-canvas: #f8fafb;
+  --page-surface: #ffffff;
+  --page-soft: #f1f5f9;
+  --page-hover: #e2e8f0;
+  --page-ink: #0f172a;
+  --page-ink-soft: #334155;
+  --page-muted: #475569;
+  --page-accent: #854d0e;
+  --page-border: #cbd5e1;
+  --page-field-border: #64748b;
+  --page-scheme: light;
+  --page-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+:root.dark {
+  color-scheme: dark;
+  --page-canvas: #0b1322;
+  --page-surface: #101929;
+  --page-soft: #1e293b;
+  --page-hover: #334155;
+  --page-ink: #f1f5f9;
+  --page-ink-soft: #e2e8f0;
+  --page-muted: #b7c1d2;
+  --page-accent: #facc15;
+  --page-border: #475569;
+  --page-field-border: #64748b;
+  --page-scheme: dark;
+  --page-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23cbd5e1' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+.theme-switcher select {
+  color-scheme: dark;
+}
