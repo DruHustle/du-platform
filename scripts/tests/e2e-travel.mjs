@@ -533,6 +533,40 @@ try {
       0
     );
     offerExpires = false;
+    await selectedFlight
+      .getByRole("link", { name: "Search again", exact: true })
+      .click();
+    await page
+      .getByRole("heading", { name: "Flights", level: 1, exact: true })
+      .waitFor();
+    assert.match(
+      await page
+        .getByRole("combobox", {
+          name: "Destination airport / area",
+          exact: true,
+        })
+        .inputValue(),
+      /VFA/
+    );
+    assert.equal(
+      await page
+        .getByLabel("Departure / pickup date", { exact: true })
+        .inputValue(),
+      future(30)
+    );
+    assert.equal(
+      await page
+        .getByLabel("Child 1 age at travel", { exact: true })
+        .inputValue(),
+      "7"
+    );
+    await page
+      .locator(".travel-nav")
+      .getByRole("link", { name: "My Trips", exact: true })
+      .click();
+    await page
+      .getByRole("heading", { name: "My Trips", level: 1, exact: true })
+      .waitFor();
     checks.push(
       `${width}: My Trips refresh keeps actionable state; expired options retain the itinerary`
     );
