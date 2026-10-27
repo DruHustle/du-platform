@@ -86,7 +86,7 @@ Real provider checks are bounded manual read-only checks, not a periodic job.
 - Production build and both TypeScript checks passed; output is 57.98 MiB within
   the existing 60 MiB deployment budget. SEO checks passed for 74 route documents
   and 61 canonical URLs. Strict translations and repository guardrails passed.
-- All 414 backend tests passed, including real disposable MySQL integration
+- All 415 backend tests passed, including real disposable MySQL integration
   tests; 125 frontend tests and seven additional Node checks passed. The
   disposable database container and volume were removed afterwards.
 - Six Weather and ten appearance browser scenarios passed in Chromium/WebKit at

@@ -183,10 +183,12 @@ export class WeatherProvider {
         signal: AbortSignal.timeout(12000),
       });
       if (response.status === 304) return { response, data: null };
-      if (response.status !== 200)
+      if (response.status !== 200) {
+        await response.body?.cancel().catch(() => {});
         throw new WeatherError(
           response.status === 429 ? "WEATHER_BUSY" : "WEATHER_UNAVAILABLE"
         );
+      }
       if (!response.body) throw new WeatherError("WEATHER_UNAVAILABLE");
       const reader = response.body.getReader();
       let size = 0,

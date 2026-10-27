@@ -234,6 +234,23 @@ describe("weather data and public-provider controls", () => {
     ).rejects.toThrow("WEATHER_INVALID");
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
+  it("releases an upstream error response body instead of retaining the connection", async () => {
+    const cancel = vi.fn();
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(
+        new Response(new ReadableStream({ cancel }), { status: 429 })
+      );
+    const provider = new WeatherProvider(
+      new MemoryWeatherCache(),
+      fetcher,
+      () => initial
+    );
+    await expect(provider.forecast(coordinates)).rejects.toThrow(
+      "WEATHER_BUSY"
+    );
+    expect(cancel).toHaveBeenCalledTimes(1);
+  });
   it("caches explicit place searches and applies a shared upstream spacing limit", async () => {
     let now = initial;
     const fetcher = vi.fn<typeof fetch>().mockImplementation(async () =>
