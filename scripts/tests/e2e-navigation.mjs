@@ -160,7 +160,7 @@ try {
       "/shop",
       "/technology",
       "/investment",
-      "/tourism",
+      "/travel",
       "/",
     ]) {
       await page.evaluate(() => scrollTo({ top: 500, behavior: "instant" }));
@@ -327,8 +327,8 @@ try {
       scenario: "lazy search navigation and query history",
     });
 
-    await navLink("/tourism").click();
-    await activeLink("/tourism").waitFor();
+    await navLink("/travel").click();
+    await activeLink("/travel").waitFor();
     await page.screenshot({ path: `${output}/tourism-${width}.png` });
     assert(
       !chunks.some(path => /VirtualExperience|InteractiveGlobe/.test(path)),

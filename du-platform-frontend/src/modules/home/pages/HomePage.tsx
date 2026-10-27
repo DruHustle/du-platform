@@ -28,7 +28,7 @@ const modules = [
   },
   {
     key: "tourism",
-    href: "/tourism",
+    href: "/travel",
     image: "/images/pages/tourism/victoria_falls.webp",
     icon: MapPin,
   },

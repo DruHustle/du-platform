@@ -115,7 +115,7 @@
   "nav": {
     "home": "Startseite",
     "shop": "Geschäft",
-    "tourism": "Tourismus",
+    "tourism": "Reisen",
     "investment": "Investitionen",
     "market_requirements": "Marktanforderungen",
     "market_requirements_desc": "Deutsche Marktvorschriften und Zertifizierungen",
@@ -155,7 +155,7 @@
   "home": {
     "hero_title": "Diaspora Unlocked — mit Simbabwe verbunden",
     "hero_subtitle": "Simbabwe verbinden – im Land und weltweit.",
-    "tourism": "Tourismus",
+    "tourism": "Reisen",
     "technology": "Technologie",
     "investments": "Investitionen",
     "explore_now": "Plattform entdecken",
@@ -166,7 +166,7 @@
     "view_data": "Wirtschaftsdaten ansehen",
     "modules": {
       "tourism": {
-        "title": "Tourismus",
+        "title": "Reisen",
         "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen und planen Sie Ihren Besuch.",
         "stats": "Reiseziele in Simbabwe"
       },
@@ -199,19 +199,19 @@
         "image_alt": "Frisches Gemüse in Körben"
       },
       "tourism": {
-        "title": "Tourismus",
+        "title": "Reisen",
         "description": "Entdecken Sie Wasserfälle, Wildtiere, Kulturerbestätten und Reiseziele in Simbabwe.",
         "detail": "Vergleiche Reiseziele, probiere den AR-Guide und entwirf mit Onesa eine Reiseroute.",
         "stats": "Reiseziel finden",
         "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe"
       }
     },
+    "hero_pause": "Bilder pausieren",
+    "hero_resume": "Bilder fortsetzen",
     "discovery": {
       "title": "Entdecke Simbabwe auf deine Art.",
       "description": "Entdecke simbabwische Produkte, recherchiere Geschäftsideen, plane einen Besuch oder frage Onesa. Finde deinen Einstieg, wo auch immer du lebst."
-    },
-    "hero_pause": "Bilder pausieren",
-    "hero_resume": "Bilder fortsetzen"
+    }
   },
   "tech": {
     "chat_with_onesa": "Chatten Sie mit Onesa",
@@ -309,7 +309,7 @@
     "note": "KI-Antworten können unvollständig oder fehlerhaft sein. Prüfen Sie Preise, Verfügbarkeit und wichtige Anforderungen bei Anbietern oder offiziellen Quellen."
   },
   "tourism": {
-    "back_to_tourism": "Zurueck zum Tourismus",
+    "back_to_tourism": "Zurück zu Reisen",
     "attractions_title": "Beginne mit einem Reiseziel",
     "attractions": {
       "vicfalls": {
@@ -614,7 +614,7 @@
     },
     "ar": {
       "seo": {
-        "title": "Simbabwe mit Ortsinformationen entdecken",
+        "title": "Augmented-Reality-Reiseführer für Simbabwe",
         "description": "Entdecken Sie Ziele in Simbabwe mit Text und Sprachausgabe. Das Kamerabild bleibt auf Ihrem Gerät; die Hinweise beziehen sich auf Ihr gewähltes Ziel. Dies ist keine Live-Navigation."
       }
     },
@@ -1676,7 +1676,7 @@
   },
   "search": {
     "categories": {
-      "tourism": "Tourismus",
+      "tourism": "Reisen",
       "investment": "Investition",
       "technology": "Technologie",
       "impact": "Auswirkungen",
@@ -2131,5 +2131,119 @@
     "failed": "Wir konnten die Speicherung nicht bestätigen. Ihre Nachricht bleibt erhalten. Wiederholen Sie die unveränderte Anfrage oder beginnen Sie ausdrücklich eine neue.",
     "changed": "Diese ungeklärte Anfrage gehört zu Ihrer vorherigen Nachricht. Wiederholen Sie diese unverändert oder beginnen Sie eine neue Anfrage.",
     "privacy": "Wir speichern Ihre Anfrage, Sprache und Benachrichtigungsverlauf in unserer Datenbank, damit das Team antworten kann. Dies ist keine Marketing-Anmeldung. Für Berichtigung oder Löschung wenden Sie sich an info@diasporaunlocked.com."
+  },
+  "travel": {
+    "title": "Reisen im südlichen Afrika",
+    "navigation": "Reisebereiche",
+    "overview": "Übersicht",
+    "flights": "Flüge",
+    "stays": "Unterkünfte",
+    "car-hire": "Mietwagen",
+    "explore": "Entdecken",
+    "my-trips": "Meine Reisen",
+    "description": "Plane Reisen ins südliche Afrika, von dort und innerhalb der Region. Sammle deine Ideen und buche direkt bei Anbietern.",
+    "search-intro": "Beginne mit Reisedaten und Reisenden. Die Angaben bleiben beim Wechsel zwischen Reisebereichen erhalten.",
+    "origin": "Abflughafen",
+    "destination": "Zielflughafen / Umgebung",
+    "stay-area": "Unterkunft nahe Zielflughafen",
+    "trip-type": "Flugart",
+    "return": "Hin und zurück",
+    "one-way": "Nur Hinflug",
+    "departure": "Abreise / Abholung",
+    "return-date": "Rückreise / Rückgabe",
+    "check-in": "Anreise",
+    "check-out": "Abreise",
+    "adults": "Erwachsene",
+    "children": "Kinder (0–17)",
+    "child-age": "Alter von Kind {{number}} bei Reisebeginn",
+    "child-ages": "Alter der Kinder",
+    "rooms": "Zimmer",
+    "occupancy-note": "Mindestens ein Erwachsener pro Zimmer. Zimmerbelegung, Kinderalter und Kapazität beim Anbieter bestätigen; dies ist kein Unterkunftsangebot.",
+    "currency": "Währung",
+    "pickup": "Abholflughafen",
+    "dropoff": "Rückgabeflughafen",
+    "pickup-time": "Ortszeit Abholung",
+    "dropoff-time": "Ortszeit Rückgabe",
+    "unsupported-options": "Flexible Reisedaten und Nachbarflughäfen sind noch nicht angebunden. Wähle konkrete Flughäfen und Daten.",
+    "review-search": "Suchangaben prüfen",
+    "search-ready": "Deine Suchübersicht",
+    "no-results": "Live-Vergleiche sind noch nicht angebunden. Es wurde kein Anbieter durchsucht und kein Preis oder Bestand bestätigt.",
+    "add-search": "Suche zur Reise hinzufügen",
+    "added": "Suche zum Entwurf hinzugefügt.",
+    "copy-search": "Suchangaben kopieren",
+    "copied": "Kopiert",
+    "copy-error": "Kopieren nicht verfügbar. Markiere und kopiere die Übersicht oben.",
+    "open-provider": "KAYAK-Suche öffnen ↗",
+    "handoff-note": "Öffnet eine öffentliche Suchseite in einem neuen Tab. Daten, Reisende und Orte werden nicht übertragen. Kopiere die Angaben und gib sie bei KAYAK ein. Keine freigegebene Affiliate-Anbindung.",
+    "review-trip": "Meine Reisen ansehen",
+    "disclosure": "DU verkauft keine Reisen und nimmt keine Reservierungen an. Normale öffentliche Links ohne eingerichtete Affiliate-Vergütung. Anbieter bestätigen Preise und Bedingungen.",
+    "guest-draft": "Dein Reiseentwurf",
+    "draft-note": "Wird nach Möglichkeit in diesem Browser gespeichert. Keine Reservierung. Gespeicherte Suchen sind Prüfaufträge, keine ausgewählten Anbieterangebote.",
+    "searches": "Zu prüfende Suchen",
+    "no-searches": "Noch keine Suche hinzugefügt. Prüfe zuerst eine Flug-, Unterkunfts- oder Mietwagensuche.",
+    "unquoted": "Ohne Angebot · Verfügbarkeit unbekannt",
+    "search-again": "Erneut suchen",
+    "remove": "Entfernen",
+    "estimates": "Deine Planungsansätze",
+    "estimate-note": "Eigene Schätzung eingeben, kein Anbieterpreis. Beträge bleiben in ihrer Originalwährung; keine Umrechnung.",
+    "category": "Kategorie",
+    "amount": "Geschätzter Betrag",
+    "add-estimate": "Schätzung hinzufügen",
+    "budget": "Schätzsummen nach Währung",
+    "no-estimates": "Keine Schätzungen erfasst. Gesamtkosten unbekannt.",
+    "funds-unknown": "Keine Anbieterangebote. Steuern, Gepäck, Pflichtgebühren, Extras und rückzahlbare Kautionen: unbekannt. Diese Teilsummen sind kein Gesamtreisepreis oder vollständiger Finanzbedarf.",
+    "onesa-planner": "Simbabwe-Reise mit Onesa entwerfen",
+    "private-trips": "Private Reisen und Suchen",
+    "private-note": "Zum geräteübergreifenden Speichern anmelden. Nur dein Konto kann diese Einträge lesen oder löschen. Laden ersetzt den Browserentwurf.",
+    "sign-in": "Zum privaten Speichern anmelden",
+    "trip-name": "Reise- / Suchname",
+    "save-trip": "Reise privat speichern",
+    "save-search": "Suchen speichern",
+    "no-saved": "Keine privaten Reisen oder Suchen gespeichert.",
+    "saved": "Privat gespeichert.",
+    "saved-trip": "Gespeicherte Reise",
+    "saved-search": "Gespeicherte Suche",
+    "restore": "In Entwurf laden",
+    "restored": "Gespeicherte Angaben in Browserentwurf geladen.",
+    "delete": "Löschen",
+    "storage-error": "Gespeicherte Reisen nicht erreichbar. Dein Browserentwurf bleibt erhalten. Versuche es später erneut.",
+    "alerts": "Preisalarme",
+    "alerts-note": "Automatische Überwachung erst nach Anbieterfreigabe und festgelegten Zustellgrenzen. Es werden keine Preise im Hintergrund geprüft.",
+    "alerts-unavailable": "Preisalarme noch nicht verfügbar",
+    "no-consent": "Speichern meldet dich weder für Preisalarme noch für den Newsletter an.",
+    "guides": "Praktische Reisehinweise",
+    "reviewed": "Geprüft am 27. Oktober 2026 · Redaktionelle Hinweise, kein Angebot",
+    "source": "Offizielle Quelle lesen ↗",
+    "share-guide": "Ratgeberlink kopieren",
+    "coverage": "Die Region entdecken",
+    "coverage-note": "Zielregionen: Simbabwe, Südafrika, Botswana, Namibia, Sambia, Mosambik, Malawi, Lesotho, Eswatini und Angola. Flughafenvorschläge und Ratgeber belegen keine Anbieterabdeckung. Live-Flüge, Unterkünfte und Mietwagen bleiben bis zur Prüfung einer freigegebenen Anbindung überall unverfügbar.",
+    "errors": {
+      "criteria": "Wähle gelistete Flughäfen und gültige Daten, Reisendenzahlen und jedes Kinderalter.",
+      "past": "Abreise darf nicht in der Vergangenheit liegen.",
+      "dates": "Wähle ein Enddatum nach dem Startdatum.",
+      "route": "Wähle unterschiedliche Start- und Zielflughäfen.",
+      "occupancy": "Jedes Zimmer benötigt mindestens einen Erwachsenen."
+    },
+    "guides-content": {
+      "zimbabwe-routes": {
+        "title": "Routen nach Simbabwe vergleichen",
+        "body": "Vergleiche die gesamte Reise nach Harare, Bulawayo oder Victoria Falls einschließlich Weiterfahrt. Ein niedriger Basispreis kann Aufgabegepäck ausschließen. Prüfe für jeden Abschnitt die Gepäckregeln der ausführenden Airline und deines Tarifs. Unterscheide separate Tickets: Transfer, Einreise und Folgen verpasster Anschlüsse selbst bestätigen."
+      },
+      "johannesburg-victoria-falls": {
+        "title": "Johannesburg nach Victoria Falls",
+        "body": "Beginne mit JNB und VFA und vergleiche Daten und die gesamte Rückreise. Victoria Falls und Livingstone sind unterschiedliche Flughäfen in verschiedenen Ländern. Bei einem grenzüberschreitenden Transfer Einreiseberechtigung und Transport vor der Buchung bei Behörden und Anbieter prüfen."
+      },
+      "cape-town-families": {
+        "title": "Familienunterkunft in Kapstadt wählen",
+        "body": "Vergleiche den Gesamtpreis für den Aufenthalt mit tatsächlichen Erwachsenen, Kinderaltern und Zimmern. Betten, Kinderbetten und Verbindungstüren bestätigen lassen; Treppen, Poolzugang und Stornobedingungen prüfen. Wähle die Lage anhand deiner Aktivitäten und Verkehrsmittel. Cape Town Tourism bietet Orts- und Besucherinformationen."
+      },
+      "car-hire-deposits": {
+        "title": "Mietwagen am Flughafen: Kaution und Bedingungen",
+        "body": "Vergleiche Mietkosten getrennt von rückzahlbarer Kaution und Selbstbeteiligung. Prüfe Karten-, Fahrer-, Kilometer-, Tank-, Öffnungszeit- und Grenzbedingungen des konkreten Vermieters. Zusatzschutz hebt eine Kaution nicht automatisch auf. Eine Kategorie garantiert weder Modell noch Kindersitz. Benötigte Ausstattung und Grenzerlaubnis schriftlich bestätigen lassen."
+      }
+    },
+    "clear-draft": "Browserentwurf leeren",
+    "privacy": "Reiseentwürfe bleiben in diesem Browser, bis du sie leerst. Angemeldet kannst du Reisedaten, Flughäfen, Reisendenalter und Planungsschätzungen ausdrücklich in deinem privaten Konto speichern und unter Meine Reisen löschen. Keine Namen, Kontaktdaten, Pass- oder Zahlungsdaten in Reisenamen eingeben. Speichern abonniert keine E-Mails. Öffentliche Anbieterlinks öffnen eine andere Website mit eigenen Datenschutzregeln; Suchangaben werden nicht automatisch übertragen.",
+    "planner-separate": "Dieser separate Simbabwe-Reiseplaner nutzt eigene Reisendenzahlen und USD-Schätzungen. Deine Reisesuchen bleiben unter Meine Reisen; sie werden weder in Anbieterangebote umgewandelt noch in dieses Formular kopiert."
   }
 }

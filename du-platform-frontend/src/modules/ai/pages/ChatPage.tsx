@@ -217,7 +217,7 @@ export default function ChatPage() {
                     asChild
                     className="h-auto min-h-8 max-w-full whitespace-normal rounded-full border border-white/15 bg-slate-900 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800"
                   >
-                    <Link href="/tourism">
+                    <Link href="/travel">
                       <ArrowLeft className="h-4 w-4" />
                       {backLabel}
                     </Link>

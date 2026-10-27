@@ -1,3 +1,7 @@
+import TravelNav from "../../travel/TravelNav";
+import SearchPanel from "../../travel/SearchPanel";
+import TravelGuides from "../../travel/TravelGuides";
+import "../../travel/travel.css";
 import { tourismDestinationAnchor } from "@shared/tourismSearch";
 import { useState, useRef } from "react";
 import Layout from "@/components/Layout";
@@ -35,7 +39,7 @@ type Attraction = {
   sourceLinks: Array<{ label: string; url: string }>;
 };
 
-export default function Tourism() {
+export default function Tourism({ explore = false }: { explore?: boolean }) {
   const { t } = useTranslation();
   const [selectedAttraction, setSelectedAttraction] =
     useState<Attraction | null>(null);
@@ -457,7 +461,7 @@ export default function Tourism() {
         t("tourism.onesa.navigate.desc") ||
         "Explore destinations with a camera preview, Onesa’s place guidance and optional narration.",
       image: "/images/pages/tourism/great_zimbabwe.jpeg",
-      href: "/onesa-ai-tourism-augmented-experience",
+      href: "/travel/augmented-experience",
       cta: t("tourism.onesa.cta.local_guide_ar", {
         defaultValue: "Explore in AR",
       }),
@@ -470,7 +474,7 @@ export default function Tourism() {
         t("tourism.onesa.plan.desc") ||
         "Turn your dates, interests and preferences into an itinerary with indicative budgets. Book directly with providers after checking the details.",
       image: "/images/pages/tourism/victoria_falls.webp",
-      href: "/onesa-ai-book-trip",
+      href: "/travel/planner",
       cta: t("tourism.onesa.cta.plan_trip", { defaultValue: "Plan your trip" }),
     },
     {
@@ -484,7 +488,7 @@ export default function Tourism() {
           "Try the Sample City demo with panoramic scenes and optional headset support. Zimbabwe destination tours are not available yet.",
       }),
       image: "/images/pages/technology/virtual-demo-preview.webp",
-      href: "/onesa-ai-tourism-virtual-experience",
+      href: "/travel/virtual-experience",
       cta: t("tourism.intro.virtual_experience_center_cta", {
         defaultValue: "Explore virtual previews",
       }),
@@ -493,12 +497,13 @@ export default function Tourism() {
 
   return (
     <Layout>
-      <div className="tourism-landing">
+      <div className="tourism-landing travel-page">
+        <TravelNav />
         <DiscoveryHero
           eyebrow={t("tourism.landing.eyebrow")}
-          title={t("tourism.landing.title")}
-          highlight={t("tourism.landing.highlight")}
-          description={t("tourism.landing.description")}
+          title={t(explore ? "travel.explore" : "travel.title")}
+          highlight=""
+          description={t("travel.description")}
           principle={t("tourism.landing.principle")}
           image="/images/pages/tourism/victoria_falls.webp"
           imageAlt={t("tourism.landing.image_alt")}
@@ -518,12 +523,14 @@ export default function Tourism() {
             variant="outline"
             className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
           >
-            <Link href="/onesa-ai-book-trip">
+            <Link href="/travel/planner">
               {t("tourism.onesa.cta.plan_trip")}
             </Link>
           </Button>
         </DiscoveryHero>
 
+        {!explore && <SearchPanel />}
+        <TravelGuides />
         <DiscoverySection
           id="attractions"
           title={t("tourism.attractions_title", {
@@ -791,7 +798,7 @@ export default function Tourism() {
                     asChild
                     className="h-auto min-h-11 whitespace-normal bg-zim-gold text-slate-950 hover:bg-yellow-300"
                   >
-                    <Link href="/onesa-ai-book-trip">
+                    <Link href="/travel/planner">
                       {t("tourism.onesa.cta.plan_trip")}
                     </Link>
                   </Button>

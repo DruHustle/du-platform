@@ -23,7 +23,7 @@ it("links known AR and travel routes but never protocol-relative or unknown dest
       }
     />
   );
-  expect(html).toContain('href="/onesa-ai-tourism-augmented-experience"');
+  expect(html).toContain('href="/travel/augmented-experience"');
   expect(html).not.toContain('href="//');
   expect(html).not.toContain('href="/admin');
 });

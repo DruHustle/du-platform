@@ -1,3 +1,5 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
+import { resolveTravelRedirect } from "../shared/travelRoutes";
 import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import tailwindcss from "@tailwindcss/vite";
@@ -7,6 +9,19 @@ import path from "node:path";
 import { defineConfig, loadEnv } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { PUBLIC_SITE_ORIGIN, resolveCanonicalUrl } from "../shared/routeSeo";
+
+function redirectTravel(
+  req: IncomingMessage,
+  res: ServerResponse,
+  next: () => void
+) {
+  const url = new URL(req.url || "/", "http://localhost");
+  const target = resolveTravelRedirect(url.pathname);
+  if (!target) return next();
+  res.statusCode = 308;
+  res.setHeader("Location", target + url.search);
+  res.end();
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(import.meta.dirname, ".."), "");
@@ -32,6 +47,15 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       ...(useDevHttps && !hasTrustedLocalCert ? [basicSsl()] : []),
+      {
+        name: "travel-redirects",
+        configureServer(server) {
+          server.middlewares.use(redirectTravel);
+        },
+        configurePreviewServer(server) {
+          server.middlewares.use(redirectTravel);
+        },
+      },
       react(),
       tailwindcss(),
       ...(useJsxLoc ? [jsxLocPlugin()] : []),

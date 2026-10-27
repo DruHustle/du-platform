@@ -1,6 +1,6 @@
 # Frontend Modules
 
-Active domains are home, authentication, core routing, tourism, investment,
+Active domains are home, authentication, core routing, Travel (in the tourism module), investment,
 technology, shop, Onesa AI, search, legal content, and administration.
 
 Each domain owns its route manifest and relevant components, hooks, API clients,
@@ -50,3 +50,5 @@ views at 375, 768 and 1440 pixels without services. Set `UI_BROWSER=webkit` for
 the second engine and `UI_OUTPUT_DIR` to select a screenshot/report directory.
 All API responses in this suite are local fixtures; it never submits enquiries,
 product alerts, campaigns, orders or authentication changes.
+
+Travel owns `/travel` and its child routes. Historical Tourism/Onesa links redirect directly to their canonical Travel equivalents. See `docs/travel-southern-africa.md` for provider capability limits and activation requirements.

@@ -115,7 +115,7 @@
   "nav": {
     "home": "Ekhaya",
     "shop": "Thenga",
-    "tourism": "Ezokuvakasha",
+    "tourism": "Ukuvakasha",
     "investment": "Ukutshala Imali",
     "market_requirements": "Izidingo zemakethe",
     "market_requirements_desc": "Imithetho lezitifiketi zemakethe yase-Germany",
@@ -155,7 +155,7 @@
   "home": {
     "hero_title": "Diaspora Unlocked — xhumana leZimbabwe",
     "hero_subtitle": "Ukuxhumanisa iZimbabwe, ekhaya laphesheya.",
-    "tourism": "Ezokuvakasha",
+    "tourism": "Ukuvakasha",
     "technology": "Ezobuchwepheshe",
     "investments": "Ukutshala Imali",
     "explore_now": "Hlola inkundla",
@@ -166,7 +166,7 @@
     "view_data": "Buka Idatha yezomnotho",
     "modules": {
       "tourism": {
-        "title": "Ezokuvakasha",
+        "title": "Ukuvakasha",
         "desc": "Thola izindawo zokuvakasha zaseZimbabwe ezisezingeni lomhlaba njalo uhlele ukuvakasha kwakho.",
         "stats": "Izindawo zeZimbabwe"
       },
@@ -199,19 +199,19 @@
         "image_alt": "Imibhida emitsha emabhasikitini"
       },
       "tourism": {
-        "title": "Ezokuvakasha",
+        "title": "Ukuvakasha",
         "description": "Yazi impophoma, inyamazana zeganga, amagugu lezindawo zokuvakatshela eZimbabwe.",
         "detail": "Qathanisa izindawo, zama umhlahlandlela weAR njalo ubhale uhlelo lohambo loOnesa.",
         "stats": "Thola lapho ofuna ukuya khona",
         "image_alt": "Izimpophoma zeVictoria Falls lendawo eluhlaza ezizungezileyo eZimbabwe"
       }
     },
+    "hero_pause": "Misa imifanekiso",
+    "hero_resume": "Qhubeka ngemifanekiso",
     "discovery": {
       "title": "Hlola iZimbabwe ngendlela yakho.",
       "description": "Hlola imikhiqizo yaseZimbabwe, cwaninga imibono yebhizimusi, hlela ukuvakatshela kumbe ubuze uOnesa. Thola indawo yokuqala, loba ngaphi lapho ohlala khona."
-    },
-    "hero_pause": "Misa imifanekiso",
-    "hero_resume": "Qhubeka ngemifanekiso"
+    }
   },
   "tech": {
     "chat_with_onesa": "Xoxa no-Onesa",
@@ -309,7 +309,7 @@
     "note": "Izimpendulo zeAI zingasilela kumbe ziphambane. Qinisekisa intengo, ukutholakala lokufunekayo kumhlinzeki kumbe emthonjeni osemthethweni."
   },
   "tourism": {
-    "back_to_tourism": "Buyela kuEzokuvakasha",
+    "back_to_tourism": "Buyela ekuvakasheni",
     "attractions_title": "Qala ngendawo ongayivakatshela",
     "attractions": {
       "vicfalls": {
@@ -614,7 +614,7 @@
     },
     "ar": {
       "seo": {
-        "title": "Umhlahlandlela Wokuvakatshela iZimbabwe",
+        "title": "Isiqondiso seAugmented Reality saseZimbabwe",
         "description": "Hlola izindawo zeZimbabwe ngokufunda loba ngokulalela umhlahlandlela. Umfanekiso wekhamera uhlala emshinini wakho; ulwazi lumayelana lendawo oyikhethileyo. Lokhu akusikho ukuqondisa indlela ngesikhathi sokuhamba."
       }
     },
@@ -1680,7 +1680,7 @@
   },
   "search": {
     "categories": {
-      "tourism": "Ezokuvakasha",
+      "tourism": "Ukuvakasha",
       "investment": "Ukutshalwa kwemali",
       "technology": "Ubuchwepheshe",
       "impact": "Umthelela",
@@ -2135,5 +2135,119 @@
     "failed": "Asenelisanga ukuqinisekisa ukugcinwa kombuzo. Umlayezo wenu usagciniwe. Phindani lingawutshintshanga kumbe liqalise umbuzo omutsha ngabomo.",
     "changed": "Isicelo esingakaqinisekiswa ngesomlayezo wenu wangaphambili. Phindani lingawutshintshanga kumbe liqalise umbuzo omutsha.",
     "privacy": "Sigcina umbuzo, ulimi lembali yezaziso kudhatabhesi ukuze iqembu liphendule. Lokhu akulibhalisi kwezokukhangisa. Cela ukulungiswa kumbe ukucitshwa ku info@diasporaunlocked.com."
+  },
+  "travel": {
+    "title": "Vakashela iSouthern Africa",
+    "navigation": "Izingxenye zokuvakasha",
+    "overview": "Okufitshane",
+    "flights": "Indizamtshina",
+    "stays": "Indawo zokuhlala",
+    "car-hire": "Ukuqhatsha imota",
+    "explore": "Hlola",
+    "my-trips": "Uhambo lwami",
+    "description": "Hlela uhambo oluya, olusuka lolungaphakathi kweSouthern Africa. Gcina imibono yakho, ubhukhe kubanikezeli.",
+    "search-intro": "Qala ngezinsuku labahambi. Imininingwane iyagcinwa nxa utshintsha ingxenye.",
+    "origin": "Isikhumulo sokusuka",
+    "destination": "Isikhumulo sokuya / indawo",
+    "stay-area": "Indawo yokuhlala eduze kwesikhumulo",
+    "trip-type": "Uhlobo lwendiza",
+    "return": "Ukuya lokubuya",
+    "one-way": "Ukuya kuphela",
+    "departure": "Usuku lokusuka / ukuthatha",
+    "return-date": "Usuku lokubuya / ukubuyisela",
+    "check-in": "Usuku lokungena",
+    "check-out": "Usuku lokuphuma",
+    "adults": "Abadala",
+    "children": "Abantwana (0–17)",
+    "child-age": "Iminyaka yomntwana {{number}} ngesikhathi sohambo",
+    "child-ages": "Iminyaka yabantwana",
+    "rooms": "Amakamelo",
+    "occupancy-note": "Omdala oyedwa ekamelweni. Qinisekisa ukwabiwa kwamakamelo, iminyaka yabantwana lendawo kumhlinzeki; lokhu akusiso isithembiso sendawo.",
+    "currency": "Imali",
+    "pickup": "Isikhumulo sokuthatha",
+    "dropoff": "Isikhumulo sokubuyisela",
+    "pickup-time": "Isikhathi sendawo sokuthatha",
+    "dropoff-time": "Isikhathi sendawo sokubuyisela",
+    "unsupported-options": "Izinsuku eziguqukayo lezikhumulo eziseduze akukaxhunywa. Khetha izikhumulo lezinsuku eziqondileyo.",
+    "review-search": "Hlola imininingwane yokudinga",
+    "search-ready": "Okufitshane kokudinga kwakho",
+    "no-results": "Ukuqhathanisa okwamanje akukaxhunywa. Akulamhlinzeki odingiweyo njalo akulantengo kumbe ukutholakala okuqinisekisiweyo.",
+    "add-search": "Faka ukudinga kuhambo",
+    "added": "Ukudinga kufakiwe kuhlaka.",
+    "copy-search": "Kopa imininingwane yokudinga",
+    "copied": "Kukotshiwe",
+    "copy-error": "Ukukopa akutholakali. Khetha ukopishe okufitshane ngaphezulu.",
+    "open-provider": "Vula ukudinga kuKAYAK ↗",
+    "handoff-note": "Kuvula ikhasi lokudinga kwenye ithebhu. Izinsuku, abahambi lezindawo azidluliselwa. Kopa imininingwane uyifake kuKAYAK. Akusikho ukuxhumana kwe-affiliate okuvunyelweyo.",
+    "review-trip": "Hlola uhambo lwami",
+    "disclosure": "I-DU ayithengisi uhambo kumbe ukubhukha. Lezi yizixhumanisi zomphakathi; akulakhomishini yeaffiliate ebekiweyo. Abanikezeli baqinisekisa intengo lemibandela.",
+    "guest-draft": "Uhlaka lohambo lwakho",
+    "draft-note": "Kugcinwa kulesisiphequluli nxa kuvuma. Akulabhukisho. Ukudinga okugciniweyo kuyizinhlelo zokuhlola, akusizo izithembiso zabanikezeli.",
+    "searches": "Ukudinga kokuhlola",
+    "no-searches": "Akukafakwa ukudinga. Qala ngokuhlola indiza, indawo yokuhlala kumbe imota.",
+    "unquoted": "Akulantengo · ukutholakala akwaziwa",
+    "search-again": "Dinga futhi",
+    "remove": "Susa",
+    "estimates": "Isilinganiso sakho sokuhlela",
+    "estimate-note": "Faka isilinganiso sakho, hatshi intengo yomnikezeli. Imali igcina uhlobo lwayo; ayiguqulwa.",
+    "category": "Ingxenye",
+    "amount": "Inani lesilinganiso",
+    "add-estimate": "Faka isilinganiso",
+    "budget": "Izamba zezilinganiso ngohlobo lwemali",
+    "no-estimates": "Akulazilinganiso ezifakiweyo. Intengo yonke ayaziwa.",
+    "funds-unknown": "Akulantengo zabanikezeli. Imithelo, impahla, izindleko ezidingekayo, okungeziwe lamadiphozithi: akwaziwa. Lezi zamba azisiyo intengo yonke kumbe imali yonke edingekayo.",
+    "onesa-planner": "Hlela uhambo lweZimbabwe loOnesa",
+    "private-trips": "Uhambo lokudinga okuyimfihlo okugciniweyo",
+    "private-note": "Ngena ukuze ugcine kumadivayisi ahlukene. I-akhawunti yakho kuphela ingabala kumbe isuse. Ukuvula okugciniweyo kuthatha indawo yohlaka lwesiphequluli.",
+    "sign-in": "Ngena ugcine okuyimfihlo",
+    "trip-name": "Ibizo lohambo / lokudinga",
+    "save-trip": "Gcina uhambo oluyimfihlo",
+    "save-search": "Gcina ukudinga",
+    "no-saved": "Akulauhambo kumbe ukudinga okugciniweyo.",
+    "saved": "Kugciniwe kuyimfihlo.",
+    "saved-trip": "Uhambo olugciniweyo",
+    "saved-search": "Ukudinga okugciniweyo",
+    "restore": "Vula kuhlaka",
+    "restored": "Imininingwane egciniweyo ivuliwe kuhlaka.",
+    "delete": "Cima",
+    "storage-error": "Akukwenzakalanga ukuvula uhambo olugciniweyo. Uhlaka lwakho lusekhona. Zama futhi ngemva kwesikhathi.",
+    "alerts": "Izaziso zentengo",
+    "alerts-note": "Ukuhlola okuzenzakalelayo akutholakali umhlinzeki engakavumi lemingcele yokuthumela. Akulantengo ezihlolwa ngemuva.",
+    "alerts-unavailable": "Izaziso azikatholakali",
+    "no-consent": "Ukugcina uhambo akukubhaliseli izaziso kumbe incwadi yezindaba.",
+    "guides": "Iziqondiso zokuvakasha",
+    "reviewed": "Kuhlolwe ngo-27 Mfumfu 2026 · Iziqondiso, akusiso isithembiso",
+    "source": "Bala umthombo osemthethweni ↗",
+    "share-guide": "Kopa isixhumanisi sesiqondiso",
+    "coverage": "Hlola isabelo",
+    "coverage-note": "Izindawo: Zimbabwe, South Africa, Botswana, Namibia, Zambia, Mozambique, Malawi, Lesotho, Eswatini leAngola. Izikhumulo leziqondiso akuqinisekisi ukutholakala kwabanikezeli. Indiza, indawo lezimota kuzatholakala nxa ukuxhumana okuvunyelweyo kuhloliwe.",
+    "errors": {
+      "criteria": "Khetha izikhumulo ezisohlwini, izinsuku, inani labahambi leminyaka yomntwana ngamunye.",
+      "past": "Usuku lokusuka alungabi seludlulile.",
+      "dates": "Khetha usuku lokuphela olulandela olokuqala.",
+      "route": "Khetha izikhumulo ezitshiyeneyo zokusuka lezokuya.",
+      "occupancy": "Ikamelo ngalinye lifuna omdala oyedwa."
+    },
+    "guides-content": {
+      "zimbabwe-routes": {
+        "title": "Qhathanisa indlela zokuya eZimbabwe",
+        "body": "Qhathanisa uhambo lonke oluya eHarare, Bulawayo kumbe Victoria Falls kuhlanganise ukuqhubekela phambili. Intengo yokuqala ingangatsho izindleko zempahla. Bala imithetho yendiza yethikithi lakho lengxenye ngayinye. Amathikithi atshiyeneyo afuna ukuqinisekisa ukutshintsha, ukungena elizweni lokuphuthelwa yindiza."
+      },
+      "johannesburg-victoria-falls": {
+        "title": "Johannesburg kusiya eVictoria Falls",
+        "body": "Qala ukudinga ngeJNB leVFA, uqhathanise izinsuku lohambo lokubuya lonke. IVictoria Falls leLivingstone yizikhumulo ezitshiyeneyo emazweni atshiyeneyo. Nxa ucabanga ukweqa umngcele, qinisekisa imvumo yokungena lezokuhamba kuziphathamandla lomnikezeli ungakabhukhi."
+      },
+      "cape-town-families": {
+        "title": "Ukukhetha indawo yemuli eCape Town",
+        "body": "Qhathanisa intengo yokuhlala yonke ngokwabadala, iminyaka yabantwana lamakamelo. Buza ngokuqinisekiswa kwemibheda, eyabantwana lamakamelo axhumeneyo; hlola amastepisi, ichibi lemibandela yokwesula. Khetha indawo ngokwemisebenzi lokuhamba kwakho. ICape Town Tourism ilemininingwane yezindawo lezivakatshi."
+      },
+      "car-hire-deposits": {
+        "title": "Ukuqhatsha imota esikhumulweni: idiphozithi lemibandela",
+        "body": "Qhathanisa imali yokuqhatsha eceleni kwediphozithi ebuyiselwayo lemali oyikhuphayo nxa kulomonakalo. Bala imithetho yekhadi, iminyaka yomtshayeli, ibanga, amafutha, isikhathi lemingcele. Ungacabangi ukuthi umvikelo owengeziweyo ususa idiphozithi kumbe uhlobo luqinisekisa imota ethile lesihlalo somntwana. Cela isiqinisekiso esibhaliweyo."
+      }
+    },
+    "clear-draft": "Susa uhlaka lwesiphequluli",
+    "privacy": "Izinhlaka zohambo zihlala kulesisiphequluli uze uzisuse. Nxa ungenile ungagcina izinsuku, izikhumulo, iminyaka yabahambi lezilinganiso zemali ku-akhawunti yakho eyimfihlo, uzicime kuHambo lwami. Ungafaki amabizo abantu, imininingwane yokuxhumana, amaphasiphothi kumbe eyokubhadala emabizweni ohambo. Ukugcina akukubhaliseli ama-imeyili. Izixhumanisi zabanikezeli zivula enye isayithi elemithetho yayo; imininingwane yokudinga ayidluliselwa ngokuzenzakalela.",
+    "planner-separate": "Lesi silinganiso esizimeleyo sohambo lweZimbabwe sisebenzisa abahambi baso lezilinganiso zeUSD. Ukudinga kwakho kuhlala kuHambo lwami; akuguqulwa kube yizithembiso zabanikezeli kumbe kukotshwe kulelifomu."
   }
 }

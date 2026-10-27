@@ -26,13 +26,93 @@
       "permanent": true
     },
     {
+      "source": "/tourism",
+      "destination": "/travel",
+      "permanent": true
+    },
+    {
+      "source": "/tourism/",
+      "destination": "/travel",
+      "permanent": true
+    },
+    {
+      "source": "/tourism.html",
+      "destination": "/travel",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-book-trip",
+      "destination": "/travel/planner",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-book-trip/",
+      "destination": "/travel/planner",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-book-trip.html",
+      "destination": "/travel/planner",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experience",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experience/",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experience.html",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experience",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experience/",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experience.html",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
       "source": "/onesa-ai-tourism-virtual-experince",
-      "destination": "/onesa-ai-tourism-virtual-experience",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experince/",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experince.html",
+      "destination": "/travel/virtual-experience",
       "permanent": true
     },
     {
       "source": "/onesa-ai-tourism-augmented-experince",
-      "destination": "/onesa-ai-tourism-augmented-experience",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experince/",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experince.html",
+      "destination": "/travel/augmented-experience",
       "permanent": true
     }
   ],
