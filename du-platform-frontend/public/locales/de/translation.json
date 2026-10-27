@@ -2222,7 +2222,8 @@
       "past": "Abreise darf nicht in der Vergangenheit liegen.",
       "dates": "Wähle ein Enddatum nach dem Startdatum.",
       "route": "Wähle unterschiedliche Start- und Zielflughäfen.",
-      "occupancy": "Jedes Zimmer benötigt mindestens einen Erwachsenen."
+      "occupancy": "Jedes Zimmer benötigt mindestens einen Erwachsenen.",
+      "time": "Die Rückgabe muss nach der Abholung liegen. Prüfe Ortszeiten und Daten."
     },
     "guides-content": {
       "zimbabwe-routes": {

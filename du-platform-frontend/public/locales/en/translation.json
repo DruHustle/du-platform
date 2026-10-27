@@ -2222,7 +2222,8 @@
       "past": "Departure cannot be in the past.",
       "dates": "Choose an end date after the start date.",
       "route": "Choose different departure and destination airports.",
-      "occupancy": "Each room needs at least one adult."
+      "occupancy": "Each room needs at least one adult.",
+      "time": "Drop-off must be after pickup. Check the local times and dates."
     },
     "guides-content": {
       "zimbabwe-routes": {

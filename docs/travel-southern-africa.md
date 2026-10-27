@@ -192,7 +192,7 @@ separate from the actual MySQL HTTP ownership tests.
 
 ## Validation results
 
-- Full backend suite: **376 passed, no skips**. Final Travel-only pass after the independent-category validation change: **27 passed**, including **4 actual MySQL HTTP/persistence tests**. The busy Mac required `--maxWorkers=1 --minWorkers=1 --hookTimeout=120000 --testTimeout=60000` for database setup and filesystem latency; assertions were unchanged. Earlier default-timeout attempts failed locally and are not reported as passes. CI retains its existing default limits.
+- Full backend suite: **376 passed, no skips**. Final Travel-only coverage, including independent categories and same-day date/time validation: **28 tests**, including **4 actual MySQL HTTP/persistence tests**. The busy Mac required `--maxWorkers=1 --minWorkers=1 --hookTimeout=120000 --testTimeout=60000` for database setup and filesystem latency; assertions were unchanged. Earlier default-timeout attempts failed locally and are not reported as passes. CI retains its existing default limits.
 - Frontend: **111 Vitest tests + 7 Node checks passed**.
 - Type checks, strict EN/DE/SN/ND translations, all guardrails, dependency audit (no known production vulnerabilities), deployment safety tests and build passed. Existing upstream Zod comment-annotation warnings during bundling are non-fatal.
 - SEO: **73 route documents / 60 canonical sitemap URLs**; new private trips excluded, all eighteen old URL forms redirect directly, no duplicate Travel aliases in the sitemap.
