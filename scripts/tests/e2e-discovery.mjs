@@ -178,9 +178,7 @@ try {
         });
         assert.equal(
           await page
-            .locator(
-              '#attractions header a[href="/travel/virtual-experience"]'
-            )
+            .locator('#attractions header a[href="/travel/virtual-experience"]')
             .count(),
           0,
           "A non-Zimbabwe VR demo must not be presented as the primary destination action"
@@ -331,9 +329,20 @@ try {
             .locator(".swipe-rail-item")
             .first()
             .boundingBox();
+          const heading = await rail
+            .locator("..")
+            .locator(".section-heading")
+            .boundingBox();
+          const controls = await rail
+            .locator(".swipe-rail-controls")
+            .boundingBox();
           assert(
-            Math.abs(first.x - (width < 768 ? 24 : 32)) <= 1,
-            "Leading tile uses Home's inset"
+            Math.abs(first.x - heading.x) <= 1,
+            "Leading tile aligns with its section heading"
+          );
+          assert(
+            Math.abs(controls.x - heading.x) <= 1,
+            "Rail controls align with their section heading"
           );
           const rows = await rail
             .locator(".swipe-rail-item")
@@ -478,10 +487,7 @@ try {
       0,
       "Destination sources must not nest interactive controls"
     );
-    assert.equal(
-      await dialog.locator('a[href="/travel/planner"]').count(),
-      1
-    );
+    assert.equal(await dialog.locator('a[href="/travel/planner"]').count(), 1);
     await page.waitForFunction(
       el => {
         const bounds = el.getBoundingClientRect();

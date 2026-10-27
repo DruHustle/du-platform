@@ -535,7 +535,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* --- INTEGRATED GLASS CEILING --- */}
       <header
-        className={`hidden lg:block fixed top-0 left-0 right-0 z-[210] pt-[env(safe-area-inset-top)] transition-all duration-500 ${
+        className={`site-header hidden lg:block fixed top-0 left-0 right-0 z-[210] pt-[env(safe-area-inset-top)] transition-colors duration-200 ${
           useHomeCompactTransparentNav
             ? "bg-transparent border-transparent py-0"
             : useDesktopTransparentNav
@@ -571,8 +571,8 @@ export default function Layout({ children }: LayoutProps) {
             <div
               ref={navPillRef}
               className={`
-              relative flex items-center gap-1 p-1 px-6 rounded-full transition-all duration-700 overflow-hidden h-16
-              bg-white/[0.08] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)]
+              relative flex items-center gap-1 p-1 px-4 rounded-full overflow-hidden h-14
+              bg-slate-900/90 backdrop-blur-xl shadow-[0_12px_30px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.1)]
             `}
             >
               <span className="absolute inset-0 rounded-full border border-white/20 pointer-events-none" />
@@ -588,7 +588,7 @@ export default function Layout({ children }: LayoutProps) {
                     onTouchStart={() => preloadNavigationImage(item.href)}
                     aria-current={active ? "page" : undefined}
                     className={`
-                      relative z-10 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 whitespace-nowrap
+                      relative z-10 inline-flex min-h-11 items-center px-4 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.1em] transition-colors duration-200 whitespace-nowrap
                       ${
                         active
                           ? "text-yellow-400 bg-yellow-400/10 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
