@@ -27,6 +27,10 @@ test("previews cannot proxy requests to production and are noindex", async () =>
     const previewJob = workflow.slice(
       workflow.indexOf("deploy-vercel-preview:")
     );
+    assert(
+      previewJob.includes("github.event.pull_request.draft == false"),
+      "Draft review must not deploy an external preview"
+    );
     const prepareIndex = previewJob.indexOf("node scripts/prepare-preview.mjs");
     const deployIndex = previewJob.indexOf("vercel deploy --yes");
     assert(

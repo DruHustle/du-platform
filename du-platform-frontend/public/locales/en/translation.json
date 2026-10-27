@@ -115,7 +115,7 @@
   "nav": {
     "home": "Home",
     "shop": "Shop",
-    "tourism": "Tourism",
+    "tourism": "Travel",
     "investment": "Investments",
     "payments": "Payments",
     "market_requirements": "Market Requirements",
@@ -155,7 +155,7 @@
   "home": {
     "hero_title": "Diaspora Unlocked — connect with Zimbabwe",
     "hero_subtitle": "Connecting Zimbabwe, at home and abroad.",
-    "tourism": "Tourism",
+    "tourism": "Travel",
     "technology": "Technology",
     "investments": "Investments",
     "explore_now": "Explore the platform",
@@ -166,7 +166,7 @@
     "view_data": "View Economic Data",
     "modules": {
       "tourism": {
-        "title": "Tourism",
+        "title": "Travel",
         "desc": "Explore Zimbabwe's world-class attractions and plan your visit.",
         "stats": "Zimbabwe destinations"
       },
@@ -199,19 +199,19 @@
         "image_alt": "Fresh vegetables displayed in baskets"
       },
       "tourism": {
-        "title": "Tourism",
+        "title": "Travel",
         "description": "Discover waterfalls, wildlife, heritage sites and places to explore across Zimbabwe.",
         "detail": "Compare destinations, try the AR guide and create a draft itinerary with Onesa.",
         "stats": "Find your next destination",
         "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe"
       }
     },
+    "hero_pause": "Pause photos",
+    "hero_resume": "Resume photos",
     "discovery": {
       "title": "Explore Zimbabwe, your way.",
       "description": "Browse Zimbabwean products, research business ideas, plan a visit or ask Onesa for help. Find a starting point, wherever you live."
-    },
-    "hero_pause": "Pause photos",
-    "hero_resume": "Resume photos"
+    }
   },
   "tech": {
     "chat_with_onesa": "Chat with Onesa",
@@ -309,7 +309,7 @@
     "note": "AI answers can be incomplete or mistaken. Check prices, availability, requirements and important decisions with the relevant provider or official source."
   },
   "tourism": {
-    "back_to_tourism": "Back to Tourism",
+    "back_to_tourism": "Back to Travel",
     "attractions_title": "Start with a destination",
     "attractions": {
       "vicfalls": {
@@ -614,7 +614,7 @@
     },
     "ar": {
       "seo": {
-        "title": "Zimbabwe Augmented Tourism Guide",
+        "title": "Zimbabwe Augmented Reality Guide",
         "description": "Explore Zimbabwe destinations with text and narrated guidance. Camera previews stay on your device; guidance uses your selected destination. This is not live navigation."
       }
     },
@@ -1676,7 +1676,7 @@
   },
   "search": {
     "categories": {
-      "tourism": "Tourism",
+      "tourism": "Travel",
       "investment": "Investment",
       "technology": "Technology",
       "impact": "Impact",
@@ -2131,5 +2131,119 @@
     "failed": "We could not confirm that your enquiry was saved. Your message is kept. Retry unchanged, or explicitly start a new enquiry.",
     "changed": "This unresolved request belongs to your previous message. Retry it unchanged, or start a new enquiry.",
     "privacy": "We store your enquiry, language and notification history in our database so the team can respond. This does not subscribe you to marketing. Contact info@diasporaunlocked.com for correction or deletion requests."
+  },
+  "travel": {
+    "title": "Travel Southern Africa",
+    "navigation": "Travel sections",
+    "overview": "Overview",
+    "flights": "Flights",
+    "stays": "Stays",
+    "car-hire": "Car Hire",
+    "explore": "Explore",
+    "my-trips": "My Trips",
+    "description": "Plan journeys to, from and within Southern Africa. Keep your ideas together, then book directly with providers.",
+    "search-intro": "Start with your dates and travellers. These details follow you between Travel sections.",
+    "origin": "Departure airport",
+    "destination": "Destination airport / area",
+    "stay-area": "Stay area near airport",
+    "trip-type": "Flight type",
+    "return": "Return",
+    "one-way": "One-way",
+    "departure": "Departure / pickup date",
+    "return-date": "Return / drop-off date",
+    "check-in": "Check-in",
+    "check-out": "Check-out",
+    "adults": "Adults",
+    "children": "Children (0–17)",
+    "child-age": "Child {{number}} age at travel",
+    "child-ages": "Child ages",
+    "rooms": "Rooms",
+    "occupancy-note": "At least one adult per room. Confirm room allocation, child ages and capacity with the provider; this is not an accommodation offer.",
+    "currency": "Currency",
+    "pickup": "Pickup airport",
+    "dropoff": "Drop-off airport",
+    "pickup-time": "Local pickup time",
+    "dropoff-time": "Local drop-off time",
+    "unsupported-options": "Flexible dates and nearby-airport searches are not connected yet. Select exact airports and dates.",
+    "review-search": "Review search details",
+    "search-ready": "Your search brief",
+    "no-results": "Live comparison is not connected. No supplier has been searched and no availability or price is confirmed.",
+    "add-search": "Add search to trip",
+    "added": "Search added to your draft.",
+    "copy-search": "Copy search details",
+    "copied": "Copied",
+    "copy-error": "Copy was unavailable. Select and copy the summary above.",
+    "open-provider": "Open KAYAK search ↗",
+    "handoff-note": "Opens a public search page in a new tab. Dates, travellers and locations are not transferred. Copy the details above and enter them on KAYAK. This is not an approved affiliate integration.",
+    "review-trip": "Review My Trips",
+    "disclosure": "DU does not sell travel or take reservations. These are ordinary public links; no affiliate commission is configured. Providers confirm all prices and conditions.",
+    "guest-draft": "Your draft trip",
+    "draft-note": "Kept on this browser when storage is available. No reservation is made. Saved searches are plans to check, not selected supplier offers.",
+    "searches": "Searches to check",
+    "no-searches": "No searches added yet. Review a search in Flights, Stays or Car Hire first.",
+    "unquoted": "Unquoted · availability unknown",
+    "search-again": "Search again",
+    "remove": "Remove",
+    "estimates": "Your planning allowances",
+    "estimate-note": "Enter your own allowance, not a supplier quote. Amounts stay in their original currency; no exchange rate is applied.",
+    "category": "Category",
+    "amount": "Allowance amount",
+    "add-estimate": "Add allowance",
+    "budget": "Allowance subtotals by currency",
+    "no-estimates": "No allowances entered. Total cost is unknown.",
+    "funds-unknown": "Supplier quotes: none. Taxes, baggage, mandatory charges, extras and refundable deposits: unknown. These subtotals are not a complete trip price or funds requirement.",
+    "onesa-planner": "Draft a Zimbabwe itinerary with Onesa",
+    "private-trips": "Private saved trips & searches",
+    "private-note": "Sign in to save across devices. Only your account can read or delete these records. Loading a saved trip replaces this browser draft.",
+    "sign-in": "Sign in to save privately",
+    "trip-name": "Trip / search name",
+    "save-trip": "Save private trip",
+    "save-search": "Save searches",
+    "no-saved": "No private trips or searches saved.",
+    "saved": "Saved privately.",
+    "saved-trip": "Saved trip",
+    "saved-search": "Saved search",
+    "restore": "Load into draft",
+    "restored": "Saved details loaded into this browser draft.",
+    "delete": "Delete",
+    "storage-error": "Could not access saved trips. Your browser draft is still here. Try again later.",
+    "alerts": "Price alerts",
+    "alerts-note": "Automatic monitoring is unavailable until a provider approves monitoring and delivery limits. No prices are being checked in the background.",
+    "alerts-unavailable": "Alerts not available yet",
+    "no-consent": "Saving a trip does not subscribe you to alerts or the newsletter.",
+    "guides": "Practical travel guides",
+    "reviewed": "Reviewed 27 October 2026 · Editorial guidance, not an offer",
+    "source": "Read the official source ↗",
+    "share-guide": "Copy guide link",
+    "coverage": "Explore the region",
+    "coverage-note": "Destination scope: Zimbabwe, South Africa, Botswana, Namibia, Zambia, Mozambique, Malawi, Lesotho, Eswatini and Angola. Airport suggestions and guides are not verified supplier coverage. Live flights, stays and cars are unavailable in every market until an approved integration is tested.",
+    "errors": {
+      "criteria": "Choose a listed airport and complete valid dates, traveller counts and every child age.",
+      "past": "Departure cannot be in the past.",
+      "dates": "Choose an end date after the start date.",
+      "route": "Choose different departure and destination airports.",
+      "occupancy": "Each room needs at least one adult."
+    },
+    "guides-content": {
+      "zimbabwe-routes": {
+        "title": "Compare routes to Zimbabwe",
+        "body": "Compare the complete journey to Harare, Bulawayo or Victoria Falls, including onward travel. A low headline fare may exclude checked baggage. Read the operating airline’s allowance for your exact fare and each leg before comparing totals. Keep separate-ticket connections distinct: confirm transfer, immigration and missed-connection arrangements yourself."
+      },
+      "johannesburg-victoria-falls": {
+        "title": "Johannesburg to Victoria Falls",
+        "body": "Use JNB and VFA as your starting search, then compare dates and the full return journey. Victoria Falls and Livingstone are different airports in different countries; do not treat them as interchangeable. If considering a border transfer, verify immigration eligibility and transport with official authorities and your provider before booking."
+      },
+      "cape-town-families": {
+        "title": "Choosing a family stay in Cape Town",
+        "body": "Compare a complete-stay total for your actual adults, child ages and rooms. Ask whether beds, cots and room connections are confirmed, and check stairs, pool access and cancellation terms. Choose an area around your planned activities and transport rather than assuming every listing is equally convenient. Cape Town Tourism provides area and visitor resources."
+      },
+      "car-hire-deposits": {
+        "title": "Airport car hire: deposits & conditions",
+        "body": "Compare rental charges separately from the refundable deposit and insurance excess. Read the specific supplier’s card, driver-age, mileage, fuel, opening-hour and cross-border conditions. Do not assume additional cover removes the deposit, or that a vehicle category guarantees a particular model or child seat. Get written confirmation of required equipment and border permission."
+      }
+    },
+    "clear-draft": "Clear browser draft",
+    "privacy": "Travel drafts stay in this browser until you clear them. Signing in lets you explicitly save travel dates, airport choices, traveller ages and planning allowances to your private account; you can delete those saves in My Trips. Do not put names, contact details, passport information or payment data in trip names. Travel saves do not subscribe you to email. Public provider links open a separate site whose privacy rules apply; search criteria are not transferred automatically.",
+    "planner-separate": "This separate Zimbabwe itinerary estimator uses its own travellers and USD allowances. Your Travel searches stay in My Trips; they are not converted into supplier offers or copied into this form."
   }
 }

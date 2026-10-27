@@ -162,7 +162,7 @@ for (const route of [
   "/",
   "/shop",
   "/shop/products",
-  "/tourism",
+  "/travel",
   "/investment",
   "/technology",
 ]) {

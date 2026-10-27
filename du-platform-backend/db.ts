@@ -1,3 +1,4 @@
+import { initializeTravel } from "./modules/travel/schema";
 import { initializeProductInterest } from "./modules/shop/interestSchema";
 import { initializeTransactionalMessages } from "./modules/notifications/schema";
 import { initializeShopPilot } from "./modules/shop/pilotSchema";
@@ -378,6 +379,7 @@ export async function initializeDatabase(): Promise<void> {
       }
     }
 
+    await initializeTravel(db);
     await initializeShopPilot(db);
     await initializeNewsletterDatabase(db);
     await initializeProductInterest(db);

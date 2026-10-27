@@ -75,7 +75,7 @@ for (const pathname of [
   "/",
   "/shop",
   "/shop/products",
-  "/tourism",
+  "/travel",
   "/investment",
   "/technology",
   "/legal-notice",

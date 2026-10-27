@@ -1,5 +1,7 @@
 import { createTripPlanPdf } from "../lib/tripPlanPdf";
 import { buildClientFallbackPlan } from "../lib/fallbackTripPlan";
+import TravelNav from "../../travel/TravelNav";
+import "../../travel/travel.css";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -578,6 +580,10 @@ export default function BookTripPage() {
 
   return (
     <Layout>
+      <TravelNav />
+      <p className="mx-auto max-w-5xl px-6 py-4 text-sm text-slate-300">
+        {t("travel.planner-separate")}
+      </p>
       <section className="document-section bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
           <div className="content-panel editorial-panel p-8 md:p-10">

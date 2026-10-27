@@ -14,6 +14,7 @@ describe("domain module registry", () => {
     expect(mountedPaths).toEqual([
       "/api/newsletter",
       "/api/auth",
+      "/api/travel",
       "/api/tourism",
       "/api/investment",
       "/api/impact",

@@ -142,7 +142,7 @@ try {
     origins[variant] = "https://127.0.0.1:" + server.address().port;
   }
   browser = await chromium.launch();
-  for (const route of ["/", "/shop", "/tourism"])
+  for (const route of ["/", "/shop", "/travel"])
     for (let run = 1; run <= 3; run++)
       for (const variant of ["before", "after"]) {
         const context = await browser.newContext({

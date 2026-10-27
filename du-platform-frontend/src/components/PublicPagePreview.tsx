@@ -19,7 +19,7 @@ const sections = [
   },
   {
     title: "Travel research",
-    href: "/tourism",
+    href: "/travel",
     description:
       "Explore Zimbabwean destinations and prepare a sample itinerary. Research Victoria Falls, Hwange, Harare, Bulawayo, Great Zimbabwe and the Eastern Highlands. Confirm transport, accommodation, visiting times and prices directly with providers. Sample trip budgets are planning allowances, not bookings or live quotations.",
   },
@@ -121,6 +121,28 @@ export function PublicPagePreview({
           <h2>{english.pilot.returns_title}</h2>
           <p>{english.pilot.returns_draft}</p>
           <p>{english.pilot.complaints}</p>
+        </section>
+      )}
+      {pathname.startsWith("/travel") && (
+        <section>
+          <h2>{english.travel.guides}</h2>
+          <p>{english.travel.reviewed}</p>
+          {Object.entries(english.travel["guides-content"]).map(
+            ([id, guide]) => (
+              <article key={id}>
+                <h3>
+                  <a href={`/travel/explore#${id}`}>{guide.title}</a>
+                </h3>
+                <p>{guide.body}</p>
+              </article>
+            )
+          )}
+          <p>{english.travel["coverage-note"]}</p>
+          <a href="/travel/flights">Flights</a>
+          {" · "}
+          <a href="/travel/stays">Stays</a>
+          {" · "}
+          <a href="/travel/car-hire">Car Hire</a>
         </section>
       )}
       {product && (

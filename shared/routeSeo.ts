@@ -1,3 +1,4 @@
+import { travelRedirects } from "./travelRoutes";
 import investmentProjectRoutes from "./investmentProjectRoutes.json";
 
 export const PUBLIC_SITE_ORIGIN = "https://www.diasporaunlocked.com";
@@ -54,7 +55,8 @@ function buildSeo(
 }
 
 export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
-  const pathname = normalizePathname(input.pathname);
+  const requestedPath = normalizePathname(input.pathname);
+  const pathname = travelRedirects[requestedPath] ?? requestedPath;
   const searchParams = new URLSearchParams(input.search ?? "");
   const searchQuery = searchParams.get("q")?.trim() ?? "";
 
@@ -173,12 +175,46 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
-  if (pathname === "/tourism") {
+  const travelPages: Record<string, [string, string]> = {
+    "/travel/flights": [
+      "Flights to Southern Africa",
+      "Prepare flight searches with exact airports, dates and travellers. Live supplier fares are not connected.",
+    ],
+    "/travel/stays": [
+      "Stays in Southern Africa",
+      "Plan accommodation searches with dates, rooms and child ages. Confirm prices and occupancy directly with providers.",
+    ],
+    "/travel/car-hire": [
+      "Car Hire in Southern Africa",
+      "Prepare airport car-hire searches and understand deposits, insurance excess and cross-border conditions.",
+    ],
+    "/travel/explore": [
+      "Southern Africa Travel Guides",
+      "Compare Zimbabwe route costs, plan Johannesburg–Victoria Falls, choose Cape Town family stays and understand car-hire deposits.",
+    ],
+    "/travel/my-trips": [
+      "My Private Trips",
+      "Review your browser draft and privately saved trips and searches.",
+    ],
+  };
+  if (travelPages[pathname]) {
+    const [title, description] = travelPages[pathname];
     return buildSeo(
-      "Zimbabwe Tourism and Trip Planning | Diaspora Unlocked",
-      "Compare Zimbabwe destinations and create a draft itinerary with indicative budgets. Explore the AR guide and Sample City VR demo; arrange bookings directly with providers.",
-      "/tourism",
-      "Zimbabwe Tourism and Trip Planning"
+      `${title} | Diaspora Unlocked`,
+      description,
+      pathname,
+      title,
+      pathname === "/travel/my-trips" || input.search
+        ? "noindex,follow"
+        : DEFAULT_ROBOTS
+    );
+  }
+  if (pathname === "/travel") {
+    return buildSeo(
+      "Travel Southern Africa | Diaspora Unlocked",
+      "Plan Southern African journeys, explore Zimbabwe, keep private trips and review flights, stays and car-hire search criteria. Live supplier comparison is not connected.",
+      "/travel",
+      "Travel Southern Africa"
     );
   }
 
@@ -191,30 +227,30 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
-  if (pathname === "/onesa-ai-book-trip") {
+  if (pathname === "/travel/planner") {
     return buildSeo(
       "Zimbabwe Trip Planner | Onesa AI",
       "Create a draft Zimbabwe itinerary with indicative budgets and download a PDF. Prices and availability are not live; bookings are made directly with providers.",
-      "/onesa-ai-book-trip",
+      "/travel/planner",
       "Zimbabwe Trip Planner"
     );
   }
 
-  if (pathname === "/onesa-ai-tourism-virtual-experience") {
+  if (pathname === "/travel/virtual-experience") {
     return buildSeo(
       "360° VR Demo | Onesa AI",
       "Explore the Sample City panoramic demo with scene controls and optional narration. This is a demonstration, not a Zimbabwe destination tour.",
-      "/onesa-ai-tourism-virtual-experience",
+      "/travel/virtual-experience",
       "360° VR Demo"
     );
   }
 
-  if (pathname === "/onesa-ai-tourism-augmented-experience") {
+  if (pathname === "/travel/augmented-experience") {
     return buildSeo(
-      "Zimbabwe Augmented Tourism Guide | Onesa AI",
+      "Zimbabwe Augmented Reality Guide | Onesa AI",
       "Explore destination information with optional camera, location and narration controls. This guide provides place context rather than object recognition or navigation.",
-      "/onesa-ai-tourism-augmented-experience",
-      "Zimbabwe Augmented Tourism Guide"
+      "/travel/augmented-experience",
+      "Zimbabwe Augmented Reality Guide"
     );
   }
 
