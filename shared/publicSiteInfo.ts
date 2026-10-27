@@ -1,4 +1,4 @@
-import { travelRedirects } from "./travelRoutes";
+import { travelCanonicalPaths, travelRedirects } from "./travelRoutes";
 export const PUBLIC_SITE_ACTIONS = [
   {
     title: "Shop catalogue",
@@ -60,7 +60,11 @@ export function allowedOnesaHref(raw: string): string | null {
     const url = new URL(raw, "https://www.diasporaunlocked.com");
     if (url.origin !== "https://www.diasporaunlocked.com") return null;
     url.pathname = travelRedirects[url.pathname] ?? url.pathname;
-    const paths = ["/shop", ...PUBLIC_SITE_ACTIONS.map(item => item.href)];
+    const paths = [
+      "/shop",
+      ...PUBLIC_SITE_ACTIONS.map(item => item.href),
+      ...travelCanonicalPaths,
+    ];
     if (
       !paths.includes(url.pathname) &&
       !/^\/shop\/product\/[a-z0-9_-]+$/.test(url.pathname)

@@ -6,6 +6,17 @@ const legacyTravelRoutes: Record<string, string> = {
   "/onesa-ai-tourism-augmented-experience": "/travel/augmented-experience",
   "/onesa-ai-tourism-augmented-experince": "/travel/augmented-experience",
 };
+export const travelCanonicalPaths = [
+  "/travel",
+  "/travel/flights",
+  "/travel/stays",
+  "/travel/car-hire",
+  "/travel/explore",
+  "/travel/my-trips",
+  "/travel/planner",
+  "/travel/virtual-experience",
+  "/travel/augmented-experience",
+];
 
 export const travelRedirects: Record<string, string> = Object.fromEntries(
   Object.entries(legacyTravelRoutes).flatMap(([source, destination]) =>
@@ -15,16 +26,7 @@ export const travelRedirects: Record<string, string> = Object.fromEntries(
 export function resolveTravelRedirect(pathname: string): string | null {
   if (travelRedirects[pathname]) return travelRedirects[pathname];
   const clean = pathname.replace(/(?:\.html|\/)$/, "");
-  const canonical = [
-    "/travel",
-    "/travel/flights",
-    "/travel/stays",
-    "/travel/car-hire",
-    "/travel/explore",
-    "/travel/my-trips",
-    "/travel/planner",
-    "/travel/virtual-experience",
-    "/travel/augmented-experience",
-  ];
-  return clean !== pathname && canonical.includes(clean) ? clean : null;
+  return clean !== pathname && travelCanonicalPaths.includes(clean)
+    ? clean
+    : null;
 }
