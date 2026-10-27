@@ -133,7 +133,7 @@ secret needs provisioning. Historical observations remain history; DU's five-min
 review window is not a supplier price hold or expiry guarantee. Before a booking
 link appears, an explicit recheck searches the same criteria and matches the
 itinerary/property identity. Changed amounts require review; missing observations
-retain the trip and show search-again guidance. Final supplier terms remain
+retain the trip and expose a contextual search-again action that restores the option’s original airports, dates and travellers. Final supplier terms remain
 controlling. No availability or quoted price is reserved on DU.
 
 Saved searches strip selected observations and allowances. Saving a full trip

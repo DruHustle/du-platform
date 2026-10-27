@@ -203,6 +203,16 @@ export function SupplierQuoteCard({
         <Button variant="outline" disabled={busy} onClick={checkPrice}>
           {t(busy ? "travel.live.checking" : "travel.live.check")}
         </Button>
+        <Button variant="outline" asChild>
+          <Link
+            href={`/travel/${current.category}`}
+            onClick={() =>
+              updateDraft(d => ({ ...d, criteria: current.criteria }))
+            }
+          >
+            {t("travel.search-again")}
+          </Link>
+        </Button>
         <Button
           variant="outline"
           onClick={() => {
