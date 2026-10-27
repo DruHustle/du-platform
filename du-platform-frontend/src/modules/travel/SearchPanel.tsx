@@ -236,7 +236,7 @@ export default function SearchPanel({
           category === "stays" ? "check-in" : "departure"
         )}
         {category === "flights" && (
-          <label>
+          <label className="travel-flex-field">
             {t("travel.live.flex-days")}
             <select
               value={c.flightFlexDays ?? 0}

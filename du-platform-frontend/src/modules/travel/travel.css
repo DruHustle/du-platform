@@ -249,6 +249,9 @@
   }
 }
 @media (max-width: 380px) {
+  .travel-form .travel-flex-field {
+    grid-column: 1 / -1;
+  }
   .travel-nav a {
     padding: 0.6rem 0.75rem;
   }
