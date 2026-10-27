@@ -48,7 +48,7 @@ export default function DiscoveryTile({
             draggable={false}
             loading="lazy"
             fetchPriority="low"
-            wrapperClassName="h-full w-full bg-slate-900"
+            wrapperClassName="absolute inset-0 h-full w-full bg-slate-900"
             className="h-full w-full object-cover"
           />
           <div

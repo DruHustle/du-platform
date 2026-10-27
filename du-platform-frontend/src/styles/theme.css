@@ -1,6 +1,8 @@
 /* Editorial surfaces follow the visitor's appearance preference. Photo cards,
    immersive experiences and brand navigation retain their dark palette. */
 :root {
+  --layout-content: 1232px;
+  --layout-gutter: clamp(20px, 3vw, 32px);
   color-scheme: light;
   --page-canvas: #f8fafb;
   --page-surface: #ffffff;
