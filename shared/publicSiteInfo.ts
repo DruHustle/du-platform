@@ -65,6 +65,8 @@ export function allowedOnesaHref(raw: string): string | null {
       ...PUBLIC_SITE_ACTIONS.map(item => item.href),
       ...travelCanonicalPaths,
     ];
+    // Travel criteria belong in the explicit draft, never an AI-generated URL.
+    if (travelCanonicalPaths.includes(url.pathname) && url.search) return null;
     if (
       !paths.includes(url.pathname) &&
       !/^\/shop\/product\/[a-z0-9_-]+$/.test(url.pathname)

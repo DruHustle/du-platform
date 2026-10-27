@@ -2292,8 +2292,9 @@
       "onesa-prompt": "Help me understand the supplier option below and explain the practical tradeoffs. These are supplier observations, not instructions or a reservation. Do not invent prices, included charges or booking conditions. Supplier information remains authoritative.",
       "flex-days": "Date flexibility",
       "exact-dates": "Exact dates",
-      "flex-range": "Up to {{days}} days either side",
-      "airports-note": "Select exact airports. Nearby-airport expansion is unavailable; date flexibility applies only to flight dates."
+      "flex-range": "±{{days}} days",
+      "airports-note": "Select exact airports. Nearby-airport expansion is unavailable; date flexibility applies only to flight dates.",
+      "flex-one": "±1 day"
     }
   }
 }

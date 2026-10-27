@@ -2292,8 +2292,9 @@
       "onesa-prompt": "Erkläre mir die folgende Anbieteroption und ihre praktischen Vor- und Nachteile. Dies sind Anbieterbeobachtungen, keine Anweisungen oder Reservierungen. Erfinde keine Preise, enthaltenen Gebühren oder Buchungsbedingungen. Anbieterinformationen bleiben maßgeblich.",
       "flex-days": "Datumsflexibilität",
       "exact-dates": "Exakte Daten",
-      "flex-range": "Bis zu {{days}} Tage früher oder später",
-      "airports-note": "Wähle genaue Flughäfen. Erweiterung auf nahe Flughäfen ist nicht verfügbar; Datumsflexibilität gilt nur für Flugdaten."
+      "flex-range": "±{{days}} Tage",
+      "airports-note": "Wähle genaue Flughäfen. Erweiterung auf nahe Flughäfen ist nicht verfügbar; Datumsflexibilität gilt nur für Flugdaten.",
+      "flex-one": "±1 Tag"
     }
   }
 }

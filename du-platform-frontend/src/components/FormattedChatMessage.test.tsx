@@ -35,6 +35,7 @@ it("links every canonical Travel section without allowing private record IDs or 
         ...paths.map(path => `[Travel](/travel/${path})`),
         "[record](/travel/saved/someone-elses-id)",
         "[criteria](/travel/flights?departure=2027-01-15)",
+        "[free-text criteria](/travel/flights?q=2027-01-15)",
       ].join(" ")}
     />
   );
