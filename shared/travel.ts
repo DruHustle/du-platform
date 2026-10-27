@@ -89,9 +89,17 @@ export function validateTravel(
   if (c.departure < today) return { success: false as const, error: "past" };
   if (
     (category !== "flights" || c.tripType === "return") &&
-    (!c.returnDate || c.returnDate <= c.departure)
+    (!c.returnDate ||
+      c.returnDate < c.departure ||
+      (category === "stays" && c.returnDate === c.departure))
   )
     return { success: false as const, error: "dates" };
+  if (
+    category === "car-hire" &&
+    c.returnDate === c.departure &&
+    c.dropoffTime <= c.pickupTime
+  )
+    return { success: false as const, error: "time" };
   if (category === "flights" && c.origin === c.destination)
     return { success: false as const, error: "route" };
   // One adult per room; exact room allocation must be supplied to a live adapter.

@@ -101,6 +101,22 @@ describe("Travel search validation and truthful capabilities", () => {
         .success
     ).toBe(false);
   });
+  it("permits same-day returns and timed rentals, while requiring overnight accommodation", () => {
+    const sameDay = { ...criteria(), returnDate: criteria().departure };
+    expect(validateTravel(sameDay, "flights", "2026-01-01").success).toBe(true);
+    expect(
+      validateTravel(
+        { ...sameDay, pickupTime: "10:00", dropoffTime: "18:00" },
+        "car-hire",
+        "2026-01-01"
+      ).success
+    ).toBe(true);
+    expect(validateTravel(sameDay, "car-hire", "2026-01-01")).toMatchObject({
+      success: false,
+      error: "time",
+    });
+    expect(validateTravel(sameDay, "stays", "2026-01-01").success).toBe(false);
+  });
   it("never invents exchange rates or combine quote and deposit amounts", () => {
     const totals = estimateTotals([
       {
