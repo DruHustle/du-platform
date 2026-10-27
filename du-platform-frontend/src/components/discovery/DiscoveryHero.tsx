@@ -31,7 +31,7 @@ export default function DiscoveryHero({
           <p className="discovery-eyebrow">{eyebrow}</p>
           <h1>
             {title}
-            <span>{highlight}</span>
+            {highlight && <span>{highlight}</span>}
           </h1>
           <p className="discovery-hero-description">{description}</p>
           <div className="discovery-actions">{children}</div>
@@ -42,7 +42,7 @@ export default function DiscoveryHero({
             src={image}
             alt={imageAlt}
             priority
-            wrapperClassName="h-full w-full"
+            wrapperClassName="absolute inset-0 h-full w-full"
             className="h-full w-full object-cover"
           />
           <figcaption>{caption}</figcaption>

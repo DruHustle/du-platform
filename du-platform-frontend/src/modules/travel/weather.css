@@ -4,7 +4,7 @@
 .content-page
   .weather-page
   :is(.weather-controls, .weather-current, .weather-hourly) {
-  max-width: 1072px;
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-content));
   margin: 1.5rem auto;
   padding: clamp(20px, 3vw, 32px);
   background: var(--page-surface);
@@ -96,14 +96,15 @@
 .weather-feedback,
 .weather-empty,
 .weather-attribution {
-  max-width: 1120px;
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-content));
   margin: 1.5rem auto;
-  padding-inline: 24px;
 }
 .weather-attribution p {
   margin-block: 0.75rem;
 }
-.weather-page a {
+.weather-page
+  :is(.weather-place-attribution, .weather-feedback, .weather-attribution)
+  a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -199,11 +200,6 @@
   background: var(--page-soft);
 }
 @media (max-width: 767px) {
-  .content-page
-    .weather-page
-    :is(.weather-controls, .weather-current, .weather-hourly) {
-    margin-inline: 24px;
-  }
   .weather-controls,
   .weather-current {
     grid-template-columns: minmax(0, 1fr);

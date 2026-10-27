@@ -392,7 +392,9 @@ export default function SearchPanel({
             {error}
           </p>
         )}
-        <Button type="submit">{t("travel.review-search")}</Button>
+        <Button type="submit" className="travel-form-submit">
+          {t("travel.review-search")}
+        </Button>
       </form>
       {notice && <p role="status">{notice}</p>}
       {reviewed && (
