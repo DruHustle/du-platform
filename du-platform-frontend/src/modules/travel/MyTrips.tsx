@@ -140,7 +140,24 @@ export default function MyTrips() {
               {s.category === "flights" && s.criteria.tripType === "one-way"
                 ? t("travel.one-way")
                 : s.criteria.returnDate || "—"}{" "}
-              · {s.criteria.adults} {t("travel.adults")} · {s.criteria.currency}
+              · {t("travel.adults")}: {s.criteria.adults} ·{" "}
+              {s.criteria.currency}
+            </p>
+            <p>
+              {t("travel.child-ages")}: {s.criteria.childAges.join(", ") || "—"}
+              {s.category === "stays" && (
+                <>
+                  {" "}
+                  · {t("travel.rooms")}: {s.criteria.rooms}
+                </>
+              )}
+              {s.category === "car-hire" && (
+                <>
+                  {" "}
+                  · {t("travel.pickup-time")}: {s.criteria.pickupTime} ·{" "}
+                  {t("travel.dropoff-time")}: {s.criteria.dropoffTime}
+                </>
+              )}
             </p>
             <p>{t("travel.unquoted")}</p>
             <div className="travel-actions">

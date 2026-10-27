@@ -353,6 +353,11 @@ try {
       .first()
       .getByText(/One-way/)
       .waitFor();
+    await page
+      .locator(".travel-trip-grid article")
+      .first()
+      .getByText("Child ages: 7", { exact: true })
+      .waitFor();
     await fit("guest draft survives refresh and separates currencies");
     await page.screenshot({
       path: `${output}/${width}-my-trips.png`,
@@ -440,19 +445,22 @@ try {
       await page.locator("main").waitFor();
     }
     checks.push(`${width}: six permanent redirects keep query and fragment`);
-    // Unavailable database must retain the draft instead of silently pretending save.
-    assert.equal(
-      (await context.request.get(base + "/api/travel/saved")).status(),
-      401
-    );
-    assert.equal(
-      (
-        await context.request.post(base + "/api/travel/alerts", {
-          data: { consent: true },
-        })
-      ).status(),
-      503
-    );
+    // Fresh loopback connections avoid reusing an idle browser API socket after
+    // the heavyweight VR navigations. HTTP assertions remain strict, no retries.
+    for (const [route, method, expected] of [
+      ["saved", "GET", 401],
+      ["alerts", "POST", 503],
+    ]) {
+      const response = await fetch(`${base}/api/travel/${route}`, {
+        method,
+        headers: { connection: "close", "content-type": "application/json" },
+        ...(method === "POST"
+          ? { body: JSON.stringify({ consent: true }) }
+          : {}),
+      });
+      assert.equal(response.status, expected);
+      await response.arrayBuffer();
+    }
     await context.close();
   }
   assert.deepEqual(errors, []);
