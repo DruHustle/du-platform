@@ -66,7 +66,6 @@ export default function Shop() {
         <DiscoverySection
           id="collections"
           title={t("shop.collections_title")}
-          description={t("shop.collections_description")}
           action={
             <Link
               href="/shop/products?category=all&cart=1"
