@@ -42,8 +42,6 @@ export default function Shop() {
           eyebrow={t("shop.landing.eyebrow")}
           title={t("shop.landing.title")}
           highlight={t("shop.landing.highlight")}
-          description={t("shop.landing.description")}
-          principle={t("shop.landing.principle")}
           image="/images/pages/shop/crafts_binga_baskets_01.jpg"
           imageAlt={t("pilot.shop_hero_alt")}
           caption={t("shop.landing.caption")}
