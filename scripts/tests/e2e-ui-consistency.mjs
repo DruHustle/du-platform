@@ -65,7 +65,7 @@ const paths = [
   "/investment/projects/masuwe",
   "/investment/projects/unknown",
   "/ntir",
-  "/tourism",
+  "/travel",
   "/login?next=/admin",
   "/register",
   "/forgot-password",
@@ -79,9 +79,9 @@ const paths = [
   "/delivery-and-returns",
   "/search?q=tourism",
   "/onesa-ai-chat",
-  "/onesa-ai-book-trip",
-  "/onesa-ai-tourism-augmented-experience",
-  "/onesa-ai-tourism-virtual-experience",
+  "/travel/planner",
+  "/travel/augmented-experience",
+  "/travel/virtual-experience",
   "/not-a-real-route",
 ];
 const pass = name => {
@@ -183,7 +183,7 @@ try {
           results: [
             {
               title: "Zimbabwe tourism",
-              href: "/tourism",
+              href: "/travel",
               category: "Tourism",
               summary: "Explore destinations and planning tools.",
             },
@@ -321,7 +321,7 @@ try {
     );
     pass(`${width}px admin heading clears close control`);
 
-    await goto("/onesa-ai-book-trip");
+    await goto("/travel/planner");
     for (const name of [
       "Increase adults",
       "Decrease adults",
@@ -420,7 +420,7 @@ try {
       .click();
     pass(`${width}px product interest dialog`);
 
-    await goto("/tourism");
+    await goto("/travel");
     const destination = page.locator(".discovery-tile-target").first();
     await destination.click();
     await page.getByRole("dialog").waitFor();

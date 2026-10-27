@@ -87,7 +87,7 @@ try {
       "/",
       "/technology",
       "/investment",
-      "/tourism",
+      "/travel",
       "/investment/opportunities",
       "/regulations",
     ]) {
@@ -109,7 +109,7 @@ try {
           await cards
             .locator("a")
             .evaluateAll(links => links.map(link => link.getAttribute("href"))),
-          ["/shop", "/technology", "/investment", "/tourism"]
+          ["/shop", "/technology", "/investment", "/travel"]
         );
         assert(
           await cards
@@ -140,9 +140,9 @@ try {
             .evaluateAll(links => links.map(link => link.getAttribute("href"))),
           [
             "/onesa-ai-chat",
-            "/onesa-ai-book-trip",
-            "/onesa-ai-tourism-virtual-experience",
-            "/onesa-ai-tourism-augmented-experience",
+            "/travel/planner",
+            "/travel/virtual-experience",
+            "/travel/augmented-experience",
           ]
         );
         assert.match(await tools.textContent(), /Sample City/);
@@ -166,7 +166,7 @@ try {
           return top >= 50 && top <= 90;
         });
       }
-      if (path === "/tourism") {
+      if (path === "/travel") {
         await page
           .getByRole("link", { name: "Explore destinations", exact: true })
           .click();
@@ -179,7 +179,7 @@ try {
         assert.equal(
           await page
             .locator(
-              '#attractions header a[href="/onesa-ai-tourism-virtual-experience"]'
+              '#attractions header a[href="/travel/virtual-experience"]'
             )
             .count(),
           0,
@@ -314,7 +314,7 @@ try {
       const rails = page.locator(".swipe-rail");
       for (const rail of await rails.all()) {
         const viewport = rail.locator(".swipe-rail-viewport");
-        if (["/", "/technology", "/investment", "/tourism"].includes(path)) {
+        if (["/", "/technology", "/investment", "/travel"].includes(path)) {
           const bounds = await viewport.boundingBox();
           const screenWidth = await page.evaluate(
             () => document.documentElement.clientWidth
@@ -417,9 +417,9 @@ try {
       if (path === "/technology") {
         for (const [href, selector] of [
           ["/onesa-ai-chat", "main textarea"],
-          ["/onesa-ai-book-trip", "main form"],
-          ["/onesa-ai-tourism-virtual-experience", "#vr-destination"],
-          ["/onesa-ai-tourism-augmented-experience", "#aug-place"],
+          ["/travel/planner", "main form"],
+          ["/travel/virtual-experience", "#vr-destination"],
+          ["/travel/augmented-experience", "#aug-place"],
         ]) {
           await page.goto(base + "/technology");
           await page.locator(`#onesa-intro a[href="${href}"]`).click();
@@ -433,14 +433,14 @@ try {
         });
       }
     }
-    for (const href of ["/shop", "/technology", "/investment", "/tourism"]) {
+    for (const href of ["/shop", "/technology", "/investment", "/travel"]) {
       await page.goto(base + "/");
       await page.locator(`#explore-platform a[href="${href}"]`).click();
       await page.waitForURL(base + href);
       await page.locator("main h1").waitFor();
     }
     record({ width, scenario: "Home cards open all four module routes" });
-    await page.goto(base + "/tourism");
+    await page.goto(base + "/travel");
     const rail = page.locator(".swipe-rail").first();
     const viewport = rail.locator(".swipe-rail-viewport");
     await viewport.scrollIntoViewIfNeeded();
@@ -479,7 +479,7 @@ try {
       "Destination sources must not nest interactive controls"
     );
     assert.equal(
-      await dialog.locator('a[href="/onesa-ai-book-trip"]').count(),
+      await dialog.locator('a[href="/travel/planner"]').count(),
       1
     );
     await page.waitForFunction(
@@ -611,7 +611,7 @@ try {
       scenario:
         "regulation deep links and same-page anchors reveal the correct tile",
     });
-    await page.goto(base + "/tourism");
+    await page.goto(base + "/travel");
     const companion = page.locator('[data-swipe-rail="Onesa AI Companion"]');
     assert.equal(await companion.locator(".swipe-rail-item").count(), 4);
     assert.equal(
@@ -635,15 +635,15 @@ try {
     });
     assert.equal(
       await arLink.getAttribute("href"),
-      "/onesa-ai-tourism-augmented-experience"
+      "/travel/augmented-experience"
     );
     await arLink.scrollIntoViewIfNeeded();
     await page.screenshot({ path: `${output}/onesa-ar-tile-${width}.png` });
     await arLink.click();
-    await page.waitForURL("**/onesa-ai-tourism-augmented-experience");
+    await page.waitForURL("**/travel/augmented-experience");
     await page.locator("#aug-place").waitFor();
-    await page.getByRole("link", { name: /back to tourism/i }).click();
-    await page.waitForURL("**/tourism");
+    await page.getByRole("link", { name: /back to travel/i }).click();
+    await page.waitForURL("**/travel");
     record({
       width,
       scenario:
@@ -661,7 +661,7 @@ try {
     assert.equal(await fourth.locator(".onesa-chat-preview").count(), 0);
     assert.equal(
       await previewLink.getAttribute("href"),
-      "/onesa-ai-tourism-virtual-experience"
+      "/travel/virtual-experience"
     );
     const cardBounds = await fourth.boundingBox();
     assert(
@@ -671,7 +671,7 @@ try {
     await companionViewport.evaluate(el => el.blur());
     await page.screenshot({ path: `${output}/onesa-companion-${width}.png` });
     await previewLink.click();
-    await page.waitForURL("**/onesa-ai-tourism-virtual-experience");
+    await page.waitForURL("**/travel/virtual-experience");
     await page.locator("main h1").waitFor();
     record({
       width,
@@ -731,7 +731,7 @@ try {
         width,
         scenario: `${language}: translated Technology tools and ideas fit`,
       });
-      for (const route of ["/", "/tourism"]) {
+      for (const route of ["/", "/travel"]) {
         await page.goto(`${base}${route}?lng=${language}`);
         await page.waitForFunction(
           expected => document.documentElement.lang === expected,

@@ -134,8 +134,8 @@ async function runScenario(path, kind) {
 }
 
 try {
-  const ar = await runScenario("/onesa-ai-tourism-augmented-experience", "ar");
-  const vr = await runScenario("/onesa-ai-tourism-virtual-experience", "vr");
+  const ar = await runScenario("/travel/augmented-experience", "ar");
+  const vr = await runScenario("/travel/virtual-experience", "vr");
   const result = { baseUrl, ar, vr, ok: ar.ok && vr.ok };
   console.log(JSON.stringify(result, null, 2));
   if (!result.ok) process.exitCode = 1;

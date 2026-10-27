@@ -27,7 +27,7 @@ const routes = [
   "/investment/projects/masuwe",
   "/investment/projects/unknown",
   "/ntir",
-  "/tourism",
+  "/travel",
   "/login",
   "/register",
   "/forgot-password",
@@ -38,9 +38,9 @@ const routes = [
   "/cookie-settings",
   "/search?q=tourism",
   "/onesa-ai-chat",
-  "/onesa-ai-book-trip",
-  "/onesa-ai-tourism-augmented-experience",
-  "/onesa-ai-tourism-virtual-experience",
+  "/travel/planner",
+  "/travel/augmented-experience",
+  "/travel/virtual-experience",
   "/not-a-real-route",
 ];
 const report = [];
@@ -110,7 +110,7 @@ try {
         if (
           [
             "/",
-            "/tourism",
+            "/travel",
             "/shop/products",
             "/login",
             "/privacy-policy",

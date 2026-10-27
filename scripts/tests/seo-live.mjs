@@ -1,3 +1,4 @@
+import fs from "node:fs/promises";
 import assert from "node:assert/strict";
 import {
   assertActiveFrontendApi,
@@ -50,7 +51,7 @@ for (const pathname of [
   "/",
   "/shop",
   "/shop/products",
-  "/tourism",
+  "/travel",
   "/technology",
   "/investment",
   "/investment/opportunities",
@@ -92,16 +93,11 @@ for (const pathname of [
 }
 for (const [pathname, destination] of [
   ["/index.html", "/"],
-  ["/tourism/", "/tourism"],
-  ["/tourism.html", "/tourism"],
-  [
-    "/onesa-ai-tourism-virtual-experince",
-    "/onesa-ai-tourism-virtual-experience",
-  ],
-  [
-    "/onesa-ai-tourism-augmented-experince",
-    "/onesa-ai-tourism-augmented-experience",
-  ],
+  ["/travel/", "/travel"],
+  ["/travel.html", "/travel"],
+  ...JSON.parse(await fs.readFile("vercel.json", "utf8"))
+    .redirects.filter(r => /tourism|onesa-ai-book-trip/.test(r.source))
+    .map(r => [r.source, r.destination]),
 ]) {
   const { response } = await read(pathname);
   assert(
@@ -114,10 +110,10 @@ for (const [pathname, destination] of [
   );
 }
 const { response: trackedResponse, html: tracked } = await read(
-  "/tourism?utm_source=seo-audit"
+  "/travel?utm_source=seo-audit"
 );
 assert.equal(trackedResponse.status, 200);
-checkDocument(tracked, "/tourism", true);
+checkDocument(tracked, "/travel", true);
 const { response: robotsResponse, html: robots } = await read("/robots.txt");
 assert.equal(robotsResponse.status, 200);
 assert(robotsResponse.headers.get("content-type")?.includes("text/plain"));

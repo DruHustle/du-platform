@@ -13,8 +13,8 @@ describe("canonical URL policy", () => {
     "http://diasporaunlocked.com",
     "http://www.diasporaunlocked.com/",
   ])("normalizes public domain %s to HTTPS www", origin => {
-    expect(resolveCanonicalUrl(origin, "/tourism")).toBe(
-      `${PUBLIC_SITE_ORIGIN}/tourism`
+    expect(resolveCanonicalUrl(origin, "/travel")).toBe(
+      `${PUBLIC_SITE_ORIGIN}/travel`
     );
   });
 
@@ -29,7 +29,7 @@ describe("canonical URL policy", () => {
       pathname: "/tourism/",
       search: "?utm_source=google",
     });
-    expect(seo.canonicalPath).toBe("/tourism");
+    expect(seo.canonicalPath).toBe("/travel");
     expect(seo.robots).toBe("index,follow");
   });
 

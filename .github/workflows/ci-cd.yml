@@ -191,6 +191,14 @@ jobs:
       - name: Site-wide UI consistency and accessible dialog regressions
         run: pnpm test:e2e:ui
 
+      - name: Travel journey Chromium
+        run: pnpm test:e2e:travel
+
+      - name: Travel journey WebKit
+        run: pnpm test:e2e:travel
+        env:
+          TRAVEL_BROWSER: webkit
+
       - name: VR music toggle regression tests
         run: pnpm test:e2e:vr:music
 
@@ -265,7 +273,8 @@ jobs:
   deploy-vercel-preview:
     name: Deploy to Vercel (Preview)
     needs: build-and-test
-    if: github.event_name == 'pull_request' && needs.build-and-test.result == 'success'
+    # Draft review runs all checks without publishing an external preview.
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && needs.build-and-test.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

@@ -4,7 +4,7 @@ import { SearchRepository } from "../repositories/searchRepository";
 const ROUTE_INDEX = [
   ...TOURISM_SEARCH_DESTINATIONS.map(({ title, id, aliases }) => ({
     title,
-    href: `/tourism#${id}`,
+    href: `/travel#${id}`,
     category: "Destination",
     tags: ["travel", "destination", ...aliases],
   })),
@@ -31,8 +31,8 @@ const ROUTE_INDEX = [
     tags: ["chat", "assistant", "help"],
   },
   {
-    title: "Tourism",
-    href: "/tourism",
+    title: "Travel Southern Africa",
+    href: "/travel",
     category: "Tourism",
     tags: ["visit", "travel", "attractions", "victoria falls"],
   },

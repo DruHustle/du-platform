@@ -52,7 +52,7 @@ try {
 
   await page.goto(`${baseUrl}/tourism`, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(1200);
-  await page.locator('a[href="/onesa-ai-book-trip"]').first().click();
+  await page.locator('a[href="/travel/planner"]').first().click();
   await page.waitForURL(/\/onesa-ai-book-trip/, { timeout: 15000 });
   pass('navigate_to_book_trip');
 

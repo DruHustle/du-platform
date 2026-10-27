@@ -88,7 +88,7 @@ describe("Onesa public chat route", () => {
     });
     const context = generateOnesaReply.mock.calls[0][0][0];
     expect(context.role).toBe("system");
-    expect(context.content).toContain("/onesa-ai-tourism-augmented-experience");
+    expect(context.content).toContain("/travel/augmented-experience");
     expect(context.content).toContain(
       "cannot book travel, accept payments or confirm delivery"
     );

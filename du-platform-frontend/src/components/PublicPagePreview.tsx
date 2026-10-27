@@ -18,10 +18,10 @@ const sections = [
       "Browse food, drinks, crafts and supporter apparel. Register interest for a one-time availability alert — no order, reservation or payment. Confirm your email separately from the newsletter. Sales are not open yet.",
   },
   {
-    title: "Travel research",
-    href: "/tourism",
+    title: "Travel Southern Africa",
+    href: "/travel",
     description:
-      "Explore Zimbabwean destinations and prepare a sample itinerary. Research Victoria Falls, Hwange, Harare, Bulawayo, Great Zimbabwe and the Eastern Highlands. Confirm transport, accommodation, visiting times and prices directly with providers. Sample trip budgets are planning allowances, not bookings or live quotations.",
+      "Search flights to, from and within Southern Africa and research stays. Read regional guides, explore Zimbabwean destinations and draft an itinerary with Onesa. Confirm final prices and conditions directly with providers; car hire uses a public search handoff.",
   },
   {
     title: "Business and innovation",
@@ -121,6 +121,28 @@ export function PublicPagePreview({
           <h2>{english.pilot.returns_title}</h2>
           <p>{english.pilot.returns_draft}</p>
           <p>{english.pilot.complaints}</p>
+        </section>
+      )}
+      {pathname.startsWith("/travel") && (
+        <section>
+          <h2>{english.travel.guides}</h2>
+          <p>{english.travel.reviewed}</p>
+          {Object.entries(english.travel["guides-content"]).map(
+            ([id, guide]) => (
+              <article key={id}>
+                <h3>
+                  <a href={`/travel/explore#${id}`}>{guide.title}</a>
+                </h3>
+                <p>{guide.body}</p>
+              </article>
+            )
+          )}
+          <p>{english.travel["coverage-note"]}</p>
+          <a href="/travel/flights">Flights</a>
+          {" · "}
+          <a href="/travel/stays">Stays</a>
+          {" · "}
+          <a href="/travel/car-hire">Car Hire</a>
         </section>
       )}
       {product && (

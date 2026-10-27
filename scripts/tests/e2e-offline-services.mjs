@@ -173,7 +173,7 @@ const responsive = async name => {
   pass(`${name} populated view fits 375, 768, and 1440 pixels`);
 };
 const chooseVr = async () => {
-  await goto("/onesa-ai-tourism-virtual-experience");
+  await goto("/travel/virtual-experience");
   await page.locator("#vr-destination").selectOption({ index: 1 });
   await expectText(/walkthrough 1\/3/i);
   assert.equal(
@@ -297,7 +297,7 @@ try {
   await responsive("chat");
   pass("chat reports a provider outage and recovers on the next message");
 
-  await goto("/onesa-ai-book-trip");
+  await goto("/travel/planner");
   await page.getByRole("button", { name: /generate trip plan/i }).click();
   await page.getByRole("button", { name: /download pdf/i }).waitFor();
   // Check the estimate status rather than its full display sentence.
@@ -407,7 +407,7 @@ try {
     768,
     `window.__streams=[];const original=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);navigator.mediaDevices.getUserMedia=async constraints=>{const stream=await original(constraints);window.__streams.push(stream);return stream;};`
   );
-  await goto("/onesa-ai-tourism-augmented-experience");
+  await goto("/travel/augmented-experience");
   await page.locator("#aug-place").selectOption({ index: 1 });
   await expectText("Victoria Falls is a strong first stop.");
   await page.getByRole("button", { name: /^turn camera on$/i }).click();
@@ -475,7 +475,7 @@ try {
     "turning conversation off ignores a late transcription instead of starting another AI request"
   );
   await responsive("ar");
-  await page.getByRole("link", { name: /back to tourism/i }).click();
+  await page.getByRole("link", { name: /back to travel/i }).click();
   assert(
     await page.evaluate(() =>
       window.__streams
@@ -493,7 +493,7 @@ try {
     375,
     `navigator.mediaDevices.getUserMedia=async()=>{throw new DOMException('Denied by test','NotAllowedError')};`
   );
-  await goto("/onesa-ai-tourism-augmented-experience");
+  await goto("/travel/augmented-experience");
   await page.locator("#aug-place").selectOption({ index: 1 });
   await page.getByRole("button", { name: /^turn camera on$/i }).click();
   await expectText(/camera.*(fail|access|denied)/i);
@@ -510,11 +510,11 @@ try {
     375,
     `window.__streams=[];window.__grants=[];const real=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);navigator.mediaDevices.getUserMedia=async constraints=>{const stream=await real(constraints);window.__streams.push(stream);await new Promise(resolve=>window.__grants.push(resolve));return stream;};`
   );
-  await goto("/onesa-ai-tourism-augmented-experience");
+  await goto("/travel/augmented-experience");
   await page.locator("#aug-place").selectOption({ index: 1 });
   await page.getByRole("button", { name: /^turn camera on$/i }).click();
   await page.waitForFunction(() => window.__grants.length === 1);
-  await page.getByRole("link", { name: /back to tourism/i }).click();
+  await page.getByRole("link", { name: /back to travel/i }).click();
   await page.evaluate(() => window.__grants.forEach(resolve => resolve()));
   await page.waitForFunction(() =>
     window.__streams
@@ -566,7 +566,7 @@ try {
       json: { success: true, data: { reply: "Current destination guidance." } },
     });
   });
-  await goto("/onesa-ai-tourism-augmented-experience");
+  await goto("/travel/augmented-experience");
   await page.locator("#aug-place").selectOption({ index: 1 });
   await page.waitForFunction(() => document.querySelector("#aug-place")?.value);
   for (let i = 0; !staleGuide && i < 100; i++) await page.waitForTimeout(20);
@@ -618,7 +618,7 @@ try {
       })
     );
     if (mode === "ar") {
-      await goto("/onesa-ai-tourism-augmented-experience");
+      await goto("/travel/augmented-experience");
       await page.locator("#aug-place").selectOption({ index: 1 });
       await expectText("Local destination description.");
     } else {
@@ -698,7 +698,7 @@ try {
         .waitFor();
     }
     await page.unroute("**/api/speech");
-    await page.getByRole("link", { name: /back to tourism/i }).click();
+    await page.getByRole("link", { name: /back to travel/i }).click();
     pass(
       `${mode.toUpperCase()} ignores late narration after switching it off${mode === "vr" ? " and handles denied fullscreen" : ""}`
     );
@@ -796,7 +796,7 @@ try {
   await page.getByRole("button", { name: /^enter vr$/i }).click();
   await page.waitForFunction(() => !!window.__device.activeSession);
   // The emulator captures pointer events while immersive; exercise SPA navigation by keyboard.
-  await page.getByRole("link", { name: /back to tourism/i }).focus();
+  await page.getByRole("link", { name: /back to travel/i }).focus();
   await page.keyboard.press("Enter");
   await page.waitForFunction(() => !window.__device.activeSession);
   pass(
@@ -847,10 +847,10 @@ try {
   await page.getByRole("button", { name: /^enter vr$/i }).click();
   await page.waitForFunction(() => Boolean(window.__grantVr));
   await page
-    .locator('a[href="/tourism"]:visible')
+    .locator('a[href="/travel"]:visible')
     .first()
     .evaluate(link => link.click());
-  await page.waitForURL("**/tourism");
+  await page.waitForURL("**/travel");
   await page.evaluate(() => window.__grantVr());
   await page.waitForFunction(() => window.__lateSessionEnded === true);
   pass(

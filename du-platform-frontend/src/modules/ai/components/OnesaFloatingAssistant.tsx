@@ -45,10 +45,7 @@ const HIDE_ONESA_BUBBLE_ROUTES = [
   "/newsletter",
   "/shop/interest",
   "/onesa-ai-chat",
-  "/onesa-ai-tourism-virtual-experience",
-  "/onesa-ai-tourism-augmented-experience",
-  "/onesa-ai-tourism-virtual-experince",
-  "/onesa-ai-tourism-augmented-experince",
+  "/travel",
 ];
 
 type DragState = {

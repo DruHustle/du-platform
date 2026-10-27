@@ -12,6 +12,7 @@ import {
 import { ArrowLeft, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
+import { consumeTravelChatDraft } from "@/modules/travel/chatHandoff";
 
 export default function ChatPage() {
   const { t, i18n } = useTranslation();
@@ -43,6 +44,10 @@ export default function ChatPage() {
     },
   ]);
   const [input, setInput] = useState("");
+  useEffect(() => {
+    const travelDraft = consumeTravelChatDraft();
+    if (travelDraft) setInput(travelDraft);
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [retryAfterSecondsRemaining, setRetryAfterSecondsRemaining] = useState<
@@ -217,7 +222,7 @@ export default function ChatPage() {
                     asChild
                     className="h-auto min-h-8 max-w-full whitespace-normal rounded-full border border-white/15 bg-slate-900 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800"
                   >
-                    <Link href="/tourism">
+                    <Link href="/travel">
                       <ArrowLeft className="h-4 w-4" />
                       {backLabel}
                     </Link>

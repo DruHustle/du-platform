@@ -95,8 +95,8 @@ const paths = [
   "/shop/product/sables-rugby-home-kit",
   "/technology",
   "/investment",
-  "/tourism",
-  "/onesa-ai-book-trip",
+  "/travel",
+  "/travel/planner",
   "/legal-notice",
   "/privacy-policy",
   "/login?next=%2Fadmin",
@@ -303,7 +303,7 @@ try {
             "/shop",
             "/shop/products",
             "/shop/product/sables-rugby-home-kit",
-            "/tourism",
+            "/travel",
             "/legal-notice",
           ].includes(path)
         ) {
