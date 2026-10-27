@@ -5,8 +5,8 @@ type Props = {
   eyebrow: string;
   title: string;
   highlight: string;
-  description: string;
-  principle: string;
+  description?: string;
+  principle?: string;
   image: string;
   imageAlt: string;
   caption: string;
@@ -33,9 +33,11 @@ export default function DiscoveryHero({
             {title}
             <span>{highlight}</span>
           </h1>
-          <p className="discovery-hero-description">{description}</p>
+          {description && (
+            <p className="discovery-hero-description">{description}</p>
+          )}
           <div className="discovery-actions">{children}</div>
-          <p className="discovery-hero-principle">{principle}</p>
+          {principle && <p className="discovery-hero-principle">{principle}</p>}
         </div>
         <figure className="discovery-hero-media">
           <InstantImage
