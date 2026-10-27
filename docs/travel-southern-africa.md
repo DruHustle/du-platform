@@ -1,7 +1,6 @@
 # Travel Southern Africa — implementation and review
 
-Feature branch: `feature/travel-southern-africa`. Release is **not authorized**.
-This feature must remain a reviewable draft PR: do not merge or deploy it as part of this task. Draft PRs run the full build/test gate but cannot publish an external Vercel preview.
+Feature branch: `feature/travel-southern-africa`, PR #143. The owner authorized review and merge to main on 27 October 2026. Production release remains gated by full CI, verified Oracle deployment, then Vercel deployment and live checks. This authorizes the planning/referral feature, not commercial sales or price-alert activation.
 
 ## Implemented experience
 
@@ -207,14 +206,14 @@ redirects are the intended production behavior.
    cancellation, cost caps and recovery holds; it is not enabled by a flag.
 4. Review Shona/Ndebele editorial copy with native speakers. Strict automated
    checks establish completeness, not native-language editorial acceptance.
-5. Separately authorize merge/release after reviewing the now-expanded PR. Public
+5. Owner merge/release authorization received on 27 October 2026; keep the full CI and deployment gates. Public
    free-provider availability has been verified locally, not from a deployed
    Oracle release. No paid subscriptions, commercial accounts, stock, production
    data, payment integrations or external provider accounts have changed.
 
 ## Migration, activation and rollback
 
-After a separately authorized release, standard protected-main CI deploys the
+For the authorized release, standard protected-main CI deploys the
 exact tested commit to Oracle and Vercel. Startup adds `travel_saved` with its
 owner FK/index, under the existing database initialization lock. It is additive
 and restart-safe; no existing table or record is rewritten. Backups include the
@@ -272,6 +271,6 @@ Screenshots from the verified local build:
 
 Actual Vite preview verification: **45 checks** covering all eighteen old URL forms, nine canonical pages and their slash/HTML normalization. Global desktop/mobile navigation and query/history recovery passed as well. These are local checks; Vercel's declared production rules cannot be live-verified before a separately authorized release.
 
-PR: [#143](https://github.com/DruHustle/du-platform/pull/143). Its full normal CI gate runs on every pushed commit; preview and production deploy jobs are excluded for this draft. The PR checks are authoritative for the final pushed revision.
+PR: [#143](https://github.com/DruHustle/du-platform/pull/143). Its full normal CI gate runs on every pushed commit. Main merges run the Oracle and Vercel production release gates. The PR checks are authoritative for the final pushed revision.
 
 Live supplier integration is locally verified as documented above. No production deployment is claimed.

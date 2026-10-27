@@ -310,7 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Buyela ekuvakasheni",
-    "attractions_title": "Qala ngendawo ongayivakatshela",
+    "attractions_title": "Izindawo zokuvakatshela eZimbabwe",
     "attractions": {
       "vicfalls": {
         "name": "I-Victoria Falls",
@@ -2137,6 +2137,9 @@
     "privacy": "Sigcina umbuzo, ulimi lembali yezaziso kudhatabhesi ukuze iqembu liphendule. Lokhu akulibhalisi kwezokukhangisa. Cela ukulungiswa kumbe ukucitshwa ku info@diasporaunlocked.com."
   },
   "travel": {
+    "explore-description": "Thola iziqondiso zohambo esabelweni lemibono yezindawo zokuvakatshela eZimbabwe. Bhala uhlelo lweZimbabwe loOnesa, uqinisekise imininingwane kubanikezeli.",
+    "explore-title": "Hlola iSouthern Africa",
+    "eyebrow": "Uhambo, indawo zokuhlala lokuvakatshela",
     "title": "Vakashela iSouthern Africa",
     "navigation": "Izingxenye zokuvakasha",
     "overview": "Okufitshane",

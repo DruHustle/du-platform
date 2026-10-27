@@ -18,10 +18,10 @@ const sections = [
       "Browse food, drinks, crafts and supporter apparel. Register interest for a one-time availability alert — no order, reservation or payment. Confirm your email separately from the newsletter. Sales are not open yet.",
   },
   {
-    title: "Travel research",
+    title: "Travel Southern Africa",
     href: "/travel",
     description:
-      "Explore Zimbabwean destinations and prepare a sample itinerary. Research Victoria Falls, Hwange, Harare, Bulawayo, Great Zimbabwe and the Eastern Highlands. Confirm transport, accommodation, visiting times and prices directly with providers. Sample trip budgets are planning allowances, not bookings or live quotations.",
+      "Search flights to, from and within Southern Africa and research stays. Read regional guides, explore Zimbabwean destinations and draft an itinerary with Onesa. Confirm final prices and conditions directly with providers; car hire uses a public search handoff.",
   },
   {
     title: "Business and innovation",

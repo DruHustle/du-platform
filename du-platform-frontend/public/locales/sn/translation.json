@@ -310,7 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Dzokera kuKufamba",
-    "attractions_title": "Tanga nenzvimbo yekushanyira",
+    "attractions_title": "Nzvimbo dzekushanyira muZimbabwe",
     "attractions": {
       "vicfalls": {
         "name": "Mapopoma eVhitori",
@@ -2137,6 +2137,9 @@
     "privacy": "Tinochengeta mubvunzo, mutauro nenhoroondo yezviziviso mudhatabhesi kuti chikwata chipindure. Izvi hazvikunyoresi kushambadziro. Kumbirai kugadzirisa kana kudzima pa info@diasporaunlocked.com."
   },
   "travel": {
+    "explore-description": "Wana mazano enzendo mudunhu nenzvimbo dzekushanyira muZimbabwe. Nyora hurongwa hweZimbabwe naOnesa, wozosimbisa mashoko nevapi vesevhisi.",
+    "explore-title": "Ongorora Southern Africa",
+    "eyebrow": "Nzendo, pekugara nekushanya",
     "title": "Famba muSouthern Africa",
     "navigation": "Zvikamu zvekufamba",
     "overview": "Pfupiso",

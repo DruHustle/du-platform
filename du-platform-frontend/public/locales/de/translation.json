@@ -310,7 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Zurück zu Reisen",
-    "attractions_title": "Beginne mit einem Reiseziel",
+    "attractions_title": "Reiseziele in Simbabwe entdecken",
     "attractions": {
       "vicfalls": {
         "name": "Victoriafälle",
@@ -2133,6 +2133,9 @@
     "privacy": "Wir speichern Ihre Anfrage, Sprache und Benachrichtigungsverlauf in unserer Datenbank, damit das Team antworten kann. Dies ist keine Marketing-Anmeldung. Für Berichtigung oder Löschung wenden Sie sich an info@diasporaunlocked.com."
   },
   "travel": {
+    "explore-description": "Finde regionale Reiseführer und Ideen für Reiseziele in Simbabwe. Entwirf mit Onesa eine Simbabwe-Reiseroute und bestätige die Details direkt bei den Anbietern.",
+    "explore-title": "Das südliche Afrika entdecken",
+    "eyebrow": "Reisen, Unterkünfte & Entdeckungen",
     "title": "Reisen im südlichen Afrika",
     "navigation": "Reisebereiche",
     "overview": "Übersicht",

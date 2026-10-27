@@ -310,7 +310,7 @@
   },
   "tourism": {
     "back_to_tourism": "Back to Travel",
-    "attractions_title": "Start with a destination",
+    "attractions_title": "Places to explore in Zimbabwe",
     "attractions": {
       "vicfalls": {
         "name": "Victoria Falls",
@@ -2133,6 +2133,9 @@
     "privacy": "We store your enquiry, language and notification history in our database so the team can respond. This does not subscribe you to marketing. Contact info@diasporaunlocked.com for correction or deletion requests."
   },
   "travel": {
+    "explore-description": "Find regional travel guides and Zimbabwe destination ideas. Draft a Zimbabwe itinerary with Onesa, then confirm details directly with providers.",
+    "explore-title": "Explore Southern Africa",
+    "eyebrow": "Journeys, stays & discovery",
     "title": "Travel Southern Africa",
     "navigation": "Travel sections",
     "overview": "Overview",
