@@ -40,7 +40,7 @@ export default function SearchResults() {
     Compliance: FileText,
   };
   const categoryLabels: Record<string, string> = {
-    Tourism: tr("search.categories.tourism", "Tourism"),
+    Tourism: tr("search.categories.tourism", "Travel"),
     Investment: tr("search.categories.investment", "Investment"),
     Technology: tr("search.categories.technology", "Technology"),
     NTIR: tr("search.categories.ntir", "NTIR"),
@@ -149,7 +149,7 @@ export default function SearchResults() {
               <p className="py-12 text-white/80">
                 {tr(
                   "search.prompt",
-                  "Search for tourism, investment, shopping, or Onesa AI."
+                  "Search for travel, investment, shopping, or Onesa AI."
                 )}
               </p>
             ) : results.length > 0 ? (
@@ -223,8 +223,8 @@ export default function SearchResults() {
                   <Link href="/shop/products">
                     {t("pilot.browse_products")}
                   </Link>
-                  <Link href="/tourism">
-                    {t("nav.tourism", { defaultValue: "Tourism" })}
+                  <Link href="/travel">
+                    {t("nav.tourism", { defaultValue: "Travel" })}
                   </Link>
                 </div>
                 <Button

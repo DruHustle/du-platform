@@ -1,3 +1,4 @@
+import { resolveTravelRedirect } from "../shared/travelRoutes";
 import { startOrderNotificationWorker } from "./modules/shop/orderNotifications";
 import { startTransactionalWorker } from "./modules/notifications/transactionalWorker";
 import { startNewsletterWorker } from "./modules/newsletter/worker";
@@ -43,6 +44,16 @@ export function createModularServer(options: ModularServerOptions) {
   });
   registerDomainModules(app);
 
+  app.get("*", (req, res, next) => {
+    const destination = resolveTravelRedirect(req.path);
+    if (!destination) return next();
+    const queryIndex = req.originalUrl.indexOf("?");
+    return res.redirect(
+      308,
+      destination + (queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : "")
+    );
+  });
+
   // Ensure API consumers receive JSON 404s instead of the SPA shell.
   app.use("/api", notFoundHandler);
 
@@ -56,8 +67,29 @@ export function createModularServer(options: ModularServerOptions) {
       return cachedIndexHtml;
     };
 
+    // Serve generated clean-URL documents before directory handling. A route
+    // such as /travel also has a folder for child pages; static's directory
+    // redirect would otherwise turn it into /travel/ and break SPA matching.
+    app.use((req, res, next) => {
+      if (!["GET", "HEAD"].includes(req.method) || path.extname(req.path))
+        return next();
+      const root = path.resolve(options.staticPath!);
+      const clean = req.path.replace(/\/$/, "");
+      const file = path.resolve(root, "." + (clean || "/index") + ".html");
+      if (!file.startsWith(root + path.sep) || !fs.existsSync(file))
+        return next();
+      res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
+      res.status(
+        getSpaDocumentStatus(
+          resolveRouteSeo({ pathname: req.path }).canonicalPath
+        )
+      );
+      return res.sendFile(file);
+    });
+
     app.use(
       express.static(options.staticPath, {
+        redirect: false,
         etag: true,
         lastModified: true,
         setHeaders: (res, filePath) => {

@@ -234,7 +234,7 @@ export default function Layout({ children }: LayoutProps) {
       matchPaths: ["/investment", "/ntir"],
       icon: Landmark,
     },
-    { name: tr("nav.tourism", "Tourism"), href: "/tourism", icon: MapPin },
+    { name: tr("nav.tourism", "Travel"), href: "/travel", icon: MapPin },
   ];
   const mobileTopNavigation = [
     { name: tr("nav.home", "Home"), href: "/", icon: House },
@@ -245,9 +245,9 @@ export default function Layout({ children }: LayoutProps) {
       icon: Brain,
     },
     {
-      name: tr("nav.tourism", "Tourism"),
-      href: "/tourism",
-      matchPaths: ["/tourism"],
+      name: tr("nav.tourism", "Travel"),
+      href: "/travel",
+      matchPaths: ["/travel"],
       icon: Compass,
     },
     {
@@ -285,7 +285,7 @@ export default function Layout({ children }: LayoutProps) {
   const hasHeroSection =
     isHomePage ||
     location === "/investment" ||
-    location === "/tourism" ||
+    location.startsWith("/travel") ||
     location === "/shop" ||
     location === "/technology";
   const useDesktopTransparentNav =

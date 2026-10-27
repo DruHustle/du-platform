@@ -29,19 +29,19 @@ const tools = [
     key: "trip",
     icon: MapPin,
     image: "/images/pages/tourism/victoria_falls.webp",
-    href: "/onesa-ai-book-trip",
+    href: "/travel/planner",
   },
   {
     key: "vr",
     icon: Camera,
     image: "/images/pages/technology/virtual-demo-preview.webp",
-    href: "/onesa-ai-tourism-virtual-experience",
+    href: "/travel/virtual-experience",
   },
   {
     key: "ar",
     icon: ClipboardList,
     image: "/images/pages/tourism/great_zimbabwe.jpeg",
-    href: "/onesa-ai-tourism-augmented-experience",
+    href: "/travel/augmented-experience",
   },
 ];
 const ideas = [

@@ -162,7 +162,7 @@ for (const route of [
   "/",
   "/shop",
   "/shop/products",
-  "/tourism",
+  "/travel",
   "/investment",
   "/technology",
 ]) {
@@ -180,7 +180,7 @@ for (const route of [
   );
   assert(
     html.includes("one-time availability alert") ||
-      html.includes("Sample trip budgets") ||
+      html.includes("Search flights to, from and within Southern Africa") ||
       html.includes("research starting points") ||
       html.includes("cannot book a trip")
   );

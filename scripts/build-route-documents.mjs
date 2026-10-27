@@ -93,7 +93,7 @@ for (const pathname of paths) {
     React.createElement(PublicPagePreview, { pathname, products })
   );
   const hero =
-    pathname === "/" || pathname === "/tourism"
+    pathname === "/" || pathname === "/travel"
       ? "/images/pages/tourism/victoria_falls.webp"
       : pathname === "/shop"
         ? "/images/pages/shop/crafts_binga_baskets_01.jpg"

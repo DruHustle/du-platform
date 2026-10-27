@@ -78,7 +78,7 @@ try {
   pass("cookie settings can accept and revoke without navigating off site");
 
   await page.goto(`${baseUrl}/search?q=tourism`);
-  await page.locator('main a[href="/tourism"]').waitFor();
+  await page.locator('main a[href="/travel"]').waitFor();
   await page.getByRole("searchbox").fill("shopping");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await page.locator('main a[href="/shop"]').waitFor();
@@ -119,7 +119,7 @@ try {
         body: JSON.stringify({
           success: true,
           data: {
-            results: [{ title: q, category: "Tourism", href: "/tourism" }],
+            results: [{ title: q, category: "Tourism", href: "/travel" }],
           },
         }),
       })
@@ -244,12 +244,12 @@ try {
     .getByRole("status")
     .filter({ hasText: "Local reset complete" })
     .waitFor();
-  await page.locator('a[href="/tourism"]:visible').first().click();
-  await page.waitForURL("**/tourism");
+  await page.locator('a[href="/travel"]:visible').first().click();
+  await page.waitForURL("**/travel");
   await page.waitForTimeout(1000);
   assert.equal(
     new URL(page.url()).pathname,
-    "/tourism",
+    "/travel",
     "A stale reset timer must not redirect after navigation"
   );
   await page.unroute("**/api/auth/reset-password");
@@ -267,15 +267,15 @@ try {
     .click();
   for (let i = 0; !pendingReset && i < 100; i++) await page.waitForTimeout(20);
   assert(pendingReset);
-  await page.locator('a[href="/tourism"]:visible').first().click();
-  await page.waitForURL("**/tourism");
+  await page.locator('a[href="/travel"]:visible').first().click();
+  await page.waitForURL("**/travel");
   await pendingReset.fulfill({
     json: { success: true, data: { message: "Late reset response" } },
   });
   await page.waitForTimeout(1100);
   assert.equal(
     new URL(page.url()).pathname,
-    "/tourism",
+    "/travel",
     "A reset response arriving after navigation must not schedule a new redirect"
   );
   await page.unroute("**/api/auth/reset-password");

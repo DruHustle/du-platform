@@ -131,7 +131,7 @@ try {
     page = await context.newPage();
     page.setDefaultTimeout(12000);
     page.on("pageerror", error => errors.push(error.message));
-    await page.goto(base + "/onesa-ai-tourism-virtual-experience");
+    await page.goto(base + "/travel/virtual-experience");
     const on = page.getByRole("button", { name: "Music: On", exact: true });
     const off = page.getByRole("button", { name: "Music: Off", exact: true });
     const stopped = async () => {
@@ -231,11 +231,11 @@ try {
         () => window.__music.node.paused && window.__music.node.muted
       )
     );
-    await page.goto(base + "/onesa-ai-tourism-virtual-experience");
+    await page.goto(base + "/travel/virtual-experience");
     await on.waitFor();
     await page.waitForFunction(() => window.__music.plays > 0);
-    await page.getByRole("link", { name: /back to tourism/i }).click();
-    await page.waitForURL("**/tourism");
+    await page.getByRole("link", { name: /back to travel/i }).click();
+    await page.waitForURL("**/travel");
     await page.waitForFunction(
       () => window.__music.node.paused && window.__music.node.muted
     );

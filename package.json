@@ -57,7 +57,8 @@
     "test:recovery:application": "node scripts/tests/restored-application.mjs",
     "test:e2e:shop:followup": "node --import tsx scripts/tests/e2e-shop-followup.mjs",
     "test:backup:mac": "PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/mac-backup-pull.test.py",
-    "test:e2e:ui": "node --import tsx scripts/tests/e2e-ui-consistency.mjs"
+    "test:e2e:ui": "node --import tsx scripts/tests/e2e-ui-consistency.mjs",
+    "test:e2e:travel": "node --import tsx scripts/tests/e2e-travel.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

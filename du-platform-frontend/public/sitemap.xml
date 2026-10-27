@@ -86,22 +86,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.diasporaunlocked.com/onesa-ai-book-trip</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.diasporaunlocked.com/onesa-ai-chat</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.diasporaunlocked.com/onesa-ai-tourism-augmented-experience</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.diasporaunlocked.com/onesa-ai-tourism-virtual-experience</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -276,7 +261,42 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.diasporaunlocked.com/tourism</loc>
+    <loc>https://www.diasporaunlocked.com/travel</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/augmented-experience</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/car-hire</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/explore</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/flights</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/planner</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/stays</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/travel/virtual-experience</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

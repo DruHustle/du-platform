@@ -66,7 +66,7 @@ export default function TourismAugmentedExperiencePage() {
     [uiLanguage]
   );
   const backToTourismLabel = t("tourism.back_to_tourism", {
-    defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Tourism" })}`,
+    defaultValue: `Back to ${t("nav.tourism", { defaultValue: "Travel" })}`,
   });
   const backToTourismButtonClass =
     "mb-4 inline-flex min-h-11 items-center text-sm font-semibold text-slate-300 transition-colors hover:text-zim-gold";
@@ -1255,13 +1255,13 @@ export default function TourismAugmentedExperiencePage() {
       {/* Page shell */}
       <section className="document-section bg-slate-950 relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto">
-          <Link href="/tourism" className={backToTourismButtonClass}>
+          <Link href="/travel" className={backToTourismButtonClass}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             {backToTourismLabel}
           </Link>
           <div className="content-panel mb-6 p-5 md:p-6">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-zim-gold">
-              {t("tourism.ar.seo.badge", { defaultValue: "Onesa AI Tourism" })}
+              {t("tourism.ar.seo.badge", { defaultValue: "Onesa AI Travel" })}
             </p>
             <h1 className="page-title mt-3">
               {t("tourism.ar.seo.title", {
