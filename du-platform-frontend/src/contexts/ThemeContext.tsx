@@ -1,65 +1,90 @@
 import { safeLocalStorage } from "@/lib/browserStorage";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 
-type Theme = "light" | "dark";
-
+export type Theme = "light" | "dark";
+export type ThemePreference = Theme | "system";
+export function isThemePreference(value: unknown): value is ThemePreference {
+  return value === "light" || value === "dark" || value === "system";
+}
+function readPreference(fallback: ThemePreference): ThemePreference {
+  const stored = safeLocalStorage.getItem("theme");
+  return isThemePreference(stored) ? stored : fallback;
+}
+function systemTheme(): Theme {
+  return typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
 interface ThemeContextType {
   theme: Theme;
-  toggleTheme?: () => void;
-  switchable: boolean;
+  preference: ThemePreference;
+  setPreference: (theme: ThemePreference) => void;
 }
-
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  switchable?: boolean;
-}
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
-  switchable = false,
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (switchable) {
-      const stored = safeLocalStorage.getItem("theme");
-      return stored === "light" || stored === "dark" ? stored : defaultTheme;
-    }
-    return defaultTheme;
-  });
+  defaultTheme = "system",
+}: {
+  children: React.ReactNode;
+  defaultTheme?: ThemePreference;
+}) {
+  const [preference, setPreference] = useState<ThemePreference>(() =>
+    readPreference(defaultTheme)
+  );
+  const [system, setSystem] = useState<Theme>(systemTheme);
+  const theme = preference === "system" ? system : preference;
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
-    if (switchable) {
-      safeLocalStorage.setItem("theme", theme);
-    }
-  }, [theme, switchable]);
-
-  const toggleTheme = switchable
-    ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
+    const media = window.matchMedia?.("(prefers-color-scheme: dark)");
+    const update = () => setSystem(media?.matches ? "dark" : "light");
+    update();
+    media?.addEventListener("change", update);
+    const sync = (event: StorageEvent) => {
+      if (event.key === "theme" || event.key === null) {
+        try {
+          if (event.storageArea && event.storageArea !== window.localStorage)
+            return;
+        } catch {
+          return;
+        }
+        setPreference(
+          isThemePreference(event.newValue) ? event.newValue : defaultTheme
+        );
       }
-    : undefined;
+    };
+    window.addEventListener("storage", sync);
+    return () => {
+      media?.removeEventListener("change", update);
+      window.removeEventListener("storage", sync);
+    };
+  }, [defaultTheme]);
+
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("dark", theme === "dark");
+    root.dataset.themePreference = preference;
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#0f172a" : "#f8fafb");
+    safeLocalStorage.setItem("theme", preference);
+  }, [preference, theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, switchable }}>
+    <ThemeContext.Provider value={{ theme, preference, setPreference }}>
       {children}
     </ThemeContext.Provider>
   );
 }
-
 export function useTheme() {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useTheme must be used within ThemeProvider");
-  }
+  if (!context) throw new Error("useTheme must be used within ThemeProvider");
   return context;
 }

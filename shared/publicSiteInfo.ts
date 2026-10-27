@@ -13,6 +13,12 @@ export const PUBLIC_SITE_ACTIONS = [
       "Public flight and hotel searches, regional guides and private trip planning. Booking takes place with suppliers; hotel price completeness must be confirmed.",
   },
   {
+    title: "Weather forecasts",
+    href: "/travel/weather",
+    summary:
+      "MET Norway forecasts by city, destination or opt-in approximate location. Local times, rain intervals and derived daily temperature ranges; not live observations or a warning service.",
+  },
+  {
     title: "Trip planner",
     href: "/travel/planner",
     summary:
