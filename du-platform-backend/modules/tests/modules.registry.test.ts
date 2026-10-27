@@ -15,6 +15,7 @@ describe("domain module registry", () => {
       "/api/newsletter",
       "/api/auth",
       "/api/travel",
+      "/api/weather",
       "/api/tourism",
       "/api/investment",
       "/api/impact",

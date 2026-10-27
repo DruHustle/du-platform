@@ -28,7 +28,14 @@ it("links known AR and travel routes but never protocol-relative or unknown dest
   expect(html).not.toContain('href="/admin');
 });
 it("links every canonical Travel section without allowing private record IDs or travel criteria in URLs", () => {
-  const paths = ["flights", "stays", "car-hire", "explore", "my-trips"];
+  const paths = [
+    "flights",
+    "stays",
+    "car-hire",
+    "explore",
+    "my-trips",
+    "weather",
+  ];
   const html = renderToStaticMarkup(
     <FormattedChatMessage
       content={[

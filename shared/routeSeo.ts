@@ -192,6 +192,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Explore Southern Africa",
       "Read regional travel guides, explore Zimbabwean destinations and draft a Zimbabwe itinerary with Onesa. Confirm travel details directly with providers.",
     ],
+    "/travel/weather": [
+      "Weather forecasts for your journey",
+      "Search a city or destination, choose a place or use your approximate location to see MET Norway weather forecasts, temperature, rain and wind.",
+    ],
     "/travel/my-trips": [
       "My Private Trips",
       "Review your browser draft and privately saved trips and searches.",

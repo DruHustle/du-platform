@@ -40,7 +40,11 @@ export default function PrivacyPolicy() {
           ))}
           <p className="text-white/80">{t("product_interest.privacy_notes")}</p>
           <p className="text-white/80">{t("contact_enquiry.privacy")}</p>
-          <p className="text-white/80">{t("travel.privacy")}</p>
+          <p className="text-white/80">
+            {t("travel.privacy")}
+            <br />
+            {t("weather.privacy")}
+          </p>
           <a href="/legal-notice" className="text-zim-gold underline">
             {t("pilot.operator_title")}
           </a>

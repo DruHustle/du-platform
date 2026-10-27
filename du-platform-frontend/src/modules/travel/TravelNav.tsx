@@ -10,8 +10,9 @@ export default function TravelNav() {
         ["flights", "flights"],
         ["stays", "stays"],
         ["car-hire", "car-hire"],
-        ["explore", "explore"],
         ["my-trips", "my-trips"],
+        ["weather", "weather"],
+        ["explore", "explore"],
       ].map(([route, label]) => (
         <Link
           key={label}

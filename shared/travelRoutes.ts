@@ -13,6 +13,7 @@ export const travelCanonicalPaths = [
   "/travel/car-hire",
   "/travel/explore",
   "/travel/my-trips",
+  "/travel/weather",
   "/travel/planner",
   "/travel/virtual-experience",
   "/travel/augmented-experience",

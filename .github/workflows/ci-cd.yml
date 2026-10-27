@@ -191,6 +191,12 @@ jobs:
       - name: Site-wide UI consistency and accessible dialog regressions
         run: pnpm test:e2e:ui
 
+      - name: Weather location and forecast browser workflows
+        run: pnpm test:e2e:weather
+
+      - name: Browser appearance preferences and Travel navigation
+        run: pnpm test:e2e:theme
+
       - name: Travel journey Chromium
         run: pnpm test:e2e:travel
 
