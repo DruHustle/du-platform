@@ -1,3 +1,4 @@
+import { createWeatherRouter } from "./weather/routes";
 import { createTravelRouter } from "./travel/routes";
 import { createNewsletterPublicRouter } from "./newsletter/routes";
 import type express from "express";
@@ -16,6 +17,7 @@ export function registerDomainModules(app: express.Express) {
   app.use("/api/newsletter", createNewsletterPublicRouter());
   app.use("/api/auth", createAuthModuleRouter());
   app.use("/api/travel", createTravelRouter());
+  app.use("/api/weather", createWeatherRouter());
   app.use("/api/tourism", createTourismModuleRouter());
   app.use("/api/investment", createInvestmentModuleRouter());
   app.use("/api/impact", createImpactModuleRouter());

@@ -15,7 +15,6 @@ export default function TravelPage() {
       <div className="travel-page">
         <TravelNav />
         <header className="travel-heading">
-          <p className="discovery-eyebrow">{t("travel.title")}</p>
           <h1 className="page-title">{t(`travel.${section}`)}</h1>
           <p>{t("travel.description")}</p>
         </header>

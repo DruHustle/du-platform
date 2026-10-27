@@ -1,5 +1,6 @@
 import { customerLanguage } from "@shared/customerLanguage";
 import ContactEnquiry from "./ContactEnquiry";
+import ThemeSwitcher from "./ThemeSwitcher";
 import { Link, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -1231,6 +1232,9 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
             <Link href="/cookie-settings">{t("cookies.consent.settings")}</Link>
           </nav>
+          <div className="mb-6">
+            <ThemeSwitcher />
+          </div>
           {/* Bottom Bar: Maintain horizontal flex on desktop, vertical on mobile */}
           <div className="border-t border-white/10 pt-8 flex flex-col flex-wrap md:flex-row justify-between items-center gap-6 text-[10px]">
             <p className="text-slate-400 text-xs font-medium">

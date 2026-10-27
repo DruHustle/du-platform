@@ -58,8 +58,8 @@
 .content-page .travel-page .travel-sort select {
   min-height: 46px;
   padding: 0.75rem;
-  color: #0f172a;
-  background: #fff;
+  color: var(--page-ink);
+  background: var(--page-surface);
   border: 1px solid #64748b;
   border-radius: 0.5rem;
 }
@@ -263,11 +263,10 @@
   }
 }
 
-/* Travel's editorial canvas follows the other discovery landings. Explicit
-   light surfaces prevent dark-card tokens inheriting the canvas's dark text. */
+/* Travel shares the editorial palette and respects the selected appearance. */
 .content-page .travel-page {
-  background: #f8fafb;
-  color: #0f172a;
+  background: var(--page-canvas);
+  color: var(--page-ink);
 }
 .content-page
   .travel-page
@@ -277,49 +276,49 @@
     .travel-guides article,
     .travel-review
   ) {
-  background: #fff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background: var(--page-surface);
+  color: var(--page-ink);
+  border: 1px solid var(--page-border);
 }
 .content-page
   .travel-page
   :is(.travel-search, .travel-trip-grid, .travel-guides)
   :is(p, h2, h3, h4, label) {
-  color: #0f172a;
+  color: var(--page-ink);
 }
 .content-page .travel-page .travel-trip-grid .surface-card,
 .content-page .travel-page .travel-supplier-card.surface-card {
-  background: #f1f5f9;
-  color: #0f172a;
-  border-color: #cbd5e1;
+  background: var(--page-soft);
+  color: var(--page-ink);
+  border-color: var(--page-border);
 }
 .content-page .travel-heading :is(h1, p) {
-  color: #0f172a;
+  color: var(--page-ink);
 }
 .content-page .travel-heading .discovery-eyebrow {
-  color: #854d0e;
+  color: var(--page-accent);
 }
 .content-page
   .travel-page
   :is(.travel-form, .travel-trip-grid)
   :is(input, select) {
-  background-color: #fff;
-  color: #0f172a;
-  border-color: #64748b;
-  color-scheme: light;
+  background-color: var(--page-surface);
+  color: var(--page-ink);
+  border-color: var(--page-muted);
+  color-scheme: var(--page-scheme);
 }
 .content-page
   .travel-page
   .content-panel
   [data-slot="button"]:not([class*="bg-primary"]) {
-  color: #0f172a;
-  border-color: #64748b;
+  color: var(--page-ink);
+  border-color: var(--page-muted);
 }
 .content-page
   .travel-page
   .content-panel
   [data-slot="button"]:not([class*="bg-primary"]):hover {
-  background-color: #e2e8f0;
+  background-color: var(--page-hover);
 }
 .content-page .travel-page .travel-location ul {
   color: #fff;
@@ -362,9 +361,9 @@
   }
 }
 .content-page .travel-page .travel-heading .page-title {
-  color: #0f172a;
+  color: var(--page-ink);
 }
 .content-page .travel-page select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: var(--page-chevron);
   padding-right: 2.25rem;
 }

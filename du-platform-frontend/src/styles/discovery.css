@@ -42,8 +42,8 @@
   }
 }
 :is(.content-page, .home-landing) .discovery-section {
-  background: #f8fafb;
-  color: #0f172a;
+  background: var(--page-canvas);
+  color: var(--page-ink);
   padding-block: 44px;
 }
 :is(.content-page, .home-landing) .discovery-section + .discovery-section {
@@ -62,11 +62,11 @@
 :is(.content-page, .home-landing)
   .discovery-section
   :is(.page-section-title, .section-title-compact) {
-  color: #0f172a;
+  color: var(--page-ink);
 }
 :is(.content-page main, .home-landing) .discovery-section .section-heading p,
 :is(.content-page main, .home-landing) .discovery-section .editorial-panel > p {
-  color: #526174;
+  color: var(--page-muted);
 }
 :is(.content-page main, .home-landing) .discovery-section .section-heading {
   text-align: left;
@@ -75,25 +75,25 @@
   margin-inline: 0;
 }
 :is(.content-page, .home-landing) .discovery-section .editorial-details {
-  border-color: #cbd5e1;
+  border-color: var(--page-border);
 }
 :is(.content-page, .home-landing)
   .discovery-section
   .editorial-details
   :is(summary, p) {
-  color: #475569;
+  color: var(--page-muted);
 }
 :is(.content-page, .home-landing) .discovery-introduction {
   max-width: 850px;
   margin-bottom: 28px;
 }
 :is(.content-page, .home-landing) .discovery-introduction p {
-  color: #526174;
+  color: var(--page-muted);
 }
 :is(.content-page, .home-landing) .swipe-rail {
   width: 100%;
   min-width: 0;
-  color: #0f172a;
+  color: var(--page-ink);
 }
 :is(.content-page, .home-landing) .swipe-rail-controls {
   display: flex;
@@ -105,7 +105,7 @@
 }
 :is(.content-page, .home-landing) .swipe-rail-hint {
   font-size: 12px;
-  color: #64748b;
+  color: var(--page-muted);
 }
 :is(.content-page, .home-landing) .swipe-rail-actions {
   display: flex;
@@ -117,7 +117,7 @@
   padding-inline: 6px;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
-  color: #475569;
+  color: var(--page-muted);
 }
 :is(.content-page, .home-landing) .swipe-rail-arrow {
   display: inline-flex;
@@ -125,10 +125,10 @@
   height: 44px;
   align-items: center;
   justify-content: center;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--page-border);
   border-radius: 50%;
-  background: #fff;
-  color: #0f172a;
+  background: var(--page-surface);
+  color: var(--page-ink);
   cursor: pointer;
   transition: background-color 0.15s;
 }
@@ -137,7 +137,7 @@
   height: 18px;
 }
 :is(.content-page, .home-landing) .swipe-rail-arrow:hover:not(:disabled) {
-  background: #e2e8f0;
+  background: var(--page-hover);
 }
 :is(.content-page, .home-landing) .swipe-rail-arrow:disabled {
   opacity: 0.35;
@@ -318,11 +318,11 @@
   padding: 24px;
   border: 1px solid #d4dce5;
   border-radius: 20px;
-  background: white;
-  color: #334155;
+  background: var(--page-surface);
+  color: var(--page-ink-soft);
 }
 :is(.content-page, .home-landing) .discovery-support-panel :is(p, h3, h4, li) {
-  color: #334155;
+  color: var(--page-ink-soft);
 }
 @media (hover: hover) and (pointer: fine) {
   :is(.content-page, .home-landing) .swipe-rail-viewport {
@@ -401,10 +401,10 @@
   gap: 8px;
 }
 :is(.content-page, .home-landing) .discovery-partners li {
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--page-border);
   border-radius: 20px;
   padding: 6px 12px;
-  color: #475569;
+  color: var(--page-muted);
   font-size: 12px;
 }
 :is(.content-page, .home-landing) .discovery-callout {
@@ -438,7 +438,7 @@
   }
 }
 :is(.content-page main, .home-landing) .discovery-page-title {
-  color: #0f172a;
+  color: var(--page-ink);
 }
 :is(.content-page main, .home-landing) .discovery-tile h2 {
   margin: 0;
@@ -449,7 +449,7 @@
   letter-spacing: -0.025em;
 }
 :is(.content-page, .home-landing) .discovery-introduction .text-zim-gold {
-  color: #92400e;
+  color: var(--page-accent);
 }
 :is(.content-page, .home-landing) .discovery-project-metrics {
   display: grid;
@@ -472,9 +472,9 @@
 :is(.content-page, .home-landing)
   .discovery-listing
   .filter-control:not(.bg-zim-gold) {
-  color: #475569;
-  border-color: #cbd5e1;
-  background: #fff;
+  color: var(--page-muted);
+  border-color: var(--page-border);
+  background: var(--page-surface);
 }
 @media (min-width: 1024px) {
   :is(.content-page main, .home-landing) > section.discovery-listing {
@@ -490,8 +490,8 @@
     .tourism-landing,
     .shop-landing
   ) {
-  background: #f8fafb;
-  color: #0f172a;
+  background: var(--page-canvas);
+  color: var(--page-ink);
 }
 .content-page .discovery-inner {
   width: min(calc(100% - 48px), 1232px);
@@ -586,15 +586,15 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--page-border);
   border-radius: 50%;
-  color: #854d0e;
+  color: var(--page-accent);
   font-size: 13px;
   font-weight: 700;
 }
 .content-page .discovery-plan-grid h3 {
   margin-bottom: 12px;
-  color: #0f172a;
+  color: var(--page-ink);
   font-size: 18px;
   font-weight: 650;
   letter-spacing: -0.025em;
@@ -602,7 +602,7 @@
 }
 .content-page .discovery-plan-grid p,
 .content-page .discovery-plan-action p {
-  color: #526174;
+  color: var(--page-muted);
   font-size: 14px;
   line-height: 1.8;
 }
@@ -616,7 +616,7 @@
   padding: 24px;
   border: 1px solid #d4dce5;
   border-radius: 20px;
-  background: white;
+  background: var(--page-surface);
 }
 .content-page .discovery-plan-action p {
   max-width: 65ch;
@@ -643,7 +643,7 @@
 .content-page main .discovery-note {
   max-width: 100ch;
   margin-top: 24px;
-  color: #526174;
+  color: var(--page-muted);
   font-size: 13px;
   line-height: 1.8;
 }
@@ -756,20 +756,20 @@
 }
 
 .content-page .shop-landing .shop-cart-link {
-  border-color: #cbd5e1;
-  background: white;
-  color: #0f172a;
+  border-color: var(--page-border);
+  background: var(--page-surface);
+  color: var(--page-ink);
 }
 .content-page .shop-landing .shop-cart-link:hover {
-  background: #e2e8f0;
+  background: var(--page-hover);
 }
 .content-page .shop-landing .catalog-notice {
-  border-color: #cbd5e1;
-  background: white;
-  color: #475569;
+  border-color: var(--page-border);
+  background: var(--page-surface);
+  color: var(--page-muted);
 }
 .content-page .shop-landing .catalog-notice button {
-  color: #854d0e;
+  color: var(--page-accent);
 }
 
 /* Currency preferences live on a light canvas, unlike the dark catalogue.
@@ -778,26 +778,26 @@
   max-width: 560px;
 }
 .content-page .shop-landing .shop-currency-control label {
-  color: #334155;
+  color: var(--page-ink-soft);
 }
 .content-page .shop-landing .shop-currency-control p {
-  color: #526174;
+  color: var(--page-muted);
 }
 .content-page .shop-landing .shop-currency-control select {
-  color-scheme: light;
+  color-scheme: var(--page-scheme);
   border-color: #94a3b8;
-  background: #fff;
-  color: #0f172a;
+  background: var(--page-surface);
+  color: var(--page-ink);
 }
 .content-page .shop-landing .shop-currency-control svg {
-  color: #475569;
+  color: var(--page-muted);
 }
 .content-page .discovery-listing select {
-  color-scheme: light;
+  color-scheme: var(--page-scheme);
   border-color: #94a3b8;
-  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-color: white;
-  color: #0f172a;
+  --select-chevron: var(--page-chevron);
+  background-color: var(--page-surface);
+  color: var(--page-ink);
   font-weight: 500;
   letter-spacing: normal;
   text-transform: none;
