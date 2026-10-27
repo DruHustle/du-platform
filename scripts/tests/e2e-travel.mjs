@@ -45,6 +45,7 @@ try {
     );
     let privateMode = false;
     let storageFails = false;
+    let malformedSavedResponse = false;
     let savedRecords = [];
     const page = await context.newPage();
     lastPage = page;
@@ -54,6 +55,8 @@ try {
     await page.route("**/api/**", async r => {
       const p = new URL(r.request().url()).pathname;
       if (privateMode && p.startsWith("/api/travel/saved")) {
+        if (malformedSavedResponse)
+          return r.fulfill({ json: { success: true, data: [{}] } });
         if (storageFails)
           return r.fulfill({
             status: 503,
@@ -437,6 +440,39 @@ try {
       path: `${output}/${width}-private-trips.png`,
       fullPage: true,
     });
+    storageFails = false;
+    malformedSavedResponse = true;
+    const draftBeforeMalformedResponse = await page.evaluate(() =>
+      localStorage.getItem("du_travel_draft_v1")
+    );
+    await page.reload();
+    await page
+      .getByText(
+        "Could not access saved trips. Your browser draft is still here. Try again later.",
+        { exact: true }
+      )
+      .waitFor();
+    assert.equal(
+      await page.evaluate(() => localStorage.getItem("du_travel_draft_v1")),
+      draftBeforeMalformedResponse,
+      "Malformed private data must not replace the guest draft"
+    );
+    assert.equal(
+      await page
+        .locator(".travel-trip-grid section:first-child article")
+        .count(),
+      3
+    );
+    assert.equal(
+      await page
+        .getByRole("button", { name: "Load into draft", exact: true })
+        .count(),
+      0
+    );
+    await fit(
+      "malformed successful response preserves draft without rendering unsafe records"
+    );
+    malformedSavedResponse = false;
     privateMode = false;
     for (const [old, target] of Object.entries(travelRedirects).filter(
       ([source]) => !source.endsWith("/") && !source.endsWith(".html")

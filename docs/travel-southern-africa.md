@@ -31,6 +31,12 @@ ID or recipient/contact/credential field. Loading a save replaces the browser
 draft. Saving never enrolls anybody in marketing or alerts. No production records
 have been created by this work.
 
+Successful saved-trip responses are also validated before rendering or restoring
+them: record shape, UUIDs, timestamps, draft contents, unique IDs and the
+30-record bound. Invalid data shows the recoverable storage error and cannot
+replace the guest draft. Chromium and WebKit cover this failure at all three
+representative widths.
+
 ## Provider evaluation — reviewed 27 October 2026
 
 Local and Oracle configuration were checked for provider variable names only:
@@ -192,11 +198,11 @@ separate from the actual MySQL HTTP ownership tests.
 
 ## Validation results
 
-- Full backend suite: **376 passed, no skips**. Final Travel-only coverage, including independent categories and same-day date/time validation: **28 tests**, including **4 actual MySQL HTTP/persistence tests**. The busy Mac required `--maxWorkers=1 --minWorkers=1 --hookTimeout=120000 --testTimeout=60000` for database setup and filesystem latency; assertions were unchanged. Earlier default-timeout attempts failed locally and are not reported as passes. CI retains its existing default limits.
-- Frontend: **111 Vitest tests + 7 Node checks passed**.
+- Full backend suite: **378 passed, no skips in CI** on revision `702cf9a`. Final Travel-only coverage, including independent categories and same-day date/time validation: **28 tests**, including **4 actual MySQL HTTP/persistence tests**. The busy Mac required `--maxWorkers=1 --minWorkers=1 --hookTimeout=120000 --testTimeout=60000` for database setup and filesystem latency; assertions were unchanged. Earlier default-timeout attempts failed locally and are not reported as passes. CI retains its existing default limits. The subsequent saved-response hardening changes frontend code and browser regression tests only; final PR checks are authoritative for that revision.
+- Frontend: **117 Vitest tests + 7 Node checks passed**, including eight saved-response contract cases.
 - Type checks, strict EN/DE/SN/ND translations, all guardrails, dependency audit (no known production vulnerabilities), deployment safety tests and build passed. Existing upstream Zod comment-annotation warnings during bundling are non-fatal.
 - SEO: **73 route documents / 60 canonical sitemap URLs**; new private trips excluded, all eighteen old URL forms redirect directly, no duplicate Travel aliases in the sitemap.
-- Travel journey: **24 checks each in Chromium and WebKit** at **375 / 768 / 1440 px**. Actual loopback HTTP redirects retain query and fragments; forms validate dates/child ages, one-way state survives, three searches collect in a draft, currencies stay separate, public handoff returns safely, guest refresh works, synthetic private save/restore/delete and failure recovery work. No page errors in either run.
+- Travel journey: **27 checks each in Chromium and WebKit** at **375 / 768 / 1440 px**. Actual loopback HTTP redirects retain query and fragments; forms validate dates/child ages, one-way state survives, three searches collect in a draft, currencies stay separate, public handoff returns safely, guest refresh works, synthetic private save/restore/delete and failure recovery work. Malformed successful saved-trip responses preserve the guest draft and show the recoverable error rather than rendering invalid records. No page errors in either run.
 - Strict responsive/CSP suite: **176 Chromium route checks** across EN/DE/SN/ND at 320/390/768/1440, plus **44 WebKit route checks** (EN at the same widths), with zero CSP violations, runtime errors or unexpected network failures. Travel uses the existing browser-interpreter validation wrapper; no `unsafe-eval` or policy relaxation was added.
 - Existing site UI: **122 Chromium checks passed**, covering public/auth/admin views, shop/contact/destination dialogs and keyboard focus. The same **122 checks passed in WebKit**. Additional regressions: **79 discovery checks**, including all four languages and unchanged Home slideshow behavior; **31 offline service/device checks**, including camera/microphone/AI failures, cancellation, no-WebGL fallback and a simulated Quest 3 entering/exiting VR with tracked controllers. No physical headset or production provider was used.
 - Build output remains within 60 MiB; no additional network services, packages or large destination assets were added. This is a planning/referral foundation, **not live comparison**. No measured supplier-price or search-latency improvement is claimed.
