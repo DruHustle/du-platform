@@ -7,8 +7,7 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": null,
-  "cleanUrls": true,
-  "trailingSlash": false,
+  "cleanUrls": false,
   "redirects": [
     {
       "source": "/coming-soon",
@@ -114,6 +113,26 @@
       "source": "/onesa-ai-tourism-augmented-experince.html",
       "destination": "/travel/augmented-experience",
       "permanent": true
+    },
+    {
+      "source": "/:path([^/].*)/index.html",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*)/index",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*).html",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*)/",
+      "destination": "/:path",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -122,8 +141,12 @@
       "destination": "https://du-api.152-70-22-84.sslip.io/api/:path*"
     },
     {
+      "source": "/:path([^/.][^.]*)",
+      "destination": "/:path.html"
+    },
+    {
       "source": "/shop/product/:slug",
-      "destination": "/shop/products"
+      "destination": "/shop/products.html"
     }
   ],
   "headers": [
