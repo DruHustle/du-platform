@@ -197,7 +197,7 @@ separate from the actual MySQL HTTP ownership tests.
 - Type checks, strict EN/DE/SN/ND translations, all guardrails, dependency audit (no known production vulnerabilities), deployment safety tests and build passed. Existing upstream Zod comment-annotation warnings during bundling are non-fatal.
 - SEO: **73 route documents / 60 canonical sitemap URLs**; new private trips excluded, all eighteen old URL forms redirect directly, no duplicate Travel aliases in the sitemap.
 - Travel journey: **24 checks each in Chromium and WebKit** at **375 / 768 / 1440 px**. Actual loopback HTTP redirects retain query and fragments; forms validate dates/child ages, one-way state survives, three searches collect in a draft, currencies stay separate, public handoff returns safely, guest refresh works, synthetic private save/restore/delete and failure recovery work. No page errors in either run.
-- Existing site UI: **122 Chromium checks passed**, covering public/auth/admin views, shop/contact/destination dialogs and keyboard focus. The same **122 checks passed in WebKit**. Wider navigation/AR/VR results are recorded after their final runs.
+- Existing site UI: **122 Chromium checks passed**, covering public/auth/admin views, shop/contact/destination dialogs and keyboard focus. The same **122 checks passed in WebKit**. Additional regressions: **79 discovery checks**, including all four languages and unchanged Home slideshow behavior; **31 offline service/device checks**, including camera/microphone/AI failures, cancellation, no-WebGL fallback and a simulated Quest 3 entering/exiting VR with tracked controllers. No physical headset or production provider was used.
 - Build output remains within 60 MiB; no additional network services, packages or large destination assets were added. This is a planning/referral foundation, **not live comparison**. No measured supplier-price or search-latency improvement is claimed.
 
 Screenshots from the verified local build:
@@ -205,5 +205,9 @@ Screenshots from the verified local build:
 ![Travel landing, desktop](images/travel-desktop.jpg)
 ![Travel search, 375px mobile](images/travel-mobile-search.png)
 ![Private saved trips and recoverable failure, synthetic account](images/travel-my-trips.png)
+
+Actual Vite preview verification: **45 checks** covering all eighteen old URL forms, nine canonical pages and their slash/HTML normalization. Global desktop/mobile navigation and query/history recovery passed as well. These are local checks; Vercel's declared production rules cannot be live-verified before a separately authorized release.
+
+PR: [#143](https://github.com/DruHustle/du-platform/pull/143). Its full normal CI gate runs on every pushed commit; preview and production deploy jobs are excluded for this draft. The PR checks are authoritative for the final pushed revision.
 
 No production deployment or live supplier integration is claimed.
