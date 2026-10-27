@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { mkdir, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { chromium, webkit } from "playwright";
 import { createModularServer } from "../../du-platform-backend/server.ts";
 import { travelRedirects } from "../../shared/travelRoutes.ts";
 const engine = process.env.TRAVEL_BROWSER || "chromium";
 const output =
-  process.env.TRAVEL_OUTPUT_DIR || `/private/tmp/du-travel-${engine}`;
+  process.env.TRAVEL_OUTPUT_DIR || join(tmpdir(), `du-travel-${engine}`);
 await mkdir(output, { recursive: true });
 const app = createModularServer({
   backend: { db: null, serverStartedAt: Date.now() },
