@@ -245,7 +245,9 @@ export default function SearchPanel({
               <option value="0">{t("travel.live.exact-dates")}</option>
               {[1, 2, 3].map(days => (
                 <option key={days} value={days}>
-                  {t("travel.live.flex-range", { days })}
+                  {days === 1
+                    ? t("travel.live.flex-one")
+                    : t("travel.live.flex-range", { days })}
                 </option>
               ))}
             </select>

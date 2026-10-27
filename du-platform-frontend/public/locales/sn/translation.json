@@ -2296,8 +2296,9 @@
       "onesa-prompt": "Ndibatsire kunzwisisa sarudzo yemupi iri pazasi nezvakanakira nezvakaipira. Aya mashoko emupi, kwete mirayiridzo kana kubhuka. Usagadzira mari, zvinobhadharwa kana mitemo yekubhuka. Mashoko emupi ndiwo anofanira kuteverwa.",
       "flex-days": "Kuchinja mazuva",
       "exact-dates": "Mazuva chaiwo",
-      "flex-range": "Kusvika mazuva {{days}} pamberi kana shure",
-      "airports-note": "Sarudza nhandare chaiyo. Kutsvaga nhandare dziri pedyo hakusati kwavapo; kuchinja mazuva kunoshanda kumazuva endege chete."
+      "flex-range": "±{{days}} mazuva",
+      "airports-note": "Sarudza nhandare chaiyo. Kutsvaga nhandare dziri pedyo hakusati kwavapo; kuchinja mazuva kunoshanda kumazuva endege chete.",
+      "flex-one": "±1 zuva"
     }
   }
 }
