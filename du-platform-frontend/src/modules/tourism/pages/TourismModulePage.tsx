@@ -500,10 +500,12 @@ export default function Tourism({ explore = false }: { explore?: boolean }) {
       <div className="tourism-landing travel-page">
         <TravelNav />
         <DiscoveryHero
-          eyebrow={t("tourism.landing.eyebrow")}
-          title={t(explore ? "travel.explore" : "travel.title")}
+          eyebrow={t(explore ? "travel.title" : "travel.eyebrow")}
+          title={t(explore ? "travel.explore-title" : "travel.title")}
           highlight=""
-          description={t("travel.description")}
+          description={t(
+            explore ? "travel.explore-description" : "travel.description"
+          )}
           principle={t("tourism.landing.principle")}
           image="/images/pages/tourism/victoria_falls.webp"
           imageAlt={t("tourism.landing.image_alt")}

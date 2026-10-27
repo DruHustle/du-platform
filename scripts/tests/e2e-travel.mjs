@@ -254,6 +254,16 @@ try {
     await page
       .getByRole("heading", { name: "Travel Southern Africa", exact: true })
       .waitFor();
+    assert.equal(
+      await page.locator("#hero .discovery-eyebrow").textContent(),
+      "Journeys, stays & discovery"
+    );
+    await page
+      .getByRole("heading", {
+        name: "Places to explore in Zimbabwe",
+        exact: true,
+      })
+      .waitFor();
     assert.equal(await page.locator('a[href="/tourism"]').count(), 0);
     await fit("landing");
     await page.screenshot({
@@ -620,6 +630,13 @@ try {
       .locator(".travel-nav")
       .getByRole("link", { name: "Explore", exact: true })
       .click();
+    await page
+      .getByRole("heading", { name: "Explore Southern Africa", exact: true })
+      .waitFor();
+    assert.equal(
+      await page.locator("#hero .discovery-eyebrow").textContent(),
+      "Travel Southern Africa"
+    );
     await page.locator(".travel-guides article").first().waitFor();
     assert.equal(await page.locator(".travel-guides article").count(), 4);
     await fit("editorial guides");

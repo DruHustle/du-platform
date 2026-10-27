@@ -189,8 +189,8 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Prepare airport car-hire searches and understand deposits, insurance excess and cross-border conditions.",
     ],
     "/travel/explore": [
-      "Southern Africa Travel Guides",
-      "Compare Zimbabwe route costs, plan Johannesburg–Victoria Falls, choose Cape Town family stays and understand car-hire deposits.",
+      "Explore Southern Africa",
+      "Read regional travel guides, explore Zimbabwean destinations and draft a Zimbabwe itinerary with Onesa. Confirm travel details directly with providers.",
     ],
     "/travel/my-trips": [
       "My Private Trips",
