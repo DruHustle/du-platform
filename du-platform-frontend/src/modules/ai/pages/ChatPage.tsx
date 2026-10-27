@@ -12,6 +12,7 @@ import {
 import { ArrowLeft, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
+import { consumeTravelChatDraft } from "@/modules/travel/chatHandoff";
 
 export default function ChatPage() {
   const { t, i18n } = useTranslation();
@@ -43,6 +44,10 @@ export default function ChatPage() {
     },
   ]);
   const [input, setInput] = useState("");
+  useEffect(() => {
+    const travelDraft = consumeTravelChatDraft();
+    if (travelDraft) setInput(travelDraft);
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [retryAfterSecondsRemaining, setRetryAfterSecondsRemaining] = useState<

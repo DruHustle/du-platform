@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { defaultTravelCriteria } from "../../../../shared/travel";
 import { initializeTravel } from "../schema";
 import { TravelRepository } from "../repository";
+import { PublicTravelSearch } from "../providers";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 if (
   url &&
@@ -123,6 +124,69 @@ describe.skipIf(!url)("private Travel persistence in MySQL", () => {
       ).status
     ).toBe(400);
     expect((await request(alice, "/invalid-sql", "DELETE")).status).toBe(400);
+  });
+  it("persists signed supplier observations and rejects forged prices without losing the trip", async () => {
+    const c = draft.criteria;
+    const leg = {
+      route: [c.origin, c.destination],
+      departureTime: c.departure + "T10:00:00",
+      arrivalTime: c.departure + "T18:00:00",
+      durationSeconds: 28800,
+      stops: 0,
+      segments: [{ carrierName: "Synthetic airline", flightNumber: "XX1" }],
+    };
+    const provider = new PublicTravelSearch(
+      async () =>
+        new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            result: {
+              structuredContent: {
+                currency: c.currency,
+                passengers: { adults: 1, children: 0, infants: 0 },
+                itineraries: [
+                  {
+                    id: "synthetic",
+                    price: 700,
+                    bookingUrl: "https://kiwi.com/u/synthetic",
+                    outbound: leg,
+                    inbound: {
+                      ...leg,
+                      route: [c.destination, c.origin],
+                      departureTime: c.returnDate + "T10:00:00",
+                      arrivalTime: c.returnDate + "T18:00:00",
+                    },
+                  },
+                ],
+              },
+            },
+          })
+        )
+    );
+    const quote = (await provider.search("flights", c)).quotes[0];
+    const input = {
+      name: "Signed supplier observation",
+      kind: "trip",
+      draft: { ...draft, quotes: [quote] },
+    };
+    const saved = await request(alice, "", "POST", input);
+    expect(saved.status).toBe(201);
+    const { id } = (await saved.json()).data;
+    expect(
+      (await new TravelRepository(pool).list(aliceId))[0].draft.quotes?.[0]
+    ).toEqual(quote);
+    expect((await request(bob, "/" + id, "DELETE")).status).toBe(404);
+    const forged = await request(alice, "", "POST", {
+      ...input,
+      draft: { ...draft, quotes: [{ ...quote, price: 1 }] },
+    });
+    expect(forged.status).toBe(400);
+    expect(
+      (await new TravelRepository(pool).list(aliceId))[0].draft.quotes?.[0]
+        .price
+    ).toBe(700);
+    expect((await request(alice, "/" + id, "DELETE")).status).toBe(200);
   });
   it("serializes concurrent saves at the 30-record account quota without partial inserts", async () => {
     const repo = new TravelRepository(pool);

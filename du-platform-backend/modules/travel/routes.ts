@@ -4,7 +4,17 @@ import { db } from "../../shared/databaseRuntime";
 import { requireJwtAuth } from "../../middleware/jwtAuth";
 import { requireCurrentUser } from "../../middleware/currentUser";
 import { rateLimiter } from "../../core/rateLimiter";
-import { savedTravelSchema, travelCapabilities } from "../../../shared/travel";
+import {
+  savedTravelSchema,
+  travelCapabilities,
+  travelCriteriaSchema,
+  travelQuoteSchema,
+} from "../../../shared/travel";
+import {
+  publicTravelSearch,
+  TravelProviderError,
+  verifyTravelQuote,
+} from "./providers";
 import { TravelRepository } from "./repository";
 import { ok, error } from "../../shared/responseFormatter";
 
@@ -15,6 +25,82 @@ export function createTravelRouter() {
     next();
   });
   router.get("/capabilities", (_req, res) => res.json(ok(travelCapabilities)));
+  const searchInput = z
+    .object({
+      category: z.enum(["flights", "stays"]),
+      criteria: travelCriteriaSchema,
+    })
+    .strict();
+  const searchLimits = [
+    rateLimiter({
+      keyPrefix: "travel:search:minute",
+      windowMs: 60000,
+      maxRequests: 8,
+    }),
+    rateLimiter({
+      keyPrefix: "travel:search:day",
+      windowMs: 86400000,
+      maxRequests: 100,
+    }),
+  ];
+  for (const action of ["search", "revalidate"] as const) {
+    router.post(`/${action}`, ...searchLimits, async (req, res) => {
+      const controller = new AbortController();
+      const disconnect = () => {
+        if (!res.writableEnded) controller.abort();
+      };
+      res.once("close", disconnect);
+      try {
+        const result =
+          action === "search"
+            ? await (async () => {
+                const input = searchInput.safeParse(req.body);
+                if (!input.success)
+                  throw new TravelProviderError("TRAVEL_INVALID");
+                return publicTravelSearch.search(
+                  input.data.category,
+                  input.data.criteria,
+                  controller.signal
+                );
+              })()
+            : await (async () => {
+                const input = travelQuoteSchema.safeParse(req.body);
+                if (!input.success)
+                  throw new TravelProviderError("TRAVEL_INVALID");
+                return publicTravelSearch.revalidate(
+                  input.data,
+                  controller.signal
+                );
+              })();
+        if (!controller.signal.aborted) res.json(ok(result));
+      } catch (e) {
+        const code =
+          e instanceof TravelProviderError
+            ? e.code
+            : "TRAVEL_PROVIDER_UNAVAILABLE";
+        const status =
+          code === "TRAVEL_INVALID"
+            ? 400
+            : code === "TRAVEL_OFFER_EXPIRED"
+              ? 410
+              : code === "TRAVEL_BUSY"
+                ? 429
+                : 503;
+        if (status === 429) res.setHeader("Retry-After", "60");
+        if (!controller.signal.aborted)
+          res
+            .status(status)
+            .json(
+              error(
+                code,
+                "Could not complete the supplier search. Keep your trip details and try again later."
+              )
+            );
+      } finally {
+        res.off("close", disconnect);
+      }
+    });
+  }
   // No monitoring, consent records or queued messages can be created while access
   // is pending, including during recovery holds. No env flag bypasses this gate.
   router.post("/alerts", (_req, res) =>
@@ -65,7 +151,10 @@ export function createTravelRouter() {
   });
   router.post("/saved", async (req, res) => {
     const parsed = savedTravelSchema.safeParse(req.body);
-    if (!parsed.success)
+    if (
+      !parsed.success ||
+      parsed.data.draft.quotes?.some(quote => !verifyTravelQuote(quote))
+    )
       return res
         .status(400)
         .json(error("TRAVEL_INVALID", "Check the trip details."));

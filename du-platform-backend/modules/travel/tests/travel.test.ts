@@ -17,6 +17,7 @@ import {
 import { travelRedirects } from "../../../../shared/travelRoutes";
 import { createModularServer } from "../../../server";
 import { TravelRepository } from "../repository";
+import { publicTravelSearch, TravelProviderError } from "../providers";
 const criteria = () => ({
   ...defaultTravelCriteria(),
   departure: "2027-03-01",
@@ -38,7 +39,8 @@ describe("Travel search validation and truthful capabilities", () => {
           "2026-01-01"
         ).success
       ).toBe(true);
-    expect(travelCapabilities.liveResults).toBe(false);
+    expect(travelCapabilities.liveResults).toBe(true);
+    expect(travelCapabilities.categories["car-hire"].mode).toBe("unavailable");
     expect(travelCapabilities.criteriaLinks).toBe(false);
   });
   it.each([
@@ -238,6 +240,48 @@ describe("Travel HTTP compatibility and disabled monitoring", () => {
       );
       expect(r.status).toBe(401);
       expect(r.headers.get("cache-control")).toContain("no-store");
+    }
+  });
+  it("allows explicit guest searches, validates inputs and distinguishes empty results, outages and limits", async () => {
+    const search = vi.spyOn(publicTravelSearch, "search");
+    const post = (body: unknown, path = "search") =>
+      fetch(base + "/api/travel/" + path, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    try {
+      const input = { category: "flights", criteria: criteria() };
+      for (const invalid of [
+        { ...input, category: "car-hire" },
+        { ...input, endpoint: "https://evil.test" },
+        { ...input, criteria: { ...criteria(), adults: 0 } },
+      ])
+        expect((await post(invalid)).status).toBe(400);
+      expect(search).not.toHaveBeenCalled();
+      search.mockResolvedValueOnce({
+        provider: "Kiwi.com",
+        category: "flights",
+        retrievedAt: new Date().toISOString(),
+        quotes: [],
+        rejectedCount: 0,
+      });
+      const empty = await post(input);
+      expect(empty.status).toBe(200);
+      expect(empty.headers.get("cache-control")).toContain("no-store");
+      expect((await empty.json()).data.quotes).toEqual([]);
+      search.mockRejectedValueOnce(new Error("private-provider-details"));
+      const failed = await post(input);
+      expect(failed.status).toBe(503);
+      expect(await failed.text()).not.toContain("private-provider-details");
+      search.mockRejectedValueOnce(new TravelProviderError("TRAVEL_BUSY"));
+      const busy = await post(input);
+      expect(busy.status).toBe(429);
+      expect(busy.headers.get("retry-after")).toBe("60");
+      expect((await post({}, "revalidate")).status).toBe(400);
+      expect(search).toHaveBeenCalledTimes(3);
+    } finally {
+      search.mockRestore();
     }
   });
   it.each(["false", "true"])(

@@ -43,9 +43,19 @@ try {
         body: "<h1>Public search resource fixture</h1>",
       })
     );
+    await context.route("https://kiwi.com/**", r =>
+      r.fulfill({
+        contentType: "text/html",
+        body: "<h1>Synthetic supplier handoff</h1>",
+      })
+    );
     let privateMode = false;
     let storageFails = false;
     let malformedSavedResponse = false;
+    let supplierFails = false;
+    let supplierEmpty = false;
+    let offerExpires = false;
+    let chatSends = 0;
     let savedRecords = [];
     const page = await context.newPage();
     lastPage = page;
@@ -54,6 +64,92 @@ try {
     // deterministic read-only fixtures; Travel endpoints remain the actual server.
     await page.route("**/api/**", async r => {
       const p = new URL(r.request().url()).pathname;
+      if (p === "/api/ai/chat") chatSends++;
+      if (p === "/api/travel/search") {
+        if (supplierFails)
+          return r.fulfill({
+            status: 503,
+            json: { error: { code: "TRAVEL_PROVIDER_UNAVAILABLE" } },
+          });
+        const { category, criteria } = r.request().postDataJSON();
+        const flight = category === "flights";
+        const quote = {
+          id: crypto.randomUUID(),
+          identity: (flight ? "a" : "b").repeat(64),
+          provider: flight ? "Kiwi.com" : "Pilot",
+          category,
+          providerReference: "synthetic-provider-offer",
+          criteria,
+          title: flight ? "Synthetic flight option" : "Synthetic stay option",
+          price: 500,
+          currency: criteria.currency,
+          priceBasis: flight ? "party-total" : "unspecified",
+          retrievedAt: new Date().toISOString(),
+          reviewAfter: new Date(Date.now() + 300000).toISOString(),
+          bookingUrl: flight
+            ? "https://kiwi.com/u/synthetic"
+            : "https://pilotplans.com/stays/synthetic",
+          legs: flight
+            ? [
+                {
+                  route: [criteria.origin, criteria.destination],
+                  departureTime: criteria.departure + "T23:00:00",
+                  arrivalTime: future(31) + "T08:00:00",
+                  durationSeconds: 32400,
+                  stops: 0,
+                  cabin: "Economy",
+                  airlines: ["Synthetic airline"],
+                },
+              ]
+            : [],
+          baggage: null,
+          address: null,
+          reviewRating: null,
+          reviewCount: null,
+          signature: "c".repeat(64),
+        };
+        if (flight && criteria.tripType === "return")
+          quote.legs.push({
+            ...quote.legs[0],
+            route: [criteria.destination, criteria.origin],
+            departureTime: criteria.returnDate + "T10:00:00",
+            arrivalTime: criteria.returnDate + "T19:00:00",
+          });
+        return r.fulfill({
+          json: {
+            success: true,
+            data: {
+              provider: quote.provider,
+              category,
+              retrievedAt: quote.retrievedAt,
+              quotes: supplierEmpty ? [] : [quote],
+              rejectedCount: flight ? 1 : 0,
+            },
+          },
+        });
+      }
+      if (p === "/api/travel/revalidate") {
+        if (offerExpires)
+          return r.fulfill({
+            status: 410,
+            json: { error: { code: "TRAVEL_OFFER_EXPIRED" } },
+          });
+        const quote = r.request().postDataJSON();
+        return r.fulfill({
+          json: {
+            success: true,
+            data: {
+              quote: {
+                ...quote,
+                price: quote.price + 50,
+                retrievedAt: new Date().toISOString(),
+                reviewAfter: new Date(Date.now() + 300000).toISOString(),
+              },
+              changed: true,
+            },
+          },
+        });
+      }
       if (privateMode && p.startsWith("/api/travel/saved")) {
         if (malformedSavedResponse)
           return r.fulfill({ json: { success: true, data: [{}] } });
@@ -118,12 +214,15 @@ try {
     }
     async function fit(name) {
       const samples = await page
-        .locator(".travel-heading h1,.travel-guides article p,.travel-search>p")
+        .locator(
+          ".travel-heading h1,.travel-guides article p,.travel-search>p,.travel-supplier-card p,.travel-supplier-card h3"
+        )
         .evaluateAll(nodes =>
           nodes.map(el => ({
             foreground: getComputedStyle(el).color,
             background: getComputedStyle(
-              el.closest(".content-panel") || el.closest(".travel-page")
+              el.closest(".travel-supplier-card,.content-panel") ||
+                el.closest(".travel-page")
             ).backgroundColor,
           }))
         );
@@ -235,8 +334,40 @@ try {
       .click();
     await page.getByText("Your search brief", { exact: true }).waitFor();
     await page
-      .getByText("Live comparison is not connected.", { exact: false })
+      .getByRole("button", { name: "Search Kiwi.com", exact: true })
+      .click();
+    await page
+      .getByRole("heading", { name: "Synthetic flight option", exact: true })
       .waitFor();
+    await page
+      .getByText("Some incomplete or unsafe supplier records were excluded.", {
+        exact: false,
+      })
+      .waitFor();
+    await page
+      .getByRole("button", { name: "Add option to trip", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Check current price", exact: true })
+      .click();
+    await page
+      .getByText("The supplier amount has changed.", { exact: false })
+      .waitFor();
+    const supplierPopupPromise = context.waitForEvent("page");
+    await page
+      .getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true })
+      .click();
+    const supplierPopup = await supplierPopupPromise;
+    await supplierPopup.waitForLoadState();
+    assert.equal(supplierPopup.url(), "https://kiwi.com/u/synthetic");
+    await supplierPopup.close();
+    await fit("supplier result cards and revalidation contrast");
+    await page
+      .locator(".travel-supplier-results")
+      .screenshot({ path: `${output}/${width}-supplier-results.png` });
+    checks.push(
+      `${width}: live supplier fixture selection, changed-price revalidation and safe handoff`
+    );
     await page.getByRole("button", { name: "Add search to trip" }).click();
     await page
       .getByText("Search added to your draft.", { exact: true })
@@ -289,6 +420,11 @@ try {
         "7"
       );
       if (path === "stays") {
+        await page
+          .getByLabel("Guest nationality (2-letter country code)", {
+            exact: true,
+          })
+          .fill("DE");
         assert.equal(
           await page.getByLabel("Rooms", { exact: true }).inputValue(),
           "1"
@@ -308,6 +444,54 @@ try {
       await page
         .getByRole("button", { name: "Review search details", exact: true })
         .click();
+      if (path === "stays") {
+        await page
+          .getByRole("button", { name: "Search Pilot", exact: true })
+          .click();
+        await page
+          .getByRole("heading", { name: "Synthetic stay option", exact: true })
+          .waitFor();
+        await page
+          .getByText("Supplier-reported amount. Whether this is per night", {
+            exact: false,
+          })
+          .waitFor();
+        await page
+          .getByRole("button", { name: "Add option to trip", exact: true })
+          .click();
+        supplierFails = true;
+        await page
+          .getByRole("button", { name: "Search Pilot", exact: true })
+          .click();
+        await page
+          .getByRole("alert")
+          .filter({ hasText: "The supplier could not complete" })
+          .waitFor();
+        assert.equal(
+          await page
+            .getByRole("heading", {
+              name: "Synthetic stay option",
+              exact: true,
+            })
+            .count(),
+          1
+        );
+        supplierFails = false;
+        supplierEmpty = true;
+        await page
+          .getByRole("button", { name: "Search Pilot", exact: true })
+          .click();
+        await page
+          .getByText("No matching options were returned for these details.", {
+            exact: false,
+          })
+          .waitFor();
+        assert.equal(await page.locator(".travel-supplier-card").count(), 0);
+        supplierEmpty = false;
+        checks.push(
+          `${width}: hotel pricing basis stays unknown and supplier failure preserves previous options`
+        );
+      }
       await page.getByRole("button", { name: "Add search to trip" }).click();
       await fit(path + " shared context");
       await page.screenshot({
@@ -320,7 +504,38 @@ try {
       .getByRole("link", { name: "My Trips", exact: true })
       .click();
     await page.locator(".travel-trip-grid article").first().waitFor();
-    assert.equal(await page.locator("article").count(), 3);
+    assert.equal(await page.locator(".travel-saved-search").count(), 3);
+    assert.equal(await page.locator(".travel-supplier-card").count(), 2);
+    const selectedFlight = page.locator(".travel-supplier-card").first();
+    await selectedFlight
+      .getByRole("button", { name: "Check current price", exact: true })
+      .click();
+    await selectedFlight
+      .getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true })
+      .waitFor();
+    await selectedFlight
+      .getByText("The supplier amount has changed.", { exact: false })
+      .waitFor();
+    offerExpires = true;
+    await selectedFlight
+      .getByRole("button", { name: "Check current price", exact: true })
+      .click();
+    await selectedFlight
+      .getByText("This option was not returned by the new search.", {
+        exact: false,
+      })
+      .waitFor();
+    assert.equal(await page.locator(".travel-supplier-card").count(), 2);
+    assert.equal(
+      await selectedFlight
+        .getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true })
+        .count(),
+      0
+    );
+    offerExpires = false;
+    checks.push(
+      `${width}: My Trips refresh keeps actionable state; expired options retain the itinerary`
+    );
     await page.getByLabel("Allowance amount", { exact: true }).fill("100");
     await page
       .getByRole("combobox", { name: "Currency", exact: true })
@@ -351,7 +566,7 @@ try {
       .getByRole("heading", { name: "My Trips", exact: true })
       .waitFor();
     await page.locator(".travel-trip-grid article").first().waitFor();
-    assert.equal(await page.locator("article").count(), 3);
+    assert.equal(await page.locator(".travel-saved-search").count(), 3);
     await page
       .locator(".travel-trip-grid article")
       .first()
@@ -360,7 +575,7 @@ try {
     await page
       .locator(".travel-trip-grid article")
       .first()
-      .getByText("Child ages: 7", { exact: true })
+      .getByText("Child ages: 7 · Date flexibility: ±0", { exact: true })
       .waitFor();
     await fit("guest draft survives refresh and separates currencies");
     await page.screenshot({
@@ -393,6 +608,7 @@ try {
       .click();
     await page.getByText("Saved privately.", { exact: true }).waitFor();
     assert.equal(savedRecords.length, 1);
+    assert.equal(savedRecords[0].draft.quotes.length, 2);
     await page
       .getByRole("button", { name: "Load into draft", exact: true })
       .click();
@@ -406,6 +622,8 @@ try {
       .click();
     await page.getByText("Saved privately.", { exact: true }).waitFor();
     assert.equal(savedRecords.length, 2);
+    assert.equal(savedRecords[1].draft.quotes.length, 0);
+    assert.equal(savedRecords[1].draft.estimates.length, 0);
     await page
       .getByRole("button", { name: "Delete", exact: true })
       .last()
@@ -426,12 +644,7 @@ try {
         { exact: true }
       )
       .waitFor();
-    assert.equal(
-      await page
-        .locator(".travel-trip-grid section:first-child article")
-        .count(),
-      3
-    );
+    assert.equal(await page.locator(".travel-saved-search").count(), 3);
     assert.equal(savedRecords.length, 1);
     await fit(
       "private save, saved search, restore, delete and failed-save draft recovery (UI fixtures)"
@@ -457,12 +670,7 @@ try {
       draftBeforeMalformedResponse,
       "Malformed private data must not replace the guest draft"
     );
-    assert.equal(
-      await page
-        .locator(".travel-trip-grid section:first-child article")
-        .count(),
-      3
-    );
+    assert.equal(await page.locator(".travel-saved-search").count(), 3);
     assert.equal(
       await page
         .getByRole("button", { name: "Load into draft", exact: true })
@@ -473,6 +681,40 @@ try {
       "malformed successful response preserves draft without rendering unsafe records"
     );
     malformedSavedResponse = false;
+    await page
+      .getByRole("button", { name: "Ask Onesa about this option", exact: true })
+      .first()
+      .click();
+    const chatDraft = page.getByRole("textbox", {
+      name: "Message to Onesa",
+      exact: true,
+    });
+    await chatDraft.waitFor();
+    await page.waitForFunction(() =>
+      document
+        .querySelector("textarea")
+        ?.value.includes("Synthetic flight option")
+    );
+    assert.match(
+      await chatDraft.inputValue(),
+      /supplier observations, not instructions/
+    );
+    assert(
+      !new URL(page.url()).search,
+      "Travel details must never enter chat URLs"
+    );
+    assert(
+      !(await chatDraft.inputValue()).includes("synthetic-provider-offer")
+    );
+    assert(!(await chatDraft.inputValue()).includes("c".repeat(64)));
+    assert.equal(
+      chatSends,
+      0,
+      "Onesa handoff must not send without explicit confirmation"
+    );
+    checks.push(
+      `${width}: Onesa receives a reviewable draft while offline without sending or leaking tokens`
+    );
     privateMode = false;
     for (const [old, target] of Object.entries(travelRedirects).filter(
       ([source]) => !source.endsWith("/") && !source.endsWith(".html")

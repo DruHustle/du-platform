@@ -68,9 +68,25 @@ export const travelCriteriaSchema = z
     dropoff: location,
     pickupTime: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/),
     dropoffTime: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/),
+    guestNationality: z
+      .string()
+      .regex(/^(?:[A-Z]{2})?$/)
+      .optional(),
+    flightFlexDays: z.number().int().min(0).max(3).optional(),
   })
   .strict();
 export type TravelCriteria = z.infer<typeof travelCriteriaSchema>;
+export function isTravelNationality(value: string) {
+  return (
+    /^[A-Z]{2}$/.test(value) &&
+    !["ZZ", "XX", "EU", "UN", "EZ", "QO", "XA", "XB"].includes(value) &&
+    Boolean(
+      new Intl.DisplayNames(["en"], { type: "region", fallback: "none" }).of(
+        value
+      )
+    )
+  );
+}
 export function validateTravel(
   criteria: unknown,
   category: TravelCategory,
@@ -102,9 +118,21 @@ export function validateTravel(
     return { success: false as const, error: "time" };
   if (category === "flights" && c.origin === c.destination)
     return { success: false as const, error: "route" };
+  if (category === "flights") {
+    const adults = c.adults + c.childAges.filter(age => age >= 12).length;
+    const infants = c.childAges.filter(age => age < 2).length;
+    if (adults > 9 || infants > 4 || infants > adults)
+      return { success: false as const, error: "criteria" };
+  }
   // One adult per room; exact room allocation must be supplied to a live adapter.
   if (category === "stays" && c.rooms > c.adults)
     return { success: false as const, error: "occupancy" };
+  if (
+    category === "stays" &&
+    c.guestNationality &&
+    !isTravelNationality(c.guestNationality)
+  )
+    return { success: false as const, error: "criteria" };
   return { success: true as const, data: c };
 }
 export function defaultTravelCriteria(): TravelCriteria {
@@ -127,14 +155,19 @@ export function defaultTravelCriteria(): TravelCriteria {
   };
 }
 export const travelCapabilities = {
-  provider: "KAYAK",
-  mode: "unavailable",
-  liveResults: false,
+  provider: "Kiwi.com / Pilot",
+  mode: "public-search",
+  liveResults: true,
   criteriaLinks: false,
   embedded: false,
   monitoring: false,
-  flexibleDates: false,
+  flexibleDates: true,
   nearbyAirports: false,
+  categories: {
+    flights: { provider: "Kiwi.com", mode: "public-api", flexibleDates: true },
+    stays: { provider: "Pilot", mode: "public-api" },
+    "car-hire": { provider: null, mode: "unavailable" },
+  },
 } as const;
 // Fixed ordinary consumer links only. No invented affiliate ID, redirect URL,
 // provider location IDs or undocumented criteria parameters.
@@ -157,6 +190,133 @@ export const estimateSchema = z
     currency: z.enum(currencies),
   })
   .strict();
+
+export function isSafeSupplierLink(provider: string, raw: string) {
+  try {
+    const url = new URL(raw);
+    if (
+      url.protocol !== "https:" ||
+      url.username ||
+      url.password ||
+      url.port ||
+      url.hash
+    )
+      return false;
+    if (provider === "Kiwi.com")
+      return (
+        ["kiwi.com", "www.kiwi.com"].includes(url.hostname) &&
+        /^\/u\/[a-zA-Z0-9_-]{1,100}$/.test(url.pathname) &&
+        !url.search
+      );
+    if (provider === "Pilot")
+      return (
+        ["pilotplans.com", "www.pilotplans.com"].includes(url.hostname) &&
+        /^\/stays\/[a-zA-Z0-9_-]{1,200}$/.test(url.pathname) &&
+        Array.from(url.searchParams).every(
+          ([key, value]) =>
+            ["checkInDate", "checkOutDate", "rooms", "currency"].includes(
+              key
+            ) && /^[a-zA-Z0-9,_.-]{1,150}$/.test(value)
+        )
+      );
+    return false;
+  } catch {
+    return false;
+  }
+}
+const localTimestamp = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[+-]\d{2}:\d{2}|Z)?$/)
+  .refine(value => {
+    const local = new Date(value.slice(0, 19) + "Z");
+    return (
+      Number.isFinite(+local) &&
+      local.toISOString().slice(0, 19) === value.slice(0, 19)
+    );
+  });
+export const travelLegSchema = z
+  .object({
+    route: z
+      .array(z.string().regex(/^[A-Z]{3}$/))
+      .min(2)
+      .max(12),
+    departureTime: localTimestamp,
+    arrivalTime: localTimestamp,
+    durationSeconds: z.number().int().nonnegative().max(604800),
+    stops: z.number().int().nonnegative().max(10),
+    cabin: z.string().max(100).nullable(),
+    airlines: z.array(z.string().max(100)).max(12),
+  })
+  .strict();
+export const travelQuoteSchema = z
+  .object({
+    id: z.string().uuid(),
+    identity: z.string().regex(/^[a-f0-9]{64}$/),
+    provider: z.enum(["Kiwi.com", "Pilot"]),
+    category: z.enum(["flights", "stays"]),
+    providerReference: z.string().min(1).max(12000),
+    criteria: travelCriteriaSchema,
+    title: z.string().min(1).max(250),
+    price: z.number().finite().nonnegative().max(10000000),
+    currency: z.enum(currencies),
+    priceBasis: z.enum(["party-total", "unspecified"]),
+    retrievedAt: z.string().datetime(),
+    // DU's review window, not a supplier guarantee or supplier expiry time.
+    reviewAfter: z.string().datetime(),
+    bookingUrl: z.string().max(4096),
+    legs: z.array(travelLegSchema).max(2),
+    baggage: z
+      .object({
+        personalItem: z.number().int().nonnegative().max(100).nullable(),
+        cabinBag: z.number().int().nonnegative().max(100).nullable(),
+        checkedBag: z.number().int().nonnegative().max(100).nullable(),
+      })
+      .strict()
+      .nullable(),
+    address: z.string().max(500).nullable(),
+    reviewRating: z.number().min(0).max(10).nullable(),
+    reviewCount: z.number().int().nonnegative().max(10000000).nullable(),
+    signature: z.string().regex(/^[a-f0-9]{64}$/),
+  })
+  .strict()
+  .superRefine((q, ctx) => {
+    if (
+      !isSafeSupplierLink(q.provider, q.bookingUrl) ||
+      (q.provider === "Kiwi.com" &&
+        (q.category !== "flights" ||
+          q.legs.length < 1 ||
+          q.priceBasis !== "party-total")) ||
+      (q.provider === "Pilot" &&
+        (q.category !== "stays" ||
+          q.legs.length !== 0 ||
+          q.priceBasis !== "unspecified"))
+    )
+      ctx.addIssue({ code: "custom", message: "Invalid supplier quote" });
+  });
+export type TravelQuote = z.infer<typeof travelQuoteSchema>;
+export const travelResultsSchema = z
+  .object({
+    provider: z.enum(["Kiwi.com", "Pilot"]),
+    category: z.enum(["flights", "stays"]),
+    retrievedAt: z.string().datetime(),
+    quotes: z.array(travelQuoteSchema).max(20),
+    rejectedCount: z.number().int().nonnegative(),
+  })
+  .strict()
+  .refine(
+    result =>
+      result.quotes.every(
+        quote =>
+          quote.provider === result.provider &&
+          quote.category === result.category
+      ) &&
+      new Set(result.quotes.map(quote => quote.id)).size ===
+        result.quotes.length &&
+      new Set(result.quotes.map(quote => quote.identity)).size ===
+        result.quotes.length,
+    "Invalid supplier result collection"
+  );
+export type TravelResults = z.infer<typeof travelResultsSchema>;
 export const travelDraftSchema = z
   .object({
     criteria: travelCriteriaSchema,
@@ -181,6 +341,16 @@ export const travelDraftSchema = z
         items => new Set(items.map(i => i.id)).size === items.length,
         "duplicate estimate"
       ),
+    quotes: z
+      .array(travelQuoteSchema)
+      .max(6)
+      .refine(
+        items =>
+          new Set(items.map(item => item.id)).size === items.length &&
+          new Set(items.map(item => item.identity)).size === items.length,
+        "duplicate supplier option"
+      )
+      .optional(),
   })
   .strict();
 export type TravelDraft = z.infer<typeof travelDraftSchema>;

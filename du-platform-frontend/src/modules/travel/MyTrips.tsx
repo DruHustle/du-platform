@@ -16,6 +16,7 @@ import {
   type TravelCategory,
 } from "@shared/travel";
 import { useTravelDraft, updateDraft, travelEvent } from "./store";
+import { SupplierQuoteCard } from "./SupplierResults";
 export default function MyTrips() {
   const { t, i18n } = useTranslation();
   const draft = useTravelDraft();
@@ -76,7 +77,8 @@ export default function MyTrips() {
       await api.post("/travel/saved", {
         name,
         kind,
-        draft: kind === "search" ? { ...draft, estimates: [] } : draft,
+        draft:
+          kind === "search" ? { ...draft, estimates: [], quotes: [] } : draft,
       });
       travelEvent("trip_saved");
       await refresh();
@@ -128,7 +130,10 @@ export default function MyTrips() {
         <h3>{t("travel.searches")}</h3>
         {!draft.searches.length && <p>{t("travel.no-searches")}</p>}
         {draft.searches.map(s => (
-          <article className="surface-card" key={s.category}>
+          <article
+            className="surface-card travel-saved-search"
+            key={s.category}
+          >
             <h4>{t(`travel.${s.category}`)}</h4>
             <p>
               {s.category === "flights"
@@ -149,6 +154,13 @@ export default function MyTrips() {
                 <>
                   {" "}
                   · {t("travel.rooms")}: {s.criteria.rooms}
+                </>
+              )}
+              {s.category === "flights" && (
+                <>
+                  {" "}
+                  · {t("travel.live.flex-days")}: ±
+                  {s.criteria.flightFlexDays ?? 0}
                 </>
               )}
               {s.category === "car-hire" && (
@@ -264,6 +276,25 @@ export default function MyTrips() {
         ))}
         {!draft.estimates.length && <p>{t("travel.no-estimates")}</p>}
         <p>{t("travel.funds-unknown")}</p>
+        <h3>{t("travel.live.selections")}</h3>
+        <p>{t("travel.live.selection-note")}</p>
+        {!draft.quotes?.length && <p>{t("travel.live.no-selections")}</p>}
+        {(draft.quotes ?? []).map(quote => (
+          <div key={quote.identity}>
+            <SupplierQuoteCard quote={quote} />
+            <Button
+              variant="outline"
+              onClick={() =>
+                updateDraft(d => ({
+                  ...d,
+                  quotes: d.quotes?.filter(q => q.id !== quote.id),
+                }))
+              }
+            >
+              {t("travel.remove")}
+            </Button>
+          </div>
+        ))}
         <Link href="/travel/planner">{t("travel.onesa-planner")}</Link>
       </section>
       <section className="content-panel">

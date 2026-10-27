@@ -51,7 +51,8 @@ export function travelEvent(
     | "criteria_reviewed"
     | "resource_opened"
     | "trip_saved"
-    | "trip_returned",
+    | "trip_returned"
+    | "results_received",
   category?: string
 ) {
   if (
