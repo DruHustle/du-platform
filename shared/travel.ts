@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "./validation";
 
 // Curated airport identifiers, not provider-specific hotel/city IDs. Adding a
 // country requires no schema change. These entries do not establish availability.
