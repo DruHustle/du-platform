@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import assert from "node:assert/strict";
 import path from "node:path";
-import { repoDir } from "../lib/paths.mjs";
+import { frontendDir } from "../lib/paths.mjs";
 import {
   assertActiveFrontendApi,
   referencedFrontendScripts,
@@ -97,7 +97,9 @@ for (const [pathname, destination] of [
   ["/index.html", "/"],
   ["/travel/", "/travel"],
   ["/travel.html", "/travel"],
-  ...JSON.parse(await fs.readFile(path.join(repoDir, "vercel.json"), "utf8"))
+  ...JSON.parse(
+    await fs.readFile(path.join(frontendDir, "vercel.json"), "utf8")
+  )
     .redirects.filter(r => /tourism|onesa-ai-book-trip/.test(r.source))
     .map(r => [r.source, r.destination]),
 ]) {

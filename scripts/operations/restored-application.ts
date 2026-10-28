@@ -8,11 +8,11 @@ import { processTransactionalMessages } from "../../du-platform-backend/modules/
 // Runs only inside the network-isolated production-backup recovery drill.
 import assert from "node:assert/strict";
 import { randomUUID, randomBytes } from "node:crypto";
-import { db } from "../../du-platform-backend/shared/databaseRuntime";
+import { db } from "../../du-platform-backend/lib/databaseRuntime";
 import {
   createShopProductAdmin,
   createShopOrder,
-} from "../../du-platform-backend/shared/persistence/shopStore";
+} from "../../du-platform-backend/lib/persistence/shopStore";
 import {
   applyOrderCommand,
   readOrderWorkspace,

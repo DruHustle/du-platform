@@ -1,7 +1,7 @@
 import {
   getPasswordIssue,
   PASSWORD_ERROR_MESSAGES,
-} from "@shared/passwordPolicy";
+} from "@/contracts/passwordPolicy";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import Layout from "@/components/Layout";

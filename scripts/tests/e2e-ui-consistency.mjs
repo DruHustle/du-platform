@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { chromium, webkit } from "playwright";
-import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
+import { getPublicShopSeedProducts } from "../../du-platform-backend/contracts/shopCatalog.ts";
 
 // UI fixtures only: no .env, database, provider, customer or production writes.
 const root = resolve("du-platform-frontend/dist");

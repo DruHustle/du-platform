@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import type mysql from "mysql2/promise";
-import { configuredAdminEmails } from "../../shared/adminIdentity";
-import { hashPassword } from "../../shared/passwords";
+import { configuredAdminEmails } from "../../lib/adminIdentity";
+import { hashPassword } from "../../lib/passwords";
 
 /** Reserve configured admin identities before public registration is available.
  * No password is disclosed and no email is sent on startup. The owner proves

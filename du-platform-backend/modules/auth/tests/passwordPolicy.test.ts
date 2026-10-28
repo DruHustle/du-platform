@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   getPasswordIssue,
   PASSWORD_ERROR_MESSAGES,
-} from "../../../../shared/passwordPolicy";
+} from "../../../contracts/passwordPolicy";
 import { registerSchema, resetPasswordSchema } from "../dto/auth.dto";
 
 const cases = [

@@ -1,12 +1,12 @@
 import { renderOrderEmail } from "../orderNotifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-vi.mock("../../../shared/databaseRuntime", () => ({
+vi.mock("../../../lib/databaseRuntime", () => ({
   db: null,
   isDbConnectionError: () => false,
   isTransientShopQueryError: () => false,
   isMemoryFallbackEnabled: () => true,
 }));
-vi.mock("../../../shared/email", () => ({
+vi.mock("../../../lib/email", () => ({
   getNotifyFromEmail: vi.fn(async () => "shop@example.test"),
   getNotifyAlertEmails: vi.fn(async () => ["merchant@example.test"]),
   sendEmailMessageSafe: vi.fn(async () => true),
@@ -14,16 +14,16 @@ vi.mock("../../../shared/email", () => ({
 import {
   shopOrderRequestSchema,
   calculateShopShippingCents,
-} from "../../../../shared/shopCheckout";
+} from "../../../contracts/shopCheckout";
 import {
   createShopOrder,
   getShopOrderByRef,
   confirmShopOrderPayment,
   shopSeedProducts,
-} from "../../../shared/persistence/shopStore";
+} from "../../../lib/persistence/shopStore";
 import { ShopService } from "../services/shopService";
 import { ShopController } from "../controllers/shopController";
-import { sendEmailMessageSafe } from "../../../shared/email";
+import { sendEmailMessageSafe } from "../../../lib/email";
 import crypto from "node:crypto";
 import express from "express";
 import { createShopModuleRouter } from "../routes";

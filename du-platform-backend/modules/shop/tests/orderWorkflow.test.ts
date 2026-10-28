@@ -4,10 +4,10 @@ import crypto from "node:crypto";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
+import { SHOP_READINESS_CHECKS } from "../../../contracts/shopReadiness";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 let pool: Pool | null = null;
-vi.mock("../../../shared/databaseRuntime", () => ({
+vi.mock("../../../lib/databaseRuntime", () => ({
   get db() {
     return pool;
   },
@@ -15,7 +15,7 @@ vi.mock("../../../shared/databaseRuntime", () => ({
   isTransientShopQueryError: () => false,
   isMemoryFallbackEnabled: () => true,
 }));
-vi.mock("../../../shared/email", () => ({
+vi.mock("../../../lib/email", () => ({
   getNotifyFromEmail: async () => "shop@example.test",
   getNotifyAlertEmails: async () => ["operator@example.test"],
   isValidEmail: () => true,
@@ -25,7 +25,7 @@ import {
   createShopOrder,
   listShopProducts,
   updateShopProductAdmin,
-} from "../../../shared/persistence/shopStore";
+} from "../../../lib/persistence/shopStore";
 import { applyOrderCommand, readOrderWorkspace } from "../orderWorkflowStore";
 import { processOrderNotifications } from "../orderNotifications";
 const test = describe.skipIf(!url);

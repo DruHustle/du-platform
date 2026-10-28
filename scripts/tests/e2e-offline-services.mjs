@@ -23,6 +23,7 @@ const server = spawn(
       PORT: String(port),
       APP_BASE_URL: baseUrl,
       CORS_ORIGINS: baseUrl,
+      STATIC_DIR: resolve("du-platform-frontend/dist"),
       ONESA_MOCK_MODE: "true",
       ONESA_MOCK_STT_TEXT: "Tell me about Victoria Falls",
     },

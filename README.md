@@ -69,103 +69,93 @@ replace acceptance testing on a physical phone or headset.
 
 ## Project Structure
 
+The frontend and backend are independent applications in one repository. There
+is no workspace package, common source folder, shared lockfile, or dependency
+between the two applications.
+
 ```text
-du-platform/                         # One parent Git/GitHub repository
-├── du-platform-frontend/            # React 19 + Vite application
-│   ├── src/                        # UI, routes, domain modules, localization
-│   ├── public/                     # Images, locales, audio, SEO assets
-│   ├── scripts/                    # Static build, SEO, translations, size checks
-│   ├── package.json                # Browser dependencies and frontend commands
-│   ├── dist/                       # Generated static site (ignored by Git)
-│   ├── index.html                  # Browser entry; src/main.tsx boots React
-│   ├── vite.config.ts
-│   ├── components.json             # shadcn/ui configuration
+du-platform/
+├── du-platform-frontend/
+│   ├── src/                       # UI, routes, and app-local contracts
+│   ├── public/                    # Browser assets and translations
+│   ├── scripts/                   # Frontend build, SEO, locale tools, tests
+│   ├── patches/                   # Frontend dependency patches
+│   ├── package.json
+│   ├── pnpm-lock.yaml
 │   ├── tsconfig.json
-│   └── tsconfig.node.json
-├── du-platform-backend/             # Existing Express API application
-│   ├── server.ts                   # HTTP entry and optional SPA serving
-│   ├── db.ts                       # MySQL bootstrap and schema synchronization
-│   ├── api/                        # API registration
-│   ├── core/                       # Middleware, startup validation, RBAC
-│   ├── modules/                    # Domain APIs and existing module tests
-│   ├── shared/                     # Backend helpers and persistence stores
-│   ├── config/                     # Backend operational configuration examples
-│   ├── package.json                # API dependencies and backend commands
-│   ├── vitest.config.ts            # Backend-only Node test configuration
-│   ├── dist/                       # Generated API bundle (ignored by Git)
-│   └── tsconfig.json
-├── shared/                         # @du/shared: contracts, validation, domain data
-├── .github/                        # Repository workflows
-├── .githooks/                      # Repository hooks
-├── scripts/                        # Cross-app development, E2E tests, release operations
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
+│   ├── vercel.json
+│   └── .env.example
+├── du-platform-backend/
+│   ├── server.ts                  # Express entry point
+│   ├── modules/                    # Domain APIs and tests
+│   ├── contracts/                  # Backend-owned models and domain data
+│   ├── lib/                        # Backend helpers, persistence, and copy
+│   ├── config/                     # Operational configuration examples
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── tsconfig.json
+│   ├── vitest.config.ts
+│   ├── Dockerfile
+│   └── .env.example
+├── scripts/                        # Optional cross-app and release operations
+├── deploy/oracle/                  # Compose independently built applications
 ├── docs/
-├── patches/                        # Existing pnpm dependency patches
-├── package.json                    # Workspace orchestration and integration tools
-├── pnpm-workspace.yaml             # Frontend, backend, and shared packages
-├── pnpm-lock.yaml                  # One reproducible lockfile for all packages
-├── tsconfig.json                   # Common compiler defaults (no browser globals)
-├── deploy/oracle/                  # Oracle container deployment and operations
-├── vercel.json                     # Static frontend deployment from repository root
-└── README.md
+├── package.json                    # Optional repository convenience commands
+├── pnpm-lock.yaml                  # Repository tool dependencies only
+└── vercel.json                     # Repository-root deployment entry point
 ```
 
-Both applications remain in this repository as pnpm workspace packages:
-`@du/frontend` and `@du/backend`. Each owns its dependencies, scripts, TypeScript
-configuration, tests, and build output. Install once at the root; dependency
-versions and patches are preserved. The root commands delegate to the app that
-owns the task.
-
-Code in `shared/` is the `@du/shared` workspace package and may be used by either
-app. Keep it free of browser and server framework dependencies. Frontend code
-must not import backend modules, and backend tests do not load the Vite frontend
-configuration. Cross-app browser tests and release orchestration live at the
-root because they exercise or deploy both applications.
-
-Run an app directly from its folder:
-
-```bash
-pnpm --dir du-platform-frontend dev      # UI and /api proxy
-pnpm --dir du-platform-backend dev       # Express API
-pnpm --dir du-platform-frontend build    # Static site only
-pnpm --dir du-platform-backend build     # API bundle only
-```
+Each app owns the contracts and data it uses. Neither app imports code or
+configuration from the other app or from the repository root. They communicate
+through HTTP. The root scripts support combined development, cross-app tests,
+and deployment; either application works without those scripts.
 
 ## Local Development
 
-Use Node.js 22 or higher (Vite 7 requires at least Node 22.12 on the 22.x line)
-and the pnpm version pinned in `package.json`. Run all commands from the repository
-root:
+Use Node 22.12+ and the pnpm version pinned in each application's `package.json`.
+Run either app independently:
 
 ```bash
+cd du-platform-frontend
 pnpm install --frozen-lockfile
-# For a new checkout only; keep an existing .env intact:
 cp .env.example .env
-# Configure local credentials in .env, then:
 pnpm dev
 ```
 
-`pnpm dev` starts the existing development orchestrator, including its MySQL and
-AI-provider checks. `pnpm dev:fast` skips local provider/database setup. Start the
-applications separately with `pnpm dev:web` and `pnpm dev:server`. The frontend
-normally uses `https://localhost:3000` (set `VITE_DEV_HTTPS=false` for HTTP), proxies
-`/api` to `BACKEND_URL` (default `http://localhost:5001`), and reads the existing
-root `.env` and `.cert/`. The backend also loads root `.env`; its port can be
-configured with `DEV_PORT` or `PORT`. Never put backend secrets in `VITE_*` variables.
+In another terminal:
 
 ```bash
-pnpm check                 # Frontend and backend TypeScript checks
-pnpm check:frontend        # Frontend only
-pnpm check:backend         # Backend only
-pnpm test:modules
-pnpm test:frontend         # Frontend regression tests
-pnpm guardrails            # Vite, deployment, and locale safety checks
-pnpm translations:check:keys
-pnpm format:check          # Read-only Prettier check (not a lint command)
-pnpm build                 # Builds both applications
-pnpm build:frontend        # Outputs du-platform-frontend/dist/
-pnpm build:backend         # Outputs du-platform-backend/dist/server.js
-pnpm preview               # Vite static preview; does not start the API
-pnpm start                 # Production Express server; configure production env first
+cd du-platform-backend
+pnpm install --frozen-lockfile
+cp .env.example .env
+# Configure database/provider credentials in this folder's .env.
+pnpm dev
+```
+
+The frontend reads its own `.env` and `.cert/`, normally serves
+`https://localhost:3000`, and proxies `/api` to `BACKEND_URL` (default port 5001).
+Set `VITE_DEV_HTTPS=false` for local HTTP. The backend reads its own `.env` and
+listens on `DEV_PORT` or `PORT`. Keep server secrets out of `VITE_*` variables.
+
+For optional combined development from the repository root:
+
+```bash
+pnpm setup                  # Install repository tools and each app independently
+pnpm dev                    # Combined provider/database checks and app startup
+pnpm dev:fast               # Skip local provider/database setup
+pnpm dev:web                # Frontend only
+pnpm dev:server             # Backend only
+pnpm check                  # Each app's own TypeScript check
+pnpm test                   # Each app's own tests
+pnpm guardrails
+pnpm translations:check
+pnpm build                  # Run the two independent builds
+pnpm build:frontend         # Writes du-platform-frontend/dist/
+pnpm build:backend          # Writes du-platform-backend/dist/server.js
+pnpm preview                # Frontend static preview
+pnpm start                  # Backend production bundle
 ```
 
 There is no separate lint script. The offline suite below requires no configured
@@ -273,7 +263,7 @@ pnpm build
 env -i PATH="$PATH" HOME="$HOME" \
   NODE_ENV=development PORT=5001 APP_BASE_URL=http://localhost:5001 \
   CORS_ORIGINS=http://localhost:5001 \
-  node --import tsx du-platform-backend/server.ts
+  STATIC_DIR=du-platform-frontend/dist node --import tsx du-platform-backend/server.ts
 ```
 
 Open `http://localhost:5001`. From another terminal, run:
@@ -295,8 +285,8 @@ registration, provider configuration, and schema initialization. Existing databa
 records are preserved; no historical tables are dropped. Accounts, the shop,
 tourism, investment information, and Onesa retain their independent controls.
 
-Local Express can serve the sibling `du-platform-frontend/dist/` output with SPA
-fallback and SEO injection. It also runs as an API without a frontend build.
+Express runs as an API without a frontend build. An explicitly configured
+`STATIC_DIR` enables SPA fallback and SEO injection for optional static files.
 Oracle's container exports the backend with production dependencies and copies
 the static site beside its bundle at `dist/public/` for the same SPA behavior.
 
@@ -546,7 +536,7 @@ MySQL database ending in `_test`; set `SHOP_TEST_DATABASE_URL` and
 `NEWSLETTER_TEST_DATABASE_URL` to that database, then run `pnpm test`,
 `pnpm test:e2e:pilot` and `PILOT_BROWSER=webkit pnpm test:e2e:pilot`.
 These tests use mock providers and temporary records, not live customer emails.
-Use Node 22+ and `pnpm install --frozen-lockfile`. `pnpm dev` runs the local app;
+Use Node 22+ and `pnpm setup` from the root. `pnpm dev` runs both local apps;
 its frontend normally opens at `https://localhost:3000` with a local backend proxy.
 PR previews intentionally have no production API access.
 

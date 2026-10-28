@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildSampleTripPlan,
   validateTripPlan,
-} from "../../../../shared/tripPlanning";
+} from "../../../contracts/tripPlanning";
 const input = {
   language: "en",
   arrivalAttraction: "Victoria Falls",

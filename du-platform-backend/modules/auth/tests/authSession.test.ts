@@ -1,6 +1,6 @@
 import type express from "express";
 import { describe, expect, it } from "vitest";
-import { resolveSessionToken } from "../../../shared/authSession";
+import { resolveSessionToken } from "../../../lib/authSession";
 
 describe("session cookie parsing", () => {
   it("treats malformed percent encoding as a missing session", () => {

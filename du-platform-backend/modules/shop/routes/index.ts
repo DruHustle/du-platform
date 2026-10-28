@@ -1,13 +1,13 @@
 import { createInterestRouter } from "../interestRoutes";
 import { z } from "zod";
 import { publicShopReadiness } from "../shopReadiness";
-import { db } from "../../../shared/databaseRuntime";
+import { db } from "../../../lib/databaseRuntime";
 import { recordShopFunnel } from "../funnel";
-import { sha256 } from "../../../shared/persistence/authStore";
+import { sha256 } from "../../../lib/persistence/authStore";
 import { createProductDetailsRouter } from "../productDetailsRoutes";
 import { applyOrderCommand, readOrderWorkspace } from "../orderWorkflowStore";
 import { orderApiError } from "../orderAdminRoutes";
-import { ok } from "../../../shared/responseFormatter";
+import { ok } from "../../../lib/responseFormatter";
 import { rateLimiter } from "../../../core/rateLimiter";
 import { Router } from "express";
 import { ShopController } from "../controllers/shopController";

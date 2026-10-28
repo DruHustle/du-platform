@@ -1,5 +1,5 @@
-import { searchNtirEntities } from "../../../shared/persistence/investmentStore";
-import { listShopProducts } from "../../../shared/persistence/shopStore";
+import { searchNtirEntities } from "../../../lib/persistence/investmentStore";
+import { listShopProducts } from "../../../lib/persistence/shopStore";
 
 export class SearchRepository {
   searchNtir(query: string) {

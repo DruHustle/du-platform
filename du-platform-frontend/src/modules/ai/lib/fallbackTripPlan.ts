@@ -1,1 +1,1 @@
-export { buildSampleTripPlan as buildClientFallbackPlan } from "@shared/tripPlanning";
+export { buildSampleTripPlan as buildClientFallbackPlan } from "@/contracts/tripPlanning";

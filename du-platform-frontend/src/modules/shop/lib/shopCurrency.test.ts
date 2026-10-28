@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { convertShopCents, currencyForTimeZone } from "@shared/shopCurrency";
+import { convertShopCents, currencyForTimeZone } from "@/contracts/shopCurrency";
 import { isOrderReceipt } from "./checkoutSession";
 
 describe("regional shop currency", () => {

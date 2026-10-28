@@ -40,13 +40,13 @@ Object.assign(process.env, {
 });
 const { initializeDatabase } = await import("../../du-platform-backend/db.ts");
 const { db } = await import(
-  "../../du-platform-backend/shared/databaseRuntime.ts"
+  "../../du-platform-backend/lib/databaseRuntime.ts"
 );
 const { createModularServer } = await import(
   "../../du-platform-backend/server.ts"
 );
 const { hashPassword } = await import(
-  "../../du-platform-backend/shared/passwords.ts"
+  "../../du-platform-backend/lib/passwords.ts"
 );
 const { processTransactionalMessages } = await import(
   "../../du-platform-backend/modules/notifications/transactionalWorker.ts"
@@ -55,7 +55,7 @@ const { openOrderAccess } = await import(
   "../../du-platform-backend/modules/shop/orderAccess.ts"
 );
 const { createUser } = await import(
-  "../../du-platform-backend/shared/persistence/authStore.ts"
+  "../../du-platform-backend/lib/persistence/authStore.ts"
 );
 await initializeDatabase();
 await db.execute(

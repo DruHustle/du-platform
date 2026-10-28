@@ -1,4 +1,4 @@
-import { listShopProducts } from "../../../shared/persistence/shopStore";
+import { listShopProducts } from "../../../lib/persistence/shopStore";
 
 export class ProductRepository {
   async list(category?: string) {

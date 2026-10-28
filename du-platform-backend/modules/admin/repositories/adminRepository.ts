@@ -2,10 +2,10 @@ import {
   createNtirEntity,
   getNtirEntities,
   updateNtirEntity,
-} from "../../../shared/persistence/investmentStore";
-import { getFeatureNotifications } from "../../../shared/persistence/notificationStore";
-import { createSuccessStory, getSuccessStories, updateSuccessStory } from "../../../shared/persistence/impactStore";
-import { getAdminSetting, upsertAdminSetting } from "../../../shared/persistence/settingsStore";
+} from "../../../lib/persistence/investmentStore";
+import { getFeatureNotifications } from "../../../lib/persistence/notificationStore";
+import { createSuccessStory, getSuccessStories, updateSuccessStory } from "../../../lib/persistence/impactStore";
+import { getAdminSetting, upsertAdminSetting } from "../../../lib/persistence/settingsStore";
 import {
   createShopProductAdmin,
   deleteShopProductAdmin,
@@ -13,7 +13,7 @@ import {
   getShopProductsAdmin,
   getShopRestockNotifications,
   updateShopProductAdmin,
-} from "../../../shared/persistence/shopStore";
+} from "../../../lib/persistence/shopStore";
 
 export class AdminRepository {
   getNotificationSetting(key: string) {

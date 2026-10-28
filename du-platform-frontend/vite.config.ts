@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { resolveTravelRedirect } from "../shared/travelRoutes";
+import { resolveTravelRedirect } from "./src/contracts/travelRoutes";
 import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import tailwindcss from "@tailwindcss/vite";
@@ -8,7 +8,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, loadEnv } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
-import { PUBLIC_SITE_ORIGIN, resolveCanonicalUrl } from "../shared/routeSeo";
+import {
+  PUBLIC_SITE_ORIGIN,
+  resolveCanonicalUrl,
+} from "./src/contracts/routeSeo";
 
 function redirectTravel(
   req: IncomingMessage,
@@ -24,7 +27,7 @@ function redirectTravel(
 }
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, path.resolve(import.meta.dirname, ".."), "");
+  const env = loadEnv(mode, import.meta.dirname, "");
   const siteUrl = resolveCanonicalUrl(
     env.VITE_SITE_URL ||
       (mode === "production"
@@ -35,7 +38,7 @@ export default defineConfig(({ mode }) => {
   const useDevHttps = env.VITE_DEV_HTTPS !== "false";
   const useJsxLoc = mode !== "production";
 
-  const certDir = path.resolve(import.meta.dirname, "..", ".cert");
+  const certDir = path.resolve(import.meta.dirname, ".cert");
   const keyPath = path.join(certDir, "localhost-key.pem");
   const certPath = path.join(certDir, "localhost-cert.pem");
   const hasTrustedLocalCert = fs.existsSync(keyPath) && fs.existsSync(certPath);
@@ -73,10 +76,9 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(import.meta.dirname, "src"),
-        "@shared": path.resolve(import.meta.dirname, "..", "shared"),
       },
     },
-    envDir: path.resolve(import.meta.dirname, ".."),
+    envDir: import.meta.dirname,
     root: path.resolve(import.meta.dirname),
     build: {
       outDir: path.resolve(import.meta.dirname, "dist"),
@@ -126,7 +128,7 @@ export default defineConfig(({ mode }) => {
       },
       fs: {
         strict: true,
-        allow: [path.resolve(import.meta.dirname, "..")],
+        allow: [import.meta.dirname],
         deny: ["**/.*"],
       },
     },

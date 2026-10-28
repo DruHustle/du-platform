@@ -6,8 +6,8 @@ import {
   type SavedTravel,
   type TravelCriteria,
   type TravelQuote,
-} from "@shared/travel";
-import { z } from "@shared/validation";
+} from "@/contracts/travel";
+import { z } from "@/contracts/validation";
 
 const savedTravelListSchema = z
   .array(

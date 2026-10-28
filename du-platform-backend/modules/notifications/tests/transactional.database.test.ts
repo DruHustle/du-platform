@@ -37,7 +37,7 @@ describe.skipIf(!url)("durable transactional messages", () => {
     vi.stubEnv("ADMIN_EMAILS", "operator@example.test");
     vi.stubEnv("APP_BASE_URL", "https://fixture.example.test");
     vi.resetModules();
-    pool = (await import("../../../shared/databaseRuntime")).db!;
+    pool = (await import("../../../lib/databaseRuntime")).db!;
     await (await import("../../../db")).initializeDatabase();
     service = new (
       await import("../transactionalService")
@@ -45,7 +45,7 @@ describe.skipIf(!url)("durable transactional messages", () => {
     worker = (await import("../transactionalWorker"))
       .processTransactionalMessages;
     crypto = await import("../../shop/orderAccess");
-    auth = await import("../../../shared/persistence/authStore");
+    auth = await import("../../../lib/persistence/authStore");
     AuthService = (await import("../../auth/services/authService")).AuthService;
   });
   beforeEach(async () => {

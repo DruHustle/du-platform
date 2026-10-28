@@ -1,6 +1,6 @@
 import React from "react";
 import english from "../../public/locales/en/translation.json";
-import { resolveRouteSeo } from "../../../shared/routeSeo";
+import { resolveRouteSeo } from "../contracts/routeSeo";
 type Product = {
   slug: string;
   name: string;

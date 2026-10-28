@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { buildSampleTripPlan } from "../../shared/tripPlanning.ts";
+import { buildSampleTripPlan } from "../../du-platform-backend/contracts/tripPlanning.ts";
 import { mkdir, writeFile } from "node:fs/promises";
 import express from "express";
 import { getOnesaRouteDeps } from "../../du-platform-backend/modules/ai/runtime/onesaRuntime.ts";

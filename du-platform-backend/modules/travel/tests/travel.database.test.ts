@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { createServer, type Server } from "node:http";
 import mysql, { type Pool } from "mysql2/promise";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { defaultTravelCriteria } from "../../../../shared/travel";
+import { defaultTravelCriteria } from "../../../contracts/travel";
 import { initializeTravel } from "../schema";
 import { TravelRepository } from "../repository";
 import { PublicTravelSearch } from "../providers";
@@ -35,11 +35,11 @@ describe.skipIf(!url)("private Travel persistence in MySQL", () => {
     vi.stubEnv("DATABASE_URL", isolated.toString());
     vi.stubEnv("ADMIN_EMAILS", "");
     vi.resetModules();
-    const runtime = await import("../../../shared/databaseRuntime");
+    const runtime = await import("../../../lib/databaseRuntime");
     pool = runtime.db!;
     await (await import("../../../db")).initializeDatabase();
     await initializeTravel(pool);
-    const store = await import("../../../shared/persistence/authStore");
+    const store = await import("../../../lib/persistence/authStore");
     const a = await store.createUser(
       "Alice",
       "alice@example.test",

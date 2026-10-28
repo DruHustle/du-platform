@@ -1,6 +1,6 @@
 import type express from "express";
 import { AppError } from "../../../core/errorHandler";
-import { error, ok } from "../../../shared/responseFormatter";
+import { error, ok } from "../../../lib/responseFormatter";
 import {
   NotificationService,
   NotificationServiceError,

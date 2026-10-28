@@ -1,4 +1,4 @@
-import { outboundMessagesPaused } from "../../shared/outboundMessages";
+import { outboundMessagesPaused } from "../../lib/outboundMessages";
 import {
   ProductInterestService,
   deliverProductInterest,
@@ -10,7 +10,7 @@ import type {
   ResultSetHeader,
 } from "mysql2/promise";
 import { hashNewsletterToken } from "./content";
-import { db } from "../../shared/databaseRuntime";
+import { db } from "../../lib/databaseRuntime";
 import {
   sendNewsletterEmail,
   newsletterSender,

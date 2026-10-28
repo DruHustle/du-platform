@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { PASSWORD_RESET_PAGE_MARKER } from "../../../shared/passwordResetProtocol.ts";
+import { PASSWORD_RESET_PAGE_MARKER } from "../../src/contracts/passwordResetProtocol.ts";
 import { readSiteRoutes } from "../lib/site-routes.mjs";
 import { assertActiveFrontendApi } from "../lib/frontend-api-origin.mjs";
-import { outputDir, repoDir } from "../lib/paths.mjs";
+import { outputDir, frontendDir } from "../lib/paths.mjs";
 import {
   PUBLIC_SITE_ORIGIN,
   resolveCanonicalUrl,
   resolveRouteSeo,
-} from "../../../shared/routeSeo.ts";
+} from "../../src/contracts/routeSeo.ts";
 
 const root = outputDir;
 assert(
@@ -31,7 +31,7 @@ assert(
 const { paths, redirects } = readSiteRoutes();
 assert(paths.includes("/admin"), "Preserve the protected admin document route");
 const config = JSON.parse(
-  fs.readFileSync(path.join(repoDir, "vercel.json"), "utf8")
+  fs.readFileSync(path.join(frontendDir, "vercel.json"), "utf8")
 );
 // Native normalization precedes custom redirects on Vercel and creates legacy
 // Travel chains. Explicit rules preserve clean public URLs after legacy aliases.

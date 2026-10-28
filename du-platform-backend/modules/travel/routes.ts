@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { db } from "../../shared/databaseRuntime";
+import { db } from "../../lib/databaseRuntime";
 import { requireJwtAuth } from "../../middleware/jwtAuth";
 import { requireCurrentUser } from "../../middleware/currentUser";
 import { rateLimiter } from "../../core/rateLimiter";
@@ -9,14 +9,14 @@ import {
   travelCapabilities,
   travelCriteriaSchema,
   travelQuoteSchema,
-} from "../../../shared/travel";
+} from "../../contracts/travel";
 import {
   publicTravelSearch,
   TravelProviderError,
   verifyTravelQuote,
 } from "./providers";
 import { TravelRepository } from "./repository";
-import { ok, error } from "../../shared/responseFormatter";
+import { ok, error } from "../../lib/responseFormatter";
 
 export function createTravelRouter() {
   const router = Router();

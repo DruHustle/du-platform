@@ -6,8 +6,8 @@ import { initializeShopPilot } from "./modules/shop/pilotSchema";
 import { initializeAdminAccounts } from "./modules/admin/bootstrap";
 import { initializeNewsletterDatabase } from "./modules/newsletter/schema";
 import mysql from "mysql2/promise";
-import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
-import { ntirSeedEntities } from "./shared/persistence/investmentStore";
+import { db, isMemoryFallbackEnabled } from "./lib/databaseRuntime";
+import { ntirSeedEntities } from "./lib/persistence/investmentStore";
 import { synchronizeShopCatalog } from "./modules/shop/catalogSeed";
 
 async function syncNtirSeedData(): Promise<void> {

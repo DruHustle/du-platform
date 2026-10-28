@@ -1,5 +1,5 @@
 import type express from "express";
-import { error, ok } from "../../../shared/responseFormatter";
+import { error, ok } from "../../../lib/responseFormatter";
 import { ImpactService } from "../services/impactService";
 
 export class ImpactController {

@@ -1,4 +1,4 @@
-import { customerLanguage } from "@shared/customerLanguage";
+import { customerLanguage } from "@/contracts/customerLanguage";
 import ContactEnquiry from "./ContactEnquiry";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Link, useLocation, useSearch } from "wouter";

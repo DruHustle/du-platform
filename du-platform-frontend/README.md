@@ -1,30 +1,33 @@
 # Frontend
 
-React, Vite, browser routes, components, styles, translations, and public assets
-live here. `package.json` owns browser dependencies and frontend tooling.
+This is an independent React/Vite application. It has its own dependencies,
+lockfile, TypeScript settings, patches, hosting settings, tests, and environment.
+It can be copied out of this repository and used on its own.
 
-Install dependencies once from the repository root with
-`pnpm install --frozen-lockfile`. From this folder:
+From this folder, using Node 22.12+ and the pinned pnpm version:
 
 ```bash
+pnpm install --frozen-lockfile
+cp .env.example .env
 pnpm dev
 pnpm check
 pnpm test
 pnpm build
-pnpm preview
 pnpm test:seo
-pnpm translations:check
+pnpm preview
 ```
 
-The build writes `dist/`, including static route documents and SEO assets.
-Local or CI builds can use `DU_PUBLIC_CATALOGUE_FILE` for an explicit catalogue
-fixture or `DU_CATALOGUE_STRATEGY=omit` for a service-free build. Production
-Vercel builds retain the published-catalogue requirement.
+The build writes `dist/` without needing a live API. Local/CI builds can set
+`DU_PUBLIC_CATALOGUE_FILE` to a public catalogue fixture, or opt into the published
+catalogue with `DU_CATALOGUE_STRATEGY=published`. Production Vercel builds always
+require the published database catalogue. `vercel.json` works with this
+directory as the deployment root.
 
-Vite reads the root `.env` and `.cert/`. It exposes only `VITE_*` variables to
-browser code and proxies `/api` to `BACKEND_URL` (default port 5001). Keep secrets
-out of `VITE_*` variables. Shared contracts and domain data are in `../shared/`;
-frontend code must not import backend modules.
+Vite reads this folder's `.env` and `.cert/`. Only `VITE_*` values enter browser
+code. `/api` proxies to `BACKEND_URL`, defaulting to `http://localhost:5001`.
+The frontend communicates with the API over HTTP; it does not import backend
+code or require the backend for installation, checks, tests, or local builds.
 
-The root `vercel.json` deploys this package's `dist/`. Cross-app browser tests and
-release operations stay in the root `scripts/` folder.
+`src/contracts/` contains this app's own models, validation, and domain data.
+There is no common package or parent configuration. Changes to API formats must
+be reflected in both applications.

@@ -4,8 +4,8 @@ import {
   resolveSessionToken,
   resolveSessionUser,
   setSessionCookie,
-} from "../../../shared/authSession";
-import { error, ok } from "../../../shared/responseFormatter";
+} from "../../../lib/authSession";
+import { error, ok } from "../../../lib/responseFormatter";
 import { AuthService, AuthServiceError } from "../services/authService";
 
 export class AuthController {

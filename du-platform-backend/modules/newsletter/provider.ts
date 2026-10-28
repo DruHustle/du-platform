@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AppError } from "../../core/errorHandler";
-import { getNotifyFromEmail, isValidEmail } from "../../shared/email";
-import { outboundMessagesPaused } from "../../shared/outboundMessages";
+import { getNotifyFromEmail, isValidEmail } from "../../lib/email";
+import { outboundMessagesPaused } from "../../lib/outboundMessages";
 
 export type NewsletterEmail = {
   from: string;

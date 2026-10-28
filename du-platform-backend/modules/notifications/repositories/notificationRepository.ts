@@ -1,4 +1,4 @@
-import { findUserById } from "../../../shared/persistence/authStore";
+import { findUserById } from "../../../lib/persistence/authStore";
 import { TransactionalService } from "../transactionalService";
 
 export class NotificationRepository {

@@ -1,6 +1,6 @@
 import type express from "express";
-import { getAdminAuthUser } from "../../../shared/admin";
-import { error, ok } from "../../../shared/responseFormatter";
+import { getAdminAuthUser } from "../../../lib/admin";
+import { error, ok } from "../../../lib/responseFormatter";
 import { AdminService, AdminServiceError } from "../services/adminService";
 
 export class AdminController {

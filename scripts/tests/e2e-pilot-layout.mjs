@@ -1,5 +1,5 @@
 import { readyShop } from "./shop-readiness-fixture.mjs";
-import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
+import { getPublicShopSeedProducts } from "../../du-platform-backend/contracts/shopCatalog.ts";
 import { createServer } from "node:https";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";

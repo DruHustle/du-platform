@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { ProductInterestService } from "./interestService";
 import { parseNewsletter } from "../newsletter/routes";
-import { ok } from "../../shared/responseFormatter";
+import { ok } from "../../lib/responseFormatter";
 import { rateLimiter } from "../../core/rateLimiter";
 export function createInterestRouter(
   admin = false,

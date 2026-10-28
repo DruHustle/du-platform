@@ -13,8 +13,8 @@ import {
   providerResources,
   isSafeTravelLink,
   travelCapabilities,
-} from "../../../../shared/travel";
-import { travelRedirects } from "../../../../shared/travelRoutes";
+} from "../../../contracts/travel";
+import { travelRedirects } from "../../../contracts/travelRoutes";
 import { createModularServer } from "../../../server";
 import { TravelRepository } from "../repository";
 import { publicTravelSearch, TravelProviderError } from "../providers";

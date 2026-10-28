@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { parseNewsletter } from "../newsletter/routes";
 import { TransactionalService } from "./transactionalService";
-import { ok } from "../../shared/responseFormatter";
+import { ok } from "../../lib/responseFormatter";
 import { AppError } from "../../core/errorHandler";
 import { rateLimiter } from "../../core/rateLimiter";
 
