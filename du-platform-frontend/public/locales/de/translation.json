@@ -6,9 +6,9 @@
     "dark": "Dunkel"
   },
   "brand": "Diaspora Unlocked",
-  "tagline": "Globale Plattform für die Simbabwische Diaspora",
+  "tagline": "In Simbabwe verwurzelt. Im südlichen Afrika verbunden.",
   "about": "Über uns",
-  "about_us": "Diaspora Unlocked verbindet Menschen im Ausland und alle mit Interesse an Simbabwe mit Produkten, Reiseinformationen, Geschäftsmöglichkeiten und KI-Assistenz.",
+  "about_us": "Mit Wurzeln in Simbabwe heißt Diaspora Unlocked die gesamte Diaspora des südlichen Afrikas willkommen: mit Produkten aus der Heimat, regionaler Reiserecherche und praktischer Orientierung zu Geschäftsideen und KI.",
   "select_lang": "Sprache wählen",
   "account": {
     "logout": "Abmelden",
@@ -32,13 +32,13 @@
     "about": {
       "title": "Über uns",
       "vision_label": "Unsere Vision",
-      "vision_content": "Mit Simbabwe verbunden bleiben, wo immer Sie leben.",
+      "vision_content": "Menschen aus Simbabwe und der gesamten Diaspora des südlichen Afrikas helfen, mit ihrer Heimat verbunden zu bleiben, wo auch immer sie leben.",
       "mission_label": "Unsere Mission",
-      "mission_content": "Produkte aus Simbabwe, Reiseinformationen, Projektprofile und praktische KI-Hilfe an einem Ort bündeln.",
+      "mission_content": "Simbabwische Produkte, regionale Reiserecherche und praktische Orientierung zu Geschäftsideen und KI an einem Ort für die Diaspora des südlichen Afrikas zusammenbringen.",
       "values_label": "Unsere Werte",
       "values_content": "Klare Informationen, nützliche Orientierung und ehrliche Angaben zum aktuellen Angebot.",
       "who_label": "Wer wir sind",
-      "who_content": "Diaspora Unlocked verbindet Menschen in Simbabwe und im Ausland mit Produkten, Reiseinformationen, Geschäftsideen und praktischer KI-Unterstützung.",
+      "who_content": "Mit Wurzeln in Simbabwe heißt Diaspora Unlocked Menschen aus der gesamten Diaspora des südlichen Afrikas und alle mit Interesse an der Region willkommen.",
       "what_label": "Was wir tun",
       "what_content": "Produkte entdecken und Interesse anmelden, eine Geschäftsidee recherchieren, eine Reise planen oder Onesa fragen. Produktinteresse ist keine Bestellung oder Zahlung."
     },
@@ -48,7 +48,7 @@
       "consent": "Bestätige deine E-Mail-Adresse für Neuigkeiten und Möglichkeiten von Diaspora Unlocked. Du kannst dich jederzeit abmelden. Dadurch wird kein Plattformkonto angelegt.",
       "privacy": "Datenschutzerklärung",
       "title": "Newsletter",
-      "description": "Simbabwische Produkte, Reiseideen und Plattformneuigkeiten per E-Mail.",
+      "description": "Simbabwische Produkte, Reiseideen für das südliche Afrika und Neuigkeiten für die Diaspora per E-Mail.",
       "email_placeholder": "E-Mail-Adresse",
       "subscribe_aria": "Newsletter abonnieren",
       "already_subscribed": "Diese E-Mail ist bereits für den Newsletter abonniert.",
@@ -159,8 +159,8 @@
     "menu": "Navigationsmenü"
   },
   "home": {
-    "hero_title": "Diaspora Unlocked — mit Simbabwe verbunden",
-    "hero_subtitle": "Simbabwe verbinden – im Land und weltweit.",
+    "hero_title": "Diaspora Unlocked — Simbabwe und die Diaspora des südlichen Afrikas",
+    "hero_subtitle": "In Simbabwe verwurzelt. Im südlichen Afrika verbunden.",
     "tourism": "Reisen",
     "technology": "Technologie",
     "investments": "Investitionen",
@@ -168,12 +168,12 @@
     "inquiry_btn": "Kontaktieren Sie uns",
     "inquiry_title": "Allgemeine Anfrage",
     "ready_to_connect_title": "Bereit zur Vernetzung?",
-    "ready_to_connect_subtitle": "Entdecken Sie Produkte, Reiseideen und Geschäftsmöglichkeiten aus Simbabwe, wo immer Sie sind.",
+    "ready_to_connect_subtitle": "Entdecke simbabwische Produkte, Reisen im südlichen Afrika und Geschäftsideen, wo auch immer du zu Hause bist.",
     "view_data": "Wirtschaftsdaten ansehen",
     "modules": {
       "tourism": {
         "title": "Reisen",
-        "desc": "Entdecken Sie Simbabwes erstklassige Attraktionen und planen Sie Ihren Besuch.",
+        "desc": "Entdecke Simbabwe und Reisen durch das südliche Afrika.",
         "stats": "Reiseziele in Simbabwe"
       },
       "investment": {
@@ -192,31 +192,29 @@
       },
       "technology": {
         "title": "Technologie",
-        "description": "Frage Onesa nach simbabwischen Produkten, Orten und Geschäftsideen.",
+        "description": "Frage Onesa nach simbabwischen Produkten, regionalen Reisen und praktischen Geschäftsideen.",
         "detail": "Vergleiche Möglichkeiten, erstelle eine Checkliste oder entwirf einen Reiseplan. Wichtige Details bestätigst du bei den Anbietern.",
         "stats": "KI-Werkzeuge entdecken",
         "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft"
       },
       "investment": {
         "title": "Investition",
-        "description": "Entdecke praktische Geschäftsideen in Landwirtschaft, Bau, Bergbaudienstleistungen und Handel.",
+        "description": "Recherchiere Geschäftsideen in Simbabwe, von Landwirtschaft und Bau bis zu Bergbaudienstleistungen und Handel.",
         "detail": "Beginne mit einer überschaubaren Idee, verstehe Kosten und Risiken und prüfe die Details, bevor du Geld investierst.",
         "stats": "Geschäftsideen entdecken",
         "image_alt": "Frisches Gemüse in Körben"
       },
       "tourism": {
         "title": "Reisen",
-        "description": "Entdecken Sie Wasserfälle, Wildtiere, Kulturerbestätten und Reiseziele in Simbabwe.",
-        "detail": "Vergleiche Reiseziele, probiere den AR-Guide und entwirf mit Onesa eine Reiseroute.",
+        "description": "Plane Reisen in die Heimat und entdecke Ziele in Simbabwe und im südlichen Afrika.",
+        "detail": "Suche Flüge und Unterkünfte, lies regionale Reiseführer oder entwirf mit Onesa eine Reiseroute für Simbabwe.",
         "stats": "Reiseziel finden",
         "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe"
       }
     },
-    "hero_pause": "Bilder pausieren",
-    "hero_resume": "Bilder fortsetzen",
     "discovery": {
-      "title": "Entdecke Simbabwe auf deine Art.",
-      "description": "Entdecke simbabwische Produkte, recherchiere Geschäftsideen, plane einen Besuch oder frage Onesa. Finde deinen Einstieg, wo auch immer du lebst."
+      "title": "Mit der Heimat verbunden, über Grenzen hinweg.",
+      "description": "Simbabwe ist unser Ausgangspunkt. Ob deine Wurzeln in Simbabwe oder anderswo im südlichen Afrika liegen: Hier bist du willkommen. Entdecke Produkte aus der Heimat, regionale Reisen und praktische Geschäftsideen."
     }
   },
   "tech": {
@@ -226,10 +224,10 @@
       "eyebrow": "Technologie & praktische Werkzeuge",
       "title": "KI-Hilfe für alltägliche Pläne.",
       "highlight": "Mit Onesa.",
-      "description": "Frage nach simbabwischen Produkten, Geschäftsideen oder Reisen. Vergleiche mit Onesa Möglichkeiten, ordne deine Fragen und entwirf einen Plan.",
+      "description": "Frage nach simbabwischen Produkten, Reisen im südlichen Afrika oder praktischen Geschäftsideen. Vergleiche mit Onesa Möglichkeiten, ordne deine Fragen und entwirf einen Plan.",
       "principle": "Beginne mit einer Frage. Finde einen klareren nächsten Schritt.",
       "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft",
-      "caption": "Onesa für deine Fragen zu Simbabwe.",
+      "caption": "Onesa, für Simbabwe und Reisen im südlichen Afrika.",
       "tools_cta": "Werkzeuge entdecken"
     },
     "tools": {
@@ -1084,7 +1082,7 @@
       "eyebrow": "Unternehmen & Investitionen",
       "title": "Geben Sie Ihren Ideen Raum.",
       "highlight": "In Simbabwe.",
-      "description": "Praktische Geschäftsideen für Menschen in Simbabwe und im Ausland. Erkunden Sie ein überschaubares erstes Vorhaben, verstehen Sie die Kosten und klären Sie nötige Prüfungen vor dem Einsatz Ihrer Ersparnisse.",
+      "description": "Geschäftsideen mit Wurzeln in Simbabwe, für Menschen vor Ort und in der Diaspora des südlichen Afrikas. Erkunde ein überschaubares erstes Projekt und was du vor dem Einsatz deiner Ersparnisse prüfen solltest.",
       "ideas_cta": "Geschäftsideen erkunden",
       "plan_cta": "Den ersten Schritt planen",
       "principle": "Klein anfangen. Kunden verstehen. Beteiligt bleiben.",
@@ -1625,8 +1623,8 @@
     "title": "Mit Onesa AI chatten",
     "send": "Senden",
     "thinking": "Überlegt...",
-    "starter_prompt": "Fragen Sie zu Simbabwe…",
-    "welcome": "Ich helfe bei Produkten, Reiseideen und Projektinformationen zu Simbabwe. Was möchten Sie wissen?",
+    "starter_prompt": "Frage nach Simbabwe oder dem südlichen Afrika…",
+    "welcome": "Willkommen bei Diaspora Unlocked, in Simbabwe verwurzelt und offen für die Diaspora des südlichen Afrikas. Ich helfe dir, simbabwische Produkte, regionale Reisen und Geschäftsideen zu erkunden. Womit möchtest du beginnen?",
     "status_prefix": "Onesa-Status",
     "status_offline": "Nicht verbunden",
     "status_backend_unreachable": "Onesa ist gerade nicht verfügbar. Bitte versuche es später erneut.",
@@ -1981,7 +1979,7 @@
   },
   "pilot": {
     "available_now": "Jetzt verfügbar",
-    "home_purpose": "Entdecken Sie Produkte aus Simbabwe, Reiseinformationen und praktische Geschäftsideen – vor Ort und im Ausland.",
+    "home_purpose": "Produkte aus der Heimat, Reisen durch die Region und praktische Geschäftsideen für Menschen aus Simbabwe und der gesamten Diaspora des südlichen Afrikas.",
     "browse_products": "Produkte ansehen",
     "request_status": "Anfragestatus",
     "final_quote": "Endgültiges Angebot",
@@ -2147,7 +2145,7 @@
     "car-hire": "Mietwagen",
     "explore": "Entdecken",
     "my-trips": "Meine Reisen",
-    "description": "Plane Reisen ins südliche Afrika, von dort und innerhalb der Region. Sammle deine Ideen und buche direkt bei Anbietern.",
+    "description": "Familie besuchen, in die Heimat reisen oder Neues entdecken? Plane Reisen nach, von und innerhalb von Simbabwe und dem südlichen Afrika und buche direkt bei den Anbietern.",
     "search-intro": "Beginne mit Reisedaten und Reisenden. Die Angaben bleiben beim Wechsel zwischen Reisebereichen erhalten.",
     "origin": "Abflughafen",
     "destination": "Zielflughafen / Umgebung",

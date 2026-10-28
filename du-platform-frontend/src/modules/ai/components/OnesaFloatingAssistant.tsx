@@ -63,9 +63,9 @@ function getWelcomeMessage(t: ReturnType<typeof useTranslation>["t"]) {
   return (
     t("onesa.welcome", {
       defaultValue:
-        "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?",
+        "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?",
     }) ||
-    "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?"
+    "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?"
   );
 }
 
@@ -941,7 +941,8 @@ export default function OnesaFloatingAssistant() {
                           hasOnesaChatStarted
                             ? ""
                             : t("onesa.starter_prompt", {
-                                defaultValue: "Ask about Zimbabwe…",
+                                defaultValue:
+                                  "Ask about Zimbabwe or Southern Africa…",
                               })
                         }
                         className="min-h-[96px] border-white/20 bg-white/[0.02] text-white placeholder:text-white/70"

@@ -6,9 +6,9 @@
     "dark": "Rima"
   },
   "brand": "Diaspora Unlocked",
-  "tagline": "Dandira reZimbabwe neVana vari Kunze kweNyika",
+  "tagline": "Midzi yedu iri muZimbabwe. Takabatana nekumaodzanyemba kweAfrica.",
   "about": "Nezvedu",
-  "about_us": "Diaspora Unlocked inobatanidza veZimbabwe vari kunze nevamwe vanofarira Zimbabwe nezvigadzirwa, ruzivo rwenzendo, mikana yebhizimisi nerubatsiro rweAI.",
+  "about_us": "Iine midzi muZimbabwe, Diaspora Unlocked inogamuchira vanhu vose vanobva kumaodzanyemba kweAfrica vari kunze kwenyika, nezvigadzirwa zvekumusha, ruzivo rwenzendo mudunhu uye mazano ebhizinesi neAI.",
   "select_lang": "Sarudza Mutauro",
   "account": {
     "logout": "Buda",
@@ -32,13 +32,13 @@
     "about": {
       "title": "Nezvedu",
       "vision_label": "Chiratidzo Chedu",
-      "vision_content": "Kuita kuti zvive nyore kuramba wakabatana neZimbabwe, chero kwaunogara.",
+      "vision_content": "Kubatsira veZimbabwe nevamwe vanobva kumaodzanyemba kweAfrica vari kunze kwenyika kuti varambe vakabatana nekumusha, chero kwavanogara.",
       "mission_label": "Basa Redu",
-      "mission_content": "Kuunza zvigadzirwa zveZimbabwe, ruzivo rwenzendo, mapurojekiti nerubatsiro rweAI panzvimbo imwe.",
+      "mission_content": "Kuunganidza zvigadzirwa zveZimbabwe, ruzivo rwenzendo mudunhu uye mazano ebhizinesi neAI munzvimbo imwe yevanobva kumaodzanyemba kweAfrica vari kunze kwenyika.",
       "values_label": "Hunhu Hwedu",
       "values_content": "Ruzivo rwakajeka, rubatsiro runobatsira nekutsanangura chokwadi chezviripo.",
       "who_label": "Tiri Vanani",
-      "who_content": "Diaspora Unlocked inobatanidza vanhu vari muZimbabwe nevari kunze nezvigadzirwa, ruzivo rwekufamba, pfungwa dzebhizinesi nerubatsiro rweAI.",
+      "who_content": "Iine midzi muZimbabwe, Diaspora Unlocked inogamuchira vanhu vanobva kumaodzanyemba kweAfrica vari kunze kwenyika nevose vanofarira dunhu iri.",
       "what_label": "Zvatinoita",
       "what_content": "Tarisa zvigadzirwa uye ratidza kufarira, tsvakurudza zano rebhizimisi, ronga rwendo kana kubvunza Onesa. Kufarira chigadzirwa hakusi kuodha kana kubhadhara."
     },
@@ -48,7 +48,7 @@
       "consent": "Simbisa email yako kuti ugamuchire nhau nemikana yeDiaspora Unlocked. Unogona kuzvibvisa chero nguva. Izvi hazvigadziri akaundi yepuratifomu.",
       "privacy": "Mutemo wezvakavanzika",
       "title": "Tsamba yenhau",
-      "description": "Zvigadzirwa zveZimbabwe, pfungwa dzekufamba nenhau dzepuratifomu neemail.",
+      "description": "Zvigadzirwa zveZimbabwe, mazano enzendo kumaodzanyemba kweAfrica nenhau dzevari kunze kwenyika neemail.",
       "email_placeholder": "Chikero chetsamba yemumhepo",
       "subscribe_aria": "Nyorera kune tsamba",
       "already_subscribed": "Iyi email yakatonyoreswa kutsamba yenhau.",
@@ -159,8 +159,8 @@
     "menu": "Menyu yekufamba pasaiti"
   },
   "home": {
-    "hero_title": "Diaspora Unlocked — batana neZimbabwe",
-    "hero_subtitle": "Kubatanidza Zimbabwe, kumusha nekumhiri kwemakungwa.",
+    "hero_title": "Diaspora Unlocked — Zimbabwe nevanobva kumaodzanyemba kweAfrica vari kunze kwenyika",
+    "hero_subtitle": "Midzi yedu iri muZimbabwe. Takabatana nekumaodzanyemba kweAfrica.",
     "tourism": "Kufamba",
     "technology": "Tekinoroji",
     "investments": "Mari dzinodyarwa",
@@ -168,12 +168,12 @@
     "inquiry_btn": "Taura Nesu",
     "inquiry_title": "Mibvunzowo Zvayo",
     "ready_to_connect_title": "Wagadzirira kubatana nesu here?",
-    "ready_to_connect_subtitle": "Ongorora zvigadzirwa, mazano enzendo nemikana yebhizimisi yeZimbabwe, chero kwauri.",
+    "ready_to_connect_subtitle": "Ongorora zvigadzirwa zveZimbabwe, nzendo kumaodzanyemba kweAfrica nemazano ebhizinesi, chero kwaunogara.",
     "view_data": "Tarisa Nhamba dzeUpfumi",
     "modules": {
       "tourism": {
         "title": "Kufamba",
-        "desc": "Tsvaga nzvimbo dzeZimbabwe dzinoyevedza pasi rose uye ronga kushanya kwako.",
+        "desc": "Ongorora Zimbabwe uye tsvaga nzendo kumaodzanyemba kweAfrica.",
         "stats": "Nzvimbo dzeZimbabwe"
       },
       "investment": {
@@ -192,31 +192,29 @@
       },
       "technology": {
         "title": "Vadivelu Comedy Technology",
-        "description": "Bvunza Onesa nezvezvigadzirwa, nzvimbo nepfungwa dzebhizinesi muZimbabwe.",
+        "description": "Bvunza Onesa nezvezvigadzirwa zveZimbabwe, nzendo mudunhu uye mazano ebhizinesi anobatsira.",
         "detail": "Enzanisa zvaungasarudza, gadzira runyoro rwezvekutarisa kana kunyora hurongwa hwerwendo. Simbisa zvakakosha nevanopa mabasa.",
         "stats": "Ongorora maturusi eAI",
         "image_alt": "Mufananidzo wemukadzi nenzou musango resavanna"
       },
       "investment": {
         "title": "Kudyara mari",
-        "description": "Ongorora pfungwa dzemabhizinesi mukurima, kuvaka, mabasa anotsigira migodhi nekutengeserana kwezuva nezuva.",
+        "description": "Tsvakurudza mazano ebhizinesi muZimbabwe, kubva pakurima nekuvaka kusvika kumabasa emigodhi nekutengeserana.",
         "detail": "Tanga nepfungwa yaunokwanisa, nzwisisa mari nenjodzi, uye simbisa zvakadzama usati waisa mari.",
         "stats": "Ongorora pfungwa dzebhizinesi",
         "image_alt": "Miriwo mitsva iri mumatengu"
       },
       "tourism": {
         "title": "Kufamba",
-        "description": "Ziva mapopoma, mhuka dzesango, nhaka nenzvimbo dzekushanyira muZimbabwe.",
-        "detail": "Enzanisa nzvimbo, edza gwara reAR uye gadzira hurongwa hwerwendo naOnesa.",
+        "description": "Ronga nzendo dzekumusha uye tsvaga nzvimbo dzekushanyira muZimbabwe nekumaodzanyemba kweAfrica.",
+        "detail": "Tsvaga ndege nepekugara, verenga mazano enzendo mudunhu kana kunyora hurongwa hweZimbabwe naOnesa.",
         "stats": "Tsvaga kwaunoda kuenda",
         "image_alt": "Mapopoma eVictoria Falls nenzvimbo yakasvibira yakaapoteredza muZimbabwe"
       }
     },
-    "hero_pause": "Misa mifananidzo",
-    "hero_resume": "Enderera nemifananidzo",
     "discovery": {
-      "title": "Ongorora Zimbabwe nenzira yako.",
-      "description": "Ongorora zvigadzirwa zveZimbabwe, tsvakurudza pfungwa dzebhizinesi, ronga kushanya kana kubvunza Onesa. Wana pokutangira, chero kwaunogara."
+      "title": "Ramba wakabatana nekumusha, mhiri kwemiganhu.",
+      "description": "Tinotangira muZimbabwe. Ungave uchibva muZimbabwe kana kune imwe nyika yekumaodzanyemba kweAfrica, unogamuchirwa pano. Tsvaga zvigadzirwa zvekumusha, nzendo mudunhu nemazano ebhizinesi."
     }
   },
   "tech": {
@@ -226,10 +224,10 @@
       "eyebrow": "Tekinoroji & zvishandiso zvezuva nezuva",
       "title": "Rubatsiro rweAI pakuronga.",
       "highlight": "Ichishandisa Onesa.",
-      "description": "Bvunza nezvezvigadzirwa zveZimbabwe, pfungwa dzebhizinesi kana kufamba. Shandisa Onesa kuenzanisa zvingasarudzwa, kuronga mibvunzo yako nekunyora hurongwa.",
+      "description": "Bvunza nezvezvigadzirwa zveZimbabwe, nzendo kumaodzanyemba kweAfrica kana mazano ebhizinesi. Shandisa Onesa kuenzanisa zvingasarudzwa, kuronga mibvunzo nekunyora hurongwa.",
       "principle": "Tanga nemubvunzo. Wana danho rinotevera rakajeka.",
       "image_alt": "Mufananidzo wemukadzi nenzou musango resavanna",
-      "caption": "Onesa ichibatsira pamibvunzo yako yeZimbabwe.",
+      "caption": "Onesa, yeZimbabwe nenzendo kumaodzanyemba kweAfrica.",
       "tools_cta": "Ongorora zvishandiso"
     },
     "tools": {
@@ -1088,7 +1086,7 @@
       "eyebrow": "Bhizimisi nekudyara mari",
       "title": "Shandura pfungwa dzako",
       "highlight": "kuita bhizimisi muZimbabwe.",
-      "description": "Mazano ebhizimisi evaZimbabwe vari kumusha nekunze. Ongorora chirongwa chidiki chekutanga, nzwisisa mari inodiwa uye zvaunofanira kuongorora usati washandisa mari yawakachengeta.",
+      "description": "Mazano ebhizinesi ane midzi muZimbabwe, kune vari kumusha nevaya vanobva kumaodzanyemba kweAfrica vari kunze kwenyika. Ongorora chirongwa chidiki chekutanga nezvaunofanira kutarisa usati washandisa mari yawakachengeta.",
       "ideas_cta": "Ongorora mazano ebhizimisi",
       "plan_cta": "Ronga danho rako rekutanga",
       "principle": "Tanga nezvidiki. Ziva mutengi wako. Ramba uchitevera.",
@@ -1629,8 +1627,8 @@
     "title": "Taura na Onesa AI",
     "send": "Tumira",
     "thinking": "Ndiri kufunga...",
-    "starter_prompt": "Bvunza nezveZimbabwe…",
-    "welcome": "Ndinogona kukubatsira kuona zvigadzirwa zveZimbabwe, mazano enzendo neruzivo rwemapurojekiti. Chii chaunoda kuziva?",
+    "starter_prompt": "Bvunza nezveZimbabwe kana kumaodzanyemba kweAfrica…",
+    "welcome": "Mauya kuDiaspora Unlocked, ine midzi muZimbabwe uye yakavhurika kune vanobva kumaodzanyemba kweAfrica vari kunze kwenyika. Ndinogona kukubatsira kuongorora zvigadzirwa zveZimbabwe, nzendo mudunhu nemazano ebhizinesi. Munoda kutangira papi?",
     "status_prefix": "Mamiro aOnesa",
     "status_offline": "Haisi online",
     "status_backend_unreachable": "Onesa haisi kuwanikwa parizvino. Edza zvakare gare gare.",
@@ -1985,7 +1983,7 @@
   },
   "pilot": {
     "available_now": "Zviripo iye zvino",
-    "home_purpose": "Wana zvigadzirwa zveZimbabwe, tsvakurudza nzendo nemazano ebhizimisi, uri kumusha kana kunze.",
+    "home_purpose": "Zvigadzirwa zvekumusha, nzendo mudunhu uye mazano ebhizinesi anobatsira veZimbabwe nevamwe vanobva kumaodzanyemba kweAfrica vari kunze kwenyika.",
     "browse_products": "Ona zvigadzirwa",
     "request_status": "Mamiriro echikumbiro",
     "final_quote": "Mutengo wekupedzisira",
@@ -2151,7 +2149,7 @@
     "car-hire": "Kurenda motokari",
     "explore": "Ongorora",
     "my-trips": "Nzendo dzangu",
-    "description": "Ronga nzendo dzekuenda, kubva uye mukati meSouthern Africa. Chengeta mazano ako, wozobhuka nevapi vesevhisi.",
+    "description": "Munoshanyira mhuri, kudzokera kumusha kana kuona nzvimbo itsva here? Rongai nzendo kuenda, kubva uye mukati meZimbabwe nekumaodzanyemba kweAfrica, mozobhuka zvakananga nevapi vemabasa.",
     "search-intro": "Tanga nemazuva nevafambi. Mashoko aya anoenderera kune zvimwe zvikamu.",
     "origin": "Nhandare yekubva",
     "destination": "Nhandare yekusvika / nzvimbo",

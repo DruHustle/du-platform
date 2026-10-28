@@ -48,6 +48,7 @@ const channel = process.env.NAVIGATION_BROWSER_CHANNEL || "chrome";
 const browser = await chromium.launch({
   channel: channel === "chromium" ? undefined : channel,
   headless: true,
+  args: ["--enable-unsafe-swiftshader"],
 });
 const checks = [];
 const record = check => {
@@ -119,9 +120,22 @@ try {
         .count(),
       0
     );
+    await page.waitForFunction(
+      () =>
+        document
+          .querySelector("[data-waterfall-state]")
+          ?.getAttribute("data-waterfall-state") === "playing"
+    );
     assert.equal(
-      await homeHero.getByRole("button", { name: /pause|resume/i }).count(),
+      await homeHero
+        .getByRole("button", { name: /(?:pause|play) waterfall animation/i })
+        .count(),
       0
+    );
+    assert.equal(
+      await homeHero.getByRole("button").count(),
+      1,
+      "Only the Explore control belongs in the Home hero"
     );
     assert.equal(
       await homeHero.locator('img[aria-hidden="true"]').getAttribute("src"),
@@ -152,7 +166,7 @@ try {
     record({
       width,
       scenario:
-        "static Victoria Falls hero and stationary mouse/keyboard exploration control",
+        "continuously flowing Victoria Falls and stationary mouse/keyboard exploration control",
     });
     slowScripts = true;
 
