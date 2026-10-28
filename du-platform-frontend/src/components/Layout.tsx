@@ -478,7 +478,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.vision_label", { defaultValue: "Our Vision" }),
       content: t("footer.about.vision_content", {
         defaultValue:
-          "Make it easier to stay connected to Zimbabwe, wherever you live.",
+          "Make it easier for Zimbabweans and the wider Southern African diaspora to stay connected to home, wherever they live.",
       }),
     },
     {
@@ -486,7 +486,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.mission_label", { defaultValue: "Our Mission" }),
       content: t("footer.about.mission_content", {
         defaultValue:
-          "Bring Zimbabwean products, travel information, project profiles and practical AI help into one place.",
+          "Bring Zimbabwean products, regional travel research and practical business and AI guidance into one place for the Southern African diaspora.",
       }),
     },
     {
@@ -502,7 +502,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.who_label", { defaultValue: "Who we are" }),
       content: t("footer.about.who_content", {
         defaultValue:
-          "Diaspora Unlocked connects people in Zimbabwe and abroad with products, travel information, business ideas and practical AI assistance.",
+          "Rooted in Zimbabwe, Diaspora Unlocked welcomes people across the Southern African diaspora and anyone interested in the region.",
       }),
     },
     {
@@ -1089,7 +1089,7 @@ export default function Layout({ children }: LayoutProps) {
                 <p className="text-sm text-slate-500">
                   {tr(
                     "footer.newsletter.description",
-                    "Zimbabwean products, travel ideas and platform news by email."
+                    "Zimbabwean products, Southern African travel ideas and diaspora news by email."
                   )}
                 </p>
                 <form

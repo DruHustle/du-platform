@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 import InstantImage from "@/components/InstantImage";
+import WaterfallBackdrop from "./WaterfallBackdrop";
 
 export default function MainPageHero() {
   const { t } = useTranslation();
@@ -11,17 +12,7 @@ export default function MainPageHero() {
     <div id="main-page-hero-wrapper" className="flex flex-col w-full">
       {/* SECTION 1: CINEMATIC HERO */}
       <section className="relative min-h-[max(40rem,100svh)] py-28 w-full flex items-center justify-center overflow-hidden bg-slate-950">
-        <div className="absolute inset-0 z-0">
-          <InstantImage
-            src="/images/pages/tourism/victoria_falls.webp"
-            alt=""
-            aria-hidden="true"
-            priority
-            fetchPriority="high"
-            wrapperClassName="absolute inset-0 h-full w-full bg-slate-900"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </div>
+        <WaterfallBackdrop />
 
         <div
           className="absolute inset-0 z-10 bg-slate-950/35"

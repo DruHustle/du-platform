@@ -97,11 +97,9 @@ export function PublicPagePreview({
             height="112"
             style={{ margin: "auto" }}
           />
-          <h1 className="seo-h1">Diaspora Unlocked</h1>
-          <p>Connecting Zimbabwe, at home and abroad.</p>
-          <p>
-            Discover products, travel research and practical business ideas.
-          </p>
+          <h1 className="seo-h1">{english.home.hero_title}</h1>
+          <p>{english.home.hero_subtitle}</p>
+          <p>{english.pilot.home_purpose}</p>
         </header>
       ) : (
         <h1>{product?.name || seo.bodyHeading}</h1>

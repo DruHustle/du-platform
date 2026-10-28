@@ -6,9 +6,9 @@
     "dark": "Kumnyama"
   },
   "brand": "Diaspora Unlocked",
-  "tagline": "Ipulatifomu yeZimbabwe Global Diaspora",
+  "tagline": "Sigxile eZimbabwe. Sixhumene le-Afrika eseNingizimu.",
   "about": "Mayelana",
-  "about_us": "IDiaspora Unlocked ixhumanisa abaseZimbabwe abaphesheya labanye abathanda iZimbabwe lempahla, ulwazi lohambo, amathuba ebhizimisi loncedo lweAI.",
+  "about_us": "Igxile eZimbabwe, iDiaspora Unlocked yamukela bonke abavela e-Afrika eseNingizimu abahlala kwamanye amazwe, ngemikhiqizo yakwethu, ulwazi lohambo esifundeni lemibono yamabhizimisi losizo lwe-AI.",
   "select_lang": "Khetha ulimi",
   "account": {
     "logout": "Phuma",
@@ -32,13 +32,13 @@
     "about": {
       "title": "Mayelana Lathi",
       "vision_label": "Umbono Wethu",
-      "vision_content": "Ukwenza kube lula ukuhlala uxhumene leZimbabwe, loba uhlala ngaphi.",
+      "vision_content": "Ukwenza kube lula kubantu beZimbabwe labanye abavela e-Afrika eseNingizimu abahlala kwamanye amazwe ukuthi bahlale bexhumene lekhaya, loba behlala ngaphi.",
       "mission_label": "Inhloso Yethu",
-      "mission_content": "Ukuhlanganisa impahla yeZimbabwe, ulwazi lohambo, amaphrofayili loncedo lweAI endaweni eyodwa.",
+      "mission_content": "Ukuhlanganisa imikhiqizo yeZimbabwe, ulwazi lohambo esifundeni lemibono yamabhizimisi losizo lwe-AI endaweni eyodwa yabavela e-Afrika eseNingizimu abahlala kwamanye amazwe.",
       "values_label": "Amanani Ethu",
       "values_content": "Ulwazi olucacileyo, uncedo oluluncedo lokuchaza iqiniso lokukhona.",
       "who_label": "Singobani",
-      "who_content": "IDiaspora Unlocked ixhumanisa abantu abaseZimbabwe labangaphandle ngemikhiqizo, ulwazi lokuhamba, imibono yebhizimusi loncedo lweAI.",
+      "who_content": "Igxile eZimbabwe, iDiaspora Unlocked yamukela abantu abavela e-Afrika eseNingizimu abahlala kwamanye amazwe labo bonke abathanda lesi sifunda.",
       "what_label": "Esikwenzayo",
       "what_content": "Khangela imikhiqizo utshengise intshisekelo, cwaninga ibhizimusi, hlela uhambo kumbe ubuze u-Onesa. Intshisekelo yomkhiqizo ayisilo oda kumbe ukukhokha."
     },
@@ -48,7 +48,7 @@
       "consent": "Qinisekisa i-imeyili yakho ukuze uthole izindaba lamathuba eDiaspora Unlocked. Ungazikhipha loba nini. Lokhu akuvuli i-akhawunti yenkundla.",
       "privacy": "Umgomo wobumfihlo",
       "title": "Iphephandaba",
-      "description": "Imikhiqizo yaseZimbabwe, imibono yokuhamba lezindaba zenkundla nge-imeyili.",
+      "description": "Imikhiqizo yeZimbabwe, imibono yohambo e-Afrika eseNingizimu lezindaba zabahlala kwamanye amazwe nge-imeyili.",
       "email_placeholder": "Ikheli le-imeyili",
       "subscribe_aria": "Bhalisela iphephandaba",
       "already_subscribed": "Le imeyili isivele ibhaliselwe i-newsletter.",
@@ -159,8 +159,8 @@
     "menu": "Imenyu yokuhamba kusayithi"
   },
   "home": {
-    "hero_title": "Diaspora Unlocked — xhumana leZimbabwe",
-    "hero_subtitle": "Ukuxhumanisa iZimbabwe, ekhaya laphesheya.",
+    "hero_title": "Diaspora Unlocked — iZimbabwe labavela e-Afrika eseNingizimu abahlala kwamanye amazwe",
+    "hero_subtitle": "Sigxile eZimbabwe. Sixhumene le-Afrika eseNingizimu.",
     "tourism": "Ukuvakasha",
     "technology": "Ezobuchwepheshe",
     "investments": "Ukutshala Imali",
@@ -168,12 +168,12 @@
     "inquiry_btn": "Thintana lathi",
     "inquiry_title": "Imibuzo ejwayelekileyo",
     "ready_to_connect_title": "Usulungele ukuxhumana?",
-    "ready_to_connect_subtitle": "Hlola impahla, amacebo ohambo lamathuba ebhizimisi eZimbabwe, loba ungaphi.",
+    "ready_to_connect_subtitle": "Hlola imikhiqizo yeZimbabwe, uhambo e-Afrika eseNingizimu lemibono yamabhizimisi, loba uhlala ngaphi.",
     "view_data": "Buka Idatha yezomnotho",
     "modules": {
       "tourism": {
         "title": "Ukuvakasha",
-        "desc": "Thola izindawo zokuvakasha zaseZimbabwe ezisezingeni lomhlaba njalo uhlele ukuvakasha kwakho.",
+        "desc": "Hlola iZimbabwe uthole lohambo e-Afrika eseNingizimu.",
         "stats": "Izindawo zeZimbabwe"
       },
       "investment": {
@@ -192,31 +192,29 @@
       },
       "technology": {
         "title": "Ubuchwepheshe",
-        "description": "Buza uOnesa ngemikhiqizo, izindawo lemibono yebhizimusi eZimbabwe.",
+        "description": "Buza u-Onesa ngemikhiqizo yeZimbabwe, uhambo esifundeni lemibono yamabhizimisi elusizo.",
         "detail": "Qathanisa ongakukhetha, lungisa uhlu lokuhlola kumbe ubhale uhlelo lohambo. Qinisekisa imininingwane eqakathekileyo labahlinzeki.",
         "stats": "Hlola amathuluzi eAI",
         "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna"
       },
       "investment": {
         "title": "Ukutshalwa kwemali",
-        "description": "Hlola imibono yamabhizimusi ekulimeni, ekwakheni, emisebenzini esekela izimayini lasekuthengiseni kwansuku zonke.",
+        "description": "Cwaninga imibono yamabhizimisi eZimbabwe, kusukela ekulimeni lekwakheni kuze kufike emisebenzini yezimayini lokuhweba.",
         "detail": "Qala ngombono ongawenelisa, zwisisa izindleko lobungozi, uqinisekise imininingwane ungakafaki imali.",
         "stats": "Hlola imibono yebhizimusi",
         "image_alt": "Imibhida emitsha emabhasikitini"
       },
       "tourism": {
         "title": "Ukuvakasha",
-        "description": "Yazi impophoma, inyamazana zeganga, amagugu lezindawo zokuvakatshela eZimbabwe.",
-        "detail": "Qathanisa izindawo, zama umhlahlandlela weAR njalo ubhale uhlelo lohambo loOnesa.",
+        "description": "Hlela uhambo lokuya ekhaya uthole izindawo eZimbabwe le-Afrika eseNingizimu.",
+        "detail": "Dinga izindiza lendawo zokuhlala, funda iziqondiso zesifunda kumbe ubhale uhlelo lweZimbabwe lo-Onesa.",
         "stats": "Thola lapho ofuna ukuya khona",
         "image_alt": "Izimpophoma zeVictoria Falls lendawo eluhlaza ezizungezileyo eZimbabwe"
       }
     },
-    "hero_pause": "Misa imifanekiso",
-    "hero_resume": "Qhubeka ngemifanekiso",
     "discovery": {
-      "title": "Hlola iZimbabwe ngendlela yakho.",
-      "description": "Hlola imikhiqizo yaseZimbabwe, cwaninga imibono yebhizimusi, hlela ukuvakatshela kumbe ubuze uOnesa. Thola indawo yokuqala, loba ngaphi lapho ohlala khona."
+      "title": "Hlala uxhumene lekhaya, ngale kwemingcele.",
+      "description": "Siqala eZimbabwe. Kungakhathalekile ukuthi uvela eZimbabwe kumbe kwenye indawo e-Afrika eseNingizimu, wamukelekile lapha. Hlola imikhiqizo yakwethu, uhambo esifundeni lemibono yamabhizimisi."
     }
   },
   "tech": {
@@ -226,10 +224,10 @@
       "eyebrow": "Ubuchwepheshe & amathuluzi ansuku zonke",
       "title": "Uncedo lweAI ekuhleleni.",
       "highlight": "Ngamandla e-Onesa.",
-      "description": "Buza ngemikhiqizo yaseZimbabwe, imibono yebhizimusi kumbe ukuhamba. Sebenzisa uOnesa ukuqathanisa ongakukhetha, ukuhlela imibuzo yakho lokubhala uhlelo.",
+      "description": "Buza ngemikhiqizo yeZimbabwe, uhambo e-Afrika eseNingizimu kumbe imibono yamabhizimisi. Sebenzisa u-Onesa ukuqhathanisa ongakukhetha, ukuhlela imibuzo lokubhala uhlelo.",
       "principle": "Qala ngombuzo. Thola inyathelo elilandelayo elicacileyo.",
       "image_alt": "Umfanekiso wowesifazane lendlovu endaweni yesavanna",
-      "caption": "I-Onesa incedisa emibuzweni yakho ngeZimbabwe.",
+      "caption": "U-Onesa, weZimbabwe lohambo e-Afrika eseNingizimu.",
       "tools_cta": "Hlola amathuluzi"
     },
     "tools": {
@@ -1088,7 +1086,7 @@
       "eyebrow": "Amabhizimusi lokutshalwa kwemali",
       "title": "Sebenzisa amacebo akho.",
       "highlight": "EZimbabwe.",
-      "description": "Amacebo ebhizimusi kubantu beZimbabwe abasekhaya labakwamanye amazwe. Hlola iphrojekthi encane yokuqala, uzwisise izindleko njalo uqale uhlole ungakasebenzisi imali oyilondolozileyo.",
+      "description": "Imibono yamabhizimisi egxile eZimbabwe, yabantu abasekhaya labavela e-Afrika eseNingizimu abahlala kwamanye amazwe. Hlola umsebenzi omncane wokuqala lalokho okumele ukuhlolisise ungakasebenzisi imali oyilondolozileyo.",
       "ideas_cta": "Hlola amacebo ebhizimusi",
       "plan_cta": "Hlela inyathelo lakho lokuqala",
       "principle": "Qala ngokuncane. Yazi ikhasimende. Hlala ulandelela.",
@@ -1629,8 +1627,8 @@
     "title": "Xoxa le-Onesa AI",
     "send": "Thumela",
     "thinking": "Iyacabanga...",
-    "starter_prompt": "Buza ngeZimbabwe…",
-    "welcome": "Ngingakusiza ukuhlola impahla yeZimbabwe, amacebo ohambo lolwazi lwamaphrojekthi. Kuyini ofuna ukukwazi?",
+    "starter_prompt": "Buza ngeZimbabwe kumbe i-Afrika eseNingizimu…",
+    "welcome": "Wamukelekile kuDiaspora Unlocked, egxile eZimbabwe levulekele abavela e-Afrika eseNingizimu abahlala kwamanye amazwe. Ngingakusiza ukuhlola imikhiqizo yeZimbabwe, uhambo esifundeni lemibono yamabhizimisi. Ufuna ukuqala ngaphi?",
     "status_prefix": "Isimo se-Onesa",
     "status_offline": "Ayikho online",
     "status_backend_unreachable": "UOnesa katholakali khathesi. Zama futhi ngemva kwesikhathi.",
@@ -1985,7 +1983,7 @@
   },
   "pilot": {
     "available_now": "Kukhona khathesi",
-    "home_purpose": "Thola imikhiqizo yaseZimbabwe, ucwaninge uhambo lamacebo ebhizimisi, usekhaya kumbe phandle.",
+    "home_purpose": "Imikhiqizo yakwethu, uhambo esifundeni lemibono yamabhizimisi kubantu beZimbabwe labanye abavela e-Afrika eseNingizimu abahlala kwamanye amazwe.",
     "browse_products": "Bona imikhiqizo",
     "request_status": "Isimo sesicelo",
     "final_quote": "Intengo yokucina",
@@ -2151,7 +2149,7 @@
     "car-hire": "Ukuqhatsha imota",
     "explore": "Hlola",
     "my-trips": "Uhambo lwami",
-    "description": "Hlela uhambo oluya, olusuka lolungaphakathi kweSouthern Africa. Gcina imibono yakho, ubhukhe kubanikezeli.",
+    "description": "Uvakashela imuli, uya ekhaya kumbe uhlola indawo entsha? Hlela uhambo lokuya, lokusuka langaphakathi kweZimbabwe le-Afrika eseNingizimu, ubhukhe ngokuqondileyo kubahlinzeki.",
     "search-intro": "Qala ngezinsuku labahambi. Imininingwane iyagcinwa nxa utshintsha ingxenye.",
     "origin": "Isikhumulo sokusuka",
     "destination": "Isikhumulo sokuya / indawo",
