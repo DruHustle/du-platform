@@ -39,9 +39,49 @@ test("previews cannot proxy requests to production and are noindex", async () =>
     );
     assert(!workflow.includes("self-hosted"));
     assert(workflow.includes("run: node scripts/tests/pilot-preview.mjs"));
-    const seo = await fs.readFile("scripts/tests/seo-build.mjs", "utf8");
+    const seo = await fs.readFile(
+      "du-platform-frontend/scripts/tests/seo-build.mjs",
+      "utf8"
+    );
     assert(seo.includes('process.env.VERCEL_ENV === "preview"'));
     assert(seo.includes('"/preview-api-unavailable.json"'));
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});
+test("repository preview preparation also isolates the standalone frontend configuration", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "du-both-previews-"));
+  try {
+    await fs.mkdir(path.join(dir, "du-platform-frontend"));
+    for (const filename of ["vercel.json", "du-platform-frontend/vercel.json"])
+      await fs.copyFile(filename, path.join(dir, filename));
+    execFileSync(
+      process.execPath,
+      [path.resolve("scripts/prepare-preview.mjs")],
+      { cwd: dir }
+    );
+    for (const filename of [
+      "vercel.json",
+      "du-platform-frontend/vercel.json",
+    ]) {
+      const config = JSON.parse(
+        await fs.readFile(path.join(dir, filename), "utf8")
+      );
+      assert.equal(
+        config.rewrites.find(rule => rule.source === "/api/:path*").destination,
+        "/preview-api-unavailable.json"
+      );
+      assert(!config.rewrites.some(rule => /https:/.test(rule.destination)));
+      assert(
+        config.headers.some(rule =>
+          rule.headers.some(
+            header =>
+              header.key === "X-Robots-Tag" &&
+              header.value === "noindex, nofollow"
+          )
+        )
+      );
+    }
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }
@@ -72,7 +112,7 @@ test("repair builds and CI never require the production API", async () => {
     )
   );
   const builder = await fs.readFile(
-    "scripts/build-route-documents.mjs",
+    "du-platform-frontend/scripts/build-route-documents.mjs",
     "utf8"
   );
   assert(

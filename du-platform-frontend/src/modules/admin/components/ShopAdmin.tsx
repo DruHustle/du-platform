@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { refreshShopCatalog } from "@/modules/shop/lib/useShopCatalog";
 import { formatShopMoney } from "@/modules/shop/lib/formatShopMoney";
-import { SHOP_CURRENCIES } from "@shared/shopCurrency";
+import { SHOP_CURRENCIES } from "@/contracts/shopCurrency";
 
 export type AdminShopProduct = {
   id: number;

@@ -1,4 +1,4 @@
-import { TOURISM_SEARCH_DESTINATIONS } from "../../../../shared/tourismSearch";
+import { TOURISM_SEARCH_DESTINATIONS } from "../../../contracts/tourismSearch";
 import { SearchRepository } from "../repositories/searchRepository";
 
 const ROUTE_INDEX = [

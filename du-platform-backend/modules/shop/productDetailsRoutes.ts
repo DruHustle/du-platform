@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { db } from "../../shared/databaseRuntime";
-import { productDetailsSchema } from "../../../shared/productDetails";
-import { ShopRequestError } from "../../shared/persistence/shopStore";
+import { db } from "../../lib/databaseRuntime";
+import { productDetailsSchema } from "../../contracts/productDetails";
+import { ShopRequestError } from "../../lib/persistence/shopStore";
 import { orderApiError } from "./orderAdminRoutes";
-import { ok } from "../../shared/responseFormatter";
+import { ok } from "../../lib/responseFormatter";
 import { readPublishedProductDetails } from "./productDetailsStore";
 export function createProductDetailsRouter(admin = false) {
   const r = Router();

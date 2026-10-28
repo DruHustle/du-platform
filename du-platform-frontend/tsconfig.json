@@ -1,8 +1,25 @@
 {
-  "extends": "../tsconfig.json",
-  "include": ["src/**/*", "shared/**/*", "../shared/**/*"],
-  "exclude": ["../node_modules", "../dist", "**/*.test.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"],
   "compilerOptions": {
-    "tsBuildInfoFile": "../node_modules/typescript/du-platform-frontend.tsbuildinfo"
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/du-platform-frontend.tsbuildinfo",
+    "noEmit": true,
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "types": ["node", "vite/client"],
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

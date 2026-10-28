@@ -4,7 +4,7 @@ import {
   PUBLIC_SITE_ORIGIN,
   resolveCanonicalUrl,
   resolveRouteSeo,
-} from "../../../shared/routeSeo";
+} from "../contracts/routeSeo";
 
 describe("canonical URL policy", () => {
   it.each([

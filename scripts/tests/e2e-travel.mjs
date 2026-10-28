@@ -5,14 +5,14 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { chromium, webkit } from "playwright";
 import { createModularServer } from "../../du-platform-backend/server.ts";
-import { travelRedirects } from "../../shared/travelRoutes.ts";
+import { travelRedirects } from "../../du-platform-backend/contracts/travelRoutes.ts";
 const engine = process.env.TRAVEL_BROWSER || "chromium";
 const output =
   process.env.TRAVEL_OUTPUT_DIR || join(tmpdir(), `du-travel-${engine}`);
 await mkdir(output, { recursive: true });
 const app = createModularServer({
   backend: { db: null, serverStartedAt: Date.now() },
-  staticPath: resolve("dist/public"),
+  staticPath: resolve("du-platform-frontend/dist"),
 });
 const server = createServer(app);
 await new Promise((r, j) => {

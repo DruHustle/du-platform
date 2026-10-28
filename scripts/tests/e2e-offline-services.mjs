@@ -23,6 +23,7 @@ const server = spawn(
       PORT: String(port),
       APP_BASE_URL: baseUrl,
       CORS_ORIGINS: baseUrl,
+      STATIC_DIR: resolve("du-platform-frontend/dist"),
       ONESA_MOCK_MODE: "true",
       ONESA_MOCK_STT_TEXT: "Tell me about Victoria Falls",
     },
@@ -725,7 +726,9 @@ try {
   await context.close();
 
   await waitForRateWindow("headset scenarios");
-  const require = createRequire(import.meta.url);
+  const require = createRequire(
+    new URL("../../du-platform-frontend/package.json", import.meta.url)
+  );
   const xrRequire = createRequire(require.resolve("@react-three/xr"));
   const pmRequire = createRequire(xrRequire.resolve("@pmndrs/xr"));
   const iwer = await readFile(

@@ -1,7 +1,7 @@
 import { NativeSelect } from "@/components/ui/native-select";
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
-import { SHOP_CURRENCIES, type ShopCurrency } from "@shared/shopCurrency";
+import { SHOP_CURRENCIES, type ShopCurrency } from "@/contracts/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 
 export default function ShopCurrencySelect({

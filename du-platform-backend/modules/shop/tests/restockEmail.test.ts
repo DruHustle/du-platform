@@ -11,9 +11,9 @@ import mysql, { type Pool, type RowDataPacket } from "mysql2/promise";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
+import { SHOP_READINESS_CHECKS } from "../../../contracts/shopReadiness";
 let pool: Pool | null = null;
-vi.mock("../../../shared/databaseRuntime", () => ({
+vi.mock("../../../lib/databaseRuntime", () => ({
   get db() {
     return pool;
   },
@@ -21,8 +21,8 @@ vi.mock("../../../shared/databaseRuntime", () => ({
   isTransientShopQueryError: () => false,
   isMemoryFallbackEnabled: () => false,
 }));
-vi.mock("../../../shared/email", async importOriginal => ({
-  ...(await importOriginal<typeof import("../../../shared/email")>()),
+vi.mock("../../../lib/email", async importOriginal => ({
+  ...(await importOriginal<typeof import("../../../lib/email")>()),
   getNotifyFromEmail: async () => "fixture@example.test",
   getNotifyAlertEmails: async () => [],
   isValidEmail: () => true,

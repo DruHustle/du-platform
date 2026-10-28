@@ -3,7 +3,7 @@ import { PublicTravelSearch, verifyTravelQuote } from "../providers";
 import {
   defaultTravelCriteria,
   isSafeSupplierLink,
-} from "../../../../shared/travel";
+} from "../../../contracts/travel";
 const now = Date.parse("2026-10-27T12:00:00Z");
 const criteria = () => ({
   ...defaultTravelCriteria(),

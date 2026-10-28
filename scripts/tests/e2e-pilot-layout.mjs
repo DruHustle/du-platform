@@ -1,5 +1,5 @@
 import { readyShop } from "./shop-readiness-fixture.mjs";
-import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
+import { getPublicShopSeedProducts } from "../../du-platform-backend/contracts/shopCatalog.ts";
 import { createServer } from "node:https";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
@@ -38,7 +38,7 @@ execFileSync(
   ],
   { stdio: "ignore" }
 );
-const root = path.resolve("dist/public");
+const root = path.resolve("du-platform-frontend/dist");
 const types = {
   ".html": "text/html",
   ".css": "text/css",

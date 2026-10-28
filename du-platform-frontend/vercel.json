@@ -1,0 +1,193 @@
+{
+  "buildCommand": "VITE_API_URL=/api pnpm build && pnpm test:seo",
+  "git": {
+    "deploymentEnabled": false
+  },
+  "outputDirectory": "dist",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": null,
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/coming-soon",
+      "destination": "/onesa-ai-chat",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tourism",
+      "destination": "/travel",
+      "permanent": true
+    },
+    {
+      "source": "/tourism/",
+      "destination": "/travel",
+      "permanent": true
+    },
+    {
+      "source": "/tourism.html",
+      "destination": "/travel",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-book-trip",
+      "destination": "/travel/planner",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-book-trip/",
+      "destination": "/travel/planner",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-book-trip.html",
+      "destination": "/travel/planner",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experience",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experience/",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experience.html",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experience",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experience/",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experience.html",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experince",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experince/",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-virtual-experince.html",
+      "destination": "/travel/virtual-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experince",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experince/",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/onesa-ai-tourism-augmented-experince.html",
+      "destination": "/travel/augmented-experience",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*)/index.html",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*)/index",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*).html",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path([^/].*)/",
+      "destination": "/:path",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://du-api.152-70-22-84.sslip.io/api/:path*"
+    },
+    {
+      "source": "/:path([^/.][^.]*)",
+      "destination": "/:path.html"
+    },
+    {
+      "source": "/shop/product/:slug",
+      "destination": "/shop/products.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; connect-src 'self' blob: https://vitals.vercel-insights.com https://va.vercel-scripts.com; media-src 'self' blob: data:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        }
+      ]
+    }
+  ]
+}

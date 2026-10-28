@@ -21,7 +21,7 @@ process.env.RESET_EMAIL_PROVIDER = "resend";
 process.env.ADMIN_EMAILS = "merchant@example.test";
 process.env.FROM_EMAIL = "shop@example.test";
 const { db } = await import(
-  "../../du-platform-backend/shared/databaseRuntime.ts"
+  "../../du-platform-backend/lib/databaseRuntime.ts"
 );
 assert.equal(
   db,
@@ -32,7 +32,7 @@ const { createShopModuleRouter } = await import(
   "../../du-platform-backend/modules/shop/routes/index.ts"
 );
 const { shopSeedProducts } = await import(
-  "../../du-platform-backend/shared/persistence/shopStore.ts"
+  "../../du-platform-backend/lib/persistence/shopStore.ts"
 );
 const product = shopSeedProducts.find(
   item => item.slug === "sables-rugby-home-kit"
@@ -44,8 +44,8 @@ Object.assign(process.env, approval.env);
 const app = express();
 app.use(express.json());
 app.use("/api/shop", createShopModuleRouter());
-app.use(express.static(resolve("dist/public")));
-app.get("*", (_req, res) => res.sendFile(resolve("dist/public/index.html")));
+app.use(express.static(resolve("du-platform-frontend/dist")));
+app.get("*", (_req, res) => res.sendFile(resolve("du-platform-frontend/dist/index.html")));
 const server = await new Promise(done => {
   const listening = app.listen(0, "127.0.0.1", () => done(listening));
 });

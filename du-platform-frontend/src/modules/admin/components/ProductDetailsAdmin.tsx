@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   productDetailsSchema,
   type ProductDetails,
-} from "@shared/productDetails";
+} from "@/contracts/productDetails";
 export default function ProductDetailsAdmin({
   products,
   onDirtyChange,

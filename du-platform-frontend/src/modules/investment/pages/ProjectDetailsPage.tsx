@@ -1,6 +1,6 @@
 import ResearchHandoff from "../components/ResearchHandoff";
 import Layout from "@/components/Layout";
-import investmentProjectRoutes from "@shared/investmentProjectRoutes.json";
+import investmentProjectRoutes from "@/contracts/investmentProjectRoutes.json";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

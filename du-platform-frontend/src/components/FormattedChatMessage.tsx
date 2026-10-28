@@ -1,4 +1,4 @@
-import { allowedOnesaHref } from "@shared/publicSiteInfo";
+import { allowedOnesaHref } from "@/contracts/publicSiteInfo";
 import { Fragment, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 

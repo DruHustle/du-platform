@@ -6,7 +6,7 @@ import Layout from "@/components/Layout";
 import { useShopCatalog } from "../lib/useShopCatalog";
 import { useShopCart } from "../lib/useShopCart";
 import { useShopCurrency } from "../lib/useShopCurrency";
-import { convertShopCents } from "@shared/shopCurrency";
+import { convertShopCents } from "@/contracts/shopCurrency";
 import { formatShopMoney } from "../lib/formatShopMoney";
 import { api } from "@/lib/api";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,7 @@ import PilotReadinessNotice from "../components/PilotReadinessNotice";
 import {
   productDetailsSchema,
   type ProductDetails,
-} from "@shared/productDetails";
+} from "@/contracts/productDetails";
 export default function ProductPage() {
   const [, params] = useRoute("/shop/product/:slug");
   const { products, status, refresh, readiness } = useShopCatalog();

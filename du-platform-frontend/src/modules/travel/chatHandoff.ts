@@ -1,5 +1,5 @@
 import { safeSessionStorage } from "@/lib/browserStorage";
-import type { TravelQuote } from "@shared/travel";
+import type { TravelQuote } from "@/contracts/travel";
 const key = "du_travel_chat_draft_v1";
 // No query-string travel data, provider tokens, signatures or automatic AI call.
 export function prepareTravelChatDraft(

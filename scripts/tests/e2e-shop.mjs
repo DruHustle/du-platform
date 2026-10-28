@@ -1,14 +1,14 @@
 import { readyShop } from "./shop-readiness-fixture.mjs";
-import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
+import { getPublicShopSeedProducts } from "../../du-platform-backend/contracts/shopCatalog.ts";
 import assert from "node:assert/strict";
-import { calculateShopShippingCents } from "../../shared/shopCheckout.ts";
+import { calculateShopShippingCents } from "../../du-platform-backend/contracts/shopCheckout.ts";
 import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { chromium, webkit } from "playwright";
 
 // Serve the production build without loading .env or contacting any service.
-const root = resolve("dist/public");
+const root = resolve("du-platform-frontend/dist");
 const output = process.env.SHOP_OUTPUT_DIR || "/tmp/du-shop-tests";
 const types = {
   ".html": "text/html",

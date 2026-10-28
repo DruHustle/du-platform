@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getSpaDocumentStatus } from "../../server";
-import { resolveRouteSeo } from "../../../shared/routeSeo";
+import { resolveRouteSeo } from "../../contracts/routeSeo";
 
 describe("SPA document fallback", () => {
   it("returns 200 for a registered public route", () => {

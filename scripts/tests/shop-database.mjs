@@ -15,10 +15,10 @@ process.env.NODE_ENV = "test";
 process.env.DATABASE_URL = url;
 const { initializeDatabase } = await import("../../du-platform-backend/db.ts");
 const { db } = await import(
-  "../../du-platform-backend/shared/databaseRuntime.ts"
+  "../../du-platform-backend/lib/databaseRuntime.ts"
 );
 const shop = await import(
-  "../../du-platform-backend/shared/persistence/shopStore.ts"
+  "../../du-platform-backend/lib/persistence/shopStore.ts"
 );
 const unique = crypto.randomUUID();
 let product;

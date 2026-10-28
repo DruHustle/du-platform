@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { customerLanguage } from "@shared/customerLanguage";
+import { customerLanguage } from "@/contracts/customerLanguage";
 import {
   Dialog,
   DialogTrigger,

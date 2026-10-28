@@ -28,7 +28,7 @@ const environment = Object.fromEntries(
     .filter(key => process.env[key])
     .map(key => [key, process.env[key]])
 );
-const serverCode = `import {initializeDatabase} from './du-platform-backend/db.ts';import {db} from './du-platform-backend/shared/databaseRuntime.ts';import {createModularServer} from './du-platform-backend/server.ts';import {createServer} from 'node:http';import path from 'node:path';await initializeDatabase();const {default:axios}=await import('axios');axios.post=async(url,payload)=>{if(!String(url).startsWith('https://api.resend.com/'))throw new Error('Unexpected test provider request');const token=payload.html?.match(/token=([a-f0-9]+)/)?.[1];if(token&&(Array.isArray(payload.to)?payload.to.includes(process.env.ADMIN_EMAILS):payload.to===process.env.ADMIN_EMAILS))console.log('TEST_RESET_TOKEN='+token);return {data:{id:'local-reset-test'}};};const server=createServer();await new Promise(done=>server.listen(0,'127.0.0.1',done));process.env.APP_BASE_URL='http://127.0.0.1:'+server.address().port;const {startTransactionalWorker}=await import('./du-platform-backend/modules/notifications/transactionalWorker.ts');const stopMessages=startTransactionalWorker(db);server.on('close',stopMessages);server.on('request',createModularServer({backend:{db,serverStartedAt:Date.now()},staticPath:path.resolve('dist/public')}));console.log('TEST_URL='+process.env.APP_BASE_URL);process.on('SIGTERM',()=>{server.close();void db?.end().then(()=>process.exit(0));});`;
+const serverCode = `import {initializeDatabase} from './du-platform-backend/db.ts';import {db} from './du-platform-backend/lib/databaseRuntime.ts';import {createModularServer} from './du-platform-backend/server.ts';import {createServer} from 'node:http';import path from 'node:path';await initializeDatabase();const {emailClient:axios}=await import('./du-platform-backend/modules/tests/fixtures/email-client.mjs');axios.post=async(url,payload)=>{if(!String(url).startsWith('https://api.resend.com/'))throw new Error('Unexpected test provider request');const token=payload.html?.match(/token=([a-f0-9]+)/)?.[1];if(token&&(Array.isArray(payload.to)?payload.to.includes(process.env.ADMIN_EMAILS):payload.to===process.env.ADMIN_EMAILS))console.log('TEST_RESET_TOKEN='+token);return {data:{id:'local-reset-test'}};};const server=createServer();await new Promise(done=>server.listen(0,'127.0.0.1',done));process.env.APP_BASE_URL='http://127.0.0.1:'+server.address().port;const {startTransactionalWorker}=await import('./du-platform-backend/modules/notifications/transactionalWorker.ts');const stopMessages=startTransactionalWorker(db);server.on('close',stopMessages);server.on('request',createModularServer({backend:{db,serverStartedAt:Date.now()},staticPath:path.resolve('du-platform-frontend/dist')}));console.log('TEST_URL='+process.env.APP_BASE_URL);process.on('SIGTERM',()=>{server.close();void db?.end().then(()=>process.exit(0));});`;
 let child,
   browser,
   base,
@@ -130,7 +130,7 @@ try {
     401
   );
   const { hashPassword } = await import(
-    "../../du-platform-backend/shared/passwords.ts"
+    "../../du-platform-backend/lib/passwords.ts"
   );
   await pool.execute("UPDATE users SET password_hash=? WHERE email=?", [
     await hashPassword(password),

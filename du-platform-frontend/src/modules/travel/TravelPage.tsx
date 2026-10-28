@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import TravelNav from "./TravelNav";
 import SearchPanel from "./SearchPanel";
 import MyTrips from "./MyTrips";
-import type { TravelCategory } from "@shared/travel";
+import type { TravelCategory } from "@/contracts/travel";
 import "./travel.css";
 export default function TravelPage() {
   const [path] = useLocation();

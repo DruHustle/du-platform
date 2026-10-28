@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { createAiArRouter } from '../ar/routes';
 import { createAiVrRouter } from '../vr/routes';
 import { AiModuleService } from '../services/aiModuleService';
-import { ok } from '../../../shared/responseFormatter';
+import { ok } from '../../../lib/responseFormatter';
 import { registerOnesaAIRoutes } from '../runtime/onesaRoutes';
 import { getOnesaRouteDeps } from '../runtime/onesaRuntime';
 import { registerSpeechRoutes, registerTtsRoutes, registerWhisperRoutes } from "../runtime/speechRoutes";

@@ -2,16 +2,19 @@
 .git
 .vercel
 .env*
+**/.env*
 .cert
+**/.cert
 .claude
 **/*.pem
 **/node_modules
 dist
+**/dist
 playwright-report
 test-results
 private
 
-# Oracle owns the backend. These directories are not needed for the static build.
+# Only the frontend is installed and built for this static deployment.
 du-platform-backend
 deploy
 docs

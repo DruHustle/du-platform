@@ -1,4 +1,4 @@
-import { resolveTravelRedirect } from "../shared/travelRoutes";
+import { resolveTravelRedirect } from "./contracts/travelRoutes";
 import { startOrderNotificationWorker } from "./modules/shop/orderNotifications";
 import { startTransactionalWorker } from "./modules/notifications/transactionalWorker";
 import { startNewsletterWorker } from "./modules/newsletter/worker";
@@ -14,9 +14,9 @@ import { registerCoreMiddleware } from "./core/middleware";
 import { errorHandler, notFoundHandler } from "./core/errorHandler";
 import { registerDomainModules } from "./modules";
 import { registerApiRoutes } from "./api";
-import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
+import { db, isMemoryFallbackEnabled } from "./lib/databaseRuntime";
 import { resolveJwtSecret } from "./utils/jwtSecret";
-import { injectSeoIntoHtml, resolveRouteSeo } from "../shared/routeSeo";
+import { injectSeoIntoHtml, resolveRouteSeo } from "./contracts/routeSeo";
 import { validateStartupConfiguration } from "./core/startupValidation";
 
 type ModularServerOptions = {
@@ -213,10 +213,14 @@ export async function startServer() {
     console.warn(error);
   }
 
-  const staticPath =
-    process.env.NODE_ENV === "production"
-      ? path.resolve(__dirname, "public")
-      : path.resolve(__dirname, "..", "dist", "public");
+  // The API runs independently. A deployment can explicitly supply static
+  // files, or package them beside the bundle for the existing SPA fallback.
+  const candidate = process.env.STATIC_DIR
+    ? path.resolve(process.env.STATIC_DIR)
+    : path.resolve(__dirname, "public");
+  const staticPath = fs.existsSync(path.join(candidate, "index.html"))
+    ? candidate
+    : null;
 
   const app = createModularServer({
     backend: {

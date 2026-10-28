@@ -1,4 +1,4 @@
-import { SHOP_SEED_PRODUCTS } from "@shared/shopCatalog";
+import { SHOP_SEED_PRODUCTS } from "@/contracts/shopCatalog";
 import { SHOP_CATEGORY_CONFIG } from "@/lib/shopCategories";
 import type { ShopProduct } from "./useShopCatalog";
 

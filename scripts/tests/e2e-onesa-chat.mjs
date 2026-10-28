@@ -5,7 +5,7 @@ import { extname, resolve, sep } from "node:path";
 import { chromium, webkit } from "playwright";
 
 // Exercise the production UI without credentials or external service calls.
-const root = resolve("dist/public");
+const root = resolve("du-platform-frontend/dist");
 const types = {
   ".html": "text/html",
   ".js": "text/javascript",

@@ -1,15 +1,15 @@
 import {
   CUSTOMER_LANGUAGES,
   customerLanguage,
-} from "../../../shared/customerLanguage";
-import { emailText } from "../../../shared/customerEmailCopy";
+} from "../../contracts/customerLanguage";
+import { emailText } from "../../lib/copy/customerEmailCopy";
 import type {
   Pool,
   PoolConnection,
   RowDataPacket,
   ResultSetHeader,
 } from "mysql2/promise";
-import { db } from "../../shared/databaseRuntime";
+import { db } from "../../lib/databaseRuntime";
 import { AppError } from "../../core/errorHandler";
 import {
   hashNewsletterToken,

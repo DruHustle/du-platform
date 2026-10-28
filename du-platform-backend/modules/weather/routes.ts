@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { z } from "../../../shared/validation";
-import { weatherCoordinateSchema } from "../../../shared/weather";
-import { db } from "../../shared/databaseRuntime";
+import { z } from "../../contracts/validation";
+import { weatherCoordinateSchema } from "../../contracts/weather";
+import { db } from "../../lib/databaseRuntime";
 import { rateLimiter } from "../../core/rateLimiter";
-import { ok, error } from "../../shared/responseFormatter";
+import { ok, error } from "../../lib/responseFormatter";
 import { MemoryWeatherCache, SqlWeatherCache } from "./cache";
 import { WeatherProvider, WeatherError } from "./provider";
 export function createWeatherRouter(

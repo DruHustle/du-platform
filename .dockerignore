@@ -4,6 +4,7 @@
 node_modules
 **/node_modules
 dist
+**/dist
 dist-server
 private
 .vercel
@@ -11,6 +12,7 @@ playwright-report
 test-results
 # Local credentials, certificates and agent state never enter image build context.
 .cert
+**/.cert
 .aws
 .codex
 .agents

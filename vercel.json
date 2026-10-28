@@ -3,9 +3,9 @@
   "git": {
     "deploymentEnabled": false
   },
-  "outputDirectory": "dist/public",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
+  "outputDirectory": "du-platform-frontend/dist",
+  "devCommand": "pnpm dev:web",
+  "installCommand": "pnpm --dir du-platform-frontend install --frozen-lockfile",
   "framework": null,
   "cleanUrls": false,
   "redirects": [

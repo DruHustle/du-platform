@@ -9,6 +9,7 @@ DEV_FAST_MODE="${DEV_FAST_MODE:-0}"
 DEV_SKIP_OLLAMA_SETUP="${DEV_SKIP_OLLAMA_SETUP:-0}"
 DEV_SKIP_MYSQL_SETUP="${DEV_SKIP_MYSQL_SETUP:-0}"
 DEV_ALL_AUTO_INSTALL_MYSQL="${DEV_ALL_AUTO_INSTALL_MYSQL:-0}"
+BACKEND_ENV_FILE="du-platform-backend/.env"
 
 get_env_value() {
   local key="$1"
@@ -18,9 +19,9 @@ get_env_value() {
     printf '%s\n' "$current"
     return
   fi
-  if [[ -f ".env" ]]; then
+  if [[ -f "$BACKEND_ENV_FILE" ]]; then
     local file_value
-    file_value="$(grep -E "^${key}=" .env | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
+    file_value="$(grep -E "^${key}=" "$BACKEND_ENV_FILE" | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
     if [[ -n "${file_value}" ]]; then
       printf '%s\n' "$file_value"
       return
@@ -46,9 +47,9 @@ get_backend_port() {
     return
   fi
 
-  if [[ -f ".env" ]]; then
+  if [[ -f "$BACKEND_ENV_FILE" ]]; then
     local env_port
-    env_port="$(grep -E '^PORT=' .env | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
+    env_port="$(grep -E '^PORT=' "$BACKEND_ENV_FILE" | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
     if [[ -n "${env_port}" ]]; then
       printf '%s\n' "$env_port"
       return
@@ -58,9 +59,9 @@ get_backend_port() {
 }
 
 get_onesa_provider() {
-  if [[ -f ".env" ]]; then
+  if [[ -f "$BACKEND_ENV_FILE" ]]; then
     local provider
-    provider="$(grep -E '^ONESA_PROVIDER=' .env | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
+    provider="$(grep -E '^ONESA_PROVIDER=' "$BACKEND_ENV_FILE" | tail -n 1 | cut -d'=' -f2- | tr -d '[:space:]' || true)"
     if [[ -n "${provider}" ]]; then
       printf '%s\n' "$(printf '%s' "${provider}" | tr '[:upper:]' '[:lower:]')"
       return

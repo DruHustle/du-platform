@@ -1,7 +1,7 @@
 import {
   getPasswordIssue,
   PASSWORD_ERROR_MESSAGES,
-} from "@shared/passwordPolicy";
+} from "@/contracts/passwordPolicy";
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";

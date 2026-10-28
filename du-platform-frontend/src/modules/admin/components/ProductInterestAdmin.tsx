@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { PublicShopReadiness } from "@shared/shopReadiness";
+import type { PublicShopReadiness } from "@/contracts/shopReadiness";
 export default function ProductInterestAdmin() {
   const [from, setFrom] = useState(
       new Date(Date.now() - 27 * 86400000).toISOString().slice(0, 10)

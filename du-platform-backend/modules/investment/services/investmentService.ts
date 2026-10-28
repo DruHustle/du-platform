@@ -1,4 +1,4 @@
-import { db } from "../../../shared/databaseRuntime";
+import { db } from "../../../lib/databaseRuntime";
 import { InvestmentRepository } from "../repositories/investmentRepository";
 
 export class InvestmentService {

@@ -2,7 +2,7 @@ import {
   publicShopReadiness,
   assertOrderRequestReadiness,
 } from "../shopReadiness";
-import type { ShopCurrency } from "../../../../shared/shopCurrency";
+import type { ShopCurrency } from "../../../contracts/shopCurrency";
 import { OrderRepository } from "../repositories/orderRepository";
 import { PaymentRepository } from "../repositories/paymentRepository";
 import { ProductRepository } from "../repositories/productRepository";

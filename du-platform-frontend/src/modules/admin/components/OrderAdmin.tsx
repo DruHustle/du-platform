@@ -9,7 +9,7 @@ import {
   ORDER_STAGES,
   permittedOrderTransition,
   type OrderStage,
-} from "@shared/orderWorkflow";
+} from "@/contracts/orderWorkflow";
 import { formatShopMoney } from "@/modules/shop/lib/formatShopMoney";
 import {
   prepareOrderCommand,

@@ -1,6 +1,6 @@
-import { isAdminEmail } from "../../../shared/adminIdentity";
-import { issueAccessTokenForUser } from "../../../shared/authSession";
-import { hashPassword, verifyPassword } from "../../../shared/passwords";
+import { isAdminEmail } from "../../../lib/adminIdentity";
+import { issueAccessTokenForUser } from "../../../lib/authSession";
+import { hashPassword, verifyPassword } from "../../../lib/passwords";
 import { isUserEmailConflictError } from "../../../utils/dbErrors";
 import { AuthRepository } from "../repositories/authRepository";
 import {
@@ -8,7 +8,7 @@ import {
   isLoginLocked,
   recordLoginFailure,
   AuthVersionChangedError,
-} from "../../../shared/persistence/authStore";
+} from "../../../lib/persistence/authStore";
 
 // Avoid an immediate response for unknown addresses. This floor is not a
 // constant-time guarantee: database lookup/persistence can take longer.

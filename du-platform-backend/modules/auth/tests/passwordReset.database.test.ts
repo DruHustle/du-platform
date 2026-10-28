@@ -15,7 +15,7 @@ if (
 describe.skipIf(!url)("atomic password reset in MySQL", () => {
   let pool: Pool;
   const databaseName = `du_auth_${crypto.randomBytes(6).toString("hex")}_test`;
-  let store: typeof import("../../../shared/persistence/authStore");
+  let store: typeof import("../../../lib/persistence/authStore");
   beforeAll(async () => {
     const admin = mysql.createPool(url!);
     try {
@@ -29,10 +29,10 @@ describe.skipIf(!url)("atomic password reset in MySQL", () => {
     vi.stubEnv("DATABASE_URL", isolatedUrl.toString());
     vi.stubEnv("ADMIN_EMAILS", "");
     vi.resetModules();
-    const runtime = await import("../../../shared/databaseRuntime");
+    const runtime = await import("../../../lib/databaseRuntime");
     pool = runtime.db!;
     await (await import("../../../db")).initializeDatabase();
-    store = await import("../../../shared/persistence/authStore");
+    store = await import("../../../lib/persistence/authStore");
   });
   afterAll(async () => {
     await pool?.end();
@@ -173,7 +173,7 @@ describe.skipIf(!url)("atomic password reset in MySQL", () => {
   it("rejects old JWTs on ordinary account routes after reset and never falls back from bearer to cookie", async () => {
     const f = await fixture();
     const { issueAccessTokenForUser } = await import(
-      "../../../shared/authSession"
+      "../../../lib/authSession"
     );
     const { createModularServer } = await import("../../../server");
     const server = createModularServer({

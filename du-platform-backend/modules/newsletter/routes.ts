@@ -1,4 +1,4 @@
-import { CUSTOMER_LANGUAGES } from "../../../shared/customerLanguage";
+import { CUSTOMER_LANGUAGES } from "../../contracts/customerLanguage";
 import {
   Router,
   type Request,
@@ -7,8 +7,8 @@ import {
 } from "express";
 import { z } from "zod";
 import { rateLimiter } from "../../core/rateLimiter";
-import { getAdminAuthUser } from "../../shared/admin";
-import { ok } from "../../shared/responseFormatter";
+import { getAdminAuthUser } from "../../lib/admin";
+import { ok } from "../../lib/responseFormatter";
 import { AppError } from "../../core/errorHandler";
 import { NewsletterService } from "./service";
 

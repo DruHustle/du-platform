@@ -5,7 +5,7 @@ import {
   findUserByEmail,
   findUserById,
   resetPasswordWithToken,
-} from "../../../shared/persistence/authStore";
+} from "../../../lib/persistence/authStore";
 import { TransactionalService } from "../../notifications/transactionalService";
 
 export class AuthRepository {

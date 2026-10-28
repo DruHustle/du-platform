@@ -1,4 +1,4 @@
-import { validateBody, validateQuery } from '../../../shared/validators';
+import { validateBody, validateQuery } from '../../../lib/validators';
 import {
   createOrderSchema,
   listProductsQuerySchema,

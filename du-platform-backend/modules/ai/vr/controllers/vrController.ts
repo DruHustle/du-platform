@@ -1,6 +1,6 @@
 import type express from 'express';
 import { VrExperienceService } from '../services/vrExperienceService';
-import { ok, error } from '../../../../shared/responseFormatter';
+import { ok, error } from '../../../../lib/responseFormatter';
 
 export class VrController {
   constructor(private readonly service = new VrExperienceService()) {}

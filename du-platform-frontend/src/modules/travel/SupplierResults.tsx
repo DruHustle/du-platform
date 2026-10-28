@@ -5,7 +5,7 @@ import {
   type TravelCriteria,
   type TravelQuote,
   type TravelResults,
-} from "@shared/travel";
+} from "@/contracts/travel";
 import { searchTravel, revalidateTravelQuote } from "./api";
 import { updateDraft, travelEvent } from "./store";
 import { Link, useLocation } from "wouter";

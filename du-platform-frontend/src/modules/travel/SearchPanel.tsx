@@ -8,7 +8,7 @@ import {
   providerResources,
   type TravelCategory,
   type TravelCriteria,
-} from "@shared/travel";
+} from "@/contracts/travel";
 import { useTravelDraft, updateDraft, travelEvent } from "./store";
 import { Button } from "@/components/ui/button";
 import SupplierResults from "./SupplierResults";

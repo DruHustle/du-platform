@@ -2,7 +2,7 @@ import TravelNav from "../../travel/TravelNav";
 import SearchPanel from "../../travel/SearchPanel";
 import TravelGuides from "../../travel/TravelGuides";
 import "../../travel/travel.css";
-import { tourismDestinationAnchor } from "@shared/tourismSearch";
+import { tourismDestinationAnchor } from "@/contracts/tourismSearch";
 import { useState, useRef } from "react";
 import Layout from "@/components/Layout";
 import SwipeRail from "@/components/discovery/SwipeRail";
