@@ -6,9 +6,9 @@
     "dark": "Dark"
   },
   "brand": "Diaspora Unlocked",
-  "tagline": "Zimbabwe Global Diaspora Platform",
+  "tagline": "Rooted in Zimbabwe. Connected across Southern Africa.",
   "about": "About",
-  "about_us": "Diaspora Unlocked connects Zimbabweans abroad and people interested in Zimbabwe with products, travel information, business opportunities and AI assistance.",
+  "about_us": "Rooted in Zimbabwe, Diaspora Unlocked welcomes the wider Southern African diaspora with products from home, regional travel research and practical business and AI guidance.",
   "select_lang": "Select Language",
   "account": {
     "logout": "Logout",
@@ -32,13 +32,13 @@
     "about": {
       "title": "About us",
       "vision_label": "Our Vision",
-      "vision_content": "Make it easier to stay connected to Zimbabwe, wherever you live.",
+      "vision_content": "Make it easier for Zimbabweans and the wider Southern African diaspora to stay connected to home, wherever they live.",
       "mission_label": "Our Mission",
-      "mission_content": "Bring Zimbabwean products, travel information, project profiles and practical AI help into one place.",
+      "mission_content": "Bring Zimbabwean products, regional travel research and practical business and AI guidance into one place for the Southern African diaspora.",
       "values_label": "Our Values",
       "values_content": "Clear information, useful guidance and honest explanations of what is available.",
       "who_label": "Who we are",
-      "who_content": "Diaspora Unlocked connects people in Zimbabwe and abroad with products, travel information, business ideas and practical AI assistance.",
+      "who_content": "Rooted in Zimbabwe, Diaspora Unlocked welcomes people across the Southern African diaspora and anyone interested in the region.",
       "what_label": "What we do",
       "what_content": "Browse products and register interest, research a business idea, draft a trip plan or ask Onesa a question. Product interest is not an order or payment."
     },
@@ -48,7 +48,7 @@
       "consent": "Confirm your email to receive Diaspora Unlocked news and opportunities. Unsubscribe at any time. This does not create a platform account.",
       "privacy": "Privacy policy",
       "title": "Newsletter",
-      "description": "Zimbabwean products, travel ideas and platform news by email.",
+      "description": "Zimbabwean products, Southern African travel ideas and diaspora news by email.",
       "email_placeholder": "Email address",
       "subscribe_aria": "Subscribe to newsletter",
       "already_subscribed": "This email is already subscribed to the newsletter.",
@@ -159,8 +159,8 @@
     "menu": "Navigation menu"
   },
   "home": {
-    "hero_title": "Diaspora Unlocked — connect with Zimbabwe",
-    "hero_subtitle": "Connecting Zimbabwe, at home and abroad.",
+    "hero_title": "Diaspora Unlocked — Zimbabwe and the Southern African diaspora",
+    "hero_subtitle": "Rooted in Zimbabwe. Connected across Southern Africa.",
     "tourism": "Travel",
     "technology": "Technology",
     "investments": "Investments",
@@ -168,12 +168,12 @@
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
     "ready_to_connect_title": "Ready to Connect?",
-    "ready_to_connect_subtitle": "Explore Zimbabwean products, travel ideas and business opportunities, wherever you are.",
+    "ready_to_connect_subtitle": "Explore Zimbabwean products, Southern African travel and business ideas, wherever you call home.",
     "view_data": "View Economic Data",
     "modules": {
       "tourism": {
         "title": "Travel",
-        "desc": "Explore Zimbabwe's world-class attractions and plan your visit.",
+        "desc": "Explore Zimbabwe and discover journeys across Southern Africa.",
         "stats": "Zimbabwe destinations"
       },
       "investment": {
@@ -192,31 +192,31 @@
       },
       "technology": {
         "title": "Technology",
-        "description": "Use Onesa to ask questions about Zimbabwean products, places and business ideas.",
+        "description": "Ask Onesa about Zimbabwean products, regional travel and practical business ideas.",
         "detail": "Compare options, prepare a checklist or draft a trip plan. Important details still need checking with providers.",
         "stats": "Explore AI tools",
         "image_alt": "Illustration of a woman with elephants in a savannah landscape"
       },
       "investment": {
         "title": "Investment",
-        "description": "Explore practical business ideas in farming, construction, mining services and everyday trade.",
+        "description": "Research business ideas in Zimbabwe, from farming and construction to mining services and everyday trade.",
         "detail": "Start with a manageable idea, understand the costs and risks, and check the details before committing money.",
         "stats": "Explore business ideas",
         "image_alt": "Fresh vegetables displayed in baskets"
       },
       "tourism": {
         "title": "Travel",
-        "description": "Discover waterfalls, wildlife, heritage sites and places to explore across Zimbabwe.",
-        "detail": "Compare destinations, try the AR guide and create a draft itinerary with Onesa.",
+        "description": "Plan journeys home and discover destinations across Zimbabwe and Southern Africa.",
+        "detail": "Search flights and stays, read regional guides or draft a Zimbabwe itinerary with Onesa.",
         "stats": "Find your next destination",
         "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe"
       }
     },
-    "hero_pause": "Pause photos",
-    "hero_resume": "Resume photos",
+    "hero_pause": "Pause waterfall animation",
+    "hero_resume": "Play waterfall animation",
     "discovery": {
-      "title": "Explore Zimbabwe, your way.",
-      "description": "Browse Zimbabwean products, research business ideas, plan a visit or ask Onesa for help. Find a starting point, wherever you live."
+      "title": "Your home connection, across borders.",
+      "description": "Zimbabwe is our starting point. Whether your roots are in Zimbabwe or elsewhere in Southern Africa, you belong here. Explore products from home, regional travel and practical business ideas."
     }
   },
   "tech": {
@@ -226,10 +226,10 @@
       "eyebrow": "Technology & everyday tools",
       "title": "AI help for everyday plans.",
       "highlight": "Powered by Onesa.",
-      "description": "Ask about Zimbabwean products, business ideas or travel. Use Onesa to compare options, organise your questions and draft a plan.",
+      "description": "Ask about Zimbabwean products, travel across Southern Africa or practical business ideas. Use Onesa to compare options, organise your questions and draft a plan.",
       "principle": "Start with a question. Leave with a clearer next step.",
       "image_alt": "Illustration of a woman with elephants in a savannah landscape",
-      "caption": "Onesa, applied to your Zimbabwe questions.",
+      "caption": "Onesa, for Zimbabwe and journeys across Southern Africa.",
       "tools_cta": "Explore the tools"
     },
     "tools": {
@@ -1084,7 +1084,7 @@
       "eyebrow": "Business & investment",
       "title": "Put your ideas to work.",
       "highlight": "In Zimbabwe.",
-      "description": "Practical business ideas for Zimbabweans at home and abroad. Explore a manageable first project, understand its costs and decide what to check before using your savings.",
+      "description": "Business ideas rooted in Zimbabwe, for people at home and across the Southern African diaspora. Explore a manageable first project and what to check before using your savings.",
       "ideas_cta": "Explore business ideas",
       "plan_cta": "Plan your first step",
       "principle": "Start small. Know your customer. Stay involved.",
@@ -1625,8 +1625,8 @@
     "title": "Chat with Onesa AI",
     "send": "Send",
     "thinking": "Thinking...",
-    "starter_prompt": "Ask about Zimbabwe…",
-    "welcome": "I can help you explore Zimbabwean products, travel ideas and project information. What would you like to know?",
+    "starter_prompt": "Ask about Zimbabwe or Southern Africa…",
+    "welcome": "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?",
     "status_prefix": "Onesa status",
     "status_offline": "Offline",
     "status_backend_unreachable": "Onesa is unavailable right now. Please try again later.",
@@ -1981,7 +1981,7 @@
   },
   "pilot": {
     "available_now": "Available now",
-    "home_purpose": "Discover Zimbabwean products, research travel and explore practical business ideas, at home and abroad.",
+    "home_purpose": "Products from home, journeys across the region and practical business ideas for Zimbabweans and the wider Southern African diaspora.",
     "browse_products": "Browse products",
     "request_status": "Request status",
     "final_quote": "Final quote",
@@ -2147,7 +2147,7 @@
     "car-hire": "Car Hire",
     "explore": "Explore",
     "my-trips": "My Trips",
-    "description": "Plan journeys to, from and within Southern Africa. Keep your ideas together, then book directly with providers.",
+    "description": "Visiting family, heading home or exploring somewhere new? Plan journeys to, from and within Zimbabwe and Southern Africa, then book directly with providers.",
     "search-intro": "Start with your dates and travellers. These details follow you between Travel sections.",
     "origin": "Departure airport",
     "destination": "Destination airport / area",

@@ -46,6 +46,8 @@ const channel = process.env.DISCOVERY_BROWSER_CHANNEL || "chrome";
 const browser = await chromium.launch({
   channel: channel === "chromium" ? undefined : channel,
   headless: true,
+  // Exercise real shader output in CI's software renderer as well as local GPUs.
+  args: ["--enable-unsafe-swiftshader"],
 });
 const checks = [],
   errors = [],
@@ -98,7 +100,10 @@ try {
         assert.equal(await page.locator("main h1.sr-only").count(), 1);
         assert.equal(
           await page
-            .getByRole("button", { name: "Pause photos", exact: true })
+            .getByRole("button", {
+              name: "Pause waterfall animation",
+              exact: true,
+            })
             .count(),
           0,
           "Reduced motion uses a static hero"
@@ -768,10 +773,15 @@ try {
     }
     await context.close();
   }
-  // Home uses one static photo regardless of motion preference.
-  for (const reducedMotion of ["no-preference", "reduce"]) {
+  // One photograph remains the base; only its water moves when motion is allowed.
+  for (const { width, reducedMotion } of [
+    { width: 375, reducedMotion: "no-preference" },
+    { width: 768, reducedMotion: "no-preference" },
+    { width: 1440, reducedMotion: "no-preference" },
+    { width: 375, reducedMotion: "reduce" },
+  ]) {
     const motionContext = await browser.newContext({
-      viewport: { width: 375, height: 900 },
+      viewport: { width, height: 900 },
       reducedMotion,
     });
     await motionContext.addInitScript(() => {
@@ -800,10 +810,73 @@ try {
       await background.getAttribute("src"),
       "/images/pages/tourism/victoria_falls.webp"
     );
-    assert.equal(
-      await hero.getByRole("button", { name: /pause|resume/i }).count(),
-      0
-    );
+    const state = hero.locator("[data-waterfall-state]");
+    const pause = hero.getByRole("button", {
+      name: "Pause waterfall animation",
+      exact: true,
+    });
+    if (reducedMotion === "reduce") {
+      await page.clock.runFor(1000);
+      assert.equal(await state.getAttribute("data-waterfall-state"), "still");
+      assert.equal(await pause.count(), 0);
+    } else {
+      await pause.waitFor();
+      assert.equal(await state.getAttribute("data-waterfall-state"), "playing");
+      const sky = { x: 8, y: 160, width: 80, height: 80 };
+      const water = { x: 20, y: 740, width: 80, height: 80 };
+      const skyBefore = await page.screenshot({ clip: sky });
+      const waterBefore = await page.screenshot({ clip: water });
+      const cliff = { x: width - 80, y: 720, width: 60, height: 80 };
+      const cliffBefore =
+        width === 1440 ? await page.screenshot({ clip: cliff }) : null;
+      await page.clock.runFor(700);
+      assert(
+        (await page.screenshot({ clip: sky })).equals(skyBefore),
+        "The sky must stay anchored"
+      );
+      assert(
+        !(await page.screenshot({ clip: water })).equals(waterBefore),
+        "Water texture must visibly move"
+      );
+      if (cliffBefore)
+        assert(
+          (await page.screenshot({ clip: cliff })).equals(cliffBefore),
+          "The foreground cliff must stay anchored"
+        );
+      await pause.click();
+      assert.equal(await state.getAttribute("data-waterfall-state"), "paused");
+      const pausedWater = await page.screenshot({ clip: water });
+      await page.clock.runFor(1000);
+      assert(
+        (await page.screenshot({ clip: water })).equals(pausedWater),
+        "Pause must freeze the waterfall"
+      );
+      await hero
+        .getByRole("button", { name: "Play waterfall animation", exact: true })
+        .click();
+      await page.clock.runFor(700);
+      assert(
+        !(await page.screenshot({ clip: water })).equals(pausedWater),
+        "Play must restart visible water movement"
+      );
+      await page.locator("footer").scrollIntoViewIfNeeded();
+      await page.waitForFunction(
+        () =>
+          document
+            .querySelector("[data-waterfall-state]")
+            ?.getAttribute("data-waterfall-state") === "still"
+      );
+      await page.evaluate(() =>
+        window.scrollTo({ top: 0, behavior: "instant" })
+      );
+      await page.waitForFunction(
+        () =>
+          document
+            .querySelector("[data-waterfall-state]")
+            ?.getAttribute("data-waterfall-state") === "playing"
+      );
+      await page.screenshot({ path: `${output}/home-waterfall-${width}.png` });
+    }
     await page.clock.runFor(18000);
     assert.equal(await background.count(), 1);
     assert.equal(
@@ -817,8 +890,72 @@ try {
     );
     await motionContext.close();
     record({
-      scenario: `Home remains static with ${reducedMotion}; no slideshow controls or unused photo requests`,
+      width,
+      scenario: `Home water respects ${reducedMotion}; one photograph, anchored landscape, pause and offscreen lifecycle`,
     });
+  }
+  for (const mode of ["save-data", "no-webgl"]) {
+    const context = await browser.newContext({
+      reducedMotion: "no-preference",
+    });
+    await context.addInitScript(mode => {
+      localStorage.setItem("du_cookie_consent_v1", "rejected");
+      localStorage.setItem("i18nextLng", "en");
+      if (mode === "save-data")
+        Object.defineProperty(navigator, "connection", {
+          value: {
+            saveData: true,
+            addEventListener() {},
+            removeEventListener() {},
+          },
+        });
+      else {
+        const original = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+          return type === "webgl" ? null : original.call(this, type, ...args);
+        };
+      }
+    }, mode);
+    await context.route("**/*", route => {
+      const url = new URL(route.request().url());
+      if (url.pathname.startsWith("/api/"))
+        return route.fulfill({ json: { user: null } });
+      return url.origin === new URL(base).origin
+        ? route.continue()
+        : route.abort();
+    });
+    page = await context.newPage();
+    page.on("pageerror", error => errors.push(error.message));
+    const animationRequests = [];
+    page.on("request", request => {
+      if (request.url().includes("/assets/waterfallFlow-"))
+        animationRequests.push(request.url());
+    });
+    await page.goto(base);
+    await page
+      .locator("#main-page-hero-wrapper img[aria-hidden='true']")
+      .evaluate(image => image.decode());
+    await page.waitForLoadState("networkidle");
+    assert.equal(
+      await page
+        .locator("[data-waterfall-state]")
+        .getAttribute("data-waterfall-state"),
+      "still"
+    );
+    assert.equal(
+      await page
+        .getByRole("button", { name: "Pause waterfall animation" })
+        .count(),
+      0
+    );
+    if (mode === "save-data")
+      assert.equal(
+        animationRequests.length,
+        0,
+        "Data saving must avoid even loading the animation module"
+      );
+    await context.close();
+    record({ scenario: `Home retains its photograph with ${mode}` });
   }
   assert.deepEqual(errors, []);
   assert.deepEqual(failures, []);

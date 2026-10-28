@@ -20,9 +20,9 @@ export type RouteSeo = {
 };
 
 const SITE_NAME = "Diaspora Unlocked";
-const SITE_DEFAULT_TITLE = `${SITE_NAME} | Products, Travel & Opportunities`;
+const SITE_DEFAULT_TITLE = `${SITE_NAME} | Zimbabwe & Southern African Diaspora`;
 const SITE_DEFAULT_DESCRIPTION =
-  "Explore Zimbabwean products, travel information, business opportunities and practical AI help on Diaspora Unlocked, wherever you live.";
+  "Rooted in Zimbabwe, connecting the Southern African diaspora with products from home, regional travel and practical business ideas, wherever you live.";
 const DEFAULT_ROBOTS = "index,follow";
 
 function normalizePathname(pathname: string): string {
@@ -65,7 +65,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       SITE_DEFAULT_TITLE,
       SITE_DEFAULT_DESCRIPTION,
       "/",
-      "Diaspora Unlocked — connect with Zimbabwe"
+      "Diaspora Unlocked — Zimbabwe and the Southern African diaspora"
     );
   }
 
@@ -169,7 +169,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/technology") {
     return buildSeo(
       "Onesa AI Tools & Practical Technology | Diaspora Unlocked",
-      "Use Onesa chat, draft trip planning, AR destination guidance and 360° demos. Explore practical digital ideas for Zimbabweans at home and abroad.",
+      "Use Onesa chat, draft Zimbabwe trip planning, AR guidance and 360° demos. Explore practical digital ideas for Zimbabweans and the wider Southern African diaspora.",
       "/technology",
       "Onesa AI Tools & Practical Technology"
     );
@@ -224,10 +224,10 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
 
   if (pathname === "/onesa-ai-chat") {
     return buildSeo(
-      "Onesa AI Chat for Zimbabwe Guidance | Diaspora Unlocked",
-      "Ask Onesa about Zimbabwean products, travel ideas and project information. Get explanations and starting points, then confirm important details with providers.",
+      "Onesa AI for Zimbabwe & Southern Africa | Diaspora Unlocked",
+      "Ask Onesa about Zimbabwean products, Southern African travel and business ideas. Get starting points, then confirm important details with providers.",
       "/onesa-ai-chat",
-      "Onesa AI Chat for Zimbabwe Guidance"
+      "Onesa AI for Zimbabwe & Southern Africa"
     );
   }
 
