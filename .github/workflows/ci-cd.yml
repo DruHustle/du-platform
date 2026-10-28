@@ -188,6 +188,18 @@ jobs:
         env:
           DISCOVERY_BROWSER_CHANNEL: chromium
 
+      - name: Preserve Home animation visual checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-animation-visual-checks
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            /tmp/du-discovery-tests/home-waterfall-*.png
+            /tmp/du-discovery-tests/report.json
+            /tmp/du-discovery-tests/failure.png
+
       - name: Site-wide UI consistency and accessible dialog regressions
         run: pnpm test:e2e:ui
 
