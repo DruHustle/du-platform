@@ -877,7 +877,7 @@ try {
       );
       await page.screenshot({ path: `${output}/home-waterfall-${width}.png` });
     }
-    await page.clock.runFor(18000);
+    await page.clock.fastForward(18000);
     assert.equal(await background.count(), 1);
     assert.equal(
       await background.getAttribute("src"),
