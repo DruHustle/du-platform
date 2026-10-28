@@ -120,12 +120,23 @@ try {
         .count(),
       0
     );
-    const pauseWaterfall = homeHero.getByRole("button", {
-      name: "Pause waterfall animation",
-      exact: true,
-    });
-    await pauseWaterfall.waitFor();
-    assert.equal(await pauseWaterfall.count(), 1);
+    await page.waitForFunction(
+      () =>
+        document
+          .querySelector("[data-waterfall-state]")
+          ?.getAttribute("data-waterfall-state") === "playing"
+    );
+    assert.equal(
+      await homeHero
+        .getByRole("button", { name: /(?:pause|play) waterfall animation/i })
+        .count(),
+      0
+    );
+    assert.equal(
+      await homeHero.getByRole("button").count(),
+      1,
+      "Only the Explore control belongs in the Home hero"
+    );
     assert.equal(
       await homeHero.locator('img[aria-hidden="true"]').getAttribute("src"),
       "/images/pages/tourism/victoria_falls.webp"
@@ -155,7 +166,7 @@ try {
     record({
       width,
       scenario:
-        "Victoria Falls motion control and stationary mouse/keyboard exploration control",
+        "continuously flowing Victoria Falls and stationary mouse/keyboard exploration control",
     });
     slowScripts = true;
 
