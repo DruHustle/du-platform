@@ -48,6 +48,7 @@ const channel = process.env.NAVIGATION_BROWSER_CHANNEL || "chrome";
 const browser = await chromium.launch({
   channel: channel === "chromium" ? undefined : channel,
   headless: true,
+  args: ["--enable-unsafe-swiftshader"],
 });
 const checks = [];
 const record = check => {
@@ -119,10 +120,12 @@ try {
         .count(),
       0
     );
-    assert.equal(
-      await homeHero.getByRole("button", { name: /pause|resume/i }).count(),
-      0
-    );
+    const pauseWaterfall = homeHero.getByRole("button", {
+      name: "Pause waterfall animation",
+      exact: true,
+    });
+    await pauseWaterfall.waitFor();
+    assert.equal(await pauseWaterfall.count(), 1);
     assert.equal(
       await homeHero.locator('img[aria-hidden="true"]').getAttribute("src"),
       "/images/pages/tourism/victoria_falls.webp"
@@ -152,7 +155,7 @@ try {
     record({
       width,
       scenario:
-        "static Victoria Falls hero and stationary mouse/keyboard exploration control",
+        "Victoria Falls motion control and stationary mouse/keyboard exploration control",
     });
     slowScripts = true;
 

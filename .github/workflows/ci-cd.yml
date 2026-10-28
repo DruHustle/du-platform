@@ -110,6 +110,28 @@ jobs:
           fi
           pnpm exec playwright install --with-deps chromium webkit
 
+      - name: Swipeable discovery regression tests
+        run: pnpm test:e2e:discovery
+        env:
+          DISCOVERY_BROWSER_CHANNEL: chromium
+
+      - name: Preserve Home animation visual checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-animation-visual-checks
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            /tmp/du-discovery-tests/home-waterfall-*.png
+            /tmp/du-discovery-tests/report.json
+            /tmp/du-discovery-tests/failure.png
+
+      - name: Navigation regression tests
+        run: pnpm test:e2e:navigation
+        env:
+          NAVIGATION_BROWSER_CHANNEL: chromium
+
       - name: Focused basket pricing and product information journeys
         run: pnpm test:e2e:shop:followup
 
@@ -128,11 +150,6 @@ jobs:
         env:
           NEWSLETTER_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
           NEWSLETTER_BROWSER_CHANNEL: chromium
-
-      - name: Navigation regression tests
-        run: pnpm test:e2e:navigation
-        env:
-          NAVIGATION_BROWSER_CHANNEL: chromium
 
       - name: Onesa chat regression tests
         run: pnpm test:e2e:onesa:chat
@@ -182,23 +199,6 @@ jobs:
         run: pnpm test:e2e:shop
         env:
           SHOP_BROWSER_ENGINE: webkit
-
-      - name: Swipeable discovery regression tests
-        run: pnpm test:e2e:discovery
-        env:
-          DISCOVERY_BROWSER_CHANNEL: chromium
-
-      - name: Preserve Home animation visual checks
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: home-animation-visual-checks
-          if-no-files-found: ignore
-          retention-days: 7
-          path: |
-            /tmp/du-discovery-tests/home-waterfall-*.png
-            /tmp/du-discovery-tests/report.json
-            /tmp/du-discovery-tests/failure.png
 
       - name: Site-wide UI consistency and accessible dialog regressions
         run: pnpm test:e2e:ui
