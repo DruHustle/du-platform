@@ -18,10 +18,14 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   await verifyAfterPropagation(() => {
-    const result = spawnSync(process.execPath, ["scripts/tests/seo-live.mjs"], {
-      stdio: "inherit",
-      timeout: 120000,
-    });
+    const result = spawnSync(
+      process.execPath,
+      ["du-platform-frontend/scripts/tests/seo-live.mjs"],
+      {
+        stdio: "inherit",
+        timeout: 120000,
+      }
+    );
     return result.status === 0;
   });
 }

@@ -3,7 +3,7 @@
   "git": {
     "deploymentEnabled": false
   },
-  "outputDirectory": "dist/public",
+  "outputDirectory": "du-platform-frontend/dist",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": null,

@@ -1,10 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveCanonicalUrl, resolveRouteSeo } from "../../shared/routeSeo.ts";
+import {
+  resolveCanonicalUrl,
+  resolveRouteSeo,
+} from "../../../shared/routeSeo.ts";
+import { repoDir } from "./paths.mjs";
 
 // Read the domain manifests without importing React or browser-only modules.
 // This inventory is shared by the static HTML build and sitemap generation.
-export function readSiteRoutes(root = process.cwd()) {
+export function readSiteRoutes(root = repoDir) {
   const modules = path.join(root, "du-platform-frontend/src/modules");
   const paths = new Set();
   const redirects = [];
@@ -36,7 +40,10 @@ export function readSiteRoutes(root = process.cwd()) {
         for (const id of Object.keys(projects))
           paths.add(`/investment/projects/${id}`);
       } else if (route === "/shop/product/:slug") {
-        const index = path.join(root, "dist/public/catalogue-index.json");
+        const index = path.join(
+          root,
+          "du-platform-frontend/dist/catalogue-index.json"
+        );
         if (fs.existsSync(index))
           for (const p of JSON.parse(fs.readFileSync(index, "utf8")))
             paths.add(`/shop/product/${p.slug}`);
@@ -57,7 +64,7 @@ export function readSiteRoutes(root = process.cwd()) {
   return { paths: [...paths].sort(), redirects };
 }
 
-export function createSitemap(siteUrl, root = process.cwd()) {
+export function createSitemap(siteUrl, root = repoDir) {
   const routes = readSiteRoutes(root)
     .paths.filter(
       route => resolveRouteSeo({ pathname: route }).robots === "index,follow"

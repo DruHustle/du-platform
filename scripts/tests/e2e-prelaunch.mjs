@@ -50,7 +50,7 @@ server.on(
   "request",
   createModularServer({
     backend: { db, serverStartedAt: Date.now() },
-    staticPath: path.resolve("dist/public"),
+    staticPath: path.resolve("du-platform-frontend/dist"),
   })
 );
 const [[product]] = await db.query(

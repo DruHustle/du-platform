@@ -12,7 +12,7 @@ const output =
 await mkdir(output, { recursive: true });
 const app = createModularServer({
   backend: { db: null, serverStartedAt: Date.now() },
-  staticPath: resolve("dist/public"),
+  staticPath: resolve("du-platform-frontend/dist"),
 });
 const server = createServer(app);
 await new Promise((r, j) => {

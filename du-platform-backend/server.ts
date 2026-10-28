@@ -213,10 +213,18 @@ export async function startServer() {
     console.warn(error);
   }
 
+  // Oracle packages the static site beside the bundle. Local workspace builds
+  // keep it in the frontend package. The API also runs without a UI build.
+  const backendRoot =
+    path.basename(__dirname) === "dist"
+      ? path.resolve(__dirname, "..")
+      : __dirname;
   const staticPath =
-    process.env.NODE_ENV === "production"
-      ? path.resolve(__dirname, "public")
-      : path.resolve(__dirname, "..", "dist", "public");
+    [
+      path.resolve(__dirname, "public"),
+      path.resolve(backendRoot, "..", "du-platform-frontend", "dist"),
+    ].find(candidate => fs.existsSync(path.join(candidate, "index.html"))) ??
+    null;
 
   const app = createModularServer({
     backend: {

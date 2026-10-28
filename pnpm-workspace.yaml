@@ -1,0 +1,4 @@
+packages:
+  - du-platform-frontend
+  - du-platform-backend
+  - shared

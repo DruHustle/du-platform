@@ -6,7 +6,7 @@ import { chromium, webkit } from "playwright";
 import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
 
 // UI fixtures only: no .env, database, provider, customer or production writes.
-const root = resolve("dist/public");
+const root = resolve("du-platform-frontend/dist");
 const output = process.env.UI_OUTPUT_DIR || "/tmp/du-ui-consistency";
 const engine = process.env.UI_BROWSER || "chromium";
 const mime = {

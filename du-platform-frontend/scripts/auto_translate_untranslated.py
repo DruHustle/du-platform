@@ -3,7 +3,7 @@
 Auto-translate locale values that are still identical to English source text.
 
 Usage:
-  python3 scripts/auto_translate_untranslated.py
+  python3 du-platform-frontend/scripts/auto_translate_untranslated.py
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LOCALES_DIR = ROOT / "du-platform-frontend" / "public" / "locales"
+LOCALES_DIR = ROOT / "public" / "locales"
 EN_PATH = LOCALES_DIR / "en" / "translation.json"
 
 # Google translate API language codes.

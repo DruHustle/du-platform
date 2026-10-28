@@ -39,7 +39,7 @@ test("previews cannot proxy requests to production and are noindex", async () =>
     );
     assert(!workflow.includes("self-hosted"));
     assert(workflow.includes("run: node scripts/tests/pilot-preview.mjs"));
-    const seo = await fs.readFile("scripts/tests/seo-build.mjs", "utf8");
+    const seo = await fs.readFile("du-platform-frontend/scripts/tests/seo-build.mjs", "utf8");
     assert(seo.includes('process.env.VERCEL_ENV === "preview"'));
     assert(seo.includes('"/preview-api-unavailable.json"'));
   } finally {
@@ -72,7 +72,7 @@ test("repair builds and CI never require the production API", async () => {
     )
   );
   const builder = await fs.readFile(
-    "scripts/build-route-documents.mjs",
+    "du-platform-frontend/scripts/build-route-documents.mjs",
     "utf8"
   );
   assert(

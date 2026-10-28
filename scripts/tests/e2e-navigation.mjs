@@ -5,7 +5,7 @@ import { extname, resolve, sep } from "node:path";
 import { chromium } from "playwright";
 
 // Serve the production build without loading .env or contacting any service.
-const root = resolve("dist/public");
+const root = resolve("du-platform-frontend/dist");
 const output = process.env.NAVIGATION_OUTPUT_DIR || "/tmp/du-navigation-tests";
 const types = {
   ".html": "text/html",

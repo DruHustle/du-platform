@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const rootDir = process.cwd();
-const viteConfigPath = path.join(rootDir, "du-platform-frontend", "vite.config.ts");
+import { frontendDir } from "../lib/paths.mjs";
+
+const viteConfigPath = path.join(frontendDir, "vite.config.ts");
 
 function fail(message) {
   console.error(`[guardrails:vite] ${message}`);
@@ -26,7 +27,10 @@ if (hasManualChunks) {
 
 const guardedPackages = ["react", "react-dom", "react-i18next", "i18next"];
 for (const pkg of guardedPackages) {
-  const pattern = new RegExp(`vendor[-_]${pkg.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}`, "i");
+  const pattern = new RegExp(
+    `vendor[-_]${pkg.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}`,
+    "i"
+  );
   if (pattern.test(source)) {
     fail(`Detected custom vendor split hint for "${pkg}" in vite.config.ts.`);
   }

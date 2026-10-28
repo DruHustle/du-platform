@@ -32,7 +32,7 @@ if (vercel.git?.deploymentEnabled !== false) {
 }
 if (
   !vercel.buildCommand.includes("pnpm build:frontend") ||
-  vercel.outputDirectory !== "dist/public"
+  vercel.outputDirectory !== "du-platform-frontend/dist"
 ) {
   fail(
     "Vercel must build and publish only the static frontend; the backend runs on Oracle."
