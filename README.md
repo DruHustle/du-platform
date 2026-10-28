@@ -27,7 +27,7 @@ Visitors can use the platform to:
 
 ### 🖼️ Dynamic Visual Experience
 
-- The original Victoria Falls photograph on Home with a lightweight falling-water effect. Motion has a pause control, respects reduced-motion and data-saving preferences, and stops offscreen or in hidden tabs. The photograph remains the fallback when animation is unavailable.
+- The original Victoria Falls photograph on Home with a lightweight falling-water effect. Water flows automatically while the hero is visible, respecting reduced-motion and data-saving preferences and stopping offscreen or in hidden tabs. The photograph remains the fallback when animation is unavailable.
 - Edge-to-edge product, destination, technology and business-idea rails with native swiping, keyboard navigation and explicit controls.
 - Shared responsive surfaces, form controls and scrollable dialogs across interior pages.
 
@@ -207,7 +207,7 @@ pnpm test:e2e:discovery
 Runs without configured services using a temporary static server and mocked API
 responses. At 375, 768, and 1440 pixels, it checks every discovery rail's final
 tile, keyboard and arrow controls, mouse dragging, native touch swipes, attraction
-dialog focus restoration, Home module navigation and photo pause/resume,
+dialog focus restoration, Home module navigation and continuous waterfall motion,
 translated Home/Technology/Tourism layouts, and project filtering/navigation. Screenshots and
 reports go to `/tmp/du-discovery-tests` (`DISCOVERY_OUTPUT_DIR` overrides it).
 CI uses `DISCOVERY_BROWSER_CHANNEL=chromium`.

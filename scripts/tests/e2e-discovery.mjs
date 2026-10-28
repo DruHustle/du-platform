@@ -811,17 +811,20 @@ try {
       "/images/pages/tourism/victoria_falls.webp"
     );
     const state = hero.locator("[data-waterfall-state]");
-    const pause = hero.getByRole("button", {
-      name: "Pause waterfall animation",
-      exact: true,
+    const motionControls = hero.getByRole("button", {
+      name: /(?:pause|play) waterfall animation/i,
     });
     if (reducedMotion === "reduce") {
       await page.clock.runFor(1000);
       assert.equal(await state.getAttribute("data-waterfall-state"), "still");
-      assert.equal(await pause.count(), 0);
     } else {
-      await pause.waitFor();
-      assert.equal(await state.getAttribute("data-waterfall-state"), "playing");
+      await page.waitForFunction(
+        () =>
+          document
+            .querySelector("[data-waterfall-state]")
+            ?.getAttribute("data-waterfall-state") === "playing"
+      );
+      assert.equal(await motionControls.count(), 0);
       const sky = { x: 8, y: 160, width: 80, height: 80 };
       const water = { x: 20, y: 740, width: 80, height: 80 };
       const skyBefore = await page.screenshot({ clip: sky });
@@ -843,21 +846,11 @@ try {
           (await page.screenshot({ clip: cliff })).equals(cliffBefore),
           "The foreground cliff must stay anchored"
         );
-      await pause.click();
-      assert.equal(await state.getAttribute("data-waterfall-state"), "paused");
-      const pausedWater = await page.screenshot({ clip: water });
+      const flowingWater = await page.screenshot({ clip: water });
       await page.clock.runFor(1000);
       assert(
-        (await page.screenshot({ clip: water })).equals(pausedWater),
-        "Pause must freeze the waterfall"
-      );
-      await hero
-        .getByRole("button", { name: "Play waterfall animation", exact: true })
-        .click();
-      await page.clock.runFor(700);
-      assert(
-        !(await page.screenshot({ clip: water })).equals(pausedWater),
-        "Play must restart visible water movement"
+        !(await page.screenshot({ clip: water })).equals(flowingWater),
+        "Water must keep flowing without a pause/play control"
       );
       await page.locator("footer").scrollIntoViewIfNeeded();
       await page.waitForFunction(
@@ -877,7 +870,13 @@ try {
       );
       await page.screenshot({ path: `${output}/home-waterfall-${width}.png` });
     }
+    assert.equal(await motionControls.count(), 0);
+    assert.equal(await hero.getByRole("button").count(), 1);
     await page.clock.fastForward(18000);
+    assert.equal(
+      await state.getAttribute("data-waterfall-state"),
+      reducedMotion === "reduce" ? "still" : "playing"
+    );
     assert.equal(await background.count(), 1);
     assert.equal(
       await background.getAttribute("src"),
@@ -891,7 +890,7 @@ try {
     await motionContext.close();
     record({
       width,
-      scenario: `Home water respects ${reducedMotion}; one photograph, anchored landscape, pause and offscreen lifecycle`,
+      scenario: `Home water respects ${reducedMotion}; one photograph, anchored landscape, continuous flow and offscreen lifecycle`,
     });
   }
   for (const mode of ["save-data", "no-webgl"]) {
