@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthService } from "../services/authService";
-import { sendResetEmail } from "../../../shared/email";
-vi.mock("../../../shared/email", async original => ({
-  ...(await original<typeof import("../../../shared/email")>()),
+import { sendResetEmail } from "../../../lib/email";
+vi.mock("../../../lib/email", async original => ({
+  ...(await original<typeof import("../../../lib/email")>()),
   sendResetEmail: vi.fn(),
 }));
 afterEach(() => vi.restoreAllMocks());

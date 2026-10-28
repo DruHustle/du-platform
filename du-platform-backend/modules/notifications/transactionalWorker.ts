@@ -1,9 +1,9 @@
 import type { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
-import { db } from "../../shared/databaseRuntime";
-import { PASSWORD_RESET_PAGE_MARKER } from "../../../shared/passwordResetProtocol";
+import { db } from "../../lib/databaseRuntime";
+import { PASSWORD_RESET_PAGE_MARKER } from "../../contracts/passwordResetProtocol";
 import { newsletterOrigin } from "../newsletter/content";
-import { outboundMessagesPaused } from "../../shared/outboundMessages";
-import { getNotifyAlertEmails } from "../../shared/email";
+import { outboundMessagesPaused } from "../../lib/outboundMessages";
+import { getNotifyAlertEmails } from "../../lib/email";
 import { openOrderAccess, sealOrderAccess } from "../shop/orderAccess";
 import { deliveryFailure } from "../newsletter/worker";
 import {

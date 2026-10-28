@@ -1,7 +1,7 @@
 import ProductInterest from "./ProductInterest";
 import { canRequestProduct, useShopCatalog } from "../lib/useShopCatalog";
 import { Link } from "wouter";
-import { convertShopCents } from "@shared/shopCurrency";
+import { convertShopCents } from "@/contracts/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";

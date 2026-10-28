@@ -1,6 +1,6 @@
-import { db } from "../../shared/databaseRuntime";
-import { productDetailsSchema } from "../../../shared/productDetails";
-import { ShopRequestError } from "../../shared/persistence/shopStore";
+import { db } from "../../lib/databaseRuntime";
+import { productDetailsSchema } from "../../contracts/productDetails";
+import { ShopRequestError } from "../../lib/persistence/shopStore";
 
 // This capability exposes only owner-published product information. It accepts a
 // catalogue ID, never SQL or a model-selected URL, and has no write operations.

@@ -1,4 +1,4 @@
-import { createShopOrder, getShopOrderByRef } from "../../../shared/persistence/shopStore";
+import { createShopOrder, getShopOrderByRef } from "../../../lib/persistence/shopStore";
 
 export class OrderRepository {
   create(payload: Parameters<typeof createShopOrder>[0]) {

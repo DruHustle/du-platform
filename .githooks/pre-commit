@@ -14,7 +14,7 @@ else
 fi
 
 echo "[pre-commit] Generating sitemap..."
-node --import tsx du-platform-frontend/scripts/generate-sitemap.mjs
+pnpm --dir du-platform-frontend sitemap:generate
 
 echo "[pre-commit] Staging generated files..."
 git add "$PUBLIC_DIR/sitemap.xml"

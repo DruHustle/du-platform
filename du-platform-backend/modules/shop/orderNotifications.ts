@@ -1,19 +1,19 @@
-import { outboundMessagesPaused } from "../../shared/outboundMessages";
-import { ORDER_STATUS_PAGE_MARKER } from "../../../shared/orderStatusProtocol";
-import nextCopy from "../../shared/copy/orderNextCopy.json";
-import emailLabels from "../../shared/copy/orderEmailLabels.json";
-import stageCopy from "../../shared/copy/orderStatusCopy.json";
+import { outboundMessagesPaused } from "../../lib/outboundMessages";
+import { ORDER_STATUS_PAGE_MARKER } from "../../contracts/orderStatusProtocol";
+import nextCopy from "../../lib/copy/orderNextCopy.json";
+import emailLabels from "../../lib/copy/orderEmailLabels.json";
+import stageCopy from "../../lib/copy/orderStatusCopy.json";
 import { openOrderAccess, sealOrderAccess } from "./orderAccess";
-import { getNotifyAlertEmails } from "../../shared/email";
+import { getNotifyAlertEmails } from "../../lib/email";
 import type { Pool, RowDataPacket } from "mysql2/promise";
-import { db } from "../../shared/databaseRuntime";
+import { db } from "../../lib/databaseRuntime";
 import {
   sendNewsletterEmail,
   newsletterSender,
   type NewsletterEmail,
 } from "../newsletter/provider";
 import { deliveryFailure } from "../newsletter/worker";
-import { emailText } from "../../shared/copy/customerEmailCopy";
+import { emailText } from "../../lib/copy/customerEmailCopy";
 
 const statusLabels: Record<string, string> = {
   en: "Order update",

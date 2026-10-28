@@ -1,4 +1,4 @@
-import { isShopCurrency } from "@shared/shopCurrency";
+import { isShopCurrency } from "@/contracts/shopCurrency";
 import { safeSessionStorage } from "@/lib/browserStorage";
 
 export type OrderReceipt = {

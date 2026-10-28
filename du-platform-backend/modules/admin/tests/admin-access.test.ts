@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type express from "express";
 const { findUserById } = vi.hoisted(() => ({ findUserById: vi.fn() }));
-vi.mock("../../../shared/persistence/authStore", () => ({ findUserById }));
-import { requireAdminAuth } from "../../../shared/admin";
+vi.mock("../../../lib/persistence/authStore", () => ({ findUserById }));
+import { requireAdminAuth } from "../../../lib/admin";
 
 afterEach(() => {
   vi.unstubAllEnvs();

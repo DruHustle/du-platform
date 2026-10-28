@@ -7,7 +7,7 @@ import {
 } from "../provider";
 import { MemoryWeatherCache } from "../cache";
 import { createWeatherRouter } from "../routes";
-import { weatherDays } from "../../../../shared/weather";
+import { weatherDays } from "../../../contracts/weather";
 import express from "express";
 const initial = Date.parse("2026-10-27T12:00:00Z");
 const coordinates = { latitude: -17.825, longitude: 31.033 };

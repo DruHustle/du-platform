@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { SHOP_SEED_PRODUCTS } from "@shared/shopCatalog";
+import { SHOP_SEED_PRODUCTS } from "@/contracts/shopCatalog";
 import { matchesShopSegment, shopProductDescription } from "./shopContent";
 
 describe("owner-managed catalogue content", () => {

@@ -2,7 +2,9 @@
 .git
 .vercel
 .env*
+**/.env*
 .cert
+**/.cert
 .claude
 **/*.pem
 **/node_modules
@@ -12,7 +14,7 @@ playwright-report
 test-results
 private
 
-# Both app manifests are required for a frozen workspace install. Only the
-# frontend's dist directory is published; operations and docs are not uploaded.
+# Only the frontend is installed and built for this static deployment.
+du-platform-backend
 deploy
 docs

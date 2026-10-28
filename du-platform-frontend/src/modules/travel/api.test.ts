@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/api", () => ({ api: { get: vi.fn() } }));
 import { api } from "@/lib/api";
 import { loadSavedTravel } from "./api";
-import { defaultTravelCriteria } from "@shared/travel";
+import { defaultTravelCriteria } from "@/contracts/travel";
 const savedTrip = () => ({
   id: "00000000-0000-4000-8000-000000000001",
   name: "Private trip",

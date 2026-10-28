@@ -12,7 +12,7 @@ import {
   Moon,
   CloudMoon,
 } from "lucide-react";
-import { z } from "@shared/validation";
+import { z } from "@/contracts/validation";
 import {
   weatherDays,
   weatherForecastSchema,
@@ -21,7 +21,7 @@ import {
   type WeatherForecast,
   type WeatherPlace,
   type WeatherPoint,
-} from "@shared/weather";
+} from "@/contracts/weather";
 import { api } from "@/lib/api";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";

@@ -6,7 +6,7 @@ import { createOrderAdminRouter } from "../../shop/orderAdminRoutes";
 import { createNewsletterAdminRouter } from "../../newsletter/routes";
 import { Router } from "express";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";
-import { requireAdminAuth } from "../../../shared/admin";
+import { requireAdminAuth } from "../../../lib/admin";
 import { AdminController } from "../controllers/adminController";
 
 export function createAdminModuleRouter() {

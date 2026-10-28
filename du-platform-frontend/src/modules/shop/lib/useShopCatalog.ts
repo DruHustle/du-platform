@@ -1,7 +1,7 @@
-import type { PublicShopReadiness } from "@shared/shopReadiness";
-import { isShopCurrency } from "@shared/shopCurrency";
+import type { PublicShopReadiness } from "@/contracts/shopReadiness";
+import { isShopCurrency } from "@/contracts/shopCurrency";
 import { useEffect, useSyncExternalStore } from "react";
-import { getPublicShopSeedProducts } from "@shared/shopCatalog";
+import { getPublicShopSeedProducts } from "@/contracts/shopCatalog";
 import { api } from "@/lib/api";
 
 export type ShopProduct = ReturnType<typeof getPublicShopSeedProducts>[number];

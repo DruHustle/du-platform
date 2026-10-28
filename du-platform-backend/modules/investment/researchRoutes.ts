@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
-import { db } from "../../shared/databaseRuntime";
-import projectRoutes from "../../../shared/investmentProjectRoutes.json";
-import { ok, error } from "../../shared/responseFormatter";
+import { db } from "../../lib/databaseRuntime";
+import projectRoutes from "../../contracts/investmentProjectRoutes.json";
+import { ok, error } from "../../lib/responseFormatter";
 const input = z
   .object({
     sources: z

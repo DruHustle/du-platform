@@ -1,6 +1,6 @@
 import type express from 'express';
-import { error } from '../shared/responseFormatter';
-import { db } from '../shared/databaseRuntime';
+import { error } from '../lib/responseFormatter';
+import { db } from '../lib/databaseRuntime';
 
 type LimiterOptions = {
   keyPrefix: string;

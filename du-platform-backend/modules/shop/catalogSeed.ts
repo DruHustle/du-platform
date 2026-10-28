@@ -1,5 +1,5 @@
 import type mysql from "mysql2/promise";
-import { SHOP_SEED_PRODUCTS } from "../../../shared/shopCatalog";
+import { SHOP_SEED_PRODUCTS } from "../../contracts/shopCatalog";
 import { LEGACY_SHOP_PRICES } from "./legacySeedPrices";
 
 /** Seed each SKU once. The history survives deletion, so owner edits and

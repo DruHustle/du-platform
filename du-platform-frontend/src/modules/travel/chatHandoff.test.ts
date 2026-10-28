@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { prepareTravelChatDraft, consumeTravelChatDraft } from "./chatHandoff";
-import { defaultTravelCriteria, type TravelQuote } from "@shared/travel";
+import { defaultTravelCriteria, type TravelQuote } from "@/contracts/travel";
 function storage() {
   const data = new Map<string, string>();
   vi.stubGlobal("window", {

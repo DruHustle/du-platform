@@ -1,9 +1,9 @@
 import type express from "express";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { requireCurrentUser } from "../../../middleware/currentUser";
-import { findUserById } from "../../../shared/persistence/authStore";
+import { findUserById } from "../../../lib/persistence/authStore";
 
-vi.mock("../../../shared/persistence/authStore", () => ({
+vi.mock("../../../lib/persistence/authStore", () => ({
   findUserById: vi.fn(),
 }));
 afterEach(() => vi.resetAllMocks());

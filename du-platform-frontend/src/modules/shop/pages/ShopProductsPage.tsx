@@ -5,11 +5,11 @@ import { getCookieConsent } from "@/lib/cookieConsent";
 import { trackShopFunnel } from "../lib/shopFunnel";
 import OrderStatus from "../components/OrderStatus";
 import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
-import { convertShopCents, SHOP_PRICING_REVISION } from "@shared/shopCurrency";
+import { convertShopCents, SHOP_PRICING_REVISION } from "@/contracts/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import PilotReadinessNotice from "../components/PilotReadinessNotice";
-import { customerLanguage } from "@shared/customerLanguage";
+import { customerLanguage } from "@/contracts/customerLanguage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import {
@@ -40,7 +40,7 @@ import { api, type AuthUser } from "@/lib/api";
 import {
   shopOrderRequestSchema,
   calculateShopShippingCents,
-} from "@shared/shopCheckout";
+} from "@/contracts/shopCheckout";
 import {
   isOrderReceipt,
   prepareCheckoutAttempt,

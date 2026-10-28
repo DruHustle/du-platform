@@ -1,4 +1,4 @@
-import { validateBody } from "../../../shared/validators";
+import { validateBody } from "../../../lib/validators";
 import {
   forgotPasswordSchema,
   loginSchema,

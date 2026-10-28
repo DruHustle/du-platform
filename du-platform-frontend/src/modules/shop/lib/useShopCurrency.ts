@@ -4,7 +4,7 @@ import {
   currencyForTimeZone,
   isShopCurrency,
   type ShopCurrency,
-} from "@shared/shopCurrency";
+} from "@/contracts/shopCurrency";
 
 const key = "du_shop_currency_v1";
 const listeners = new Set<() => void>();

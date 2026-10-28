@@ -3,13 +3,13 @@ import path from "node:path";
 import {
   resolveCanonicalUrl,
   resolveRouteSeo,
-} from "../../../shared/routeSeo.ts";
-import { repoDir } from "./paths.mjs";
+} from "../../src/contracts/routeSeo.ts";
+import { frontendDir } from "./paths.mjs";
 
 // Read the domain manifests without importing React or browser-only modules.
 // This inventory is shared by the static HTML build and sitemap generation.
-export function readSiteRoutes(root = repoDir) {
-  const modules = path.join(root, "du-platform-frontend/src/modules");
+export function readSiteRoutes(root = frontendDir) {
+  const modules = path.join(root, "src/modules");
   const paths = new Set();
   const redirects = [];
   for (const entry of fs.readdirSync(modules, { withFileTypes: true })) {
@@ -33,17 +33,14 @@ export function readSiteRoutes(root = repoDir) {
       if (route === "/investment/projects/:id") {
         const projects = JSON.parse(
           fs.readFileSync(
-            path.join(root, "shared/investmentProjectRoutes.json"),
+            path.join(root, "src/contracts/investmentProjectRoutes.json"),
             "utf8"
           )
         );
         for (const id of Object.keys(projects))
           paths.add(`/investment/projects/${id}`);
       } else if (route === "/shop/product/:slug") {
-        const index = path.join(
-          root,
-          "du-platform-frontend/dist/catalogue-index.json"
-        );
+        const index = path.join(root, "dist/catalogue-index.json");
         if (fs.existsSync(index))
           for (const p of JSON.parse(fs.readFileSync(index, "utf8")))
             paths.add(`/shop/product/${p.slug}`);
@@ -64,7 +61,7 @@ export function readSiteRoutes(root = repoDir) {
   return { paths: [...paths].sort(), redirects };
 }
 
-export function createSitemap(siteUrl, root = repoDir) {
+export function createSitemap(siteUrl, root = frontendDir) {
   const routes = readSiteRoutes(root)
     .paths.filter(
       route => resolveRouteSeo({ pathname: route }).robots === "index,follow"

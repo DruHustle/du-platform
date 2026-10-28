@@ -1,6 +1,6 @@
 import type express from "express";
-import { findUserById } from "../shared/persistence/authStore";
-import { error } from "../shared/responseFormatter";
+import { findUserById } from "../lib/persistence/authStore";
+import { error } from "../lib/responseFormatter";
 
 // JWT signature validation alone cannot revoke a token after password reset.
 // Use after requireJwtAuth on ordinary account routes; admin routes already

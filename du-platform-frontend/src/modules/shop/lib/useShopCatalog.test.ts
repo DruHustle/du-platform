@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getPublicShopSeedProducts } from "@shared/shopCatalog";
+import { getPublicShopSeedProducts } from "@/contracts/shopCatalog";
 const { get } = vi.hoisted(() => ({ get: vi.fn() }));
 vi.mock("@/lib/api", () => ({ api: { get } }));
 

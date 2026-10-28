@@ -5,15 +5,15 @@ import {
   convertShopCents,
   SHOP_PRICING_REVISION,
   type ShopCurrency,
-} from "../../../shared/shopCurrency";
-import { customerLanguage } from "../../../shared/customerLanguage";
+} from "../../contracts/shopCurrency";
+import { customerLanguage } from "../../contracts/customerLanguage";
 import crypto from "crypto";
 import {
   shopOrderRequestSchema,
   calculateShopShippingCents,
-} from "../../../shared/shopCheckout";
+} from "../../contracts/shopCheckout";
 import type mysql from "mysql2/promise";
-import { cloneShopSeedProducts } from "../../../shared/shopCatalog";
+import { cloneShopSeedProducts } from "../../contracts/shopCatalog";
 import {
   db,
   isDbConnectionError,

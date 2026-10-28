@@ -1,6 +1,6 @@
 import type express from 'express';
 import { ArExperienceService } from '../services/arExperienceService';
-import { ok, error } from '../../../../shared/responseFormatter';
+import { ok, error } from '../../../../lib/responseFormatter';
 
 export class ArController {
   constructor(private readonly service = new ArExperienceService()) {}

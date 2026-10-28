@@ -1,4 +1,4 @@
-import { ORDER_STATUS_PAGE_MARKER } from "../../shared/orderStatusProtocol.ts";
+import { ORDER_STATUS_PAGE_MARKER } from "../src/contracts/orderStatusProtocol.ts";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PublicPagePreview } from "../src/components/PublicPagePreview.tsx";
@@ -9,7 +9,7 @@ import {
   resolveCanonicalUrl,
   resolveRouteSeo,
   PUBLIC_SITE_ORIGIN,
-} from "../../shared/routeSeo.ts";
+} from "../src/contracts/routeSeo.ts";
 import { createSitemap, readSiteRoutes } from "./lib/site-routes.mjs";
 import { outputDir } from "./lib/paths.mjs";
 
@@ -31,7 +31,13 @@ if (new URL(siteUrl).hostname === "localhost") {
 // Only public catalogue data is read; builds never connect to a production
 // database or invoke write endpoints. Local/CI fixtures can supply a snapshot.
 const fixture = process.env.DU_PUBLIC_CATALOGUE_FILE;
-const omit = process.env.DU_CATALOGUE_STRATEGY === "omit";
+// Local builds need no running API. Production hosting still requires the
+// published catalogue; local fixtures and explicit published builds are opt-in.
+const omit =
+  process.env.DU_CATALOGUE_STRATEGY === "omit" ||
+  (!process.env.DU_CATALOGUE_STRATEGY &&
+    !fixture &&
+    process.env.VERCEL_ENV !== "production");
 if (process.env.VERCEL_ENV === "production" && (fixture || omit))
   throw new Error(
     "Production frontend must use the published database catalogue"

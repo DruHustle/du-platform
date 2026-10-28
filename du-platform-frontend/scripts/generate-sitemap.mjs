@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PUBLIC_SITE_ORIGIN } from "../../shared/routeSeo.ts";
+import { PUBLIC_SITE_ORIGIN } from "../src/contracts/routeSeo.ts";
 import { createSitemap } from "./lib/site-routes.mjs";
 import { frontendDir } from "./lib/paths.mjs";
 

@@ -1,13 +1,14 @@
 # Backend
 
-Express routes, domain services, database access, authentication, workers, and
-backend tests live here. Server-only localized copy is in `shared/copy/`, and
-the shop approval example is in `config/`.
+This is an independent Express application. It has its own dependencies,
+lockfile, TypeScript settings, tests, environment, and Dockerfile. It can be
+copied out of this repository and used on its own.
 
-Install dependencies once from the repository root with
-`pnpm install --frozen-lockfile`. From this folder:
+From this folder, using Node 22.12+ and the pinned pnpm version:
 
 ```bash
+pnpm install --frozen-lockfile
+cp .env.example .env
 pnpm dev
 pnpm check
 pnpm test
@@ -15,16 +16,17 @@ pnpm build
 pnpm start
 ```
 
-Development loads the root `.env` when present. Production requires the runtime
-environment described in the root `.env.example`. The build writes
-`dist/server.js`; `pnpm start` runs that bundle. The API can run without a UI
-build. When available, it serves the sibling frontend's `dist/` output with the
-existing SPA fallback and SEO handling.
+Development reads this folder's `.env`. Production receives runtime environment
+variables from its host. `pnpm build` writes `dist/server.js`. `pnpm start` runs
+the production bundle; configure the database, secrets, and providers first.
+Database tests require dedicated `SHOP_TEST_DATABASE_URL` and
+`NEWSLETTER_TEST_DATABASE_URL` test databases.
 
-Backend tests use `vitest.config.ts` with Node globals and no frontend Vite
-configuration. Database integration tests require the dedicated test database
-variables documented in the root README.
+`contracts/` contains this app's own models, validation, and domain data. `lib/`
+contains backend helpers, persistence stores, and server-only copy. The backend
+does not import frontend code, read its configuration, or require its files.
 
-Shared contracts and domain data are in `../shared/`. Oracle deployment remains
-in `../deploy/oracle/`: it exports this package with production dependencies and
-copies frontend static output into the container's `dist/public/`.
+The API runs without a UI build. A deployment may supply static files through
+`STATIC_DIR`, or place them beside the bundle at `dist/public/` to enable SPA
+fallback. The standalone Dockerfile builds this app alone. The repository's
+Oracle deployment separately builds both applications and composes their output.

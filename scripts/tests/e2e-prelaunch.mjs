@@ -33,7 +33,7 @@ Object.assign(process.env, {
 });
 const { initializeDatabase } = await import("../../du-platform-backend/db.ts");
 const { db } = await import(
-  "../../du-platform-backend/shared/databaseRuntime.ts"
+  "../../du-platform-backend/lib/databaseRuntime.ts"
 );
 const { createModularServer } = await import(
   "../../du-platform-backend/server.ts"
@@ -86,7 +86,7 @@ try {
           );
           // The catalogue cache is intentionally bypassed only in this isolated fixture.
           const { updateShopProductAdmin } = await import(
-            "../../du-platform-backend/shared/persistence/shopStore.ts"
+            "../../du-platform-backend/lib/persistence/shopStore.ts"
           );
           await updateShopProductAdmin(product.id, {
             stock_qty: state === "low" ? 1 : 0,

@@ -3,7 +3,7 @@ import {
   PUBLIC_SITE_ORIGIN,
   resolveRouteSeo,
   resolveCanonicalUrl,
-} from "@shared/routeSeo";
+} from "@/contracts/routeSeo";
 
 type RouteSeoProps = {
   pathname: string;

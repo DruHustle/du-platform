@@ -1,8 +1,9 @@
 # Diaspora Unlocked Architecture
 
-The repository contains a React 19/Vite frontend and an Express backend, with a
-single root dependency manifest and lockfile. Shared route metadata and shop
-catalogue data live in `shared/`.
+The repository contains an independent React 19/Vite frontend and Express backend,
+each with its own dependency manifest, lockfile, and compiler settings. Route metadata and shop
+catalogue data are owned separately in `du-platform-frontend/src/contracts/`
+and `du-platform-backend/contracts/`; neither application imports the other.
 
 ## Frontend
 
@@ -18,7 +19,7 @@ German, Shona, and Ndebele through locale files in `public/locales/`.
 The shared UI directory contains components used by the application, rather than
 an unused component catalogue. `contexts/ThemeContext.tsx` owns the application
 theme, including toast notifications. Add dependencies when a route or shared
-component needs them; keep the root manifest and lockfile in sync when retiring
+component needs them; keep the frontend manifest and lockfile in sync when retiring
 components.
 
 ## Backend

@@ -1,5 +1,5 @@
 {
-  "name": "@du/frontend",
+  "name": "du-platform-frontend",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -21,7 +21,6 @@
     "guardrails:locales": "node scripts/guardrails/check-locales-shape.mjs"
   },
   "dependencies": {
-    "@du/shared": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.7",
@@ -44,7 +43,8 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "three": "^0.183.1",
-    "wouter": "^3.3.5"
+    "wouter": "^3.3.5",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@builder.io/vite-plugin-jsx-loc": "^0.1.1",
@@ -63,5 +63,24 @@
     "vite": "^7.1.7",
     "vite-plugin-html": "^3.2.2",
     "vitest": "^2.1.4"
+  },
+  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
+  "pnpm": {
+    "overrides": {
+      "tailwindcss>nanoid": "3.3.18",
+      "lodash@<4.18.0": "4.18.1",
+      "lodash-es@<4.18.0": "4.18.1",
+      "postcss@<8.5.18": "8.5.29",
+      "mermaid@<11.16.1": "11.16.1",
+      "fflate@>=0.8.0 <0.8.3": "0.8.3",
+      "fflate@>=0.6.0 <0.6.11": "0.6.11",
+      "mdast-util-to-hast@<13.2.1": "13.2.1",
+      "body-parser@<1.20.9": "1.20.9",
+      "qs@<6.16.1": "6.16.1"
+    },
+    "patchedDependencies": {
+      "wouter@3.7.1": "patches/wouter@3.7.1.patch",
+      "@pmndrs/xr@6.6.29": "patches/@pmndrs__xr@6.6.29.patch"
+    }
   }
 }

@@ -2,20 +2,20 @@ import { queueOrderNotification } from "./orderOutboxStore";
 import { assertQuoteReadiness } from "./shopReadiness";
 import { recordShopFunnel } from "./funnel";
 import type { PoolConnection, RowDataPacket } from "mysql2/promise";
-import { db } from "../../shared/databaseRuntime";
-import { sha256 } from "../../shared/persistence/authStore";
+import { db } from "../../lib/databaseRuntime";
+import { sha256 } from "../../lib/persistence/authStore";
 import {
   ShopRequestError,
   invalidateShopProductsCache,
   getShopOrderByRef,
-} from "../../shared/persistence/shopStore";
+} from "../../lib/persistence/shopStore";
 import {
   orderCommandSchema,
   orderNextAction,
   permittedOrderTransition,
   type OrderStage,
   ORDER_STAGES,
-} from "../../../shared/orderWorkflow";
+} from "../../contracts/orderWorkflow";
 
 function pool() {
   if (!db)

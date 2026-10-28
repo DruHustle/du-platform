@@ -1,6 +1,6 @@
 import { NewsletterService } from "../../newsletter/service";
 import { parseNewsletter, subscriptionSchema } from "../../newsletter/routes";
-import { ok } from "../../../shared/responseFormatter";
+import { ok } from "../../../lib/responseFormatter";
 import { Router } from "express";
 import { rateLimiter } from "../../../core/rateLimiter";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";

@@ -1,10 +1,10 @@
-import { isShopCurrency } from "../../../../shared/shopCurrency";
+import { isShopCurrency } from "../../../contracts/shopCurrency";
 import {
   ADMIN_SETTING_NOTIFY_ALERT_EMAILS,
   ADMIN_SETTING_NOTIFY_FROM_EMAIL,
   isValidEmail,
   parseCsvEmails,
-} from "../../../shared/email";
+} from "../../../lib/email";
 import { AdminRepository } from "../repositories/adminRepository";
 
 export class AdminServiceError extends Error {

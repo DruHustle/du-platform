@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { customerLanguage } from "@shared/customerLanguage";
+import { customerLanguage } from "@/contracts/customerLanguage";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {

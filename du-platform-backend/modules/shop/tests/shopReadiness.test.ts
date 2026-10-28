@@ -7,7 +7,7 @@ import {
   assertQuoteReadiness,
   assertOrderRequestReadiness,
 } from "../shopReadiness";
-import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
+import { SHOP_READINESS_CHECKS } from "../../../contracts/shopReadiness";
 let dir: string, file: string;
 const now = Date.parse("2026-10-23T12:00:00Z");
 const approval = () => ({

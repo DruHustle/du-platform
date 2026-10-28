@@ -14,7 +14,7 @@ import {
   type SavedTravel,
   type TravelDraft,
   type TravelCategory,
-} from "@shared/travel";
+} from "@/contracts/travel";
 import { useTravelDraft, updateDraft, travelEvent } from "./store";
 import { SupplierQuoteCard } from "./SupplierResults";
 export default function MyTrips() {

@@ -1,4 +1,4 @@
-import { getSuccessStories } from "../../../shared/persistence/impactStore";
+import { getSuccessStories } from "../../../lib/persistence/impactStore";
 
 export class ImpactRepository {
   listStories() {

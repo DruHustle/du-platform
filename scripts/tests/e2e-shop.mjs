@@ -1,7 +1,7 @@
 import { readyShop } from "./shop-readiness-fixture.mjs";
-import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
+import { getPublicShopSeedProducts } from "../../du-platform-backend/contracts/shopCatalog.ts";
 import assert from "node:assert/strict";
-import { calculateShopShippingCents } from "../../shared/shopCheckout.ts";
+import { calculateShopShippingCents } from "../../du-platform-backend/contracts/shopCheckout.ts";
 import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";

@@ -21,7 +21,7 @@ process.env.RESET_EMAIL_PROVIDER = "resend";
 process.env.ADMIN_EMAILS = "merchant@example.test";
 process.env.FROM_EMAIL = "shop@example.test";
 const { db } = await import(
-  "../../du-platform-backend/shared/databaseRuntime.ts"
+  "../../du-platform-backend/lib/databaseRuntime.ts"
 );
 assert.equal(
   db,
@@ -32,7 +32,7 @@ const { createShopModuleRouter } = await import(
   "../../du-platform-backend/modules/shop/routes/index.ts"
 );
 const { shopSeedProducts } = await import(
-  "../../du-platform-backend/shared/persistence/shopStore.ts"
+  "../../du-platform-backend/lib/persistence/shopStore.ts"
 );
 const product = shopSeedProducts.find(
   item => item.slug === "sables-rugby-home-kit"

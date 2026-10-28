@@ -6,7 +6,7 @@ import {
   defaultTravelCriteria,
   guestTravelDraftSchema,
   type TravelDraft,
-} from "@shared/travel";
+} from "@/contracts/travel";
 const key = "du_travel_draft_v1";
 let draft: TravelDraft | undefined;
 const listeners = new Set<() => void>();

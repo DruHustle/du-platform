@@ -1,7 +1,7 @@
 import {
   getPasswordIssue,
   PASSWORD_ERROR_MESSAGES,
-} from "../../../../shared/passwordPolicy";
+} from "../../../contracts/passwordPolicy";
 import { z } from "zod";
 
 const passwordSchema = z.string().superRefine((value, ctx) => {
