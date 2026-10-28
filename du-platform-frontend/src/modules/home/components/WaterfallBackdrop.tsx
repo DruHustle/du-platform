@@ -116,14 +116,18 @@ export default function WaterfallBackdrop() {
         <button
           type="button"
           onClick={() => setPaused(value => !value)}
-          className="absolute bottom-5 left-6 z-30 inline-flex min-h-11 max-w-[calc(100%-3rem)] items-center gap-2 rounded-full border border-white/25 bg-slate-950/65 px-4 py-2 text-xs text-white backdrop-blur-sm hover:bg-slate-950/85 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold"
+          aria-label={t(paused ? "home.hero_resume" : "home.hero_pause")}
+          title={t(paused ? "home.hero_resume" : "home.hero_pause")}
+          className="absolute bottom-5 left-6 z-30 inline-flex min-h-11 min-w-11 max-w-[calc(100%-3rem)] items-center justify-center gap-2 rounded-full border border-white/25 bg-slate-950/65 px-3 py-2 text-xs text-white backdrop-blur-sm hover:bg-slate-950/85 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold sm:px-4"
         >
           {paused ? (
             <Play size={14} aria-hidden="true" />
           ) : (
             <Pause size={14} aria-hidden="true" />
           )}
-          {t(paused ? "home.hero_resume" : "home.hero_pause")}
+          <span className="hidden sm:inline">
+            {t(paused ? "home.hero_resume" : "home.hero_pause")}
+          </span>
         </button>
       )}
     </>
