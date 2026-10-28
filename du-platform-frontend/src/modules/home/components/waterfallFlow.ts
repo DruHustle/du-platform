@@ -2,7 +2,7 @@
 // cannot move the effect onto the sky or the foreground cliff on narrow screens.
 const vertexSource = `
 attribute vec2 position;
-varying vec2 screen;
+varying mediump vec2 screen;
 void main() {
   screen = vec2(position.x, -position.y) * 0.5 + 0.5;
   gl_Position = vec4(position, 0.0, 1.0);
@@ -13,7 +13,7 @@ precision mediump float;
 uniform sampler2D photograph;
 uniform vec2 crop;
 uniform float time;
-varying vec2 screen;
+varying mediump vec2 screen;
 
 void main() {
   vec2 uv = (screen - 0.5) * crop + 0.5;
