@@ -38,7 +38,7 @@ execFileSync(
   ],
   { stdio: "ignore" }
 );
-const root = path.resolve("dist/public");
+const root = path.resolve("du-platform-frontend/dist");
 const types = {
   ".html": "text/html",
   ".css": "text/css",

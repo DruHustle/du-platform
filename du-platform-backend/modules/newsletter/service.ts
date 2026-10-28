@@ -2,7 +2,7 @@ import {
   CUSTOMER_LANGUAGES,
   customerLanguage,
 } from "../../../shared/customerLanguage";
-import { emailText } from "../../../shared/customerEmailCopy";
+import { emailText } from "../../shared/copy/customerEmailCopy";
 import type {
   Pool,
   PoolConnection,

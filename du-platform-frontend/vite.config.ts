@@ -79,7 +79,7 @@ export default defineConfig(({ mode }) => {
     envDir: path.resolve(import.meta.dirname, ".."),
     root: path.resolve(import.meta.dirname),
     build: {
-      outDir: path.resolve(import.meta.dirname, "..", "dist/public"),
+      outDir: path.resolve(import.meta.dirname, "dist"),
       emptyOutDir: true,
       minify: "terser",
       terserOptions: {
@@ -116,8 +116,8 @@ export default defineConfig(({ mode }) => {
               key: fs.readFileSync(keyPath),
               cert: fs.readFileSync(certPath),
             }
-          : true
-        : false,
+          : {}
+        : undefined,
       proxy: {
         "/api": {
           target: env.BACKEND_URL || "http://localhost:5001",

@@ -1,7 +1,7 @@
-import { ORDER_STATUS_PAGE_MARKER } from "../shared/orderStatusProtocol.ts";
+import { ORDER_STATUS_PAGE_MARKER } from "../../shared/orderStatusProtocol.ts";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { PublicPagePreview } from "../du-platform-frontend/src/components/PublicPagePreview.tsx";
+import { PublicPagePreview } from "../src/components/PublicPagePreview.tsx";
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -9,10 +9,11 @@ import {
   resolveCanonicalUrl,
   resolveRouteSeo,
   PUBLIC_SITE_ORIGIN,
-} from "../shared/routeSeo.ts";
+} from "../../shared/routeSeo.ts";
 import { createSitemap, readSiteRoutes } from "./lib/site-routes.mjs";
+import { outputDir } from "./lib/paths.mjs";
 
-const output = path.resolve("dist/public");
+const output = outputDir;
 const template = fs.readFileSync(path.join(output, "index.html"), "utf8");
 // Use the origin already resolved by Vite, including its build-time environment.
 const templateOrigin = template.match(

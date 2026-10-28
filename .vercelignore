@@ -7,11 +7,12 @@
 **/*.pem
 **/node_modules
 dist
+**/dist
 playwright-report
 test-results
 private
 
-# Oracle owns the backend. These directories are not needed for the static build.
-du-platform-backend
+# Both app manifests are required for a frozen workspace install. Only the
+# frontend's dist directory is published; operations and docs are not uploaded.
 deploy
 docs

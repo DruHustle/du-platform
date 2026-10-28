@@ -1,5 +1,5 @@
 import { customerLanguage } from "../../../shared/customerLanguage";
-import { emailText } from "../../../shared/customerEmailCopy";
+import { emailText } from "../../shared/copy/customerEmailCopy";
 import { randomBytes, createHash } from "node:crypto";
 import { escapeEmailHtml } from "../../shared/email";
 

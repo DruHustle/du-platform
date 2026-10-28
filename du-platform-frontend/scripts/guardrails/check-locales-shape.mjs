@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const rootDir = process.cwd();
-const localesDir = path.join(rootDir, "du-platform-frontend", "public", "locales");
+import { frontendDir } from "../lib/paths.mjs";
+
+const localesDir = path.join(frontendDir, "public", "locales");
 
 function valueType(value) {
   if (Array.isArray(value)) return "array";
@@ -34,12 +35,14 @@ if (!fs.existsSync(localesDir)) {
 
 const localeCodes = fs
   .readdirSync(localesDir, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map((entry) => entry.name)
+  .filter(entry => entry.isDirectory())
+  .map(entry => entry.name)
   .sort();
 
 if (!localeCodes.includes("en")) {
-  fail("Missing required baseline locale: du-platform-frontend/public/locales/en/translation.json");
+  fail(
+    "Missing required baseline locale: du-platform-frontend/public/locales/en/translation.json"
+  );
 }
 
 const localeObjects = {};
@@ -53,7 +56,11 @@ for (const locale of localeCodes) {
   }
 }
 
-if (!localeObjects.en || typeof localeObjects.en !== "object" || Array.isArray(localeObjects.en)) {
+if (
+  !localeObjects.en ||
+  typeof localeObjects.en !== "object" ||
+  Array.isArray(localeObjects.en)
+) {
   fail("English translation baseline must be a JSON object.");
 }
 
@@ -68,7 +75,9 @@ for (const [locale, translations] of Object.entries(localeObjects)) {
     if (!(key in localeMap)) continue;
     const localeType = localeMap[key];
     if (localeType !== enType) {
-      problems.push(`${locale}: key "${key}" type mismatch (en=${enType}, ${locale}=${localeType})`);
+      problems.push(
+        `${locale}: key "${key}" type mismatch (en=${enType}, ${locale}=${localeType})`
+      );
       if (problems.length >= 100) break;
     }
   }
@@ -80,4 +89,6 @@ if (problems.length > 0) {
   fail(`Found locale shape mismatches:\n- ${problems.join("\n- ")}`);
 }
 
-console.log(`[guardrails:locales] OK (${Object.keys(localeObjects).length} locale files checked)`);
+console.log(
+  `[guardrails:locales] OK (${Object.keys(localeObjects).length} locale files checked)`
+);

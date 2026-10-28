@@ -1,7 +1,7 @@
-import interestCopy from "../../../../shared/productInterestCopy.json";
+import interestCopy from "../../../shared/copy/productInterestCopy.json";
 import { publicShopReadiness } from "../../shop/shopReadiness";
 import { readPublishedProductDetails } from "../../shop/productDetailsStore";
-import answerCopy from "../../../../shared/catalogueAnswerCopy.json";
+import answerCopy from "../../../shared/copy/catalogueAnswerCopy.json";
 import type { ProductDetails } from "../../../../shared/productDetails";
 import { listShopProducts } from "../../../shared/persistence/shopStore";
 import {

@@ -44,8 +44,8 @@ Object.assign(process.env, approval.env);
 const app = express();
 app.use(express.json());
 app.use("/api/shop", createShopModuleRouter());
-app.use(express.static(resolve("dist/public")));
-app.get("*", (_req, res) => res.sendFile(resolve("dist/public/index.html")));
+app.use(express.static(resolve("du-platform-frontend/dist")));
+app.get("*", (_req, res) => res.sendFile(resolve("du-platform-frontend/dist/index.html")));
 const server = await new Promise(done => {
   const listening = app.listen(0, "127.0.0.1", () => done(listening));
 });

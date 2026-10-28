@@ -1,0 +1,36 @@
+{
+  "name": "@du/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "node --watch --env-file-if-exists=../.env --import tsx server.ts",
+    "build": "esbuild server.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "start": "NODE_ENV=production node dist/server.js",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@du/shared": "workspace:*",
+    "axios": "^1.20.0",
+    "compression": "^1.8.2",
+    "cors": "^2.8.5",
+    "express": "^4.22.3",
+    "mysql2": "^3.24.5",
+    "tz-lookup": "6.1.25",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.17",
+    "@types/express": "4.17.21",
+    "@types/node": "^24.7.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.1",
+    "typescript": "5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

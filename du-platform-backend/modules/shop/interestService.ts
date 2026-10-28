@@ -12,7 +12,7 @@ import {
 } from "../newsletter/content";
 import { newsletterSender, type NewsletterEmail } from "../newsletter/provider";
 import { publicShopReadiness } from "./shopReadiness";
-import copy from "../../../shared/productInterestCopy.json";
+import copy from "../../shared/copy/productInterestCopy.json";
 
 export class ProductInterestService extends NewsletterService {
   constructor(pool: Pool | null = db) {

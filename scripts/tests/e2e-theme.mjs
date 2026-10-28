@@ -9,7 +9,7 @@ import { createModularServer } from "../../du-platform-backend/server.ts";
 // Local, anonymous browser checks: no .env, production services or account writes.
 const app = createModularServer({
   backend: { db: null, serverStartedAt: Date.now() },
-  staticPath: resolve("dist/public"),
+  staticPath: resolve("du-platform-frontend/dist"),
 });
 const server = createServer(app);
 await new Promise((done, reject) => {

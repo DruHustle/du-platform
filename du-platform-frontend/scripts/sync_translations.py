@@ -142,9 +142,9 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    # Script lives in scripts/, so project root is one level up.
+    # Script lives in the frontend's scripts/ directory.
     root = Path(__file__).resolve().parent.parent
-    locales_dir = root / "du-platform-frontend" / "public" / "locales"
+    locales_dir = root / "public" / "locales"
     en_path = locales_dir / "en" / "translation.json"
     if not en_path.exists():
         raise FileNotFoundError(f"English source file not found: {en_path}")

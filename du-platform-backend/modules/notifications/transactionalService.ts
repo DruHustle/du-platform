@@ -14,7 +14,7 @@ import { newsletterOrigin, renderNewsletter } from "../newsletter/content";
 import type { NewsletterEmail } from "../newsletter/provider";
 import { customerLanguage } from "../../../shared/customerLanguage";
 import { contactInquirySchema } from "./dto/notification.dto";
-import copy from "../../../shared/transactionalEmailCopy.json";
+import copy from "../../shared/copy/transactionalEmailCopy.json";
 
 export async function enqueueTransactional(
   c: PoolConnection,

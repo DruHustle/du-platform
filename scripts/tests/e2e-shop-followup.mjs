@@ -6,7 +6,7 @@ import path from "node:path";
 import { chromium, webkit } from "playwright";
 import { getPublicShopSeedProducts } from "../../shared/shopCatalog.ts";
 import { readyShop } from "./shop-readiness-fixture.mjs";
-const root = path.resolve("dist/public"),
+const root = path.resolve("du-platform-frontend/dist"),
   out = process.env.SHOP_FOLLOWUP_OUTPUT || "/tmp/du-shop-followup";
 await fs.mkdir(out, { recursive: true });
 const mime = {

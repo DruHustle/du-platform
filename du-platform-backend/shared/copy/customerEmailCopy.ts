@@ -1,4 +1,4 @@
-import { customerLanguage } from "./customerLanguage";
+import { customerLanguage } from "../../../shared/customerLanguage";
 
 const copy = {
   order_subject: {

@@ -3,6 +3,7 @@ lockfileVersion: "9.0"
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
+  injectWorkspacePackages: true
 
 overrides:
   tailwindcss>nanoid: 3.3.18
@@ -26,7 +27,89 @@ patchedDependencies:
 
 importers:
   .:
+    devDependencies:
+      axios:
+        specifier: ^1.20.0
+        version: 1.20.0
+      express:
+        specifier: ^4.22.3
+        version: 4.22.3
+      mysql2:
+        specifier: ^3.24.5
+        version: 3.24.5(@types/node@24.7.0)
+      playwright:
+        specifier: ^1.58.2
+        version: 1.58.2
+      pnpm:
+        specifier: ^10.15.1
+        version: 10.18.1
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      tsx:
+        specifier: ^4.19.1
+        version: 4.20.6
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+
+  du-platform-backend:
     dependencies:
+      "@du/shared":
+        specifier: workspace:*
+        version: file:shared
+      axios:
+        specifier: ^1.20.0
+        version: 1.20.0
+      compression:
+        specifier: ^1.8.2
+        version: 1.8.2
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.6
+      express:
+        specifier: ^4.22.3
+        version: 4.22.3
+      mysql2:
+        specifier: ^3.24.5
+        version: 3.24.5(@types/node@24.7.0)
+      tz-lookup:
+        specifier: 6.1.25
+        version: 6.1.25
+      zod:
+        specifier: ^4.6.6
+        version: 4.6.7
+    devDependencies:
+      "@types/compression":
+        specifier: ^1.8.1
+        version: 1.8.1
+      "@types/cors":
+        specifier: ^2.8.17
+        version: 2.8.19
+      "@types/express":
+        specifier: 4.17.21
+        version: 4.17.21
+      "@types/node":
+        specifier: ^24.7.0
+        version: 24.7.0
+      esbuild:
+        specifier: ^0.25.0
+        version: 0.25.10
+      tsx:
+        specifier: ^4.19.1
+        version: 4.20.6
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+      vitest:
+        specifier: ^2.1.4
+        version: 2.1.9(@types/node@24.7.0)(lightningcss@1.30.1)(terser@5.46.0)
+
+  du-platform-frontend:
+    dependencies:
+      "@du/shared":
+        specifier: workspace:*
+        version: file:shared
       "@radix-ui/react-dialog":
         specifier: ^1.1.15
         version: 1.1.15(@types/react-dom@19.2.1(@types/react@19.2.1))(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -48,9 +131,6 @@ importers:
       "@react-three/xr":
         specifier: ^6.6.29
         version: 6.6.29(@react-three/fiber@9.5.0(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(three@0.183.1))(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(three@0.183.1)
-      "@types/three":
-        specifier: ^0.183.1
-        version: 0.183.1
       "@vercel/analytics":
         specifier: ^1.6.1
         version: 1.6.1(react@19.2.1)
@@ -66,15 +146,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      compression:
-        specifier: ^1.8.2
-        version: 1.8.2
-      cors:
-        specifier: ^2.8.5
-        version: 2.8.6
-      express:
-        specifier: ^4.22.3
-        version: 4.22.3
       framer-motion:
         specifier: ^12.23.22
         version: 12.23.22(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -84,9 +155,6 @@ importers:
       lucide-react:
         specifier: ^0.453.0
         version: 0.453.0(react@19.2.1)
-      mysql2:
-        specifier: ^3.24.5
-        version: 3.24.5(@types/node@24.7.0)
       react:
         specifier: ^19.2.1
         version: 19.2.1
@@ -108,15 +176,9 @@ importers:
       three:
         specifier: ^0.183.1
         version: 0.183.1
-      tz-lookup:
-        specifier: 6.1.25
-        version: 6.1.25
       wouter:
         specifier: ^3.3.5
         version: 3.7.1(patch_hash=4e16e6ff3fde7d6c1024d3e0c8605dc9eb6afb690d0d49958c2f449091813072)(react@19.2.1)
-      zod:
-        specifier: ^4.6.6
-        version: 4.6.7
     devDependencies:
       "@builder.io/vite-plugin-jsx-loc":
         specifier: ^0.1.1
@@ -124,15 +186,6 @@ importers:
       "@tailwindcss/vite":
         specifier: ^4.1.3
         version: 4.1.14(vite@7.1.9(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.46.0)(tsx@4.20.6))
-      "@types/compression":
-        specifier: ^1.8.1
-        version: 1.8.1
-      "@types/cors":
-        specifier: ^2.8.17
-        version: 2.8.19
-      "@types/express":
-        specifier: 4.17.21
-        version: 4.17.21
       "@types/node":
         specifier: ^24.7.0
         version: 24.7.0
@@ -142,24 +195,15 @@ importers:
       "@types/react-dom":
         specifier: ^19.2.1
         version: 19.2.1(@types/react@19.2.1)
+      "@types/three":
+        specifier: ^0.183.1
+        version: 0.183.1
       "@vitejs/plugin-basic-ssl":
         specifier: ^2.1.4
         version: 2.1.4(vite@7.1.9(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.46.0)(tsx@4.20.6))
       "@vitejs/plugin-react":
         specifier: ^5.0.4
         version: 5.0.4(vite@7.1.9(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.46.0)(tsx@4.20.6))
-      esbuild:
-        specifier: ^0.25.0
-        version: 0.25.10
-      playwright:
-        specifier: ^1.58.2
-        version: 1.58.2
-      pnpm:
-        specifier: ^10.15.1
-        version: 10.18.1
-      prettier:
-        specifier: ^3.6.2
-        version: 3.6.2
       tailwindcss:
         specifier: ^4.1.14
         version: 4.1.14
@@ -185,7 +229,15 @@ importers:
         specifier: ^2.1.4
         version: 2.1.9(@types/node@24.7.0)(lightningcss@1.30.1)(terser@5.46.0)
 
+  shared:
+    dependencies:
+      zod:
+        specifier: ^4.6.6
+        version: 4.6.7
+
 packages:
+  "@du/shared@file:shared":
+    resolution: { directory: shared, type: directory }
   "@babel/code-frame@7.27.1":
     resolution:
       {
@@ -4899,6 +4951,9 @@ packages:
         optional: true
 
 snapshots:
+  "@du/shared@file:shared":
+    dependencies:
+      zod: 4.6.7
   "@babel/code-frame@7.27.1":
     dependencies:
       "@babel/helper-validator-identifier": 7.27.1

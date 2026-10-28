@@ -5,7 +5,7 @@ import { extname, resolve, sep } from "node:path";
 import { chromium, webkit } from "playwright";
 
 // Production assets, no backend or provider credentials. Playback is a controlled fixture.
-const root = resolve("dist/public");
+const root = resolve("du-platform-frontend/dist");
 const output = process.env.VR_MUSIC_OUTPUT_DIR || "/tmp/du-vr-music";
 const types = {
   ".html": "text/html",

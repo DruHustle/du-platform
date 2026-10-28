@@ -8,7 +8,7 @@ import { extname, resolve, sep } from "node:path";
 import { chromium, webkit } from "playwright";
 
 // Serve the production build without loading .env or contacting any service.
-const root = resolve("dist/public");
+const root = resolve("du-platform-frontend/dist");
 const output = process.env.SHOP_OUTPUT_DIR || "/tmp/du-shop-tests";
 const types = {
   ".html": "text/html",

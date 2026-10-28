@@ -48,7 +48,7 @@ and explicit approval. Blank or unverified facts remain **NOT READY**.
 | `backup_restore`      | Production Aiven plan/current backup status and retention; latest recoverable point; approved isolated restore target; schema/row comparison and application recovery; queue/retry reconciliation; date/reviewer                              | Production logical restore and application probe passed, 25 October 2026; provider PITR not exercised                        |
 | `transactional_email` | Explicitly designated test recipients; sender/domain authorization; provider acceptance, private-link recovery, quote/refund content and inbox checks; duplicate/retry review; date/reviewer                                                  | Three labelled samples accepted and owner-confirmed at info@diasporaunlocked.com; live private-link inbox flow not exercised |
 
-Copy [the deliberately unapproved JSON template](../config/shop-pilot-approval.example.json)
+Copy [the deliberately unapproved JSON template](../du-platform-backend/config/shop-pilot-approval.example.json)
 to a private operational location. Fill actual dates, approver, country codes and
 accepted country-name spellings, approved database product IDs, and evidence for
 every check. `null`, empty lists and false approvals intentionally cannot enable

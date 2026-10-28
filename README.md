@@ -74,38 +74,61 @@ du-platform/                         # One parent Git/GitHub repository
 ├── du-platform-frontend/            # React 19 + Vite application
 │   ├── src/                        # UI, routes, domain modules, localization
 │   ├── public/                     # Images, locales, audio, SEO assets
-│   ├── shared/                     # Frontend-only helpers and data
+│   ├── scripts/                    # Static build, SEO, translations, size checks
+│   ├── package.json                # Browser dependencies and frontend commands
+│   ├── dist/                       # Generated static site (ignored by Git)
 │   ├── index.html                  # Browser entry; src/main.tsx boots React
 │   ├── vite.config.ts
 │   ├── components.json             # shadcn/ui configuration
 │   ├── tsconfig.json
 │   └── tsconfig.node.json
 ├── du-platform-backend/             # Existing Express API application
-│   ├── server.ts                   # HTTP entry and production SPA serving
+│   ├── server.ts                   # HTTP entry and optional SPA serving
 │   ├── db.ts                       # MySQL bootstrap and schema synchronization
 │   ├── api/                        # API registration
 │   ├── core/                       # Middleware, startup validation, RBAC
 │   ├── modules/                    # Domain APIs and existing module tests
 │   ├── shared/                     # Backend helpers and persistence stores
+│   ├── config/                     # Backend operational configuration examples
+│   ├── package.json                # API dependencies and backend commands
+│   ├── vitest.config.ts            # Backend-only Node test configuration
+│   ├── dist/                       # Generated API bundle (ignored by Git)
 │   └── tsconfig.json
-├── shared/                         # Both applications: SEO, shop catalog, password policy
+├── shared/                         # @du/shared: contracts, validation, domain data
 ├── .github/                        # Repository workflows
 ├── .githooks/                      # Repository hooks
-├── scripts/                        # Development, guardrails, translations, E2E tools
+├── scripts/                        # Cross-app development, E2E tests, release operations
 ├── docs/
 ├── patches/                        # Existing pnpm dependency patches
-├── package.json                    # Single dependency manifest and app scripts
-├── pnpm-lock.yaml                  # Single, unchanged lockfile
-├── tsconfig.json                   # Shared compiler options and root aliases
+├── package.json                    # Workspace orchestration and integration tools
+├── pnpm-workspace.yaml             # Frontend, backend, and shared packages
+├── pnpm-lock.yaml                  # One reproducible lockfile for all packages
+├── tsconfig.json                   # Common compiler defaults (no browser globals)
 ├── deploy/oracle/                  # Oracle container deployment and operations
 ├── vercel.json                     # Static frontend deployment from repository root
 └── README.md
 ```
 
-Both application folders belong to the parent repository. They have no separate
-Git repositories or submodules. Dependencies remain centralized in the existing
-root manifest; install once at the root. This restructuring does not introduce
-pnpm workspaces or change dependency versions.
+Both applications remain in this repository as pnpm workspace packages:
+`@du/frontend` and `@du/backend`. Each owns its dependencies, scripts, TypeScript
+configuration, tests, and build output. Install once at the root; dependency
+versions and patches are preserved. The root commands delegate to the app that
+owns the task.
+
+Code in `shared/` is the `@du/shared` workspace package and may be used by either
+app. Keep it free of browser and server framework dependencies. Frontend code
+must not import backend modules, and backend tests do not load the Vite frontend
+configuration. Cross-app browser tests and release orchestration live at the
+root because they exercise or deploy both applications.
+
+Run an app directly from its folder:
+
+```bash
+pnpm --dir du-platform-frontend dev      # UI and /api proxy
+pnpm --dir du-platform-backend dev       # Express API
+pnpm --dir du-platform-frontend build    # Static site only
+pnpm --dir du-platform-backend build     # API bundle only
+```
 
 ## Local Development
 
@@ -139,8 +162,8 @@ pnpm guardrails            # Vite, deployment, and locale safety checks
 pnpm translations:check:keys
 pnpm format:check          # Read-only Prettier check (not a lint command)
 pnpm build                 # Builds both applications
-pnpm build:frontend        # Outputs dist/public/
-pnpm build:backend         # Outputs dist/server.js
+pnpm build:frontend        # Outputs du-platform-frontend/dist/
+pnpm build:backend         # Outputs du-platform-backend/dist/server.js
 pnpm preview               # Vite static preview; does not start the API
 pnpm start                 # Production Express server; configure production env first
 ```
@@ -272,15 +295,16 @@ registration, provider configuration, and schema initialization. Existing databa
 records are preserved; no historical tables are dropped. Accounts, the shop,
 tourism, investment information, and Onesa retain their independent controls.
 
-Production Express serves the built frontend from `dist/public/`, including the
-existing SPA fallback and SEO injection. Build outputs stay at the repository
-root to preserve this behavior.
+Local Express can serve the sibling `du-platform-frontend/dist/` output with SPA
+fallback and SEO injection. It also runs as an API without a frontend build.
+Oracle's container exports the backend with production dependencies and copies
+the static site beside its bundle at `dist/public/` for the same SPA behavior.
 
 ## Hosting Configuration
 
 GitHub repository: https://github.com/DruHustle/du-platform (one repository).
 Vercel builds the frontend from the **repository root** with output directory
-`dist/public`. The production backend runs on the Oracle VM **Software Engineering
+`du-platform-frontend/dist`. The production backend runs on the Oracle VM **Software Engineering
 Backend**, shared with other independent applications. See
 [Oracle deployment and rollback](deploy/oracle/README.md). Managed database and
 provider integrations remain unchanged. Retired deployment configuration has been
@@ -538,7 +562,7 @@ concurrent builds or browser suites:
 
 ```sh
 node scripts/tests/pilot-performance.mjs \
-  --before=/tmp/du-baseline/dist/public --after=dist/public \
+  --before=/tmp/du-baseline/du-platform-frontend/dist --after=du-platform-frontend/dist \
   --catalogue=/tmp/du-public-catalogue.json --out=/tmp/du-performance.json \
   --before-revision=BASELINE_SHA --after-revision=REVIEW_SHA
 ```
