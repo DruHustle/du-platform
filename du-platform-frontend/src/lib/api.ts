@@ -176,8 +176,13 @@ api.interceptors.response.use(
       const headers = ensureAxiosHeaders(config as InternalAxiosRequestConfig);
       headers.set("Authorization", `Bearer ${token}`);
       return api(config);
-    } catch {
-      return Promise.reject(error);
+    } catch (refreshError: any) {
+      // A failed refresh is only evidence of a signed-out session when the
+      // server actually rejected it. Preserve outages and rate limits so
+      // callers can distinguish them from an expired session.
+      return Promise.reject(
+        Number(refreshError?.response?.status) === 401 ? error : refreshError
+      );
     }
   }
 );

@@ -55,6 +55,8 @@ full SHA and receives source as a Docker build context on stdin. Application
 runtime secrets stay root-readable in `/opt/du-platform/compose.runtime.json`.
 Worker and privileged release scripts are installed separately after review;
 ordinary application commits cannot overwrite these host scripts.
+The installed bundle includes `manage-images.py` alongside `poll-release.py`;
+rerun the reviewed `install-release-worker.sh` when updating this cleanup policy.
 
 The release script locks deployment, checks the image revision, privately backs
 up both manifests, updates only DU's image and `APP_REVISION`, then waits for
@@ -63,6 +65,54 @@ Onesa readiness. Failure after switching manifests restores the previous DU
 manifests and image. Sibling stacks are not restarted. Backups contain runtime
 configuration and remain root-readable only. The CI wait times out rather than
 publishing Vercel against an unverified backend.
+
+## Docker image retention (production and local)
+
+After all production readiness checks pass, the release script removes older
+unused DU images. It retains the just-verified image, the exact image used before
+the release for rollback, and images referenced by **any running or stopped
+container**. Failed deployments leave images intact for recovery. Cleanup errors
+log a warning and do not roll back a healthy release; retry maintenance after
+fixing the reported Docker error.
+The rollback image also receives the `du-platform:oracle-previous` tag; repeating
+the same cached release preserves the preceding distinct release.
+
+Cleanup targets only tags in the exact `du-platform` repository and dangling
+images carrying DU's `org.opencontainers.image.source` label. Legacy tagged DU
+images are included; unlabeled dangling images cannot safely be attributed to DU
+and are left alone. Shared image tags belonging to other applications remain.
+It never forces removal, prunes the shared host, or removes containers, volumes,
+networks or builder caches.
+
+For local Docker builds, run:
+
+```bash
+pnpm docker:build
+```
+
+This builds the current checkout using the same Dockerfile for the local Docker
+daemon's platform, tags it `du-platform:local`, retains the preceding successful
+build as `du-platform:local-previous`, then runs cleanup. Builds and cleanup are
+serialized; a failed build does not rotate or remove images. Native `pnpm dev`
+runs without Docker and creates no images.
+
+Manual cleanup requires explicit retained references. Include both the active
+and rollback images; a missing retained reference aborts before any deletion.
+Preview the candidates first, then omit `--dry-run` to remove them:
+
+```bash
+# Local, after at least two successful local Docker builds:
+pnpm docker:cleanup --keep du-platform:local --keep du-platform:local-previous --dry-run
+
+# Production, as root; set CURRENT_IMAGE to the active image tag/ID:
+flock -w 60 /var/lock/du-platform-deploy.lock \
+  python3 /usr/local/lib/du-platform-release/manage-images.py cleanup \
+  --keep "${CURRENT_IMAGE:?Set the active image tag/ID}" --keep du-platform:oracle-previous --dry-run
+```
+
+Install both the updated `deploy.sh` and `manage-images.py` on the VM with the
+reviewed installer before relying on automatic production cleanup. Application
+CI does not replace these root-owned host scripts.
 
 Inspect the worker with `systemctl status du-platform-release.timer` and
 `journalctl -u du-platform-release.service`. A manual `systemctl start du-platform-release.service` only checks for an

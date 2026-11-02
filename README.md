@@ -285,6 +285,11 @@ Backend**, shared with other independent applications. See
 [Oracle deployment and rollback](deploy/oracle/README.md). Managed database and
 provider integrations remain unchanged. Retired deployment configuration has been
 removed; rollback uses the previous tested Oracle image.
+After a verified backend release, DU removes older unused Docker images while
+keeping the current release, its rollback image and every container's image.
+For local Docker builds, `pnpm docker:build` applies the same cleanup policy and
+keeps `du-platform:local` plus `du-platform:local-previous`. Native `pnpm dev`
+does not build Docker images. See the Oracle operations guide for manual cleanup.
 GitHub Actions owns automatic frontend releases and PR previews after CI passes;
 Vercel Git auto-deployment is disabled to prevent duplicate copies. Vercel builds
 only `build:frontend`; Oracle backend releases remain independent.

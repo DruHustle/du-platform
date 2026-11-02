@@ -740,6 +740,23 @@ try {
     );
     malformedSavedResponse = false;
     await page
+      .getByRole("alert")
+      .getByRole("button", { name: "Try again" })
+      .click();
+    await page
+      .getByRole("button", { name: "Load into draft", exact: true })
+      .waitFor();
+    assert.equal(
+      await page
+        .getByText(
+          "Could not access saved trips. Your browser draft is still here. Try again later.",
+          { exact: true }
+        )
+        .count(),
+      0,
+      "Retry should clear the failure and show the recovered records"
+    );
+    await page
       .getByRole("button", { name: "Ask Onesa about this option", exact: true })
       .first()
       .click();

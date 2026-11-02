@@ -10,6 +10,7 @@ fi
 install -d -o du-release -g du-release -m 0700 /var/lib/du-platform-release
 install -d -o root -g root -m 0755 /usr/local/lib/du-platform-release
 install -o root -g root -m 0755 "$source_dir/poll-release.py" /usr/local/lib/du-platform-release/poll-release.py
+install -o root -g root -m 0755 "$source_dir/manage-images.py" /usr/local/lib/du-platform-release/manage-images.py
 install -o root -g root -m 0755 "$source_dir/deploy.sh" /usr/local/sbin/du-platform-deploy
 printf '%s\n' 'du-release ALL=(root) NOPASSWD: /usr/local/sbin/du-platform-deploy *' > /etc/sudoers.d/du-platform-release
 chmod 0440 /etc/sudoers.d/du-platform-release
