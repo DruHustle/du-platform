@@ -11,6 +11,7 @@
   "about_us": "Mit Wurzeln in Simbabwe heißt Diaspora Unlocked die gesamte Diaspora des südlichen Afrikas willkommen: mit Produkten aus der Heimat, regionaler Reiserecherche und praktischer Orientierung zu Geschäftsideen und KI.",
   "select_lang": "Sprache wählen",
   "account": {
+    "session_retry": "Konto derzeit nicht verfügbar. Erneut versuchen",
     "logout": "Abmelden",
     "logout_failed": "Abmelden fehlgeschlagen. Bitte versuchen Sie es erneut."
   },

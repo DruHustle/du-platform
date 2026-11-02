@@ -31,13 +31,24 @@ export async function resolveCurrentUserBootstrap(options?: {
         }
         return user;
       })
-      .catch(() => null)
+      .catch(error => {
+        if (Number(error?.response?.status) === 401) return null;
+        throw error;
+      })
       .finally(() => {
         if (currentUserInFlight === request) currentUserInFlight = null;
       });
   currentUserInFlight = request;
 
-  const user = await request;
+  let user: AuthUser | null;
+  try {
+    user = await request;
+  } catch (error) {
+    // A request started before a logout or account switch must not affect the
+    // new session, even when the old request fails.
+    if (generation !== cacheGeneration) return currentUserCache?.user ?? null;
+    throw error;
+  }
   if (generation !== cacheGeneration) return currentUserCache?.user ?? null;
   currentUserCache = { checkedAt: Date.now(), user };
   return user;

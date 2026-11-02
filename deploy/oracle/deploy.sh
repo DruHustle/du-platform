@@ -13,10 +13,14 @@ mkdir -p "$DOCKER_CONFIG"
 exec 9>/var/lock/du-platform-deploy.lock
 flock -w 900 9
 image="du-platform:oracle-$revision"
+# Pin the rollback image by identity before a build can move an existing tag.
+previous_image=$(python3 -c 'import json; print(json.load(open("compose.yaml"))["services"]["app"]["image"])')
+previous_id=$(docker image inspect --format '{{.Id}}' "$previous_image")
 # Docker handles the archive as build context; it is never extracted on the host.
 docker build --build-arg "APP_REVISION=$revision" -f deploy/oracle/Dockerfile -t "$image" -
 actual=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$image")
 [[ "$actual" == "$revision" ]] || { echo 'Image revision mismatch.' >&2; exit 1; }
+current_id=$(docker image inspect --format '{{.Id}}' "$image")
 backup=$(mktemp -d "$root/release-backup-$revision-XXXXXX")
 cp compose.yaml "$backup/compose.yaml"
 cp compose.runtime.json "$backup/compose.runtime.json"
@@ -27,6 +31,11 @@ rollback() {
   echo 'DU release failed; restoring the previous DU manifests.' >&2
   cp "$backup/compose.yaml" compose.yaml
   cp "$backup/compose.runtime.json" compose.runtime.json
+  # Rebuilding the same revision can move its tag; restore the exact old image.
+  if ! docker image tag "$previous_id" "$previous_image"; then
+    echo 'ROLLBACK FAILED: could not restore the previous image tag.' >&2
+    exit "$code"
+  fi
   if ! "${compose[@]}" up -d --no-deps --wait --wait-timeout 180 app; then
     echo 'ROLLBACK FAILED: manual recovery is required.' >&2
   fi
@@ -66,4 +75,19 @@ curl --fail --silent --show-error --max-time 25 https://du-api.152-70-22-84.ssli
 curl --fail --silent --show-error --max-time 25 https://du-api.152-70-22-84.sslip.io/api/ai/ready |
   python3 -c 'import json,sys; assert json.load(sys.stdin).get("ready") is True, "Onesa is not ready"'
 trap - ERR HUP INT TERM
+# Cleanup is maintenance after verification, never a reason to roll back a healthy app.
+maintain_images() {
+  local rollback_id=$previous_id
+  if [[ "$previous_id" != "$current_id" ]]; then
+    docker image tag "$previous_id" du-platform:oracle-previous || return
+  else
+    # A repeated/cached release must not discard the preceding distinct release.
+    rollback_id=$(docker image ls --no-trunc --quiet du-platform:oracle-previous) || return
+    rollback_id=${rollback_id:-$previous_id}
+  fi
+  python3 /usr/local/lib/du-platform-release/manage-images.py cleanup --keep "$image" --keep "$rollback_id"
+}
+if ! maintain_images; then
+  echo 'WARNING: DU release is healthy, but image cleanup failed; retry image maintenance.' >&2
+fi
 echo "Oracle DU release verified: $revision"

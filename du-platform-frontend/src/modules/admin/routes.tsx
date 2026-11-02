@@ -45,6 +45,9 @@ function AdminGuard() {
             });
           setStatus(error?.response?.status === 403 ? "denied" : "error");
         }
+      },
+      () => {
+        if (!cancelled) setStatus("error");
       }
     );
 
