@@ -41,6 +41,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Validate optional MySQL container configuration
+        run: python3 du-platform-backend/deploy/database/test_configuration.py --require-compose
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
