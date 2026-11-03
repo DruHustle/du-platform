@@ -12,7 +12,14 @@ const AUTH_HEADER_EXCLUDED_ENDPOINTS = new Set([
   "/auth/logout",
 ]);
 
-let refreshPromise: Promise<string> | null = null;
+type SessionRequestConfig = InternalAxiosRequestConfig & {
+  _authGeneration?: number;
+  _retryAfterRefresh?: boolean;
+};
+
+let refreshInFlight: { generation: number; promise: Promise<string> } | null =
+  null;
+let authGeneration = 0;
 let accessToken = "";
 
 function resolveApiBaseUrl() {
@@ -73,7 +80,7 @@ export function markHasLoggedInBefore() {
   safeLocalStorage.setItem(HAS_LOGGED_IN_KEY, "1");
 }
 
-export function saveAuthToken(token: string) {
+function storeAuthToken(token: string) {
   if (typeof window === "undefined") return;
   const normalized = String(token ?? "").trim();
   if (!normalized) return;
@@ -84,8 +91,17 @@ export function saveAuthToken(token: string) {
   markHasLoggedInBefore();
 }
 
+export function saveAuthToken(token: string) {
+  if (typeof window === "undefined" || !String(token ?? "").trim()) return;
+  // Explicit sign-in/account changes invalidate requests made by the old
+  // session. A token renewal, by contrast, stays in the same generation.
+  authGeneration += 1;
+  storeAuthToken(token);
+}
+
 export function clearAuthToken() {
   if (typeof window === "undefined") return;
+  authGeneration += 1;
   accessToken = "";
   safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
@@ -122,6 +138,17 @@ export function hasLoggedInBefore(): boolean {
 }
 
 api.interceptors.request.use(config => {
+  const sessionConfig = config as SessionRequestConfig;
+  // A retry can wait in Axios's asynchronous interceptor queue after the
+  // response handler checks its session. Preserve that captured generation
+  // and cancel it before attaching credentials from a different account.
+  if (
+    sessionConfig._authGeneration !== undefined &&
+    sessionConfig._authGeneration !== authGeneration
+  ) {
+    throw new axios.CanceledError("Authentication session changed.", config);
+  }
+  sessionConfig._authGeneration = authGeneration;
   const token = loadAuthToken();
   if (!token) return config;
 
@@ -149,26 +176,33 @@ api.interceptors.response.use(
   },
   async error => {
     const status = Number(error?.response?.status ?? 0);
-    const config = error?.config as
-      | (typeof error.config & { _retryAfterRefresh?: boolean })
-      | undefined;
+    const config = error?.config as SessionRequestConfig | undefined;
     const requestUrl = String(config?.url ?? "");
 
     if (
       status !== 401 ||
       !config ||
       config._retryAfterRefresh ||
+      config._authGeneration !== authGeneration ||
       isAuthHeaderExcludedEndpoint(requestUrl)
     ) {
       return Promise.reject(error);
     }
 
     try {
-      refreshPromise ??= refreshAuthTokenFromSession().finally(() => {
-        refreshPromise = null;
-      });
-      const token = await refreshPromise;
-      if (!token) {
+      const generation = authGeneration;
+      if (refreshInFlight?.generation !== generation) {
+        const entry = {
+          generation,
+          promise: refreshAuthTokenFromSession(),
+        };
+        entry.promise = entry.promise.finally(() => {
+          if (refreshInFlight === entry) refreshInFlight = null;
+        });
+        refreshInFlight = entry;
+      }
+      const token = await refreshInFlight.promise;
+      if (!token || generation !== authGeneration) {
         return Promise.reject(error);
       }
 
@@ -188,9 +222,13 @@ api.interceptors.response.use(
 );
 
 export async function refreshAuthTokenFromSession(): Promise<string> {
+  const generation = authGeneration;
   const response = await api.post("/auth/token/refresh");
+  // A late response must never sign a user back in or replace a newly signed-in
+  // account's bearer token, even if the original refresh succeeded remotely.
+  if (generation !== authGeneration) return "";
   const token = String(response?.data?.accessToken ?? "").trim();
-  if (token) saveAuthToken(token);
+  if (token) storeAuthToken(token);
   return token;
 }
 
@@ -219,6 +257,7 @@ export function getApiErrorMessage(
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     accessToken = "";
-    refreshPromise = null;
+    authGeneration += 1;
+    refreshInFlight = null;
   });
 }

@@ -31,6 +31,8 @@ try {
   for (const width of [375, 768, 1440]) {
     const context = await browser.newContext({
       viewport: { width, height: 950 },
+      isMobile: width === 375,
+      hasTouch: width === 375,
       reducedMotion: "reduce",
     });
     await context.addInitScript(() => {
@@ -320,9 +322,34 @@ try {
       name: "Destination airport / area",
     });
     await dest.fill("Victoria");
-    await page.getByRole("option", { name: /Victoria Falls/ }).waitFor();
+    const destinationOption = page.getByRole("option", {
+      name: /Victoria Falls/,
+    });
+    await destinationOption.waitFor();
+    // Starting a touch scroll must not select the airport under the finger.
+    // Only a completed activation should commit the selected location.
+    await destinationOption.dispatchEvent("pointerdown", {
+      pointerType: "touch",
+      pointerId: 1,
+      isPrimary: true,
+    });
+    assert.equal(await dest.inputValue(), "Victoria");
+    assert.equal(await destinationOption.isVisible(), true);
+    await destinationOption.dispatchEvent("pointercancel", {
+      pointerType: "touch",
+      pointerId: 1,
+      isPrimary: true,
+    });
+    if (width === 375) await destinationOption.tap();
+    else await destinationOption.click();
+    assert.match(await dest.inputValue(), /VFA/);
+    await dest.fill("Victoria");
+    await destinationOption.waitFor();
     await dest.press("Enter");
     assert.match(await dest.inputValue(), /VFA/);
+    checks.push(
+      `${width}: airport gesture start preserves suggestions; ${width === 375 ? "touch tap" : "click"} and keyboard selection work`
+    );
     await page
       .getByLabel("Departure / pickup date", { exact: true })
       .fill(future(30));
@@ -656,11 +683,15 @@ try {
       .first()
       .screenshot({ path: `${output}/${width}-guide-detail.png` });
     privateMode = true;
-    await page.evaluate(() => localStorage.setItem("du_has_logged_in", "1"));
+    // The HttpOnly session is valid even if optional localStorage was cleared.
+    await page.evaluate(() => localStorage.removeItem("du_has_logged_in"));
     await goto("/travel/my-trips");
     await page
       .getByLabel("Trip / search name", { exact: true })
       .fill("Synthetic family trip");
+    checks.push(
+      `${width}: saved-trip access restores the session without a browser storage marker`
+    );
     await page
       .getByRole("button", { name: "Save private trip", exact: true })
       .click();

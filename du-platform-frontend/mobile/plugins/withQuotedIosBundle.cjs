@@ -2,15 +2,18 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { withFinalizedMod } = require("expo/config-plugins");
 
-// Expo's template executes a command-substitution result without quoting it.
-// Paths containing spaces then split before the script can run.
+// Normalize the iOS bundle command across Expo templates. SDK 58 already
+// quotes the backticks; consume those quotes to avoid doubling them and
+// splitting paths containing spaces when converting to command substitution.
 module.exports = function withQuotedIosBundle(config) {
   return withFinalizedMod(config, ["ios", async next => {
     const project = path.join(next.modRequest.platformProjectRoot, `${next.modRequest.projectName}.xcodeproj`, "project.pbxproj");
     const contents = fs.readFileSync(project, "utf8");
     const pattern = /`(\\"\$NODE_BINARY\\" --print \\"require\('path'\)\.dirname\(require\.resolve\('react-native\/package\.json'\)\) \+ '\/scripts\/react-native-xcode\.sh'\\")`/;
-    if (!pattern.test(contents)) throw new Error("Could not find the Expo iOS bundle script to quote.");
-    let output = contents.replace(pattern, (_, command) => `\\"$(${command})\\"`);
+    const quotedPattern = new RegExp(String.raw`\\"` + pattern.source + String.raw`\\"`);
+    const targetPattern = quotedPattern.test(contents) ? quotedPattern : pattern;
+    if (!targetPattern.test(contents)) throw new Error("Could not find the Expo iOS bundle script to quote.");
+    let output = contents.replace(targetPattern, (_, command) => `\\"$(${command})\\"`);
     // The dev-launcher plugin otherwise generates a fresh random phase ID on
     // every clean prebuild, producing meaningless native-project drift.
     const phase = /([A-F0-9]{24})(?= \/\* \[Expo Dev Launcher\] Strip Local Network Keys for Release \*\/)/g;

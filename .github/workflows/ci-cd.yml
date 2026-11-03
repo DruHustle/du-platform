@@ -74,7 +74,13 @@ jobs:
           git diff --exit-code -- du-platform-frontend/mobile/ios du-platform-frontend/mobile/android
           test -z "$(git status --porcelain --untracked-files=all -- du-platform-frontend/mobile/ios du-platform-frontend/mobile/android)"
 
-      - name: Audit production dependencies
+      - name: Audit web production dependencies
+        run: pnpm --dir du-platform-frontend/web audit --prod --audit-level=moderate
+
+      - name: Audit backend production dependencies
+        run: pnpm --dir du-platform-backend audit --prod --audit-level=moderate
+
+      - name: Audit repository tooling production dependencies
         run: pnpm --dir du-platform-frontend/tooling audit --prod --audit-level=moderate
 
       - name: Type check
