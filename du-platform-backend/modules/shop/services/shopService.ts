@@ -2,7 +2,9 @@ import {
   publicShopReadiness,
   assertOrderRequestReadiness,
 } from "../shopReadiness";
-import type { ShopCurrency } from "../../../../shared/shopCurrency";
+import { SHOP_PRICING_REVISION, SHOP_RATES_PER_EUR, type ShopCurrency } from "../../../domain/shopCurrency";
+import { SHOP_SHIPPING_POLICY } from "../../../domain/shopCheckout";
+import { SHOP_SEED_PRODUCTS } from "../../../domain/shopCatalog";
 import { OrderRepository } from "../repositories/orderRepository";
 import { PaymentRepository } from "../repositories/paymentRepository";
 import { ProductRepository } from "../repositories/productRepository";
@@ -29,10 +31,20 @@ export class ShopService {
 
   async listProducts(category?: string) {
     const result = await this.products.list(category);
+    const seedDescriptions = new Map(SHOP_SEED_PRODUCTS.map(product => [product.slug, product.description]));
     return {
       readiness: await publicShopReadiness(),
+      pricing: { revision: SHOP_PRICING_REVISION, ratesPerEur: SHOP_RATES_PER_EUR, shipping: SHOP_SHIPPING_POLICY },
       count: result.products.length,
-      products: result.products,
+      products: result.products.map(product => ({
+        ...product,
+        image_api_url: /^\/images\/pages\/shop\/[A-Za-z0-9_.-]+\.(?:png|jpe?g|webp)$/i.test(product.image_url)
+          ? `/api/shop/assets/${product.image_url.split("/").at(-1)}`
+          : null,
+        translation_key: seedDescriptions.get(product.slug) === product.description
+          ? `shop.products.descriptions.${product.slug}`
+          : null,
+      })),
       source: result.source,
       cached: result.cached,
     };

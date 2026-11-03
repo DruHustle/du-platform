@@ -1,8 +1,8 @@
 import {
   CUSTOMER_LANGUAGES,
   customerLanguage,
-} from "../../../shared/customerLanguage";
-import { emailText } from "../../../shared/customerEmailCopy";
+} from "../../domain/customerLanguage";
+import { emailText } from "../../domain/customerEmailCopy";
 import type {
   Pool,
   PoolConnection,

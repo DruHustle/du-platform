@@ -1,6 +1,3 @@
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import path from "node:path";
 import { describe, expect, it, afterAll, beforeAll, vi } from "vitest";
 import { createServer, type Server } from "node:http";
 import {
@@ -13,8 +10,7 @@ import {
   providerResources,
   isSafeTravelLink,
   travelCapabilities,
-} from "../../../../shared/travel";
-import { travelRedirects } from "../../../../shared/travelRoutes";
+} from "../../../domain/travel";
 import { createModularServer } from "../../../server";
 import { TravelRepository } from "../repository";
 import { publicTravelSearch, TravelProviderError } from "../providers";
@@ -182,23 +178,10 @@ describe("Travel search validation and truthful capabilities", () => {
 describe("Travel HTTP compatibility and disabled monitoring", () => {
   let server: Server;
   let base: string;
-  let staticPath: string;
   beforeAll(async () => {
-    staticPath = await mkdtemp(path.join(tmpdir(), "du-travel-static-"));
-    await mkdir(path.join(staticPath, "travel"));
-    await writeFile(
-      path.join(staticPath, "index.html"),
-      "<html><head><title>Fixture</title></head><body><div id='root'></div></body></html>"
-    );
-    await writeFile(
-      path.join(staticPath, "travel.html"),
-      "Travel guide fixture"
-    );
-    await writeFile(path.join(staticPath, "404.html"), "Missing page fixture");
     server = createServer(
       createModularServer({
         backend: { db: null, serverStartedAt: Date.now() },
-        staticPath,
       })
     );
     await new Promise<void>((r, j) => {
@@ -209,26 +192,6 @@ describe("Travel HTTP compatibility and disabled monitoring", () => {
   });
   afterAll(async () => {
     await new Promise<void>(r => server.close(() => r()));
-    await rm(staticPath, { recursive: true, force: true });
-  });
-  it("redirects every old path once, preserves query and never points to an alias", async () => {
-    for (const [old, target] of Object.entries(travelRedirects)) {
-      const r = await fetch(base + old + "?lng=de&source=bookmark", {
-        redirect: "manual",
-      });
-      expect(r.status).toBe(308);
-      expect(r.headers.get("location")).toBe(
-        target + "?lng=de&source=bookmark"
-      );
-      expect(travelRedirects[target]).toBeUndefined();
-    }
-  });
-  it("serves the clean landing with its guide document despite child folders and keeps 404 status", async () => {
-    const response = await fetch(base + "/travel", { redirect: "manual" });
-    expect(response.status).toBe(200);
-    expect(response.headers.get("location")).toBeNull();
-    expect(await response.text()).toBe("Travel guide fixture");
-    expect((await fetch(base + "/404")).status).toBe(404);
   });
   it("rejects anonymous access to private records", async () => {
     for (const method of ["GET", "POST", "DELETE"]) {

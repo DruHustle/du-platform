@@ -43,63 +43,84 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+          cache-dependency-path: du-platform-frontend/tooling/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm --dir du-platform-frontend/tooling install --frozen-lockfile
+
+      - name: Install independent application dependencies
+        run: |
+          pnpm --dir du-platform-frontend/web install --frozen-lockfile
+          pnpm --dir du-platform-backend install --frozen-lockfile
+          npm --prefix du-platform-frontend/mobile ci --no-audit --no-fund
+
+      - name: Verify application boundaries and isolated builds
+        run: |
+          pnpm --dir du-platform-frontend/tooling check:architecture
+          node --test du-platform-frontend/tooling/scripts/tests/architecture.test.mjs
+          pnpm --dir du-platform-frontend/tooling test:isolation
+
+      - name: Verify tracked native projects match Expo configuration
+        run: |
+          npm --prefix du-platform-frontend/mobile run native:generate
+          git diff --exit-code -- du-platform-frontend/mobile/ios du-platform-frontend/mobile/android
+          test -z "$(git status --porcelain --untracked-files=all -- du-platform-frontend/mobile/ios du-platform-frontend/mobile/android)"
 
       - name: Audit production dependencies
-        run: pnpm audit --prod --audit-level=moderate
+        run: pnpm --dir du-platform-frontend/tooling audit --prod --audit-level=moderate
 
       - name: Type check
-        run: pnpm check
+        run: pnpm --dir du-platform-frontend/tooling check
 
       - name: Oracle deployment safety regressions
-        run: pnpm test:deploy
+        run: pnpm --dir du-platform-frontend/tooling test:deploy
 
       - name: Module tests
-        run: pnpm test:modules
+        run: pnpm --dir du-platform-frontend/tooling test:modules
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
           NEWSLETTER_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Restored application and held-worker recovery
-        run: pnpm test:recovery:application
+        run: pnpm --dir du-platform-frontend/tooling test:recovery:application
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Synthetic encrypted recovery custody
-        run: pnpm test:recovery:custody
+        run: pnpm --dir du-platform-frontend/tooling test:recovery:custody
 
       - name: Mac backup safety and scheduling regressions
         run: |
-          pnpm test:backup:mac
-          bash -n deploy/oracle/verify-recovery.sh deploy/oracle/mac-backup.sh
+          pnpm --dir du-platform-frontend/tooling test:backup:mac
+          bash -n du-platform-backend/deploy/oracle/verify-recovery.sh du-platform-backend/deploy/oracle/mac-backup.sh
 
       - name: Frontend tests
-        run: pnpm test:frontend
+        run: pnpm --dir du-platform-frontend/tooling test:frontend
 
       - name: Onesa provider HTTP regression tests
-        run: pnpm test:e2e:onesa:runtime
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:onesa:runtime
 
       - name: Guardrails (Build Safety)
-        run: pnpm guardrails
+        run: pnpm --dir du-platform-frontend/tooling guardrails
 
       - name: Validate translations
-        run: pnpm translations:check
+        run: pnpm --dir du-platform-frontend/tooling translations:check
 
       - name: Build project with isolated catalogue fixture
         run: |
-          node --import tsx scripts/create-catalogue-fixture.mjs "$RUNNER_TEMP/du-catalogue.json"
-          DU_PUBLIC_CATALOGUE_FILE="$RUNNER_TEMP/du-catalogue.json" pnpm build
+          node --import ./du-platform-frontend/tooling/node_modules/tsx/dist/loader.mjs du-platform-frontend/tooling/scripts/create-catalogue-fixture.mjs "$RUNNER_TEMP/du-catalogue.json"
+          DU_PUBLIC_CATALOGUE_FILE="$RUNNER_TEMP/du-catalogue.json" pnpm --dir du-platform-frontend/tooling build
 
       - name: Initial HTML and canonical SEO regression checks
-        run: pnpm test:seo
+        run: pnpm --dir du-platform-frontend/tooling test:seo
 
       - name: Install browsers for regression tests
         run: |
@@ -108,10 +129,10 @@ jobs:
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
           fi
-          pnpm exec playwright install --with-deps chromium webkit
+          pnpm --dir du-platform-frontend/tooling exec playwright install --with-deps chromium webkit
 
       - name: Swipeable discovery regression tests
-        run: pnpm test:e2e:discovery
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:discovery
         env:
           DISCOVERY_BROWSER_CHANNEL: chromium
 
@@ -128,100 +149,100 @@ jobs:
             /tmp/du-discovery-tests/failure.png
 
       - name: Navigation regression tests
-        run: pnpm test:e2e:navigation
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:navigation
         env:
           NAVIGATION_BROWSER_CHANNEL: chromium
 
       - name: Focused basket pricing and product information journeys
-        run: pnpm test:e2e:shop:followup
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:shop:followup
 
       - name: Prelaunch and confirmed product-interest browser journeys
-        run: pnpm test:e2e:prelaunch
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:prelaunch
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Transactional contact and password recovery browser workflows
-        run: pnpm test:e2e:transactional
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:transactional
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Newsletter database and admin workflow regression tests
-        run: pnpm test:e2e:newsletter
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:newsletter
         env:
           NEWSLETTER_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
           NEWSLETTER_BROWSER_CHANNEL: chromium
 
       - name: Onesa chat regression tests
-        run: pnpm test:e2e:onesa:chat
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:onesa:chat
         env:
           ONESA_BROWSER_CHANNEL: chromium
 
       - name: Onesa WebKit chat regression tests
-        run: pnpm test:e2e:onesa:chat
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:onesa:chat
         env:
           ONESA_BROWSER_ENGINE: webkit
 
       - name: Shop cart regression tests
-        run: pnpm test:e2e:shop
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:shop
         env:
           SHOP_BROWSER_CHANNEL: chromium
 
       - name: Shop integrated HTTP browser workflow
-        run: pnpm test:e2e:shop:integrated
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:shop:integrated
         env:
           SHOP_BROWSER_CHANNEL: chromium
 
       - name: Shop MySQL transaction regressions
-        run: node --import tsx scripts/tests/shop-database.mjs
+        run: node --import ./du-platform-frontend/tooling/node_modules/tsx/dist/loader.mjs du-platform-frontend/tooling/scripts/tests/shop-database.mjs
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Responsive public pages and frontend CSP
-        run: pnpm test:e2e:pilot:layout
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:pilot:layout
 
       - name: Assisted-order pilot Chromium journey
-        run: pnpm test:e2e:pilot
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:pilot
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Assisted-order pilot WebKit journey
-        run: pnpm test:e2e:pilot
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:pilot
         env:
           PILOT_BROWSER: webkit
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Protected shop admin and regional checkout regressions
-        run: pnpm test:e2e:shop:admin
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:shop:admin
         env:
           SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Shop WebKit cart regression tests
-        run: pnpm test:e2e:shop
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:shop
         env:
           SHOP_BROWSER_ENGINE: webkit
 
       - name: Site-wide UI consistency and accessible dialog regressions
-        run: pnpm test:e2e:ui
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:ui
 
       - name: Weather location and forecast browser workflows
-        run: pnpm test:e2e:weather
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:weather
 
       - name: Browser appearance preferences and Travel navigation
-        run: pnpm test:e2e:theme
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:theme
 
       - name: Travel journey Chromium
-        run: pnpm test:e2e:travel
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:travel
 
       - name: Travel journey WebKit
-        run: pnpm test:e2e:travel
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:travel
         env:
           TRAVEL_BROWSER: webkit
 
       - name: VR music toggle regression tests
-        run: pnpm test:e2e:vr:music
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:vr:music
 
       - name: VR WebKit music toggle regression tests
-        run: pnpm test:e2e:vr:music
+        run: pnpm --dir du-platform-frontend/tooling test:e2e:vr:music
         env:
           VR_MUSIC_BROWSER_ENGINE: webkit
 
@@ -255,12 +276,12 @@ jobs:
       - name: Wait for verified Oracle release
         env:
           EXPECTED_REVISION: ${{ github.sha }}
-        run: node scripts/tests/wait-for-oracle-release.mjs
+        run: node du-platform-frontend/tooling/scripts/tests/wait-for-oracle-release.mjs
 
       - name: Verify Oracle and public API release
         env:
           EXPECTED_REVISION: ${{ github.sha }}
-        run: node scripts/tests/verify-backend-release.mjs
+        run: node du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs
 
   # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
   #    On failure, rolls back to the last successful Vercel production deployment.
@@ -275,37 +296,42 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@65.4.0
 
+      - name: Prepare isolated Vercel source
+        run: node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage"
+
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Record current production target for rollback
         id: previous_production
         run: |
-          vercel inspect https://www.diasporaunlocked.com --json --token=${{ secrets.VERCEL_TOKEN }} > "$RUNNER_TEMP/du-previous-deployment.json"
-          node scripts/vercel-previous-target.mjs "$RUNNER_TEMP/du-previous-deployment.json" >> "$GITHUB_OUTPUT"
+          vercel inspect --cwd "$RUNNER_TEMP/du-vercel-stage" https://www.diasporaunlocked.com --json --token=${{ secrets.VERCEL_TOKEN }} > "$RUNNER_TEMP/du-previous-deployment.json"
+          node du-platform-frontend/tooling/scripts/vercel-previous-target.mjs "$RUNNER_TEMP/du-previous-deployment.json" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Vercel Production
         id: vercel_deploy
-        run: vercel deploy --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Verify published browser API routing and canonical pages
-        run: node scripts/tests/verify-published-site.mjs
+        run: node du-platform-frontend/tooling/scripts/tests/verify-published-site.mjs
 
       - name: Verify matching Oracle release through the deployed frontend
         env:
           EXPECTED_REVISION: ${{ github.sha }}
-        run: node scripts/tests/verify-backend-release.mjs
+        run: node du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs
 
       - name: Rollback on deployment failure
         if: failure() && (steps.vercel_deploy.conclusion == 'failure' || steps.vercel_deploy.conclusion == 'success')
         run: |
           echo "Deployment or verification failed — rolling back to the previous production deployment."
-          vercel rollback "${{ steps.previous_production.outputs.deployment }}" --token=${{ secrets.VERCEL_TOKEN }} --yes
-          vercel rollback status --token=${{ secrets.VERCEL_TOKEN }}
+          vercel rollback --cwd "$RUNNER_TEMP/du-vercel-stage" "${{ steps.previous_production.outputs.deployment }}" --token=${{ secrets.VERCEL_TOKEN }} --yes
+          vercel rollback status --cwd "$RUNNER_TEMP/du-vercel-stage" --token=${{ secrets.VERCEL_TOKEN }}
           echo "Rollback complete."
 
   # 3) Preview deploys for pull requests — only if build-and-test passed.
@@ -321,27 +347,32 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@65.4.0
 
+      - name: Prepare isolated Vercel source
+        run: node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage"
+
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Isolate preview from production data
-        run: node scripts/prepare-preview.mjs
+        run: node du-platform-frontend/tooling/scripts/prepare-preview.mjs "$RUNNER_TEMP/du-vercel-stage/du-platform-frontend/web/vercel.json"
 
       - name: Deploy to Vercel Preview
         id: preview_deploy
         run: |
-          url=$(vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }})
+          url=$(vercel deploy --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Verify isolated preview
         env:
           PILOT_PREVIEW_URL: ${{ steps.preview_deploy.outputs.url }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: node scripts/tests/pilot-preview.mjs
+        run: node du-platform-frontend/tooling/scripts/tests/pilot-preview.mjs
 
   # 4) Non-blocking formatting visibility; does not gate deployment.
   code-quality:
@@ -353,15 +384,18 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
           node-version: 22.x
           cache: "pnpm"
+          cache-dependency-path: du-platform-frontend/tooling/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm --dir du-platform-frontend/tooling install --frozen-lockfile
 
       - name: Run Prettier check
-        run: pnpm format:check || echo "Prettier check completed"
+        run: pnpm --dir du-platform-frontend/tooling format:check || echo "Prettier check completed"

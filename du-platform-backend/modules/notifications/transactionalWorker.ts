@@ -1,6 +1,6 @@
 import type { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import { db } from "../../shared/databaseRuntime";
-import { PASSWORD_RESET_PAGE_MARKER } from "../../../shared/passwordResetProtocol";
+import { PASSWORD_RESET_PAGE_MARKER } from "../../domain/passwordResetProtocol";
 import { newsletterOrigin } from "../newsletter/content";
 import { outboundMessagesPaused } from "../../shared/outboundMessages";
 import { getNotifyAlertEmails } from "../../shared/email";
