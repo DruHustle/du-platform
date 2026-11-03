@@ -31,10 +31,24 @@ class SelectorTests(unittest.TestCase):
         self.assertEqual(smoke.bounds(button), (80, 700, 160, 760))
 
     def test_merged_tab_accessibility_labels(self):
-        for label in ("✈ Travel", "Travel, tab, 3 of 5"):
+        for label in ("✈ Travel", "✈, Travel", "Travel, tab, 3 of 5"):
             with self.subTest(label=label):
                 button = node(clickable="true", **{"content-desc": label})
                 self.assertIs(smoke.find_target(button, "Travel", PACKAGE, tab=True), button)
+
+    def test_travel_tab_does_not_match_observed_explore_travel_action(self):
+        # Regression from the first rendered CI Home hierarchy: both labels end
+        # in Travel, but only the tab has an icon/punctuation prefix.
+        tree = ET.Element("hierarchy")
+        action = node(clickable="true", bounds="[116,2241][1325,2409]",
+                      **{"content-desc": "Explore Travel"})
+        action.append(node(text="Explore Travel"))
+        tree.append(action)
+        tab = node(clickable="true", bounds="[576,2866][864,3036]",
+                   **{"content-desc": "✈, Travel"})
+        tab.append(node(text="Travel"))
+        tree.append(tab)
+        self.assertIs(smoke.find_target(tree, "Travel", PACKAGE, tab=True), tab)
 
     def test_duplicate_text_and_description_resolve_one_button(self):
         button = node(clickable="true", **{"content-desc": "Continue"})

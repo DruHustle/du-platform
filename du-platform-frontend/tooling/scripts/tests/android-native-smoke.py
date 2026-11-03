@@ -64,7 +64,7 @@ def find_target(tree, label, package, tab=False):
         matches = any(value == label for value in values)
         if tab:
             matches = matches or any(
-                value.endswith(" " + label)
+                re.fullmatch(r"\W+" + re.escape(label), value)
                 or re.fullmatch(re.escape(label) + r", tab(?:, \d+ of \d+)?", value, re.I)
                 for value in values
             )
