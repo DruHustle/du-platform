@@ -43,6 +43,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
@@ -294,22 +296,27 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@65.4.0
 
+      - name: Prepare isolated Vercel source
+        run: node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage"
+
       - name: Pull Vercel Environment Information
-        run: vercel pull --cwd du-platform-frontend/web --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Record current production target for rollback
         id: previous_production
         run: |
-          vercel inspect --cwd du-platform-frontend/web https://www.diasporaunlocked.com --json --token=${{ secrets.VERCEL_TOKEN }} > "$RUNNER_TEMP/du-previous-deployment.json"
+          vercel inspect --cwd "$RUNNER_TEMP/du-vercel-stage" https://www.diasporaunlocked.com --json --token=${{ secrets.VERCEL_TOKEN }} > "$RUNNER_TEMP/du-previous-deployment.json"
           node du-platform-frontend/tooling/scripts/vercel-previous-target.mjs "$RUNNER_TEMP/du-previous-deployment.json" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Vercel Production
         id: vercel_deploy
-        run: vercel deploy --cwd du-platform-frontend/web --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Verify published browser API routing and canonical pages
         run: node du-platform-frontend/tooling/scripts/tests/verify-published-site.mjs
@@ -323,8 +330,8 @@ jobs:
         if: failure() && (steps.vercel_deploy.conclusion == 'failure' || steps.vercel_deploy.conclusion == 'success')
         run: |
           echo "Deployment or verification failed — rolling back to the previous production deployment."
-          vercel rollback --cwd du-platform-frontend/web "${{ steps.previous_production.outputs.deployment }}" --token=${{ secrets.VERCEL_TOKEN }} --yes
-          vercel rollback status --cwd du-platform-frontend/web --token=${{ secrets.VERCEL_TOKEN }}
+          vercel rollback --cwd "$RUNNER_TEMP/du-vercel-stage" "${{ steps.previous_production.outputs.deployment }}" --token=${{ secrets.VERCEL_TOKEN }} --yes
+          vercel rollback status --cwd "$RUNNER_TEMP/du-vercel-stage" --token=${{ secrets.VERCEL_TOKEN }}
           echo "Rollback complete."
 
   # 3) Preview deploys for pull requests — only if build-and-test passed.
@@ -340,20 +347,25 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@65.4.0
 
+      - name: Prepare isolated Vercel source
+        run: node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage"
+
       - name: Pull Vercel Environment Information
-        run: vercel pull --cwd du-platform-frontend/web --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Isolate preview from production data
-        run: node du-platform-frontend/tooling/scripts/prepare-preview.mjs
+        run: node du-platform-frontend/tooling/scripts/prepare-preview.mjs "$RUNNER_TEMP/du-vercel-stage/du-platform-frontend/web/vercel.json"
 
       - name: Deploy to Vercel Preview
         id: preview_deploy
         run: |
-          url=$(vercel deploy --cwd du-platform-frontend/web --yes --token=${{ secrets.VERCEL_TOKEN }})
+          url=$(vercel deploy --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Verify isolated preview
@@ -372,6 +384,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
