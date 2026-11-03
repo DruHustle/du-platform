@@ -38,6 +38,11 @@ hostname-valid certificate and `require_secure_transport=ON`. Never put MySQL in
 the API's ephemeral filesystem or add a public database HTTP proxy. Database
 credentials must be unique to DU. This change does not create or switch that DB.
 
+The [optional private MySQL container candidate](../database/README.md) supplies
+a separate Compose database and network/CA-only overlay for an isolated restore
+rehearsal. Render does not run that project or convert its named volume into a
+Render disk. This API Blueprint retains the external Aiven primary.
+
 Before copying production, create and restore a consistent MySQL backup into a
 disposable database. `mysqldump --single-transaction` requires transactional tables
 and no concurrent DDL; inventory table engines, routines, triggers, events,
