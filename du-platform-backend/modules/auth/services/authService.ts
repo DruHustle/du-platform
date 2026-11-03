@@ -1,6 +1,6 @@
-import { isAdminEmail } from "../../../lib/adminIdentity";
-import { issueAccessTokenForUser } from "../../../lib/authSession";
-import { hashPassword, verifyPassword } from "../../../lib/passwords";
+import { isAdminEmail } from "../../../shared/adminIdentity";
+import { issueAccessTokenForUser } from "../../../shared/authSession";
+import { hashPassword, verifyPassword } from "../../../shared/passwords";
 import { isUserEmailConflictError } from "../../../utils/dbErrors";
 import { AuthRepository } from "../repositories/authRepository";
 import {
@@ -8,7 +8,7 @@ import {
   isLoginLocked,
   recordLoginFailure,
   AuthVersionChangedError,
-} from "../../../lib/persistence/authStore";
+} from "../../../shared/persistence/authStore";
 
 // Avoid an immediate response for unknown addresses. This floor is not a
 // constant-time guarantee: database lookup/persistence can take longer.
@@ -217,6 +217,12 @@ export class AuthService {
 
   currentUser(user: Record<string, unknown>) {
     return { user: this.toPublicUser(user) };
+  }
+
+  async updateProfile(userId: number, fullName: string) {
+    const user = await this.repository.updateFullName(userId, fullName);
+    if (!user) throw new AuthServiceError("AUTH_UNAUTHORIZED", 401, "Unauthorized.");
+    return this.currentUser(user);
   }
 
   refresh(user: Record<string, unknown>) {

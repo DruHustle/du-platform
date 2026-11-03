@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../../lib/databaseRuntime", () => ({
+vi.mock("../../shared/databaseRuntime", () => ({
   isMemoryFallbackEnabled: () => false,
 }));
 import { validateStartupConfiguration } from "../../core/startupValidation";

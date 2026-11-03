@@ -1,5 +1,5 @@
 import { logger } from "./logger";
-import { db } from "../lib/databaseRuntime";
+import { db } from "../shared/databaseRuntime";
 
 export type AuditEvent = {
   actorId?: number | null;

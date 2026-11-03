@@ -1,4 +1,4 @@
-import { isMemoryFallbackEnabled } from "../lib/databaseRuntime";
+import { isMemoryFallbackEnabled } from "../shared/databaseRuntime";
 
 function hasEnv(name: string) {
   return String(process.env[name] ?? "").trim().length > 0;

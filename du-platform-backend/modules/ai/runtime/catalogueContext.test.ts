@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { catalogueReply, asksAboutCatalogue } from "./catalogueContext";
-import { productDetailsSchema } from "../../../contracts/productDetails";
+import { productDetailsSchema } from "../../../domain/productDetails";
 const products = [
   {
     id: 1,

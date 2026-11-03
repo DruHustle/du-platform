@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import type express from "express";
-import { error } from "../lib/responseFormatter";
+import { error } from "../shared/responseFormatter";
 import { resolveJwtSecret } from "../utils/jwtSecret";
 
 type JwtClaims = {

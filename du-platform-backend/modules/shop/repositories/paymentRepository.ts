@@ -1,4 +1,4 @@
-import { confirmShopOrderPayment } from "../../../lib/persistence/shopStore";
+import { confirmShopOrderPayment } from "../../../shared/persistence/shopStore";
 
 export class PaymentRepository {
   confirm(orderRef: string, paymentReference: string, manageToken: string) {

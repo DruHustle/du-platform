@@ -4,7 +4,7 @@ import {
   sendEmailMessage,
   sendEmailMessageSafe,
   sendResetEmail,
-} from "../../../lib/email";
+} from "../../../shared/email";
 import { sendNewsletterEmail } from "../../newsletter/provider";
 
 const { axiosPost } = vi.hoisted(() => ({

@@ -1,4 +1,4 @@
-import { searchNtirEntities } from "../../../lib/persistence/investmentStore";
+import { searchNtirEntities } from "../../../shared/persistence/investmentStore";
 
 export class InvestmentRepository {
   searchNtir(query: string) {

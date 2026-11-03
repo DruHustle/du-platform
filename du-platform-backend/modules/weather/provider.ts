@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto";
 import lookupTimezone from "tz-lookup";
-import { z } from "../../contracts/validation";
+import { z } from "../../domain/validation";
 import {
   weatherCoordinateSchema,
   weatherForecastSchema,
   weatherPlaceSchema,
   type WeatherForecast,
   type WeatherPoint,
-} from "../../contracts/weather";
+} from "../../domain/weather";
 import {
   MemoryWeatherCache,
   type WeatherCache,

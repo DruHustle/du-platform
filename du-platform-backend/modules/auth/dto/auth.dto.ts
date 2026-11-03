@@ -1,7 +1,7 @@
 import {
   getPasswordIssue,
   PASSWORD_ERROR_MESSAGES,
-} from "../../../contracts/passwordPolicy";
+} from "../../../domain/passwordPolicy";
 import { z } from "zod";
 
 const passwordSchema = z.string().superRefine((value, ctx) => {
@@ -14,6 +14,10 @@ export const loginSchema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(1).max(255),
 });
+
+export const profileSchema = z.object({
+  fullName: z.string().trim().min(2).max(255),
+}).strict();
 
 export const registerSchema = z
   .object({

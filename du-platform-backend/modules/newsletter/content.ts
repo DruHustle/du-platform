@@ -1,7 +1,7 @@
-import { customerLanguage } from "../../contracts/customerLanguage";
-import { emailText } from "../../lib/copy/customerEmailCopy";
+import { customerLanguage } from "../../domain/customerLanguage";
+import { emailText } from "../../domain/customerEmailCopy";
 import { randomBytes, createHash } from "node:crypto";
-import { escapeEmailHtml } from "../../lib/email";
+import { escapeEmailHtml } from "../../shared/email";
 
 export const newsletterToken = () => randomBytes(24).toString("hex");
 export const hashNewsletterToken = (token: string) =>
