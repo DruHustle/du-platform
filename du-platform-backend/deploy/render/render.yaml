@@ -1,0 +1,38 @@
+# Candidate only. Select this path explicitly; publishing it creates no resources.
+# Review pricing and existing service IDs before a Blueprint sync.
+services:
+  - type: web
+    name: du-platform-api-candidate
+    runtime: docker
+    region: frankfurt
+    plan: 1c-2g
+    numInstances: 1
+    autoDeployTrigger: "off"
+    dockerfilePath: ./du-platform-backend/deploy/oracle/Dockerfile
+    dockerContext: ./du-platform-backend
+    healthCheckPath: /api/health/db
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: DATABASE_PROVIDER
+        value: aiven
+      - key: AIVEN_MYSQL_URL
+        sync: false
+      - key: AIVEN_CA_CERT
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: FRONTEND_PUBLIC_URL
+        value: https://www.diasporaunlocked.com
+      - key: APP_BASE_URL
+        value: https://www.diasporaunlocked.com
+      - key: API_PUBLIC_URL
+        sync: false
+      - key: SHOP_COMMERCIAL_MODE
+        value: prelaunch
+      - key: OUTBOUND_MESSAGES_PAUSED
+        value: "true"
