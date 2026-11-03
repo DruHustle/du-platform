@@ -4,7 +4,7 @@ import {
   randomUUID,
   timingSafeEqual,
 } from "node:crypto";
-import { z } from "../../contracts/validation";
+import { z } from "../../domain/validation";
 import {
   travelLocations,
   validateTravel,
@@ -13,7 +13,7 @@ import {
   type TravelCriteria,
   type TravelQuote,
   type TravelResults,
-} from "../../contracts/travel";
+} from "../../domain/travel";
 import { resolveJwtSecret } from "../../utils/jwtSecret";
 
 const endpoints = {

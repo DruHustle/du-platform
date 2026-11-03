@@ -1,8 +1,8 @@
 import { AppError } from "../../../core/errorHandler";
-import { ShopRequestError } from "../../../lib/persistence/shopStore";
+import { ShopRequestError } from "../../../shared/persistence/shopStore";
 import type express from "express";
 import { ShopService, ShopServiceError } from "../services/shopService";
-import { ok, error } from "../../../lib/responseFormatter";
+import { ok, error } from "../../../shared/responseFormatter";
 
 export class ShopController {
   constructor(private readonly service = new ShopService()) {}

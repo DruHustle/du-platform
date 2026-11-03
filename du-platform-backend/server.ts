@@ -1,10 +1,8 @@
-import { resolveTravelRedirect } from "./contracts/travelRoutes";
 import { startOrderNotificationWorker } from "./modules/shop/orderNotifications";
 import { startTransactionalWorker } from "./modules/notifications/transactionalWorker";
 import { startNewsletterWorker } from "./modules/newsletter/worker";
 import compression from "compression";
 import express from "express";
-import fs from "fs";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -14,9 +12,8 @@ import { registerCoreMiddleware } from "./core/middleware";
 import { errorHandler, notFoundHandler } from "./core/errorHandler";
 import { registerDomainModules } from "./modules";
 import { registerApiRoutes } from "./api";
-import { db, isMemoryFallbackEnabled } from "./lib/databaseRuntime";
+import { db, isMemoryFallbackEnabled } from "./shared/databaseRuntime";
 import { resolveJwtSecret } from "./utils/jwtSecret";
-import { injectSeoIntoHtml, resolveRouteSeo } from "./contracts/routeSeo";
 import { validateStartupConfiguration } from "./core/startupValidation";
 
 type ModularServerOptions = {
@@ -24,15 +21,7 @@ type ModularServerOptions = {
     db: Pool | null;
     serverStartedAt: number;
   };
-  staticPath?: string | null;
 };
-
-export function getSpaDocumentStatus(canonicalPath: string): 200 | 404 {
-  return canonicalPath === "/404" ? 404 : 200;
-}
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export function createModularServer(options: ModularServerOptions) {
   const app = express();
@@ -44,110 +33,8 @@ export function createModularServer(options: ModularServerOptions) {
   });
   registerDomainModules(app);
 
-  app.get("*", (req, res, next) => {
-    const destination = resolveTravelRedirect(req.path);
-    if (!destination) return next();
-    const queryIndex = req.originalUrl.indexOf("?");
-    return res.redirect(
-      308,
-      destination + (queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : "")
-    );
-  });
-
-  // Ensure API consumers receive JSON 404s instead of the SPA shell.
+  // The API never serves or builds the web application.
   app.use("/api", notFoundHandler);
-
-  if (options.staticPath) {
-    const staticIndexPath = path.join(options.staticPath, "index.html");
-    let cachedIndexHtml: string | null = null;
-    const getIndexHtml = () => {
-      if (cachedIndexHtml == null) {
-        cachedIndexHtml = fs.readFileSync(staticIndexPath, "utf8");
-      }
-      return cachedIndexHtml;
-    };
-
-    // Serve generated clean-URL documents before directory handling. A route
-    // such as /travel also has a folder for child pages; static's directory
-    // redirect would otherwise turn it into /travel/ and break SPA matching.
-    app.use((req, res, next) => {
-      if (!["GET", "HEAD"].includes(req.method) || path.extname(req.path))
-        return next();
-      const root = path.resolve(options.staticPath!);
-      const clean = req.path.replace(/\/$/, "");
-      const file = path.resolve(root, "." + (clean || "/index") + ".html");
-      if (!file.startsWith(root + path.sep) || !fs.existsSync(file))
-        return next();
-      res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
-      res.status(
-        getSpaDocumentStatus(
-          resolveRouteSeo({ pathname: req.path }).canonicalPath
-        )
-      );
-      return res.sendFile(file);
-    });
-
-    app.use(
-      express.static(options.staticPath, {
-        redirect: false,
-        etag: true,
-        lastModified: true,
-        setHeaders: (res, filePath) => {
-          const relativePath = path
-            .relative(options.staticPath as string, filePath)
-            .replace(/\\/g, "/");
-
-          if (relativePath.endsWith(".html")) {
-            res.setHeader(
-              "Cache-Control",
-              "no-cache, max-age=0, must-revalidate"
-            );
-            return;
-          }
-
-          if (/^assets\/.+-[A-Za-z0-9_-]{8,}\.[^/]+$/i.test(relativePath)) {
-            res.setHeader(
-              "Cache-Control",
-              "public, max-age=31536000, immutable"
-            );
-            return;
-          }
-
-          if (
-            /\.(?:css|js|mjs|png|jpe?g|gif|svg|webp|avif|ico|woff2?|mp3|wav)$/i.test(
-              relativePath
-            )
-          ) {
-            res.setHeader("Cache-Control", "public, max-age=86400");
-            return;
-          }
-
-          res.setHeader("Cache-Control", "public, max-age=3600");
-        },
-      })
-    );
-    app.get("*", (req, res) => {
-      res.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate");
-      const siteUrl = String(
-        process.env.VITE_SITE_URL ||
-          process.env.APP_BASE_URL ||
-          `${req.protocol}://${req.get("host") || "localhost"}`
-      )
-        .trim()
-        .replace(/\/+$/, "");
-      const url = new URL(
-        req.originalUrl || req.url,
-        `${siteUrl || "http://localhost"}/`
-      );
-      const seo = resolveRouteSeo({
-        pathname: url.pathname,
-        search: url.search,
-      });
-      const html = injectSeoIntoHtml(getIndexHtml(), seo, siteUrl);
-      const status = getSpaDocumentStatus(seo.canonicalPath);
-      res.status(status).type("html").send(html);
-    });
-  }
 
   app.use(notFoundHandler);
   app.use(errorHandler);
@@ -213,21 +100,11 @@ export async function startServer() {
     console.warn(error);
   }
 
-  // The API runs independently. A deployment can explicitly supply static
-  // files, or package them beside the bundle for the existing SPA fallback.
-  const candidate = process.env.STATIC_DIR
-    ? path.resolve(process.env.STATIC_DIR)
-    : path.resolve(__dirname, "public");
-  const staticPath = fs.existsSync(path.join(candidate, "index.html"))
-    ? candidate
-    : null;
-
   const app = createModularServer({
     backend: {
       db,
       serverStartedAt: Date.now(),
     },
-    staticPath,
   });
   const server = createServer(app);
   server.keepAliveTimeout = 5_000;

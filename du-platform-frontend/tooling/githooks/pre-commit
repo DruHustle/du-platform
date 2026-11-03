@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PUBLIC_DIR="du-platform-frontend/web/public"
+
+EN_FILE="$PUBLIC_DIR/locales/en/translation.json"
+if git diff --cached --name-only | grep -qx "$EN_FILE"; then
+  echo "[pre-commit] English translations changed. Syncing locale keys..."
+  python3 du-platform-frontend/tooling/scripts/sync_translations.py --mode sync
+  du-platform-frontend/tooling/node_modules/.bin/prettier --write "$PUBLIC_DIR"/locales/*/translation.json
+  git add "$PUBLIC_DIR"/locales/*/translation.json
+else
+  echo "[pre-commit] No English translation key changes detected. Skipping translation sync."
+fi
+
+echo "[pre-commit] Generating sitemap..."
+pnpm --dir du-platform-frontend/web sitemap
+
+echo "[pre-commit] Staging generated files..."
+git add "$PUBLIC_DIR/sitemap.xml"
+
+echo "[pre-commit] Done."

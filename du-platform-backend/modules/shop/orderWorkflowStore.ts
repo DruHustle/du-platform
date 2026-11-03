@@ -2,20 +2,20 @@ import { queueOrderNotification } from "./orderOutboxStore";
 import { assertQuoteReadiness } from "./shopReadiness";
 import { recordShopFunnel } from "./funnel";
 import type { PoolConnection, RowDataPacket } from "mysql2/promise";
-import { db } from "../../lib/databaseRuntime";
-import { sha256 } from "../../lib/persistence/authStore";
+import { db } from "../../shared/databaseRuntime";
+import { sha256 } from "../../shared/persistence/authStore";
 import {
   ShopRequestError,
   invalidateShopProductsCache,
   getShopOrderByRef,
-} from "../../lib/persistence/shopStore";
+} from "../../shared/persistence/shopStore";
 import {
   orderCommandSchema,
   orderNextAction,
   permittedOrderTransition,
   type OrderStage,
   ORDER_STAGES,
-} from "../../contracts/orderWorkflow";
+} from "../../domain/orderWorkflow";
 
 function pool() {
   if (!db)
@@ -192,7 +192,7 @@ export async function readOrderWorkspace(ref: string, token?: string) {
     const { access_grant: _sealed, ...safeState } = state;
     return {
       order: safeOrder,
-      state: { ...safeState, ...publicState },
+      state: { ...safeState, ...publicState, allowedTransitions: ORDER_STAGES.filter(next => permittedOrderTransition(stage, next)) },
       items,
       snapshots: snapshots[0] ? JSON.parse(snapshots[0].items) : null,
       quotes: parsedQuotes,

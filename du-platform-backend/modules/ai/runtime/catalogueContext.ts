@@ -1,13 +1,13 @@
-import interestCopy from "../../../lib/copy/productInterestCopy.json";
+import interestCopy from "../../../resources/productInterestCopy.json";
 import { publicShopReadiness } from "../../shop/shopReadiness";
 import { readPublishedProductDetails } from "../../shop/productDetailsStore";
-import answerCopy from "../../../lib/copy/catalogueAnswerCopy.json";
-import type { ProductDetails } from "../../../contracts/productDetails";
-import { listShopProducts } from "../../../lib/persistence/shopStore";
+import answerCopy from "../../../resources/catalogueAnswerCopy.json";
+import type { ProductDetails } from "../../../domain/productDetails";
+import { listShopProducts } from "../../../shared/persistence/shopStore";
 import {
   convertShopCents,
   isShopCurrency,
-} from "../../../contracts/shopCurrency";
+} from "../../../domain/shopCurrency";
 const copy = {
   en: {
     intro: "From the published DU catalogue (availability can change):",

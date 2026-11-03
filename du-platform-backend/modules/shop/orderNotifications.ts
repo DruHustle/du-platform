@@ -1,19 +1,19 @@
-import { outboundMessagesPaused } from "../../lib/outboundMessages";
-import { ORDER_STATUS_PAGE_MARKER } from "../../contracts/orderStatusProtocol";
-import nextCopy from "../../lib/copy/orderNextCopy.json";
-import emailLabels from "../../lib/copy/orderEmailLabels.json";
-import stageCopy from "../../lib/copy/orderStatusCopy.json";
+import { outboundMessagesPaused } from "../../shared/outboundMessages";
+import { ORDER_STATUS_PAGE_MARKER } from "../../domain/orderStatusProtocol";
+import nextCopy from "../../resources/orderNextCopy.json";
+import emailLabels from "../../resources/orderEmailLabels.json";
+import stageCopy from "../../resources/orderStatusCopy.json";
 import { openOrderAccess, sealOrderAccess } from "./orderAccess";
-import { getNotifyAlertEmails } from "../../lib/email";
+import { getNotifyAlertEmails } from "../../shared/email";
 import type { Pool, RowDataPacket } from "mysql2/promise";
-import { db } from "../../lib/databaseRuntime";
+import { db } from "../../shared/databaseRuntime";
 import {
   sendNewsletterEmail,
   newsletterSender,
   type NewsletterEmail,
 } from "../newsletter/provider";
 import { deliveryFailure } from "../newsletter/worker";
-import { emailText } from "../../lib/copy/customerEmailCopy";
+import { emailText } from "../../domain/customerEmailCopy";
 
 const statusLabels: Record<string, string> = {
   en: "Order update",

@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { z } from "zod";
-import { db } from "../../lib/databaseRuntime";
-import projectRoutes from "../../contracts/investmentProjectRoutes.json";
-import { ok, error } from "../../lib/responseFormatter";
+import { db } from "../../shared/databaseRuntime";
+import { ok, error } from "../../shared/responseFormatter";
+// Stable IDs accepted by the research API; display names belong to each client.
+const projectIds = new Set(["masuwe", "leather", "apparel", "horticulture", "fintech", "solar", "beef_dairy", "agro_park", "data_centres", "vaccine", "roof_tiles", "radco_solar"]);
 const input = z
   .object({
     sources: z
@@ -77,7 +78,7 @@ export function createResearchRouter(admin = false) {
             );
         if (!db) return res.sendStatus(503);
         const { kind, key } = req.params;
-        if (kind === "project" && !Object.hasOwn(projectRoutes, key))
+        if (kind === "project" && !projectIds.has(key))
           return res.sendStatus(404);
         if (kind === "ntir") {
           const [rows] = await db.query<any[]>(

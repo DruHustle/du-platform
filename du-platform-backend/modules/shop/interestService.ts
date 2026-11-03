@@ -1,8 +1,8 @@
-import { escapeEmailHtml } from "../../lib/email";
+import { escapeEmailHtml } from "../../shared/email";
 import type { Pool, PoolConnection, RowDataPacket } from "mysql2/promise";
-import { db } from "../../lib/databaseRuntime";
+import { db } from "../../shared/databaseRuntime";
 import { AppError } from "../../core/errorHandler";
-import { customerLanguage } from "../../contracts/customerLanguage";
+import { customerLanguage } from "../../domain/customerLanguage";
 import { NewsletterService } from "../newsletter/service";
 import {
   hashNewsletterToken,
@@ -12,7 +12,7 @@ import {
 } from "../newsletter/content";
 import { newsletterSender, type NewsletterEmail } from "../newsletter/provider";
 import { publicShopReadiness } from "./shopReadiness";
-import copy from "../../lib/copy/productInterestCopy.json";
+import copy from "../../resources/productInterestCopy.json";
 
 export class ProductInterestService extends NewsletterService {
   constructor(pool: Pool | null = db) {

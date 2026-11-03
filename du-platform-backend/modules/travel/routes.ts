@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { db } from "../../lib/databaseRuntime";
+import { db } from "../../shared/databaseRuntime";
 import { requireJwtAuth } from "../../middleware/jwtAuth";
 import { requireCurrentUser } from "../../middleware/currentUser";
 import { rateLimiter } from "../../core/rateLimiter";
@@ -9,14 +9,16 @@ import {
   travelCapabilities,
   travelCriteriaSchema,
   travelQuoteSchema,
-} from "../../contracts/travel";
+  travelLocations,
+  providerResources,
+} from "../../domain/travel";
 import {
   publicTravelSearch,
   TravelProviderError,
   verifyTravelQuote,
 } from "./providers";
 import { TravelRepository } from "./repository";
-import { ok, error } from "../../lib/responseFormatter";
+import { ok, error } from "../../shared/responseFormatter";
 
 export function createTravelRouter() {
   const router = Router();
@@ -24,7 +26,7 @@ export function createTravelRouter() {
     res.setHeader("Cache-Control", "private, no-store");
     next();
   });
-  router.get("/capabilities", (_req, res) => res.json(ok(travelCapabilities)));
+  router.get("/capabilities", (_req, res) => res.json(ok({ ...travelCapabilities, locations: travelLocations, resources: providerResources })));
   const searchInput = z
     .object({
       category: z.enum(["flights", "stays"]),

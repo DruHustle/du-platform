@@ -4,8 +4,8 @@ import {
   resolveSessionToken,
   resolveSessionUser,
   setSessionCookie,
-} from "../../../lib/authSession";
-import { error, ok } from "../../../lib/responseFormatter";
+} from "../../../shared/authSession";
+import { error, ok } from "../../../shared/responseFormatter";
 import { AuthService, AuthServiceError } from "../services/authService";
 
 export class AuthController {
@@ -53,6 +53,35 @@ export class AuthController {
       const result = await this.service.login(req.body);
       setSessionCookie(res, result.sessionToken);
       return res.json(ok(result.payload));
+    } catch (err) {
+      return this.sendError(res, err, "AUTH_LOGIN_FAILED", "Login failed.");
+    }
+  };
+
+  // Native clients keep the opaque session in platform-secure storage. The
+  // existing browser endpoints continue to return only an HttpOnly cookie.
+  nativeRegister = async (req: express.Request, res: express.Response) => {
+    try {
+      const result = await this.service.register(req.body);
+      return res
+        .status(201)
+        .json(ok({ ...result.payload, sessionToken: result.sessionToken }));
+    } catch (err) {
+      return this.sendError(
+        res,
+        err,
+        "AUTH_REGISTER_FAILED",
+        "Registration failed."
+      );
+    }
+  };
+
+  nativeLogin = async (req: express.Request, res: express.Response) => {
+    try {
+      const result = await this.service.login(req.body);
+      return res.json(
+        ok({ ...result.payload, sessionToken: result.sessionToken })
+      );
     } catch (err) {
       return this.sendError(res, err, "AUTH_LOGIN_FAILED", "Login failed.");
     }
@@ -107,6 +136,14 @@ export class AuthController {
         "AUTH_ME_FAILED",
         "Failed to resolve current user."
       );
+    }
+  };
+
+  updateProfile = async (req: express.Request, res: express.Response) => {
+    try {
+      return res.json(ok(await this.service.updateProfile(req.auth!.userId, req.body.fullName)));
+    } catch (err) {
+      return this.sendError(res, err, "AUTH_PROFILE_FAILED", "Unable to update your profile.");
     }
   };
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isDbConnectionError } from "../../../lib/databaseRuntime";
+import { isDbConnectionError } from "../../../shared/databaseRuntime";
 
 describe("isDbConnectionError", () => {
   it("treats socket permission failures as connection errors when fallback is enabled", () => {

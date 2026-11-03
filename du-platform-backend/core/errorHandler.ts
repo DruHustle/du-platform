@@ -1,6 +1,6 @@
 import type express from 'express';
 import { logger } from './logger';
-import { error } from '../lib/responseFormatter';
+import { error } from '../shared/responseFormatter';
 
 export class AppError extends Error {
   readonly statusCode: number;

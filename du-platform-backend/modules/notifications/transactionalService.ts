@@ -5,16 +5,16 @@ import type {
   RowDataPacket,
   ResultSetHeader,
 } from "mysql2/promise";
-import { db } from "../../lib/databaseRuntime";
+import { db } from "../../shared/databaseRuntime";
 import { AppError } from "../../core/errorHandler";
-import { getNotifyAlertEmails, getNotifyFromEmail } from "../../lib/email";
+import { getNotifyAlertEmails, getNotifyFromEmail } from "../../shared/email";
 import { sealOrderAccess, openOrderAccess } from "../shop/orderAccess";
 import { NewsletterService } from "../newsletter/service";
 import { newsletterOrigin, renderNewsletter } from "../newsletter/content";
 import type { NewsletterEmail } from "../newsletter/provider";
-import { customerLanguage } from "../../contracts/customerLanguage";
+import { customerLanguage } from "../../domain/customerLanguage";
 import { contactInquirySchema } from "./dto/notification.dto";
-import copy from "../../lib/copy/transactionalEmailCopy.json";
+import copy from "../../resources/transactionalEmailCopy.json";
 
 export async function enqueueTransactional(
   c: PoolConnection,

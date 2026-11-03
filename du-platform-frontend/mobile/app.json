@@ -1,0 +1,65 @@
+{
+  "expo": {
+    "name": "Diaspora Unlocked",
+    "slug": "diaspora-unlocked",
+    "version": "1.0.0",
+    "scheme": "diasporaunlocked",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.diasporaunlocked.app",
+      "supportsTablet": true,
+      "associatedDomains": [
+        "applinks:www.diasporaunlocked.com"
+      ]
+    },
+    "android": {
+      "package": "com.diasporaunlocked.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#071525",
+        "foregroundImage": "./assets/icon.png"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "pathPrefix": "/reset-password"
+            },
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "pathPrefix": "/travel"
+            },
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "pathPrefix": "/shop"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-status-bar",
+      "./plugins/withUnsignedRelease.cjs",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "enableSceneSupport": true
+          }
+        }
+      ],
+      "./plugins/withQuotedIosBundle.cjs"
+    ]
+  }
+}

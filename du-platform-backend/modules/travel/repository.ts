@@ -4,7 +4,7 @@ import {
   savedTravelSchema,
   type SavedTravelInput,
   type SavedTravel,
-} from "../../contracts/travel";
+} from "../../domain/travel";
 export class TravelRepository {
   constructor(private pool: Pool) {}
   async list(owner: number): Promise<SavedTravel[]> {
