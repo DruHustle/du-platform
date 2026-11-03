@@ -161,7 +161,9 @@ for (const name of apps) {
         ts.isCallExpression(node) &&
         (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
           (ts.isIdentifier(node.expression) &&
-            node.expression.text === "require"))
+            node.expression.text === "require") ||
+          (ts.isPropertyAccessExpression(node.expression) &&
+            node.expression.name.text === "require"))
       )
         checkLiteral(node.arguments[0]);
       if (
