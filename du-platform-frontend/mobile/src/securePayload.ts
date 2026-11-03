@@ -5,9 +5,19 @@ import * as SecureStore from "expo-secure-store";
 // request is not sent until the completed index is stored.
 const prefix = "chunks:v1:";
 const staging = "writing:v1:";
+async function removeChunks(key: string, count: number) {
+  // Await every deletion even if one fails. A session storage queue must not
+  // begin a newer write while an older cleanup still has deletions in flight.
+  const results = await Promise.allSettled(Array.from({length: count}, (_, i) => SecureStore.deleteItemAsync(`${key}.${i}`)));
+  const failure = results.find(result => result.status === "rejected");
+  if (failure?.status === "rejected") throw failure.reason;
+}
 export async function saveSecurePayload(key: string, value: string) {
   const parts = value.match(/[\s\S]{1,400}/gu) ?? [];
   if (parts.length > 40) throw new Error("The request is too long to save safely on this device.");
+  // Replacing a longer payload must remove its old trailing chunks before the
+  // new index is written, or a later logout could no longer discover them.
+  await deleteSecurePayload(key);
   let written = 0;
   try {
     await SecureStore.setItemAsync(key, `${staging}${parts.length}`);
@@ -18,7 +28,7 @@ export async function saveSecurePayload(key: string, value: string) {
     await SecureStore.setItemAsync(key, `${prefix}${parts.length}`);
   } catch (error) {
     try {
-      await Promise.all(Array.from({length: written}, (_, index) => SecureStore.deleteItemAsync(`${key}.${index}`)));
+      await removeChunks(key, written);
       await SecureStore.deleteItemAsync(key);
     } catch { /* Keep the staging marker for cleanup on the next launch. */ }
     throw error;
@@ -38,6 +48,6 @@ export async function deleteSecurePayload(key: string) {
   const index = await SecureStore.getItemAsync(key);
   const count = index?.startsWith(prefix) ? Number(index.slice(prefix.length)) : index?.startsWith(staging) ? Number(index.slice(staging.length)) : 0;
   if (Number.isInteger(count) && count > 0 && count <= 40)
-    await Promise.all(Array.from({length: count}, (_, i) => SecureStore.deleteItemAsync(`${key}.${i}`)));
+    await removeChunks(key, count);
   await SecureStore.deleteItemAsync(key);
 }

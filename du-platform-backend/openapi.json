@@ -3,7 +3,7 @@
   "info": {
     "title": "Diaspora Unlocked API",
     "version": "1.0.0",
-    "description": "Versioned network contract. Web sessions use HttpOnly cookies; native sessions use opaque bearer tokens held in platform-secure storage. Travel offers are research, and order requests do not constitute payment."
+    "description": "Versioned network contract. Web sessions use HttpOnly cookies; native sessions use opaque bearer tokens held in platform-secure storage. Travel offers are research, and order requests do not constitute payment. Client request/response schemas cover authentication, travel, catalogue/orders, search, contact and assistant chat/planning. x-contract-coverage=route-inventory explicitly identifies registered operations whose full provider/admin payload contracts are not yet verified. Backend tests compare registered routes and validate representative HTTP responses; external provider delivery and native device execution are separate checks."
   },
   "servers": [
     {
@@ -14,7 +14,7 @@
     "/auth/register": {
       "post": {
         "summary": "Create an account or sign in",
-        "description": "Sets an HttpOnly browser session cookie; does not return the opaque session token.",
+        "description": "Passwords require 8–255 characters including an uppercase letter, a digit and a non-alphanumeric character. If supplied, confirmPassword must equal password.",
         "requestBody": {
           "required": true,
           "content": {
@@ -32,24 +32,55 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
                       "$ref": "#/components/schemas/BrowserAuth"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -58,7 +89,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/login": {
@@ -82,24 +114,55 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
                       "$ref": "#/components/schemas/BrowserAuth"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -108,13 +171,14 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/native/register": {
       "post": {
         "summary": "Create an account or sign in",
-        "description": "Returns an opaque session for secure native storage; does not set a browser cookie.",
+        "description": "Passwords require 8–255 characters including an uppercase letter, a digit and a non-alphanumeric character. If supplied, confirmPassword must equal password.",
         "requestBody": {
           "required": true,
           "content": {
@@ -132,24 +196,55 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
                       "$ref": "#/components/schemas/NativeAuth"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,7 +253,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/native/login": {
@@ -182,24 +278,55 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
                       "$ref": "#/components/schemas/NativeAuth"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -208,7 +335,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/token/refresh": {
@@ -224,10 +352,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RefreshedAccessToken"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Cookie origin or CSRF header rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -236,7 +404,31 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "description": "Cookie-backed writes require an Origin or Referer matching the server CORS allowlist. When CSRF enforcement is enabled (the production default), also send a nonempty X-CSRF-Token header. Opaque native Bearer session requests do not use the cookie CSRF branch; an explicit Authorization header never falls back to a cookie.",
+        "parameters": [
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Required for cookie-backed writes when CSRF enforcement is enabled. Native Bearer sessions are exempt."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Cookie-backed writes require an allowed Origin, or an allowed Referer if Origin is absent."
+          }
+        ]
       }
     },
     "/auth/logout": {
@@ -252,10 +444,40 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Cookie origin or CSRF header rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -264,7 +486,31 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "description": "Cookie-backed writes require an Origin or Referer matching the server CORS allowlist. When CSRF enforcement is enabled (the production default), also send a nonempty X-CSRF-Token header. Opaque native Bearer session requests do not use the cookie CSRF branch; an explicit Authorization header never falls back to a cookie.",
+        "parameters": [
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Required for cookie-backed writes when CSRF enforcement is enabled. Native Bearer sessions are exempt."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Cookie-backed writes require an allowed Origin, or an allowed Referer if Origin is absent."
+          }
+        ]
       }
     },
     "/auth/me": {
@@ -277,10 +523,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CurrentUser"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -289,7 +575,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/profile": {
@@ -317,32 +604,55 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
-                      "type": "object",
-                      "required": [
-                        "user"
-                      ],
-                      "properties": {
-                        "user": {
-                          "$ref": "#/components/schemas/User"
-                        }
-                      }
+                      "$ref": "#/components/schemas/CurrentUser"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -351,7 +661,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/forgot-password": {
@@ -362,29 +673,57 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "email"
-                ],
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  },
-                  "language": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/ForgotPassword"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -393,7 +732,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/auth/reset-password": {
@@ -404,32 +744,57 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "token",
-                  "password"
-                ],
-                "properties": {
-                  "token": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  },
-                  "confirmPassword": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/ResetPassword"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -438,7 +803,9 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "description": "The reset token comes from the password reset link. Password policy and confirmPassword equality match registration."
       }
     },
     "/shop/products": {
@@ -451,24 +818,45 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
                       "$ref": "#/components/schemas/Catalogue"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -477,7 +865,20 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "description": "sports, crafts or food. Food includes beverages; other values return the full catalogue."
+          }
+        ]
       }
     },
     "/shop/products/{id}/details": {
@@ -495,10 +896,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/PublishedProductDetails"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -507,7 +948,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/shop/readiness": {
@@ -515,10 +957,30 @@
         "summary": "Read assisted-order availability",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ShopReadiness"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -527,7 +989,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/shop/restock-notifications": {
@@ -538,39 +1001,76 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "email",
-                  "productSlug",
-                  "productName"
-                ],
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "productSlug": {
-                    "type": "string"
-                  },
-                  "productName": {
-                    "type": "string"
-                  },
-                  "productId": {
-                    "type": "integer"
-                  },
-                  "language": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/RestockNotification"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "requiresConfirmation": {
+                          "const": true
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["requiresConfirmation", "message"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -579,13 +1079,14 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/shop/orders": {
       "post": {
         "summary": "Create an assisted-order request",
-        "description": "The request is not a completed payment. Reuse requestToken and the unchanged request after an unconfirmed response.",
+        "description": "Creates an assisted order request, subject to commercial readiness. No payment is accepted by this action. Prices come from the current server catalogue. Items must have unique product IDs. Reuse the same requestToken and unchanged payload when retrying; a changed payload or outdated pricingRevision returns 409.",
         "requestBody": {
           "required": true,
           "content": {
@@ -598,10 +1099,76 @@
         },
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "order": {
+                          "$ref": "#/components/schemas/CreatedOrder"
+                        }
+                      },
+                      "required": ["order"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -610,7 +1177,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/shop/orders/{orderRef}": {
@@ -628,10 +1196,56 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "order": {
+                          "$ref": "#/components/schemas/Order"
+                        }
+                      },
+                      "required": ["order"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -640,7 +1254,14 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "description": "Send X-Order-Access-Token. A legacy manageToken query parameter is also accepted on this GET endpoint; prefer the header to keep the bearer grant out of URLs.",
+        "security": [
+          {
+            "orderAccess": []
+          }
+        ]
       }
     },
     "/shop/orders/{orderRef}/workflow": {
@@ -658,10 +1279,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderWorkflow"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -670,7 +1331,14 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "description": "Customer-visible workflow. The memory fallback contains only the base state, quotes and history. Database-backed responses also include quote, refund, estimate and requested-item details.",
+        "security": [
+          {
+            "orderAccess": []
+          }
+        ]
       }
     },
     "/shop/orders/{orderRef}/accept-quote": {
@@ -688,10 +1356,70 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderWorkflow"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -700,7 +1428,24 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptQuote"
+              }
+            }
+          }
+        },
+        "description": "Idempotent customer quote acceptance using requestId and the current workflow version. The server sets action to quote_accepted; no other transition is authorized.",
+        "security": [
+          {
+            "orderAccess": []
+          }
+        ]
       }
     },
     "/shop/orders/{orderRef}/confirm-payment": {
@@ -718,10 +1463,86 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "order": {
+                          "$ref": "#/components/schemas/Order"
+                        }
+                      },
+                      "required": ["order"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Simulated payment is unavailable in production",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -730,7 +1551,24 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentConfirmation"
+              }
+            }
+          }
+        },
+        "description": "Compatibility payment endpoint for dummy_gateway orders in non-production environments. Production returns 403. Assisted orders cannot be auto-confirmed; their payments are recorded by authorized shop staff. Send the order token in X-Order-Access-Token, or legacy manageToken in the JSON body; query credentials are ignored on POST.",
+        "security": [
+          {
+            "orderAccess": []
+          }
+        ]
       }
     },
     "/travel/capabilities": {
@@ -743,24 +1581,25 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "success",
-                    "data"
-                  ],
                   "properties": {
                     "success": {
                       "const": true
                     },
                     "data": {
                       "$ref": "#/components/schemas/TravelReference"
+                    },
+                    "error": {
+                      "type": "null"
                     }
-                  }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
                 }
               }
             }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -769,7 +1608,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/travel/search": {
@@ -780,32 +1620,67 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "category",
-                  "criteria"
-                ],
-                "properties": {
-                  "category": {
-                    "enum": [
-                      "flights",
-                      "stays"
-                    ]
-                  },
-                  "criteria": {
-                    "$ref": "#/components/schemas/TravelCriteria"
-                  }
-                }
+                "$ref": "#/components/schemas/TravelSearchRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/TravelResults"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -814,7 +1689,9 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "description": "Only flights and stays support public search. Criteria must pass the backend calendar, known-location and route validation. Provider quotes contain signed, time-limited values."
       }
     },
     "/travel/revalidate": {
@@ -822,10 +1699,70 @@
         "summary": "Recheck a supplier observation",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/TravelRevalidation"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -834,18 +1771,27 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TravelQuote"
+              }
+            }
+          }
+        },
+        "description": "Submit the complete signed quote returned by search. The backend verifies provider/category, booking URL, signature and expiry; do not edit quote fields."
       }
     },
     "/travel/alerts": {
       "post": {
         "summary": "Price monitoring is unavailable",
         "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+          "503": {
+            "description": "TRAVEL_MONITORING_UNAVAILABLE; no alert is created",
             "content": {
               "application/json": {
                 "schema": {
@@ -854,7 +1800,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/travel/saved": {
@@ -867,10 +1814,64 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SavedTravel"
+                      },
+                      "maxItems": 30
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -879,7 +1880,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       },
       "post": {
         "summary": "Save a trip or search",
@@ -889,11 +1891,88 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Success"
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        }
+                      },
+                      "required": ["id"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -902,7 +1981,19 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedTravelInput"
+              }
+            }
+          }
+        },
+        "description": "A draft always includes criteria, searches and estimates. Saved searches require at least one search. Search categories must be unique and signed quotes must remain unchanged. At most 30 records per account."
       }
     },
     "/travel/saved/{id}": {
@@ -925,10 +2016,86 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "removed": {
+                          "const": true
+                        }
+                      },
+                      "required": ["removed"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -937,7 +2104,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/search": {
@@ -945,10 +2113,50 @@
         "summary": "Search public content",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SearchResults"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -957,18 +2165,90 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive trimmed query. Missing or empty query returns an empty result set."
+          }
+        ]
       }
     },
     "/notifications/contact": {
       "post": {
         "summary": "Submit a contact enquiry",
         "responses": {
-          "200": {
-            "description": "Success"
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContactReceipt"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -977,23 +2257,111 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInquiry"
+              }
+            }
+          }
+        },
+        "description": "An immutable enquiry identified by a UUID requestId. Retry the same payload and requestId after an uncertain response. A different payload with the same ID returns 409. A 201 confirms persistence and queued acknowledgements, not email delivery."
       }
     },
     "/notifications/newsletter": {
       "post": {
         "summary": "Request newsletter subscription",
         "responses": {
-          "200": {
-            "description": "Success"
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "requiresConfirmation": {
+                          "const": true
+                        },
+                        "deliveryPending": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "message",
+                        "requiresConfirmation",
+                        "deliveryPending"
+                      ]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"]
+                }
+              }
+            }
           },
-          "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+          "400": {
+            "description": "Request rejected or service unavailable",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Request rejected or service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Middleware, validation, authorization, rate limit or service error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterSubscription"
               }
             }
           }
@@ -1005,10 +2373,74 @@
         "summary": "Ask the assistant",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatReply"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assistant request or provider error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Assistant request or provider error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/AssistantError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Assistant request or provider error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Assistant request or provider error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Assistant request or provider error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantError"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1017,7 +2449,19 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          }
+        },
+        "description": "This endpoint returns a raw reply object, not the success/data envelope. The conversation must end with a nonempty user message after filtering; only the most recent 20 user/assistant messages are used. Published-catalogue answers include source. Middleware may return the standard error envelope."
       }
     },
     "/ai/trip-plan": {
@@ -1025,10 +2469,27 @@
         "summary": "Research an itinerary",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripPlanReply"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid itinerary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantError"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1037,7 +2498,19 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripPlanRequest"
+              }
+            }
+          }
+        },
+        "description": "Returns a raw structured plan with source ai or fallback. Fallback values are estimates, not live quotes. Optional preferences are normalized and bounded by the server."
       }
     },
     "/ai/capabilities": {
@@ -1045,10 +2518,30 @@
         "summary": "Read assistant capabilities",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AiCapabilities"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"],
+                  "additionalProperties": false
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1057,7 +2550,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/impact/stories": {
@@ -1077,7 +2571,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/investment/ntir/search": {
@@ -1097,7 +2592,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/health/db": {
@@ -1105,19 +2601,64 @@
         "summary": "Check database health",
         "responses": {
           "200": {
-            "description": "Success"
-          },
-          "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "mode": {
+                      "const": "mysql"
+                    }
+                  },
+                  "required": ["ok", "mode"]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database connection failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["ok", "error"]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["ok", "error"]
                 }
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/ping": {
@@ -1125,10 +2666,17 @@
         "summary": "Check API availability",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ping"
+                }
+              }
+            }
           },
           "default": {
-            "description": "Error, validation failure, rate limit or service unavailable",
+            "description": "Middleware, validation, authorization, rate limit or service error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1137,7 +2685,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "schema"
       }
     },
     "/admin/overview": {
@@ -1163,7 +2712,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/notification-settings": {
@@ -1189,7 +2739,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       },
       "put": {
         "summary": "Administrator operation",
@@ -1213,7 +2764,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/notify-requests": {
@@ -1239,7 +2791,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/ntir": {
@@ -1265,7 +2818,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       },
       "post": {
         "summary": "Administrator operation",
@@ -1289,7 +2843,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/ntir/{id}": {
@@ -1325,7 +2880,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/impact": {
@@ -1351,7 +2907,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       },
       "post": {
         "summary": "Administrator operation",
@@ -1375,7 +2932,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/impact/{id}": {
@@ -1411,7 +2969,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/shop-products": {
@@ -1437,7 +2996,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       },
       "post": {
         "summary": "Administrator operation",
@@ -1461,7 +3021,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/shop-products/{id}": {
@@ -1497,7 +3058,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       },
       "delete": {
         "summary": "Administrator operation",
@@ -1531,7 +3093,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/orders": {
@@ -1557,7 +3120,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/orders/{ref}": {
@@ -1593,7 +3157,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/orders/{ref}/commands": {
@@ -1629,7 +3194,8 @@
               }
             }
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/newsletter/confirm": {
@@ -1637,13 +3203,67 @@
         "summary": "Confirm newsletter subscription",
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"]
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service unavailable"
+            "description": "Storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Middleware or service error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferenceToken"
+              }
+            }
           }
         }
       }
@@ -1653,13 +3273,67 @@
         "summary": "Unsubscribe using a newsletter token",
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"]
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service unavailable"
+            "description": "Storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Middleware or service error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferenceToken"
+              }
+            }
           }
         }
       }
@@ -1677,7 +3351,8 @@
           "503": {
             "description": "Service unavailable"
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/weather/forecast": {
@@ -1693,7 +3368,8 @@
           "503": {
             "description": "Service unavailable"
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/tourism/health": {
@@ -1709,7 +3385,8 @@
           "503": {
             "description": "Service unavailable"
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/legal/health": {
@@ -1725,7 +3402,8 @@
           "503": {
             "description": "Service unavailable"
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/notifications/features": {
@@ -1746,21 +3424,68 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/shop/funnel": {
       "post": {
         "summary": "Record a consented shop event",
         "responses": {
+          "204": {
+            "description": "Accepted; no body"
+          },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service unavailable"
-          },
-          "204": {
-            "description": "Action recorded"
+            "description": "Unavailable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "event": {
+                    "type": "string",
+                    "enum": ["product_discovery", "basket_add"]
+                  },
+                  "consent": {
+                    "const": true
+                  }
+                },
+                "required": ["event", "consent"],
+                "additionalProperties": false
+              }
+            }
           }
         }
       }
@@ -1769,14 +3494,48 @@
       "post": {
         "summary": "Withdraw order analytics consent",
         "responses": {
+          "204": {
+            "description": "Accepted; no body"
+          },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service unavailable"
-          },
-          "204": {
-            "description": "Action recorded"
+            "description": "Unavailable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1788,7 +3547,29 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "schema",
+        "security": [
+          {
+            "orderAccess": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "consent": {
+                    "const": false
+                  }
+                },
+                "required": ["consent"]
+              }
+            }
+          }
+        }
       }
     },
     "/admin/shop-products/{id}/details": {
@@ -1819,7 +3600,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       },
       "put": {
         "summary": "Publish product details",
@@ -1848,7 +3630,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/orders/funnel": {
@@ -1869,7 +3652,8 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/orders/{ref}/notifications/{id}/retry": {
@@ -1908,7 +3692,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/subscribers": {
@@ -1929,7 +3714,8 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/campaigns": {
@@ -1950,7 +3736,8 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       },
       "post": {
         "summary": "Create a newsletter draft",
@@ -1969,7 +3756,8 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/campaigns/{id}": {
@@ -2000,7 +3788,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/campaigns/{id}/test": {
@@ -2031,7 +3820,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/campaigns/{id}/send": {
@@ -2062,7 +3852,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/deliveries": {
@@ -2083,7 +3874,8 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/deliveries/{id}/retry": {
@@ -2114,7 +3906,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/newsletter/subscribers/{id}/unsubscribe": {
@@ -2145,7 +3938,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/admin/service-inbox": {
@@ -2166,7 +3960,8 @@
           {
             "accessToken": []
           }
-        ]
+        ],
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/ai/ar": {
@@ -2182,7 +3977,8 @@
           "503": {
             "description": "Service unavailable"
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/ai/vr": {
@@ -2198,7 +3994,8 @@
           "503": {
             "description": "Service unavailable"
           }
-        }
+        },
+        "x-contract-coverage": "route-inventory"
       }
     },
     "/shop/assets/{file}": {
@@ -2221,6 +4018,429 @@
           "404": {
             "description": "Image not found"
           }
+        },
+        "x-contract-coverage": "route-inventory"
+      }
+    },
+    "/investment/research/{kind}/{key}": {
+      "get": {
+        "summary": "GET /investment/research/{kind}/{key}",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts.",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/admin/service-inbox/{id}/action": {
+      "post": {
+        "summary": "POST /admin/service-inbox/{id}/action",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts.",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/admin/research/{kind}/{key}": {
+      "get": {
+        "summary": "GET /admin/research/{kind}/{key}",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts.",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "summary": "PUT /admin/research/{kind}/{key}",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts.",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/admin/product-interest": {
+      "get": {
+        "summary": "GET /admin/product-interest",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts.",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/ai/generate-world": {
+      "post": {
+        "summary": "POST /ai/generate-world",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts."
+      }
+    },
+    "/ai/health": {
+      "get": {
+        "summary": "GET /ai/health",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts."
+      }
+    },
+    "/ai/ready": {
+      "get": {
+        "summary": "GET /ai/ready",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts."
+      }
+    },
+    "/whisper": {
+      "post": {
+        "summary": "POST /whisper",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts."
+      }
+    },
+    "/tts": {
+      "post": {
+        "summary": "POST /tts",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts."
+      }
+    },
+    "/speech": {
+      "post": {
+        "summary": "POST /speech",
+        "responses": {
+          "default": {
+            "description": "Response contract not yet verified"
+          }
+        },
+        "x-contract-coverage": "route-inventory",
+        "description": "Registered route inventory. Provider/admin-specific payloads and all response variants have not yet been verified as client contracts."
+      }
+    },
+    "/shop/interest/confirm": {
+      "post": {
+        "summary": "POST /shop/interest/confirm",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "confirmed": {
+                          "const": true
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["confirmed", "message"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Middleware or service error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "description": "A confirmation or cancellation bearer token from a product-interest email. This changes only product-interest preferences and creates no order or payment.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferenceToken"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shop/interest/cancel": {
+      "post": {
+        "summary": "POST /shop/interest/cancel",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cancelled": {
+                          "const": true
+                        }
+                      },
+                      "required": ["cancelled"]
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  },
+                  "required": ["success", "data", "error"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Middleware or service error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "description": "A confirmation or cancellation bearer token from a product-interest email. This changes only product-interest preferences and creates no order or payment.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferenceToken"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/csp-report": {
+      "post": {
+        "summary": "POST /csp-report",
+        "responses": {
+          "204": {
+            "description": "Report accepted"
+          },
+          "400": {
+            "description": "Malformed JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Report too large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "schema",
+        "description": "Browser CSP reports; returns no content after body parsing. The route parser limits reports to 16 KB.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/csp-report": {
+              "schema": {}
+            },
+            "application/reports+json": {
+              "schema": {}
+            },
+            "application/json": {
+              "schema": {}
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }
@@ -2241,19 +4461,21 @@
         "type": "apiKey",
         "in": "cookie",
         "name": "du_session"
+      },
+      "orderAccess": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Order-Access-Token",
+        "description": "Opaque order management token returned by order creation. This is independent of account authentication."
       }
     },
     "schemas": {
       "User": {
         "type": "object",
-        "required": [
-          "id",
-          "fullName",
-          "email"
-        ],
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 1
           },
           "fullName": {
             "type": "string"
@@ -2262,31 +4484,27 @@
             "type": "string",
             "format": "email"
           }
-        }
+        },
+        "required": ["id", "fullName", "email"]
       },
       "Credentials": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
         "properties": {
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
           }
-        }
+        },
+        "required": ["email", "password"]
       },
       "Registration": {
         "type": "object",
-        "required": [
-          "fullName",
-          "email",
-          "password"
-        ],
         "properties": {
           "fullName": {
             "type": "string",
@@ -2295,72 +4513,80 @@
           },
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
           },
           "password": {
             "type": "string",
             "minLength": 8,
-            "maxLength": 255
+            "maxLength": 255,
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]*$"
           },
           "confirmPassword": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
           }
-        }
+        },
+        "required": ["fullName", "email", "password"]
       },
       "NativeAuth": {
         "type": "object",
-        "required": [
-          "user",
-          "accessToken",
-          "sessionToken"
-        ],
         "properties": {
+          "message": {
+            "type": "string"
+          },
           "user": {
             "$ref": "#/components/schemas/User"
           },
           "accessToken": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "sessionToken": {
             "type": "string",
             "pattern": "^[a-f0-9]{96}$"
           }
-        }
+        },
+        "required": ["message", "user", "accessToken", "sessionToken"]
       },
       "BrowserAuth": {
         "type": "object",
-        "required": [
-          "user",
-          "accessToken"
-        ],
         "properties": {
+          "message": {
+            "type": "string"
+          },
           "user": {
             "$ref": "#/components/schemas/User"
           },
           "accessToken": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
-        }
+        },
+        "required": ["message", "user", "accessToken"],
+        "additionalProperties": false
       },
       "Profile": {
         "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "fullName"
-        ],
         "properties": {
           "fullName": {
             "type": "string",
             "minLength": 2,
             "maxLength": 255
           }
-        }
+        },
+        "required": ["fullName"],
+        "additionalProperties": false
       },
       "Error": {
         "type": "object",
         "properties": {
           "success": {
             "const": false
+          },
+          "data": {
+            "type": "null"
           },
           "error": {
             "type": "object",
@@ -2370,14 +4596,91 @@
               },
               "message": {
                 "type": "string"
-              }
-            }
+              },
+              "details": {}
+            },
+            "required": ["code", "message"]
           }
-        }
+        },
+        "required": ["success", "data", "error"],
+        "additionalProperties": false
       },
       "TravelCriteria": {
         "type": "object",
-        "additionalProperties": false,
+        "properties": {
+          "origin": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "tripType": {
+            "type": "string",
+            "enum": ["return", "one-way"]
+          },
+          "departure": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "returnDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "string",
+                "const": ""
+              }
+            ]
+          },
+          "adults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          },
+          "childAges": {
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 17
+            }
+          },
+          "rooms": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["EUR", "GBP", "USD", "ZAR"]
+          },
+          "pickup": {
+            "type": "string"
+          },
+          "dropoff": {
+            "type": "string"
+          },
+          "pickupTime": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "dropoffTime": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "guestNationality": {
+            "type": "string",
+            "pattern": "^(?:[A-Z]{2})?$"
+          },
+          "flightFlexDays": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          }
+        },
         "required": [
           "origin",
           "destination",
@@ -2393,74 +4696,100 @@
           "pickupTime",
           "dropoffTime"
         ],
-        "properties": {
-          "origin": {
-            "type": "string"
-          },
-          "destination": {
-            "type": "string"
-          },
-          "tripType": {
-            "enum": [
-              "return",
-              "one-way"
-            ]
-          },
-          "departure": {
-            "type": "string",
-            "format": "date"
-          },
-          "returnDate": {
-            "type": "string"
-          },
-          "adults": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 9
-          },
-          "childAges": {
-            "type": "array",
-            "items": {
-              "type": "integer"
-            }
-          },
-          "rooms": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 9
-          },
-          "currency": {
-            "enum": [
-              "EUR",
-              "GBP",
-              "USD",
-              "ZAR"
-            ]
-          },
-          "pickup": {
-            "type": "string"
-          },
-          "dropoff": {
-            "type": "string"
-          },
-          "pickupTime": {
-            "type": "string"
-          },
-          "dropoffTime": {
-            "type": "string"
-          },
-          "guestNationality": {
-            "type": "string"
-          },
-          "flightFlexDays": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3
-          }
-        }
+        "additionalProperties": false
       },
       "OrderRequest": {
         "type": "object",
+        "properties": {
+          "items": {
+            "minItems": 1,
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "productId": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "quantity": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 2147483647
+                }
+              },
+              "required": ["productId", "quantity"]
+            }
+          },
+          "currency": {
+            "default": "EUR",
+            "type": "string",
+            "enum": ["EUR", "USD", "ZAR"]
+          },
+          "pricingRevision": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "language": {
+            "default": "en",
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          },
+          "customerName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "customerEmail": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "shippingCountry": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "analyticsConsent": {
+            "default": false,
+            "type": "boolean"
+          },
+          "customerNotes": {
+            "default": "",
+            "type": "string",
+            "maxLength": 1000
+          },
+          "postalCode": {
+            "default": "",
+            "type": "string",
+            "maxLength": 30
+          },
+          "shippingCity": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "shippingAddress": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 400
+          },
+          "deliverySpeed": {
+            "default": "normal",
+            "type": "string",
+            "enum": ["normal", "express"]
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": ["manual_assisted", "dummy_gateway"]
+          },
+          "requestToken": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
         "required": [
           "items",
           "customerName",
@@ -2469,176 +4798,147 @@
           "shippingCity",
           "shippingAddress",
           "paymentMethod"
-        ],
-        "properties": {
-          "items": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": [
-                "productId",
-                "quantity"
-              ],
-              "properties": {
-                "productId": {
-                  "type": "integer"
-                },
-                "quantity": {
-                  "type": "integer",
-                  "minimum": 1
-                }
-              }
-            }
-          },
-          "currency": {
-            "enum": [
-              "EUR",
-              "USD",
-              "ZAR"
-            ]
-          },
-          "pricingRevision": {
-            "type": "string"
-          },
-          "language": {
-            "enum": [
-              "en",
-              "de",
-              "sn",
-              "nd"
-            ]
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "customerEmail": {
-            "type": "string",
-            "format": "email"
-          },
-          "shippingCountry": {
-            "type": "string"
-          },
-          "shippingCity": {
-            "type": "string"
-          },
-          "shippingAddress": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          },
-          "customerNotes": {
-            "type": "string"
-          },
-          "deliverySpeed": {
-            "enum": [
-              "normal",
-              "express"
-            ]
-          },
-          "paymentMethod": {
-            "enum": [
-              "manual_assisted",
-              "dummy_gateway"
-            ]
-          },
-          "analyticsConsent": {
-            "type": "boolean"
-          },
-          "requestToken": {
-            "type": "string",
-            "pattern": "^[a-f0-9]{64}$",
-            "description": "Reuse the same token and unchanged payload on retry."
-          }
-        }
+        ]
       },
       "Catalogue": {
         "type": "object",
-        "required": [
-          "products",
-          "count",
-          "source",
-          "readiness",
-          "pricing"
-        ],
         "properties": {
-          "products": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": [
-                "id",
-                "slug",
-                "name",
-                "price_cents",
-                "currency",
-                "stock_qty"
-              ],
-              "properties": {
-                "image_api_url": {
-                  "type": [
-                    "string",
-                    "null"
-                  ],
-                  "description": "Optional API-owned product image path; older API versions may omit it."
-                }
-              }
-            }
+          "readiness": {
+            "$ref": "#/components/schemas/ShopReadiness"
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/ShopPricing"
           },
           "count": {
             "type": "integer",
             "minimum": 0
           },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
+          },
           "source": {
-            "type": "string"
+            "type": "string",
+            "enum": ["db", "memory"]
           },
           "cached": {
             "type": "boolean"
-          },
-          "readiness": {
-            "type": "object"
-          },
-          "pricing": {
-            "type": "object",
-            "required": [
-              "revision",
-              "ratesPerEur",
-              "shipping"
-            ],
-            "properties": {
-              "revision": {
-                "type": "string"
-              },
-              "ratesPerEur": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "number"
-                }
-              },
-              "shipping": {
-                "type": "object"
-              }
-            }
           }
-        }
+        },
+        "required": [
+          "readiness",
+          "pricing",
+          "count",
+          "products",
+          "source",
+          "cached"
+        ]
       },
       "TravelReference": {
         "type": "object",
-        "required": [
-          "locations",
-          "resources"
-        ],
         "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "liveResults": {
+            "type": "boolean"
+          },
+          "criteriaLinks": {
+            "type": "boolean"
+          },
+          "embedded": {
+            "type": "boolean"
+          },
+          "monitoring": {
+            "type": "boolean"
+          },
+          "flexibleDates": {
+            "type": "boolean"
+          },
+          "nearbyAirports": {
+            "type": "boolean"
+          },
+          "categories": {
+            "type": "object",
+            "properties": {
+              "flights": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "flexibleDates": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["provider", "mode"]
+              },
+              "stays": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "flexibleDates": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["provider", "mode"]
+              },
+              "car-hire": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "flexibleDates": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["provider", "mode"]
+              }
+            },
+            "required": ["flights", "stays", "car-hire"]
+          },
           "locations": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "id",
-                "name",
-                "country"
-              ],
               "properties": {
                 "id": {
                   "type": "string"
@@ -2649,18 +4949,1870 @@
                 "country": {
                   "type": "string"
                 }
-              }
+              },
+              "required": ["id", "name", "country"]
             }
           },
           "resources": {
             "type": "object",
-            "required": [
-              "flights",
-              "stays",
-              "car-hire"
+            "properties": {
+              "flights": {
+                "type": "string",
+                "format": "uri"
+              },
+              "stays": {
+                "type": "string",
+                "format": "uri"
+              },
+              "car-hire": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": ["flights", "stays", "car-hire"]
+          }
+        },
+        "required": [
+          "provider",
+          "mode",
+          "liveResults",
+          "criteriaLinks",
+          "embedded",
+          "monitoring",
+          "flexibleDates",
+          "nearbyAirports",
+          "categories",
+          "locations",
+          "resources"
+        ]
+      },
+      "ForgotPassword": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "language": {
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          }
+        },
+        "required": ["email"]
+      },
+      "ResetPassword": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 255,
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]*$"
+          },
+          "confirmPassword": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        },
+        "required": ["token", "password"]
+      },
+      "TravelQuote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "identity": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["Kiwi.com", "Pilot"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["flights", "stays"]
+          },
+          "providerReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 12000
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/TravelCriteria"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["EUR", "GBP", "USD", "ZAR"]
+          },
+          "priceBasis": {
+            "type": "string",
+            "enum": ["party-total", "unspecified"]
+          },
+          "retrievedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "reviewAfter": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "bookingUrl": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "legs": {
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "route": {
+                  "minItems": 2,
+                  "maxItems": 12,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  }
+                },
+                "departureTime": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:[+-]\\d{2}:\\d{2}|Z)?$"
+                },
+                "arrivalTime": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:[+-]\\d{2}:\\d{2}|Z)?$"
+                },
+                "durationSeconds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 604800
+                },
+                "stops": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10
+                },
+                "cabin": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "airlines": {
+                  "maxItems": 12,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 100
+                  }
+                }
+              },
+              "required": [
+                "route",
+                "departureTime",
+                "arrivalTime",
+                "durationSeconds",
+                "stops",
+                "cabin",
+                "airlines"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "baggage": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "personalItem": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cabinBag": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "checkedBag": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": ["personalItem", "cabinBag", "checkedBag"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewRating": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "id",
+          "identity",
+          "provider",
+          "category",
+          "providerReference",
+          "criteria",
+          "title",
+          "price",
+          "currency",
+          "priceBasis",
+          "retrievedAt",
+          "reviewAfter",
+          "bookingUrl",
+          "legs",
+          "baggage",
+          "address",
+          "reviewRating",
+          "reviewCount",
+          "signature"
+        ],
+        "additionalProperties": false
+      },
+      "TravelResults": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": ["Kiwi.com", "Pilot"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["flights", "stays"]
+          },
+          "retrievedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "quotes": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelQuote"
+            }
+          },
+          "rejectedCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "provider",
+          "category",
+          "retrievedAt",
+          "quotes",
+          "rejectedCount"
+        ],
+        "additionalProperties": false
+      },
+      "TravelDraft": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "$ref": "#/components/schemas/TravelCriteria"
+          },
+          "searches": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "enum": ["flights", "stays", "car-hire"]
+                },
+                "criteria": {
+                  "$ref": "#/components/schemas/TravelCriteria"
+                }
+              },
+              "required": ["category", "criteria"],
+              "additionalProperties": false
+            }
+          },
+          "estimates": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "category": {
+                  "type": "string",
+                  "enum": ["flights", "stays", "car-hire"]
+                },
+                "amount": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "currency": {
+                  "type": "string",
+                  "enum": ["EUR", "GBP", "USD", "ZAR"]
+                }
+              },
+              "required": ["id", "category", "amount", "currency"],
+              "additionalProperties": false
+            }
+          },
+          "quotes": {
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelQuote"
+            }
+          }
+        },
+        "required": ["criteria", "searches", "estimates"],
+        "additionalProperties": false
+      },
+      "SavedTravelInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["trip", "search"]
+          },
+          "draft": {
+            "$ref": "#/components/schemas/TravelDraft"
+          }
+        },
+        "required": ["name", "kind", "draft"],
+        "additionalProperties": false
+      },
+      "RestockNotification": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "default": "en",
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          },
+          "productId": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "productSlug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "productName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": ["productSlug", "productName", "email"]
+      },
+      "ContactInquiry": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "language": {
+            "default": "en",
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "phone": {
+            "default": "",
+            "type": "string",
+            "maxLength": 30
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "module": {
+            "default": "general",
+            "type": "string",
+            "enum": [
+              "general",
+              "technology",
+              "export",
+              "tourism",
+              "investment",
+              "data",
+              "success"
             ]
           }
-        }
+        },
+        "required": ["name", "requestId", "email", "subject", "message"]
+      },
+      "NewsletterSubscription": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "default": "en",
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 255,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "consent": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": ["email"]
+      },
+      "ProductDetails": {
+        "type": "object",
+        "properties": {
+          "sizes": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "variants": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "sizeGuidance": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "dimensions": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "materials": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "ingredients": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "allergens": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "netQuantity": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "storage": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "origin": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "supplier": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "deliveryEligibility": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "handling": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "photos": {
+            "default": [],
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 500
+            }
+          },
+          "sources": {
+            "default": [],
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 1000,
+              "format": "uri"
+            }
+          }
+        },
+        "required": [
+          "sizes",
+          "variants",
+          "sizeGuidance",
+          "dimensions",
+          "materials",
+          "ingredients",
+          "allergens",
+          "netQuantity",
+          "storage",
+          "origin",
+          "supplier",
+          "deliveryEligibility",
+          "handling",
+          "photos",
+          "sources"
+        ],
+        "additionalProperties": false
+      },
+      "TripPlan": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "optimizedFor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "estimatedTotalUsd": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "contingencyUsd": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "nights": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "flights": {
+            "type": "object",
+            "properties": {
+              "route": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "cabin": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "estimatedCostUsd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "rationale": {
+                "type": "string",
+                "maxLength": 20000
+              }
+            },
+            "required": ["route", "cabin", "estimatedCostUsd", "rationale"],
+            "additionalProperties": false
+          },
+          "hotels": {
+            "type": "object",
+            "properties": {
+              "area": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "style": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "estimatedCostUsd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "rationale": {
+                "type": "string",
+                "maxLength": 20000
+              }
+            },
+            "required": ["area", "style", "estimatedCostUsd", "rationale"],
+            "additionalProperties": false
+          },
+          "carHire": {
+            "type": "object",
+            "properties": {
+              "vehicleClass": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "estimatedCostUsd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "rationale": {
+                "type": "string",
+                "maxLength": 20000
+              }
+            },
+            "required": ["vehicleClass", "estimatedCostUsd", "rationale"],
+            "additionalProperties": false
+          },
+          "experiences": {
+            "maxItems": 60,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 20000
+                },
+                "location": {
+                  "type": "string",
+                  "maxLength": 20000
+                },
+                "estimatedCostUsd": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "rationale": {
+                  "type": "string",
+                  "maxLength": 20000
+                }
+              },
+              "required": ["name", "location", "estimatedCostUsd", "rationale"],
+              "additionalProperties": false
+            }
+          },
+          "itinerary": {
+            "minItems": 1,
+            "maxItems": 60,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "day": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "date": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "transferFrom": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string",
+                  "maxLength": 20000
+                },
+                "details": {
+                  "type": "string",
+                  "maxLength": 20000
+                },
+                "estimatedDailyCostUsd": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10000000
+                }
+              },
+              "required": ["day", "title", "details", "estimatedDailyCostUsd"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "summary",
+          "optimizedFor",
+          "estimatedTotalUsd",
+          "flights",
+          "hotels",
+          "carHire",
+          "experiences",
+          "itinerary"
+        ],
+        "additionalProperties": false
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"]
+      },
+      "CurrentUser": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": ["user"]
+      },
+      "RefreshedAccessToken": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["message", "accessToken"]
+      },
+      "TravelSearchRequest": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["flights", "stays"]
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/TravelCriteria"
+          }
+        },
+        "required": ["category", "criteria"],
+        "additionalProperties": false
+      },
+      "TravelRevalidation": {
+        "type": "object",
+        "properties": {
+          "quote": {
+            "$ref": "#/components/schemas/TravelQuote"
+          },
+          "changed": {
+            "type": "boolean"
+          }
+        },
+        "required": ["quote", "changed"]
+      },
+      "SavedTravel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["trip", "search"]
+          },
+          "draft": {
+            "$ref": "#/components/schemas/TravelDraft"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["name", "kind", "draft", "id", "updatedAt"],
+        "additionalProperties": false
+      },
+      "ShopReadiness": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["observe", "prelaunch", "pilot"]
+          },
+          "enforcement": {
+            "type": "string",
+            "enum": ["report_only", "enforced"]
+          },
+          "commercialReady": {
+            "type": "boolean"
+          },
+          "missing": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "approvedProductIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "destinationCountries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "mode",
+          "enforcement",
+          "commercialReady",
+          "missing",
+          "approvedProductIds",
+          "destinationCountries"
+        ]
+      },
+      "ShopPricing": {
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": "string"
+          },
+          "ratesPerEur": {
+            "type": "object",
+            "properties": {
+              "EUR": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "USD": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "ZAR": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": ["EUR", "USD", "ZAR"]
+          },
+          "shipping": {
+            "type": "object",
+            "properties": {
+              "freeAboveCents": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "normalCents": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "expressCents": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": ["freeAboveCents", "normalCents", "expressCents"]
+          }
+        },
+        "required": ["revision", "ratesPerEur", "shipping"]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["sports", "crafts", "food", "beverage"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "image_api_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "translation_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "price_cents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string"
+          },
+          "stock_qty": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "is_active": {
+            "type": "integer",
+            "enum": [0, 1]
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "category",
+          "description",
+          "image_url",
+          "image_api_url",
+          "translation_key",
+          "price_cents",
+          "currency",
+          "stock_qty",
+          "is_active"
+        ]
+      },
+      "PublishedProductDetails": {
+        "type": "object",
+        "properties": {
+          "details": {
+            "$ref": "#/components/schemas/ProductDetails"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": ["details", "updatedAt"]
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "productId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "productName": {
+            "type": "string"
+          },
+          "unitPriceCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "lineTotalCents": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "productId",
+          "productName",
+          "unitPriceCents",
+          "quantity",
+          "lineTotalCents"
+        ]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["awaiting_payment", "paid", "failed"]
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": ["manual_assisted", "dummy_gateway"]
+          },
+          "paymentReference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["EUR", "USD", "ZAR"]
+          },
+          "subtotalCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "shippingCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "totalCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "deliverySpeed": {
+            "type": "string",
+            "enum": ["normal", "express"]
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          }
+        },
+        "required": [
+          "orderRef",
+          "status",
+          "paymentMethod",
+          "currency",
+          "subtotalCents",
+          "shippingCents",
+          "totalCents",
+          "deliverySpeed",
+          "items"
+        ]
+      },
+      "CreatedOrder": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["awaiting_payment", "paid", "failed"]
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": ["manual_assisted", "dummy_gateway"]
+          },
+          "paymentReference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["EUR", "USD", "ZAR"]
+          },
+          "subtotalCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "shippingCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "totalCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "deliverySpeed": {
+            "type": "string",
+            "enum": ["normal", "express"]
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "manageToken": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "orderRef",
+          "status",
+          "paymentMethod",
+          "currency",
+          "subtotalCents",
+          "shippingCents",
+          "totalCents",
+          "deliverySpeed",
+          "items",
+          "manageToken"
+        ]
+      },
+      "OrderWorkflow": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "request_received",
+              "under_review",
+              "quote_sent",
+              "quote_accepted",
+              "payment_confirmed",
+              "dispatched",
+              "delivered",
+              "cancelled"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "quoteVersion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "quoteExpired": {
+            "type": "boolean"
+          },
+          "carrier": {
+            "type": "string"
+          },
+          "tracking": {
+            "type": "string"
+          },
+          "refundCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "nextAction": {
+            "type": "string"
+          },
+          "paymentReviewRequired": {
+            "type": "boolean"
+          },
+          "customerNotes": {
+            "type": "string"
+          },
+          "refundCurrency": {
+            "type": "string"
+          },
+          "remainingPaidCents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unreconciledRefundCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "refunds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "amountCents": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": ["amountCents", "currency", "createdAt"]
+            }
+          },
+          "quotes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "total_cents": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "shipping_cents": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "valid_until": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderQuoteItem"
+                  }
+                },
+                "expired": {
+                  "type": ["integer", "boolean"]
+                }
+              },
+              "required": [
+                "version",
+                "currency",
+                "total_cents",
+                "shipping_cents",
+                "valid_until",
+                "items"
+              ]
+            }
+          },
+          "estimate": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              },
+              "shippingCents": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "totalCents": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": ["currency", "shippingCents", "totalCents"]
+          },
+          "requestedItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestedOrderItem"
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "public_message": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "command_id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["action", "created_at"]
+            }
+          }
+        },
+        "required": [
+          "stage",
+          "version",
+          "quoteVersion",
+          "quoteExpired",
+          "carrier",
+          "tracking",
+          "refundCents",
+          "nextAction",
+          "quotes",
+          "history"
+        ]
+      },
+      "AcceptQuote": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "publicMessage": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": ["requestId", "version"]
+      },
+      "PaymentConfirmation": {
+        "type": "object",
+        "properties": {
+          "paymentReference": {
+            "type": "string"
+          },
+          "manageToken": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "SearchResults": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "href": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": ["title", "href", "category"]
+            }
+          }
+        },
+        "required": ["query", "count", "results"]
+      },
+      "ContactReceipt": {
+        "type": "object",
+        "properties": {
+          "received": {
+            "const": true
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["received", "requestId", "message"]
+      },
+      "ChatRequest": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": ["user", "assistant"]
+                },
+                "content": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["role", "content"]
+            },
+            "minItems": 1
+          },
+          "language": {
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["EUR", "USD", "ZAR"]
+          }
+        },
+        "required": ["messages"]
+      },
+      "ChatReply": {
+        "type": "object",
+        "properties": {
+          "reply": {
+            "type": "string",
+            "minLength": 1
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "source": {
+            "const": "published_catalogue"
+          }
+        },
+        "required": ["reply", "truncated"]
+      },
+      "AssistantError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "retryAfterMs": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["message"]
+      },
+      "TripPlanRequest": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string",
+            "enum": ["en", "de", "sn", "nd"]
+          },
+          "tripType": {
+            "type": "string",
+            "enum": ["one_way", "round_trip", "multi_trip"]
+          },
+          "origin": {
+            "type": "string"
+          },
+          "arrivalCity": {
+            "type": "string"
+          },
+          "departureAirport": {
+            "type": "string"
+          },
+          "arrivalAirport": {
+            "type": "string"
+          },
+          "arrivalAttraction": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "multiCity": {
+            "type": "boolean"
+          },
+          "multiCityCities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "season": {
+            "type": "string",
+            "enum": ["dry", "green", "shoulder"]
+          },
+          "budget": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "comfort": {
+            "type": "string",
+            "enum": ["budget", "standard", "premium"]
+          },
+          "days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 60
+          },
+          "travelers": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 70
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": []
+      },
+      "TripPlanReply": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": ["ai", "fallback"]
+          },
+          "plan": {
+            "$ref": "#/components/schemas/TripPlan"
+          }
+        },
+        "required": ["source", "plan"]
+      },
+      "AiCapabilities": {
+        "type": "object",
+        "properties": {
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "integrationsReady": {
+            "type": "boolean"
+          }
+        },
+        "required": ["domains", "integrationsReady"]
+      },
+      "PreferenceToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{48}$"
+          }
+        },
+        "required": ["token"]
+      },
+      "Ping": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "service": {
+            "const": "du-platform"
+          },
+          "commit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "uptimeSeconds": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "now": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "ok",
+          "service",
+          "commit",
+          "uptimeSeconds",
+          "startedAt",
+          "now"
+        ]
+      },
+      "OrderQuoteItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "productName": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "unitPriceCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lineTotalCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fulfilmentDetails": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "productId",
+          "productName",
+          "quantity",
+          "unitPriceCents",
+          "lineTotalCents"
+        ]
+      },
+      "RequestedOrderItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "unitPriceCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "quantity", "unitPriceCents"]
       }
     }
   }

@@ -5,8 +5,10 @@ It owns its dependencies, screens, API client and tests. It shares the existing
 account system through the backend HTTP API; the opaque session token is stored
 with Expo SecureStore and access tokens are held in memory.
 
-Use Node 22.13 or newer, Android Studio/SDK for Android, and macOS, Xcode and
-CocoaPods for iOS. The `.nvmrc` selects Node 24 for developers using nvm. On a
+The app uses Expo SDK 58 with React Native 0.88.1 and React 19.3.0. Use Node
+24.3 or later in the Node 24 line selected by `.nvmrc`, or Node 22.13 or later
+in the Node 22 line used by CI. Android development needs Android Studio/SDK;
+iOS development needs macOS, Xcode 26.4 or later and CocoaPods. On a
 Mac where `xcode-select` points to the Command Line Tools, select the full Xcode
 for this shell without changing the system-wide selection:
 
@@ -72,3 +74,7 @@ open their web equivalents in the platform browser view. A website handoff can
 require a separate sign-in; iOS browser views do not share Safari's cookies.
 See `../docs/mobile-first-review.md` for the
 feature matrix, verification results and remaining device/release checks.
+
+The subsequent fixes and current evidence are in
+`../docs/mobile-review-followup.md`. Native compilation and the remaining
+dependency audit findings are tracked separately in `../docs/mobile-validation.md`.

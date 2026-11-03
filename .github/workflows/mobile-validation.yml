@@ -1,0 +1,181 @@
+name: Native Mobile Validation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "du-platform-frontend/mobile/**"
+      - "du-platform-frontend/tooling/scripts/report-mobile-audit.mjs"
+      - "du-platform-frontend/tooling/scripts/tests/android-native-smoke*"
+      - ".github/workflows/mobile-validation.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "du-platform-frontend/mobile/**"
+      - "du-platform-frontend/tooling/scripts/report-mobile-audit.mjs"
+      - "du-platform-frontend/tooling/scripts/tests/android-native-smoke*"
+      - ".github/workflows/mobile-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: du-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "1"
+  EXPO_NO_TELEMETRY: "1"
+  # Compilation and launch checks do not use production accounts or services.
+  EXPO_PUBLIC_API_URL: "https://api.example.invalid/api"
+  EXPO_PUBLIC_WEB_URL: "https://www.example.invalid"
+
+jobs:
+  # This is a separate mobile release check. It must remain visibly failed when
+  # advisories are unresolved; it does not gate unrelated web/API deployments.
+  mobile-security:
+    name: Mobile dependency security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+      - name: Audit the actual mobile lockfile
+        id: audit
+        working-directory: du-platform-frontend/mobile
+        run: npm audit --package-lock-only --omit=dev --audit-level=moderate --json > "$RUNNER_TEMP/du-mobile-audit.json"
+      - name: Summarize mobile security status
+        if: always()
+        run: node du-platform-frontend/tooling/scripts/report-mobile-audit.mjs "$RUNNER_TEMP/du-mobile-audit.json"
+      - name: Preserve the complete audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-dependency-audit
+          path: ${{ runner.temp }}/du-mobile-audit.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  android-build:
+    name: Android native build and launch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      EXPO_NO_DOTENV: "1"
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install mobile dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Verify mobile types and behavior
+        run: |
+          npm run check
+          npm test
+          python3 ../tooling/scripts/tests/android-native-smoke.test.py
+      - name: Compile the Android emulator application
+        run: bash android/gradlew -p android :app:assembleDebug --no-daemon -PreactNativeArchitectures=x86_64
+      - name: Preserve the development APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: du-platform-frontend/mobile/android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enable emulator hardware acceleration
+        # Recommended Linux KVM setup from android-emulator-runner's README.
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+      - name: Launch and exercise the Android application
+        timeout-minutes: 20
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7_pro
+          cores: 2
+          ram-size: 2048M
+          avd-name: du-native-smoke
+          force-avd-creation: true
+          emulator-boot-timeout: 360
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none
+          disable-animations: true
+          disable-linux-hw-accel: false
+          working-directory: ./
+          # The runner tears down the emulator when this script exits. The
+          # script captures logcat, screenshots and UI XML before that happens.
+          script: python3 du-platform-frontend/tooling/scripts/tests/android-native-smoke.py --mobile-dir du-platform-frontend/mobile --apk du-platform-frontend/mobile/android/app/build/outputs/apk/debug/app-debug.apk --artifacts /tmp/du-native-android-smoke
+      - name: Preserve Android launch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-native-smoke
+          path: /tmp/du-native-android-smoke
+          if-no-files-found: warn
+          retention-days: 14
+
+  ios-build:
+    name: iOS native simulator build
+    # Expo SDK 58 needs Xcode 26.4+; macOS 26 supplies a compatible Xcode.
+    runs-on: macos-26
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - name: Show native toolchain versions
+        run: |
+          xcodebuild -version
+          pod --version
+      - name: Install mobile dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install iOS native dependencies
+        working-directory: du-platform-frontend/mobile/ios
+        run: pod install
+      - name: Compile the unsigned iOS simulator application
+        run: |
+          xcodebuild \
+            -workspace ios/DiasporaUnlocked.xcworkspace \
+            -scheme DiasporaUnlocked \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/du-ios-build" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            build
+      - name: Archive the simulator application
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$RUNNER_TEMP/du-ios-build/Build/Products/Debug-iphonesimulator/DiasporaUnlocked.app" \
+            "$RUNNER_TEMP/du-ios-simulator.zip"
+      - name: Preserve the simulator application
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-app
+          path: ${{ runner.temp }}/du-ios-simulator.zip
+          if-no-files-found: error
+          retention-days: 7

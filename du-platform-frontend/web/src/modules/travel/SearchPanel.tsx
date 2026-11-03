@@ -42,7 +42,14 @@ export function LocationField({
     setOpen(false);
   }
   return (
-    <div className="travel-location">
+    <div
+      className="travel-location"
+      onBlur={event => {
+        if (event.currentTarget.contains(event.relatedTarget)) return;
+        setOpen(false);
+        setQuery(null);
+      }}
+    >
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
@@ -59,10 +66,6 @@ export function LocationField({
           setQuery("");
           setOpen(true);
           setIndex(0);
-        }}
-        onBlur={() => {
-          setOpen(false);
-          setQuery(null);
         }}
         onChange={e => {
           setQuery(e.target.value);
@@ -101,11 +104,13 @@ export function LocationField({
               key={l.id}
               id={`${id}-${l.id}`}
               role="option"
+              tabIndex={-1}
               aria-selected={index === i}
-              onPointerDown={e => {
-                e.preventDefault();
-                select(l.id);
-              }}
+              // Keep mouse selection in the combobox. Touch selection waits
+              // for a click so scrolling the suggestions does not choose the
+              // airport under the user's finger at the start of the gesture.
+              onMouseDown={event => event.preventDefault()}
+              onClick={() => select(l.id)}
             >
               {l.name} · {l.id} · {l.country}
             </li>

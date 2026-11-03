@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 afterEach(() => {
   vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
   vi.resetModules();
 });
 it("production browser requests use the controlled same-origin API even with a dashboard override", async () => {
@@ -64,4 +65,188 @@ describe("session refresh errors", () => {
       }
     }
   );
+});
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>(done => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
+describe("session refresh isolation", () => {
+  it.each(["sign-out", "account switch"])(
+    "does not restore an old token or replay its request after %s",
+    async transition => {
+      vi.stubGlobal("window", {});
+      const { api, saveAuthToken, clearAuthToken, loadAuthToken } =
+        await import("./api");
+      saveAuthToken("old-access-token");
+      const started = deferred<void>();
+      const refreshed = deferred<string>();
+      let protectedRequests = 0;
+      api.defaults.adapter = async config => {
+        if (config.url === "/auth/token/refresh") {
+          started.resolve();
+          return {
+            config,
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            data: { accessToken: await refreshed.promise },
+          };
+        }
+        protectedRequests += 1;
+        throw { config, response: { status: 401 } };
+      };
+      const request = api.get("/travel/saved");
+      const rejected = expect(request).rejects.toMatchObject({
+        response: { status: 401 },
+      });
+      await started.promise;
+      if (transition === "sign-out") clearAuthToken();
+      else saveAuthToken("new-account-token");
+      refreshed.resolve("old-refreshed-token");
+      await rejected;
+      expect(loadAuthToken()).toBe(
+        transition === "sign-out" ? "" : "new-account-token"
+      );
+      expect(protectedRequests).toBe(1);
+    }
+  );
+
+  it("does not refresh a rejected request from before an account switch", async () => {
+    vi.stubGlobal("window", {});
+    const { api, saveAuthToken, loadAuthToken } = await import("./api");
+    saveAuthToken("old-account-token");
+    const sent = deferred<void>();
+    const rejected = deferred<void>();
+    let refreshes = 0;
+    api.defaults.adapter = async config => {
+      if (config.url === "/auth/token/refresh") {
+        refreshes += 1;
+        return {
+          config,
+          status: 200,
+          statusText: "OK",
+          headers: {},
+          data: { accessToken: "unexpected-token" },
+        };
+      }
+      sent.resolve();
+      await rejected.promise;
+      throw { config, response: { status: 401 } };
+    };
+    const request = api.get("/travel/saved");
+    const failure = expect(request).rejects.toMatchObject({
+      response: { status: 401 },
+    });
+    await sent.promise;
+    saveAuthToken("new-account-token");
+    rejected.resolve();
+    await failure;
+    expect(refreshes).toBe(0);
+    expect(loadAuthToken()).toBe("new-account-token");
+  });
+
+  it.each(["sign-out", "account switch"])(
+    "cancels a queued retry if %s happens before its auth interceptor runs",
+    async transition => {
+      vi.stubGlobal("window", {});
+      const { api, saveAuthToken, clearAuthToken, loadAuthToken } =
+        await import("./api");
+      saveAuthToken("expired-token");
+      const queued = deferred<void>();
+      const resume = deferred<void>();
+      let refreshes = 0;
+      let protectedRequests = 0;
+      // Axios runs request interceptors asynchronously in reverse order. Hold
+      // the replay after it is queued but before the auth interceptor runs.
+      api.interceptors.request.use(async config => {
+        if (config.url === "/travel/saved" && refreshes > 0) {
+          queued.resolve();
+          await resume.promise;
+        }
+        return config;
+      });
+      api.defaults.adapter = async config => {
+        if (config.url === "/auth/token/refresh") {
+          refreshes += 1;
+          return {
+            config,
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            data: { accessToken: "renewed-old-account-token" },
+          };
+        }
+        protectedRequests += 1;
+        if (protectedRequests === 1)
+          throw { config, response: { status: 401 } };
+        return {
+          config,
+          status: 200,
+          statusText: "OK",
+          headers: {},
+          data: { authorization: config.headers.get("Authorization") },
+        };
+      };
+      const request = api.get("/travel/saved");
+      const rejected = expect(request).rejects.toMatchObject({
+        code: "ERR_CANCELED",
+      });
+      await queued.promise;
+      if (transition === "sign-out") clearAuthToken();
+      else saveAuthToken("new-account-token");
+      resume.resolve();
+      await rejected;
+      expect(protectedRequests).toBe(1);
+      expect(loadAuthToken()).toBe(
+        transition === "sign-out" ? "" : "new-account-token"
+      );
+    }
+  );
+
+  it("deduplicates renewal within the current session and retries with its new token", async () => {
+    vi.stubGlobal("window", {});
+    const { api, saveAuthToken, loadAuthToken } = await import("./api");
+    saveAuthToken("expired-token");
+    const started = deferred<void>();
+    const refreshed = deferred<void>();
+    let refreshes = 0;
+    api.defaults.adapter = async config => {
+      if (config.url === "/auth/token/refresh") {
+        refreshes += 1;
+        started.resolve();
+        await refreshed.promise;
+        return {
+          config,
+          status: 200,
+          statusText: "OK",
+          headers: {},
+          data: { accessToken: "renewed-token" },
+        };
+      }
+      if (config.headers.get("Authorization") !== "Bearer renewed-token")
+        throw { config, response: { status: 401 } };
+      return {
+        config,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        data: { success: true, data: { owner: "current-account" } },
+      };
+    };
+    const requests = [api.get("/auth/me"), api.get("/travel/saved")];
+    await started.promise;
+    refreshed.resolve();
+    const responses = await Promise.all(requests);
+    expect(refreshes).toBe(1);
+    expect(loadAuthToken()).toBe("renewed-token");
+    expect(responses.map(response => response.data)).toEqual([
+      { owner: "current-account" },
+      { owner: "current-account" },
+    ]);
+  });
 });
