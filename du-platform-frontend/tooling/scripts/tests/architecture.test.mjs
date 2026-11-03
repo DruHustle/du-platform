@@ -51,13 +51,18 @@ test("accepts independent application inputs", async () => {
 
 test("rejects a cross-project source import", async () => {
   await withFixture(async root => {
-    await fs.writeFile(
-      path.join(root, "du-platform-frontend/web/app.ts"),
+    for (const source of [
       'import /* boundary */ "../../mobile/app";',
-    );
-    const result = run(root);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /cross-project import/);
+      'module.require("../../mobile/app");',
+    ]) {
+      await fs.writeFile(
+        path.join(root, "du-platform-frontend/web/app.ts"),
+        source,
+      );
+      const result = run(root);
+      assert.notEqual(result.status, 0, source);
+      assert.match(result.stderr, /cross-project import/, source);
+    }
   });
 });
 
@@ -132,6 +137,7 @@ test("rejects undeclared literal imports across JavaScript and TypeScript forms"
       'export { value } from /* source */ "missing-package";',
       'const lazy = import /* dynamic */ ("missing-package");',
       'const dependency = require /* runtime */ ("missing-package");',
+      'const dependency = module.require("missing-package");',
       'import Imported = require("missing-package");',
       'type Imported = import("missing-package").Imported;',
       'const lazy = import(\u0060missing-package\u0060);',
