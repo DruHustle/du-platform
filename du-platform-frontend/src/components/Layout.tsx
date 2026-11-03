@@ -133,6 +133,8 @@ export default function Layout({ children }: LayoutProps) {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
+  const [authRetry, setAuthRetry] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
   const [newsletterFeedback, setNewsletterFeedback] = useState<{
@@ -192,11 +194,13 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     let mounted = true;
     const fetchMe = async () => {
+      setAuthLoading(true);
+      setAuthError(false);
       try {
         const nextUser = await resolveCurrentUserBootstrap();
         if (mounted) setUser(nextUser);
       } catch {
-        if (mounted) setUser(null);
+        if (mounted) setAuthError(true);
       } finally {
         if (mounted) setAuthLoading(false);
       }
@@ -205,7 +209,7 @@ export default function Layout({ children }: LayoutProps) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [authRetry]);
 
   const handleLogout = async () => {
     try {
@@ -712,6 +716,15 @@ export default function Layout({ children }: LayoutProps) {
                         className="h-4 w-24 rounded bg-white/15 animate-pulse"
                       />
                     </DropdownMenuItem>
+                  ) : authError ? (
+                    <DropdownMenuItem
+                      onSelect={() => setAuthRetry(value => value + 1)}
+                    >
+                      {tr(
+                        "account.session_retry",
+                        "Account unavailable. Try again"
+                      )}
+                    </DropdownMenuItem>
                   ) : user ? (
                     <>
                       <DropdownMenuItem
@@ -847,6 +860,17 @@ export default function Layout({ children }: LayoutProps) {
               <div className="space-y-2 px-1">
                 {authLoading ? (
                   <div className="h-9 w-full rounded-xl border border-white/10 bg-white/10 animate-pulse" />
+                ) : authError ? (
+                  <Button
+                    variant="ghost"
+                    className="min-h-11 w-full justify-start text-white"
+                    onClick={() => setAuthRetry(value => value + 1)}
+                  >
+                    {tr(
+                      "account.session_retry",
+                      "Account unavailable. Try again"
+                    )}
+                  </Button>
                 ) : user ? (
                   <>
                     <Button

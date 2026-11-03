@@ -1,4 +1,5 @@
 .git
+.docker-build.lock
 .env*
 **/.env*
 node_modules

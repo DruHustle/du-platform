@@ -49,6 +49,32 @@ describe("current user bootstrap", () => {
     expect(api.get).toHaveBeenCalledOnce();
   });
 
+  it("does not cache a service failure as a signed-out session", async () => {
+    vi.mocked(api.get).mockRejectedValueOnce(new Error("offline"));
+    await expect(resolveCurrentUserBootstrap()).rejects.toThrow("offline");
+    vi.mocked(api.get).mockResolvedValueOnce({ data: { user: oldUser } });
+    await expect(resolveCurrentUserBootstrap()).resolves.toEqual(oldUser);
+    expect(api.get).toHaveBeenCalledTimes(2);
+  });
+
+  it("treats an unauthorized response as a signed-out session", async () => {
+    vi.mocked(api.get).mockRejectedValueOnce({ response: { status: 401 } });
+    await expect(resolveCurrentUserBootstrap()).resolves.toBeNull();
+  });
+
+  it("ignores a failed lookup from before an account switch", async () => {
+    let reject!: (error: Error) => void;
+    vi.mocked(api.get).mockReturnValueOnce(
+      new Promise((_resolve, fail) => {
+        reject = fail;
+      })
+    );
+    const lookup = resolveCurrentUserBootstrap();
+    primeCurrentUserBootstrap(newUser);
+    reject(new Error("offline"));
+    await expect(lookup).resolves.toEqual(newUser);
+  });
+
   it("does not restore a logged-out user when an old lookup finishes", async () => {
     const complete = pendingLookup();
     const lookup = resolveCurrentUserBootstrap();

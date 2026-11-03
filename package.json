@@ -32,6 +32,8 @@
     "translations:check": "python3 scripts/sync_translations.py --mode check --require-translated --allow-same-keys-file scripts/translation_allow_same_keys.txt",
     "build:frontend": "vite build --config du-platform-frontend/vite.config.ts && node --import tsx scripts/build-route-documents.mjs && pnpm check:deployment-size",
     "build:backend": "esbuild du-platform-backend/server.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "docker:build": "python3 deploy/oracle/manage-images.py build-local",
+    "docker:cleanup": "python3 deploy/oracle/manage-images.py cleanup",
     "check:frontend": "tsc --noEmit -p du-platform-frontend/tsconfig.json",
     "check:backend": "tsc --noEmit -p du-platform-backend/tsconfig.json",
     "format:check": "prettier --check .",
@@ -48,7 +50,7 @@
     "test:e2e:discovery": "node scripts/tests/e2e-discovery.mjs",
     "test:e2e:vr:music": "node scripts/tests/e2e-vr-music.mjs",
     "test:e2e:shop:integrated": "node --import tsx scripts/tests/e2e-shop-integrated.mjs",
-    "test:deploy": "node --test scripts/tests/oracle-deploy.test.mjs && PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/oracle-release-worker.test.py && node --test scripts/tests/pilot-deploy.test.mjs scripts/tests/vercel-release.test.mjs",
+    "test:deploy": "node --test scripts/tests/oracle-deploy.test.mjs && PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/docker-images.test.py && PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/oracle-release-worker.test.py && node --test scripts/tests/pilot-deploy.test.mjs scripts/tests/vercel-release.test.mjs",
     "test:e2e:shop:admin": "node scripts/tests/e2e-shop-admin.mjs",
     "test:e2e:pilot": "node scripts/tests/e2e-pilot.mjs",
     "test:e2e:pilot:layout": "node --import tsx scripts/tests/e2e-pilot-layout.mjs",
@@ -134,7 +136,8 @@
       "fflate@>=0.6.0 <0.6.11": "0.6.11",
       "mdast-util-to-hast@<13.2.1": "13.2.1",
       "body-parser@<1.20.9": "1.20.9",
-      "qs@<6.16.1": "6.16.1"
+      "qs@<6.16.1": "6.16.1",
+      "follow-redirects@<1.16.2": "1.16.2"
     }
   }
 }

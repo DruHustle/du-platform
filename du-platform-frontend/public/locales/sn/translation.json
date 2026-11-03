@@ -11,6 +11,7 @@
   "about_us": "Iine midzi muZimbabwe, Diaspora Unlocked inogamuchira vanhu vose vanobva kumaodzanyemba kweAfrica vari kunze kwenyika, nezvigadzirwa zvekumusha, ruzivo rwenzendo mudunhu uye mazano ebhizinesi neAI.",
   "select_lang": "Sarudza Mutauro",
   "account": {
+    "session_retry": "Akaundi haisi kuwanikwa. Edzazve",
     "logout": "Buda",
     "logout_failed": "Hatina kukwanisa kukubudisa muakaundi. Ndapota edza zvakare."
   },

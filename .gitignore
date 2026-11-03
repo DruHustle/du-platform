@@ -98,6 +98,7 @@ Thumbs.db
 .rts2_cache_*/
 *.orig
 *.bak
+/.docker-build.lock
 
 # Private Oracle runtime environment overrides
 /deploy/oracle/compose.runtime*.json

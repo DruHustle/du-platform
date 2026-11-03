@@ -11,6 +11,7 @@
   "about_us": "Rooted in Zimbabwe, Diaspora Unlocked welcomes the wider Southern African diaspora with products from home, regional travel research and practical business and AI guidance.",
   "select_lang": "Select Language",
   "account": {
+    "session_retry": "Account unavailable. Try again",
     "logout": "Logout",
     "logout_failed": "Unable to sign out. Please try again."
   },
