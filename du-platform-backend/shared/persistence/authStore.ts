@@ -152,6 +152,17 @@ export async function findUserById(id: number) {
   }
 }
 
+export async function updateUserFullName(id: number, fullName: string) {
+  if (!db) {
+    const user = memoryUsers.find(entry => entry.id === id);
+    if (!user) return null;
+    user.full_name = fullName;
+    return user;
+  }
+  await db.execute("UPDATE users SET full_name = ? WHERE id = ?", [fullName, id]);
+  return findUserById(id);
+}
+
 export async function createUser(
   fullName: string,
   email: string,

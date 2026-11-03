@@ -1,0 +1,109 @@
+# Mobile-first review and migration checklist
+
+Status: **in progress**. The inventory records the starting implementation and
+the remaining review work; a route is not considered fully verified solely because it appears here. Route names
+are the current public URLs; legacy redirects must remain valid during migration.
+
+## Route-to-feature matrix
+
+| Route(s)                                                                                                             | Existing feature / initial issue                                                                  | Intended change                                                                                                | Verification and current result                                                     |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `/`                                                                                                                  | Zimbabwe-first home, Victoria Falls and discovery; layout needs a full small-screen audit         | Compact, accessible mobile hierarchy; keep visible waterfall animation, reduced-motion and data-saver handling | Width samples and Chromium flowing-water, offscreen, reduced-motion, data-saver and navigation checks passed; full interaction audit **pending** |
+| `/travel`, `/travel/explore`                                                                                         | Destination discovery and information                                                             | Preserve content, search and navigation; compact cards                                                         | Chromium/WebKit Travel journey passed; Android research search tested, remaining native discovery **pending** |
+| `/travel/flights`, `/travel/stays`, `/travel/car-hire`                                                               | Research and provider handoff; not a booking engine                                               | Preserve filters, service states and external handoff                                                          | Chromium/WebKit provider fixture passed; Android search and revalidation passed, external handoff and remaining native paths **pending** |
+| `/travel/my-trips`                                                                                                   | Browser draft and account-backed saved trips; failure could appear as empty                       | Distinguish failure, loading and empty; retry                                                                  | Implementation updated; full browser and database journey **pending**               |
+| `/travel/weather`                                                                                                    | Location and forecasts                                                                            | Preserve permission, loading, error and location behavior                                                      | Six Chromium/WebKit weather journeys passed; native web handoff **pending** |
+| `/travel/planner`                                                                                                    | Onesa trip planning                                                                               | Preserve input and generated-plan handoff                                                                      | Browser sample/AI, PDF and outage paths passed; native handoff **pending**                                             |
+| `/travel/virtual-experience`, `/travel/augmented-experience`                                                         | Immersive experiences                                                                             | Defer heavy assets, retain accessible device fallbacks                                                         | Device and reduced-motion tests: **pending**                                        |
+| `/tourism`, `/tourism/`, `/tourism.html` and legacy `/onesa-ai-*` travel URLs                                        | Redirects to current Travel paths                                                                 | Preserve redirects and query strings                                                                           | Hosting, direct links and history: **pending**                                      |
+| `/shop`, `/shop/products`, `/shop/product/:slug`                                                                     | Product discovery, filtering, detail and cart                                                     | Keep catalogue accurate, compact layouts, preserve assisted-order semantics                                    | Shop browser cart/retry passed; native journey **pending**                                 |
+| `/shop/interest`, `/shop/order-status`                                                                               | Product-interest and order follow-up                                                              | Preserve request, status access and privacy                                                                    | MySQL workflow tests passed; real email/provider delivery **pending**                                    |
+| `/investment`, `/investment/opportunities`, `/investment/projects/:id`, `/ntir`                                      | Investment content, project detail and registry search                                            | Preserve content and filters in mobile layouts                                                                 | Chromium discovery, filtering and detail navigation passed; registry and native handoff **pending** |
+| `/technology`                                                                                                        | Product and business information                                                                  | Maintain readable compact content                                                                              | Chromium discovery and feature links passed; native handoff **pending** |
+| `/search`                                                                                                            | Site search                                                                                       | Preserve query state, navigation and failure handling                                                          | Chromium navigation and query history passed; API/native search **pending** |
+| `/onesa-ai-chat`, `/coming-soon`                                                                                     | Assistant and legacy redirect                                                                     | Accessible, keyboard-aware conversation with clear failures                                                    | Browser/native API and redirect: **pending**                                        |
+| `/login`, `/register`                                                                                                | Sign-in and account creation                                                                      | Preserve identity, validation and secure session behavior                                                      | API account tests passed; Android registration, sign-in, logout and session restoration passed; iOS **pending** |
+| `/forgot-password`, `/reset-password`                                                                                | Recovery request and token-based completion                                                       | Preserve input on errors, enforce expired and reused tokens                                                    | MySQL reset tests passed; delivery and device link **pending**                                     |
+| `/admin`                                                                                                             | Protected dashboard and business operations; session service failure could be mistaken for logout | Preserve server authorization and show service failure                                                         | Error path updated; role and protected mutation tests **pending**                   |
+| `/newsletter`                                                                                                        | Newsletter preferences                                                                            | Preserve subscription and opt-out flows                                                                        | Fifteen controlled Chromium/MySQL subscription, authorization, campaign and opt-out checks passed; live email delivery **pending** |
+| `/legal-notice`, `/delivery-and-returns`, `/regulations`, `/cookie-settings`, `/privacy-policy`, `/terms-of-service` | Policies, consent and preferences                                                                 | Keep direct links, legible content and controls                                                                | Browser and native handoff: **pending**                                             |
+| `/404` and unknown routes                                                                                            | Not-found handling                                                                                | Preserve status and recovery navigation                                                                        | Direct links and deployment routing: **pending**                                    |
+| Contact, newsletter and account controls in site layout                                                              | Shared web navigation and forms; outage could look like sign-out                                  | Clear service errors, readable fields and accessible mobile controls                                           | Session error UI updated; complete controls, keyboard and browser tests **pending** |
+
+## Web/mobile feature matrix
+
+| Feature | Web | Native | Evidence and limitations |
+| --- | --- | --- | --- |
+| Home, navigation and site search | Existing routes and search | Native tabs, stack and API search | Native app uses website handoff for business/project information; full device journey remains to be verified. |
+| Product discovery, detail and cart | Search/filter, detail, cart | Native catalogue, category/search, product details and basket | Product data and published details come from the API; no catalogue is silently substituted on failure. Android showed the explicitly labeled sample state. New catalogue responses advertise API-owned images; older backends use the configured public asset origin. |
+| Assisted orders and follow-up | Request, quote and status | Request, secure receipt, status and quote acceptance | No payment is collected by the app. MySQL order workflow tests cover persistence and idempotency; native end-to-end remains to be verified. |
+| Travel research and saved searches | Flights, stays, car-hire handoff, saved trips | Flights and stays for one adult, saved searches and provider handoff | More travellers, car hire, destination guides and immersive experiences use the website. Results are research, not a booking. |
+| Account, recovery and profile | Login, registration and recovery | Native login, registration, recovery, reset links and profile name | Same backend accounts; native opaque session in secure storage, browser retains HttpOnly cookie. Device recovery links remain to be verified. |
+| Assistant and contact | Chat and contact | Native chat and contact | Provider/email effects require a controlled environment for end-to-end testing. |
+| Newsletter, legal pages and administration | Existing web routes | Website handoff where relevant | Administrative authorization remains server-enforced; native admin screens are not implemented. Browser views may require a separate website sign-in. |
+
+## Architecture and delivery checklist
+
+| Initial issue | Change | Verification / result |
+| --- | --- | --- |
+| Repository root contained application-independent files alongside the projects | Moved docs and integration tooling under `du-platform-frontend/` and Oracle deployment files under `du-platform-backend/`; retained `.git` and `.github` for the single Git repository and working GitHub Actions | The root-layout guard rejects additional root files and folders. Local environment and certificate files remain ignored inside their owning applications. |
+| Web and backend depended on root `shared/` and centralized installation | Web owns browser code under `du-platform-frontend/web/`; backend owns domain data and rules under `du-platform-backend/` | `node du-platform-frontend/tooling/scripts/check-architecture.mjs` passed. `du-platform-frontend/tooling/scripts/test-isolation.mjs` installed and built each app from its own isolated copy. |
+| Backend served the SPA | API runs independently; Vercel owns web hosting and proxy routing; the combined server is test-only | Backend isolated build and deployment tests passed. Verify deployed proxy and rollback on staging before release. |
+| No native implementation | Expo React Native app with tracked Android and iOS projects, local client and secure session storage | Both platform JS bundles exported in isolation; Android debug APK built. Simulator/device customer journeys and iOS build are tracked below. |
+| Shared catalogue and travel reference data | Backend returns catalogue pricing and travel reference data through additive API responses; clients keep local presentation and validation | Contract/unit tests and browser fixtures pass. Assisted requests remain available without old APIs' missing pricing metadata, with the server calculating totals. Deploy the additive backend before web to make Travel reference data available. |
+| Paths in CI and deployments referred to the old structure | Updated CI, the app-local Vercel configuration and the backend-only Docker context | Deployment safety tests passed. [Isolated preview](https://du-platform-hq0pk4lk5-druhustles-projects.vercel.app) passed noindex, CSP, direct product link and API-isolation checks. The installed Oracle release worker must be updated before the first release using this layout. |
+| Session outages appeared to be sign-outs | Distinguish unavailable session service from an unauthorized session and expose retry | Web unit tests pass; native restoration, expiry and device interruptions need device-level confirmation. |
+
+## Verification recorded for this increment
+
+- `pnpm --dir du-platform-frontend/web test`: 140 passed. Web production build and TypeScript check passed.
+- Backend from an isolated copy with disposable local MySQL 8.4: `SHOP_TEST_DATABASE_URL=... NEWSLETTER_TEST_DATABASE_URL=... pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 --minWorkers=1 --hookTimeout=60000 --testTimeout=60000`: 411 passed, including transactional assisted orders, password reset, authorization and messaging tests. An earlier parallel run timed out during database setup under build load; the serial rerun passed.
+- `TRAVEL_BROWSER=chromium pnpm --dir du-platform-frontend/tooling test:e2e:travel` and `TRAVEL_BROWSER=webkit pnpm --dir du-platform-frontend/tooling test:e2e:travel`: 42 checks passed in each engine. A saved airport display race found by these checks was fixed and rerun.
+- Chromium navigation tests passed at 375, 768 and 1440 pixels, including lazy destinations, browser history, keyboard navigation and continuous waterfall motion.
+- Chromium discovery tests passed at 375, 768 and 1440 pixels for home, technology, investment, Travel and regulations, including translated layouts, touch and keyboard controls, reduced motion and data-saving fallback.
+- The controlled UI consistency suite passed 122 checks each in Chromium and WebKit, covering route rendering, dialogs, form surfaces, synthetic admin views and footer controls at 375, 768 and 1440 pixels. It does not replace a complete assistive-technology or real-keyboard audit.
+- Six controlled Weather browser journeys passed in Chromium and WebKit at 375, 768 and 1440 pixels.
+- `pnpm --dir du-platform-frontend/tooling test:e2e:newsletter` passed 15 checks against disposable MySQL and a mock email provider, including subscription confirmation, admin authorization, idempotent campaign queueing and opt-out.
+- The controlled `test:e2e:pilot` workflow passed in Chromium and WebKit against a disposable MySQL database: order persistence, private grants, server authorization, quote acceptance, payment-reference recording, dispatch, refunds and duplicate-command reconciliation. No real payment or message was sent.
+- `pnpm --dir du-platform-frontend/tooling test:e2e:shop` passed in Chromium and WebKit: cart, checkout layout, controlled retry and unavailable-catalogue checks at 375, 768 and 1440 pixels, plus the older catalogue without pricing metadata. `pnpm --dir du-platform-frontend/tooling test:e2e:offline`: 31 passed, including trip-planner outage, AR and simulated VR flows.
+- `pnpm --dir du-platform-frontend/tooling test:deploy`: passed Oracle, Vercel and deployment guard tests. The backend-only Docker image built and a test container served `/api/ping` and a product image successfully. `node du-platform-frontend/tooling/scripts/test-isolation.mjs` passed standalone install and build for all three applications; mobile's `build` command exports JavaScript and is not a native binary build.
+- Mobile TypeScript and fourteen unit tests passed, including local account-data removal when server logout is unavailable and Travel link mapping. Android `assembleDebug` succeeded with Android Studio's JDK and `JAVA_TOOL_OPTIONS=--enable-native-access=ALL-UNNAMED`. Android emulator: a lower-load retry verified registration, session restoration after force-stop, sign-out, sign-in, profile update, shop sample labeling, Travel search and provider revalidation, reset deep link, invalid-token feedback and Android back. With the updated build, the stays deep link selected the native stays tab and the car-hire handoff opened Chrome's first-run screen; website page loading was not verified. The initial high-load run had an input timeout. The app was removed from the test emulator afterward. The updated iOS app built successfully for the ARM64 simulator, and an earlier build opened the development launcher. Screen interaction remains blocked because this Xcode installation has no Simulator.app GUI to dismiss the first-run prompt. Offline logout has unit coverage but has not yet been verified on a device.
+- Screenshots and single-sample local metrics are in `du-platform-frontend/docs/images/mobile-first/` and `du-platform-frontend/docs/mobile-first-measurements.json`. They use controlled API failures, reduced motion and no network throttling; they are not field performance measurements. At 390px in one Chromium sample, home JavaScript resources decreased from 968,554 to 940,885 encoded bytes and LCP was 116ms before versus 108ms after. These single local readings are noisy and do not establish a field improvement. Check every route and requested interaction before declaring the mobile-first audit complete.
+
+## Release and rollback
+
+Ship the additive backend API first, verify its health and controlled workflows,
+then release the web build and native clients independently. Keep the previous
+backend image and web deployment for rollback. Rolling back the backend before the
+new web client will make Travel reference data and price estimates unavailable,
+so roll back web first if reverting both. No live provider, email,
+store publication, signing, universal-link association, a backend staging environment or production
+release is implied by local tests. Confirm those in the appropriate environment.
+
+## Dependency audit
+
+On 2026-11-03, `npm audit --omit=dev` for mobile reported 13 findings
+(2 high, 9 moderate, 2 low), including transitive Expo CLI dependencies. The
+registry's automated suggestion includes an incompatible major Expo change;
+it is not evidence of a safe fix. Review supported Expo updates and remediate
+the remaining advisories before release; no major override has been assumed
+safe without native regression testing.
+
+## Remaining implementation gaps
+
+- The versioned OpenAPI document covers the principal client and administrative
+  operations, but several operations still need complete request/response schemas
+  and a route-coverage check. It must not yet be treated as a complete contract
+  for every existing endpoint.
+- The trip-plan generator now runs only on the backend. Client-side validation
+  and stable route IDs remain local to each application; review the remaining
+  client contracts for drift as the API evolves.
+- The route matrix above identifies a broad set of interactions that have not
+  received complete keyboard, accessibility, slow-network and device testing.
+  The four-page viewport measurements do not verify every route or control.
+
+- Local and preview builds omit product-specific static SEO documents. Production
+  builds attempt a published public catalogue snapshot and continue with generic
+  routing if it is unavailable; product pages still load their data at runtime.
+  `DU_CATALOGUE_STRATEGY=published` makes the snapshot mandatory. Product-specific
+  indexing during a catalogue outage remains a limitation.

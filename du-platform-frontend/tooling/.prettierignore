@@ -1,0 +1,10 @@
+dist
+node_modules
+.git
+*.min.js
+*.min.css
+**/.local-root/
+**/.cert/
+**/.claude/
+**/.env
+**/.env.*

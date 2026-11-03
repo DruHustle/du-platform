@@ -1,4 +1,4 @@
-import { CUSTOMER_LANGUAGES } from "../../../shared/customerLanguage";
+import { CUSTOMER_LANGUAGES } from "../../domain/customerLanguage";
 import {
   Router,
   type Request,

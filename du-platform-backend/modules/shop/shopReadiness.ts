@@ -4,7 +4,7 @@ import {
   shopPilotApprovalSchema,
   type PublicShopReadiness,
   type ShopPilotApproval,
-} from "../../../shared/shopReadiness";
+} from "../../domain/shopReadiness";
 import { ShopRequestError } from "../../shared/persistence/shopStore";
 
 async function load(env: NodeJS.ProcessEnv = process.env, now = Date.now()) {

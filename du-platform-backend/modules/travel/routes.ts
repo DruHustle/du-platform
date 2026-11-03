@@ -9,7 +9,9 @@ import {
   travelCapabilities,
   travelCriteriaSchema,
   travelQuoteSchema,
-} from "../../../shared/travel";
+  travelLocations,
+  providerResources,
+} from "../../domain/travel";
 import {
   publicTravelSearch,
   TravelProviderError,
@@ -24,7 +26,7 @@ export function createTravelRouter() {
     res.setHeader("Cache-Control", "private, no-store");
     next();
   });
-  router.get("/capabilities", (_req, res) => res.json(ok(travelCapabilities)));
+  router.get("/capabilities", (_req, res) => res.json(ok({ ...travelCapabilities, locations: travelLocations, resources: providerResources })));
   const searchInput = z
     .object({
       category: z.enum(["flights", "stays"]),
