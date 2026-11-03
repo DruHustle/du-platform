@@ -140,7 +140,7 @@ class AndroidSmoke:
     def capture(self, name, xml=None, diagnostic=False):
         if xml is not None:
             (self.artifacts / f"{name}.xml").write_bytes(xml)
-        png = self.adb("exec-out", "screencap", "-p", timeout=6, diagnostic=diagnostic)
+        png = self.adb("exec-out", "screencap", "-p", timeout=15, diagnostic=diagnostic)
         if not png.startswith(b"\x89PNG\r\n\x1a\n"):
             raise SmokeFailure("adb screencap did not return a PNG")
         (self.artifacts / f"{name}.png").write_bytes(png)
@@ -216,7 +216,9 @@ class AndroidSmoke:
             if parsed.scheme != "https" or not (parsed.hostname or "").endswith(".invalid") or parsed.username or parsed.password:
                 raise SmokeFailure(f"{key} must use an HTTPS .invalid test origin")
             env[key] = value
-        env.update({"CI": "1", "EXPO_NO_DOTENV": "1", "EXPO_NO_TELEMETRY": "1"})
+        # --offline is a host-selection flag that conflicts with --localhost.
+        # EXPO_OFFLINE disables CLI network requests without changing the host.
+        env.update({"CI": "1", "EXPO_NO_DOTENV": "1", "EXPO_NO_TELEMETRY": "1", "EXPO_OFFLINE": "1"})
         env.pop("EXPO_NO_CLIENT_ENV_VARS", None)
         # Never attach this test to somebody else's Metro/environment.
         try:
@@ -227,7 +229,7 @@ class AndroidSmoke:
         (self.artifacts / "test-origins.json").write_text(json.dumps({key: env[key] for key in defaults}, indent=2) + "\n")
         self.metro_log = (self.artifacts / "metro.log").open("wb")
         self.metro = subprocess.Popen(
-            [str(self.mobile / "node_modules/.bin/expo"), "start", "--dev-client", "--localhost", "--port", "8081", "--offline"],
+            [str(self.mobile / "node_modules/.bin/expo"), "start", "--dev-client", "--localhost", "--port", "8081"],
             cwd=self.mobile, env=env, stdin=subprocess.DEVNULL,
             stdout=self.metro_log, stderr=subprocess.STDOUT, start_new_session=True,
         )
