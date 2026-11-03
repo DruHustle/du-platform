@@ -12,9 +12,9 @@ import { sealOrderAccess, openOrderAccess } from "../shop/orderAccess";
 import { NewsletterService } from "../newsletter/service";
 import { newsletterOrigin, renderNewsletter } from "../newsletter/content";
 import type { NewsletterEmail } from "../newsletter/provider";
-import { customerLanguage } from "../../../shared/customerLanguage";
+import { customerLanguage } from "../../domain/customerLanguage";
 import { contactInquirySchema } from "./dto/notification.dto";
-import copy from "../../../shared/transactionalEmailCopy.json";
+import copy from "../../resources/transactionalEmailCopy.json";
 
 export async function enqueueTransactional(
   c: PoolConnection,

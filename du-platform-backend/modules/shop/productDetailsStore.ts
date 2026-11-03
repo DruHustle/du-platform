@@ -1,5 +1,5 @@
 import { db } from "../../shared/databaseRuntime";
-import { productDetailsSchema } from "../../../shared/productDetails";
+import { productDetailsSchema } from "../../domain/productDetails";
 import { ShopRequestError } from "../../shared/persistence/shopStore";
 
 // This capability exposes only owner-published product information. It accepts a

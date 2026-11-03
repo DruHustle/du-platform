@@ -6,6 +6,7 @@ import { AuthController } from "../controllers/authController";
 import {
   validateForgotPassword,
   validateLogin,
+  validateProfile,
   validateRegister,
   validateResetPassword,
 } from "../validators";
@@ -39,6 +40,27 @@ export function createAuthModuleRouter() {
     validateLogin,
     controller.login
   );
+  // Use the same rate-limit buckets and validation as browser authentication.
+  router.post(
+    "/native/register",
+    rateLimiter({
+      keyPrefix: "api:auth:register",
+      windowMs: 5 * 60_000,
+      maxRequests: 10,
+    }),
+    validateRegister,
+    controller.nativeRegister
+  );
+  router.post(
+    "/native/login",
+    rateLimiter({
+      keyPrefix: "api:auth:login",
+      windowMs: 5 * 60_000,
+      maxRequests: 12,
+    }),
+    validateLogin,
+    controller.nativeLogin
+  );
   router.post("/logout", controller.logout);
   router.post(
     "/forgot-password",
@@ -71,6 +93,14 @@ export function createAuthModuleRouter() {
       keyByUser: true,
     }),
     controller.me
+  );
+  router.put(
+    "/profile",
+    requireJwtAuth,
+    requireCurrentUser,
+    rateLimiter({ keyPrefix: "api:auth:profile", windowMs: 60_000, maxRequests: 10, keyByUser: true }),
+    validateProfile,
+    controller.updateProfile
   );
   router.post(
     "/token/refresh",

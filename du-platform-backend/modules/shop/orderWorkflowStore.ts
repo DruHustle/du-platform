@@ -15,7 +15,7 @@ import {
   permittedOrderTransition,
   type OrderStage,
   ORDER_STAGES,
-} from "../../../shared/orderWorkflow";
+} from "../../domain/orderWorkflow";
 
 function pool() {
   if (!db)
@@ -192,7 +192,7 @@ export async function readOrderWorkspace(ref: string, token?: string) {
     const { access_grant: _sealed, ...safeState } = state;
     return {
       order: safeOrder,
-      state: { ...safeState, ...publicState },
+      state: { ...safeState, ...publicState, allowedTransitions: ORDER_STAGES.filter(next => permittedOrderTransition(stage, next)) },
       items,
       snapshots: snapshots[0] ? JSON.parse(snapshots[0].items) : null,
       quotes: parsedQuotes,

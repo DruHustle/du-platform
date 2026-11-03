@@ -9,7 +9,10 @@ import { applyOrderCommand, readOrderWorkspace } from "../orderWorkflowStore";
 import { orderApiError } from "../orderAdminRoutes";
 import { ok } from "../../../shared/responseFormatter";
 import { rateLimiter } from "../../../core/rateLimiter";
-import { Router } from "express";
+import { Router, static as serveStatic } from "express";
+import path from "node:path";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { ShopController } from "../controllers/shopController";
 import {
   validateCreateOrder,
@@ -20,6 +23,13 @@ import {
 export function createShopModuleRouter() {
   const router = Router();
   const controller = new ShopController();
+  const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+  // Source and bundled server have different relative locations.
+  const assetCandidates = [path.resolve(moduleDir, "../assets/shop"), path.resolve(moduleDir, "../../../assets/shop")];
+  const assetDirectory = assetCandidates.find(existsSync) ?? assetCandidates[0];
+  router.use("/assets", serveStatic(assetDirectory, {
+    fallthrough: true, index: false, maxAge: "1h",
+  }));
   router.get("/readiness", async (_req, res) => {
     res.setHeader("Cache-Control", "no-store");
     res.json(ok(await publicShopReadiness()));

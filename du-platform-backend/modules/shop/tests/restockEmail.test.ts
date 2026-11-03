@@ -11,7 +11,7 @@ import mysql, { type Pool, type RowDataPacket } from "mysql2/promise";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
+import { SHOP_READINESS_CHECKS } from "../../../domain/shopReadiness";
 let pool: Pool | null = null;
 vi.mock("../../../shared/databaseRuntime", () => ({
   get db() {

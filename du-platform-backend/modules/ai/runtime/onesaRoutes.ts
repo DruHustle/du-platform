@@ -1,10 +1,10 @@
-import { PUBLIC_SITE_ACTIONS } from "../../../../shared/publicSiteInfo";
+import { PUBLIC_SITE_ACTIONS } from "../../../domain/publicSiteInfo";
 import { asksAboutCatalogue, catalogueReply } from "./catalogueContext";
 import {
   buildSampleTripPlan,
   validateTripPlan,
   type PlanResult as TripPlanResult,
-} from "../../../../shared/tripPlanning";
+} from "../../../domain/tripPlanning";
 import type express from "express";
 import { IncompleteOnesaReplyError } from "./replyCompletion";
 

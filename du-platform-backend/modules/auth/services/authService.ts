@@ -219,6 +219,12 @@ export class AuthService {
     return { user: this.toPublicUser(user) };
   }
 
+  async updateProfile(userId: number, fullName: string) {
+    const user = await this.repository.updateFullName(userId, fullName);
+    if (!user) throw new AuthServiceError("AUTH_UNAUTHORIZED", 401, "Unauthorized.");
+    return this.currentUser(user);
+  }
+
   refresh(user: Record<string, unknown>) {
     return {
       message: "Token refreshed.",

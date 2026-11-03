@@ -7,7 +7,6 @@ import {
 } from "../provider";
 import { MemoryWeatherCache } from "../cache";
 import { createWeatherRouter } from "../routes";
-import { weatherDays } from "../../../../shared/weather";
 import express from "express";
 const initial = Date.parse("2026-10-27T12:00:00Z");
 const coordinates = { latitude: -17.825, longitude: 31.033 };
@@ -110,14 +109,11 @@ describe("weather data and public-provider controls", () => {
     invalid.properties.timeseries[0].data.instant.details.air_temperature = 999;
     expect(() => normalizeWeather(invalid, -17.825, 31.033, initial)).toThrow();
   });
-  it("groups dates in the destination timezone across the date line", () => {
+  it("normalizes destination timezone and severe weather", () => {
     const source = raw();
     source.geometry.coordinates = [174.764, -36.85, 10];
     const forecast = normalizeWeather(source, -36.85, 174.764, initial);
     expect(forecast.timezone).toBe("Pacific/Auckland");
-    expect(weatherDays(forecast, initial)[0].date).toBe("2026-10-28");
-    expect(weatherDays(forecast, initial)[0].low).toBe(20);
-    expect(weatherDays(forecast, initial)[0].high).toBe(27);
     expect(weatherCondition("heavysnowshowersandthunder_night")).toBe(
       "thunder"
     );

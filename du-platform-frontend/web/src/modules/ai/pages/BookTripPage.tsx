@@ -1,0 +1,1041 @@
+import { createTripPlanPdf } from "../lib/tripPlanPdf";
+import TravelNav from "../../travel/TravelNav";
+import "../../travel/travel.css";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { requestOnesaTripPlan } from "@/modules/ai/lib/aiApi";
+import { useTranslation } from "react-i18next";
+import {
+  Calendar,
+  Car,
+  Download,
+  Hotel,
+  Plane,
+  Sparkles,
+  Wallet,
+} from "lucide-react";
+
+import { validateTripPlan, type PlanResult } from "@/modules/ai/lib/tripPlan";
+
+type Interest =
+  | "wildlife"
+  | "culture"
+  | "adventure"
+  | "food"
+  | "history"
+  | "nature";
+type TripType = "one_way" | "round_trip" | "multi_trip";
+type DepartureOption = {
+  value: string;
+  city: string;
+  airport: string;
+  iata: string;
+};
+type AttractionOption = {
+  value: string;
+  label: string;
+  nearestAirport: string;
+};
+
+function formatDateForInput(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export default function BookTripPage() {
+  const { t, i18n } = useTranslation();
+  const departureOptions: DepartureOption[] = [
+    {
+      value: "berlin",
+      city: "Berlin",
+      airport: "Berlin Brandenburg Airport",
+      iata: "BER",
+    },
+    {
+      value: "frankfurt",
+      city: "Frankfurt",
+      airport: "Frankfurt Airport",
+      iata: "FRA",
+    },
+    { value: "munich", city: "Munich", airport: "Munich Airport", iata: "MUC" },
+    {
+      value: "london",
+      city: "London",
+      airport: "London Heathrow Airport",
+      iata: "LHR",
+    },
+    {
+      value: "manchester",
+      city: "Manchester",
+      airport: "Manchester Airport",
+      iata: "MAN",
+    },
+    {
+      value: "birmingham",
+      city: "Birmingham",
+      airport: "Birmingham Airport",
+      iata: "BHX",
+    },
+    {
+      value: "edinburgh",
+      city: "Edinburgh",
+      airport: "Edinburgh Airport",
+      iata: "EDI",
+    },
+    {
+      value: "glasgow",
+      city: "Glasgow",
+      airport: "Glasgow Airport",
+      iata: "GLA",
+    },
+    {
+      value: "paris",
+      city: "Paris",
+      airport: "Paris Charles de Gaulle Airport",
+      iata: "CDG",
+    },
+    {
+      value: "amsterdam",
+      city: "Amsterdam",
+      airport: "Amsterdam Schiphol Airport",
+      iata: "AMS",
+    },
+    {
+      value: "brussels",
+      city: "Brussels",
+      airport: "Brussels Airport",
+      iata: "BRU",
+    },
+    {
+      value: "madrid",
+      city: "Madrid",
+      airport: "Adolfo Suarez Madrid-Barajas Airport",
+      iata: "MAD",
+    },
+    {
+      value: "barcelona",
+      city: "Barcelona",
+      airport: "Barcelona-El Prat Airport",
+      iata: "BCN",
+    },
+    {
+      value: "rome",
+      city: "Rome",
+      airport: "Leonardo da Vinci-Fiumicino Airport",
+      iata: "FCO",
+    },
+    {
+      value: "milan",
+      city: "Milan",
+      airport: "Milan Malpensa Airport",
+      iata: "MXP",
+    },
+    {
+      value: "lisbon",
+      city: "Lisbon",
+      airport: "Humberto Delgado Airport",
+      iata: "LIS",
+    },
+    {
+      value: "vienna",
+      city: "Vienna",
+      airport: "Vienna International Airport",
+      iata: "VIE",
+    },
+    { value: "zurich", city: "Zurich", airport: "Zurich Airport", iata: "ZRH" },
+    {
+      value: "johannesburg",
+      city: "Johannesburg",
+      airport: "O.R. Tambo International Airport",
+      iata: "JNB",
+    },
+    {
+      value: "cape_town",
+      city: "Cape Town",
+      airport: "Cape Town International Airport",
+      iata: "CPT",
+    },
+    {
+      value: "durban",
+      city: "Durban",
+      airport: "King Shaka International Airport",
+      iata: "DUR",
+    },
+    {
+      value: "gqeberha",
+      city: "Gqeberha",
+      airport: "Chief Dawid Stuurman International Airport",
+      iata: "PLZ",
+    },
+    {
+      value: "nairobi",
+      city: "Nairobi",
+      airport: "Jomo Kenyatta International Airport",
+      iata: "NBO",
+    },
+    {
+      value: "harare",
+      city: "Harare",
+      airport: "Robert Gabriel Mugabe International Airport",
+      iata: "HRE",
+    },
+    {
+      value: "bulawayo",
+      city: "Bulawayo",
+      airport: "Joshua Mqabuko Nkomo International Airport",
+      iata: "BUQ",
+    },
+    {
+      value: "victoria_falls",
+      city: "Victoria Falls",
+      airport: "Victoria Falls International Airport",
+      iata: "VFA",
+    },
+  ];
+  const attractionOptions: AttractionOption[] = [
+    {
+      value: "victoria_falls",
+      label: "Victoria Falls",
+      nearestAirport: "Victoria Falls International Airport (VFA)",
+    },
+    {
+      value: "hwange_national_park",
+      label: "Hwange National Park",
+      nearestAirport: "Victoria Falls International Airport (VFA)",
+    },
+    {
+      value: "mana_pools",
+      label: "Mana Pools",
+      nearestAirport: "Robert Gabriel Mugabe International Airport (HRE)",
+    },
+    {
+      value: "great_zimbabwe",
+      label: "Great Zimbabwe",
+      nearestAirport: "Joshua Mqabuko Nkomo International Airport (BUQ)",
+    },
+    {
+      value: "matobo_national_park",
+      label: "Matobo National Park",
+      nearestAirport: "Joshua Mqabuko Nkomo International Airport (BUQ)",
+    },
+    {
+      value: "eastern_highlands",
+      label: "Eastern Highlands",
+      nearestAirport: "Robert Gabriel Mugabe International Airport (HRE)",
+    },
+    {
+      value: "nyanga_national_park",
+      label: "Nyanga National Park",
+      nearestAirport: "Robert Gabriel Mugabe International Airport (HRE)",
+    },
+    {
+      value: "gonarezhou",
+      label: "Gonarezhou National Park",
+      nearestAirport: "Robert Gabriel Mugabe International Airport (HRE)",
+    },
+    {
+      value: "kariba",
+      label: "Lake Kariba",
+      nearestAirport: "Robert Gabriel Mugabe International Airport (HRE)",
+    },
+  ];
+
+  const [origin, setOrigin] = useState("berlin");
+  const [arrivalCity, setArrivalCity] = useState("victoria_falls");
+  const [tripType, setTripType] = useState<TripType>("round_trip");
+  const [startDate, setStartDate] = useState(() =>
+    formatDateForInput(new Date())
+  );
+  const [endDate, setEndDate] = useState(() => {
+    const nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    return formatDateForInput(nextWeek);
+  });
+  const [multiCityInput, setMultiCityInput] = useState(
+    "Victoria Falls, Hwange"
+  );
+  const [budget, setBudget] = useState("medium");
+  const [comfort, setComfort] = useState("standard");
+  const [days] = useState(7);
+  const [adultPassengers, setAdultPassengers] = useState("1");
+  const [infantPassengers, setInfantPassengers] = useState("");
+  const [interests, setInterests] = useState<Interest[]>([
+    "wildlife",
+    "culture",
+  ]);
+  const planRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => planRequest.current?.abort(), []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [source, setSource] = useState<"ai" | "fallback" | null>(null);
+  const [result, setResult] = useState<PlanResult | null>(null);
+  useEffect(() => {
+    planRequest.current?.abort();
+    planRequest.current = null;
+    setLoading(false);
+    setResult(null);
+    setSource(null);
+    setError("");
+  }, [
+    origin,
+    arrivalCity,
+    tripType,
+    startDate,
+    endDate,
+    multiCityInput,
+    budget,
+    comfort,
+    adultPassengers,
+    infantPassengers,
+    interests,
+    i18n.language,
+    i18n.resolvedLanguage,
+  ]);
+  const adultCount = Number(adultPassengers) || 0;
+  const infantCount = Number(infantPassengers) || 0;
+  const selectedDeparture =
+    departureOptions.find(item => item.value === origin) ?? departureOptions[0];
+  const selectedArrival =
+    attractionOptions.find(item => item.value === arrivalCity) ??
+    attractionOptions[0];
+
+  const interestOptions: Array<{ value: Interest; label: string }> = [
+    {
+      value: "wildlife",
+      label:
+        t("tourism.onesa.trip_planner.interests_options.wildlife") ||
+        "Wildlife",
+    },
+    {
+      value: "culture",
+      label:
+        t("tourism.onesa.trip_planner.interests_options.culture") || "Culture",
+    },
+    {
+      value: "adventure",
+      label:
+        t("tourism.onesa.trip_planner.interests_options.adventure") ||
+        "Adventure",
+    },
+    {
+      value: "food",
+      label: t("tourism.onesa.trip_planner.interests_options.food") || "Food",
+    },
+    {
+      value: "history",
+      label:
+        t("tourism.onesa.trip_planner.interests_options.history") || "History",
+    },
+    {
+      value: "nature",
+      label:
+        t("tourism.onesa.trip_planner.interests_options.nature") || "Nature",
+    },
+  ];
+
+  const selectedInterestSet = useMemo(() => new Set(interests), [interests]);
+  const computedTripDays = useMemo(() => {
+    if (tripType === "one_way" || !startDate || !endDate) return days;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()))
+      return days;
+    const diffMs = end.getTime() - start.getTime();
+    const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000)) + 1;
+    return Math.max(1, Math.min(60, diffDays));
+  }, [startDate, endDate, days, tripType]);
+
+  const toggleInterest = (value: Interest) => {
+    setInterests(prev => {
+      if (prev.includes(value)) {
+        const next = prev.filter(item => item !== value);
+        return next.length === 0 ? prev : next;
+      }
+      return [...prev, value];
+    });
+  };
+
+  const adjustPassengerCount = (
+    current: string,
+    delta: number,
+    min: number,
+    max: number
+  ): string => {
+    const base = Number(current);
+    const safeBase = Number.isFinite(base) ? base : min;
+    const next = Math.max(min, Math.min(max, safeBase + delta));
+    return String(next);
+  };
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (planRequest.current && !planRequest.current.signal.aborted) return;
+    const request = new AbortController();
+    planRequest.current = request;
+    setLoading(true);
+    setError("");
+    const normalizedAdults = Math.max(
+      1,
+      Math.min(50, Number(adultPassengers) || 1)
+    );
+    const normalizedInfants = Math.max(
+      0,
+      Math.min(20, Number(infantPassengers) || 0)
+    );
+    const totalTravelers = Math.max(
+      1,
+      Math.min(70, normalizedAdults + normalizedInfants)
+    );
+    try {
+      const { data } = await requestOnesaTripPlan(
+        {
+          origin: selectedDeparture.city,
+          departureAirportCity: selectedDeparture.city,
+          departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
+          arrivalCity: selectedArrival.label,
+          arrivalAttraction: selectedArrival.label,
+          tripType,
+          startDate,
+          endDate: tripType === "one_way" ? "" : endDate,
+          multiCity: tripType === "multi_trip",
+          multiCityCities:
+            tripType === "multi_trip"
+              ? multiCityInput
+                  .split(",")
+                  .map(item => item.trim())
+                  .filter(Boolean)
+              : [],
+          budget,
+          comfort,
+          days: Math.max(1, Math.min(60, Number(computedTripDays) || 7)),
+          travelers: totalTravelers,
+          adults: normalizedAdults,
+          infants: normalizedInfants,
+          interests,
+          language: i18n.resolvedLanguage ?? i18n.language ?? "en",
+        },
+        { timeout: 240000, signal: request.signal }
+      );
+      if (request.signal.aborted) return;
+      const plan = validateTripPlan(data?.plan, {
+        language: i18n.resolvedLanguage ?? "en",
+        departureAirport: `${selectedDeparture.airport} (${selectedDeparture.iata})`,
+        arrivalAirport: selectedArrival.nearestAirport,
+        arrivalAttraction: selectedArrival.label,
+        comfort,
+        budget,
+        days: computedTripDays,
+        travelers: totalTravelers,
+        startDate,
+        endDate,
+        tripType,
+        multiCity: tripType === "multi_trip",
+        multiCityCities: multiCityInput
+          .split(",")
+          .map(v => v.trim())
+          .filter(Boolean),
+        interests,
+      });
+      if (!plan) throw new Error("Invalid trip plan");
+      setResult(plan);
+      setSource(data?.source === "ai" ? "ai" : "fallback");
+    } catch {
+      if (request.signal.aborted) return;
+      setResult(null);
+      setError(t("pilot.trip_unavailable", { defaultValue: "The trip planner is unavailable. Your details are still here; please try again." }));
+    } finally {
+      if (!request.signal.aborted) setLoading(false);
+      if (planRequest.current === request) planRequest.current = null;
+    }
+  };
+
+  const handleDownloadPdf = () => {
+    if (!result) return;
+    const lines: string[] = [];
+    lines.push(t("tourism.onesa.trip_planner.pdf_title") || "Onesa Trip Plan");
+    const noticeLines = t("tourism.onesa.trip_planner.booking_focus")
+      .split(/\s+/)
+      .reduce<string[]>((wrapped, word) => {
+        const last = wrapped.length - 1;
+        if (last < 0 || wrapped[last].length + word.length + 1 > 85) {
+          wrapped.push(word);
+        } else {
+          wrapped[last] += ` ${word}`;
+        }
+        return wrapped;
+      }, []);
+    lines.push(...noticeLines);
+    lines.push("----------------------------------------");
+    lines.push(
+      `${t("tourism.onesa.trip_planner.summary") || "Summary"}: ${result.summary}`
+    );
+    lines.push(
+      `${t("tourism.onesa.trip_planner.optimized_for") || "Planning preferences"}: ${result.optimizedFor}`
+    );
+    lines.push(`${t("pilot.contingency")}: USD ${result.contingencyUsd ?? 0}`);
+    lines.push(
+      `${t("tourism.onesa.trip_planner.estimated_total") || "Indicative budget (USD)"}: USD ${result.estimatedTotalUsd}`
+    );
+    lines.push("");
+    lines.push(
+      `${t("tourism.onesa.trip_planner.flights") || "Flight estimate"}: ${result.flights.route} (${result.flights.cabin}) - USD ${result.flights.estimatedCostUsd}`
+    );
+    lines.push(
+      `${t("tourism.onesa.trip_planner.hotels") || "Stay estimate"}: ${result.hotels.area} (${result.hotels.style}) - USD ${result.hotels.estimatedCostUsd}`
+    );
+    lines.push(
+      `${t("tourism.onesa.trip_planner.car_hire") || "Transport estimate"}: ${result.carHire.vehicleClass} - USD ${result.carHire.estimatedCostUsd}`
+    );
+    lines.push("");
+    lines.push(
+      `${t("tourism.onesa.trip_planner.experiences") || "Experiences"}:`
+    );
+    result.experiences.forEach(item => {
+      lines.push(
+        `- ${item.name} (${item.location}) - USD ${item.estimatedCostUsd}`
+      );
+    });
+    lines.push("");
+    lines.push(
+      `${t("tourism.onesa.trip_planner.itinerary") || "Draft itinerary"}:`
+    );
+    result.itinerary.forEach(day => {
+      lines.push(
+        `${t("tourism.onesa.trip_planner.day")} ${day.day} ${day.date || ""} · ${day.location || ""}: ${day.title} - USD ${day.estimatedDailyCostUsd}`
+      );
+      lines.push(`  ${day.details}`);
+    });
+
+    const bytes = createTripPlanPdf(lines);
+    const blob = new Blob([bytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    const fileNameBase = (
+      t("tourism.onesa.trip_planner.pdf_filename") || "onesa-trip-plan"
+    )
+      .toLowerCase()
+      .replace(/[^a-z0-9-_]+/g, "-");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileNameBase}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  };
+
+  return (
+    <Layout>
+      <TravelNav />
+      <p className="mx-auto max-w-5xl px-6 py-4 text-sm text-slate-300">
+        {t("travel.planner-separate")}
+      </p>
+      <section className="document-section bg-slate-950 relative overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="content-panel editorial-panel p-8 md:p-10">
+            <div className="mb-8 text-center">
+              <Badge className="bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
+                {t("tourism.onesa.trip_planner.badge") || "Onesa AI Travel"}
+              </Badge>
+              <h1 className="page-title mt-3">
+                {t("tourism.onesa.trip_planner.title") ||
+                  "Plan your Zimbabwe trip"}
+              </h1>
+              <p className="mt-4 text-sm leading-7 text-slate-300">
+                {t("tourism.onesa.trip_planner.subtitle") ||
+                  "Create a draft itinerary and indicative budgets for flights, stays, transport and activities. Use it to compare ideas and prepare questions for providers."}
+              </p>
+              <p className="text-xs text-white/70 mt-3">
+                {t("tourism.onesa.trip_planner.booking_focus") ||
+                  "Budgets are estimates, not quotes. If Onesa is unavailable, you will see a sample plan using preset allowances. This planner does not check live availability or make bookings."}
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
+              <label className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.origin") || "Departure city"}
+                <select
+                  value={origin}
+                  onChange={e => setOrigin(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
+                >
+                  {departureOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.city} - {option.iata}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.arrival_city") || "Arrival city"}
+                <select
+                  value={arrivalCity}
+                  onChange={e => setArrivalCity(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
+                >
+                  {attractionOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-2 text-xs text-white/70">
+                  {t("tourism.onesa.trip_planner.nearest_airport_hint") ||
+                    "Suggested nearby airport; confirm routes with your airline"}
+                  :{" "}
+                  <span className="text-white/80">
+                    {selectedArrival.nearestAirport}
+                  </span>
+                </p>
+              </label>
+
+              <label className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.trip_type") || "Trip type"}
+                <select
+                  value={tripType}
+                  onChange={e => setTripType(e.target.value as TripType)}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
+                >
+                  <option value="one_way">
+                    {t(
+                      "tourism.onesa.trip_planner.trip_type_options.one_way"
+                    ) || "One way"}
+                  </option>
+                  <option value="round_trip">
+                    {t(
+                      "tourism.onesa.trip_planner.trip_type_options.round_trip"
+                    ) || "Round trip"}
+                  </option>
+                  <option value="multi_trip">
+                    {t(
+                      "tourism.onesa.trip_planner.trip_type_options.multi_trip"
+                    ) || "Multi-trip"}
+                  </option>
+                </select>
+              </label>
+
+              <label className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.budget") || "Budget profile"}
+                <select
+                  value={budget}
+                  onChange={e => setBudget(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
+                >
+                  <option value="low">
+                    {t("tourism.onesa.trip_planner.budget_options.low") ||
+                      "Low"}
+                  </option>
+                  <option value="medium">
+                    {t("tourism.onesa.trip_planner.budget_options.medium") ||
+                      "Medium"}
+                  </option>
+                  <option value="high">
+                    {t("tourism.onesa.trip_planner.budget_options.high") ||
+                      "High"}
+                  </option>
+                </select>
+              </label>
+
+              <label className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.comfort") ||
+                  "Comfort preference"}
+                <select
+                  value={comfort}
+                  onChange={e => setComfort(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
+                >
+                  <option value="budget">
+                    {t("tourism.onesa.trip_planner.comfort_options.budget") ||
+                      "Budget"}
+                  </option>
+                  <option value="standard">
+                    {t("tourism.onesa.trip_planner.comfort_options.standard") ||
+                      "Standard"}
+                  </option>
+                  <option value="premium">
+                    {t("tourism.onesa.trip_planner.comfort_options.premium") ||
+                      "Premium"}
+                  </option>
+                </select>
+              </label>
+
+              <div className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.passengers") || "Passengers"}
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
+                    <span className="text-sm text-slate-300">
+                      {adultCount}{" "}
+                      {adultCount === 1
+                        ? t("tourism.onesa.trip_planner.adult") || "Adult"
+                        : t("tourism.onesa.trip_planner.adults") || "Adults"}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        disabled={adultCount <= 1}
+                        onClick={() =>
+                          setAdultPassengers(prev =>
+                            adjustPassengerCount(prev, -1, 1, 50)
+                          )
+                        }
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
+                        aria-label={
+                          t("tourism.onesa.trip_planner.decrease_adults") ||
+                          "Decrease adults"
+                        }
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        disabled={adultCount >= 50}
+                        onClick={() =>
+                          setAdultPassengers(prev =>
+                            adjustPassengerCount(prev, 1, 1, 50)
+                          )
+                        }
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
+                        aria-label={
+                          t("tourism.onesa.trip_planner.increase_adults") ||
+                          "Increase adults"
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
+                    <span className="text-sm text-slate-300">
+                      {infantCount}{" "}
+                      {infantCount === 1
+                        ? t("tourism.onesa.trip_planner.infant") || "Infant"
+                        : t("tourism.onesa.trip_planner.infants") || "Infants"}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        disabled={infantCount <= 0}
+                        onClick={() =>
+                          setInfantPassengers(prev =>
+                            adjustPassengerCount(prev, -1, 0, 20)
+                          )
+                        }
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
+                        aria-label={
+                          t("tourism.onesa.trip_planner.decrease_infants") ||
+                          "Decrease infants"
+                        }
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        disabled={infantCount >= 20}
+                        onClick={() =>
+                          setInfantPassengers(prev =>
+                            adjustPassengerCount(prev, 1, 0, 20)
+                          )
+                        }
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-zim-gold/50 transition-colors disabled:opacity-40"
+                        aria-label={
+                          t("tourism.onesa.trip_planner.increase_infants") ||
+                          "Increase infants"
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-sm text-white/80 grid grid-cols-1 xl:grid-cols-2 gap-3">
+                <label className="block text-sm text-white/80">
+                  {t("tourism.onesa.trip_planner.start_date") || "Start date"}
+                  <div className="mt-2">
+                    <input
+                      type="date"
+                      required
+                      value={startDate}
+                      onChange={e => setStartDate(e.target.value)}
+                      className="w-full min-w-0 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white"
+                    />
+                  </div>
+                </label>
+
+                {tripType !== "one_way" ? (
+                  <label className="block text-sm text-white/80">
+                    {t("tourism.onesa.trip_planner.end_date") || "End date"}
+                    <div className="mt-2">
+                      <input
+                        type="date"
+                        required
+                        min={startDate}
+                        value={endDate}
+                        onChange={e => setEndDate(e.target.value)}
+                        className="w-full min-w-0 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white"
+                      />
+                    </div>
+                  </label>
+                ) : (
+                  <div />
+                )}
+              </div>
+
+              <label className="text-sm text-white/80">
+                {t("tourism.onesa.trip_planner.days") || "Trip days"}
+                <input
+                  type="number"
+                  readOnly
+                  value={computedTripDays}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white/80 outline-none cursor-not-allowed"
+                />
+              </label>
+
+              <div className="md:col-span-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                <p className="text-sm text-white/80">
+                  {t("tourism.onesa.trip_planner.multi_city") ||
+                    "Multi-city trip"}
+                </p>
+                {tripType === "multi_trip" ? (
+                  <div className="mt-3">
+                    <p className="text-xs text-white/70 mb-1">
+                      {t("tourism.onesa.trip_planner.multi_city_cities") ||
+                        "Cities (comma separated)"}
+                    </p>
+                    <input
+                      value={multiCityInput}
+                      onChange={e => setMultiCityInput(e.target.value)}
+                      className="w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-zim-gold/60"
+                      placeholder={t(
+                        "tourism.onesa.trip_planner.multi_city_placeholder",
+                        {
+                          defaultValue: "Victoria Falls, Hwange, Bulawayo",
+                        }
+                      )}
+                    />
+                  </div>
+                ) : (
+                  <p className="mt-2 text-xs text-white/70">
+                    {t("tourism.onesa.trip_planner.multi_city_hint") ||
+                      "Select Multi-trip to add additional cities."}
+                  </p>
+                )}
+              </div>
+
+              <div className="md:col-span-2">
+                <p className="text-sm text-white/80 mb-3">
+                  {t("tourism.onesa.trip_planner.interests") || "Interests"}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {interestOptions.map(option => {
+                    const active = selectedInterestSet.has(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => toggleInterest(option.value)}
+                        aria-pressed={active}
+                        className={`min-h-11 rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
+                          active
+                            ? "border-zim-gold/50 bg-zim-gold/15 text-zim-gold"
+                            : "border-white/20 bg-white/[0.03] text-white/70 hover:text-white"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {error ? (
+                <p role="alert" className="md:col-span-2 text-red-300 text-sm">
+                  {error}
+                </p>
+              ) : null}
+
+              <div className="md:col-span-2 flex justify-end">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-6"
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  {loading
+                    ? t("tourism.onesa.trip_planner.generating") ||
+                      "Generating..."
+                    : t("tourism.onesa.trip_planner.generate") ||
+                      "Generate trip plan"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {result ? (
+        <section className="pb-12 bg-slate-950 relative overflow-hidden">
+          <div className="container relative z-10 px-6 mx-auto">
+            <div className="content-panel editorial-panel p-8 md:p-10">
+              <div className="flex flex-wrap items-center gap-3 mb-5">
+                <Badge className="max-w-full whitespace-normal bg-zim-gold/10 text-zim-gold border border-zim-gold/20 uppercase tracking-widest text-[10px] font-black">
+                  {source === "ai"
+                    ? t("tourism.onesa.trip_planner.ai_optimized") ||
+                      "AI-generated draft"
+                    : t("tourism.onesa.trip_planner.fallback_plan") ||
+                      "Sample plan · preset budget allowances"}
+                </Badge>
+                <span className="text-white/70 text-xs">
+                  {result.optimizedFor}
+                  <span className="mt-2 block">
+                    {t("pilot.contingency", {
+                      defaultValue: "Contingency allowance",
+                    })}
+                    : USD {result.contingencyUsd ?? 0}
+                  </span>
+                </span>
+                <Button
+                  type="button"
+                  onClick={handleDownloadPdf}
+                  className="ml-auto bg-zim-gold text-zim-black hover:bg-white font-black uppercase tracking-widest text-[10px] rounded-full px-5"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  {t("tourism.onesa.trip_planner.download_pdf") ||
+                    "Download PDF"}
+                </Button>
+              </div>
+
+              <h2 className="text-xl font-black tracking-tight text-white mb-3">
+                {result.summary}
+              </h2>
+              <p className="text-zim-gold text-sm font-black uppercase tracking-wider mb-8">
+                <Wallet className="h-4 w-4 inline mr-2" />
+                {(t("tourism.onesa.trip_planner.estimated_total") ||
+                  "Indicative budget (USD)") + ": $"}
+                {result.estimatedTotalUsd.toLocaleString()}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
+                    <Plane className="h-4 w-4 inline mr-2" />
+                    {t("tourism.onesa.trip_planner.flights") ||
+                      "Flight estimate"}
+                  </p>
+                  <p className="text-white text-sm font-bold">
+                    {result.flights.route}
+                  </p>
+                  <p className="text-white/70 text-xs mt-1">
+                    {result.flights.cabin}
+                  </p>
+                  <p className="text-zim-gold text-xs font-black mt-2">
+                    ${result.flights.estimatedCostUsd}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
+                    <Hotel className="h-4 w-4 inline mr-2" />
+                    {t("tourism.onesa.trip_planner.hotels") || "Stay estimate"}
+                  </p>
+                  <p className="text-white text-sm font-bold">
+                    {result.hotels.area}
+                  </p>
+                  <p className="text-white/70 text-xs mt-1">
+                    {result.hotels.style}
+                  </p>
+                  <p className="text-zim-gold text-xs font-black mt-2">
+                    ${result.hotels.estimatedCostUsd}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <p className="text-[10px] uppercase tracking-widest text-white/70 font-black mb-2">
+                    <Car className="h-4 w-4 inline mr-2" />
+                    {t("tourism.onesa.trip_planner.car_hire") ||
+                      "Transport estimate"}
+                  </p>
+                  <p className="text-white text-sm font-bold">
+                    {result.carHire.vehicleClass}
+                  </p>
+                  <p className="text-white/70 text-xs mt-1">
+                    {result.carHire.rationale}
+                  </p>
+                  <p className="text-zim-gold text-xs font-black mt-2">
+                    ${result.carHire.estimatedCostUsd}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-8">
+                <h3 className="text-base font-black text-white tracking-tight mb-3">
+                  {t("tourism.onesa.trip_planner.experiences") || "Experiences"}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {result.experiences.map(item => (
+                    <div
+                      key={`${item.name}-${item.location}`}
+                      className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                    >
+                      <p className="text-white font-bold text-sm">
+                        {item.name}
+                      </p>
+                      <p className="text-white/70 text-xs">{item.location}</p>
+                      <p className="text-zim-gold text-xs font-black mt-2">
+                        ${item.estimatedCostUsd}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-base font-black text-white tracking-tight mb-3">
+                  <Calendar className="h-4 w-4 inline mr-2" />
+                  {t("tourism.onesa.trip_planner.itinerary") ||
+                    "Draft itinerary"}
+                </h3>
+                <div className="space-y-3">
+                  {result.itinerary.map(dayPlan => (
+                    <div
+                      key={dayPlan.day}
+                      className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                    >
+                      <p className="text-zim-gold text-[10px] uppercase tracking-widest font-black">
+                        {(t("tourism.onesa.trip_planner.day") || "Day") +
+                          " " +
+                          dayPlan.day}
+                      </p>
+                      <p className="text-xs text-white/70">
+                        {dayPlan.date} · {dayPlan.location}
+                      </p>
+                      <p className="text-white font-bold text-sm mt-1">
+                        {dayPlan.title}
+                      </p>
+                      <p className="text-white/70 text-xs mt-1">
+                        {dayPlan.details}
+                      </p>
+                      <p className="text-white/80 text-xs mt-2">
+                        {(t("tourism.onesa.trip_planner.estimated") ||
+                          "Estimated") +
+                          ": $" +
+                          dayPlan.estimatedDailyCostUsd}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+    </Layout>
+  );
+}
