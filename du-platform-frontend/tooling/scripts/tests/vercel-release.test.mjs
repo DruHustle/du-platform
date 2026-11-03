@@ -82,7 +82,7 @@ test("rollback captures and validates the actual prior DU deployment", async () 
     );
     assert(
       workflow.includes(
-        'vercel rollback --cwd du-platform-frontend/web "${{ steps.previous_production.outputs.deployment }}"'
+        'vercel rollback --cwd "$RUNNER_TEMP/du-vercel-stage" "${{ steps.previous_production.outputs.deployment }}"'
       )
     );
   } finally {

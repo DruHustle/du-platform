@@ -32,10 +32,11 @@ test("previews cannot proxy requests to production and are noindex", async () =>
       "Draft review must not deploy an external preview"
     );
     const prepareIndex = previewJob.indexOf("node du-platform-frontend/tooling/scripts/prepare-preview.mjs");
-    const deployIndex = previewJob.indexOf("vercel deploy --cwd du-platform-frontend/web --yes");
+    const stageIndex = previewJob.indexOf("node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs");
+    const deployIndex = previewJob.indexOf('vercel deploy --cwd "$RUNNER_TEMP/du-vercel-stage" --yes');
     assert(
-      prepareIndex >= 0 && deployIndex > prepareIndex,
-      "Preview isolation must run before the deploy command, including captured-URL commands"
+      stageIndex >= 0 && prepareIndex > stageIndex && deployIndex > prepareIndex,
+      "Web-only source staging and preview isolation must run before deployment"
     );
     assert(!workflow.includes("self-hosted"));
     assert(workflow.includes("run: node du-platform-frontend/tooling/scripts/tests/pilot-preview.mjs"));
