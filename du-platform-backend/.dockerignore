@@ -1,0 +1,35 @@
+.git
+.docker-build.lock
+.env*
+**/.env*
+node_modules
+**/node_modules
+dist
+dist-server
+private
+.vercel
+playwright-report
+test-results
+# Local credentials, certificates and agent state never enter image build context.
+.cert
+.aws
+.codex
+.agents
+.local-root
+.claude
+*.pem
+**/*.pem
+*.key
+**/*.key
+*.sql
+**/*.sql
+*.db
+**/*.db
+*.sqlite*
+**/*.sqlite*
+mysql-data
+*.log
+**/*.log
+**/shop-pilot-approval.json
+# Documentation and deployment tools are not needed in the runtime image.
+deploy

@@ -1,0 +1,725 @@
+{
+  "note": "Local controlled API failures; warm filesystem cache, no network throttling; single samples, reduced motion. Encoded JS bytes are not transfer/compression measurements.",
+  "results": [
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 968554,
+      "lcp": 116,
+      "dom": 63
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 390,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 968554,
+      "lcp": 76,
+      "dom": 25
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 390,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 968554,
+      "lcp": 72,
+      "dom": 32
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 390,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 976537,
+      "lcp": 656,
+      "dom": 31
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 968554,
+      "lcp": 140,
+      "dom": 56
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 1440,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 968554,
+      "lcp": 92,
+      "dom": 29
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 1440,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 968554,
+      "lcp": 92,
+      "dom": 40
+    },
+    {
+      "engine": "chromium",
+      "version": "before",
+      "width": 1440,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 976537,
+      "lcp": 392,
+      "dom": 43
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 320,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 124,
+      "dom": 56
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 320,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 92,
+      "dom": 31
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 320,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 84,
+      "dom": 46
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 320,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 652,
+      "dom": 30
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 360,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 100,
+      "dom": 50
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 360,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 80,
+      "dom": 33
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 360,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 52,
+      "dom": 24
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 360,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 704,
+      "dom": 40
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 108,
+      "dom": 53
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 390,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 184,
+      "dom": 29
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 390,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 84,
+      "dom": 31
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 390,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 668,
+      "dom": 27
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 430,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 108,
+      "dom": 56
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 430,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 80,
+      "dom": 30
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 430,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 80,
+      "dom": 39
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 430,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 688,
+      "dom": 36
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 768,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 116,
+      "dom": 54
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 768,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 84,
+      "dom": 26
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 768,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 80,
+      "dom": 25
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 768,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 664,
+      "dom": 31
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1024,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 160,
+      "dom": 61
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1024,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 92,
+      "dom": 28
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1024,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 84,
+      "dom": 36
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1024,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 376,
+      "dom": 28
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 132,
+      "dom": 53
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1440,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 88,
+      "dom": 28
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1440,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940885,
+      "lcp": 76,
+      "dom": 29
+    },
+    {
+      "engine": "chromium",
+      "version": "after",
+      "width": 1440,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948867,
+      "lcp": 408,
+      "dom": 34
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 968576,
+      "lcp": 249,
+      "dom": 73
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 390,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 968576,
+      "lcp": 179,
+      "dom": 51
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 390,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 968576,
+      "lcp": 148,
+      "dom": 50
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 390,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 976608,
+      "lcp": 39,
+      "dom": 49
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 968576,
+      "lcp": 201,
+      "dom": 66
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 1440,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 968576,
+      "lcp": 171,
+      "dom": 48
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 1440,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 968576,
+      "lcp": 158,
+      "dom": 59
+    },
+    {
+      "engine": "webkit",
+      "version": "before",
+      "width": 1440,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 976608,
+      "lcp": 53,
+      "dom": 61
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 320,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 149,
+      "dom": 58
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 320,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 189,
+      "dom": 58
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 320,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 117,
+      "dom": 54
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 320,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 39,
+      "dom": 46
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 360,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 155,
+      "dom": 60
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 360,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 184,
+      "dom": 59
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 360,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 106,
+      "dom": 45
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 360,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 53,
+      "dom": 61
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 163,
+      "dom": 57
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 390,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 171,
+      "dom": 60
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 390,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 100,
+      "dom": 44
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 390,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 30,
+      "dom": 37
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 430,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 156,
+      "dom": 57
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 430,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 174,
+      "dom": 59
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 430,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 98,
+      "dom": 42
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 430,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 46,
+      "dom": 56
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 768,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 150,
+      "dom": 60
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 768,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 174,
+      "dom": 45
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 768,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 114,
+      "dom": 55
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 768,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 35,
+      "dom": 43
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1024,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 167,
+      "dom": 66
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1024,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 168,
+      "dom": 45
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1024,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 97,
+      "dom": 38
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1024,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 34,
+      "dom": 42
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 154,
+      "dom": 57
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1440,
+      "route": "/travel",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 179,
+      "dom": 59
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1440,
+      "route": "/shop",
+      "overflow": false,
+      "jsBytes": 940907,
+      "lcp": 122,
+      "dom": 58
+    },
+    {
+      "engine": "webkit",
+      "version": "after",
+      "width": 1440,
+      "route": "/login",
+      "overflow": false,
+      "jsBytes": 948938,
+      "lcp": 32,
+      "dom": 39
+    }
+  ]
+}

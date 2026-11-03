@@ -14,7 +14,7 @@ vi.mock("../../../shared/email", () => ({
 import {
   shopOrderRequestSchema,
   calculateShopShippingCents,
-} from "../../../../shared/shopCheckout";
+} from "../../../domain/shopCheckout";
 import {
   createShopOrder,
   getShopOrderByRef,

@@ -1,0 +1,23 @@
+# Application dependencies, generated output and local secrets.
+node_modules/
+.pnpm-store/
+dist/
+build/
+coverage/
+.env
+.env.*
+!.env.example
+.local-root/
+.cert/
+.claude/
+*.pem
+*.key
+*.log
+*.tsbuildinfo
+.DS_Store
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+!*.seed.sql
+mysql-data/

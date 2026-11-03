@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { createServer, type Server } from "node:http";
 import mysql, { type Pool } from "mysql2/promise";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { defaultTravelCriteria } from "../../../../shared/travel";
+import { defaultTravelCriteria } from "../../../domain/travel";
 import { initializeTravel } from "../schema";
 import { TravelRepository } from "../repository";
 import { PublicTravelSearch } from "../providers";

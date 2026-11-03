@@ -5,6 +5,7 @@ import {
   findUserByEmail,
   findUserById,
   resetPasswordWithToken,
+  updateUserFullName,
 } from "../../../shared/persistence/authStore";
 import { TransactionalService } from "../../notifications/transactionalService";
 
@@ -21,6 +22,10 @@ export class AuthRepository {
 
   findById(id: number) {
     return findUserById(id);
+  }
+
+  updateFullName(id: number, fullName: string) {
+    return updateUserFullName(id, fullName);
   }
 
   createUser(fullName: string, email: string, passwordHash: string) {

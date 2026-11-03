@@ -4,7 +4,7 @@ import crypto from "node:crypto";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { SHOP_READINESS_CHECKS } from "../../../../shared/shopReadiness";
+import { SHOP_READINESS_CHECKS } from "../../../domain/shopReadiness";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 let pool: Pool | null = null;
 vi.mock("../../../shared/databaseRuntime", () => ({

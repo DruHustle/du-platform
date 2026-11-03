@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../../shared/databaseRuntime";
-import { productDetailsSchema } from "../../../shared/productDetails";
+import { productDetailsSchema } from "../../domain/productDetails";
 import { ShopRequestError } from "../../shared/persistence/shopStore";
 import { orderApiError } from "./orderAdminRoutes";
 import { ok } from "../../shared/responseFormatter";

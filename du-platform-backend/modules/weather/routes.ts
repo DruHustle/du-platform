@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { z } from "../../../shared/validation";
-import { weatherCoordinateSchema } from "../../../shared/weather";
+import { z } from "../../domain/validation";
+import { weatherCoordinateSchema } from "../../domain/weather";
 import { db } from "../../shared/databaseRuntime";
 import { rateLimiter } from "../../core/rateLimiter";
 import { ok, error } from "../../shared/responseFormatter";
