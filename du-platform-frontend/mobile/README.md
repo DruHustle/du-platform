@@ -6,7 +6,23 @@ account system through the backend HTTP API; the opaque session token is stored
 with Expo SecureStore and access tokens are held in memory.
 
 Use Node 22.13 or newer, Android Studio/SDK for Android, and macOS, Xcode and
-CocoaPods for iOS. Configure `EXPO_PUBLIC_API_URL` with a public API base ending
+CocoaPods for iOS. The `.nvmrc` selects Node 24 for developers using nvm. On a
+Mac where `xcode-select` points to the Command Line Tools, select the full Xcode
+for this shell without changing the system-wide selection:
+
+```sh
+nvm use
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
+```
+
+Xcode 27 uses Device Hub in place of Simulator.app. Open **Xcode → Open
+Developer Tool → Device Hub** to view and interact with an iPhone simulator.
+In the `ios` directory, run `pod install` before building the iOS project.
+
+Configure `EXPO_PUBLIC_API_URL` with a public API base ending
 in `/api`. Current APIs serve catalogue images directly. Set `EXPO_PUBLIC_WEB_URL` to the
 public web asset origin for older API versions that do not advertise image URLs;
 do not put secrets in Expo public environment variables. For Android
@@ -23,6 +39,18 @@ npm run android            # builds and installs an Android development build
 npm run ios                # builds and installs an iOS simulator development build
 npm start                  # Metro for an already installed development build
 ```
+
+If another service uses port 8081, start Metro on an unused port and forward it
+to the Android emulator. For example, with port 57767:
+
+```sh
+NODE_OPTIONS=--dns-result-order=ipv4first npm start -- --localhost --port 57767
+adb reverse tcp:57767 tcp:57767
+adb shell am start -a android.intent.action.VIEW -d 'exp+diaspora-unlocked://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A57767' com.diasporaunlocked.app
+```
+
+Use a different unused port if needed. The `adb reverse` step applies to a USB
+device or emulator connected to this development server.
 
 The `android/` and `ios/` projects are tracked. After changing `app.json`, Expo
 plugins, or native dependencies, run `npm run native:generate`, review and commit
