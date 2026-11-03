@@ -825,9 +825,24 @@ try {
     for (const [old, target] of Object.entries(travelRedirects).filter(
       ([source]) => !source.endsWith("/") && !source.endsWith(".html")
     )) {
-      await page.goto(base + old + "?lng=en#attractions");
+      // The SEO preview already contains <main> before React starts. Complete
+      // each destination's bootstrap before replacing its document again;
+      // WebKit can report replacement-cancelled XHRs as access-control errors.
+      const bootstrapEndpoints = [["/api/auth/me", 401]];
+      if (target === "/travel")
+        bootstrapEndpoints.push(["/api/travel/capabilities", 200]);
+      await Promise.all([
+        ...bootstrapEndpoints.map(async ([endpoint, expectedStatus]) => {
+          const response = await page.waitForResponse(
+            candidate => candidate.url() === base + endpoint
+          );
+          assert.equal(response.status(), expectedStatus);
+          assert.equal(await response.finished(), null);
+        }),
+        page.goto(base + old + "?lng=en#attractions"),
+      ]);
       await page.waitForURL(base + target + "?lng=en#attractions");
-      await page.locator("main").waitFor();
+      await page.locator("main:not(.public-preview)").waitFor();
     }
     checks.push(`${width}: six permanent redirects keep query and fragment`);
     // Fresh loopback connections avoid reusing an idle browser API socket after
