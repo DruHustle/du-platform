@@ -11,6 +11,7 @@
   "about_us": "Igxile eZimbabwe, iDiaspora Unlocked yamukela bonke abavela e-Afrika eseNingizimu abahlala kwamanye amazwe, ngemikhiqizo yakwethu, ulwazi lohambo esifundeni lemibono yamabhizimisi losizo lwe-AI.",
   "select_lang": "Khetha ulimi",
   "account": {
+    "session_retry": "I-akhawunti ayitholakali. Zama futhi",
     "logout": "Phuma",
     "logout_failed": "Asenelisanga ukukukhipha ku-akhawunti. Sicela uzame futhi."
   },

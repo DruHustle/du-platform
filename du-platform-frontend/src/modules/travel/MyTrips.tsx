@@ -30,29 +30,62 @@ export default function MyTrips() {
     useState<TravelDraft["criteria"]["currency"]>("EUR");
   const [category, setCategory] = useState<TravelCategory>("flights");
   const [signedIn, setSignedIn] = useState(Boolean(loadAuthToken()));
+  const [sessionError, setSessionError] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(
+    () => hasLoggedInBefore() || Boolean(loadAuthToken())
+  );
+  const [sessionRetry, setSessionRetry] = useState(0);
+  const [savedError, setSavedError] = useState(false);
+  const [savedLoaded, setSavedLoaded] = useState(false);
+  const [savedRetry, setSavedRetry] = useState(0);
   useEffect(() => {
     let active = true;
-    if (hasLoggedInBefore() || loadAuthToken())
-      void resolveCurrentUserBootstrap().then(user => {
-        if (active) setSignedIn(Boolean(user));
-      });
+    if (hasLoggedInBefore() || loadAuthToken()) {
+      setSessionLoading(true);
+      setSessionError(false);
+      void resolveCurrentUserBootstrap().then(
+        user => {
+          if (active) {
+            setSignedIn(Boolean(user));
+            setSessionLoading(false);
+          }
+        },
+        () => {
+          if (active) {
+            setSessionError(true);
+            setSessionLoading(false);
+          }
+        }
+      );
+    }
     return () => {
       active = false;
     };
-  }, []);
+  }, [sessionRetry]);
   async function refresh() {
-    setSaved(await loadSavedTravel());
+    try {
+      setSaved(await loadSavedTravel());
+      setSavedError(false);
+      setSavedLoaded(true);
+    } catch (error) {
+      setSavedError(true);
+      throw error;
+    }
   }
   useEffect(() => {
     let cancelled = false;
     if (signedIn) {
       setLoading(true);
+      setSavedError(false);
       loadSavedTravel()
         .then(rows => {
-          if (!cancelled) setSaved(rows);
+          if (!cancelled) {
+            setSaved(rows);
+            setSavedLoaded(true);
+          }
         })
         .catch(() => {
-          if (!cancelled) setStatus(t("travel.storage-error"));
+          if (!cancelled) setSavedError(true);
         })
         .finally(() => {
           if (!cancelled) setLoading(false);
@@ -61,7 +94,7 @@ export default function MyTrips() {
     return () => {
       cancelled = true;
     };
-  }, [signedIn, t]);
+  }, [signedIn, savedRetry]);
   async function save(kind: "trip" | "search") {
     if (!travelDraftSchema.safeParse(draft).success) {
       setStatus(t("travel.errors.criteria"));
@@ -300,7 +333,19 @@ export default function MyTrips() {
       <section className="content-panel">
         <h2 className="page-section-title">{t("travel.private-trips")}</h2>
         <p>{t("travel.private-note")}</p>
-        {!signedIn ? (
+        {sessionLoading ? (
+          <p role="status">{t("routing.loading_page_content")}</p>
+        ) : sessionError ? (
+          <div role="alert">
+            <p>{t("travel.storage-error")}</p>
+            <Button
+              variant="outline"
+              onClick={() => setSessionRetry(value => value + 1)}
+            >
+              {t("search.retry", { defaultValue: "Try again" })}
+            </Button>
+          </div>
+        ) : !signedIn ? (
           <Button asChild>
             <Link href="/login?next=%2Ftravel%2Fmy-trips">
               {t("travel.sign-in")}
@@ -334,7 +379,20 @@ export default function MyTrips() {
             {loading && (
               <p role="status">{t("routing.loading_page_content")}</p>
             )}
-            {!loading && !saved.length && <p>{t("travel.no-saved")}</p>}
+            {savedError && (
+              <div role="alert">
+                <p>{t("travel.storage-error")}</p>
+                <Button
+                  variant="outline"
+                  onClick={() => setSavedRetry(value => value + 1)}
+                >
+                  {t("search.retry", { defaultValue: "Try again" })}
+                </Button>
+              </div>
+            )}
+            {!loading && savedLoaded && !savedError && !saved.length && (
+              <p>{t("travel.no-saved")}</p>
+            )}
             {saved.map(s => (
               <article className="surface-card" key={s.id}>
                 <h3>{s.name}</h3>

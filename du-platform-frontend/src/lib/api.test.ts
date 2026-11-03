@@ -39,3 +39,29 @@ describe("user-facing API failure messages", () => {
     ).toBe("Insufficient stock.");
   });
 });
+
+describe("session refresh errors", () => {
+  it.each([
+    [503, 503],
+    [429, 429],
+    [401, 401],
+  ])(
+    "preserves a refresh response of %i as %i",
+    async (refreshStatus, expected) => {
+      const { api } = await import("./api");
+      const previousAdapter = api.defaults.adapter;
+      api.defaults.adapter = async config => {
+        const status =
+          config.url === "/auth/token/refresh" ? refreshStatus : 401;
+        throw { config, response: { status } };
+      };
+      try {
+        await expect(api.get("/auth/me")).rejects.toMatchObject({
+          response: { status: expected },
+        });
+      } finally {
+        api.defaults.adapter = previousAdapter;
+      }
+    }
+  );
+});
