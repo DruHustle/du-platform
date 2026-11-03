@@ -15,6 +15,7 @@ overrides:
   mdast-util-to-hast@<13.2.1: 13.2.1
   body-parser@<1.20.9: 1.20.9
   qs@<6.16.1: 6.16.1
+  follow-redirects@<1.16.2: 1.16.2
 
 patchedDependencies:
   "@pmndrs/xr@6.6.29":
@@ -2948,10 +2949,10 @@ packages:
       }
     engines: { node: ">=12" }
 
-  follow-redirects@1.16.1:
+  follow-redirects@1.16.2:
     resolution:
       {
-        integrity: sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg==,
+        integrity: sha512-/kVP2U8z596Ia0gwFrwyIeo74ta5aVmSeU1FfAUMAmcEP5EP7zydmag3SLiN64NaRKef3lxsq7i/g7ltJQDGow==,
       }
     engines: { node: ">=4.0" }
     peerDependencies:
@@ -6034,7 +6035,7 @@ snapshots:
 
   axios@1.20.0:
     dependencies:
-      follow-redirects: 1.16.1
+      follow-redirects: 1.16.2
       form-data: 4.0.6
       https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
@@ -6544,7 +6545,7 @@ snapshots:
       kapsule: 1.16.3
       preact: 10.28.4
 
-  follow-redirects@1.16.1: {}
+  follow-redirects@1.16.2: {}
 
   form-data@4.0.6:
     dependencies:
