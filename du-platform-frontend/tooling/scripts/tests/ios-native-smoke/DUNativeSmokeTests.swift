@@ -7,6 +7,7 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor private var app: XCUIApplication!
     private var checks: [[String: Any]] = []
     private let tabs = ["Home", "Shop", "Travel", "Assistant", "Account"]
+    private var dismissedTypingTutorial = false
 
     @MainActor
     override func setUp() async throws {
@@ -45,25 +46,29 @@ final class DUNativeSmokeTests: XCTestCase {
 
             navigate("Account", text: "Welcome back")
             let email = unique(.textField, "Email address")
-            reveal(email)
+            let accountScroll = contentScrollView(containing: email)
+            reveal(email, in: accountScroll)
             replaceText(email, with: "ios-smoke@example.invalid")
             XCTAssertEqual(email.value as? String, "ios-smoke@example.invalid")
             let password = unique(.secureTextField, "Password")
-            reveal(password)
+            reveal(password, in: accountScroll)
             replaceText(password, with: "keyboard-fixture", secure: true)
             XCTAssertFalse((password.value as? String ?? "").isEmpty)
             XCTAssertNotEqual(password.value as? String, "Password")
             XCTAssertEqual((password.value as? String)?.count, "keyboard-fixture".count)
-            assertKeyboardAccess(password, action: unique(.button, "Sign in"), name: "\(name)-account-keyboard")
-            dismissKeyboard()
+            assertKeyboardAccess(password, action: unique(.button, "Sign in"), in: accountScroll,
+                                 name: "\(name)-account-keyboard")
+            dismissKeyboard(in: accountScroll, avoiding: password)
 
             navigate("Assistant", text: "Onesa assistant")
             let message = unique(.textView, "Your message")
-            reveal(message)
+            let assistantScroll = contentScrollView(containing: message)
+            reveal(message, in: assistantScroll)
             replaceText(message, with: "A simulator keyboard check.")
             XCTAssertEqual(message.value as? String, "A simulator keyboard check.")
-            assertKeyboardAccess(message, action: unique(.button, "Send message"), name: "\(name)-assistant-keyboard", multiline: true)
-            dismissKeyboard()
+            assertKeyboardAccess(message, action: unique(.button, "Send message"), in: assistantScroll,
+                                 name: "\(name)-assistant-keyboard", multiline: true)
+            dismissKeyboard(in: assistantScroll, avoiding: message)
             checkTabs("\(name)-tabs-after-keyboard")
             attachEvidence(name)
         }
@@ -125,10 +130,39 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func visibleContent() -> CGRect {
-        var frame = app.scrollViews.firstMatch.frame.intersection(app.frame)
-        if app.keyboards.firstMatch.exists {
-            frame.size.height = max(0, min(frame.maxY, app.keyboards.firstMatch.frame.minY) - frame.minY)
+    private func contentScrollView(containing field: XCUIElement) -> XCUIElement {
+        // Keyboard windows also expose scroll views. Select the unique app
+        // window and content scroll view that actually contain this form.
+        let type = field.elementType
+        let label = field.label
+        let windows = app.windows.containing(type, identifier: label)
+        XCTAssertEqual(windows.count, 1, "The form must belong to one app window: \(label)")
+        let scrolls = windows.element(boundBy: 0).scrollViews.containing(type, identifier: label)
+        XCTAssertEqual(scrolls.count, 1, "The form must belong to one content scroll view: \(label)")
+        return scrolls.element(boundBy: 0)
+    }
+
+    @MainActor
+    private func visibleKeyboardAccessories() -> [XCUIElement] {
+        let window = app.frame
+        return app.otherElements.matching(NSPredicate(format: "identifier == %@", "SystemInputAssistantView"))
+            .allElementsBoundByIndex.filter { !$0.frame.intersection(window).isEmpty }
+    }
+
+    @MainActor
+    private func keyboardObstructionFrame() -> CGRect? {
+        guard var frame = visibleKeyboardFrame() else { return nil }
+        for accessory in visibleKeyboardAccessories() {
+            frame = frame.union(accessory.frame)
+        }
+        return frame.intersection(app.frame)
+    }
+
+    @MainActor
+    private func visibleContent(in scroll: XCUIElement) -> CGRect {
+        var frame = scroll.frame.intersection(app.frame)
+        if let keyboard = keyboardObstructionFrame() {
+            frame.size.height = max(0, min(frame.maxY, keyboard.minY) - frame.minY)
         }
         return frame
     }
@@ -148,15 +182,41 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func reveal(_ element: XCUIElement) {
-        let scroll = app.scrollViews.firstMatch
+    private func scrollContent(_ scroll: XCUIElement, avoiding field: XCUIElement, up: Bool) {
+        let viewport = visibleContent(in: scroll)
+        let fieldFrame = field.frame
+        let scrollFrame = scroll.frame
+        let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
+        let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
+        XCTAssertFalse(viewport.isEmpty, "There is no visible app content available for a scroll gesture")
+        XCTAssertGreaterThan(max(left, right), 0, "A scroll gesture needs a visible gutter outside the editor")
+        let x = left >= right ? viewport.minX + left / 2 : viewport.maxX - right / 2
+        let top = viewport.minY + viewport.height * 0.2
+        let bottom = viewport.minY + viewport.height * 0.8
+        let start = CGPoint(x: x, y: up ? bottom : top)
+        let end = CGPoint(x: x, y: up ? top : bottom)
+        XCTAssertTrue(viewport.contains(start) && viewport.contains(end),
+                      "Scroll endpoints must stay inside the measured visible app viewport")
+        // The element-relative drag stays above the entire keyboard/accessory
+        // and outside the editor, which may have its own internal scroll view.
+        let origin = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+        let from = origin.withOffset(CGVector(dx: start.x - scrollFrame.minX, dy: start.y - scrollFrame.minY))
+        let to = origin.withOffset(CGVector(dx: end.x - scrollFrame.minX, dy: end.y - scrollFrame.minY))
+        checks.append(["name": up ? "content-scroll-up" : "content-scroll-down",
+                       "field": field.label, "scroll": rectangle(scrollFrame), "viewport": rectangle(viewport),
+                       "start": ["x": Double(start.x), "y": Double(start.y)],
+                       "end": ["x": Double(end.x), "y": Double(end.y)]])
+        from.press(forDuration: 0.1, thenDragTo: to)
+    }
+
+    @MainActor
+    private func reveal(_ element: XCUIElement, in scroll: XCUIElement) {
         for _ in 0..<4 {
-            let viewport = visibleContent()
+            let viewport = visibleContent(in: scroll)
             if element.isHittable && contains(viewport, element.frame) { return }
-            if element.frame.minY < viewport.minY { scroll.swipeDown() }
-            else { scroll.swipeUp() }
+            scrollContent(scroll, avoiding: element, up: element.frame.minY >= viewport.minY)
         }
-        assertControl(element, within: visibleContent())
+        assertControl(element, within: visibleContent(in: scroll))
     }
 
     @MainActor
@@ -168,11 +228,48 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func waitForTypingKeyboard() {
+    private func typingTutorials() -> XCUIElementQuery {
+        app.otherElements.matching(NSPredicate(format: "identifier == %@", "UIContinuousPathIntroductionView"))
+    }
+
+    @MainActor
+    private func dismissKnownTypingTutorial() -> Bool {
+        let tutorials = typingTutorials()
+        guard tutorials.firstMatch.exists else { return false }
+        XCTAssertEqual(tutorials.count, 1, "The observed iOS keyboard tutorial must be unique")
+        XCTAssertFalse(dismissedTypingTutorial, "The first-use keyboard tutorial must not recur")
+        let tutorial = tutorials.element(boundBy: 0)
+        let instruction = tutorial.staticTexts.matching(NSPredicate(format: "label == %@",
+            "Speed up your typing by sliding your finger across the letters to compose a word."))
+        let buttons = tutorial.buttons.matching(NSPredicate(format: "label == %@", "Continue"))
+        XCTAssertEqual(instruction.count, 1, "Only the observed QuickPath introduction may be dismissed")
+        XCTAssertEqual(buttons.count, 1, "The known tutorial must contain its own Continue button")
+        let button = buttons.element(boundBy: 0)
+        XCTAssertFalse(tutorial.frame.intersection(app.frame).isEmpty)
+        XCTAssertFalse(instruction.element(boundBy: 0).frame.intersection(app.frame).isEmpty)
+        XCTAssertTrue(button.isEnabled && button.isHittable)
+        XCTAssertTrue(contains(app.frame, button.frame))
+        record("keyboard-tutorial-before", elements: [tutorial, button])
+        attachEvidence("keyboard-tutorial-before")
+        dismissedTypingTutorial = true
+        button.tap()
+        wait("The known keyboard tutorial did not disappear", timeout: 5) { !tutorial.exists }
+        record("keyboard-tutorial-after", elements: [])
+        attachEvidence("keyboard-tutorial-after")
+        return true
+    }
+
+    @MainActor
+    private func waitForKeyboardOrTutorial() -> Bool {
+        var tutorialObserved = false
         var previous: CGRect?
         var settledSince = Date()
         wait("A visible software keyboard must settle before typing") {
-            guard let frame = self.visibleKeyboardFrame() else {
+            if self.typingTutorials().firstMatch.exists {
+                tutorialObserved = true
+                return true
+            }
+            guard let frame = self.keyboardObstructionFrame() else {
                 previous = nil
                 settledSince = Date()
                 return false
@@ -184,6 +281,20 @@ final class DUNativeSmokeTests: XCTestCase {
             }
             return Date().timeIntervalSince(settledSince) >= 0.2
         }
+        return tutorialObserved
+    }
+
+    @MainActor
+    private func waitForTypingKeyboard(refocusing field: XCUIElement? = nil) {
+        guard waitForKeyboardOrTutorial() else { return }
+        // Capture and acknowledge the once-only OS interruption outside the
+        // keyboard deadline. Evidence collection must not consume the fresh
+        // bounded settling phase after the tutorial has disappeared.
+        XCTAssertTrue(dismissKnownTypingTutorial())
+        // Only this observed blocking tutorial can justify another field tap;
+        // no text has been sent and no input event is replayed.
+        field?.tap()
+        XCTAssertFalse(waitForKeyboardOrTutorial(), "The first-use keyboard tutorial must not recur")
     }
 
     @MainActor
@@ -202,8 +313,9 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func replaceText(_ field: XCUIElement, with value: String, secure: Bool = false) {
+        _ = dismissKnownTypingTutorial()
         field.tap()
-        waitForTypingKeyboard()
+        waitForTypingKeyboard(refocusing: field)
         var expected = field.value as? String ?? ""
         while !expected.isEmpty {
             expected.removeLast()
@@ -224,19 +336,19 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func assertKeyboardAccess(_ field: XCUIElement, action: XCUIElement, name: String, multiline: Bool = false) {
+    private func assertKeyboardAccess(_ field: XCUIElement, action: XCUIElement, in scroll: XCUIElement,
+                                      name: String, multiline: Bool = false) {
         let keyboard = app.keyboards.firstMatch
         XCTAssertTrue(existsOrWait(keyboard, timeout: 10), "Software keyboard is required")
         let expectedValue = field.value as? String
         XCTAssertNotNil(expectedValue, "The typed input must expose its value")
-        let scroll = app.scrollViews.firstMatch
         for _ in 0..<4 {
             XCTAssertTrue(keyboard.exists, "Scrolling dismissed the keyboard; this is not keyboard-clearance evidence")
-            let viewport = visibleContent()
+            let viewport = visibleContent(in: scroll)
             if editingAreaVisible(field, viewport: viewport, multiline: multiline)
                 && action.isHittable && contains(viewport, action.frame) { break }
-            if action.frame.maxY > viewport.maxY || field.frame.minY > viewport.maxY { scroll.swipeUp() }
-            else { scroll.swipeDown() }
+            scrollContent(scroll, avoiding: field,
+                          up: action.frame.maxY > viewport.maxY || field.frame.minY > viewport.maxY)
         }
         if multiline {
             // Prove editing still works after the bounded scroll. XCTest has no
@@ -256,23 +368,23 @@ final class DUNativeSmokeTests: XCTestCase {
         }
         if multiline {
             XCTAssertTrue(field.isEnabled)
-            XCTAssertTrue(editingAreaVisible(field, viewport: visibleContent(), multiline: true),
+            XCTAssertTrue(editingAreaVisible(field, viewport: visibleContent(in: scroll), multiline: true),
                           "The focused multiline editor needs at least 44pt of visible editing area above the keyboard")
         } else {
-            assertControl(field, within: visibleContent())
+            assertControl(field, within: visibleContent(in: scroll))
         }
-        assertControl(action, within: visibleContent())
-        record(name, elements: [field, action, keyboard])
+        assertControl(action, within: visibleContent(in: scroll))
+        record(name, elements: [field, action, keyboard] + visibleKeyboardAccessories())
         attachEvidence(name)
     }
 
     @MainActor
-    private func dismissKeyboard() {
+    private func dismissKeyboard(in scroll: XCUIElement, avoiding field: XCUIElement) {
         // iOS's native scroll view uses interactive dismissal. This semantic
         // gesture does not submit a form or invoke an unrelated app action.
         for _ in 0..<3 {
             if !app.keyboards.firstMatch.exists { break }
-            app.scrollViews.firstMatch.swipeDown()
+            scrollContent(scroll, avoiding: field, up: false)
         }
         wait("Software keyboard did not dismiss") { !self.app.keyboards.firstMatch.exists }
     }
