@@ -895,7 +895,7 @@ export default function OnesaFloatingAssistant() {
                             size="icon"
                             aria-label={t("close", { defaultValue: "Close" })}
                             onClick={() => setIsOnesaChatOpen(false)}
-                            className="h-11 w-11 rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                            className="h-11 min-h-[44px] w-11 min-w-[44px] rounded-full text-white/70 hover:bg-white/10 hover:text-white"
                           >
                             <X className="h-4 w-4" />
                           </Button>
@@ -994,7 +994,7 @@ export default function OnesaFloatingAssistant() {
                               !onesaInput.trim() ||
                               (onesaRetryAfterSecondsRemaining ?? 0) > 0
                             }
-                            className="h-auto min-h-11 whitespace-normal rounded-full bg-zim-gold px-6 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
+                            className="h-auto min-h-[44px] min-w-[44px] sm:min-w-[11rem] whitespace-normal rounded-full bg-zim-gold px-6 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
                           >
                             <Send className="mr-2 h-4 w-4" />
                             {onesaLoading

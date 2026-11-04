@@ -85,6 +85,99 @@ class EnvironmentTests(unittest.TestCase):
                 runner.cleanup()
 
 
+class DeveloperMenuTests(unittest.TestCase):
+    def setUp(self):
+        directory = TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.AndroidSmoke(SimpleNamespace(mobile_dir=directory.name, apk=directory.name,
+                                                         artifacts=directory.name))
+        self.runner.package = PACKAGE
+        self.addCleanup(self.runner.cleanup)
+        for name in ("capture", "shell", "note"):
+            mocked = patch.object(self.runner, name)
+            setattr(self, name, mocked.start())
+            self.addCleanup(mocked.stop)
+
+    def native_menu(self):
+        # Essential nodes from run 41751015388's final.xml. This is RN's native
+        # AlertDialog, whose options are not Expo's clickable Compose buttons.
+        tree = ET.Element("hierarchy")
+        tree.append(node(text="React Native Dev Menu", bounds="[93,911][1347,1037]"))
+        options = node(**{"resource-id": "android:id/select_dialog_listview",
+                          "class": "android.widget.ListView", "bounds": "[93,1065][1347,2269]"})
+        for label in ("Reload", "Open DevTools", "Change Bundle Location", "Toggle Element Inspector",
+                      "Disable Fast Refresh", "Show Perf Monitor", "Settings"):
+            options.append(node(text=label))
+        tree.append(options)
+        return tree
+
+    def expo_menu(self, close=True, onboarding=True):
+        tree = ET.Element("hierarchy")
+        tree.append(node(text="Runtime version: exposdk:58.0.0"))
+        if onboarding:
+            tree.append(node(text="This is the developer menu. It gives you access to useful tools in your development builds."))
+            button = node(clickable="true", bounds="[140,2727][1300,2895]")
+            button.append(node(text="Continue"))
+            tree.append(button)
+        else:
+            tree.append(node(text="Reload"))
+        if close:
+            button = node(clickable="true", bounds="[1209,2160][1377,2328]")
+            button.append(node(**{"content-desc": "Close"}))
+            tree.append(button)
+        return tree
+
+    def dismiss(self, tree):
+        return self.runner.dismiss_developer_menu(tree, self.runner.visible_labels(tree))
+
+    def test_observed_native_dialog_without_close_is_dismissed_with_back(self):
+        tree = self.native_menu()
+        self.assertTrue(self.dismiss(tree))
+        self.shell.assert_called_once_with("input", "keyevent", "KEYCODE_BACK")
+        self.capture.assert_called_once_with("developer-menu-back-0", None)
+        self.assertEqual(self.runner.dismissals["Back"], 1)
+
+    def test_onboarding_uses_observed_close_instead_of_opening_more_tools(self):
+        self.assertTrue(self.dismiss(self.expo_menu()))
+        self.shell.assert_called_once_with("input", "tap", 1293, 2244)
+        self.assertEqual(self.runner.dismissals, {"Continue": 0, "Close": 1, "Back": 0})
+
+    def test_finished_expo_menu_retains_close_support(self):
+        self.assertTrue(self.dismiss(self.expo_menu(onboarding=False)))
+        self.shell.assert_called_once_with("input", "tap", 1293, 2244)
+
+    def test_unchanged_hierarchy_cannot_trigger_a_second_stale_tap(self):
+        tree = self.expo_menu(close=False)
+        self.assertTrue(self.dismiss(tree))
+        self.assertTrue(self.dismiss(tree))
+        self.shell.assert_called_once_with("input", "tap", 720, 2811)
+        self.assertEqual(self.runner.dismissals["Continue"], 1)
+        # A newly observed native dialog can then be handled independently.
+        self.assertTrue(self.dismiss(self.native_menu()))
+        self.assertEqual(self.shell.call_count, 2)
+        self.shell.assert_called_with("input", "keyevent", "KEYCODE_BACK")
+
+    def test_menu_recognition_never_backs_out_of_ordinary_app_content(self):
+        for text in ("Home", "Reload", "React Native Dev Menu", "Close"):
+            tree = ET.Element("hierarchy")
+            tree.append(node(text=text, clickable="true"))
+            self.assertFalse(self.dismiss(tree))
+        tree = self.native_menu()
+        for item in tree.iter("node"):
+            item.set("package", "com.android.settings")
+        self.assertFalse(self.dismiss(tree))
+        self.shell.assert_not_called()
+        self.capture.assert_not_called()
+
+    def test_repeated_menu_reappearance_remains_bounded(self):
+        for _ in range(2):
+            self.assertTrue(self.dismiss(self.native_menu()))
+            self.assertFalse(self.dismiss(node(text="Explore what connects us")))
+        with self.assertRaisesRegex(smoke.SmokeFailure, "more than two Back"):
+            self.dismiss(self.native_menu())
+        self.assertEqual(self.shell.call_count, 2)
+
+
 class ResponsiveEvidenceTests(unittest.TestCase):
     def test_display_overrides_are_read_without_losing_original_values(self):
         self.assertEqual(smoke.display_setting("Physical size: 1440x3120\nOverride size: 1200x1920", "size"),

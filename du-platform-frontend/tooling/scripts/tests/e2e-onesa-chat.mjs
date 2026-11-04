@@ -139,13 +139,19 @@ try {
       // is short, including the space remaining above an on-screen keyboard.
       // This exercises layout resizing; it does not simulate a native keyboard.
       if (surface === "popup" && width === 375) {
-        for (const viewport of [
+        for (const { fontSize, ...viewport } of [
           { width: 320, height: 568 },
+          { width: 320, height: 568, fontSize: 14 },
           { width: 844, height: 320 },
           { width: 390, height: 300 },
           { width: 1024, height: 600 },
         ]) {
           await page.setViewportSize(viewport);
+          // Browser font preferences must not shrink the 44px touch targets.
+          await page.evaluate(size => {
+            if (size) document.documentElement.style.fontSize = `${size}px`;
+            else document.documentElement.style.removeProperty("font-size");
+          }, fontSize ?? null);
           await input.focus();
           await page.waitForFunction(() => {
             const dialog = document.querySelector(
@@ -170,20 +176,30 @@ try {
               );
             });
           });
-          for (const action of [
-            send,
-            scope.getByRole("button", { name: "Close", exact: true }),
+          const close = scope.getByRole("button", {
+            name: "Close",
+            exact: true,
+          });
+          // A trial click waits for the animated popup to be stable without
+          // dismissing it. A visible box alone can still be mid-transition.
+          await close.click({ trial: true });
+          const variant = `${viewport.width}x${viewport.height}${fontSize ? `-font-${fontSize}` : ""}`;
+          // Preserve the failing view too, rather than taking evidence only
+          // after every assertion has already passed.
+          await page.screenshot({
+            path: `${output}/popup-${variant}.png`,
+          });
+          for (const [name, action] of [
+            ["Send", send],
+            ["Close", close],
           ]) {
             const box = await action.boundingBox();
             assert(
               box && box.width >= 44 && box.height >= 44,
-              "Chat controls must retain 44px touch targets in short viewports"
+              `${engine} ${variant} ${name} must retain a 44px touch target; measured ${JSON.stringify(box)}`
             );
           }
-          await page.screenshot({
-            path: `${output}/popup-${viewport.width}x${viewport.height}.png`,
-          });
-          layoutChecks.push(viewport);
+          layoutChecks.push({ ...viewport, ...(fontSize ? { fontSize } : {}) });
         }
         await page.setViewportSize({ width, height: 900 });
         // iOS can resize/pan only VisualViewport when the keyboard opens.

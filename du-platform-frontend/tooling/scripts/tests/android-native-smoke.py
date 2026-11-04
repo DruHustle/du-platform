@@ -147,7 +147,8 @@ class AndroidSmoke:
         self.display_state = None
         self.display_changed = False
         self.layout_cases = []
-        self.dismissals = {"Continue": 0, "Close": 0}
+        self.dismissals = {"Continue": 0, "Close": 0, "Back": 0}
+        self.pending_dismissal = None
         self.command_log = (self.artifacts / "commands.log").open("w", encoding="utf-8")
 
     def note(self, message):
@@ -203,17 +204,40 @@ class AndroidSmoke:
         return True
 
     def dismiss_developer_menu(self, tree, visible):
-        # SDK58's Continue reveals the menu; Close then returns to the app.
+        # Expo and React Native expose different development menus. The native
+        # AlertDialog observed in run 41751015388 has no Close button; Android
+        # Back cancels that dialog. Never send Back for an ordinary app screen.
+        native_menu = {"React Native Dev Menu", "Reload", "Change Bundle Location"} <= visible and any(
+            node.get("package") == self.package
+            and node.get("resource-id") == "android:id/select_dialog_listview"
+            for node in tree.iter("node")
+        )
         onboarding = any("This is the developer menu." in value for value in visible)
-        label = "Continue" if onboarding else "Close" if "Reload" in visible and "Close" in visible else None
+        expo_menu = onboarding or ("Reload" in visible and any(
+            value.startswith(("Runtime version: ", "SDK version: ")) for value in visible
+        ))
+        # The onboarding sheet also offers Close. Use it directly when present
+        # instead of opening more development tools with Continue.
+        label = "Back" if native_menu else "Close" if expo_menu and "Close" in visible else "Continue" if onboarding else None
         if label is None:
+            self.pending_dismissal = None
             return False
+        signature = (label, tuple(sorted(visible)))
+        if signature == self.pending_dismissal:
+            # UIAutomator can repeat the pre-transition hierarchy. A second tap
+            # at the old Continue coordinates can select a different menu item.
+            # Keep observing; wait_screen's deadline still fails a stuck menu.
+            return True
         if self.dismissals[label] >= 2:
-            raise SmokeFailure(f"Developer menu remained open after two {label} taps")
+            raise SmokeFailure(f"Developer menu required more than two {label} dismissals")
         self.capture(f"developer-menu-{label.lower()}-{self.dismissals[label]}", self.last_xml)
-        if not self.tap(tree, label):
+        if native_menu:
+            self.note("Dismiss observed React Native developer dialog with Android Back")
+            self.shell("input", "keyevent", "KEYCODE_BACK")
+        elif not self.tap(tree, label):
             raise SmokeFailure(f"Observed developer menu without an enabled {label} button")
         self.dismissals[label] += 1
+        self.pending_dismissal = signature
         return True
 
     def wait_screen(self, name, expected, timeout=45, orientation=None):
@@ -230,6 +254,8 @@ class AndroidSmoke:
             else:
                 visible = self.visible_labels(tree)
                 if self.dismiss_developer_menu(tree, visible):
+                    last_error = f"Developer menu is still visible: {sorted(visible)}"
+                    time.sleep(1)
                     continue
                 if all(text in visible for text in expected):
                     self.capture(name, self.last_xml)
