@@ -8,6 +8,7 @@ final class DUNativeSmokeTests: XCTestCase {
     private var checks: [[String: Any]] = []
     private let tabs = ["Home", "Shop", "Travel", "Assistant", "Account"]
     private var dismissedTypingTutorial = false
+    private var pendingPasswordPromptFor: String?
 
     @MainActor
     override func setUp() async throws {
@@ -58,7 +59,11 @@ final class DUNativeSmokeTests: XCTestCase {
             XCTAssertEqual((password.value as? String)?.count, "keyboard-fixture".count)
             assertKeyboardAccess(password, action: unique(.button, "Sign in"), in: accountScroll,
                                  name: "\(name)-account-keyboard")
+            // iOS can offer to save these fixture credentials after leaving
+            // the form. Allow one observed prompt for this Account visit.
+            pendingPasswordPromptFor = name
             dismissKeyboard(in: accountScroll, avoiding: password)
+            _ = declinePasswordPrompt(preserving: password, expected: "keyboard-fixture", secure: true)
 
             navigate("Assistant", text: "Onesa assistant")
             let message = unique(.textView, "Your message")
@@ -71,6 +76,7 @@ final class DUNativeSmokeTests: XCTestCase {
             dismissKeyboard(in: assistantScroll, avoiding: message)
             checkTabs("\(name)-tabs-after-keyboard")
             attachEvidence(name)
+            pendingPasswordPromptFor = nil
         }
         rotate(.portrait, name: "restored-portrait")
         navigate("Home", text: "Explore what connects us")
@@ -211,6 +217,10 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func reveal(_ element: XCUIElement, in scroll: XCUIElement) {
+        if pendingPasswordPromptFor != nil {
+            _ = declinePasswordPrompt(preserving: element, expected: element.value as? String ?? "",
+                                      secure: element.elementType == .secureTextField)
+        }
         for _ in 0..<4 {
             let viewport = visibleContent(in: scroll)
             if element.isHittable && contains(viewport, element.frame) { return }
@@ -230,6 +240,69 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     private func typingTutorials() -> XCUIElementQuery {
         app.otherElements.matching(NSPredicate(format: "identifier == %@", "UIContinuousPathIntroductionView"))
+    }
+
+    @MainActor
+    private func passwordPrompt() -> XCUIElement? {
+        let title = NSPredicate(format: "label == %@", "Save Password?")
+        let matches = app.sheets.matching(title).allElementsBoundByIndex
+            + app.alerts.matching(title).allElementsBoundByIndex
+        guard !matches.isEmpty else { return nil }
+        XCTAssertEqual(matches.count, 1, "The observed password-saving prompt must be unique")
+        return matches[0]
+    }
+
+    @MainActor
+    private func inputMatches(_ field: XCUIElement, expected: String, secure: Bool = false) -> Bool {
+        guard let observed = field.value else { return expected.isEmpty }
+        guard let actual = observed as? String else { return false }
+        return secure ? actual.count == expected.count : actual == expected
+    }
+
+    @MainActor
+    private func declinePasswordPrompt(preserving field: XCUIElement, expected: String, secure: Bool = false) -> Bool {
+        guard let prompt = passwordPrompt() else { return false }
+        guard let phase = pendingPasswordPromptFor else {
+            XCTFail("A password-saving prompt outside its Account visit, or a repeated prompt, is unexpected")
+            return false
+        }
+        let title = prompt.staticTexts.matching(NSPredicate(format: "label == %@", "Save Password?"))
+        let body = prompt.staticTexts.matching(NSPredicate(format: "label == %@",
+            "Securely store your password so it’s filled automatically the next time you need it."))
+        let cancel = prompt.buttons.matching(NSPredicate(format: "label == %@", "Not Now"))
+        let save = prompt.buttons.matching(NSPredicate(format: "label == %@", "Save"))
+        XCTAssertEqual(title.count, 1)
+        XCTAssertEqual(body.count, 1, "Only the observed password-saving prompt may be declined")
+        XCTAssertEqual(cancel.count, 1)
+        XCTAssertEqual(save.count, 1)
+        XCTAssertEqual(prompt.buttons.count, 2, "Unknown prompt actions must not be dismissed")
+        let button = cancel.element(boundBy: 0)
+        XCTAssertFalse(prompt.frame.intersection(app.frame).isEmpty)
+        XCTAssertTrue(button.isEnabled && button.isHittable)
+        XCTAssertTrue(contains(app.frame, button.frame))
+        XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
+                      "The acknowledged input changed before the password prompt was declined")
+        record("\(phase)-password-prompt-before", elements: [prompt, button, field])
+        attachEvidence("\(phase)-password-prompt-before")
+        pendingPasswordPromptFor = nil
+        button.tap()
+        wait("The known password prompt did not disappear", timeout: 5) { !prompt.exists }
+        XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
+                      "Declining the password prompt must preserve the acknowledged input")
+        record("\(phase)-password-prompt-after", elements: [field])
+        attachEvidence("\(phase)-password-prompt-after")
+        return true
+    }
+
+    @MainActor
+    private func resumePasswordInterruptedInput(_ field: XCUIElement, expected: String, secure: Bool = false) {
+        guard declinePasswordPrompt(preserving: field, expected: expected, secure: secure) else { return }
+        // Only the observed prompt authorizes refocusing; this never types,
+        // repairs a value, or retries an event already sent to the input.
+        field.tap()
+        waitForTypingKeyboard(refocusing: field, preserving: expected, secure: secure)
+        XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
+                      "Refocusing after the password prompt must preserve the acknowledged input")
     }
 
     @MainActor
@@ -260,13 +333,13 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func waitForKeyboardOrTutorial() -> Bool {
-        var tutorialObserved = false
+    private func waitForKeyboardOrInterruption() -> Bool {
+        var interruptionObserved = false
         var previous: CGRect?
         var settledSince = Date()
         wait("A visible software keyboard must settle before typing") {
-            if self.typingTutorials().firstMatch.exists {
-                tutorialObserved = true
+            if self.typingTutorials().firstMatch.exists || self.passwordPrompt() != nil {
+                interruptionObserved = true
                 return true
             }
             guard let frame = self.keyboardObstructionFrame() else {
@@ -281,49 +354,81 @@ final class DUNativeSmokeTests: XCTestCase {
             }
             return Date().timeIntervalSince(settledSince) >= 0.2
         }
-        return tutorialObserved
+        return interruptionObserved
     }
 
     @MainActor
-    private func waitForTypingKeyboard(refocusing field: XCUIElement? = nil) {
-        guard waitForKeyboardOrTutorial() else { return }
-        // Capture and acknowledge the once-only OS interruption outside the
-        // keyboard deadline. Evidence collection must not consume the fresh
-        // bounded settling phase after the tutorial has disappeared.
-        XCTAssertTrue(dismissKnownTypingTutorial())
-        // Only this observed blocking tutorial can justify another field tap;
-        // no text has been sent and no input event is replayed.
-        field?.tap()
-        XCTAssertFalse(waitForKeyboardOrTutorial(), "The first-use keyboard tutorial must not recur")
+    private func waitForTypingKeyboard(refocusing field: XCUIElement, preserving expected: String, secure: Bool = false) {
+        // At most the once-only typing introduction and this Account visit's
+        // password prompt may interrupt a settling phase. Neither is a retry.
+        for phase in 0..<3 {
+            guard waitForKeyboardOrInterruption() else { return }
+            XCTAssertLessThan(phase, 2, "Unexpected repeated input interruptions")
+            XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
+                          "An input interruption must not replace the acknowledged value")
+            if !dismissKnownTypingTutorial() {
+                XCTAssertTrue(declinePasswordPrompt(preserving: field, expected: expected, secure: secure))
+            }
+            // Evidence and acknowledgment occur outside the keyboard deadline.
+            // Refocus only after an observed prompt, without sending any text.
+            field.tap()
+            XCTAssertTrue(inputMatches(field, expected: expected, secure: secure))
+        }
+        XCTFail("The software keyboard did not return after the bounded input interruptions")
     }
 
     @MainActor
-    private func typeOnce(_ character: String, into field: XCUIElement, expecting value: String, secure: Bool = false) {
-        XCTAssertNotNil(visibleKeyboardFrame(), "The software keyboard disappeared before typing")
+    private func typeOnce(_ character: String, into field: XCUIElement, from previous: String,
+                          expecting value: String, secure: Bool = false) {
+        if pendingPasswordPromptFor != nil {
+            resumePasswordInterruptedInput(field, expected: previous, secure: secure)
+        }
+        var keyboardFrame = visibleKeyboardFrame()
+        if keyboardFrame == nil && passwordPrompt() != nil {
+            resumePasswordInterruptedInput(field, expected: previous, secure: secure)
+            keyboardFrame = visibleKeyboardFrame()
+        }
+        XCTAssertNotNil(keyboardFrame, "The software keyboard disappeared before typing")
         field.typeText(character)
         // Acknowledgment observes each event; it never resends it or repairs the
         // text. Secure inputs expose only a masked value, so check its length.
+        var passwordPromptObserved = false
         wait("Typed input did not acknowledge the expected \(secure ? "masked length" : "exact prefix") of \(value.count)", timeout: 3) {
-            guard self.visibleKeyboardFrame() != nil else { return false }
-            guard let observed = field.value else { return value.isEmpty }
-            guard let actual = observed as? String else { return false }
-            return secure ? actual.count == value.count : actual == value
+            guard self.visibleKeyboardFrame() != nil else {
+                passwordPromptObserved = self.passwordPrompt() != nil
+                return passwordPromptObserved
+            }
+            return self.inputMatches(field, expected: value, secure: secure)
         }
+        if passwordPromptObserved {
+            // The event was already sent. Even if a prompt arrived during its
+            // acknowledgment, the exact NEW value must appear without replay.
+            wait("An interrupted input event must still acknowledge its exact value", timeout: 3) {
+                self.inputMatches(field, expected: value, secure: secure)
+            }
+            resumePasswordInterruptedInput(field, expected: value, secure: secure)
+        }
+        XCTAssertTrue(inputMatches(field, expected: value, secure: secure))
     }
 
     @MainActor
     private func replaceText(_ field: XCUIElement, with value: String, secure: Bool = false) {
-        _ = dismissKnownTypingTutorial()
-        field.tap()
-        waitForTypingKeyboard(refocusing: field)
         var expected = field.value as? String ?? ""
+        _ = dismissKnownTypingTutorial()
+        if pendingPasswordPromptFor != nil {
+            _ = declinePasswordPrompt(preserving: field, expected: expected, secure: secure)
+        }
+        field.tap()
+        waitForTypingKeyboard(refocusing: field, preserving: expected, secure: secure)
         while !expected.isEmpty {
+            let previous = expected
             expected.removeLast()
-            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, expecting: expected, secure: secure)
+            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, from: previous, expecting: expected, secure: secure)
         }
         for character in value {
+            let previous = expected
             expected.append(character)
-            typeOnce(String(character), into: field, expecting: expected, secure: secure)
+            typeOnce(String(character), into: field, from: previous, expecting: expected, secure: secure)
         }
     }
 
@@ -338,11 +443,19 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     private func assertKeyboardAccess(_ field: XCUIElement, action: XCUIElement, in scroll: XCUIElement,
                                       name: String, multiline: Bool = false) {
-        let keyboard = app.keyboards.firstMatch
-        XCTAssertTrue(existsOrWait(keyboard, timeout: 10), "Software keyboard is required")
         let expectedValue = field.value as? String
         XCTAssertNotNil(expectedValue, "The typed input must expose its value")
+        if pendingPasswordPromptFor != nil {
+            resumePasswordInterruptedInput(field, expected: expectedValue ?? "",
+                                           secure: field.elementType == .secureTextField)
+        }
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(existsOrWait(keyboard, timeout: 10), "Software keyboard is required")
         for _ in 0..<4 {
+            if pendingPasswordPromptFor != nil {
+                resumePasswordInterruptedInput(field, expected: expectedValue ?? "",
+                                               secure: field.elementType == .secureTextField)
+            }
             XCTAssertTrue(keyboard.exists, "Scrolling dismissed the keyboard; this is not keyboard-clearance evidence")
             let viewport = visibleContent(in: scroll)
             if editingAreaVisible(field, viewport: viewport, multiline: multiline)
@@ -354,9 +467,9 @@ final class DUNativeSmokeTests: XCTestCase {
             // Prove editing still works after the bounded scroll. XCTest has no
             // public iOS caret rectangle; retain this typed state for screenshot
             // review rather than claiming a programmatic caret-bound assertion.
-            waitForTypingKeyboard()
-            typeOnce("x", into: field, expecting: (expectedValue ?? "") + "x")
-            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, expecting: expectedValue ?? "")
+            waitForTypingKeyboard(refocusing: field, preserving: expectedValue ?? "")
+            typeOnce("x", into: field, from: expectedValue ?? "", expecting: (expectedValue ?? "") + "x")
+            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, from: (expectedValue ?? "") + "x", expecting: expectedValue ?? "")
         }
         XCTAssertTrue(keyboard.exists && keyboard.frame.height > 0, "The software keyboard must still be visible")
         XCTAssertFalse(keyboard.frame.intersection(app.frame).isEmpty,
