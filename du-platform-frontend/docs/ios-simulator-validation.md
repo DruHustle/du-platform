@@ -43,7 +43,8 @@ The same semantic XCTest journey runs once on each device:
 - Check full tab touch targets of at least 44 points within the app window.
 - Type fixture text into the Account and Assistant forms with a real visible
   software keyboard. The single-line Account input and action must remain fully
-  inside the visible scroll viewport above the keyboard. The multiline editor
+  inside the visible scroll viewport above the keyboard, including its observed
+  `SystemInputAssistantView` accessory bar. The multiline editor
   must remain editable and hittable with at least 44 points of visible editing
   area; its full enabled action must still fit above the keyboard. Typed values,
   screenshots and accessibility trees retain the focused state for manual
@@ -53,8 +54,14 @@ The same semantic XCTest journey runs once on each device:
   portrait. Bounded native scroll gestures may reveal controls; an absent
   keyboard cannot count as evidence of keyboard clearance.
 
-The app's real accessibility labels select elements. No absolute coordinates,
-API stubs, form submissions, skipped devices, or whole-test retries are used.
+The app's real accessibility labels select elements. Each form selects the unique
+app window and scroll view containing its input, using XCTest's
+[descendant query](https://developer.apple.com/documentation/xcuiautomation/xcuielementquery/containing(_:identifier:)).
+Bounded scroll drags use element-relative points measured inside the visible
+content viewport and outside the editor. They cannot start on a keyboard
+accessory scroll view or within the multiline editor's own scrolling area.
+No hard-coded screen coordinates, coordinate taps, API stubs, form submissions,
+skipped devices, or whole-test retries are used.
 Each device must produce an XCTest summary with exactly one passed smoke test,
 zero failed tests and zero skipped tests. A successful build or empty test run
 cannot satisfy the runtime check.
@@ -67,6 +74,19 @@ geometry assertions remain in place. This synchronizes the real editing journey;
 rapid bulk typing. Run [41787512082](https://github.com/DruHustle/du-platform/actions/runs/41787512082)
 retained a cold-keyboard transition and a 60-character-per-second bulk event with
 missing input, which the original full-value assertion correctly rejected.
+
+The runner handles only the first-use QuickPath introduction observed in run
+[41791909311](https://github.com/DruHustle/du-platform/actions/runs/41791909311).
+Its exact `UIContinuousPathIntroductionView` identifier, instruction text and
+descendant `Continue` button must all match. It records the visible prompt,
+dismisses it once, requires its disappearance, and records the resulting state.
+Only that observed interruption can justify a second field tap before typing;
+no text event is replayed. Tutorial evidence and acknowledgment occur outside
+the keyboard-settling wait, which starts fresh after that one interruption;
+the overall test and job deadlines remain unchanged. Other prompts and a recurring introduction remain
+failures. The same run retained exact email input but exposed a gesture aimed
+at the keyboard's accessory scroll view; form-scoped selection and measured
+viewport drags correct that harness path without changing app behavior.
 
 ## Evidence and bounds
 
