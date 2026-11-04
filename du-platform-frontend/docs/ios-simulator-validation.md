@@ -37,9 +37,10 @@ with both an observed compatible iPhone and iPad device type. It creates its own
 two devices and reports the actual model, runtime, architecture and checked-out
 revision. It does not download runtimes or reuse a developer's simulator.
 
-The same semantic XCTest journey runs once on each device:
+Two independent semantic XCTest cases run on each device, one for portrait and
+one for landscape. Each case launches the real app and completes this journey:
 
-- Reach Home and visit all five tabs in portrait and landscape.
+- Reach Home and visit all five tabs in its assigned orientation.
 - Check full tab touch targets of at least 44 points within the app window.
 - Type fixture text into the Account and Assistant forms with a real visible
   software keyboard. The single-line Account input and action must remain fully
@@ -53,6 +54,15 @@ The same semantic XCTest journey runs once on each device:
 - Dismiss the keyboard, verify that the tab bar returns, and rotate back to
   portrait. Bounded native scroll gestures may reveal controls; an absent
   keyboard cannot count as evidence of keyboard clearance.
+
+Each input first receives a small real seed, which the same replacement helper
+deletes completely before entering the unchanged full fixture. Each mounted form
+also rotates away and back after its keyboard check: the email and message must
+retain their exact values, and the secure password must retain its full masked
+length. These explicit retention checks preserve rotation/state coverage without
+depending on test order or another case's application state. The Account prompt
+allowance remains tied to that same visit and is checked again before navigating
+away from the form.
 
 The app's real accessibility labels select elements. Each form selects the unique
 app window and scroll view containing its input, using XCTest's
@@ -72,7 +82,7 @@ content overscroll with a fixed keyboard because the original dismissal path
 ended above it. It remains a failed journey, not full device qualification.
 No hard-coded screen coordinates, coordinate taps, API stubs, form submissions,
 skipped devices, or whole-test retries are used.
-Each device must produce an XCTest summary with exactly one passed smoke test,
+Each device must produce an XCTest summary with exactly two passed smoke tests,
 zero failed tests and zero skipped tests. A successful build or empty test run
 cannot satisfy the runtime check.
 
@@ -89,7 +99,8 @@ The runner recognizes the first-use QuickPath introduction observed in run
 [41791909311](https://github.com/DruHustle/du-platform/actions/runs/41791909311).
 Its exact `UIContinuousPathIntroductionView` identifier, instruction text and
 descendant `Continue` button must all match. It records the visible prompt,
-dismisses it once, requires its disappearance, and records the resulting state.
+dismisses it once per device, requires its disappearance, and records the resulting state.
+A suite-level guard preserves that limit across the two cases regardless of order.
 Acknowledging this observed introduction permits a second field tap before typing;
 no text event is replayed. Tutorial evidence and acknowledgment occur outside
 the keyboard-settling wait, which starts fresh after that one interruption;
@@ -117,12 +128,30 @@ waits, while the overall test and job deadlines remain unchanged.
 Run [41809310414](https://github.com/DruHustle/du-platform/actions/runs/41809310414)
 retained the iPad's exact `A simu` prefix while the keyboard disappeared before
 the password prompt appeared. XCTest failed between separate keyboard existence
-and frame queries. Keyboard and accessory measurements now come from one public
-[application snapshot](https://developer.apple.com/documentation/xcuiautomation/xcuielementsnapshotproviding/snapshot()),
-including its window and descendant frames. An unreadable snapshot fails the
-test; it cannot count as a closed keyboard. The final clearance check and its
-`keyboardObservation` JSON use that same measurement, while application controls
-still require their actual enabled and hittable states.
+and frame queries. Public throwing
+[element snapshots](https://developer.apple.com/documentation/xcuiautomation/xcuielementsnapshotproviding/snapshot())
+avoid that unhandled existence/frame race. Run
+[41814926872](https://github.com/DruHustle/du-platform/actions/runs/41814926872)
+then completed portrait Account and Assistant checks on both devices but exposed
+a landscape discrepancy between recursively read snapshot-child frames and
+resolved accessibility frames. The iPad's actual visible area above the keyboard
+was 234 points, while the former calculation rejected an empty viewport.
+
+Geometry therefore comes from snapshots of the resolved keyboard and accessory
+elements. At most two read attempts require a consistent device orientation,
+application window, keyboard position and hierarchy presence; no coordinates are
+manually rotated or offset. Raw application snapshots establish presence and
+retain diagnostic data, rather than supplying descendant geometry. A target that
+disappears during capture can count as absent only when two subsequent readable
+hierarchies confirm its absence in the same orientation/window. Other unreadable
+or inconsistent observations fail. Per-character checks avoid redundant accessory
+measurement; full clearance checks retain the complete keyboard/accessory bound.
+
+Raw windows, keyboard/accessory frames and resolved control/scroll measurements
+are recorded before rejected geometry. Invalid rectangles use a JSON-safe tagged
+description so they cannot destroy the failure report during serialization. Final
+clearance and `keyboardObservation` JSON use the same validated measurement;
+application controls still require their actual enabled and hittable states.
 
 Every sent character still has three seconds to acknowledge its exact new value
 or secure-field length. If the keyboard disappears, only an already-authorized
@@ -147,8 +176,11 @@ checks even when the native assertions passed.
 
 The temporary test action retains system attachments on success as well as
 failure, following [Apple's recording-retention guidance](https://developer.apple.com/videos/play/wwdc2025/344/).
-Export validation requires the expected test, the owned simulator UUID,
-nonempty local attachment payloads and a manifest-labelled screen recording.
+Export validation requires the two exact expected case identifiers and
+URLs, the owned simulator UUID, nonempty local attachment payloads and at least
+one manifest-labelled screen recording for each case. If Xcode segments a recording,
+every distinct clip must validate and remain bound to its own case; clips for one
+case cannot substitute for the other case's evidence.
 The runner rejects an attachment-error placeholder, then uses the installed
 AVFoundation framework to require a positive-duration video track and an actually
 decoded frame. Only that validated recording is reported as usable evidence.
@@ -171,8 +203,14 @@ share a 35-minute execution budget, leaving room for dependency setup, cleanup
 and artifact upload. Within that budget, build-for-testing allows 20 minutes;
 each device gets one six-minute cold-boot wait and a ten-minute `xcodebuild`
 test command. That command includes simulator test-runner launch and result
-finalization. The actual XCTest journey retains its 240-second default and
-300-second maximum test allowance. In run
+finalization. Each independent orientation case retains its 240-second default
+and 300-second maximum test allowance. In run 41814926872, the old combined phone
+journey reached portrait completion at about 196 seconds and then exceeded
+240 seconds during ordinary acknowledged landscape email replacement. This was
+distinct from the earlier animation-idle stall. The two-case design keeps full
+fixture entry, real replacement and explicit rotation retention within separate
+bounded cases; it does not increase the command or overall execution budgets.
+Hosted results must still establish that both complete. In run
 [41779981845](https://github.com/DruHustle/du-platform/actions/runs/41779981845),
 iPad test launch took about 193 seconds, the failing journey took 107 seconds,
 and the earlier six-minute command deadline interrupted result finalization.

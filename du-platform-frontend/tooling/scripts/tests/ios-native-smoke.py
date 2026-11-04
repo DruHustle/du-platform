@@ -28,7 +28,12 @@ JOURNEY_BUDGET_SECONDS = 35 * 60
 CLEANUP_BUDGET_SECONDS = 180
 BOOT_TIMEOUT_SECONDS = 360
 TEST_COMMAND_TIMEOUT_SECONDS = 600
-TEST_IDENTIFIER = "DUNativeSmokeUITests/DUNativeSmokeTests/testResponsiveNavigationAndKeyboard"
+TEST_IDENTIFIERS = (
+    "DUNativeSmokeUITests/DUNativeSmokeTests/testPortraitNavigationAndKeyboard",
+    "DUNativeSmokeUITests/DUNativeSmokeTests/testLandscapeNavigationAndKeyboard",
+)
+TEST_CASE_URLS = {identifier.split("/", 1)[1] + "()": f"test://com.apple.xcode/DiasporaUnlocked/{identifier}"
+                  for identifier in TEST_IDENTIFIERS}
 
 # Use the installed Apple media framework, not filename extensions or a magic
 # header, to reject xcresult's error-text placeholders and undecodable media.
@@ -119,9 +124,10 @@ def select_devices(inventory):
 
 
 def validate_test_summary(summary):
-    expected = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0}
-    if any(type(summary.get(key)) is not int or summary[key] != value for key, value in expected.items()):
-        raise SmokeFailure("XCTest must report exactly one passed, zero failed and zero skipped smoke test per device")
+    expected = {"totalTestCount": 2, "passedTests": 2, "failedTests": 0, "skippedTests": 0}
+    if (not isinstance(summary, dict)
+            or any(type(summary.get(key)) is not int or summary[key] != value for key, value in expected.items())):
+        raise SmokeFailure("XCTest must report exactly two passed, zero failed and zero skipped smoke tests per device")
 
 
 def exported_recordings(directory, device_id):
@@ -133,36 +139,45 @@ def exported_recordings(directory, device_id):
         manifest = json.loads(manifest_path.read_text())
     except (ValueError, UnicodeError) as error:
         raise SmokeFailure("Invalid XCTest attachment manifest") from error
-    if (not isinstance(manifest, list) or len(manifest) != 1 or not isinstance(manifest[0], dict)
-            or manifest[0].get("testIdentifier") != TEST_IDENTIFIER.split("/", 1)[1] + "()"
-            or manifest[0].get("testIdentifierURL") != f"test://com.apple.xcode/DiasporaUnlocked/{TEST_IDENTIFIER}"):
-        raise SmokeFailure("Attachment manifest does not identify the single expected smoke test")
-    attachments = manifest[0].get("attachments")
-    if not isinstance(attachments, list) or not attachments:
-        raise SmokeFailure("The smoke test exported no attachments")
-    recordings = []
-    for attachment in attachments:
-        if not isinstance(attachment, dict) or attachment.get("deviceId") != device_id:
-            raise SmokeFailure("Attachment manifest does not match the owned simulator")
-        name = attachment.get("exportedFileName")
-        title = attachment.get("suggestedHumanReadableName")
-        if (not isinstance(name, str) or not name or name in (".", "..") or Path(name).name != name
-                or "\\" in name or not isinstance(title, str)):
-            raise SmokeFailure("Malformed exported attachment filename or title")
-        path = directory / name
-        if path.resolve().parent != directory.resolve() or not path.is_file() or path.stat().st_size == 0:
-            raise SmokeFailure(f"Missing, empty or external attachment payload: {name}")
-        if title == "Screen Recording" or title.startswith("Screen Recording "):
-            with path.open("rb") as payload:
-                prefix = payload.read(512)
-            if prefix.lstrip().startswith(b"Unexpected Error:"):
-                raise SmokeFailure(f"Screen recording is an XCTest error placeholder: {name}")
-            if path in recordings:
-                raise SmokeFailure("Duplicate screen recording in attachment manifest")
-            recordings.append(path)
-    if not recordings:
-        raise SmokeFailure("The smoke test has no retained automatic screen recording")
-    return recordings
+    if not isinstance(manifest, list) or len(manifest) != len(TEST_CASE_URLS):
+        raise SmokeFailure("Attachment manifest must identify both expected smoke tests exactly once")
+    recordings_by_test = {}
+    recorded_paths = set()
+    for test in manifest:
+        identifier = test.get("testIdentifier") if isinstance(test, dict) else None
+        if (not isinstance(identifier, str) or identifier not in TEST_CASE_URLS
+                or identifier in recordings_by_test or test.get("testIdentifierURL") != TEST_CASE_URLS[identifier]):
+            raise SmokeFailure("Attachment manifest must identify both expected smoke tests exactly once")
+        attachments = test.get("attachments")
+        if not isinstance(attachments, list) or not attachments:
+            raise SmokeFailure(f"The smoke test exported no attachments: {identifier}")
+        recordings = []
+        for attachment in attachments:
+            if not isinstance(attachment, dict) or attachment.get("deviceId") != device_id:
+                raise SmokeFailure("Attachment manifest does not match the owned simulator")
+            name = attachment.get("exportedFileName")
+            title = attachment.get("suggestedHumanReadableName")
+            if (not isinstance(name, str) or not name or name in (".", "..") or Path(name).name != name
+                    or "\\" in name or not isinstance(title, str)):
+                raise SmokeFailure("Malformed exported attachment filename or title")
+            path = directory / name
+            resolved_path = path.resolve()
+            if resolved_path.parent != directory.resolve() or not path.is_file() or path.stat().st_size == 0:
+                raise SmokeFailure(f"Missing, empty or external attachment payload: {name}")
+            if title == "Screen Recording" or title.startswith("Screen Recording "):
+                with path.open("rb") as payload:
+                    prefix = payload.read(512)
+                if prefix.lstrip().startswith(b"Unexpected Error:"):
+                    raise SmokeFailure(f"Screen recording is an XCTest error placeholder: {name}")
+                if resolved_path in recorded_paths:
+                    raise SmokeFailure("Duplicate screen recording in attachment manifest")
+                recorded_paths.add(resolved_path)
+                recordings.append(path)
+        if not recordings:
+            raise SmokeFailure(f"The smoke test has no retained automatic screen recording: {identifier}")
+        recordings_by_test[identifier] = recordings
+    # Keep case ownership explicit, independent of the manifest's entry order.
+    return {identifier: recordings_by_test[identifier] for identifier in TEST_CASE_URLS}
 
 
 def validate_recording_probe(probe, recordings):
@@ -405,12 +420,16 @@ class IOSSmoke:
                 self.run(["xcrun", "xcresulttool", "export", "attachments", "--path", str(result),
                           "--output-path", str(directory)],
                          f"{family}-attachments", timeout=60)
-                recordings = exported_recordings(directory, udid)
+                recordings_by_test = exported_recordings(directory, udid)
+                owned_recordings = [(identifier, path) for identifier, paths in recordings_by_test.items() for path in paths]
+                recordings = [path for _, path in owned_recordings]
                 output = self.capture(["xcrun", "swift", str(self.recording_probe), *map(str, recordings)],
                                       f"{family}-recordings", timeout=60, separate_stderr=True)
                 probe = validate_recording_probe(json.loads(output), recordings)
-                device["recordings"] = [{**item, "file": f"{family}-attachments/{item['fileName']}"}
-                                         for item in probe]
+                device["recordings"] = [{**item, "testIdentifier": identifier,
+                                          "testIdentifierURL": TEST_CASE_URLS[identifier],
+                                          "file": f"{family}-attachments/{item['fileName']}"}
+                                         for (identifier, _), item in zip(owned_recordings, probe)]
             except Exception as error:
                 device.setdefault("evidenceErrors", []).append(str(error))
                 # Native screenshots/trees must be inspectable off the Mac too.
@@ -481,7 +500,7 @@ class IOSSmoke:
                       "-test-timeouts-enabled", "YES",
                       "-default-test-execution-time-allowance", "240",
                       "-maximum-test-execution-time-allowance", "300",
-                      f"-only-testing:{TEST_IDENTIFIER}"],
+                      *[f"-only-testing:{identifier}" for identifier in TEST_IDENTIFIERS]],
                      f"test-{family}", timeout=TEST_COMMAND_TIMEOUT_SECONDS)
             summary = json.loads(self.capture(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)],
                                               f"summary-{family}"))

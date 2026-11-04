@@ -22,7 +22,10 @@ ENVIRONMENT = {"EXPO_PUBLIC_API_URL": "https://api.example.invalid/api",
 RUNTIME = "com.apple.CoreSimulator.SimRuntime.iOS-26-0"
 PHONE = "com.apple.CoreSimulator.SimDeviceType.iPhone-16e"
 TABLET = "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro"
-PASSED = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0}
+PASSED = {"totalTestCount": 2, "passedTests": 2, "failedTests": 0, "skippedTests": 0}
+PORTRAIT_CASE = "DUNativeSmokeTests/testPortraitNavigationAndKeyboard()"
+LANDSCAPE_CASE = "DUNativeSmokeTests/testLandscapeNavigationAndKeyboard()"
+LANDSCAPE_RECORDING = "landscape-recording-without-extension"
 PHONE_ID = "11111111-1111-1111-1111-111111111111"
 TABLET_ID = "22222222-2222-2222-2222-222222222222"
 BUNDLE_IDENTIFIER = "com.diasporaunlocked.app"
@@ -33,21 +36,24 @@ SIMULATED_ENTITLEMENTS = {"application-identifier": f"FAKETEAMID.{BUNDLE_IDENTIF
 
 def attachment_fixture(directory, device_id=PHONE_ID, filename="recording-without-extension"):
     directory.mkdir(parents=True, exist_ok=True)
-    manifest = [{"testIdentifier": "DUNativeSmokeTests/testResponsiveNavigationAndKeyboard()",
-                 "testIdentifierURL": "test://com.apple.xcode/DiasporaUnlocked/DUNativeSmokeUITests/"
-                                      "DUNativeSmokeTests/testResponsiveNavigationAndKeyboard",
-                 "attachments": [{"deviceId": device_id, "exportedFileName": filename,
-                                  "suggestedHumanReadableName": "Screen Recording 2026-11-04 at 09.03.29 AM"}]}]
+    manifest = [{"testIdentifier": identifier,
+                 "testIdentifierURL": "test://com.apple.xcode/DiasporaUnlocked/DUNativeSmokeUITests/" + identifier[:-2],
+                 "attachments": [{"deviceId": device_id, "exportedFileName": name,
+                                  "suggestedHumanReadableName": "Screen Recording 2026-11-04 at 09.03.29 AM"}]}
+                for identifier, name in ((PORTRAIT_CASE, filename), (LANDSCAPE_CASE, LANDSCAPE_RECORDING))]
     (directory / "manifest.json").write_text(json.dumps(manifest))
     # This host fixture is not a video. Actual decoding belongs to AVFoundation
     # on the Mac, whose success/failure is supplied explicitly in runner tests.
-    (directory / filename).write_bytes(b"fixture passed to native media validation")
+    for name in (filename, LANDSCAPE_RECORDING):
+        (directory / name).write_bytes(b"fixture passed to native media validation")
     return manifest
 
 
 def recording_probe(filename="recording-without-extension"):
     return [{"fileName": filename, "durationSeconds": 145.25, "videoTrackCount": 1,
-             "width": 750, "height": 1334}]
+             "width": 750, "height": 1334},
+            {"fileName": LANDSCAPE_RECORDING, "durationSeconds": 140.5, "videoTrackCount": 1,
+             "width": 1334, "height": 750}]
 
 
 def macho_fixture(entitlements=SIMULATED_ENTITLEMENTS, architecture="arm64", copies=1, payload=None):
@@ -115,14 +121,16 @@ class ValidationTests(unittest.TestCase):
             with self.subTest(overrides=overrides), self.assertRaises(smoke.SmokeFailure):
                 smoke.validate_environment({**ENVIRONMENT, **overrides})
 
-    def test_zero_tests_skip_failure_or_unknown_summary_cannot_pass(self):
+    def test_partial_extra_skipped_failed_or_unknown_summary_cannot_pass(self):
         smoke.validate_test_summary(PASSED)
-        for change in ({"totalTestCount": 0, "passedTests": 0}, {"skippedTests": 1},
-                       {"failedTests": 1}, {"passedTests": True}, {"totalTestCount": "1"}):
+        for change in ({"totalTestCount": 0, "passedTests": 0}, {"totalTestCount": 1, "passedTests": 1},
+                       {"totalTestCount": 3, "passedTests": 3}, {"passedTests": 1, "skippedTests": 1},
+                       {"passedTests": 1, "failedTests": 1}, {"passedTests": True}, {"totalTestCount": "2"}):
             with self.subTest(change=change), self.assertRaises(smoke.SmokeFailure):
                 smoke.validate_test_summary({**PASSED, **change})
-        with self.assertRaises(smoke.SmokeFailure):
-            smoke.validate_test_summary({})
+        for value in ({}, [], None):
+            with self.subTest(value=value), self.assertRaises(smoke.SmokeFailure):
+                smoke.validate_test_summary(value)
 
     def test_generated_application_identifier_supplies_default_keychain_access_without_a_sharing_group(self):
         self.assertEqual(smoke.validate_simulator_signing(ADHOC_METADATA,
@@ -151,8 +159,17 @@ class RecordingManifestTests(unittest.TestCase):
         (self.directory / "manifest.json").write_text(json.dumps(self.manifest))
 
     def test_selects_manifest_recording_without_trusting_a_file_extension(self):
-        paths = smoke.exported_recordings(self.directory, PHONE_ID)
-        self.assertEqual(paths, [self.directory / "recording-without-extension"])
+        recordings = smoke.exported_recordings(self.directory, PHONE_ID)
+        self.assertEqual(recordings, {PORTRAIT_CASE: [self.directory / "recording-without-extension"],
+                                      LANDSCAPE_CASE: [self.directory / LANDSCAPE_RECORDING]})
+
+    def test_manifest_order_does_not_swap_recording_ownership(self):
+        self.manifest.reverse()
+        self.write_manifest()
+        recordings = smoke.exported_recordings(self.directory, PHONE_ID)
+        self.assertEqual(list(recordings), [PORTRAIT_CASE, LANDSCAPE_CASE])
+        self.assertEqual(recordings[PORTRAIT_CASE], [self.directory / "recording-without-extension"])
+        self.assertEqual(recordings[LANDSCAPE_CASE], [self.directory / LANDSCAPE_RECORDING])
 
     def test_rejects_observed_pending_attachment_placeholder_even_with_mp4_extension(self):
         attachment_fixture(self.directory, filename="pending.mp4")
@@ -161,17 +178,61 @@ class RecordingManifestTests(unittest.TestCase):
         with self.assertRaisesRegex(smoke.SmokeFailure, "error placeholder"):
             smoke.exported_recordings(self.directory, PHONE_ID)
 
-    def test_test_identity_and_device_must_match_the_executed_journey(self):
+    def test_test_identity_url_and_device_must_match_both_executed_cases(self):
         for key, value in (("testIdentifier", "OtherTests/testSomething()"),
                            ("testIdentifierURL", "test://com.apple.xcode/Other/OtherTests/testSomething")):
-            with self.subTest(key=key):
+            for index in (0, 1):
+                with self.subTest(key=key, index=index):
+                    self.manifest = attachment_fixture(self.directory)
+                    self.manifest[index][key] = value
+                    self.write_manifest()
+                    with self.assertRaisesRegex(smoke.SmokeFailure, "expected smoke test"):
+                        smoke.exported_recordings(self.directory, PHONE_ID)
+        for index in (0, 1):
+            with self.subTest(foreign_device_case=index):
                 self.manifest = attachment_fixture(self.directory)
-                self.manifest[0][key] = value
+                self.manifest[index]["attachments"][0]["deviceId"] = TABLET_ID
                 self.write_manifest()
-                with self.assertRaisesRegex(smoke.SmokeFailure, "expected smoke test"):
+                with self.assertRaisesRegex(smoke.SmokeFailure, "owned simulator"):
                     smoke.exported_recordings(self.directory, PHONE_ID)
-        attachment_fixture(self.directory, device_id=TABLET_ID)
-        with self.assertRaisesRegex(smoke.SmokeFailure, "owned simulator"):
+
+    def test_two_entries_for_one_case_cannot_substitute_for_both_orientations(self):
+        self.manifest[1]["testIdentifier"] = self.manifest[0]["testIdentifier"]
+        self.manifest[1]["testIdentifierURL"] = self.manifest[0]["testIdentifierURL"]
+        self.write_manifest()
+        with self.assertRaisesRegex(smoke.SmokeFailure, "both expected smoke tests exactly once"):
+            smoke.exported_recordings(self.directory, PHONE_ID)
+
+    def test_two_clips_for_one_case_cannot_substitute_for_a_missing_case_recording(self):
+        self.manifest[0]["attachments"].append(dict(self.manifest[1]["attachments"][0]))
+        self.manifest[1]["attachments"][0]["suggestedHumanReadableName"] = "final-accessibility.txt"
+        self.write_manifest()
+        with self.assertRaisesRegex(smoke.SmokeFailure, "no retained automatic screen recording.*Landscape"):
+            smoke.exported_recordings(self.directory, PHONE_ID)
+
+    def test_distinct_segmented_recordings_are_kept_with_their_own_case(self):
+        extra = "portrait-second-segment"
+        (self.directory / extra).write_bytes(b"another clip supplied to native validation")
+        self.manifest[0]["attachments"].append({**self.manifest[0]["attachments"][0], "exportedFileName": extra})
+        self.write_manifest()
+        recordings = smoke.exported_recordings(self.directory, PHONE_ID)
+        self.assertEqual(recordings[PORTRAIT_CASE], [self.directory / "recording-without-extension", self.directory / extra])
+        self.assertEqual(recordings[LANDSCAPE_CASE], [self.directory / LANDSCAPE_RECORDING])
+
+    def test_shared_or_repeated_recording_cannot_count_for_two_cases_or_segments(self):
+        for index in (0, 1):
+            with self.subTest(index=index):
+                self.manifest = attachment_fixture(self.directory)
+                self.manifest[index]["attachments"].append(dict(self.manifest[0]["attachments"][0]))
+                self.write_manifest()
+                with self.assertRaisesRegex(smoke.SmokeFailure, "Duplicate screen recording"):
+                    smoke.exported_recordings(self.directory, PHONE_ID)
+
+    def test_alias_of_one_recording_cannot_substitute_for_the_second_case(self):
+        landscape = self.directory / LANDSCAPE_RECORDING
+        landscape.unlink()
+        landscape.symlink_to(self.directory / "recording-without-extension")
+        with self.assertRaisesRegex(smoke.SmokeFailure, "Duplicate screen recording"):
             smoke.exported_recordings(self.directory, PHONE_ID)
 
     def test_missing_or_empty_payload_and_external_path_cannot_count_as_evidence(self):
@@ -194,7 +255,7 @@ class RecordingManifestTests(unittest.TestCase):
             smoke.exported_recordings(self.directory, PHONE_ID)
 
     def test_empty_wrong_shaped_or_duplicate_test_manifest_is_rejected(self):
-        for value in ([], {}, [None], self.manifest * 2):
+        for value in ([], {}, [None, None], self.manifest[:1], self.manifest * 2):
             with self.subTest(value=value):
                 (self.directory / "manifest.json").write_text(json.dumps(value))
                 with self.assertRaises(smoke.SmokeFailure):
@@ -210,13 +271,17 @@ class RecordingManifestTests(unittest.TestCase):
             smoke.exported_recordings(self.directory, PHONE_ID)
 
     def test_media_report_requires_matching_files_duration_track_and_decoded_dimensions(self):
-        paths = [self.directory / "recording-without-extension"]
+        paths = [self.directory / "recording-without-extension", self.directory / LANDSCAPE_RECORDING]
         self.assertEqual(smoke.validate_recording_probe(recording_probe(), paths), recording_probe())
         for change in ({"fileName": "other.mp4"}, {"durationSeconds": 0}, {"durationSeconds": float("nan")},
                        {"durationSeconds": True}, {"videoTrackCount": 0}, {"width": 0}, {"height": "1334"}):
-            with self.subTest(change=change), self.assertRaises(smoke.SmokeFailure):
-                smoke.validate_recording_probe([{**recording_probe()[0], **change}], paths)
-        for report in ([], {}, [None], recording_probe() * 2):
+            for index in (0, 1):
+                report = recording_probe()
+                report[index].update(change)
+                with self.subTest(change=change, index=index), self.assertRaises(smoke.SmokeFailure):
+                    smoke.validate_recording_probe(report, paths)
+        for report in ([], {}, [None, None], recording_probe()[:1], recording_probe() * 2,
+                       list(reversed(recording_probe()))):
             with self.subTest(report=report), self.assertRaises(smoke.SmokeFailure):
                 smoke.validate_recording_probe(report, paths)
 
@@ -604,6 +669,10 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(len(test_calls), 1)
         self.assertEqual(test_calls[0].kwargs["timeout"], 600)
         command = test_calls[0].args[0]
+        self.assertEqual([arg for arg in command if arg.startswith("-only-testing:")], [
+            "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testPortraitNavigationAndKeyboard",
+            "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testLandscapeNavigationAndKeyboard",
+        ])
         self.assertEqual(command[command.index("-default-test-execution-time-allowance") + 1], "240")
         self.assertEqual(command[command.index("-maximum-test-execution-time-allowance") + 1], "300")
         for repetition_flag in ("-test-iterations", "-test-repetitions", "-retry-tests-on-failure", "-run-tests-until-failure"):
@@ -659,6 +728,54 @@ class RunnerTests(unittest.TestCase):
         self.runner.exercise(device, self.root / "test.xctestrun")
         self.assertEqual(device["status"], "failed")
 
+    def test_both_passed_case_counts_and_owned_recordings_are_required_for_device_success(self):
+        (self.runner.artifacts / "iPhone.xcresult").mkdir()
+        attachment_fixture(self.runner.artifacts / "iPhone-attachments")
+        self.runner.run = Mock(return_value=(0, ""))
+        self.runner.capture = Mock(side_effect=[json.dumps(PASSED), json.dumps(recording_probe())])
+        self.runner.device_state = Mock(return_value="Shutdown")
+        device = {"family": "iPhone", "udid": PHONE_ID}
+        self.assertTrue(self.runner.exercise(device, self.root / "test.xctestrun"))
+        self.assertEqual(device["status"], "passed")
+        self.assertEqual([item["testIdentifier"] for item in device["recordings"]], [PORTRAIT_CASE, LANDSCAPE_CASE])
+        self.assertEqual(json.loads((self.runner.artifacts / "iPhone-summary.json").read_text()), PASSED)
+        self.assertEqual(len([call for call in self.runner.run.call_args_list if call.args[1] == "test-iPhone"]), 1)
+
+    def test_passing_aggregate_counts_cannot_replace_a_missing_orientation_manifest(self):
+        (self.runner.artifacts / "iPhone.xcresult").mkdir()
+        directory = self.runner.artifacts / "iPhone-attachments"
+        manifest = attachment_fixture(directory)
+        (directory / "manifest.json").write_text(json.dumps(manifest[:1]))
+        self.runner.run = Mock(return_value=(0, ""))
+        self.runner.capture = Mock(return_value=json.dumps(PASSED))
+        self.runner.device_state = Mock(return_value="Shutdown")
+        device = {"family": "iPhone", "udid": PHONE_ID}
+        self.assertTrue(self.runner.exercise(device, self.root / "test.xctestrun"))
+        self.assertEqual(device["status"], "failed")
+        self.assertIn("both expected smoke tests exactly once", device["error"])
+        self.assertNotIn("recordings", device)
+        self.runner.capture.assert_called_once()
+
+    def test_one_failed_case_preserves_its_error_when_other_case_only_evidence_is_exported(self):
+        (self.runner.artifacts / "iPhone.xcresult").mkdir()
+        directory = self.runner.artifacts / "iPhone-attachments"
+        manifest = attachment_fixture(directory)
+        (directory / "manifest.json").write_text(json.dumps(manifest[:1]))
+        def run(_args, label, **_kwargs):
+            if label == "test-iPhone":
+                raise smoke.SmokeFailure("Landscape keyboard assertion failed")
+            return 0, ""
+        self.runner.run = Mock(side_effect=run)
+        self.runner.capture = Mock()
+        self.runner.device_state = Mock(return_value="Shutdown")
+        device = {"family": "iPhone", "udid": PHONE_ID}
+        self.assertTrue(self.runner.exercise(device, self.root / "test.xctestrun"))
+        self.assertEqual(device["status"], "failed")
+        self.assertEqual(device["error"], "Landscape keyboard assertion failed")
+        self.assertIn("both expected smoke tests exactly once", device["evidenceErrors"][0])
+        self.runner.capture.assert_not_called()
+        self.assertEqual(len([call for call in self.runner.run.call_args_list if call.args[1] == "test-iPhone"]), 1)
+
     def test_attachments_are_exported_on_native_failure_for_review_without_xcode(self):
         result = self.runner.artifacts / "iPhone.xcresult"
         result.mkdir()
@@ -694,7 +811,7 @@ class RunnerTests(unittest.TestCase):
         self.assertIn("error placeholder", device["evidenceErrors"][0])
         self.runner.capture.assert_not_called()
 
-    def test_a_successful_journey_needs_a_native_decoded_recording_before_acceptance(self):
+    def test_each_successful_case_needs_a_native_decoded_recording_before_acceptance(self):
         (self.runner.artifacts / "iPhone.xcresult").mkdir()
         attachment_fixture(self.runner.artifacts / "iPhone-attachments")
         self.runner.recording_probe.write_text(smoke.RECORDING_PROBE_SWIFT)
@@ -705,10 +822,52 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(device["status"], "passed")
         self.assertEqual(device["recordings"][0]["file"], "iPhone-attachments/recording-without-extension")
         self.assertEqual(device["recordings"][0]["durationSeconds"], 145.25)
+        self.assertEqual([item["testIdentifier"] for item in device["recordings"]], [PORTRAIT_CASE, LANDSCAPE_CASE])
+        self.assertEqual([item["testIdentifierURL"] for item in device["recordings"]], [
+            "test://com.apple.xcode/DiasporaUnlocked/DUNativeSmokeUITests/DUNativeSmokeTests/testPortraitNavigationAndKeyboard",
+            "test://com.apple.xcode/DiasporaUnlocked/DUNativeSmokeUITests/DUNativeSmokeTests/testLandscapeNavigationAndKeyboard",
+        ])
         args = self.runner.capture.call_args.args[0]
         self.assertEqual(args[:2], ["xcrun", "swift"])
-        self.assertEqual(Path(args[-1]), self.runner.artifacts / "iPhone-attachments/recording-without-extension")
+        self.assertEqual([Path(arg) for arg in args[3:]], [self.runner.artifacts / "iPhone-attachments/recording-without-extension",
+                                                       self.runner.artifacts / "iPhone-attachments" / LANDSCAPE_RECORDING])
         self.assertTrue(self.runner.capture.call_args.kwargs["separate_stderr"])
+
+    def test_segmented_recordings_are_all_decoded_and_reported_with_case_ownership(self):
+        (self.runner.artifacts / "iPhone.xcresult").mkdir()
+        directory = self.runner.artifacts / "iPhone-attachments"
+        manifest = attachment_fixture(directory)
+        extra = "portrait-second-segment"
+        (directory / extra).write_bytes(b"segmented video fixture")
+        manifest[0]["attachments"].append({**manifest[0]["attachments"][0], "exportedFileName": extra})
+        (directory / "manifest.json").write_text(json.dumps(list(reversed(manifest))))
+        self.runner.run = Mock(return_value=(0, ""))
+        probe = recording_probe()
+        probe.insert(1, {**probe[0], "fileName": extra, "durationSeconds": 10.5})
+        self.runner.capture = Mock(return_value=json.dumps(probe))
+        device = {"family": "iPhone", "udid": PHONE_ID, "status": "passed"}
+        self.runner.evidence(device)
+        self.assertEqual(device["status"], "passed")
+        self.assertEqual([item["testIdentifier"] for item in device["recordings"]],
+                         [PORTRAIT_CASE, PORTRAIT_CASE, LANDSCAPE_CASE])
+        self.assertEqual([Path(arg).name for arg in self.runner.capture.call_args.args[0][3:]],
+                         ["recording-without-extension", extra, LANDSCAPE_RECORDING])
+
+    def test_missing_or_invalid_second_case_media_probe_cannot_leave_a_passing_device(self):
+        (self.runner.artifacts / "iPhone.xcresult").mkdir()
+        attachment_fixture(self.runner.artifacts / "iPhone-attachments")
+        self.runner.run = Mock(return_value=(0, ""))
+        incomplete = recording_probe()[:1]
+        undecodable = recording_probe()
+        undecodable[1]["height"] = 0
+        for probe in (incomplete, undecodable):
+            with self.subTest(probe=probe):
+                self.runner.capture = Mock(return_value=json.dumps(probe))
+                device = {"family": "iPhone", "udid": PHONE_ID, "status": "passed"}
+                self.runner.evidence(device)
+                self.assertEqual(device["status"], "failed")
+                self.assertNotIn("recordings", device)
+                self.assertEqual(len(device["evidenceErrors"]), 1)
 
     def test_media_decode_failure_or_timeout_cannot_leave_a_passing_device(self):
         (self.runner.artifacts / "iPhone.xcresult").mkdir()

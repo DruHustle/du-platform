@@ -7,8 +7,9 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor private var app: XCUIApplication!
     private var checks: [[String: Any]] = []
     private let tabs = ["Home", "Shop", "Travel", "Assistant", "Account"]
-    private var dismissedTypingTutorial = false
+    @MainActor private static var dismissedTypingTutorial = false
     private var pendingPasswordPromptFor: String?
+    private var lastKeyboardDiagnostic: [String: Any] = [:]
 
     private struct KeyboardObservation {
         let window: CGRect
@@ -16,6 +17,18 @@ final class DUNativeSmokeTests: XCTestCase {
         let keyboard: CGRect?
         let accessories: [CGRect]
         let obstruction: CGRect?
+    }
+
+    private struct KeyboardHierarchy {
+        let window: CGRect
+        let descendantWindows: [CGRect]
+        let keyboards: [CGRect]
+        let accessories: [CGRect]
+    }
+
+    private struct KeyboardTargetFailure: Error {
+        let kind: String
+        let detail: String
     }
 
     @MainActor
@@ -42,53 +55,83 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    func testResponsiveNavigationAndKeyboard() {
-        for (name, orientation) in [("portrait", UIDeviceOrientation.portrait),
-                                    ("landscape", UIDeviceOrientation.landscapeLeft)] {
-            rotate(orientation, name: name)
-            checkTabs("\(name)-tabs")
-            navigate("Home", text: "Explore what connects us")
-            navigate("Shop", text: "Filter by category")
-            XCTAssertTrue(app.textFields["Search products"].exists)
-            navigate("Travel", text: "Find options")
-            XCTAssertTrue(app.textFields["From airport code (e.g. FRA)"].exists)
+    func testPortraitNavigationAndKeyboard() {
+        exerciseOrientation(.portrait, name: "portrait")
+    }
 
-            navigate("Account", text: "Welcome back")
-            let email = unique(.textField, "Email address")
-            let accountScroll = contentScrollView(containing: email)
-            reveal(email, in: accountScroll)
-            replaceText(email, with: "ios-smoke@example.invalid")
-            XCTAssertEqual(email.value as? String, "ios-smoke@example.invalid")
-            let password = unique(.secureTextField, "Password")
-            reveal(password, in: accountScroll)
-            replaceText(password, with: "keyboard-fixture", secure: true)
-            XCTAssertFalse((password.value as? String ?? "").isEmpty)
-            XCTAssertNotEqual(password.value as? String, "Password")
-            XCTAssertEqual((password.value as? String)?.count, "keyboard-fixture".count)
-            assertKeyboardAccess(password, action: unique(.button, "Sign in"), in: accountScroll,
-                                 name: "\(name)-account-keyboard")
-            // iOS can offer to save these fixture credentials after leaving
-            // the form. Allow one observed prompt for this Account visit.
-            pendingPasswordPromptFor = name
-            dismissKeyboard(in: accountScroll, avoiding: password)
-            _ = declinePasswordPrompt(preserving: password, expected: "keyboard-fixture", secure: true)
+    @MainActor
+    func testLandscapeNavigationAndKeyboard() {
+        exerciseOrientation(.landscapeLeft, name: "landscape")
+    }
 
-            navigate("Assistant", text: "Onesa assistant")
-            let message = unique(.textView, "Your message")
-            let assistantScroll = contentScrollView(containing: message)
-            reveal(message, in: assistantScroll)
-            replaceText(message, with: "A simulator keyboard check.")
-            XCTAssertEqual(message.value as? String, "A simulator keyboard check.")
-            assertKeyboardAccess(message, action: unique(.button, "Send message"), in: assistantScroll,
-                                 name: "\(name)-assistant-keyboard", multiline: true)
-            dismissKeyboard(in: assistantScroll, avoiding: message)
-            checkTabs("\(name)-tabs-after-keyboard")
-            attachEvidence(name)
-            pendingPasswordPromptFor = nil
-        }
+    @MainActor
+    private func exerciseOrientation(_ orientation: UIDeviceOrientation, name: String) {
+        rotate(orientation, name: name)
+        checkTabs("\(name)-tabs")
+        navigate("Home", text: "Explore what connects us")
+        navigate("Shop", text: "Filter by category")
+        XCTAssertTrue(app.textFields["Search products"].exists)
+        navigate("Travel", text: "Find options")
+        XCTAssertTrue(app.textFields["From airport code (e.g. FRA)"].exists)
+
+        navigate("Account", text: "Welcome back")
+        let email = unique(.textField, "Email address")
+        let accountScroll = contentScrollView(containing: email)
+        reveal(email, in: accountScroll)
+        replaceFixture(email, with: "ios-smoke@example.invalid")
+        XCTAssertEqual(email.value as? String, "ios-smoke@example.invalid")
+        let password = unique(.secureTextField, "Password")
+        reveal(password, in: accountScroll)
+        replaceFixture(password, with: "keyboard-fixture", secure: true)
+        XCTAssertFalse((password.value as? String ?? "").isEmpty)
+        XCTAssertNotEqual(password.value as? String, "Password")
+        XCTAssertEqual((password.value as? String)?.count, "keyboard-fixture".count)
+        assertKeyboardAccess(password, action: unique(.button, "Sign in"), in: accountScroll,
+                             name: "\(name)-account-keyboard")
+        // One prompt allowance follows this verified Account visit. Rotation
+        // checks remain in the mounted form and do not create another visit.
+        pendingPasswordPromptFor = name
+        dismissKeyboard(in: accountScroll, avoiding: password)
+        _ = declinePasswordPrompt(preserving: password, expected: "keyboard-fixture", secure: true)
+        assertRetainedInput([(email, "ios-smoke@example.invalid", false), (password, "keyboard-fixture", true)],
+                            orientation: orientation, name: "\(name)-account", promptField: password,
+                            promptValue: "keyboard-fixture", secure: true)
+        // The delayed native prompt may appear during the rotation checks.
+        _ = declinePasswordPrompt(preserving: password, expected: "keyboard-fixture", secure: true)
+
+        navigate("Assistant", text: "Onesa assistant")
+        let message = unique(.textView, "Your message")
+        let assistantScroll = contentScrollView(containing: message)
+        reveal(message, in: assistantScroll)
+        replaceFixture(message, with: "A simulator keyboard check.")
+        XCTAssertEqual(message.value as? String, "A simulator keyboard check.")
+        assertKeyboardAccess(message, action: unique(.button, "Send message"), in: assistantScroll,
+                             name: "\(name)-assistant-keyboard", multiline: true)
+        dismissKeyboard(in: assistantScroll, avoiding: message)
+        assertRetainedInput([(message, "A simulator keyboard check.", false)],
+                            orientation: orientation, name: "\(name)-assistant", promptField: message,
+                            promptValue: "A simulator keyboard check.")
+        checkTabs("\(name)-tabs-after-keyboard")
+        attachEvidence(name)
+        pendingPasswordPromptFor = nil
         rotate(.portrait, name: "restored-portrait")
         navigate("Home", text: "Explore what connects us")
         checkTabs("restored-portrait-tabs")
+    }
+
+    @MainActor
+    private func assertRetainedInput(_ fields: [(XCUIElement, String, Bool)], orientation: UIDeviceOrientation,
+                                     name: String, promptField: XCUIElement, promptValue: String, secure: Bool = false) {
+        let other: UIDeviceOrientation = orientation.isLandscape ? .portrait : .landscapeLeft
+        for (phase, target) in [("away", other), ("back", orientation)] {
+            rotate(target, name: "\(name)-rotate-\(phase)")
+            _ = declinePasswordPrompt(preserving: promptField, expected: promptValue, secure: secure)
+            for (field, expected, masked) in fields {
+                XCTAssertTrue(inputMatches(field, expected: expected, secure: masked),
+                              "Rotation must preserve the exact input or masked length: \(field.label)")
+            }
+            record("\(name)-retained-\(phase)", elements: fields.map { $0.0 })
+        }
     }
 
     @MainActor
@@ -157,47 +200,182 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func observeKeyboard() -> KeyboardObservation? {
+    private func captureKeyboardHierarchy() throws -> KeyboardHierarchy {
+        let snapshot = try app.snapshot()
+        var descendants = snapshot.children
+        var index = 0
+        var windows: [CGRect] = []
+        var keyboards: [CGRect] = []
+        var accessories: [CGRect] = []
+        while index < descendants.count {
+            let element = descendants[index]
+            index += 1
+            descendants.append(contentsOf: element.children)
+            if element.elementType == .window {
+                windows.append(element.frame)
+            } else if element.elementType == .keyboard {
+                keyboards.append(element.frame)
+            } else if element.elementType == .other && element.identifier == "SystemInputAssistantView" {
+                accessories.append(element.frame)
+            }
+        }
+        // Descendant frames are retained for diagnosis only. In the observed
+        // rotated hierarchy they differed from resolved element coordinates.
+        return KeyboardHierarchy(window: snapshot.frame, descendantWindows: windows,
+                                 keyboards: keyboards, accessories: accessories)
+    }
+
+    private func hierarchyRecord(_ hierarchy: KeyboardHierarchy) -> [String: Any] {
+        ["window": rectangle(hierarchy.window), "descendantWindows": hierarchy.descendantWindows.map(rectangle),
+         "keyboards": hierarchy.keyboards.map(rectangle),
+         "accessories": hierarchy.accessories.map(rectangle)]
+    }
+
+    private func hierarchyWindowMatches(_ hierarchy: KeyboardHierarchy, window: CGRect) -> Bool {
+        finite(hierarchy.window) && !hierarchy.window.isEmpty && hierarchy.window == window
+    }
+
+    @MainActor
+    private func resolvedFrames(_ elements: [XCUIElement], kind: String) throws -> [CGRect] {
         do {
-            // Resolve the stable application once. A keyboard can disappear
-            // between a live `exists` query and a subsequent `frame` query.
-            let snapshot = try app.snapshot()
-            let window = snapshot.frame
-            guard !window.isEmpty && [window.minX, window.minY, window.width, window.height].allSatisfy({ $0.isFinite }) else {
-                XCTFail("The application snapshot must contain a finite visible window")
+            return try elements.map { try $0.snapshot().frame }
+        } catch {
+            throw KeyboardTargetFailure(kind: kind, detail: String(describing: error))
+        }
+    }
+
+    @MainActor
+    private func confirmedAbsence(_ kind: String, orientation: UIDeviceOrientation, window: CGRect,
+                                  diagnostic: inout [String: Any]) throws -> Bool {
+        let first = try captureKeyboardHierarchy()
+        let second = try captureKeyboardHierarchy()
+        let currentWindow = app.frame
+        diagnostic["absenceFirst"] = hierarchyRecord(first)
+        diagnostic["absenceSecond"] = hierarchyRecord(second)
+        diagnostic["absenceWindow"] = rectangle(currentWindow)
+        diagnostic["absenceOrientation"] = XCUIDevice.shared.orientation.rawValue
+        let empty = kind == "keyboard"
+            ? first.keyboards.isEmpty && second.keyboards.isEmpty
+            : first.accessories.isEmpty && second.accessories.isEmpty
+        return empty && hierarchyWindowMatches(first, window: window)
+            && hierarchyWindowMatches(second, window: window) && currentWindow == window
+            && XCUIDevice.shared.orientation == orientation
+    }
+
+    @MainActor
+    private func rejectKeyboardObservation(_ reason: String, diagnostic: [String: Any]) {
+        lastKeyboardDiagnostic = diagnostic
+        checks.append(["name": "keyboard-observation-rejected", "reason": reason, "observation": diagnostic])
+        XCTFail(reason)
+    }
+
+    @MainActor
+    private func observeKeyboard(includeAccessories: Bool = true) -> KeyboardObservation? {
+        // At most two read attempts may establish one consistent observation.
+        // No UI action or text event is repeated by this measurement helper.
+        for attempt in 0..<2 {
+            let orientation = XCUIDevice.shared.orientation
+            let window = app.frame
+            var diagnostic: [String: Any] = ["attempt": attempt + 1, "orientation": orientation.rawValue,
+                                            "window": rectangle(window), "includeAccessories": includeAccessories]
+            do {
+                guard finite(window) && !window.isEmpty && (orientation.isPortrait || orientation.isLandscape) else {
+                    rejectKeyboardObservation("The application must have a finite window and a stable orientation", diagnostic: diagnostic)
+                    return nil
+                }
+                let rawBefore: KeyboardHierarchy?
+                if includeAccessories { rawBefore = try captureKeyboardHierarchy() }
+                else { rawBefore = nil }
+                if let raw = rawBefore { diagnostic["rawBefore"] = hierarchyRecord(raw) }
+                let keyboardTargets = app.keyboards.allElementsBoundByIndex
+                if keyboardTargets.isEmpty {
+                    if try confirmedAbsence("keyboard", orientation: orientation, window: window, diagnostic: &diagnostic) {
+                        lastKeyboardDiagnostic = diagnostic
+                        return KeyboardObservation(window: window, hasKeyboardElement: false,
+                                                   keyboard: nil, accessories: [], obstruction: nil)
+                    }
+                    checks.append(["name": "keyboard-observation-changed", "observation": diagnostic])
+                    if attempt == 0 { continue }
+                    rejectKeyboardObservation("Keyboard absence was not confirmed by a stable readable hierarchy", diagnostic: diagnostic)
+                    return nil
+                }
+                let keyboardFrames = try resolvedFrames(keyboardTargets, kind: "keyboard")
+                diagnostic["resolvedKeyboards"] = keyboardFrames.map(rectangle)
+                var accessoryFrames: [CGRect] = []
+                var keyboardFramesAfter = keyboardFrames
+                var rawAfter: KeyboardHierarchy?
+                if includeAccessories {
+                    let targets = app.otherElements.matching(NSPredicate(format: "identifier == %@", "SystemInputAssistantView"))
+                        .allElementsBoundByIndex
+                    accessoryFrames = try resolvedFrames(targets, kind: "accessory")
+                    diagnostic["resolvedAccessories"] = accessoryFrames.map(rectangle)
+                    // Ensure the keyboard did not move while its accessory was
+                    // captured. Raw app snapshots establish presence, not coordinates.
+                    keyboardFramesAfter = try resolvedFrames(app.keyboards.allElementsBoundByIndex, kind: "keyboard")
+                    let after = try captureKeyboardHierarchy()
+                    rawAfter = after
+                    diagnostic["resolvedKeyboardsAfter"] = keyboardFramesAfter.map(rectangle)
+                    diagnostic["rawAfter"] = hierarchyRecord(after)
+                }
+                let currentWindow = app.frame
+                diagnostic["windowAfter"] = rectangle(currentWindow)
+                diagnostic["orientationAfter"] = XCUIDevice.shared.orientation.rawValue
+                let presenceAgrees = rawBefore.map { hierarchyWindowMatches($0, window: window)
+                    && $0.keyboards.count == keyboardFrames.count
+                    && $0.accessories.count == accessoryFrames.count } ?? true
+                let finalPresenceAgrees = rawAfter.map { hierarchyWindowMatches($0, window: window)
+                    && $0.keyboards.count == keyboardFrames.count
+                    && $0.accessories.count == accessoryFrames.count } ?? true
+                guard currentWindow == window && XCUIDevice.shared.orientation == orientation
+                    && keyboardFrames == keyboardFramesAfter && presenceAgrees && finalPresenceAgrees else {
+                    checks.append(["name": "keyboard-observation-changed", "observation": diagnostic])
+                    if attempt == 0 { continue }
+                    rejectKeyboardObservation("Keyboard geometry or orientation changed during its bounded observation", diagnostic: diagnostic)
+                    return nil
+                }
+                let frames = keyboardFrames + accessoryFrames
+                guard frames.allSatisfy({ finite($0) && $0.width >= 0 && $0.height >= 0
+                    && ($0.intersection(window).isEmpty || contains(window, $0)) }) else {
+                    if rawBefore == nil {
+                        do { diagnostic["rawAtRejection"] = hierarchyRecord(try captureKeyboardHierarchy()) }
+                        catch { diagnostic["rawCaptureError"] = String(describing: error) }
+                    }
+                    rejectKeyboardObservation("Resolved keyboard geometry must be finite and use the observed screen window", diagnostic: diagnostic)
+                    return nil
+                }
+                var keyboard: CGRect?
+                for frame in keyboardFrames where !frame.intersection(window).isEmpty && frame.height > 0 {
+                    keyboard = keyboard.map { $0.union(frame) } ?? frame
+                }
+                let accessories = accessoryFrames.filter { !$0.intersection(window).isEmpty }
+                let obstruction = keyboard.map { frame in
+                    accessories.reduce(frame) { $0.union($1) }.intersection(window)
+                }
+                lastKeyboardDiagnostic = diagnostic
+                return KeyboardObservation(window: window, hasKeyboardElement: true, keyboard: keyboard,
+                                           accessories: accessories, obstruction: obstruction)
+            } catch let failure as KeyboardTargetFailure {
+                diagnostic["targetFailure"] = ["kind": failure.kind, "detail": failure.detail]
+                do {
+                    if try confirmedAbsence(failure.kind, orientation: orientation, window: window, diagnostic: &diagnostic) {
+                        checks.append(["name": "keyboard-target-disappeared", "observation": diagnostic])
+                        if failure.kind == "keyboard" {
+                            lastKeyboardDiagnostic = diagnostic
+                            return KeyboardObservation(window: window, hasKeyboardElement: false,
+                                                       keyboard: nil, accessories: [], obstruction: nil)
+                        }
+                        if attempt == 0 { continue }
+                    }
+                } catch { diagnostic["absenceCaptureError"] = String(describing: error) }
+                rejectKeyboardObservation("A disappearing keyboard target could not be read or confirmed absent", diagnostic: diagnostic)
+                return nil
+            } catch {
+                diagnostic["hierarchyError"] = String(describing: error)
+                rejectKeyboardObservation("Could not capture the application keyboard hierarchy", diagnostic: diagnostic)
                 return nil
             }
-            var descendants = snapshot.children
-            var index = 0
-            var hasKeyboardElement = false
-            var keyboard: CGRect?
-            var accessories: [CGRect] = []
-            while index < descendants.count {
-                let element = descendants[index]
-                index += 1
-                descendants.append(contentsOf: element.children)
-                let frame = element.frame
-                if element.elementType == .keyboard {
-                    hasKeyboardElement = true
-                    if frame.height > 0 && !frame.intersection(window).isEmpty {
-                        keyboard = keyboard.map { $0.union(frame) } ?? frame
-                    }
-                } else if element.elementType == .other && element.identifier == "SystemInputAssistantView"
-                            && !frame.intersection(window).isEmpty {
-                    accessories.append(frame)
-                }
-            }
-            let obstruction = keyboard.map { keyboardFrame in
-                accessories.reduce(keyboardFrame) { $0.union($1) }.intersection(window)
-            }
-            return KeyboardObservation(window: window, hasKeyboardElement: hasKeyboardElement,
-                                       keyboard: keyboard, accessories: accessories, obstruction: obstruction)
-        } catch {
-            // An unreadable hierarchy is a failed observation, never proof
-            // that the keyboard has closed or that an input is reachable.
-            XCTFail("Could not capture the application keyboard hierarchy: \(error)")
-            return nil
         }
+        return nil
     }
 
     @MainActor
@@ -219,11 +397,24 @@ final class DUNativeSmokeTests: XCTestCase {
         !outer.isEmpty && !inner.isEmpty && outer.insetBy(dx: -0.5, dy: -0.5).contains(inner)
     }
 
+    private func finite(_ frame: CGRect) -> Bool {
+        [frame.minX, frame.minY, frame.width, frame.height].allSatisfy { $0.isFinite }
+    }
+
+    @MainActor
+    private func recordGeometry(_ name: String, frames: [String: CGRect]) {
+        checks.append(["name": name, "frames": frames.mapValues(rectangle),
+                       "keyboardObservation": lastKeyboardDiagnostic])
+    }
+
     @MainActor
     private func assertControl(_ element: XCUIElement, within viewport: CGRect) {
-        XCTAssertTrue(element.isEnabled, "Disabled control: \(element.label)")
-        XCTAssertTrue(element.isHittable, "Unreachable control: \(element.label)")
+        let enabled = element.isEnabled
+        let hittable = element.isHittable
         let frame = element.frame
+        recordGeometry("control-geometry-\(element.label)", frames: ["control": frame, "viewport": viewport])
+        XCTAssertTrue(enabled, "Disabled control: \(element.label)")
+        XCTAssertTrue(hittable, "Unreachable control: \(element.label)")
         XCTAssertGreaterThanOrEqual(frame.width, 44, "Narrow touch target: \(element.label)")
         XCTAssertGreaterThanOrEqual(frame.height, 44, "Short touch target: \(element.label)")
         XCTAssertTrue(contains(viewport, frame), "Clipped control \(element.label): \(frame), viewport \(viewport)")
@@ -234,6 +425,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let viewport = visibleContent(in: scroll)
         let fieldFrame = field.frame
         let scrollFrame = scroll.frame
+        recordGeometry("content-scroll-geometry", frames: ["scroll": scrollFrame, "viewport": viewport, "field": fieldFrame])
         let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
         let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
         XCTAssertFalse(viewport.isEmpty, "There is no visible app content available for a scroll gesture")
@@ -273,7 +465,7 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func visibleKeyboardFrame() -> CGRect? {
-        observeKeyboard()?.keyboard
+        observeKeyboard(includeAccessories: false)?.keyboard
     }
 
     @MainActor
@@ -367,7 +559,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let tutorials = typingTutorials()
         guard tutorials.firstMatch.exists else { return false }
         XCTAssertEqual(tutorials.count, 1, "The observed iOS keyboard tutorial must be unique")
-        XCTAssertFalse(dismissedTypingTutorial, "The first-use keyboard tutorial must not recur")
+        XCTAssertFalse(Self.dismissedTypingTutorial, "The first-use keyboard tutorial must not recur on this device")
         let tutorial = tutorials.element(boundBy: 0)
         let instruction = tutorial.staticTexts.matching(NSPredicate(format: "label == %@",
             "Speed up your typing by sliding your finger across the letters to compose a word."))
@@ -381,7 +573,7 @@ final class DUNativeSmokeTests: XCTestCase {
         XCTAssertTrue(contains(app.frame, button.frame))
         record("keyboard-tutorial-before", elements: [tutorial, button])
         attachEvidence("keyboard-tutorial-before")
-        dismissedTypingTutorial = true
+        Self.dismissedTypingTutorial = true
         button.tap()
         wait("The known keyboard tutorial did not disappear", timeout: 5) { !tutorial.exists }
         record("keyboard-tutorial-after", elements: [])
@@ -461,6 +653,14 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
+    private func replaceFixture(_ field: XCUIElement, with value: String, secure: Bool = false) {
+        // Exercise a real nonempty -> empty -> full replacement in each case,
+        // independently of the other test's application state or execution order.
+        replaceText(field, with: "xy", secure: secure)
+        replaceText(field, with: value, secure: secure)
+    }
+
+    @MainActor
     private func replaceText(_ field: XCUIElement, with value: String, secure: Bool = false) {
         var expected = field.value as? String ?? ""
         _ = dismissKnownTypingTutorial()
@@ -505,6 +705,7 @@ final class DUNativeSmokeTests: XCTestCase {
                                                secure: field.elementType == .secureTextField)
             }
             guard let observation = observeKeyboard() else { return }
+            recordGeometry("keyboard-clearance-observation", frames: ["window": observation.window, "scroll": scroll.frame])
             XCTAssertNotNil(observation.keyboard, "Scrolling dismissed the keyboard; this is not keyboard-clearance evidence")
             let viewport = visibleContent(in: scroll, observing: observation)
             if editingAreaVisible(field, viewport: viewport, multiline: multiline)
@@ -521,6 +722,8 @@ final class DUNativeSmokeTests: XCTestCase {
             typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, from: (expectedValue ?? "") + "x", expecting: expectedValue ?? "")
         }
         guard let observation = observeKeyboard() else { return }
+        recordGeometry("keyboard-clearance-final", frames: ["window": observation.window, "scroll": scroll.frame,
+                                                             "field": field.frame, "action": action.frame])
         XCTAssertNotNil(observation.keyboard,
                         "The software keyboard must have a nonempty visible frame inside the application window")
         let viewport = visibleContent(in: scroll, observing: observation)
@@ -553,6 +756,8 @@ final class DUNativeSmokeTests: XCTestCase {
             let fieldFrame = field.frame
             let scrollFrame = scroll.frame
             let window = observation.window
+            recordGeometry("keyboard-dismiss-geometry", frames: ["window": window, "scroll": scrollFrame,
+                                                                  "viewport": viewport, "field": fieldFrame])
             let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
             let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
             XCTAssertFalse(viewport.isEmpty, "Keyboard dismissal needs visible app content")
@@ -588,7 +793,7 @@ final class DUNativeSmokeTests: XCTestCase {
         ]
         if let observation = keyboard {
             check["keyboardObservation"] = [
-                "source": "single-application-snapshot",
+                "source": "validated-resolved-element-snapshots",
                 "hasKeyboardElement": observation.hasKeyboardElement,
                 "frame": observation.keyboard.map { rectangle($0) as Any } ?? NSNull(),
                 "accessories": observation.accessories.map(rectangle),
@@ -598,9 +803,10 @@ final class DUNativeSmokeTests: XCTestCase {
         checks.append(check)
     }
 
-    private func rectangle(_ frame: CGRect) -> [String: Double] {
-        ["x": Double(frame.origin.x), "y": Double(frame.origin.y),
-         "width": Double(frame.width), "height": Double(frame.height)]
+    private func rectangle(_ frame: CGRect) -> [String: Any] {
+        guard finite(frame) else { return ["invalid": true, "description": String(describing: frame)] }
+        return ["x": Double(frame.origin.x), "y": Double(frame.origin.y),
+                "width": Double(frame.width), "height": Double(frame.height)]
     }
 
     @MainActor
