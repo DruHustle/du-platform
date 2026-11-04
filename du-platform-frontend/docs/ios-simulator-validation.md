@@ -57,9 +57,19 @@ The same semantic XCTest journey runs once on each device:
 The app's real accessibility labels select elements. Each form selects the unique
 app window and scroll view containing its input, using XCTest's
 [descendant query](https://developer.apple.com/documentation/xcuiautomation/xcuielementquery/containing(_:identifier:)).
-Bounded scroll drags use element-relative points measured inside the visible
+Bounded content-reveal drags use element-relative points measured inside the visible
 content viewport and outside the editor. They cannot start on a keyboard
 accessory scroll view or within the multiline editor's own scrolling area.
+Intentional keyboard dismissal uses a separate pan that starts in that measured
+content gutter and continues toward the observed window's bottom. This matches
+iOS's [interactive dismissal](https://developer.apple.com/documentation/uikit/uiscrollview/keyboarddismissmode-swift.enum/interactive),
+where the keyboard follows the touch offscreen. Only this dismissal gesture may
+cross the keyboard area; content-reveal and keyboard-clearance drags stay above
+the entire obstruction. The keyboard must then disappear and the tab targets
+must return. Run [41796953321](https://github.com/DruHustle/du-platform/actions/runs/41796953321)
+passed portrait Account input and geometry checks on both devices, then showed
+content overscroll with a fixed keyboard because the original dismissal path
+ended above it. It remains a failed journey, not full device qualification.
 No hard-coded screen coordinates, coordinate taps, API stubs, form submissions,
 skipped devices, or whole-test retries are used.
 Each device must produce an XCTest summary with exactly one passed smoke test,
@@ -100,6 +110,15 @@ failed tests. Those in-app attachments can be inspected without Xcode; the final
 `simctl` screenshot may show SpringBoard after app teardown. `report.json`
 distinguishes failed, passed and unexecuted devices. Export failures remain failed
 checks even when the native assertions passed.
+
+Inspect the exported screen recording when a still image omits secure input.
+Apple documents that [secure fields hide their dots in iOS screenshots](https://developer.apple.com/documentation/swiftui/securefield).
+In run 41796953321, the XCTest still images omitted both the password dots and
+keyboard, while the corresponding recording showed the 16 masked characters,
+caret, full keyboard/accessory and Sign in action. That observed difference is
+not evidence of lost input or a dismissed keyboard. The recording and measured
+accessibility state must agree before accepting visual keyboard clearance; the
+workflow does not disable secure-entry protections to obtain a screenshot.
 
 The job remains bounded to 45 minutes. All build, device and evidence commands
 share a 35-minute execution budget, leaving room for dependency setup, cleanup
