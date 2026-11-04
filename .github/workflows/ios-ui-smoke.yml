@@ -1,0 +1,79 @@
+name: iOS Simulator Runtime Validation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "du-platform-frontend/mobile/**"
+      - "du-platform-frontend/tooling/scripts/tests/ios-native-smoke*"
+      - "du-platform-frontend/tooling/scripts/tests/ios-native-smoke/**"
+      - ".github/workflows/ios-ui-smoke.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "du-platform-frontend/mobile/**"
+      - "du-platform-frontend/tooling/scripts/tests/ios-native-smoke*"
+      - "du-platform-frontend/tooling/scripts/tests/ios-native-smoke/**"
+      - ".github/workflows/ios-ui-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: du-ios-ui-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "1"
+  EXPO_NO_TELEMETRY: "1"
+  EXPO_NO_DOTENV: "1"
+  # The real Release bundle uses isolated destinations, without account writes.
+  EXPO_PUBLIC_API_URL: "https://api.example.invalid/api"
+  EXPO_PUBLIC_WEB_URL: "https://www.example.invalid"
+
+jobs:
+  ios-ui-smoke:
+    name: iPhone and iPad runtime smoke
+    runs-on: macos-26
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - name: Verify simulator selection and failure guards
+        run: python3 ../tooling/scripts/tests/ios-native-smoke.test.py
+      - name: Install mobile dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Show native toolchain versions
+        run: |
+          xcodebuild -version
+          pod --version
+          ruby -e 'require "xcodeproj"; puts "xcodeproj #{Xcodeproj::VERSION}"'
+      - name: Install iOS native dependencies
+        working-directory: du-platform-frontend/mobile/ios
+        run: pod install
+      - name: Prepare the temporary XCTest target
+        # The generated native project is changed only in this disposable job.
+        # Native regeneration and the existing Debug/audit gates stay separate.
+        run: ruby ../tooling/scripts/tests/ios-native-smoke/prepare-ui-tests.rb ios/DiasporaUnlocked.xcodeproj
+      - name: Build and exercise the real Release simulator app
+        run: >-
+          python3 ../tooling/scripts/tests/ios-native-smoke.py
+          --mobile-dir .
+          --derived-data "$RUNNER_TEMP/du-ios-ui-build"
+          --artifacts "$RUNNER_TEMP/du-ios-ui-smoke"
+      - name: Preserve iPhone and iPad runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-native-smoke
+          path: ${{ runner.temp }}/du-ios-ui-smoke
+          if-no-files-found: warn
+          retention-days: 14
