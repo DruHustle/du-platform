@@ -117,6 +117,26 @@ class RunnerTests(unittest.TestCase):
                 self.runner.execute()
         self.runner.run.assert_not_called()
 
+    def test_initial_inventory_has_one_bounded_allowance_before_mutations(self):
+        def capture(args, label, **kwargs):
+            if label == "simulator-inventory":
+                raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+            return "--path --output-path" if "--help" in args else "fixture"
+        self.runner.capture = Mock(side_effect=capture)
+        self.runner.set_software_keyboard = Mock()
+        self.runner.create_device = Mock()
+        self.runner.exercise = Mock()
+        with patch.dict(smoke.os.environ, ENVIRONMENT), patch.object(smoke.platform, "system", return_value="Darwin"):
+            with self.assertRaises(subprocess.TimeoutExpired):
+                self.runner.execute()
+        calls = [call for call in self.runner.capture.call_args_list if call.args[1] == "simulator-inventory"]
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0].kwargs["timeout"], 120)
+        self.runner.set_software_keyboard.assert_not_called()
+        self.runner.create_device.assert_not_called()
+        self.runner.exercise.assert_not_called()
+        self.assertEqual(self.runner.report["devices"], [])
+
     def test_a_phone_failure_is_not_hidden_by_a_passing_tablet(self):
         def capture(args, _label, **_kwargs):
             if args[:2] == ["git", "rev-parse"]:
