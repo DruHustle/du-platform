@@ -279,7 +279,10 @@ class RunnerTests(unittest.TestCase):
         self.assertIn("overlaps", device["error"])
         self.runner.capture.assert_not_called()
         self.runner.evidence.assert_called_once_with(device)
-        self.assertEqual(sum(call.args[1] == "test-iPhone" for call in self.runner.run.call_args_list), 1)
+        test_calls = [call for call in self.runner.run.call_args_list if call.args[1] == "test-iPhone"]
+        self.assertEqual(len(test_calls), 1)
+        for repetition_flag in ("-test-iterations", "-test-repetitions", "-retry-tests-on-failure", "-run-tests-until-failure"):
+            self.assertNotIn(repetition_flag, test_calls[0].args[0])
 
     def test_cold_boot_timeout_keeps_primary_error_when_shutdown_also_times_out(self):
         def run(args, label, **kwargs):

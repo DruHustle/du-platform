@@ -253,7 +253,7 @@ class IOSSmoke:
             self.run(["xcodebuild", "test-without-building", "-xctestrun", str(test_run),
                       "-destination", self.destination(udid),
                       "-resultBundlePath", str(result), "-parallel-testing-enabled", "NO",
-                      "-test-iterations", "1", "-test-timeouts-enabled", "YES",
+                      "-test-timeouts-enabled", "YES",
                       "-default-test-execution-time-allowance", "240",
                       "-maximum-test-execution-time-allowance", "300",
                       "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testResponsiveNavigationAndKeyboard"],
