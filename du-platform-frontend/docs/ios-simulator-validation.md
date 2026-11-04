@@ -75,6 +75,28 @@ app window and scroll view containing its input, using XCTest's
 Bounded content-reveal drags use element-relative points measured inside the visible
 content viewport and outside the editor. They cannot start on a keyboard
 accessory scroll view or within the multiline editor's own scrolling area.
+Reveal and keyboard-clearance drags compute a feasible vertical-shift interval
+from fresh target and viewport measurements. A single-line field and its action
+must both fit completely; a multiline editor must retain at least 44 points of
+editing area while the whole action fits. An empty intersection fails instead of
+alternating directions. The gesture targets the nearest feasible edge with up to
+12 points of interior margin for pan initiation, capped to the safe travel inside
+the measured gutter. It uses Apple's public
+[slow drag and end-hold API](https://developer.apple.com/documentation/xcuiautomation/xcuicoordinate/press(forduration:thendragto:withvelocity:thenholdforduration:))
+with a 0.2-second hold before release. Each following attempt measures the viewport
+again; the four-attempt limit and all final bounds remain unchanged.
+
+Run [41829274004](https://github.com/DruHustle/du-platform/actions/runs/41829274004)
+passed both complete portrait cases, with recorded Account and Assistant keyboard
+states visually corroborating the assertions. Its landscape cases reached full
+email entry but the former fixed, 500-pixel-per-second gestures repeatedly moved
+Password past the opposite viewport edge. The iPhone's measured y-position
+alternated about 231 → −73 → 229, and the iPad's 312 → 34 → 312. The phone recording
+shows the corresponding overscroll; the iPad landscape recording was an error
+placeholder, so its diagnosis relies on the retained measurements and final
+image. This is evidence of an overshooting reveal gesture, not proof that the
+form cannot scroll. The adaptive gesture still requires actual hosted validation.
+
 Intentional keyboard dismissal uses a separate pan that starts in that measured
 content gutter and continues toward the observed window's bottom. This matches
 iOS's [interactive dismissal](https://developer.apple.com/documentation/uikit/uiscrollview/keyboarddismissmode-swift.enum/interactive),
@@ -152,11 +174,14 @@ keyboard/accessory targets also retained those unrotated frames. Both landscape
 cases correctly rejected the inconsistent geometry; neither qualified the form.
 The raw frames are therefore opaque signatures, never coordinates to transform.
 
-The next runtime qualification uses public live
+Fresh geometry uses public live
 [element frames](https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/frame)
 during settled phases, following their documented screen-coordinate contract.
-The diagnostic accessibility text alone does not prove these direct reads return
-normalized coordinates on this runtime; the actual run must establish that.
+Run 41829274004 recorded normalized live keyboard and accessory frames in both
+orientations while the paired raw snapshot frames retained their distinct basis.
+Its landscape failures occurred later in the reveal gestures. This runtime
+evidence establishes those measurements; diagnostic accessibility text alone
+would not prove the direct reads behaved correctly.
 At most two read attempts require identical live keyboard
 **and** accessory measurements, bracketed by matching readable app snapshots with
 the complete keyboard, accessory and descendant-window signatures. The app window,
@@ -253,6 +278,11 @@ iPad test launch took about 193 seconds, the failing journey took 107 seconds,
 and the earlier six-minute command deadline interrupted result finalization.
 Fresh iOS 26.5 data migration exceeded the earlier 150-second wait while still
 progressing in run [41774274359](https://github.com/DruHustle/du-platform/actions/runs/41774274359).
+Run 41829274004 also retained a separate 93.63-second gap between the initial
+iPhone app launch and automation-session setup. Early recording frames show
+Springboard and then a white launch surface; the cause is unassigned. It is not
+evidence of a rendered Home screen waiting idle, and it does not change these
+budgets or explain the later measured gesture overshoot.
 The timeout journal retains the command, elapsed time, original error and the
 complete output log, including failures during process termination.
 
