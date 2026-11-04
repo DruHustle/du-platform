@@ -334,7 +334,10 @@ class IOSSmoke:
         help_text = self.capture(["xcrun", "xcresulttool", "export", "attachments", "--help"], "xcresult-attachment-help")
         if "--path" not in help_text or "--output-path" not in help_text:
             raise SmokeFailure("Installed xcresulttool does not expose the required attachment export interface")
-        inventory = json.loads(self.capture(["xcrun", "simctl", "list", "--json"], "simulator-inventory"))
+        # The first CoreSimulator inventory read exceeded the generic 30s limit
+        # on a hosted Mac. Give this one read its own bounded allowance, not a retry.
+        inventory = json.loads(self.capture(["xcrun", "simctl", "list", "--json"],
+                                            "simulator-inventory", timeout=120))
         devices = select_devices(inventory)
         self.report["devices"] = devices
         self.set_software_keyboard()
