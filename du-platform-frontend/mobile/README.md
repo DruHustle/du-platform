@@ -30,12 +30,28 @@ space. Larger text and smaller windows return to a single column.
 
 The tab bar keeps full touch targets in landscape and makes room for wrapped,
 scaled labels. It hides while the keyboard is open. iOS scroll views use native
-keyboard insets; Android uses the existing `adjustResize` activity setting.
+keyboard insets. Android measures the overlap between the outer screen view and
+the software keyboard and reserves that space; an already resized window gets
+no additional inset. Android scrolling keeps the keyboard open while revealing
+form actions.
 Bottom content spacing includes the device safe area, and the offline notice
-appears below the navigation header. Device validation should cover keyboard
-access to the final fields and submit buttons, large text, landscape and tablet
-multitasking as well as ordinary portrait navigation. JavaScript bundle exports
-alone do not verify those native interactions.
+appears below the navigation header.
+
+[Native validation run 41769955061](https://github.com/DruHustle/du-platform/actions/runs/41769955061)
+passed the Android build and real-emulator journey on revision `e7342c139da8601f33b14b560ad7b1da2553e4bf`:
+59 checkpoints and 60 screenshots cover all five tabs on phone, tablet portrait,
+tablet landscape and 1.8× text. Real keyboard focus/typing checks verify the phone
+Account email field with its Sign in action and the large-text landscape tablet
+Assistant composer with its Send action. The keyboard stays open during the
+Assistant scroll; fixture text, focus and complete action bounds are checked.
+No account or message is submitted, and emulator settings are restored.
+
+That run's iOS evidence is unsigned simulator compilation. Interactive iPhone/iPad,
+split view, physical-device, authenticated and signed-release journeys require
+their own runtime evidence. The six moderate Expo tooling audit findings and
+native distribution gate remain unchanged. See
+`../docs/responsive-review-20261104.md` for exact configurations, artifacts and
+verification limits.
 
 ## Development setup
 
