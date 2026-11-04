@@ -224,10 +224,15 @@ final class DUNativeSmokeTests: XCTestCase {
     private func record(_ name: String, elements: [XCUIElement]) {
         checks.append([
             "name": name,
-            "window": NSStringFromCGRect(app.frame),
-            "elements": elements.map { ["label": $0.label, "frame": NSStringFromCGRect($0.frame),
+            "window": rectangle(app.frame),
+            "elements": elements.map { ["label": $0.label, "frame": rectangle($0.frame),
                                         "hittable": $0.isHittable, "typedValue": $0.value as? String ?? ""] as [String: Any] }
         ])
+    }
+
+    private func rectangle(_ frame: CGRect) -> [String: Double] {
+        ["x": Double(frame.origin.x), "y": Double(frame.origin.y),
+         "width": Double(frame.width), "height": Double(frame.height)]
     }
 
     @MainActor
