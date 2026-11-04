@@ -420,20 +420,65 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func scrollContent(_ scroll: XCUIElement, avoiding field: XCUIElement, up: Bool) {
-        let viewport = visibleContent(in: scroll)
+    @discardableResult
+    private func scrollContent(_ scroll: XCUIElement, avoiding field: XCUIElement,
+                               action: XCUIElement? = nil, multiline: Bool = false) -> Bool {
+        guard let observation = observeKeyboard() else { return false }
+        let viewport = visibleContent(in: scroll, observing: observation)
         let fieldFrame = field.frame
         let scrollFrame = scroll.frame
-        recordGeometry("content-scroll-geometry", frames: ["scroll": scrollFrame, "viewport": viewport, "field": fieldFrame])
+        let actionFrame = action.map { $0.frame }
+        var frames = ["scroll": scrollFrame, "viewport": viewport, "field": fieldFrame]
+        if let target = actionFrame { frames["action"] = target }
+        recordGeometry("content-scroll-geometry", frames: frames)
+        guard frames.values.allSatisfy({ finite($0) && !$0.isEmpty }) else {
+            XCTFail("A content gesture requires readable nonempty viewport and target geometry")
+            return false
+        }
+
+        // A positive content shift moves the form up. Intersect the shifts
+        // that expose the full field/action, or 44pt of a multiline editor
+        // together with the complete action. Empty intervals cannot be solved
+        // by scrolling and must not be hidden by repeated direction changes.
+        if multiline && (fieldFrame.height < 44 || viewport.height < 44) {
+            XCTFail("The multiline editor and viewport must each support 44pt of visible editing area")
+            return false
+        }
+        var lower = multiline ? fieldFrame.minY + 44 - viewport.maxY : fieldFrame.maxY - viewport.maxY
+        var upper = multiline ? fieldFrame.maxY - 44 - viewport.minY : fieldFrame.minY - viewport.minY
+        if let target = actionFrame {
+            lower = max(lower, target.maxY - viewport.maxY)
+            upper = min(upper, target.minY - viewport.minY)
+        }
+        guard lower.isFinite && upper.isFinite else {
+            XCTFail("The required scroll displacement must be finite")
+            return false
+        }
+        checks.append(["name": "content-scroll-required-shift", "minimum": Double(lower),
+                       "maximum": Double(upper), "multiline": multiline])
+        guard lower <= upper else {
+            XCTFail("The required editor area and full action cannot fit above the keyboard: shift \(lower)...\(upper)")
+            return false
+        }
+        // If geometry already fits, another gesture cannot establish a missing
+        // hittability condition. Leave that condition to the unchanged checks.
+        guard lower > 0 || upper < 0 else { return false }
+        // Aim just inside the nearest feasible edge, allowing up to 12pt for
+        // pan initiation without targeting outside the valid clearance range.
+        let margin = min(CGFloat(12), (upper - lower) / 2)
+        let requestedShift = lower > 0 ? lower + margin : upper - margin
         let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
         let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
-        XCTAssertFalse(viewport.isEmpty, "There is no visible app content available for a scroll gesture")
         XCTAssertGreaterThan(max(left, right), 0, "A scroll gesture needs a visible gutter outside the editor")
         let x = left >= right ? viewport.minX + left / 2 : viewport.maxX - right / 2
         let top = viewport.minY + viewport.height * 0.2
         let bottom = viewport.minY + viewport.height * 0.8
+        let up = requestedShift > 0
+        let distance = min(abs(requestedShift), bottom - top)
+        let appliedShift = up ? distance : -distance
         let start = CGPoint(x: x, y: up ? bottom : top)
-        let end = CGPoint(x: x, y: up ? top : bottom)
+        let end = CGPoint(x: x, y: start.y - appliedShift)
+        XCTAssertGreaterThan(distance, 0)
         XCTAssertTrue(viewport.contains(start) && viewport.contains(end),
                       "Scroll endpoints must stay inside the measured visible app viewport")
         // The element-relative drag stays above the entire keyboard/accessory
@@ -443,10 +488,14 @@ final class DUNativeSmokeTests: XCTestCase {
         let to = origin.withOffset(CGVector(dx: end.x - scrollFrame.minX, dy: end.y - scrollFrame.minY))
         checks.append(["name": up ? "content-scroll-up" : "content-scroll-down",
                        "field": field.label, "scroll": rectangle(scrollFrame), "viewport": rectangle(viewport),
+                       "requestedShift": Double(requestedShift), "appliedShift": Double(appliedShift),
                        "start": ["x": Double(start.x), "y": Double(start.y)],
                        "end": ["x": Double(end.x), "y": Double(end.y)]])
         typingKeyboardPair = nil
-        from.press(forDuration: 0.1, thenDragTo: to)
+        // The default fast release produced 278–304pt of movement from
+        // 90–140pt gestures. Use slow travel and a hold before releasing.
+        from.press(forDuration: 0.1, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.2)
+        return true
     }
 
     @MainActor
@@ -458,7 +507,7 @@ final class DUNativeSmokeTests: XCTestCase {
         for _ in 0..<4 {
             let viewport = visibleContent(in: scroll)
             if element.isHittable && contains(viewport, element.frame) { return }
-            scrollContent(scroll, avoiding: element, up: element.frame.minY >= viewport.minY)
+            if !scrollContent(scroll, avoiding: element) { break }
         }
         assertControl(element, within: visibleContent(in: scroll))
     }
@@ -840,8 +889,7 @@ final class DUNativeSmokeTests: XCTestCase {
             let viewport = visibleContent(in: scroll, observing: observation)
             if editingAreaVisible(field, viewport: viewport, multiline: multiline)
                 && action.isHittable && contains(viewport, action.frame) { break }
-            scrollContent(scroll, avoiding: field,
-                          up: action.frame.maxY > viewport.maxY || field.frame.minY > viewport.maxY)
+            if !scrollContent(scroll, avoiding: field, action: action, multiline: multiline) { break }
         }
         if multiline {
             // Prove editing still works after the bounded scroll. XCTest has no
