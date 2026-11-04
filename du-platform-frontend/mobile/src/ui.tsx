@@ -1,25 +1,56 @@
-import React, { useState } from "react";
-import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions, type TextInputProps } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions, type TextInputProps } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { keyboardBottomInset } from "./keyboardLayout";
 
 export const colors = { ink: "#13233a", navy: "#071525", gold: "#e5b63b", pale: "#f3f5f7", border: "#cbd5e1", red: "#a6212b" };
 export function Screen({ children, wide = false }: React.PropsWithChildren<{ wide?: boolean }>) {
   const insets = useSafeAreaInsets();
   const connection = useNetInfo();
   const offline = connection.isConnected === false || connection.isInternetReachable === false;
+  const viewport = useRef<React.ComponentRef<typeof View>>(null);
+  const measurement = useRef(0);
+  const [keyboardInset, setKeyboardInset] = useState(0);
+  const updateKeyboardInset = useCallback(() => {
+    if (Platform.OS !== "android") return;
+    const generation = ++measurement.current;
+    const keyboardTop = Keyboard.metrics()?.screenY;
+    if (keyboardTop === undefined) {
+      setKeyboardInset(0);
+      return;
+    }
+    viewport.current?.measureInWindow((_x, y, _width, height) => {
+      // A hide, rotation or later layout can overtake this async measurement.
+      if (generation === measurement.current) setKeyboardInset(keyboardBottomInset({ y, height }, keyboardTop));
+    });
+  }, []);
+  useEffect(() => {
+    if (Platform.OS !== "android") return;
+    const shown = Keyboard.addListener("keyboardDidShow", updateKeyboardInset);
+    const hidden = Keyboard.addListener("keyboardDidHide", updateKeyboardInset);
+    updateKeyboardInset();
+    return () => {
+      ++measurement.current;
+      shown.remove();
+      hidden.remove();
+    };
+  }, [updateKeyboardInset]);
   return <SafeAreaView edges={["left", "right"]} style={styles.safe}>
     {offline && <View accessibilityRole="alert" style={styles.offline}><Text style={styles.offlineText}>You are offline. Reconnect and retry.</Text></View>}
+    <View ref={viewport} collapsable={false} onLayout={updateKeyboardInset}
+      style={[styles.flex, Platform.OS === "android" && { paddingBottom: keyboardInset }]}>
     <ScrollView
       style={styles.flex}
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
-      // Native keyboard insets use the scroll view's actual screen position,
-      // so no fixed navigation-header offset is needed. Android resizes the
-      // activity through its existing adjustResize manifest setting.
+      keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "none"}
+      // iOS supplies native scroll insets. Android edge-to-edge windows can
+      // remain full height despite adjustResize; the measured outer viewport
+      // reserves only its actual overlap and keeps the IME open while scrolling.
       automaticallyAdjustKeyboardInsets
       contentContainerStyle={[styles.content, wide && styles.wideContent, { paddingBottom: Math.max(24, insets.bottom + 16) }]}
     >{children}</ScrollView>
+    </View>
   </SafeAreaView>;
 }
 /** Use the available window/card width, including iPad split-screen resizing. */

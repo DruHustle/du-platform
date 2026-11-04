@@ -236,18 +236,6 @@ class ScrollReachabilityTests(unittest.TestCase):
         self.capture.assert_not_called()
         self.assertEqual(self.runner.steps, [])
 
-    def test_action_position_requires_the_observed_keyboard_clearance(self):
-        covered = self.scroll_view(target_bounds="[20,900][780,980]")
-        revealed = self.scroll_view(marker_y=100, target_bounds="[20,650][780,730]")
-        with patch.object(self.runner, "hierarchy", side_effect=[covered, revealed]):
-            self.runner.reveal_control("From airport code (e.g. FRA)", "position-before-ime", bottom_limit=800)
-        swipe = self.shell.call_args.args
-        self.assertEqual(swipe[:2], ("input", "swipe"))
-        self.assertGreater(swipe[3], swipe[5])
-        self.assertTrue(100 < swipe[5] < swipe[3] < 800)
-        self.assertEqual(self.runner.steps[-1]["bounds"], (20, 650, 780, 730))
-
-
 class KeyboardEvidenceTests(unittest.TestCase):
     @staticmethod
     def window_dump(visible="true", frame="[0,800][800,1200]"):
@@ -366,7 +354,8 @@ class KeyboardEvidenceTests(unittest.TestCase):
                 with patch.object(runner, "reveal_control", return_value=empty), \
                      patch.object(runner, "hierarchy", return_value=empty), \
                      patch.object(runner, "tap", return_value=True), \
-                     patch.object(runner, "wait_keyboard", side_effect=[(typed, {}), (typed, proof), (typed, proof)]), \
+                     patch.object(runner, "wait_keyboard", side_effect=[(typed, {}), (typed, proof)]), \
+                     patch.object(runner, "reveal_keyboard_action", return_value=(typed, proof)), \
                      patch.object(runner, "close_keyboard", return_value=(typed, {"tabs": {"Home": (0, 1100, 160, 1180)}})), \
                      patch.object(runner, "shell", return_value=b"") as shell:
                     runner.keyboard_case("composer-ime", "Your message", "NativeInputCheck", "Send message")
@@ -375,7 +364,7 @@ class KeyboardEvidenceTests(unittest.TestCase):
             finally:
                 runner.cleanup()
 
-    def test_covered_action_positioning_cannot_pass_if_reopened_keyboard_is_hidden(self):
+    def test_keyboard_case_cannot_pass_when_the_action_phase_has_no_visible_ime(self):
         with TemporaryDirectory() as directory:
             runner = self.runner(directory)
             empty = self.app_tree(value="", focused="false")
@@ -383,20 +372,92 @@ class KeyboardEvidenceTests(unittest.TestCase):
             field_proof = smoke.keyboard_observation(covered, PACKAGE, "Your message", "NativeInputCheck",
                                                      (0, 800, 800, 1200), (800, 1200), 240)
             try:
-                with patch.object(runner, "reveal_control", return_value=empty) as reveal, \
-                     patch.object(runner, "hierarchy", return_value=empty), \
+                with patch.object(runner, "reveal_control", return_value=empty), \
+                     patch.object(runner, "hierarchy", side_effect=[empty, covered]), \
                      patch.object(runner, "tap", return_value=True) as tap, \
-                     patch.object(runner, "wait_keyboard", side_effect=[(covered, {}), (covered, field_proof),
-                                 smoke.SmokeFailure("The software keyboard is not visibly open")]), \
+                     patch.object(runner, "wait_keyboard", side_effect=[(covered, {}), (covered, field_proof)]), \
+                     patch.object(runner, "keyboard_state", return_value=(None, "hidden")), \
                      patch.object(runner, "close_keyboard") as close, \
                      patch.object(runner, "shell", return_value=b"") as shell:
                     with self.assertRaisesRegex(smoke.SmokeFailure, "not visibly open"):
                         runner.keyboard_case("composer-ime", "Your message", "NativeInputCheck", "Send message")
-                self.assertEqual(reveal.call_args.kwargs["bottom_limit"], 800)
-                self.assertEqual([call.args[1] for call in tap.call_args_list], ["Your message", "Your message"])
-                close.assert_called_once_with("composer-ime-positioning", "Your message", "NativeInputCheck")
+                self.assertEqual([call.args[1] for call in tap.call_args_list], ["Your message"])
+                close.assert_not_called()
                 shell.assert_called_once_with("input", "text", "NativeInputCheck")
                 self.assertEqual(runner.keyboard_cases, [])
+            finally:
+                runner.cleanup()
+
+    def tablet_composer(self, shift=0):
+        # Actual run 41765883784 coordinates: Send overlaps the y720 IME edge.
+        tree = self.app_tree(field_bounds=f"[515,{500 - shift}][1496,{680 - shift}]",
+                             action_bounds=f"[515,{695 - shift}][1496,{772 - shift}]")
+        view = node(scrollable="true", bounds="[89,138][1920,720]", **{"class": "android.widget.ScrollView"})
+        view.extend(list(tree))
+        tree.clear()
+        tree.append(view)
+        return tree
+
+    def test_action_scroll_uses_actual_open_ime_region_and_preserves_typed_focus(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            runner.last_screen_size = (1920, 1200)
+            frame = (89, 720, 1920, 1200)
+            covered, revealed = self.tablet_composer(), self.tablet_composer(shift=72)
+            proof = smoke.keyboard_observation(revealed, PACKAGE, "Your message", "NativeInputCheck",
+                                               frame, runner.last_screen_size, 240, "Send message")
+
+            def capture_proof(*args, **kwargs):
+                runner.steps.append({"screen": args[0]})
+                return revealed, proof
+
+            try:
+                with patch.object(runner, "hierarchy", side_effect=[covered, revealed]), \
+                     patch.object(runner, "keyboard_state", return_value=(frame, "visible")), \
+                     patch.object(runner, "wait_keyboard", side_effect=capture_proof), \
+                     patch.object(runner, "note"), patch.object(runner, "shell", return_value=b"") as shell:
+                    _, observed = runner.reveal_keyboard_action("composer-action", "Your message", "NativeInputCheck", "Send message")
+                swipe = shell.call_args.args
+                self.assertEqual(shell.call_count, 1)
+                self.assertEqual(swipe[:2], ("input", "swipe"))
+                self.assertTrue(89 < swipe[2] < 515)  # outside the editor, inside its scroll view
+                self.assertTrue(138 < swipe[5] < swipe[3] < 720)  # never swipe on the IME
+                self.assertEqual(observed["scrollGestures"], 1)
+                self.assertEqual(observed["actionBounds"], (515, 623, 1496, 700))
+            finally:
+                runner.cleanup()
+
+    def test_keyboard_disappearing_during_scroll_cannot_pass_or_trigger_navigation(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            runner.last_screen_size = (1920, 1200)
+            try:
+                with patch.object(runner, "hierarchy", return_value=self.tablet_composer()), \
+                     patch.object(runner, "keyboard_state", side_effect=[((89, 720, 1920, 1200), "visible"), (None, "hidden")]), \
+                     patch.object(runner, "wait_keyboard") as capture, patch.object(runner, "note"), \
+                     patch.object(runner, "shell", return_value=b"") as shell:
+                    with self.assertRaisesRegex(smoke.SmokeFailure, "not visibly open"):
+                        runner.reveal_keyboard_action("composer-action", "Your message", "NativeInputCheck", "Send message")
+                self.assertEqual(shell.call_count, 1)
+                self.assertEqual(shell.call_args.args[:2], ("input", "swipe"))
+                capture.assert_not_called()
+                self.assertEqual(runner.steps, [])
+            finally:
+                runner.cleanup()
+
+    def test_action_scroll_remains_bounded_if_the_visible_viewport_cannot_move(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            runner.last_screen_size = (1920, 1200)
+            try:
+                with patch.object(runner, "hierarchy", return_value=self.tablet_composer()), \
+                     patch.object(runner, "keyboard_state", return_value=((89, 720, 1920, 1200), "visible")), \
+                     patch.object(runner, "wait_keyboard") as capture, patch.object(runner, "note"), \
+                     patch.object(runner, "shell", return_value=b"") as shell:
+                    with self.assertRaisesRegex(smoke.SmokeFailure, "within six scroll gestures"):
+                        runner.reveal_keyboard_action("composer-action", "Your message", "NativeInputCheck", "Send message")
+                self.assertEqual(shell.call_count, 6)
+                capture.assert_not_called()
             finally:
                 runner.cleanup()
 
