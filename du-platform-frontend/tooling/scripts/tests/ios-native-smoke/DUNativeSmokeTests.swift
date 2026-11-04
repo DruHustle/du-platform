@@ -15,7 +15,7 @@ final class DUNativeSmokeTests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 40),
+        XCTAssertTrue(existsOrWait(app.staticTexts["Explore what connects us"], timeout: 40),
                       "The bundled native application did not reach Home.")
     }
 
@@ -50,10 +50,10 @@ final class DUNativeSmokeTests: XCTestCase {
             XCTAssertEqual(email.value as? String, "ios-smoke@example.invalid")
             let password = unique(.secureTextField, "Password")
             reveal(password)
-            password.tap()
-            password.typeText("keyboard-fixture")
+            replaceText(password, with: "keyboard-fixture", secure: true)
             XCTAssertFalse((password.value as? String ?? "").isEmpty)
             XCTAssertNotEqual(password.value as? String, "Password")
+            XCTAssertEqual((password.value as? String)?.count, "keyboard-fixture".count)
             assertKeyboardAccess(password, action: unique(.button, "Sign in"), name: "\(name)-account-keyboard")
             dismissKeyboard()
 
@@ -75,16 +75,22 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     private func wait(_ description: String, timeout: TimeInterval = 10, until condition: () -> Bool) {
         let deadline = Date(timeIntervalSinceNow: timeout)
-        while !condition() && Date() < deadline {
+        repeat {
+            if condition() { return }
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        }
+        } while Date() < deadline
         XCTAssertTrue(condition(), description)
+    }
+
+    @MainActor
+    private func existsOrWait(_ element: XCUIElement, timeout: TimeInterval = 15) -> Bool {
+        element.exists || element.waitForExistence(timeout: timeout)
     }
 
     @MainActor
     private func unique(_ type: XCUIElement.ElementType, _ label: String) -> XCUIElement {
         let matches = app.descendants(matching: type).matching(NSPredicate(format: "label == %@", label))
-        XCTAssertTrue(matches.firstMatch.waitForExistence(timeout: 15), "Missing \(type): \(label)")
+        XCTAssertTrue(existsOrWait(matches.firstMatch), "Missing \(type): \(label)")
         XCTAssertEqual(matches.count, 1, "Ambiguous accessibility target: \(label)")
         return matches.element(boundBy: 0)
     }
@@ -94,7 +100,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let target = unique(.button, tab)
         assertControl(target, within: app.frame)
         target.tap()
-        XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 15), "\(tab) did not show \(text)")
+        XCTAssertTrue(existsOrWait(app.staticTexts[text]), "\(tab) did not show \(text)")
         record("tab-\(tab)", elements: [target])
     }
 
@@ -135,9 +141,10 @@ final class DUNativeSmokeTests: XCTestCase {
     private func assertControl(_ element: XCUIElement, within viewport: CGRect) {
         XCTAssertTrue(element.isEnabled, "Disabled control: \(element.label)")
         XCTAssertTrue(element.isHittable, "Unreachable control: \(element.label)")
-        XCTAssertGreaterThanOrEqual(element.frame.width, 44, "Narrow touch target: \(element.label)")
-        XCTAssertGreaterThanOrEqual(element.frame.height, 44, "Short touch target: \(element.label)")
-        XCTAssertTrue(contains(viewport, element.frame), "Clipped control \(element.label): \(element.frame), viewport \(viewport)")
+        let frame = element.frame
+        XCTAssertGreaterThanOrEqual(frame.width, 44, "Narrow touch target: \(element.label)")
+        XCTAssertGreaterThanOrEqual(frame.height, 44, "Short touch target: \(element.label)")
+        XCTAssertTrue(contains(viewport, frame), "Clipped control \(element.label): \(frame), viewport \(viewport)")
     }
 
     @MainActor
@@ -153,14 +160,59 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func replaceText(_ field: XCUIElement, with value: String) {
-        field.tap()
-        let previous = field.value as? String ?? ""
-        if !previous.isEmpty {
-            field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: previous.count))
+    private func visibleKeyboardFrame() -> CGRect? {
+        let keyboard = app.keyboards.firstMatch
+        guard keyboard.exists else { return nil }
+        let frame = keyboard.frame
+        return frame.height > 0 && !frame.intersection(app.frame).isEmpty ? frame : nil
+    }
+
+    @MainActor
+    private func waitForTypingKeyboard() {
+        var previous: CGRect?
+        var settledSince = Date()
+        wait("A visible software keyboard must settle before typing") {
+            guard let frame = self.visibleKeyboardFrame() else {
+                previous = nil
+                settledSince = Date()
+                return false
+            }
+            if previous != frame {
+                previous = frame
+                settledSince = Date()
+                return false
+            }
+            return Date().timeIntervalSince(settledSince) >= 0.2
         }
-        field.typeText(value)
-        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10), "Typing did not show a software keyboard")
+    }
+
+    @MainActor
+    private func typeOnce(_ character: String, into field: XCUIElement, expecting value: String, secure: Bool = false) {
+        XCTAssertNotNil(visibleKeyboardFrame(), "The software keyboard disappeared before typing")
+        field.typeText(character)
+        // Acknowledgment observes each event; it never resends it or repairs the
+        // text. Secure inputs expose only a masked value, so check its length.
+        wait("Typed input did not acknowledge the expected \(secure ? "masked length" : "exact prefix") of \(value.count)", timeout: 3) {
+            guard self.visibleKeyboardFrame() != nil else { return false }
+            guard let observed = field.value else { return value.isEmpty }
+            guard let actual = observed as? String else { return false }
+            return secure ? actual.count == value.count : actual == value
+        }
+    }
+
+    @MainActor
+    private func replaceText(_ field: XCUIElement, with value: String, secure: Bool = false) {
+        field.tap()
+        waitForTypingKeyboard()
+        var expected = field.value as? String ?? ""
+        while !expected.isEmpty {
+            expected.removeLast()
+            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, expecting: expected, secure: secure)
+        }
+        for character in value {
+            expected.append(character)
+            typeOnce(String(character), into: field, expecting: expected, secure: secure)
+        }
     }
 
     @MainActor
@@ -174,7 +226,7 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     private func assertKeyboardAccess(_ field: XCUIElement, action: XCUIElement, name: String, multiline: Bool = false) {
         let keyboard = app.keyboards.firstMatch
-        XCTAssertTrue(keyboard.waitForExistence(timeout: 10), "Software keyboard is required")
+        XCTAssertTrue(existsOrWait(keyboard, timeout: 10), "Software keyboard is required")
         let expectedValue = field.value as? String
         XCTAssertNotNil(expectedValue, "The typed input must expose its value")
         let scroll = app.scrollViews.firstMatch
@@ -190,13 +242,18 @@ final class DUNativeSmokeTests: XCTestCase {
             // Prove editing still works after the bounded scroll. XCTest has no
             // public iOS caret rectangle; retain this typed state for screenshot
             // review rather than claiming a programmatic caret-bound assertion.
-            field.typeText("x")
-            field.typeText(XCUIKeyboardKey.delete.rawValue)
+            waitForTypingKeyboard()
+            typeOnce("x", into: field, expecting: (expectedValue ?? "") + "x")
+            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, expecting: expectedValue ?? "")
         }
         XCTAssertTrue(keyboard.exists && keyboard.frame.height > 0, "The software keyboard must still be visible")
         XCTAssertFalse(keyboard.frame.intersection(app.frame).isEmpty,
                        "An offscreen keyboard accessibility element is not visible-keyboard evidence")
-        XCTAssertEqual(field.value as? String, expectedValue, "The typed value changed during scrolling")
+        if field.elementType == .secureTextField {
+            XCTAssertEqual((field.value as? String)?.count, expectedValue?.count, "The masked input length changed during scrolling")
+        } else {
+            XCTAssertEqual(field.value as? String, expectedValue, "The typed value changed during scrolling")
+        }
         if multiline {
             XCTAssertTrue(field.isEnabled)
             XCTAssertTrue(editingAreaVisible(field, viewport: visibleContent(), multiline: true),

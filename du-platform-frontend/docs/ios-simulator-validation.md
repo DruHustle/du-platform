@@ -59,6 +59,15 @@ Each device must produce an XCTest summary with exactly one passed smoke test,
 zero failed tests and zero skipped tests. A successful build or empty test run
 cannot satisfy the runtime check.
 
+Fixture entry waits for a visibly settled software keyboard before sending each
+character once. Each event must acknowledge the exact text prefix, or the masked
+length for a secure field, within a bounded wait. The runner never resends a lost
+character or repairs a mismatched value. Final exact-text, masked-length and
+geometry assertions remain in place. This synchronizes the real editing journey; it does not qualify
+rapid bulk typing. Run [41787512082](https://github.com/DruHustle/du-platform/actions/runs/41787512082)
+retained a cold-keyboard transition and a 60-character-per-second bulk event with
+missing input, which the original full-value assertion correctly rejected.
+
 ## Evidence and bounds
 
 The `ios-native-smoke` artifact retains the inventory, signature/entitlement
