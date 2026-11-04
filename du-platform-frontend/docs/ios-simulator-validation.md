@@ -55,8 +55,13 @@ one for landscape. Each case launches the real app and completes this journey:
   portrait. Bounded native scroll gestures may reveal controls; an absent
   keyboard cannot count as evidence of keyboard clearance.
 
-Each input first receives a small real seed, which the same replacement helper
-deletes completely before entering the unchanged full fixture. Each mounted form
+Each input receives a small real seed, then per-character deletion and the
+unchanged full fixture in one focus session. Run
+[41821386008](https://github.com/DruHustle/du-platform/actions/runs/41821386008)
+recorded the former helper's second tap selecting the complete `xy` seed on both
+portrait devices. One delete correctly removed the selection, while the helper
+incorrectly expected a one-character suffix deletion. The current sequence avoids
+that extra tap and preserves every exact per-event acknowledgment. Each mounted form
 also rotates away and back after its keyboard check: the email and message must
 retain their exact values, and the secure password must retain its full masked
 length. These explicit retention checks preserve rotation/state coverage without
@@ -86,8 +91,9 @@ Each device must produce an XCTest summary with exactly two passed smoke tests,
 zero failed tests and zero skipped tests. A successful build or empty test run
 cannot satisfy the runtime check.
 
-Fixture entry waits for a visibly settled software keyboard before sending each
-character once. Each event must acknowledge the exact text prefix, or the masked
+Fixture entry waits for a visibly settled software keyboard before typing, then
+checks current keyboard continuity and hittability before and after each event.
+Each character is sent once and must acknowledge the exact text prefix, or the masked
 length for a secure field, within a bounded wait. The runner never resends a lost
 character or repairs a mismatched value. Final exact-text, masked-length and
 geometry assertions remain in place. This synchronizes the real editing journey; it does not qualify
@@ -122,30 +128,61 @@ Before a character is sent, an observed password prompt must preserve the prior
 acknowledged prefix. If it arrives after the event was sent, the exact new value
 must still be acknowledged before continuing. A missing event fails; it is never
 resent or repaired. Only an observed known prompt permits refocusing the field.
+If iOS has already restored a visible, hittable keyboard after that prompt, the
+runner preserves the editing session without another tap; confirmed keyboard
+absence permits one refocus. Subsequent field events retain exact acknowledgment.
 Prompt capture and acknowledgment occur outside the bounded input/keyboard
 waits, while the overall test and job deadlines remain unchanged.
 
 Run [41809310414](https://github.com/DruHustle/du-platform/actions/runs/41809310414)
 retained the iPad's exact `A simu` prefix while the keyboard disappeared before
 the password prompt appeared. XCTest failed between separate keyboard existence
-and frame queries. Public throwing
+and frame queries. Public throwing whole-application
 [element snapshots](https://developer.apple.com/documentation/xcuiautomation/xcuielementsnapshotproviding/snapshot())
-avoid that unhandled existence/frame race. Run
+provide current typed hierarchy observations without re-resolving a disappearing
+keyboard's live frame between keystrokes. Run
 [41814926872](https://github.com/DruHustle/du-platform/actions/runs/41814926872)
 then completed portrait Account and Assistant checks on both devices but exposed
 a landscape discrepancy between recursively read snapshot-child frames and
 resolved accessibility frames. The iPad's actual visible area above the keyboard
 was 234 points, while the former calculation rejected an empty viewport.
 
-Geometry therefore comes from snapshots of the resolved keyboard and accessory
-elements. At most two read attempts require a consistent device orientation,
-application window, keyboard position and hierarchy presence; no coordinates are
-manually rotated or offset. Raw application snapshots establish presence and
-retain diagnostic data, rather than supplying descendant geometry. A target that
-disappears during capture can count as absent only when two subsequent readable
-hierarchies confirm its absence in the same orientation/window. Other unreadable
-or inconsistent observations fail. Per-character checks avoid redundant accessory
-measurement; full clearance checks retain the complete keyboard/accessory bound.
+Run 41821386008 then established that snapshots taken directly from resolved
+keyboard/accessory targets also retained those unrotated frames. Both landscape
+cases correctly rejected the inconsistent geometry; neither qualified the form.
+The raw frames are therefore opaque signatures, never coordinates to transform.
+
+The next runtime qualification uses public live
+[element frames](https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/frame)
+during settled phases, following their documented screen-coordinate contract.
+The diagnostic accessibility text alone does not prove these direct reads return
+normalized coordinates on this runtime; the actual run must establish that.
+At most two read attempts require identical live keyboard
+**and** accessory measurements, bracketed by matching readable app snapshots with
+the complete keyboard, accessory and descendant-window signatures. The app window,
+orientation, counts and multiplicity must also agree. Frames must be finite and
+use the observed screen window. This bracket is not atomic: a live-resolution
+failure remains a test failure. No coordinates are manually rotated or offset,
+and the runner never parses debugging text into assertion data.
+
+Only a pair that passes those checks is cached as typing-continuity evidence.
+Before and after each event, a new throwing app snapshot must exactly match its
+complete raw signature, app window and orientation. The keyboard must also be
+currently [hittable](https://developer.apple.com/documentation/xcuiautomation/xcuielement/ishittable).
+There are no live keyboard-frame reads on this per-event path. A changed signature
+invalidates the pair and can recover only through the currently observed,
+phase-authorized exact password prompt; an unknown change or unreadable signature
+fails. Neither can silently reuse old geometry. Focus,
+navigation, rotation, gestures, known prompts and disappearance invalidate the
+pair. Refocusing establishes a fresh settled measurement.
+
+A keyboard can count as absent only when two subsequent readable hierarchies
+confirm its absence in the same valid orientation/window. A still-present but
+nonhittable keyboard is a separate covered state; it may resume only if the
+phase-authorized exact password prompt is already observed. Hittability alone
+never grants prompt permission or proves dismissal. Full clearance assertions and
+geometry-dependent gestures always take fresh live measurements, including the
+entire accessory bar; cached typing evidence cannot satisfy their bounds.
 
 Raw windows, keyboard/accessory frames and resolved control/scroll measurements
 are recorded before rejected geometry. Invalid rectangles use a JSON-safe tagged
