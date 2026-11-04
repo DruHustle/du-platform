@@ -177,6 +177,64 @@ class DeveloperMenuTests(unittest.TestCase):
             self.dismiss(self.native_menu())
         self.assertEqual(self.shell.call_count, 2)
 
+    def test_display_wait_handles_recreated_menu_before_accepting_an_enabled_home_tab(self):
+        # Run 41756008487 recreated Expo's onboarding sheet at tablet density.
+        menu = self.expo_menu()
+        smoke.find_target(menu, "Close", PACKAGE).set("bounds", "[1101,1548][1173,1620]")
+        disabled = node(text="Home", clickable="true", enabled="false")
+        ready = node(text="Home", clickable="true", bounds="[0,1800][240,1884]")
+        self.capture.side_effect = lambda *args: setattr(self.runner, "last_screen_size", (1200, 1920))
+        with patch.object(self.runner, "hierarchy", side_effect=[ET.Element("hierarchy"), disabled, menu, ready]), \
+             patch.object(smoke.time, "sleep"):
+            observed = self.runner.wait_screen("tablet-display-ready", [], orientation="portrait", required_tabs=("Home",))
+        self.assertIs(observed, ready)
+        self.shell.assert_called_once_with("input", "tap", 1137, 1584)
+        self.assertEqual(self.runner.steps[-1]["requiredTabs"], ["Home"])
+
+
+class ScrollReachabilityTests(unittest.TestCase):
+    def setUp(self):
+        directory = TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.AndroidSmoke(SimpleNamespace(mobile_dir=directory.name, apk=directory.name,
+                                                         artifacts=directory.name))
+        self.runner.package = PACKAGE
+        self.runner.current_density = 240
+        self.addCleanup(self.runner.cleanup)
+        for name in ("capture", "shell", "note"):
+            mocked = patch.object(self.runner, name)
+            setattr(self, name, mocked.start())
+            self.addCleanup(mocked.stop)
+
+    def scroll_view(self, marker_y=150, target_bounds=None):
+        view = node(scrollable="true", bounds="[0,100][800,1100]", **{"class": "android.widget.ScrollView"})
+        view.append(node(text="Find options", bounds=f"[20,{marker_y}][780,{marker_y + 50}]"))
+        if target_bounds:
+            view.append(node(clickable="true", bounds=target_bounds,
+                             **{"content-desc": "From airport code (e.g. FRA)"}))
+        return view
+
+    def test_first_field_below_fold_is_found_after_reversing_at_observed_top_boundary(self):
+        top = self.scroll_view()
+        revealed = self.scroll_view(marker_y=100, target_bounds="[20,600][780,680]")
+        with patch.object(self.runner, "hierarchy", side_effect=[top, top, revealed]):
+            tree = self.runner.reveal_control("From airport code (e.g. FRA)", "large-text-form", forward=False)
+        self.assertIs(tree, revealed)
+        swipes = [call.args for call in self.shell.call_args_list]
+        self.assertEqual(swipes, [("input", "swipe", 400, 300, 400, 900, "400"),
+                                 ("input", "swipe", 400, 900, 400, 300, "400")])
+        self.assertEqual(self.runner.steps[-1]["bounds"], (20, 600, 780, 680))
+
+    def test_clipped_field_never_passes_and_scroll_search_stays_bounded(self):
+        trees = [self.scroll_view(marker_y=150 + (index % 2) * 100, target_bounds="[20,1080][780,1100]")
+                 for index in range(7)]
+        with patch.object(self.runner, "hierarchy", side_effect=trees), \
+             self.assertRaisesRegex(smoke.SmokeFailure, "within six bounded scroll gestures"):
+            self.runner.reveal_control("From airport code (e.g. FRA)", "clipped-field", forward=False)
+        self.assertEqual(self.shell.call_count, 6)
+        self.capture.assert_not_called()
+        self.assertEqual(self.runner.steps, [])
+
 
 class ResponsiveEvidenceTests(unittest.TestCase):
     def test_display_overrides_are_read_without_losing_original_values(self):

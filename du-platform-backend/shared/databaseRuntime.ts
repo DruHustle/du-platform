@@ -1,5 +1,5 @@
-import fs from "fs";
 import mysql from "mysql2/promise";
+import { databaseConnectionOptions } from "./databaseConfig";
 
 export type DbLike = mysql.Pool | null;
 
@@ -17,47 +17,6 @@ export function isMemoryFallbackEnabled(): boolean {
   return MEMORY_FALLBACK_ENABLED;
 }
 
-function getEnv(name: string): string | undefined {
-  const value = process.env[name];
-  return value && value.trim() ? value.trim() : undefined;
-}
-
-function buildSslConfig() {
-  const caFromEnv = getEnv("AIVEN_CA_CERT");
-  const caPath = getEnv("AIVEN_CA_CERT_PATH");
-
-  if (caFromEnv) return { rejectUnauthorized: true, ca: caFromEnv };
-  if (caPath) {
-    if (!fs.existsSync(caPath)) {
-      if (NODE_ENV === "production") {
-        throw new Error(
-          `[databaseRuntime] AIVEN_CA_CERT_PATH does not exist: ${caPath}`
-        );
-      }
-    } else {
-      return { rejectUnauthorized: true, ca: fs.readFileSync(caPath, "utf8") };
-    }
-  }
-
-  if (NODE_ENV === "production") {
-    throw new Error(
-      "[databaseRuntime] Production database TLS requires AIVEN_CA_CERT or AIVEN_CA_CERT_PATH."
-    );
-  }
-  return { rejectUnauthorized: false };
-}
-
-function sanitizeMysqlUrl(rawUrl: string): string {
-  try {
-    const parsed = new URL(rawUrl);
-    parsed.searchParams.delete("ssl-mode");
-    parsed.searchParams.delete("sslmode");
-    return parsed.toString();
-  } catch {
-    return rawUrl;
-  }
-}
-
 function createUtcPool(options: mysql.PoolOptions): mysql.Pool {
   const pool = mysql.createPool({ ...options, timezone: "Z" });
   pool.on("connection", connection => {
@@ -66,69 +25,8 @@ function createUtcPool(options: mysql.PoolOptions): mysql.Pool {
   return pool;
 }
 function buildPoolFromEnv(): DbLike {
-  const isProduction = NODE_ENV === "production";
-
-  if (isProduction) {
-    const rawAivenUrl = getEnv("AIVEN_MYSQL_URL");
-    const aivenUrl = rawAivenUrl ? sanitizeMysqlUrl(rawAivenUrl) : undefined;
-    if (aivenUrl) {
-      return createUtcPool({
-        uri: aivenUrl,
-        waitForConnections: true,
-        connectionLimit: 10,
-        namedPlaceholders: true,
-        ssl: buildSslConfig(),
-      });
-    }
-
-    const host = getEnv("AIVEN_MYSQL_HOST");
-    const user = getEnv("AIVEN_MYSQL_USER");
-    const password = getEnv("AIVEN_MYSQL_PASSWORD");
-    const database = getEnv("AIVEN_MYSQL_DATABASE");
-    const port = Number(getEnv("AIVEN_MYSQL_PORT") ?? "3306");
-    if (!host || !user || !database) return null;
-
-    return createUtcPool({
-      host,
-      user,
-      password,
-      database,
-      port,
-      waitForConnections: true,
-      connectionLimit: 10,
-      namedPlaceholders: true,
-      ssl: buildSslConfig(),
-    });
-  }
-
-  const rawLocalUrl = getEnv("DATABASE_URL");
-  const localUrl = rawLocalUrl ? sanitizeMysqlUrl(rawLocalUrl) : undefined;
-  if (localUrl) {
-    return createUtcPool({
-      uri: localUrl,
-      waitForConnections: true,
-      connectionLimit: 10,
-      namedPlaceholders: true,
-    });
-  }
-
-  const host = getEnv("MYSQL_HOST");
-  const user = getEnv("MYSQL_USER");
-  const password = getEnv("MYSQL_PASSWORD");
-  const database = getEnv("MYSQL_DATABASE");
-  const port = Number(getEnv("MYSQL_PORT") ?? "3306");
-  if (!host || !user || !database) return null;
-
-  return createUtcPool({
-    host,
-    user,
-    password,
-    database,
-    port,
-    waitForConnections: true,
-    connectionLimit: 10,
-    namedPlaceholders: true,
-  });
+  const options = databaseConnectionOptions(process.env);
+  return options ? createUtcPool(options) : null;
 }
 
 export const db = buildPoolFromEnv();

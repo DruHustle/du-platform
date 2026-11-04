@@ -1,0 +1,8 @@
+# Runtime inputs belong outside the checkout and image context.
+*.env
+*.pem
+*.key
+*.crt
+*.dump
+*.sql
+private/

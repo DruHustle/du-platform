@@ -9,6 +9,7 @@ describe("backend liveness revision", () => {
     "reports the image revision without a hosting-provider variable: %s",
     revision => {
       vi.stubEnv("APP_REVISION", revision);
+      vi.stubEnv("RENDER_GIT_COMMIT", "");
       const routes = new Map<string, Function>();
       const app = {
         get: (path: string, handler: Function) => routes.set(path, handler),
@@ -29,4 +30,18 @@ describe("backend liveness revision", () => {
       );
     }
   );
+
+  it("reports Render revision while preserving an explicit image revision", () => {
+    const routes = new Map<string, Function>();
+    const app = { get: (path: string, handler: Function) => routes.set(path, handler), post: vi.fn() };
+    registerBackendApiRoutes(app as unknown as express.Express, { db: null, serverStartedAt: Date.now() });
+    vi.stubEnv("APP_REVISION", "");
+    vi.stubEnv("RENDER_GIT_COMMIT", "a".repeat(40));
+    const json = vi.fn();
+    routes.get("/api/ping")!({}, { json });
+    expect(json).toHaveBeenLastCalledWith(expect.objectContaining({ commit: "a".repeat(40) }));
+    vi.stubEnv("APP_REVISION", "b".repeat(40));
+    routes.get("/api/ping")!({}, { json });
+    expect(json).toHaveBeenLastCalledWith(expect.objectContaining({ commit: "b".repeat(40) }));
+  });
 });
