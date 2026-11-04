@@ -4,6 +4,7 @@
 import argparse
 from contextlib import nullcontext
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -27,6 +28,54 @@ JOURNEY_BUDGET_SECONDS = 35 * 60
 CLEANUP_BUDGET_SECONDS = 180
 BOOT_TIMEOUT_SECONDS = 360
 TEST_COMMAND_TIMEOUT_SECONDS = 600
+TEST_IDENTIFIER = "DUNativeSmokeUITests/DUNativeSmokeTests/testResponsiveNavigationAndKeyboard"
+
+# Use the installed Apple media framework, not filename extensions or a magic
+# header, to reject xcresult's error-text placeholders and undecodable media.
+# https://developer.apple.com/documentation/avfoundation/avassetimagegenerator/image(at:)
+RECORDING_PROBE_SWIFT = r'''
+import AVFoundation
+import Foundation
+
+struct Recording: Codable {
+    let fileName: String
+    let durationSeconds: Double
+    let videoTrackCount: Int
+    let width: Int
+    let height: Int
+}
+
+do {
+    let paths = Array(CommandLine.arguments.dropFirst())
+    guard !paths.isEmpty else { throw NSError(domain: "DUSmokeRecording", code: 1) }
+    var recordings: [Recording] = []
+    for path in paths {
+        let url = URL(fileURLWithPath: path)
+        let asset = AVURLAsset(url: url)
+        let tracks = try await asset.loadTracks(withMediaType: .video)
+        let durationTime = try await asset.load(.duration)
+        let duration = durationTime.seconds
+        guard !tracks.isEmpty, duration.isFinite, duration > 0 else {
+            throw NSError(domain: "DUSmokeRecording", code: 2,
+                          userInfo: [NSLocalizedDescriptionKey: "No video track or positive duration: \(url.lastPathComponent)"])
+        }
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        let frame = try await generator.image(at: .zero)
+        guard frame.image.width > 0, frame.image.height > 0 else {
+            throw NSError(domain: "DUSmokeRecording", code: 3)
+        }
+        recordings.append(Recording(fileName: url.lastPathComponent, durationSeconds: duration,
+                                    videoTrackCount: tracks.count, width: frame.image.width, height: frame.image.height))
+    }
+    let data = try JSONEncoder().encode(recordings)
+    FileHandle.standardOutput.write(data)
+    FileHandle.standardOutput.write(Data("\n".utf8))
+} catch {
+    FileHandle.standardError.write(Data("Recording validation failed: \(error)\n".utf8))
+    exit(1)
+}
+'''
 
 
 def validate_environment(environment):
@@ -73,6 +122,61 @@ def validate_test_summary(summary):
     expected = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0}
     if any(type(summary.get(key)) is not int or summary[key] != value for key, value in expected.items()):
         raise SmokeFailure("XCTest must report exactly one passed, zero failed and zero skipped smoke test per device")
+
+
+def exported_recordings(directory, device_id):
+    """Validate the observed xcresult manifest before trusting its payloads."""
+    manifest_path = directory / "manifest.json"
+    if not manifest_path.is_file() or manifest_path.stat().st_size > 2_000_000:
+        raise SmokeFailure("Missing or oversized XCTest attachment manifest")
+    try:
+        manifest = json.loads(manifest_path.read_text())
+    except (ValueError, UnicodeError) as error:
+        raise SmokeFailure("Invalid XCTest attachment manifest") from error
+    if (not isinstance(manifest, list) or len(manifest) != 1 or not isinstance(manifest[0], dict)
+            or manifest[0].get("testIdentifier") != TEST_IDENTIFIER.split("/", 1)[1] + "()"
+            or manifest[0].get("testIdentifierURL") != f"test://com.apple.xcode/DiasporaUnlocked/{TEST_IDENTIFIER}"):
+        raise SmokeFailure("Attachment manifest does not identify the single expected smoke test")
+    attachments = manifest[0].get("attachments")
+    if not isinstance(attachments, list) or not attachments:
+        raise SmokeFailure("The smoke test exported no attachments")
+    recordings = []
+    for attachment in attachments:
+        if not isinstance(attachment, dict) or attachment.get("deviceId") != device_id:
+            raise SmokeFailure("Attachment manifest does not match the owned simulator")
+        name = attachment.get("exportedFileName")
+        title = attachment.get("suggestedHumanReadableName")
+        if (not isinstance(name, str) or not name or name in (".", "..") or Path(name).name != name
+                or "\\" in name or not isinstance(title, str)):
+            raise SmokeFailure("Malformed exported attachment filename or title")
+        path = directory / name
+        if path.resolve().parent != directory.resolve() or not path.is_file() or path.stat().st_size == 0:
+            raise SmokeFailure(f"Missing, empty or external attachment payload: {name}")
+        if title == "Screen Recording" or title.startswith("Screen Recording "):
+            with path.open("rb") as payload:
+                prefix = payload.read(512)
+            if prefix.lstrip().startswith(b"Unexpected Error:"):
+                raise SmokeFailure(f"Screen recording is an XCTest error placeholder: {name}")
+            if path in recordings:
+                raise SmokeFailure("Duplicate screen recording in attachment manifest")
+            recordings.append(path)
+    if not recordings:
+        raise SmokeFailure("The smoke test has no retained automatic screen recording")
+    return recordings
+
+
+def validate_recording_probe(probe, recordings):
+    if (not isinstance(probe, list) or len(probe) != len(recordings)
+            or any(not isinstance(item, dict) for item in probe)
+            or [item.get("fileName") for item in probe] != [path.name for path in recordings]):
+        raise SmokeFailure("Media validation did not report every expected recording")
+    for item in probe:
+        duration = item.get("durationSeconds")
+        if (type(duration) not in (int, float) or not math.isfinite(duration) or duration <= 0
+                or any(type(item.get(key)) is not int or item[key] <= 0
+                       for key in ("videoTrackCount", "width", "height"))):
+            raise SmokeFailure("Screen recording has no positive duration, video track or decoded frame")
+    return probe
 
 
 def validate_simulator_signing(metadata, entitlements, bundle_identifier):
@@ -150,6 +254,7 @@ class IOSSmoke:
         self.derived = Path(derived_data).resolve()
         self.artifacts = Path(artifacts).resolve()
         self.artifacts.mkdir(parents=True, exist_ok=True)
+        self.recording_probe = self.artifacts / "validate-recording.swift"
         self.owned = []
         self.keyboard_changed = False
         self.keyboard_previous = None
@@ -296,13 +401,26 @@ class IOSSmoke:
         result = self.artifacts / f"{family}.xcresult"
         if result.exists():
             try:
+                directory = self.artifacts / f"{family}-attachments"
                 self.run(["xcrun", "xcresulttool", "export", "attachments", "--path", str(result),
-                          "--output-path", str(self.artifacts / f"{family}-attachments")],
+                          "--output-path", str(directory)],
                          f"{family}-attachments", timeout=60)
+                recordings = exported_recordings(directory, udid)
+                output = self.capture(["xcrun", "swift", str(self.recording_probe), *map(str, recordings)],
+                                      f"{family}-recordings", timeout=60, separate_stderr=True)
+                probe = validate_recording_probe(json.loads(output), recordings)
+                device["recordings"] = [{**item, "file": f"{family}-attachments/{item['fileName']}"}
+                                         for item in probe]
             except Exception as error:
                 device.setdefault("evidenceErrors", []).append(str(error))
                 # Native screenshots/trees must be inspectable off the Mac too.
                 device["status"] = "failed"
+                device.setdefault("error", str(error))
+        elif device.get("status") == "passed":
+            error = "A passed XCTest journey has no result bundle to export"
+            device.setdefault("evidenceErrors", []).append(error)
+            device["status"] = "failed"
+            device.setdefault("error", error)
         for args, label in [
             (["xcrun", "simctl", "io", udid, "screenshot", str(self.artifacts / f"{family}-final.png")], f"{family}-screenshot"),
             (["xcrun", "simctl", "spawn", udid, "log", "show", "--last", "5m", "--style", "compact", "--predicate",
@@ -363,7 +481,7 @@ class IOSSmoke:
                       "-test-timeouts-enabled", "YES",
                       "-default-test-execution-time-allowance", "240",
                       "-maximum-test-execution-time-allowance", "300",
-                      "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testResponsiveNavigationAndKeyboard"],
+                      f"-only-testing:{TEST_IDENTIFIER}"],
                      f"test-{family}", timeout=TEST_COMMAND_TIMEOUT_SECONDS)
             summary = json.loads(self.capture(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)],
                                               f"summary-{family}"))
@@ -397,6 +515,11 @@ class IOSSmoke:
         help_text = self.capture(["xcrun", "xcresulttool", "export", "attachments", "--help"], "xcresult-attachment-help")
         if "--path" not in help_text or "--output-path" not in help_text:
             raise SmokeFailure("Installed xcresulttool does not expose the required attachment export interface")
+        # Check the installed SDK's media APIs before simulator setup/app build,
+        # once, under the same deadline. Evidence uses this exact helper later.
+        self.recording_probe.write_text(RECORDING_PROBE_SWIFT)
+        self.run(["xcrun", "swiftc", "-typecheck", str(self.recording_probe)],
+                 "typecheck-recording-probe", timeout=60)
         # The first CoreSimulator inventory read exceeded the generic 30s limit
         # on a hosted Mac. Give this one read its own bounded allowance, not a retry.
         inventory = json.loads(self.capture(["xcrun", "simctl", "list", "--json"],

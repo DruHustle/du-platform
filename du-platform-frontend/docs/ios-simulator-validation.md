@@ -85,18 +85,34 @@ rapid bulk typing. Run [41787512082](https://github.com/DruHustle/du-platform/ac
 retained a cold-keyboard transition and a 60-character-per-second bulk event with
 missing input, which the original full-value assertion correctly rejected.
 
-The runner handles only the first-use QuickPath introduction observed in run
+The runner recognizes the first-use QuickPath introduction observed in run
 [41791909311](https://github.com/DruHustle/du-platform/actions/runs/41791909311).
 Its exact `UIContinuousPathIntroductionView` identifier, instruction text and
 descendant `Continue` button must all match. It records the visible prompt,
 dismisses it once, requires its disappearance, and records the resulting state.
-Only that observed interruption can justify a second field tap before typing;
+Acknowledging this observed introduction permits a second field tap before typing;
 no text event is replayed. Tutorial evidence and acknowledgment occur outside
 the keyboard-settling wait, which starts fresh after that one interruption;
-the overall test and job deadlines remain unchanged. Other prompts and a recurring introduction remain
-failures. The same run retained exact email input but exposed a gesture aimed
+the overall test and job deadlines remain unchanged. A recurring introduction remains
+a failure. The same run retained exact email input but exposed a gesture aimed
 at the keyboard's accessory scroll view; form-scoped selection and measured
 viewport drags correct that harness path without changing app behavior.
+
+One optional password-saving prompt is anticipated after each of the two
+Account visits. In run [41802097647](https://github.com/DruHustle/du-platform/actions/runs/41802097647),
+the native `Save Password?` sheet/alert appeared after navigating to Assistant;
+the iPad had already acknowledged `A simulato` before the prompt hid its keyboard.
+The handler requires the exact observed title, description and its own `Not Now`
+and `Save` buttons. It chooses only `Not Now`, records both states and verifies
+that the input is unchanged. That allowance ends with the orientation's Assistant
+phase; an unknown prompt or a repeated password prompt fails.
+
+Before a character is sent, an observed password prompt must preserve the prior
+acknowledged prefix. If it arrives after the event was sent, the exact new value
+must still be acknowledged before continuing. A missing event fails; it is never
+resent or repaired. Only an observed known prompt permits refocusing the field.
+Prompt capture and acknowledgment occur outside the bounded input/keyboard
+waits, while the overall test and job deadlines remain unchanged.
 
 ## Evidence and bounds
 
@@ -110,6 +126,18 @@ failed tests. Those in-app attachments can be inspected without Xcode; the final
 `simctl` screenshot may show SpringBoard after app teardown. `report.json`
 distinguishes failed, passed and unexecuted devices. Export failures remain failed
 checks even when the native assertions passed.
+
+The temporary test action retains system attachments on success as well as
+failure, following [Apple's recording-retention guidance](https://developer.apple.com/videos/play/wwdc2025/344/).
+Export validation requires the expected test, the owned simulator UUID,
+nonempty local attachment payloads and a manifest-labelled screen recording.
+The runner rejects an attachment-error placeholder, then uses the installed
+AVFoundation framework to require a positive-duration video track and an actually
+decoded frame. Only that validated recording is reported as usable evidence.
+This is necessary because run 41802097647 exported a pending-attachment error as
+the iPhone's purported recording despite a successful export command. The
+validation does not claim that every frame is intact or that a decoded frame
+proves keyboard clearance; the actual journey still needs visual review.
 
 Inspect the exported screen recording when a still image omits secure input.
 Apple documents that [secure fields hide their dots in iOS screenshots](https://developer.apple.com/documentation/swiftui/securefield).

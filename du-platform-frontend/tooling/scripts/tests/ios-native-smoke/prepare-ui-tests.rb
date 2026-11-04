@@ -35,6 +35,9 @@ project.save
 scheme = Xcodeproj::XCScheme.new
 scheme.configure_with_targets(app, test)
 scheme.test_action.build_configuration = 'Release'
+# XCTest's explicit .keepAlways attachments do not retain the automatic video.
+# Keep system captures for passing runs too, so secure-input evidence survives.
+scheme.test_action.xml_element.attributes['systemAttachmentLifetime'] = 'keepAlways'
 scheme.launch_action.build_configuration = 'Release'
 scheme.save_as(project.path, 'DUNativeSmoke', true)
 puts 'Prepared DUNativeSmoke with the real application and UI-test targets.'
