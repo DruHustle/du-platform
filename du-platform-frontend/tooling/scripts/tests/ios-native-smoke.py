@@ -11,6 +11,7 @@ import plistlib
 import re
 import shlex
 import signal
+import struct
 import subprocess
 import time
 from urllib.parse import urlparse
@@ -86,6 +87,61 @@ def validate_simulator_signing(metadata, entitlements, bundle_identifier):
     # Apple includes application-identifier in the app's keychain access groups.
     # A separate sharing group, team identity or provisioning profile is not needed.
     return identifier
+
+
+def simulator_entitlements(binary, architecture):
+    """Read Xcode's simulated plist from the signed, thin 64-bit executable.
+
+    Simulator entitlements live in __TEXT,__entitlements, separately from the
+    host macOS signature's entitlement dictionary. SwiftBuild reads this section
+    too: Sources/SWBUtil/MachO.swift, simulatedEntitlements().
+    """
+    cpu_types = {"arm64": 0x0100000C, "x86_64": 0x01000007}
+    if len(binary) < 32 or binary[:4] != b"\xcf\xfa\xed\xfe":
+        raise SmokeFailure("Expected a thin little-endian 64-bit simulator Mach-O executable")
+    _, cpu, _, file_type, command_count, command_bytes, _, _ = struct.unpack_from("<8I", binary)
+    if architecture not in cpu_types or cpu != cpu_types[architecture] or file_type != 2:
+        raise SmokeFailure("Simulator Mach-O architecture or executable type does not match the runtime build")
+    commands_end = 32 + command_bytes
+    if not (0 < command_count <= 4096 and 8 * command_count <= command_bytes
+            and command_bytes % 8 == 0 and commands_end <= len(binary)):
+        raise SmokeFailure("Malformed simulator Mach-O load-command bounds")
+    offset = 32
+    matches = []
+    for _ in range(command_count):
+        if offset + 8 > commands_end:
+            raise SmokeFailure("Truncated simulator Mach-O load command")
+        command, size = struct.unpack_from("<II", binary, offset)
+        if size < 8 or size % 8 or offset + size > commands_end:
+            raise SmokeFailure("Malformed simulator Mach-O load-command size")
+        if command == 0x19:  # LC_SEGMENT_64; segment_command_64 is 72 bytes.
+            if size < 72:
+                raise SmokeFailure("Truncated simulator Mach-O segment")
+            segment = struct.unpack_from("<II16sQQQQiiII", binary, offset)
+            name, file_offset, file_size, section_count = segment[2], segment[5], segment[6], segment[9]
+            if size != 72 + 80 * section_count or file_offset + file_size > len(binary):
+                raise SmokeFailure("Malformed simulator Mach-O segment bounds")
+            for index in range(section_count):
+                section = struct.unpack_from("<16s16sQQ8I", binary, offset + 72 + 80 * index)
+                section_name, segment_name, _, section_size, section_offset = section[:5]
+                if section_name.rstrip(b"\0") == b"__entitlements" and segment_name.rstrip(b"\0") == b"__TEXT":
+                    if (name.rstrip(b"\0") != b"__TEXT" or not 0 < section_size <= 1_048_576
+                            or section_offset < max(commands_end, file_offset)
+                            or section_offset + section_size > file_offset + file_size):
+                        raise SmokeFailure("Malformed simulator entitlement section bounds")
+                    matches.append(binary[section_offset:section_offset + section_size])
+        offset += size
+    if offset != commands_end:
+        raise SmokeFailure("Simulator Mach-O load-command count does not match its size")
+    if len(matches) != 1:
+        raise SmokeFailure("Expected exactly one simulator __TEXT,__entitlements section")
+    try:
+        entitlements = plistlib.loads(matches[0])
+    except (plistlib.InvalidFileException, ValueError, ExpatError) as error:
+        raise SmokeFailure("Simulator entitlement section is not a valid plist") from error
+    if not isinstance(entitlements, dict):
+        raise SmokeFailure("Simulator entitlement section must contain a dictionary")
+    return entitlements, matches[0]
 
 
 class IOSSmoke:
@@ -224,9 +280,16 @@ class IOSSmoke:
             entitlements = plistlib.loads(xml.encode())
         except (plistlib.InvalidFileException, ValueError, ExpatError) as error:
             raise SmokeFailure("codesign did not produce a valid XML entitlement plist") from error
-        identifier = validate_simulator_signing(metadata, entitlements, "com.diasporaunlocked.app")
+        if not isinstance(entitlements, dict):
+            raise SmokeFailure("codesign host entitlements must contain a dictionary")
+        simulated, actual_plist = simulator_entitlements((bundle / "DiasporaUnlocked").read_bytes(),
+                                                        self.report["architecture"])
+        evidence = self.artifacts / "app-simulated-entitlements.plist"
+        evidence.write_bytes(actual_plist)
+        identifier = validate_simulator_signing(metadata, simulated, "com.diasporaunlocked.app")
         self.report["signing"] = {"signature": "adhoc", "applicationIdentifier": identifier,
-                                  "keychainAccessGroups": entitlements.get("keychain-access-groups", [])}
+                                  "entitlementSource": "__TEXT,__entitlements", "entitlements": evidence.name,
+                                  "keychainAccessGroups": simulated.get("keychain-access-groups", [])}
 
     def evidence(self, device):
         family, udid = device["family"], device["udid"]

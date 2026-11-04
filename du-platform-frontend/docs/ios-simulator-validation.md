@@ -18,8 +18,13 @@ form is submitted.
 
 The runtime build uses Xcode's normal local simulator signature (`-` identity),
 following [Apple's simulator signing guidance](https://developer.apple.com/forums/thread/826882).
-The script verifies the signature and reads its generated entitlements before
-booting either device. The generated `application-identifier` must identify the
+The script verifies the signature, then reads the generated simulator entitlements
+from the actual executable's `__TEXT,__entitlements` section before booting either
+device. This follows [SwiftBuild's simulator qualification](https://github.com/swiftlang/swift-build/blob/main/Sources/SwiftBuildTestSupport/CoreQualificationTester.swift):
+simulated entitlements are separate from the host macOS signing entitlement
+dictionary, which can be empty. The bounded reader requires the expected thin
+64-bit architecture, one matching section, and valid file/segment/section bounds;
+it saves the exact embedded plist as evidence. The generated `application-identifier` must identify the
 expected app bundle; Apple uses it for
 [default keychain access](https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps).
 No sharing group, team identity or provisioning profile is authored by the runner.
