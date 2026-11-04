@@ -380,11 +380,33 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func dismissKeyboard(in scroll: XCUIElement, avoiding field: XCUIElement) {
-        // iOS's native scroll view uses interactive dismissal. This semantic
-        // gesture does not submit a form or invoke an unrelated app action.
+        // Interactive dismissal follows the touch offscreen. Unlike a content
+        // reveal, this intentional pan must continue through the keyboard area.
+        // It still starts in the owned app scroll view, outside the editor.
         for _ in 0..<3 {
             if !app.keyboards.firstMatch.exists { break }
-            scrollContent(scroll, avoiding: field, up: false)
+            let viewport = visibleContent(in: scroll)
+            let fieldFrame = field.frame
+            let scrollFrame = scroll.frame
+            let window = app.frame
+            let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
+            let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
+            XCTAssertFalse(viewport.isEmpty, "Keyboard dismissal needs visible app content")
+            XCTAssertGreaterThan(max(left, right), 0, "Keyboard dismissal must start outside the editor")
+            let x = left >= right ? viewport.minX + left / 2 : viewport.maxX - right / 2
+            let start = CGPoint(x: x, y: viewport.minY + viewport.height * 0.8)
+            let end = CGPoint(x: x, y: window.maxY - 1)
+            XCTAssertTrue(viewport.contains(start), "Keyboard dismissal must begin above the keyboard/accessory")
+            XCTAssertTrue(window.contains(end), "Keyboard dismissal must end inside the observed window")
+            XCTAssertGreaterThan(end.y, viewport.maxY, "Keyboard dismissal must continue beyond the obstruction's top")
+            let origin = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            let from = origin.withOffset(CGVector(dx: start.x - scrollFrame.minX, dy: start.y - scrollFrame.minY))
+            let to = origin.withOffset(CGVector(dx: end.x - scrollFrame.minX, dy: end.y - scrollFrame.minY))
+            checks.append(["name": "keyboard-dismiss-pan", "field": field.label,
+                           "scroll": rectangle(scrollFrame), "viewport": rectangle(viewport), "window": rectangle(window),
+                           "start": ["x": Double(start.x), "y": Double(start.y)],
+                           "end": ["x": Double(end.x), "y": Double(end.y)]])
+            from.press(forDuration: 0.1, thenDragTo: to)
         }
         wait("Software keyboard did not dismiss") { !self.app.keyboards.firstMatch.exists }
     }
