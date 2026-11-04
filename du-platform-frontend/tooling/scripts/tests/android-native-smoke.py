@@ -9,16 +9,18 @@ Run inside an already booted emulator, after npm ci and assembleDebug:
 
 This clears only the installed test app on an emulator. It submits no forms and
 requires .invalid API/website origins. Taps use labels and bounds from the current
-uiautomator hierarchy, never device-specific coordinates. Tablet, landscape and
-large-text cases retain screenshots and native bounds. Display settings are
-restored during cleanup, including after a failed assertion. The working
-deadline is 9 minutes; diagnostics and restoration are separately bounded.
+uiautomator hierarchy, never device-specific coordinates. Tablet, landscape,
+large-text and real keyboard cases retain screenshots and native bounds.
+Display and keyboard settings are restored during cleanup, including after a
+failed assertion. The working deadline is 9 minutes; diagnostics and restoration
+are separately bounded.
 
 Launch/diagnostic references:
 https://docs.expo.dev/more/expo-cli/#server-url
 https://docs.expo.dev/more/qr-codes/
 https://docs.expo.dev/develop/development-builds/development-workflows/#app-specific-deep-links
 https://developer.android.com/tools/adb
+https://developer.android.com/develop/ui/views/layout/sw-keyboard
 """
 
 import argparse
@@ -127,6 +129,69 @@ def navigation_bounds(tree, package, size, density):
     return targets
 
 
+def ime_bounds(output):
+    """Read the actual visible IME inset on the emulator's default display.
+
+    Android 16's `dumpsys window displays` prints InsetsSource.dump(), including
+    `type=ime frame=[...][...] visible=true`. A show request, input-method history
+    entry or a visible keyboard on another display is not sufficient evidence.
+    """
+    displays = re.split(r"(?m)^\s*Display: mDisplayId=(\d+)[^\n]*\n", output)
+    default = next((displays[i + 1] for i in range(1, len(displays), 2) if displays[i] == "0"), None)
+    if default is None:
+        raise SmokeFailure("WindowManager did not report the default display's insets")
+    frames = set()
+    for line in default.splitlines():
+        if not re.match(r"\s*InsetsSource id=\S+ type=ime\s", line):
+            continue
+        if not re.search(r"\bvisible=true\b", line):
+            continue
+        match = re.search(r"\bframe=(\[\d+,\d+\]\[\d+,\d+\])", line)
+        area = bounds({"bounds": match.group(1)}) if match else None
+        if area is None:
+            raise SmokeFailure(f"Visible IME has invalid bounds: {line.strip()}")
+        frames.add(area)
+    if len(frames) > 1:
+        raise SmokeFailure(f"Ambiguous visible IME bounds: {sorted(frames)}")
+    return next(iter(frames), None)
+
+
+def editable_field(tree, label, package):
+    matches = [node for node in tree.iter("node") if node.get("package") == package
+               and node.get("class") == "android.widget.EditText" and label in labels(node)
+               and node.get("enabled") == "true" and bounds(node)]
+    if len(matches) != 1:
+        raise SmokeFailure(f"Expected one visible, enabled editable {label!r}; found {len(matches)}")
+    return matches[0]
+
+
+def keyboard_observation(tree, package, label, value, frame, size, density, action=None):
+    """Require focused app text and usable controls above a visible real IME."""
+    if frame is None:
+        raise SmokeFailure("The software keyboard is not visibly open")
+    width, height = size
+    if frame[2] > width or frame[3] > height:
+        raise SmokeFailure(f"IME extends outside the {width}x{height} display: {frame}")
+    field = editable_field(tree, label, package)
+    if field.get("focused") != "true" or field.get("text", "") != value:
+        raise SmokeFailure(f"{label!r} does not hold the expected focused text")
+    minimum = 44 * density / 160 - 1
+
+    def visible_area(target, description):
+        area = bounds(target) if target is not None else None
+        if (area is None or area[2] > width or area[3] > frame[1]
+                or area[2] - area[0] < minimum or area[3] - area[1] < minimum):
+            raise SmokeFailure(f"{description} is not a full 44dp target above the keyboard: {area}")
+        return area
+
+    observation = {"field": label, "value": value, "fieldBounds": visible_area(field, label),
+                   "imeBounds": frame}
+    if action is not None:
+        target = find_target(tree, action, package)
+        observation.update({"action": action, "actionBounds": visible_area(target, action)})
+    return observation
+
+
 class AndroidSmoke:
     def __init__(self, args):
         self.mobile = Path(args.mobile_dir).resolve()
@@ -146,7 +211,9 @@ class AndroidSmoke:
         self.current_density = 160
         self.display_state = None
         self.display_changed = False
+        self.keyboard_changed = False
         self.layout_cases = []
+        self.keyboard_cases = []
         self.dismissals = {"Continue": 0, "Close": 0, "Back": 0}
         self.pending_dismissal = None
         self.command_log = (self.artifacts / "commands.log").open("w", encoding="utf-8")
@@ -286,8 +353,21 @@ class AndroidSmoke:
                  for kind in ("size", "density")}
         state["settings"] = {key: self.shell("settings", "get", "system", key).decode().strip()
                              for key in ("font_scale", "accelerometer_rotation", "user_rotation")}
+        state["secureSettings"] = {
+            "show_ime_with_hard_keyboard": self.shell("settings", "get", "secure",
+                                                      "show_ime_with_hard_keyboard").decode().strip()
+        }
         self.display_state = state
+        self.current_density = int(state["density"]["effective"])
         (self.artifacts / "original-display.json").write_text(json.dumps(state, indent=2) + "\n")
+
+    def enable_soft_keyboard(self):
+        if not self.device_ready or not self.display_state or "secureSettings" not in self.display_state:
+            raise SmokeFailure("Keyboard changes require a verified emulator and saved original setting")
+        # The CI emulator exposes a hardware keyboard. Explicitly render its
+        # real IME, then restore the prior value even if the first phone case fails.
+        self.keyboard_changed = True
+        self.shell("settings", "put", "secure", "show_ime_with_hard_keyboard", "1")
 
     def configure_display(self, rotation, font_scale):
         if self.display_state is None or not self.device_ready:
@@ -301,7 +381,7 @@ class AndroidSmoke:
         self.shell("settings", "put", "system", "accelerometer_rotation", "0")
         self.shell("settings", "put", "system", "user_rotation", str(rotation))
 
-    def reveal_control(self, label, name, forward=True):
+    def reveal_control(self, label, name, forward=True, bottom_limit=None):
         """Reach an off-screen action by scrolling the observed app ScrollView."""
         previous_content = None
         reversed_direction = False
@@ -312,7 +392,8 @@ class AndroidSmoke:
             # UIAutomator clips an off-screen button's bounds. Keep scrolling
             # until a full usable touch target is visible, not just its label.
             minimum = 44 * self.current_density / 160 - 1
-            if area and area[2] - area[0] >= minimum and area[3] - area[1] >= minimum:
+            if (area and area[2] - area[0] >= minimum and area[3] - area[1] >= minimum
+                    and (bottom_limit is None or area[3] <= bottom_limit)):
                 self.capture(name, self.last_xml)
                 self.steps.append({"screen": name, "expected": [label], "bounds": bounds(target),
                                    "elapsedSeconds": round(time.monotonic() - self.started, 2)})
@@ -339,10 +420,105 @@ class AndroidSmoke:
                 self.note(f"Scroll boundary reached while finding {label!r}; reverse direction once")
             previous_content = content
             x1, y1, x2, y2 = bounds(view)
+            if bottom_limit is not None:
+                y2 = min(y2, bottom_limit)
+                if y2 - y1 < minimum:
+                    raise SmokeFailure("The keyboard leaves no usable app scroll area")
             margin = max(1, (y2 - y1) // 5)
             start, finish = (y2 - margin, y1 + margin) if forward else (y1 + margin, y2 - margin)
+            if bottom_limit is not None and area and forward:
+                # Position a form before reopening the keyboard. Use its last
+                # observed top edge and the action's actual bounds, not a guessed
+                # keyboard height or a large swipe that could skip the field.
+                distance = max(minimum, area[3] - bottom_limit + round(8 * self.current_density / 160))
+                finish = max(finish, start - round(distance))
             self.shell("input", "swipe", (x1 + x2) // 2, start, (x1 + x2) // 2, finish, "400")
         raise SmokeFailure(f"Could not reach {label!r} within six bounded scroll gestures")
+
+    def keyboard_state(self):
+        output = self.shell("dumpsys", "window", "displays", timeout=6).decode(errors="replace")
+        (self.artifacts / "latest-window-displays.txt").write_text(output)
+        return ime_bounds(output), output
+
+    def wait_keyboard(self, name, label, value, shown=True, action=None, timeout=30):
+        end = min(self.deadline, time.monotonic() + timeout)
+        last_error = "No keyboard observation returned"
+        while time.monotonic() < end:
+            try:
+                tree = self.hierarchy()
+                frame, window_dump = self.keyboard_state()
+                if shown:
+                    observation = keyboard_observation(tree, self.package, label, value, frame,
+                                                       self.last_screen_size, self.current_density, action)
+                else:
+                    if frame is not None:
+                        raise SmokeFailure("The software keyboard has not closed")
+                    field = editable_field(tree, label, self.package)
+                    if field.get("text", "") != value:
+                        raise SmokeFailure(f"{label!r} lost its typed value after closing the keyboard")
+                    observation = {"field": label, "value": value, "imeBounds": None,
+                                   "tabs": navigation_bounds(tree, self.package, self.last_screen_size,
+                                                             self.current_density)}
+                self.capture(name, self.last_xml)
+                (self.artifacts / f"{name}-window-displays.txt").write_text(window_dump)
+                (self.artifacts / f"{name}-input-method.txt").write_bytes(
+                    self.shell("dumpsys", "input_method", timeout=6))
+                self.steps.append({"screen": name, "keyboardVisible": shown, **observation,
+                                   "elapsedSeconds": round(time.monotonic() - self.started, 2)})
+                return tree, observation
+            except (SmokeFailure, ET.ParseError, subprocess.TimeoutExpired) as error:
+                last_error = str(error)
+            time.sleep(0.5)
+        raise SmokeFailure(f"Timed out waiting for {name}. {last_error}")
+
+    def close_keyboard(self, name, label, value):
+        # Never send Back based only on a previous focus or stale screenshot.
+        # If a gesture already dismissed the IME, do not navigate out of the app.
+        if self.keyboard_state()[0] is not None:
+            self.shell("input", "keyevent", "KEYCODE_BACK")
+        return self.wait_keyboard(name, label, value, shown=False)
+
+    def keyboard_case(self, name, label, value, action):
+        # Fixed, non-secret fixtures only. No Enter/action/submit key is sent.
+        if not re.fullmatch(r"[A-Za-z0-9@._-]+", value):
+            raise SmokeFailure("Keyboard fixture must be plain ASCII text without control characters")
+        tree = self.reveal_control(label, name + "-field", forward=False)
+        before = editable_field(tree, label, self.package).get("text", "")
+        if before:
+            raise SmokeFailure(f"{label!r} must start empty in the isolated keyboard check")
+        if not self.tap(self.hierarchy(), label):
+            raise SmokeFailure(f"Could not focus {label!r}")
+        self.wait_keyboard(name + "-opened", label, "")
+        self.shell("input", "text", value)
+        tree, observed = self.wait_keyboard(name + "-typed", label, value)
+        try:
+            keyboard_observation(tree, self.package, label, value, observed["imeBounds"],
+                                 self.last_screen_size, self.current_density, action)
+        except SmokeFailure:
+            # Android intentionally dismisses this app's keyboard on a drag.
+            # Scroll with it closed, then reopen it and verify the real inset
+            # again. A hidden keyboard can never make the action check pass.
+            self.close_keyboard(name + "-positioning", label, value)
+            self.reveal_control(action, name + "-action-position", bottom_limit=observed["imeBounds"][1])
+            if not self.tap(self.hierarchy(), label):
+                raise SmokeFailure(f"Could not refocus {label!r} after positioning its action")
+        _, observed = self.wait_keyboard(name + "-action", label, value, action=action)
+        _, restored = self.close_keyboard(name + "-closed", label, value)
+        self.keyboard_cases.append({"name": name, "density": self.current_density,
+                                    "displayPixels": self.last_screen_size, **observed,
+                                    "restoredTabs": restored["tabs"]})
+
+    def assistant_case(self, name, keyboard=False):
+        tree = self.navigate_tab("Assistant", ["Onesa assistant", "Your message", "Send message"], name)
+        send = [node for node in tree.iter("node") if node.get("package") == self.package
+                and node.get("class") == "android.widget.Button" and "Send message" in labels(node)]
+        if len(send) != 1 or send[0].get("enabled") != "false":
+            raise SmokeFailure("Assistant must expose one disabled Send message button for an empty composer")
+        self.reveal_control("Your message", name + "-composer")
+        tree = self.reveal_control("Contact the team", name + "-contact")
+        navigation_bounds(tree, self.package, self.last_screen_size, self.current_density)
+        if keyboard:
+            self.keyboard_case(name + "-keyboard", "Your message", "NativeInputCheck", "Send message")
 
     def responsive_case(self, name, rotation, font_scale):
         self.note(f"Tablet case {name}, rotation={rotation}, font_scale={font_scale}")
@@ -367,6 +543,7 @@ class AndroidSmoke:
         navigation_bounds(tree, self.package, self.last_screen_size, density)
         tree = self.navigate_tab("Shop", ["Search products", "Filter by category"], name + "-shop")
         navigation_bounds(tree, self.package, self.last_screen_size, density)
+        self.assistant_case(name + "-assistant", keyboard=font_scale > 1)
         tree = self.navigate_tab("Account", ["Account"], name + "-account")
         navigation_bounds(tree, self.package, self.last_screen_size, density)
         self.reveal_control("Email address", name + "-account-form", forward=False)
@@ -431,6 +608,7 @@ class AndroidSmoke:
             raise SmokeFailure("This test clears app data and may run only on an Android emulator")
         self.device_ready = True
         self.remember_display()
+        self.enable_soft_keyboard()
         self.adb("logcat", "-c")
         self.start_metro()
         self.adb("reverse", "tcp:8081", "tcp:8081")
@@ -447,7 +625,9 @@ class AndroidSmoke:
         self.wait_screen("01-home", ["Explore what connects us", "Search Diaspora Unlocked"], timeout=180)
         self.navigate_tab("Travel", ["Find options", "From airport code (e.g. FRA)"], "02-travel")
         self.navigate_tab("Shop", ["Search products", "Filter by category"], "03-shop")
+        self.assistant_case("03-assistant")
         self.navigate_tab("Account", ["Welcome back", "Email address"], "04-account")
+        self.keyboard_case("04-account-keyboard", "Email address", "keyboard-check@example.invalid", "Sign in")
 
         # Expo dev-client supports app-specific links only after the project is
         # open. Real cold email-link launch remains a release/device check.
@@ -498,19 +678,27 @@ class AndroidSmoke:
 
     def cleanup(self):
         restore_errors = []
+        commands = []
         if self.display_changed and self.display_state is not None:
             commands = [("wm", kind, self.display_state[kind]["override"] or "reset")
                         for kind in ("size", "density")]
             commands.extend(("settings", "delete", "system", key) if value == "null" else
                             ("settings", "put", "system", key, value)
                             for key, value in self.display_state["settings"].items())
-            for command in commands:
-                try:
-                    self.shell(*command, timeout=5, diagnostic=True)
-                except Exception as error:
-                    restore_errors.append(f"{shlex.join(command)}: {error}")
+        if self.keyboard_changed and self.display_state is not None:
+            value = self.display_state["secureSettings"]["show_ime_with_hard_keyboard"]
+            commands.append(("settings", "delete", "secure", "show_ime_with_hard_keyboard") if value == "null" else
+                            ("settings", "put", "secure", "show_ime_with_hard_keyboard", value))
+        for command in commands:
+            try:
+                self.shell(*command, timeout=5, diagnostic=True)
+            except Exception as error:
+                restore_errors.append(f"{shlex.join(command)}: {error}")
+        if commands:
             (self.artifacts / "display-restoration.json").write_text(
-                json.dumps({"restored": not restore_errors, "errors": restore_errors}, indent=2) + "\n")
+                json.dumps({"restored": not restore_errors, "errors": restore_errors,
+                            "keyboardSetting": self.display_state.get("secureSettings") if self.keyboard_changed else None},
+                           indent=2) + "\n")
         if self.metro is not None:
             try:
                 os.killpg(self.metro.pid, signal.SIGTERM)
@@ -529,7 +717,7 @@ class AndroidSmoke:
             except Exception as error:
                 self.note(f"adb reverse cleanup: {error}")
         self.command_log.close()
-        return "Could not restore emulator display settings: " + "; ".join(restore_errors) if restore_errors else None
+        return "Could not restore emulator display/keyboard settings: " + "; ".join(restore_errors) if restore_errors else None
 
 
 def main():
@@ -550,8 +738,9 @@ def main():
         cleanup_error = runner.cleanup()
         error = error or cleanup_error
         result = {"passed": error is None, "error": error, "steps": runner.steps, "layoutCases": runner.layout_cases,
+                  "keyboardCases": runner.keyboard_cases,
                   "elapsedSeconds": round(time.monotonic() - runner.started, 2),
-                  "scope": "Android debug launch, tabs, warm reset link, tablet portrait/landscape, large text and form-action reachability; no cold standalone link/authenticated/provider/commerce journey"}
+                  "scope": "Android debug launch, all tab screens, warm reset link, tablet portrait/landscape, large text, form-action reachability and real keyboard focus/typing/action visibility; no submissions/cold standalone link/authenticated/provider/commerce journey"}
         (runner.artifacts / "result.json").write_text(json.dumps(result, indent=2) + "\n")
     runner.note("PASS" if error is None else "FAIL; inspect Android smoke artifacts")
     return 0 if error is None else 1

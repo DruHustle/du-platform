@@ -1,6 +1,7 @@
 """Host-only smoke-runner regression checks; these do not execute an emulator."""
 
 import importlib.util
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -235,6 +236,196 @@ class ScrollReachabilityTests(unittest.TestCase):
         self.capture.assert_not_called()
         self.assertEqual(self.runner.steps, [])
 
+    def test_action_position_requires_the_observed_keyboard_clearance(self):
+        covered = self.scroll_view(target_bounds="[20,900][780,980]")
+        revealed = self.scroll_view(marker_y=100, target_bounds="[20,650][780,730]")
+        with patch.object(self.runner, "hierarchy", side_effect=[covered, revealed]):
+            self.runner.reveal_control("From airport code (e.g. FRA)", "position-before-ime", bottom_limit=800)
+        swipe = self.shell.call_args.args
+        self.assertEqual(swipe[:2], ("input", "swipe"))
+        self.assertGreater(swipe[3], swipe[5])
+        self.assertTrue(100 < swipe[5] < swipe[3] < 800)
+        self.assertEqual(self.runner.steps[-1]["bounds"], (20, 650, 780, 730))
+
+
+class KeyboardEvidenceTests(unittest.TestCase):
+    @staticmethod
+    def window_dump(visible="true", frame="[0,800][800,1200]"):
+        # Format from Android 16 InsetsSource.dump(), the pinned emulator API.
+        return ("WINDOW MANAGER DISPLAY CONTENTS\nDisplay: mDisplayId=0\n"
+                "  WindowInsetsStateController\n  InsetsState\n"
+                f"    InsetsSource id=3 type=ime frame={frame} visible={visible} flags= sideHint=BOTTOM\n")
+
+    @staticmethod
+    def app_tree(value="NativeInputCheck", focused="true", field_bounds="[20,420][780,500]",
+                 action_bounds="[20,600][780,680]"):
+        tree = ET.Element("hierarchy")
+        tree.append(node(text="Your message", **{"class": "android.widget.TextView"}))
+        tree.append(node(text=value, focused=focused, clickable="true", bounds=field_bounds,
+                         **{"class": "android.widget.EditText", "content-desc": "Your message"}))
+        tree.append(node(clickable="true", bounds=action_bounds,
+                         **{"class": "android.widget.Button", "content-desc": "Send message"}))
+        return tree
+
+    def test_ime_requires_visible_insets_on_the_default_display(self):
+        frame = (0, 800, 800, 1200)
+        self.assertEqual(smoke.ime_bounds(self.window_dump()), frame)
+        self.assertEqual(smoke.ime_bounds(self.window_dump().replace(" visible=", " visibleFrame=[0,800][800,1200] visible=")), frame)
+        self.assertIsNone(smoke.ime_bounds(self.window_dump(visible="false")))
+        history = "  mInputShown=true mRequestedVisibleTypes=ime\n  history: InsetsSource id=3 type=ime frame=[0,800][800,1200] visible=true\n"
+        self.assertIsNone(smoke.ime_bounds("Display: mDisplayId=0\n" + history))
+        other_display = self.window_dump().replace("mDisplayId=0", "mDisplayId=1")
+        self.assertIsNone(smoke.ime_bounds(self.window_dump(visible="false") + other_display))
+
+    def test_unknown_ambiguous_and_invalid_insets_cannot_claim_a_keyboard(self):
+        with self.assertRaisesRegex(smoke.SmokeFailure, "default display"):
+            smoke.ime_bounds("mInputShown=true")
+        with self.assertRaisesRegex(smoke.SmokeFailure, "invalid bounds"):
+            smoke.ime_bounds(self.window_dump(frame="[0,800][0,800]"))
+        conflicting = self.window_dump() + "  InsetsSource id=4 type=ime frame=[0,700][800,1200] visible=true\n"
+        with self.assertRaisesRegex(smoke.SmokeFailure, "Ambiguous"):
+            smoke.ime_bounds(conflicting)
+
+    def observe(self, tree=None, frame=(0, 800, 800, 1200)):
+        return smoke.keyboard_observation(self.app_tree() if tree is None else tree, PACKAGE,
+                                          "Your message", "NativeInputCheck", frame, (800, 1200), 240,
+                                          "Send message")
+
+    def test_keyboard_proof_requires_focused_typed_app_field_and_full_action(self):
+        proof = self.observe()
+        self.assertEqual(proof["fieldBounds"], (20, 420, 780, 500))
+        self.assertEqual(proof["actionBounds"], (20, 600, 780, 680))
+        for tree in (self.app_tree(value=""), self.app_tree(focused="false")):
+            with self.subTest(tree=ET.tostring(tree)), self.assertRaisesRegex(smoke.SmokeFailure, "focused text"):
+                self.observe(tree)
+        with self.assertRaisesRegex(smoke.SmokeFailure, "not visibly open"):
+            self.observe(frame=None)
+        with self.assertRaisesRegex(smoke.SmokeFailure, "outside"):
+            self.observe(frame=(0, 800, 900, 1200))
+
+    def test_occluded_clipped_missing_and_disabled_controls_fail(self):
+        bad = [self.app_tree(field_bounds="[20,780][780,860]"),
+               self.app_tree(action_bounds="[20,740][780,820]"),
+               self.app_tree(action_bounds="[20,740][780,770]")]
+        disabled = self.app_tree()
+        disabled[-1].set("enabled", "false")
+        bad.append(disabled)
+        missing = self.app_tree()
+        missing.remove(missing[-1])
+        bad.append(missing)
+        for tree in bad:
+            with self.subTest(tree=ET.tostring(tree)), self.assertRaisesRegex(smoke.SmokeFailure, "44dp target above"):
+                self.observe(tree)
+        wrong_package = self.app_tree()
+        wrong_package[1].set("package", "com.android.inputmethod.latin")
+        with self.assertRaisesRegex(smoke.SmokeFailure, "editable"):
+            self.observe(wrong_package)
+
+    def runner(self, directory):
+        runner = smoke.AndroidSmoke(SimpleNamespace(mobile_dir=directory, apk=directory, artifacts=directory))
+        runner.package = PACKAGE
+        runner.current_density = 240
+        runner.last_screen_size = (800, 1200)
+        return runner
+
+    def test_wait_does_not_accept_focus_and_typing_without_a_visible_keyboard(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            try:
+                with patch.object(runner, "hierarchy", return_value=self.app_tree()), \
+                     patch.object(runner, "keyboard_state", side_effect=[(None, "hidden"), ((0, 800, 800, 1200), "visible")]), \
+                     patch.object(runner, "capture") as capture, patch.object(runner, "shell", return_value=b"IME details"), \
+                     patch.object(smoke.time, "sleep"):
+                    _, proof = runner.wait_keyboard("typed-ime", "Your message", "NativeInputCheck", action="Send message")
+                capture.assert_called_once_with("typed-ime", None)
+                self.assertEqual(proof["imeBounds"], (0, 800, 800, 1200))
+                self.assertTrue(runner.steps[-1]["keyboardVisible"])
+                self.assertEqual((Path(directory) / "typed-ime-window-displays.txt").read_text(), "visible")
+            finally:
+                runner.cleanup()
+
+    def test_already_closed_keyboard_never_sends_back_into_navigation(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            try:
+                with patch.object(runner, "keyboard_state", return_value=(None, "hidden")), \
+                     patch.object(runner, "wait_keyboard") as wait, patch.object(runner, "shell") as shell:
+                    runner.close_keyboard("closed", "Your message", "NativeInputCheck")
+                shell.assert_not_called()
+                wait.assert_called_once_with("closed", "Your message", "NativeInputCheck", shown=False)
+            finally:
+                runner.cleanup()
+
+    def test_keyboard_case_types_fixture_without_submitting_and_records_real_action_proof(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            empty = self.app_tree(value="", focused="false")
+            typed = self.app_tree()
+            proof = self.observe(typed)
+            try:
+                with patch.object(runner, "reveal_control", return_value=empty), \
+                     patch.object(runner, "hierarchy", return_value=empty), \
+                     patch.object(runner, "tap", return_value=True), \
+                     patch.object(runner, "wait_keyboard", side_effect=[(typed, {}), (typed, proof), (typed, proof)]), \
+                     patch.object(runner, "close_keyboard", return_value=(typed, {"tabs": {"Home": (0, 1100, 160, 1180)}})), \
+                     patch.object(runner, "shell", return_value=b"") as shell:
+                    runner.keyboard_case("composer-ime", "Your message", "NativeInputCheck", "Send message")
+                shell.assert_called_once_with("input", "text", "NativeInputCheck")
+                self.assertEqual(runner.keyboard_cases[0]["actionBounds"], (20, 600, 780, 680))
+            finally:
+                runner.cleanup()
+
+    def test_covered_action_positioning_cannot_pass_if_reopened_keyboard_is_hidden(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            empty = self.app_tree(value="", focused="false")
+            covered = self.app_tree(action_bounds="[20,780][780,860]")
+            field_proof = smoke.keyboard_observation(covered, PACKAGE, "Your message", "NativeInputCheck",
+                                                     (0, 800, 800, 1200), (800, 1200), 240)
+            try:
+                with patch.object(runner, "reveal_control", return_value=empty) as reveal, \
+                     patch.object(runner, "hierarchy", return_value=empty), \
+                     patch.object(runner, "tap", return_value=True) as tap, \
+                     patch.object(runner, "wait_keyboard", side_effect=[(covered, {}), (covered, field_proof),
+                                 smoke.SmokeFailure("The software keyboard is not visibly open")]), \
+                     patch.object(runner, "close_keyboard") as close, \
+                     patch.object(runner, "shell", return_value=b"") as shell:
+                    with self.assertRaisesRegex(smoke.SmokeFailure, "not visibly open"):
+                        runner.keyboard_case("composer-ime", "Your message", "NativeInputCheck", "Send message")
+                self.assertEqual(reveal.call_args.kwargs["bottom_limit"], 800)
+                self.assertEqual([call.args[1] for call in tap.call_args_list], ["Your message", "Your message"])
+                close.assert_called_once_with("composer-ime-positioning", "Your message", "NativeInputCheck")
+                shell.assert_called_once_with("input", "text", "NativeInputCheck")
+                self.assertEqual(runner.keyboard_cases, [])
+            finally:
+                runner.cleanup()
+
+    def test_secure_keyboard_setting_restores_even_before_any_display_case(self):
+        for original in ("null", "0", "1"):
+            with self.subTest(original=original), TemporaryDirectory() as directory:
+                runner = self.runner(directory)
+                runner.keyboard_changed = True
+                runner.display_state = {"secureSettings": {"show_ime_with_hard_keyboard": original}}
+                with patch.object(runner, "shell", return_value=b"") as shell:
+                    self.assertIsNone(runner.cleanup())
+                expected = ("settings", "delete", "secure", "show_ime_with_hard_keyboard") if original == "null" else \
+                           ("settings", "put", "secure", "show_ime_with_hard_keyboard", original)
+                self.assertEqual(shell.call_args.args, expected)
+                restored = json.loads((Path(directory) / "display-restoration.json").read_text())
+                self.assertTrue(restored["restored"])
+                self.assertEqual(restored["keyboardSetting"]["show_ime_with_hard_keyboard"], original)
+
+    def test_failed_keyboard_enable_still_restores_the_saved_value(self):
+        with TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            runner.device_ready = True
+            runner.display_state = {"secureSettings": {"show_ime_with_hard_keyboard": "0"}}
+            with patch.object(runner, "shell", side_effect=[RuntimeError("setting failed"), b""]) as shell:
+                with self.assertRaisesRegex(RuntimeError, "setting failed"):
+                    runner.enable_soft_keyboard()
+                self.assertIsNone(runner.cleanup())
+            self.assertEqual(shell.call_args.args, ("settings", "put", "secure", "show_ime_with_hard_keyboard", "0"))
+
 
 class ResponsiveEvidenceTests(unittest.TestCase):
     def test_display_overrides_are_read_without_losing_original_values(self):
@@ -292,10 +483,13 @@ class ResponsiveEvidenceTests(unittest.TestCase):
         with TemporaryDirectory() as directory:
             runner = smoke.AndroidSmoke(SimpleNamespace(mobile_dir=directory, apk=directory, artifacts=directory))
             runner.display_changed = True
-            runner.display_state = {"size": {"override": None}, "density": {"override": None}, "settings": {"font_scale": "1"}}
-            with patch.object(runner, "shell", side_effect=[RuntimeError("test failure"), b"", b""]) as shell:
+            runner.keyboard_changed = True
+            runner.display_state = {"size": {"override": None}, "density": {"override": None}, "settings": {"font_scale": "1"},
+                                    "secureSettings": {"show_ime_with_hard_keyboard": "0"}}
+            with patch.object(runner, "shell", side_effect=[RuntimeError("test failure"), b"", b"", b""]) as shell:
                 self.assertIn("Could not restore", runner.cleanup())
-            self.assertEqual(shell.call_count, 3)
+            self.assertEqual(shell.call_count, 4)
+            self.assertEqual(shell.call_args.args, ("settings", "put", "secure", "show_ime_with_hard_keyboard", "0"))
 
 
 if __name__ == "__main__":
