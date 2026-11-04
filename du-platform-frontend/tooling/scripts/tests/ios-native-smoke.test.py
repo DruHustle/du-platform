@@ -24,6 +24,8 @@ TABLET = "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro"
 PASSED = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0}
 PHONE_ID = "11111111-1111-1111-1111-111111111111"
 TABLET_ID = "22222222-2222-2222-2222-222222222222"
+BUNDLE_IDENTIFIER = "com.diasporaunlocked.app"
+ADHOC_METADATA = f"Executable=/fixture/DiasporaUnlocked.app/DiasporaUnlocked\nIdentifier={BUNDLE_IDENTIFIER}\nSignature=adhoc\n"
 
 
 def inventory():
@@ -85,6 +87,21 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaises(smoke.SmokeFailure):
             smoke.validate_test_summary({})
 
+    def test_generated_application_identifier_supplies_default_keychain_access_without_a_sharing_group(self):
+        self.assertEqual(smoke.validate_simulator_signing(ADHOC_METADATA,
+                         {"application-identifier": BUNDLE_IDENTIFIER}, BUNDLE_IDENTIFIER), BUNDLE_IDENTIFIER)
+        for metadata, entitlements in (
+            (ADHOC_METADATA.replace("Signature=adhoc", "Authority=fixture"), {"application-identifier": BUNDLE_IDENTIFIER}),
+            (ADHOC_METADATA.replace(f"Identifier={BUNDLE_IDENTIFIER}", "Identifier=com.example.other"),
+             {"application-identifier": BUNDLE_IDENTIFIER}),
+            (ADHOC_METADATA, {}),
+            (ADHOC_METADATA, {"application-identifier": "com.example.other"}),
+            (ADHOC_METADATA, {"application-identifier": "*"}),
+            (ADHOC_METADATA, {"application-identifier": f"$(AppIdentifierPrefix){BUNDLE_IDENTIFIER}"}),
+        ):
+            with self.subTest(metadata=metadata, entitlements=entitlements), self.assertRaises(smoke.SmokeFailure):
+                smoke.validate_simulator_signing(metadata, entitlements, BUNDLE_IDENTIFIER)
+
 
 class RunnerTests(unittest.TestCase):
     def setUp(self):
@@ -117,6 +134,7 @@ class RunnerTests(unittest.TestCase):
         self.runner.run = Mock(return_value=(0, ""))
         self.runner.set_software_keyboard = Mock()
         self.runner.verify_bundle = Mock(return_value=self.root / "test.xctestrun")
+        self.runner.verify_signing = Mock()
         self.runner.exercise = Mock(side_effect=exercise)
         with patch.dict(smoke.os.environ, ENVIRONMENT), patch.object(smoke.platform, "system", return_value="Darwin"):
             with self.assertRaisesRegex(smoke.SmokeFailure, "Both iPhone and iPad"):
@@ -125,6 +143,9 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(self.runner.owned, [PHONE_ID, TABLET_ID])
         build = next(call for call in self.runner.run.call_args_list if call.args[1] == "build-for-testing")
         self.assertIn("ONLY_ACTIVE_ARCH=YES", build.args[0])
+        self.assertIn("CODE_SIGN_IDENTITY=-", build.args[0])
+        self.assertIn("CODE_SIGNING_ALLOWED=YES", build.args[0])
+        self.assertNotIn("CODE_SIGNING_ALLOWED=NO", build.args[0])
         self.assertEqual(build.args[0][build.args[0].index("-destination") + 1],
                          f"platform=iOS Simulator,id={PHONE_ID},arch={self.runner.report['architecture']}")
 
@@ -153,12 +174,34 @@ class RunnerTests(unittest.TestCase):
         self.runner.run = Mock(return_value=(0, ""))
         self.runner.set_software_keyboard = Mock()
         self.runner.verify_bundle = Mock(return_value=self.root / "test.xctestrun")
+        self.runner.verify_signing = Mock()
         self.runner.exercise = Mock(side_effect=exercise)
         with patch.dict(smoke.os.environ, ENVIRONMENT), patch.object(smoke.platform, "system", return_value="Darwin"):
             with self.assertRaisesRegex(smoke.SmokeFailure, "Original boot timeout"):
                 self.runner.execute()
         self.runner.exercise.assert_called_once()
         self.assertEqual(self.runner.report["devices"][1]["status"], "not-run")
+
+    def test_failed_signing_preflight_stops_before_any_device_launch(self):
+        def capture(args, _label, **_kwargs):
+            if "--help" in args:
+                return "--path --output-path"
+            if "list" in args:
+                return json.dumps(inventory())
+            if "create" in args:
+                return PHONE_ID if args[-2] == PHONE else TABLET_ID
+            return "fixture"
+        self.runner.capture = Mock(side_effect=capture)
+        self.runner.run = Mock(return_value=(0, ""))
+        self.runner.set_software_keyboard = Mock()
+        self.runner.verify_bundle = Mock(return_value=self.root / "test.xctestrun")
+        self.runner.verify_signing = Mock(side_effect=smoke.SmokeFailure("missing generated entitlement"))
+        self.runner.exercise = Mock()
+        with patch.dict(smoke.os.environ, ENVIRONMENT), patch.object(smoke.platform, "system", return_value="Darwin"):
+            with self.assertRaisesRegex(smoke.SmokeFailure, "missing generated entitlement"):
+                self.runner.execute()
+        self.runner.exercise.assert_not_called()
+        self.assertEqual([device["status"] for device in self.runner.report["devices"]], ["not-run", "not-run"])
 
     def test_only_owned_simulators_are_deleted_and_keyboard_value_is_restored(self):
         self.runner.owned = [PHONE_ID, TABLET_ID]
@@ -264,6 +307,41 @@ class RunnerTests(unittest.TestCase):
         with self.assertRaisesRegex(smoke.SmokeFailure, "simulator application"):
             self.runner.verify_bundle()
 
+    def test_signing_preflight_verifies_signature_and_parses_generated_xml_from_stdout(self):
+        self.runner.run = Mock(return_value=(0, ""))
+        self.runner.capture = Mock(side_effect=[ADHOC_METADATA,
+                                   plistlib.dumps({"application-identifier": BUNDLE_IDENTIFIER}).decode()])
+        self.runner.verify_signing()
+        self.assertEqual(self.runner.run.call_args.args[0][:3], ["codesign", "--verify", "--strict"])
+        entitlement_read = self.runner.capture.call_args_list[-1]
+        self.assertEqual(entitlement_read.args[0][:5], ["codesign", "--display", "--entitlements", "-", "--xml"])
+        self.assertTrue(entitlement_read.kwargs["separate_stderr"])
+        self.assertEqual(self.runner.report["signing"],
+                         {"signature": "adhoc", "applicationIdentifier": BUNDLE_IDENTIFIER, "keychainAccessGroups": []})
+
+    def test_failed_signature_verification_cannot_be_replaced_by_plausible_metadata(self):
+        self.runner.run = Mock(side_effect=smoke.SmokeFailure("invalid signature"))
+        self.runner.capture = Mock(return_value=ADHOC_METADATA)
+        with self.assertRaisesRegex(smoke.SmokeFailure, "invalid signature"):
+            self.runner.verify_signing()
+        self.runner.capture.assert_not_called()
+
+    def test_invalid_or_diagnostic_prefixed_xml_is_rejected(self):
+        self.runner.run = Mock(return_value=(0, ""))
+        for xml in ("<?xml version='1.0'?><plist>",
+                    "Executable=/fixture\n" + plistlib.dumps({"application-identifier": BUNDLE_IDENTIFIER}).decode()):
+            self.runner.capture = Mock(side_effect=[ADHOC_METADATA, xml])
+            with self.subTest(xml=xml), self.assertRaisesRegex(smoke.SmokeFailure, "valid XML"):
+                self.runner.verify_signing()
+
+    def test_machine_readable_stdout_is_kept_separate_from_diagnostic_stderr(self):
+        script = ("import plistlib, sys; sys.stderr.write('Executable=/fixture\\n'); "
+                  "sys.stdout.buffer.write(plistlib.dumps({'application-identifier': 'com.diasporaunlocked.app'}))")
+        output = self.runner.capture([sys.executable, "-c", script], "xml-output", separate_stderr=True)
+        self.assertEqual(plistlib.loads(output.encode())["application-identifier"], BUNDLE_IDENTIFIER)
+        entry = json.loads((self.runner.artifacts / "commands.jsonl").read_text())
+        self.assertEqual((self.runner.artifacts / entry["stderr"]).read_text(), "Executable=/fixture\n")
+
     def test_native_test_failure_is_not_retried_or_replaced_by_summary_success(self):
         def run(_args, label, **_kwargs):
             if label == "test-iPhone":
@@ -281,8 +359,12 @@ class RunnerTests(unittest.TestCase):
         self.runner.evidence.assert_called_once_with(device)
         test_calls = [call for call in self.runner.run.call_args_list if call.args[1] == "test-iPhone"]
         self.assertEqual(len(test_calls), 1)
+        self.assertEqual(test_calls[0].kwargs["timeout"], 600)
+        command = test_calls[0].args[0]
+        self.assertEqual(command[command.index("-default-test-execution-time-allowance") + 1], "240")
+        self.assertEqual(command[command.index("-maximum-test-execution-time-allowance") + 1], "300")
         for repetition_flag in ("-test-iterations", "-test-repetitions", "-retry-tests-on-failure", "-run-tests-until-failure"):
-            self.assertNotIn(repetition_flag, test_calls[0].args[0])
+            self.assertNotIn(repetition_flag, command)
 
     def test_cold_boot_timeout_keeps_primary_error_when_shutdown_also_times_out(self):
         def run(args, label, **kwargs):
@@ -348,7 +430,7 @@ class RunnerTests(unittest.TestCase):
 
     def test_attachment_export_failure_cannot_leave_a_successful_report(self):
         (self.runner.artifacts / "iPad.xcresult").mkdir()
-        self.runner.run = Mock(side_effect=[smoke.SmokeFailure("export failed"), (0, ""), (0, "")])
+        self.runner.run = Mock(side_effect=[smoke.SmokeFailure("export failed"), (0, ""), (0, ""), (0, "")])
         device = {"family": "iPad", "udid": TABLET_ID, "status": "passed"}
         self.runner.evidence(device)
         self.assertEqual(device["status"], "failed")

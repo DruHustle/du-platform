@@ -11,10 +11,21 @@ On the existing standard `macos-26` runner, CocoaPods' `xcodeproj` library adds 
 temporary UI-test target and shared scheme to the job's checkout. The committed
 Expo-generated native project is unchanged. A Release simulator build embeds
 the real JavaScript bundle for the runner's active simulator architecture, so
-these checks do not rely on Metro or Expo's
-developer launcher. Both public endpoint variables use reserved `.invalid`
+these checks do not rely on Metro or Expo's developer launcher. Both public
+endpoint variables use reserved `.invalid`
 destinations, with dotenv loading disabled. No production account, message or
 form is submitted.
+
+The runtime build uses Xcode's normal local simulator signature (`-` identity),
+following [Apple's simulator signing guidance](https://developer.apple.com/forums/thread/826882).
+The script verifies the signature and reads its generated entitlements before
+booting either device. The generated `application-identifier` must identify the
+expected app bundle; Apple uses it for
+[default keychain access](https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps).
+No sharing group, team identity or provisioning profile is authored by the runner.
+Existing app entitlement sources and the separate unsigned Debug compile check
+are preserved. Session restoration uses the real SecureStore implementation;
+a storage error continues to fail the Account journey.
 
 The script reads `simctl` inventory and selects an installed available runtime
 with both an observed compatible iPhone and iPad device type. It creates its own
@@ -45,7 +56,8 @@ cannot satisfy the runtime check.
 
 ## Evidence and bounds
 
-The `ios-native-smoke` artifact retains the inventory, build/test/console logs,
+The `ios-native-smoke` artifact retains the inventory, signature/entitlement
+output, build/test/console logs, app-specific simulator security diagnostics,
 per-device result summaries, final screenshots, and `.xcresult` bundles. The
 script verifies the installed `xcresulttool export attachments` interface and
 exports the XCTest screenshots, accessibility trees and measured-control JSON
@@ -58,7 +70,13 @@ checks even when the native assertions passed.
 The job remains bounded to 45 minutes. All build, device and evidence commands
 share a 35-minute execution budget, leaving room for dependency setup, cleanup
 and artifact upload. Within that budget, build-for-testing allows 20 minutes;
-each device gets one six-minute cold-boot wait and a six-minute test command.
+each device gets one six-minute cold-boot wait and a ten-minute `xcodebuild`
+test command. That command includes simulator test-runner launch and result
+finalization. The actual XCTest journey retains its 240-second default and
+300-second maximum test allowance. In run
+[41779981845](https://github.com/DruHustle/du-platform/actions/runs/41779981845),
+iPad test launch took about 193 seconds, the failing journey took 107 seconds,
+and the earlier six-minute command deadline interrupted result finalization.
 Fresh iOS 26.5 data migration exceeded the earlier 150-second wait while still
 progressing in run [41774274359](https://github.com/DruHustle/du-platform/actions/runs/41774274359).
 The timeout journal retains the command, elapsed time, original error and the
