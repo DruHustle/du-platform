@@ -36,7 +36,7 @@ jobs:
   ios-ui-smoke:
     name: iPhone and iPad runtime smoke
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: du-platform-frontend/mobile

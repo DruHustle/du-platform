@@ -260,10 +260,10 @@ not evidence of lost input or a dismissed keyboard. The recording and measured
 accessibility state must agree before accepting visual keyboard clearance; the
 workflow does not disable secure-entry protections to obtain a screenshot.
 
-The job remains bounded to 45 minutes. All build, device and evidence commands
-share a 35-minute execution budget, leaving room for dependency setup, cleanup
+The job remains bounded to 60 minutes. All build, device and evidence commands
+share a 50-minute execution budget, leaving room for dependency setup, cleanup
 and artifact upload. Within that budget, build-for-testing allows 20 minutes;
-each device gets one six-minute cold-boot wait and a ten-minute `xcodebuild`
+each device gets one six-minute cold-boot wait and a fifteen-minute `xcodebuild`
 test command. That command includes simulator test-runner launch and result
 finalization. Each independent orientation case retains its 240-second default
 and 300-second maximum test allowance. In run 41814926872, the old combined phone
@@ -307,3 +307,16 @@ journeys require the hosted Xcode job to pass. This workflow does not establish
 physical-device behavior, all iOS versions, larger Dynamic Type settings, iPad
 split view, App Store signing, production authentication, or backend readiness. The separate known mobile
 dependency audit remains a release limitation until it passes.
+
+### Bounded finalization after timeout
+
+A device's two orientation cases may each use up to 300 seconds of XCTest time;
+the outer `xcodebuild` command additionally includes launching the test runner
+and finalizing its result bundle. Run [41837024642](https://github.com/DruHustle/du-platform/actions/runs/41837024642)
+exhausted the previous ten-minute command allowance on both devices, leaving
+incomplete result bundles and no authoritative layout outcome. The outer
+command now has fifteen minutes per device within the 50-minute shared journey
+and 60-minute job ceiling. This is a bounded qualification allowance, **not**
+a retry, ignored failure, or relaxation of the two-test pass requirement. On
+command timeout, the runner prints only the final 8 KB of the XCTest log and
+still records failure; the full logs remain in artifacts.
