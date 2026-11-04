@@ -20,6 +20,11 @@ class SmokeFailure(RuntimeError):
     pass
 
 
+JOURNEY_BUDGET_SECONDS = 35 * 60
+CLEANUP_BUDGET_SECONDS = 180
+BOOT_TIMEOUT_SECONDS = 360
+
+
 def validate_environment(environment):
     for name in ("EXPO_PUBLIC_API_URL", "EXPO_PUBLIC_WEB_URL"):
         url = urlparse(environment.get(name, ""))
@@ -76,6 +81,7 @@ class IOSSmoke:
         self.keyboard_changed = False
         self.keyboard_previous = None
         self.command_number = 0
+        self.deadline = None
         self.report = {"status": "running", "architecture": platform.machine(), "devices": []}
 
     def run(self, args, label, timeout=30, check=True, capture=False):
@@ -83,26 +89,43 @@ class IOSSmoke:
         output_path = self.artifacts / f"{self.command_number:02d}-{label}.log"
         print(f"[{label}] {shlex.join(map(str, args))}", flush=True)
         started = time.monotonic()
-        with output_path.open("w") as output:
-            process = subprocess.Popen(list(map(str, args)), cwd=self.mobile, stdout=output,
-                                       stderr=subprocess.STDOUT, start_new_session=True)
-            try:
-                code = process.wait(timeout=timeout)
-            except BaseException:
+        effective_timeout = timeout if self.deadline is None else min(timeout, self.deadline - started)
+        entry = {"command": list(map(str, args)), "requestedTimeoutSeconds": timeout,
+                 "timeoutSeconds": max(0, effective_timeout), "output": output_path.name}
+        code = None
+        try:
+            with output_path.open("w") as output:
+                if effective_timeout <= 0:
+                    raise SmokeFailure(f"Simulator command budget exhausted before {label}")
+                process = subprocess.Popen(list(map(str, args)), cwd=self.mobile, stdout=output,
+                                           stderr=subprocess.STDOUT, start_new_session=True)
                 try:
-                    os.killpg(process.pid, signal.SIGTERM)
-                except ProcessLookupError:
-                    pass
-                try:
-                    process.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    os.killpg(process.pid, signal.SIGKILL)
-                    process.wait(timeout=5)
-                raise
-        with (self.artifacts / "commands.jsonl").open("a") as log:
-            log.write(json.dumps({"command": list(map(str, args)), "exitCode": code,
-                                  "elapsedSeconds": round(time.monotonic() - started, 2),
-                                  "output": output_path.name}) + "\n")
+                    code = process.wait(timeout=effective_timeout)
+                except BaseException:
+                    try:
+                        try:
+                            os.killpg(process.pid, signal.SIGTERM)
+                        except ProcessLookupError:
+                            pass
+                        try:
+                            process.wait(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            os.killpg(process.pid, signal.SIGKILL)
+                            process.wait(timeout=5)
+                    except Exception as error:
+                        entry["terminationError"] = str(error)
+                    # Preserve the original command failure if termination also fails.
+                    raise
+                finally:
+                    code = process.poll()
+        except BaseException as error:
+            entry.update(error=str(error), errorType=type(error).__name__)
+            raise
+        finally:
+            entry.update(exitCode=code, elapsedSeconds=round(time.monotonic() - started, 2))
+            # Include failed/timed-out commands too; the referenced log keeps full stdout.
+            with (self.artifacts / "commands.jsonl").open("a") as log:
+                log.write(json.dumps(entry) + "\n")
         if check and code:
             with output_path.open("rb") as output:
                 output.seek(max(0, output_path.stat().st_size - 6000))
@@ -114,6 +137,12 @@ class IOSSmoke:
 
     def capture(self, args, label, timeout=30):
         return self.run(args, label, timeout=timeout, capture=True)[1]
+
+    def destination(self, udid):
+        architecture = self.report["architecture"]
+        if architecture not in ("arm64", "x86_64"):
+            raise SmokeFailure(f"Unsupported simulator host architecture: {architecture}")
+        return f"platform=iOS Simulator,id={udid},arch={architecture}"
 
     def set_software_keyboard(self):
         command = ["defaults", "read", "com.apple.iphonesimulator", "ConnectHardwareKeyboard"]
@@ -181,14 +210,48 @@ class IOSSmoke:
             except Exception as error:
                 device.setdefault("evidenceErrors", []).append(str(error))
 
+    def device_state(self, device, phase):
+        inventory = json.loads(self.capture(["xcrun", "simctl", "list", "devices", "--json"],
+                                            f"{device['family']}-{phase}-state", timeout=15))
+        matches = [item for group in inventory.get("devices", {}).values() for item in group
+                   if item.get("udid") == device["udid"]]
+        if len(matches) != 1 or not isinstance(matches[0].get("state"), str):
+            raise SmokeFailure("Could not determine the owned simulator's state")
+        state = matches[0]["state"]
+        device.setdefault("observedStates", []).append({"phase": phase, "state": state})
+        return state
+
+    def stop_device(self, device):
+        errors = []
+        try:
+            self.run(["xcrun", "simctl", "shutdown", device["udid"]],
+                     f"stop-{device['family']}", timeout=60, check=False)
+        except Exception as error:
+            errors.append(str(error))
+        stopped = False
+        try:
+            stopped = self.device_state(device, "after-stop") == "Shutdown"
+            if not stopped:
+                errors.append("Owned simulator did not reach Shutdown; next device will not be booted")
+        except Exception as error:
+            errors.append(str(error))
+        if errors:
+            device["status"] = "failed"
+            device.setdefault("shutdownErrors", []).extend(errors)
+            # A shutdown problem must not replace a boot or XCTest failure.
+            device.setdefault("error", errors[0])
+        return stopped
+
     def exercise(self, device, test_run):
         family, udid = device["family"], device["udid"]
         result = self.artifacts / f"{family}.xcresult"
         try:
             self.run(["xcrun", "simctl", "boot", udid], f"boot-{family}")
-            self.run(["xcrun", "simctl", "bootstatus", udid, "-b"], f"ready-{family}", timeout=150)
+            # Fresh iOS 26 data migration exceeded 150s while still progressing.
+            # Wait once with a bounded cold-boot budget; never retry a failed test.
+            self.run(["xcrun", "simctl", "bootstatus", udid, "-b"], f"ready-{family}", timeout=BOOT_TIMEOUT_SECONDS)
             self.run(["xcodebuild", "test-without-building", "-xctestrun", str(test_run),
-                      "-destination", f"platform=iOS Simulator,id={udid}",
+                      "-destination", self.destination(udid),
                       "-resultBundlePath", str(result), "-parallel-testing-enabled", "NO",
                       "-test-iterations", "1", "-test-timeouts-enabled", "YES",
                       "-default-test-execution-time-allowance", "240",
@@ -202,14 +265,26 @@ class IOSSmoke:
             device["status"] = "passed"
         except Exception as error:
             device.update(status="failed", error=str(error))
+            try:
+                self.device_state(device, "after-failure")
+            except Exception as state_error:
+                device.setdefault("diagnosticErrors", []).append(str(state_error))
         finally:
-            self.evidence(device)
-            self.run(["xcrun", "simctl", "shutdown", udid], f"stop-{family}", check=False)
+            try:
+                self.evidence(device)
+            except Exception as evidence_error:
+                device["status"] = "failed"
+                device.setdefault("evidenceErrors", []).append(str(evidence_error))
+                device.setdefault("error", str(evidence_error))
+        return self.stop_device(device)
 
     def execute(self):
         validate_environment(os.environ)
         if platform.system() != "Darwin":
             raise SmokeFailure("Xcode simulator execution requires macOS; host tests do not execute simulators")
+        # Leave room in the 45-minute job for dependency setup, cleanup and upload.
+        self.deadline = time.monotonic() + JOURNEY_BUDGET_SECONDS
+        self.report["journeyBudgetSeconds"] = JOURNEY_BUDGET_SECONDS
         self.report["revision"] = self.capture(["git", "rev-parse", "HEAD"], "source-revision").strip()
         self.report["xcode"] = self.capture(["xcodebuild", "-version"], "xcode-version").strip()
         help_text = self.capture(["xcrun", "xcresulttool", "export", "attachments", "--help"], "xcresult-attachment-help")
@@ -223,32 +298,41 @@ class IOSSmoke:
             self.create_device(device)
         self.run(["xcodebuild", "build-for-testing", "-workspace", "ios/DiasporaUnlocked.xcworkspace",
                   "-scheme", "DUNativeSmoke", "-configuration", "Release", "-sdk", "iphonesimulator",
-                  "-destination", f"platform=iOS Simulator,id={devices[0]['udid']}",
-                  "-derivedDataPath", str(self.derived), "CODE_SIGNING_ALLOWED=NO", "CODE_SIGNING_REQUIRED=NO"],
+                  "-destination", self.destination(devices[0]["udid"]),
+                  "-derivedDataPath", str(self.derived), "ONLY_ACTIVE_ARCH=YES",
+                  "CODE_SIGNING_ALLOWED=NO", "CODE_SIGNING_REQUIRED=NO"],
                  "build-for-testing", timeout=1200)
         test_run = self.verify_bundle()
         for device in devices:
-            self.exercise(device, test_run)
+            if self.exercise(device, test_run) is False:
+                break
         if any(device["status"] != "passed" for device in devices):
-            raise SmokeFailure("Both iPhone and iPad must pass the real-app XCTest journey; see per-device evidence")
+            failures = "; ".join(f"{device['family']}: {device.get('error', device['status'])}"
+                                 for device in devices if device["status"] != "passed")
+            raise SmokeFailure(f"Both iPhone and iPad must pass the real-app XCTest journey; {failures}")
 
     def cleanup(self):
         errors = []
-        for udid in self.owned:
-            try:
-                self.run(["xcrun", "simctl", "shutdown", udid], "cleanup-shutdown", check=False)
-                self.run(["xcrun", "simctl", "delete", udid], "cleanup-delete")
-            except Exception as error:
-                errors.append(str(error))
+        self.deadline = time.monotonic() + CLEANUP_BUDGET_SECONDS
+        # Restore shared preferences before a stuck device can consume cleanup's budget.
         if self.keyboard_changed:
             try:
                 args = (["defaults", "delete", "com.apple.iphonesimulator", "ConnectHardwareKeyboard"]
                         if self.keyboard_previous is None else
                         ["defaults", "write", "com.apple.iphonesimulator", "ConnectHardwareKeyboard", "-bool",
                          str(self.keyboard_previous).lower()])
-                self.run(args, "restore-keyboard-preference")
+                self.run(args, "restore-keyboard-preference", timeout=10)
             except Exception as error:
                 errors.append(str(error))
+        for udid in self.owned:
+            # Five cleanup commands total at most 110s, plus 10s TERM/KILL
+            # grace each. Keep 20s headroom so the last owned delete can start.
+            for command, timeout, check in (("shutdown", 30, False), ("delete", 20, True)):
+                try:
+                    self.run(["xcrun", "simctl", command, udid], f"cleanup-{command}",
+                             timeout=timeout, check=check)
+                except Exception as error:
+                    errors.append(str(error))
         return errors
 
 
