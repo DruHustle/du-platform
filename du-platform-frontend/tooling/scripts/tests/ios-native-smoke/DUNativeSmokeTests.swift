@@ -10,6 +10,14 @@ final class DUNativeSmokeTests: XCTestCase {
     private var dismissedTypingTutorial = false
     private var pendingPasswordPromptFor: String?
 
+    private struct KeyboardObservation {
+        let window: CGRect
+        let hasKeyboardElement: Bool
+        let keyboard: CGRect?
+        let accessories: [CGRect]
+        let obstruction: CGRect?
+    }
+
     @MainActor
     override func setUp() async throws {
         continueAfterFailure = false
@@ -149,25 +157,59 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func visibleKeyboardAccessories() -> [XCUIElement] {
-        let window = app.frame
-        return app.otherElements.matching(NSPredicate(format: "identifier == %@", "SystemInputAssistantView"))
-            .allElementsBoundByIndex.filter { !$0.frame.intersection(window).isEmpty }
-    }
-
-    @MainActor
-    private func keyboardObstructionFrame() -> CGRect? {
-        guard var frame = visibleKeyboardFrame() else { return nil }
-        for accessory in visibleKeyboardAccessories() {
-            frame = frame.union(accessory.frame)
+    private func observeKeyboard() -> KeyboardObservation? {
+        do {
+            // Resolve the stable application once. A keyboard can disappear
+            // between a live `exists` query and a subsequent `frame` query.
+            let snapshot = try app.snapshot()
+            let window = snapshot.frame
+            guard !window.isEmpty && [window.minX, window.minY, window.width, window.height].allSatisfy({ $0.isFinite }) else {
+                XCTFail("The application snapshot must contain a finite visible window")
+                return nil
+            }
+            var descendants = snapshot.children
+            var index = 0
+            var hasKeyboardElement = false
+            var keyboard: CGRect?
+            var accessories: [CGRect] = []
+            while index < descendants.count {
+                let element = descendants[index]
+                index += 1
+                descendants.append(contentsOf: element.children)
+                let frame = element.frame
+                if element.elementType == .keyboard {
+                    hasKeyboardElement = true
+                    if frame.height > 0 && !frame.intersection(window).isEmpty {
+                        keyboard = keyboard.map { $0.union(frame) } ?? frame
+                    }
+                } else if element.elementType == .other && element.identifier == "SystemInputAssistantView"
+                            && !frame.intersection(window).isEmpty {
+                    accessories.append(frame)
+                }
+            }
+            let obstruction = keyboard.map { keyboardFrame in
+                accessories.reduce(keyboardFrame) { $0.union($1) }.intersection(window)
+            }
+            return KeyboardObservation(window: window, hasKeyboardElement: hasKeyboardElement,
+                                       keyboard: keyboard, accessories: accessories, obstruction: obstruction)
+        } catch {
+            // An unreadable hierarchy is a failed observation, never proof
+            // that the keyboard has closed or that an input is reachable.
+            XCTFail("Could not capture the application keyboard hierarchy: \(error)")
+            return nil
         }
-        return frame.intersection(app.frame)
     }
 
     @MainActor
     private func visibleContent(in scroll: XCUIElement) -> CGRect {
-        var frame = scroll.frame.intersection(app.frame)
-        if let keyboard = keyboardObstructionFrame() {
+        guard let observation = observeKeyboard() else { return .null }
+        return visibleContent(in: scroll, observing: observation)
+    }
+
+    @MainActor
+    private func visibleContent(in scroll: XCUIElement, observing observation: KeyboardObservation) -> CGRect {
+        var frame = scroll.frame.intersection(observation.window)
+        if let keyboard = observation.obstruction {
             frame.size.height = max(0, min(frame.maxY, keyboard.minY) - frame.minY)
         }
         return frame
@@ -231,10 +273,7 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func visibleKeyboardFrame() -> CGRect? {
-        let keyboard = app.keyboards.firstMatch
-        guard keyboard.exists else { return nil }
-        let frame = keyboard.frame
-        return frame.height > 0 && !frame.intersection(app.frame).isEmpty ? frame : nil
+        observeKeyboard()?.keyboard
     }
 
     @MainActor
@@ -295,14 +334,32 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func resumePasswordInterruptedInput(_ field: XCUIElement, expected: String, secure: Bool = false) {
-        guard declinePasswordPrompt(preserving: field, expected: expected, secure: secure) else { return }
+    @discardableResult
+    private func resumePasswordInterruptedInput(_ field: XCUIElement, expected: String, secure: Bool = false) -> Bool {
+        guard declinePasswordPrompt(preserving: field, expected: expected, secure: secure) else { return false }
         // Only the observed prompt authorizes refocusing; this never types,
         // repairs a value, or retries an event already sent to the input.
         field.tap()
         waitForTypingKeyboard(refocusing: field, preserving: expected, secure: secure)
         XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
                       "Refocusing after the password prompt must preserve the acknowledged input")
+        return true
+    }
+
+    @MainActor
+    private func awaitExpectedPasswordTransition(_ field: XCUIElement, expected: String, secure: Bool = false) {
+        guard pendingPasswordPromptFor != nil else {
+            XCTFail("The software keyboard disappeared without an authorized password-prompt phase")
+            return
+        }
+        // The exact input must already be acknowledged. iOS can remove the
+        // keyboard before the anticipated password prompt becomes observable.
+        wait("The keyboard disappeared without the anticipated password prompt", timeout: 10) {
+            self.passwordPrompt() != nil
+        }
+        XCTAssertTrue(resumePasswordInterruptedInput(field, expected: expected, secure: secure),
+                      "The exact anticipated password prompt must be acknowledged before resuming")
+        XCTAssertNotNil(visibleKeyboardFrame(), "The real software keyboard must return before further input")
     }
 
     @MainActor
@@ -342,7 +399,7 @@ final class DUNativeSmokeTests: XCTestCase {
                 interruptionObserved = true
                 return true
             }
-            guard let frame = self.keyboardObstructionFrame() else {
+            guard let frame = self.observeKeyboard()?.obstruction else {
                 previous = nil
                 settledSince = Date()
                 return false
@@ -384,29 +441,21 @@ final class DUNativeSmokeTests: XCTestCase {
             resumePasswordInterruptedInput(field, expected: previous, secure: secure)
         }
         var keyboardFrame = visibleKeyboardFrame()
-        if keyboardFrame == nil && passwordPrompt() != nil {
-            resumePasswordInterruptedInput(field, expected: previous, secure: secure)
+        if keyboardFrame == nil {
+            awaitExpectedPasswordTransition(field, expected: previous, secure: secure)
             keyboardFrame = visibleKeyboardFrame()
         }
         XCTAssertNotNil(keyboardFrame, "The software keyboard disappeared before typing")
         field.typeText(character)
         // Acknowledgment observes each event; it never resends it or repairs the
         // text. Secure inputs expose only a masked value, so check its length.
-        var passwordPromptObserved = false
         wait("Typed input did not acknowledge the expected \(secure ? "masked length" : "exact prefix") of \(value.count)", timeout: 3) {
-            guard self.visibleKeyboardFrame() != nil else {
-                passwordPromptObserved = self.passwordPrompt() != nil
-                return passwordPromptObserved
-            }
             return self.inputMatches(field, expected: value, secure: secure)
         }
-        if passwordPromptObserved {
-            // The event was already sent. Even if a prompt arrived during its
-            // acknowledgment, the exact NEW value must appear without replay.
-            wait("An interrupted input event must still acknowledge its exact value", timeout: 3) {
-                self.inputMatches(field, expected: value, secure: secure)
-            }
-            resumePasswordInterruptedInput(field, expected: value, secure: secure)
+        if visibleKeyboardFrame() == nil {
+            // The event was sent exactly once and its NEW value is confirmed.
+            // Observing the known OS transition does not extend that deadline.
+            awaitExpectedPasswordTransition(field, expected: value, secure: secure)
         }
         XCTAssertTrue(inputMatches(field, expected: value, secure: secure))
     }
@@ -449,15 +498,15 @@ final class DUNativeSmokeTests: XCTestCase {
             resumePasswordInterruptedInput(field, expected: expectedValue ?? "",
                                            secure: field.elementType == .secureTextField)
         }
-        let keyboard = app.keyboards.firstMatch
-        XCTAssertTrue(existsOrWait(keyboard, timeout: 10), "Software keyboard is required")
+        wait("Software keyboard is required") { self.visibleKeyboardFrame() != nil }
         for _ in 0..<4 {
             if pendingPasswordPromptFor != nil {
                 resumePasswordInterruptedInput(field, expected: expectedValue ?? "",
                                                secure: field.elementType == .secureTextField)
             }
-            XCTAssertTrue(keyboard.exists, "Scrolling dismissed the keyboard; this is not keyboard-clearance evidence")
-            let viewport = visibleContent(in: scroll)
+            guard let observation = observeKeyboard() else { return }
+            XCTAssertNotNil(observation.keyboard, "Scrolling dismissed the keyboard; this is not keyboard-clearance evidence")
+            let viewport = visibleContent(in: scroll, observing: observation)
             if editingAreaVisible(field, viewport: viewport, multiline: multiline)
                 && action.isHittable && contains(viewport, action.frame) { break }
             scrollContent(scroll, avoiding: field,
@@ -471,9 +520,10 @@ final class DUNativeSmokeTests: XCTestCase {
             typeOnce("x", into: field, from: expectedValue ?? "", expecting: (expectedValue ?? "") + "x")
             typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, from: (expectedValue ?? "") + "x", expecting: expectedValue ?? "")
         }
-        XCTAssertTrue(keyboard.exists && keyboard.frame.height > 0, "The software keyboard must still be visible")
-        XCTAssertFalse(keyboard.frame.intersection(app.frame).isEmpty,
-                       "An offscreen keyboard accessibility element is not visible-keyboard evidence")
+        guard let observation = observeKeyboard() else { return }
+        XCTAssertNotNil(observation.keyboard,
+                        "The software keyboard must have a nonempty visible frame inside the application window")
+        let viewport = visibleContent(in: scroll, observing: observation)
         if field.elementType == .secureTextField {
             XCTAssertEqual((field.value as? String)?.count, expectedValue?.count, "The masked input length changed during scrolling")
         } else {
@@ -481,13 +531,13 @@ final class DUNativeSmokeTests: XCTestCase {
         }
         if multiline {
             XCTAssertTrue(field.isEnabled)
-            XCTAssertTrue(editingAreaVisible(field, viewport: visibleContent(in: scroll), multiline: true),
+            XCTAssertTrue(editingAreaVisible(field, viewport: viewport, multiline: true),
                           "The focused multiline editor needs at least 44pt of visible editing area above the keyboard")
         } else {
-            assertControl(field, within: visibleContent(in: scroll))
+            assertControl(field, within: viewport)
         }
-        assertControl(action, within: visibleContent(in: scroll))
-        record(name, elements: [field, action, keyboard] + visibleKeyboardAccessories())
+        assertControl(action, within: viewport)
+        record(name, elements: [field, action], keyboard: observation)
         attachEvidence(name)
     }
 
@@ -497,11 +547,12 @@ final class DUNativeSmokeTests: XCTestCase {
         // reveal, this intentional pan must continue through the keyboard area.
         // It still starts in the owned app scroll view, outside the editor.
         for _ in 0..<3 {
-            if !app.keyboards.firstMatch.exists { break }
-            let viewport = visibleContent(in: scroll)
+            guard let observation = observeKeyboard() else { return }
+            if !observation.hasKeyboardElement { break }
+            let viewport = visibleContent(in: scroll, observing: observation)
             let fieldFrame = field.frame
             let scrollFrame = scroll.frame
-            let window = app.frame
+            let window = observation.window
             let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
             let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
             XCTAssertFalse(viewport.isEmpty, "Keyboard dismissal needs visible app content")
@@ -521,17 +572,30 @@ final class DUNativeSmokeTests: XCTestCase {
                            "end": ["x": Double(end.x), "y": Double(end.y)]])
             from.press(forDuration: 0.1, thenDragTo: to)
         }
-        wait("Software keyboard did not dismiss") { !self.app.keyboards.firstMatch.exists }
+        wait("Software keyboard did not dismiss") {
+            guard let observation = self.observeKeyboard() else { return false }
+            return !observation.hasKeyboardElement
+        }
     }
 
     @MainActor
-    private func record(_ name: String, elements: [XCUIElement]) {
-        checks.append([
+    private func record(_ name: String, elements: [XCUIElement], keyboard: KeyboardObservation? = nil) {
+        var check: [String: Any] = [
             "name": name,
-            "window": rectangle(app.frame),
+            "window": rectangle(keyboard?.window ?? app.frame),
             "elements": elements.map { ["label": $0.label, "frame": rectangle($0.frame),
                                         "hittable": $0.isHittable, "typedValue": $0.value as? String ?? ""] as [String: Any] }
-        ])
+        ]
+        if let observation = keyboard {
+            check["keyboardObservation"] = [
+                "source": "single-application-snapshot",
+                "hasKeyboardElement": observation.hasKeyboardElement,
+                "frame": observation.keyboard.map { rectangle($0) as Any } ?? NSNull(),
+                "accessories": observation.accessories.map(rectangle),
+                "obstruction": observation.obstruction.map { rectangle($0) as Any } ?? NSNull()
+            ] as [String: Any]
+        }
+        checks.append(check)
     }
 
     private func rectangle(_ frame: CGRect) -> [String: Double] {
