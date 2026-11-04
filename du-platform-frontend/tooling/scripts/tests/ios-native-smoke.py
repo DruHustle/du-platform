@@ -2,6 +2,7 @@
 """Bounded real-app XCTest runs on one freshly owned iPhone and iPad simulator."""
 
 import argparse
+from contextlib import nullcontext
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,7 @@ import subprocess
 import time
 from urllib.parse import urlparse
 from uuid import UUID
+from xml.parsers.expat import ExpatError
 
 
 class SmokeFailure(RuntimeError):
@@ -23,6 +25,7 @@ class SmokeFailure(RuntimeError):
 JOURNEY_BUDGET_SECONDS = 35 * 60
 CLEANUP_BUDGET_SECONDS = 180
 BOOT_TIMEOUT_SECONDS = 360
+TEST_COMMAND_TIMEOUT_SECONDS = 600
 
 
 def validate_environment(environment):
@@ -71,6 +74,20 @@ def validate_test_summary(summary):
         raise SmokeFailure("XCTest must report exactly one passed, zero failed and zero skipped smoke test per device")
 
 
+def validate_simulator_signing(metadata, entitlements, bundle_identifier):
+    if re.findall(r"(?m)^Signature=(.+)$", metadata) != ["adhoc"]:
+        raise SmokeFailure("The runtime simulator app must have a local ad hoc signature")
+    if re.findall(r"(?m)^Identifier=(.+)$", metadata) != [bundle_identifier]:
+        raise SmokeFailure("The simulator signature has the wrong application identifier")
+    identifier = entitlements.get("application-identifier") if isinstance(entitlements, dict) else None
+    if (not isinstance(identifier, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9.-]*", identifier)
+            or not (identifier == bundle_identifier or identifier.endswith("." + bundle_identifier))):
+        raise SmokeFailure("The simulator app lacks its generated application-identifier entitlement for default keychain access")
+    # Apple includes application-identifier in the app's keychain access groups.
+    # A separate sharing group, team identity or provisioning profile is not needed.
+    return identifier
+
+
 class IOSSmoke:
     def __init__(self, mobile_dir, derived_data, artifacts):
         self.mobile = Path(mobile_dir).resolve()
@@ -84,7 +101,7 @@ class IOSSmoke:
         self.deadline = None
         self.report = {"status": "running", "architecture": platform.machine(), "devices": []}
 
-    def run(self, args, label, timeout=30, check=True, capture=False):
+    def run(self, args, label, timeout=30, check=True, capture=False, separate_stderr=False):
         self.command_number += 1
         output_path = self.artifacts / f"{self.command_number:02d}-{label}.log"
         print(f"[{label}] {shlex.join(map(str, args))}", flush=True)
@@ -92,13 +109,17 @@ class IOSSmoke:
         effective_timeout = timeout if self.deadline is None else min(timeout, self.deadline - started)
         entry = {"command": list(map(str, args)), "requestedTimeoutSeconds": timeout,
                  "timeoutSeconds": max(0, effective_timeout), "output": output_path.name}
+        stderr_path = output_path.with_suffix(".stderr.log") if separate_stderr else None
+        if stderr_path is not None:
+            entry["stderr"] = stderr_path.name
         code = None
         try:
-            with output_path.open("w") as output:
+            with output_path.open("w") as output, \
+                    (stderr_path.open("w") if stderr_path is not None else nullcontext(subprocess.STDOUT)) as stderr:
                 if effective_timeout <= 0:
                     raise SmokeFailure(f"Simulator command budget exhausted before {label}")
                 process = subprocess.Popen(list(map(str, args)), cwd=self.mobile, stdout=output,
-                                           stderr=subprocess.STDOUT, start_new_session=True)
+                                           stderr=stderr, start_new_session=True)
                 try:
                     code = process.wait(timeout=effective_timeout)
                 except BaseException:
@@ -127,16 +148,19 @@ class IOSSmoke:
             with (self.artifacts / "commands.jsonl").open("a") as log:
                 log.write(json.dumps(entry) + "\n")
         if check and code:
-            with output_path.open("rb") as output:
-                output.seek(max(0, output_path.stat().st_size - 6000))
-                tail = output.read().decode(errors="replace")
+            tail = ""
+            for path in (output_path, stderr_path):
+                if path is not None:
+                    with path.open("rb") as output:
+                        output.seek(max(0, path.stat().st_size - 6000))
+                        tail += output.read().decode(errors="replace")
             raise SmokeFailure(f"{label} exited {code}; see {output_path.name}\n{tail}")
         if capture and output_path.stat().st_size > 2_000_000:
             raise SmokeFailure(f"Unexpectedly large structured output from {label}")
         return code, output_path.read_text() if capture else ""
 
-    def capture(self, args, label, timeout=30):
-        return self.run(args, label, timeout=timeout, capture=True)[1]
+    def capture(self, args, label, timeout=30, separate_stderr=False):
+        return self.run(args, label, timeout=timeout, capture=True, separate_stderr=separate_stderr)[1]
 
     def destination(self, udid):
         architecture = self.report["architecture"]
@@ -188,6 +212,22 @@ class IOSSmoke:
             raise SmokeFailure("Expected one generated XCTest run configuration")
         return paths[0]
 
+    def verify_signing(self):
+        bundle = self.derived / "Build/Products/Release-iphonesimulator/DiasporaUnlocked.app"
+        self.run(["codesign", "--verify", "--strict", str(bundle)], "verify-app-signature")
+        metadata = self.capture(["codesign", "--display", "--verbose=4", str(bundle)], "app-signature")
+        # codesign writes its diagnostic header to stderr and machine-readable XML
+        # to stdout. Keep these streams separate; do not parse mixed log output.
+        xml = self.capture(["codesign", "--display", "--entitlements", "-", "--xml", str(bundle)],
+                           "app-entitlements", separate_stderr=True)
+        try:
+            entitlements = plistlib.loads(xml.encode())
+        except (plistlib.InvalidFileException, ValueError, ExpatError) as error:
+            raise SmokeFailure("codesign did not produce a valid XML entitlement plist") from error
+        identifier = validate_simulator_signing(metadata, entitlements, "com.diasporaunlocked.app")
+        self.report["signing"] = {"signature": "adhoc", "applicationIdentifier": identifier,
+                                  "keychainAccessGroups": entitlements.get("keychain-access-groups", [])}
+
     def evidence(self, device):
         family, udid = device["family"], device["udid"]
         result = self.artifacts / f"{family}.xcresult"
@@ -204,6 +244,10 @@ class IOSSmoke:
             (["xcrun", "simctl", "io", udid, "screenshot", str(self.artifacts / f"{family}-final.png")], f"{family}-screenshot"),
             (["xcrun", "simctl", "spawn", udid, "log", "show", "--last", "5m", "--style", "compact", "--predicate",
               'process == "DiasporaUnlocked" OR process == "DUNativeSmokeUITests-Runner"'], f"{family}-console"),
+            (["xcrun", "simctl", "spawn", udid, "log", "show", "--last", "5m", "--style", "compact", "--predicate",
+              '(process == "securityd" OR subsystem == "com.apple.securityd") AND '
+              '(eventMessage CONTAINS[c] "DiasporaUnlocked" OR eventMessage CONTAINS[c] "com.diasporaunlocked.app")'],
+             f"{family}-security"),
         ]:
             try:
                 self.run(args, label, timeout=25, check=False)
@@ -257,7 +301,7 @@ class IOSSmoke:
                       "-default-test-execution-time-allowance", "240",
                       "-maximum-test-execution-time-allowance", "300",
                       "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testResponsiveNavigationAndKeyboard"],
-                     f"test-{family}", timeout=360)
+                     f"test-{family}", timeout=TEST_COMMAND_TIMEOUT_SECONDS)
             summary = json.loads(self.capture(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)],
                                               f"summary-{family}"))
             (self.artifacts / f"{family}-summary.json").write_text(json.dumps(summary, indent=2) + "\n")
@@ -300,9 +344,10 @@ class IOSSmoke:
                   "-scheme", "DUNativeSmoke", "-configuration", "Release", "-sdk", "iphonesimulator",
                   "-destination", self.destination(devices[0]["udid"]),
                   "-derivedDataPath", str(self.derived), "ONLY_ACTIVE_ARCH=YES",
-                  "CODE_SIGNING_ALLOWED=NO", "CODE_SIGNING_REQUIRED=NO"],
+                  "CODE_SIGN_IDENTITY=-", "CODE_SIGNING_ALLOWED=YES", "CODE_SIGNING_REQUIRED=YES"],
                  "build-for-testing", timeout=1200)
         test_run = self.verify_bundle()
+        self.verify_signing()
         for device in devices:
             if self.exercise(device, test_run) is False:
                 break

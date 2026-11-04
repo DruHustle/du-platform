@@ -22,8 +22,6 @@ test.build_configurations.each do |configuration|
     'GENERATE_INFOPLIST_FILE' => 'YES',
     'TARGETED_DEVICE_FAMILY' => '1,2',
     'TEST_TARGET_NAME' => app.name,
-    'CODE_SIGNING_ALLOWED' => 'NO',
-    'CODE_SIGNING_REQUIRED' => 'NO',
     'SUPPORTED_PLATFORMS' => 'iphonesimulator',
     'LD_RUNPATH_SEARCH_PATHS' => '$(inherited) @executable_path/Frameworks @loader_path/Frameworks'
   )
