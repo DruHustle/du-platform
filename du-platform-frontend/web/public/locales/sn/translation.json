@@ -1375,7 +1375,8 @@
         "crafts": "Unyanzvi nemabasa emaoko",
         "food": "Chikafu & Nostalgia",
         "all_segments": "Mhando dzose dzezvigadzirwa",
-        "select_segment": "Sarudza mhando yechigadzirwa"
+        "select_segment": "Sarudza mhando yechigadzirwa",
+        "select_category": "Sarudza chikamu"
       },
       "loading": "Kurodha zvigadzirwa...",
       "empty_state": "Parizvino hapana zvigadzirwa.",

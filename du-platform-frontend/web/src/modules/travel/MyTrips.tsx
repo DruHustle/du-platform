@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { api, loadAuthToken, hasLoggedInBefore } from "@/lib/api";
+import { api } from "@/lib/api";
 import {
   travelDraftSchema,
   estimateTotals,
@@ -29,35 +29,34 @@ export default function MyTrips() {
   const [currency, setCurrency] =
     useState<TravelDraft["criteria"]["currency"]>("EUR");
   const [category, setCategory] = useState<TravelCategory>("flights");
-  const [signedIn, setSignedIn] = useState(Boolean(loadAuthToken()));
+  const [signedIn, setSignedIn] = useState(false);
   const [sessionError, setSessionError] = useState(false);
-  const [sessionLoading, setSessionLoading] = useState(
-    () => hasLoggedInBefore() || Boolean(loadAuthToken())
-  );
+  const [sessionLoading, setSessionLoading] = useState(true);
   const [sessionRetry, setSessionRetry] = useState(0);
   const [savedError, setSavedError] = useState(false);
   const [savedLoaded, setSavedLoaded] = useState(false);
   const [savedRetry, setSavedRetry] = useState(0);
   useEffect(() => {
     let active = true;
-    if (hasLoggedInBefore() || loadAuthToken()) {
-      setSessionLoading(true);
-      setSessionError(false);
-      void resolveCurrentUserBootstrap().then(
-        user => {
-          if (active) {
-            setSignedIn(Boolean(user));
-            setSessionLoading(false);
-          }
-        },
-        () => {
-          if (active) {
-            setSessionError(true);
-            setSessionLoading(false);
-          }
+    // HttpOnly cookies remain valid when optional browser storage is blocked
+    // or cleared. Always ask the session service rather than treating a missing
+    // localStorage marker as proof that the user is signed out.
+    setSessionLoading(true);
+    setSessionError(false);
+    void resolveCurrentUserBootstrap().then(
+      user => {
+        if (active) {
+          setSignedIn(Boolean(user));
+          setSessionLoading(false);
         }
-      );
-    }
+      },
+      () => {
+        if (active) {
+          setSessionError(true);
+          setSessionLoading(false);
+        }
+      }
+    );
     return () => {
       active = false;
     };

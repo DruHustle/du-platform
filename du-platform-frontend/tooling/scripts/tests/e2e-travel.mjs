@@ -31,6 +31,8 @@ try {
   for (const width of [375, 768, 1440]) {
     const context = await browser.newContext({
       viewport: { width, height: 950 },
+      isMobile: width === 375,
+      hasTouch: width === 375,
       reducedMotion: "reduce",
     });
     await context.addInitScript(() => {
@@ -319,10 +321,74 @@ try {
     const dest = page.getByRole("combobox", {
       name: "Destination airport / area",
     });
+    await dest.fill("");
+    const suggestions = page.getByRole("listbox");
+    await suggestions.waitFor();
+    assert(
+      (await suggestions.getByRole("option").count()) > 12,
+      "The fixture must exercise suggestions beyond the visible list"
+    );
+    const inputId = await dest.getAttribute("id");
+    for (let move = 0; move < 12; move++) await dest.press("ArrowDown");
+    await page.waitForFunction(id => {
+      const input = document.getElementById(id);
+      const selected = document.getElementById(
+        input.getAttribute("aria-activedescendant")
+      );
+      const list = document.getElementById(input.getAttribute("aria-controls"));
+      if (!selected || !list || list.scrollTop <= 0) return false;
+      const item = selected.getBoundingClientRect(),
+        box = list.getBoundingClientRect();
+      return item.top >= box.top - 1 && item.bottom <= box.bottom + 1;
+    }, inputId);
+    assert.equal(
+      await dest.getAttribute("aria-activedescendant"),
+      await suggestions.getByRole("option").nth(12).getAttribute("id")
+    );
+    for (let move = 0; move < 12; move++) await dest.press("ArrowUp");
+    await page.waitForFunction(id => {
+      const input = document.getElementById(id);
+      const selected = document.getElementById(
+        input.getAttribute("aria-activedescendant")
+      );
+      const list = document.getElementById(input.getAttribute("aria-controls"));
+      if (!selected || !list || list.scrollTop > 1) return false;
+      const item = selected.getBoundingClientRect(),
+        box = list.getBoundingClientRect();
+      return item.top >= box.top - 1 && item.bottom <= box.bottom + 1;
+    }, inputId);
+    checks.push(
+      `${width}: keyboard airport selection stays visible while the suggestion list scrolls`
+    );
     await dest.fill("Victoria");
-    await page.getByRole("option", { name: /Victoria Falls/ }).waitFor();
+    const destinationOption = page.getByRole("option", {
+      name: /Victoria Falls/,
+    });
+    await destinationOption.waitFor();
+    // Starting a touch scroll must not select the airport under the finger.
+    // Only a completed activation should commit the selected location.
+    await destinationOption.dispatchEvent("pointerdown", {
+      pointerType: "touch",
+      pointerId: 1,
+      isPrimary: true,
+    });
+    assert.equal(await dest.inputValue(), "Victoria");
+    assert.equal(await destinationOption.isVisible(), true);
+    await destinationOption.dispatchEvent("pointercancel", {
+      pointerType: "touch",
+      pointerId: 1,
+      isPrimary: true,
+    });
+    if (width === 375) await destinationOption.tap();
+    else await destinationOption.click();
+    assert.match(await dest.inputValue(), /VFA/);
+    await dest.fill("Victoria");
+    await destinationOption.waitFor();
     await dest.press("Enter");
     assert.match(await dest.inputValue(), /VFA/);
+    checks.push(
+      `${width}: airport gesture start preserves suggestions; ${width === 375 ? "touch tap" : "click"} and keyboard selection work`
+    );
     await page
       .getByLabel("Departure / pickup date", { exact: true })
       .fill(future(30));
@@ -656,11 +722,15 @@ try {
       .first()
       .screenshot({ path: `${output}/${width}-guide-detail.png` });
     privateMode = true;
-    await page.evaluate(() => localStorage.setItem("du_has_logged_in", "1"));
+    // The HttpOnly session is valid even if optional localStorage was cleared.
+    await page.evaluate(() => localStorage.removeItem("du_has_logged_in"));
     await goto("/travel/my-trips");
     await page
       .getByLabel("Trip / search name", { exact: true })
       .fill("Synthetic family trip");
+    checks.push(
+      `${width}: saved-trip access restores the session without a browser storage marker`
+    );
     await page
       .getByRole("button", { name: "Save private trip", exact: true })
       .click();
@@ -794,9 +864,24 @@ try {
     for (const [old, target] of Object.entries(travelRedirects).filter(
       ([source]) => !source.endsWith("/") && !source.endsWith(".html")
     )) {
-      await page.goto(base + old + "?lng=en#attractions");
+      // The SEO preview already contains <main> before React starts. Complete
+      // each destination's bootstrap before replacing its document again;
+      // WebKit can report replacement-cancelled XHRs as access-control errors.
+      const bootstrapEndpoints = [["/api/auth/me", 401]];
+      if (target === "/travel")
+        bootstrapEndpoints.push(["/api/travel/capabilities", 200]);
+      await Promise.all([
+        ...bootstrapEndpoints.map(async ([endpoint, expectedStatus]) => {
+          const response = await page.waitForResponse(
+            candidate => candidate.url() === base + endpoint
+          );
+          assert.equal(response.status(), expectedStatus);
+          assert.equal(await response.finished(), null);
+        }),
+        page.goto(base + old + "?lng=en#attractions"),
+      ]);
       await page.waitForURL(base + target + "?lng=en#attractions");
-      await page.locator("main").waitFor();
+      await page.locator("main:not(.public-preview)").waitFor();
     }
     checks.push(`${width}: six permanent redirects keep query and fragment`);
     // Fresh loopback connections avoid reusing an idle browser API socket after

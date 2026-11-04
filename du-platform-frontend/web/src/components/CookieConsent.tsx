@@ -14,9 +14,9 @@ export default function CookieConsent() {
       aria-label={t("cookies.consent.title", {
         defaultValue: "Cookie preferences",
       })}
-      className="fixed inset-x-0 bottom-0 z-[240] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      className="cookie-consent fixed inset-x-0 bottom-0 z-[240] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))]"
     >
-      <div className="mx-auto max-w-4xl rounded-2xl border border-white/20 bg-slate-900 p-5 shadow-2xl">
+      <div className="mx-auto max-h-[calc(100dvh-1.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] max-w-4xl overflow-y-auto overscroll-contain rounded-2xl border border-white/20 bg-slate-900 p-5 shadow-2xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <p className="text-white/90 text-sm leading-relaxed sm:flex-1">
             {t("cookies.consent.optional_description", {

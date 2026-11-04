@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { request } from "../api";
+import { accountNavigationState } from "../links";
+import { latestRequest } from "../requestLifecycle";
 import { useSession } from "../session";
 import { Action, Card, Copy, Field, Heading, Loading, Message, Screen } from "../ui";
 
 const message = (error: unknown) => error instanceof Error ? error.message : "Unable to complete your request. Please try again.";
-export function AccountScreen() {
+export function AccountScreen({route}: {route?: {params?: {mode?: string}}}) {
   const session = useSession();
   const navigation = useNavigation<any>();
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
@@ -16,6 +18,12 @@ export function AccountScreen() {
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState("");
+  useEffect(() => {
+    const requested = route?.params?.mode;
+    if (requested === "login" || requested === "register" || requested === "forgot") {
+      setMode(requested); setPassword(""); setFeedback(""); setError("");
+    }
+  }, [route?.params]);
   useEffect(() => { setProfileName(session.user?.fullName || ""); }, [session.user?.id, session.user?.fullName]);
   const run = async (action: () => Promise<void>) => { if (busy) return; setError(""); setFeedback(""); setBusy(true); try { await action(); } catch (e) { setError(message(e)); } finally { setBusy(false); } };
   if (session.loading) return <Screen><Heading>Account</Heading><Loading label="Checking your account…" /></Screen>;
@@ -36,7 +44,34 @@ export function AccountScreen() {
 }
 
 export function ResetPasswordScreen({route}: {route: {params?: {token?: string}}}) {
+  const navigation = useNavigation<any>();
+  const session = useSession();
   const [password,setPassword]=useState(""); const [confirm,setConfirm]=useState(""); const [busy,setBusy]=useState(false); const [feedback,setFeedback]=useState(""); const [error,setError]=useState("");
   const token=route.params?.token || "";
-  return <Screen><Heading>Choose a new password</Heading><Copy>Use the link from your reset email. Reset links can only be used once.</Copy>{!token ? <Message error message="This link is missing its reset token. Request a new link on the account screen." /> : <Card><Field label="New password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" /><Field label="Confirm new password" value={confirm} onChangeText={setConfirm} secureTextEntry autoComplete="new-password" />{error ? <Message error message={error} /> : null}{feedback ? <Message message={feedback} /> : null}<Action title={busy ? "Saving…" : "Reset password"} disabled={busy || Boolean(feedback)} onPress={() => {if(busy)return;setError("");if(password!==confirm){setError("Passwords do not match.");return;}setBusy(true);void request("/auth/reset-password",{method:"POST",body:{token,password,confirmPassword:confirm}}).then(()=>{setPassword("");setConfirm("");setFeedback("Password changed. You can sign in with your new password.");}).catch(e=>setError(message(e))).finally(()=>setBusy(false));}} /></Card>}</Screen>;
+  const [attempts] = useState(latestRequest);
+  const currentToken = useRef(token); currentToken.current = token;
+  useEffect(() => {
+    setPassword(""); setConfirm(""); setFeedback(""); setError(""); setBusy(false);
+    return () => attempts.invalidate();
+  }, [token, attempts]);
+  const reset = async () => {
+    if (busy || !token) return;
+    setError("");
+    if (password !== confirm) { setError("Passwords do not match."); return; }
+    const pending = attempts.begin();
+    const current = () => pending.isCurrent() && currentToken.current === token;
+    setBusy(true);
+    try {
+      await request("/auth/reset-password", { method: "POST", body: { token, password, confirmPassword: confirm }, signal: pending.signal });
+      if (current()) {
+        setPassword(""); setConfirm(""); setFeedback("Password changed. You can sign in with your new password.");
+        void session.restore();
+      }
+    } catch (e) { if (current()) setError(message(e)); }
+    finally { if (current()) setBusy(false); }
+  };
+  return <Screen><Heading>Choose a new password</Heading><Copy>Use the link from your reset email. Reset links can only be used once.</Copy>{!token ? <Message error message="This link is missing its reset token. Request a new link on the account screen." /> : <Card><Field label="New password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" /><Field label="Confirm new password" value={confirm} onChangeText={setConfirm} secureTextEntry autoComplete="new-password" />{error ? <Message error message={error} /> : null}{feedback ? <Message message={feedback} /> : null}<Action title={busy ? "Saving…" : "Reset password"} disabled={busy || Boolean(feedback)} onPress={() => void reset()} /></Card>}
+    <Action title="Back to sign in" secondary disabled={busy} onPress={() => navigation.reset(accountNavigationState())} />
+    {!feedback && <Action title="Request a new reset link" secondary disabled={busy} onPress={() => navigation.reset(accountNavigationState("forgot"))} />}
+  </Screen>;
 }

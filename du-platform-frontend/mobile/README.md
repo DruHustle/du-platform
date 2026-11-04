@@ -5,8 +5,10 @@ It owns its dependencies, screens, API client and tests. It shares the existing
 account system through the backend HTTP API; the opaque session token is stored
 with Expo SecureStore and access tokens are held in memory.
 
-Use Node 22.13 or newer, Android Studio/SDK for Android, and macOS, Xcode and
-CocoaPods for iOS. The `.nvmrc` selects Node 24 for developers using nvm. On a
+The app uses Expo SDK 58 with React Native 0.88.1 and React 19.3.0. Use Node
+24.3 or later in the Node 24 line selected by `.nvmrc`, or Node 22.13 or later
+in the Node 22 line used by CI. Android development needs Android Studio/SDK;
+iOS development needs macOS, Xcode 26.4 or later and CocoaPods. On a
 Mac where `xcode-select` points to the Command Line Tools, select the full Xcode
 for this shell without changing the system-wide selection:
 
@@ -17,6 +19,41 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 ```
+
+## Phone and tablet layouts
+
+Screens respond to the current window size, including rotation and iPad split
+view. Account, checkout, Travel and help forms stay within a centered 720-point
+reading width. Home, Shop and Search can use up to 1120 points, with two card
+columns only when the available width and the user's text size leave enough
+space. Larger text and smaller windows return to a single column.
+
+The tab bar keeps full touch targets in landscape and makes room for wrapped,
+scaled labels. It hides while the keyboard is open. iOS scroll views use native
+keyboard insets. Android measures the overlap between the outer screen view and
+the software keyboard and reserves that space; an already resized window gets
+no additional inset. Android scrolling keeps the keyboard open while revealing
+form actions.
+Bottom content spacing includes the device safe area, and the offline notice
+appears below the navigation header.
+
+[Native validation run 41769955061](https://github.com/DruHustle/du-platform/actions/runs/41769955061)
+passed the Android build and real-emulator journey on revision `e7342c139da8601f33b14b560ad7b1da2553e4bf`:
+59 checkpoints and 60 screenshots cover all five tabs on phone, tablet portrait,
+tablet landscape and 1.8× text. Real keyboard focus/typing checks verify the phone
+Account email field with its Sign in action and the large-text landscape tablet
+Assistant composer with its Send action. The keyboard stays open during the
+Assistant scroll; fixture text, focus and complete action bounds are checked.
+No account or message is submitted, and emulator settings are restored.
+
+That run's iOS evidence is unsigned simulator compilation. Interactive iPhone/iPad,
+split view, physical-device, authenticated and signed-release journeys require
+their own runtime evidence. The six moderate Expo tooling audit findings and
+native distribution gate remain unchanged. See
+`../docs/responsive-review-20261104.md` for exact configurations, artifacts and
+verification limits.
+
+## Development setup
 
 Xcode 27 uses Device Hub in place of Simulator.app. Open **Xcode → Open
 Developer Tool → Device Hub** to view and interact with an iPhone simulator.
@@ -72,3 +109,7 @@ open their web equivalents in the platform browser view. A website handoff can
 require a separate sign-in; iOS browser views do not share Safari's cookies.
 See `../docs/mobile-first-review.md` for the
 feature matrix, verification results and remaining device/release checks.
+
+The subsequent fixes and current evidence are in
+`../docs/mobile-review-followup.md`. Native compilation and the remaining
+dependency audit findings are tracked separately in `../docs/mobile-validation.md`.

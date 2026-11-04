@@ -9,6 +9,7 @@ import {
   vi,
 } from "vitest";
 import mysql, { type Pool } from "mysql2/promise";
+import { expectApiRequest, validateApiSchema } from "../../tests/apiContract";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 if (
   url &&
@@ -93,7 +94,12 @@ describe.skipIf(!url)("durable transactional messages", () => {
   }
   it("stores enquiry and independent notification intents atomically, without marketing consent", async () => {
     const input = enquiry();
+    expectApiRequest("/notifications/contact", "post", input);
     const result = await service.contact(input);
+    expect(
+      validateApiSchema({ $ref: "#/components/schemas/ContactReceipt" }, result)
+        .success
+    ).toBe(true);
     expect(result).toMatchObject({
       received: true,
       requestId: input.requestId,
