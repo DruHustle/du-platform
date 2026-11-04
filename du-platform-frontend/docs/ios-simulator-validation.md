@@ -79,9 +79,10 @@ Reveal and keyboard-clearance drags compute a feasible vertical-shift interval
 from fresh target and viewport measurements. A single-line field and its action
 must both fit completely; a multiline editor must retain at least 44 points of
 editing area while the whole action fits. An empty intersection fails instead of
-alternating directions. The gesture targets the nearest feasible edge with up to
-12 points of interior margin for pan initiation, capped to the safe travel inside
-the measured gutter. It uses Apple's public
+alternating directions. The gesture targets the midpoint of the measured feasible
+interval, capped to safe travel inside the measured gutter. This avoids choosing
+a tiny correction just inside an edge without assuming a gesture-recognizer
+threshold. It uses Apple's public
 [slow drag and end-hold API](https://developer.apple.com/documentation/xcuiautomation/xcuicoordinate/press(forduration:thendragto:withvelocity:thenholdforduration:))
 with a 0.2-second hold before release. Each following attempt measures the viewport
 again; the four-attempt limit and all final bounds remain unchanged.
@@ -95,7 +96,32 @@ alternated about 231 → −73 → 229, and the iPad's 312 → 34 → 312. The p
 shows the corresponding overscroll; the iPad landscape recording was an error
 placeholder, so its diagnosis relies on the retained measurements and final
 image. This is evidence of an overshooting reveal gesture, not proof that the
-form cannot scroll. The adaptive gesture still requires actual hosted validation.
+form cannot scroll.
+
+Run [41837024642](https://github.com/DruHustle/du-platform/actions/runs/41837024642)
+then completed the iPhone's landscape Account keyboard check and entered the full
+Assistant fixture, but exceeded the case's 240-second allowance before final
+Assistant clearance. The iPad's 54-point reveal succeeded. A subsequent 70.5-point
+clearance gesture left Sign in 3.5 points below the accessory edge; the following
+15.5-point correction lost keyboard focus. Retained typed hierarchies confirmed
+actual keyboard absence with the full masked password preserved and no prompt.
+The synthesized event matched that short displacement, but its recognizer
+classification is unknown. The midpoint target addresses this measured small
+correction; actual convergence within four attempts remains to be established.
+
+The same run recorded the iPhone multiline accessibility frame at 118 points
+before focus and 28 points afterward, ending exactly at the accessory's top edge.
+A currently clipped accessibility frame does not establish the editor's intrinsic
+height. Bounded scrolling may therefore reveal more of it when the viewport has
+at least 44 points available. For an observed multiline frame below 44 points,
+the current full action's measured interval guides that attempt; the runner does
+not infer the editor's hidden bottom or substitute a guessed height. This branch
+is recorded as `action-only-clipped-editor` and cannot itself establish editor
+feasibility. The final actual editor/viewport intersection must still measure at
+least 44 points, with the full action visible and hittable. If the action already
+fits but the editor cannot meet that final check, the journey fails honestly.
+Neither device completed both cases or produced valid recordings in that run;
+partial input and geometry checks do not qualify the full journey.
 
 Intentional keyboard dismissal uses a separate pan that starts in that measured
 content gutter and continues toward the observed window's bottom. This matches
@@ -145,6 +171,16 @@ The handler requires the exact observed title, description and its own `Not Now`
 and `Save` buttons. It chooses only `Not Now`, records both states and verifies
 that the input is unchanged. That allowance ends with the orientation's Assistant
 phase; an unknown prompt or a repeated password prompt fails.
+
+During typing, the already-required app snapshot also counts exact
+`Save Password?` sheets and alerts. One observed match in a readable, matching
+window and stable orientation can invoke the existing live validator; snapshot
+presence alone never authorizes a tap. The validator still checks phase permission,
+the exact body, the two owned buttons and the acknowledged value. Duplicate,
+out-of-phase or repeated prompts fail. This removes a separate prompt-query pair
+before every character while keeping fresh keyboard observations on both sides
+of every event. The normal observation reads orientation before the snapshot and
+after keyboard hittability; it does not reuse a prior event's observation.
 
 Before a character is sent, an observed password prompt must preserve the prior
 acknowledged prefix. If it arrives after the event was sent, the exact new value
@@ -271,7 +307,8 @@ journey reached portrait completion at about 196 seconds and then exceeded
 240 seconds during ordinary acknowledged landscape email replacement. This was
 distinct from the earlier animation-idle stall. The two-case design keeps full
 fixture entry, real replacement and explicit rotation retention within separate
-bounded cases; it does not increase the command or overall execution budgets.
+bounded cases. The gesture and query changes retain the current command and
+overall execution budgets listed above.
 Hosted results must still establish that both complete. In run
 [41779981845](https://github.com/DruHustle/du-platform/actions/runs/41779981845),
 iPad test launch took about 193 seconds, the failing journey took 107 seconds,
@@ -314,7 +351,9 @@ A device's two orientation cases may each use up to 300 seconds of XCTest time;
 the outer `xcodebuild` command additionally includes launching the test runner
 and finalizing its result bundle. Run [41837024642](https://github.com/DruHustle/du-platform/actions/runs/41837024642)
 exhausted the previous ten-minute command allowance on both devices, leaving
-incomplete result bundles and no authoritative layout outcome. The outer
+incomplete result bundles and no complete case/media qualification. Its retained
+logs and data still identify the earlier phone case timeout and iPad keyboard-loss
+assertion described above; the outer timeouts do not replace those primary failures. The outer
 command now has fifteen minutes per device within the 50-minute shared journey
 and 60-minute job ceiling. This is a bounded qualification allowance, **not**
 a retry, ignored failure, or relaxation of the two-test pass requirement. On

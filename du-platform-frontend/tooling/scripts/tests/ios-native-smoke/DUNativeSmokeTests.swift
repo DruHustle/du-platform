@@ -25,6 +25,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let descendantWindows: [CGRect]
         let keyboards: [CGRect]
         let accessories: [CGRect]
+        let passwordPromptCount: Int
     }
 
     private struct KeyboardGeometryPair {
@@ -35,6 +36,7 @@ final class DUNativeSmokeTests: XCTestCase {
 
     private enum TypingKeyboardState {
         case visible(CGRect)
+        case prompt
         case absent
         case covered
         case changed
@@ -220,6 +222,7 @@ final class DUNativeSmokeTests: XCTestCase {
         var windows: [CGRect] = []
         var keyboards: [CGRect] = []
         var accessories: [CGRect] = []
+        var passwordPromptCount = 0
         while index < descendants.count {
             let element = descendants[index]
             index += 1
@@ -231,17 +234,22 @@ final class DUNativeSmokeTests: XCTestCase {
             } else if element.elementType == .other && element.identifier == "SystemInputAssistantView" {
                 accessories.append(element.frame)
             }
+            if (element.elementType == .sheet || element.elementType == .alert)
+                && element.label == "Save Password?" {
+                passwordPromptCount += 1
+            }
         }
         // Raw rectangles are opaque continuity signatures and diagnostics.
         // They are never interpreted or transformed into screen geometry.
         return KeyboardHierarchy(window: snapshot.frame, descendantWindows: windows,
-                                 keyboards: keyboards, accessories: accessories)
+                                 keyboards: keyboards, accessories: accessories,
+                                 passwordPromptCount: passwordPromptCount)
     }
 
     private func hierarchyRecord(_ hierarchy: KeyboardHierarchy) -> [String: Any] {
         ["window": rectangle(hierarchy.window), "descendantWindows": hierarchy.descendantWindows.map(rectangle),
          "keyboards": hierarchy.keyboards.map(rectangle),
-         "accessories": hierarchy.accessories.map(rectangle)]
+         "accessories": hierarchy.accessories.map(rectangle), "passwordPromptCount": hierarchy.passwordPromptCount]
     }
 
     private func hierarchyWindowMatches(_ hierarchy: KeyboardHierarchy, window: CGRect) -> Bool {
@@ -436,26 +444,44 @@ final class DUNativeSmokeTests: XCTestCase {
             return false
         }
 
-        // A positive content shift moves the form up. Intersect the shifts
-        // that expose the full field/action, or 44pt of a multiline editor
-        // together with the complete action. Empty intervals cannot be solved
-        // by scrolling and must not be hidden by repeated direction changes.
-        if multiline && (fieldFrame.height < 44 || viewport.height < 44) {
-            XCTFail("The multiline editor and viewport must each support 44pt of visible editing area")
+        // A positive content shift moves the form up. Intersect the measured
+        // field/action bounds when the editor's extent is available. A clipped
+        // multiline frame instead permits action-guided reveal, never an
+        // inference that its currently exposed edge is its intrinsic bottom.
+        // A multiline accessibility frame may describe only the currently
+        // exposed part of the editor. The same landscape editor measured
+        // 118pt before focus and 28pt at the accessory edge afterward. Give
+        // bounded scrolling a chance to reveal it; only the final measured
+        // intersection proves the required 44pt of visible editing area.
+        if multiline && viewport.height < 44 {
+            XCTFail("The viewport must support 44pt of visible editing area")
             return false
         }
-        var lower = multiline ? fieldFrame.minY + 44 - viewport.maxY : fieldFrame.maxY - viewport.maxY
-        var upper = multiline ? fieldFrame.maxY - 44 - viewport.minY : fieldFrame.minY - viewport.minY
-        if let target = actionFrame {
-            lower = max(lower, target.maxY - viewport.maxY)
-            upper = min(upper, target.minY - viewport.minY)
+        let clippedMultiline = multiline && fieldFrame.height < 44
+        var lower: CGFloat
+        var upper: CGFloat
+        if clippedMultiline {
+            guard let target = actionFrame else {
+                XCTFail("A clipped multiline editor requires a measured action to guide its bounded reveal")
+                return false
+            }
+            lower = target.maxY - viewport.maxY
+            upper = target.minY - viewport.minY
+        } else {
+            lower = multiline ? fieldFrame.minY + 44 - viewport.maxY : fieldFrame.maxY - viewport.maxY
+            upper = multiline ? fieldFrame.maxY - 44 - viewport.minY : fieldFrame.minY - viewport.minY
+            if let target = actionFrame {
+                lower = max(lower, target.maxY - viewport.maxY)
+                upper = min(upper, target.minY - viewport.minY)
+            }
         }
         guard lower.isFinite && upper.isFinite else {
             XCTFail("The required scroll displacement must be finite")
             return false
         }
         checks.append(["name": "content-scroll-required-shift", "minimum": Double(lower),
-                       "maximum": Double(upper), "multiline": multiline])
+                       "maximum": Double(upper), "multiline": multiline,
+                       "guidance": clippedMultiline ? "action-only-clipped-editor" : "field-and-action"])
         guard lower <= upper else {
             XCTFail("The required editor area and full action cannot fit above the keyboard: shift \(lower)...\(upper)")
             return false
@@ -463,10 +489,11 @@ final class DUNativeSmokeTests: XCTestCase {
         // If geometry already fits, another gesture cannot establish a missing
         // hittability condition. Leave that condition to the unchanged checks.
         guard lower > 0 || upper < 0 else { return false }
-        // Aim just inside the nearest feasible edge, allowing up to 12pt for
-        // pan initiation without targeting outside the valid clearance range.
-        let margin = min(CGFloat(12), (upper - lower) / 2)
-        let requestedShift = lower > 0 ? lower + margin : upper - margin
+        // Aim at the middle of the measured feasible interval. The prior
+        // edge-adjacent target left a 15.5pt corrective gesture that lost the
+        // keyboard. An interior target avoids that measured small correction
+        // without assuming a recognizer threshold or expanding acceptance.
+        let requestedShift = lower / 2 + upper / 2
         let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
         let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
         XCTAssertGreaterThan(max(left, right), 0, "A scroll gesture needs a visible gutter outside the editor")
@@ -523,6 +550,30 @@ final class DUNativeSmokeTests: XCTestCase {
         do {
             let raw = try captureKeyboardHierarchy()
             diagnostic["currentRaw"] = hierarchyRecord(raw)
+            if raw.passwordPromptCount > 0 {
+                let orientationAfter = XCUIDevice.shared.orientation
+                diagnostic["orientationAfter"] = orientationAfter.rawValue
+                let matchesPair = typingKeyboardPair.map {
+                    hierarchyWindowMatches(raw, window: $0.observation.window) && orientation == $0.orientation
+                } ?? true
+                guard raw.passwordPromptCount == 1 && finite(raw.window) && !raw.window.isEmpty
+                    && (orientation.isPortrait || orientation.isLandscape)
+                    && orientationAfter == orientation && matchesPair else {
+                    rejectKeyboardObservation("The observed password prompt needs one readable matching window and orientation", diagnostic: diagnostic)
+                    return .failed
+                }
+                guard pendingPasswordPromptFor != nil else {
+                    rejectKeyboardObservation("A password-saving prompt outside its Account visit, or a repeated prompt, is unexpected", diagnostic: diagnostic)
+                    return .failed
+                }
+                // The snapshot supplies presence only. The unchanged live
+                // validator still checks the exact title/body/owned buttons,
+                // phase permission and acknowledged value before any tap.
+                typingKeyboardPair = nil
+                lastKeyboardDiagnostic = diagnostic
+                checks.append(["name": "keyboard-input-prompt", "observation": diagnostic])
+                return .prompt
+            }
             if raw.keyboards.isEmpty {
                 typingKeyboardPair = nil
                 if try confirmedAbsence("keyboard", orientation: orientation, window: raw.window, diagnostic: &diagnostic) {
@@ -540,12 +591,17 @@ final class DUNativeSmokeTests: XCTestCase {
             diagnostic["pairedWindow"] = rectangle(pair.observation.window)
             diagnostic["pairedOrientation"] = pair.orientation.rawValue
             guard readableKeyboardSignature(raw, window: pair.observation.window)
-                && orientation == pair.orientation
-                && XCUIDevice.shared.orientation == orientation, let frame = pair.observation.keyboard else {
+                && orientation == pair.orientation, let frame = pair.observation.keyboard else {
                 rejectKeyboardObservation("Typing requires readable keyboard signatures in the paired window and orientation", diagnostic: diagnostic)
                 return .failed
             }
             if raw != pair.hierarchy {
+                let orientationAfter = XCUIDevice.shared.orientation
+                diagnostic["orientationAfter"] = orientationAfter.rawValue
+                guard orientationAfter == orientation else {
+                    rejectKeyboardObservation("Orientation changed during the typing keyboard observation", diagnostic: diagnostic)
+                    return .failed
+                }
                 typingKeyboardPair = nil
                 lastKeyboardDiagnostic = diagnostic
                 checks.append(["name": "keyboard-input-changed", "observation": diagnostic])
@@ -553,7 +609,9 @@ final class DUNativeSmokeTests: XCTestCase {
             }
             let hittable = app.keyboards.firstMatch.isHittable
             diagnostic["keyboardHittable"] = hittable
-            guard XCUIDevice.shared.orientation == orientation else {
+            let orientationAfter = XCUIDevice.shared.orientation
+            diagnostic["orientationAfter"] = orientationAfter.rawValue
+            guard orientationAfter == orientation else {
                 rejectKeyboardObservation("Orientation changed during the typing keyboard observation", diagnostic: diagnostic)
                 return .failed
             }
@@ -595,6 +653,9 @@ final class DUNativeSmokeTests: XCTestCase {
         switch typingKeyboardState() {
         case .visible(let frame): return frame
         case .absent, .failed: return nil
+        case .prompt:
+            rejectKeyboardObservation("The observed password prompt must be acknowledged before keyboard visibility is accepted", diagnostic: lastKeyboardDiagnostic)
+            return nil
         case .covered:
             rejectKeyboardObservation("A present but nonhittable keyboard is not a dismissed keyboard", diagnostic: lastKeyboardDiagnostic)
             return nil
@@ -793,6 +854,12 @@ final class DUNativeSmokeTests: XCTestCase {
         switch typingKeyboardState() {
         case .visible: return true
         case .failed: return false
+        case .prompt:
+            guard pendingPasswordPromptFor != nil,
+                  resumePasswordInterruptedInput(field, expected: expected, secure: secure) else {
+                XCTFail("The exact authorized password prompt must be acknowledged before further input")
+                return false
+            }
         case .absent:
             awaitExpectedPasswordTransition(field, expected: expected, secure: secure)
         case .covered, .changed:
@@ -817,9 +884,6 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     private func typeOnce(_ character: String, into field: XCUIElement, from previous: String,
                           expecting value: String, secure: Bool = false) {
-        if pendingPasswordPromptFor != nil {
-            resumePasswordInterruptedInput(field, expected: previous, secure: secure)
-        }
         guard requireTypingKeyboard(field, expected: previous, secure: secure) else { return }
         field.typeText(character)
         // Acknowledgment observes each event; it never resends it or repairs the
