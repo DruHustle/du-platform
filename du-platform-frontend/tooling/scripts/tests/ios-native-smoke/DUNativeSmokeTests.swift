@@ -10,6 +10,7 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor private static var dismissedTypingTutorial = false
     private var pendingPasswordPromptFor: String?
     private var lastKeyboardDiagnostic: [String: Any] = [:]
+    @MainActor private var typingKeyboardPair: KeyboardGeometryPair?
 
     private struct KeyboardObservation {
         let window: CGRect
@@ -19,16 +20,25 @@ final class DUNativeSmokeTests: XCTestCase {
         let obstruction: CGRect?
     }
 
-    private struct KeyboardHierarchy {
+    private struct KeyboardHierarchy: Equatable {
         let window: CGRect
         let descendantWindows: [CGRect]
         let keyboards: [CGRect]
         let accessories: [CGRect]
     }
 
-    private struct KeyboardTargetFailure: Error {
-        let kind: String
-        let detail: String
+    private struct KeyboardGeometryPair {
+        let orientation: UIDeviceOrientation
+        let hierarchy: KeyboardHierarchy
+        let observation: KeyboardObservation
+    }
+
+    private enum TypingKeyboardState {
+        case visible(CGRect)
+        case absent
+        case covered
+        case changed
+        case failed
     }
 
     @MainActor
@@ -50,6 +60,7 @@ final class DUNativeSmokeTests: XCTestCase {
         report.name = "du-ios-checks.json"
         report.lifetime = .keepAlways
         add(report)
+        typingKeyboardPair = nil
         app.terminate()
         XCUIDevice.shared.orientation = .portrait
     }
@@ -161,6 +172,7 @@ final class DUNativeSmokeTests: XCTestCase {
     private func navigate(_ tab: String, text: String) {
         let target = unique(.button, tab)
         assertControl(target, within: app.frame)
+        typingKeyboardPair = nil
         target.tap()
         XCTAssertTrue(existsOrWait(app.staticTexts[text]), "\(tab) did not show \(text)")
         record("tab-\(tab)", elements: [target])
@@ -168,6 +180,7 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func rotate(_ orientation: UIDeviceOrientation, name: String) {
+        typingKeyboardPair = nil
         XCUIDevice.shared.orientation = orientation
         wait("Application did not rotate to \(name)") {
             let frame = self.app.frame
@@ -219,8 +232,8 @@ final class DUNativeSmokeTests: XCTestCase {
                 accessories.append(element.frame)
             }
         }
-        // Descendant frames are retained for diagnosis only. In the observed
-        // rotated hierarchy they differed from resolved element coordinates.
+        // Raw rectangles are opaque continuity signatures and diagnostics.
+        // They are never interpreted or transformed into screen geometry.
         return KeyboardHierarchy(window: snapshot.frame, descendantWindows: windows,
                                  keyboards: keyboards, accessories: accessories)
     }
@@ -235,13 +248,11 @@ final class DUNativeSmokeTests: XCTestCase {
         finite(hierarchy.window) && !hierarchy.window.isEmpty && hierarchy.window == window
     }
 
-    @MainActor
-    private func resolvedFrames(_ elements: [XCUIElement], kind: String) throws -> [CGRect] {
-        do {
-            return try elements.map { try $0.snapshot().frame }
-        } catch {
-            throw KeyboardTargetFailure(kind: kind, detail: String(describing: error))
-        }
+    private func readableKeyboardSignature(_ hierarchy: KeyboardHierarchy, window: CGRect) -> Bool {
+        hierarchyWindowMatches(hierarchy, window: window)
+            && !hierarchy.keyboards.isEmpty && !hierarchy.descendantWindows.isEmpty
+            && (hierarchy.descendantWindows + hierarchy.keyboards + hierarchy.accessories)
+                .allSatisfy { finite($0) && !$0.isEmpty }
     }
 
     @MainActor
@@ -264,31 +275,35 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func rejectKeyboardObservation(_ reason: String, diagnostic: [String: Any]) {
+        typingKeyboardPair = nil
         lastKeyboardDiagnostic = diagnostic
         checks.append(["name": "keyboard-observation-rejected", "reason": reason, "observation": diagnostic])
         XCTFail(reason)
     }
 
     @MainActor
-    private func observeKeyboard(includeAccessories: Bool = true) -> KeyboardObservation? {
+    private func observeKeyboard() -> KeyboardObservation? {
         // At most two read attempts may establish one consistent observation.
         // No UI action or text event is repeated by this measurement helper.
+        // Live frames have a documented screen-coordinate contract, which the
+        // bounds below must verify. Snapshot frames remain opaque signatures
+        // after both snapshot APIs returned unrotated keyboard frames in the
+        // recorded landscape failures. This bracket is not atomic:
+        // any live-resolution failure remains an XCTest failure.
+        typingKeyboardPair = nil
         for attempt in 0..<2 {
             let orientation = XCUIDevice.shared.orientation
             let window = app.frame
             var diagnostic: [String: Any] = ["attempt": attempt + 1, "orientation": orientation.rawValue,
-                                            "window": rectangle(window), "includeAccessories": includeAccessories]
+                                            "window": rectangle(window), "source": "bracketed-live-element-frames"]
             do {
                 guard finite(window) && !window.isEmpty && (orientation.isPortrait || orientation.isLandscape) else {
                     rejectKeyboardObservation("The application must have a finite window and a stable orientation", diagnostic: diagnostic)
                     return nil
                 }
-                let rawBefore: KeyboardHierarchy?
-                if includeAccessories { rawBefore = try captureKeyboardHierarchy() }
-                else { rawBefore = nil }
-                if let raw = rawBefore { diagnostic["rawBefore"] = hierarchyRecord(raw) }
-                let keyboardTargets = app.keyboards.allElementsBoundByIndex
-                if keyboardTargets.isEmpty {
+                let rawBefore = try captureKeyboardHierarchy()
+                diagnostic["rawBefore"] = hierarchyRecord(rawBefore)
+                if rawBefore.keyboards.isEmpty {
                     if try confirmedAbsence("keyboard", orientation: orientation, window: window, diagnostic: &diagnostic) {
                         lastKeyboardDiagnostic = diagnostic
                         return KeyboardObservation(window: window, hasKeyboardElement: false,
@@ -299,35 +314,33 @@ final class DUNativeSmokeTests: XCTestCase {
                     rejectKeyboardObservation("Keyboard absence was not confirmed by a stable readable hierarchy", diagnostic: diagnostic)
                     return nil
                 }
-                let keyboardFrames = try resolvedFrames(keyboardTargets, kind: "keyboard")
-                diagnostic["resolvedKeyboards"] = keyboardFrames.map(rectangle)
-                var accessoryFrames: [CGRect] = []
-                var keyboardFramesAfter = keyboardFrames
-                var rawAfter: KeyboardHierarchy?
-                if includeAccessories {
-                    let targets = app.otherElements.matching(NSPredicate(format: "identifier == %@", "SystemInputAssistantView"))
-                        .allElementsBoundByIndex
-                    accessoryFrames = try resolvedFrames(targets, kind: "accessory")
-                    diagnostic["resolvedAccessories"] = accessoryFrames.map(rectangle)
-                    // Ensure the keyboard did not move while its accessory was
-                    // captured. Raw app snapshots establish presence, not coordinates.
-                    keyboardFramesAfter = try resolvedFrames(app.keyboards.allElementsBoundByIndex, kind: "keyboard")
-                    let after = try captureKeyboardHierarchy()
-                    rawAfter = after
-                    diagnostic["resolvedKeyboardsAfter"] = keyboardFramesAfter.map(rectangle)
-                    diagnostic["rawAfter"] = hierarchyRecord(after)
+                guard readableKeyboardSignature(rawBefore, window: window) else {
+                    rejectKeyboardObservation("The keyboard signature must contain readable finite window and target frames", diagnostic: diagnostic)
+                    return nil
                 }
+                lastKeyboardDiagnostic = diagnostic
+                checks.append(["name": "keyboard-live-capture-start", "observation": diagnostic])
+                let accessoryTargets = app.otherElements.matching(NSPredicate(format: "identifier == %@", "SystemInputAssistantView"))
+                let keyboardFrames = app.keyboards.allElementsBoundByIndex.map { $0.frame }
+                let accessoryFrames = accessoryTargets.allElementsBoundByIndex.map { $0.frame }
+                let keyboardFramesAfter = app.keyboards.allElementsBoundByIndex.map { $0.frame }
+                let accessoryFramesAfter = accessoryTargets.allElementsBoundByIndex.map { $0.frame }
+                let hittable = app.keyboards.firstMatch.isHittable
+                let rawAfter = try captureKeyboardHierarchy()
+                diagnostic["liveKeyboards"] = keyboardFrames.map(rectangle)
+                diagnostic["liveAccessories"] = accessoryFrames.map(rectangle)
+                diagnostic["liveKeyboardsAfter"] = keyboardFramesAfter.map(rectangle)
+                diagnostic["liveAccessoriesAfter"] = accessoryFramesAfter.map(rectangle)
+                diagnostic["keyboardHittable"] = hittable
+                diagnostic["rawAfter"] = hierarchyRecord(rawAfter)
                 let currentWindow = app.frame
                 diagnostic["windowAfter"] = rectangle(currentWindow)
                 diagnostic["orientationAfter"] = XCUIDevice.shared.orientation.rawValue
-                let presenceAgrees = rawBefore.map { hierarchyWindowMatches($0, window: window)
-                    && $0.keyboards.count == keyboardFrames.count
-                    && $0.accessories.count == accessoryFrames.count } ?? true
-                let finalPresenceAgrees = rawAfter.map { hierarchyWindowMatches($0, window: window)
-                    && $0.keyboards.count == keyboardFrames.count
-                    && $0.accessories.count == accessoryFrames.count } ?? true
                 guard currentWindow == window && XCUIDevice.shared.orientation == orientation
-                    && keyboardFrames == keyboardFramesAfter && presenceAgrees && finalPresenceAgrees else {
+                    && rawBefore == rawAfter && readableKeyboardSignature(rawAfter, window: window)
+                    && rawBefore.keyboards.count == keyboardFrames.count
+                    && rawBefore.accessories.count == accessoryFrames.count
+                    && keyboardFrames == keyboardFramesAfter && accessoryFrames == accessoryFramesAfter else {
                     checks.append(["name": "keyboard-observation-changed", "observation": diagnostic])
                     if attempt == 0 { continue }
                     rejectKeyboardObservation("Keyboard geometry or orientation changed during its bounded observation", diagnostic: diagnostic)
@@ -336,11 +349,7 @@ final class DUNativeSmokeTests: XCTestCase {
                 let frames = keyboardFrames + accessoryFrames
                 guard frames.allSatisfy({ finite($0) && $0.width >= 0 && $0.height >= 0
                     && ($0.intersection(window).isEmpty || contains(window, $0)) }) else {
-                    if rawBefore == nil {
-                        do { diagnostic["rawAtRejection"] = hierarchyRecord(try captureKeyboardHierarchy()) }
-                        catch { diagnostic["rawCaptureError"] = String(describing: error) }
-                    }
-                    rejectKeyboardObservation("Resolved keyboard geometry must be finite and use the observed screen window", diagnostic: diagnostic)
+                    rejectKeyboardObservation("Live keyboard geometry must be finite and use the observed screen window", diagnostic: diagnostic)
                     return nil
                 }
                 var keyboard: CGRect?
@@ -352,23 +361,13 @@ final class DUNativeSmokeTests: XCTestCase {
                     accessories.reduce(frame) { $0.union($1) }.intersection(window)
                 }
                 lastKeyboardDiagnostic = diagnostic
-                return KeyboardObservation(window: window, hasKeyboardElement: true, keyboard: keyboard,
-                                           accessories: accessories, obstruction: obstruction)
-            } catch let failure as KeyboardTargetFailure {
-                diagnostic["targetFailure"] = ["kind": failure.kind, "detail": failure.detail]
-                do {
-                    if try confirmedAbsence(failure.kind, orientation: orientation, window: window, diagnostic: &diagnostic) {
-                        checks.append(["name": "keyboard-target-disappeared", "observation": diagnostic])
-                        if failure.kind == "keyboard" {
-                            lastKeyboardDiagnostic = diagnostic
-                            return KeyboardObservation(window: window, hasKeyboardElement: false,
-                                                       keyboard: nil, accessories: [], obstruction: nil)
-                        }
-                        if attempt == 0 { continue }
-                    }
-                } catch { diagnostic["absenceCaptureError"] = String(describing: error) }
-                rejectKeyboardObservation("A disappearing keyboard target could not be read or confirmed absent", diagnostic: diagnostic)
-                return nil
+                let observation = KeyboardObservation(window: window, hasKeyboardElement: true, keyboard: keyboard,
+                                                      accessories: accessories, obstruction: obstruction)
+                if keyboard != nil && hittable {
+                    typingKeyboardPair = KeyboardGeometryPair(orientation: orientation, hierarchy: rawAfter,
+                                                              observation: observation)
+                }
+                return observation
             } catch {
                 diagnostic["hierarchyError"] = String(describing: error)
                 rejectKeyboardObservation("Could not capture the application keyboard hierarchy", diagnostic: diagnostic)
@@ -446,6 +445,7 @@ final class DUNativeSmokeTests: XCTestCase {
                        "field": field.label, "scroll": rectangle(scrollFrame), "viewport": rectangle(viewport),
                        "start": ["x": Double(start.x), "y": Double(start.y)],
                        "end": ["x": Double(end.x), "y": Double(end.y)]])
+        typingKeyboardPair = nil
         from.press(forDuration: 0.1, thenDragTo: to)
     }
 
@@ -464,8 +464,101 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
+    private func typingKeyboardState() -> TypingKeyboardState {
+        // A current whole-app snapshot must exactly match the complete raw
+        // signature paired with a normalized, visible keyboard measurement.
+        // This is cached typing continuity, never fresh clearance geometry.
+        let orientation = XCUIDevice.shared.orientation
+        var diagnostic: [String: Any] = ["source": "paired-typing-continuity",
+                                        "orientation": orientation.rawValue]
+        do {
+            let raw = try captureKeyboardHierarchy()
+            diagnostic["currentRaw"] = hierarchyRecord(raw)
+            if raw.keyboards.isEmpty {
+                typingKeyboardPair = nil
+                if try confirmedAbsence("keyboard", orientation: orientation, window: raw.window, diagnostic: &diagnostic) {
+                    lastKeyboardDiagnostic = diagnostic
+                    return .absent
+                }
+                rejectKeyboardObservation("Typing keyboard absence was not confirmed by readable matching hierarchies", diagnostic: diagnostic)
+                return .failed
+            }
+            guard let pair = typingKeyboardPair else {
+                rejectKeyboardObservation("Typing requires a fresh settled keyboard measurement after a transition", diagnostic: diagnostic)
+                return .failed
+            }
+            diagnostic["pairedRaw"] = hierarchyRecord(pair.hierarchy)
+            diagnostic["pairedWindow"] = rectangle(pair.observation.window)
+            diagnostic["pairedOrientation"] = pair.orientation.rawValue
+            guard readableKeyboardSignature(raw, window: pair.observation.window)
+                && orientation == pair.orientation
+                && XCUIDevice.shared.orientation == orientation, let frame = pair.observation.keyboard else {
+                rejectKeyboardObservation("Typing requires readable keyboard signatures in the paired window and orientation", diagnostic: diagnostic)
+                return .failed
+            }
+            if raw != pair.hierarchy {
+                typingKeyboardPair = nil
+                lastKeyboardDiagnostic = diagnostic
+                checks.append(["name": "keyboard-input-changed", "observation": diagnostic])
+                return .changed
+            }
+            let hittable = app.keyboards.firstMatch.isHittable
+            diagnostic["keyboardHittable"] = hittable
+            guard XCUIDevice.shared.orientation == orientation else {
+                rejectKeyboardObservation("Orientation changed during the typing keyboard observation", diagnostic: diagnostic)
+                return .failed
+            }
+            if hittable {
+                lastKeyboardDiagnostic = diagnostic
+                return .visible(frame)
+            }
+            // isHittable also returns false for a covered, still-present
+            // keyboard. Only subsequent readable absence can mean dismissed.
+            typingKeyboardPair = nil
+            let after = try captureKeyboardHierarchy()
+            diagnostic["nonhittableRawAfter"] = hierarchyRecord(after)
+            if after.keyboards.isEmpty,
+               try confirmedAbsence("keyboard", orientation: orientation, window: raw.window, diagnostic: &diagnostic) {
+                lastKeyboardDiagnostic = diagnostic
+                return .absent
+            }
+            guard readableKeyboardSignature(after, window: pair.observation.window)
+                && XCUIDevice.shared.orientation == orientation else {
+                rejectKeyboardObservation("A nonhittable keyboard changed without confirmed absence", diagnostic: diagnostic)
+                return .failed
+            }
+            lastKeyboardDiagnostic = diagnostic
+            if after != raw {
+                checks.append(["name": "keyboard-input-changed", "observation": diagnostic])
+                return .changed
+            }
+            checks.append(["name": "keyboard-input-covered", "observation": diagnostic])
+            return .covered
+        } catch {
+            diagnostic["hierarchyError"] = String(describing: error)
+            rejectKeyboardObservation("Could not read the current typing keyboard hierarchy", diagnostic: diagnostic)
+            return .failed
+        }
+    }
+
+    @MainActor
     private func visibleKeyboardFrame() -> CGRect? {
-        observeKeyboard(includeAccessories: false)?.keyboard
+        switch typingKeyboardState() {
+        case .visible(let frame): return frame
+        case .absent, .failed: return nil
+        case .covered:
+            rejectKeyboardObservation("A present but nonhittable keyboard is not a dismissed keyboard", diagnostic: lastKeyboardDiagnostic)
+            return nil
+        case .changed:
+            rejectKeyboardObservation("A changed keyboard signature cannot reuse cached visibility", diagnostic: lastKeyboardDiagnostic)
+            return nil
+        }
+    }
+
+    @MainActor
+    private func focusInput(_ field: XCUIElement) {
+        typingKeyboardPair = nil
+        field.tap()
     }
 
     @MainActor
@@ -516,6 +609,7 @@ final class DUNativeSmokeTests: XCTestCase {
         record("\(phase)-password-prompt-before", elements: [prompt, button, field])
         attachEvidence("\(phase)-password-prompt-before")
         pendingPasswordPromptFor = nil
+        typingKeyboardPair = nil
         button.tap()
         wait("The known password prompt did not disappear", timeout: 5) { !prompt.exists }
         XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
@@ -526,12 +620,30 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     @MainActor
+    private func restoreInputAfterObservedPrompt(_ field: XCUIElement, expected: String, secure: Bool) {
+        guard let observation = observeKeyboard() else { return }
+        if observation.hasKeyboardElement {
+            // Do not retap an editing session that iOS already restored: that
+            // can select a nonempty prefix. The next event still has to target
+            // this field and acknowledge its exact expected value.
+            XCTAssertNotNil(observation.keyboard, "The restored software keyboard must be visible")
+            XCTAssertNotNil(typingKeyboardPair, "The restored software keyboard must be hittable")
+        } else {
+            // Only the exact prompt and confirmed keyboard absence authorize
+            // this refocus. No text event is sent or replayed here.
+            focusInput(field)
+        }
+        XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
+                      "Restoring the observed prompt's input must preserve its acknowledged value")
+    }
+
+    @MainActor
     @discardableResult
     private func resumePasswordInterruptedInput(_ field: XCUIElement, expected: String, secure: Bool = false) -> Bool {
         guard declinePasswordPrompt(preserving: field, expected: expected, secure: secure) else { return false }
         // Only the observed prompt authorizes refocusing; this never types,
         // repairs a value, or retries an event already sent to the input.
-        field.tap()
+        restoreInputAfterObservedPrompt(field, expected: expected, secure: secure)
         waitForTypingKeyboard(refocusing: field, preserving: expected, secure: secure)
         XCTAssertTrue(inputMatches(field, expected: expected, secure: secure),
                       "Refocusing after the password prompt must preserve the acknowledged input")
@@ -574,6 +686,7 @@ final class DUNativeSmokeTests: XCTestCase {
         record("keyboard-tutorial-before", elements: [tutorial, button])
         attachEvidence("keyboard-tutorial-before")
         Self.dismissedTypingTutorial = true
+        typingKeyboardPair = nil
         button.tap()
         wait("The known keyboard tutorial did not disappear", timeout: 5) { !tutorial.exists }
         record("keyboard-tutorial-after", elements: [])
@@ -591,7 +704,7 @@ final class DUNativeSmokeTests: XCTestCase {
                 interruptionObserved = true
                 return true
             }
-            guard let frame = self.observeKeyboard()?.obstruction else {
+            guard let frame = self.observeKeyboard()?.obstruction, self.typingKeyboardPair != nil else {
                 previous = nil
                 settledSince = Date()
                 return false
@@ -619,11 +732,37 @@ final class DUNativeSmokeTests: XCTestCase {
                 XCTAssertTrue(declinePasswordPrompt(preserving: field, expected: expected, secure: secure))
             }
             // Evidence and acknowledgment occur outside the keyboard deadline.
-            // Refocus only after an observed prompt, without sending any text.
-            field.tap()
+            // Preserve an already-restored keyboard session without retapping.
+            restoreInputAfterObservedPrompt(field, expected: expected, secure: secure)
             XCTAssertTrue(inputMatches(field, expected: expected, secure: secure))
         }
         XCTFail("The software keyboard did not return after the bounded input interruptions")
+    }
+
+    @MainActor
+    private func requireTypingKeyboard(_ field: XCUIElement, expected: String, secure: Bool) -> Bool {
+        switch typingKeyboardState() {
+        case .visible: return true
+        case .failed: return false
+        case .absent:
+            awaitExpectedPasswordTransition(field, expected: expected, secure: secure)
+        case .covered, .changed:
+            // Coverage or signature changes grant no interruption permission. The exact,
+            // phase-authorized prompt must already be observable in this case.
+            guard pendingPasswordPromptFor != nil, passwordPrompt() != nil else {
+                rejectKeyboardObservation("Keyboard continuity changed without the observed authorized password prompt", diagnostic: lastKeyboardDiagnostic)
+                return false
+            }
+            guard resumePasswordInterruptedInput(field, expected: expected, secure: secure) else {
+                XCTFail("The observed password prompt must be acknowledged before further input")
+                return false
+            }
+        }
+        guard case .visible = typingKeyboardState() else {
+            XCTFail("The real visible keyboard must return after the observed input interruption")
+            return false
+        }
+        return true
     }
 
     @MainActor
@@ -632,23 +771,16 @@ final class DUNativeSmokeTests: XCTestCase {
         if pendingPasswordPromptFor != nil {
             resumePasswordInterruptedInput(field, expected: previous, secure: secure)
         }
-        var keyboardFrame = visibleKeyboardFrame()
-        if keyboardFrame == nil {
-            awaitExpectedPasswordTransition(field, expected: previous, secure: secure)
-            keyboardFrame = visibleKeyboardFrame()
-        }
-        XCTAssertNotNil(keyboardFrame, "The software keyboard disappeared before typing")
+        guard requireTypingKeyboard(field, expected: previous, secure: secure) else { return }
         field.typeText(character)
         // Acknowledgment observes each event; it never resends it or repairs the
         // text. Secure inputs expose only a masked value, so check its length.
         wait("Typed input did not acknowledge the expected \(secure ? "masked length" : "exact prefix") of \(value.count)", timeout: 3) {
             return self.inputMatches(field, expected: value, secure: secure)
         }
-        if visibleKeyboardFrame() == nil {
-            // The event was sent exactly once and its NEW value is confirmed.
-            // Observing the known OS transition does not extend that deadline.
-            awaitExpectedPasswordTransition(field, expected: value, secure: secure)
-        }
+        // The event was sent once and its NEW value is confirmed. Observing
+        // a known OS transition does not extend that acknowledgment deadline.
+        guard requireTypingKeyboard(field, expected: value, secure: secure) else { return }
         XCTAssertTrue(inputMatches(field, expected: value, secure: secure))
     }
 
@@ -656,28 +788,26 @@ final class DUNativeSmokeTests: XCTestCase {
     private func replaceFixture(_ field: XCUIElement, with value: String, secure: Bool = false) {
         // Exercise a real nonempty -> empty -> full replacement in each case,
         // independently of the other test's application state or execution order.
-        replaceText(field, with: "xy", secure: secure)
-        replaceText(field, with: value, secure: secure)
-    }
-
-    @MainActor
-    private func replaceText(_ field: XCUIElement, with value: String, secure: Bool = false) {
+        // Keep one focus session: a second tap can select the seed, so one
+        // delete would correctly remove that selection rather than one suffix.
         var expected = field.value as? String ?? ""
         _ = dismissKnownTypingTutorial()
         if pendingPasswordPromptFor != nil {
             _ = declinePasswordPrompt(preserving: field, expected: expected, secure: secure)
         }
-        field.tap()
+        focusInput(field)
         waitForTypingKeyboard(refocusing: field, preserving: expected, secure: secure)
-        while !expected.isEmpty {
-            let previous = expected
-            expected.removeLast()
-            typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, from: previous, expecting: expected, secure: secure)
-        }
-        for character in value {
-            let previous = expected
-            expected.append(character)
-            typeOnce(String(character), into: field, from: previous, expecting: expected, secure: secure)
+        for replacement in ["xy", value] {
+            while !expected.isEmpty {
+                let previous = expected
+                expected.removeLast()
+                typeOnce(XCUIKeyboardKey.delete.rawValue, into: field, from: previous, expecting: expected, secure: secure)
+            }
+            for character in replacement {
+                let previous = expected
+                expected.append(character)
+                typeOnce(String(character), into: field, from: previous, expecting: expected, secure: secure)
+            }
         }
     }
 
@@ -775,6 +905,7 @@ final class DUNativeSmokeTests: XCTestCase {
                            "scroll": rectangle(scrollFrame), "viewport": rectangle(viewport), "window": rectangle(window),
                            "start": ["x": Double(start.x), "y": Double(start.y)],
                            "end": ["x": Double(end.x), "y": Double(end.y)]])
+            typingKeyboardPair = nil
             from.press(forDuration: 0.1, thenDragTo: to)
         }
         wait("Software keyboard did not dismiss") {
@@ -793,7 +924,7 @@ final class DUNativeSmokeTests: XCTestCase {
         ]
         if let observation = keyboard {
             check["keyboardObservation"] = [
-                "source": "validated-resolved-element-snapshots",
+                "source": "bracketed-live-element-frames",
                 "hasKeyboardElement": observation.hasKeyboardElement,
                 "frame": observation.keyboard.map { rectangle($0) as Any } ?? NSNull(),
                 "accessories": observation.accessories.map(rectangle),
