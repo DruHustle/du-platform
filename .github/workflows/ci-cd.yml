@@ -188,6 +188,15 @@ jobs:
         env:
           ONESA_BROWSER_ENGINE: webkit
 
+      - name: Preserve responsive assistant evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-assistant-evidence
+          if-no-files-found: ignore
+          retention-days: 7
+          path: /tmp/du-onesa-chat-*
+
       - name: Shop cart regression tests
         run: pnpm --dir du-platform-frontend/tooling test:e2e:shop
         env:

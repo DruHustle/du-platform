@@ -77,3 +77,28 @@ export type Readiness = { commercialReady: boolean; mode: string; enforcement: s
 export type Catalog = { products: Product[]; readiness: Readiness; source: string; cached?: boolean };
 export type TravelQuote = { id: string; identity: string; provider: string; category: string; title: string; price: number; currency: string; bookingUrl: string; [key: string]: unknown };
 export type TravelCriteria = { origin: string; destination: string; tripType: "return" | "one-way"; departure: string; returnDate: string; adults: number; childAges: number[]; rooms: number; currency: string; pickup: string; dropoff: string; pickupTime: string; dropoffTime: string };
+
+/** Validate values used by native filters, prices and ordering before rendering. */
+export function parseCatalog(value: unknown): Catalog {
+  const invalid = () => new ApiError("The catalogue response was invalid. Please try again.", 502, "INVALID_RESPONSE");
+  if (!value || typeof value !== "object") throw invalid();
+  const data = value as Partial<Catalog>;
+  const validProduct = (product: unknown): product is Product => {
+    if (!product || typeof product !== "object") return false;
+    const p = product as Partial<Product>;
+    return Number.isSafeInteger(p.id) && p.id! > 0
+      && [p.slug, p.name, p.description, p.category, p.image_url, p.currency].every(field => typeof field === "string")
+      && Number.isSafeInteger(p.price_cents) && p.price_cents! >= 0
+      && Number.isSafeInteger(p.stock_qty) && p.stock_qty! >= 0
+      && (p.is_active === 0 || p.is_active === 1)
+      && (p.image_api_url == null || typeof p.image_api_url === "string");
+  };
+  const readiness = data.readiness;
+  if (!Array.isArray(data.products) || !data.products.every(validProduct)
+    || typeof data.source !== "string" || (data.cached !== undefined && typeof data.cached !== "boolean")
+    || !readiness || typeof readiness.commercialReady !== "boolean"
+    || typeof readiness.mode !== "string" || typeof readiness.enforcement !== "string"
+    || !Array.isArray(readiness.approvedProductIds) || !readiness.approvedProductIds.every(id => Number.isSafeInteger(id) && id > 0)
+    || !Array.isArray(readiness.destinationCountries) || !readiness.destinationCountries.every(country => typeof country === "string")) throw invalid();
+  return data as Catalog;
+}

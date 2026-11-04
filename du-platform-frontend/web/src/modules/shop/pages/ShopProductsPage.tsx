@@ -5,7 +5,10 @@ import { getCookieConsent } from "@/lib/cookieConsent";
 import { trackShopFunnel } from "../lib/shopFunnel";
 import OrderStatus from "../components/OrderStatus";
 import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
-import { convertShopCents, calculateShopShippingCents } from "@/domain/shopCurrency";
+import {
+  convertShopCents,
+  calculateShopShippingCents,
+} from "@/domain/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import PilotReadinessNotice from "../components/PilotReadinessNotice";
@@ -37,9 +40,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { api, type AuthUser } from "@/lib/api";
-import {
-  shopOrderRequestSchema,
-} from "@/domain/shopCheckout";
+import { shopOrderRequestSchema } from "@/domain/shopCheckout";
 import {
   isOrderReceipt,
   prepareCheckoutAttempt,
@@ -250,6 +251,35 @@ export default function ShopProducts() {
 
   const availableOnly = new URLSearchParams(search).get("available") === "1";
   const selectedProduct = new URLSearchParams(search).get("product");
+  const categoryOptions: Array<{ key: ProductCategory; label: string }> = [
+    {
+      key: "all",
+      label: t("shop.products.filters.all", { defaultValue: "All" }),
+    },
+    {
+      key: "sports",
+      label: t("shop.products.filters.sports", { defaultValue: "Sports" }),
+    },
+    {
+      key: "crafts",
+      label: t("shop.products.filters.crafts", {
+        defaultValue: "Arts & Crafts",
+      }),
+    },
+    {
+      key: "food",
+      label: t("shop.products.filters.food", {
+        defaultValue: "Food & Nostalgia",
+      }),
+    },
+  ];
+  const selectCategory = (nextCategory: ProductCategory) => {
+    setCategory(nextCategory);
+    setSegment("");
+    setLocation(
+      `/shop/products?category=${nextCategory}${availableOnly ? "&available=1" : ""}`
+    );
+  };
   const products = useMemo(
     () =>
       allProducts.filter(product => {
@@ -322,8 +352,13 @@ export default function ShopProducts() {
         row.item.quantity,
     0
   );
-  const shippingBase = calculateShopShippingCents(baseSubtotalCents, deliverySpeed);
-  const shippingCents = Number.isFinite(shippingBase) ? convertShopCents(shippingBase, "EUR", currency) : Number.NaN;
+  const shippingBase = calculateShopShippingCents(
+    baseSubtotalCents,
+    deliverySpeed
+  );
+  const shippingCents = Number.isFinite(shippingBase)
+    ? convertShopCents(shippingBase, "EUR", currency)
+    : Number.NaN;
   const totalCents = subtotalCents + shippingCents;
   const whatsappNumber = normalizeWhatsAppPhone(
     String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? "")
@@ -562,43 +597,30 @@ export default function ShopProducts() {
                   className={`lg:col-span-8 space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}
                 >
                   <div className="flex flex-wrap items-center gap-2">
+                    <label className="flex w-full min-w-0 flex-col gap-1.5 sm:hidden">
+                      <span>{t("shop.products.filters.select_category")}</span>
+                      <select
+                        id="shop-category"
+                        value={category}
+                        onChange={event =>
+                          selectCategory(event.target.value as ProductCategory)
+                        }
+                        className="w-full min-w-0 border px-3 py-2"
+                      >
+                        {categoryOptions.map(option => (
+                          <option key={option.key} value={option.key}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                     <div className="hidden sm:flex flex-wrap gap-2">
-                      {[
-                        {
-                          key: "all" as ProductCategory,
-                          label: t("shop.products.filters.all", {
-                            defaultValue: "All",
-                          }),
-                        },
-                        {
-                          key: "sports" as ProductCategory,
-                          label: t("shop.products.filters.sports", {
-                            defaultValue: "Sports",
-                          }),
-                        },
-                        {
-                          key: "crafts" as ProductCategory,
-                          label: t("shop.products.filters.crafts", {
-                            defaultValue: "Arts & Crafts",
-                          }),
-                        },
-                        {
-                          key: "food" as ProductCategory,
-                          label: t("shop.products.filters.food", {
-                            defaultValue: "Food & Nostalgia",
-                          }),
-                        },
-                      ].map(tab => (
+                      {categoryOptions.map(tab => (
                         <Button
                           key={tab.key}
                           type="button"
-                          onClick={() => {
-                            setCategory(tab.key);
-                            setSegment("");
-                            setLocation(
-                              `/shop/products?category=${tab.key}${availableOnly ? "&available=1" : ""}`
-                            );
-                          }}
+                          aria-pressed={category === tab.key}
+                          onClick={() => selectCategory(tab.key)}
                           className={`rounded-full px-5 py-2 h-auto text-[10px] font-black uppercase tracking-[0.2em] ${
                             category === tab.key
                               ? "bg-zim-gold text-black hover:bg-zim-gold/90"
@@ -610,7 +632,7 @@ export default function ShopProducts() {
                       ))}
                     </div>
 
-                    <div className="relative min-w-[190px]">
+                    <div className="relative w-full min-w-0 sm:w-auto sm:min-w-[190px]">
                       <select
                         aria-label={t("shop.products.filters.select_segment")}
                         value={segment}
@@ -771,7 +793,10 @@ export default function ShopProducts() {
                     {!receiptOnly && <PilotReadinessNotice />}
                     {!receiptOnly && canCheckout && !pricing && (
                       <p role="status" className="mb-4 text-sm text-amber-200">
-                        Current delivery and conversion estimates are unavailable. You can still send an assisted request; the server will calculate the request total, and the team will confirm the final quote before payment.
+                        Current delivery and conversion estimates are
+                        unavailable. You can still send an assisted request; the
+                        server will calculate the request total, and the team
+                        will confirm the final quote before payment.
                       </p>
                     )}
                     {!receiptOnly && invalidBasket && (
@@ -1426,7 +1451,7 @@ export default function ShopProducts() {
         <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
           <div
             data-mobile-basket-summary
-            className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3"
+            className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-3"
           >
             <div className="flex items-center gap-2 min-w-0">
               <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />

@@ -7,7 +7,7 @@ import { ApiError, request } from "../api";
 import { PENDING_CONTACT_KEY, useSession } from "../session";
 import { latestRequest } from "../requestLifecycle";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
-import { Action, Card, Copy, Field, Heading, Message, Screen } from "../ui";
+import { Action, Card, Copy, Field, Grid, Heading, Message, Screen } from "../ui";
 
 const errorMessage=(e:unknown)=>e instanceof Error?e.message:"The service is temporarily unavailable.";
 export function AssistantScreen() {
@@ -65,8 +65,24 @@ export function ContactScreen() {
 }
 export function SearchScreen() {
   const linkTo=useLinkTo();const [query,setQuery]=useState("");const [results,setResults]=useState<{title:string;category:string;summary?:string;href:string}[]|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");
-  const search=async()=>{if(busy||!query.trim())return;setBusy(true);setError("");setResults(null);try{const data=await request<{results:typeof results}>(`/search?q=${encodeURIComponent(query.trim())}`);if(!Array.isArray(data.results)||!data.results.every(item=>item&&typeof item.title==="string"&&typeof item.category==="string"&&typeof item.href==="string"&&item.href.startsWith("/")&&!item.href.startsWith("//")&&!item.href.includes("\\")&&(item.summary===undefined||typeof item.summary==="string")))throw new Error("The search response was invalid.");setResults(data.results);}catch(e){setError(errorMessage(e));}finally{setBusy(false);}};
-  return <Screen><Heading>Search</Heading><Field label="Search products, destinations and information" value={query} onChangeText={setQuery} returnKeyType="search" onSubmitEditing={()=>void search()}/><Action title={busy?"Searching…":"Search"} disabled={busy||!query.trim()} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{results&&!results.length&&<Copy>No results found. Try another search.</Copy>}{results?.map((item,i)=><Card key={`${item.href}-${i}`}><Heading>{item.title}</Heading><Copy>{item.category}{item.summary?` · ${item.summary}`:""}</Copy><Action title="Open result" onPress={()=>{try{linkTo(item.href);}catch{setError("This result could not be opened. Please try again.");}}}/></Card>)}</Screen>;
+  const [requests] = useState(latestRequest);
+  useEffect(() => () => requests.invalidate(), [requests]);
+  const changeQuery = (value: string) => {
+    requests.invalidate(); setBusy(false); setResults(null); setError(""); setQuery(value);
+  };
+  const search = async () => {
+    if (busy || !query.trim()) return;
+    const pending = requests.begin();
+    setBusy(true); setError(""); setResults(null);
+    try {
+      const data = await request<{ results: typeof results }>(`/search?q=${encodeURIComponent(query.trim())}`, { signal: pending.signal });
+      if (!Array.isArray(data.results) || !data.results.every(item => item && typeof item.title === "string" && typeof item.category === "string" && typeof item.href === "string" && item.href.startsWith("/") && !item.href.startsWith("//") && !item.href.includes("\\") && (item.summary === undefined || typeof item.summary === "string")))
+        throw new Error("The search response was invalid.");
+      if (pending.isCurrent()) setResults(data.results);
+    } catch (e) { if (pending.isCurrent()) setError(errorMessage(e)); }
+    finally { if (pending.isCurrent()) setBusy(false); }
+  };
+  return <Screen wide><Heading>Search</Heading><Field label="Search products, destinations and information" value={query} onChangeText={changeQuery} returnKeyType="search" onSubmitEditing={()=>void search()}/><Action title={busy?"Searching…":"Search"} disabled={busy||!query.trim()} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{results&&!results.length&&<Copy>No results found. Try another search.</Copy>}<Grid>{results?.map((item,i)=><Card key={`${item.href}-${i}`}><Heading>{item.title}</Heading><Copy>{item.category}{item.summary?` · ${item.summary}`:""}</Copy><Action title="Open result" onPress={()=>{try{linkTo(item.href);}catch{setError("This result could not be opened. Please try again.");}}}/></Card>)}</Grid></Screen>;
 }
 export function ExternalScreen({route}:{route:{params:{path:string;title:string}}}) {
   const [error,setError]=useState("");const path=route.params.path;const valid=path.startsWith("/")&&!path.startsWith("//")&&!path.includes("\\");

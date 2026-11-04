@@ -20,6 +20,25 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 ```
 
+## Phone and tablet layouts
+
+Screens respond to the current window size, including rotation and iPad split
+view. Account, checkout, Travel and help forms stay within a centered 720-point
+reading width. Home, Shop and Search can use up to 1120 points, with two card
+columns only when the available width and the user's text size leave enough
+space. Larger text and smaller windows return to a single column.
+
+The tab bar keeps full touch targets in landscape and makes room for wrapped,
+scaled labels. It hides while the keyboard is open. iOS scroll views use native
+keyboard insets; Android uses the existing `adjustResize` activity setting.
+Bottom content spacing includes the device safe area, and the offline notice
+appears below the navigation header. Device validation should cover keyboard
+access to the final fields and submit buttons, large text, landscape and tablet
+multitasking as well as ordinary portrait navigation. JavaScript bundle exports
+alone do not verify those native interactions.
+
+## Development setup
+
 Xcode 27 uses Device Hub in place of Simulator.app. Open **Xcode → Open
 Developer Tool → Device Hub** to view and interact with an iPhone simulator.
 In the `ios` directory, run `pod install` before building the iOS project.

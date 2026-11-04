@@ -1,4 +1,10 @@
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import {
@@ -35,6 +41,26 @@ export function LocationField({
     )
     .slice(0, 24);
   const [index, setIndex] = useState(0);
+  const optionsRef = useRef<HTMLUListElement>(null);
+  const activeOptionId = open ? matches[index]?.id : undefined;
+  useLayoutEffect(() => {
+    const list = optionsRef.current;
+    const option = list?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!list || !option) return;
+    // Scroll only the suggestions, keeping the input and software keyboard in
+    // place. aria-activedescendant does not reveal the option automatically.
+    const listBox = list.getBoundingClientRect();
+    const optionBox = option.getBoundingClientRect();
+    if (optionBox.top < listBox.top + list.clientTop) {
+      list.scrollTop += optionBox.top - listBox.top - list.clientTop;
+    } else if (
+      optionBox.bottom >
+      listBox.top + list.clientTop + list.clientHeight
+    ) {
+      list.scrollTop +=
+        optionBox.bottom - listBox.top - list.clientTop - list.clientHeight;
+    }
+  }, [activeOptionId]);
   const chosen = locations.find(l => l.id === value);
   function select(id: string) {
     onChange(id);
@@ -98,7 +124,12 @@ export function LocationField({
         }}
       />
       {open && (
-        <ul id={`${id}-options`} role="listbox">
+        <ul
+          ref={optionsRef}
+          id={`${id}-options`}
+          role="listbox"
+          aria-label={label}
+        >
           {matches.map((l, i) => (
             <li
               key={l.id}
@@ -138,9 +169,11 @@ export default function SearchPanel({
   useEffect(() => {
     const controller = new AbortController();
     setReferenceError(false);
-    void loadTravelReference(controller.signal).then(setReference).catch(() => {
-      if (!controller.signal.aborted) setReferenceError(true);
-    });
+    void loadTravelReference(controller.signal)
+      .then(setReference)
+      .catch(() => {
+        if (!controller.signal.aborted) setReferenceError(true);
+      });
     return () => controller.abort();
   }, [referenceAttempt]);
   function resetReview() {
@@ -158,8 +191,18 @@ export default function SearchPanel({
   }
   function submit(e: FormEvent) {
     e.preventDefault();
-    const required = category === "flights" ? [c.origin, c.destination] : category === "stays" ? [c.destination] : [c.pickup, c.dropoff];
-    if (!reference || required.some(id => !reference.locations.some(location => location.id === id))) {
+    const required =
+      category === "flights"
+        ? [c.origin, c.destination]
+        : category === "stays"
+          ? [c.destination]
+          : [c.pickup, c.dropoff];
+    if (
+      !reference ||
+      required.some(
+        id => !reference.locations.some(location => location.id === id)
+      )
+    ) {
       setError(t("travel.errors.criteria"));
       return;
     }
@@ -207,7 +250,22 @@ export default function SearchPanel({
         {t(`travel.${category}`)}
       </h2>
       <p>{t("travel.search-intro")}</p>
-      {referenceError && <div role="alert"><p>{t("travel.reference_unavailable", { defaultValue: "Travel locations are temporarily unavailable. Please try again." })}</p><Button variant="outline" onClick={() => setReferenceAttempt(value => value + 1)}>{t("search.retry", { defaultValue: "Try again" })}</Button></div>}
+      {referenceError && (
+        <div role="alert">
+          <p>
+            {t("travel.reference_unavailable", {
+              defaultValue:
+                "Travel locations are temporarily unavailable. Please try again.",
+            })}
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setReferenceAttempt(value => value + 1)}
+          >
+            {t("search.retry", { defaultValue: "Try again" })}
+          </Button>
+        </div>
+      )}
       <form onSubmit={submit} className="travel-form">
         {category === "flights" && (
           <LocationField
@@ -419,7 +477,11 @@ export default function SearchPanel({
             {error}
           </p>
         )}
-        <Button type="submit" className="travel-form-submit" disabled={!reference}>
+        <Button
+          type="submit"
+          className="travel-form-submit"
+          disabled={!reference}
+        >
           {t("travel.review-search")}
         </Button>
       </form>
@@ -466,16 +528,18 @@ export default function SearchPanel({
             >
               {t(copied ? "travel.copied" : "travel.copy-search")}
             </Button>
-            {reference && <Button variant="outline" asChild>
-              <a
-                href={reference.resources[category]}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => travelEvent("resource_opened", category)}
-              >
-                {t("travel.open-provider")}
-              </a>
-            </Button>}
+            {reference && (
+              <Button variant="outline" asChild>
+                <a
+                  href={reference.resources[category]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => travelEvent("resource_opened", category)}
+                >
+                  {t("travel.open-provider")}
+                </a>
+              </Button>
+            )}
           </div>
           <p>{t("travel.handoff-note")}</p>
           <Link href="/travel/my-trips">{t("travel.review-trip")}</Link>
