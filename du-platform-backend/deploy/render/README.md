@@ -29,8 +29,13 @@ must be supplied before the application can be qualified.
 
 DU requires an external durable MySQL database with verified TLS. Free web
 service storage is ephemeral. The optional self-hosted database examples in
-`../database` are outside this free-service configuration. Startup can perform
-schema and seed operations, so use an isolated database for initial validation.
+`../database` are outside this free-service configuration. Render uses `DATABASE_STARTUP_MODE=verify`: startup checks every required runtime
+column in a MySQL read-only transaction. It does not run DDL, seed data, rewrite
+credentials or create admin accounts. A missing schema/column or unavailable
+database stops startup even when memory fallback was requested. The default
+`initialize` mode preserves existing local/Oracle behavior; it must not be used
+for production-database candidate qualification. Keep outbound messages paused
+and commercial operations in prelaunch mode during qualification.
 
 ## Release behavior
 
