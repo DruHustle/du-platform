@@ -10,7 +10,8 @@ dependency audit.
 On the existing standard `macos-26` runner, CocoaPods' `xcodeproj` library adds a
 temporary UI-test target and shared scheme to the job's checkout. The committed
 Expo-generated native project is unchanged. A Release simulator build embeds
-the real JavaScript bundle, so these checks do not rely on Metro or Expo's
+the real JavaScript bundle for the runner's active simulator architecture, so
+these checks do not rely on Metro or Expo's
 developer launcher. Both public endpoint variables use reserved `.invalid`
 destinations, with dotenv loading disabled. No production account, message or
 form is submitted.
@@ -54,11 +55,23 @@ failed tests. Those in-app attachments can be inspected without Xcode; the final
 distinguishes failed, passed and unexecuted devices. Export failures remain failed
 checks even when the native assertions passed.
 
-The job remains bounded to 45 minutes. Build-for-testing allows 20 minutes;
-each device gets a 150-second boot wait and a six-minute test command. Devices
-run sequentially from one build. Cleanup restores the prior hardware-keyboard
-preference and shuts down/deletes only the two simulator UUIDs this run created.
-Cleanup failures remain failures.
+The job remains bounded to 45 minutes. All build, device and evidence commands
+share a 35-minute execution budget, leaving room for dependency setup, cleanup
+and artifact upload. Within that budget, build-for-testing allows 20 minutes;
+each device gets one six-minute cold-boot wait and a six-minute test command.
+Fresh iOS 26.5 data migration exceeded the earlier 150-second wait while still
+progressing in run [41774274359](https://github.com/DruHustle/du-platform/actions/runs/41774274359).
+The timeout journal retains the command, elapsed time, original error and the
+complete output log, including failures during process termination.
+
+Devices run sequentially from one build. A failed boot records the simulator
+state and remains a failure. Before starting the next device, the runner must
+confirm that the previous owned simulator has shut down. Secondary shutdown or
+evidence errors do not replace the primary boot/test error. Final cleanup has
+its own three-minute budget, attempts shutdown and deletion independently for
+only the two UUIDs this run created, and restores the prior hardware-keyboard
+preference. Cleanup failures remain failures. No device or whole-test retry is
+used.
 
 Host regression tests run with:
 
