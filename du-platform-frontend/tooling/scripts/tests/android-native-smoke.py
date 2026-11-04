@@ -381,7 +381,7 @@ class AndroidSmoke:
         self.shell("settings", "put", "system", "accelerometer_rotation", "0")
         self.shell("settings", "put", "system", "user_rotation", str(rotation))
 
-    def reveal_control(self, label, name, forward=True, bottom_limit=None):
+    def reveal_control(self, label, name, forward=True):
         """Reach an off-screen action by scrolling the observed app ScrollView."""
         previous_content = None
         reversed_direction = False
@@ -392,8 +392,7 @@ class AndroidSmoke:
             # UIAutomator clips an off-screen button's bounds. Keep scrolling
             # until a full usable touch target is visible, not just its label.
             minimum = 44 * self.current_density / 160 - 1
-            if (area and area[2] - area[0] >= minimum and area[3] - area[1] >= minimum
-                    and (bottom_limit is None or area[3] <= bottom_limit)):
+            if area and area[2] - area[0] >= minimum and area[3] - area[1] >= minimum:
                 self.capture(name, self.last_xml)
                 self.steps.append({"screen": name, "expected": [label], "bounds": bounds(target),
                                    "elapsedSeconds": round(time.monotonic() - self.started, 2)})
@@ -420,18 +419,8 @@ class AndroidSmoke:
                 self.note(f"Scroll boundary reached while finding {label!r}; reverse direction once")
             previous_content = content
             x1, y1, x2, y2 = bounds(view)
-            if bottom_limit is not None:
-                y2 = min(y2, bottom_limit)
-                if y2 - y1 < minimum:
-                    raise SmokeFailure("The keyboard leaves no usable app scroll area")
             margin = max(1, (y2 - y1) // 5)
             start, finish = (y2 - margin, y1 + margin) if forward else (y1 + margin, y2 - margin)
-            if bottom_limit is not None and area and forward:
-                # Position a form before reopening the keyboard. Use its last
-                # observed top edge and the action's actual bounds, not a guessed
-                # keyboard height or a large swipe that could skip the field.
-                distance = max(minimum, area[3] - bottom_limit + round(8 * self.current_density / 160))
-                finish = max(finish, start - round(distance))
             self.shell("input", "swipe", (x1 + x2) // 2, start, (x1 + x2) // 2, finish, "400")
         raise SmokeFailure(f"Could not reach {label!r} within six bounded scroll gestures")
 
@@ -478,6 +467,52 @@ class AndroidSmoke:
             self.shell("input", "keyevent", "KEYCODE_BACK")
         return self.wait_keyboard(name, label, value, shown=False)
 
+    def reveal_keyboard_action(self, name, label, value, action):
+        # The large-text Assistant in run 41765883784 had Send at y695..772
+        # behind an IME beginning at y720. Its expanded, keyboard-closed content
+        # had no scroll range. Exercise the actual open-IME viewport instead.
+        for attempt in range(7):
+            tree = self.hierarchy()
+            frame, _ = self.keyboard_state()
+            field = keyboard_observation(tree, self.package, label, value, frame,
+                                         self.last_screen_size, self.current_density)
+            try:
+                keyboard_observation(tree, self.package, label, value, frame,
+                                     self.last_screen_size, self.current_density, action)
+            except SmokeFailure:
+                if attempt == 6:
+                    break
+            else:
+                tree, observed = self.wait_keyboard(name, label, value, action=action)
+                observed["scrollGestures"] = attempt
+                self.steps[-1]["scrollGestures"] = attempt
+                return tree, observed
+            scroll_views = [node for node in tree.iter("node") if node.get("package") == self.package
+                            and node.get("scrollable") == "true" and bounds(node)]
+            if not scroll_views:
+                raise SmokeFailure(f"No observed app scroll area can reveal {action!r} above the keyboard")
+            view = max(scroll_views, key=lambda node: (bounds(node)[2] - bounds(node)[0]) *
+                                                     (bounds(node)[3] - bounds(node)[1]))
+            x1, y1, x2, view_bottom = bounds(view)
+            y2 = min(view_bottom, frame[1])
+            margin = max(1, (y2 - y1) // 5)
+            start, limit = y2 - margin, y1 + margin
+            field_area = field["fieldBounds"]
+            available = min(start - limit, field_area[1] - y1 - 8 * self.current_density / 160)
+            if available <= 0:
+                raise SmokeFailure(f"Cannot reveal {action!r} while retaining the focused field above the keyboard")
+            target = find_target(tree, action, self.package)
+            area = bounds(target) if target is not None else None
+            distance = max(64 * self.current_density / 160,
+                           (area[3] - y2 if area else 0) + 12 * self.current_density / 160)
+            finish = start - max(1, round(min(available, distance)))
+            # Use observed gutter space when available, so a multiline editor
+            # cannot consume this gesture as selection or internal text scrolling.
+            x = (x1 + field_area[0]) // 2 if field_area[0] > x1 else (x1 + x2) // 2
+            self.note(f"Scroll observed {action!r} above visible IME, attempt={attempt + 1}, ime={frame}")
+            self.shell("input", "swipe", x, start, x, finish, "400")
+        raise SmokeFailure(f"Could not reveal {action!r} above the open keyboard within six scroll gestures")
+
     def keyboard_case(self, name, label, value, action):
         # Fixed, non-secret fixtures only. No Enter/action/submit key is sent.
         if not re.fullmatch(r"[A-Za-z0-9@._-]+", value):
@@ -490,19 +525,8 @@ class AndroidSmoke:
             raise SmokeFailure(f"Could not focus {label!r}")
         self.wait_keyboard(name + "-opened", label, "")
         self.shell("input", "text", value)
-        tree, observed = self.wait_keyboard(name + "-typed", label, value)
-        try:
-            keyboard_observation(tree, self.package, label, value, observed["imeBounds"],
-                                 self.last_screen_size, self.current_density, action)
-        except SmokeFailure:
-            # Android intentionally dismisses this app's keyboard on a drag.
-            # Scroll with it closed, then reopen it and verify the real inset
-            # again. A hidden keyboard can never make the action check pass.
-            self.close_keyboard(name + "-positioning", label, value)
-            self.reveal_control(action, name + "-action-position", bottom_limit=observed["imeBounds"][1])
-            if not self.tap(self.hierarchy(), label):
-                raise SmokeFailure(f"Could not refocus {label!r} after positioning its action")
-        _, observed = self.wait_keyboard(name + "-action", label, value, action=action)
+        self.wait_keyboard(name + "-typed", label, value)
+        _, observed = self.reveal_keyboard_action(name + "-action", label, value, action)
         _, restored = self.close_keyboard(name + "-closed", label, value)
         self.keyboard_cases.append({"name": name, "density": self.current_density,
                                     "displayPixels": self.last_screen_size, **observed,
