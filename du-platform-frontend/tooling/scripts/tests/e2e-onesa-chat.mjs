@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { chromium, webkit } from "playwright";
 
@@ -49,7 +49,10 @@ const browser = await (engine === "webkit" ? webkit : chromium).launch({
     : {}),
   headless: true,
 });
-const errors = [];
+const errors = [],
+  layoutChecks = [];
+const output = process.env.ONESA_OUTPUT_DIR || `/tmp/du-onesa-chat-${engine}`;
+await mkdir(output, { recursive: true });
 
 try {
   for (const width of [375, 1440]) {
@@ -131,6 +134,107 @@ try {
         "Opening chat must not send a generation request"
       );
       assert(await send.isDisabled(), "Empty messages must not be sent");
+
+      // Keep the actual composer and Close control visible when the viewport
+      // is short, including the space remaining above an on-screen keyboard.
+      // This exercises layout resizing; it does not simulate a native keyboard.
+      if (surface === "popup" && width === 375) {
+        for (const viewport of [
+          { width: 320, height: 568 },
+          { width: 844, height: 320 },
+          { width: 390, height: 300 },
+          { width: 1024, height: 600 },
+        ]) {
+          await page.setViewportSize(viewport);
+          await input.focus();
+          await page.waitForFunction(() => {
+            const dialog = document.querySelector(
+              '[data-onesa-chat-modal="true"]'
+            );
+            const elements = [
+              dialog,
+              dialog?.querySelector("textarea"),
+              dialog?.querySelector('button[type="submit"]'),
+              dialog?.querySelector('button[aria-label="Close"]'),
+            ];
+            return elements.every(element => {
+              if (!element) return false;
+              const box = element.getBoundingClientRect();
+              return (
+                box.width > 0 &&
+                box.height > 0 &&
+                box.left >= -1 &&
+                box.top >= -1 &&
+                box.right <= innerWidth + 1 &&
+                box.bottom <= innerHeight + 1
+              );
+            });
+          });
+          for (const action of [
+            send,
+            scope.getByRole("button", { name: "Close", exact: true }),
+          ]) {
+            const box = await action.boundingBox();
+            assert(
+              box && box.width >= 44 && box.height >= 44,
+              "Chat controls must retain 44px touch targets in short viewports"
+            );
+          }
+          await page.screenshot({
+            path: `${output}/popup-${viewport.width}x${viewport.height}.png`,
+          });
+          layoutChecks.push(viewport);
+        }
+        await page.setViewportSize({ width, height: 900 });
+        // iOS can resize/pan only VisualViewport when the keyboard opens.
+        // Change that browser API independently of the layout viewport and
+        // verify the rendered composer, then restore the original getters.
+        await page.evaluate(() => {
+          Object.defineProperties(window.visualViewport, {
+            height: { configurable: true, value: 280 },
+            offsetTop: { configurable: true, value: 80 },
+          });
+          window.visualViewport.dispatchEvent(new Event("resize"));
+          window.visualViewport.dispatchEvent(new Event("scroll"));
+        });
+        await page.waitForFunction(() => {
+          const elements = [
+            document.querySelector('[data-onesa-chat-modal="true"]'),
+            document.querySelector(".onesa-chat-composer"),
+            document.querySelector(
+              '[data-onesa-chat-modal="true"] button[aria-label="Close"]'
+            ),
+          ];
+          return (
+            innerHeight === 900 &&
+            elements.every(element => {
+              if (!element) return false;
+              const box = element.getBoundingClientRect();
+              return box.height > 0 && box.top >= 79 && box.bottom <= 361;
+            })
+          );
+        });
+        await page.screenshot({
+          path: `${output}/popup-visual-viewport-only.png`,
+        });
+        layoutChecks.push({
+          visualViewportOnly: true,
+          height: 280,
+          offsetTop: 80,
+        });
+        await page.evaluate(() => {
+          delete window.visualViewport.height;
+          delete window.visualViewport.offsetTop;
+          window.visualViewport.dispatchEvent(new Event("resize"));
+          window.visualViewport.dispatchEvent(new Event("scroll"));
+        });
+        await page.waitForFunction(
+          () =>
+            document
+              .querySelector('[data-onesa-chat-modal="true"]')
+              .getBoundingClientRect().height > 280
+        );
+      }
 
       let release;
       const pending = new Promise(done => {
@@ -295,6 +399,10 @@ try {
     "Chat interactions must not raise browser errors"
   );
 } finally {
+  await writeFile(
+    `${output}/report.json`,
+    JSON.stringify({ engine, layoutChecks, errors }, null, 2)
+  );
   await browser.close();
   await new Promise(done => server.close(done));
 }

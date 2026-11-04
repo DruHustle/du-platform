@@ -321,6 +321,45 @@ try {
     const dest = page.getByRole("combobox", {
       name: "Destination airport / area",
     });
+    await dest.fill("");
+    const suggestions = page.getByRole("listbox");
+    await suggestions.waitFor();
+    assert(
+      (await suggestions.getByRole("option").count()) > 12,
+      "The fixture must exercise suggestions beyond the visible list"
+    );
+    const inputId = await dest.getAttribute("id");
+    for (let move = 0; move < 12; move++) await dest.press("ArrowDown");
+    await page.waitForFunction(id => {
+      const input = document.getElementById(id);
+      const selected = document.getElementById(
+        input.getAttribute("aria-activedescendant")
+      );
+      const list = document.getElementById(input.getAttribute("aria-controls"));
+      if (!selected || !list || list.scrollTop <= 0) return false;
+      const item = selected.getBoundingClientRect(),
+        box = list.getBoundingClientRect();
+      return item.top >= box.top - 1 && item.bottom <= box.bottom + 1;
+    }, inputId);
+    assert.equal(
+      await dest.getAttribute("aria-activedescendant"),
+      await suggestions.getByRole("option").nth(12).getAttribute("id")
+    );
+    for (let move = 0; move < 12; move++) await dest.press("ArrowUp");
+    await page.waitForFunction(id => {
+      const input = document.getElementById(id);
+      const selected = document.getElementById(
+        input.getAttribute("aria-activedescendant")
+      );
+      const list = document.getElementById(input.getAttribute("aria-controls"));
+      if (!selected || !list || list.scrollTop > 1) return false;
+      const item = selected.getBoundingClientRect(),
+        box = list.getBoundingClientRect();
+      return item.top >= box.top - 1 && item.bottom <= box.bottom + 1;
+    }, inputId);
+    checks.push(
+      `${width}: keyboard airport selection stays visible while the suggestion list scrolls`
+    );
     await dest.fill("Victoria");
     const destinationOption = page.getByRole("option", {
       name: /Victoria Falls/,

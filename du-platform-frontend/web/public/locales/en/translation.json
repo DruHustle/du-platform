@@ -1437,7 +1437,8 @@
         "crafts": "Arts & Crafts",
         "food": "Food & Nostalgia",
         "all_segments": "All product types",
-        "select_segment": "Choose a product type"
+        "select_segment": "Choose a product type",
+        "select_category": "Choose a category"
       },
       "loading": "Loading products...",
       "empty_state": "No products available in this category yet.",
