@@ -1,4 +1,5 @@
 import { isMemoryFallbackEnabled } from "../shared/databaseRuntime";
+import { databaseProvider } from "../shared/databaseConfig";
 
 function hasEnv(name: string) {
   return String(process.env[name] ?? "").trim().length > 0;
@@ -11,14 +12,17 @@ function getEnv(name: string, fallback = "") {
 function collectDatabaseConfigErrors(errors: string[]) {
   const nodeEnv = getEnv("NODE_ENV", "development").toLowerCase();
   if (nodeEnv === "production" && !isMemoryFallbackEnabled()) {
-    const hasUrl = hasEnv("AIVEN_MYSQL_URL");
+    const provider = databaseProvider(process.env);
+    const prefix = provider === "aiven" ? "AIVEN_MYSQL" : "MYSQL";
+    const urlName = provider === "aiven" ? "AIVEN_MYSQL_URL" : "DATABASE_URL";
+    const hasUrl = hasEnv(urlName);
     const hasDiscreteConfig =
-      hasEnv("AIVEN_MYSQL_HOST") &&
-      hasEnv("AIVEN_MYSQL_USER") &&
-      hasEnv("AIVEN_MYSQL_DATABASE");
+      hasEnv(`${prefix}_HOST`) &&
+      hasEnv(`${prefix}_USER`) &&
+      hasEnv(`${prefix}_DATABASE`);
     if (!hasUrl && !hasDiscreteConfig) {
       errors.push(
-        "Production requires AIVEN_MYSQL_URL or AIVEN_MYSQL_HOST/AIVEN_MYSQL_USER/AIVEN_MYSQL_DATABASE."
+        `Production requires ${urlName} or ${prefix}_HOST/${prefix}_USER/${prefix}_DATABASE.`
       );
     }
   }

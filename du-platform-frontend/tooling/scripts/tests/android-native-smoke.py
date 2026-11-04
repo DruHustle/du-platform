@@ -240,8 +240,9 @@ class AndroidSmoke:
         self.pending_dismissal = signature
         return True
 
-    def wait_screen(self, name, expected, timeout=45, orientation=None):
-        self.note(f"Wait for {name}: {', '.join(expected)}")
+    def wait_screen(self, name, expected, timeout=45, orientation=None, required_tabs=()):
+        description = [*expected, *(label + " tab" for label in required_tabs)]
+        self.note(f"Wait for {name}: {', '.join(description)}")
         end = min(self.deadline, time.monotonic() + timeout)
         last_error = "No hierarchy returned"
         while time.monotonic() < end:
@@ -257,13 +258,16 @@ class AndroidSmoke:
                     last_error = f"Developer menu is still visible: {sorted(visible)}"
                     time.sleep(1)
                     continue
-                if all(text in visible for text in expected):
+                if all(text in visible for text in expected) and all(
+                    find_target(tree, label, self.package, tab=True) is not None for label in required_tabs
+                ):
                     self.capture(name, self.last_xml)
                     width, height = self.last_screen_size
                     if orientation and (width > height) != (orientation == "landscape"):
                         last_error = f"Display has not reached {orientation}: {width}x{height}"
                         continue
                     self.steps.append({"screen": name, "expected": expected,
+                                       "requiredTabs": list(required_tabs),
                                        "displayPixels": {"width": width, "height": height},
                                        "elapsedSeconds": round(time.monotonic() - self.started, 2)})
                     return tree
@@ -299,6 +303,8 @@ class AndroidSmoke:
 
     def reveal_control(self, label, name, forward=True):
         """Reach an off-screen action by scrolling the observed app ScrollView."""
+        previous_content = None
+        reversed_direction = False
         for attempt in range(7):
             tree = self.hierarchy()
             target = find_target(tree, label, self.package)
@@ -319,16 +325,33 @@ class AndroidSmoke:
                 raise SmokeFailure(f"No observed scrollable content can reveal {label!r}")
             view = max(scroll_views, key=lambda node: (bounds(node)[2] - bounds(node)[0]) *
                                                      (bounds(node)[3] - bounds(node)[1]))
+            content = tuple((tuple(labels(node)), bounds(node)) for node in view.iter("node")
+                            if bounds(node) and any(labels(node)))
+            if content == previous_content:
+                # A first field can move below the fold at large font sizes.
+                # If the preferred upward search is already at the top (or a
+                # downward search at the bottom), use observed lack of movement
+                # to reverse once. Never turn a missing/clipped target into a pass.
+                if reversed_direction:
+                    break
+                forward = not forward
+                reversed_direction = True
+                self.note(f"Scroll boundary reached while finding {label!r}; reverse direction once")
+            previous_content = content
             x1, y1, x2, y2 = bounds(view)
             margin = max(1, (y2 - y1) // 5)
             start, finish = (y2 - margin, y1 + margin) if forward else (y1 + margin, y2 - margin)
             self.shell("input", "swipe", (x1 + x2) // 2, start, (x1 + x2) // 2, finish, "400")
-        raise SmokeFailure(f"Could not reach {label!r} after six bounded scroll gestures")
+        raise SmokeFailure(f"Could not reach {label!r} within six bounded scroll gestures")
 
     def responsive_case(self, name, rotation, font_scale):
         self.note(f"Tablet case {name}, rotation={rotation}, font_scale={font_scale}")
         self.configure_display(rotation, font_scale)
         orientation = "landscape" if rotation else "portrait"
+        # Size, density and font changes may recreate the activity. Wait for an
+        # actual enabled tab in the new orientation, handling observed developer
+        # overlays, before deriving tap coordinates from a fresh hierarchy.
+        self.wait_screen(name + "-display-ready", [], orientation=orientation, required_tabs=("Home",))
         if not self.tap(self.hierarchy(), "Home", tab=True):
             raise SmokeFailure("Home tab is unavailable after the display change")
         tree = self.wait_screen(name + "-home", ["Explore what connects us"], orientation=orientation)
@@ -416,7 +439,11 @@ class AndroidSmoke:
         if self.shell("pm", "clear", self.package).decode().strip() != "Success":
             raise SmokeFailure("Could not clear test app data before launch")
         server = urllib.parse.quote("http://127.0.0.1:8081", safe="")
-        self.launch(f"exp+{config['slug']}://expo-development-client/?url={server}")
+        # SDK58's ExpoLauncherUrl applies these reserved outer query params to
+        # the development tools only. Keep their overlays from reopening when
+        # Android recreates the activity for tablet density or font changes.
+        self.launch(f"exp+{config['slug']}://expo-development-client/?url={server}"
+                    "&__expo_disable_auto_launch=1&__expo_disable_fab=1&__expo_disable_onboarding=1")
         self.wait_screen("01-home", ["Explore what connects us", "Search Diaspora Unlocked"], timeout=180)
         self.navigate_tab("Travel", ["Find options", "From airport code (e.g. FRA)"], "02-travel")
         self.navigate_tab("Shop", ["Search products", "Filter by category"], "03-shop")
