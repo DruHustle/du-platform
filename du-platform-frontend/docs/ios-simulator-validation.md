@@ -114,6 +114,24 @@ resent or repaired. Only an observed known prompt permits refocusing the field.
 Prompt capture and acknowledgment occur outside the bounded input/keyboard
 waits, while the overall test and job deadlines remain unchanged.
 
+Run [41809310414](https://github.com/DruHustle/du-platform/actions/runs/41809310414)
+retained the iPad's exact `A simu` prefix while the keyboard disappeared before
+the password prompt appeared. XCTest failed between separate keyboard existence
+and frame queries. Keyboard and accessory measurements now come from one public
+[application snapshot](https://developer.apple.com/documentation/xcuiautomation/xcuielementsnapshotproviding/snapshot()),
+including its window and descendant frames. An unreadable snapshot fails the
+test; it cannot count as a closed keyboard. The final clearance check and its
+`keyboardObservation` JSON use that same measurement, while application controls
+still require their actual enabled and hittable states.
+
+Every sent character still has three seconds to acknowledge its exact new value
+or secure-field length. If the keyboard disappears, only an already-authorized
+Account phase can then wait up to ten seconds for the exact password prompt.
+This separate OS transition allowance cannot rescue a missing character. The
+handler must preserve that acknowledged value, and the real software keyboard
+must return before another input event or the final clearance check. No input
+event, test or device journey is retried, and the overall deadlines are unchanged.
+
 ## Evidence and bounds
 
 The `ios-native-smoke` artifact retains the inventory, signature/entitlement
