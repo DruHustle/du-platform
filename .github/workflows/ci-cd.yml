@@ -278,6 +278,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
           path: |
+            /tmp/du-shop-tests/report.json
+            /tmp/du-shop-tests/failure.png
             /tmp/du-travel-*/report.json
             /tmp/du-travel-*/failure.png
             /tmp/du-travel-*/failure.html
