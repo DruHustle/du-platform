@@ -39,6 +39,13 @@ class WorkerTests(unittest.TestCase):
         self.jobs[1]["steps"] = []
         self.assertIsNone(self.eligible())
 
+    def test_host_selection_preserves_oracle_handshake(self):
+        self.jobs.append(dict(name="Deploy to Render (Production)", status="completed", conclusion="skipped"))
+        self.assertEqual(self.eligible(), "a" * 40)
+        self.jobs[1] = dict(name="Deploy to Oracle (Production)", status="completed", conclusion="skipped")
+        self.jobs[2] = dict(name="Deploy to Render (Production)", status="in_progress")
+        self.assertIsNone(self.eligible(), "A Render release must not trigger the Oracle worker")
+
     def test_archives_only_the_tested_backend_subtree(self):
         archive = MagicMock()
         archive.wait.return_value = 0

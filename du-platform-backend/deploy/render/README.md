@@ -1,79 +1,67 @@
-# Render backend migration candidate
+# Free Render web service
 
-This is prepared source, not a deployment receipt. The current Oracle release
-pipeline and Vercel frontend remain unchanged. `render.yaml` is deliberately
-nested and auto-deploy is off. Creating its paid service requires an approved
-resource selection and actual Render access. Reuse the correctly identified
-existing service if appropriate instead of creating duplicates.
+This directory prepares the independent DU backend as a normal Render web
+service on the `free` compute plan. The Blueprint defines one service in
+Frankfurt, with automatic deployment off. It does not create a cron job,
+database, disk, or worker.
 
-## Application contract
+A checked-in Blueprint does not create a resource or move public traffic.
+Verify the actual service configuration and application readiness before
+selecting it as the active backend.
 
-- Build context: `du-platform-backend`; Dockerfile: `deploy/oracle/Dockerfile`.
-  It packages only the API, assets and runtime dependencies. Its name describes
-  the original host; it supports Render's container runtime too.
-- `/api/ping` exposes `APP_REVISION`, falling back to `RENDER_GIT_COMMIT`.
-  `/api/health/db` is database readiness; `/api/ai/ready` verifies configured AI.
-- Render supplies `PORT`. Preserve the existing JWT secret: it also encrypts
-  saved order-access tokens and queued transactional payloads. Rotating it during
-  relocation would make those records unreadable.
-- Populate existing provider settings securely. The candidate starts with
-  outbound delivery paused and prelaunch commercial policy; this is not a live
-  production email configuration.
-- Initial qualification uses an isolated MySQL copy. Startup performs existing
-  additive schema/seed work, so a production connection is not a read-only test.
+## Build and runtime
 
-## MySQL persistence and independent backups
+Use the repository root with these explicit paths:
 
-DU uses MySQL, not PostgreSQL. The production default remains Aiven. Opt into a
-qualified self-hosted target using `DATABASE_PROVIDER=mysql`, `DATABASE_URL` (or
-`MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`) and
-`MYSQL_CA_CERT` or `MYSQL_CA_CERT_PATH`. Production requires verified TLS for both
-providers; query parameters cannot disable it. The server certificate must cover
-the actual private service hostname.
+- Docker context: `du-platform-backend`
+- Dockerfile: `du-platform-backend/deploy/render/Dockerfile`
+- Start command: the Docker image's `node dist/server.js`
+- HTTP readiness path: `/api/health/db`
+- Liveness path: `/api/ping`
 
-For a Render database container, use a separate **paid private service** in the
-same region, pin a MySQL image compatible with the inspected source version,
-mount its persistent disk at `/var/lib/mysql`, and enable server-side TLS with a
-hostname-valid certificate and `require_secure_transport=ON`. Never put MySQL in
-the API's ephemeral filesystem or add a public database HTTP proxy. Database
-credentials must be unique to DU. This change does not create or switch that DB.
+The image contains only backend runtime files and runs as the `node` user.
+Render supplies `PORT` and `RENDER_GIT_COMMIT`. Do not set a stale
+`APP_REVISION`, because it takes precedence in the version response.
 
-The [optional private MySQL container candidate](../database/README.md) supplies
-a separate Compose database and network/CA-only overlay for an isolated restore
-rehearsal. Render does not run that project or convert its named volume into a
-Render disk. This API Blueprint retains the external Aiven primary.
+Keep runtime configuration in the hosting provider's secure environment
+settings. Never commit secret values. The Blueprint's `sync: false` fields
+must be supplied before the application can be qualified.
 
-Before copying production, create and restore a consistent MySQL backup into a
-disposable database. `mysqldump --single-transaction` requires transactional tables
-and no concurrent DDL; inventory table engines, routines, triggers, events,
-collations and source/target compatibility first. Store encrypted backups outside
-Render and Oracle, with a tested restore and separate retained encryption key.
-Backblaze B2, if selected, is backup object storage, not a live database. Select a
-binlog/PITR scheme if the required recovery point is tighter than dump cadence.
-Render disk snapshots are not a substitute for database-consistent backups.
+DU requires an external durable MySQL database with verified TLS. Free web
+service storage is ephemeral. The optional self-hosted database examples in
+`../database` are outside this free-service configuration. Startup can perform
+schema and seed operations, so use an isolated database for initial validation.
 
-## Qualification and cutover
+## Release behavior
 
-1. Run backend checks/tests/build and restore rehearsal. Inspect the candidate's
-   exact revision and real DB/AI readiness, with outbound mail paused.
-2. Run account, reset, admin, shop, newsletter and mobile API contract checks with
-   isolated approved test data. Verify candidate restart persistence.
-3. Prepare a separate release-path change: current CI intentionally requires the
-   Oracle release before Vercel and its deployment guardrails enforce that path.
-   Do not bypass those gates or point Vercel at an unqualified candidate.
-4. At the coordinated cutover, pause old workers and writes, take the final copy,
-   verify it, then switch the Vercel same-origin `/api` proxy and mobile API URL.
-   Preserve the frontend domain and its browser API URL `/api`.
-5. Enable delivery only on the selected active backend, then verify revision,
-   private data access, queue processing, mail links and rollback compatibility.
-6. Disable the old Oracle release timer before retiring its DU container. Keep
-   the rollback image and data; never remove other applications or shared ingress.
+The GitHub release workflow keeps Oracle as its default. Render is an explicit
+opt-in through `DU_BACKEND_HOST=render` and the corresponding repository
+deployment variables. Read the release script for the complete configuration
+contract. Automatic service deployment must remain disabled.
 
-Once new production writes exist, rollback must reconcile those writes. DNS or
-proxy rollback alone cannot safely restore an outdated database.
+The release job verifies the selected service, the free plan, and the exact
+tested revision. Database and AI readiness must pass before the staged frontend
+API proxy can change. The tracked frontend configuration remains available
+for rollback. Production configuration and live acceptance are separate from
+source-level tests.
 
-Official references: [Render Docker](https://render.com/docs/docker),
-[private networking](https://render.com/docs/private-network),
-[MySQL](https://render.com/docs/deploy-mysql),
-[persistent disks](https://render.com/docs/disks), and
-[Blueprint fields](https://render.com/docs/blueprint-spec).
+Check the applied HTTP health-check setting in the Render Dashboard: some
+creation tools expose only the platform's default TCP check.
+
+## External keepalive
+
+The user manages their own cron. Once the service is live, a GET to its
+`/api/ping` endpoint checks liveness without a database or AI-provider request.
+No keepalive schedule is created here.
+
+Free web services sleep after 15 minutes without inbound traffic and can
+restart at any time. A keepalive does not guarantee availability. The workspace
+shares 750 free instance-hours per calendar month across all free web services;
+continuous operation in a 30-day month uses about 720 hours for one service.
+
+Validate the Blueprint against the current
+[Render JSON Schema](https://render.com/schema/render.yaml.json). See the
+official [free-service limits](https://render.com/docs/free),
+[Docker guide](https://render.com/docs/docker),
+[health checks](https://render.com/docs/health-checks), and
+[Blueprint reference](https://render.com/docs/blueprint-spec).
