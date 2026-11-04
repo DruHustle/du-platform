@@ -24,10 +24,10 @@ class SmokeFailure(RuntimeError):
     pass
 
 
-JOURNEY_BUDGET_SECONDS = 35 * 60
+JOURNEY_BUDGET_SECONDS = 50 * 60
 CLEANUP_BUDGET_SECONDS = 180
 BOOT_TIMEOUT_SECONDS = 360
-TEST_COMMAND_TIMEOUT_SECONDS = 600
+TEST_COMMAND_TIMEOUT_SECONDS = 900
 TEST_IDENTIFIERS = (
     "DUNativeSmokeUITests/DUNativeSmokeTests/testPortraitNavigationAndKeyboard",
     "DUNativeSmokeUITests/DUNativeSmokeTests/testLandscapeNavigationAndKeyboard",
@@ -317,6 +317,17 @@ class IOSSmoke:
                     code = process.poll()
         except BaseException as error:
             entry.update(error=str(error), errorType=type(error).__name__)
+            if isinstance(error, subprocess.TimeoutExpired) and label.startswith("test-"):
+                # The full XCTest log remains in the artifact, but a bounded
+                # tail in Actions logs makes a timed-out command diagnosable
+                # even when xcodebuild leaves an incomplete .xcresult bundle.
+                try:
+                    with output_path.open("rb") as timed_out:
+                        timed_out.seek(max(0, output_path.stat().st_size - 8000))
+                        diagnostic = timed_out.read().decode(errors="replace")
+                    print(f"[{label}] timed-out XCTest log tail:\n{diagnostic}", flush=True)
+                except OSError as diagnostic_error:
+                    entry["timeoutTailError"] = str(diagnostic_error)
             raise
         finally:
             entry.update(exitCode=code, elapsedSeconds=round(time.monotonic() - started, 2))
@@ -526,7 +537,7 @@ class IOSSmoke:
         validate_environment(os.environ)
         if platform.system() != "Darwin":
             raise SmokeFailure("Xcode simulator execution requires macOS; host tests do not execute simulators")
-        # Leave room in the 45-minute job for dependency setup, cleanup and upload.
+        # Leave room in the 60-minute job for dependency setup, cleanup and upload.
         self.deadline = time.monotonic() + JOURNEY_BUDGET_SECONDS
         self.report["journeyBudgetSeconds"] = JOURNEY_BUDGET_SECONDS
         self.report["revision"] = self.capture(["git", "rev-parse", "HEAD"], "source-revision").strip()

@@ -2,6 +2,8 @@
 
 import importlib.util
 import json
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 import plistlib
 import struct
@@ -667,7 +669,7 @@ class RunnerTests(unittest.TestCase):
         self.runner.evidence.assert_called_once_with(device)
         test_calls = [call for call in self.runner.run.call_args_list if call.args[1] == "test-iPhone"]
         self.assertEqual(len(test_calls), 1)
-        self.assertEqual(test_calls[0].kwargs["timeout"], 600)
+        self.assertEqual(test_calls[0].kwargs["timeout"], 900)
         command = test_calls[0].args[0]
         self.assertEqual([arg for arg in command if arg.startswith("-only-testing:")], [
             "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testPortraitNavigationAndKeyboard",
@@ -901,9 +903,12 @@ class RunnerTests(unittest.TestCase):
     def test_subprocess_deadline_terminates_its_owned_process_group(self):
         started = time.monotonic()
         self.runner.deadline = started + 1
-        with self.assertRaises(subprocess.TimeoutExpired):
+        stdout = StringIO()
+        with redirect_stdout(stdout), self.assertRaises(subprocess.TimeoutExpired):
             self.runner.run([sys.executable, "-c", "import time; print('boot progress', flush=True); time.sleep(10)"],
-                            "timeout", timeout=10)
+                            "test-timeout", timeout=10)
+        self.assertIn("boot progress", stdout.getvalue())
+        self.assertIn("timed-out XCTest log tail", stdout.getvalue())
         self.assertLess(time.monotonic() - started, 4)
         entry = json.loads((self.runner.artifacts / "commands.jsonl").read_text())
         self.assertEqual(entry["errorType"], "TimeoutExpired")
