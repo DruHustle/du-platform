@@ -29,3 +29,8 @@ require disposable localhost databases ending in `_test`, provided through
 directory alongside `dist/` when deploying outside Docker. The Oracle image is
 built from the backend directory with `deploy/oracle/Dockerfile` and contains only
 this application. The web hosting proxy routes `/api` to it independently.
+
+The [Render migration candidate](deploy/render/README.md) prepares an independent
+backend move while preserving the current deployment path. Production keeps its
+Aiven configuration by default; an explicitly selected self-hosted MySQL target
+must provide a verified CA and a matching server identity.

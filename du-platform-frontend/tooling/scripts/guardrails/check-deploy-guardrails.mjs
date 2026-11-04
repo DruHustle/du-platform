@@ -1,5 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import {
+  backendTarget,
+  ORACLE_API_ORIGIN,
+} from "../lib/backend-deployment.mjs";
 
 const rootDir = process.cwd();
 const workflowPath = path.join(rootDir, ".github", "workflows", "ci-cd.yml");
@@ -14,8 +18,16 @@ if (!fs.existsSync(workflowPath)) {
 }
 
 const source = fs.readFileSync(workflowPath, "utf8");
+try {
+  backendTarget();
+} catch (error) {
+  fail(error.message);
+}
 const vercel = JSON.parse(
-  fs.readFileSync(path.join(rootDir, "du-platform-frontend/web/vercel.json"), "utf8")
+  fs.readFileSync(
+    path.join(rootDir, "du-platform-frontend/web/vercel.json"),
+    "utf8"
+  )
 );
 if (!vercel.buildCommand.startsWith("VITE_API_URL=/api ")) {
   fail(
@@ -35,15 +47,17 @@ if (
   vercel.outputDirectory !== "dist"
 ) {
   fail(
-    "Vercel must build and publish only the static frontend; the backend runs on Oracle."
+    "Vercel must build and publish only the static frontend; backend releases use the selected verified host."
   );
 }
 
 if (
   vercel.rewrites.find(rule => rule.source === "/api/:path*")?.destination !==
-  "https://du-api.152-70-22-84.sslip.io/api/:path*"
+  `${ORACLE_API_ORIGIN}/api/:path*`
 ) {
-  fail("The Vercel API proxy must target the Oracle backend.");
+  fail(
+    "The tracked Vercel config must preserve the Oracle rollback proxy. Render cutover belongs only in verified production staging."
+  );
 }
 for (const filename of fs.readdirSync(
   path.join(rootDir, ".github", "workflows")
@@ -52,12 +66,10 @@ for (const filename of fs.readdirSync(
     path.join(rootDir, ".github", "workflows", filename),
     "utf8"
   );
-  if (/onrender\.com|\bRENDER_[A-Z_]+\b/i.test(workflow))
-    fail(`${filename} still depends on retired hosting configuration.`);
-}
-for (const filename of ["render.yaml", "render.yml"]) {
-  if (fs.existsSync(path.join(rootDir, filename)))
-    fail(`Remove retired deployment manifest ${filename}.`);
+  if (/https?:\/\/[a-z0-9.-]+\.onrender\.com/i.test(workflow))
+    fail(
+      `${filename} must select a verified Render origin from configuration, not hardcode a service hostname.`
+    );
 }
 
 if (/vercel\s+deploy[^\n]*--prebuilt/.test(source)) {
@@ -76,18 +88,74 @@ if (!/vercel\s+deploy[^\n]*--prod/.test(source)) {
   fail("Missing production deploy command with `--prod`.");
 }
 
+function job(id) {
+  const start = source.indexOf(`  ${id}:\n`);
+  if (start < 0) return "";
+  const remaining = source.slice(start + 2);
+  const end = remaining.search(/\n  [a-z][a-z0-9-]+:\n/);
+  return end < 0 ? remaining : remaining.slice(0, end);
+}
+
+const oracle = job("deploy-oracle-production"),
+  render = job("deploy-render-production"),
+  production = job("deploy-vercel-production");
+for (const [name, release] of [
+  ["Oracle", oracle],
+  ["Render", render],
+]) {
+  for (const required of [
+    "needs: build-and-test",
+    "github.ref == 'refs/heads/main'",
+    "github.event_name == 'push'",
+    "needs.build-and-test.result == 'success'",
+    "EXPECTED_REVISION: ${{ github.sha }}",
+  ])
+    if (!release.includes(required))
+      fail(
+        `${name} production releases must depend on the complete main-commit quality gate and exact tested revision.`
+      );
+}
 if (
-  !source.includes("deploy-oracle-production:") ||
-  !source.includes("needs: [build-and-test, deploy-oracle-production]")
-) {
+  !oracle.includes("name: Deploy to Oracle (Production)") ||
+  !oracle.includes("Wait for verified Oracle release") ||
+  !oracle.includes("wait-for-oracle-release.mjs") ||
+  !oracle.includes("verify-backend-release.mjs --direct") ||
+  !oracle.includes(
+    "(vars.DU_BACKEND_HOST == '' || vars.DU_BACKEND_HOST == 'oracle')"
+  )
+)
   fail(
-    "Production must release the tested Oracle backend before deploying Vercel."
+    "Preserve the default Oracle worker handshake and direct release verification before proxy cutover."
   );
-}
 if (
-  !source.includes("Wait for verified Oracle release") ||
-  !source.includes("du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs")
-) {
-  fail("Oracle deployment must wait for and verify the published commit.");
-}
+  !render.includes("vars.DU_BACKEND_HOST == 'render'") ||
+  !render.includes("deploy-render-production.mjs") ||
+  !render.includes("RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}")
+)
+  fail("Render must be an explicit configured, tested-commit release.");
+for (const required of [
+  "needs: [build-and-test, deploy-oracle-production, deploy-render-production]",
+  "always() && !cancelled()",
+  "github.ref == 'refs/heads/main'",
+  "github.event_name == 'push'",
+  "needs.build-and-test.result == 'success'",
+  "(vars.DU_BACKEND_HOST == '' || vars.DU_BACKEND_HOST == 'oracle')",
+  "vars.DU_BACKEND_HOST == 'render'",
+  "needs.deploy-oracle-production.result == 'success'",
+  "needs.deploy-render-production.result == 'success'",
+  "needs.deploy-oracle-production.result == 'skipped'",
+  "needs.deploy-render-production.result == 'skipped'",
+  'prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage" --production',
+  "EXPECTED_REVISION: ${{ github.sha }}",
+  "VERIFIED_BACKEND_REVISION: ${{ needs.deploy-render-production.outputs.revision }}",
+  "VERIFIED_RENDER_ORIGIN: ${{ needs.deploy-render-production.outputs.origin }}",
+  "VERIFIED_RENDER_SERVICE_ID: ${{ needs.deploy-render-production.outputs.service_id }}",
+  "VERIFIED_RENDER_WORKSPACE_ID: ${{ needs.deploy-render-production.outputs.workspace_id }}",
+  "VERIFIED_RENDER_DEPLOY_ID: ${{ needs.deploy-render-production.outputs.deploy_id }}",
+  "run: node du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs\n",
+])
+  if (!production.includes(required))
+    fail(
+      "Vercel production requires the selected backend's successful release, matching staging evidence and post-cutover API verification."
+    );
 console.log("[guardrails:deploy] OK");

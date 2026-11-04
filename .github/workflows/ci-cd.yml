@@ -17,6 +17,12 @@ concurrency:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # Unset/oracle preserves the existing release path. Enable render only after
+  # the selected service has the existing durable database and runtime secrets.
+  DU_BACKEND_HOST: ${{ vars.DU_BACKEND_HOST }}
+  DU_RENDER_API_ORIGIN: ${{ vars.DU_RENDER_API_ORIGIN }}
+  DU_RENDER_SERVICE_ID: ${{ vars.DU_RENDER_SERVICE_ID }}
+  DU_RENDER_WORKSPACE_ID: ${{ vars.DU_RENDER_WORKSPACE_ID }}
 
 jobs:
   # 1) Baseline quality gate — ALL deployment jobs are blocked until this passes.
@@ -40,6 +46,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+
+      - name: Validate optional MySQL container configuration
+        run: python3 du-platform-backend/deploy/database/test_configuration.py --require-compose
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -80,7 +89,7 @@ jobs:
       - name: Type check
         run: pnpm --dir du-platform-frontend/tooling check
 
-      - name: Oracle deployment safety regressions
+      - name: Backend and Vercel deployment safety regressions
         run: pnpm --dir du-platform-frontend/tooling test:deploy
 
       - name: Module tests
@@ -264,7 +273,7 @@ jobs:
   deploy-oracle-production:
     name: Deploy to Oracle (Production)
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success' && (vars.DU_BACKEND_HOST == '' || vars.DU_BACKEND_HOST == 'oracle')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -278,17 +287,49 @@ jobs:
           EXPECTED_REVISION: ${{ github.sha }}
         run: node du-platform-frontend/tooling/scripts/tests/wait-for-oracle-release.mjs
 
-      - name: Verify Oracle and public API release
+      - name: Verify Oracle API release before proxy cutover
         env:
           EXPECTED_REVISION: ${{ github.sha }}
-        run: node du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs
+        run: node du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs --direct
+
+  # Explicit, tested-commit deployment. The Render service must have auto-deploy
+  # disabled; no service creation, secret replacement or cron is performed here.
+  deploy-render-production:
+    name: Deploy to Render (Production)
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success' && vars.DU_BACKEND_HOST == 'render'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    outputs:
+      revision: ${{ steps.release.outputs.revision }}
+      origin: ${{ steps.release.outputs.origin }}
+      service_id: ${{ steps.release.outputs.service_id }}
+      workspace_id: ${{ steps.release.outputs.workspace_id }}
+      deploy_id: ${{ steps.release.outputs.deploy_id }}
+    steps:
+      - name: Checkout tested commit
+        uses: actions/checkout@v5
+
+      - name: Deploy and verify the tested Render revision
+        id: release
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: node du-platform-frontend/tooling/scripts/deploy-render-production.mjs
 
   # 2) Production deploy — only on direct pushes to main, only if build-and-test passed.
   #    On failure, rolls back to the last successful Vercel production deployment.
   deploy-vercel-production:
     name: Deploy to Vercel (Production)
-    needs: [build-and-test, deploy-oracle-production]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success' && needs.deploy-oracle-production.result == 'success'
+    needs: [build-and-test, deploy-oracle-production, deploy-render-production]
+    # always() permits the deliberately unselected backend job to be skipped.
+    # Every selected backend and the complete quality gate must still succeed.
+    if: >-
+      always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-test.result == 'success' &&
+      (((vars.DU_BACKEND_HOST == '' || vars.DU_BACKEND_HOST == 'oracle') && needs.deploy-oracle-production.result == 'success' && needs.deploy-render-production.result == 'skipped') ||
+      (vars.DU_BACKEND_HOST == 'render' && needs.deploy-render-production.result == 'success' && needs.deploy-oracle-production.result == 'skipped'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -303,7 +344,14 @@ jobs:
         run: pnpm add -g vercel@65.4.0
 
       - name: Prepare isolated Vercel source
-        run: node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage"
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+          VERIFIED_BACKEND_REVISION: ${{ needs.deploy-render-production.outputs.revision }}
+          VERIFIED_RENDER_ORIGIN: ${{ needs.deploy-render-production.outputs.origin }}
+          VERIFIED_RENDER_SERVICE_ID: ${{ needs.deploy-render-production.outputs.service_id }}
+          VERIFIED_RENDER_WORKSPACE_ID: ${{ needs.deploy-render-production.outputs.workspace_id }}
+          VERIFIED_RENDER_DEPLOY_ID: ${{ needs.deploy-render-production.outputs.deploy_id }}
+        run: node du-platform-frontend/tooling/scripts/prepare-vercel-source.mjs "$RUNNER_TEMP/du-vercel-stage" --production
 
       - name: Pull Vercel Environment Information
         run: vercel pull --cwd "$RUNNER_TEMP/du-vercel-stage" --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
@@ -321,7 +369,7 @@ jobs:
       - name: Verify published browser API routing and canonical pages
         run: node du-platform-frontend/tooling/scripts/tests/verify-published-site.mjs
 
-      - name: Verify matching Oracle release through the deployed frontend
+      - name: Verify matching backend release through the deployed frontend
         env:
           EXPECTED_REVISION: ${{ github.sha }}
         run: node du-platform-frontend/tooling/scripts/tests/verify-backend-release.mjs

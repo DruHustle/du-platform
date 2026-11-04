@@ -1,0 +1,112 @@
+{
+  "name": "du-platform-database",
+  "services": {
+    "mysql": {
+      "image": "${DU_MYSQL_IMAGE:?Use a reviewed source-compatible official MySQL image digest}",
+      "platform": "${DU_MYSQL_PLATFORM:?Use the qualified target platform}",
+      "profiles": [
+        "candidate-database"
+      ],
+      "restart": "unless-stopped",
+      "user": "${DU_MYSQL_UID:?Use the reviewed image mysql UID}:${DU_MYSQL_GID:?Use the reviewed image mysql GID}",
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,noexec,size=128m,mode=1777",
+        "/var/run/mysqld:rw,nosuid,noexec,size=16m,mode=1777"
+      ],
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "pids_limit": 256,
+      "stop_grace_period": "120s",
+      "mem_limit": "${DU_MYSQL_MEMORY_LIMIT:?Use the measured database memory budget}",
+      "cpus": "${DU_MYSQL_CPU_LIMIT:?Use the measured database CPU budget}",
+      "environment": {
+        "MYSQL_ROOT_HOST": "localhost",
+        "MYSQL_ROOT_PASSWORD_FILE": "/run/secrets/mysql_bootstrap_password"
+      },
+      "command": [
+        "mysqld",
+        "--datadir=/var/lib/mysql",
+        "--socket=/var/run/mysqld/mysqld.sock",
+        "--pid-file=/var/run/mysqld/mysqld.pid",
+        "--secure-file-priv=NULL",
+        "--mysqlx=OFF",
+        "--require-secure-transport=ON",
+        "--tls-version=TLSv1.2,TLSv1.3",
+        "--ssl-ca=/run/mysql-tls/ca.crt",
+        "--ssl-cert=/run/mysql-tls/server.crt",
+        "--ssl-key=/run/mysql-tls/server.key",
+        "--max-connections=${DU_MYSQL_MAX_CONNECTIONS:?Use the reviewed connection budget}",
+        "--innodb-buffer-pool-size=${DU_MYSQL_BUFFER_POOL_SIZE:?Use a measured buffer pool below the memory budget}"
+      ],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "mysql_data",
+          "target": "/var/lib/mysql"
+        },
+        {
+          "type": "bind",
+          "source": "${DU_MYSQL_TLS_DIR:?Use the existing private certificate directory}",
+          "target": "/run/mysql-tls",
+          "read_only": true,
+          "bind": {
+            "create_host_path": false
+          }
+        }
+      ],
+      "secrets": [
+        "mysql_bootstrap_password"
+      ],
+      "networks": {
+        "database": {
+          "aliases": [
+            "du-mysql"
+          ]
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "mysqladmin",
+          "--protocol=socket",
+          "--socket=/var/run/mysqld/mysqld.sock",
+          "ping",
+          "--silent"
+        ],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 18,
+        "start_period": "60s"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    }
+  },
+  "networks": {
+    "database": {
+      "name": "du-platform-database",
+      "internal": true
+    }
+  },
+  "volumes": {
+    "mysql_data": {
+      "name": "${DU_MYSQL_VOLUME:?Use the existing reviewed durable volume}",
+      "external": true
+    }
+  },
+  "secrets": {
+    "mysql_bootstrap_password": {
+      "file": "${DU_MYSQL_PASSWORD_FILE:?Use a private bootstrap password file}"
+    }
+  }
+}

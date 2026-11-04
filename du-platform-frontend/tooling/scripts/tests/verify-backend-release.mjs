@@ -1,29 +1,26 @@
-import assert from "node:assert/strict";
-const revision = process.env.EXPECTED_REVISION;
-assert.match(
-  revision || "",
-  /^[a-f0-9]{40}$/,
-  "Set EXPECTED_REVISION to the tested commit"
-);
-for (const origin of [
-  "https://du-api.152-70-22-84.sslip.io",
-  "https://www.diasporaunlocked.com",
-]) {
-  for (const path of ["/api/ping", "/api/health/db", "/api/ai/ready"]) {
-    const response = await fetch(origin + path, {
-      signal: AbortSignal.timeout(30000),
-      headers: { "Cache-Control": "no-cache" },
-    });
-    assert.equal(response.status, 200, `${origin}${path} must be available`);
-    const body = await response.json();
-    if (path === "/api/ping")
-      assert.equal(
-        body.commit,
-        revision,
-        "The published backend must match the tested commit"
-      );
-    if (path === "/api/ai/ready")
-      assert.equal(body.ready, true, "Onesa must be ready");
-  }
-  console.log(`PASS ${origin}: expected revision, database and Onesa ready`);
+import {
+  backendTarget,
+  PUBLIC_SITE_ORIGIN,
+  testedRevision,
+  verifyBackendOrigin,
+} from "../lib/backend-deployment.mjs";
+
+const flags = process.argv.slice(2);
+if (flags.length > 1 || (flags.length === 1 && flags[0] !== "--direct"))
+  throw new Error(
+    "The only optional release verification argument is --direct."
+  );
+const revision = testedRevision(process.env.EXPECTED_REVISION);
+const target = backendTarget();
+const origins =
+  flags[0] === "--direct"
+    ? [target.origin]
+    : [target.origin, PUBLIC_SITE_ORIGIN];
+for (const origin of origins) {
+  await verifyBackendOrigin(origin, revision, {
+    allowColdStart: target.provider === "render",
+  });
+  console.log(
+    `PASS ${origin}: exact tested revision, durable database and Onesa ready`
+  );
 }
