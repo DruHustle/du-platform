@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import plistlib
+import struct
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
@@ -26,6 +27,23 @@ PHONE_ID = "11111111-1111-1111-1111-111111111111"
 TABLET_ID = "22222222-2222-2222-2222-222222222222"
 BUNDLE_IDENTIFIER = "com.diasporaunlocked.app"
 ADHOC_METADATA = f"Executable=/fixture/DiasporaUnlocked.app/DiasporaUnlocked\nIdentifier={BUNDLE_IDENTIFIER}\nSignature=adhoc\n"
+SIMULATED_ENTITLEMENTS = {"application-identifier": f"FAKETEAMID.{BUNDLE_IDENTIFIER}",
+                          "com.apple.developer.associated-domains": ["applinks:www.diasporaunlocked.com"]}
+
+
+def macho_fixture(entitlements=SIMULATED_ENTITLEMENTS, architecture="arm64", copies=1, payload=None):
+    payload = plistlib.dumps(entitlements) if payload is None else payload
+    command_size = 72 + 80 * copies
+    payload_offset = 32 + command_size
+    header = struct.pack("<8I", 0xFEEDFACF, {"arm64": 0x0100000C, "x86_64": 0x01000007}[architecture],
+                         0, 2, 1, command_size, 0, 0)
+    segment = struct.pack("<II16sQQQQiiII", 0x19, command_size, b"__TEXT", 0,
+                          payload_offset + copies * len(payload), 0,
+                          payload_offset + copies * len(payload), 5, 5, copies, 0)
+    sections = b"".join(struct.pack("<16s16sQQ8I", b"__entitlements", b"__TEXT", 0, len(payload),
+                                    payload_offset + index * len(payload), 0, 0, 0, 0, 0, 0, 0)
+                         for index in range(copies))
+    return header + segment + sections + copies * payload
 
 
 def inventory():
@@ -101,6 +119,76 @@ class ValidationTests(unittest.TestCase):
         ):
             with self.subTest(metadata=metadata, entitlements=entitlements), self.assertRaises(smoke.SmokeFailure):
                 smoke.validate_simulator_signing(metadata, entitlements, BUNDLE_IDENTIFIER)
+
+
+class SimulatorEntitlementTests(unittest.TestCase):
+    def test_reads_actual_thin_arm64_and_x86_64_sections_without_altering_generated_values(self):
+        for architecture in ("arm64", "x86_64"):
+            with self.subTest(architecture=architecture):
+                entitlements, raw = smoke.simulator_entitlements(macho_fixture(architecture=architecture), architecture)
+                self.assertEqual(entitlements, SIMULATED_ENTITLEMENTS)
+                self.assertEqual(raw, plistlib.dumps(SIMULATED_ENTITLEMENTS))
+
+    def test_rejects_truncated_fat_wrong_endian_or_wrong_architecture_executables(self):
+        binary = macho_fixture()
+        for data, architecture in ((binary[:31], "arm64"),
+                                   (b"\xca\xfe\xba\xbe" + binary[4:], "arm64"),
+                                   (b"\xfe\xed\xfa\xcf" + binary[4:], "arm64"),
+                                   (binary, "x86_64"), (binary, "unknown")):
+            with self.subTest(data=data[:4], architecture=architecture), self.assertRaises(smoke.SmokeFailure):
+                smoke.simulator_entitlements(data, architecture)
+
+    def test_malformed_header_load_command_and_segment_bounds_fail_closed(self):
+        cases = [
+            ("not executable", 12, "I", 6),
+            ("no commands", 16, "I", 0),
+            ("excess command count", 16, "I", 4097),
+            ("truncated command count", 16, "I", 2),
+            ("commands outside file", 20, "I", 1_000_000),
+            ("unaligned command area", 20, "I", 153),
+            ("unaccounted command bytes", 20, "I", 160),
+            ("zero command size", 36, "I", 0),
+            ("unaligned command size", 36, "I", 151),
+            ("command outside declared area", 36, "I", 160),
+            ("truncated segment", 36, "I", 8),
+            ("section count exceeds command", 96, "I", 2),
+            ("segment starts outside file", 72, "Q", 1_000_000),
+            ("segment extends outside file", 80, "Q", 1_000_000),
+        ]
+        for label, offset, kind, value in cases:
+            binary = bytearray(macho_fixture())
+            struct.pack_into("<" + kind, binary, offset, value)
+            with self.subTest(label=label), self.assertRaises(smoke.SmokeFailure):
+                smoke.simulator_entitlements(binary, "arm64")
+
+    def test_entitlement_bytes_must_fit_within_the_file_and_owning_text_segment(self):
+        cases = [
+            ("empty plist", 144, "Q", 0),
+            ("oversize plist", 144, "Q", 1_048_577),
+            ("overlaps load commands", 152, "I", 0),
+            ("offset outside file", 152, "I", 1_000_000),
+            ("end outside file", 144, "Q", 900_000),
+            ("end outside shorter segment", 80, "Q", 185),
+        ]
+        for label, offset, kind, value in cases:
+            binary = bytearray(macho_fixture())
+            struct.pack_into("<" + kind, binary, offset, value)
+            with self.subTest(label=label), self.assertRaises(smoke.SmokeFailure):
+                smoke.simulator_entitlements(binary, "arm64")
+        binary = bytearray(macho_fixture())
+        binary[40:56] = b"__DATA".ljust(16, b"\0")
+        with self.assertRaisesRegex(smoke.SmokeFailure, "section bounds"):
+            smoke.simulator_entitlements(binary, "arm64")
+
+    def test_missing_or_duplicate_sections_are_not_accepted(self):
+        for copies in (0, 2):
+            with self.subTest(copies=copies), self.assertRaisesRegex(smoke.SmokeFailure, "exactly one"):
+                smoke.simulator_entitlements(macho_fixture(copies=copies), "arm64")
+
+    def test_section_must_be_a_valid_entitlement_dictionary(self):
+        for payload in (b"not a plist", b"<?xml version='1.0'?><plist>", plistlib.dumps(["not a dictionary"])):
+            with self.subTest(payload=payload), self.assertRaises(smoke.SmokeFailure):
+                smoke.simulator_entitlements(macho_fixture(payload=payload), "arm64")
 
 
 class RunnerTests(unittest.TestCase):
@@ -327,17 +415,34 @@ class RunnerTests(unittest.TestCase):
         with self.assertRaisesRegex(smoke.SmokeFailure, "simulator application"):
             self.runner.verify_bundle()
 
-    def test_signing_preflight_verifies_signature_and_parses_generated_xml_from_stdout(self):
+    def test_signing_preflight_accepts_empty_host_entitlements_and_checks_actual_simulator_identity(self):
+        binary = self.runner.derived / "Build/Products/Release-iphonesimulator/DiasporaUnlocked.app/DiasporaUnlocked"
+        binary.parent.mkdir(parents=True)
+        binary.write_bytes(macho_fixture(architecture=self.runner.report["architecture"]))
         self.runner.run = Mock(return_value=(0, ""))
-        self.runner.capture = Mock(side_effect=[ADHOC_METADATA,
-                                   plistlib.dumps({"application-identifier": BUNDLE_IDENTIFIER}).decode()])
+        self.runner.capture = Mock(side_effect=[ADHOC_METADATA, plistlib.dumps({}).decode()])
         self.runner.verify_signing()
         self.assertEqual(self.runner.run.call_args.args[0][:3], ["codesign", "--verify", "--strict"])
         entitlement_read = self.runner.capture.call_args_list[-1]
         self.assertEqual(entitlement_read.args[0][:5], ["codesign", "--display", "--entitlements", "-", "--xml"])
         self.assertTrue(entitlement_read.kwargs["separate_stderr"])
         self.assertEqual(self.runner.report["signing"],
-                         {"signature": "adhoc", "applicationIdentifier": BUNDLE_IDENTIFIER, "keychainAccessGroups": []})
+                         {"signature": "adhoc", "applicationIdentifier": f"FAKETEAMID.{BUNDLE_IDENTIFIER}",
+                          "entitlementSource": "__TEXT,__entitlements", "entitlements": "app-simulated-entitlements.plist",
+                          "keychainAccessGroups": []})
+        self.assertEqual((self.runner.artifacts / "app-simulated-entitlements.plist").read_bytes(),
+                         plistlib.dumps(SIMULATED_ENTITLEMENTS))
+
+    def test_host_identity_cannot_substitute_for_missing_simulator_identity(self):
+        binary = self.runner.derived / "Build/Products/Release-iphonesimulator/DiasporaUnlocked.app/DiasporaUnlocked"
+        binary.parent.mkdir(parents=True)
+        binary.write_bytes(macho_fixture(entitlements={}, architecture=self.runner.report["architecture"]))
+        self.runner.run = Mock(return_value=(0, ""))
+        self.runner.capture = Mock(side_effect=[ADHOC_METADATA,
+                                   plistlib.dumps({"application-identifier": BUNDLE_IDENTIFIER}).decode()])
+        with self.assertRaisesRegex(smoke.SmokeFailure, "generated application-identifier"):
+            self.runner.verify_signing()
+        self.assertNotIn("signing", self.runner.report)
 
     def test_failed_signature_verification_cannot_be_replaced_by_plausible_metadata(self):
         self.runner.run = Mock(side_effect=smoke.SmokeFailure("invalid signature"))
