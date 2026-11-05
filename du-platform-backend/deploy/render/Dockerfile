@@ -10,7 +10,7 @@ FROM node:22-bookworm-slim
 LABEL org.opencontainers.image.source="https://github.com/DruHustle/du-platform"
 # Render injects PORT and RENDER_GIT_COMMIT at runtime. Never bake the former
 # Oracle APP_REVISION or production credentials into this image.
-ENV NODE_ENV=production PORT=10000 SHOP_COMMERCIAL_MODE=prelaunch
+ENV NODE_ENV=production PORT=10000 SHOP_COMMERCIAL_MODE=prelaunch DATABASE_STARTUP_MODE=verify
 WORKDIR /app
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/package.json ./package.json

@@ -1,3 +1,4 @@
+import { databaseStartupMode, verifyDatabaseSchema } from "./shared/databaseStartup";
 import { initializeWeather } from "./modules/weather/cache";
 import { initializeTravel } from "./modules/travel/schema";
 import { initializeProductInterest } from "./modules/shop/interestSchema";
@@ -102,6 +103,11 @@ async function withDatabaseInitializationLock<T>(
 }
 
 export async function initializeDatabase(): Promise<void> {
+  if (databaseStartupMode() === "verify") {
+    if (!db) throw new Error("Verify-only startup requires the existing MySQL database");
+    await verifyDatabaseSchema(db);
+    return;
+  }
   if (!db) {
     if (isMemoryFallbackEnabled()) return;
     throw new Error(

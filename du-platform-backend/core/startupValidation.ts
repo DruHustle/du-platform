@@ -1,3 +1,4 @@
+import { databaseStartupMode } from "../shared/databaseStartup";
 import { isMemoryFallbackEnabled } from "../shared/databaseRuntime";
 import { databaseProvider } from "../shared/databaseConfig";
 
@@ -30,6 +31,7 @@ function collectDatabaseConfigErrors(errors: string[]) {
 
 export function validateStartupConfiguration() {
   const errors: string[] = [];
+  databaseStartupMode();
 
   collectDatabaseConfigErrors(errors);
 

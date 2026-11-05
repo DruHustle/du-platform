@@ -373,6 +373,7 @@ try {
       .getByRole("link", { name: /^Discover/ })
       .click();
     await page.waitForURL(/\/shop\/products\?/);
+    await page.locator("#shop-products-heading").waitFor();
     await card(mazoe.slug).waitFor();
     assert.equal(
       (await cart())[0].quantity,
@@ -871,6 +872,10 @@ try {
     .card("sables-rugby-home-kit")
     .getByRole("link", { name: /^Discover/ })
     .click();
+  // The deferred router keeps the landing page's matching cart controls visible
+  // until the lazy products page commits; the URL or card alone is not enough.
+  await blocked.page.waitForURL(/\/shop\/products\?/);
+  await blocked.page.locator("#shop-products-heading").waitFor();
   await blocked
     .card("sables-rugby-home-kit")
     .getByRole("button", { name: /^Remove one/ })
