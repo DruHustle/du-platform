@@ -491,6 +491,98 @@ try {
     );
     pass(`${width}px footer contact keyboard menu and focus return`);
 
+    await goto("/");
+    for (const colorScheme of ["light", "dark"]) {
+      await page.emulateMedia({ colorScheme });
+      await page
+        .getByRole("button", { name: "Chat with Onesa", exact: true })
+        .waitFor();
+      await page.evaluate(() =>
+        scrollTo(0, document.documentElement.scrollHeight)
+      );
+      const legalLinks = page.locator(
+        '.footer-bottom-links a[href="/privacy-policy"], .footer-bottom-links a[href="/terms-of-service"]'
+      );
+      assert.equal(
+        await legalLinks.count(),
+        2,
+        "Both legal links must be present"
+      );
+      for (const link of await legalLinks.all()) {
+        const reachable = await link.evaluate(element => {
+          const box = element.getBoundingClientRect();
+          return [0.1, 0.5, 0.9].every(fraction => {
+            const hit = document.elementFromPoint(
+              box.left + box.width * fraction,
+              box.top + box.height / 2
+            );
+            return hit === element || element.contains(hit);
+          });
+        });
+        assert(
+          reachable,
+          `${await link.innerText()} is obscured at page bottom`
+        );
+      }
+      const contrast = await page.locator("footer").evaluate(footer => {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        const luminance = color => {
+          context.fillStyle = color;
+          context.fillRect(0, 0, 1, 1);
+          const channels = [...context.getImageData(0, 0, 1, 1).data].slice(
+            0,
+            3
+          );
+          return channels
+            .map(channel => {
+              const value = channel / 255;
+              return value <= 0.04045
+                ? value / 12.92
+                : ((value + 0.055) / 1.055) ** 2.4;
+            })
+            .reduce(
+              (sum, value, index) =>
+                sum + value * [0.2126, 0.7152, 0.0722][index],
+              0
+            );
+        };
+        const background = luminance(getComputedStyle(footer).backgroundColor);
+        const description = [...footer.querySelectorAll("p")].find(element =>
+          element.textContent.includes(
+            "Zimbabwean products, Southern African travel ideas"
+          )
+        );
+        if (!description) throw new Error("Newsletter description is missing");
+        return [
+          description,
+          ...footer.querySelectorAll(
+            '.footer-bottom-links a[href="/privacy-policy"], .footer-bottom-links a[href="/terms-of-service"]'
+          ),
+        ].map(element => {
+          const foreground = luminance(getComputedStyle(element).color);
+          return {
+            text: element.textContent.trim(),
+            ratio:
+              (Math.max(foreground, background) + 0.05) /
+              (Math.min(foreground, background) + 0.05),
+          };
+        });
+      });
+      for (const result of contrast)
+        assert(
+          result.ratio >= 4.5,
+          `${result.text}: contrast ${result.ratio.toFixed(2)} is below 4.5:1`
+        );
+      await page.screenshot({
+        path: `${output}/${width}-footer-${colorScheme}.png`,
+      });
+      pass(
+        `${width}px ${colorScheme} footer contrast and unobscured legal links`
+      );
+    }
+
     await context.close();
   }
   assert.equal(errors.length, 0, JSON.stringify(errors));
