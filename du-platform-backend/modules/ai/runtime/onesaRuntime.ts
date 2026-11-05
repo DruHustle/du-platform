@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createHash } from "node:crypto";
 import type { OnesaRouteDeps } from "./onesaRoutes";
 import { createMockOnesaReply, isOnesaMockModeEnabled } from "./mockMode";
 import { removeRepeatedReplyText } from "./replyText";
@@ -52,13 +53,69 @@ type OnesaReadiness = {
   model: string;
   endpoint: string;
   resolvedModel?: string | null;
+  inferenceVerified?: boolean;
+  modelAvailable?: boolean;
   message?: string;
   providerTargets?: Array<{ name: string; baseUrl: string }>;
 };
 
-let onesaReadinessCache: { checkedAt: number; value: OnesaReadiness } | null =
-  null;
-let lastOnesaSuccessAt = 0;
+let onesaReadinessCache: {
+  configKey: string;
+  expiresAt: number;
+  value: OnesaReadiness;
+} | null = null;
+type InferenceSuccess = {
+  targetName?: string;
+  configKey: string;
+  at: number;
+  endpoint: string;
+  model: string;
+};
+let lastCloudSuccess: InferenceSuccess | null = null;
+let lastLocalSuccess: InferenceSuccess | null = null;
+// Fingerprints stay process-local; they must never be returned or logged.
+const configIdentity = (config: ReturnType<typeof getOnesaConfig>) =>
+  createHash("sha256").update(JSON.stringify(config)).digest("hex");
+function recentSuccess(success: InferenceSuccess | null, configKey: string) {
+  const age = Date.now() - (success?.at ?? 0);
+  return success?.configKey === configKey &&
+    age >= 0 &&
+    age < ONESA_READINESS_GRACE_MS
+    ? success
+    : null;
+}
+function rememberInference(
+  kind: "cloud" | "local",
+  config: ReturnType<typeof getOnesaConfig>,
+  endpoint: string,
+  model: string,
+  targetName?: string
+) {
+  const success = {
+    targetName,
+    configKey: configIdentity(config),
+    at: Date.now(),
+    endpoint,
+    model,
+  };
+  if (kind === "cloud") lastCloudSuccess = success;
+  else lastLocalSuccess = success;
+  onesaReadinessCache = null;
+}
+function forgetCloudInference(
+  config: ReturnType<typeof getOnesaConfig>,
+  endpoint: string,
+  targetName: string
+) {
+  if (
+    lastCloudSuccess?.configKey === configIdentity(config) &&
+    lastCloudSuccess.endpoint === endpoint &&
+    lastCloudSuccess.targetName === targetName
+  ) {
+    lastCloudSuccess = null;
+  }
+  onesaReadinessCache = null;
+}
 const onesaProviderBackoffUntilByEndpoint = new Map<string, number>();
 
 type ChatMessage = {
@@ -956,7 +1013,6 @@ async function generateOnesaReply(
     const reply =
       smallTalkReply ??
       createMockOnesaReply(latestUserMessage, responseLanguage);
-    lastOnesaSuccessAt = Date.now();
     return { reply, truncated: false };
   }
 
@@ -996,7 +1052,6 @@ async function generateOnesaReply(
     ? getSmallTalkReply(latestUserMessage, responseLanguage)
     : null;
   if (smallTalkReply) {
-    lastOnesaSuccessAt = Date.now();
     return { reply: smallTalkReply, truncated: false };
   }
   const normalizedMessages: ChatMessage[] = [
@@ -1165,7 +1220,7 @@ async function generateOnesaReply(
             lowQualityReply = finalReply;
             continue;
           }
-          lastOnesaSuccessAt = Date.now();
+          rememberInference("local", config, ollamaBase, candidate);
           return { reply: finalReply, truncated: false };
         }
       } catch (error: any) {
@@ -1191,7 +1246,7 @@ async function generateOnesaReply(
             lowQualityReply = finalReply;
             continue;
           }
-          lastOnesaSuccessAt = Date.now();
+          rememberInference("local", config, ollamaBase, candidate);
           return { reply: finalReply, truncated: false };
         }
       } catch (error: any) {
@@ -1332,10 +1387,26 @@ async function generateOnesaReply(
             !isLowQualityOnesaReply(finalReply) &&
             !isMixedLanguageReply(finalReply, responseLanguage)
           ) {
-            lastOnesaSuccessAt = Date.now();
+            rememberInference(
+              "cloud",
+              config,
+              providerTarget.baseUrl,
+              targetModel,
+              providerTarget.name
+            );
             return { reply: finalReply, truncated, finishReason };
           }
+          forgetCloudInference(
+            config,
+            providerTarget.baseUrl,
+            providerTarget.name
+          );
         } catch (error: any) {
+          forgetCloudInference(
+            config,
+            providerTarget.baseUrl,
+            providerTarget.name
+          );
           if (isRateLimitedUpstreamError(error)) {
             lastRateLimitError = error;
             const remaining = getEndpointBackoffRemainingMs(
@@ -1502,6 +1573,8 @@ async function getOnesaHealth() {
 
       return {
         ok: false,
+        ready: false,
+        inferenceVerified: false,
         provider,
         model,
         endpoint: openaiBase,
@@ -1510,59 +1583,130 @@ async function getOnesaHealth() {
       };
     }
 
-    const failures: string[] = [];
-    for (const providerTarget of providerTargets) {
+    const configKey = configIdentity(config);
+    const success = recentSuccess(lastCloudSuccess, configKey);
+    // Prefer the exact provider/model that actually completed a request. A
+    // healthy but unused primary cannot stand in for a failed fallback.
+    const orderedTargets = success
+      ? [...providerTargets].sort(
+          (a, b) =>
+            Number(
+              b.baseUrl === success.endpoint && b.name === success.targetName
+            ) -
+            Number(
+              a.baseUrl === success.endpoint && a.name === success.targetName
+            )
+        )
+      : providerTargets;
+    let reachable = false;
+    for (const target of orderedTargets) {
+      if (getEndpointBackoffRemainingMs(target.baseUrl) > 0) continue;
+      const matchingSuccess =
+        success?.endpoint === target.baseUrl &&
+        success.targetName === target.name &&
+        target.models.includes(success.model)
+          ? success
+          : null;
       try {
-        if (providerTarget.kind === "anthropic") {
-          await axios.get(`${providerTarget.baseUrl}/v1/models`, {
-            timeout: 5000,
-            headers: {
-              "x-api-key": providerTarget.apiKey,
-              "anthropic-version":
-                providerTarget.anthropicVersion ?? "2023-06-01",
-              "Content-Type": "application/json",
-            },
-          });
-        } else {
-          await axios.get(`${providerTarget.baseUrl}/models`, {
-            timeout: 5000,
-            headers: {
-              Authorization: `Bearer ${providerTarget.apiKey}`,
-              "Content-Type": "application/json",
-            },
-          });
-        }
+        const response = await axios.get(
+          target.baseUrl +
+            (target.kind === "anthropic" ? "/v1/models" : "/models"),
+          {
+            timeout: Math.min(config.timeoutMs, 5000),
+            maxContentLength: 1024 * 1024,
+            maxRedirects: 0,
+            headers:
+              target.kind === "anthropic"
+                ? {
+                    "x-api-key": target.apiKey,
+                    "anthropic-version":
+                      target.anthropicVersion ?? "2023-06-01",
+                  }
+                : { Authorization: `Bearer ${target.apiKey}` },
+          }
+        );
+        reachable = true;
+        const rows: unknown = response.data?.data;
+        if (
+          !Array.isArray(rows) ||
+          rows.length > 10000 ||
+          !rows.every(row => row && typeof row.id === "string")
+        )
+          continue;
+        const available = new Set(rows.map(row => row.id));
+        const selected =
+          matchingSuccess && available.has(matchingSuccess.model)
+            ? matchingSuccess.model
+            : target.models.find(candidate => available.has(candidate));
+        if (!selected) continue;
+        const inferenceVerified =
+          lastCloudSuccess === matchingSuccess &&
+          Boolean(recentSuccess(matchingSuccess, configKey)) &&
+          matchingSuccess?.model === selected;
         return {
           ok: true,
+          ready: inferenceVerified,
+          inferenceVerified,
           provider,
-          model,
-          endpoint: providerTarget.baseUrl,
+          model: selected,
+          endpoint: target.baseUrl,
+          modelAvailable: true,
+          reachable: true,
           providerTargets: targetSummaries,
+          message: inferenceVerified
+            ? undefined
+            : "Provider model is listed; recent inference is not verified.",
         };
       } catch (error: any) {
-        const status = Number(error?.response?.status ?? 0);
-        if (status === 404 || status === 405) {
-          // Some providers may not expose a models list endpoint.
+        const status = getUpstreamStatus(error);
+        reachable ||= status > 0;
+        // Catalogue absence is not success. Only the exact recent generation
+        // can qualify a provider that does not implement model discovery.
+        if (
+          (status === 404 || status === 405) &&
+          matchingSuccess &&
+          lastCloudSuccess === matchingSuccess &&
+          recentSuccess(matchingSuccess, configKey)
+        ) {
           return {
             ok: true,
+            ready: true,
+            inferenceVerified: true,
             provider,
-            model,
-            endpoint: providerTarget.baseUrl,
+            model: matchingSuccess.model,
+            endpoint: target.baseUrl,
+            reachable: true,
             providerTargets: targetSummaries,
           };
         }
-        failures.push(
-          `${providerTarget.name}:${String(error?.message ?? "unknown error")}`
-        );
+        if (status === 401 || status === 403) {
+          if (matchingSuccess)
+            forgetCloudInference(config, target.baseUrl, target.name);
+        }
+        if (isRateLimitedUpstreamError(error)) {
+          const until =
+            Date.now() + Math.min(30000, getRetryAfterMs(error) ?? 10000);
+          onesaProviderBackoffUntilByEndpoint.set(
+            target.baseUrl,
+            Math.max(
+              onesaProviderBackoffUntilByEndpoint.get(target.baseUrl) ?? 0,
+              until
+            )
+          );
+        }
       }
     }
     return {
       ok: false,
+      ready: false,
+      inferenceVerified: false,
+      modelAvailable: false,
+      reachable,
       provider,
       model,
       endpoint: openaiBase,
       providerTargets: targetSummaries,
-      message: `Cloud endpoint unreachable: ${failures.join(" | ") || "unknown error"}`,
+      message: "Cloud provider model availability is unverified.",
     };
   }
 
@@ -1608,8 +1752,6 @@ async function getOnesaReadiness() {
       endpoint: "local://mock-onesa",
       message: "Onesa mock mode is active.",
     };
-    onesaReadinessCache = { checkedAt: Date.now(), value };
-    lastOnesaSuccessAt = Date.now();
     return value;
   }
 
@@ -1618,17 +1760,29 @@ async function getOnesaReadiness() {
   const fallbackEndpoint =
     provider === "openai_compatible" ? openaiBase : ollamaBase;
   const now = Date.now();
+  const configKey = configIdentity(config);
   const probeTimeout = Math.min(timeoutMs, 10000);
 
   if (
-    onesaReadinessCache &&
-    now - onesaReadinessCache.checkedAt < ONESA_READINESS_CACHE_MS
+    onesaReadinessCache?.configKey === configKey &&
+    now < onesaReadinessCache.expiresAt
   ) {
     return onesaReadinessCache.value;
   }
 
   const remember = (value: OnesaReadiness) => {
-    onesaReadinessCache = { checkedAt: Date.now(), value };
+    const success =
+      provider === "openai_compatible" ? lastCloudSuccess : lastLocalSuccess;
+    onesaReadinessCache = {
+      configKey,
+      expiresAt: Math.min(
+        Date.now() + ONESA_READINESS_CACHE_MS,
+        value.ready && success?.configKey === configKey
+          ? success.at + ONESA_READINESS_GRACE_MS
+          : Infinity
+      ),
+      value,
+    };
     return value;
   };
 
@@ -1645,126 +1799,28 @@ async function getOnesaReadiness() {
     });
   }
 
-  const recentSuccess = now - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
-  if (recentSuccess) {
+  if (provider === "openai_compatible") {
+    return remember({
+      ...health,
+      ok: health.ready === true,
+      ready: health.ready === true,
+      inferenceVerified: health.ready === true,
+    });
+  }
+
+  const localSuccess = recentSuccess(lastLocalSuccess, configKey);
+  const resolvedModel = String((health as any)?.resolvedModel ?? model);
+  if (
+    localSuccess?.endpoint === ollamaBase &&
+    localSuccess.model === resolvedModel
+  ) {
     return remember({
       ok: true,
       ready: true,
       provider,
       model,
       endpoint,
-      resolvedModel:
-        provider === "ollama"
-          ? String((health as any)?.resolvedModel ?? model)
-          : undefined,
-    });
-  }
-
-  if (provider === "openai_compatible") {
-    const providerTargets = buildCloudProviderTargets(config);
-    const targetSummaries = providerTargets.map(target => ({
-      name: target.name,
-      baseUrl: target.baseUrl,
-    }));
-    if (providerTargets.length === 0) {
-      return remember({
-        ok: false,
-        ready: false,
-        provider,
-        model,
-        endpoint,
-        providerTargets: targetSummaries,
-        message: "Onesa is unavailable.",
-      });
-    }
-
-    let observedRateLimit = false;
-    let lastFailureMessage = "";
-
-    for (const providerTarget of providerTargets) {
-      const endpointBackoffMs = getEndpointBackoffRemainingMs(
-        providerTarget.baseUrl
-      );
-      if (endpointBackoffMs > 0) {
-        observedRateLimit = true;
-        continue;
-      }
-
-      try {
-        if (providerTarget.kind === "anthropic") {
-          await axios.get(`${providerTarget.baseUrl}/v1/models`, {
-            timeout: probeTimeout,
-            headers: {
-              "x-api-key": providerTarget.apiKey,
-              "anthropic-version":
-                providerTarget.anthropicVersion ?? "2023-06-01",
-              "Content-Type": "application/json",
-            },
-          });
-        } else {
-          await axios.get(`${providerTarget.baseUrl}/models`, {
-            timeout: probeTimeout,
-            headers: {
-              Authorization: `Bearer ${providerTarget.apiKey}`,
-              "Content-Type": "application/json",
-            },
-          });
-        }
-        return remember({
-          ok: true,
-          ready: true,
-          provider,
-          model: providerTarget.models[0] ?? model,
-          endpoint: providerTarget.baseUrl,
-          providerTargets: targetSummaries,
-        });
-      } catch (error: any) {
-        const status = getUpstreamStatus(error);
-        if (status === 404 || status === 405) {
-          // Some providers do not expose a models endpoint consistently.
-          return remember({
-            ok: true,
-            ready: true,
-            provider,
-            model: providerTarget.models[0] ?? model,
-            endpoint: providerTarget.baseUrl,
-            providerTargets: targetSummaries,
-          });
-        }
-        if (isRateLimitedUpstreamError(error)) {
-          observedRateLimit = true;
-          const retryAfterMs = getRetryAfterMs(error) ?? 10000;
-          const existing =
-            onesaProviderBackoffUntilByEndpoint.get(providerTarget.baseUrl) ??
-            0;
-          onesaProviderBackoffUntilByEndpoint.set(
-            providerTarget.baseUrl,
-            Math.max(existing, Date.now() + Math.min(30000, retryAfterMs))
-          );
-          continue;
-        }
-        if (status === 401 || status === 403) {
-          lastFailureMessage = "Authentication failed.";
-          continue;
-        }
-        lastFailureMessage = String(error?.message ?? "probe failed");
-      }
-    }
-
-    const globalBackoffMs = getGlobalBackoffRemainingMs();
-    return remember({
-      ok: false,
-      ready: false,
-      provider,
-      model,
-      endpoint,
-      providerTargets: targetSummaries,
-      message:
-        observedRateLimit && globalBackoffMs > 0
-          ? "Onesa is temporarily rate-limited."
-          : lastFailureMessage
-            ? "Onesa is unavailable."
-            : "Onesa is unavailable.",
+      resolvedModel,
     });
   }
 
@@ -1792,7 +1848,7 @@ async function getOnesaReadiness() {
     const reply = String(response.data?.response ?? "").trim();
     const ready = reply.length > 0;
     if (ready) {
-      lastOnesaSuccessAt = Date.now();
+      rememberInference("local", config, ollamaBase, resolvedModel);
     }
     return remember({
       ok: ready,
@@ -1804,8 +1860,9 @@ async function getOnesaReadiness() {
       message: ready ? undefined : "Onesa is unavailable.",
     });
   } catch {
+    const success = recentSuccess(lastLocalSuccess, configKey);
     const stillWarm =
-      Date.now() - lastOnesaSuccessAt < ONESA_READINESS_GRACE_MS;
+      success?.endpoint === ollamaBase && success.model === resolvedModel;
     return remember({
       ok: stillWarm,
       ready: stillWarm,
@@ -1832,7 +1889,7 @@ const onesaRouteDeps: OnesaRouteDeps = {
   getGlobalBackoffRemainingMs,
   isRateLimitedUpstreamError,
   onChatSuccess: () => {
-    lastOnesaSuccessAt = Date.now();
+    // Local greetings, identity and catalogue replies are not inference proof.
     onesaReadinessCache = null;
   },
 };

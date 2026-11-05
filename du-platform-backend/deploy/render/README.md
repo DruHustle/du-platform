@@ -70,3 +70,20 @@ official [free-service limits](https://render.com/docs/free),
 [Docker guide](https://render.com/docs/docker),
 [health checks](https://render.com/docs/health-checks), and
 [Blueprint reference](https://render.com/docs/blueprint-spec).
+
+### Cold AI qualification
+
+A newly started cloud-backed API intentionally reports `/api/ai/ready` as 503
+until an actual authorized generation succeeds for its current provider, model
+and credential configuration. The model catalogue alone is insufficient. The
+proof expires after two minutes without another generation, and health checks
+do not issue cloud inference. The service's Render health path remains the
+independent database readiness path, avoiding AI warm-up/restart loops.
+
+The production publication gate still requires AI readiness. Stage the backend,
+perform a bounded owner-controlled inference using an already approved provider
+and verified free allowance, then run the exact-revision backend and frontend
+publication checks within the proof window. This needs an explicit qualification
+step before automatic frontend promotion; a deploy-only pipeline that skips it
+must stop. Do not change readiness to success, enable mock mode, generate paid
+warm-ups or remove the gate to release an unqualified candidate.
