@@ -1,3 +1,4 @@
+import { databaseStartupMode } from "./shared/databaseStartup";
 import { startOrderNotificationWorker } from "./modules/shop/orderNotifications";
 import { startTransactionalWorker } from "./modules/notifications/transactionalWorker";
 import { startNewsletterWorker } from "./modules/newsletter/worker";
@@ -91,7 +92,7 @@ export async function startServer() {
   try {
     await initializeDatabase();
   } catch (error) {
-    if (!isMemoryFallbackEnabled()) {
+    if (databaseStartupMode() === "verify" || !isMemoryFallbackEnabled()) {
       throw error;
     }
     console.warn(
