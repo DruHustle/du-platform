@@ -130,6 +130,24 @@ try {
   pass(
     "identity questions in four selected languages do not contact a provider"
   );
+  const health = await fetch(`${base}/health`);
+  assert.equal(health.status, 200);
+  assert.deepEqual(
+    (({ ok, ready, modelAvailable, inferenceVerified }) => ({
+      ok,
+      ready,
+      modelAvailable,
+      inferenceVerified,
+    }))(await health.json()),
+    { ok: true, ready: false, modelAvailable: true, inferenceVerified: false }
+  );
+  const unverified = await fetch(`${base}/ready`);
+  assert.equal(unverified.status, 503);
+  assert.equal((await unverified.json()).ready, false);
+  assert.equal(requests.length, 0);
+  pass(
+    "listed models and local identity replies do not establish inference readiness"
+  );
 
   for (const name of ["Gemini", "Grok", "ChatGPT", "Claude"]) {
     configure();
@@ -295,6 +313,30 @@ try {
     tripType: "round_trip",
   });
   plan.itinerary = plan.itinerary.map(day => ({ ...day, details: complete }));
+  respond = () => ({ text: complete, reason: "stop" });
+  const coldPlan = await api("/trip-plan", {
+    origin: "Berlin",
+    days: 3,
+    travelers: 1,
+  });
+  assert.equal(coldPlan.data.source, "fallback");
+  assert.equal(
+    requests.length,
+    0,
+    "Cold trip planning must not trigger a billable readiness probe"
+  );
+  assert.equal(
+    (await chat("Explain an entry document I should prepare.")).status,
+    200
+  );
+  const verified = await fetch(`${base}/ready`);
+  assert.equal(verified.status, 200);
+  assert.equal((await verified.json()).inferenceVerified, true);
+  assert.equal(
+    requests.length,
+    1,
+    "Readiness reuses actual request evidence without generation"
+  );
   respond = () => ({ text: JSON.stringify(plan), reason: "stop" });
   const planned = await api("/trip-plan", {
     origin: "Berlin",
