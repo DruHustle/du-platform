@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   backendTarget,
-  ORACLE_API_ORIGIN,
+  TRACKED_API_ORIGIN,
 } from "../lib/backend-deployment.mjs";
 
 const rootDir = process.cwd();
@@ -53,10 +53,10 @@ if (
 
 if (
   vercel.rewrites.find(rule => rule.source === "/api/:path*")?.destination !==
-  `${ORACLE_API_ORIGIN}/api/:path*`
+  `${TRACKED_API_ORIGIN}/api/:path*`
 ) {
   fail(
-    "The tracked Vercel config must preserve the Oracle rollback proxy. Render cutover belongs only in verified production staging."
+    "The tracked Vercel config must preserve the current Render proxy. Backend selection and any rollback still require verified production staging."
   );
 }
 for (const filename of fs.readdirSync(
