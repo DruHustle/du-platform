@@ -78,7 +78,7 @@ du-platform/
 │   │   └── android/
 │   ├── docs/                 # Review checklist and operations
 │   └── tooling/              # Repository tests and orchestration
-├── du-platform-backend/      # Express API and deploy/oracle/
+├── du-platform-backend/      # Express API and deploy/render/
 └── .github/                  # GitHub Actions workflows
 ```
 
@@ -246,25 +246,22 @@ Production web hosting serves generated route documents and the SPA. Express ser
 ## Hosting Configuration
 
 GitHub repository: https://github.com/DruHustle/du-platform (one repository).
-Vercel builds the frontend from the **repository root** with output directory
-`du-platform-frontend/web/dist`. The production backend runs on the Oracle VM **Software Engineering
-Backend**, shared with other independent applications. See
-[Oracle deployment and rollback](../du-platform-backend/deploy/oracle/README.md). Managed database and
-provider integrations remain unchanged. Retired deployment configuration has been
-removed; rollback uses the previous tested Oracle image.
-After a verified backend release, DU removes older unused Docker images while
-keeping the current release, its rollback image and every container's image.
-For local Docker builds, `pnpm --dir du-platform-frontend/tooling docker:build` applies the same cleanup policy and
-keeps `du-platform:local` plus `du-platform:local-previous`. Native `pnpm --dir du-platform-frontend/tooling dev`
-does not build Docker images. See the Oracle operations guide for manual cleanup.
-GitHub Actions owns automatic frontend releases and PR previews after CI passes;
-Vercel Git auto-deployment is disabled to prevent duplicate copies. Vercel builds
-only `build:frontend`; Oracle backend releases remain independent.
+The production backend runs only on the existing free Render web service. See
+[Render deployment](../du-platform-backend/deploy/render/README.md) and the
+[runtime and recovery handoff](../du-platform-backend/deploy/render/retirement.md).
+The managed database and provider integrations are retained. Production workflow
+selection rejects Oracle and has no VM fallback.
+
+The frontend remains on Vercel, independently of the Render backend. GitHub
+Actions builds it from the repository root to `du-platform-frontend/web/dist`
+only after the exact Render backend release passes. Vercel Git auto-deployment
+remains disabled so the verified workflow owns preview and production releases.
+The canonical domain and existing Vercel routing remain unchanged.
 Frontend builds enforce a 60 MiB output budget and a 6 MiB per-file budget. Run
 `pnpm --dir du-platform-frontend/tooling check:deployment-size` to inspect the current output.
 The frontend build emits a static HTML document for each registered route,
 including project details, with its own initial canonical, title, and robots
-directive. Vercel serves these documents with `cleanUrls: true`; do not restore
+directive. Hosting rules serve these route documents; do not restore
 the catch-all rewrite to `index.html`, which makes every initial document point
 at the homepage. Unmatched URLs use `404.html` with HTTP 404. Existing typo
 aliases permanently redirect to their corrected routes, and the API proxy stays
@@ -381,18 +378,19 @@ You should see:
 [E2E] Onesa smoke test passed.
 ```
 
-## Manual Oracle readiness checks
+## Manual Render readiness checks
 
 The backend keeps these read-only endpoints for release verification and
 troubleshooting:
 
-- App liveness and deployed commit: `https://du-api.152-70-22-84.sslip.io/api/ping`
-- Database readiness: `https://du-api.152-70-22-84.sslip.io/api/health/db`
-- Onesa readiness: `https://du-api.152-70-22-84.sslip.io/api/ai/ready`
+- App liveness and deployed commit: `https://du-platform-api.onrender.com/api/ping`
+- Database readiness: `https://du-platform-api.onrender.com/api/health/db`
+- Onesa readiness: `https://du-platform-api.onrender.com/api/ai/ready`
 
 The scheduled GitHub infrastructure probes and their email alerts have been
-removed. Docker retains its container health check. See
-[Oracle operations](../du-platform-backend/deploy/oracle/README.md) for release and rollback checks.
+removed. The Render service retains its database health check. See
+[Render operations](../du-platform-backend/deploy/render/README.md) for release
+checks and the free service's bounded cold-start behavior.
 
 ## Strategic Framework Alignment
 
@@ -438,9 +436,12 @@ The backend uses the existing MySQL, `RESEND_API_KEY`, `RESET_EMAIL_PROVIDER=res
 `FROM_EMAIL`/admin sender setting, `APP_BASE_URL` (the public HTTPS frontend), and
 `ADMIN_EMAILS` allowlist. No email credentials belong in the frontend. MySQL schema
 initialization adds subscription lifecycle columns, campaigns and a persistent
-outbox without deleting existing signups. Oracle runs the queue worker; do not run
-it from Vercel or start a second application just for sending. Database advisory
-locking prevents competing workers from claiming the same job.
+outbox without deleting existing signups. The existing Render web process runs
+the queue workers while awake; no separate VM application or sending service is
+needed. Database advisory locking prevents competing workers from claiming the
+same job. Free-service idle suspension can delay delivery until the web service
+wakes. Preserve `OUTBOUND_MESSAGES_PAUSED=true` during a consumer handoff until
+the previous consumer has been stopped and key continuity verified.
 
 The worker sends individual messages, includes personal unsubscribe links, checks
 subscription eligibility before sending and retries temporary failures with
