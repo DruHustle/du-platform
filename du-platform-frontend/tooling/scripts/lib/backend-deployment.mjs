@@ -1,6 +1,7 @@
 import { pathToFileURL } from "node:url";
 
 export const ORACLE_API_ORIGIN = "https://du-api.152-70-22-84.sslip.io";
+export const TRACKED_API_ORIGIN = "https://du-platform-api.onrender.com";
 export const PUBLIC_SITE_ORIGIN = "https://www.diasporaunlocked.com";
 export const SOURCE_REPOSITORY = "https://github.com/DruHustle/du-platform";
 
@@ -180,8 +181,8 @@ export async function productionProxy(config, env = process.env, options = {}) {
   requireCondition(
     apiRules.length === 1 &&
       apiRules[0].source === "/api/:path*" &&
-      apiRules[0].destination === `${ORACLE_API_ORIGIN}/api/:path*`,
-    "Production source must start from the tracked Oracle rollback proxy, with exactly one API rule."
+      apiRules[0].destination === `${TRACKED_API_ORIGIN}/api/:path*`,
+    "Production source must start from the tracked Render proxy, with exactly one API rule."
   );
   if (target.provider === "render") {
     requireCondition(
