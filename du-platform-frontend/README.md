@@ -252,12 +252,11 @@ The production backend runs only on the existing free Render web service. See
 The managed database and provider integrations are retained. Production workflow
 selection rejects Oracle and has no VM fallback.
 
-The frontend transition uses a free Render Static Site from this same standalone
-repository. Until its build, routes, headers and canonical-domain handoff are
-verified, the accepted Vercel frontend remains the rollback boundary: GitHub
+The frontend remains on Vercel, independently of the Render backend. GitHub
 Actions builds it from the repository root to `du-platform-frontend/web/dist`
 only after the exact Render backend release passes. Vercel Git auto-deployment
-remains disabled. This source change does not claim a provider/domain cutover.
+remains disabled so the verified workflow owns preview and production releases.
+The canonical domain and existing Vercel routing remain unchanged.
 Frontend builds enforce a 60 MiB output budget and a 6 MiB per-file budget. Run
 `pnpm --dir du-platform-frontend/tooling check:deployment-size` to inspect the current output.
 The frontend build emits a static HTML document for each registered route,

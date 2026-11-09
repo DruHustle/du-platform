@@ -1,4 +1,4 @@
-# Render-only runtime and recovery handoff
+# Render-only backend and recovery handoff
 
 DU remains the standalone `DruHustle/du-platform` application. Its production
 backend belongs on the existing free Render web service. No DU runtime, worker,
@@ -78,14 +78,11 @@ separate from keeping an application hosted there.
 
 ## Frontend placement
 
-The backend remains independently deployable. The remaining frontend handoff is
-a free Render Static Site from the same standalone repository. Render supports
-full-URL rewrite destinations, allowing same-origin `/api/*` forwarding to the
-verified Render backend. Preserve existing route documents, redirects, security
-headers, cache controls, source identity and post-deployment checks before moving
-the canonical domain. Do not replace an accepted frontend with an unqualified
-static build merely because the backend is already on Render.
+The frontend remains on Vercel at `https://www.diasporaunlocked.com`. Its
+same-origin `/api/*` proxy forwards to the independently deployed Render backend.
+Keep the existing route documents, redirects, security headers, cache controls,
+source identity and post-deployment checks. The backend handoff does not change
+frontend hosting or the canonical domain. No Render static site is required.
 
 References: [free-service behavior](https://render.com/docs/free),
-[deployment lifecycle](https://render.com/docs/deploys),
-[static-site rewrites](https://render.com/docs/redirects-rewrites).
+[deployment lifecycle](https://render.com/docs/deploys).
