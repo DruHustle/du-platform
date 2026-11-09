@@ -21,7 +21,7 @@ if (
   );
 // Preview staging remains offline and is isolated by prepare-preview.mjs.
 // Production staging requires fresh, exact-revision backend readiness before
-// any deployable source is written, including during an Oracle rollback.
+// any deployable source is written. Historical VM backends are refused.
 const preparedConfig =
   flags[0] === "--production"
     ? await productionProxy(

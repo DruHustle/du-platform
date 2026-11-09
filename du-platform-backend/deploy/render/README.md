@@ -39,33 +39,53 @@ and commercial operations in prelaunch mode during qualification.
 
 ## Release behavior
 
-The GitHub release workflow keeps Oracle as its default. Render is an explicit
-opt-in through `DU_BACKEND_HOST=render` and the corresponding repository
-deployment variables. Read the release script for the complete configuration
-contract. Automatic service deployment must remain disabled.
+Render is the only production backend. `DU_BACKEND_HOST` may be unset or
+`render`; every other value is refused. The service, workspace and origin still
+come from the corresponding repository deployment variables. Read the release
+script for the complete configuration contract. Automatic service deployment
+must remain disabled. No production workflow can request an Oracle release.
 
 The release job verifies the selected service, the free plan, and the exact
 tested revision. Database and AI readiness must pass before the staged frontend
 API proxy can change. The tracked frontend proxy now records the verified
 production origin, `https://du-platform-api.onrender.com`. Production staging
-still verifies the selected backend before preparing its proxy, including an
-explicit Oracle rollback. Changing the tracked origin does not change the
-workflow's backend selection or bypass release evidence. Production
+still verifies the Render backend before preparing its proxy. Historical VM
+backends cannot be selected for a production rollout or proxy rollback. Changing
+the tracked origin does not bypass release evidence. Production
 configuration and live acceptance are separate from source-level tests.
 
 Check the applied HTTP health-check setting in the Render Dashboard: some
 creation tools expose only the platform's default TCP check.
 
-## External keepalive
+## Outbox workers and free-service limits
 
-The user manages their own cron. Once the service is live, a GET to its
-`/api/ping` endpoint checks liveness without a database or AI-provider request.
-No keepalive schedule is created here.
+The web process already starts the newsletter, order-notification and
+transactional-message workers. They use the existing durable MySQL queues,
+advisory locks and stable Resend idempotency keys, and send over HTTPS. A
+separate worker service is not required. During qualification,
+`OUTBOUND_MESSAGES_PAUSED=true` suppresses provider calls. Clear it only after
+the old consumer is stopped and the existing JWT/payload encryption key,
+database and sender configuration are confirmed unchanged. Do not create a new
+job or send a test message to qualify this hosting change.
+
+A GET to `/api/ping` checks liveness without a database or AI-provider request.
+No keepalive schedule is created or required by these deployment files.
 
 Free web services sleep after 15 minutes without inbound traffic and can
 restart at any time. A keepalive does not guarantee availability. The workspace
 shares 750 free instance-hours per calendar month across all free web services;
 continuous operation in a 30-day month uses about 720 hours for one service.
+Queued work remains durable while the free process is asleep, but delivery is
+delayed until it wakes. This configuration does not promise an always-on sender.
+
+## Recovery and retirement
+
+The old Oracle scripts are retained as historical recovery material. Their
+container/SSH adapter cannot run inside a free Render web service. Keep the
+encrypted archives and the separate existing passphrase/JWT custody until an
+independent owner-device or managed-database recovery path is verified. Never
+place backup keys in the frontend or an archive download. See
+[the Render-only handoff](retirement.md) for sequencing and remaining custody.
 
 Validate the Blueprint against the current
 [Render JSON Schema](https://render.com/schema/render.yaml.json). See the
