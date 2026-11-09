@@ -711,7 +711,7 @@ test("Render proxy changes only the staged API destination after matching eviden
   assert.deepEqual(
     config,
     original,
-    "The tracked Oracle rollback config must remain intact"
+    "The tracked Render config must remain intact"
   );
   assert.equal(calls.length, 3);
   assert.equal(staged.buildCommand, "VITE_API_URL=/api pnpm build");
@@ -771,6 +771,9 @@ test("staging rejects direct browser API origins, duplicate proxies and uncontro
     value => {
       value.rewrites[0].destination = origin + "/api/:path*";
     },
+    value => {
+      value.rewrites[0].destination = ORACLE_API_ORIGIN + "/api/:path*";
+    },
   ]) {
     const changed = structuredClone(config),
       calls = [];
@@ -788,6 +791,9 @@ test("staging rejects direct browser API origins, duplicate proxies and uncontro
 
 test("Oracle rollback checks the Oracle host before cutover without requiring public traffic to have moved already", async () => {
   const calls = [];
+  const expected = structuredClone(config);
+  expected.rewrites.find(rule => rule.source === "/api/:path*").destination =
+    `${ORACLE_API_ORIGIN}/api/:path*`;
   assert.deepEqual(
     await productionProxy(
       config,
@@ -796,7 +802,7 @@ test("Oracle rollback checks the Oracle host before cutover without requiring pu
         fetcher: readyFetcher({}, calls, ORACLE_API_ORIGIN),
       }
     ),
-    config
+    expected
   );
   assert.equal(calls.length, 3);
   assert(calls.every(call => new URL(call.url).origin === ORACLE_API_ORIGIN));

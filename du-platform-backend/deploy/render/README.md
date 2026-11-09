@@ -46,9 +46,12 @@ contract. Automatic service deployment must remain disabled.
 
 The release job verifies the selected service, the free plan, and the exact
 tested revision. Database and AI readiness must pass before the staged frontend
-API proxy can change. The tracked frontend configuration remains available
-for rollback. Production configuration and live acceptance are separate from
-source-level tests.
+API proxy can change. The tracked frontend proxy now records the verified
+production origin, `https://du-platform-api.onrender.com`. Production staging
+still verifies the selected backend before preparing its proxy, including an
+explicit Oracle rollback. Changing the tracked origin does not change the
+workflow's backend selection or bypass release evidence. Production
+configuration and live acceptance are separate from source-level tests.
 
 Check the applied HTTP health-check setting in the Render Dashboard: some
 creation tools expose only the platform's default TCP check.
