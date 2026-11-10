@@ -138,7 +138,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://du-api.152-70-22-84.sslip.io/api/:path*"
+      "destination": "https://du-platform-api.onrender.com/api/:path*"
     },
     {
       "source": "/:path([^/.][^.]*)",

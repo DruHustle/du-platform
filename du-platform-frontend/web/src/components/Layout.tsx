@@ -1055,8 +1055,8 @@ export default function Layout({ children }: LayoutProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Footer */}
-      <footer className="site-footer bg-slate-950 pt-14 pb-12">
+      {/* Leave room below footer content for the fixed chat launcher. */}
+      <footer className="site-footer bg-slate-950 pt-14 pb-40 md:pb-28">
         <div className="container mx-auto px-6">
           {/* Footer information and contact grid */}
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 mb-12 lg:grid-cols-[0.8fr_0.8fr_1.25fr_1.15fr]">
@@ -1110,7 +1110,7 @@ export default function Layout({ children }: LayoutProps) {
                 {tr("footer.newsletter.title", "Newsletter")}
               </h3>
               <div className="space-y-4">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   {tr(
                     "footer.newsletter.description",
                     "Zimbabwean products, Southern African travel ideas and diaspora news by email."
@@ -1134,7 +1134,7 @@ export default function Layout({ children }: LayoutProps) {
                     )}
                     required
                     autoComplete="email"
-                    className="min-w-0 flex-1 h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                    className="min-w-0 flex-1 h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white placeholder:text-slate-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                   />
                   <button
                     type="submit"
@@ -1273,13 +1273,13 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
               <Link
                 href="/privacy-policy"
-                className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold"
+                className="text-slate-400 hover:text-white transition-colors uppercase tracking-widest font-bold"
               >
                 {t("privacy_policy")}
               </Link>
               <Link
                 href="/terms-of-service"
-                className="text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-bold"
+                className="text-slate-400 hover:text-white transition-colors uppercase tracking-widest font-bold"
               >
                 {t("terms_of_service")}
               </Link>

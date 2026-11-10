@@ -19,6 +19,8 @@ services:
         value: production
       - key: TRUST_PROXY
         value: "1"
+      - key: DATABASE_STARTUP_MODE
+        value: verify
       - key: DATABASE_PROVIDER
         value: aiven
       - key: AIVEN_MYSQL_URL
