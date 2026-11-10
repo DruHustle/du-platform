@@ -46,7 +46,7 @@ jobs:
       - name: Audit the actual mobile lockfile
         id: audit
         working-directory: du-platform-frontend/mobile
-        run: npm audit --package-lock-only --omit=dev --audit-level=moderate --json > "$RUNNER_TEMP/du-mobile-audit.json"
+        run: npm audit --package-lock-only --audit-level=moderate --json > "$RUNNER_TEMP/du-mobile-audit.json"
       - name: Summarize mobile security status
         if: always()
         run: node du-platform-frontend/tooling/scripts/report-mobile-audit.mjs "$RUNNER_TEMP/du-mobile-audit.json"

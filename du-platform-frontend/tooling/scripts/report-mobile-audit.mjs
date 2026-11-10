@@ -30,7 +30,7 @@ const message = [
   "",
   blocked
     ? "**Native distribution remains blocked by unresolved moderate-or-higher dependency findings.**"
-    : "No moderate-or-higher findings were reported in the mobile production dependency graph.",
+    : "No moderate-or-higher findings were reported in the mobile application and development dependency graph.",
   "",
   "| Severity | Dependency entries |",
   "| --- | ---: |",
