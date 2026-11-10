@@ -1,6 +1,6 @@
 import { pathToFileURL } from "node:url";
 
-export const ORACLE_API_ORIGIN = "https://du-api.152-70-22-84.sslip.io";
+export const TRACKED_API_ORIGIN = "https://du-platform-api.onrender.com";
 export const PUBLIC_SITE_ORIGIN = "https://www.diasporaunlocked.com";
 export const SOURCE_REPOSITORY = "https://github.com/DruHustle/du-platform";
 
@@ -38,15 +38,14 @@ export function canonicalRenderOrigin(value) {
   return value;
 }
 
-// Opt-in is deliberate. Adding a Blueprint or a prepared Render service never
-// moves customer traffic while the durable database and secrets are incomplete.
+// Production belongs only on Render. The selected service, workspace and
+// readiness evidence remain explicit; no VM fallback is permitted.
 export function backendTarget(env = process.env) {
-  const provider = env.DU_BACKEND_HOST || "oracle";
+  const provider = env.DU_BACKEND_HOST || "render";
   requireCondition(
-    provider === "oracle" || provider === "render",
-    "DU_BACKEND_HOST must be oracle or render."
+    provider === "render",
+    "DU_BACKEND_HOST must be render; VM production hosting is retired."
   );
-  if (provider === "oracle") return { provider, origin: ORACLE_API_ORIGIN };
   const origin = canonicalRenderOrigin(env.DU_RENDER_API_ORIGIN);
   requireCondition(
     /^srv-[a-z0-9]{20}$/.test(env.DU_RENDER_SERVICE_ID || ""),
@@ -180,24 +179,22 @@ export async function productionProxy(config, env = process.env, options = {}) {
   requireCondition(
     apiRules.length === 1 &&
       apiRules[0].source === "/api/:path*" &&
-      apiRules[0].destination === `${ORACLE_API_ORIGIN}/api/:path*`,
-    "Production source must start from the tracked Oracle rollback proxy, with exactly one API rule."
+      apiRules[0].destination === `${TRACKED_API_ORIGIN}/api/:path*`,
+    "Production source must start from the tracked Render proxy, with exactly one API rule."
   );
-  if (target.provider === "render") {
-    requireCondition(
-      env.VERIFIED_BACKEND_REVISION === revision &&
-        env.VERIFIED_RENDER_ORIGIN === target.origin &&
-        env.VERIFIED_RENDER_SERVICE_ID === target.serviceId &&
-        env.VERIFIED_RENDER_WORKSPACE_ID === target.workspaceId &&
-        validDeployId(env.VERIFIED_RENDER_DEPLOY_ID),
-      "Render proxy cutover requires matching revision, origin, workspace, service and deployment evidence from the successful Render release job."
-    );
-  }
+  requireCondition(
+    env.VERIFIED_BACKEND_REVISION === revision &&
+      env.VERIFIED_RENDER_ORIGIN === target.origin &&
+      env.VERIFIED_RENDER_SERVICE_ID === target.serviceId &&
+      env.VERIFIED_RENDER_WORKSPACE_ID === target.workspaceId &&
+      validDeployId(env.VERIFIED_RENDER_DEPLOY_ID),
+    "Render proxy cutover requires matching revision, origin, workspace, service and deployment evidence from the successful Render release job."
+  );
   // Check again immediately before preparing the production source. A previous
   // successful job is not enough if another deployment has since replaced it.
   await verifyBackendOrigin(target.origin, revision, {
     ...options,
-    allowColdStart: target.provider === "render",
+    allowColdStart: true,
   });
   const prepared = structuredClone(config);
   prepared.rewrites.find(rule => rule.source === "/api/:path*").destination =

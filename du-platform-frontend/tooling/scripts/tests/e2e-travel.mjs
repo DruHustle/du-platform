@@ -864,20 +864,28 @@ try {
     for (const [old, target] of Object.entries(travelRedirects).filter(
       ([source]) => !source.endsWith("/") && !source.endsWith(".html")
     )) {
-      // The SEO preview already contains <main> before React starts. Complete
-      // each destination's bootstrap before replacing its document again;
-      // WebKit can report replacement-cancelled XHRs as access-control errors.
-      const bootstrapEndpoints = [["/api/auth/me", 401]];
-      if (target === "/travel")
-        bootstrapEndpoints.push(["/api/travel/capabilities", 200]);
-      await Promise.all([
-        ...bootstrapEndpoints.map(async ([endpoint, expectedStatus]) => {
+      // The generated document already contains <main> before React starts its
+      // requests. Finish the destination's bootstrap reads before navigating
+      // again, rather than aborting them during WebKit's document teardown.
+      const bootstrapPaths = ["/api/auth/me"];
+      if (target === "/travel") bootstrapPaths.push("/api/travel/capabilities");
+      const bootstrap = Promise.all(
+        bootstrapPaths.map(async path => {
           const response = await page.waitForResponse(
-            candidate => candidate.url() === base + endpoint
+            response =>
+              response.url() === base + path &&
+              response.request().method() === "GET"
           );
-          assert.equal(response.status(), expectedStatus);
-          assert.equal(await response.finished(), null);
-        }),
+          assert.equal(response.status(), path === "/api/auth/me" ? 401 : 200);
+          assert.equal(
+            await response.finished(),
+            null,
+            path + " did not finish"
+          );
+        })
+      );
+      await Promise.all([
+        bootstrap,
         page.goto(base + old + "?lng=en#attractions"),
       ]);
       await page.waitForURL(base + target + "?lng=en#attractions");

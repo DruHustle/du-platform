@@ -58,7 +58,7 @@ assert.deepEqual(config.rewrites, [
     destination:
       process.env.VERCEL_ENV === "preview"
         ? "/preview-api-unavailable.json"
-        : "https://du-api.152-70-22-84.sslip.io/api/:path*",
+        : "https://du-platform-api.onrender.com/api/:path*",
   },
   { source: "/:path([^/.][^.]*)", destination: "/:path.html" },
   { source: "/shop/product/:slug", destination: "/shop/products.html" },

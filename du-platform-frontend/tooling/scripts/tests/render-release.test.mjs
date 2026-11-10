@@ -9,7 +9,6 @@ import {
   assertRenderService,
   backendTarget,
   canonicalRenderOrigin,
-  ORACLE_API_ORIGIN,
   productionProxy,
   SOURCE_REPOSITORY,
   testedRevision,
@@ -22,6 +21,7 @@ const serviceId = `srv-${"a".repeat(20)}`,
   workspaceId = `tea-${"b".repeat(20)}`,
   deployId = `dep-${"c".repeat(20)}`;
 const origin = "https://du-release-fixture.onrender.com";
+const retiredOracleOrigin = "https://du-api.152-70-22-84.sslip.io";
 const env = {
   DU_BACKEND_HOST: "render",
   DU_RENDER_API_ORIGIN: origin,
@@ -159,19 +159,15 @@ function renderFixture({
   };
 }
 
-test("Oracle remains the default and Render requires complete explicit configuration", () => {
-  for (const setting of [undefined, "", "oracle"])
-    assert.deepEqual(backendTarget({ DU_BACKEND_HOST: setting }), {
-      provider: "oracle",
-      origin: ORACLE_API_ORIGIN,
+test("Render is the only backend and still requires complete explicit service configuration", () => {
+  for (const setting of [undefined, "", "render"])
+    assert.deepEqual(backendTarget({ ...env, DU_BACKEND_HOST: setting }), {
+      provider: "render",
+      origin,
+      serviceId,
+      workspaceId,
     });
-  assert.deepEqual(backendTarget(env), {
-    provider: "render",
-    origin,
-    serviceId,
-    workspaceId,
-  });
-  for (const setting of ["Render", "other", " render"])
+  for (const setting of ["oracle", "Render", "other", " render"])
     assert.throws(
       () => backendTarget({ ...env, DU_BACKEND_HOST: setting }),
       /DU_BACKEND_HOST/
@@ -629,13 +625,9 @@ test("a sleeping free Render service gets a bounded wake window without extendin
         { EXPECTED_REVISION: revision },
         { fetcher: slowWake }
       ),
-      /Cold start/
+      /DU_RENDER_API_ORIGIN/
     );
-    assert.deepEqual(
-      calls,
-      [{ route: "/api/ping", limit: 30_000 }],
-      "Oracle deadlines stay unchanged"
-    );
+    assert.deepEqual(calls, [], "Incomplete service identity must fail before any request");
   } finally {
     timeout.mock.restore();
   }
@@ -711,7 +703,7 @@ test("Render proxy changes only the staged API destination after matching eviden
   assert.deepEqual(
     config,
     original,
-    "The tracked Oracle rollback config must remain intact"
+    "The tracked Render config must remain intact"
   );
   assert.equal(calls.length, 3);
   assert.equal(staged.buildCommand, "VITE_API_URL=/api pnpm build");
@@ -771,6 +763,9 @@ test("staging rejects direct browser API origins, duplicate proxies and uncontro
     value => {
       value.rewrites[0].destination = origin + "/api/:path*";
     },
+    value => {
+      value.rewrites[0].destination = retiredOracleOrigin + "/api/:path*";
+    },
   ]) {
     const changed = structuredClone(config),
       calls = [];
@@ -786,20 +781,21 @@ test("staging rejects direct browser API origins, duplicate proxies and uncontro
   }
 });
 
-test("Oracle rollback checks the Oracle host before cutover without requiring public traffic to have moved already", async () => {
+test("retired Oracle selection cannot prepare a production proxy or make any request", async () => {
   const calls = [];
-  assert.deepEqual(
-    await productionProxy(
+  const original = structuredClone(config);
+  await assert.rejects(
+    productionProxy(
       config,
-      { EXPECTED_REVISION: revision },
+      { ...env, ...proof, DU_BACKEND_HOST: "oracle" },
       {
-        fetcher: readyFetcher({}, calls, ORACLE_API_ORIGIN),
+        fetcher: readyFetcher({}, calls, retiredOracleOrigin),
       }
     ),
-    config
+    /VM production hosting is retired/
   );
-  assert.equal(calls.length, 3);
-  assert(calls.every(call => new URL(call.url).origin === ORACLE_API_ORIGIN));
+  assert.equal(calls.length, 0);
+  assert.deepEqual(config, original);
 });
 
 test("the production CLI writes a verified staged proxy and refuses incomplete Render configuration without creating source", async () => {
@@ -903,7 +899,7 @@ test("release guardrails reject weakened quality gates, missing cutover proof an
       [workflow, true],
       [
         workflow.replace(
-          "needs: [build-and-test, deploy-oracle-production, deploy-render-production]",
+          "needs: [build-and-test, deploy-render-production]",
           "needs: build-and-test"
         ),
         false,
@@ -930,10 +926,7 @@ test("release guardrails reject weakened quality gates, missing cutover proof an
         false,
       ],
       [
-        workflow.replace(
-          "Wait for verified Oracle release",
-          "Changed Oracle handshake"
-        ),
+        workflow + "\n  deploy-oracle-production:\n    name: Retired VM deployment\n",
         false,
       ],
       [workflow.replace("always() && !cancelled()", "always()"), false],
@@ -952,7 +945,7 @@ test("release guardrails reject weakened quality gates, missing cutover proof an
         [script("guardrails/check-deploy-guardrails.mjs")],
         {
           cwd: dir,
-          env: { PATH: process.env.PATH, DU_BACKEND_HOST: "oracle" },
+          env: { PATH: process.env.PATH, ...env },
           encoding: "utf8",
         }
       );
@@ -963,7 +956,7 @@ test("release guardrails reject weakened quality gates, missing cutover proof an
   }
 });
 
-test("workflow host selection publishes only the successful selected backend after a passing main push", () => {
+test("workflow publishes only a successful Render release after a passing main push", () => {
   const condition = id => {
     const section = workflow
       .split(`  ${id}:\n`)[1]
@@ -984,8 +977,8 @@ test("workflow host selection publishes only the successful selected backend aft
       `return (${expression});`
     );
   };
-  const oracle = condition("deploy-oracle-production"),
-    render = condition("deploy-render-production"),
+  assert(!workflow.includes("  deploy-oracle-production:\n"));
+  const render = condition("deploy-render-production"),
     publish = condition("deploy-vercel-production");
   const context = (host, changes = {}) => {
     const github = {
@@ -995,11 +988,8 @@ test("workflow host selection publishes only the successful selected backend aft
     };
     const needs = {
       "build-and-test": { result: "success" },
-      "deploy-oracle-production": {
-        result: host === "render" ? "skipped" : "success",
-      },
       "deploy-render-production": {
-        result: host === "render" ? "success" : "skipped",
+        result: host === "render" || host === "" ? "success" : "skipped",
       },
       ...changes.needs,
     };
@@ -1011,22 +1001,17 @@ test("workflow host selection publishes only the successful selected backend aft
       () => Boolean(changes.cancelled),
     ];
   };
-  for (const host of ["", "oracle", "render"]) {
-    assert.equal(oracle(...context(host)), host !== "render");
-    assert.equal(render(...context(host)), host === "render");
+  for (const host of ["", "render"]) {
+    assert.equal(render(...context(host)), true);
     assert.equal(publish(...context(host)), true);
     for (const result of ["failure", "cancelled", "skipped"])
       assert.equal(
         publish(...context(host, { needs: { "build-and-test": { result } } })),
         false
       );
-    const selected =
-      host === "render"
-        ? "deploy-render-production"
-        : "deploy-oracle-production";
     for (const result of ["failure", "cancelled", "skipped"])
       assert.equal(
-        publish(...context(host, { needs: { [selected]: { result } } })),
+        publish(...context(host, { needs: { "deploy-render-production": { result } } })),
         false
       );
     assert.equal(
@@ -1039,7 +1024,8 @@ test("workflow host selection publishes only the successful selected backend aft
     );
     assert.equal(publish(...context(host, { cancelled: true })), false);
   }
-  assert.equal(oracle(...context("invalid")), false);
-  assert.equal(render(...context("invalid")), false);
-  assert.equal(publish(...context("invalid")), false);
+  for (const host of ["oracle", "invalid"]) {
+    assert.equal(render(...context(host)), false);
+    assert.equal(publish(...context(host)), false);
+  }
 });
