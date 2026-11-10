@@ -527,15 +527,21 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func reveal(_ element: XCUIElement, in scroll: XCUIElement) {
-        if pendingPasswordPromptFor != nil {
-            _ = declinePasswordPrompt(preserving: element, expected: element.value as? String ?? "",
-                                      secure: element.elementType == .secureTextField)
-        }
+        let expected = element.value as? String ?? ""
+        let secure = element.elementType == .secureTextField
         for _ in 0..<4 {
+            // The Account prompt can arrive after navigation or during a
+            // previous observation. Recheck it before each bounded gesture,
+            // preserving the value acknowledged before this reveal began.
+            _ = declinePasswordPrompt(preserving: element, expected: expected, secure: secure)
             let viewport = visibleContent(in: scroll)
+            if declinePasswordPrompt(preserving: element, expected: expected, secure: secure) {
+                continue // The modal changed the window; remeasure before any gesture.
+            }
             if element.isHittable && contains(viewport, element.frame) { return }
             if !scrollContent(scroll, avoiding: element) { break }
         }
+        _ = declinePasswordPrompt(preserving: element, expected: expected, secure: secure)
         assertControl(element, within: visibleContent(in: scroll))
     }
 
@@ -807,6 +813,9 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     private func waitForKeyboardOrInterruption() -> Bool {
         var interruptionObserved = false
+        var previousHierarchy: KeyboardHierarchy?
+        var previousOrientation: UIDeviceOrientation?
+        var hierarchySettledSince = Date()
         var previous: CGRect?
         var settledSince = Date()
         wait("A visible software keyboard must settle before typing") {
@@ -814,6 +823,48 @@ final class DUNativeSmokeTests: XCTestCase {
                 interruptionObserved = true
                 return true
             }
+            // A freshly focused keyboard can be replaced by the delayed
+            // Account prompt. Read whole-app snapshots while it is changing:
+            // resolving a disappearing live Keyboard.frame fails XCTest before
+            // the exact known prompt can be acknowledged by the caller.
+            // Snapshot rectangles remain opaque signatures, never geometry.
+            let orientation = XCUIDevice.shared.orientation
+            let hierarchy: KeyboardHierarchy
+            do {
+                hierarchy = try self.captureKeyboardHierarchy()
+            } catch {
+                self.rejectKeyboardObservation("Could not observe the settling keyboard hierarchy",
+                                               diagnostic: ["hierarchyError": String(describing: error)])
+                return false
+            }
+            if hierarchy.passwordPromptCount > 0 {
+                interruptionObserved = true
+                return true
+            }
+            let window = self.app.frame
+            guard self.readableKeyboardSignature(hierarchy, window: window)
+                && XCUIDevice.shared.orientation == orientation else {
+                previousHierarchy = nil
+                previous = nil
+                hierarchySettledSince = Date()
+                settledSince = Date()
+                return false
+            }
+            if previousHierarchy != hierarchy || previousOrientation != orientation {
+                previousHierarchy = hierarchy
+                previousOrientation = orientation
+                previous = nil
+                hierarchySettledSince = Date()
+                settledSince = Date()
+                return false
+            }
+            guard Date().timeIntervalSince(hierarchySettledSince) >= 0.2 else { return false }
+            if self.typingTutorials().firstMatch.exists || self.passwordPrompt() != nil {
+                interruptionObserved = true
+                return true
+            }
+            // Stable signatures only permit the original live-frame checks.
+            // They cannot establish visibility, hittability or clearance.
             guard let frame = self.observeKeyboard()?.obstruction, self.typingKeyboardPair != nil else {
                 previous = nil
                 settledSince = Date()
