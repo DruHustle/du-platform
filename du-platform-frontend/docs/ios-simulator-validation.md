@@ -172,6 +172,26 @@ and `Save` buttons. It chooses only `Not Now`, records both states and verifies
 that the input is unchanged. That allowance ends with the orientation's Assistant
 phase; an unknown prompt or a repeated password prompt fails.
 
+Run [41846956741](https://github.com/DruHustle/du-platform/actions/runs/41846956741)
+passed both portrait cases but failed both landscape cases after the delayed
+password prompt arrived on Assistant. The iPhone's final screenshot shows the
+prompt over the message editor; its four attempted reveal gestures left the
+editor's frame unchanged while the recorded snapshot already contained the
+prompt. The iPad's final screenshot shows the same prompt after it replaced a
+newly focused keyboard between the whole-app snapshot and a live frame lookup.
+Neither failure establishes a completed Assistant landscape journey.
+
+Reveal now checks the existing exact prompt validator before each bounded
+attempt and again after observing its viewport, keeping the input value from
+before the reveal. Dismissing an observed prompt requires a fresh viewport before
+any gesture. Initial keyboard settling first requires a stable whole-app
+keyboard/window signature and orientation, and checks for the prompt again
+before resolving live keyboard frames. The raw rectangles remain opaque
+signatures; the original live-frame stability, visibility, hittability, 44-point
+targets and keyboard-clearance checks still determine acceptance. A failed live
+lookup still fails the test. These changes need a fresh hosted iPhone and iPad
+run; they do not claim simulator acceptance from host-only checks.
+
 During typing, the already-required app snapshot also counts exact
 `Save Password?` sheets and alerts. One observed match in a readable, matching
 window and stable orientation can invoke the existing live validator; snapshot
