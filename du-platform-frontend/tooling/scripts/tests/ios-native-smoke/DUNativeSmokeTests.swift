@@ -26,12 +26,24 @@ final class DUNativeSmokeTests: XCTestCase {
         let keyboards: [CGRect]
         let accessories: [CGRect]
         let passwordPromptCount: Int
+        let typingTutorialCount: Int
     }
 
     private struct KeyboardGeometryPair {
         let orientation: UIDeviceOrientation
         let hierarchy: KeyboardHierarchy
         let observation: KeyboardObservation
+    }
+
+    private struct ContentPan {
+        let orientation: UIDeviceOrientation
+        let window: CGRect
+        let viewport: CGRect
+        let keyboard: CGRect?
+        let accessories: [CGRect]
+        let field: CGRect
+        let action: CGRect?
+        let appliedShift: CGFloat
     }
 
     private enum TypingKeyboardState {
@@ -223,6 +235,7 @@ final class DUNativeSmokeTests: XCTestCase {
         var keyboards: [CGRect] = []
         var accessories: [CGRect] = []
         var passwordPromptCount = 0
+        var typingTutorialCount = 0
         while index < descendants.count {
             let element = descendants[index]
             index += 1
@@ -238,18 +251,22 @@ final class DUNativeSmokeTests: XCTestCase {
                 && element.label == "Save Password?" {
                 passwordPromptCount += 1
             }
+            if element.elementType == .other && element.identifier == "UIContinuousPathIntroductionView" {
+                typingTutorialCount += 1
+            }
         }
         // Raw rectangles are opaque continuity signatures and diagnostics.
         // They are never interpreted or transformed into screen geometry.
         return KeyboardHierarchy(window: snapshot.frame, descendantWindows: windows,
                                  keyboards: keyboards, accessories: accessories,
-                                 passwordPromptCount: passwordPromptCount)
+                                 passwordPromptCount: passwordPromptCount, typingTutorialCount: typingTutorialCount)
     }
 
     private func hierarchyRecord(_ hierarchy: KeyboardHierarchy) -> [String: Any] {
         ["window": rectangle(hierarchy.window), "descendantWindows": hierarchy.descendantWindows.map(rectangle),
          "keyboards": hierarchy.keyboards.map(rectangle),
-         "accessories": hierarchy.accessories.map(rectangle), "passwordPromptCount": hierarchy.passwordPromptCount]
+         "accessories": hierarchy.accessories.map(rectangle), "passwordPromptCount": hierarchy.passwordPromptCount,
+         "typingTutorialCount": hierarchy.typingTutorialCount]
     }
 
     private func hierarchyWindowMatches(_ hierarchy: KeyboardHierarchy, window: CGRect) -> Bool {
@@ -430,8 +447,10 @@ final class DUNativeSmokeTests: XCTestCase {
     @MainActor
     @discardableResult
     private func scrollContent(_ scroll: XCUIElement, avoiding field: XCUIElement,
-                               action: XCUIElement? = nil, multiline: Bool = false) -> Bool {
+                               action: XCUIElement? = nil, multiline: Bool = false,
+                               previousPan: inout ContentPan?) -> Bool {
         guard let observation = observeKeyboard() else { return false }
+        let orientation = XCUIDevice.shared.orientation
         let viewport = visibleContent(in: scroll, observing: observation)
         let fieldFrame = field.frame
         let scrollFrame = scroll.frame
@@ -489,11 +508,36 @@ final class DUNativeSmokeTests: XCTestCase {
         // If geometry already fits, another gesture cannot establish a missing
         // hittability condition. Leave that condition to the unchanged checks.
         guard lower > 0 || upper < 0 else { return false }
-        // Aim at the middle of the measured feasible interval. The prior
-        // edge-adjacent target left a 15.5pt corrective gesture that lost the
-        // keyboard. An interior target avoids that measured small correction
-        // without assuming a recognizer threshold or expanding acceptance.
+        // Aim at the middle of the measured feasible interval. A previous
+        // gesture may have spent part of its travel acquiring the scroll pan:
+        // the recorded 60.33pt drag moved both controls only 50.33pt, then an
+        // unadjusted 10pt correction dismissed the keyboard. Derive any extra
+        // travel from this attempt's actual movement, never a fixed threshold.
         let requestedShift = lower / 2 + upper / 2
+        var unappliedTravel: CGFloat = 0
+        if let previous = previousPan,
+           previous.orientation == orientation && previous.window == observation.window,
+           previous.viewport == viewport && previous.keyboard == observation.keyboard,
+           previous.accessories == observation.accessories,
+           previous.field.size == fieldFrame.size && previous.field.minX == fieldFrame.minX,
+           previous.action?.size == actionFrame?.size && previous.action?.minX == actionFrame?.minX {
+            let fieldShift = previous.field.minY - fieldFrame.minY
+            let referenceShift = (previous.action ?? previous.field).minY - (actionFrame ?? fieldFrame).minY
+            // A layout change, clipping, reversed/zero motion or overshoot is
+            // not evidence of recognizer travel. Keep the same gesture budget
+            // and let the unchanged final geometry assertions decide success.
+            if fieldShift.isFinite && referenceShift.isFinite,
+               abs(fieldShift - referenceShift) <= 0.5,
+               referenceShift * previous.appliedShift > 0,
+               requestedShift * previous.appliedShift > 0,
+               abs(referenceShift) <= abs(previous.appliedShift) {
+                unappliedTravel = abs(previous.appliedShift) - abs(referenceShift)
+                checks.append(["name": "content-pan-measured-travel",
+                               "previousGesture": Double(previous.appliedShift),
+                               "observedContentShift": Double(referenceShift),
+                               "unappliedTravel": Double(unappliedTravel)])
+            }
+        }
         let left = max(0, min(viewport.maxX, fieldFrame.minX) - viewport.minX)
         let right = max(0, viewport.maxX - max(viewport.minX, fieldFrame.maxX))
         XCTAssertGreaterThan(max(left, right), 0, "A scroll gesture needs a visible gutter outside the editor")
@@ -501,7 +545,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let top = viewport.minY + viewport.height * 0.2
         let bottom = viewport.minY + viewport.height * 0.8
         let up = requestedShift > 0
-        let distance = min(abs(requestedShift), bottom - top)
+        let distance = min(abs(requestedShift) + unappliedTravel, bottom - top)
         let appliedShift = up ? distance : -distance
         let start = CGPoint(x: x, y: up ? bottom : top)
         let end = CGPoint(x: x, y: start.y - appliedShift)
@@ -516,9 +560,13 @@ final class DUNativeSmokeTests: XCTestCase {
         checks.append(["name": up ? "content-scroll-up" : "content-scroll-down",
                        "field": field.label, "scroll": rectangle(scrollFrame), "viewport": rectangle(viewport),
                        "requestedShift": Double(requestedShift), "appliedShift": Double(appliedShift),
+                       "unappliedTravel": Double(unappliedTravel),
                        "start": ["x": Double(start.x), "y": Double(start.y)],
                        "end": ["x": Double(end.x), "y": Double(end.y)]])
         typingKeyboardPair = nil
+        previousPan = ContentPan(orientation: orientation, window: observation.window, viewport: viewport,
+                                 keyboard: observation.keyboard, accessories: observation.accessories,
+                                 field: fieldFrame, action: actionFrame, appliedShift: appliedShift)
         // The default fast release produced 278–304pt of movement from
         // 90–140pt gestures. Use slow travel and a hold before releasing.
         from.press(forDuration: 0.1, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.2)
@@ -529,6 +577,7 @@ final class DUNativeSmokeTests: XCTestCase {
     private func reveal(_ element: XCUIElement, in scroll: XCUIElement) {
         let expected = element.value as? String ?? ""
         let secure = element.elementType == .secureTextField
+        var previousPan: ContentPan?
         for _ in 0..<4 {
             // The Account prompt can arrive after navigation or during a
             // previous observation. Recheck it before each bounded gesture,
@@ -539,7 +588,7 @@ final class DUNativeSmokeTests: XCTestCase {
                 continue // The modal changed the window; remeasure before any gesture.
             }
             if element.isHittable && contains(viewport, element.frame) { return }
-            if !scrollContent(scroll, avoiding: element) { break }
+            if !scrollContent(scroll, avoiding: element, previousPan: &previousPan) { break }
         }
         _ = declinePasswordPrompt(preserving: element, expected: expected, secure: secure)
         assertControl(element, within: visibleContent(in: scroll))
@@ -819,10 +868,6 @@ final class DUNativeSmokeTests: XCTestCase {
         var previous: CGRect?
         var settledSince = Date()
         wait("A visible software keyboard must settle before typing") {
-            if self.typingTutorials().firstMatch.exists || self.passwordPrompt() != nil {
-                interruptionObserved = true
-                return true
-            }
             // A freshly focused keyboard can be replaced by the delayed
             // Account prompt. Read whole-app snapshots while it is changing:
             // resolving a disappearing live Keyboard.frame fails XCTest before
@@ -837,7 +882,11 @@ final class DUNativeSmokeTests: XCTestCase {
                                                diagnostic: ["hierarchyError": String(describing: error)])
                 return false
             }
-            if hierarchy.passwordPromptCount > 0 {
+            // In the recorded iPad failure, resolving absent tutorial/sheet/
+            // alert queries consumed the entire 10s wait before its first live
+            // keyboard pair. Presence comes from this existing whole-app
+            // snapshot; the caller still validates every live prompt control.
+            if hierarchy.passwordPromptCount > 0 || hierarchy.typingTutorialCount > 0 {
                 interruptionObserved = true
                 return true
             }
@@ -859,10 +908,6 @@ final class DUNativeSmokeTests: XCTestCase {
                 return false
             }
             guard Date().timeIntervalSince(hierarchySettledSince) >= 0.2 else { return false }
-            if self.typingTutorials().firstMatch.exists || self.passwordPrompt() != nil {
-                interruptionObserved = true
-                return true
-            }
             // Stable signatures only permit the original live-frame checks.
             // They cannot establish visibility, hittability or clearance.
             guard let frame = self.observeKeyboard()?.obstruction, self.typingKeyboardPair != nil else {
@@ -993,6 +1038,7 @@ final class DUNativeSmokeTests: XCTestCase {
                                            secure: field.elementType == .secureTextField)
         }
         wait("Software keyboard is required") { self.visibleKeyboardFrame() != nil }
+        var previousPan: ContentPan?
         for _ in 0..<4 {
             if pendingPasswordPromptFor != nil {
                 resumePasswordInterruptedInput(field, expected: expectedValue ?? "",
@@ -1004,7 +1050,8 @@ final class DUNativeSmokeTests: XCTestCase {
             let viewport = visibleContent(in: scroll, observing: observation)
             if editingAreaVisible(field, viewport: viewport, multiline: multiline)
                 && action.isHittable && contains(viewport, action.frame) { break }
-            if !scrollContent(scroll, avoiding: field, action: action, multiline: multiline) { break }
+            if !scrollContent(scroll, avoiding: field, action: action, multiline: multiline,
+                              previousPan: &previousPan) { break }
         }
         if multiline {
             // Prove editing still works after the bounded scroll. XCTest has no
