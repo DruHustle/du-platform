@@ -113,3 +113,5 @@ feature matrix, verification results and remaining device/release checks.
 The subsequent fixes and current evidence are in
 `../docs/mobile-review-followup.md`. Native compilation and the remaining
 dependency audit findings are tracked separately in `../docs/mobile-validation.md`.
+
+See [mobile distribution](DISTRIBUTION.md) for owner-signed Android APKs and physical-device App Store Connect archives.
