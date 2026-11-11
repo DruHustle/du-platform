@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Image, Pressable, ScrollView, Text } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
-import { ApiError, request, type Catalog, type Product } from "../api";
+import { request, type Catalog, type Product } from "../api";
 import { productImageUrl as imageUrl } from "../media";
 import { useCart } from "../cart";
+import { canEditRejectedRequest, readPendingOrder, type OrderPayload, type Order } from "../checkout";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
 import { ORDER_KEY, PENDING_ORDER_KEY, PENDING_ORDER_COMMAND_KEY, useSession } from "../session";
 import { Action, Card, Copy, Field, Heading, Loading, Message, Screen, colors } from "../ui";
@@ -43,14 +44,112 @@ function PublishedDetails({productId}:{productId:number}) {
   return <Card><Heading>More information</Heading>{loading&&<Loading label="Loading product information…"/>}{!!error&&<><Message error message={error}/><Action title="Retry product information" secondary onPress={()=>setAttempt(value=>value+1)}/></>}{!loading&&!error&&rows.length===0&&<Copy>No additional details have been published.</Copy>}{rows.map(([key,label])=><Copy key={key}>{label}: {details?.[key] as string}</Copy>)}</Card>;
 }
 
-type OrderPayload={items:{productId:number;quantity:number}[];currency:string;language:string;customerName:string;customerEmail:string;shippingCountry:string;shippingCity:string;shippingAddress:string;postalCode:string;customerNotes:string;deliverySpeed:"normal";paymentMethod:"manual_assisted";analyticsConsent:false;requestToken:string};
-type Order={orderRef:string;manageToken:string;status:string;currency:string;totalCents:number};
 export function CartScreen() {
   const cart=useCart(),session=useSession(); const [name,setName]=useState(session.user?.fullName||"");const [email,setEmail]=useState(session.user?.email||"");const [country,setCountry]=useState("");const [city,setCity]=useState("");const [address,setAddress]=useState("");const [postal,setPostal]=useState("");const [notes,setNotes]=useState("");const [pending,setPending]=useState<OrderPayload|null>(null);const [order,setOrder]=useState<Order|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");
-  useEffect(()=>{void Promise.all([readSecurePayload(PENDING_ORDER_KEY),SecureStore.getItemAsync(ORDER_KEY)]).then(([a,b])=>{if(a)setPending(JSON.parse(a));if(b)setOrder(JSON.parse(b));}).catch(()=>setError("Could not read your saved request on this device."));},[]);
-  const submit=async()=>{if(busy)return;setError("");setBusy(true);try {let payload=pending;if(!payload){if(!cart.items.length||!name.trim()||!email.trim()||!country.trim()||!city.trim()||!address.trim())throw new Error("Complete the contact and delivery fields before sending.");const bytes=await Crypto.getRandomBytesAsync(32);const requestToken=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");payload={items:cart.items.map(i=>({productId:i.product.id,quantity:i.quantity})),currency:"EUR",language:"en",customerName:name.trim(),customerEmail:email.trim(),shippingCountry:country.trim(),shippingCity:city.trim(),shippingAddress:address.trim(),postalCode:postal.trim(),customerNotes:notes.trim(),deliverySpeed:"normal",paymentMethod:"manual_assisted",analyticsConsent:false,requestToken};await saveSecurePayload(PENDING_ORDER_KEY,JSON.stringify(payload));setPending(payload);}const result=await request<{order:Order}>("/shop/orders",{method:"POST",body:payload});if(!result.order?.orderRef||!result.order?.manageToken)throw new Error("Could not confirm the response. Retry the same request.");const receipt={orderRef:result.order.orderRef,manageToken:result.order.manageToken,status:result.order.status,currency:result.order.currency,totalCents:result.order.totalCents};await SecureStore.setItemAsync(ORDER_KEY,JSON.stringify(receipt));await deleteSecurePayload(PENDING_ORDER_KEY);setPending(null);setOrder(result.order);cart.clear();}catch(e){if(e instanceof ApiError&&e.status===400){await deleteSecurePayload(PENDING_ORDER_KEY);setPending(null);}setError(err(e));}finally{setBusy(false);}};
-  return <Screen><Heading>Basket</Heading><Copy>Submitting a request does not complete a payment. The team will follow up with the next steps.</Copy>{order&&<OrderStatus order={order} />}{pending&&<Message error message="A previous request could not be confirmed. Retry the same request to avoid creating a duplicate." />}{!cart.items.length&&!pending&&<Copy>Your basket is empty.</Copy>}{cart.items.map(item=><Card key={item.product.id}><Copy>{item.product.name} · {money(item.product.price_cents,item.product.currency)}</Copy><Copy>Quantity: {item.quantity}</Copy><Action title="Add one" secondary disabled={!!pending||item.quantity>=item.product.stock_qty} onPress={()=>cart.setQuantity(item.product.id,item.quantity+1)} /><Action title="Remove" secondary disabled={!!pending} onPress={()=>cart.remove(item.product.id)} /></Card>)}
-    {(cart.items.length>0||pending)&&<Card><Heading>Contact and delivery</Heading><Field label="Full name" value={name} onChangeText={setName} autoComplete="name" editable={!pending} /><Field label="Email" value={email} onChangeText={setEmail} autoComplete="email" keyboardType="email-address" autoCapitalize="none" editable={!pending} /><Field label="Country" value={country} onChangeText={setCountry} editable={!pending} /><Field label="City" value={city} onChangeText={setCity} editable={!pending} /><Field label="Address" value={address} onChangeText={setAddress} editable={!pending} /><Field label="Postal code" value={postal} onChangeText={setPostal} editable={!pending} /><Field label="Notes (optional)" value={notes} onChangeText={setNotes} multiline editable={!pending} />{!!error&&<Message error message={error}/>}<Action title={busy?"Sending…":pending?"Retry same request":"Send assisted-order request"} disabled={busy} onPress={()=>void submit()} /></Card>}
+  const sending = useRef(false);
+  const [restored, setRestored] = useState(false);
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setRestored(false);
+    setError("");
+    void Promise.all([readSecurePayload(PENDING_ORDER_KEY), SecureStore.getItemAsync(ORDER_KEY)])
+      .then(([draft, receipt]) => {
+        if (!active) return;
+        if (draft) {
+          const saved = readPendingOrder(draft);
+          setPending(saved);
+          setName(saved.customerName); setEmail(saved.customerEmail);
+          setCountry(saved.shippingCountry); setCity(saved.shippingCity);
+          setAddress(saved.shippingAddress); setPostal(saved.postalCode); setNotes(saved.customerNotes);
+        }
+        if (receipt) setOrder(JSON.parse(receipt));
+        setRestored(true);
+      })
+      .catch(() => { if (active) setError("Could not read your saved request on this device."); });
+    return () => { active = false; };
+  }, [restoreAttempt]);
+  const submit = async () => {
+    if (sending.current || !restored) return;
+    sending.current = true;
+    setError(""); setBusy(true);
+    let payload = pending;
+    try {
+      if (!payload) {
+        if (!cart.items.length || !name.trim() || !email.trim() || !country.trim() || !city.trim() || !address.trim())
+          throw new Error("Complete the contact and delivery fields before sending.");
+        const bytes = await Crypto.getRandomBytesAsync(32);
+        const requestToken = Array.from(bytes, b => b.toString(16).padStart(2,"0")).join("");
+        payload = {
+          items: cart.items.map(item => ({ productId: item.product.id, quantity: item.quantity })),
+          currency: "EUR", language: "en", customerName: name.trim(), customerEmail: email.trim(),
+          shippingCountry: country.trim(), shippingCity: city.trim(), shippingAddress: address.trim(),
+          postalCode: postal.trim(), customerNotes: notes.trim(), deliverySpeed: "normal",
+          paymentMethod: "manual_assisted", analyticsConsent: false, requestToken,
+        };
+        await saveSecurePayload(PENDING_ORDER_KEY, JSON.stringify(payload));
+        cart.reserve(requestToken, payload.items);
+        setPending(payload);
+      }
+      const result = await request<{ order: Order }>("/shop/orders", { method: "POST", body: payload });
+      if (!result?.order?.orderRef || result.order.manageToken !== payload.requestToken)
+        throw new Error("Could not confirm the response. Retry the same request.");
+      const { orderRef, manageToken, status, currency, totalCents } = result.order;
+      const receipt = { orderRef, manageToken, status, currency, totalCents };
+      await SecureStore.setItemAsync(ORDER_KEY, JSON.stringify(receipt));
+      await deleteSecurePayload(PENDING_ORDER_KEY);
+      cart.finish(payload.requestToken, true);
+      setPending(null); setOrder(receipt);
+    } catch (e) {
+      if (payload && canEditRejectedRequest(e, Boolean(pending))) {
+        try {
+          await deleteSecurePayload(PENDING_ORDER_KEY);
+          cart.finish(payload.requestToken, false);
+          setPending(null);
+        } catch {
+          setError("Could not clear the saved request. Retry the same request.");
+          return;
+        }
+      }
+      setError(err(e));
+    } finally {
+      sending.current = false;
+      setBusy(false);
+    }
+  };
+  const editable = restored && !busy && !pending;
+  return <Screen>
+    <Heading>Basket</Heading>
+    <Copy>Submitting a request does not complete a payment. The team will follow up with the next steps.</Copy>
+    {order && <OrderStatus order={order} />}
+    {!restored && !error && <Loading label="Checking for a saved request…" />}
+    {!!error && <Message error message={error} />}
+    {!restored && !!error && <Action title="Retry loading saved request" secondary onPress={() => setRestoreAttempt(value => value + 1)} />}
+    {pending && !busy && <Message message="A previous request could not be confirmed. Retry the same request to avoid creating a duplicate." />}
+    {restored && !cart.items.length && !pending && <Copy>Your basket is empty.</Copy>}
+    {pending ? <Card>
+      <Heading>Items in this request</Heading>
+      {pending.items.map(line => <Copy key={line.productId}>
+        {cart.items.find(item => item.product.id === line.productId)?.product.name || `Product #${line.productId}`} × {line.quantity}
+      </Copy>)}
+    </Card> : cart.items.map(({ product, quantity }) => <Card key={product.id}>
+      <Copy>{product.name} · {money(product.price_cents, product.currency)}</Copy>
+      <Copy>Quantity: {quantity}</Copy>
+      <Action title="Add one" secondary disabled={!editable || quantity >= product.stock_qty} onPress={() => cart.setQuantity(product.id, quantity + 1)} />
+      <Action title="Remove one" secondary disabled={!editable || quantity <= 1} onPress={() => cart.setQuantity(product.id, quantity - 1)} />
+      <Action title="Remove" secondary disabled={!editable} onPress={() => cart.remove(product.id)} />
+    </Card>)}
+    {(cart.items.length > 0 || pending) && <Card>
+      <Heading>Contact and delivery</Heading>
+      <Field label="Full name" value={name} onChangeText={setName} autoComplete="name" editable={editable} />
+      <Field label="Email" value={email} onChangeText={setEmail} autoComplete="email" keyboardType="email-address" autoCapitalize="none" editable={editable} />
+      <Field label="Country" value={country} onChangeText={setCountry} editable={editable} />
+      <Field label="City" value={city} onChangeText={setCity} editable={editable} />
+      <Field label="Address" value={address} onChangeText={setAddress} editable={editable} />
+      <Field label="Postal code" value={postal} onChangeText={setPostal} editable={editable} />
+      <Field label="Notes (optional)" value={notes} onChangeText={setNotes} multiline editable={editable} />
+      <Action title={busy ? "Sending…" : pending ? "Retry same request" : "Send assisted-order request"} disabled={busy || !restored} onPress={() => void submit()} />
+    </Card>}
   </Screen>;
 }
 

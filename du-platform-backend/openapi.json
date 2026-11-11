@@ -945,7 +945,7 @@
         "summary": "Search public content",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Matching public routes, products and directory entries. When a source is temporarily unavailable and other sources have matches, data.partial is true. An incomplete search with no matches returns an error so callers can retry."
           },
           "default": {
             "description": "Error, validation failure, rate limit or service unavailable",

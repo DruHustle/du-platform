@@ -2,6 +2,17 @@ import { CUSTOMER_LANGUAGES } from "./customerLanguage";
 import { SHOP_CURRENCIES } from "./shopCurrency";
 import { z } from "./validation";
 
+/** Deliberate, safe public validation errors; driver/provider errors stay private. */
+export class ShopRequestError extends Error {
+  constructor(
+    message: string,
+    public readonly status = 400
+  ) {
+    super(message);
+    this.name = "ShopRequestError";
+  }
+}
+
 // Shared constraints match the persisted order fields. Prices are always read
 // from the server catalogue, never accepted from a checkout request.
 export const shopOrderRequestSchema = z.object({

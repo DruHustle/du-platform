@@ -1,3 +1,4 @@
+import { assertOrderRequestReadiness } from "../../modules/shop/shopReadiness";
 import { recordShopFunnel } from "../../modules/shop/funnel";
 import { sealOrderAccess } from "../../modules/shop/orderAccess";
 import { queueOrderNotification } from "../../modules/shop/orderOutboxStore";
@@ -9,6 +10,7 @@ import {
 import { customerLanguage } from "../../domain/customerLanguage";
 import crypto from "crypto";
 import {
+  ShopRequestError,
   shopOrderRequestSchema,
   calculateShopShippingCents,
 } from "../../domain/shopCheckout";
@@ -22,16 +24,7 @@ import {
 } from "../databaseRuntime";
 import { sha256 } from "./authStore";
 
-/** Deliberate, safe public validation errors; driver/provider errors stay private. */
-export class ShopRequestError extends Error {
-  constructor(
-    message: string,
-    public readonly status = 400
-  ) {
-    super(message);
-    this.name = "ShopRequestError";
-  }
-}
+export { ShopRequestError } from "../../domain/shopCheckout";
 
 export type ShopPaymentMethod = "manual_assisted" | "dummy_gateway";
 export type ShopOrderStatus = "awaiting_payment" | "paid" | "failed";
@@ -472,6 +465,10 @@ export async function createShopOrder(payload: {
     const existing = await replay();
     if (existing) return existing;
   }
+
+  // A lost receipt is recoverable even after pilot approval changes. Only new
+  // requests reach the gate; a replay above still needs the original grant and details.
+  await assertOrderRequestReadiness(shippingCountry, items.map(item => item.productId));
 
   if (
     (payload.pricingRevision &&

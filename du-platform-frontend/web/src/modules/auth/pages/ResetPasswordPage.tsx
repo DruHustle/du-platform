@@ -27,6 +27,7 @@ export default function ResetPassword() {
     t(key, { defaultValue: fallback });
   const [, setLocation] = useLocation();
   const [token] = useState(getTokenFromUrl);
+  const [invalidToken, setInvalidToken] = useState(false);
   const resetRequest = useRef<AbortController | null>(null);
   const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
@@ -95,6 +96,12 @@ export default function ResetPassword() {
       redirectTimer.current = setTimeout(() => setLocation("/login"), 900);
     } catch (err: any) {
       if (request.signal.aborted) return;
+      if (err?.response?.data?.error?.code === "AUTH_INVALID_RESET_TOKEN") {
+        setInvalidToken(true);
+        setPassword("");
+        setConfirmPassword("");
+        return;
+      }
       setError(
         getApiErrorMessage(
           err,
@@ -122,13 +129,26 @@ export default function ResetPassword() {
             </p>
           </div>
 
-          {!token ? (
-            <p className="mt-6 text-sm text-red-400">
-              {tr(
-                "auth.reset.missing_token",
-                "Missing reset token. Please use the link sent to your email."
-              )}
-            </p>
+          {!token || invalidToken ? (
+            <div className="mt-6 space-y-3">
+              <p role="alert" className="text-sm text-red-400">
+                {invalidToken
+                  ? tr(
+                      "auth.reset.invalid_link",
+                      "This reset link is invalid or has expired."
+                    )
+                  : tr(
+                      "auth.reset.missing_token",
+                      "Missing reset token. Please use the link sent to your email."
+                    )}
+              </p>
+              <Link
+                href="/forgot-password"
+                className="inline-flex min-h-11 items-center font-semibold text-zim-gold hover:underline"
+              >
+                {tr("auth.reset.request_link", "Request a new reset link")}
+              </Link>
+            </div>
           ) : (
             <form className="mt-8 space-y-6" onSubmit={onSubmit}>
               <div className="space-y-2">

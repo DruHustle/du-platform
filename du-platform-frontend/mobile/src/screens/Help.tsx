@@ -21,9 +21,43 @@ export function ContactScreen() {
   return <Screen><Heading>Contact and help</Heading><Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy><Card><Field label="Full name" value={name} onChangeText={setName} editable={!pending} autoComplete="name"/><Field label="Email address" value={email} onChangeText={setEmail} editable={!pending} keyboardType="email-address" autoCapitalize="none" autoComplete="email"/><Field label="Subject" value={subject} onChangeText={setSubject} editable={!pending}/><Field label="Message" value={message} onChangeText={setMessage} editable={!pending} multiline maxLength={4000}/>{!!error&&<Message error message={error}/>}{!!feedback&&<Message message={feedback}/>}<Action title={busy?"Sending…":pending?"Retry same message":"Send message"} disabled={busy||!name.trim()||!email.trim()||!subject.trim()||!message.trim()} onPress={()=>void send()}/></Card><Action title="Email info@diasporaunlocked.com" secondary onPress={()=>void Linking.openURL("mailto:info@diasporaunlocked.com").catch(()=>setError("Could not open your email app."))}/></Screen>;
 }
 export function SearchScreen() {
-  const navigation=useNavigation<any>();const [query,setQuery]=useState("");const [results,setResults]=useState<{title:string;category:string;summary?:string;href:string}[]|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");
-  const search=async()=>{if(busy||!query.trim())return;setBusy(true);setError("");setResults(null);try{const data=await request<{results:typeof results}>(`/search?q=${encodeURIComponent(query.trim())}`);if(!Array.isArray(data.results)||!data.results.every(item=>item&&typeof item.title==="string"&&typeof item.category==="string"&&typeof item.href==="string"&&item.href.startsWith("/")&&!item.href.startsWith("//")&&!item.href.includes("\\")&&(item.summary===undefined||typeof item.summary==="string")))throw new Error("The search response was invalid.");setResults(data.results);}catch(e){setError(errorMessage(e));}finally{setBusy(false);}};
-  return <Screen><Heading>Search</Heading><Field label="Search products, destinations and information" value={query} onChangeText={setQuery} returnKeyType="search" onSubmitEditing={()=>void search()}/><Action title={busy?"Searching…":"Search"} disabled={busy||!query.trim()} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{results&&!results.length&&<Copy>No results found. Try another search.</Copy>}{results?.map((item,i)=><Card key={`${item.href}-${i}`}><Heading>{item.title}</Heading><Copy>{item.category}{item.summary?` · ${item.summary}`:""}</Copy><Action title="Open result" onPress={()=>{if(item.href.startsWith("/travel#"))navigation.navigate("External",{path:item.href,title:item.title});else if(/^\/travel(?:\/|\?|$)/.test(item.href))navigation.navigate("Main",{screen:"Travel",params:{section:item.href.split("?")[0].split("/")[2]}});else if(item.href.startsWith("/shop/product/"))navigation.navigate("Product",{slug:item.href.slice("/shop/product/".length)});else if(item.href.startsWith("/shop/products?")){const params=new URLSearchParams(item.href.split("?")[1]);const slug=params.get("product");if(slug)navigation.navigate("Product",{slug});else navigation.navigate("Main",{screen:"Shop",params:{category:params.get("category")}});}else if(item.href.startsWith("/shop"))navigation.navigate("Main",{screen:"Shop"});else navigation.navigate("External",{path:item.href,title:item.title});}}/></Card>)}</Screen>;
+  const navigation = useNavigation<any>();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<{
+    title: string;
+    category: string;
+    summary?: string;
+    href: string;
+  }[] | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [partial, setPartial] = useState(false);
+  const [error, setError] = useState("");
+
+  const search = async () => {
+    if (busy || !query.trim()) return;
+    setBusy(true);
+    setError("");
+    setPartial(false);
+    setResults(null);
+    try {
+      const data = await request<{ results: typeof results; partial?: boolean }>(
+        `/search?q=${encodeURIComponent(query.trim())}`
+      );
+      if (!Array.isArray(data?.results) || !data.results.every(item =>
+        item && typeof item.title === "string" && typeof item.category === "string" &&
+        typeof item.href === "string" && item.href.startsWith("/") &&
+        !item.href.startsWith("//") && !item.href.includes("\\") &&
+        (item.summary === undefined || typeof item.summary === "string")
+      )) throw new Error("The search response was invalid.");
+      setResults(data.results);
+      setPartial(data.partial === true);
+    } catch (e) {
+      setError(errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return <Screen><Heading>Search</Heading><Field label="Search products, destinations and information" value={query} onChangeText={setQuery} returnKeyType="search" onSubmitEditing={()=>void search()}/><Action title={busy?"Searching…":"Search"} disabled={busy||!query.trim()} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{partial&&<Message message="Some search results are temporarily unavailable. Search again to retry."/>}{results&&!results.length&&<Copy>No results found. Try another search.</Copy>}{results?.map((item,i)=><Card key={`${item.href}-${i}`}><Heading>{item.title}</Heading><Copy>{item.category}{item.summary?` · ${item.summary}`:""}</Copy><Action title="Open result" onPress={()=>{if(item.href.startsWith("/travel#"))navigation.navigate("External",{path:item.href,title:item.title});else if(/^\/travel(?:\/|\?|$)/.test(item.href))navigation.navigate("Main",{screen:"Travel",params:{section:item.href.split("?")[0].split("/")[2]}});else if(item.href.startsWith("/shop/product/"))navigation.navigate("Product",{slug:item.href.slice("/shop/product/".length)});else if(item.href.startsWith("/shop/products?")){const params=new URLSearchParams(item.href.split("?")[1]);const slug=params.get("product");if(slug)navigation.navigate("Product",{slug});else navigation.navigate("Main",{screen:"Shop",params:{category:params.get("category")}});}else if(item.href.startsWith("/shop"))navigation.navigate("Main",{screen:"Shop"});else navigation.navigate("External",{path:item.href,title:item.title});}}/></Card>)}</Screen>;
 }
 export function ExternalScreen({route}:{route:{params:{path:string;title:string}}}) {
   const [error,setError]=useState("");const path=route.params.path;const valid=path.startsWith("/")&&!path.startsWith("//")&&!path.includes("\\");

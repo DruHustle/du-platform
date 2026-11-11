@@ -78,10 +78,12 @@ export class SearchService {
         String(value).toLowerCase().includes(normalizedQuery)
       )
     );
-    const [entities, products] = await Promise.all([
+    const [directory, catalogue] = await Promise.allSettled([
       this.repository.searchNtir(normalizedQuery),
       this.repository.publishedProducts(),
     ]);
+    const entities = directory.status === "fulfilled" ? directory.value : [];
+    const products = catalogue.status === "fulfilled" ? catalogue.value : [];
     const productMatches = products
       .filter(
         (p: any) =>
@@ -107,7 +109,10 @@ export class SearchService {
       summary: `${row.sector} - ${row.location}`,
     }));
     const results = [...productMatches, ...routeMatches, ...ntirMatches];
+    const unavailable = [directory, catalogue].find(source => source.status === "rejected");
+    if (unavailable && results.length === 0) throw unavailable.reason;
     return {
+      ...(unavailable && { partial: true }),
       query: normalizedQuery,
       count: results.length,
       results,

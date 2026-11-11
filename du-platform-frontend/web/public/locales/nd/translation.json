@@ -104,6 +104,8 @@
     "reset": {
       "title": "Setha Iphasiwedi Entsha",
       "subtitle": "Khetha iphasiwedi eqinile ye-akhawunti yakho.",
+      "invalid_link": "Isixhumanisi lesi sokutshintsha iphaswedi kasisebenzi kumbe sesiphelelwe yisikhathi.",
+      "request_link": "Cela isixhumanisi esitsha sokutshintsha iphaswedi",
       "missing_token": "Ithokheni yokusetha kabusha ayikho. Sicela usebenzise isixhumanisi esithunyelwe ku-imeyili yakho.",
       "new_password": "Iphasiwedi Entsha",
       "show_password": "Bonisa iphasiwedi",
@@ -1686,6 +1688,7 @@
     }
   },
   "search": {
+    "partial": "Eminye impumela yosesho kayitholakali okwamanje.",
     "categories": {
       "tourism": "Ukuvakasha",
       "investment": "Ukutshalwa kwemali",

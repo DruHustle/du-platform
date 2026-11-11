@@ -104,6 +104,8 @@
     "reset": {
       "title": "Set New Password",
       "subtitle": "Choose a strong password for your account.",
+      "invalid_link": "This reset link is invalid or has expired.",
+      "request_link": "Request a new reset link",
       "missing_token": "Missing reset token. Please use the link sent to your email.",
       "new_password": "New Password",
       "show_password": "Show password",
@@ -1682,6 +1684,7 @@
     }
   },
   "search": {
+    "partial": "Some search results are temporarily unavailable.",
     "categories": {
       "tourism": "Travel",
       "investment": "Investment",

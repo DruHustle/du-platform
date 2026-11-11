@@ -14,6 +14,12 @@ const AUTH_HEADER_EXCLUDED_ENDPOINTS = new Set([
 
 let refreshPromise: Promise<string> | null = null;
 let accessToken = "";
+let sessionGeneration = 0;
+
+type SessionRequestConfig = InternalAxiosRequestConfig & {
+  _sessionGeneration?: number;
+  _retryAfterRefresh?: boolean;
+};
 
 function resolveApiBaseUrl() {
   // Deployed browsers always use the host's controlled API rewrite. Preview
@@ -73,19 +79,27 @@ export function markHasLoggedInBefore() {
   safeLocalStorage.setItem(HAS_LOGGED_IN_KEY, "1");
 }
 
-export function saveAuthToken(token: string) {
-  if (typeof window === "undefined") return;
-  const normalized = String(token ?? "").trim();
-  if (!normalized) return;
-  accessToken = normalized;
+function storeAccessToken(token: string) {
+  accessToken = token;
   // Do not persist bearer tokens in browser storage.
   safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   markHasLoggedInBefore();
 }
 
+export function saveAuthToken(token: string) {
+  if (typeof window === "undefined") return;
+  const normalized = String(token ?? "").trim();
+  if (!normalized) return;
+  sessionGeneration += 1;
+  refreshPromise = null;
+  storeAccessToken(normalized);
+}
+
 export function clearAuthToken() {
   if (typeof window === "undefined") return;
+  sessionGeneration += 1;
+  refreshPromise = null;
   accessToken = "";
   safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
@@ -121,7 +135,11 @@ export function hasLoggedInBefore(): boolean {
   return safeLocalStorage.getItem(HAS_LOGGED_IN_KEY) === "1";
 }
 
-api.interceptors.request.use(config => {
+api.interceptors.request.use((config: SessionRequestConfig) => {
+  config._sessionGeneration ??= sessionGeneration;
+  if (config._sessionGeneration !== sessionGeneration) {
+    throw new axios.CanceledError("Account session changed.");
+  }
   const token = loadAuthToken();
   if (!token) return config;
 
@@ -149,14 +167,13 @@ api.interceptors.response.use(
   },
   async error => {
     const status = Number(error?.response?.status ?? 0);
-    const config = error?.config as
-      | (typeof error.config & { _retryAfterRefresh?: boolean })
-      | undefined;
+    const config = error?.config as SessionRequestConfig | undefined;
     const requestUrl = String(config?.url ?? "");
 
     if (
       status !== 401 ||
       !config ||
+      config._sessionGeneration !== sessionGeneration ||
       config._retryAfterRefresh ||
       isAuthHeaderExcludedEndpoint(requestUrl)
     ) {
@@ -164,16 +181,13 @@ api.interceptors.response.use(
     }
 
     try {
-      refreshPromise ??= refreshAuthTokenFromSession().finally(() => {
-        refreshPromise = null;
-      });
-      const token = await refreshPromise;
-      if (!token) {
+      const token = await refreshAuthTokenFromSession();
+      if (!token || config._sessionGeneration !== sessionGeneration) {
         return Promise.reject(error);
       }
 
       config._retryAfterRefresh = true;
-      const headers = ensureAxiosHeaders(config as InternalAxiosRequestConfig);
+      const headers = ensureAxiosHeaders(config);
       headers.set("Authorization", `Bearer ${token}`);
       return api(config);
     } catch (refreshError: any) {
@@ -187,11 +201,22 @@ api.interceptors.response.use(
   }
 );
 
-export async function refreshAuthTokenFromSession(): Promise<string> {
-  const response = await api.post("/auth/token/refresh");
-  const token = String(response?.data?.accessToken ?? "").trim();
-  if (token) saveAuthToken(token);
-  return token;
+export function refreshAuthTokenFromSession(): Promise<string> {
+  if (refreshPromise) return refreshPromise;
+  const generation = sessionGeneration;
+  const request = api
+    .post("/auth/token/refresh")
+    .then(response => {
+      if (generation !== sessionGeneration) return "";
+      const token = String(response.data?.accessToken ?? "").trim();
+      if (token && typeof window !== "undefined") storeAccessToken(token);
+      return token;
+    })
+    .finally(() => {
+      if (refreshPromise === request) refreshPromise = null;
+    });
+  refreshPromise = request;
+  return request;
 }
 
 export function getApiErrorMessage(
