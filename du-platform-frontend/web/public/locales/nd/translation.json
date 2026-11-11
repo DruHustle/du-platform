@@ -1707,14 +1707,14 @@
     },
     "no_results": {
       "title": "Ayikho imiphumela etholiwe",
-      "message": "Asikwazanga ukuthola lutho olufana ne-\"{{query}}\". Zama ukusesha amagama abanzi njengokuthi \"Investment\", \"Tourism\", noma \"Onesa\".",
+      "message": "Asitholanga okuhambelana lokuthi “{{query}}”. Zama ibala elifitshane njengokuthi “indizamtshina” kumbe “indawo zokuhlala”.",
       "return_home": "Buyela Ekhaya"
     },
     "submit": "Dinga",
     "loading": "Siyadinga…",
     "failed": "Ukudinga akutholakali okwamanje. Sicela uzame futhi.",
     "retry": "Zama futhi",
-    "prompt": "Dinga ezokuvakasha, ukutshala imali, ukuthenga, kumbe i-Onesa AI.",
+    "prompt": "Dinga indizamtshina, indawo zokuhlala, impahla kumbe i-Onesa AI.",
     "description": "Thola imikhiqizo, izindawo zokuvakatshela, imibono yebhizimusi lamathuluzi eOnesa."
   },
   "error_boundary": {
@@ -2161,6 +2161,9 @@
     "explore": "Hlola",
     "my-trips": "Uhambo lwami",
     "description": "Uvakashela imuli, uya ekhaya kumbe uhlola indawo entsha? Hlela uhambo lokuya, lokusuka langaphakathi kweZimbabwe le-Afrika eseNingizimu, ubhukhe ngokuqondileyo kubahlinzeki.",
+    "choose-location": "Khetha indawo kuluhlu.",
+    "no-locations": "Ayikho indawo ehambelanayo. Zama ibizo ledolobho, ilizwe kumbe ikhodi yesikhumulo sendizamtshina.",
+    "clear-confirm": "Uyasusa imininingwane yohambo, okudingileyo, izindleko ozihlelileyo lokukhethileyo kulesi siphequluli?",
     "search-intro": "Qala ngezinsuku labahambi. Imininingwane iyagcinwa nxa utshintsha ingxenye.",
     "origin": "Isikhumulo sokusuka",
     "destination": "Isikhumulo sokuya / indawo",

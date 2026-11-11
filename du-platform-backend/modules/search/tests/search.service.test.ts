@@ -10,9 +10,30 @@ describe("search service route index", () => {
   it.each([
     ["shopping", "/shop"],
     ["assistant", "/onesa-ai-chat"],
+    ["cheap flights", "/travel/flights"],
+    ["cheap flights to Harare", "/travel/flights"],
+    ["flight to Harare", "/travel/flights"],
+    ["hotels", "/travel/stays"],
+    ["Hotels in Windhoek?", "/travel/stays"],
+    ["hotel in Harare", "/travel/stays"],
+    ["I need a rental car", "/travel/car-hire"],
+    ["CAR-HIRE", "/travel/car-hire"],
+    ["saved searches", "/travel/my-trips"],
+    ["weather forecast", "/travel/weather"],
+    ["places to visit", "/travel/explore"],
+    ["trip planner", "/travel/planner"],
+    ["fluge", "/travel/flights"],
+    ["Pekugara", "/travel/stays"],
+    ["Ukuqhatsha   imota", "/travel/car-hire"],
+    ["Wetter in Kapstadt", "/travel/weather"],
   ])("finds the public journey for %s", async (query, href) => {
     const result = await new SearchService(repository as any).search(query);
     expect(result.results).toContainEqual(expect.objectContaining({ href }));
+  });
+
+  it("does not return every route for separator-only input", async () => {
+    const result = await new SearchService(repository as any).search("---");
+    expect(result.results).toEqual([]);
   });
 
   it("does not return removed or unavailable application routes", async () => {

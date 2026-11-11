@@ -143,25 +143,33 @@ export default function MyTrips() {
     setAmount("");
   }
   const totals = estimateTotals(draft.estimates);
+  const defaults = defaultTravelCriteria();
+  const hasDraft =
+    draft.searches.length > 0 ||
+    draft.estimates.length > 0 ||
+    Boolean(draft.quotes?.length) ||
+    JSON.stringify({ ...defaults, ...draft.criteria }) !==
+      JSON.stringify(defaults);
   return (
     <div className="travel-trip-grid">
       <section className="content-panel">
         <h2 className="page-section-title">{t("travel.guest-draft")}</h2>
         <p>{t("travel.draft-note")}</p>
-        <Button
-          variant="outline"
-          onClick={() =>
-            updateDraft({
-              criteria: defaultTravelCriteria(),
-              searches: [],
-              estimates: [],
-            })
-          }
-        >
-          {t("travel.clear-draft")}
-        </Button>
         <h3>{t("travel.searches")}</h3>
-        {!draft.searches.length && <p>{t("travel.no-searches")}</p>}
+        {!draft.searches.length && (
+          <>
+            <p>{t("travel.no-searches")}</p>
+            <div className="travel-actions travel-start-searches">
+              {categories.map(category => (
+                <Button key={category} variant="outline" asChild>
+                  <Link href={`/travel/${category}`}>
+                    {t(`travel.${category}`)}
+                  </Link>
+                </Button>
+              ))}
+            </div>
+          </>
+        )}
         {draft.searches.map(s => (
           <article
             className="surface-card travel-saved-search"
@@ -328,7 +336,27 @@ export default function MyTrips() {
             </Button>
           </div>
         ))}
-        <Link href="/travel/planner">{t("travel.onesa-planner")}</Link>
+        <div className="travel-actions">
+          <Link className="self-center underline" href="/travel/planner">
+            {t("travel.onesa-planner")}
+          </Link>
+          {hasDraft && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (window.confirm(t("travel.clear-confirm"))) {
+                  updateDraft({
+                    criteria: defaultTravelCriteria(),
+                    searches: [],
+                    estimates: [],
+                  });
+                }
+              }}
+            >
+              {t("travel.clear-draft")}
+            </Button>
+          )}
+        </div>
       </section>
       <section className="content-panel">
         <h2 className="page-section-title">{t("travel.private-trips")}</h2>

@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   defaultTravelCriteria,
   guestTravelDraftSchema,
+  isTravelNationality,
   savedTravelSchema,
   validateTravel,
 } from "./travel";
@@ -42,4 +43,15 @@ describe("guest trip drafts", () => {
       ).toBe(false);
     }
   );
+});
+
+it("keeps stay searches usable without the browser region-name catalog", () => {
+  vi.stubGlobal("Intl", { ...Intl, DisplayNames: undefined });
+  try {
+    expect(isTravelNationality("ZW")).toBe(true);
+    expect(isTravelNationality("ZZ")).toBe(false);
+    expect(isTravelNationality("Z")).toBe(false);
+  } finally {
+    vi.unstubAllGlobals();
+  }
 });

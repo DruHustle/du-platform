@@ -31,6 +31,7 @@ try {
   for (const width of [375, 768, 1440]) {
     const context = await browser.newContext({
       viewport: { width, height: 950 },
+      hasTouch: width === 375,
       reducedMotion: "reduce",
     });
     await context.addInitScript(() => {
@@ -187,7 +188,8 @@ try {
         }
         return r.fulfill({ json: { success: true, data: savedRecords } });
       }
-      if (p.startsWith("/api/travel/")) return r.continue();
+      if (p === "/api/search" || p.startsWith("/api/travel/"))
+        return r.continue();
       if (p === "/api/auth/me" && privateMode)
         return r.fulfill({
           json: {
@@ -257,6 +259,37 @@ try {
       );
       checks.push(`${width}: ${name}`);
     }
+    await goto("/search?q=hotels%20in%20Windhoek");
+    await page
+      .locator('main a[href="/travel/stays"]')
+      .filter({
+        has: page.getByRole("heading", { name: "Stays", exact: true }),
+      })
+      .click();
+    await page
+      .getByRole("combobox", { name: "Destination area", exact: true })
+      .waitFor();
+    checks.push(
+      `${width}: site search finds accommodation planning through the real search API`
+    );
+    await goto("/travel/my-trips");
+    const start = page.locator(".travel-start-searches");
+    await start.waitFor();
+    assert.equal(
+      await page.getByRole("button", { name: "Clear browser draft" }).count(),
+      0
+    );
+    assert.deepEqual(
+      await start
+        .getByRole("link")
+        .evaluateAll(links => links.map(link => link.getAttribute("href"))),
+      ["/travel/flights", "/travel/stays", "/travel/car-hire"]
+    );
+    await start.getByRole("link", { name: "Stays", exact: true }).click();
+    await page
+      .getByRole("heading", { name: "Stays", level: 1, exact: true })
+      .waitFor();
+    checks.push(`${width}: start an accommodation search from an empty trip`);
     await goto("/travel");
     await page
       .getByRole("heading", { name: "Travel Southern Africa", exact: true })
@@ -319,6 +352,33 @@ try {
     const dest = page.getByRole("combobox", {
       name: "Destination airport / area",
     });
+    await dest.fill("zimbabwe");
+    await page
+      .getByRole("option", { name: /Victoria Falls.*Zimbabwe/ })
+      .waitFor();
+    if (width === 375) {
+      await page.getByRole("option", { name: /Harare.*HRE/ }).tap();
+      assert.match(await dest.inputValue(), /Harare.*HRE/);
+      assert.equal(await dest.getAttribute("aria-expanded"), "false");
+    }
+    await dest.fill("Unknown city");
+    await page
+      .getByRole("status")
+      .filter({ hasText: "No matching locations" })
+      .waitFor();
+    await dest.press("Tab");
+    assert.equal(await dest.inputValue(), "Unknown city");
+    assert.equal(await dest.evaluate(input => input.validity.valid), false);
+    await dest.focus();
+    await dest.press("Escape");
+    assert.match(await dest.inputValue(), /HRE/);
+    assert.equal(await dest.evaluate(input => input.validity.valid), true);
+    await dest.fill("vfa");
+    await dest.press("Tab");
+    assert.match(await dest.inputValue(), /Victoria Falls.*VFA/);
+    checks.push(
+      `${width}: country lookup, unmatched text, cancelled edit and exact airport code`
+    );
     await dest.fill("Victoria");
     await page.getByRole("option", { name: /Victoria Falls/ }).waitFor();
     await dest.press("Enter");
@@ -424,6 +484,14 @@ try {
         .locator(".travel-nav")
         .getByRole("link", { name, exact: true })
         .click();
+      await page
+        .getByRole("heading", { name, exact: true, level: 1 })
+        .waitFor();
+      assert.equal(
+        await page.locator(".travel-review").count(),
+        0,
+        "Reviews belong to their travel category"
+      );
       assert.equal(
         await page
           .getByRole("combobox", { name: "Currency", exact: true })
@@ -628,6 +696,11 @@ try {
       .first()
       .getByText("Child ages: 7 · Date flexibility: ±0", { exact: true })
       .waitFor();
+    page.once("dialog", dialog => dialog.dismiss());
+    await page
+      .getByRole("button", { name: "Clear browser draft", exact: true })
+      .click();
+    assert.equal(await page.locator(".travel-saved-search").count(), 3);
     await fit("guest draft survives refresh and separates currencies");
     await page.screenshot({
       path: `${output}/${width}-my-trips.png`,
