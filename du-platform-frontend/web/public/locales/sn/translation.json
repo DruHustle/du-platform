@@ -30,6 +30,11 @@
   "partners": "Vatishandi",
   "contact": "Taura Nesu",
   "footer": {
+    "mobile_apps": {
+      "title": "Maapp enharembozha",
+      "available": "Vhura peji rekudhaunirodha",
+      "unavailable": "Haisati yawanikwa"
+    },
     "about": {
       "title": "Nezvedu",
       "vision_label": "Chiratidzo Chedu",

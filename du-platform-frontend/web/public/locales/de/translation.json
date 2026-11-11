@@ -30,6 +30,11 @@
   "partners": "Partner",
   "contact": "Kontakt",
   "footer": {
+    "mobile_apps": {
+      "title": "Mobile Apps",
+      "available": "Downloadseite öffnen",
+      "unavailable": "Noch nicht verfügbar"
+    },
     "about": {
       "title": "Über uns",
       "vision_label": "Unsere Vision",
