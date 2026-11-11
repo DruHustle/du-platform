@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { api, getApiErrorMessage } from "@/lib/api";
+import { api } from "@/lib/api";
 import { ArrowLeft, Search } from "lucide-react";
 import { Link, useSearch } from "wouter";
 import { useTranslation } from "react-i18next";
@@ -169,16 +169,16 @@ export default function NTIRSearchPage() {
       });
       if (controller.signal.aborted) return;
       setResults(Array.isArray(data?.results) ? data.results : []);
-    } catch (err: any) {
+    } catch {
       if (controller.signal.aborted) return;
-      const apiMessage = getApiErrorMessage(err, "");
       setResults(searchFallbackEntities(q));
+      // Always identify the bundled records. A generic transport/server error
+      // must not conceal that these results did not come from the live API.
       setError(
-        apiMessage ||
-          t("investment.ntir.service_unavailable", {
-            defaultValue:
-              "Search is unavailable. Showing the directory entries included with the site.",
-          })
+        t("investment.ntir.service_unavailable", {
+          defaultValue:
+            "Search is unavailable. Showing the directory entries included with the site.",
+        })
       );
     } finally {
       if (!controller.signal.aborted) setLoading(false);
@@ -247,9 +247,12 @@ export default function NTIRSearchPage() {
           </form>
 
           {error ? (
-            <p role="alert" className="text-red-400">
-              {error}
-            </p>
+            <div role="alert" className="space-y-3">
+              <p className="text-red-400">{error}</p>
+              <Button variant="outline" onClick={() => void runSearch(query)}>
+                {t("search.retry", { defaultValue: "Try again" })}
+              </Button>
+            </div>
           ) : null}
           {loading ? (
             <p role="status" className="text-white/70">

@@ -6,6 +6,7 @@ import { defaultTravelCriteria } from "../../../domain/travel";
 import { initializeTravel } from "../schema";
 import { TravelRepository } from "../repository";
 import { PublicTravelSearch } from "../providers";
+import { expectApiResponse } from "../../tests/apiContract";
 const url = process.env.SHOP_TEST_DATABASE_URL;
 if (
   url &&
@@ -75,8 +76,13 @@ describe.skipIf(!url)("private Travel persistence in MySQL", () => {
     await admin.end();
     vi.unstubAllEnvs();
   });
-  const request = (token: string, path = "", method = "GET", body?: unknown) =>
-    fetch(base + "/api/travel/saved" + path, {
+  const request = async (
+    token: string,
+    path = "",
+    method = "GET",
+    body?: unknown
+  ) => {
+    const response = await fetch(base + "/api/travel/saved" + path, {
       method,
       headers: {
         authorization: "Bearer " + token,
@@ -84,6 +90,14 @@ describe.skipIf(!url)("private Travel persistence in MySQL", () => {
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
+    await expectApiResponse(
+      path ? "/travel/saved/{id}" : "/travel/saved",
+      method.toLowerCase(),
+      response.clone(),
+      response.status
+    );
+    return response;
+  };
   it("keeps private trips and searches across repository instances and prevents cross-user reads/deletes", async () => {
     const r = await request(alice, "", "POST", {
       name: "Private Harare trip",

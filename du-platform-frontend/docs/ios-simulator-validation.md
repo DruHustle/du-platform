@@ -1,0 +1,381 @@
+# iPhone and iPad runtime validation
+
+The separate **iOS Simulator Runtime Validation** workflow supplements the
+existing **Native Mobile Validation** workflow. It does not replace the Android
+checks, unsigned iOS Debug compilation, native regeneration guard, or mobile
+dependency audit.
+
+## What it runs
+
+On the existing standard `macos-26` runner, CocoaPods' `xcodeproj` library adds a
+temporary UI-test target and shared scheme to the job's checkout. The committed
+Expo-generated native project is unchanged. A Release simulator build embeds
+the real JavaScript bundle for the runner's active simulator architecture, so
+these checks do not rely on Metro or Expo's developer launcher. Both public
+endpoint variables use reserved `.invalid`
+destinations, with dotenv loading disabled. No production account, message or
+form is submitted.
+
+The runtime build uses Xcode's normal local simulator signature (`-` identity),
+following [Apple's simulator signing guidance](https://developer.apple.com/forums/thread/826882).
+The script verifies the signature, then reads the generated simulator entitlements
+from the actual executable's `__TEXT,__entitlements` section before booting either
+device. This follows [SwiftBuild's simulator qualification](https://github.com/swiftlang/swift-build/blob/main/Sources/SwiftBuildTestSupport/CoreQualificationTester.swift):
+simulated entitlements are separate from the host macOS signing entitlement
+dictionary, which can be empty. The bounded reader requires the expected thin
+64-bit architecture, one matching section, and valid file/segment/section bounds;
+it saves the exact embedded plist as evidence. The generated `application-identifier` must identify the
+expected app bundle; Apple uses it for
+[default keychain access](https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps).
+No sharing group, team identity or provisioning profile is authored by the runner.
+Existing app entitlement sources and the separate unsigned Debug compile check
+are preserved. Session restoration uses the real SecureStore implementation;
+a storage error continues to fail the Account journey.
+
+The script reads `simctl` inventory and selects an installed available runtime
+with both an observed compatible iPhone and iPad device type. It creates its own
+two devices and reports the actual model, runtime, architecture and checked-out
+revision. It does not download runtimes or reuse a developer's simulator.
+
+Two independent semantic XCTest cases run on each device, one for portrait and
+one for landscape. Each case launches the real app and completes this journey:
+
+- Reach Home and visit all five tabs in its assigned orientation.
+- Check full tab touch targets of at least 44 points within the app window.
+- Type fixture text into the Account and Assistant forms with a real visible
+  software keyboard. The single-line Account input and action must remain fully
+  inside the visible scroll viewport above the keyboard, including its observed
+  `SystemInputAssistantView` accessory bar. The multiline editor
+  must remain editable and hittable with at least 44 points of visible editing
+  area; its full enabled action must still fit above the keyboard. Typed values,
+  screenshots and accessibility trees retain the focused state for manual
+  caret/text review. Public XCTest does not expose a reliable iOS caret rectangle,
+  so this workflow makes no automated caret-bound assertion.
+- Dismiss the keyboard, verify that the tab bar returns, and rotate back to
+  portrait. Bounded native scroll gestures may reveal controls; an absent
+  keyboard cannot count as evidence of keyboard clearance.
+
+Each input receives a small real seed, then per-character deletion and the
+unchanged full fixture in one focus session. Run
+[41821386008](https://github.com/DruHustle/du-platform/actions/runs/41821386008)
+recorded the former helper's second tap selecting the complete `xy` seed on both
+portrait devices. One delete correctly removed the selection, while the helper
+incorrectly expected a one-character suffix deletion. The current sequence avoids
+that extra tap and preserves every exact per-event acknowledgment. Each mounted form
+also rotates away and back after its keyboard check: the email and message must
+retain their exact values, and the secure password must retain its full masked
+length. These explicit retention checks preserve rotation/state coverage without
+depending on test order or another case's application state. The Account prompt
+allowance remains tied to that same visit and is checked again before navigating
+away from the form.
+
+The app's real accessibility labels select elements. Each form selects the unique
+app window and scroll view containing its input, using XCTest's
+[descendant query](https://developer.apple.com/documentation/xcuiautomation/xcuielementquery/containing(_:identifier:)).
+Bounded content-reveal drags use element-relative points measured inside the visible
+content viewport and outside the editor. They cannot start on a keyboard
+accessory scroll view or within the multiline editor's own scrolling area.
+Reveal and keyboard-clearance drags compute a feasible vertical-shift interval
+from fresh target and viewport measurements. A single-line field and its action
+must both fit completely; a multiline editor must retain at least 44 points of
+editing area while the whole action fits. An empty intersection fails instead of
+alternating directions. The gesture targets the midpoint of the measured feasible
+interval, capped to safe travel inside the measured gutter. This avoids choosing
+a tiny correction just inside an edge without assuming a gesture-recognizer
+threshold. It uses Apple's public
+[slow drag and end-hold API](https://developer.apple.com/documentation/xcuiautomation/xcuicoordinate/press(forduration:thendragto:withvelocity:thenholdforduration:))
+with a 0.2-second hold before release. Each following attempt measures the viewport
+again; the four-attempt limit and all final bounds remain unchanged.
+
+Run [41829274004](https://github.com/DruHustle/du-platform/actions/runs/41829274004)
+passed both complete portrait cases, with recorded Account and Assistant keyboard
+states visually corroborating the assertions. Its landscape cases reached full
+email entry but the former fixed, 500-pixel-per-second gestures repeatedly moved
+Password past the opposite viewport edge. The iPhone's measured y-position
+alternated about 231 → −73 → 229, and the iPad's 312 → 34 → 312. The phone recording
+shows the corresponding overscroll; the iPad landscape recording was an error
+placeholder, so its diagnosis relies on the retained measurements and final
+image. This is evidence of an overshooting reveal gesture, not proof that the
+form cannot scroll.
+
+Run [41837024642](https://github.com/DruHustle/du-platform/actions/runs/41837024642)
+then completed the iPhone's landscape Account keyboard check and entered the full
+Assistant fixture, but exceeded the case's 240-second allowance before final
+Assistant clearance. The iPad's 54-point reveal succeeded. A subsequent 70.5-point
+clearance gesture left Sign in 3.5 points below the accessory edge; the following
+15.5-point correction lost keyboard focus. Retained typed hierarchies confirmed
+actual keyboard absence with the full masked password preserved and no prompt.
+The synthesized event matched that short displacement, but its recognizer
+classification is unknown. The midpoint target addresses this measured small
+correction; actual convergence within four attempts remains to be established.
+
+The same run recorded the iPhone multiline accessibility frame at 118 points
+before focus and 28 points afterward, ending exactly at the accessory's top edge.
+A currently clipped accessibility frame does not establish the editor's intrinsic
+height. Bounded scrolling may therefore reveal more of it when the viewport has
+at least 44 points available. For an observed multiline frame below 44 points,
+the current full action's measured interval guides that attempt; the runner does
+not infer the editor's hidden bottom or substitute a guessed height. This branch
+is recorded as `action-only-clipped-editor` and cannot itself establish editor
+feasibility. The final actual editor/viewport intersection must still measure at
+least 44 points, with the full action visible and hittable. If the action already
+fits but the editor cannot meet that final check, the journey fails honestly.
+Neither device completed both cases or produced valid recordings in that run;
+partial input and geometry checks do not qualify the full journey.
+
+Intentional keyboard dismissal uses a separate pan that starts in that measured
+content gutter and continues toward the observed window's bottom. This matches
+iOS's [interactive dismissal](https://developer.apple.com/documentation/uikit/uiscrollview/keyboarddismissmode-swift.enum/interactive),
+where the keyboard follows the touch offscreen. Only this dismissal gesture may
+cross the keyboard area; content-reveal and keyboard-clearance drags stay above
+the entire obstruction. The keyboard must then disappear and the tab targets
+must return. Run [41796953321](https://github.com/DruHustle/du-platform/actions/runs/41796953321)
+passed portrait Account input and geometry checks on both devices, then showed
+content overscroll with a fixed keyboard because the original dismissal path
+ended above it. It remains a failed journey, not full device qualification.
+No hard-coded screen coordinates, coordinate taps, API stubs, form submissions,
+skipped devices, or whole-test retries are used.
+Each device must produce an XCTest summary with exactly two passed smoke tests,
+zero failed tests and zero skipped tests. A successful build or empty test run
+cannot satisfy the runtime check.
+
+Fixture entry waits for a visibly settled software keyboard before typing, then
+checks current keyboard continuity and hittability before and after each event.
+Each character is sent once and must acknowledge the exact text prefix, or the masked
+length for a secure field, within a bounded wait. The runner never resends a lost
+character or repairs a mismatched value. Final exact-text, masked-length and
+geometry assertions remain in place. This synchronizes the real editing journey; it does not qualify
+rapid bulk typing. Run [41787512082](https://github.com/DruHustle/du-platform/actions/runs/41787512082)
+retained a cold-keyboard transition and a 60-character-per-second bulk event with
+missing input, which the original full-value assertion correctly rejected.
+
+The runner recognizes the first-use QuickPath introduction observed in run
+[41791909311](https://github.com/DruHustle/du-platform/actions/runs/41791909311).
+Its exact `UIContinuousPathIntroductionView` identifier, instruction text and
+descendant `Continue` button must all match. It records the visible prompt,
+dismisses it once per device, requires its disappearance, and records the resulting state.
+A suite-level guard preserves that limit across the two cases regardless of order.
+Acknowledging this observed introduction permits a second field tap before typing;
+no text event is replayed. Tutorial evidence and acknowledgment occur outside
+the keyboard-settling wait, which starts fresh after that one interruption;
+the overall test and job deadlines remain unchanged. A recurring introduction remains
+a failure. The same run retained exact email input but exposed a gesture aimed
+at the keyboard's accessory scroll view; form-scoped selection and measured
+viewport drags correct that harness path without changing app behavior.
+
+One optional password-saving prompt is anticipated after each of the two
+Account visits. In run [41802097647](https://github.com/DruHustle/du-platform/actions/runs/41802097647),
+the native `Save Password?` sheet/alert appeared after navigating to Assistant;
+the iPad had already acknowledged `A simulato` before the prompt hid its keyboard.
+The handler requires the exact observed title, description and its own `Not Now`
+and `Save` buttons. It chooses only `Not Now`, records both states and verifies
+that the input is unchanged. That allowance ends with the orientation's Assistant
+phase; an unknown prompt or a repeated password prompt fails.
+
+Run [41846956741](https://github.com/DruHustle/du-platform/actions/runs/41846956741)
+passed both portrait cases but failed both landscape cases after the delayed
+password prompt arrived on Assistant. The iPhone's final screenshot shows the
+prompt over the message editor; its four attempted reveal gestures left the
+editor's frame unchanged while the recorded snapshot already contained the
+prompt. The iPad's final screenshot shows the same prompt after it replaced a
+newly focused keyboard between the whole-app snapshot and a live frame lookup.
+Neither failure establishes a completed Assistant landscape journey.
+
+Reveal now checks the existing exact prompt validator before each bounded
+attempt and again after observing its viewport, keeping the input value from
+before the reveal. Dismissing an observed prompt requires a fresh viewport before
+any gesture. Initial keyboard settling first requires a stable whole-app
+keyboard/window signature and orientation, and checks for the prompt again
+before resolving live keyboard frames. The raw rectangles remain opaque
+signatures; the original live-frame stability, visibility, hittability, 44-point
+targets and keyboard-clearance checks still determine acceptance. A failed live
+lookup still fails the test. These changes need a fresh hosted iPhone and iPad
+run; they do not claim simulator acceptance from host-only checks.
+
+During typing, the already-required app snapshot also counts exact
+`Save Password?` sheets and alerts. One observed match in a readable, matching
+window and stable orientation can invoke the existing live validator; snapshot
+presence alone never authorizes a tap. The validator still checks phase permission,
+the exact body, the two owned buttons and the acknowledged value. Duplicate,
+out-of-phase or repeated prompts fail. This removes a separate prompt-query pair
+before every character while keeping fresh keyboard observations on both sides
+of every event. The normal observation reads orientation before the snapshot and
+after keyboard hittability; it does not reuse a prior event's observation.
+
+Before a character is sent, an observed password prompt must preserve the prior
+acknowledged prefix. If it arrives after the event was sent, the exact new value
+must still be acknowledged before continuing. A missing event fails; it is never
+resent or repaired. Only an observed known prompt permits refocusing the field.
+If iOS has already restored a visible, hittable keyboard after that prompt, the
+runner preserves the editing session without another tap; confirmed keyboard
+absence permits one refocus. Subsequent field events retain exact acknowledgment.
+Prompt capture and acknowledgment occur outside the bounded input/keyboard
+waits, while the overall test and job deadlines remain unchanged.
+
+Run [41809310414](https://github.com/DruHustle/du-platform/actions/runs/41809310414)
+retained the iPad's exact `A simu` prefix while the keyboard disappeared before
+the password prompt appeared. XCTest failed between separate keyboard existence
+and frame queries. Public throwing whole-application
+[element snapshots](https://developer.apple.com/documentation/xcuiautomation/xcuielementsnapshotproviding/snapshot())
+provide current typed hierarchy observations without re-resolving a disappearing
+keyboard's live frame between keystrokes. Run
+[41814926872](https://github.com/DruHustle/du-platform/actions/runs/41814926872)
+then completed portrait Account and Assistant checks on both devices but exposed
+a landscape discrepancy between recursively read snapshot-child frames and
+resolved accessibility frames. The iPad's actual visible area above the keyboard
+was 234 points, while the former calculation rejected an empty viewport.
+
+Run 41821386008 then established that snapshots taken directly from resolved
+keyboard/accessory targets also retained those unrotated frames. Both landscape
+cases correctly rejected the inconsistent geometry; neither qualified the form.
+The raw frames are therefore opaque signatures, never coordinates to transform.
+
+Fresh geometry uses public live
+[element frames](https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/frame)
+during settled phases, following their documented screen-coordinate contract.
+Run 41829274004 recorded normalized live keyboard and accessory frames in both
+orientations while the paired raw snapshot frames retained their distinct basis.
+Its landscape failures occurred later in the reveal gestures. This runtime
+evidence establishes those measurements; diagnostic accessibility text alone
+would not prove the direct reads behaved correctly.
+At most two read attempts require identical live keyboard
+**and** accessory measurements, bracketed by matching readable app snapshots with
+the complete keyboard, accessory and descendant-window signatures. The app window,
+orientation, counts and multiplicity must also agree. Frames must be finite and
+use the observed screen window. This bracket is not atomic: a live-resolution
+failure remains a test failure. No coordinates are manually rotated or offset,
+and the runner never parses debugging text into assertion data.
+
+Only a pair that passes those checks is cached as typing-continuity evidence.
+Before and after each event, a new throwing app snapshot must exactly match its
+complete raw signature, app window and orientation. The keyboard must also be
+currently [hittable](https://developer.apple.com/documentation/xcuiautomation/xcuielement/ishittable).
+There are no live keyboard-frame reads on this per-event path. A changed signature
+invalidates the pair and can recover only through the currently observed,
+phase-authorized exact password prompt; an unknown change or unreadable signature
+fails. Neither can silently reuse old geometry. Focus,
+navigation, rotation, gestures, known prompts and disappearance invalidate the
+pair. Refocusing establishes a fresh settled measurement.
+
+A keyboard can count as absent only when two subsequent readable hierarchies
+confirm its absence in the same valid orientation/window. A still-present but
+nonhittable keyboard is a separate covered state; it may resume only if the
+phase-authorized exact password prompt is already observed. Hittability alone
+never grants prompt permission or proves dismissal. Full clearance assertions and
+geometry-dependent gestures always take fresh live measurements, including the
+entire accessory bar; cached typing evidence cannot satisfy their bounds.
+
+Raw windows, keyboard/accessory frames and resolved control/scroll measurements
+are recorded before rejected geometry. Invalid rectangles use a JSON-safe tagged
+description so they cannot destroy the failure report during serialization. Final
+clearance and `keyboardObservation` JSON use the same validated measurement;
+application controls still require their actual enabled and hittable states.
+
+Every sent character still has three seconds to acknowledge its exact new value
+or secure-field length. If the keyboard disappears, only an already-authorized
+Account phase can then wait up to ten seconds for the exact password prompt.
+This separate OS transition allowance cannot rescue a missing character. The
+handler must preserve that acknowledged value, and the real software keyboard
+must return before another input event or the final clearance check. No input
+event, test or device journey is retried, and the overall deadlines are unchanged.
+
+## Evidence and bounds
+
+The `ios-native-smoke` artifact retains the inventory, signature/entitlement
+output, build/test/console logs, app-specific simulator security diagnostics,
+per-device result summaries, final screenshots, and `.xcresult` bundles. The
+script verifies the installed `xcresulttool export attachments` interface and
+exports the XCTest screenshots, accessibility trees and measured-control JSON
+into ordinary files in `iPhone-attachments/` and `iPad-attachments/`, including
+failed tests. Those in-app attachments can be inspected without Xcode; the final
+`simctl` screenshot may show SpringBoard after app teardown. `report.json`
+distinguishes failed, passed and unexecuted devices. Export failures remain failed
+checks even when the native assertions passed.
+
+The temporary test action retains system attachments on success as well as
+failure, following [Apple's recording-retention guidance](https://developer.apple.com/videos/play/wwdc2025/344/).
+Export validation requires the two exact expected case identifiers and
+URLs, the owned simulator UUID, nonempty local attachment payloads and at least
+one manifest-labelled screen recording for each case. If Xcode segments a recording,
+every distinct clip must validate and remain bound to its own case; clips for one
+case cannot substitute for the other case's evidence.
+The runner rejects an attachment-error placeholder, then uses the installed
+AVFoundation framework to require a positive-duration video track and an actually
+decoded frame. Only that validated recording is reported as usable evidence.
+This is necessary because run 41802097647 exported a pending-attachment error as
+the iPhone's purported recording despite a successful export command. The
+validation does not claim that every frame is intact or that a decoded frame
+proves keyboard clearance; the actual journey still needs visual review.
+
+Inspect the exported screen recording when a still image omits secure input.
+Apple documents that [secure fields hide their dots in iOS screenshots](https://developer.apple.com/documentation/swiftui/securefield).
+In run 41796953321, the XCTest still images omitted both the password dots and
+keyboard, while the corresponding recording showed the 16 masked characters,
+caret, full keyboard/accessory and Sign in action. That observed difference is
+not evidence of lost input or a dismissed keyboard. The recording and measured
+accessibility state must agree before accepting visual keyboard clearance; the
+workflow does not disable secure-entry protections to obtain a screenshot.
+
+The job remains bounded to 60 minutes. All build, device and evidence commands
+share a 50-minute execution budget, leaving room for dependency setup, cleanup
+and artifact upload. Within that budget, build-for-testing allows 20 minutes;
+each device gets one six-minute cold-boot wait and a fifteen-minute `xcodebuild`
+test command. That command includes simulator test-runner launch and result
+finalization. Each independent orientation case retains its 240-second default
+and 300-second maximum test allowance. In run 41814926872, the old combined phone
+journey reached portrait completion at about 196 seconds and then exceeded
+240 seconds during ordinary acknowledged landscape email replacement. This was
+distinct from the earlier animation-idle stall. The two-case design keeps full
+fixture entry, real replacement and explicit rotation retention within separate
+bounded cases. The gesture and query changes retain the current command and
+overall execution budgets listed above.
+Hosted results must still establish that both complete. In run
+[41779981845](https://github.com/DruHustle/du-platform/actions/runs/41779981845),
+iPad test launch took about 193 seconds, the failing journey took 107 seconds,
+and the earlier six-minute command deadline interrupted result finalization.
+Fresh iOS 26.5 data migration exceeded the earlier 150-second wait while still
+progressing in run [41774274359](https://github.com/DruHustle/du-platform/actions/runs/41774274359).
+Run 41829274004 also retained a separate 93.63-second gap between the initial
+iPhone app launch and automation-session setup. Early recording frames show
+Springboard and then a white launch surface; the cause is unassigned. It is not
+evidence of a rendered Home screen waiting idle, and it does not change these
+budgets or explain the later measured gesture overshoot.
+The timeout journal retains the command, elapsed time, original error and the
+complete output log, including failures during process termination.
+
+Devices run sequentially from one build. A failed boot records the simulator
+state and remains a failure. Before starting the next device, the runner must
+confirm that the previous owned simulator has shut down. Secondary shutdown or
+evidence errors do not replace the primary boot/test error. Final cleanup has
+its own three-minute budget, attempts shutdown and deletion independently for
+only the two UUIDs this run created, and restores the prior hardware-keyboard
+preference. Cleanup failures remain failures. No device or whole-test retry is
+used.
+
+Host regression tests run with:
+
+```sh
+python3 du-platform-frontend/tooling/scripts/tests/ios-native-smoke.test.py
+```
+
+These host checks verify selection, fixture restrictions, failure handling and
+cleanup; they do not establish native runtime success. The Swift target and real
+journeys require the hosted Xcode job to pass. This workflow does not establish
+physical-device behavior, all iOS versions, larger Dynamic Type settings, iPad
+split view, App Store signing, production authentication, or backend readiness. The separate known mobile
+dependency audit remains a release limitation until it passes.
+
+### Bounded finalization after timeout
+
+A device's two orientation cases may each use up to 300 seconds of XCTest time;
+the outer `xcodebuild` command additionally includes launching the test runner
+and finalizing its result bundle. Run [41837024642](https://github.com/DruHustle/du-platform/actions/runs/41837024642)
+exhausted the previous ten-minute command allowance on both devices, leaving
+incomplete result bundles and no complete case/media qualification. Its retained
+logs and data still identify the earlier phone case timeout and iPad keyboard-loss
+assertion described above; the outer timeouts do not replace those primary failures. The outer
+command now has fifteen minutes per device within the 50-minute shared journey
+and 60-minute job ceiling. This is a bounded qualification allowance, **not**
+a retry, ignored failure, or relaxation of the two-test pass requirement. On
+command timeout, the runner prints only the final 8 KB of the XCTest log and
+still records failure; the full logs remain in artifacts.

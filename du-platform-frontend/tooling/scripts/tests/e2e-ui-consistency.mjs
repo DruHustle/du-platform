@@ -111,9 +111,16 @@ const targetSize = async locator => {
   );
 };
 try {
-  for (const width of [375, 768, 1440]) {
+  for (const { width, height } of [
+    { width: 320, height: 568 },
+    { width: 375, height: 900 },
+    { width: 768, height: 900 },
+    { width: 1024, height: 600 },
+    { width: 1440, height: 900 },
+  ]) {
     const context = await browser.newContext({
-      viewport: { width, height: 900 },
+      viewport: { width, height },
+      hasTouch: width <= 1024,
       reducedMotion: "reduce",
     });
     let admin = false,
@@ -196,10 +203,12 @@ try {
     });
     const page = await context.newPage();
     page.setDefaultTimeout(12000);
-    page.on("pageerror", e => errors.push({ width, message: e.message }));
+    page.on("pageerror", e =>
+      errors.push({ width, height, message: e.message })
+    );
     page.on("response", r => {
       if (r.status() >= 400 && !r.url().includes("/api/search"))
-        network.push({ width, url: r.url(), status: r.status() });
+        network.push({ width, height, url: r.url(), status: r.status() });
     });
     const goto = async path => {
       await page.goto(base + path);
@@ -270,9 +279,9 @@ try {
           "Broken image"
         );
         await screenshot(page, `${width}-${path.replace(/[^a-z0-9]/gi, "_")}`);
-        pass(`${width}px ${path}`);
+        pass(`${width}x${height} ${path}`);
       } catch (e) {
-        failures.push(`${width}px ${path}: ${e.message}`);
+        failures.push(`${width}x${height} ${path}: ${e.message}`);
       }
     }
     await goto("/shop");
@@ -327,7 +336,7 @@ try {
       await menu.click();
       const menuBox = await page.getByRole("dialog").boundingBox();
       assert(
-        menuBox && menuBox.y + menuBox.height <= 900,
+        menuBox && menuBox.y >= 0 && menuBox.y + menuBox.height <= height + 1,
         "Menu is clipped below the viewport"
       );
       await screenshot(page, `${width}-navigation-menu`);
@@ -336,6 +345,41 @@ try {
         () => !document.querySelector('[role="dialog"]')
       );
       pass(`${width}px navigation menu stays inside viewport`);
+    }
+
+    if (width < 640) {
+      await goto("/shop/products?category=sports");
+      const category = page.getByRole("combobox", {
+        name: "Choose a category",
+        exact: true,
+      });
+      await category.waitFor();
+      await targetSize(category);
+      assert.equal(await category.inputValue(), "sports");
+      await page
+        .getByRole("heading", { name: "Sables Rugby Home Kit", exact: true })
+        .waitFor();
+      await category.selectOption("crafts");
+      await page.waitForURL(
+        url => url.searchParams.get("category") === "crafts"
+      );
+      await page
+        .getByRole("heading", { name: "Shona Stone Sculpture", exact: true })
+        .waitFor();
+      assert.equal(
+        await page
+          .getByRole("heading", { name: "Sables Rugby Home Kit", exact: true })
+          .count(),
+        0
+      );
+      await category.selectOption("all");
+      await page
+        .getByRole("heading", { name: "Sables Rugby Home Kit", exact: true })
+        .waitFor();
+      await assertFits(page);
+      pass(
+        `${width}x${height} mobile category switching updates products and URL`
+      );
     }
 
     await goto("/login?next=/admin");
@@ -414,14 +458,14 @@ try {
       (await field.boundingBox()).height >= 44,
       "Dialog field is too short"
     );
-    if (width === 375)
+    if (width < 640)
       assert(
         await field.evaluate(
           e => parseFloat(getComputedStyle(e).fontSize) >= 16
         ),
         "Small-screen fields must avoid iOS auto-zoom"
       );
-    assert((await dialog.boundingBox()).height <= 900 - 32);
+    assert((await dialog.boundingBox()).height <= height - 32 + 1);
     await field.focus();
     assert.notEqual(
       await field.evaluate(e => getComputedStyle(e).outlineStyle),

@@ -1378,7 +1378,8 @@
         "crafts": "Kunst und Handwerk",
         "food": "Essen & Nostalgie",
         "all_segments": "Alle Produktarten",
-        "select_segment": "Produktart wählen"
+        "select_segment": "Produktart wählen",
+        "select_category": "Kategorie wählen"
       },
       "loading": "Produkte werden geladen...",
       "empty_state": "In dieser Kategorie sind noch keine Produkte verfügbar.",
