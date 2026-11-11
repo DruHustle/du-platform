@@ -73,7 +73,17 @@ export function Action({title, onPress, disabled = false, secondary = false}: {t
   return <Pressable accessibilityRole="button" accessibilityState={{disabled}} disabled={disabled} onPress={onPress} style={({pressed}) => [styles.button, secondary && styles.secondary, disabled && styles.disabled, pressed && styles.pressed]}><Text style={[styles.buttonText, secondary && styles.secondaryText]}>{title}</Text></Pressable>;
 }
 export function Field({label, ...props}: TextInputProps & {label: string}) {
-  return <View style={styles.field}><Text style={styles.label}>{label}</Text><TextInput accessibilityLabel={label} placeholderTextColor="#65758b" {...props} style={[styles.input, props.multiline && styles.multiline, props.style]} /></View>;
+  const { width, height, fontScale } = useWindowDimensions();
+  const compactMultiline = props.multiline && Platform.OS === "ios" && width > height && height <= 500;
+  // Leave room for the action and keyboard on a landscape phone. A taller
+  // editor can put its first typed line behind the navigation header.
+  const compactHeight = Math.max(68, Math.ceil(44 * fontScale) + 22);
+  return <View style={styles.field}>
+    <Text style={styles.label}>{label}</Text>
+    <TextInput accessibilityLabel={label} placeholderTextColor="#65758b" {...props}
+      style={[styles.input, props.multiline && styles.multiline,
+        compactMultiline && { minHeight: compactHeight, height: compactHeight }, props.style]} />
+  </View>;
 }
 export function Message({message, error = false}: {message: string; error?: boolean}) { return <Text accessibilityRole={error ? "alert" : "text"} style={[styles.message, error && styles.error]}>{message}</Text>; }
 export function Loading({label = "Loading…"}: {label?: string}) { return <View style={styles.loading}><ActivityIndicator color={colors.ink} /><Text style={styles.copy}>{label}</Text></View>; }

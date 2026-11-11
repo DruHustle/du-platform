@@ -503,7 +503,8 @@ final class DUNativeSmokeTests: XCTestCase {
             upper = target.minY - viewport.minY
         } else {
             lower = multiline ? fieldFrame.minY + 44 - viewport.maxY : fieldFrame.maxY - viewport.maxY
-            upper = multiline ? fieldFrame.maxY - 44 - viewport.minY : fieldFrame.minY - viewport.minY
+            // Both fixtures type one line. Keep the editor’s first line below the header.
+            upper = fieldFrame.minY - viewport.minY
             if let target = actionFrame {
                 lower = max(lower, target.maxY - viewport.maxY)
                 upper = min(upper, target.minY - viewport.minY)
@@ -1046,10 +1047,10 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func editingAreaVisible(_ field: XCUIElement, viewport: CGRect, multiline: Bool) -> Bool {
-        let visible = field.frame.intersection(viewport)
-        return field.isHittable && (multiline
-            ? visible.width >= 44 && visible.height >= 44
-            : contains(viewport, field.frame))
+        let frame = field.frame
+        guard multiline else { return field.isHittable && contains(viewport, frame) }
+        let firstLineArea = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: 44)
+        return frame.width >= 44 && frame.height >= 44 && field.isHittable && contains(viewport, firstLineArea)
     }
 
     @MainActor
@@ -1099,7 +1100,7 @@ final class DUNativeSmokeTests: XCTestCase {
         if multiline {
             XCTAssertTrue(field.isEnabled)
             XCTAssertTrue(editingAreaVisible(field, viewport: viewport, multiline: true),
-                          "The focused multiline editor needs at least 44pt of visible editing area above the keyboard")
+                          "The first 44pt of the focused multiline editor must be visible between the header and keyboard")
         } else {
             assertControl(field, within: viewport)
         }
