@@ -57,7 +57,7 @@ jobs:
           name: mobile-dependency-audit
           path: ${{ runner.temp }}/du-mobile-audit.json
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: ${{ github.event_name == 'pull_request' && 2 || 14 }}
 
   android-build:
     name: Android native build and launch
@@ -107,7 +107,7 @@ jobs:
           name: android-debug-apk
           path: du-platform-frontend/mobile/android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-          retention-days: 7
+          retention-days: ${{ github.event_name == 'pull_request' && 1 || 7 }}
       - name: Launch and exercise the Android application
         timeout-minutes: 20
         uses: reactivecircus/android-emulator-runner@v2
@@ -135,7 +135,7 @@ jobs:
           name: android-native-smoke
           path: /tmp/du-native-android-smoke
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: ${{ github.event_name == 'pull_request' && 2 || 14 }}
 
   ios-build:
     name: iOS native simulator build
@@ -183,4 +183,4 @@ jobs:
           name: ios-simulator-app
           path: ${{ runner.temp }}/du-ios-simulator.zip
           if-no-files-found: error
-          retention-days: 7
+          retention-days: ${{ github.event_name == 'pull_request' && 1 || 7 }}

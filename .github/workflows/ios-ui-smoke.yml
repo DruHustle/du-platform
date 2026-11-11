@@ -76,4 +76,4 @@ jobs:
           name: ios-native-smoke
           path: ${{ runner.temp }}/du-ios-ui-smoke
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: ${{ github.event_name == 'pull_request' && 2 || 14 }}
