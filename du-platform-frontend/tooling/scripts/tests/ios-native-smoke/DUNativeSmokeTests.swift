@@ -75,7 +75,8 @@ final class DUNativeSmokeTests: XCTestCase {
         report.lifetime = .keepAlways
         add(report)
         typingKeyboardPair = nil
-        app.terminate()
+        // launch() starts a fresh process for each test. The harness shuts down
+        // its simulator after xcodebuild has finished recording the result.
         XCUIDevice.shared.orientation = .portrait
     }
 
@@ -161,12 +162,17 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func wait(_ description: String, timeout: TimeInterval = 10, until condition: () -> Bool) {
+        XCTAssertTrue(waitUntil(timeout: timeout, condition), description)
+    }
+
+    @MainActor
+    private func waitUntil(timeout: TimeInterval, _ condition: () -> Bool) -> Bool {
         let deadline = Date(timeIntervalSinceNow: timeout)
         repeat {
-            if condition() { return }
+            if condition() { return true }
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         } while Date() < deadline
-        XCTAssertTrue(condition(), description)
+        return condition()
     }
 
     @MainActor
@@ -868,7 +874,7 @@ final class DUNativeSmokeTests: XCTestCase {
         var hierarchySettledSince = Date()
         var previous: CGRect?
         var settledSince = Date()
-        wait("A visible software keyboard must settle before typing") {
+        let settled = waitUntil(timeout: 10) {
             // A freshly focused keyboard can be replaced by the delayed
             // Account prompt. Read whole-app snapshots while it is changing:
             // resolving a disappearing live Keyboard.frame fails XCTest before
@@ -923,7 +929,16 @@ final class DUNativeSmokeTests: XCTestCase {
             }
             return Date().timeIntervalSince(settledSince) >= 0.2
         }
-        return interruptionObserved
+        if settled { return interruptionObserved }
+        // iPad can present its separate password alert window at the end of
+        // the keyboard transition. Only the outstanding Account prompt may
+        // extend observation, and only its exact live controls authorize action.
+        if pendingPasswordPromptFor != nil,
+           waitUntil(timeout: 3, { self.passwordPrompt() != nil }) {
+            return true
+        }
+        XCTFail("A visible software keyboard must settle before typing")
+        return false
     }
 
     @MainActor
