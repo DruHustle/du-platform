@@ -883,7 +883,7 @@ final class DUNativeSmokeTests: XCTestCase {
         var hierarchySettledSince = Date()
         var previous: CGRect?
         var settledSince = Date()
-        let settled = waitUntil(timeout: 10) {
+        let sample: () -> Bool = {
             // A freshly focused keyboard can be replaced by the delayed
             // Account prompt. Read whole-app snapshots while it is changing:
             // resolving a disappearing live Keyboard.frame fails XCTest before
@@ -938,7 +938,13 @@ final class DUNativeSmokeTests: XCTestCase {
             }
             return Date().timeIntervalSince(settledSince) >= 0.2
         }
-        if settled { return interruptionObserved }
+        if waitUntil(timeout: 10, sample) { return interruptionObserved }
+        // A cold accessibility query can consume the first window while
+        // returning a valid live pair. Give only that measured keyboard one
+        // bounded confirmation. The same raw and live checks must pass again.
+        if previous != nil && typingKeyboardPair != nil && waitUntil(timeout: 10, sample) {
+            return interruptionObserved
+        }
         // iPad can present its separate password alert window at the end of
         // the keyboard transition. Only the outstanding Account prompt may
         // extend observation, and only its exact live controls authorize action.
