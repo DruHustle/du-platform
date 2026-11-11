@@ -37,6 +37,54 @@ const ROUTE_INDEX = [
     tags: ["visit", "travel", "attractions", "victoria falls"],
   },
   {
+    title: "Flights",
+    href: "/travel/flights",
+    category: "Tourism",
+    tags: ["flight", "cheap flights", "compare flights", "airfare", "plane tickets",
+      "Flüge", "Fluege", "Ndege", "Indizamtshina"],
+  },
+  {
+    title: "Places to stay",
+    href: "/travel/stays",
+    category: "Tourism",
+    tags: ["stays", "accommodation", "hotel", "hotels", "lodging",
+      "Unterkünfte", "Unterkuenfte", "Pekugara", "Indawo zokuhlala"],
+  },
+  {
+    title: "Car hire",
+    href: "/travel/car-hire",
+    category: "Tourism",
+    tags: ["car rental", "car rentals", "rental car", "rental cars", "rent a car",
+      "Mietwagen", "Kurenda motokari", "Ukuqhatsha imota"],
+  },
+  {
+    title: "My trips",
+    href: "/travel/my-trips",
+    category: "Tourism",
+    tags: ["saved trips", "saved searches", "Meine Reisen", "Nzendo dzangu", "Uhambo lwami"],
+  },
+  {
+    title: "Weather",
+    href: "/travel/weather",
+    category: "Tourism",
+    tags: ["weather forecast", "temperature", "rainfall",
+      "Wetter", "Mamiriro ekunze", "Isimo sezulu"],
+  },
+  {
+    title: "Explore destinations",
+    href: "/travel/explore",
+    category: "Tourism",
+    tags: ["destination guides", "places to visit", "Entdecken", "Ongorora", "Hlola"],
+  },
+  {
+    title: "Plan a Zimbabwe itinerary",
+    href: "/travel/planner",
+    category: "Tourism",
+    tags: ["trip planner", "travel planner", "itinerary planner",
+      "Simbabwe-Reise mit Onesa entwerfen", "Ronga rwendo rweZimbabwe naOnesa",
+      "Hlela uhambo lweZimbabwe loOnesa"],
+  },
+  {
     title: "Investment",
     href: "/investment",
     category: "Investment",
@@ -62,6 +110,15 @@ const ROUTE_INDEX = [
   },
 ];
 
+function normalizeRouteText(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\s.,?!-]+/g, " ")
+    .trim();
+}
+
 export class SearchService {
   constructor(private readonly repository = new SearchRepository()) {}
 
@@ -73,11 +130,22 @@ export class SearchService {
       return { query: "", count: 0, results: [] };
     }
 
-    const routeMatches = ROUTE_INDEX.filter(item =>
-      [item.title, item.category, ...item.tags].some(value =>
-        String(value).toLowerCase().includes(normalizedQuery)
-      )
-    );
+    const routeQuery = normalizeRouteText(normalizedQuery);
+    const routeMatches = ROUTE_INDEX.filter(item => {
+      if (!routeQuery) return false;
+      const terms = [item.title, ...item.tags].map(normalizeRouteText);
+      if (
+        normalizeRouteText(item.category).includes(routeQuery) ||
+        terms.some(term => term.includes(routeQuery))
+      ) {
+        return true;
+      }
+      // Recognise the planning tool inside queries such as "hotels in Harare".
+      return (
+        item.href.startsWith("/travel/") &&
+        terms.some(term => ` ${routeQuery} `.includes(` ${term} `))
+      );
+    });
     const [directory, catalogue] = await Promise.allSettled([
       this.repository.searchNtir(normalizedQuery),
       this.repository.publishedProducts(),

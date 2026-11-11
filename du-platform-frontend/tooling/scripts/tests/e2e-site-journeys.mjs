@@ -124,6 +124,9 @@ try {
   let searchAttempts = 0;
   await page.route("**/api/search?**", route => {
     searchAttempts += 1;
+    if (searchAttempts === 2) {
+      return route.fulfill({ status: 503, json: { message: "Temporarily unavailable" } });
+    }
     return route.fulfill({ json: { success: true, data: {
       partial: searchAttempts === 1,
       results: [{ title: "Travel Southern Africa", category: "Tourism", href: "/travel" }],
@@ -134,9 +137,16 @@ try {
   await page.getByRole("heading", { name: 'Search Results for "travel $&"' }).waitFor();
   await page.getByRole("status").filter({ hasText: "Some search results" }).waitFor();
   await page.locator('main a[href="/travel"]').waitFor();
-  await page.getByRole("button", { name: "Try again", exact: true }).click();
+  const retrySearch = page.getByRole("button", { name: "Try again", exact: true });
+  const retryFailure = page.waitForResponse(response =>
+    new URL(response.url()).pathname === "/api/search" && response.status() === 503
+  );
+  await retrySearch.click();
+  await retryFailure;
   await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).waitFor();
-  assert.equal(searchAttempts, 2);
+  await retrySearch.click();
+  await page.getByRole("status").filter({ hasText: "Some search results" }).waitFor({ state: "hidden" });
+  assert.equal(searchAttempts, 3);
   assert.equal(await page.getByText("Some search results are temporarily unavailable.").count(), 0);
   await page.unroute("**/api/search?**");
   pass("partial search keeps usable links and retries the same query");

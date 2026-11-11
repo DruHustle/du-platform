@@ -39,11 +39,13 @@ export function isTravelNationality(value: string) {
   return (
     /^[A-Z]{2}$/.test(value) &&
     !["ZZ", "XX", "EU", "UN", "EZ", "QO", "XA", "XB"].includes(value) &&
-    Boolean(
-      new Intl.DisplayNames(["en"], { type: "region", fallback: "none" }).of(
-        value
-      )
-    )
+    // The API validates the code when the browser lacks the region catalog.
+    (typeof Intl.DisplayNames !== "function" ||
+      Boolean(
+        new Intl.DisplayNames(["en"], { type: "region", fallback: "none" }).of(
+          value
+        )
+      ))
   );
 }
 export function validateTravel(

@@ -1703,14 +1703,14 @@
     },
     "no_results": {
       "title": "Keine Ergebnisse gefunden",
-      "message": "Wir konnten nichts finden, was mit „{{query}}“ übereinstimmt. Versuchen Sie, nach umfassenderen Begriffen wie „Investment“, „Tourismus“ oder „Onesa“ zu suchen.",
+      "message": "Keine Treffer für „{{query}}“. Probiere einen kürzeren Begriff wie „Flüge“ oder „Unterkünfte“.",
       "return_home": "Heimkehr"
     },
     "submit": "Suchen",
     "loading": "Suche läuft…",
     "failed": "Die Suche ist derzeit nicht verfügbar. Bitte versuchen Sie es erneut.",
     "retry": "Erneut versuchen",
-    "prompt": "Suchen Sie nach Tourismus, Investitionen, Einkauf oder Onesa AI.",
+    "prompt": "Suche nach Flügen, Unterkünften, Produkten oder Onesa AI.",
     "description": "Finde Produkte, Reiseziele, Geschäftsideen und Onesa-Werkzeuge."
   },
   "error_boundary": {
@@ -2157,6 +2157,9 @@
     "explore": "Entdecken",
     "my-trips": "Meine Reisen",
     "description": "Familie besuchen, in die Heimat reisen oder Neues entdecken? Plane Reisen nach, von und innerhalb von Simbabwe und dem südlichen Afrika und buche direkt bei den Anbietern.",
+    "choose-location": "Wähle einen Ort aus der Liste.",
+    "no-locations": "Kein passender Ort. Versuche es mit einer Stadt, einem Land oder einem Flughafencode.",
+    "clear-confirm": "Reisedaten, Suchen, Budgetposten und ausgewählte Angebote in diesem Browser löschen?",
     "search-intro": "Beginne mit Reisedaten und Reisenden. Die Angaben bleiben beim Wechsel zwischen Reisebereichen erhalten.",
     "origin": "Abflughafen",
     "destination": "Zielflughafen / Umgebung",

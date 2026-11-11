@@ -1707,14 +1707,14 @@
     },
     "no_results": {
       "title": "Hapana zvawanikwa",
-      "message": "Hatina kuwana chinoenderana ne\"{{query}}\". Edza kutsvaga mazwi akadai se \"Investment\", \"Tourism\", kana \"Onesa\".",
+      "message": "Hatina kuwana zvinoenderana ne“{{query}}”. Edza izwi pfupi rakaita sekuti “ndege” kana “pekugara”.",
       "return_home": "Dzoka Kumba"
     },
     "submit": "Tsvaga",
     "loading": "Tiri kutsvaga…",
     "failed": "Kutsvaga hakusi kushanda pari zvino. Ndapota edza zvakare.",
     "retry": "Edza zvakare",
-    "prompt": "Tsvaga zvekushanya, kuisa mari, kutenga, kana Onesa AI.",
+    "prompt": "Tsvaga ndege, pekugara, zvigadzirwa kana Onesa AI.",
     "description": "Tsvaga zvigadzirwa, nzvimbo dzekushanyira, pfungwa dzebhizinesi nematurusi eOnesa."
   },
   "error_boundary": {
@@ -2161,6 +2161,9 @@
     "explore": "Ongorora",
     "my-trips": "Nzendo dzangu",
     "description": "Munoshanyira mhuri, kudzokera kumusha kana kuona nzvimbo itsva here? Rongai nzendo kuenda, kubva uye mukati meZimbabwe nekumaodzanyemba kweAfrica, mozobhuka zvakananga nevapi vemabasa.",
+    "choose-location": "Sarudza nzvimbo kubva pane dzakarongwa.",
+    "no-locations": "Hapana nzvimbo inoenderana nezvawanyora. Edza zita reguta, nyika kana kodhi yenhandare yendege.",
+    "clear-confirm": "Unoda kudzima mashoko erwendo, zvawakatsvaga, mari yawakaronga uye zvawakasarudza mubhurawuza rino here?",
     "search-intro": "Tanga nemazuva nevafambi. Mashoko aya anoenderera kune zvimwe zvikamu.",
     "origin": "Nhandare yekubva",
     "destination": "Nhandare yekusvika / nzvimbo",
