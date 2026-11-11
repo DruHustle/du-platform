@@ -676,7 +676,7 @@ class RunnerTests(unittest.TestCase):
             "-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testLandscapeNavigationAndKeyboard",
         ])
         self.assertEqual(command[command.index("-default-test-execution-time-allowance") + 1], "240")
-        self.assertEqual(command[command.index("-maximum-test-execution-time-allowance") + 1], "300")
+        self.assertEqual(command[command.index("-maximum-test-execution-time-allowance") + 1], "480")
         for repetition_flag in ("-test-iterations", "-test-repetitions", "-retry-tests-on-failure", "-run-tests-until-failure"):
             self.assertNotIn(repetition_flag, command)
 
@@ -729,6 +729,9 @@ class RunnerTests(unittest.TestCase):
         device = {"family": "iPad", "udid": TABLET_ID}
         self.runner.exercise(device, self.root / "test.xctestrun")
         self.assertEqual(device["status"], "failed")
+        command = next(call.args[0] for call in self.runner.run.call_args_list if call.args[1] == "test-iPad")
+        self.assertEqual(command[command.index("-default-test-execution-time-allowance") + 1], "240")
+        self.assertEqual(command[command.index("-maximum-test-execution-time-allowance") + 1], "300")
 
     def test_both_passed_case_counts_and_owned_recordings_are_required_for_device_success(self):
         (self.runner.artifacts / "iPhone.xcresult").mkdir()

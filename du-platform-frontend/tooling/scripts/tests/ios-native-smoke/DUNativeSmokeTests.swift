@@ -87,9 +87,8 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     func testLandscapeNavigationAndKeyboard() {
-        // The cold iPad journey finished its assertions and teardown in 271s.
-        // Allow it the existing five-minute XCTest ceiling, including restoration.
-        executionTimeAllowance = 300
+        // Cold landscape assertions and teardown took 388s on iPhone and 272s on iPad.
+        executionTimeAllowance = UIDevice.current.userInterfaceIdiom == .phone ? 480 : 300
         exerciseOrientation(.landscapeLeft, name: "landscape")
     }
 

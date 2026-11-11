@@ -510,7 +510,7 @@ class IOSSmoke:
                       "-resultBundlePath", str(result), "-parallel-testing-enabled", "NO",
                       "-test-timeouts-enabled", "YES",
                       "-default-test-execution-time-allowance", "240",
-                      "-maximum-test-execution-time-allowance", "300",
+                      "-maximum-test-execution-time-allowance", "480" if family == "iPhone" else "300",
                       *[f"-only-testing:{identifier}" for identifier in TEST_IDENTIFIERS]],
                      f"test-{family}", timeout=TEST_COMMAND_TIMEOUT_SECONDS)
             summary = json.loads(self.capture(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)],
