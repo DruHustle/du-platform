@@ -1,5 +1,6 @@
 import { customerLanguage } from "@/domain/customerLanguage";
 import ContactEnquiry from "./ContactEnquiry";
+import AppDownloads from "./AppDownloads";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Link, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
@@ -1246,6 +1247,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
+          <AppDownloads />
           <nav
             aria-label={t("pilot.operator_title")}
             className="mb-6 flex flex-wrap gap-x-5 gap-y-1 text-xs text-white/80 underline underline-offset-4"

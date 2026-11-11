@@ -30,6 +30,11 @@
   "partners": "Abahlanganyeli",
   "contact": "Thintana lathi",
   "footer": {
+    "mobile_apps": {
+      "title": "Ama-app eselula",
+      "available": "Vula ikhasi lokulanda",
+      "unavailable": "Kayikatholakali"
+    },
     "about": {
       "title": "Mayelana Lathi",
       "vision_label": "Umbono Wethu",
