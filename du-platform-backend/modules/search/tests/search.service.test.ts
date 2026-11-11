@@ -93,3 +93,23 @@ it("opens the matching directory search instead of an unfiltered directory", asy
     })
   );
 });
+
+it("keeps indexed routes available during a directory and catalogue outage", async () => {
+  const offline = async () => { throw new Error("offline"); };
+  const service = new SearchService({ searchNtir: offline, publishedProducts: offline });
+  const match = await service.search("shopping");
+  expect(match.partial).toBe(true);
+  expect(match.results).toContainEqual(expect.objectContaining({ href: "/shop" }));
+  await expect(service.search("unmatched")).rejects.toThrow("offline");
+});
+
+it("keeps directory matches when the catalogue fails", async () => {
+  const service = new SearchService({
+    searchNtir: async () => [{ name: "Sample Co", sector: "Crafts", location: "Harare" }],
+    publishedProducts: async () => { throw new Error("catalogue unavailable"); },
+  } as any);
+  const result = await service.search("sample");
+  expect(result).toMatchObject({
+    partial: true, count: 1, results: [{ href: "/ntir?q=Sample%20Co" }],
+  });
+});

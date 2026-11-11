@@ -104,6 +104,8 @@
     "reset": {
       "title": "Gadzirisazve pasiwedhi",
       "subtitle": "Isa pasiwedhi itsva yeaccount yako.",
+      "invalid_link": "Link iyi yekugadzirisazve pasiwedhi haisi kushanda kana kuti yapera.",
+      "request_link": "Kumbira link itsva yekugadzirisazve pasiwedhi",
       "missing_token": "Link yekugadzirisazve haipo kana kuti yapera.",
       "new_password": "Pasiwedhi itsva",
       "show_password": "Ratidza pasiwedhi",
@@ -1686,6 +1688,7 @@
     }
   },
   "search": {
+    "partial": "Mimwe mhinduro yetsvakiridzo haisi kuwanikwa pari zvino.",
     "categories": {
       "tourism": "Kufamba",
       "investment": "Kudyara mari",

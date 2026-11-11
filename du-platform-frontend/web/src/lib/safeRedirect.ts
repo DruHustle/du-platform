@@ -9,3 +9,16 @@ export function safeRedirectPath(value: string | null): string {
     return "/";
   return value;
 }
+
+export function returnPathFromSearch(search: string): string {
+  return safeRedirectPath(new URLSearchParams(search).get("next"));
+}
+
+export function authPageLink(
+  path: "/login" | "/register" | "/forgot-password",
+  returnPath: string
+): string {
+  return returnPath === "/"
+    ? path
+    : `${path}?next=${encodeURIComponent(returnPath)}`;
+}

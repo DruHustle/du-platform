@@ -104,6 +104,8 @@
     "reset": {
       "title": "Neues Passwort festlegen",
       "subtitle": "Wählen Sie ein sicheres Passwort für Ihr Konto.",
+      "invalid_link": "Dieser Link ist ungültig oder abgelaufen.",
+      "request_link": "Neuen Link zum Zurücksetzen anfordern",
       "missing_token": "Fehlendes Reset-Token. Bitte verwenden Sie den Link, der Ihnen per E-Mail zugesandt wurde.",
       "new_password": "Neues Passwort",
       "show_password": "Passwort anzeigen",
@@ -1682,6 +1684,7 @@
     }
   },
   "search": {
+    "partial": "Ein Teil der Suchergebnisse ist vorübergehend nicht verfügbar.",
     "categories": {
       "tourism": "Reisen",
       "investment": "Investition",

@@ -30,6 +30,7 @@ export default function SearchResults() {
     Array<{ title: string; href: string; category: string; summary?: string }>
   >([]);
   const [loading, setLoading] = useState(Boolean(query));
+  const [partial, setPartial] = useState(false);
   const [failed, setFailed] = useState(false);
   const [retry, setRetry] = useState(0);
   const iconByCategory: Record<string, any> = {
@@ -53,6 +54,7 @@ export default function SearchResults() {
     const controller = new AbortController();
     setResults([]);
     setFailed(false);
+    setPartial(false);
     setLoading(Boolean(query));
     if (!query) return () => controller.abort();
 
@@ -63,7 +65,10 @@ export default function SearchResults() {
         signal: controller.signal,
       })
       .then(({ data }) => {
-        if (!controller.signal.aborted) setResults(data?.results ?? []);
+        if (controller.signal.aborted) return;
+        if (!Array.isArray(data?.results)) throw new Error("Invalid search response");
+        setResults(data.results);
+        setPartial(data.partial === true);
       })
       .catch(() => {
         if (!controller.signal.aborted) setFailed(true);
@@ -87,10 +92,7 @@ export default function SearchResults() {
               <Search className="h-8 w-8 text-zim-gold" />
               <h1 className="page-title">
                 {query
-                  ? tr(
-                      "search.results.title_with_query",
-                      `Search Results for "{{query}}"`
-                    ).replace("{{query}}", query)
+                  ? t("search.results.title_with_query", { query })
                   : tr(
                       "search.results.title_default",
                       "Search Diaspora Unlocked"
@@ -123,6 +125,14 @@ export default function SearchResults() {
                 {tr("search.submit", "Search")}
               </Button>
             </form>
+            {partial && (
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <p role="status">{t("search.partial")}</p>
+                <Button variant="outline" onClick={() => setRetry(value => value + 1)}>
+                  {t("search.retry")}
+                </Button>
+              </div>
+            )}
             {loading ? (
               <p role="status" className="py-12 text-white/80">
                 {tr("search.loading", "Searching…")}
@@ -214,10 +224,7 @@ export default function SearchResults() {
                   {tr("search.no_results.title", "No results found")}
                 </h2>
                 <p className=" max-w-md mx-auto">
-                  {tr(
-                    "search.no_results.message",
-                    `We couldn't find anything matching "{{query}}". Try searching for broader terms like "Investment", "Tourism", or "Onesa".`
-                  ).replace("{{query}}", query)}
+                  {t("search.no_results.message", { query })}
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-5 text-zim-gold underline">
                   <Link href="/shop/products">

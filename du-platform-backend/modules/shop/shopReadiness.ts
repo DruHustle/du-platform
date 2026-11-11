@@ -5,7 +5,7 @@ import {
   type PublicShopReadiness,
   type ShopPilotApproval,
 } from "../../domain/shopReadiness";
-import { ShopRequestError } from "../../shared/persistence/shopStore";
+import { ShopRequestError } from "../../domain/shopCheckout";
 
 async function load(env: NodeJS.ProcessEnv = process.env, now = Date.now()) {
   const requested = env.SHOP_COMMERCIAL_MODE || "observe";

@@ -101,39 +101,85 @@ const hotel = z.object({
   rating: z.number().min(0).max(10).nullish(),
   reviewCount: z.number().int().nonnegative().max(10000000).nullish(),
 });
-function payload(raw: string, requestId: number): unknown {
-  let envelope: any;
+function parseProviderJson(text: string) {
   try {
-    if (raw.trimStart().startsWith("{")) envelope = JSON.parse(raw);
-    else {
-      const frames = raw.replace(/\r\n/g, "\n").split("\n\n");
-      for (const frame of frames) {
-        const lines = frame
-          .split("\n")
-          .filter(line => line.startsWith("data:"));
-        if (!lines.length) continue;
-        const item = JSON.parse(
-          lines.map(line => line.slice(5).trimStart()).join("\n")
-        );
-        if (item.id === requestId) envelope = item;
-      }
-    }
-    if (
-      !envelope ||
-      envelope.id !== requestId ||
-      envelope.error ||
-      envelope.result?.isError
-    )
-      throw new Error();
-    const result = envelope.result;
-    if (result.structuredContent) return result.structuredContent;
-    const block = result.content?.find(
-      (item: any) => item.type === "text" || typeof item.text === "string"
-    );
-    return JSON.parse(block.text);
+    return JSON.parse(text);
   } catch {
     throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
   }
+}
+
+function eventEnvelope(frame: string, requestId: number) {
+  const lines = frame
+    .split(/\r\n|\r|\n/)
+    .filter(line => line.startsWith("data:"));
+  if (!lines.length) return;
+  const event = parseProviderJson(
+    lines.map(line => line.slice(5).trimStart()).join("\n")
+  );
+  if (event?.id === requestId) return event;
+}
+
+async function readEnvelope(response: Response, requestId: number) {
+  const reader = response.body!.getReader();
+  const decoder = new TextDecoder();
+  const eventStream =
+    response.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase() ===
+    "text/event-stream";
+  const eventEnd = /\r?\n\r?\n|\r\r/g;
+  let pending = "";
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > 1048576)
+        throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+      // A frame delimiter can be split across reads.
+      eventEnd.lastIndex = Math.max(0, pending.length - 3);
+      pending += decoder.decode(value, { stream: true });
+      if (eventStream) {
+        for (let end; (end = eventEnd.exec(pending)); ) {
+          const envelope = eventEnvelope(
+            pending.slice(0, end.index),
+            requestId
+          );
+          if (envelope) return envelope;
+          pending = pending.slice(eventEnd.lastIndex);
+          eventEnd.lastIndex = 0;
+        }
+      }
+    }
+    pending += decoder.decode();
+    if (!eventStream && pending.trimStart().startsWith("{"))
+      return parseProviderJson(pending);
+    // Some providers return SSE without a content type, or end the final frame at EOF.
+    for (const frame of pending.split(eventEnd)) {
+      const envelope = eventEnvelope(frame, requestId);
+      if (envelope) return envelope;
+    }
+    throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+}
+
+function payload(envelope: any, requestId: number): unknown {
+  if (
+    !envelope ||
+    envelope.id !== requestId ||
+    envelope.error ||
+    envelope.result?.isError
+  )
+    throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+  const result = envelope.result;
+  if (result?.structuredContent) return result.structuredContent;
+  const block = Array.isArray(result?.content)
+    ? result.content.find((item: any) => typeof item?.text === "string")
+    : undefined;
+  if (!block) throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+  return parseProviderJson(block.text);
 }
 
 // Fixed, read-only tools on explicitly public vendor endpoints. No generic MCP
@@ -182,24 +228,7 @@ export class PublicTravelSearch {
       });
       if (!response.ok || !response.body)
         throw new TravelProviderError("TRAVEL_PROVIDER_UNAVAILABLE");
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let size = 0,
-        body = "";
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          size += value.byteLength;
-          if (size > 1048576)
-            throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
-          body += decoder.decode(value, { stream: true });
-        }
-        body += decoder.decode();
-      } finally {
-        await reader.cancel().catch(() => {});
-      }
-      const data: any = payload(body, 1);
+      const data: any = payload(await readEnvelope(response, 1), 1);
       if (!data || data.error)
         throw new TravelProviderError("TRAVEL_PROVIDER_UNAVAILABLE");
       return data;

@@ -113,7 +113,8 @@ export async function sendOnesaChatMessage(input: {
   const response = await api.post(
     "/ai/chat",
     {
-      messages: input.messages.map(message => ({
+      // The chat endpoint uses the most recent 20 messages for context.
+      messages: input.messages.slice(-20).map(message => ({
         role: message.role,
         content: message.content,
       })),

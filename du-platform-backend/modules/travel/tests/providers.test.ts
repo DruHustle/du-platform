@@ -291,6 +291,42 @@ describe("public read-only Travel providers", () => {
       ).quotes
     ).toHaveLength(1);
   });
+  it("finishes the matching SSE response on an open connection and releases the supplier slot", async () => {
+    const cancel = vi.fn();
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(async () => {
+      const envelope = {
+        jsonrpc: "2.0",
+        id: 1,
+        result: { structuredContent: flights() },
+      };
+      const chunks = [
+        ": keepalive\n\n",
+        'data: {"jsonrpc":"2.0","method":"notifications/progress"}\n\n',
+        'data: {"id":7,"result":{}}\r\n\r\n',
+        "event: message\r\ndata: " + JSON.stringify(envelope) + "\r",
+        "\n\r",
+        "\n",
+      ];
+      const stream = new ReadableStream<Uint8Array>({
+        start(controller) {
+          for (const chunk of chunks)
+            controller.enqueue(new TextEncoder().encode(chunk));
+          // The server keeps sending heartbeats until the client closes the stream.
+        },
+        cancel,
+      });
+      return new Response(stream, {
+        headers: { "Content-Type": "text/event-stream; charset=utf-8" },
+      });
+    });
+    const search = new PublicTravelSearch(fetcher, () => now);
+    for (let i = 0; i < 3; i++)
+      expect((await search.search("flights", criteria())).quotes).toHaveLength(
+        1
+      );
+    expect(cancel).toHaveBeenCalledTimes(3);
+  });
+
   it("fails closed on provider blocks, invalid envelopes, oversized responses and cancellation", async () => {
     for (const res of [
       new Response("blocked", { status: 403 }),

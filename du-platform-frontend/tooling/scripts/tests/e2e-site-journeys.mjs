@@ -110,6 +110,26 @@ try {
   await page.getByRole("heading", { name: /no results found/i }).waitFor();
   pass("failed search has a retry state distinct from empty results");
 
+  let searchAttempts = 0;
+  await page.route("**/api/search?**", route => {
+    searchAttempts += 1;
+    return route.fulfill({ json: { success: true, data: {
+      partial: searchAttempts === 1,
+      results: [{ title: "Travel Southern Africa", category: "Tourism", href: "/travel" }],
+    } } });
+  });
+  await page.getByRole("searchbox").fill("travel $&");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("heading", { name: 'Search Results for "travel $&"' }).waitFor();
+  await page.getByRole("status").filter({ hasText: "Some search results" }).waitFor();
+  await page.locator('main a[href="/travel"]').waitFor();
+  await page.getByRole("button", { name: "Try again", exact: true }).click();
+  await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).waitFor();
+  assert.equal(searchAttempts, 2);
+  assert.equal(await page.getByText("Some search results are temporarily unavailable.").count(), 0);
+  await page.unroute("**/api/search?**");
+  pass("partial search keeps usable links and retries the same query");
+
   await page.route("**/api/search?**", async route => {
     const q = new URL(route.request().url()).searchParams.get("q");
     await new Promise(resolve => setTimeout(resolve, q === "slow" ? 700 : 50));
@@ -283,7 +303,35 @@ try {
     "reset tokens leave history and reset completion cannot redirect a later journey"
   );
 
-  await page.goto(`${baseUrl}/register`);
+  for (const token of ["", "#token=expired-local-token"]) {
+    await page.goto(`${baseUrl}/reset-password${token}`);
+    if (token) {
+      await page.route("**/api/auth/reset-password", route =>
+        route.fulfill({
+          status: 400,
+          json: { success: false, error: { code: "AUTH_INVALID_RESET_TOKEN" } },
+        })
+      );
+      await page.locator("#ResetPasswordPage-password").fill("StrongLocal123!");
+      await page
+        .locator("#ResetPasswordPage-confirmPassword")
+        .fill("StrongLocal123!");
+      await page
+        .getByRole("button", { name: "Reset Password", exact: true })
+        .click();
+    }
+    await page.getByRole("link", { name: "Request a new reset link" }).click();
+    await page.locator("#ForgotPasswordPage-email").waitFor();
+    await page.unroute("**/api/auth/reset-password");
+  }
+  pass("missing and expired reset links lead directly to a new reset request");
+
+  const returnPath = "/travel/my-trips?city=Victoria%20Falls#saved";
+  const nextQuery = `?next=${encodeURIComponent(returnPath)}`;
+  await page.goto(`${baseUrl}/login${nextQuery}`);
+  await page.locator(`a[href="/forgot-password${nextQuery}"]`).click();
+  await page.locator(`a[href="/login${nextQuery}"]`).click();
+  await page.locator(`a[href="/register${nextQuery}"]`).click();
   const email = `audit-${Date.now()}@example.com`;
   const password = "Audit-Local-Password-123!";
   await page.getByLabel("First Name", { exact: true }).fill("Local");
@@ -307,10 +355,10 @@ try {
   await page.locator("#RegisterPage-confirmPassword").fill(password);
   await page.locator("#terms").check();
   await page.getByRole("button", { name: /register/i }).click();
-  await page.waitForURL(`${baseUrl}/`);
+  await page.waitForURL(`${baseUrl}${returnPath}`);
   assert.equal(await page.evaluate(() => localStorage.getItem("du_jwt")), null);
   pass(
-    "registration succeeds in the local sandbox without persisting bearer tokens"
+    "registration returns to the requested trip after switching account forms without persisting bearer tokens"
   );
   const crossSiteLogout = await context.request.post(
     `${baseUrl}/api/auth/logout`,
