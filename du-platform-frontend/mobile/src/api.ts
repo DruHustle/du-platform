@@ -60,6 +60,21 @@ export async function request<T>(path: string, options: {
   return (payload?.success === true && "data" in payload ? payload.data : payload) as T;
 }
 
+export type ChatMessage = { role: "user" | "assistant"; content: string };
+
+export async function requestOnesaReply(conversation: ChatMessage[], signal: AbortSignal): Promise<string> {
+  const result = await request<{ reply: string; truncated?: boolean }>("/ai/chat", {
+    method: "POST",
+    body: { messages: conversation.slice(-20), language: "en" },
+    signal,
+    timeoutMs: 30_000,
+  });
+  if (typeof result?.reply !== "string" || !result.reply.trim() || result.truncated) {
+    throw new Error("The assistant could not complete a response. Please try again.");
+  }
+  return result.reply;
+}
+
 export type User = { id: number; fullName: string; email: string };
 export type AuthResult = { user: User; accessToken: string; sessionToken: string };
 export type Product = { id: number; slug: string; name: string; description: string; category: string; image_url: string; image_api_url?: string | null; price_cents: number; currency: string; stock_qty: number; is_active: number };
