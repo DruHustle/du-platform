@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { getPublicShopSeedProducts } from "../../../../du-platform-backend/domain/shopCatalog.ts";
+import {
+  readyShop,
+  testPricing,
+  translatedFixture,
+} from "./shop-readiness-fixture.mjs";
 
 const baseUrl = process.env.E2E_BASE_URL || "http://localhost:5001";
 assert(
@@ -407,6 +413,7 @@ try {
   );
   await page.getByRole("button", { name: "Account", exact: true }).click();
   await page.getByRole("menuitem", { name: "Logout", exact: true }).click();
+  await page.waitForURL(`${baseUrl}/`);
   await page.goto(`${baseUrl}/login?next=%2Fshop%2Fproducts`);
   await page.locator("#LoginPage-email").fill("invalid-email");
   await page.locator("#LoginPage-password").fill(password);
@@ -438,22 +445,33 @@ try {
     .waitFor();
   await page.unroute("**/api/auth/login");
   pass("failed sign-in shows an accessible error and allows retry");
+
+  // Exercise an approved basket in this browser only. The local service may
+  // legitimately be in prelaunch or have no persistent catalogue.
+  const products = getPublicShopSeedProducts().map(product => ({
+    ...translatedFixture(product),
+    stock_qty: product.slug === "sables-rugby-home-kit" ? 5 : 0,
+  }));
+  await page.route("**/api/shop/products", route =>
+    route.fulfill({
+      json: {
+        products,
+        pricing: testPricing,
+        readiness: readyShop(products.map(product => product.id)),
+      },
+    })
+  );
   await page.getByRole("button", { name: /^login$/i }).click();
   await page.waitForURL("**/shop/products");
-  await page.getByRole("heading", { name: /cart & order request/i }).waitFor();
-  // The real seed catalog intentionally has zero stock. Use a browser-only fixture
-  // to verify cart behavior without changing inventory or creating an order.
-  await page.route("**/api/shop/products", async route => {
-    const response = await route.fetch();
-    const payload = await response.json();
-    const data = payload.success ? payload.data : payload;
-    data.products[0].stock_qty = 5;
-    await route.fulfill({ response, json: payload });
-  });
-  await page.reload();
-  const card = page.locator('[data-stock-state="in"]').first();
-  await card.getByRole("button", { name: /add to cart/i }).click();
-  await page.getByText(/your cart is empty/i).waitFor({ state: "hidden" });
+  const productName = "Sables Rugby Home Kit";
+  const card = page.locator('[data-shop-product-card="sables-rugby-home-kit"]');
+  await card
+    .getByRole("button", { name: `Add ${productName} to cart`, exact: true })
+    .click();
+  await page
+    .getByRole("form", { name: /cart & order request/i })
+    .getByText(productName, { exact: true })
+    .waitFor();
   pass(
     "logout and sign-in return path work; cart works with a browser-only stock fixture"
   );
@@ -541,7 +559,7 @@ try {
     .click();
   await page
     .getByRole("status")
-    .filter({ hasText: /If this address needs confirmation/i })
+    .filter({ hasText: /check your email for a confirmation link/i })
     .waitFor();
   await page.unroute("**/api/notifications/newsletter");
   pass(
