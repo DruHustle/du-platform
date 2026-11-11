@@ -25,3 +25,12 @@ continue with generic product routing if it is unavailable. Product pages load
 their data at runtime. Set `DU_CATALOGUE_STRATEGY=published` to require the
 published snapshot or `DU_CATALOGUE_STRATEGY=omit` to skip it. Run the repository browser tests
 against a controlled API fixture as described in `../docs/mobile-first-review.md`.
+
+## Mobile app downloads
+
+The website footer shows iOS and Android availability independently. Leave each
+public build variable empty until its destination has been verified from a
+signed-out browser. Set `VITE_IOS_DOWNLOAD_URL` to this app's App Store listing
+or public TestFlight invitation. Set `VITE_ANDROID_DOWNLOAD_URL` to the Google
+Play details URL for `com.diasporaunlocked.app`. Rebuild the website after changing either
+value. Internal builds, simulator artifacts and debug APKs are not public releases.
