@@ -85,15 +85,20 @@ try {
   assert(page.url().includes("q=shopping"));
   pass("search updates when only the URL query changes");
 
-  await page.route("**/api/search?**", route =>
+  const offlineSearch = "**/api/search?q=offline";
+  await page.route(offlineSearch, route =>
     route.fulfill({
-      status: 503,
-      contentType: "application/json",
-      body: JSON.stringify({
-        success: false,
-        error: { message: "Temporarily unavailable" },
-      }),
+      json: { success: true, data: { results: [], partial: false } },
     })
+  );
+  await page.route(
+    offlineSearch,
+    route =>
+      route.fulfill({
+        status: 503,
+        json: { success: false, error: { message: "Temporarily unavailable" } },
+      }),
+    { times: 1 }
   );
   await page.getByRole("searchbox").fill("offline");
   await page.getByRole("button", { name: "Search", exact: true }).click();
@@ -105,9 +110,9 @@ try {
     await page.getByRole("heading", { name: /no results found/i }).count(),
     0
   );
-  await page.unroute("**/api/search?**");
   await page.getByRole("button", { name: "Try again", exact: true }).click();
   await page.getByRole("heading", { name: /no results found/i }).waitFor();
+  await page.unroute(offlineSearch);
   pass("failed search has a retry state distinct from empty results");
 
   let searchAttempts = 0;
