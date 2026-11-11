@@ -307,10 +307,12 @@ class AndroidSmoke:
         self.pending_dismissal = signature
         return True
 
-    def wait_screen(self, name, expected, timeout=45, orientation=None, required_tabs=()):
+    def wait_screen(self, name, expected, timeout=45, orientation=None, required_tabs=(),
+                    recover_boot_dialog=False):
         description = [*expected, *(label + " tab" for label in required_tabs)]
         self.note(f"Wait for {name}: {', '.join(description)}")
         end = min(self.deadline, time.monotonic() + timeout)
+        waited_for_system_ui = False
         last_error = "No hierarchy returned"
         while time.monotonic() < end:
             if self.metro and self.metro.poll() is not None:
@@ -320,6 +322,22 @@ class AndroidSmoke:
             except (SmokeFailure, ET.ParseError, subprocess.TimeoutExpired) as error:
                 last_error = str(error)
             else:
+                # A cold emulator can leave its own System UI ANR over the app.
+                # Use Wait once, then require the normal Home assertions.
+                title = tree.find(".//node[@package='android'][@resource-id='android:id/alertTitle']")
+                if recover_boot_dialog and title is not None and title.get("text") == "System UI isn't responding":
+                    if not waited_for_system_ui:
+                        wait = find_target(tree, "Wait", "android")
+                        if wait is None or wait.get("resource-id") != "android:id/aerr_wait":
+                            raise SmokeFailure("System UI cold-start dialog has no enabled Wait button")
+                        x1, y1, x2, y2 = bounds(wait)
+                        self.capture("cold-start-system-ui", self.last_xml)
+                        self.note("Tap Wait on the emulator's System UI cold-start dialog")
+                        self.shell("input", "tap", (x1 + x2) // 2, (y1 + y2) // 2)
+                        waited_for_system_ui = True
+                    last_error = "System UI cold-start dialog still blocks the app"
+                    time.sleep(1)
+                    continue
                 visible = self.visible_labels(tree)
                 if self.dismiss_developer_menu(tree, visible):
                     last_error = f"Developer menu is still visible: {sorted(visible)}"
@@ -646,7 +664,8 @@ class AndroidSmoke:
         # Android recreates the activity for tablet density or font changes.
         self.launch(f"exp+{config['slug']}://expo-development-client/?url={server}"
                     "&__expo_disable_auto_launch=1&__expo_disable_fab=1&__expo_disable_onboarding=1")
-        self.wait_screen("01-home", ["Explore what connects us", "Search Diaspora Unlocked"], timeout=180)
+        self.wait_screen("01-home", ["Explore what connects us", "Search Diaspora Unlocked"],
+                         timeout=180, recover_boot_dialog=True)
         self.navigate_tab("Travel", ["Find options", "From airport code (e.g. FRA)"], "02-travel")
         self.navigate_tab("Shop", ["Search products", "Filter by category"], "03-shop")
         self.assistant_case("03-assistant")

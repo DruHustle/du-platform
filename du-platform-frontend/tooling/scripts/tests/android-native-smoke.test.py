@@ -178,6 +178,37 @@ class DeveloperMenuTests(unittest.TestCase):
             self.dismiss(self.native_menu())
         self.assertEqual(self.shell.call_count, 2)
 
+    def system_anr(self, title, package="android"):
+        tree = ET.Element("hierarchy")
+        tree.append(node(package=package, text=title, **{"resource-id": "android:id/alertTitle"}))
+        tree.append(node(package=package, text="Wait", clickable="true", bounds="[93,1680][1347,1848]",
+                         **{"resource-id": "android:id/aerr_wait"}))
+        return tree
+
+    def test_cold_start_waits_once_for_system_ui_then_requires_home(self):
+        dialog = self.system_anr("System UI isn't responding")
+        home = node(text="Home")
+        self.capture.side_effect = lambda *args: setattr(self.runner, "last_screen_size", (1080, 1920))
+        with patch.object(self.runner, "hierarchy", side_effect=[dialog, dialog, home]), \
+             patch.object(smoke.time, "sleep"):
+            observed = self.runner.wait_screen("01-home", ["Home"], recover_boot_dialog=True)
+        self.assertIs(observed, home)
+        self.shell.assert_called_once_with("input", "tap", 720, 1764)
+        self.assertEqual([step["screen"] for step in self.runner.steps], ["01-home"])
+
+    def test_app_anr_other_windows_and_later_steps_are_never_acknowledged(self):
+        for dialog, recover in ((self.system_anr("Diaspora Unlocked isn't responding"), True),
+                                (self.system_anr("System UI isn't responding", PACKAGE), True),
+                                (self.system_anr("System UI isn't responding"), False)):
+            with self.subTest(recover=recover, title=dialog[0].get("text")), \
+                 patch.object(self.runner, "hierarchy", return_value=dialog), \
+                 patch.object(smoke.time, "monotonic", side_effect=[0, 0, 2]), \
+                 patch.object(smoke.time, "sleep"), \
+                 self.assertRaisesRegex(smoke.SmokeFailure, "Timed out"):
+                self.runner.wait_screen("screen", ["Home"], timeout=1, recover_boot_dialog=recover)
+        self.shell.assert_not_called()
+        self.capture.assert_not_called()
+
     def test_display_wait_handles_recreated_menu_before_accepting_an_enabled_home_tab(self):
         # Run 41756008487 recreated Expo's onboarding sheet at tablet density.
         menu = self.expo_menu()
