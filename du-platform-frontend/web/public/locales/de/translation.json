@@ -31,6 +31,8 @@
   "contact": "Kontakt",
   "footer": {
     "mobile_apps": {
+      "apk": "Signierte APK herunterladen",
+      "play": "Bei Google Play herunterladen",
       "title": "Mobile Apps",
       "available": "Downloadseite öffnen",
       "unavailable": "Noch nicht verfügbar"
