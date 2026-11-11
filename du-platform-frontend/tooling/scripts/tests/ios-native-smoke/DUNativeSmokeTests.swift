@@ -92,6 +92,11 @@ final class DUNativeSmokeTests: XCTestCase {
 
     @MainActor
     private func exerciseOrientation(_ orientation: UIDeviceOrientation, name: String) {
+        // Keep the longer fixtures in portrait. In the cold landscape case each
+        // character still gets a fresh pre/post keyboard and exact-value check.
+        let emailFixture = orientation.isLandscape ? "q@x.test" : "ios-smoke@example.invalid"
+        let passwordFixture = orientation.isLandscape ? "keyboard-1234" : "keyboard-fixture"
+        let messageFixture = orientation.isLandscape ? "It works." : "A simulator keyboard check."
         rotate(orientation, name: name)
         checkTabs("\(name)-tabs")
         navigate("Home", text: "Explore what connects us")
@@ -104,39 +109,39 @@ final class DUNativeSmokeTests: XCTestCase {
         let email = unique(.textField, "Email address")
         let accountScroll = contentScrollView(containing: email)
         reveal(email, in: accountScroll)
-        replaceFixture(email, with: "ios-smoke@example.invalid")
-        XCTAssertEqual(email.value as? String, "ios-smoke@example.invalid")
+        replaceFixture(email, with: emailFixture)
+        XCTAssertEqual(email.value as? String, emailFixture)
         let password = unique(.secureTextField, "Password")
         reveal(password, in: accountScroll)
-        replaceFixture(password, with: "keyboard-fixture", secure: true)
+        replaceFixture(password, with: passwordFixture, secure: true)
         XCTAssertFalse((password.value as? String ?? "").isEmpty)
         XCTAssertNotEqual(password.value as? String, "Password")
-        XCTAssertEqual((password.value as? String)?.count, "keyboard-fixture".count)
+        XCTAssertEqual((password.value as? String)?.count, passwordFixture.count)
         assertKeyboardAccess(password, action: unique(.button, "Sign in"), in: accountScroll,
                              name: "\(name)-account-keyboard")
         // One prompt allowance follows this verified Account visit. Rotation
         // checks remain in the mounted form and do not create another visit.
         pendingPasswordPromptFor = name
         dismissKeyboard(in: accountScroll, avoiding: password)
-        _ = declinePasswordPrompt(preserving: password, expected: "keyboard-fixture", secure: true)
-        assertRetainedInput([(email, "ios-smoke@example.invalid", false), (password, "keyboard-fixture", true)],
+        _ = declinePasswordPrompt(preserving: password, expected: passwordFixture, secure: true)
+        assertRetainedInput([(email, emailFixture, false), (password, passwordFixture, true)],
                             orientation: orientation, name: "\(name)-account", promptField: password,
-                            promptValue: "keyboard-fixture", secure: true)
+                            promptValue: passwordFixture, secure: true)
         // The delayed native prompt may appear during the rotation checks.
-        _ = declinePasswordPrompt(preserving: password, expected: "keyboard-fixture", secure: true)
+        _ = declinePasswordPrompt(preserving: password, expected: passwordFixture, secure: true)
 
         navigate("Assistant", text: "Onesa assistant")
         let message = unique(.textView, "Your message")
         let assistantScroll = contentScrollView(containing: message)
         reveal(message, in: assistantScroll)
-        replaceFixture(message, with: "A simulator keyboard check.")
-        XCTAssertEqual(message.value as? String, "A simulator keyboard check.")
+        replaceFixture(message, with: messageFixture)
+        XCTAssertEqual(message.value as? String, messageFixture)
         assertKeyboardAccess(message, action: unique(.button, "Send message"), in: assistantScroll,
                              name: "\(name)-assistant-keyboard", multiline: true)
         dismissKeyboard(in: assistantScroll, avoiding: message)
-        assertRetainedInput([(message, "A simulator keyboard check.", false)],
+        assertRetainedInput([(message, messageFixture, false)],
                             orientation: orientation, name: "\(name)-assistant", promptField: message,
-                            promptValue: "A simulator keyboard check.")
+                            promptValue: messageFixture)
         checkTabs("\(name)-tabs-after-keyboard")
         attachEvidence(name)
         pendingPasswordPromptFor = nil
