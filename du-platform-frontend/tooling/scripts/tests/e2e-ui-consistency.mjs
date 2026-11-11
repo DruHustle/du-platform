@@ -206,6 +206,32 @@ try {
       await page.locator("main h1").first().waitFor({ state: "attached" });
       await page.evaluate(() => document.fonts.ready);
     };
+    // A clean initial URL should land on both platform choices after the
+    // homepage finishes expanding, then allow the reader to scroll away.
+    await goto("/#mobile-apps-title");
+    const appPanel = page.getByRole("region", { name: "Mobile apps" });
+    await appPanel.waitFor();
+    await page.waitForFunction(() => {
+      const box = document.getElementById("mobile-apps-title")?.closest("section")?.getBoundingClientRect();
+      return box && box.top >= 0 && box.bottom <= innerHeight;
+    });
+    await page.evaluate(() => {
+      const delayed = document.createElement("div");
+      delayed.id = "deferred-content-test";
+      delayed.style.height = "1400px";
+      document.querySelector("main").append(delayed);
+    });
+    await page.waitForFunction(() => {
+      const box = document.getElementById("mobile-apps-title").closest("section").getBoundingClientRect();
+      return box.top >= 0 && box.bottom <= innerHeight;
+    });
+    await page.keyboard.press("Control+Home");
+    await page.waitForFunction(() => window.scrollY === 0);
+    await page.evaluate(() => { document.getElementById("deferred-content-test").style.height = "1800px"; });
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(await page.evaluate(() => window.scrollY), 0, "A visitor can scroll away from the app download panel");
+    checks.push({ width, path: "/#mobile-apps-title", appPanelVisible: true });
+
     for (const path of paths) {
       try {
         await goto(path);
