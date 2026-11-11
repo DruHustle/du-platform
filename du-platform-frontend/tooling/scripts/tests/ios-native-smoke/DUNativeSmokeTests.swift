@@ -467,16 +467,17 @@ final class DUNativeSmokeTests: XCTestCase {
         // field/action bounds when the editor's extent is available. A clipped
         // multiline frame instead permits action-guided reveal, never an
         // inference that its currently exposed edge is its intrinsic bottom.
-        // A multiline accessibility frame may describe only the currently
-        // exposed part of the editor. The same landscape editor measured
-        // 118pt before focus and 28pt at the accessory edge afterward. Give
-        // bounded scrolling a chance to reveal it; only the final measured
-        // intersection proves the required 44pt of visible editing area.
+        // XCTest can stop the editor's frame at the keyboard even when more
+        // than 44pt is visible. Its clipped bottom cannot bound an upward pan
+        // to reveal the action below it. Re-measure both controls after the pan.
         if multiline && viewport.height < 44 {
             XCTFail("The viewport must support 44pt of visible editing area")
             return false
         }
-        let clippedMultiline = multiline && fieldFrame.height < 44
+        let editorMeetsKeyboard = observation.obstruction != nil
+            && abs(fieldFrame.maxY - viewport.maxY) <= 0.5
+            && (actionFrame.map { $0.maxY > viewport.maxY } ?? false)
+        let clippedMultiline = multiline && (fieldFrame.height < 44 || editorMeetsKeyboard)
         var lower: CGFloat
         var upper: CGFloat
         if clippedMultiline {
