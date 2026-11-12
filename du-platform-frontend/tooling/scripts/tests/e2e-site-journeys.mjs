@@ -128,8 +128,10 @@ try {
       return route.fulfill({ status: 503, json: { message: "Temporarily unavailable" } });
     }
     return route.fulfill({ json: { success: true, data: {
-      partial: searchAttempts === 1,
-      results: [{ title: "Travel Southern Africa", category: "Tourism", href: "/travel" }],
+      partial: searchAttempts < 4,
+      results: searchAttempts === 1
+        ? [{ title: "Travel Southern Africa", category: "Tourism", href: "/travel" }]
+        : [{ title: "Sables Rugby Home Kit", category: "Product", href: "/shop/product/sables-rugby-home-kit" }],
     } } });
   });
   await page.getByRole("searchbox").fill("travel $&");
@@ -145,8 +147,12 @@ try {
   await retryFailure;
   await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).waitFor();
   await retrySearch.click();
+  await page.getByRole("heading", { name: "Sables Rugby Home Kit", exact: true }).waitFor();
+  assert(await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).isVisible());
+  await retrySearch.click();
   await page.getByRole("status").filter({ hasText: "Some search results" }).waitFor({ state: "hidden" });
-  assert.equal(searchAttempts, 3);
+  assert.equal(searchAttempts, 4);
+  assert.equal(await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).count(), 0);
   assert.equal(await page.getByText("Some search results are temporarily unavailable.").count(), 0);
   await page.unroute("**/api/search?**");
   pass("partial search keeps usable links and retries the same query");
