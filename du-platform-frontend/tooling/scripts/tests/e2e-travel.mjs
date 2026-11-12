@@ -297,7 +297,12 @@ try {
     checks.push(`${width}: start an accommodation search from an empty trip`);
     await goto("/travel");
     await page
-      .getByRole("heading", { name: "Travel Southern Africa", exact: true })
+      .locator("#hero")
+      .getByRole("heading", {
+        name: "Travel Southern Africa",
+        level: 1,
+        exact: true,
+      })
       .waitFor();
     assert.equal(
       await page.locator("#hero .discovery-eyebrow").textContent(),
