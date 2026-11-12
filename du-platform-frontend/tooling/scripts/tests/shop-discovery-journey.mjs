@@ -82,6 +82,7 @@ export async function checkCatalogueDiscovery({ browser, base, language, locale,
     if (width === 320 && language === "en") {
       await page.setViewportSize({ width: 375, height: 667 });
       for (const userMovedFocus of [false, true]) {
+        await page.goto(base + "/shop");
         let releaseCatalogue;
         const delayed = new Promise(resolve => { releaseCatalogue = resolve; });
         const delayResponse = async route => { await delayed; await route.fallback(); };
