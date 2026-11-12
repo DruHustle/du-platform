@@ -1,16 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Linking } from "react-native";
+import { Linking, Text } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from "@react-navigation/native";
 import * as Crypto from "expo-crypto";
 import { ApiError, request, requestOnesaReply, type ChatMessage } from "../api";
+import { onesaProductLinks } from "../onesaProductLinks";
 import { shopDestination, isSitePath } from "../shopDiscovery";
 import { readSearchResponse, type SearchResponse } from "../searchResults";
 import { PENDING_CONTACT_KEY } from "../session";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
-import { Action, Card, Copy, Field, Heading, Message, Screen } from "../ui";
+import { Action, Card, Copy, Field, Heading, Message, Screen, styles } from "../ui";
 
 const errorMessage=(e:unknown)=>e instanceof Error?e.message:"The service is temporarily unavailable.";
+function AssistantReply({ content }: { content: string }) {
+  const navigation = useNavigation<any>();
+  const parts = onesaProductLinks(content);
+  const links = parts.filter(part => part.destination);
+  if (!links.length) return <Copy>{content}</Copy>;
+  function open(part: (typeof parts)[number]) {
+    const target = part.destination;
+    if (target?.screen === "Shop") navigation.navigate("Main", { screen: "Shop", params: target.params });
+    else if (target) navigation.navigate(target.screen, target.params);
+  }
+  return <Text style={styles.copy}
+    accessibilityActions={links.map((part, index) => ({ name: String(index), label: part.text }))}
+    onAccessibilityAction={({ nativeEvent }) => {
+      const link = links.find((_, index) => String(index) === nativeEvent.actionName);
+      if (link) open(link);
+    }}>
+    {parts.map((part, index) => part.destination
+      ? <Text key={index} accessibilityRole="link" onPress={() => open(part)}
+          style={{ textDecorationLine: "underline", fontWeight: "600" }}>{part.text}</Text>
+      : part.text)}
+  </Text>;
+}
+
 export function AssistantScreen() {
   const navigation = useNavigation<any>();
   const [text, setText] = useState("");
@@ -46,7 +70,7 @@ export function AssistantScreen() {
     <Copy>Ask about Diaspora Unlocked, products, travel and business information. Onesa cannot book travel or accept payments.</Copy>
     {messages.map((message, index) => <Card key={index}>
       <Copy>{message.role === "user" ? "You" : "Onesa"}</Copy>
-      <Copy>{message.content}</Copy>
+      {message.role === "assistant" ? <AssistantReply content={message.content} /> : <Copy>{message.content}</Copy>}
     </Card>)}
     <Card>
       <Field label="Your message" value={text} multiline maxLength={4000} onChangeText={value => {

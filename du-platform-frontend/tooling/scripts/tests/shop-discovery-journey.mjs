@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { SearchService } from "../../../../du-platform-backend/modules/search/services/searchService.ts";
 import { readyShop, testPricing } from "./shop-readiness-fixture.mjs";
 
 export async function checkCatalogueDiscovery({ browser, base, language, locale, width, products }) {
@@ -10,8 +11,15 @@ export async function checkCatalogueDiscovery({ browser, base, language, locale,
       localStorage.setItem("i18nextLng", language);
       localStorage.setItem("du_cookie_consent_v1", "rejected");
     }, language);
-    await context.route("**/api/**", route => {
-      const pathname = new URL(route.request().url()).pathname;
+    const searchService = new SearchService({
+      publishedProducts: async () => products.map(product => ({ ...product, is_active: 1 })),
+      searchNtir: async () => [],
+    });
+    await context.route("**/api/**", async route => {
+      const { pathname, searchParams } = new URL(route.request().url());
+      if (pathname === "/api/search") return route.fulfill({
+        json: { success: true, data: await searchService.search(searchParams.get("q")) },
+      });
       if (pathname === "/api/shop/products") return route.fulfill({
         json: { source: "db", products, readiness: readyShop([jersey.id]), pricing: testPricing },
       });
@@ -60,6 +68,17 @@ export async function checkCatalogueDiscovery({ browser, base, language, locale,
     assert.equal(await availability.isChecked(), false);
     assert.equal(await page.evaluate(() => document.activeElement?.getAttribute("role")), "status");
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+    if (width === 1440) {
+      await page.getByRole("button", { name: locale.search.results.title_default, exact: true }).click();
+      const input = page.getByRole("dialog").locator("input");
+      await input.fill("kit sables");
+      await input.press("Enter");
+      const result = page.getByRole("link").filter({ has: page.getByRole("heading", { name: other.name, exact: true }) });
+      assert.equal(await result.getAttribute("href"), `/shop/product/${other.slug}`);
+      await result.click();
+      await page.getByRole("heading", { name: other.name, exact: true }).waitFor();
+      assert.equal(new URL(page.url()).pathname, `/shop/product/${other.slug}`);
+    }
     assert.deepEqual(errors, []);
   } finally {
     await context.close();
