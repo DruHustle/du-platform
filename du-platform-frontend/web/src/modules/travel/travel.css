@@ -177,11 +177,20 @@
   box-shadow: 0 10px 25px #0004;
 }
 .travel-location li {
+  min-height: 44px;
   padding: 0.7rem;
   cursor: pointer;
 }
+.travel-location li:hover,
 .travel-location li[aria-selected="true"] {
   background: #334155;
+}
+.travel-location-feedback {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.travel-start-searches a {
+  min-height: 44px;
 }
 .travel-review {
   padding: 1.25rem;
@@ -200,6 +209,12 @@
   gap: 1.5rem;
   width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-content));
   margin: auto;
+}
+.travel-saved-shortcut {
+  display: none;
+}
+#private-trips {
+  scroll-margin-top: 6rem;
 }
 .travel-trip-grid > section {
   padding: 1.5rem;
@@ -274,6 +289,14 @@
   }
   .travel-trip-grid {
     grid-template-columns: 1fr;
+  }
+  .travel-saved-shortcut {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
   .travel-supplier-grid {
     grid-template-columns: minmax(0, 1fr);

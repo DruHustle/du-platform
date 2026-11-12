@@ -129,6 +129,25 @@ describe("checkout reliability", () => {
       (await getShopOrderByRef(first.orderRef, first.manageToken))?.items
     ).toHaveLength(1);
   });
+  it("recovers an exact saved request after pilot closure while refusing new orders", async () => {
+    const service = new ShopService();
+    const input = payload();
+    vi.stubEnv("SHOP_COMMERCIAL_MODE", "observe");
+    try {
+      const { order } = await service.createOrder(input);
+      vi.stubEnv("SHOP_COMMERCIAL_MODE", "prelaunch");
+      await expect(service.createOrder(input)).resolves.toMatchObject({
+        order: { orderRef: order.orderRef, manageToken: input.requestToken, replayed: true },
+      });
+      await expect(service.createOrder({ ...input, shippingCity: "Mutare" }))
+        .rejects.toThrow("different order details");
+      await expect(service.createOrder(payload())).rejects.toMatchObject({ status: 409 });
+      await expect(service.createOrder({ ...input, requestToken: undefined }))
+        .rejects.toMatchObject({ status: 409 });
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
   it("checks stock, converts supported catalogue currencies and refuses overflowing totals", async () => {
     await expect(
       createShopOrder({ ...payload(), items: [{ productId: 1, quantity: 4 }] })

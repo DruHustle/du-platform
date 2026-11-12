@@ -1,10 +1,10 @@
-import { loadSavedTravel } from "./api";
+import { deleteSavedTravel, loadSavedTravel, saveTravel } from "./api";
 import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { api, loadAuthToken, hasLoggedInBefore } from "@/lib/api";
+import { loadAuthToken, hasLoggedInBefore } from "@/lib/api";
 import {
   travelDraftSchema,
   estimateTotals,
@@ -62,16 +62,6 @@ export default function MyTrips() {
       active = false;
     };
   }, [sessionRetry]);
-  async function refresh() {
-    try {
-      setSaved(await loadSavedTravel());
-      setSavedError(false);
-      setSavedLoaded(true);
-    } catch (error) {
-      setSavedError(true);
-      throw error;
-    }
-  }
   useEffect(() => {
     let cancelled = false;
     if (signedIn) {
@@ -107,15 +97,33 @@ export default function MyTrips() {
     setBusy(true);
     setStatus("");
     try {
-      await api.post("/travel/saved", {
+      await saveTravel({
         name,
         kind,
         draft:
           kind === "search" ? { ...draft, estimates: [], quotes: [] } : draft,
       });
       travelEvent("trip_saved");
-      await refresh();
       setStatus(t("travel.saved"));
+      setName(current => (current === name ? "" : current));
+      setSavedRetry(value => value + 1);
+    } catch {
+      setStatus(t("travel.storage-error"));
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function deleteSaved(record: SavedTravel) {
+    if (!window.confirm(t("travel.delete-confirm", { name: record.name }))) {
+      return;
+    }
+    setBusy(true);
+    setStatus("");
+    try {
+      await deleteSavedTravel(record.id);
+      setSaved(rows => rows.filter(row => row.id !== record.id));
+      setStatus(t("travel.deleted", { name: record.name }));
+      setSavedRetry(value => value + 1);
     } catch {
       setStatus(t("travel.storage-error"));
     } finally {
@@ -143,25 +151,36 @@ export default function MyTrips() {
     setAmount("");
   }
   const totals = estimateTotals(draft.estimates);
+  const defaults = defaultTravelCriteria();
+  const hasDraft =
+    draft.searches.length > 0 ||
+    draft.estimates.length > 0 ||
+    Boolean(draft.quotes?.length) ||
+    JSON.stringify({ ...defaults, ...draft.criteria }) !==
+      JSON.stringify(defaults);
   return (
     <div className="travel-trip-grid">
       <section className="content-panel">
         <h2 className="page-section-title">{t("travel.guest-draft")}</h2>
+        <a className="travel-saved-shortcut" href="#private-trips">
+          {t("travel.private-trips")}
+        </a>
         <p>{t("travel.draft-note")}</p>
-        <Button
-          variant="outline"
-          onClick={() =>
-            updateDraft({
-              criteria: defaultTravelCriteria(),
-              searches: [],
-              estimates: [],
-            })
-          }
-        >
-          {t("travel.clear-draft")}
-        </Button>
         <h3>{t("travel.searches")}</h3>
-        {!draft.searches.length && <p>{t("travel.no-searches")}</p>}
+        {!draft.searches.length && (
+          <>
+            <p>{t("travel.no-searches")}</p>
+            <div className="travel-actions travel-start-searches">
+              {categories.map(category => (
+                <Button key={category} variant="outline" asChild>
+                  <Link href={`/travel/${category}`}>
+                    {t(`travel.${category}`)}
+                  </Link>
+                </Button>
+              ))}
+            </div>
+          </>
+        )}
         {draft.searches.map(s => (
           <article
             className="surface-card travel-saved-search"
@@ -328,10 +347,32 @@ export default function MyTrips() {
             </Button>
           </div>
         ))}
-        <Link href="/travel/planner">{t("travel.onesa-planner")}</Link>
+        <div className="travel-actions">
+          <Link className="self-center underline" href="/travel/planner">
+            {t("travel.onesa-planner")}
+          </Link>
+          {hasDraft && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (window.confirm(t("travel.clear-confirm"))) {
+                  updateDraft({
+                    criteria: defaultTravelCriteria(),
+                    searches: [],
+                    estimates: [],
+                  });
+                }
+              }}
+            >
+              {t("travel.clear-draft")}
+            </Button>
+          )}
+        </div>
       </section>
       <section className="content-panel">
-        <h2 className="page-section-title">{t("travel.private-trips")}</h2>
+        <h2 className="page-section-title" id="private-trips" tabIndex={-1}>
+          {t("travel.private-trips")}
+        </h2>
         <p>{t("travel.private-note")}</p>
         {sessionLoading ? (
           <p role="status">{t("routing.loading_page_content")}</p>
@@ -376,12 +417,13 @@ export default function MyTrips() {
                 {t("travel.save-search")}
               </Button>
             </div>
+            {status && <p role="status">{status}</p>}
             {loading && (
               <p role="status">{t("routing.loading_page_content")}</p>
             )}
             {savedError && (
               <div role="alert">
-                <p>{t("travel.storage-error")}</p>
+                <p>{t("travel.list-error")}</p>
                 <Button
                   variant="outline"
                   onClick={() => setSavedRetry(value => value + 1)}
@@ -408,6 +450,12 @@ export default function MyTrips() {
                   <Button
                     variant="outline"
                     onClick={() => {
+                      if (
+                        hasDraft &&
+                        !window.confirm(t("travel.restore-confirm", { name: s.name }))
+                      ) {
+                        return;
+                      }
                       updateDraft(s.draft);
                       travelEvent("trip_returned");
                       setStatus(t("travel.restored"));
@@ -418,17 +466,7 @@ export default function MyTrips() {
                   <Button
                     variant="outline"
                     disabled={busy}
-                    onClick={async () => {
-                      setBusy(true);
-                      try {
-                        await api.delete(`/travel/saved/${s.id}`);
-                        await refresh();
-                      } catch {
-                        setStatus(t("travel.storage-error"));
-                      } finally {
-                        setBusy(false);
-                      }
-                    }}
+                    onClick={() => deleteSaved(s)}
                   >
                     {t("travel.delete")}
                   </Button>
@@ -437,7 +475,6 @@ export default function MyTrips() {
             ))}
           </>
         )}
-        {status && <p role="status">{status}</p>}
         <hr />
         <h3>{t("travel.alerts")}</h3>
         <p>{t("travel.alerts-note")}</p>

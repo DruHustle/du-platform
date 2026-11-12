@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ApiError, request, validateApiUrl } from "../src/api";
+import { ApiError, request, requestOnesaReply, validateApiUrl, type ChatMessage } from "../src/api";
 
 afterEach(() => vi.unstubAllGlobals());
 describe("mobile API boundary", () => {
@@ -22,6 +22,16 @@ describe("mobile API boundary", () => {
     vi.stubGlobal("fetch",vi.fn().mockRejectedValue(new Error("offline")));
     await expect(request("/test")).rejects.toBeInstanceOf(ApiError);
     await expect(request("/test")).rejects.toMatchObject({status:0,code:"NETWORK_ERROR"});
+  });
+  it("sends the latest 20 Onesa messages while retaining the complete conversation", async () => {
+    const conversation: ChatMessage[] = Array.from({ length: 23 }, (_, i) => ({
+      role: i % 2 === 0 ? "user" : "assistant", content: `Message ${i}`,
+    }));
+    const post = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true, data: { reply: "Ready" } })));
+    vi.stubGlobal("fetch", post);
+    await expect(requestOnesaReply(conversation, new AbortController().signal)).resolves.toBe("Ready");
+    expect(JSON.parse(post.mock.calls[0][1].body).messages).toEqual(conversation.slice(3));
+    expect(conversation).toHaveLength(23);
   });
   it("does not accept an absolute URL as an API path", async () => {
     await expect(request("//evil.test/path")).rejects.toThrow("Invalid API path");

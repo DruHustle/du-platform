@@ -1,18 +1,87 @@
-import React, { useEffect, useState } from "react";
-import { Linking } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Linking, Text } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from "@react-navigation/native";
 import * as Crypto from "expo-crypto";
-import { ApiError, request } from "../api";
+import { ApiError, request, requestOnesaReply, type ChatMessage } from "../api";
+import { onesaProductLinks } from "../onesaProductLinks";
+import { shopDestination, isSitePath } from "../shopDiscovery";
+import { readSearchResponse, type SearchResponse } from "../searchResults";
 import { PENDING_CONTACT_KEY } from "../session";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
-import { Action, Card, Copy, Field, Heading, Message, Screen } from "../ui";
+import { Action, Card, Copy, Field, Heading, Message, Screen, styles } from "../ui";
 
 const errorMessage=(e:unknown)=>e instanceof Error?e.message:"The service is temporarily unavailable.";
+function AssistantReply({ content }: { content: string }) {
+  const navigation = useNavigation<any>();
+  const parts = onesaProductLinks(content);
+  const links = parts.filter(part => part.destination);
+  if (!links.length) return <Copy>{content}</Copy>;
+  function open(part: (typeof parts)[number]) {
+    const target = part.destination;
+    if (target?.screen === "Shop") navigation.navigate("Main", { screen: "Shop", params: target.params });
+    else if (target) navigation.navigate(target.screen, target.params);
+  }
+  return <Text style={styles.copy}
+    accessibilityActions={links.map((part, index) => ({ name: String(index), label: part.text }))}
+    onAccessibilityAction={({ nativeEvent }) => {
+      const link = links.find((_, index) => String(index) === nativeEvent.actionName);
+      if (link) open(link);
+    }}>
+    {parts.map((part, index) => part.destination
+      ? <Text key={index} accessibilityRole="link" onPress={() => open(part)}
+          style={{ textDecorationLine: "underline", fontWeight: "600" }}>{part.text}</Text>
+      : part.text)}
+  </Text>;
+}
+
 export function AssistantScreen() {
-  const navigation=useNavigation<any>();const [text,setText]=useState("");const [messages,setMessages]=useState<{role:"user"|"assistant";content:string}[]>([]);const [busy,setBusy]=useState(false);const [error,setError]=useState("");
-  const send=async()=>{if(busy||!text.trim())return;const conversation=[...messages,{role:"user" as const,content:text.trim()}];setBusy(true);setError("");try{const result=await request<{reply:string;truncated?:boolean}>("/ai/chat",{method:"POST",body:{messages:conversation,language:"en"},timeoutMs:30_000});if(!result?.reply?.trim()||result.truncated)throw new Error("The assistant could not complete a response. Please try again.");setMessages([...conversation,{role:"assistant",content:result.reply}]);setText("");}catch(e){setError(errorMessage(e));}finally{setBusy(false);}};
-  return <Screen><Heading>Onesa assistant</Heading><Copy>Ask about Diaspora Unlocked, products, travel and business information. Onesa cannot book travel or accept payments.</Copy>{messages.map((m,i)=><Card key={i}><Copy>{m.role==="user"?"You":"Onesa"}</Copy><Copy>{m.content}</Copy></Card>)}<Card><Field label="Your message" value={text} onChangeText={setText} multiline maxLength={4000}/>{!!error&&<Message error message={error}/>}<Action title={busy?"Sending…":"Send message"} disabled={busy||!text.trim()} onPress={()=>void send()}/></Card><Action title="Contact the team" secondary onPress={()=>navigation.navigate("Contact")}/></Screen>;
+  const navigation = useNavigation<any>();
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const active = useRef<AbortController | null>(null);
+  const draftVersion = useRef(0);
+  useEffect(() => () => active.current?.abort(), []);
+
+  async function send() {
+    if (active.current || !text.trim()) return;
+    const controller = new AbortController();
+    active.current = controller;
+    const submittedVersion = draftVersion.current;
+    const conversation = [...messages, { role: "user" as const, content: text.trim() }];
+    setBusy(true);
+    setError("");
+    try {
+      const reply = await requestOnesaReply(conversation, controller.signal);
+      if (controller.signal.aborted) return;
+      setMessages([...conversation, { role: "assistant", content: reply }]);
+      if (draftVersion.current === submittedVersion) setText("");
+    } catch (failure) {
+      if (!controller.signal.aborted) setError(errorMessage(failure));
+    } finally {
+      active.current = null;
+      if (!controller.signal.aborted) setBusy(false);
+    }
+  }
+  return <Screen>
+    <Heading>Onesa assistant</Heading>
+    <Copy>Ask about Diaspora Unlocked, products, travel and business information. Onesa cannot book travel or accept payments.</Copy>
+    {messages.map((message, index) => <Card key={index}>
+      <Copy>{message.role === "user" ? "You" : "Onesa"}</Copy>
+      {message.role === "assistant" ? <AssistantReply content={message.content} /> : <Copy>{message.content}</Copy>}
+    </Card>)}
+    <Card>
+      <Field label="Your message" value={text} multiline maxLength={4000} onChangeText={value => {
+        draftVersion.current++;
+        setText(value);
+      }} />
+      {!!error && <Message error message={error}/>}
+      <Action title={busy ? "Sending…" : "Send message"} disabled={busy || !text.trim()} onPress={() => void send()}/>
+    </Card>
+    <Action title="Contact the team" secondary onPress={() => navigation.navigate("Contact")}/>
+  </Screen>;
 }
 export function ContactScreen() {
   const [name,setName]=useState("");const [email,setEmail]=useState("");const [subject,setSubject]=useState("");const [message,setMessage]=useState("");const [busy,setBusy]=useState(false);const [feedback,setFeedback]=useState("");const [error,setError]=useState("");const [pending,setPending]=useState<{name:string;email:string;subject:string;message:string;requestId:string;language:string;module:string}|null>(null);
@@ -21,11 +90,75 @@ export function ContactScreen() {
   return <Screen><Heading>Contact and help</Heading><Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy><Card><Field label="Full name" value={name} onChangeText={setName} editable={!pending} autoComplete="name"/><Field label="Email address" value={email} onChangeText={setEmail} editable={!pending} keyboardType="email-address" autoCapitalize="none" autoComplete="email"/><Field label="Subject" value={subject} onChangeText={setSubject} editable={!pending}/><Field label="Message" value={message} onChangeText={setMessage} editable={!pending} multiline maxLength={4000}/>{!!error&&<Message error message={error}/>}{!!feedback&&<Message message={feedback}/>}<Action title={busy?"Sending…":pending?"Retry same message":"Send message"} disabled={busy||!name.trim()||!email.trim()||!subject.trim()||!message.trim()} onPress={()=>void send()}/></Card><Action title="Email info@diasporaunlocked.com" secondary onPress={()=>void Linking.openURL("mailto:info@diasporaunlocked.com").catch(()=>setError("Could not open your email app."))}/></Screen>;
 }
 export function SearchScreen() {
-  const navigation=useNavigation<any>();const [query,setQuery]=useState("");const [results,setResults]=useState<{title:string;category:string;summary?:string;href:string}[]|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");
-  const search=async()=>{if(busy||!query.trim())return;setBusy(true);setError("");setResults(null);try{const data=await request<{results:typeof results}>(`/search?q=${encodeURIComponent(query.trim())}`);if(!Array.isArray(data.results)||!data.results.every(item=>item&&typeof item.title==="string"&&typeof item.category==="string"&&typeof item.href==="string"&&item.href.startsWith("/")&&!item.href.startsWith("//")&&!item.href.includes("\\")&&(item.summary===undefined||typeof item.summary==="string")))throw new Error("The search response was invalid.");setResults(data.results);}catch(e){setError(errorMessage(e));}finally{setBusy(false);}};
-  return <Screen><Heading>Search</Heading><Field label="Search products, destinations and information" value={query} onChangeText={setQuery} returnKeyType="search" onSubmitEditing={()=>void search()}/><Action title={busy?"Searching…":"Search"} disabled={busy||!query.trim()} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{results&&!results.length&&<Copy>No results found. Try another search.</Copy>}{results?.map((item,i)=><Card key={`${item.href}-${i}`}><Heading>{item.title}</Heading><Copy>{item.category}{item.summary?` · ${item.summary}`:""}</Copy><Action title="Open result" onPress={()=>{if(item.href.startsWith("/travel#"))navigation.navigate("External",{path:item.href,title:item.title});else if(/^\/travel(?:\/|\?|$)/.test(item.href))navigation.navigate("Main",{screen:"Travel",params:{section:item.href.split("?")[0].split("/")[2]}});else if(item.href.startsWith("/shop/product/"))navigation.navigate("Product",{slug:item.href.slice("/shop/product/".length)});else if(item.href.startsWith("/shop/products?")){const params=new URLSearchParams(item.href.split("?")[1]);const slug=params.get("product");if(slug)navigation.navigate("Product",{slug});else navigation.navigate("Main",{screen:"Shop",params:{category:params.get("category")}});}else if(item.href.startsWith("/shop"))navigation.navigate("Main",{screen:"Shop"});else navigation.navigate("External",{path:item.href,title:item.title});}}/></Card>)}</Screen>;
+  const navigation = useNavigation<any>();
+  const [query, setQuery] = useState("");
+  const [response, setResponse] = useState<SearchResponse | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const active = useRef<AbortController | null>(null);
+  useEffect(() => () => active.current?.abort(), []);
+
+  function editQuery(value: string) {
+    if (value.trim() !== query.trim()) {
+      active.current?.abort();
+      active.current = null;
+      setResponse(null);
+      setError("");
+      setBusy(false);
+    }
+    setQuery(value);
+  }
+
+  async function search() {
+    if (active.current || !query.trim()) return;
+    const controller = new AbortController();
+    active.current = controller;
+    setBusy(true);
+    setError("");
+    try {
+      const data = await request<unknown>(`/search?q=${encodeURIComponent(query.trim())}`, { signal: controller.signal });
+      if (!controller.signal.aborted) setResponse(readSearchResponse(data, response));
+    } catch (e) {
+      if (!controller.signal.aborted) setError(errorMessage(e));
+    } finally {
+      if (active.current === controller) {
+        active.current = null;
+        if (!controller.signal.aborted) setBusy(false);
+      }
+    }
+  }
+
+  function openResult({ href, title }: { href: string; title: string }) {
+    const shop = shopDestination(href, title);
+    if (shop?.screen === "Shop") {
+      navigation.navigate("Main", { screen: "Shop", params: shop.params });
+    } else if (shop) {
+      navigation.navigate(shop.screen, shop.params);
+    } else if (href === "/onesa-ai-chat") {
+      navigation.navigate("Main", { screen: "Assistant" });
+    } else if (href === "/travel" || href === "/travel/flights" || href === "/travel/stays") {
+      navigation.navigate("Main", { screen: "Travel", params: { section: href.split("/")[2] } });
+    } else {
+      navigation.navigate("External", { path: href, title });
+    }
+  }
+
+  return <Screen>
+    <Heading>Search</Heading>
+    <Field label="Search products, destinations and information" value={query} onChangeText={editQuery}
+      returnKeyType="search" onSubmitEditing={() => void search()}/>
+    <Action title={busy ? "Searching…" : error || response?.partial ? "Retry search" : "Search"} disabled={busy || !query.trim()} onPress={() => void search()}/>
+    {!!error && <Message error message={error}/>}
+    {response?.partial && !error && <Message message="Some results are temporarily unavailable. You can open the results shown or retry your search."/>}
+    {response && !response.results.length && !response.partial && !busy && !error && <Copy>No results found. Try another search.</Copy>}
+    {response?.results.map((item, i) => <Card key={`${item.href}-${i}`}>
+      <Heading>{item.title}</Heading>
+      <Copy>{item.category === "Tourism" ? "Travel" : item.category}{item.summary ? ` · ${item.summary}` : ""}</Copy>
+      <Action title={`Open ${item.title}`} onPress={() => openResult(item)}/>
+    </Card>)}
+  </Screen>;
 }
 export function ExternalScreen({route}:{route:{params:{path:string;title:string}}}) {
-  const [error,setError]=useState("");const path=route.params.path;const valid=path.startsWith("/")&&!path.startsWith("//")&&!path.includes("\\");
+  const [error,setError]=useState("");const path=route.params.path;const valid=isSitePath(path);
   return <Screen><Heading>{route.params.title}</Heading><Copy>This section opens on the Diaspora Unlocked website. You may need to sign in there.</Copy>{!!error&&<Message error message={error}/>}<Action title="Open website" disabled={!valid} onPress={()=>{if(valid)void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${path}`).catch(()=>setError("Could not open the browser."));}}/></Screen>;
 }

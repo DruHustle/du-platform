@@ -9,6 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { SessionProvider } from "./src/session";
 import { CartProvider } from "./src/cart";
 import { navigationPath } from "./src/links";
+import { shopDestination } from "./src/shopDiscovery";
 import { HomeScreen } from "./src/screens/Home";
 import { ShopScreen, ProductScreen, CartScreen } from "./src/screens/Shop";
 import { TravelScreen } from "./src/screens/Travel";
@@ -20,7 +21,14 @@ type RootStackParams = { Main: undefined; Product: {slug: string}; Cart: undefin
 const Tabs=createBottomTabNavigator();const Stack=createNativeStackNavigator<RootStackParams>();
 const icons: Record<string,string>={Home:"⌂",Shop:"▣",Travel:"✈",Assistant:"✦",Account:"●"};
 function MainTabs(){return <Tabs.Navigator screenOptions={({route})=>({headerStyle:{backgroundColor:colors.navy},headerTintColor:"white",headerTitleStyle:{fontWeight:"700"},tabBarActiveTintColor:colors.ink,tabBarInactiveTintColor:"#53657a",tabBarLabelStyle:{fontSize:12,fontWeight:"600"},tabBarIcon:({color})=><Text style={{color,fontSize:20}}>{icons[route.name]}</Text>})}><Tabs.Screen name="Home" component={HomeScreen} options={{headerTitle:"Diaspora Unlocked",tabBarLabel:"Home"}}/><Tabs.Screen name="Shop" component={ShopScreen}/><Tabs.Screen name="Travel" component={TravelScreen}/><Tabs.Screen name="Assistant" component={AssistantScreen}/><Tabs.Screen name="Account" component={AccountScreen}/></Tabs.Navigator>;}
-const linking: LinkingOptions<any>={prefixes:["diasporaunlocked://","https://www.diasporaunlocked.com"],config:{screens:{Main:{screens:{Home:"",Shop:"shop",Travel:"travel/:section?",Assistant:"onesa-ai-chat",Account:"login"}},Product:"shop/product/:slug",Reset:"reset-password"}},getStateFromPath:(path,options)=>getStateFromPath(navigationPath(path),options)};
+const linking: LinkingOptions<any>={prefixes:["diasporaunlocked://","https://www.diasporaunlocked.com"],config:{initialRouteName:"Main",screens:{Main:{screens:{Home:"",Shop:"shop",Travel:"travel/:section?",Assistant:"onesa-ai-chat",Account:"login"}},Product:"shop/product/:slug",Reset:"reset-password"}},getStateFromPath: (path, options) => {
+  const shop = shopDestination(path.startsWith("/") ? path : `/${path}`);
+  if (!shop) return getStateFromPath(navigationPath(path), options);
+  const tab = shop.screen === "Shop" ? { name: "Shop", params: shop.params } : { name: "Shop" };
+  const main = { name: "Main", state: { routes: [tab] } };
+  if (shop.screen === "Shop") return { routes: [main] };
+  return { index: 1, routes: [main, { name: shop.screen, params: shop.params }] };
+}};
 export default function App(){
   const [offline,setOffline]=useState(false);
   useEffect(()=>NetInfo.addEventListener(state=>setOffline(state.isConnected===false||state.isInternetReachable===false)),[]);

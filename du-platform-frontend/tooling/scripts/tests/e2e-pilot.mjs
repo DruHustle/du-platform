@@ -166,12 +166,10 @@ try {
     .getByRole("heading", { name: product.name, exact: true })
     .waitFor();
   await page.getByRole("heading", { name: product.name, exact: true }).click();
-  await page.waitForURL(/product=/);
-  const card = page.locator(`[data-shop-product-card="${product.slug}"]`);
-  await card.getByRole("button", { name: /^Add to Cart:/ }).click();
-  await page
-    .getByRole("button", { name: "Review basket", exact: true })
-    .click();
+  await page.waitForURL(url => url.pathname === `/shop/product/${product.slug}`);
+  await page.getByRole("heading", { level: 1, name: product.name, exact: true }).waitFor();
+  await page.getByRole("button", { name: `Add to Cart: ${product.name}`, exact: true }).click();
+  await page.getByRole("link", { name: "Review basket", exact: true }).click();
   await page
     .getByLabel("Full Name", { exact: true })
     .fill("Pilot Browser Fixture");
@@ -197,7 +195,7 @@ try {
   ref = order.orderRef;
   await page.getByText(ref, { exact: true }).first().waitFor();
   pass(
-    "Mazoe discovery → correct filtered product → basket → guest request with postal address"
+    "Mazoe discovery → product details → basket → guest request with postal address"
   );
   let workspace = await call(`/admin/orders/${ref}`, "GET", undefined, token);
   assert.equal(workspace.body.data.notifications.length, 2);

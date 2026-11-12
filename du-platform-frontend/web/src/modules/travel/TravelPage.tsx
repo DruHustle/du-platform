@@ -21,7 +21,7 @@ export default function TravelPage() {
         {section === "my-trips" ? (
           <MyTrips />
         ) : (
-          <SearchPanel category={section as TravelCategory} />
+          <SearchPanel key={section} category={section as TravelCategory} />
         )}
         <p className="travel-disclosure">
           {t("travel.disclosure")}{" "}

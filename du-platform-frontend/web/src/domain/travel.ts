@@ -39,11 +39,13 @@ export function isTravelNationality(value: string) {
   return (
     /^[A-Z]{2}$/.test(value) &&
     !["ZZ", "XX", "EU", "UN", "EZ", "QO", "XA", "XB"].includes(value) &&
-    Boolean(
-      new Intl.DisplayNames(["en"], { type: "region", fallback: "none" }).of(
-        value
-      )
-    )
+    // The API validates the code when the browser lacks the region catalog.
+    (typeof Intl.DisplayNames !== "function" ||
+      Boolean(
+        new Intl.DisplayNames(["en"], { type: "region", fallback: "none" }).of(
+          value
+        )
+      ))
   );
 }
 export function validateTravel(
@@ -300,9 +302,10 @@ export const guestTravelDraftSchema = travelDraftSchema.extend({
     returnDate: z.string().max(10),
     pickupTime: z.string().max(5),
     dropoffTime: z.string().max(5),
-    adults: z.number().int().min(0).max(9),
-    rooms: z.number().int().min(0).max(9),
-    childAges: z.array(z.number().int().min(-1).max(17)).max(6),
+    guestNationality: z.string().max(2).optional(),
+    adults: z.number().finite(),
+    rooms: z.number().finite(),
+    childAges: z.array(z.number().finite()).max(6),
   }),
 });
 export const savedTravelSchema = z

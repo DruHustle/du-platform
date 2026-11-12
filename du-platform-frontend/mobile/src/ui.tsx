@@ -9,8 +9,16 @@ export function Screen({ children }: React.PropsWithChildren) {
 export function Heading({children}: React.PropsWithChildren) { return <Text accessibilityRole="header" style={styles.heading}>{children}</Text>; }
 export function Copy({children}: React.PropsWithChildren) { return <Text style={styles.copy}>{children}</Text>; }
 export function Card({children}: React.PropsWithChildren) { return <View style={styles.card}>{children}</View>; }
-export function Action({title, onPress, disabled = false, secondary = false}: {title: string; onPress: () => void; disabled?: boolean; secondary?: boolean}) {
-  return <Pressable accessibilityRole="button" accessibilityState={{disabled}} disabled={disabled} onPress={onPress} style={({pressed}) => [styles.button, secondary && styles.secondary, disabled && styles.disabled, pressed && styles.pressed]}><Text style={[styles.buttonText, secondary && styles.secondaryText]}>{title}</Text></Pressable>;
+export function Action({title, onPress, disabled = false, secondary = false, selected, expanded, accessibilityLabel}: {
+  title: string;
+  onPress: () => void;
+  disabled?: boolean;
+  secondary?: boolean;
+  selected?: boolean;
+  expanded?: boolean;
+  accessibilityLabel?: string;
+}) {
+  return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{disabled, selected, expanded}} disabled={disabled} onPress={onPress} style={({pressed}) => [styles.button, secondary && styles.secondary, disabled && styles.disabled, pressed && styles.pressed]}><Text style={[styles.buttonText, secondary && styles.secondaryText]}>{title}</Text></Pressable>;
 }
 export function Field({label, ...props}: TextInputProps & {label: string}) {
   return <View style={styles.field}><Text style={styles.label}>{label}</Text><TextInput accessibilityLabel={label} placeholderTextColor="#65758b" {...props} style={[styles.input, props.multiline && styles.multiline, props.style]} /></View>;

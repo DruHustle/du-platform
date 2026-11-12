@@ -19,6 +19,7 @@ type Props = {
   category?: string;
   description?: string;
   priority?: boolean;
+  catalogQuery?: string;
   footer?: ReactNode;
 };
 export default function ProductCard({
@@ -30,6 +31,7 @@ export default function ProductCard({
   category,
   description,
   priority,
+  catalogQuery = "",
   footer,
 }: Props) {
   const { t } = useTranslation();
@@ -108,7 +110,7 @@ export default function ProductCard({
             <ProductInterest product={product} />
           )}
           <Link
-            href={`/shop/product/${encodeURIComponent(product.slug)}`}
+            href={`/shop/product/${encodeURIComponent(product.slug)}${catalogQuery}`}
             className="relative z-20 mt-3 inline-flex min-h-11 items-center text-xs text-zim-gold underline underline-offset-4"
           >
             {t("pilot.product_details")}
