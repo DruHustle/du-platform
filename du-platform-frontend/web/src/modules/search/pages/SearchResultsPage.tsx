@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
+import { safeRedirectPath } from "@/lib/safeRedirect";
 
 type SearchResult = {
   title: string;
@@ -23,6 +24,14 @@ type SearchResult = {
   category: string;
   summary?: string;
 };
+function isSearchResult(item: unknown): item is SearchResult {
+  if (!item || typeof item !== "object") return false;
+  const row = item as Partial<SearchResult>;
+  return typeof row.title === "string" && typeof row.category === "string" &&
+    typeof row.href === "string" && safeRedirectPath(row.href) === row.href &&
+    (row.summary === undefined || typeof row.summary === "string");
+}
+
 type SearchResponse = {
   query: string;
   results: SearchResult[];
@@ -101,12 +110,16 @@ export default function SearchResults() {
       })
       .then(({ data }) => {
         if (controller.signal.aborted) return;
-        if (!Array.isArray(data?.results))
+        if (!Array.isArray(data?.results) || !data.results.every(isSearchResult))
           throw new Error("Invalid search response");
-        setResponse({
-          query,
-          results: data.results,
-          status: data.partial === true ? "partial" : "complete",
+        const results: SearchResult[] = data.results;
+        setResponse(previous => {
+          if (data.partial !== true) return { query, results, status: "complete" };
+          const returned = new Set(results.map(result => result.href));
+          const retained = previous?.query === query
+            ? previous.results.filter(result => !returned.has(result.href))
+            : [];
+          return { query, results: [...results, ...retained], status: "partial" };
         });
       })
       .catch(() => {

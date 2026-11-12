@@ -444,6 +444,16 @@ try {
   pass(
     "Private request status survives a same-tab refresh without a token in the URL"
   );
+  await page.evaluate(() => { window.location.hash = "ref=DU-INVALID&access=invalid"; });
+  await page.getByText("Delivered", { exact: true }).waitFor({ state: "hidden" });
+  assert.equal(new URL(page.url()).hash, "");
+  assert.equal(await page.evaluate(() => sessionStorage.getItem("du_order_status_grant_v1")), null);
+  await page.evaluate(({ ref, token }) => {
+    window.location.hash = new URLSearchParams({ ref, access: token }).toString();
+  }, { ref, token: order.manageToken });
+  await page.getByText("Delivered", { exact: true }).waitFor();
+  assert.equal(new URL(page.url()).hash, "");
+  pass("Opening another receipt in the same tab clears an invalid link and loads the newly presented grant");
   await adminPage
     .getByRole("button", { name: "Shop Products", exact: true })
     .click();
