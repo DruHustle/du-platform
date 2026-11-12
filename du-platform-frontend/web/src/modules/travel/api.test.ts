@@ -1,7 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
-vi.mock("@/lib/api", () => ({ api: { get: vi.fn() } }));
+vi.mock("@/lib/api", () => ({
+  api: { get: vi.fn(), post: vi.fn(), delete: vi.fn() },
+}));
 import { api } from "@/lib/api";
-import { loadSavedTravel, loadTravelReference } from "./api";
+import {
+  deleteSavedTravel,
+  loadSavedTravel,
+  loadTravelReference,
+  saveTravel,
+} from "./api";
 import { defaultTravelCriteria } from "@/domain/travel";
 const savedTrip = () => ({
   id: "00000000-0000-4000-8000-000000000001",
@@ -19,6 +26,23 @@ describe("Travel API response contract", () => {
     await expect(loadTravelReference()).rejects.toThrow();
     vi.mocked(api.get).mockResolvedValueOnce({ data: { categories: {} } });
     await expect(loadTravelReference()).rejects.toThrow();
+  });
+  it("requires a saved ID before confirming a private trip", async () => {
+    const { id, name, draft } = savedTrip();
+    const input = { name, draft, kind: "trip" as const };
+    vi.mocked(api.post).mockResolvedValueOnce({ data: { id } });
+    await saveTravel(input);
+    expect(api.post).toHaveBeenCalledWith("/travel/saved", input);
+    vi.mocked(api.post).mockResolvedValueOnce({ data: {} });
+    await expect(saveTravel(input)).rejects.toThrow();
+  });
+  it("requires a deletion receipt before removing the trip from the list", async () => {
+    const { id } = savedTrip();
+    vi.mocked(api.delete).mockResolvedValueOnce({ data: { removed: true } });
+    await deleteSavedTravel(id);
+    expect(api.delete).toHaveBeenCalledWith(`/travel/saved/${id}`);
+    vi.mocked(api.delete).mockResolvedValueOnce({ data: { removed: false } });
+    await expect(deleteSavedTravel(id)).rejects.toThrow();
   });
   it("uses the array already unwrapped by the shared interceptor", async () => {
     const rows = [savedTrip()];
