@@ -10,6 +10,8 @@ import {
   TrendingUp,
   Plane,
   Brain,
+  ShoppingBag,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -36,6 +38,13 @@ const routeTitles = new Map([
   ["/travel/explore", "travel.explore"],
   ["/travel/planner", "travel.onesa-planner"],
   ["/ntir", "investment.ntir.title"],
+  ["/shop", "nav.shop"],
+  ["/shop/products", "pilot.browse_products"],
+  ["/shop/order-status", "pilot.request_status"],
+  ["/shop/products?category=food&segment=beverages", "shop.categories.beverages.title"],
+  ...(["sports", "crafts", "food"] as const).map(category =>
+    [`/shop/products?category=${category}`, `admin.shop.categories.${category}`] as const
+  ),
 ]);
 
 export default function SearchResults() {
@@ -59,12 +68,18 @@ export default function SearchResults() {
     Technology: Brain,
     NTIR: Globe,
     Compliance: FileText,
+    Shop: ShoppingBag,
+    Product: ShoppingBag,
+    Collection: Layers,
   };
   const categoryLabels: Record<string, string> = {
     Tourism: tr("search.categories.tourism", "Travel"),
     Investment: tr("search.categories.investment", "Investment"),
     Technology: tr("search.categories.technology", "Technology"),
     NTIR: tr("search.categories.ntir", "NTIR"),
+    Shop: t("nav.shop"),
+    Product: t("shop.product"),
+    Collection: t("shop.collections"),
     Compliance: tr("search.categories.compliance", "Compliance"),
   };
 

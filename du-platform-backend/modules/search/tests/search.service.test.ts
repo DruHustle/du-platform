@@ -9,6 +9,13 @@ describe("search service route index", () => {
 
   it.each([
     ["shopping", "/shop"],
+    ["track my order", "/shop/order-status"],
+    ["Bestellstatus", "/shop/order-status"],
+    ["Mamiriro echikumbiro", "/shop/order-status"],
+    ["Isimo sesicelo", "/shop/order-status"],
+    ["register interest", "/shop/products"],
+    ["juice", "/shop/products?category=food&segment=beverages"],
+    ["groceries", "/shop/products?category=food"],
     ["assistant", "/onesa-ai-chat"],
     ["cheap flights", "/travel/flights"],
     ["cheap flights to Harare", "/travel/flights"],
@@ -82,13 +89,26 @@ it("finds published catalogue descriptions and excludes hidden products", async 
   expect((await service.search("mazoe")).results).toEqual([
     expect.objectContaining({
       title: "Mazoe Orange",
-      href: "/shop/products?product=mazoe-orange",
+      href: "/shop/product/mazoe-orange",
+      summary: "Orange cordial",
       category: "Product",
     }),
   ]);
   expect((await service.search("cordial")).results).toContainEqual(
     expect.objectContaining({ title: "Mazoe Orange" })
   );
+});
+it("ranks a named product above mentions in descriptions and matches words in any order", async () => {
+  const service = new SearchService({
+    searchNtir: async () => [],
+    publishedProducts: async () => [
+      { name: "Gift box", slug: "gift-box", description: "May include a Sables kit", is_active: 1, stock_qty: 9 },
+      { name: "Sables Rugby Home Kit", slug: "sables-rugby-home-kit", description: "Supporter shirt", is_active: 1, stock_qty: 0 },
+    ],
+  } as any);
+  expect((await service.search("kit—Sábles")).results.map(item => item.href))
+    .toEqual(["/shop/product/sables-rugby-home-kit", "/shop/product/gift-box"]);
+  expect((await service.search("Sables mugs")).results).toEqual([]);
 });
 it("propagates catalogue failures rather than reporting an empty search", async () => {
   await expect(

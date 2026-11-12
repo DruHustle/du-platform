@@ -1384,7 +1384,12 @@
         "crafts": "Ubuciko Nezandla",
         "food": "Ukudla & Nostalgia",
         "all_segments": "Zonke izinhlobo zemikhiqizo",
-        "select_segment": "Khetha uhlobo lomkhiqizo"
+        "select_segment": "Khetha uhlobo lomkhiqizo",
+        "search": "Dinga imikhiqizo",
+        "category": "Isigaba",
+        "result_count_one": "Umkhiqizo otholakeleyo ({{count}})",
+        "result_count_other": "Imikhiqizo etholakeleyo ({{count}})",
+        "no_matches": "Akutholakalanga imikhiqizo ehambelana lokukhethileyo"
       },
       "loading": "Ilayisha imikhiqizo...",
       "empty_state": "Ayikho imikhiqizo etholakalayo kulesi sigaba okwamanje.",

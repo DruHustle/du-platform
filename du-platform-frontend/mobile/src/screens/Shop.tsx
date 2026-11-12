@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Image, Pressable, ScrollView, Text } from "react-native";
+import { Image, Pressable, Switch, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
 import { request, type Catalog, type Product } from "../api";
+import { canRequestProduct, defaultShopFilters, filterShopProducts, shopCategories, type ShopFilters } from "../shopDiscovery";
 import { productImageUrl as imageUrl } from "../media";
 import { useCart } from "../cart";
 import { canEditRejectedRequest, readPendingOrder, type OrderPayload, type Order } from "../checkout";
@@ -19,21 +20,132 @@ function useCatalog() {
   useFocusEffect(useCallback(()=>{void load();},[load]));
   return {data,loading,error,load};
 }
-function available(data: Catalog | null, p: Product) {const r=data?.readiness;return data?.source === "db" && !!r && r.commercialReady && r.mode === "pilot" && r.enforcement === "enforced" && Array.isArray(r.approvedProductIds) && r.approvedProductIds.includes(p.id) && p.stock_qty > 0;}
-export function ShopScreen({route}: {route?: {params?: {category?: string}}}) {
-  const navigation=useNavigation<any>(); const cart=useCart(); const {data,loading,error,load}=useCatalog(); const [query,setQuery]=useState("");const [category,setCategory]=useState("all");
-  useEffect(()=>{const selected=route?.params?.category;if(selected && ["all","sports","crafts","food","beverage"].includes(selected))setCategory(selected);},[route?.params?.category]);
-  const products=(data?.products || []).filter(p=>(category === "all" || p.category === category) && `${p.name} ${p.description}`.toLowerCase().includes(query.toLowerCase()));
-  return <Screen><Heading>Shop</Heading><Copy>Explore products from home. Assisted orders are available only for approved products and destinations.</Copy><Field label="Search products" value={query} onChangeText={setQuery} autoCapitalize="none" /><Action title={`Basket (${cart.items.reduce((n,item)=>n+item.quantity,0)})`} onPress={()=>navigation.navigate("Cart")} secondary />
-    <Card><Copy>Filter by category</Copy><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>{["all","sports","crafts","food","beverage"].map(c=><Pressable key={c} accessibilityRole="button" accessibilityState={{selected:category===c}} onPress={()=>setCategory(c)} style={{minHeight:48,justifyContent:"center",paddingHorizontal:16,borderRadius:24,borderWidth:1,borderColor:colors.ink,backgroundColor:category===c?colors.navy:"white"}}><Text style={{fontSize:16,fontWeight:"600",color:category===c?"white":colors.ink}}>{c === "all" ? "All products" : c[0].toUpperCase()+c.slice(1)}</Text></Pressable>)}</ScrollView></Card>
-    {loading && !data && <Loading label="Loading products…" />}{error && <Card><Message error message={data ? `Showing previously loaded products. ${error}` : error} /><Action title="Try again" secondary onPress={()=>void load()} /></Card>}{data?.source === "memory" && <Message message="Sample catalogue data for demonstration. Availability is not live." />}{data?.cached && <Message message="Showing cached catalogue data; availability may have changed." />}{!loading && !error && data && !products.length && <Copy>No products match these filters.</Copy>}
-    {products.map(product=><Card key={product.id}>{imageUrl(product.image_url,product.image_api_url) && <Image source={{uri:imageUrl(product.image_url,product.image_api_url)}} style={{width:"100%",height:180,borderRadius:10,backgroundColor:"#e2e8f0"}} resizeMode="cover" />}<Text style={{fontSize:19,fontWeight:"700",color:colors.ink}}>{product.name}</Text><Copy>{product.description}</Copy><Copy>Indicative price: {money(product.price_cents,product.currency)}</Copy><Action title="Product details" onPress={()=>navigation.navigate("Product",{slug:product.slug})} /></Card>)}
+export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> } }) {
+  const navigation = useNavigation<any>();
+  const cart = useCart();
+  const { data, loading, error, load } = useCatalog();
+  const filters = { ...defaultShopFilters, ...route?.params };
+  const products = data ? filterShopProducts(data, filters) : [];
+  const filtered = Boolean(filters.q.trim() || filters.availableOnly || filters.category !== "all");
+  const quantity = cart.items.reduce((count, item) => count + item.quantity, 0);
+  return <Screen>
+    <Heading>Shop</Heading>
+    <Copy>Explore Zimbabwean products, check availability and request updates.</Copy>
+    <Action title={`Basket (${quantity})`} onPress={() => navigation.navigate("Cart")} secondary />
+    <Card>
+      <Field label="Search products" placeholder="Product name or description" value={filters.q}
+        onChangeText={q => navigation.setParams({ q })} autoCapitalize="none" returnKeyType="search" />
+      <Copy>Category</Copy>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        {(Object.keys(shopCategories) as ShopFilters["category"][]).map(category => {
+          const selected = filters.category === category;
+          return <Pressable key={category} accessibilityRole="button" accessibilityState={{ selected }}
+            onPress={() => navigation.setParams({ category })}
+            style={{ minHeight: 48, justifyContent: "center", paddingHorizontal: 14, borderRadius: 24,
+              borderWidth: 1, borderColor: colors.ink, backgroundColor: selected ? colors.navy : "white" }}>
+            <Text style={{ fontSize: 16, fontWeight: "600", color: selected ? "white" : colors.ink }}>{shopCategories[category]}</Text>
+          </Pressable>;
+        })}
+      </View>
+      <View style={{ flexDirection: "row", minHeight: 48, alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <Text style={{ flex: 1, fontSize: 16, color: colors.ink }}>Available to request only</Text>
+        <Switch hitSlop={8} accessibilityLabel="Available to request only" value={filters.availableOnly}
+          onValueChange={availableOnly => navigation.setParams({ availableOnly })} />
+      </View>
+      {filtered && <Action title="Clear filters" secondary onPress={() => navigation.setParams(defaultShopFilters)} />}
+    </Card>
+    {loading && !data && <Loading label="Loading products…" />}
+    {!!error && <Card><Message error message={data ? `Showing previously loaded products. ${error}` : error} /><Action title="Try again" secondary onPress={() => void load()} /></Card>}
+    {data?.source === "memory" && <Message message="Sample catalogue. Live stock levels are unavailable." />}
+    {data?.cached && <Message message="Showing cached catalogue data. Availability may have changed." />}
+    {data && products.length > 0 && <Text accessibilityLiveRegion="polite" style={{ fontSize: 16, fontWeight: "600", color: colors.ink }}>
+      {products.length} {products.length === 1 ? "product" : "products"}
+    </Text>}
+    {data && !products.length && <Message message={filtered ? "No products match. Change or clear your filters to see more." : "There are no products in the catalogue yet."} />}
+    {products.map(product => {
+      const image = imageUrl(product.image_url, product.image_api_url);
+      return <Card key={product.id}>
+        {image && <Image source={{ uri: image }} style={{ width: "100%", height: 180, borderRadius: 10, backgroundColor: colors.pale }} resizeMode="cover" />}
+        <Text accessibilityRole="header" style={{ fontSize: 19, fontWeight: "700", color: colors.ink }}>{product.name}</Text>
+        <Copy>{product.description}</Copy>
+        <Copy>Indicative price: {money(product.price_cents, product.currency)}</Copy>
+        <Action title="Product details" accessibilityLabel={`View details for ${product.name}`} onPress={() => navigation.navigate("Product", { slug: product.slug })} />
+      </Card>;
+    })}
   </Screen>;
 }
-export function ProductScreen({route}: {route:{params:{slug:string}}}) {
-  const navigation=useNavigation<any>();const cart=useCart();const {data,loading,error,load}=useCatalog();const [email,setEmail]=useState("");const [busy,setBusy]=useState(false);const [feedback,setFeedback]=useState("");const [failure,setFailure]=useState("");
-  const p=data?.products.find(item=>item.slug===route.params.slug);
-  return <Screen><Heading>Product details</Heading>{loading&&!data&&<Loading />}{!!error&&<Card><Message error message={error} /><Action title="Try again" onPress={()=>void load()} /></Card>}{data&&!p&&<Copy>This product is not currently available.</Copy>}{p&&<><Card>{imageUrl(p.image_url,p.image_api_url)&&<Image source={{uri:imageUrl(p.image_url,p.image_api_url)}} style={{height:220,width:"100%",borderRadius:10}} resizeMode="cover" />}<Heading>{p.name}</Heading><Copy>{p.description}</Copy><Copy>Indicative price: {money(p.price_cents,p.currency)}</Copy><Copy>{available(data,p) && !error && !loading ? "Available to request through assisted ordering." : "Ordering is not currently available for this product."}</Copy><Action disabled={!available(data,p)||!!error||loading} title="Add to basket" onPress={()=>{cart.add(p);navigation.navigate("Cart");}} /></Card><PublishedDetails productId={p.id}/><Card><Heading>Product updates</Heading><Copy>Request a one-time availability update. Confirm the email link; this does not create an order or payment.</Copy><Field label="Email address" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoComplete="email" />{feedback?<Message message={feedback}/>:null}{failure?<Message error message={failure}/>:null}<Action title={busy?"Sending…":"Request an update"} disabled={busy} onPress={()=>{if(busy)return;setBusy(true);setFailure("");void request("/shop/restock-notifications",{method:"POST",body:{email:email.trim(),productId:p.id,productSlug:p.slug,productName:p.name,language:"en"}}).then(()=>setFeedback("If confirmation is needed, an email link will be sent.")).catch(e=>setFailure(err(e))).finally(()=>setBusy(false));}} /></Card></>}</Screen>;
+export function ProductScreen({ route }: { route: { params: { slug: string } } }) {
+  const navigation = useNavigation<any>();
+  const cart = useCart();
+  const { data, loading, error, load } = useCatalog();
+  const product = data?.products.find(item => item.slug === route.params.slug);
+  const orderable = data && product && !loading && !error && canRequestProduct(data, product);
+  const image = product && imageUrl(product.image_url, product.image_api_url);
+  return <Screen>
+    <Heading>{product?.name || "Product details"}</Heading>
+    {loading && !data && <Loading label="Loading product…" />}
+    {!!error && <Card><Message error message={error} /><Action title="Try again" onPress={() => void load()} /></Card>}
+    {data && !product && <Card>
+      <Copy>This product is no longer in the catalogue.</Copy>
+      <Action title="Browse products" onPress={() => navigation.navigate("Main", { screen: "Shop", params: defaultShopFilters })} />
+    </Card>}
+    {product && <>
+      <Card>
+        {image && <Image source={{ uri: image }} style={{ height: 220, width: "100%", borderRadius: 10 }} resizeMode="cover" />}
+        <Copy>{product.description}</Copy>
+        <Copy>Indicative price: {money(product.price_cents, product.currency)}</Copy>
+        {orderable ? <>
+          <Copy>Available to request through assisted ordering.</Copy>
+          <Action title="Add to basket" onPress={() => { cart.add(product); navigation.navigate("Cart"); }} />
+        </> : <Copy>{loading ? "Checking ordering availability…" : error ? "Ordering availability could not be checked." : "Ordering is currently unavailable for this product."}</Copy>}
+      </Card>
+      <ProductUpdates key={product.slug} product={product} />
+      <PublishedDetails productId={product.id} />
+    </>}
+  </Screen>;
+}
+
+function ProductUpdates({ product }: { product: Product }) {
+  const { user } = useSession();
+  const [email, setEmail] = useState(user?.email || "");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [failure, setFailure] = useState("");
+  const active = useRef<AbortController | null>(null);
+  useEffect(() => () => active.current?.abort(), []);
+
+  async function send() {
+    if (active.current || status !== "idle") return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setFailure("Enter a valid email address.");
+      return;
+    }
+    const controller = new AbortController();
+    active.current = controller;
+    setFailure("");
+    setStatus("sending");
+    try {
+      await request("/shop/restock-notifications", {
+        method: "POST", signal: controller.signal,
+        body: { email: email.trim(), productId: product.id, productSlug: product.slug, productName: product.name, language: "en" },
+      });
+      if (!controller.signal.aborted) setStatus("sent");
+    } catch (e) {
+      if (!controller.signal.aborted) { setFailure(err(e)); setStatus("idle"); }
+    } finally {
+      active.current = null;
+    }
+  }
+  return <Card>
+    <Heading>Availability update</Heading>
+    {status === "sent" ? <Message message="Request received. If confirmation is needed, we’ll send an email link." /> : <>
+      <Copy>Get a one-time email when this product is available. This does not place an order.</Copy>
+      <Field label="Email address" value={email} onChangeText={value => { setEmail(value); setFailure(""); }}
+        editable={status === "idle"} keyboardType="email-address" autoCapitalize="none" autoComplete="email"
+        returnKeyType="send" onSubmitEditing={() => void send()} />
+      {!!failure && <Message error message={failure} />}
+      <Action title={status === "sending" ? "Sending…" : "Request an update"} disabled={status === "sending"} onPress={() => void send()} />
+    </>}
+  </Card>;
 }
 
 const detailLabels: Record<string, string> = { sizes:"Sizes", variants:"Variants", sizeGuidance:"Size guidance", dimensions:"Dimensions", materials:"Materials", ingredients:"Ingredients", allergens:"Allergens", netQuantity:"Net quantity", storage:"Storage", origin:"Origin", supplier:"Supplier", deliveryEligibility:"Delivery eligibility", handling:"Handling" };

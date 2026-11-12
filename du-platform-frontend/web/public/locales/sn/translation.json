@@ -1384,7 +1384,12 @@
         "crafts": "Unyanzvi nemabasa emaoko",
         "food": "Chikafu & Nostalgia",
         "all_segments": "Mhando dzose dzezvigadzirwa",
-        "select_segment": "Sarudza mhando yechigadzirwa"
+        "select_segment": "Sarudza mhando yechigadzirwa",
+        "search": "Tsvaga zvigadzirwa",
+        "category": "Chikamu",
+        "result_count_one": "Chigadzirwa chawanikwa ({{count}})",
+        "result_count_other": "Zvigadzirwa zvawanikwa ({{count}})",
+        "no_matches": "Hapana zvigadzirwa zvinoenderana nezvawasarudza"
       },
       "loading": "Kurodha zvigadzirwa...",
       "empty_state": "Parizvino hapana zvigadzirwa.",
