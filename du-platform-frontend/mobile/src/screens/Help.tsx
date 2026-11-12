@@ -4,6 +4,8 @@ import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from "@react-navigation/native";
 import * as Crypto from "expo-crypto";
 import { ApiError, request, requestOnesaReply, type ChatMessage } from "../api";
+import { shopDestination, isSitePath } from "../shopDiscovery";
+import { readSearchResponse, type SearchResponse } from "../searchResults";
 import { PENDING_CONTACT_KEY } from "../session";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
 import { Action, Card, Copy, Field, Heading, Message, Screen } from "../ui";
@@ -66,55 +68,52 @@ export function ContactScreen() {
 export function SearchScreen() {
   const navigation = useNavigation<any>();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<{
-    title: string;
-    category: string;
-    summary?: string;
-    href: string;
-  }[] | null>(null);
+  const [response, setResponse] = useState<SearchResponse | null>(null);
   const [busy, setBusy] = useState(false);
-  const [partial, setPartial] = useState(false);
   const [error, setError] = useState("");
+  const active = useRef<AbortController | null>(null);
+  useEffect(() => () => active.current?.abort(), []);
 
-  const search = async () => {
-    if (busy || !query.trim()) return;
-    setBusy(true);
-    setError("");
-    setPartial(false);
-    setResults(null);
-    try {
-      const data = await request<{ results: typeof results; partial?: boolean }>(
-        `/search?q=${encodeURIComponent(query.trim())}`
-      );
-      if (!Array.isArray(data?.results) || !data.results.every(item =>
-        item && typeof item.title === "string" && typeof item.category === "string" &&
-        typeof item.href === "string" && item.href.startsWith("/") &&
-        !item.href.startsWith("//") && !item.href.includes("\\") &&
-        (item.summary === undefined || typeof item.summary === "string")
-      )) throw new Error("The search response was invalid.");
-      setResults(data.results);
-      setPartial(data.partial === true);
-    } catch (e) {
-      setError(errorMessage(e));
-    } finally {
+  function editQuery(value: string) {
+    if (value.trim() !== query.trim()) {
+      active.current?.abort();
+      active.current = null;
+      setResponse(null);
+      setError("");
       setBusy(false);
     }
-  };
+    setQuery(value);
+  }
+
+  async function search() {
+    if (active.current || !query.trim()) return;
+    const controller = new AbortController();
+    active.current = controller;
+    setBusy(true);
+    setError("");
+    try {
+      const data = await request<unknown>(`/search?q=${encodeURIComponent(query.trim())}`, { signal: controller.signal });
+      if (!controller.signal.aborted) setResponse(readSearchResponse(data, response));
+    } catch (e) {
+      if (!controller.signal.aborted) setError(errorMessage(e));
+    } finally {
+      if (active.current === controller) {
+        active.current = null;
+        if (!controller.signal.aborted) setBusy(false);
+      }
+    }
+  }
+
   function openResult({ href, title }: { href: string; title: string }) {
-    // Keep anchored and parameterized web results intact when handing off.
-    if (href === "/onesa-ai-chat") {
+    const shop = shopDestination(href, title);
+    if (shop?.screen === "Shop") {
+      navigation.navigate("Main", { screen: "Shop", params: shop.params });
+    } else if (shop) {
+      navigation.navigate(shop.screen, shop.params);
+    } else if (href === "/onesa-ai-chat") {
       navigation.navigate("Main", { screen: "Assistant" });
     } else if (href === "/travel" || href === "/travel/flights" || href === "/travel/stays") {
       navigation.navigate("Main", { screen: "Travel", params: { section: href.split("/")[2] } });
-    } else if (href.startsWith("/shop/product/")) {
-      navigation.navigate("Product", { slug: href.slice("/shop/product/".length) });
-    } else if (href.startsWith("/shop/products?")) {
-      const params = new URLSearchParams(href.split("?")[1]);
-      const slug = params.get("product");
-      if (slug) navigation.navigate("Product", { slug });
-      else navigation.navigate("Main", { screen: "Shop", params: { category: params.get("category") } });
-    } else if (href.startsWith("/shop")) {
-      navigation.navigate("Main", { screen: "Shop" });
     } else {
       navigation.navigate("External", { path: href, title });
     }
@@ -122,13 +121,13 @@ export function SearchScreen() {
 
   return <Screen>
     <Heading>Search</Heading>
-    <Field label="Search products, destinations and information" value={query} onChangeText={setQuery}
+    <Field label="Search products, destinations and information" value={query} onChangeText={editQuery}
       returnKeyType="search" onSubmitEditing={() => void search()}/>
-    <Action title={busy ? "Searching…" : "Search"} disabled={busy || !query.trim()} onPress={() => void search()}/>
+    <Action title={busy ? "Searching…" : error || response?.partial ? "Retry search" : "Search"} disabled={busy || !query.trim()} onPress={() => void search()}/>
     {!!error && <Message error message={error}/>}
-    {partial && <Message message="Some search results are temporarily unavailable. Search again to retry."/>}
-    {results && !results.length && !partial && <Copy>No results found. Try another search.</Copy>}
-    {results?.map((item, i) => <Card key={`${item.href}-${i}`}>
+    {response?.partial && !error && <Message message="Some results are temporarily unavailable. You can open the results shown or retry your search."/>}
+    {response && !response.results.length && !response.partial && !busy && !error && <Copy>No results found. Try another search.</Copy>}
+    {response?.results.map((item, i) => <Card key={`${item.href}-${i}`}>
       <Heading>{item.title}</Heading>
       <Copy>{item.category === "Tourism" ? "Travel" : item.category}{item.summary ? ` · ${item.summary}` : ""}</Copy>
       <Action title={`Open ${item.title}`} onPress={() => openResult(item)}/>
@@ -136,6 +135,6 @@ export function SearchScreen() {
   </Screen>;
 }
 export function ExternalScreen({route}:{route:{params:{path:string;title:string}}}) {
-  const [error,setError]=useState("");const path=route.params.path;const valid=path.startsWith("/")&&!path.startsWith("//")&&!path.includes("\\");
+  const [error,setError]=useState("");const path=route.params.path;const valid=isSitePath(path);
   return <Screen><Heading>{route.params.title}</Heading><Copy>This section opens on the Diaspora Unlocked website. You may need to sign in there.</Copy>{!!error&&<Message error message={error}/>}<Action title="Open website" disabled={!valid} onPress={()=>{if(valid)void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${path}`).catch(()=>setError("Could not open the browser."));}}/></Screen>;
 }
