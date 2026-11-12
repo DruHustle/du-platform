@@ -53,6 +53,9 @@ try {
     let privateMode = false;
     let storageFails = false;
     let malformedSavedResponse = false;
+    let savedListFails = false;
+    let saves = 0;
+    let deletions = 0;
     let supplierFails = false;
     let supplierEmpty = false;
     let offerExpires = false;
@@ -161,12 +164,14 @@ try {
       if (privateMode && p.startsWith("/api/travel/saved")) {
         if (malformedSavedResponse)
           return r.fulfill({ json: { success: true, data: [{}] } });
-        if (storageFails)
+        const method = r.request().method();
+        if (method === "POST") saves++;
+        if (method === "DELETE") deletions++;
+        if (storageFails || (savedListFails && method === "GET"))
           return r.fulfill({
             status: 503,
             json: { error: { code: "TRAVEL_STORAGE_UNAVAILABLE" } },
           });
-        const method = r.request().method();
         if (method === "POST") {
           const input = r.request().postDataJSON();
           const id = crypto.randomUUID();
@@ -731,50 +736,136 @@ try {
     privateMode = true;
     await page.evaluate(() => localStorage.setItem("du_has_logged_in", "1"));
     await goto("/travel/my-trips");
-    await page
-      .getByLabel("Trip / search name", { exact: true })
-      .fill("Synthetic family trip");
-    await page
-      .getByRole("button", { name: "Save private trip", exact: true })
-      .click();
+    const nameField = page.getByLabel("Trip / search name", { exact: true });
+    const saveTrip = page.getByRole("button", {
+      name: "Save private trip",
+      exact: true,
+    });
+    const savedCard = name =>
+      page.locator(".travel-trip-grid article").filter({
+        has: page.getByRole("heading", { name, exact: true }),
+      });
+    const tripName = "Synthetic family trip";
+    const searchName = "Family flight searches";
+    const listError = page
+      .getByRole("alert")
+      .filter({ hasText: "Could not load your saved list." });
+    const retryList = listError.getByRole("button", {
+      name: "Try again",
+      exact: true,
+    });
+    const withConfirmation = async (button, choice, recordName) => {
+      const dialogSeen = page.waitForEvent("dialog").then(async dialog => {
+        const kind = dialog.type();
+        const message = dialog.message();
+        await dialog[choice]();
+        assert.equal(kind, "confirm");
+        assert(message.includes(recordName));
+      });
+      await Promise.all([dialogSeen, button.click()]);
+    };
+
+    if (width <= 768) {
+      await page
+        .getByRole("link", {
+          name: "Private saved trips & searches",
+          exact: true,
+        })
+        .click();
+      assert.equal(
+        await page.evaluate(() => document.activeElement?.id),
+        "private-trips"
+      );
+    }
+    await nameField.fill(tripName);
+    savedListFails = true;
+    await saveTrip.click();
     await page.getByText("Saved privately.", { exact: true }).waitFor();
+    await listError.waitFor();
+    assert.equal(await nameField.inputValue(), "");
+    assert(await saveTrip.isDisabled());
     assert.equal(savedRecords.length, 1);
     assert.equal(savedRecords[0].draft.quotes.length, 2);
-    await page
-      .getByRole("button", { name: "Load into draft", exact: true })
-      .click();
+    savedListFails = false;
+    await retryList.click();
+    const restore = savedCard(tripName).getByRole("button", {
+      name: "Load into draft",
+      exact: true,
+    });
+    await restore.waitFor();
+    assert.equal(
+      saves,
+      1,
+      "Retrying the list must not create a duplicate trip"
+    );
+    await withConfirmation(restore, "accept", tripName);
     await page
       .getByText("Saved details loaded into this browser draft.", {
         exact: true,
       })
       .waitFor();
+    await nameField.fill(searchName);
     await page
       .getByRole("button", { name: "Save searches", exact: true })
       .click();
-    await page.getByText("Saved privately.", { exact: true }).waitFor();
+    const searchCard = savedCard(searchName);
+    await searchCard.waitFor();
     assert.equal(savedRecords.length, 2);
     assert.equal(savedRecords[1].draft.quotes.length, 0);
     assert.equal(savedRecords[1].draft.estimates.length, 0);
-    await page
-      .getByRole("button", { name: "Delete", exact: true })
-      .last()
-      .click();
-    await page.waitForFunction(
-      () =>
-        document.querySelectorAll(
-          ".travel-trip-grid section:nth-child(2) article"
-        ).length === 1
+    const currentDraft = () =>
+      page.evaluate(() => localStorage.getItem("du_travel_draft_v1"));
+    const fullDraft = await currentDraft();
+    await withConfirmation(
+      searchCard.getByRole("button", { name: "Load into draft" }),
+      "dismiss",
+      searchName
     );
+    assert.equal(
+      await currentDraft(),
+      fullDraft,
+      "Cancel must preserve selections and allowances"
+    );
+    const removeSearch = searchCard.getByRole("button", {
+      name: "Delete",
+      exact: true,
+    });
+    await withConfirmation(removeSearch, "dismiss", searchName);
+    assert.equal(deletions, 0);
+    await searchCard.waitFor();
+    savedListFails = true;
+    await withConfirmation(removeSearch, "accept", searchName);
+    await listError.waitFor();
+    await page.getByRole("status").filter({ hasText: searchName }).waitFor();
+    await searchCard.waitFor({ state: "detached" });
+    await savedCard(tripName).waitFor();
+    savedListFails = false;
+    await retryList.click();
+    await listError.waitFor({ state: "detached" });
+    assert.equal(
+      deletions,
+      1,
+      "Retrying the list must not repeat the deletion"
+    );
+    assert.equal(saves, 2);
+    assert.deepEqual(
+      savedRecords.map(row => row.name),
+      [tripName]
+    );
+    await fit(
+      "acknowledged saves and deletes survive a list outage; retry only reads"
+    );
+
     storageFails = true;
-    await page
-      .getByRole("button", { name: "Save private trip", exact: true })
-      .click();
+    await nameField.fill("Keep my draft");
+    await saveTrip.click();
     await page
       .getByText(
         "Could not access saved trips. Your browser draft is still here. Try again later.",
         { exact: true }
       )
       .waitFor();
+    assert.equal(await nameField.inputValue(), "Keep my draft");
     assert.equal(await page.locator(".travel-saved-search").count(), 3);
     assert.equal(savedRecords.length, 1);
     await fit(
@@ -786,18 +877,11 @@ try {
     });
     storageFails = false;
     malformedSavedResponse = true;
-    const draftBeforeMalformedResponse = await page.evaluate(() =>
-      localStorage.getItem("du_travel_draft_v1")
-    );
+    const draftBeforeMalformedResponse = await currentDraft();
     await page.reload();
-    await page
-      .getByText(
-        "Could not access saved trips. Your browser draft is still here. Try again later.",
-        { exact: true }
-      )
-      .waitFor();
+    await listError.waitFor();
     assert.equal(
-      await page.evaluate(() => localStorage.getItem("du_travel_draft_v1")),
+      await currentDraft(),
       draftBeforeMalformedResponse,
       "Malformed private data must not replace the guest draft"
     );
@@ -812,23 +896,9 @@ try {
       "malformed successful response preserves draft without rendering unsafe records"
     );
     malformedSavedResponse = false;
-    await page
-      .getByRole("alert")
-      .getByRole("button", { name: "Try again" })
-      .click();
-    await page
-      .getByRole("button", { name: "Load into draft", exact: true })
-      .waitFor();
-    assert.equal(
-      await page
-        .getByText(
-          "Could not access saved trips. Your browser draft is still here. Try again later.",
-          { exact: true }
-        )
-        .count(),
-      0,
-      "Retry should clear the failure and show the recovered records"
-    );
+    await retryList.click();
+    await restore.waitFor();
+    await listError.waitFor({ state: "detached" });
     await page
       .getByRole("button", { name: "Ask Onesa about this option", exact: true })
       .first()

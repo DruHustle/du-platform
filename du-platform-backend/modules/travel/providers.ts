@@ -20,6 +20,7 @@ const endpoints = {
   "Kiwi.com": "https://mcp.kiwi.com",
   Pilot: "https://mcp.pilotplans.com/mcp",
 } as const;
+const maxSupplierRows = 100;
 export class TravelProviderError extends Error {
   constructor(
     public code:
@@ -244,6 +245,20 @@ export class PublicTravelSearch {
     criteria: TravelCriteria,
     signal?: AbortSignal
   ): Promise<TravelResults> {
+    const page = await this.fetchOffers(category, criteria, "search", signal);
+    return page.results;
+  }
+  private async fetchOffers(
+    category: "flights" | "stays",
+    criteria: TravelCriteria,
+    purpose: "search" | "revalidate",
+    signal?: AbortSignal,
+    hotelOffset?: number
+  ): Promise<{
+    results: TravelResults;
+    moreHotels: boolean;
+    nextHotelOffset?: number;
+  }> {
     if (
       !validateTravel(
         criteria,
@@ -322,18 +337,21 @@ export class PublicTravelSearch {
           children_ages: criteria.childAges,
           currency: criteria.currency,
           guest_nationality: criteria.guestNationality,
-          limit: 10,
+          // Preserve the original query on recheck. Changing its limit can
+          // change which properties Pilot returns on the first page.
+          limit: hotelOffset === undefined ? 10 : 40,
+          ...(hotelOffset !== undefined && { offset: hotelOffset }),
         },
         signal
       );
       rows = data.hotels;
     }
-    if (!Array.isArray(rows) || rows.length > 100)
+    if (!Array.isArray(rows) || rows.length > maxSupplierRows)
       throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
     const quotes: TravelQuote[] = [];
-    let rejectedCount = 0;
     const identities = new Set<string>();
-    for (const row of rows.slice(0, 20)) {
+    for (const row of rows) {
+      if (purpose === "search" && quotes.length === 20) break;
       try {
         let base: Omit<TravelQuote, "signature" | "identity" | "id">,
           identityData: unknown;
@@ -441,10 +459,7 @@ export class PublicTravelSearch {
         const identity = createHash("sha256")
           .update(canonical(identityData))
           .digest("hex");
-        if (identities.has(identity)) {
-          rejectedCount++;
-          continue;
-        }
+        if (identities.has(identity)) continue;
         const unsigned = { ...base, id: randomUUID(), identity };
         const quote = travelQuoteSchema.parse({
           ...unsigned,
@@ -453,24 +468,55 @@ export class PublicTravelSearch {
         identities.add(identity);
         quotes.push(quote);
       } catch {
-        rejectedCount++;
+        continue;
       }
     }
     if (rows.length && !quotes.length)
       throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
-    return {
+    const results: TravelResults = {
       provider,
       category,
       retrievedAt,
       quotes,
-      rejectedCount: rejectedCount + Math.max(0, rows.length - 20),
+      rejectedCount: rows.length - quotes.length,
     };
+    const moreHotels = category === "stays" && data.has_more === true;
+    const nextHotelOffset =
+      moreHotels &&
+      Number.isSafeInteger(data.next_offset) &&
+      data.next_offset > (hotelOffset ?? 0)
+        ? (data.next_offset as number)
+        : undefined;
+    return { results, moreHotels, nextHotelOffset };
   }
   async revalidate(quote: TravelQuote, signal?: AbortSignal) {
     if (!verifyTravelQuote(quote))
       throw new TravelProviderError("TRAVEL_INVALID");
-    const current = await this.search(quote.category, quote.criteria, signal);
-    const match = current.quotes.find(item => item.identity === quote.identity);
+    // Share the original request deadline if a hotel moves to a later page.
+    const timeout = AbortSignal.timeout(25000);
+    const deadline = signal ? AbortSignal.any([signal, timeout]) : timeout;
+    const first = await this.fetchOffers(
+      quote.category,
+      quote.criteria,
+      "revalidate",
+      deadline
+    );
+    const sameOffer = (item: TravelQuote) => item.identity === quote.identity;
+    let match = first.results.quotes.find(sameOffer);
+    if (!match && first.moreHotels) {
+      if (first.nextHotelOffset === undefined)
+        throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+      const next = await this.fetchOffers(
+        "stays",
+        quote.criteria,
+        "revalidate",
+        deadline,
+        first.nextHotelOffset
+      );
+      match = next.results.quotes.find(sameOffer);
+      if (!match && next.moreHotels)
+        throw new TravelProviderError("TRAVEL_PROVIDER_UNAVAILABLE");
+    }
     if (!match) throw new TravelProviderError("TRAVEL_OFFER_EXPIRED");
     return {
       quote: match,

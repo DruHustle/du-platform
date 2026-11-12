@@ -210,6 +210,12 @@
   width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-content));
   margin: auto;
 }
+.travel-saved-shortcut {
+  display: none;
+}
+#private-trips {
+  scroll-margin-top: 6rem;
+}
 .travel-trip-grid > section {
   padding: 1.5rem;
   min-width: 0;
@@ -283,6 +289,14 @@
   }
   .travel-trip-grid {
     grid-template-columns: 1fr;
+  }
+  .travel-saved-shortcut {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
   .travel-supplier-grid {
     grid-template-columns: minmax(0, 1fr);
